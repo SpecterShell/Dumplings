@@ -1,0 +1,17 @@
+name: Automation
+on:
+  schedule:
+    - cron: "30 0-16/3 * * *"
+  workflow_dispatch:
+jobs:
+  automation:
+    name: Automation
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: .\Index.ps1 -Automation
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

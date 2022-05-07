@@ -1,0 +1,14 @@
+name: Clean
+on:
+  workflow_dispatch:
+jobs:
+  clean:
+    name: Clean
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: .\Index.ps1 -Clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
