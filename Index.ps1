@@ -206,7 +206,7 @@ filter Import-LastState {
     # If state file doesn't exist, mark the task as "new"
     else {
         Write-Host -Object "$($Session.Name): Last state not found" -ForegroundColor Yellow
-        Add-Member -MemberType NoteProperty -Name 'Status' -Value 'New' -InputObject $Session
+        $Session.Status = 'New'
         return $Session
     }
 }
@@ -222,7 +222,7 @@ filter Compare-State {
         # If state is changed, mark the task as "Changed"
         if ($Changes.Count -gt 0) {
             Write-Host -Object "$($Session.Name): State changed" -ForegroundColor Green
-            Add-Member -MemberType NoteProperty -Name 'Status' -Value 'Changed' -InputObject $Session
+            $Session.Status = 'Changed'
             return $Session
         }
         # If state is not changed, do nothing
@@ -261,21 +261,26 @@ filter Write-CurrentState {
     return $Session
 }
 
+# Add, commit and push changes to repository
+function Write-Repository {
+    Write-Host -Object 'Panda: Pushing branches'
+    git config user.name 'github-actions[bot]'
+    git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+    git pull
+    git add $TaskPath
+    git commit -m "Build: Update states [$env:GITHUB_RUN_NUMBER]"
+    git push
+}
+
 # Automate tasks
 if ($Automation) {
     $Results = $TaskPath | Get-Tasks | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
         Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-CurrentState
     $Results | Where-Object -Property 'Status' -EQ -Value 'Changed' | Send-TelegramMessage | Out-Null
 
-    # Commit changes to repository
+    # Push changes to repository
     if ($env:CI -and $Results.Count -gt 0) {
-        Write-Host -Object 'Panda: Pushing branches'
-        git config user.name 'github-actions[bot]'
-        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-        git pull
-        git add $TaskPath
-        git commit -m "Build: Update states [$env:GITHUB_RUN_NUMBER]"
-        git push
+        Write-Repository
     }
     else {
         Write-Host -Object 'Panda: Skip pushing branches'
@@ -300,21 +305,32 @@ if ($Test) {
 
 # Clean log files (and state files)
 if ($Clean) {
+    $Files = @()
+
     # If task names are specified, do cleaning for those tasks only
     if ($TaskNames.Count -gt 0) {
         $TaskNames | ForEach-Object -Process {
-            Join-Path -Path $TaskPath -ChildPath $_ | Get-ChildItem -Include 'Log*.yaml' -Recurse | Remove-Item -ErrorAction SilentlyContinue -Verbose
+            $Files += Join-Path -Path $TaskPath -ChildPath $_ | Get-ChildItem -Include 'Log*.yaml' -Recurse
             if ($IncludeStates) {
-                Join-Path -Path $TaskPath -ChildPath $_ | Get-ChildItem -Include 'State.yaml' -Recurse | Remove-Item -ErrorAction SilentlyContinue -Verbose
+                $Files += Join-Path -Path $TaskPath -ChildPath $_ | Get-ChildItem -Include 'State.yaml' -Recurse
             }
         }
     }
     # If not specified, do cleaning for all tasks
     else {
-        $TaskPath | Get-Tasks | Get-ChildItem -Include 'Log*.yaml' -Recurse | Remove-Item -ErrorAction SilentlyContinue -Verbose
+        $Files = $TaskPath | Get-Tasks | Get-ChildItem -Include 'Log*.yaml' -Recurse
         if ($IncludeStates) {
-            $TaskPath | Get-Tasks | Get-ChildItem -Include 'State.yaml' -Recurse | Remove-Item -ErrorAction SilentlyContinue -Verbose
+            $Files += $TaskPath | Get-Tasks | Get-ChildItem -Include 'State.yaml' -Recurse
         }
+    }
+    $Files | Remove-Item -ErrorAction SilentlyContinue -Verbose
+
+    # Push changes to repository
+    if ($env:CI -and $Files.Count -gt 0) {
+        Write-Repository
+    }
+    else {
+        Write-Host -Object 'Panda: Skip pushing branches'
     }
 }
 
