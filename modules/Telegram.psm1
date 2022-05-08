@@ -3,8 +3,14 @@ $TGBotToken = $env:TG_BOT_TOKEN
 # Telegram Chat ID
 $TGChatID = $env:TG_CHAT_ID
 
-# Function to send message using Telegram Bot API
 filter Send-TelegramMessage {
+    <#
+    .SYNOPSIS
+        Function to send message using Telegram Bot API
+    .OUTPUTS
+        pscustomobject
+    #>
+
     # Avoid conflicts
     $Session = $_
 
@@ -51,3 +57,5 @@ filter Send-TelegramMessage {
     }
     return $Session
 }
+
+Export-ModuleMember -Function Send-TelegramMessage

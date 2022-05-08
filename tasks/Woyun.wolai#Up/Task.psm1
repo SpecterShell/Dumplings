@@ -1,10 +1,10 @@
 $Config = @{
-    'Identifier' = '1MHz.Knotes'
+    'Identifier' = 'Woyun.wolai'
     'Skip'       = $false
 }
 
-$Uri = 'https://knotes2-release-cn.s3.amazonaws.com/win/latest.yml'
-$Prefix = 'https://knotes2-release-cn.s3.amazonaws.com/win/'
+$Uri = 'https://static2.wolai.com/dist/installers/latest.yml'
+$Prefix = 'https://cdn.wostatic.cn/dist/installers/'
 
 $Fetch = {
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-ElectronUpdater -Prefix $Prefix

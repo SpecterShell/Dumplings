@@ -22,7 +22,6 @@
     .\Index.ps1 -Clean -IncludeStates
     Delete log files and state files for all tasks
 #>
-
 param (
     [Parameter(
         ParameterSetName = 'Automation',
@@ -126,7 +125,7 @@ filter Get-Tasks {
     # Avoid conflicts with catch
     $Path = $_
 
-    $Tasks = Get-ChildItem -Path $Path -Include 'Task.psm1' -Recurse -File | Select-Object -ExpandProperty 'Directory'
+    $Tasks = Get-ChildItem -Path $Path -Include 'Task.psm1' -Recurse -File | Select-Object -ExpandProperty 'DirectoryName'
     if ($Tasks.Count -eq 0) {
         Write-Error -Message "No tasks found in $Path" -CategoryActivity 'Panda'
     }
@@ -153,7 +152,8 @@ filter Import-Task {
     }
 
     # Add Name for Write-Host and Write-Error
-    Add-Member -MemberType NoteProperty -Name 'Name' -Value $Path.Name -InputObject $Session
+    $Name = Split-Path -Path $Path -Leaf
+    Add-Member -MemberType NoteProperty -Name 'Name' -Value $Name -InputObject $Session
     # Add Path for reading state files and log files in other functions
     Add-Member -MemberType NoteProperty -Name 'Path' -Value $Path -InputObject $Session
     # Add Status for filtering tasks
@@ -279,7 +279,7 @@ if ($Automation) {
     $Results | Where-Object -Property 'Status' -EQ -Value 'Changed' | Send-TelegramMessage | Out-Null
 
     # Push changes to repository
-    if ($env:CI -and $Results.Count -gt 0) {
+    if ($env:CI -and $Results.Count -gt 0 -and $NoPush -ne $true) {
         Write-Repository
     }
     else {
@@ -293,13 +293,13 @@ if ($Test) {
     if ($TaskNames.Count -gt 0) {
         $TaskNames | ForEach-Object -Process {
             Join-Path -Path $TaskPath -ChildPath $_ | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
-                Where-Object -Property 'Status' -EQ -Value 'Changed' | Write-Message | Out-Null
+                Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Out-Null
         }
     }
     # If not specified, do test for all tasks
     else {
         $TaskPath | Get-Tasks | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
-            Where-Object -Property 'Status' -EQ -Value 'Changed' | Write-Message | Out-Null
+            Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Out-Null
     }
 }
 
@@ -334,4 +334,5 @@ if ($Clean) {
     }
 }
 
+# Remove all imported tasks
 Get-Module -Name 'Task' | Remove-Module

@@ -1,10 +1,10 @@
 $Config = @{
-    'Identifier' = '1MHz.Knotes'
+    'Identifier' = 'Yuanli.uTools'
     'Skip'       = $false
 }
 
-$Uri = 'https://knotes2-release-cn.s3.amazonaws.com/win/latest.yml'
-$Prefix = 'https://knotes2-release-cn.s3.amazonaws.com/win/'
+$Uri = 'https://publish.u-tools.cn/version2/latest.yml'
+$Prefix = 'https://publish.u-tools.cn/version2/'
 
 $Fetch = {
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-ElectronUpdater -Prefix $Prefix
