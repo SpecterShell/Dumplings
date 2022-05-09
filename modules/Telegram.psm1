@@ -49,7 +49,6 @@ filter Send-TelegramMessage {
         Method      = 'Post'
         Body        = ([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $payload -Compress)))
         ContentType = 'application/json'
-        Proxy       = 'http://127.0.0.1:7890'
     }
     try {
         Invoke-RestMethod @Request | Out-Null
