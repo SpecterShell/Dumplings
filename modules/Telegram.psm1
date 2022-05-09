@@ -27,7 +27,9 @@ filter Send-TelegramMessage {
         $Message += "地址：`n$($Session.CurrentState.InstallerUrls -join "`n")`n"
     }
     if ($Session.CurrentState.ReleaseTime) {
-        $Message += "日期：$($Session.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))`n"
+        $Message += $Session.CurrentState.ReleaseTime -is [datetime]? `
+            "日期：$($Session.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))`n": `
+            "日期：$($Session.CurrentState.ReleaseTime)`n"
     }
     if ($Session.CurrentState.ReleaseNotes) {
         $Message += "内容：`n$($Session.CurrentState.ReleaseNotes)`n"
