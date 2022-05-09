@@ -79,10 +79,15 @@ param (
 # Install required modules
 @('powershell-yaml', 'PowerHTML') | ForEach-Object -Process {
     if (-not (Get-Module -Name $_ -ListAvailable)) {
+        Write-Host -Object '[Panda] Installing PowerShell modules'
         Install-Module -Name $_ -Scope CurrentUser -Force
         if (-not (Get-Module -Name $_ -ListAvailable)) {
             throw "[Panda] Unable to install `"$_`""
         }
+        Write-Host -Object '[Panda] Modules installed'
+    }
+    else {
+        Write-Host -Object '[Panda] Modules already installed'
     }
 }
 
@@ -218,7 +223,8 @@ filter Compare-State {
 
     # If last state exists, compare states
     if ($Session.LastState) {
-        $Changes = Compare-Object -ReferenceObject $Session.LastState.PSObject.Properties -DifferenceObject $Session.CurrentState.PSObject.Properties
+        # $Changes = Compare-Object -ReferenceObject $Session.LastState.PSObject.Properties -DifferenceObject $Session.CurrentState.PSObject.Properties
+        $Changes = Compare-Object -ReferenceObject $Session.LastState -DifferenceObject $Session.CurrentState -Property @('Version', 'InstallerUrls')
         # If state is changed, mark the task as "Changed"
         if ($Changes.Count -gt 0) {
             Write-Host -Object "$($Session.Name): State changed" -ForegroundColor Green
