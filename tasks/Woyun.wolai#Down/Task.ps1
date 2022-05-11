@@ -3,12 +3,12 @@ $Config = @{
     'Skip'       = $false
 }
 
-$Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
-$Prefix = 'https://cdn.wostatic.cn/dist/installers/'
-
 $Fetch = {
+    $Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
+    $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
+
     $Result = [PSCustomObject]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
+    $Object = Invoke-RestMethod @WebRequestParameters -Uri $Uri
 
     # Version
     Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.win.version -InputObject $Result
@@ -22,4 +22,4 @@ $Fetch = {
     return $Result
 }
 
-Export-ModuleMember -Variable Config, Fetch
+return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }

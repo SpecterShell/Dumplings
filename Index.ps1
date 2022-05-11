@@ -66,6 +66,7 @@ param (
         ParameterSetName = 'Clean',
         HelpMessage = 'The name of the task to be cleaned. Leave blank to clean all tasks'
     )]
+    [ArgumentCompleter({ (Get-ChildItem -Path $FakeBoundParameters.TaskPath -Include 'Task.ps1' -Recurse -File).Directory.Name })]
     [string[]]
     $TaskNames = @(),
 
@@ -79,15 +80,15 @@ param (
 # Install required modules
 @('powershell-yaml', 'PowerHTML') | ForEach-Object -Process {
     if (-not (Get-Module -Name $_ -ListAvailable)) {
-        Write-Host -Object '[Panda] Installing PowerShell modules'
+        Write-Host -Object "Panda: Installing $_"
         Install-Module -Name $_ -Scope CurrentUser -Force
         if (-not (Get-Module -Name $_ -ListAvailable)) {
-            throw "[Panda] Unable to install `"$_`""
+            throw "Panda: Unable to install $_"
         }
-        Write-Host -Object '[Panda] Modules installed'
+        Write-Host -Object "Panda: $_ has been installed"
     }
     else {
-        Write-Host -Object '[Panda] Modules already installed'
+        Write-Host -Object "Panda: $_ has already been installed"
     }
 }
 
@@ -130,7 +131,7 @@ filter Get-Tasks {
     # Avoid conflicts with catch
     $Path = $_
 
-    $Tasks = Get-ChildItem -Path $Path -Include 'Task.psm1' -Recurse -File | Select-Object -ExpandProperty 'DirectoryName'
+    $Tasks = Get-ChildItem -Path $Path -Include 'Task.ps1' -Recurse -File | Select-Object -ExpandProperty 'DirectoryName'
     if ($Tasks.Count -eq 0) {
         Write-Error -Message "No tasks found in $Path" -CategoryActivity 'Panda'
     }
@@ -142,17 +143,17 @@ filter Import-Task {
     # Avoid conflicts with catch
     $Path = $_
 
-    # Import task module
-    $Session = Join-Path -Path $Path -ChildPath 'Task.psm1' | Import-Module -PassThru -AsCustomObject -Force
-    # Import-Module doesn't throw errors, so check it manually
-    if (-not ($Session -and $Session.Config -and $Session.Fetch)) {
-        Write-Error -Message "Failed to load task in $Path" -CategoryActivity 'Panda'
+    # Import task
+    try {
+        $Session = & (Join-Path -Path $Path -ChildPath 'Task.ps1')
+    }
+    catch {
+        Write-Error -Message "Failed to load task in $Path`: $($_.Exception.Message)" -CategoryActivity 'Panda'
         return
     }
-
-    # Skip task if it wants
-    if ($Session.Config.Skip -eq $true) {
-        Write-Host -Object "$($Path.Name): Skipped" -ForegroundColor DarkGray
+    # Validate task
+    if (-not ($Session -and $Session.Config -and $Session.Fetch)) {
+        Write-Error -Message "Invalid task in $Path" -CategoryActivity 'Panda'
         return
     }
 
@@ -166,6 +167,12 @@ filter Import-Task {
     # Add Template if not specified, for generating message
     if (-not $Session.Template) {
         Add-Member -MemberType NoteProperty -Name 'Template' -Value $DefaultTemplate -InputObject $Session
+    }
+
+    # Skip task on demand
+    if ($Session.Config.Skip -eq $true) {
+        Write-Host -Object "$($Name): Skipped" -ForegroundColor DarkGray
+        return
     }
 
     return $Session
@@ -281,7 +288,7 @@ function Write-Repository {
 # Automate tasks
 if ($Automation) {
     $Results = $TaskPath | Get-Tasks | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
-        Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-CurrentState
+        Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Write-CurrentState
     $Results | Where-Object -Property 'Status' -EQ -Value 'Changed' | Send-TelegramMessage | Out-Null
 
     # Push changes to repository
@@ -339,6 +346,3 @@ if ($Clean) {
         Write-Host -Object 'Panda: Skip pushing branches'
     }
 }
-
-# Remove all imported tasks
-Get-Module -Name 'Task' | Remove-Module

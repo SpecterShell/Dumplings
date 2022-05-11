@@ -8,32 +8,38 @@ $DefaultTemplate = {
         $Session
     )
 
-    $Message = "$($Session.Config.Identifier)`n"
+    $Message = "$($Session.Config.Identifier)"
     if ($Session.CurrentState.Version) {
-        $Message += "版本：$($Session.LastState.Version) -> $($Session.CurrentState.Version)`n"
+        $Message += "`n版本：$($Session.LastState.Version) -> $($Session.CurrentState.Version)"
     }
     if ($Session.CurrentState.InstallerUrls) {
-        $Message += "地址：`n$($Session.CurrentState.InstallerUrls -join "`n")`n"
+        $Message += "`n地址：`n$($Session.CurrentState.InstallerUrls -join "`n")"
     }
     if ($Session.CurrentState.ReleaseTime) {
         if ($Session.CurrentState.ReleaseTime -is [datetime]) {
-            $Message += "日期：$($Session.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))`n"
+            $Message += "`n日期：$($Session.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))"
         }
         else {
-            $Message += "日期：$($Session.CurrentState.ReleaseTime)`n"
+            $Message += "`n日期：$($Session.CurrentState.ReleaseTime)"
         }
     }
     if ($Session.CurrentState.ReleaseNotes) {
-        $Message += "内容：`n$($Session.CurrentState.ReleaseNotes)`n"
+        $Message += "`n内容：`n$($Session.CurrentState.ReleaseNotes)"
     }
     if ($Session.CurrentState.ReleaseNotesUrl) {
-        $Message += "链接：$($Session.CurrentState.ReleaseNotesUrl)`n"
+        $Message += "`n链接：$($Session.CurrentState.ReleaseNotesUrl)"
     }
     if ($Session.Config.Note) {
-        $Message += "注释：`n$($Session.Config.Note)"
+        $Message += "`n注释：`n$($Session.Config.Note)"
     }
 
     return $Message
 }
 
-Export-ModuleMember -Variable DefaultTemplate
+$WebRequestParameters = @{
+    TimeoutSec        = 500
+    MaximumRetryCount = 5
+    RetryIntervalSec  = 5
+}
+
+Export-ModuleMember -Variable DefaultTemplate, WebRequestParameters

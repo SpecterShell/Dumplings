@@ -3,11 +3,11 @@ $Config = @{
     'Skip'       = $false
 }
 
-$Uri = 'https://pcapp-update.youku.com/check?action=web_iku_install_page&cid=iku'
-
 $Fetch = {
+    $Uri = 'https://pcapp-update.youku.com/check?action=web_iku_install_page&cid=iku'
+
     $Result = [PSCustomObject]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
+    $Object = Invoke-RestMethod @WebRequestParameters -Uri $Uri
 
     # Version
     Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.method.ikuver -InputObject $Result
@@ -24,4 +24,4 @@ $Fetch = {
     return $Result
 }
 
-Export-ModuleMember -Variable Config, Fetch
+return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }

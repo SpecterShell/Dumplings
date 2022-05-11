@@ -3,11 +3,11 @@ $Config = @{
     'Skip'       = $false
 }
 
-$Uri = 'https://appversion.115.com/1/web/1.0/api/chrome'
-
 $Fetch = {
+    $Uri = 'https://appversion.115.com/1/web/1.0/api/chrome'
+
     $Result = [PSCustomObject]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
+    $Object = Invoke-RestMethod @WebRequestParameters -Uri $Uri
 
     # Version
     Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.data.window_115.version_code -InputObject $Result
@@ -21,4 +21,4 @@ $Fetch = {
     return $Result
 }
 
-Export-ModuleMember -Variable Config, Fetch
+return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }

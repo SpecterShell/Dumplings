@@ -3,13 +3,13 @@ $Config = @{
     'Skip'       = $false
 }
 
-$Uri1 = 'https://free.zhiyunwenxian.cn/zy/UpdateData.txt'
-$Uri2 = 'https://free.zhiyunwenxian.cn/zy/UpdateURL.txt'
-
 $Fetch = {
+    $Uri1 = 'https://free.zhiyunwenxian.cn/zy/UpdateData.txt'
+    $Uri2 = 'https://free.zhiyunwenxian.cn/zy/UpdateURL.txt'
+
     $Result = [PSCustomObject]@{}
-    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent
-    $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
+    $Content1 = Invoke-WebRequest @WebRequestParameters -Uri $Uri1 | Get-ResponseContent
+    $Content2 = Invoke-WebRequest @WebRequestParameters -Uri $Uri2 | Get-ResponseContent
 
     # Version
     $Version = $Content1.Split("`r`n")[0].Trim()
@@ -33,4 +33,4 @@ $Fetch = {
     return $Result
 }
 
-Export-ModuleMember -Variable Config, Fetch
+return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }
