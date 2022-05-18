@@ -7,19 +7,22 @@ $Fetch = {
     $Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
     $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
 
-    $Result = [PSCustomObject]@{}
-    $Object = Invoke-RestMethod @WebRequestParameters -Uri $Uri
+    $Result = @{}
+    $Object = Invoke-RestMethod -Uri $Uri
 
     # Version
-    Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.win.version -InputObject $Result
+    $Result.Version = $Object.win.version
 
-    # InstallerUrls
-    Add-Member -MemberType NoteProperty -Name 'InstallerUrls' -Value "$($Prefix)$([System.Uri]::EscapeDataString($Object.win.files[0].url))" -InputObject $Result
+    # InstallerUrl
+    $Result.InstallerUrl = $Prefix + [System.Uri]::EscapeDataString($Object.win.files[0].url)
 
     # ReleaseTime
-    Add-Member -MemberType NoteProperty -Name 'ReleaseTime' -Value $Object.win.releaseDate.ToUniversalTime() -InputObject $Result
+    $Result.ReleaseTime = $Object.win.releaseDate.ToUniversalTime()
 
-    return $Result
+    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }
+return [PSCustomObject]@{
+    Config = $Config
+    Fetch  = $Fetch
+}

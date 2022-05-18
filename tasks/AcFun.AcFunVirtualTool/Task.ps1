@@ -3,23 +3,25 @@ $Config = @{
     'Skip'       = $false
 }
 
-
 $Fetch = {
     $Uri = 'https://api.kuaishouzt.com/rest/zt/appsupport/checkupgrade?appver=0.0.0.0&kpn=ACFUN_APP.LIVE.PC&kpf=WINDOWS_PC'
 
-    $Result = [PSCustomObject]@{}
-    $Object = Invoke-RestMethod @WebRequestParameters -Uri $Uri
+    $Result = @{}
+    $Object = Invoke-RestMethod -Uri $Uri
 
     # Version
-    Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.releaseInfo.version -InputObject $Result
+    $Result.Version = $Object.releaseInfo.version
 
-    # InstallerUrls
-    Add-Member -MemberType NoteProperty -Name 'InstallerUrls' -Value $Object.releaseInfo.downloadUrl -InputObject $Result
+    # InstallerUrl
+    $Result.InstallerUrl = $Object.releaseInfo.downloadUrl
 
     # ReleaseNotes
-    Add-Member -MemberType NoteProperty -Name 'ReleaseNotes' -Value ( $Object.releaseInfo.message | Format-Text ) -InputObject $Result
+    $Result.ReleaseNotes = $Object.releaseInfo.message | Format-Text
 
-    return $Result
+    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }
+return [PSCustomObject]@{
+    Config = $Config
+    Fetch  = $Fetch
+}

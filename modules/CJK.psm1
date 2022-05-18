@@ -5,7 +5,7 @@ $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK = "(?m)(?<LeftCJK>[${CJK}])[ ]*(?<Symbols>
 $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS = "(?m)(?<CJK>[${CJK}])[ ]*(?<Symbols>[~\!;,\?]+)[ ]*"
 $CJK_AN = "([${CJK}])([${A}${N}])"
 $AN_CJK = "([${A}${N}])([${CJK}])"
-$NUMBER_SYMBOLS_TEXT = "(?m)(?<=^[${N}])([\.\u3001-] *)"
+$ORDERED_LIST_NUMBER = "(?m)(?<=^[${N}])([\.\u3001-] *)"
 filter ConvertTo-FullWidth {
     <#
     .SYNOPSIS
@@ -24,7 +24,7 @@ filter ConvertTo-FullWidth {
         -creplace '\?', '？'
 }
 
-filter Format-Text {
+function Format-Text {
     <#
     .SYNOPSIS
         Perform a set of formatting rules on the text
@@ -36,19 +36,23 @@ filter Format-Text {
     .LINK
         https://github.com/vinta/pangu.js
     #>
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Text
+    )
 
-    if ($_ -is [string]) {
-        if ($_.Length -le 1 -or $_ -cnotmatch "[${CJK}]") {
-            return $_
+    process {
+        if ($Text.Length -le 1 -or $Text -cnotmatch "[${CJK}]") {
+            return $Text
         }
         else {
-            $Text = $_
             # Convert half width symbols between CJK characters to full width symbols
             $Text = $Text -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, { "$($_.Groups['LeftCJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)$($_.Groups['RightCJK'].Value)" }
             # Convert half width symbols after CJK characters to full width symbols
             $Text = $Text -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, { "$($_.Groups['CJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)" }
             # Format the prefix of the ordered list
-            $Text = $Text -creplace $NUMBER_SYMBOLS_TEXT, "`. "
+            $Text = $Text -creplace $ORDERED_LIST_NUMBER, "`. "
             # Add space between CJK characters and ANS
             $Text = $Text -creplace $CJK_AN, '$1 $2'
             # Add space between ANS and CJK characters

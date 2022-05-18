@@ -19,27 +19,7 @@ filter Send-TelegramMessage {
         return $Session
     }
 
-    $Message = "$($Session.Config.Identifier)`n"
-    if ($Session.CurrentState.Version) {
-        $Message += "版本：$($Session.LastState.Version) -> $($Session.CurrentState.Version)`n"
-    }
-    if ($Session.CurrentState.InstallerUrls) {
-        $Message += "地址：`n$($Session.CurrentState.InstallerUrls -join "`n")`n"
-    }
-    if ($Session.CurrentState.ReleaseTime) {
-        $Message += $Session.CurrentState.ReleaseTime -is [datetime]? `
-            "日期：$($Session.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))`n": `
-            "日期：$($Session.CurrentState.ReleaseTime)`n"
-    }
-    if ($Session.CurrentState.ReleaseNotes) {
-        $Message += "内容：`n$($Session.CurrentState.ReleaseNotes)`n"
-    }
-    if ($Session.CurrentState.ReleaseNotesUrl) {
-        $Message += "链接：$($Session.CurrentState.ReleaseNotesUrl)"
-    }
-    if ($Session.Config.Notes) {
-        $Message += "注释：$($Session.Config.Notes)"
-    }
+    $Message = Invoke-Command -ScriptBlock $Session.Template -ArgumentList $Session
     $Payload = @{
         chat_id = $TGChatID
         text    = $Message

@@ -3,7 +3,7 @@ filter ConvertFrom-ElectronUpdater {
     .SYNOPSIS
         Convert a electron-updater YAML update source into to a PSCustomObject object
     .PARAMETER Prefix
-        The prefix of the InstallerUrls
+        The prefix of the InstallerUrl
     .OUTPUTS
         pscustomobject
     #>
@@ -12,28 +12,27 @@ filter ConvertFrom-ElectronUpdater {
         $Prefix
     )
 
-    $Result = [PSCustomObject]@{}
-    $Object = $_ | ConvertFrom-Yaml
+    $Result = @{}
 
     # Version
-    if ($Object.version) {
-        Add-Member -MemberType NoteProperty -Name 'Version' -Value $Object.version -InputObject $Result
+    if ($_.version) {
+        $Result.Version = $_.version
     }
 
-    # InstallerUrls
-    if ($Object.files) {
-        $InstallerUrls = "$($Prefix)$([System.Uri]::EscapeDataString($Object.files[0].url))"
-        Add-Member -MemberType NoteProperty -Name 'InstallerUrls' -Value $InstallerUrls -InputObject $Result
+    # InstallerUrl
+    if ($_.files) {
+        $InstallerUrl = $Prefix + [System.Uri]::EscapeUriString($_.files[0].url)
+        $Result.InstallerUrl = $InstallerUrl
     }
 
     # ReleaseTime
-    if ($Object.releaseDate) {
-        Add-Member -MemberType NoteProperty -Name 'ReleaseTime' -Value $Object.releaseDate.ToUniversalTime() -InputObject $Result
+    if ($_.releaseDate) {
+        $Result.ReleaseTime = $_.releaseDate.ToUniversalTime()
     }
 
     # ReleaseNotes
-    if ($Object.releaseNotes) {
-        Add-Member -MemberType NoteProperty -Name 'ReleaseNotes' -Value ($Object.releaseNotes | Format-Text) -InputObject $Result
+    if ($_.releaseNotes) {
+        $Result.ReleaseNotes = $_.releaseNotes | Format-Text
     }
 
     return $Result

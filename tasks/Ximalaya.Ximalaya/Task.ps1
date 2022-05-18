@@ -13,9 +13,15 @@ $Fetch = {
         uid          = ''
     }
 
-    $Result = Invoke-RestMethod @WebRequestParameters -Uri $Uri -Headers $Headers | ConvertFrom-ElectronUpdater -Prefix $Prefix
-    $Result.InstallerUrls = (Invoke-WebRequest @WebRequestParameters -Uri $Result.InstallerUrls -Method Head -Headers $Headers).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
-    return $Result
+    $Result = Invoke-RestMethod -Uri $Uri -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
+    # InstallerUrl
+    $Result.InstallerUrl = Get-RedirectedUrl -Uri $Result.InstallerUrl -Method Head -Headers $Headers
+
+    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }
+return [PSCustomObject]@{
+    Config = $Config
+    Fetch  = $Fetch
+}

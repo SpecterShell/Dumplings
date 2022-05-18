@@ -7,8 +7,11 @@ $Fetch = {
     $Uri = 'https://knotes2-release-cn.s3.amazonaws.com/win/latest.yml'
     $Prefix = 'https://knotes2-release-cn.s3.amazonaws.com/win/'
 
-    $Result = Invoke-RestMethod @WebRequestParameters -Uri $Uri | ConvertFrom-ElectronUpdater -Prefix $Prefix
-    return $Result
+    $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{Config = $Config; Fetch = $Fetch }
+return [PSCustomObject]@{
+    Config = $Config
+    Fetch  = $Fetch
+}
