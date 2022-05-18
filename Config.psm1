@@ -10,7 +10,7 @@ $DefaultTemplate = {
 
     $Message = "$($Session.Config.Identifier)`n"
     if ($Session.CurrentState.Version) {
-        $Message += "`n版本：" + $Session.LastState.Version + '->' + $Session.CurrentState.Version
+        $Message += "`n版本：" + $Session.LastState.Version + ' -> ' + $Session.CurrentState.Version
     }
     if ($Session.CurrentState.InstallerUrl) {
         $Message += "`n地址：`n" + ($Session.CurrentState.InstallerUrl -join "`n")
