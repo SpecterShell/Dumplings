@@ -6,7 +6,7 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://www.effie.co/downloadfile/win'
 
-    $Result = @{}
+    $Result = [ordered]@{}
 
     # InstallerUrl
     $Result.InstallerUrl = Get-RedirectedUrl -Uri $Uri

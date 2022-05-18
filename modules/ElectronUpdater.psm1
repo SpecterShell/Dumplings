@@ -12,7 +12,7 @@ filter ConvertFrom-ElectronUpdater {
         $Prefix
     )
 
-    $Result = @{}
+    $Result = [ordered]@{}
 
     # Version
     if ($_.version) {

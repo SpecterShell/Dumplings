@@ -6,7 +6,7 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://im.dingtalk.com/manifest/new/release_windows_vista_later_manual_lowpriority.json'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
 
     # Version

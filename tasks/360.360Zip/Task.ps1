@@ -7,7 +7,7 @@ $Fetch = {
     $Uri1 = 'https://www.360totalsecurity.com/en/360zip/'
     $Uri2 = 'https://www.360totalsecurity.com/en/download-free-360-zip/'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Html
     $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Html
 

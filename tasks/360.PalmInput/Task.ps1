@@ -7,7 +7,7 @@ $Fetch = {
     $Uri1 = 'https://baoku.360.cn/soft/show/appid/104126128'
     $Uri2 = 'https://cdn.soft.360.cn/static/baoku/info_7_0/softinfo_104126128.html'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Html
     $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Html
 

@@ -9,7 +9,7 @@ $Fetch = {
         Referer = 'https://openhome.alipay.com'
     }
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-RestMethod -Uri $Uri -Headers $Headers
 
     # Version

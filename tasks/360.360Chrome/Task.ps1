@@ -7,7 +7,7 @@ $Fetch = {
     $Uri1 = 'https://browser.360.cn/ee/'
     $Uri2 = 'https://bbs.360.cn/thread-15913525-1-1.html'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Html
     $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Html
 

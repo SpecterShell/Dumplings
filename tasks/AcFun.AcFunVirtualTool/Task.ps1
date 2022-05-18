@@ -6,7 +6,7 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://api.kuaishouzt.com/rest/zt/appsupport/checkupgrade?appver=0.0.0.0&kpn=ACFUN_APP.LIVE.PC&kpf=WINDOWS_PC'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-RestMethod -Uri $Uri
 
     # Version

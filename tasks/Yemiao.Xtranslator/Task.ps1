@@ -7,7 +7,7 @@ $Fetch = {
     $Uri1 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateData.txt'
     $Uri2 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateURL.txt'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent
     $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
 

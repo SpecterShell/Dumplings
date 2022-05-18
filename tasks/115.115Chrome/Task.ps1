@@ -6,7 +6,7 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://appversion.115.com/1/web/1.0/api/chrome'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-RestMethod -Uri $Uri
 
     # Version

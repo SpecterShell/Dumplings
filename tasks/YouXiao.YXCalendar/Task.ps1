@@ -7,7 +7,7 @@ $Fetch = {
     $Uri1 = 'https://www.youxiao.cn/yxcalendar/'
     $Uri2 = 'https://www.youxiao.cn/index.php/yxcalendar/version-log/'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Html
     $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Html
 

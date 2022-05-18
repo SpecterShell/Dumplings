@@ -6,7 +6,7 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://pcapp-update.youku.com/check?action=web_iku_install_page&cid=iku'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-RestMethod -Uri $Uri
 
     # Version

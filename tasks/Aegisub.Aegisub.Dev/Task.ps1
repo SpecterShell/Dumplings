@@ -7,7 +7,7 @@ $Fetch = {
     $Uri = 'http://plorkyeran.com/aegisub/'
     $Prefix = 'http://plorkyeran.com/aegisub/'
 
-    $Result = @{}
+    $Result = [ordered]@{}
     $Object = Invoke-RestMethod -Uri $Uri | ConvertFrom-Html
 
     # Version
