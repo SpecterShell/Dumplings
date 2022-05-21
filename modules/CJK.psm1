@@ -40,6 +40,7 @@ function Format-Text {
     #>
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
+        [AllowEmptyString()]
         [string]
         $Text
     )

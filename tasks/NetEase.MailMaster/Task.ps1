@@ -17,7 +17,7 @@ $Fetch = {
 
     # ReleaseNotes
     $ReleaseNotes = $Object.full[0].introduction -csplit "`n"
-    $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 3)] | Format-Text
+    $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 4)] | Format-Text
 
     return [PSCustomObject]$Result
 }
