@@ -5,9 +5,9 @@ $Config = @{
 
 $Fetch = {
     $Uri = 'https://im.dingtalk.com/manifest/new/release_windows_vista_later_all.json'
+    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
 
     $Result = [ordered]@{}
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
 
     # Version
     $Result.Version = $Object.win.package.version
@@ -17,7 +17,7 @@ $Fetch = {
 
     # ReleaseTime
     if ($Object.win.install.description[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1].Trim() -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
     # ReleaseNotes

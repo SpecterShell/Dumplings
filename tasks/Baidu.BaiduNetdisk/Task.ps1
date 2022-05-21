@@ -5,24 +5,25 @@ $Config = @{
 
 $Fetch = {
     $Uri1 = 'https://pan.baidu.com/disk/cmsdata?platform=guanjia'
+    $Object1 = Invoke-RestMethod -Uri $Uri1
+
     $Uri2 = 'https://pan.baidu.com/disk/version'
 
     $Result = [ordered]@{}
-    $Object = Invoke-RestMethod -Uri $Uri1
 
     # Version
-    if ($Object.list[0].version -cmatch 'V([\d\.]+)') {
+    if ($Object1.list[0].version -cmatch 'V([\d\.]+)') {
         $Result.Version = $Matches[1].Trim()
     }
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.list[0].url
+    $Result.InstallerUrl = $Object1.list[0].url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.list[0].publish -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = Get-Date -Date $Object1.list[0].publish -AsUTC
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.list[0].detail.more | ConvertTo-OrderedList | Format-Text
+    $Result.ReleaseNotes = $Object1.list[0].detail.more | Format-Text | ConvertTo-OrderedList
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2

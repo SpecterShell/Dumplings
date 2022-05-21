@@ -13,7 +13,7 @@ $Fetch = {
 
     # Version
     if ($Result.InstallerUrl -cmatch '([\d\.]+)\.exe') {
-        $Result.Version = $Matches[1].Trim()
+        $Result.Version = $Matches[1]
     }
 
     return [PSCustomObject]$Result

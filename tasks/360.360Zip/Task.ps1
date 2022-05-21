@@ -5,15 +5,16 @@ $Config = @{
 
 $Fetch = {
     $Uri1 = 'https://www.360totalsecurity.com/en/360zip/'
+    $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
+
     $Uri2 = 'https://www.360totalsecurity.com/en/download-free-360-zip/'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $Result = [ordered]@{}
-    $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Html
-    $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Html
 
     # Version
-    if ($Object1.SelectSingleNode('//*[@id="primary-actions"]/p/span').InnerText -cmatch '([\d\.]+)') {
-        $Result.Version = $Matches[1].Trim()
+    if ($Object1.SelectSingleNode('//*[@id="primary-actions"]/p/span').InnerText.Trim() -cmatch '([\d\.]+)') {
+        $Result.Version = $Matches[1]
     }
 
     # InstallerUrl

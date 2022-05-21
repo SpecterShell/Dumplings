@@ -310,14 +310,13 @@ if ($Test) {
     # If task names are specified, do test for those tasks only
     if ($Name.Count -gt 0) {
         $Name | ForEach-Object -Process {
-            Join-Path -Path $Path -ChildPath $_ | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
-                Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Out-Null
+            Join-Path -Path $Path -ChildPath $_ | Import-Task | Invoke-Task | Import-LastState | Compare-State | Write-Message | Out-Null
         }
     }
     # If not specified, do test for all tasks
     else {
         $Path | Get-Tasks | Import-Task | Invoke-Task | Import-LastState | Compare-State | `
-            Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Out-Null
+        Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Write-Message | Out-Null
     }
 }
 

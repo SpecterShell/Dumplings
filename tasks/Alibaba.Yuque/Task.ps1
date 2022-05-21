@@ -5,9 +5,9 @@ $Config = @{
 
 $Fetch = {
     $Uri = 'https://app.nlark.com/yuque-desktop/v2/latest-lark.json'
+    $Object = (Invoke-RestMethod -Uri $Uri).stable | Where-Object -Property 'platform' -EQ -Value 'win32'
 
     $Result = [ordered]@{}
-    $Object = Invoke-RestMethod -Uri $Uri | Select-Object -ExpandProperty 'stable' | Where-Object -Property 'platform' -EQ -Value 'win32'
 
     # Version
     $Result.Version = $Object.version
@@ -16,7 +16,7 @@ $Fetch = {
     $Result.InstallerUrl = $Object.exe_url
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.change_logs | ConvertTo-UnorderedList | Format-Text
+    $Result.ReleaseNotes = $Object.change_logs | Format-Text | ConvertTo-UnorderedList
 
     return [PSCustomObject]$Result
 }

@@ -21,7 +21,7 @@ filter ConvertFrom-ElectronUpdater {
 
     # InstallerUrl
     if ($_.files) {
-        $InstallerUrl = $Prefix + [System.Uri]::EscapeUriString($_.files[0].url)
+        $InstallerUrl = $Prefix + $_.files[0].url
         $Result.InstallerUrl = $InstallerUrl
     }
 

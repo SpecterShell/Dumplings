@@ -5,11 +5,12 @@ $Config = @{
 
 $Fetch = {
     $Uri1 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateData.txt'
+    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent
+
     $Uri2 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateURL.txt'
+    $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
 
     $Result = [ordered]@{}
-    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent
-    $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
 
     # Version
     $Result.Version = $Content1.Split("`r`n")[0].Trim()
@@ -19,7 +20,7 @@ $Fetch = {
 
     # ReleaseTime
     if ($Content1 -cmatch '发布日期：([\d/]+)') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1].Trim() -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
     # ReleaseNotes

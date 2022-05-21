@@ -14,7 +14,7 @@ $Fetch = {
     $Result.Version = $Object.win.version
 
     # InstallerUrl
-    $Result.InstallerUrl = $Prefix + [System.Uri]::EscapeUriString($Object.win.files[0].url)
+    $Result.InstallerUrl = $Prefix + $Object.win.files[0].url
 
     # ReleaseTime
     $Result.ReleaseTime = $Object.win.releaseDate.ToUniversalTime()

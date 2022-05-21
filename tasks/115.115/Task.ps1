@@ -5,9 +5,9 @@ $Config = @{
 
 $Fetch = {
     $Uri = 'https://appversion.115.com/1/web/1.0/api/chrome'
+    $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
 
     # Version
     $Result.Version = $Object.data.win.version_code
@@ -16,7 +16,7 @@ $Fetch = {
     $Result.InstallerUrl = $Object.data.win.version_url
 
     # ReleaseTime
-    $Result.ReleaseTime = ($Object.data.win.created_time | ConvertFrom-UnixTimeSeconds)
+    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.win.created_time
 
     return [PSCustomObject]$Result
 }

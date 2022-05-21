@@ -5,9 +5,9 @@ $Config = @{
 
 $Fetch = {
     $Uri = 'https://pcapp-update.youku.com/check?action=web_iku_install_page&cid=iku'
+    $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
 
     # Version
     $Result.Version = $Object.method.ikuver
@@ -17,7 +17,7 @@ $Fetch = {
 
     # ReleaseTime
     if ($Object.method.iku_desc -cmatch '日期 ([\d/]+)') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1].Trim() -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
     return [PSCustomObject]$Result
