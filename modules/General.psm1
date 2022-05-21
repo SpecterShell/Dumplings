@@ -1,7 +1,7 @@
 function ConvertFrom-UnixTimeSeconds {
     <#
     .SYNOPSIS
-        Convert unix time in seconds to UTC Time
+        Convert Unix time in seconds to UTC DateTime
     .PARAMETER Seconds
         The Unix time in seconds
     .OUTPUTS
@@ -21,7 +21,7 @@ function ConvertFrom-UnixTimeSeconds {
 function ConvertFrom-UnixTimeMilliseconds {
     <#
     .SYNOPSIS
-        Convert unix time in milliseconds to UTC Time
+        Convert Unix time in milliseconds to UTC DateTime
     .PARAMETER Milliseconds
         The Unix time in milliseconds
     .OUTPUTS
@@ -92,6 +92,32 @@ function ConvertTo-UnorderedList {
 
     end {
         return $Result -join "`n"
+    }
+}
+
+function ConvertTo-UtcDateTime {
+    <#
+    .SYNOPSIS
+        Change the DateTime from specified timezone to UTC
+    .PARAMETER DateTime
+        The DateTime object to be converted
+    .PARAMETER Id
+        Timezone ID
+    .OUTPUTS
+        datetime
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [datetime]
+        $DateTime,
+
+        [parameter(Mandatory)]
+        [string]
+        $Id
+    )
+
+    process {
+        [System.TimeZoneInfo]::ConvertTimeToUtc($DateTime, [System.TimeZoneInfo]::FindSystemTimeZoneById($Id))
     }
 }
 

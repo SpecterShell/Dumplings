@@ -10,8 +10,6 @@ $Fetch = {
     $Uri2 = 'https://smartprogram.baidu.com/forum/api/docs_detail?path=%2Fdevelop%2Fdevtools%2Fuplog_tool_normal'
     $Object2 = ((Invoke-RestMethod -Uri $Uri2).data.content.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-    $Uri3 = 'https://smartprogram.baidu.com/docs/develop/devtools/uplog_tool_normal/'
-
     $Result = [ordered]@{}
 
     # Version
@@ -25,11 +23,11 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Object2.SelectSingleNode('/table[1]/tbody/tr/td[2]').InnerText.Trim() -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('/table[1]/tbody/tr/td[3]/node()').InnerText.Trim() -join "`n" | Format-Text
+        $Result.ReleaseNotes = $Object2.SelectNodes('/table[1]/tbody/tr/td[3]/node()').InnerText.Trim() | Format-Text
     }
 
     # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = $Uri3
+    $Result.ReleaseNotesUrl = 'https://smartprogram.baidu.com/docs/develop/devtools/uplog_tool_normal/'
 
     return [PSCustomObject]$Result
 }

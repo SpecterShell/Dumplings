@@ -20,11 +20,11 @@ $Fetch = {
     $Result.InstallerUrl = $Object1.data.downloadUrl
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object1.data.createTime -AsUTC
+    $Result.ReleaseTime = Get-Date -Date $Object1.data.createTime | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     if ($Object2.SelectSingleNode('//*[@id="download-page"]/div[2]/table/tr[2]/td[2]').InnerText.Trim() -cmatch [regex]::Escape($Result.Version)) {
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="download-page"]/div[2]/table/tr[2]/td[3]/text()').Text.Trim() -join "`n" | Format-Text
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="download-page"]/div[2]/table/tr[2]/td[3]/text()').Text | Format-Text
     }
 
     # ReleaseNotesUrl

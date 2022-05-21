@@ -16,7 +16,7 @@ $Fetch = {
     $Result = Invoke-RestMethod -Uri $Uri -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # InstallerUrl
-    $Result.InstallerUrl = Get-RedirectedUrl -Uri $Result.InstallerUrl -Method Head -Headers $Headers
+    $Result.InstallerUrl = Get-RedirectedUrl -Uri $Result.InstallerUrl -Headers $Headers
 
     return [PSCustomObject]$Result
 }

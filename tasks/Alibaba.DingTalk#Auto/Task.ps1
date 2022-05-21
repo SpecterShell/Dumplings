@@ -21,7 +21,7 @@ $Fetch = {
     }
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.win.install.description[1..($Object.win.install.description.length - 1)] -join "`n" | Format-Text
+    $Result.ReleaseNotes = $Object.win.install.description[1..($Object.win.install.description.length - 1)] | Format-Text
 
     return [PSCustomObject]$Result
 }

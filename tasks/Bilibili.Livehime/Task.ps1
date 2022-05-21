@@ -10,8 +10,6 @@ $Fetch = {
     $Uri2 = 'https://api.live.bilibili.com/client/v1/LiveHime/getVerList?type=3'
     $Object2 = Invoke-RestMethod -Uri $Uri2
 
-    $Uri3 = 'https://live.bilibili.com/liveHime/'
-
     $Result = [ordered]@{}
 
     # Version
@@ -31,7 +29,7 @@ $Fetch = {
     $Result.ReleaseNotes = $Object1.data.ver_desc | Format-Text
 
     # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = $Uri3
+    $Result.ReleaseNotesUrl = 'https://live.bilibili.com/liveHime/'
 
     return [PSCustomObject]$Result
 }

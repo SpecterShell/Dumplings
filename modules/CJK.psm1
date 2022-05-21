@@ -40,7 +40,6 @@ function Format-Text {
     #>
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
-        [AllowEmptyString()]
         [string]
         $Text
     )
@@ -54,10 +53,6 @@ function Format-Text {
     }
 
     end {
-        if ($Result.Length -lt 1) {
-            return $Result
-        }
-
         $Result = $Result -join "`n"
         if ($Result -cnotmatch "[${CJK}]") {
             return $Result
