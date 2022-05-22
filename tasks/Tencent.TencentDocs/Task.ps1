@@ -30,7 +30,7 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = @($Object.download_win, $Object.download_win_arm)
 
-    $ReleaseNotes = $Object.update_info -csplit "`n"
+    $ReleaseNotes = $Object.update_info.Split("`n")
 
     # ReleaseTime
     if ($ReleaseNotes[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {

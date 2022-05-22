@@ -40,6 +40,7 @@ function Format-Text {
     #>
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
+        [AllowEmptyString()]
         [string]
         $Text
     )
@@ -54,14 +55,7 @@ function Format-Text {
 
     end {
         $Result = $Result -join "`n"
-        if ($Result -cnotmatch "[${CJK}]") {
-            return $Result
-        }
 
-        # Convert half width symbols between CJK characters to full width symbols
-        $Result = $Result -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, { "$($_.Groups['LeftCJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)$($_.Groups['RightCJK'].Value)" }
-        # Convert half width symbols after CJK characters to full width symbols
-        $Result = $Result -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, { "$($_.Groups['CJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)" }
         # Remove empty characters at the beginning and the end of each line
         $Result = $Result -creplace '(?m)^\s+', '' -creplace '(?m)\s+$', ''
         # Remove empty characters at the beginning and the end of the text
@@ -70,6 +64,10 @@ function Format-Text {
         $Result = $Result -creplace $ORDERED_LIST_NUMBER, "`. "
         # Format the prefix of the unordered list
         $Result = $Result -creplace $UNORDERED_LIST_NUMBER, '- '
+        # Convert half width symbols between CJK characters to full width symbols
+        $Result = $Result -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, { "$($_.Groups['LeftCJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)$($_.Groups['RightCJK'].Value)" }
+        # Convert half width symbols after CJK characters to full width symbols
+        $Result = $Result -creplace $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, { "$($_.Groups['CJK'].Value)$($_.Groups['Symbols'].Value | ConvertTo-FullWidth)" }
         # Add space between CJK characters and ANS
         $Result = $Result -creplace $CJK_AN, '$1 $2'
         # Add space between ANS and CJK characters

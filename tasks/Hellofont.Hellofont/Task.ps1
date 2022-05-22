@@ -10,7 +10,7 @@ $Fetch = {
     $Result = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Result.ReleaseNotes -replace '<br/>', "`n" -replace '&nbsp;', ' ' | Format-Text
+    $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Result.ReleaseNotes).Replace('<br/>', "`n") | Format-Text
 
     return [PSCustomObject]$Result
 }

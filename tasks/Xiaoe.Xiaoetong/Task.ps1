@@ -13,7 +13,7 @@ $Fetch = {
     $Result = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object1.data.remark -creplace '<p>(.+?)</p>', "`$1`n" | Format-Text
+    $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Object1.data.remark) -creplace '<p>(.+?)</p>', "`$1`n" | Format-Text
 
     return [PSCustomObject]$Result
 }

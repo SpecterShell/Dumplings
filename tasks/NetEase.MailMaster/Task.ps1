@@ -16,7 +16,7 @@ $Fetch = {
     $Result.InstallerUrl = $Object.full[0].url
 
     # ReleaseNotes
-    $ReleaseNotes = $Object.full[0].introduction -csplit "`n"
+    $ReleaseNotes = $Object.full[0].introduction.Split("`n")
     $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 4)] | Format-Text
 
     return [PSCustomObject]$Result
