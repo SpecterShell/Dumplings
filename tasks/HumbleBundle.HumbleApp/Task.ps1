@@ -8,6 +8,7 @@ $Fetch = {
     $Prefix = 'https://www.humblebundle.com/client/update/NGf0YgSs2uKIyI4dFQIU/'
 
     $Result = Invoke-WebRequest -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
     return [PSCustomObject]$Result
 }
 

@@ -8,6 +8,7 @@ $Fetch = {
     $Prefix = 'https://dldir1.qq.com/arthub/desktop/versions/'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
     return [PSCustomObject]$Result
 }
 

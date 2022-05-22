@@ -8,6 +8,7 @@ $Fetch = {
     $Prefix = 'https://fanyiapp.cdn.bcebos.com/tongchuan/update/'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
     return [PSCustomObject]$Result
 }
 

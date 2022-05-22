@@ -8,7 +8,10 @@ $Fetch = {
     $Prefix = 'https://hellofont.oss-cn-beijing.aliyuncs.com/Client/Release/'
 
     $Result = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
+    # ReleaseNotes
     $Result.ReleaseNotes = $Result.ReleaseNotes -replace '<br/>', "`n" -replace '&nbsp;', ' ' | Format-Text
+
     return [PSCustomObject]$Result
 }
 

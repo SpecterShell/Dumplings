@@ -8,6 +8,7 @@ $Fetch = {
     $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
     return [PSCustomObject]$Result
 }
 

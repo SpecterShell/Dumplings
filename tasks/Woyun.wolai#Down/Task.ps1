@@ -6,9 +6,9 @@ $Config = @{
 $Fetch = {
     $Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
     $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
+    $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}
-    $Object = Invoke-RestMethod -Uri $Uri
 
     # Version
     $Result.Version = $Object.win.version

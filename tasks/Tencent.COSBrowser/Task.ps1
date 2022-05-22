@@ -8,6 +8,7 @@ $Fetch = {
     $Prefix = 'https://cos5.cloud.tencent.com/cosbrowser/'
 
     $Result = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
     return [PSCustomObject]$Result
 }
 
