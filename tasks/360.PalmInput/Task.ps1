@@ -13,7 +13,7 @@ $Fetch = {
     $Result.Version = $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[2]/span[2]').InnerText.Trim()
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value
+    $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value | ConvertTo-Https
 
     # ReleaseTime
     $Result.ReleaseTime = Get-Date -Date $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText.Trim() -Format 'yyyy-MM-dd'

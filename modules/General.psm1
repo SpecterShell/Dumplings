@@ -38,6 +38,26 @@ function ConvertFrom-UnixTimeMilliseconds {
     }
 }
 
+function ConvertTo-Https {
+    <#
+    .SYNOPSIS
+        Change the scheme of the URI from HTTP to HTTPS
+    .PARAMETER Uri
+        The URI to be converted
+    .OUTPUTS
+        datetime
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Uri
+    )
+
+    process {
+        $Uri -creplace '^http://', 'https://'
+    }
+}
+
 function ConvertTo-OrderedList {
     <#
     .SYNOPSIS
