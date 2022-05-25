@@ -4,8 +4,8 @@ $Config = @{
 }
 
 $Fetch = {
-    $Uri = 'https://cadreader.glodon.com/query/update/cadpc?clientVersion=3.4.3.12&cadpcClientBits=32'
-    $Object1 = Invoke-RestMethod -Uri $Uri
+    $Uri1 = 'https://cadreader.glodon.com/query/update/cadpc?clientVersion=3.4.3.12&cadpcClientBits=32'
+    $Object1 = Invoke-RestMethod -Uri $Uri1
 
     $Result = [ordered]@{}
 
