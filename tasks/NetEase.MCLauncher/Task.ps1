@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'NetEase.MCLauncher'
-    'Skip'       = $false
+    Identifier = 'NetEase.MCLauncher'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://x19.update.netease.com/pl/x19_java_patchlist'
     $Object = ("{$(Invoke-RestMethod -Uri $Uri)}" | ConvertFrom-Json).PSObject.Properties | Where-Object -FilterScript { $_.Value.url -cmatch '\.exe' } | Sort-Object -Descending
 
@@ -15,10 +15,10 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = "https://x19.gdl.netease.com/MCLauncher_publish_$($Result.Version).exe"
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

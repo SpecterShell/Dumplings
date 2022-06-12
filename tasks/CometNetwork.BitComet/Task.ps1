@@ -1,14 +1,11 @@
 $Config = @{
-    'Identifier' = 'CometNetwork.BitComet'
-    'Skip'       = $false
+    Identifier = 'CometNetwork.BitComet'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://update.bitcomet.com/client/bitcomet/'
     $Object1 = Invoke-RestMethod -Uri $Uri1
-
-    $Uri2 = 'https://www.bitcomet.com/en/changelog'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
@@ -17,6 +14,18 @@ $Fetch = {
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.bitcomet.com/achive/BitComet_$($Result.Version)_setup.exe"
+
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://www.bitcomet.com/en/changelog'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     # ReleaseTime
     if ($Object2.SelectSingleNode('/html/body/div/div/dl/dt[1]').InnerText -cmatch '(\d{4}\.\d{1,2}\.\d{1,2})') {
@@ -28,11 +37,10 @@ $Fetch = {
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

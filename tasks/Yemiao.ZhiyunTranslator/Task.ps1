@@ -1,11 +1,11 @@
 $Config = @{
-    'Identifier' = 'Yemiao.ZhiyunTranslator'
-    'Skip'       = $false
+    Identifier = 'Yemiao.ZhiyunTranslator'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://free.zhiyunwenxian.cn/zy/UpdateData.txt'
-    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent
+    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent | ConvertTo-Lf
 
     $Uri2 = 'https://free.zhiyunwenxian.cn/zy/UpdateURL.txt'
     $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
@@ -13,7 +13,7 @@ $Fetch = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Content1.Split("`r`n")[0].Trim()
+    $Result.Version = $Content1.Split("`n")[0].Trim()
 
     # InstallerUrl
     $Result.InstallerUrl = $Content2.Trim()
@@ -24,14 +24,17 @@ $Fetch = {
     }
 
     # ReleaseNotes
-    if ($Content1 -cmatch '更新内容：.*(?:\n)+((?:.+\n)+)') {
+    if ($Content1 -cmatch '更新内容：.*\n+((?:.+\n)+)') {
         $Result.ReleaseNotes = $Matches[1] | Format-Text
     }
 
-    return [PSCustomObject]$Result
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://www.wolai.com/xtranslator/vR6osaHKhei3gmhpgNyBj3'
+
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

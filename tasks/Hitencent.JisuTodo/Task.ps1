@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Hitencent.JisuTodo'
-    'Skip'       = $false
+    Identifier = 'Hitencent.JisuTodo'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://pc.jisutodo.com/'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
 
@@ -22,10 +22,13 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
-    Config = $Config
-    Fetch  = $Fetch
+$ComparedProperties = @('Version')
+
+return @{
+    Config             = $Config
+    Ping               = $Ping
+    ComparedProperties = $ComparedProperties
 }

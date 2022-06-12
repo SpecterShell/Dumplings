@@ -4,8 +4,6 @@ filter ConvertFrom-ElectronUpdater {
         Convert a electron-updater YAML update source into to a PSCustomObject object
     .PARAMETER Prefix
         The prefix of the InstallerUrl
-    .OUTPUTS
-        pscustomobject
     #>
     param (
         [string]

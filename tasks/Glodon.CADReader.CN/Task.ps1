@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Glodon.CADReader.CN'
-    'Skip'       = $false
+    Identifier = 'Glodon.CADReader.CN'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://cad.glodon.com/update/version/info/cadpc'
     $Object1 = Invoke-RestMethod -Uri $Uri1
 
@@ -17,15 +17,24 @@ $Fetch = {
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Object1.body.pageUrl
+
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
     $Object2 = Invoke-WebRequest -Uri $Result.ReleaseNotesUrl | ConvertFrom-Html
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object2.SelectNodes('/html/body/div/p[@style="margin-top: 30px;"]/following-sibling::p[count(.|/html/body/div/p[@style="margin-top:30px;"]/preceding-sibling::p)=count(/html/body/div/p[@style="margin-top:30px;"]/preceding-sibling::p)]').InnerText | Format-Text
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

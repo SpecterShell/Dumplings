@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = '360.360Zip'
-    'Skip'       = $false
+    Identifier = '360.360Zip'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://www.360totalsecurity.com/en/360zip/'
     $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
 
@@ -20,10 +20,10 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = 'https:' + $Object2.SelectSingleNode('//*[@id="download-intro"]/div[1]/a').Attributes['href'].Value
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

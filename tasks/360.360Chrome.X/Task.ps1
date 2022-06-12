@@ -1,24 +1,33 @@
 $Config = @{
-    'Identifier' = '360.360Chrome.X'
-    'Skip'       = $false
+    Identifier = '360.360Chrome.X'
+    Skip       = $false
 }
 
-$Fetch = {
-    $Uri1 = 'https://browser.360.cn/ee/'
+$Ping = {
+    $Uri1 = 'https://browser.360.cn/eex/'
     $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
-
-    $Uri2 = 'https://bbs.360.cn/thread-16005307-1-1.html'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
-    # InstallerUrl
-    $Result.InstallerUrl = $Object1.SelectSingleNode('//*[@id="loadnew64"]').Attributes['href'].Value
-
     # Version
-    if ($Result.InstallerUrl -cmatch '([\d\.]+)\.exe') {
+    if ($Object1.SelectSingleNode('/html/body/div[3]/div[1]/p[2]').InnerText.Trim() -cmatch '([\d\.]+)') {
         $Result.Version = $Matches[1]
     }
+
+    # InstallerUrl
+    $Result.InstallerUrl = $Object1.SelectSingleNode('//*[@id="download"]').Attributes['href'].Value
+
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://bbs.360.cn/thread-16005307-1-1.html'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="postmessage_118543728"]/strong[6]').InnerText.Trim()
     if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
@@ -33,11 +42,10 @@ $Fetch = {
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

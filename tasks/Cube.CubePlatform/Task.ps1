@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Cube.CubePlatform'
-    'Skip'       = $false
+    Identifier = 'Cube.CubePlatform'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://infobox.cubejoy.com/data.ashx?JsonData=%7B%22Code%22:%2210030%22%7D'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -30,10 +30,10 @@ $Fetch = {
         $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 1)] | Format-Text
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

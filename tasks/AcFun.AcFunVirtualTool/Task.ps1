@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'AcFun.AcFunVirtualTool'
-    'Skip'       = $false
+    Identifier = 'AcFun.AcFunVirtualTool'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://api.kuaishouzt.com/rest/zt/appsupport/checkupgrade?appver=0.0.0.0&kpn=ACFUN_APP.LIVE.PC&kpf=WINDOWS_PC'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -18,10 +18,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.releaseInfo.message | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

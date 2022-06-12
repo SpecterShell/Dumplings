@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'aloneguid.BrowserTamer'
-    'Skip'       = $false
+    Identifier = 'aloneguid.BrowserTamer'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.aloneguid.uk/projects/bt'
     $Prefix = 'https://www.aloneguid.uk/projects/bt/'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
@@ -27,10 +27,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://www.aloneguid.uk/projects/bt#version-history'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

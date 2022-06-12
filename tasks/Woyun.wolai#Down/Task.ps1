@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Woyun.wolai'
-    'Skip'       = $false
+    Identifier = 'Woyun.wolai'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
     $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
     $Object = Invoke-RestMethod -Uri $Uri
@@ -19,10 +19,10 @@ $Fetch = {
     # ReleaseTime
     $Result.ReleaseTime = $Object.win.releaseDate.ToUniversalTime()
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

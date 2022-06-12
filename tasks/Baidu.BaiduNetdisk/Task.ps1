@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Baidu.BaiduNetdisk'
-    'Skip'       = $false
+    Identifier = 'Baidu.BaiduNetdisk'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://pan.baidu.com/disk/cmsdata?platform=guanjia'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -26,10 +26,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://pan.baidu.com/disk/version'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Tencent.TencentDocs'
-    'Skip'       = $false
+    Identifier = 'Tencent.TencentDocs'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://docs.qq.com/rainbow/config.v2.ConfigService/PullConfigReq'
     $Headers = @{
         'Content-Type' = 'application/json'
@@ -43,10 +43,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://docs.qq.com/doc/DZGZITkNhUFlXZklL?pub=1&dver=2.1.0'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

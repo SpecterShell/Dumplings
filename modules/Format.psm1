@@ -29,7 +29,7 @@ filter ConvertTo-FullWidth {
 function Format-Text {
     <#
     .SYNOPSIS
-        Perform a set of formatting rules on the text
+        Apply a set of formatting rules to the text
     .OUTPUTS
         string
     .NOTES

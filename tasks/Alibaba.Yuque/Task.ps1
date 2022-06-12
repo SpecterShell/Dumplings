@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Alibaba.Yuque'
-    'Skip'       = $false
+    Identifier = 'Alibaba.Yuque'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://app.nlark.com/yuque-desktop/v2/latest-lark.json'
     $Object = (Invoke-RestMethod -Uri $Uri).stable | Where-Object -Property 'platform' -EQ -Value 'win32'
 
@@ -18,10 +18,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.change_logs | Format-Text | ConvertTo-UnorderedList
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

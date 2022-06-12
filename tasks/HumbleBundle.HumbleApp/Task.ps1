@@ -1,18 +1,18 @@
 $Config = @{
-    'Identifier' = 'HumbleBundle.HumbleApp'
-    'Skip'       = $false
+    Identifier = 'HumbleBundle.HumbleApp'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.humblebundle.com/client/update/NGf0YgSs2uKIyI4dFQIU/latest.yml'
     $Prefix = 'https://www.humblebundle.com/client/update/NGf0YgSs2uKIyI4dFQIU/'
 
     $Result = Invoke-WebRequest -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

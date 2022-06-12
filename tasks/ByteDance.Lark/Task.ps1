@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'ByteDance.Lark'
-    'Skip'       = $false
+    Identifier = 'ByteDance.Lark'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.larksuite.com/api/downloads'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -20,10 +20,10 @@ $Fetch = {
     # ReleaseTime
     $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.versions.Windows.release_time
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

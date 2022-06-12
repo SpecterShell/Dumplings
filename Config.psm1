@@ -1,10 +1,6 @@
 $DefaultTemplate = {
     param (
-        [parameter(
-            Mandatory = $true,
-            Position = 0,
-            ValueFromPipeline = $true
-        )]
+        [parameter(Mandatory)]
         $Session
     )
 
@@ -27,15 +23,23 @@ $DefaultTemplate = {
     if ($Session.CurrentState.ReleaseNotes) {
         $Message += "`n`n内容：`n" + $Session.CurrentState.ReleaseNotes
     }
+    if ($Session.CurrentState.ReleaseNotesCN) {
+        $Message += "`n`n内容（中文）：`n" + $Session.CurrentState.ReleaseNotesCN
+    }
     if ($Session.CurrentState.ReleaseNotesUrl) {
         $Message += "`n`n链接：`n" + $Session.CurrentState.ReleaseNotesUrl
     }
-    if ($Session.Config.Note) {
-        $Message += "`n`n注释：`n" + $Session.Config.Note
+    if ($Session.CurrentState.ReleaseNotesUrlCN) {
+        $Message += "`n`n链接（中文）：`n" + $Session.CurrentState.ReleaseNotesUrlCN
+    }
+    if ($Session.Config.Notes) {
+        $Message += "`n`n注释：`n" + $Session.Config.Notes
     }
 
     return $Message
 }
+
+$DefaultComparedProperties = @('Version', 'InstallerUrl')
 
 $DefaultWebRequestParameters = @{
     TimeoutSec        = 500
@@ -43,4 +47,4 @@ $DefaultWebRequestParameters = @{
     RetryIntervalSec  = 5
 }
 
-Export-ModuleMember -Variable DefaultTemplate, DefaultWebRequestParameters
+Export-ModuleMember -Variable *

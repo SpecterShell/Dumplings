@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Baidu.BaiduTranslate'
-    'Skip'       = $false
+    Identifier = 'Baidu.BaiduTranslate'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://fanyiapp.cdn.bcebos.com/fanyi-client/update/latest.yml'
     $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml
 
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.detail | Format-Text | ConvertTo-UnorderedList
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

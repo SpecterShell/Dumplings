@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Alibaba.aDrive'
-    'Skip'       = $false
+    Identifier = 'Alibaba.aDrive'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://www.aliyundrive.com/desktop/version/update.json'
     $Object1 = Invoke-RestMethod -Uri $Uri1
 
@@ -11,10 +11,10 @@ $Fetch = {
 
     $Result = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

@@ -1,14 +1,11 @@
 $Config = @{
-    'Identifier' = 'Hitencent.JisuPDF'
-    'Skip'       = $false
+    Identifier = 'Hitencent.JisuPDF'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://jisupdf.com/zh-cn/pdf-reader.html'
     $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
-
-    $Uri2 = 'https://jisupdf.com/ApiProduct/log'
-    $Object2 = Invoke-RestMethod -Uri $Uri2
 
     $Result = [ordered]@{}
 
@@ -25,19 +22,30 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://jisupdf.com/zh-cn/log.html'
+
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://jisupdf.com/ApiProduct/log'
+    $Object2 = Invoke-RestMethod -Uri $Uri2
+
     # ReleaseNotes
     $ReleaseNotes = $Object2.data.list | Where-Object -Property 'version' -CMatch -Value ([regex]::Escape($Result.Version))
     if ($ReleaseNotes) {
         $Result.ReleaseNotes = $ReleaseNotes.content | Format-Text
     }
-
-    # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://jisupdf.com/zh-cn/log.html'
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

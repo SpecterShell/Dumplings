@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Xiaoe.Xiaoetong'
-    'Skip'       = $false
+    Identifier = 'Xiaoe.Xiaoetong'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://class-server.xiaoeknow.com/client/xe.big_class.client.check_version?sv=Windows&sw=0&dn=0'
     $Object1 = Invoke-RestMethod -Uri $Uri1 -Method Post
 
@@ -15,10 +15,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Object1.data.remark) -creplace '<p>(.+?)</p>', "`$1`n" | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

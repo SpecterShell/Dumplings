@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Youku.YoukuClient'
-    'Skip'       = $false
+    Identifier = 'Youku.YoukuClient'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://pcapp-update.youku.com/check?action=web_iku_install_page&cid=iku'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -16,14 +16,14 @@ $Fetch = {
     $Result.InstallerUrl = $Object.method.iku_package
 
     # ReleaseTime
-    if ($Object.method.iku_desc -cmatch '日期 ([\d/]+)') {
+    if ($Object.method.iku_desc -cmatch '日期 (\d{4}/\d{1,2}/\d{1,2})') {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

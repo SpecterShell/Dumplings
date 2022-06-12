@@ -1,14 +1,11 @@
 $Config = @{
-    'Identifier' = 'YouXiao.YXCalendar'
-    'Skip'       = $false
+    Identifier = 'YouXiao.YXCalendar'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://www.youxiao.cn/yxcalendar/'
     $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
-
-    $Uri2 = 'https://www.youxiao.cn/index.php/yxcalendar/version-log/'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
@@ -20,21 +17,35 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = "https://static.youxiao.cn/yxcalendar/yxcalendar_v$($Result.Version).exe"
 
-    # ReleaseTime
-    if ($Object2.SelectSingleNode('//*[@id="post-350"]/div[2]/ul[1]/li/text()').Text.Trim() -cmatch '(\d{4}年\d{1,2}月\d{1,2}日)') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    return $Result
+}
 
-    # ReleaseNotes
-    $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="post-350"]/div[2]/ol[1]/li/text()').Text | Format-Text | ConvertTo-OrderedList
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://www.youxiao.cn/index.php/yxcalendar/version-log/'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+
+    $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="post-350"]/div[2]/ul[1]/li/text()').Text.Trim()
+    if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
+        # ReleaseTime
+        if ($ReleaseNotesTitle  -cmatch '(\d{4}年\d{1,2}月\d{1,2}日)') {
+            $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
+        }
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="post-350"]/div[2]/ol[1]/li/text()').Text | Format-Text | ConvertTo-OrderedList
+    }
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

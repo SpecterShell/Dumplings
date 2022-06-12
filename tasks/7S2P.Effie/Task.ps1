@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = '7S2P.Effie'
-    'Skip'       = $false
+    Identifier = '7S2P.Effie'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.effie.co/downloadfile/win'
 
     $Result = [ordered]@{}
@@ -16,10 +16,10 @@ $Fetch = {
         $Result.Version = $Matches[1]
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

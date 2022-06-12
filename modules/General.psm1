@@ -58,6 +58,26 @@ function ConvertTo-Https {
     }
 }
 
+function ConvertTo-Lf {
+    <#
+    .SYNOPSIS
+        Replace CRLF endline with LF endline
+    .PARAMETER Text
+        The text to be converted
+    .OUTPUTS
+        string
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Text
+    )
+
+    process {
+        $Text -creplace "`r`n", "`n"
+    }
+}
+
 function ConvertTo-OrderedList {
     <#
     .SYNOPSIS
@@ -177,24 +197,6 @@ function Get-ResponseContent {
         $Stream.Position = 0;
         return [System.IO.StreamReader]::new($Stream).ReadToEnd()
     }
-}
-
-function Invoke-CustomWebRequest {
-    <#
-    .SYNOPSIS
-        Invoke "Invoke-WebRequest" with custom parameters
-    #>
-
-    Invoke-WebRequest @DefaultWebRequestParameters @args
-}
-
-function Invoke-CustomRestMethod {
-    <#
-    .SYNOPSIS
-        Invoke "Invoke-RestMethod" with custom parameters
-    #>
-
-    Invoke-RestMethod @DefaultWebRequestParameters @args
 }
 
 Export-ModuleMember -Function *

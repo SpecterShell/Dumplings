@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'CCTV.Cbox'
-    'Skip'       = $false
+    Identifier = 'CCTV.Cbox'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://download.cntv.cn/cbox/update_config.txt'
     $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
 
@@ -20,10 +20,10 @@ $Fetch = {
     # ReleaseTime
     $Result.ReleaseTime = Get-Date -Date $Object.status.now | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

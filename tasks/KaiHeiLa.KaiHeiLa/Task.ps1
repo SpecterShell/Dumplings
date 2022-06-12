@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'KaiHeiLa.KaiHeiLa'
-    'Skip'       = $false
+    Identifier = 'KaiHeiLa.KaiHeiLa'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.kaiheila.cn/api/v2/updates/latest-version?platform=windows'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -24,10 +24,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://blog.kaiheila.cn/category/%e7%89%88%e6%9c%ac%e6%9b%b4%e6%96%b0blog/'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

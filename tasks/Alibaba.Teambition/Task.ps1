@@ -1,17 +1,17 @@
 $Config = @{
-    'Identifier' = 'Alibaba.Teambition'
-    'Skip'       = $false
+    Identifier = 'Alibaba.Teambition'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://im.dingtalk.com/manifest/dtron/Teambition/win32/ia32/latest.yml'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

@@ -30,12 +30,9 @@ filter Send-TelegramMessage {
         Body        = ([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $payload -Compress)))
         ContentType = 'application/json'
     }
-    try {
-        Invoke-RestMethod @Request | Out-Null
-    }
-    catch {
-        Write-Error -Message "Failed to push to Telegram: $($_.Exception.Message)" -CategoryActivity $Session.Config.Identifier
-    }
+
+    Invoke-RestMethod @Request | Out-Null
+
     return $Session
 }
 

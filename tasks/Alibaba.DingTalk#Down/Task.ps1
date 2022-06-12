@@ -1,9 +1,13 @@
 $Config = @{
-    'Identifier' = 'Alibaba.DingTalk'
-    'Skip'       = $false
+    Identifier = 'Alibaba.DingTalk'
+    Skip       = $false
+    Note       = @'
+下载源
+https://alidocs.dingtalk.com/i/p/Y7kmbokZp3pgGLq2/docs/gXMGnr6AkOP814d6rvOmJybeZRxlzopj
+'@
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://im.dingtalk.com/manifest/new/website/vista_later.json'
     $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
 
@@ -23,10 +27,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.win.install.description[1..($Object.win.install.description.length - 1)] | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

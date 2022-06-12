@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'NetEase.MailMaster'
-    'Skip'       = $false
+    Identifier = 'NetEase.MailMaster'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'http://fm.dl.126.net/mailmaster/update2/update_config.json'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -19,10 +19,10 @@ $Fetch = {
     $ReleaseNotes = $Object.full[0].introduction.Split("`n")
     $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 4)] | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Axure.AxureRP.10'
-    'Skip'       = $false
+    Identifier = 'Axure.AxureRP.10'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.axure.com/update-check/CheckForUpdate?info=%7B%22ClientVersion%22%3A%2210.0.0.0000%22%2C%22ClientOS%22%3A%22Windows%7C64bit%22%7D'
     $Content = Invoke-RestMethod -Uri $Uri
 
@@ -32,10 +32,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://www.axure.com/release-history'
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

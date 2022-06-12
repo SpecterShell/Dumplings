@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Ximalaya.Ximalaya'
-    'Skip'       = $false
+    Identifier = 'Ximalaya.Ximalaya'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://pc.ximalaya.com/ximalaya-pc-updater/api/v1/update/full/latest.yml'
     $Prefix = 'https://pc.ximalaya.com/ximalaya-pc-updater/api/v1/update/full/'
     $Headers = @{
@@ -18,10 +18,10 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = Get-RedirectedUrl -Uri $Result.InstallerUrl -Headers $Headers
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

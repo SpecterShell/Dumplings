@@ -1,18 +1,18 @@
 $Config = @{
-    'Identifier' = 'Baidu.BaiduSIMeeting'
-    'Skip'       = $false
+    Identifier = 'Baidu.BaiduSIMeeting'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://fanyiapp.cdn.bcebos.com/tongchuan/update/latest.yml'
     $Prefix = 'https://fanyiapp.cdn.bcebos.com/tongchuan/update/'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

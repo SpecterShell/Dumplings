@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'ByteDance.JianyingPro'
-    'Skip'       = $false
+    Identifier = 'ByteDance.JianyingPro'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://lf3-beecdn.bytetos.com/obj/ies-fe-bee/bee_prod/biz_80/bee_prod_80_bee_publish_3563.json'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -22,10 +22,10 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

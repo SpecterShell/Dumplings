@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Alibaba.AliIM'
-    'Skip'       = $false
+    Identifier = 'Alibaba.AliIM'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://yungw.taobao.com/gw/invoke/taobao.jindoucloud.version.check2?clientSysName=Windows+PC&clientName=WangWang&clientVersion=9.12.10C&timestamp=0'
     $Headers = @{
         Referer = 'http://www.taobao.com/'
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.feature | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

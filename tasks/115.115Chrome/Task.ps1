@@ -1,9 +1,10 @@
 $Config = @{
-    'Identifier' = '115.115Chrome'
-    'Skip'       = $false
+    Identifier = '115.115Chrome'
+    Skip       = $false
+    Note       = 'https://115.com/115'
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://appversion.115.com/1/web/1.0/api/chrome'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -18,10 +19,10 @@ $Fetch = {
     # ReleaseTime
     $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.window_115.created_time
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

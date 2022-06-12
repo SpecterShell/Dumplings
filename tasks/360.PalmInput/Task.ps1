@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = '360.PalmInput'
-    'Skip'       = $false
+    Identifier = '360.PalmInput'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://cdn.soft.360.cn/static/baoku/info_7_0/softinfo_104126128.html'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
 
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.SelectNodes('//*[@id="doc"]/div[3]/div[3]/div[2]/div/p/text()').Text | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

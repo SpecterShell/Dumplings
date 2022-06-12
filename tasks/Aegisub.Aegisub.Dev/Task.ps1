@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Aegisub.Aegisub.Dev'
-    'Skip'       = $false
+    Identifier = 'Aegisub.Aegisub.Dev'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'http://plorkyeran.com/aegisub/'
     $Prefix = 'http://plorkyeran.com/aegisub/'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
@@ -32,10 +32,10 @@ $Fetch = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

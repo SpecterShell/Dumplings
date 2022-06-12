@@ -1,18 +1,18 @@
 $Config = @{
-    'Identifier' = 'Baidu.BaiduWenku'
-    'Skip'       = $false
+    Identifier = 'Baidu.BaiduWenku'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://edu-wenku.bdimg.com/v1/pcclient/upgrade/latest.yml'
     $Prefix = 'https://edu-wenku.bdimg.com/v1/pcclient/upgrade/'
 
     $Result = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

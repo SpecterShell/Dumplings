@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'ByteDance.StreamingTool'
-    'Skip'       = $false
+    Identifier = 'ByteDance.StreamingTool'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=6888137292980951303&uid=&branch=master&buildId='
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = '"' + $Object.data.releaseNote + '"' | ConvertFrom-Json | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

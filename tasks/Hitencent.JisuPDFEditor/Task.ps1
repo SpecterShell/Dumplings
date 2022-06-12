@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Hitencent.JisuPDFEditor'
-    'Skip'       = $false
+    Identifier = 'Hitencent.JisuPDFEditor'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.jisupdfeditor.com/'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
 
@@ -22,10 +22,10 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

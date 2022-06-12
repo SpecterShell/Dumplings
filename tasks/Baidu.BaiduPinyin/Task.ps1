@@ -1,14 +1,11 @@
 $Config = @{
-    'Identifier' = 'Baidu.BaiduPinyin'
-    'Skip'       = $false
+    Identifier = 'Baidu.BaiduPinyin'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://shurufa.baidu.com/'
     $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
-
-    $Uri2 = 'https://shurufa.baidu.com/update'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
@@ -25,6 +22,18 @@ $Fetch = {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://shurufa.baidu.com/update'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+
     $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="update_body"]/div/div/div[1]/span[2]').InnerText.Trim()
     if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
         # ReleaseNotes
@@ -33,11 +42,10 @@ $Fetch = {
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
-
-    return [PSCustomObject]$Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

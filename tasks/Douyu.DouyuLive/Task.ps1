@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Douyu.DouyuLive'
-    'Skip'       = $false
+    Identifier = 'Douyu.DouyuLive'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://venus.douyucdn.cn/venus/release/pc/checkPackage?appCode=Douyu_Live_PC_Client'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.data.changelog | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

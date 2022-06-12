@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Tencent.START'
-    'Skip'       = $false
+    Identifier = 'Tencent.START'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://api.start.qq.com/cfg/get?biztypes=windows-update-info-start'
     $Object = (Invoke-RestMethod -Uri $Uri).configs.'windows-update-info-start'.value | ConvertFrom-Json
 
@@ -21,10 +21,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.whatsnew | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

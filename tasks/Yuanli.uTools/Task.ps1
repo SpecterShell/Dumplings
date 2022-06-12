@@ -1,18 +1,19 @@
 $Config = @{
-    'Identifier' = 'Yuanli.uTools'
-    'Skip'       = $false
+    Identifier = 'Yuanli.uTools'
+    Skip       = $false
+    Note       = 'https://yuanliao.info/t/utools'
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://publish.u-tools.cn/version2/latest.yml'
     $Prefix = 'https://publish.u-tools.cn/version2/'
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

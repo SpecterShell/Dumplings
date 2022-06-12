@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Hellofont.Hellofont'
-    'Skip'       = $false
+    Identifier = 'Hellofont.Hellofont'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://hellofont.oss-cn-beijing.aliyuncs.com/Client/Release/latest.yml'
     $Prefix = 'https://hellofont.oss-cn-beijing.aliyuncs.com/Client/Release/'
 
@@ -12,10 +12,10 @@ $Fetch = {
     # ReleaseNotes
     $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Result.ReleaseNotes).Replace('<br/>', "`n") | Format-Text
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

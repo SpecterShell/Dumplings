@@ -1,13 +1,13 @@
 $Config = @{
-    'Identifier' = 'ByteDance.Feishu'
-    'Skip'       = $false
-    'Note'       = @'
+    Identifier = 'ByteDance.Feishu'
+    Skip       = $false
+    Notes      = @'
 https://www.feishu.cn/hc/en-US/articles/360043073734
 https://www.feishu.cn/hc/zh-CN/articles/360043073734
 '@
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://www.feishu.cn/api/downloads'
     $Object = Invoke-RestMethod -Uri $Uri
 
@@ -24,10 +24,10 @@ $Fetch = {
     # ReleaseTime
     $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.versions.Windows.release_time
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }

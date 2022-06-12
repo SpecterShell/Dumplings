@@ -1,26 +1,37 @@
 $Config = @{
-    'Identifier' = 'PaodingAI.PDFlux'
-    'Skip'       = $false
+    Identifier = 'PaodingAI.PDFlux'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri1 = 'https://pdflux.com/downloads/latest.yml'
     $Prefix = 'https://pdflux.com/downloads/'
 
+    $Result = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+
+    return $Result
+}
+
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
     $Uri2 = 'https://pdflux.com/log/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent | ConvertFrom-Html
-
-    $Result = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # ReleaseNotes
     if ($Object2.SelectSingleNode('//*[@class="last-version"]//*[@class="version-title"]').InnerText.Trim() -cmatch '([\d\.]+)') {
         $Result.ReleaseNotes = $Object2.SelectSingleNode('//*[@class="last-version"]//*[@class="version-subtitle"]').InnerText | Format-Text | ConvertTo-OrderedList
     }
 
-    return [PSCustomObject]$Result
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = $Uri2
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
+    Pong   = $Pong
 }

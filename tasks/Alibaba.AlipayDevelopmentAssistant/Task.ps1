@@ -1,9 +1,9 @@
 $Config = @{
-    'Identifier' = 'Alibaba.AlipayDevelopmentAssistant'
-    'Skip'       = $false
+    Identifier = 'Alibaba.AlipayDevelopmentAssistant'
+    Skip       = $false
 }
 
-$Fetch = {
+$Ping = {
     $Uri = 'https://ideservice.alipay.com/ide/api/pluginVersion.json?platform=win&clientType=assistant'
     $Headers = @{
         Referer = 'https://openhome.alipay.com'
@@ -18,10 +18,10 @@ $Fetch = {
     # InstallerUrl
     $Result.InstallerUrl = $Object.baseResponse.data.downloadUrl
 
-    return [PSCustomObject]$Result
+    return $Result
 }
 
-return [PSCustomObject]@{
+return @{
     Config = $Config
-    Fetch  = $Fetch
+    Ping   = $Ping
 }
