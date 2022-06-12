@@ -18,7 +18,7 @@ $Ping = {
 
     # ReleaseTime
     if ($Object.SelectSingleNode('//*[@id="page"]/main/div/table/tbody/tr[1]/td[2]').InnerText.Trim() -cmatch '(\d{2}/\d{2}/\d{2})') {
-        $Result.ReleaseTime = [datetime]::ParseExact('20/05/2022', 'dd/MM/yyyy', $null).ToString('yyyy-MM-dd')
+        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd/MM/yyyy', $null).ToString('yyyy-MM-dd')
     }
 
     # ReleaseNotes

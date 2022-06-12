@@ -20,7 +20,7 @@ $Ping = {
 
     # ReleaseTime
     if ($Content -cmatch 'subtitle=(\d{1,2}/\d{1,2}/\d{4})') {
-        $Result.ReleaseTime = [datetime]::Parse($Matches[1], [cultureinfo]::GetCultureInfo('en-US')).ToString('yyyy-MM-dd')
+        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'M/d/yyyy', $null).ToString('yyyy-MM-dd')
     }
 
     # ReleaseNotes

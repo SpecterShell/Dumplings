@@ -9,7 +9,7 @@ $DefaultTemplate = {
         $Message += "`n`n版本：`n" + $Session.LastState.Version + ' → ' + $Session.CurrentState.Version
     }
     if ($Session.CurrentState.InstallerUrl) {
-        $Message += "`n`n地址：`n" + (($Session.CurrentState.InstallerUrl | ForEach-Object -Process { [System.Uri]::EscapeUriString($_) }) -join "`n")
+        $Message += "`n`n地址：`n" + (($Session.CurrentState.InstallerUrl | ForEach-Object -Process { [uri]::EscapeUriString($_) }) -join "`n")
     }
     if ($Session.CurrentState.ReleaseTime) {
         $Message += "`n`n日期：`n"

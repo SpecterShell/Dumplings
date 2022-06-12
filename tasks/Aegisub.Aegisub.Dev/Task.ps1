@@ -23,7 +23,7 @@ $Ping = {
 
     # ReleaseTime
     if ($Object.SelectSingleNode('/html/body/h3[1]').InnerText.Trim() -cmatch '(\d{2}/\d{2}/\d{2})') {
-        $Result.ReleaseTime = [datetime]::Parse($Matches[1], [cultureinfo]::GetCultureInfo('en-US')).ToString('yyyy-MM-dd')
+        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
     }
 
     # ReleaseNotes
