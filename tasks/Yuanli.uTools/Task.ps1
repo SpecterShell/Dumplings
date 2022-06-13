@@ -1,7 +1,7 @@
 $Config = @{
     Identifier = 'Yuanli.uTools'
     Skip       = $false
-    Note       = 'https://yuanliao.info/t/utools'
+    Notes      = 'https://yuanliao.info/t/utools'
 }
 
 $Ping = {

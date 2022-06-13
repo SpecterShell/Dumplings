@@ -1,7 +1,7 @@
 $Config = @{
     Identifier = 'Alibaba.DingTalk'
     Skip       = $false
-    Note       = @'
+    Notes      = @'
 自动更新源
 https://alidocs.dingtalk.com/i/p/Y7kmbokZp3pgGLq2/docs/gXMGnr6AkOP814d6rvOmJybeZRxlzopj
 '@

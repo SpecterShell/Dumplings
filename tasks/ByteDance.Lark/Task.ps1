@@ -1,6 +1,10 @@
 $Config = @{
     Identifier = 'ByteDance.Lark'
     Skip       = $false
+    Notes      = @'
+https://www.larksuite.com/hc/en-US/articles/360046836333
+https://www.larksuite.com/hc/zh-CN/articles/360046836333
+'@
 }
 
 $Ping = {
