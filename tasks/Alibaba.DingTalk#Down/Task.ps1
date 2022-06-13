@@ -25,7 +25,10 @@ $Ping = {
     }
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.win.install.description[1..($Object.win.install.description.length - 1)] | Format-Text
+    $Result.ReleaseNotes = $Object.win.install.multi_lang_description.en_US[1..($Object.win.install.description.length - 1)] | Format-Text
+
+    # ReleaseNotesCN
+    $Result.ReleaseNotesCN = $Object.win.install.description[1..($Object.win.install.description.length - 1)] | Format-Text
 
     return $Result
 }
