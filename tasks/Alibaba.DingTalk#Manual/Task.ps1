@@ -17,7 +17,7 @@ $Ping = {
     $Result.Version = $Object.win.package.version
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.win.package.url
+    $Result.InstallerUrl = $Object.win.install.url
 
     # ReleaseTime
     if ($Object.win.install.description[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {

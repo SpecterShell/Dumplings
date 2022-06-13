@@ -30,7 +30,7 @@ $Pong = {
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="postmessage_118543728"]/strong[6]').InnerText.Trim()
-    if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
+    if ($ReleaseNotesTitle.Contains($Result.Version)) {
         # ReleaseTime
         if ($ReleaseNotesTitle -cmatch '(\d{4}\.\d{1,2}\.\d{1,2})') {
             $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'

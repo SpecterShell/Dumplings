@@ -1,7 +1,7 @@
 $Config = @{
     Identifier = '115.115'
     Skip       = $false
-    Notes      = 'https://115.com/115'
+    Notes      = 'https://115.com/115/T504444.html'
 }
 
 $Ping = {
