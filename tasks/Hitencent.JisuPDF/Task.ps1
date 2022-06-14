@@ -38,7 +38,7 @@ $Pong = {
     $Object2 = Invoke-RestMethod -Uri $Uri2
 
     # ReleaseNotes
-    $ReleaseNotes = $Object2.data.list | Where-Object -Property 'version' -CMatch -Value ([regex]::Escape($Result.Version))
+    $ReleaseNotes = $Object2.data.list | Where-Object -FilterScript { $_.version.Contains($Result.Version) }
     if ($ReleaseNotes) {
         $Result.ReleaseNotes = $ReleaseNotes.content | Format-Text
     }

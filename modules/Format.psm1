@@ -5,7 +5,7 @@ $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK = "(?m)(?<LeftCJK>[${CJK}])[ ]*(?<Symbols>
 $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS = "(?m)(?<CJK>[${CJK}])[ ]*(?<Symbols>[~\!;,\?]+)[ ]*"
 $CJK_AN = "([${CJK}])([${A}${N}])"
 $AN_CJK = "([${A}${N}])([${CJK}])"
-$ORDERED_LIST_NUMBER = "(?m)(?<=^[${N}]+)([\.\u3001-] *)"
+$ORDERED_LIST_NUMBER = "(?m)(?<=^[${N}]+)([\.\u3001] *)"
 $UNORDERED_LIST_NUMBER = '(?m)(^[-·] *)'
 
 filter ConvertTo-FullWidth {
@@ -56,6 +56,8 @@ function Format-Text {
     end {
         $Result = $Result -join "`n"
 
+        # Remove HTML characters
+        $Result = [System.Web.HttpUtility]::HtmlDecode($Result)
         # Remove empty characters at the beginning and the end of each line
         $Result = $Result -creplace '(?m)^\s+', '' -creplace '(?m)\s+$', ''
         # Remove empty characters at the beginning and the end of the text

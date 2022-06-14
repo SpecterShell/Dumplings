@@ -35,7 +35,7 @@ $Pong = {
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="update_body"]/div/div/div[1]/span[2]').InnerText.Trim()
-    if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
+    if ($ReleaseNotesTitle.Contains($Result.Version)) {
         # ReleaseNotes
         $Result.ReleaseNotes = $Object2.SelectNodes('//*[@class="update-item-split"][1]/following::*[@class="update-item-con"][count(.|//*[@class="update-item-tit"][2]/preceding::*[@class="update-item-con"])=count(//*[@class="update-item-tit"][2]/preceding::*[@class="update-item-con"])]').SelectNodes('p|div').InnerText | Format-Text
     }

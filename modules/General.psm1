@@ -169,12 +169,7 @@ function Get-RedirectedUrl {
         string
     #>
 
-    if ($DefaultWebRequestParameters) {
-        (Invoke-WebRequest @DefaultWebRequestParameters -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
-    }
-    else {
-        (Invoke-WebRequest -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
-    }
+    (Invoke-WebRequest @DefaultWebRequestParameters -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
 
 function Get-ResponseContent {
@@ -196,6 +191,38 @@ function Get-ResponseContent {
         $Stream = $Response.RawContentStream
         $Stream.Position = 0;
         return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+    }
+}
+
+function Get-TempFile {
+    <#
+    .SYNOPSIS
+        Download the file and return its path
+    .OUTPUTS
+        string
+    #>
+
+    $WorkingDirectory = New-Item -Path $env:TEMP -Name 'Panda' -ItemType Directory -Force
+    $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    Invoke-WebRequest @DefaultWebRequestParameters -OutFile $FilePath @args
+    return $FilePath
+}
+
+function Read-ProductVersionFromExe {
+    <#
+    .SYNOPSIS
+        Read ProductVersion from EXE file
+    .OUTPUTS
+        string
+    #>
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Path
+    )
+
+    process {
+        [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion
     }
 }
 

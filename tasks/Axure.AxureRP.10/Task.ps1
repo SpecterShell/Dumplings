@@ -26,7 +26,7 @@ $Ping = {
     # ReleaseNotes
     if ($Content -cmatch '(?s)message=(.+)') {
         $ReleaseNotes = $Matches[1].Split('<title>')[1].Split("`n")
-        $Result.ReleaseNotes = $ReleaseNotes[3..($ReleaseNotes.Length - 1)] | Format-Text
+        $Result.ReleaseNotes = $ReleaseNotes[2..($ReleaseNotes.Length - 1)] | Format-Text
     }
 
     # ReleaseNotesUrl

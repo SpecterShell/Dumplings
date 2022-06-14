@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'Youxiao.YXFile'
+    Identifier = 'YouXiao.YXFile'
     Skip       = $false
 }
 
@@ -30,7 +30,7 @@ $Pong = {
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
     $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="post-930"]/div[2]/ul[1]/li/text()').Text.Trim()
-    if ($ReleaseNotesTitle -cmatch [regex]::Escape($Result.Version)) {
+    if ($ReleaseNotesTitle.Contains($Result.Version)) {
         # ReleaseTime
         if ($ReleaseNotesTitle -cmatch '(\d{4}年\d{1,2}月\d{1,2}日)') {
             $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'

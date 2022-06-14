@@ -6,7 +6,12 @@ $DefaultTemplate = {
 
     $Message = "$($Session.Config.Identifier)"
     if ($Session.CurrentState.Version) {
-        $Message += "`n`n版本：`n" + $Session.LastState.Version + ' → ' + $Session.CurrentState.Version
+        if ($Session.CurrentState.RealVersion) {
+            $Message += "`n`n版本：`n" + $Session.LastState.RealVersion + ' → ' + $Session.CurrentState.RealVersion
+        }
+        else {
+            $Message += "`n`n版本：`n" + $Session.LastState.Version + ' → ' + $Session.CurrentState.Version
+        }
     }
     if ($Session.CurrentState.InstallerUrl) {
         $Message += "`n`n地址：`n" + (($Session.CurrentState.InstallerUrl | ForEach-Object -Process { [uri]::EscapeUriString($_) }) -join "`n")

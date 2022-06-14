@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = 'Xiaoe.Xiaoetong'
     Skip       = $false
+    Notes      = '升级源'
 }
 
 $Ping = {
@@ -13,7 +14,7 @@ $Ping = {
     $Result = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # ReleaseNotes
-    $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Object1.data.remark) -creplace '<p>(.+?)</p>', "`$1`n" | Format-Text
+    $Result.ReleaseNotes = $Object1.data.remark -creplace '<p>(.+?)</p>', "`$1`n" | Format-Text
 
     return $Result
 }

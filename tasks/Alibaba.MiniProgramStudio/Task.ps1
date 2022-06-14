@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.path.Trim()
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.guideMemo | Format-Text
+    $Result.ReleaseNotes = (($Object.guideMemo | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectNodes('//*[self::h4 or self::li]') | ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } | Format-Text
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://opendocs.alipay.com/mini/ide/stable_log'

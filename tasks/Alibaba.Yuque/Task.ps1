@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = 'Alibaba.Yuque'
     Skip       = $false
+    Notes      = 'https://www.yuque.com/yuque/yuque-desktop/changelog'
 }
 
 $Ping = {

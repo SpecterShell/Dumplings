@@ -17,7 +17,7 @@ $Ping = {
 
     # ReleaseNotes
     $ReleaseNotes = $Object.full[0].introduction.Split("`n")
-    $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 4)] | Format-Text
+    $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 3)] | Format-Text
 
     return $Result
 }

@@ -33,11 +33,16 @@ $Pong = {
     $Uri2 = 'https://fancynode.com.cn/pxcook/version'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    # ReleaseNotes
-    $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="version-list1"]/*[self::div[@class="item"] or self::ul]//*[self::p or self::li]') | ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } | Format-Text
+    if ($Object2.SelectSingleNode('//*[@id="version-list1"]/div[1]/p').InnerText.Trim() -cmatch '([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
+        # ReleaseNotes
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="version-list1"]/*[self::div[@class="item"] or self::ul]//*[self::p or self::li]') | ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } | Format-Text
+    }
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
+
+    # RealVersion
+    $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl[0] | Read-ProductVersionFromExe
 }
 
 return @{

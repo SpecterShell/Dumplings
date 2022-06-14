@@ -37,7 +37,7 @@ $Pong = {
     $Uri3 = 'https://www.catsxp.com/zh-hans/history'
     $Object3 = Invoke-WebRequest -Uri $Uri3 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="accordion"]/div[1]/a/h4/text()[2]').Text.Trim() -cmatch 'v([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
+    if ($Object2.SelectSingleNode('//*[@id="accordion"]/div[1]/a/h4/text()[2]').Text.Trim() -cmatch '([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
         # ReleaseTime
         if ($Object2.SelectSingleNode('//*[@id="accordion"]/div[1]/a/h4/i').InnerText.Trim() -cmatch '(\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2})') {
             $Result.ReleaseTime = Get-Date -Date $Matches[1] | ConvertTo-UtcDateTime -Id 'China Standard Time'
@@ -50,7 +50,7 @@ $Pong = {
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri2
 
-    if ($Object3.SelectSingleNode('//*[@id="accordion"]/div[1]/a/h4/text()[2]').Text.Trim() -cmatch 'v([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
+    if ($Object3.SelectSingleNode('//*[@id="accordion"]/div[1]/a/h4/text()[2]').Text.Trim() -cmatch '([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
         # ReleaseNotesCN
         $Result.ReleaseNotesCN = $Object3.SelectNodes('//*[@id="collapseA1"]/div/p').InnerText | Format-Text
     }

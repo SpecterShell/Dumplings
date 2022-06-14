@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = 'Hellofont.Hellofont'
     Skip       = $false
+    Notes      = '升级源'
 }
 
 $Ping = {
@@ -10,7 +11,10 @@ $Ping = {
     $Result = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     # ReleaseNotes
-    $Result.ReleaseNotes = [System.Web.HttpUtility]::HtmlDecode($Result.ReleaseNotes).Replace('<br/>', "`n") | Format-Text
+    $Result.ReleaseNotes = $Result.ReleaseNotes.Replace('<br/>', "`n") | Format-Text
+
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://www.hellofont.cn/download'
 
     return $Result
 }

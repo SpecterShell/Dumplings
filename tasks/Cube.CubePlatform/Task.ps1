@@ -18,7 +18,7 @@ $Ping = {
         "https://download.cubejoy.com/app/$($Result.Version)/CubeSetup_HK_TC_v$($Result.Version).exe"
     )
 
-    $ReleaseNotes = $Object.result.whatisnew.Split("`r`n")
+    $ReleaseNotes = ($Object.result.whatisnew | ConvertTo-Lf).Split("`n")
 
     # ReleaseTime
     if ($ReleaseNotes[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {

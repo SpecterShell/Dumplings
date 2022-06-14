@@ -35,8 +35,9 @@ $Pong = {
     $Uri2 = 'https://api.live.bilibili.com/client/v1/LiveHime/getVerList?type=3'
     $Object2 = Invoke-RestMethod -Uri $Uri2
 
+    $ReleaseNotes = $Object2.data.list | Where-Object -FilterScript { $_.title.Contains($Result.Version) }
     # ReleaseTime
-    if ($Object2.data.list[0].title -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
+    if ($ReleaseNotes -and $ReleaseNotes.title -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
         $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
     }
 }

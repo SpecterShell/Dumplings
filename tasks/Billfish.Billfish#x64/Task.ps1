@@ -31,7 +31,7 @@ $Pong = {
     $Uri2 = 'https://www.billfish.cn/download/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="download-page"]/div[2]/table/tr[2]/td[2]').InnerText.Trim() -cmatch [regex]::Escape($Result.Version)) {
+    if ($Object2.SelectSingleNode('//*[@id="download-page"]/div[2]/table/tr[2]/td[2]').InnerText.Trim().Contains($Result.Version)) {
         # ReleaseNotes
         $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="download-page"]/div[2]/table/tr[2]/td[3]/text()').Text | Format-Text
     }
