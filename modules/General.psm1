@@ -222,7 +222,7 @@ function Read-ProductVersionFromExe {
     )
 
     process {
-        [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion
+        [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion.Trim()
     }
 }
 
