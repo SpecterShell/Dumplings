@@ -16,4 +16,4 @@ function Invoke-CustomRestMethod {
     Invoke-RestMethod @DefaultWebRequestParameters @args
 }
 
-Export-ModuleMember -Function * -Variable *
+Export-ModuleMember -Function *

@@ -19,8 +19,7 @@ filter ConvertFrom-ElectronUpdater {
 
     # InstallerUrl
     if ($_.files) {
-        $InstallerUrl = $Prefix + $_.files[0].url
-        $Result.InstallerUrl = $InstallerUrl
+        $Result.InstallerUrl = $Prefix + $_.files[0].url
     }
 
     # ReleaseTime

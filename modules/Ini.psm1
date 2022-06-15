@@ -1,7 +1,7 @@
 function ConvertFrom-Ini {
     <#
     .SYNOPSIS
-        Convert INI content into to ordered hashtable
+        Convert INI string into ordered hashtable
     .PARAMETER InputObject
         The INI string
     .PARAMETER CommentChars
@@ -33,14 +33,14 @@ function ConvertFrom-Ini {
         $KeyRegex = "^\s*(.+?)\s*=\s*(['`"]?)(.*)\2\s*$"
         $CommentRegex = "^\s*[$($CommentChars -join '')](.*)$"
 
-        # Name of the Section, in case the ini file had none
+        # Name of the section, in case the INI string had none
         $NoSection = '_'
     }
 
     process {
         $Object = [ordered]@{}
         $CommentCount = 0
-        switch -Regex ($InputObject.Split("`n")) {
+        switch -Regex ($InputObject -csplit '\r\n|\n') {
             $SectionRegex {
                 $Section = $Matches[1]
                 $Object[$Section] = [ordered]@{}
