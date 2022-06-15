@@ -73,8 +73,8 @@ function Invoke-WondershareXmlUpgradeApi {
         $Version
     )
 
-    $Uri2 = "https://cbs.wondershare.com/go.php?m=upgrade_info&pid=${ProductId}&version=${Version}"
-    $Object = Invoke-RestMethod -Uri $Uri2
+    $Uri = "https://cbs.wondershare.com/go.php?m=upgrade_info&pid=${ProductId}&version=${Version}"
+    $Object = [xml](Invoke-WebRequest -Uri $Uri | Get-ResponseContent)
 
     $Result = [ordered]@{}
 
@@ -87,4 +87,30 @@ function Invoke-WondershareXmlUpgradeApi {
     return $Result
 }
 
-Export-ModuleMember -Function Invoke-WondershareJsonUpgradeApi, Invoke-WondershareXmlUpgradeApi
+function Invoke-WondershareXmlDownloadApi {
+    <#
+    .SYNOPSIS
+        Invoke Wondershare's XML download API
+    #>
+    param (
+        [parameter(Mandatory)]
+        [int]
+        $ProductId,
+
+        [parameter(Mandatory)]
+        [string]
+        $Wae
+    )
+
+    $Uri = "http://platform.wondershare.com/rest/v2/downloader/runtime/?product_id=${ProductId}&wae=${Wae}"
+    $Object = Invoke-RestMethod -Uri $Uri
+
+    $Result = [ordered]@{}
+
+    # Version
+    $Result.Version = $Object.wsrp.downloader.runtime.version.'#cdata-section'
+
+    return $Result
+}
+
+Export-ModuleMember -Function Invoke-WondershareJsonUpgradeApi, Invoke-WondershareXmlUpgradeApi, Invoke-WondershareXmlDownloadApi
