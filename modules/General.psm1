@@ -169,7 +169,7 @@ function Get-RedirectedUrl {
         string
     #>
 
-    (Invoke-WebRequest @DefaultWebRequestParameters -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
+    (Invoke-WebRequest -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
 
 function Get-ResponseContent {
@@ -204,7 +204,7 @@ function Get-TempFile {
 
     $WorkingDirectory = New-Item -Path $env:TEMP -Name 'Panda' -ItemType Directory -Force
     $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
-    Invoke-WebRequest @DefaultWebRequestParameters -OutFile $FilePath @args
+    Invoke-WebRequest -OutFile $FilePath @args
     return $FilePath
 }
 

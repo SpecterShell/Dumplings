@@ -12,6 +12,9 @@ $Ping = {
         "https://download.wondershare.com/cbs_down/pdfelement-pro_64bit_$($Result.Version)_full5239.exe"
     )
 
+    # ReleaseNotes
+    $Result.ReleaseNotes = ($Result.ReleaseNotes | ConvertFrom-Html).SelectNodes('text()').Text | Format-Text
+
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://pdf.wondershare.com/whats-new.html'
 

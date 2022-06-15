@@ -5,8 +5,8 @@ $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK = "(?m)(?<LeftCJK>[${CJK}])[ ]*(?<Symbols>
 $CONVERT_TO_FULLWIDTH_CJK_SYMBOLS = "(?m)(?<CJK>[${CJK}])[ ]*(?<Symbols>[~\!;,\?]+)[ ]*"
 $CJK_AN = "([${CJK}])([${A}${N}])"
 $AN_CJK = "([${A}${N}])([${CJK}])"
-$ORDERED_LIST_NUMBER = "(?m)(?<=^[${N}]+)([\.\u3001] *)"
-$UNORDERED_LIST_NUMBER = '(?m)(^[-·] *)'
+$ORDERED_LIST_NUMBER = "(?m)(?<=^[${N}]+)([\.\u3001]\s*)"
+$UNORDERED_LIST_NUMBER = '(?m)(^[-·]\s*)'
 
 filter ConvertTo-FullWidth {
     <#
