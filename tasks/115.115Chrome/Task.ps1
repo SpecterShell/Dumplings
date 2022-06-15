@@ -11,13 +11,13 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Object.data.window_115.version_code
+    $Result.Version = $Object.data.win.version_code
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.data.window_115.version_url
+    $Result.InstallerUrl = $Object.data.win.version_url
 
     # ReleaseTime
-    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.window_115.created_time
+    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.win.created_time
 
     return $Result
 }
