@@ -1,7 +1,7 @@
 filter ConvertFrom-ElectronUpdater {
     <#
     .SYNOPSIS
-        Convert a electron-updater YAML update source into to a PSCustomObject object
+        Convert electron-updater YAML update source into to ordered hashtable
     .PARAMETER Prefix
         The prefix of the InstallerUrl
     #>
