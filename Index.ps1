@@ -272,7 +272,7 @@ function Write-Repository {
     git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
     git pull
     git add $Path
-    git commit -m "Build: Update states [$env:GITHUB_RUN_NUMBER]"
+    git commit -m "build: Update states [$env:GITHUB_RUN_NUMBER]"
     git push
 }
 
