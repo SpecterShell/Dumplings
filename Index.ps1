@@ -337,3 +337,5 @@ if ($Clean) {
         Write-Host -Object 'Panda: Skip committing changes'
     }
 }
+
+Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
