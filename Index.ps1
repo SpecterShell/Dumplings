@@ -52,7 +52,7 @@ param (
         ParameterSetName = 'Clean',
         HelpMessage = 'The name of the task to be cleaned. Leave blank to clean all tasks'
     )]
-    [ArgumentCompleter({ (Get-ChildItem -Path ($args[4].Path ?? (Join-Path -Path $PSScriptRoot -ChildPath 'tasks')) -Include 'Task.ps1' -Recurse -File).Directory.Name | Select-String -Pattern "^$([regex]::Escape($args[2])).*" -Raw })]
+    [ArgumentCompleter({ (Get-ChildItem -Path "$($args[4].Path ?? (Join-Path -Path $PSScriptRoot -ChildPath 'tasks'))/$($args[2])*/Task.ps1" -File).Directory.Name })]
     [string[]]
     $Name = @(),
 
