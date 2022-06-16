@@ -46,10 +46,4 @@ $DefaultTemplate = {
 
 $DefaultComparedProperties = @('Version', 'InstallerUrl')
 
-$DefaultWebRequestParameters = @{
-    TimeoutSec        = 500
-    MaximumRetryCount = 5
-    RetryIntervalSec  = 5
-}
-
 Export-ModuleMember -Variable *

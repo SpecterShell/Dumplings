@@ -78,13 +78,13 @@ param (
 # Import config
 Join-Path -Path $PSScriptRoot -ChildPath 'Config.psm1' | Import-Module -Force
 
-# Import helpers
-Join-Path -Path $PSScriptRoot -ChildPath 'Library.psm1' | Import-Module -Force
-
-# Override Invoke-WebRequest and Invoke-RestMethod with custom parameters
-if ($DefaultWebRequestParameters) {
-    New-Alias -Name 'Invoke-WebRequest' -Value 'Invoke-CustomWebRequest' -Scope Script
-    New-Alias -Name 'Invoke-RestMethod' -Value 'Invoke-CustomRestMethod' -Scope Script
+$PSDefaultParameterValues = @{
+    'Invoke-WebRequest:TimeoutSec'        = 500
+    'Invoke-WebRequest:MaximumRetryCount' = 5
+    'Invoke-WebRequest:RetryIntervalSec'  = 5
+    'Invoke-RestMethod:TimeoutSec'        = 500
+    'Invoke-RestMethod:MaximumRetryCount' = 5
+    'Invoke-RestMethod:RetryIntervalSec'  = 5
 }
 
 # Import modules
