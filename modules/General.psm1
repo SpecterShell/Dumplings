@@ -38,6 +38,52 @@ function ConvertFrom-UnixTimeMilliseconds {
     }
 }
 
+function ConvertTo-UtcDateTime {
+    <#
+    .SYNOPSIS
+        Change the DateTime from specified timezone to UTC
+    .PARAMETER DateTime
+        The DateTime object to be converted
+    .PARAMETER Id
+        Timezone ID
+    .OUTPUTS
+        datetime
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [datetime]
+        $DateTime,
+
+        [parameter(Mandatory)]
+        [string]
+        $Id
+    )
+
+    process {
+        [System.TimeZoneInfo]::ConvertTimeToUtc($DateTime, [System.TimeZoneInfo]::FindSystemTimeZoneById($Id))
+    }
+}
+
+function ConvertFrom-Base64 {
+    <#
+    .SYNOPSIS
+        Decoding Base64 string
+    .PARAMETER InputObject
+        The Base64 string to be decoded
+    .OUTPUTS
+        string
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $InputObject
+    )
+
+    process {
+        [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputObject))
+    }
+}
+
 function ConvertTo-Https {
     <#
     .SYNOPSIS
@@ -135,30 +181,18 @@ function ConvertTo-UnorderedList {
     }
 }
 
-function ConvertTo-UtcDateTime {
+function Get-TempFile {
     <#
     .SYNOPSIS
-        Change the DateTime from specified timezone to UTC
-    .PARAMETER DateTime
-        The DateTime object to be converted
-    .PARAMETER Id
-        Timezone ID
+        Download the file and return its path
     .OUTPUTS
-        datetime
+        string
     #>
-    param (
-        [parameter(Mandatory, ValueFromPipeline)]
-        [datetime]
-        $DateTime,
 
-        [parameter(Mandatory)]
-        [string]
-        $Id
-    )
-
-    process {
-        [System.TimeZoneInfo]::ConvertTimeToUtc($DateTime, [System.TimeZoneInfo]::FindSystemTimeZoneById($Id))
-    }
+    $WorkingDirectory = New-Item -Path $env:TEMP -Name 'Panda' -ItemType Directory -Force
+    $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    Invoke-WebRequest -OutFile $FilePath @args
+    return $FilePath
 }
 
 function Get-RedirectedUrl {
@@ -192,20 +226,6 @@ function Get-ResponseContent {
         $Stream.Position = 0;
         return [System.IO.StreamReader]::new($Stream).ReadToEnd()
     }
-}
-
-function Get-TempFile {
-    <#
-    .SYNOPSIS
-        Download the file and return its path
-    .OUTPUTS
-        string
-    #>
-
-    $WorkingDirectory = New-Item -Path $env:TEMP -Name 'Panda' -ItemType Directory -Force
-    $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
-    Invoke-WebRequest -OutFile $FilePath @args
-    return $FilePath
 }
 
 function Read-ProductVersionFromExe {

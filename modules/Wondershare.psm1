@@ -21,9 +21,9 @@ function Invoke-WondershareJsonUpgradeApi {
 
     $Uri2 = "https://pc-api.300624.com/v${Type}/product/check-upgrade?pid=${ProductId}&client_sign={}&version=${Version}&platform=win_$($x86 ? 'x86' : 'x64')"
     if ($Type -ge 3) {
-        $Object1 = Invoke-RestMethod @{
+        $Params1 = @{
             Uri         = 'https://pc-api.300624.com/v3/user/client/token'
-            Method      = Post
+            Method      = 'Post'
             Headers     = @{
                 'X-Client-Type' = 1
                 'X-Client-Sn'   = '{}'
@@ -37,11 +37,13 @@ function Invoke-WondershareJsonUpgradeApi {
             } | ConvertTo-Json -Compress
             ContentType = 'application/json'
         }
-        $Object2 = Invoke-RestMethod @{
+        $Object1 = Invoke-RestMethod @Params1
+        $Params2 = @{
             Uri            = $Uri2
-            Authentication = Bearer
+            Authentication = 'Bearer'
             Token          = ConvertTo-SecureString -String $Object1.data.access_token -AsPlainText
         }
+        $Object2 = Invoke-RestMethod @Params2
     }
     else {
         $Object2 = Invoke-RestMethod -Uri $Uri2
