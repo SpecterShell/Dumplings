@@ -64,6 +64,24 @@ function ConvertTo-UtcDateTime {
     }
 }
 
+function ConvertFrom-Xml {
+    <#
+    .SYNOPSIS
+        Convert XML text to object
+    .PARAMETER InputObject
+        The XML text to be converted
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $InputObject
+    )
+
+    process {
+        [xml]$InputObject
+    }
+}
+
 function ConvertFrom-Base64 {
     <#
     .SYNOPSIS
