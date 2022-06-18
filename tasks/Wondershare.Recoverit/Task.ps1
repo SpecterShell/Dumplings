@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 4134 -Version '7.0.0'
+    $Result = Invoke-WondershareXmlDownloadApi -ProductId 4134 -Wae '3.0.3'
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/recoverit_64bit_$($Result.Version)_full4134.exe"

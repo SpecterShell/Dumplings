@@ -19,14 +19,10 @@ $Ping = {
     $Result.InstallerUrl = $Content2.Trim()
 
     # ReleaseTime
-    if ($Content1 -cmatch '发布日期：(\d{4}年\d{1,2}月\d{1,2}日)') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    $Result.ReleaseTime = [regex]::Match($Content1, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
-    if ($Content1 -cmatch '更新内容：.*\n+((?:.+\n)+)') {
-        $Result.ReleaseNotes = $Matches[1] | Format-Text
-    }
+    $Result.ReleaseNotes = [regex]::Match($Content1, '更新内容：.*\n+((?:.+\n)+)').Groups[1].Value | Format-Text
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://www.wolai.com/xtranslator/vR6osaHKhei3gmhpgNyBj3'

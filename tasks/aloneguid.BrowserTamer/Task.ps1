@@ -17,9 +17,14 @@ $Ping = {
     $Result.InstallerUrl = $Prefix + $Object.SelectSingleNode('//*[@id="page"]/main/div/table/tbody/tr[1]/td[4]/a').Attributes['href'].Value
 
     # ReleaseTime
-    if ($Object.SelectSingleNode('//*[@id="page"]/main/div/table/tbody/tr[1]/td[2]').InnerText.Trim() -cmatch '(\d{1,2}/\d{1,2}/\d{4})') {
-        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd/MM/yyyy', $null).ToString('yyyy-MM-dd')
-    }
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match(
+            $Object.SelectSingleNode('//*[@id="page"]/main/div/table/tbody/tr[1]/td[2]').InnerText,
+            '(\d{1,2}/\d{1,2}/\d{4})'
+        ).Groups[1].Value,
+        'dd/MM/yyyy',
+        $null
+    ).ToString('yyyy-MM-dd')
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.SelectNodes('//*[@id="page"]/main/div/table/tbody/tr[1]/td[3]').InnerText | Format-Text

@@ -33,9 +33,7 @@ $Ping = {
     $ReleaseNotes = $Object.update_info.Split("`n")
 
     # ReleaseTime
-    if ($ReleaseNotes[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    $Result.ReleaseTime = [regex]::Match($ReleaseNotes[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
     $Result.ReleaseNotes = $ReleaseNotes[2..$ReleaseNotes.Length] | Format-Text

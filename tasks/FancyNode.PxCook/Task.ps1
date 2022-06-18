@@ -19,7 +19,7 @@ $Ping = {
     )
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object1.config.date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    $Result.ReleaseTime = $Object1.config.date | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     return $Result
 }
@@ -33,9 +33,15 @@ $Pong = {
     $Uri2 = 'https://fancynode.com.cn/pxcook/version'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="version-list1"]/div[1]/p').InnerText.Trim() -cmatch '([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
+    if ($Object2.SelectSingleNode('//*[@id="version-list1"]/div[1]/p').InnerText -cmatch '([\d\.]+)' -and $Result.Version.Contains($Matches[1])) {
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="version-list1"]/*[self::div[@class="item"] or self::ul]//*[self::p or self::li]') | ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } | Format-Text
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="version-list1"]/*[self::div[@class="item"] or self::ul]//*[self::p or self::li]') |
+            ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } |
+            Format-Text
+    }
+    else {
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 
     # ReleaseNotesUrl

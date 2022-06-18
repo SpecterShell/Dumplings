@@ -10,9 +10,7 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    if ($Object1.data.version -cmatch '([\d\.]+)') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match($Object1.data.version, '([\d\.]+)').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = $Object1.data.dl_url
@@ -36,9 +34,13 @@ $Pong = {
     $Object2 = Invoke-RestMethod -Uri $Uri2
 
     $ReleaseNotes = $Object2.data.list | Where-Object -FilterScript { $_.title.Contains($Result.Version) }
-    # ReleaseTime
-    if ($ReleaseNotes -and $ReleaseNotes.title -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
+    if ($ReleaseNotes) {
+        # ReleaseTime
+        $Result.ReleaseTime = [regex]::Match($ReleaseNotes.title, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
     }
 }
 

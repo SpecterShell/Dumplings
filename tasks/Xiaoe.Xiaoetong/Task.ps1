@@ -1,7 +1,6 @@
 $Config = @{
     Identifier = 'Xiaoe.Xiaoetong'
     Skip       = $false
-    Notes      = '升级源'
 }
 
 $Ping = {

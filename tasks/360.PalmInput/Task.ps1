@@ -16,10 +16,13 @@ $Ping = {
     $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value | ConvertTo-Https
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText.Trim() -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = [regex]::Match(
+        $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+    ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.SelectNodes('//*[@id="doc"]/div[3]/div[3]/div[2]/div/p/text()').Text | Format-Text
+    $Result.ReleaseNotes = $Object.SelectNodes('//*[@id="doc"]/div[3]/div[3]/div[2]/div/p/text()').InnerText | Format-Text
 
     return $Result
 }

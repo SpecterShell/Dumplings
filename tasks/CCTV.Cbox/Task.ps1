@@ -13,12 +13,10 @@ $Ping = {
     $Result.InstallerUrl = $Object.result.update_url
 
     # Version
-    if ($Result.InstallerUrl -cmatch '_v([\d\.]+)_') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match($Result.InstallerUrl, '_v([\d\.]+)_').Groups[1].Value
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.status.now | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    $Result.ReleaseTime = $Object.status.now | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     return $Result
 }

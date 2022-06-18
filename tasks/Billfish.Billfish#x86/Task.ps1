@@ -17,7 +17,7 @@ $Ping = {
     $Result.InstallerUrl = $Object1.data.downloadUrl
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object1.data.createTime | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    $Result.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     return $Result
 }
@@ -31,9 +31,13 @@ $Pong = {
     $Uri2 = 'https://www.billfish.cn/download/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="download-page"]/div[2]/table/tr[2]/td[2]').InnerText.Trim().Contains($Result.Version)) {
+    if ($Object2.SelectSingleNode('//*[@id="download-page"]/div[2]/table/tr[2]/td[2]').InnerText.Contains($Result.Version)) {
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="download-page"]/div[2]/table/tr[2]/td[3]/text()').Text | Format-Text
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="download-page"]/div[2]/table/tr[2]/td[3]').InnerText | Format-Text
+    }
+    else {
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 
     # ReleaseNotesUrl

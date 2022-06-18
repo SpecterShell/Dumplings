@@ -19,7 +19,7 @@ $Ping = {
     )
 
     # ReleaseNotes
-    $Result.ReleaseNotes = '"' + $Object.data.releaseNote + '"' | ConvertFrom-Json | Format-Text
+    $Result.ReleaseNotes = "`"$($Object.data.releaseNote)`"" | ConvertFrom-Json | Format-Text
 
     return $Result
 }

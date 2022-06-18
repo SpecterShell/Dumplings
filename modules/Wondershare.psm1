@@ -99,7 +99,6 @@ function Invoke-WondershareXmlDownloadApi {
         [int]
         $ProductId,
 
-        [parameter(Mandatory)]
         [string]
         $Wae
     )

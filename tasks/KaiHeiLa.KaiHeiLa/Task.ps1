@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.created_at | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    $Result.ReleaseTime = $Object.created_at | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.direction | Format-Text

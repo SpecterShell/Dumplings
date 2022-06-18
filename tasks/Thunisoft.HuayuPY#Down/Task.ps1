@@ -20,7 +20,7 @@ $Ping = {
     $Result.InstallerUrl = $Object1.result.addr
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object1.result.date -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object1.result.date | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }
@@ -38,6 +38,10 @@ $Pong = {
         # ReleaseNotes
         $ReleaseNotes = $Object2.newfeature.Split("`n")
         $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 1)] | Format-Text
+    }
+    else {
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 }
 

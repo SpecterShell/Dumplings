@@ -13,10 +13,10 @@ $Ping = {
     $Result.InstallerUrl = $Object.result.download_url
 
     # Version
-    $Result.Version = [regex]::Match($Result.InstallerUrl, 'EduInstall_([\d\.]+)_sign\.exe').Groups[1].Value
+    $Result.Version = [regex]::Match($Result.InstallerUrl, 'EduInstall_([\d\.]+)_.+\.exe').Groups[1].Value
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.result.publish_time -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.result.publish_time | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.result.desc | Format-Text

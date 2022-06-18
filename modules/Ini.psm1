@@ -65,7 +65,8 @@ function ConvertFrom-Ini {
                     $Section = $NoSection
                     $Object[$Section] = [ordered]@{}
                 }
-                $Name, $Value = $Matches[1, 3]
+                $Name = $Matches[1]
+                $Value = $Matches[3].Replace('\r', "`r").Replace('\n', "`n")
                 if ($Object[$Section][$Name]) {
                     if ($Object[$Section][$Name] -is [array]) {
                         $Object[$Section][$Name] += $Value

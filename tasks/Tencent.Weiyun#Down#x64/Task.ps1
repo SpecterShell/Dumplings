@@ -17,7 +17,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.electron_win64.download_url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.electron_win64.date -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.electron_win64.date | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

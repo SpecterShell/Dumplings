@@ -20,9 +20,14 @@ $Ping = {
     )
 
     # ReleaseTime
-    if ($Result.Version -cmatch '(\d{8})') {
-        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-    }
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($Result.Version, '(\d{8})').Groups[1].Value,
+        'yyyyMMdd',
+        $null
+    ).ToString('yyyy-MM-dd')
+
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://github.com/UB-Mannheim/tesseract/wiki'
 
     return $Result
 }

@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.'info-list'[0].url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.'info-list'[0].'sub-date' -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.'info-list'[0].'sub-date' | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

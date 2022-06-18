@@ -16,7 +16,11 @@ $Ping = {
     $Result.InstallerUrl = $Object.files[0].url
 
     # ReleaseTime
-    $Result.ReleaseTime = [datetime]::ParseExact($Object.releaseDate, "ddd MMM dd yyyy HH:mm:ss 'GMT'K '(GMT'K')'", [cultureinfo]::GetCultureInfo('en-US')).ToUniversalTime()
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        $Object.releaseDate,
+        "ddd MMM dd yyyy HH:mm:ss 'GMT'K '(GMT'K')'",
+        [cultureinfo]::GetCultureInfo('en-US')
+    ).ToUniversalTime()
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.detail | Format-Text | ConvertTo-UnorderedList

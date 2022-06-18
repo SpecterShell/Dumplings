@@ -30,12 +30,22 @@ $Pong = {
     $Uri2 = 'https://smartprogram.baidu.com/forum/api/docs_detail?path=%2Fdevelop%2Fdevtools%2Fuplog_tool_normal'
     $Object2 = ((Invoke-RestMethod -Uri $Uri2).data.content.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-    if ($Object2.SelectNodes('/table[1]/tbody/tr/td[1]').InnerText.Trim().Contains($Result.Version)) {
+    if ($Object2.SelectNodes('/table[1]/tbody/tr/td[1]').InnerText.Contains($Result.Version)) {
         # ReleaseTime
-        $Result.ReleaseTime = Get-Date -Date $Object2.SelectSingleNode('/table[1]/tbody/tr/td[2]').InnerText.Trim() -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = [regex]::Match(
+            $Object2.SelectSingleNode('/table[1]/tbody/tr/td[2]').InnerText,
+            '(\d{4}-\d{1,2}-\d{1,2})'
+        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('/table[1]/tbody/tr/td[3]/node()').InnerText.Trim() | Format-Text
+        $Result.ReleaseNotes = $Object2.SelectNodes('/table[1]/tbody/tr/td[3]/node()').InnerText | Format-Text
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 }
 

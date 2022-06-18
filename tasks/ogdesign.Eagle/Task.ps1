@@ -30,10 +30,11 @@ $Pong = {
     $Uri2 = 'https://eagle.cool/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="hero"]/div/div/div/div/div[3]/text()[2]').Text.Trim() -cmatch '(\d{4}/\d{1,2}/\d{1,2})') {
-        # ReleaseTime
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    # ReleaseTime
+    $Result.ReleaseTime = [regex]::Match(
+        $Object2.SelectSingleNode('//*[@id="hero"]/div/div/div/div/div[3]/text()[2]').InnerText,
+        '(\d{4}/\d{1,2}/\d{1,2})'
+    ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://trello.com/b/LSsVep1d/eagle-development-roadmap'

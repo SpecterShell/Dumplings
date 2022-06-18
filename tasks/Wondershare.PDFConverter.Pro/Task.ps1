@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareXmlUpgradeApi -ProductId 839 -Version '2.6.0.0'
+    $Result = Invoke-WondershareXmlDownloadApi -ProductId 839
 
     # InstallerUrl
     $Result.InstallerUrl = 'https://download.wondershare.com/cbs_down/pdf-converter-pro_full839.exe'

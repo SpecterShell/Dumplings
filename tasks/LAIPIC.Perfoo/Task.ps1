@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.downloadUrl
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.description -creplace '；', "；`n" | Format-Text
+    $Result.ReleaseNotes = $Object.description.Replace('；', "；`n") | Format-Text
 
     return $Result
 }

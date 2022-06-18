@@ -17,7 +17,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.data.window_115.version_url
 
     # ReleaseTime
-    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.window_115.created_time
+    $Result.ReleaseTime = $Object.data.window_115.created_time | ConvertFrom-UnixTimeSeconds
 
     return $Result
 }

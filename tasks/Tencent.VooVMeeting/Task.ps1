@@ -5,12 +5,10 @@ $Config = @{
 
 $Ping = {
     $Uri = 'https://voovmeeting.com/wemeet-webapi/v2/config/query-download-info'
-    $Body = @(
-        @{
-            instance = 'windows'
-            type     = '1410000197'
-        }
-    ) | ConvertTo-Json -Compress -AsArray
+    $Body = @{
+        instance = 'windows'
+        type     = '1410000197'
+    } | ConvertTo-Json -Compress -AsArray
     $Object = Invoke-RestMethod -Uri $Uri -Method Post -Body $Body
 
     $Result = [ordered]@{}
@@ -22,7 +20,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.data[0].url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.data[0].sub_date -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

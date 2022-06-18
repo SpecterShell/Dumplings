@@ -10,15 +10,13 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    if ($Object.list[0].version -cmatch 'V([\d\.]+)') {
-        $Result.Version = $Matches[1].Trim()
-    }
+    $Result.Version = [regex]::Match($Object.list[0].version, 'V([\d\.]+)').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = $Object.list[0].url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.list[0].publish | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    $Result.ReleaseTime = $Object.list[0].publish | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.list[0].detail.more | Format-Text | ConvertTo-OrderedList

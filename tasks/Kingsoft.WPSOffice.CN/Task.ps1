@@ -16,9 +16,10 @@ $Ping = {
     $Result.Version = '11.1.0.' + [regex]::Match($Result.InstallerUrl, 'WPS_Setup_(\d+)\.exe').Groups[1].Value
 
     # ReleaseTime
-    if ($Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/text()').Text.Trim() -cmatch '(\d{4}\.\d{1,2}\.\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    $Result.ReleaseTime = [regex]::Match(
+        $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/text()').InnerText,
+        '(\d{4}\.\d{1,2}\.\d{1,2})'
+    ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

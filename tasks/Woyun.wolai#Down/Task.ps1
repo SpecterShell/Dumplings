@@ -10,18 +10,8 @@ https://www.wolai.com/wolai/k1Qgi1J2L9vWBQkkJz8j82
 $Ping = {
     $Uri = 'https://cdn.wostatic.cn/dist/installers/electron-versions.json'
     $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
-    $Object = Invoke-RestMethod -Uri $Uri
 
-    $Result = [ordered]@{}
-
-    # Version
-    $Result.Version = $Object.win.version
-
-    # InstallerUrl
-    $Result.InstallerUrl = $Prefix + $Object.win.files[0].url
-
-    # ReleaseTime
-    $Result.ReleaseTime = $Object.win.releaseDate.ToUniversalTime()
+    $Result = (Invoke-RestMethod -Uri $Uri).win | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
     return $Result
 }

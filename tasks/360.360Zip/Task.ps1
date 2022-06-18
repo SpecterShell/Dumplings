@@ -13,9 +13,10 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    if ($Object1.SelectSingleNode('//*[@id="primary-actions"]/p/span').InnerText.Trim() -cmatch '([\d\.]+)') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@id="primary-actions"]/p/span').InnerText,
+        '([\d\.]+)'
+    ).Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = 'https:' + $Object2.SelectSingleNode('//*[@id="download-intro"]/div[1]/a').Attributes['href'].Value

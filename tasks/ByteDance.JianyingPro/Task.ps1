@@ -13,14 +13,10 @@ $Ping = {
     $Result.InstallerUrl = $Object.windows_download_pkg.channel_default
 
     # Version
-    if ($Result.InstallerUrl -cmatch '_([0-9_]+)_') {
-        $Result.Version = $Matches[1].Replace('_', '.')
-    }
+    $Result.Version = [regex]::Match($Result.InstallerUrl, 'Jianying_pro_([\d_]+)_jianyingpro_0\.exe').Groups[1].Value.Replace('_', '.')
 
     # ReleaseTime
-    if ($Object.windows_version_and_update_date -cmatch '(\d{4}/\d{1,2}/\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    $Result.ReleaseTime = [regex]::Match($Object.windows_version_and_update_date, '(\d{4}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

@@ -34,9 +34,16 @@ $Pong = {
     $Uri2 = 'https://www.diskgenius.com/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[1]').InnerText.Trim().Contains($Result.Version) -and $Object2.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[3]').InnerText.Trim() -cmatch 'Updated: (.+)') {
+    if ($Object2.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[1]').InnerText.Contains($Result.Version)) {
         # ReleaseTime
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = [regex]::Match(
+            $Object2.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[3]').InnerText,
+            'Updated: (.+)'
+        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
     }
 }
 

@@ -27,15 +27,20 @@ $Pong = {
     $Uri2 = 'https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@class="markdown-render-content"]/div/h1[2]/text()').Text.Trim()
+    $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@class="markdown-render-content"]/div/h1[2]/text()').InnerText
     if ($ReleaseNotesTitle.Contains($Result.Version)) {
         # ReleaseTime
-        if ($ReleaseNotesTitle -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-            $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-        }
+        $Result.ReleaseTime = [regex]::Match($ReleaseNotesTitle, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
         $Result.ReleaseNotes = $Object2.SelectNodes('//*[@class="markdown-render-content"]/div/h1[2]/following-sibling::ul[1]/li').InnerText | Format-Text | ConvertTo-UnorderedList
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 
     # ReleaseNotesUrl

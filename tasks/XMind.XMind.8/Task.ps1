@@ -15,9 +15,6 @@ $Ping = {
     # InstallerUrl
     $Result.InstallerUrl = $Object.download
 
-    # ReleaseTime
-    $Result.ReleaseTime = [datetime]::ParseExact([regex]::Match($Result.Version, '(\d{12})'), 'yyyyMMddHHmm', $null) | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.whatsNew.Split("`n`n")[1] | Format-Text
 

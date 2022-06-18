@@ -42,11 +42,16 @@ $Pong = {
     $Uri2 = 'https://y.qq.com/download/download.html'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('/html/body/div[2]/div[2]/ul/li[1]/h3/span').InnerText.Trim().Contains($Result.Version)) {
+    if ($Object2.SelectSingleNode('/html/body/div[2]/div[2]/ul/li[1]/h3/span').InnerText.Contains($Result.Version)) {
         # ReleaseTime
-        if ($Object2.SelectSingleNode('/html/body/div[2]/div[2]/ul/li[1]/ul/li[last()]').InnerText.Trim() -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-            $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-        }
+        $Result.ReleaseTime = [regex]::Match(
+            $Object2.SelectSingleNode('/html/body/div[2]/div[2]/ul/li[1]/ul/li[last()]').InnerText,
+            '(\d{4}-\d{1,2}-\d{1,2})'
+        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
     }
 }
 

@@ -12,9 +12,7 @@ $Ping = {
     $Result.InstallerUrl = Get-RedirectedUrl -Uri $Uri
 
     # Version
-    if ($Result.InstallerUrl -cmatch '([\d\.]+)\.exe') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match($Result.InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 
     return $Result
 }

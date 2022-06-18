@@ -10,9 +10,10 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    if ($Object1.SelectSingleNode('//*[@id="home"]/div/div[1]/form/p[1]/text()[2]').Text.Trim() -cmatch '([\d\.]+)') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@id="home"]/div/div[1]/form/p[1]/text()[2]').InnerText,
+        '([\d\.]+)'
+    ).Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = "https://static.youxiao.cn/yxfile/yxfile_v$($Result.Version).exe"
@@ -29,15 +30,20 @@ $Pong = {
     $Uri2 = 'https://www.youxiao.cn/index.php/yxfile/log/'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
 
-    $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="post-930"]/div[2]/ul[1]/li/text()').Text.Trim()
+    $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="post-930"]/div[2]/ul[1]/li/text()').InnerText
     if ($ReleaseNotesTitle.Contains($Result.Version)) {
         # ReleaseTime
-        if ($ReleaseNotesTitle -cmatch '(\d{4}年\d{1,2}月\d{1,2}日)') {
-            $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-        }
+        $Result.ReleaseTime = [regex]::Match($ReleaseNotesTitle, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="post-930"]/div[2]/ol[1]/li/text()').Text | Format-Text | ConvertTo-OrderedList
+        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="post-930"]/div[2]/ol[1]/li/text()').InnerText | Format-Text | ConvertTo-OrderedList
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 
     # ReleaseNotesUrl

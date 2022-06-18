@@ -25,7 +25,7 @@ $Pong = {
     )
 
     $Uri2 = 'https://www.tominlab.com/api/product/update-detail/?app=wonderpen'
-    $Object2 = (Invoke-RestMethod -Uri $Uri2).data | Where-Object -Property version -EQ -Value $Result.Version
+    $Object2 = (Invoke-RestMethod -Uri $Uri2).data | Where-Object -Property 'version' -EQ -Value $Result.Version
 
     if ($Object2) {
         # ReleaseTime
@@ -36,6 +36,16 @@ $Pong = {
 
         # ReleaseNotesCN
         $Result.ReleaseNotesCN = $Object2.desc.cn | Format-Text
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
+
+        # ReleaseNotesCN
+        $Result.ReleaseNotesCN = $null
     }
 }
 

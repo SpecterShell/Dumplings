@@ -16,7 +16,10 @@ $Ping = {
     $Result.Version = [regex]::Match($Result.InstallerUrl, 'QiDian([\d\.]+)\.exe').Groups[1].Value
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.FReleaseTime -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.FReleaseTime | Get-Date -Format 'yyyy-MM-dd'
+
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://admin.qidian.qq.com/hp/helpCenter/list?cid=413'
 
     return $Result
 }

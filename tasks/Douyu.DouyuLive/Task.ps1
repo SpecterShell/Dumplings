@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.data.fileUrl
 
     # ReleaseTime
-    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.data.updateTime
+    $Result.ReleaseTime = $Object.data.updateTime | ConvertFrom-UnixTimeSeconds
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.data.changelog | Format-Text

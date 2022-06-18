@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.windows_sync.download_url
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.windows_sync.date -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.windows_sync.date | Get-Date -Format 'yyyy-MM-dd'
 
     return $Result
 }

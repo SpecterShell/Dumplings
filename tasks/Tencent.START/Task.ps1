@@ -16,7 +16,7 @@ $Ping = {
     $Result.InstallerUrl = $Object.downloadurl
 
     # ReleaseTime
-    $Result.ReleaseTime = Get-Date -Date $Object.updatedate -Format 'yyyy-MM-dd'
+    $Result.ReleaseTime = $Object.updatedate | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.whatsnew | Format-Text

@@ -14,15 +14,13 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    if ($Object.versions.Windows.version_number -cmatch 'V([\d\.]+)') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match($Object.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = $Object.versions.Windows.download_link
 
     # ReleaseTime
-    $Result.ReleaseTime = ConvertFrom-UnixTimeSeconds -Seconds $Object.versions.Windows.release_time
+    $Result.ReleaseTime = $Object.versions.Windows.release_time | ConvertFrom-UnixTimeSeconds
 
     return $Result
 }

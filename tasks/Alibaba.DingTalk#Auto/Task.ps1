@@ -20,12 +20,10 @@ $Ping = {
     $Result.InstallerUrl = $Object.win.install.url
 
     # ReleaseTime
-    if ($Object.win.install.description[0] -cmatch '(\d{4}-\d{1,2}-\d{1,2})') {
-        $Result.ReleaseTime = Get-Date -Date $Matches[1] -Format 'yyyy-MM-dd'
-    }
+    $Result.ReleaseTime = [regex]::Match($Object.win.install.description[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.win.install.multi_lang_description.en_US[1..($Object.win.install.description.length - 1)] | Format-Text
+    $Result.ReleaseNotes = $Object.win.install.multi_lang_description.en_US[1..($Object.win.install.multi_lang_description.en_US.length - 1)] | Format-Text
 
     # ReleaseNotesCN
     $Result.ReleaseNotesCN = $Object.win.install.description[1..($Object.win.install.description.length - 1)] | Format-Text

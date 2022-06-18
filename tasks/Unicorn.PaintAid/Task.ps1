@@ -16,9 +16,11 @@ $Ping = {
     $Result.InstallerUrl = $Object.updater.TypeWin.package_url + $Object.updater.TypeWin.package.name
 
     # ReleaseTime
-    if ($Object.updater.TypeWin.package.name -cmatch '(\d{8})') {
-        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-    }
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($Result.InstallerUrl, '(\d{8})').Groups[1].Value,
+        'yyyyMMdd',
+        $null
+    ).ToString('yyyy-MM-dd')
 
     return $Result
 }

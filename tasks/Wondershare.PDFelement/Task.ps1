@@ -13,7 +13,7 @@ $Ping = {
     )
 
     # ReleaseNotes
-    $Result.ReleaseNotes = ($Result.ReleaseNotes | ConvertFrom-Html).SelectNodes('text()').Text | Format-Text
+    $Result.ReleaseNotes = ($Result.ReleaseNotes | ConvertFrom-Html).SelectNodes('text()').InnerText | Format-Text
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = 'https://pdf.wondershare.com/whats-new.html'

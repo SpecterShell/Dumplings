@@ -34,7 +34,11 @@ $Pong = {
     $Object2 = Invoke-WebRequest -Uri $Result.ReleaseNotesUrl | ConvertFrom-Html
 
     # ReleaseTime
-    $Result.ReleaseTime = [datetime]::ParseExact($Object2.SelectSingleNode('/html/body/section[2]/div/div[1]/div/div[2]').InnerText.Trim(), "dd MMM yyyy 'at' HH:mm 'UTC'", [cultureinfo]::GetCultureInfo('en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        $Object2.SelectSingleNode('/html/body/section[2]/div/div[1]/div/div[2]').InnerText.Trim(),
+        "dd MMM yyyy 'at' HH:mm 'UTC'",
+        (Get-Culture -Name 'en-US')
+    ) | ConvertTo-UtcDateTime -Id 'UTC'
 }
 
 return @{

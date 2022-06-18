@@ -10,10 +10,10 @@ $Ping = {
 
     $Result = [ordered]@{}
 
+    $ReleaseNotesTitle = $Object.SelectSingleNode('/html/body/h3[1]').InnerText
+
     # Version
-    if ($Object.SelectSingleNode('/html/body/h3[1]').InnerText.Trim() -cmatch '(r[\d]+)') {
-        $Result.Version = $Matches[1]
-    }
+    $Result.Version = [regex]::Match($ReleaseNotesTitle, '(r[\d]+)').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = @(
@@ -22,12 +22,14 @@ $Ping = {
     )
 
     # ReleaseTime
-    if ($Object.SelectSingleNode('/html/body/h3[1]').InnerText.Trim() -cmatch '(\d{2}/\d{2}/\d{2})') {
-        $Result.ReleaseTime = [datetime]::ParseExact($Matches[1], 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
-    }
+    $Result.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($ReleaseNotesTitle, '(\d{2}/\d{2}/\d{2})').Groups[1].Value,
+        'MM/dd/yy',
+        $null
+    ).ToString('yyyy-MM-dd')
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.SelectNodes('/html/body/ul[2]/li/text()').Text | Format-Text | ConvertTo-UnorderedList
+    $Result.ReleaseNotes = $Object.SelectNodes('/html/body/ul[2]/li/text()').InnerText | Format-Text | ConvertTo-UnorderedList
 
     # ReleaseNotesUrl
     $Result.ReleaseNotesUrl = $Uri

@@ -33,11 +33,18 @@ $Pong = {
 
     if ($Object2) {
         # ReleaseTime
-        $Result.ReleaseTime = Get-Date -Date $Object2.time -Format 'yyyy-MM-dd'
+        $Result.ReleaseTime = $Object2.time | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
         $ReleaseNotes = $Object2.newfeature.Split("`n")
         $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 1)] | Format-Text
+    }
+    else {
+        # ReleaseTime
+        $Result.ReleaseTime = $null
+
+        # ReleaseNotes
+        $Result.ReleaseNotes = $null
     }
 }
 
