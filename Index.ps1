@@ -25,39 +25,45 @@
 param (
     [Parameter(
         ParameterSetName = 'Automation',
-        HelpMessage = 'Run script in Automation mode'
+        HelpMessage = 'Run script in Automation mode',
+        Position = 0
     )]
     [switch]
     $Automation = $false,
 
     [Parameter(
         ParameterSetName = 'Test',
-        HelpMessage = 'Run script in Test mode'
+        HelpMessage = 'Run script in Test mode',
+        Position = 0
     )]
     [switch]
     $Test = $false,
 
     [Parameter(
         ParameterSetName = 'Clean',
-        HelpMessage = 'Run script in Clean mode'
+        HelpMessage = 'Run script in Clean mode',
+        Position = 0
     )]
     [switch]
     $Clean = $false,
 
     [Parameter(
         ParameterSetName = 'Test',
-        HelpMessage = 'The name of the task to be tested. Leave blank to test all tasks'
+        HelpMessage = 'The name of the tasks to be tested. Leave blank to test all tasks',
+        Position = 1
     )]
     [Parameter(
         ParameterSetName = 'Clean',
-        HelpMessage = 'The name of the task to be cleaned. Leave blank to clean all tasks'
+        HelpMessage = 'The name of the tasks to be cleaned. Leave blank to clean all tasks',
+        Position = 1
     )]
     [ArgumentCompleter({ (Get-ChildItem -Path "$($args[4].Path ?? (Join-Path -Path $PSScriptRoot -ChildPath 'tasks'))/$($args[2])*/Task.ps1" -File).Directory.Name })]
     [string[]]
     $Name = @(),
 
     [Parameter(
-        HelpMessage = 'The path containing tasks'
+        HelpMessage = 'The path containing tasks',
+        Position = 2
     )]
     [string]
     $Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tasks')

@@ -1,6 +1,11 @@
 name: Clean
 on:
   workflow_dispatch:
+    inputs:
+      Name:
+        description: The name of the tasks to be cleaned. Leave blank to test all tasks.
+        required: false
+        type: string
 jobs:
   clean:
     name: Clean
@@ -9,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: .\Index.ps1 -Clean
+        run: .\Index.ps1 -Clean ${{ github.event.inputs.Name }}
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

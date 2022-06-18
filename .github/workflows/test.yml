@@ -1,6 +1,11 @@
 name: Test
 on:
   workflow_dispatch:
+    inputs:
+      Name:
+        description: The name of the tasks to be tested. Leave blank to test all tasks.
+        required: false
+        type: string
 jobs:
   test:
     name: Test
@@ -9,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: .\Index.ps1 -Test
+        run: .\Index.ps1 -Test ${{ github.event.inputs.Name }}
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
