@@ -253,7 +253,7 @@ filter Write-Message {
 # Write current state to log file and state file
 filter Write-CurrentState {
     # Writing current state to log file
-    $LogPath = Join-Path -Path $_.Path -ChildPath "Log_$((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd-HHmmss'))_$($_.CurrentState.Version).yaml"
+    $LogPath = Join-Path -Path $_.Path -ChildPath "Log_$((Get-Date).ToUniversalTime().ToString("yyyyMMdd'T'HHmmss'Z'")).yaml"
     Write-Host -Object "$($_.Name): Writing new state to log file $LogPath" -ForegroundColor Blue
     ConvertTo-Yaml -Data $_.CurrentState -OutFile $LogPath -Force
 
