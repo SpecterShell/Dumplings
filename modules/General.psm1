@@ -1,3 +1,8 @@
+# Apply default parameters for most web requests if exists
+if ($DefaultWebRequestParameters) {
+    $PSDefaultParameterValues = $DefaultWebRequestParameters
+}
+
 function ConvertFrom-UnixTimeSeconds {
     <#
     .SYNOPSIS

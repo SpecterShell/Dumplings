@@ -84,17 +84,13 @@ param (
 # Import config
 Join-Path -Path $PSScriptRoot -ChildPath 'Config.psm1' | Import-Module -Force
 
-$PSDefaultParameterValues = @{
-    'Invoke-WebRequest:TimeoutSec'        = 500
-    'Invoke-WebRequest:MaximumRetryCount' = 5
-    'Invoke-WebRequest:RetryIntervalSec'  = 5
-    'Invoke-RestMethod:TimeoutSec'        = 500
-    'Invoke-RestMethod:MaximumRetryCount' = 5
-    'Invoke-RestMethod:RetryIntervalSec'  = 5
-}
-
 # Import modules
 Join-Path -Path $PSScriptRoot -ChildPath 'modules' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+
+# Apply default parameters for most web requests if exists
+if ($DefaultWebRequestParameters) {
+    $PSDefaultParameterValues = $DefaultWebRequestParameters
+}
 
 # Continue on error
 $ErrorActionPreference = 'Continue'
@@ -287,8 +283,8 @@ if ($Automation) {
     $Modified = @()
 
     $Path | Get-Tasks | Initialize-Task | Invoke-Ping | Compare-State | `
-        Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Invoke-Pong | Write-Message | Write-CurrentState | Invoke-ScriptBlock -ScriptBlock { $script:Modified += $_ } | `
-        Where-Object -Property 'Status' -EQ -Value 'Changed' | Send-TelegramMessage | Out-Null
+            Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Invoke-Pong | Write-Message | Write-CurrentState | Invoke-ScriptBlock -ScriptBlock { $script:Modified += $_ } | `
+            Where-Object -Property 'Status' -EQ -Value 'Changed' | Send-TelegramMessage | Out-Null
 
     if ($Modified.Length -gt 0) {
         Write-Host -Object "Panda: Modified tasks: $($Modified.Name -join ', ')"
@@ -314,7 +310,7 @@ if ($Test) {
     # If task names are not specified, test all tasks
     else {
         $Path | Get-Tasks | Initialize-Task | Invoke-Ping | Compare-State | `
-            Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Invoke-Pong | Write-Message | Invoke-ScriptBlock -ScriptBlock { $script:Modified += $_ } | Out-Null
+                Where-Object -Property 'Status' -Match -Value '(New|Changed)' | Invoke-Pong | Write-Message | Invoke-ScriptBlock -ScriptBlock { $script:Modified += $_ } | Out-Null
         if ($Modified.Length -gt 0) {
             Write-Host -Object "Panda: Modified tasks: $($Modified.Name -join ', ')"
         }

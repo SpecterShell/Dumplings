@@ -46,4 +46,13 @@ $DefaultTemplate = {
 
 $DefaultComparedProperties = @('Version', 'InstallerUrl')
 
+$DefaultWebRequestParameters = @{
+    'Invoke-WebRequest:TimeoutSec'        = 512
+    'Invoke-WebRequest:MaximumRetryCount' = 4
+    'Invoke-WebRequest:RetryIntervalSec'  = 16
+    'Invoke-RestMethod:TimeoutSec'        = 512
+    'Invoke-RestMethod:MaximumRetryCount' = 4
+    'Invoke-RestMethod:RetryIntervalSec'  = 16
+}
+
 Export-ModuleMember -Variable *

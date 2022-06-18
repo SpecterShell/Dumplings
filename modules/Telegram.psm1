@@ -3,6 +3,11 @@ $TGBotToken = $env:TG_BOT_TOKEN
 # Telegram Chat ID
 $TGChatID = $env:TG_CHAT_ID
 
+# Apply default parameters for most web requests if exists
+if ($DefaultWebRequestParameters) {
+    $PSDefaultParameterValues = $DefaultWebRequestParameters
+}
+
 filter Send-TelegramMessage {
     <#
     .SYNOPSIS
