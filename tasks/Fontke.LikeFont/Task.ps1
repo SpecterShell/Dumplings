@@ -4,29 +4,17 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://api.frdic.com/api/v2/appsupport/checkversion'
-    $Headers = @{
-        EudicUserAgent = '/eusoft_eudic_en_win32/12.0.0//'
-    }
-    $Object = Invoke-RestMethod -Uri $Uri -Headers $Headers
+    $Uri = 'https://desk.likefont.com/client/update'
+    $UserAgent = 'likefont/0'
+    $Object = Invoke-RestMethod -Uri $Uri -UserAgent $UserAgent
 
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Object.version
+    $Result.Version = $Object.desktop.version
 
     # InstallerUrl
-    $Result.InstallerUrl = 'https://static.frdic.com/pkg/eudic_win.exe'
-
-    # ReleaseTime
-    $Result.ReleaseTime = $Object.publish_date | Get-Date -Format 'yyyy-MM-dd'
-
-    # ReleaseNotes
-    $ReleaseNotes = $Object.info.Split("`n")
-    $Result.ReleaseNotes = $ReleaseNotes[1..($ReleaseNotes.Length - 1)] | Format-Text
-
-    # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://www.eudic.net/v4/en/app/history?appkey=eusoft_eudic_en'
+    $Result.InstallerUrl = 'https://www.likefont.com/download/windows/LikeFont.exe'
 
     return $Result
 }
