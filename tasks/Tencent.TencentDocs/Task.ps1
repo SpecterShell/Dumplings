@@ -5,9 +5,6 @@ $Config = @{
 
 $Ping = {
     $Uri = 'https://docs.qq.com/rainbow/config.v2.ConfigService/PullConfigReq'
-    $Headers = @{
-        'Content-Type' = 'application/json'
-    }
     $Body = @{
         'pull_item'    = @{
             'app_id' = 'e4099bf9-f579-4233-9a15-6625a48bcb56';
@@ -20,7 +17,8 @@ $Ping = {
             }
         )
     } | ConvertTo-Json -Compress
-    $Object = (Invoke-RestMethod -Uri $Uri -Method Post -Headers $Headers -Body $Body).config.items[0].key_values[0].value | ConvertFrom-Json
+    $ContentType = 'application/json'
+    $Object = (Invoke-RestMethod -Uri $Uri -Method Post -Body $Body -ContentType $ContentType).config.items[0].key_values[0].value | ConvertFrom-Json
 
     $Result = [ordered]@{}
 
