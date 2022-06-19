@@ -25,7 +25,7 @@ $Ping = {
     $Result.Version = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgVersion.ToString().Insert(2, '.')
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgUrl
+    $Result.InstallerUrl = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgUrl | ConvertTo-Https
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgDesc | Format-Text | ConvertTo-UnorderedList

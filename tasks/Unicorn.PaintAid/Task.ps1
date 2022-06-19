@@ -13,7 +13,7 @@ $Ping = {
     $Result.Version = $Object.updater.mversion + '.' + $Object.updater.subversion
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.updater.TypeWin.package_url + $Object.updater.TypeWin.package.name
+    $Result.InstallerUrl = $Object.updater.TypeWin.package_url + $Object.updater.TypeWin.package.name | ConvertTo-Https
 
     # ReleaseTime
     $Result.ReleaseTime = [datetime]::ParseExact(
