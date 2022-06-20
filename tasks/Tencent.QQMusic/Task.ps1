@@ -17,7 +17,7 @@ $Ping = {
             param  = @{}
         }
     } | ConvertTo-Json -Compress
-    $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Post -Body $Body1 | Get-ResponseContent | ConvertFrom-Json
+    $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Post -Body $Body1 | Read-ResponseContent | ConvertFrom-Json
 
     $Result = [ordered]@{}
 

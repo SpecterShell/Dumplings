@@ -5,10 +5,10 @@ $Config = @{
 
 $Ping = {
     $Uri1 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateData.txt'
-    $Content1 = Invoke-WebRequest -Uri $Uri1 | Get-ResponseContent | ConvertTo-Lf
+    $Content1 = Invoke-WebRequest -Uri $Uri1 | Read-ResponseContent | ConvertTo-Lf
 
     $Uri2 = 'https://free.zhiyunwenxian.cn/xtrans/UpdateURL.txt'
-    $Content2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent
+    $Content2 = Invoke-WebRequest -Uri $Uri2 | Read-ResponseContent
 
     $Result = [ordered]@{}
 

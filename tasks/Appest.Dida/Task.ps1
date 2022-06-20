@@ -5,7 +5,7 @@ $Config = @{
 
 $Ping = {
     $Uri = 'https://pull.dida365.com/windows/release_note.json'
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Json
 
     $Result = [ordered]@{}
 

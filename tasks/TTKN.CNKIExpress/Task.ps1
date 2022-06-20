@@ -6,7 +6,7 @@ $Config = @{
 $Ping = {
     $Uri = 'https://download.cnki.net/cnkiexpress/latest.yml'
     $Prefix = 'https://download.cnki.net/cnkiexpress/'
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Yaml
 
     $Result = [ordered]@{}
 

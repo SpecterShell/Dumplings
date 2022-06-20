@@ -14,7 +14,7 @@ $Ping = {
     <RequestType>1</RequestType>
 </CheckForUpdate>
 '@
-    $Object = Invoke-WebRequest -Uri $Uri -Method Post -Body $Body | Get-ResponseContent | ConvertFrom-Xml
+    $Object = Invoke-WebRequest -Uri $Uri -Method Post -Body $Body | Read-ResponseContent | ConvertFrom-Xml
 
     $Result = [ordered]@{}
 

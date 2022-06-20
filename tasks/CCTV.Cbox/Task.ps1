@@ -5,7 +5,7 @@ $Config = @{
 
 $Ping = {
     $Uri = 'https://download.cntv.cn/cbox/update_config.txt'
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Json
 
     $Result = [ordered]@{}
 

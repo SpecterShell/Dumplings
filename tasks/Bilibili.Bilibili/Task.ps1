@@ -9,7 +9,7 @@ $Ping = {
     $Headers = @{
         appversion = '0'
     }
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Yaml
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Yaml
 
     $Result = [ordered]@{}
 

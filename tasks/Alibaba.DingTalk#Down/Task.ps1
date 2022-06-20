@@ -9,7 +9,7 @@ https://alidocs.dingtalk.com/i/p/Y7kmbokZp3pgGLq2/docs/gXMGnr6AkOP814d6rvOmJybeZ
 
 $Ping = {
     $Uri = 'https://im.dingtalk.com/manifest/new/website/vista_later.json'
-    $Object = Invoke-WebRequest -Uri $Uri | Get-ResponseContent | ConvertFrom-Json
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Json
 
     $Result = [ordered]@{}
 

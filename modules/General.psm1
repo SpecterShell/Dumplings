@@ -268,5 +268,38 @@ function Read-ProductVersionFromExe {
         [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion.Trim()
     }
 }
+function Read-ProductVersionFromMsi {
+    <#
+    .SYNOPSIS
+        Read ProductVersion from Database file
+    .OUTPUTS
+        string
+    #>
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Path
+    )
+
+    begin {
+        $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
+    }
+
+    process {
+        $Database = $WindowsInstaller.OpenDatabase($Path, 0)
+        $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='ProductVersion'")
+        $View.Execute()
+        $Record = $View.Fetch()
+        Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
+        [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
+        [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
+    }
+
+    end {
+        [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+        [System.GC]::Collect()
+        [System.GC]::WaitForPendingFinalizers()
+    }
+}
 
 Export-ModuleMember -Function *

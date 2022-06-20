@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://download.flvcd.com/'
+    $Uri = 'http://download.flvcd.com/'
     $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
 
     $Result = [ordered]@{}

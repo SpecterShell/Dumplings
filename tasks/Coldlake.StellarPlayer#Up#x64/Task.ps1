@@ -32,7 +32,7 @@ $Pong = {
     )
 
     $Uri2 = "https://player-update.coldlake1.com/version/gray/$($Result.Version)_x64.ini"
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | Get-ResponseContent | ConvertFrom-Ini
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | Read-ResponseContent | ConvertFrom-Ini
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object2.update.info | Format-Text
