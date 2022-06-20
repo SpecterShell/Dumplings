@@ -288,7 +288,7 @@ function Read-ProductVersionFromMsi {
     process {
         $Database = $WindowsInstaller.OpenDatabase($Path, 0)
         $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='ProductVersion'")
-        $View.Execute()
+        $View.Execute() | Out-Null
         $Record = $View.Fetch()
         Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
         [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
