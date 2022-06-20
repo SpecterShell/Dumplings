@@ -229,7 +229,7 @@ function Get-RedirectedUrl {
     (Invoke-WebRequest -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
 
-function Get-ResponseContent {
+function Read-ResponseContent {
     <#
     .SYNOPSIS
         Get garble-less content from the response object
