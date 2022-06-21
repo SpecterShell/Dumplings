@@ -8,7 +8,7 @@ $Ping = {
     $Headers = @{
         origin = 'https://srf.xunfei.cn'
     }
-    $Object = Invoke-RestMethod -Uri $Uri -Headers $Headers
+    $Object = Invoke-RestMethod -Uri $Uri -Headers $Headers -SslProtocol Tls12
 
     $Result = [ordered]@{}
 

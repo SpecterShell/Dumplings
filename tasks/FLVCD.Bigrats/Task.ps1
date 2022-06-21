@@ -4,8 +4,8 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'http://download.flvcd.com/'
-    $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
+    $Uri = 'https://download.flvcd.com/'
+    $Object = Invoke-WebRequest -Uri $Uri -SslProtocol Tls12 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 

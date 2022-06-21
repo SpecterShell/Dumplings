@@ -81,7 +81,7 @@ function Invoke-WondershareXmlUpgradeApi {
     )
 
     $Uri = "https://cbs.wondershare.com/go.php?m=upgrade_info&pid=${ProductId}&version=${Version}"
-    $Object = [xml](Invoke-WebRequest -Uri $Uri | Get-ResponseContent)
+    $Object = [xml](Invoke-WebRequest -Uri $Uri | Read-ResponseContent)
 
     $Result = [ordered]@{}
 
