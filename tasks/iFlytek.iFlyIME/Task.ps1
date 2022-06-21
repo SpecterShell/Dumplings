@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'iFlytek.iFlyIME'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

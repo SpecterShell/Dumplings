@@ -1,11 +1,11 @@
 $Config = @{
     Identifier = 'FLVCD.Bigrats'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {
     $Uri = 'https://download.flvcd.com/'
-    $Object = Invoke-WebRequest -Uri $Uri -SslProtocol Tls12 | ConvertFrom-Html
+    $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
