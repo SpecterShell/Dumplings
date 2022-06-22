@@ -1,11 +1,11 @@
 $Config = @{
-    Identifier = 'Redisant.KafkaAssistant'
+    Identifier = 'Redisant.RabbitMQAssistant'
     Skip       = $false
 }
 
 $Ping = {
-    $Uri = 'https://www.redisant.com/ka/activate/checkUpdate'
-    # $Uri = 'https://www.redisant.cn/ka/activate/checkUpdate'
+    $Uri = 'https://www.redisant.com/rta/activate/checkUpdate'
+    # $Uri = 'https://www.redisant.cn/rta/activate/checkUpdate'
     $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}

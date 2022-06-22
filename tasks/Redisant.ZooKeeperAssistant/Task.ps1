@@ -22,12 +22,6 @@ $Ping = {
     # ReleaseNotesCN
     $Result.ReleaseNotesCN = $Object.describes[0..($Object.describes.Length - 2)] | Format-Text | ConvertTo-UnorderedList
 
-    # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://www.redisant.com/za/download'
-
-    # ReleaseNotesUrlCN
-    $Result.ReleaseNotesUrlCN = 'https://www.redisant.cn/za/download'
-
     return $Result
 }
 
