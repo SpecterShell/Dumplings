@@ -22,7 +22,7 @@ $Pong = {
     )
 
     # RealVersion
-    $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl[0] | Read-ProductVersionFromExe
+    $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl | Read-ProductVersionFromExe
 }
 
 return @{
