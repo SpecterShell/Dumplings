@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.PDFConverter.Pro'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

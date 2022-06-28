@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Fotophire.Maximizer'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

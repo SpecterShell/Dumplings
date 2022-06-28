@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Filmii'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

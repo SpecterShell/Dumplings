@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'TTKN.CAJViewer.Simple'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Filmora.Pro'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

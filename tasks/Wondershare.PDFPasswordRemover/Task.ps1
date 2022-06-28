@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.PDFPasswordRemover'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

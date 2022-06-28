@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.PDFelement.6.Pro'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

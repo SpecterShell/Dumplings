@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Fotophire.SlideshowMaker'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

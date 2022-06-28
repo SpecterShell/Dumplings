@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Fotophire.Focus'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

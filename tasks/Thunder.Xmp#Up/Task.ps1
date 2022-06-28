@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Thunder.Xmp'
-    Skip       = $false
+    Skip       = $true
     Notes      = '升级源'
 }
 

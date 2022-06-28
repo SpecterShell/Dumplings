@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.HiPDF'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {
