@@ -1,10 +1,10 @@
 $Config = @{
-    Identifier = 'KaiHeiLa.KaiHeiLa'
+    Identifier = 'KOOK.KOOK'
     Skip       = $false
 }
 
 $Ping = {
-    $Uri = 'https://www.kaiheila.cn/api/v2/updates/latest-version?platform=windows'
+    $Uri = 'https://www.kookapp.cn/api/v2/updates/latest-version?platform=windows'
     $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}
@@ -20,9 +20,6 @@ $Ping = {
 
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.direction | Format-Text
-
-    # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://blog.kaiheila.cn/category/%e7%89%88%e6%9c%ac%e6%9b%b4%e6%96%b0blog/'
 
     return $Result
 }
