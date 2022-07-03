@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'DeepL.DeepL'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {
