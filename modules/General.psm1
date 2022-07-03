@@ -332,7 +332,46 @@ function Read-ResponseContent {
     process {
         $Stream = $Response.RawContentStream
         $Stream.Position = 0;
-        return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+        return [System.IO.StringReader]::new($Stream).ReadToEnd()
+    }
+}
+
+function Read-EmbeddedJson {
+    <#
+    .SYNOPSIS
+        Read embedded JSON from string
+    .PARAMETER InputObject
+        The string containing the JSON
+    .PARAMETER StartsFrom
+        The string indicating where the JSON starts from
+    .OUTPUTS
+        string
+    .LINK
+        https://stackoverflow.com/questions/48470971/how-to-deserialize-a-jsonp-response-preferably-with-jsontextreader-and-not-a-st
+    .LINK
+        https://github.com/PowerShell/PowerShell/blob/master/src/Microsoft.PowerShell.Commands.Utility/commands/utility/WebCmdlet/JsonObject.cs
+    #>
+    param (
+        [parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $InputObject,
+
+        [parameter(Mandatory)]
+        [string]
+        $StartsFrom
+    )
+
+    process {
+        if ($InputObject.Contains($StartsFrom)) {
+            [Newtonsoft.Json.JsonConvert]::DeserializeObject(
+                $InputObject.Substring($InputObject.IndexOf($StartsFrom) + $StartsFrom.Length),
+                [Newtonsoft.Json.JsonSerializerSettings]@{
+                    TypeNameHandling = [Newtonsoft.Json.TypeNameHandling]::None
+                    MetadataPropertyHandling = [Newtonsoft.Json.MetadataPropertyHandling]::Ignore
+                    CheckAdditionalContent = $false
+                }
+            ).ToString()
+        }
     }
 }
 
