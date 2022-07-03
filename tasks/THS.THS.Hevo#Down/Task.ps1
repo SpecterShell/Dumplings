@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'HithinkRoyalflush.THS.Hevo'
+    Identifier = 'THS.THS.Hevo'
     Skip       = $false
     Notes      = @'
 下载源
