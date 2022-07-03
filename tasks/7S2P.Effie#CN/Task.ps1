@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = '7S2P.Effie'
     Skip       = $false
+    Notes      = '国内版'
 }
 
 $Ping = {
