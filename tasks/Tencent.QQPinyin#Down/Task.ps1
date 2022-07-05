@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Tencent.QQPinyin'
-    Skip       = $false
+    Skip       = $true
     Notes      = '下载源'
 }
 
