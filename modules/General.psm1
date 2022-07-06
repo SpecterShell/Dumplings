@@ -332,7 +332,7 @@ function Read-ResponseContent {
     process {
         $Stream = $Response.RawContentStream
         $Stream.Position = 0;
-        return [System.IO.StringReader]::new($Stream).ReadToEnd()
+        return [System.IO.StreamReader]::new($Stream).ReadToEnd()
     }
 }
 
