@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'JinweiZhiguang.Lanhu.Photoshop'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

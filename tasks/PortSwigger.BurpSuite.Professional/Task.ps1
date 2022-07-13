@@ -34,7 +34,7 @@ $Pong = {
 
     # ReleaseTime
     $Result.ReleaseTime = [datetime]::ParseExact(
-        $Object2.SelectSingleNode('/html/body/section[2]/div/div[1]/div/div[2]').InnerText.Trim(),
+        $Object2.SelectSingleNode('//*[@id="PostAdditionalInfo"]').InnerText.Trim(),
         "dd MMMM yyyy 'at' HH:mm 'UTC'",
         (Get-Culture -Name 'en-US')
     ) | ConvertTo-UtcDateTime -Id 'UTC'

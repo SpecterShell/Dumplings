@@ -7,7 +7,7 @@ $Ping = {
     $Uri = 'https://api.bilibili.com/x/elec-frontend/update/latest.yml'
     $Prefix = 'https://api.bilibili.com/x/elec-frontend/update/'
     $Headers = @{
-        appversion = '0'
+        appversion = '0.0.0'
     }
     $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Yaml
 
