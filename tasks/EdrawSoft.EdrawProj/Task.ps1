@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'EdrawSoft.EdrawProj'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

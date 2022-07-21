@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Wondershare.Fotophire.Toolkit'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {

@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'EdrawSoft.OrgCharting'
-    Skip       = $false
+    Skip       = $true
 }
 
 $Ping = {
