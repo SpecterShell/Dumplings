@@ -4,33 +4,35 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://hex-rays.com/ida-free/'
-    $Object = Invoke-WebRequest -Uri $Uri | ConvertFrom-Html
+    $Uri1 = 'https://www.hex-rays.com/cgi-bin/oracle.cgi?prod0=IDAFRENW&ver0=0.0.0&prod1=IDAFRECW&ver1=0.0.0&prod2=IDAFREFW&ver2=0.0.0&vercheck=1'
+    $Object1 = Invoke-RestMethod -Uri $Uri1 | ConvertFrom-Ini
 
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = [regex]::Match(
-        $Object.SelectSingleNode('//*[@id="download"]/div/div/div[1]/p[1]').InnerText,
-        'v([\d\.]+)'
-    ).Groups[1].Value
-
-    # InstallerUrl
-    $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="download"]/div/div/div[2]/div[1]/p/a').Attributes['href'].Value
-
-    # Hash
-    $Result.Hash = [regex]::Match(
-        $Object.SelectSingleNode('//*[@id="download"]/div/div/div[1]/pre').InnerText,
-        '([0-9a-f]+).+windows'
-    ).Groups[1].Value
+    $Result.Version = $Object1.IDAFRE.ver
 
     return $Result
 }
 
-$ComparedProperties = @('Version', 'InstallerUrl', 'Hash')
+$Pong = {
+    param (
+        [parameter(Mandatory)]
+        $Result
+    )
+
+    $Uri2 = 'https://hex-rays.com/ida-free/'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+
+    # InstallerUrl
+    $Result.InstallerUrl = $Object2.SelectSingleNode('//*[@id="download"]/div/div/div[2]/div[1]/p/a').Attributes['href'].Value
+}
+
+$ComparedProperties = @('Version')
 
 return @{
     Config             = $Config
     Ping               = $Ping
+    Pong               = $Pong
     ComparedProperties = $ComparedProperties
 }
