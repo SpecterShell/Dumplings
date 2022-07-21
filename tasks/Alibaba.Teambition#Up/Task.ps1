@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = 'Alibaba.Teambition'
     Skip       = $false
+    Notes      = '更新源'
 }
 
 $Ping = {

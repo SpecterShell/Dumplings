@@ -12,6 +12,9 @@ $Ping = {
     # Version
     $Result.Version = $Object1.IDAFRE.ver
 
+    # RealVersion
+    $Result.RealVersion = [regex]::Match($Result.Version, '^(\d+\.\d+)').Groups[1].Value
+
     return $Result
 }
 

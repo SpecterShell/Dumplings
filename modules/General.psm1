@@ -392,6 +392,25 @@ function Read-ProductVersionFromExe {
         [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion.Trim()
     }
 }
+
+function Read-FileVersionFromExe {
+    <#
+    .SYNOPSIS
+        Read FileVersion from EXE file
+    .OUTPUTS
+        string
+    #>
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Path
+    )
+
+    process {
+        [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).FileVersion.Trim()
+    }
+}
+
 function Read-ProductVersionFromMsi {
     <#
     .SYNOPSIS

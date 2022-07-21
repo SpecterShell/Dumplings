@@ -10,7 +10,10 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = [regex]::Match($Object.list[0].version, 'V(\d+\.\d+\.\d+)').Groups[1].Value
+    $Result.Version = [regex]::Match($Object.list[0].version, 'V([\d\.]+)').Groups[1].Value
+
+    # RealVersion
+    $Result.RealVersion = [regex]::Match($Result.Version, '^(\d+\.\d+\.\d+)').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = $Object.list[0].url
