@@ -1,11 +1,10 @@
 $Config = @{
-    Identifier = '7S2P.Effie'
+    Identifier = '7S2P.Effie.CN'
     Skip       = $false
-    Notes      = '国际版'
 }
 
 $Ping = {
-    $Uri = 'https://www.effie.pro/downloadfile/win'
+    $Uri = 'https://www.effie.co/downloadfile/win'
 
     $Result = [ordered]@{}
 
