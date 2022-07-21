@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'Youqu.Todesk'
+    Identifier = 'Youqu.ToDesk'
     Skip       = $false
 }
 
