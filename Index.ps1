@@ -330,7 +330,7 @@ if ($Clean) {
         $Tasks = $Path | Get-Tasks
     }
 
-    $Tasks | Get-ChildItem -Include 'Log*.yaml' | Invoke-Command -ScriptBlock { ++$script:Removed } | Remove-Item -ErrorAction SilentlyContinue -Verbose
+    $Tasks | Get-ChildItem -Include 'Log*.yaml' -Recurse | Invoke-ScriptBlock -ScriptBlock { ++$script:Removed } | Remove-Item -ErrorAction SilentlyContinue -Verbose
 
     if ($env:CI -and $Removed -gt 0) {
         Write-Repository
