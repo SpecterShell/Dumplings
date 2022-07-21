@@ -11,12 +11,12 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = [regex]::Match($Content, 'tesseract-ocr-w64-setup-v([\d\.]+)\.exe').Groups[1].Value
+    $Result.Version = [regex]::Match($Content, 'tesseract-ocr-w64-setup-(v[\d\.]+)\.exe').Groups[1].Value
 
     # InstallerUrl
     $Result.InstallerUrl = @(
-        "${Prefix}tesseract-ocr-w32-setup-v$($Result.Version).exe",
-        "${Prefix}tesseract-ocr-w64-setup-v$($Result.Version).exe"
+        "${Prefix}tesseract-ocr-w32-setup-$($Result.Version).exe",
+        "${Prefix}tesseract-ocr-w64-setup-$($Result.Version).exe"
     )
 
     # ReleaseTime
