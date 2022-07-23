@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 7743 -Version '4.0.0.0'
+    $Result = $script:WondershareUpgradeInfo['7743']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/democreator_$($Result.Version)_full7743.exe"

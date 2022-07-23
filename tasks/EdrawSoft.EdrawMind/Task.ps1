@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 5370 -Version '8.0.0' -X86
+    $Result = $script:WondershareUpgradeInfo['5370']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.edrawsoft.com/cbs_down/edrawmind_$($Result.version)_full5370.exe"

@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 5375 -Version '8.0.0' -X86
+    $Result = $script:WondershareUpgradeInfo['5375']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://cc-download.edrawsoft.cn/cbs_down/mindmaster_cn_$($Result.version)_full5375.exe"

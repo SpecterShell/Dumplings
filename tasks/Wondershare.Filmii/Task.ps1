@@ -1,10 +1,10 @@
 $Config = @{
     Identifier = 'Wondershare.Filmii'
-    Skip       = $true
+    Skip       = $false
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 7771 -Version '1.0.0.0'
+    $Result = $script:WondershareUpgradeInfo['7771']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/filmii_64bit_$($Result.Version)_full7771.exe"

@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 4981 -Version '11.0.0'
+    $Result = $script:WondershareUpgradeInfo['4981']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://cc-download.wondershare.cc/cbs_down/video-converter-ultimate_$($Result.Version)_full4981.exe"

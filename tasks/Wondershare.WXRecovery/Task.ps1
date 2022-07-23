@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 7546 -Version '1.0.0'
+    $Result = $script:WondershareUpgradeInfo['7546']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://cc-download.wondershare.cc/cbs_down/wxrecovery_$($Result.Version)_full7546.exe"

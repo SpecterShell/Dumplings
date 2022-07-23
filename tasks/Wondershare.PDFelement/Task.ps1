@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareXmlUpgradeApi -ProductId 5239 -Version '7.0.0.0'
+    $Result = $script:WondershareUpgradeInfo['5239']
 
     # InstallerUrl
     $Result.InstallerUrl = @(

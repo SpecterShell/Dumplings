@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 846 -Version '10.0.0.0'
+    $Result = $script:WondershareUpgradeInfo['846']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/filmora_64bit_$($Result.Version)_full846.exe"

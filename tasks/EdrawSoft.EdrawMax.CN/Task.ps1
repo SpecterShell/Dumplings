@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 5374 -Version '10.0.0' -X86
+    $Result = $script:WondershareUpgradeInfo['5374']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://cc-download.edrawsoft.cn/cbs_down/edraw-max_cn_$($Result.version)_full5374.exe"

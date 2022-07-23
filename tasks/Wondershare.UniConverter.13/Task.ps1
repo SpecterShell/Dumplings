@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Result = Invoke-WondershareJsonUpgradeApi -ProductId 9629 -Version '13.0.0'
+    $Result = $script:WondershareUpgradeInfo['9629']
 
     # InstallerUrl
     $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/uniconverter13_$($Result.Version)_full9629.exe"
