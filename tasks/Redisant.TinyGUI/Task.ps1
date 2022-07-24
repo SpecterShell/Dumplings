@@ -11,12 +11,12 @@ $Ping = {
 
     # Version
     $Result.Version = [regex]::Match(
-        $Object.SelectSingleNode('//*[@id="Family"]/div[5]/div/div/div[3]/div/div[2]/a/span').InnerText,
+        $Object.SelectSingleNode('//*[@id="Family"]/div/div[6]/div[3]/a/span').InnerText,
         '([\d\.]+)'
     ).Groups[1].Value
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="Family"]/div[5]/div/div/div[3]/div/div[2]/a').Attributes['href'].Value
+    $Result.InstallerUrl = $Object.SelectSingleNode('//*[@id="Family"]/div/div[6]/div[3]/a').Attributes['href'].Value
 
     return $Result
 }
