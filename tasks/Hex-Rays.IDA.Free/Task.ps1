@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'HexRays.IDA.Free'
+    Identifier = 'Hex-Rays.IDA.Free'
     Skip       = $false
 }
 
