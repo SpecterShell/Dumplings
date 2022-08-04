@@ -10,7 +10,7 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Object.updater.mversion + '.' + $Object.updater.subversion
+    $Result.Version = $Object.updater.pa_mversion + '.' + $Object.updater.pa_subversion
 
     # InstallerUrl
     $Result.InstallerUrl = $Object.updater.TypeWin.package_url + $Object.updater.TypeWin.package.name | ConvertTo-Https
