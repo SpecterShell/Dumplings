@@ -9,11 +9,11 @@ $Ping = {
 
     $Result = [ordered]@{}
 
-    # Version
-    $Result.Version = $Object.data.versionCode
-
     # InstallerUrl
     $Result.InstallerUrl = [uri]::UnescapeDataString($Object.data.downloadUrl)
+
+    # Version
+    $Result.Version = [regex]::Match($Result.InstallerUrl, '([\d\.-]+)\.exe').Groups[1].Value
 
     # ReleaseTime
     $Result.ReleaseTime = $Object.data.createTime | ConvertFrom-UnixTimeMilliseconds
