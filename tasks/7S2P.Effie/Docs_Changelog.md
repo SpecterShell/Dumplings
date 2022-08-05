@@ -1,3 +1,7 @@
+# Version 2.1.11:
+
+- Some minor improvements and bugs fixed.
+
 # Version 2.1.7:
 
 - Improved for 4K (150% scaling) display.
