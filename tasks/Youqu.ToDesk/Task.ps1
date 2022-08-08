@@ -4,16 +4,19 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri1 = 'https://www.todesk.com/js/common.js'
-    $Content1 = Invoke-WebRequest -Uri $Uri1 | Read-ResponseContent | ConvertTo-Lf
+    $Uri1 = 'https://www.todesk.com/download.html'
+    $Object1 = Invoke-WebRequest -Uri $Uri1 | ConvertFrom-Html
 
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = [regex]::Match($Content1, "WIN_VERSION\s*=\s*'([\d\.]+)'").Groups[1].Value
+    $Result.Version = [regex]::Match(
+        $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/a').InnerText,
+        '([\d\.]+)'
+    ).Groups[1].Value
 
     # InstallerUrl
-    $Result.InstallerUrl = [regex]::Match($Content1, "WIN_DOWNLOAD_URL\s*=\s*'(.+?)'").Groups[1].Value
+    $Result.InstallerUrl = $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/div[1]/a').Attributes['href'].Value
 
     return $Result
 }
