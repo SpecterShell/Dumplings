@@ -9,7 +9,10 @@ https://www.feishu.cn/hc/zh-CN/articles/360043073734
 
 $Ping = {
     $Uri = 'https://www.feishu.cn/api/downloads'
-    $Object = Invoke-RestMethod -Uri $Uri
+    $Headers = @{
+        cookie = '__tea__ug__uid=1'
+    }
+    $Object = Invoke-RestMethod -Uri $Uri -Headers $Headers
 
     $Result = [ordered]@{}
 
