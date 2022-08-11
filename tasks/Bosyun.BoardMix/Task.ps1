@@ -6,8 +6,21 @@ $Config = @{
 $Ping = {
     $Uri = 'https://boardmix-public.oss-accelerate.aliyuncs.com/cms/download/package/latest.yml'
     $Prefix = 'https://boardmix-public.oss-accelerate.aliyuncs.com/cms/download/package/'
+    $Object = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Yaml
 
-    $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+    $Result = [ordered]@{}
+
+    # Version
+    $Result.Version = $Object.version
+
+    # InstallerUrl
+    $Result.InstallerUrl = $Prefix + $Object.files[0].url
+
+    # ReleaseTime
+    $Result.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+
+    # ReleaseNotes
+    $Result.ReleaseNotes = $Object.releaseNotes.Where({$_.version -eq $Result.Version}).note | Format-Text | ConvertTo-OrderedList
 
     return $Result
 }
