@@ -5,7 +5,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://app.nlark.com/yuque-desktop/v2/latest-lark.json'
+    $Uri = 'https://app.nlark.com/yuque-desktop/v4/latest.json'
     $Object = (Invoke-RestMethod -Uri $Uri).stable | Where-Object -Property 'platform' -EQ -Value 'win32'
 
     $Result = [ordered]@{}
