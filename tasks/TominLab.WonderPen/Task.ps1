@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri1 = 'https://www.tominlab.com/api/product/check-update/?app=wonderpen'
+    $Uri1 = 'https://www.tominlab.com/api/product/check-update?app=wonderpen'
     $Object1 = Invoke-RestMethod -Uri $Uri1
 
     $Result = [ordered]@{}
@@ -24,7 +24,7 @@ $Pong = {
         $Result
     )
 
-    $Uri2 = 'https://www.tominlab.com/api/product/update-detail/?app=wonderpen'
+    $Uri2 = 'https://www.tominlab.com/api/product/update-detail?app=wonderpen'
     $Object2 = (Invoke-RestMethod -Uri $Uri2).data | Where-Object -Property 'version' -EQ -Value $Result.Version
 
     if ($Object2) {
