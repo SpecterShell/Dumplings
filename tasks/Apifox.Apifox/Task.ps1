@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Apifox.Apifox'
-    Skip       = $true
+    Skip       = $false
 }
 
 $Ping = {

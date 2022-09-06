@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Qingfeng.HeyboxAccelerator'
-    Skip       = $true
+    Skip       = $false
 }
 
 $Ping = {

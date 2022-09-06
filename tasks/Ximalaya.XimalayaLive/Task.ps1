@@ -1,6 +1,6 @@
 $Config = @{
     Identifier = 'Ximalaya.XimalayaLive'
-    Skip       = $true
+    Skip       = $false
 }
 
 $Ping = {
