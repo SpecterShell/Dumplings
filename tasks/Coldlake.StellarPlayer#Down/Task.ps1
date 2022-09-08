@@ -34,6 +34,12 @@ $Pong = {
         $Result
     )
 
+    $Uri2 = "https://player-update.coldlake1.com/version/gray/$($Result.Version)_x64.ini"
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | Read-ResponseContent | ConvertFrom-Ini
+
+    # ReleaseNotes
+    $Result.ReleaseNotes = $Object2.update.info | Format-Text
+
     # RealVersion
     $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl[0] | Read-ProductVersionFromExe
 }
