@@ -7,7 +7,7 @@ $DefaultTemplate = {
     $Message = "$($Session.Config.Identifier)"
     if ($Session.CurrentState.Version) {
         if ($Session.CurrentState.RealVersion) {
-            $Message += "`n`n版本：`n" + $Session.LastState.RealVersion + ' → ' + $Session.CurrentState.RealVersion
+            $Message += "`n`n版本：`n$($Session.LastState.RealVersion) ($($Session.LastState.Version)) → $($Session.CurrentState.RealVersion) ($($Session.CurrentState.Version))"
         }
         else {
             $Message += "`n`n版本：`n" + $Session.LastState.Version + ' → ' + $Session.CurrentState.Version
