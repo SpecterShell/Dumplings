@@ -25,6 +25,9 @@ $Ping = {
     # ReleaseNotes
     $Result.ReleaseNotes = $Object.news | Format-Text
 
+    # ReleaseNotesUrl
+    $Result.ReleaseNotesUrl = 'https://app.bilibili.com/'
+
     return $Result
 }
 

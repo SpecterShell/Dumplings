@@ -9,6 +9,9 @@ $Ping = {
 
     $Result = Invoke-WebRequest -Uri $Uri | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
+    # ReleaseNotesUrlCN
+    $Result.ReleaseNotesUrlCN = 'https://github.com/TencentCloud/cosbrowser/blob/master/changelog.md'
+
     return $Result
 }
 
