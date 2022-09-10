@@ -1,6 +1,7 @@
 $Config = @{
     Identifier = 'Tencent.TencentMeeting'
     Skip       = $false
+    Notes      = "下载源"
 }
 
 $Ping = {
