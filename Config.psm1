@@ -5,6 +5,9 @@ $DefaultTemplate = {
     )
 
     $Message = "$($Session.Config.Identifier)"
+    if ($Session.Config.Notes) {
+        $Message += "`n" + $Session.Config.Notes
+    }
     if ($Session.CurrentState.Version) {
         if ($Session.CurrentState.RealVersion) {
             $Message += "`n`n版本：`n$($Session.LastState.RealVersion) ($($Session.LastState.Version)) → $($Session.CurrentState.RealVersion) ($($Session.CurrentState.Version))"
@@ -36,9 +39,6 @@ $DefaultTemplate = {
     }
     if ($Session.CurrentState.ReleaseNotesUrlCN) {
         $Message += "`n`n链接（中文）：`n" + $Session.CurrentState.ReleaseNotesUrlCN
-    }
-    if ($Session.Config.Notes) {
-        $Message += "`n`n注释：`n" + $Session.Config.Notes
     }
 
     return $Message
