@@ -5,7 +5,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&sdk_id=0300000000&from=2&appver=3.10.10.100'
+    $Uri = 'https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&sdk_id=0300000000&from=2&appver=3.10.0.0'
     $Object = Invoke-RestMethod -Uri $Uri
 
     $Result = [ordered]@{}
