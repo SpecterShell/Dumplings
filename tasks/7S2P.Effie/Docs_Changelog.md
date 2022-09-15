@@ -1,3 +1,11 @@
+# Version 2.1.19:
+
+- Some minor improvements and bugs fixed.
+
+# Version 2.1.17:
+
+- Supports WebP images.
+
 # Version 2.1.15:
 
 - Supports WebP images.
