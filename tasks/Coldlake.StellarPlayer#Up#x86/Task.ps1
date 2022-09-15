@@ -19,9 +19,6 @@ $Ping = {
     # InstallerUrl
     $Result.InstallerUrl = "https://player-download.coldlake1.com/player/$($Result.Version)/Stellar_$($($Result.Version))_official_stable_full_x86.exe"
 
-    # ReleaseTime
-    $Result.ReleaseTime = [datetime]::ParseExact($Result.Version, 'yyyyMMddHHmmss', $null) | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
     return $Result
 }
 

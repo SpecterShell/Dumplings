@@ -22,9 +22,6 @@ $Ping = {
     # Version
     $Result.Version = [regex]::Match($Result.InstallerUrl[0], '(\d{14})').Groups[1].Value
 
-    # ReleaseTime
-    $Result.ReleaseTime = [datetime]::ParseExact($Result.Version, 'yyyyMMddHHmmss', $null) | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
     return $Result
 }
 
