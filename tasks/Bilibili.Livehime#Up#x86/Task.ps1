@@ -1,11 +1,11 @@
 $Config = @{
     Identifier = 'Bilibili.Livehime'
     Skip       = $false
-    Notes      = '64 位'
+    Notes      = '升级源 32 位'
 }
 
 $Ping = {
-    $Uri1 = 'https://api.live.bilibili.com/xlive/app-blink/v1/liveVersionInfo/getHomePageLiveVersion?system_version=2'
+    $Uri1 = 'https://api.live.bilibili.com/xlive/app-blink/v1/liveVersionInfo/getLiveVersionUpgradeInfo?build=1&system_version=1&uid=1'
     $Object1 = Invoke-RestMethod -Uri $Uri1
 
     $Result = [ordered]@{}
