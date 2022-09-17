@@ -30,6 +30,9 @@ $Pong = {
         $Result
     )
 
+    # RealVersion
+    $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl | Read-ProductVersionFromExe
+
     $Object2 = Invoke-WebRequest -Uri $Result.ReleaseNotesUrl | ConvertFrom-Html
 
     if ($Object2.SelectSingleNode("/html/body/div/*[contains(text(), '$($Result.Version)')]").InnerText.Contains($Result.Version)) {

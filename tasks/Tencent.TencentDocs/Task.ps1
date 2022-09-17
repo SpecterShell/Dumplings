@@ -4,8 +4,8 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://docs.qq.com/rainbow/config.v2.ConfigService/PullConfigReq'
-    $Body = @{
+    $Uri1 = 'https://docs.qq.com/rainbow/config.v2.ConfigService/PullConfigReq'
+    $Body1 = @{
         'pull_item'    = @{
             'app_id' = 'e4099bf9-f579-4233-9a15-6625a48bcb56';
             'group'  = 'Prod.Common.Update'
@@ -17,18 +17,15 @@ $Ping = {
             }
         )
     } | ConvertTo-Json -Compress
-    $ContentType = 'application/json'
-    $Object = (Invoke-RestMethod -Uri $Uri -Method Post -Body $Body -ContentType $ContentType).config.items[0].key_values[0].value | ConvertFrom-Json
+    $ContentType1 = 'application/json'
+    $Object1 = (Invoke-RestMethod -Uri $Uri1 -Method Post -Body $Body1 -ContentType $ContentType1).config.items.Where({ $_.group -eq 'Prod.Common.Update' }).key_values.Where({ $_.key -eq 'update_info' }).value | ConvertFrom-Json
 
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Object.version
+    $Result.Version = $Object1.version
 
-    # InstallerUrl
-    $Result.InstallerUrl = @($Object.download_win, $Object.download_win_arm)
-
-    $ReleaseNotes = $Object.update_info.Split("`n")
+    $ReleaseNotes = $Object1.update_info.Split("`n")
 
     # ReleaseTime
     $Result.ReleaseTime = [regex]::Match($ReleaseNotes[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -37,7 +34,22 @@ $Ping = {
     $Result.ReleaseNotes = $ReleaseNotes[2..$ReleaseNotes.Length] | Format-Text
 
     # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://docs.qq.com/doc/DZGZITkNhUFlXZklL?pub=1&dver=2.1.0'
+    $Result.ReleaseNotesUrl = 'https://docs.qq.com/doc/p/1021a084756aecce345430ed666a5e84e78466f6?pub=1&dver=2.1.0'
+
+    $Prefix = "https://dldir1.qq.com/weiyun/tencentdocs/electron-update/release/$($Result.Version)/"
+    $Uri2 = "${Prefix}latest-win32-ia32.yml"
+    $Object2 = Invoke-RestMethod -Uri $Uri2 | ConvertFrom-Yaml
+    $Uri3 = "${Prefix}latest-win32-x64.yml"
+    $Object3 = Invoke-RestMethod -Uri $Uri3 | ConvertFrom-Yaml
+    $Uri4 = "${Prefix}latest-win32-arm64.yml"
+    $Object4 = Invoke-RestMethod -Uri $Uri4 | ConvertFrom-Yaml
+
+    # InstallerUrl
+    $Result.InstallerUrl = @(
+        $Prefix + $Object2.files[0].url
+        $Prefix + $Object3.files[0].url
+        $Prefix + $Object4.files[0].url
+    )
 
     return $Result
 }
