@@ -5,8 +5,9 @@ $Config = @{
 }
 
 $Ping = {
-    $Object = Invoke-CloudMusicApi -Path '/api/pc/upgrade/get' -Params @{
+    $Object = Invoke-CloudMusicApi -Path '/pc/upgrade/get' -Params @{
         'e_r' = $false
+        'action' = 'manual'
     }
 
     $Result = [ordered]@{}

@@ -19,8 +19,8 @@ function Invoke-CloudMusicApi {
 
         [hashtable]
         $Cookies = @{
+            osver   = 'Microsoft-Windows-10'
             appver  = '0.0'
-            MUSIC_A = '15e860272ed0803ccf979188982b610ab086a424d18df0f04ee8b1d194962355ef2ae33b30bb5917c514d981210de4857a446f6ceddb779fec58efb075f2174dcb7ce23cca3bd6be03a4f1d7e1fccdebb72149bd3b14523943124f3fcebe94e446b14e3f0c3f8af94212382188fe1965'
         }
     )
 
@@ -33,13 +33,13 @@ function Invoke-CloudMusicApi {
 
     # Hash params
     $ParamsJson = ConvertTo-Json -InputObject $Params -Compress
-    $Sign = "nobody${Path}use${ParamsJson}md5forencrypt"
+    $Sign = "nobody/api${Path}use${ParamsJson}md5forencrypt"
     $SignBytes = [System.Text.Encoding]::UTF8.GetBytes($Sign)
     $SignHashedBytes = [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData($SignBytes)
     $SignHashed = [System.BitConverter]::ToString($SignHashedBytes).Replace('-', '').ToLower()
 
     # Encrypt request content
-    $RequestContent = "${Path}-36cd479b6b5-${ParamsJson}-36cd479b6b5-$SignHashed"
+    $RequestContent = "/api${Path}-36cd479b6b5-${ParamsJson}-36cd479b6b5-$SignHashed"
     $RequestContentBytes = [System.Text.Encoding]::UTF8.GetBytes($RequestContent)
     $RequestContentEncryptedBytes = $Encryptor.TransformFinalBlock($RequestContentBytes, 0, $RequestContentBytes.Length)
     $RequestContentEncrypted = [System.BitConverter]::ToString($RequestContentEncryptedBytes).Replace('-', '')
@@ -47,7 +47,7 @@ function Invoke-CloudMusicApi {
     # Invoke API
     $RequestParams = @{
         Method  = 'Post'
-        Uri     = "https://interface.music.163.com/$($Path.Replace('/api', 'eapi'))"
+        Uri     = "https://interface.music.163.com/eapi${Path}"
         Headers = @{
             Cookie = $Cookies.GetEnumerator().ForEach({ "$($_.Name)=$($_.Value)" }) -join ';'
         }
