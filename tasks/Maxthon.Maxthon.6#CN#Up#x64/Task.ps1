@@ -1,7 +1,7 @@
 $Config = @{
     Identifier = 'Maxthon.Maxthon.6'
     Skip       = $false
-    Notes      = '国际版 升级源 64 位'
+    Notes      = '国内版 升级源 64 位'
 }
 
 $Ping = {

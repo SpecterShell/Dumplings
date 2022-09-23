@@ -37,10 +37,10 @@ $Pong = {
     ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
     # ReleaseNotesUrl
-    $Result.ReleaseNotesUrl = 'https://trello.com/b/LSsVep1d/eagle-development-roadmap'
+    $Result.ReleaseNotesUrl = 'https://en.eagle.cool/changelog'
 
     # ReleaseNotesUrlCN
-    $Result.ReleaseNotesUrlCN = 'https://trello.com/b/YgBOPQ6x/eagle-%E4%BA%A7%E5%93%81%E8%B7%AF%E7%BA%BF%E5%9B%BE'
+    $Result.ReleaseNotesUrlCN = 'https://cn.eagle.cool/changelog'
 
     # RealVersion
     $Result.RealVersion = Get-TempFile -Uri $Result.InstallerUrl[0] | Read-ProductVersionFromExe
