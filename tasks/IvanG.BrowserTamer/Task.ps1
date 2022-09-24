@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'aloneguid.BrowserTamer'
+    Identifier = 'IvanG.BrowserTamer'
     Skip       = $false
 }
 
