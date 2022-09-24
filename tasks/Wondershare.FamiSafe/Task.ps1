@@ -7,7 +7,7 @@ $Ping = {
     $Result = Invoke-WondershareXmlUpgradeApi -ProductId 7740 -Version '1.0.0.0'
 
     # InstallerUrl
-    $Result.InstallerUrl = 'https://download.wondershare.com/cbs_down/famisafe_full7740.exe'
+    $Result.InstallerUrl = "https://download.wondershare.com/cbs_down/famisafe_$($Result.Version)_full7740.exe"
 
     return $Result
 }
