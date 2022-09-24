@@ -36,15 +36,13 @@ $Pong = {
 
     if ($Object2.SelectSingleNode('//*[@id="write"]/h2[1]').InnerText.Contains($Result.Version)) {
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="write"]/h2[contains(text(), "1.3.6")]/following-sibling::*[self::h4 or self::ul][count(.|//*[@id="write"]/h2[contains(text(), "1.3.6")]/following-sibling::h2[1]/preceding-sibling::*[self::h4 or self::ul])=count(//*[@id="write"]/h2[contains(text(), "1.3.6")]/following-sibling::h2[1]/preceding-sibling::*[self::h4 or self::ul])]/descendant-or-self::*[self::h4 or self::li]') |
+        $Result.ReleaseNotes = $Object2.SelectNodes("//*[@id=`"write`"]/h2[contains(text(), `"$($Result.Version)`")]/following-sibling::*[self::h4 or self::ul][count(.|//*[@id=`"write`"]/h2[contains(text(), `"$($Result.Version)`")]/following-sibling::h2[1]/preceding-sibling::*[self::h4 or self::ul])=count(//*[@id=`"write`"]/h2[contains(text(), `"$($Result.Version)`")]/following-sibling::h2[1]/preceding-sibling::*[self::h4 or self::ul])]/descendant-or-self::*[self::h4 or self::li]") |
             ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } |
             Format-Text
-    }
-    else {
+    } else {
         # ReleaseNotes
         $Result.ReleaseNotes = $null
     }
-
 }
 
 return @{
