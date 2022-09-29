@@ -15,8 +15,8 @@ $Ping = {
 
     # InstallerUrl
     $Result.InstallerUrl = @(
-        $Object1.download,
-        $Object1.downloadCN
+        $Object1.download.Replace("update", "setup")
+        $Object1.downloadCN.Replace("update", "setup")
     )
 
     return $Result
