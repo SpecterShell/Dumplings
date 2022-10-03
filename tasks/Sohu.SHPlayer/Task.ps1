@@ -24,20 +24,19 @@ $Pong = {
         $Result
     )
 
-    $Uri2 = 'https://tv.sohu.com/app/?x=3'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+    $Uri2 = 'https://tv.sohu.com/down/index.shtml?downLoad=windows'
+    $Object2 = Invoke-WebRequest -Uri $Uri2 | Read-ResponseContent -Encoding 'GBK' | ConvertFrom-Html
 
-    if ($Object2.SelectSingleNode('//*[@id="yingyinTab"]/div[7]/div/div/dl[1]/dd[1]').InnerText.Contains($Result.Version)) {
+    if ($Object2.SelectSingleNode('/html/body/div[3]/div/div[1]/div[2]/div/p/span').InnerText.Contains($Result.Version)) {
         # ReleaseTime
         $Result.ReleaseTime = [regex]::Match(
-            $Object2.SelectSingleNode('//*[@id="yingyinTab"]/div[7]/div/div/dl[1]/dd[2]').InnerText,
+            $Object2.SelectSingleNode('/html/body/div[3]/div/div[1]/div[2]/div/p/span').InnerText,
             '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes
-        $Result.ReleaseNotes = $Object2.SelectNodes('//*[@id="yingyinTab"]/div[7]/div/div/dl[2]/dd').InnerText | Format-Text
-    }
-    else {
+        $Result.ReleaseNotes = $Object2.SelectNodes('/html/body/div[3]/div/div[1]/div[2]/div/div/p').InnerText | Format-Text
+    } else {
         # ReleaseTime
         $Result.ReleaseTime = $null
 

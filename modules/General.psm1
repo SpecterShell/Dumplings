@@ -157,12 +157,10 @@ function ConvertFrom-Ini {
                 if ($Object[$Section][$Name]) {
                     if ($Object[$Section][$Name] -is [array]) {
                         $Object[$Section][$Name] += $Value
-                    }
-                    else {
+                    } else {
                         $Object[$Section][$Name] = @($Object[$Section][$Name], $Value)
                     }
-                }
-                else {
+                } else {
                     $Object[$Section][$Name] = $Value
                 }
                 continue
@@ -326,13 +324,20 @@ function Read-ResponseContent {
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [Microsoft.PowerShell.Commands.WebResponseObject]
-        $Response
+        $Response,
+
+        [string]
+        $Encoding
     )
 
     process {
         $Stream = $Response.RawContentStream
         $Stream.Position = 0;
-        return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+        if ($Encoding) {
+            return [System.IO.StreamReader]::new($Stream, [System.Text.Encoding]::GetEncoding($Encoding)).ReadToEnd()
+        } else {
+            return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+        }
     }
 }
 
@@ -366,9 +371,9 @@ function Read-EmbeddedJson {
             [Newtonsoft.Json.JsonConvert]::DeserializeObject(
                 $InputObject.Substring($InputObject.IndexOf($StartsFrom) + $StartsFrom.Length),
                 [Newtonsoft.Json.JsonSerializerSettings]@{
-                    TypeNameHandling = [Newtonsoft.Json.TypeNameHandling]::None
+                    TypeNameHandling         = [Newtonsoft.Json.TypeNameHandling]::None
                     MetadataPropertyHandling = [Newtonsoft.Json.MetadataPropertyHandling]::Ignore
-                    CheckAdditionalContent = $false
+                    CheckAdditionalContent   = $false
                 }
             ).ToString()
         }
