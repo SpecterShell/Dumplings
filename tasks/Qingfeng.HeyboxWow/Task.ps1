@@ -10,13 +10,16 @@ $Ping = {
     $Result = [ordered]@{}
 
     # Version
-    $Result.Version = $Object.result.new_version
+    $Result.Version = $Object.result.version_list[0].Version
 
     # InstallerUrl
-    $Result.InstallerUrl = $Object.result.url
+    $Result.InstallerUrl = $Object.result.version_list[0].DownloadPath
+
+    # ReleaseTime
+    $Result.ReleaseTime = $Object.result.version_list[0].PublishTime | ConvertFrom-UnixTimeMilliseconds
 
     # ReleaseNotes
-    $Result.ReleaseNotes = [regex]::Matches($Object.result.change_log, '(?<=<li>).+?(?=</li>)').Value | Format-Text | ConvertTo-UnorderedList
+    $Result.ReleaseNotes = [regex]::Matches($Object.result.version_list[0].VersionLog, '(?<=<li>).+?(?=</li>)').Value | Format-Text | ConvertTo-UnorderedList
 
     return $Result
 }
