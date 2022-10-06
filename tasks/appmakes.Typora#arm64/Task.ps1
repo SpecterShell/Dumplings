@@ -1,11 +1,11 @@
 $Config = @{
-    Identifier = 'Typora.Typora'
+    Identifier = 'appmakes.Typora'
     Skip       = $false
-    Notes      = 'x86'
+    Notes      = 'arm64'
 }
 
 $Ping = {
-    $Uri1 = 'https://typora.io/releases/windows_32.json'
+    $Uri1 = 'https://typora.io/releases/windows_arm.json'
     $Object1 = Invoke-RestMethod -Uri $Uri1
 
     $Result = [ordered]@{}

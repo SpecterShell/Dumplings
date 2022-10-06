@@ -1,5 +1,5 @@
 $Config = @{
-    Identifier = 'Typora.Typora'
+    Identifier = 'appmakes.Typora'
     Skip       = $false
     Notes      = 'x64'
 }
