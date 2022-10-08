@@ -20,7 +20,7 @@ $Ping = {
     $Result.ReleaseTime = $Object.releaseDate.ToUniversalTime()
 
     # ReleaseNotes
-    $Result.ReleaseNotes = $Object.releaseNotes.Where({$_.version -eq $Result.Version}).note | Format-Text | ConvertTo-OrderedList
+    $Result.ReleaseNotes = $Object.releaseNotes | Format-Text | ConvertTo-OrderedList
 
     return $Result
 }
