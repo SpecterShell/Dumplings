@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://cdn.apifox.cn/download/latest.yml'
+    $Uri = 'https://cdn.apifox.cn/download/latest.yml?noCache='
 
     $Result = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater
 
