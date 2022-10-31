@@ -4,7 +4,7 @@ $Config = @{
 }
 
 $Ping = {
-    $Uri = 'https://www.xmind.net/xmind/update/latest-win64.yml'
+    $Uri = 'https://www.xmind.app/xmind/update/latest-win64.yml'
     $Object = Invoke-RestMethod -Uri $Uri | ConvertFrom-Yaml
 
     $Result = [ordered]@{}

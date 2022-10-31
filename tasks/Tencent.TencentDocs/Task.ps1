@@ -18,7 +18,7 @@ $Ping = {
         )
     } | ConvertTo-Json -Compress
     $ContentType1 = 'application/json'
-    $Object1 = (Invoke-RestMethod -Uri $Uri1 -Method Post -Body $Body1 -ContentType $ContentType1).config.items.Where({ $_.group -eq 'Prod.Common.Update' }).key_values.Where({ $_.key -eq 'update_info' }).value | ConvertFrom-Json
+    $Object1 = (Invoke-RestMethod -Uri $Uri1 -Method Post -Body $Body1 -ContentType $ContentType1).config.items.Where({ $_.group -eq 'Prod.Common.Update' }).key_values.Where({ $_.key -eq 'update_info' })[0].value | ConvertFrom-Json
 
     $Result = [ordered]@{}
 
