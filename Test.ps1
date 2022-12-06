@@ -80,7 +80,7 @@ $Global:DumplingsDefaultParameterValues = @{
     Write-Verbose -Message "Dumplings: PowerShell module ${_} has already been installed"
   } else {
     Write-Host -Object "Dumplings: Installing PowerShell module ${_}"
-    Install-Package -Name $_ -Source PSGallery -ProviderName PowerShellGet
+    Install-Package -Name $_ -Source PSGallery -ProviderName PowerShellGet -Force
     Write-Host -Object "Dumplings: PowerShell module ${_} installed"
   }
 }
