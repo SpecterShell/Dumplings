@@ -1,0 +1,22 @@
+name: Test
+on:
+  workflow_dispatch:
+    inputs:
+      Name:
+        description: The name of the tasks to be tested. Leave blank to test all tasks.
+        required: false
+        type: string
+jobs:
+  test:
+    name: Test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: .\Test.ps1 ${{ github.event.inputs.Name }}
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
