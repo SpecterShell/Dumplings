@@ -43,6 +43,15 @@ param (
   $NoPush = $false
 )
 
+# Apply default parameters
+if ($DumplingsDefaultParameterValues) {
+  $PSDefaultParameterValues = $DumplingsDefaultParameterValues
+}
+
+$Script:Temp = [ordered]@{
+  ChangeList = @()
+}
+
 class Task {
   [ValidateNotNullOrEmpty()][string]$Name
   [ValidateNotNullOrEmpty()][string]$Path
@@ -52,10 +61,6 @@ class Task {
     Installer = @()
     Locale    = @()
   }
-}
-
-$Script:Temp = [ordered]@{
-  ChangeList = @()
 }
 
 function Compare-State {
