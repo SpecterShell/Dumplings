@@ -19,7 +19,7 @@ $Task.CurrentState.ReleaseTime = [regex]::Match(
 
 # ReleaseNotes (zh-CN)
 $ReleaseNotes = $Object.SelectSingleNode('/html/body/table/tr[4]/td/table/tr[3]/td/pre').InnerText -csplit '硕鼠更新日志.+' |
-  Where-Object -FilterScript { $_.Contains($Result.Version) } |
+  Where-Object -FilterScript { $_.Contains($Task.CurrentState.Version) } |
   Format-Text
 if ($ReleaseNotes) {
   $Task.CurrentState.Locale += [ordered]@{

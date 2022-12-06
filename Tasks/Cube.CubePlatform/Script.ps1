@@ -5,11 +5,11 @@ $Task.CurrentState.Version = $Object.result.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.cubejoy.com/app/$($Result.Version)/CubeSetup_v$($Result.Version).exe"
+  InstallerUrl = "https://download.cubejoy.com/app/$($Task.CurrentState.Version)/CubeSetup_v$($Task.CurrentState.Version).exe"
 }
 $Task.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-HK'
-  InstallerUrl    = "https://download.cubejoy.com/app/$($Result.Version)/CubeSetup_HK_TC_v$($Result.Version).exe"
+  InstallerUrl    = "https://download.cubejoy.com/app/$($Task.CurrentState.Version)/CubeSetup_HK_TC_v$($Task.CurrentState.Version).exe"
 }
 
 $ReleaseNotes = $Object.result.whatisnew | Split-LineEndings
