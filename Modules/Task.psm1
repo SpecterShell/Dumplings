@@ -146,12 +146,12 @@ function Write-State {
     # Writing current state to log file
     $LogPath = Join-Path $Task.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").json"
     Write-Host -Object "Task $($Task.Name): Writing current state to log file ${LogPath}"
-    # $State | ConvertTo-Json | Out-File -FilePath $LogPath
+    $State | ConvertTo-Json | Out-File -FilePath $LogPath
 
     # Writing current state to state file
     $StatePath = Join-Path $Task.Path 'State.json'
     Write-Host -Object "Task $($Task.Name): Writing current state to state file ${StatePath}"
-    # $State | ConvertTo-Json | Out-File -FilePath $StatePath
+    $State | ConvertTo-Json | Out-File -FilePath $StatePath
   }
 }
 
