@@ -6,7 +6,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://onemark.neuxlab.cn/updates/latest.xml
 # Version
 $Task.CurrentState.Version = $Object1.item.version
 
-if ($Object1.item.url -ne $Object2.item.url) {
+if ($Object1.item.version -ne $Object2.item.version) {
   Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
   $Task.Config.Notes = '各个架构的版本号不相同'
 }
@@ -51,7 +51,7 @@ switch (Compare-State) {
   ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
-  ({ $_ -ge 3 -and $Object1.item.url -eq $Object2.item.url }) {
+  ({ $_ -ge 3 -and $Object1.item.version -eq $Object2.item.version }) {
     New-Manifest
   }
 }

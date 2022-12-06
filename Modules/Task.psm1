@@ -55,7 +55,7 @@ class Task {
 }
 
 $Script:Temp = [ordered]@{}
-$Private:ChangeList = @()
+$Global:ChangeList = @()
 
 function Compare-State {
   <#

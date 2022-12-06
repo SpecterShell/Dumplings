@@ -1,6 +1,6 @@
 $Prefix = 'https://edu-wenku.bdimg.com/v1/pcclient/upgrade/'
 
-$Task.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN' -Locale 'zh-CN'
+$Task.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
