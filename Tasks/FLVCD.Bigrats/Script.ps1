@@ -1,4 +1,4 @@
-$Object = Invoke-WebRequest -Uri 'https://download.flvcd.com/' | ConvertFrom-Html
+$Object = Invoke-WebRequest -Uri 'https://download.flvcd.com/' -SslProtocol Tls12 | ConvertFrom-Html
 
 # Version
 $Task.CurrentState.Version = [regex]::Match(
