@@ -54,8 +54,9 @@ class Task {
   }
 }
 
-$Script:Temp = [ordered]@{}
-$Global:ChangeList = @()
+$Script:Temp = [ordered]@{
+  ChangeList = @()
+}
 
 function Compare-State {
   <#
@@ -135,17 +136,17 @@ function Write-State {
   if ($NoWrite) {
     Write-Host -Object 'Task: Writing feature is disabled'
   } else {
-    $ChangeList += $Task.Config.Identifier
+    $Temp.ChangeList += $Task.Name
 
     # Writing current state to log file
     $LogPath = Join-Path $Task.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").json"
     Write-Host -Object "Task $($Task.Name): Writing current state to log file ${LogPath}"
-    $State | ConvertTo-Json | Out-File -FilePath $LogPath
+    # $State | ConvertTo-Json | Out-File -FilePath $LogPath
 
     # Writing current state to state file
     $StatePath = Join-Path $Task.Path 'State.json'
     Write-Host -Object "Task $($Task.Name): Writing current state to state file ${StatePath}"
-    $State | ConvertTo-Json | Out-File -FilePath $StatePath
+    # $State | ConvertTo-Json | Out-File -FilePath $StatePath
   }
 }
 
@@ -339,10 +340,8 @@ function Invoke-TaskPipeline {
 
   New-Event -SourceIdentifier 'DumplingsTaskFinished' -Sender 'DumplingsTask' | Out-Null
 
-  if ($ChangeList -gt 0) {
-    Write-Host -Object "Task: The states of the following tasks have been changed:`n$($ChangeList -join "`n")"
-  }
-  return $ChangeList
+  Write-Host -Object "Task: The states of the following tasks have been changed:`n$($Temp.ChangeList -join "`n")"
+  return $Temp.ChangeList
 }
 
 # Find tasks
