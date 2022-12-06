@@ -60,7 +60,7 @@ $Global:DumplingsDefaultParameterValues = @{
 
 # Install and import required PowerShell modules
 @('PowerHTML', 'powershell-yaml') | ForEach-Object -Process {
-  if (Get-Package -Name $_) {
+  if (Get-Package | Where-Object -Property 'Name' -EQ -Value $_) {
     Write-Verbose -Message "Dumplings: PowerShell module ${_} has already been installed"
   } else {
     Write-Host -Object "Dumplings: Installing PowerShell module ${_}"
