@@ -7,7 +7,7 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$Task.CurrentState.Version = '11.1.0.' + [regex]::Match($Task.CurrentState.InstallerUrl, 'WPS_Setup_(\d+)\.exe').Groups[1].Value
+$Task.CurrentState.Version = '11.1.0.' + [regex]::Match($InstallerUrl, 'WPS_Setup_(\d+)\.exe').Groups[1].Value
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match(
