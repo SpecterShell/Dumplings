@@ -1,3 +1,7 @@
+# Version 2.2.13:
+
+- Some minor improvements and bugs fixed.
+
 # Version 2.2.11:
 
 - Some minor improvements and bugs fixed.
