@@ -1,4 +1,4 @@
-$Task.CurrentState = Invoke-RestMethod -Uri 'https://cdn.apifox.cn/download/latest.yml?noCache=' | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
+$Task.CurrentState = Invoke-RestMethod -Uri "https://cdn.apifox.cn/download/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {

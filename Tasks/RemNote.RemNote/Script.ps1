@@ -1,6 +1,6 @@
 $Prefix = 'https://download.remnote.io/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
+$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {

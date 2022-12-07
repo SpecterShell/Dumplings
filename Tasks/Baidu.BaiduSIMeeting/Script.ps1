@@ -1,6 +1,6 @@
 $Prefix = 'https://fanyiapp.cdn.bcebos.com/tongchuan/update/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {

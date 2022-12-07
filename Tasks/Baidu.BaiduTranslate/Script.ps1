@@ -1,4 +1,4 @@
-$Object = Invoke-WebRequest -Uri 'https://fanyiapp.cdn.bcebos.com/fanyi-client/update/latest.yml' | Read-ResponseContent | ConvertFrom-Yaml
+$Object = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/fanyi-client/update/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $Task.CurrentState.Version = $Object.version

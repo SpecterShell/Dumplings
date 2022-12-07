@@ -1,6 +1,6 @@
 $Prefix = 'https://calliper.cn/downloads/'
 
-$Task.CurrentState = (Invoke-RestMethod -Uri "${Prefix}latest.yml").Replace('Password: ', '') | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Task.CurrentState = (Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])").Replace('Password: ', '') | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {

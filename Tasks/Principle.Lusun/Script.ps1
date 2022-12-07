@@ -1,6 +1,6 @@
 $Prefix = 'https://releases.lusun.com/'
 
-$Object = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
+$Object = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $Task.CurrentState.Version = $Object.version
