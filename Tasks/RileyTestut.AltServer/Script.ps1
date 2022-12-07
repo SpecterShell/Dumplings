@@ -4,9 +4,8 @@ $Object = Invoke-RestMethod -Uri 'https://altstore.io/altserver/sparkle-windows.
 $Task.CurrentState.Version = $Object[0].enclosure.version
 
 # Installer
-$InstallerUrl = $Object[0].enclosure.url
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $Object[0].enclosure.url
 }
 
 # ReleaseTime
