@@ -1,4 +1,4 @@
-$Object = Invoke-RestMethod -Uri 'https://www.larksuite.com/api/downloads' -Headers @{
+$Object = Invoke-RestMethod -Uri 'https://www.feishu.cn/api/downloads' -Headers @{
   cookie = '__tea__ug__uid=1'
 }
 
