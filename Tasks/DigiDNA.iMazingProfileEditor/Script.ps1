@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://downloads.imazing.com/com.DigiDNA.iMazing2Windows.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://downloads.imazing.com/com.DigiDNA.iMazingProfileEditorWindows.xml'
 
 # Version
 $Task.CurrentState.Version = $Object1[0].enclosure.version
