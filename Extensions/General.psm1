@@ -150,7 +150,7 @@ function ConvertFrom-Ini {
   .LINK
     https://github.com/lipkau/PsIni
   #>
-  [OutputType([ordered])]
+  # [OutputType([ordered])]
   param (
     [Parameter(
       Mandatory, ValueFromPipeline,
