@@ -104,7 +104,8 @@ function Send-TelegramMessage {
     try {
       Invoke-WebRequest @Request
     } catch {
-      Write-Host -Object "Telegram: ${_}" -ForegroundColor Yellow
+      Write-Host -Object 'Telegram: An error occured while sending the message:' -ForegroundColor Red
+      $_ | Out-Host
     }
   }
 }

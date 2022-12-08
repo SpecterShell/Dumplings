@@ -339,7 +339,8 @@ function Invoke-TaskPipeline {
     try {
       & (Join-Path $Task.Path 'Script.ps1')
     } catch {
-      Write-Host -Object "Task $($Task.Name): An error occured while running the script:`n${_}" -ForegroundColor Red
+      Write-Host -Object "Task $($Task.Name): An error occured while running the script:" -ForegroundColor Red
+      $_ | Out-Host
     }
   }
 
