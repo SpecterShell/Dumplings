@@ -17,18 +17,18 @@ $Task.CurrentState.Locale += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    # TODO: Get the latest ReleaseNotes from https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/
+    $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
+    Start-Sleep -Seconds 10
 
-    # $Object2 = Invoke-RestMethod -Uri 'https://lf-cdn-tos.bytescm.com/obj/static/docs/resource/page-data/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/page-data.d54366d08371445a82cc246a109f9fdf.json'
-
-    # try {
-    #   $Task.CurrentState.ReleaseTime = [regex]::Match(
-    #     $Object2.result.pageContext.htmlAst.children.Where({ $_.tagName -eq 'h1' -and $_.children[0].value.Contains($Task.CurrentState.Version) }).children[0].value,
-    #     '(\d{4}-\d{1,2}-\d{1,2})'
-    #   ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-    # } catch {
-    #   Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
-    # }
+    try {
+      # ReleaseTime
+      $Task.CurrentState.ReleaseTime = [regex]::Match(
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='doc']/div[1]/div[1]/div/div/h1[contains(./text(), '$($Task.CurrentState.Version)')]")).Text,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
+    }
 
     Write-State
   }

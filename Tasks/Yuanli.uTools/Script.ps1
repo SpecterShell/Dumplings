@@ -1,21 +1,24 @@
-$Object = Invoke-RestMethod -Uri 'https://publish.u-tools.cn/version2/newest-version.json'
+$EdgeDriver.Navigate().GoToUrl('https://u.tools/')
 
-if ($Object1.win32.x64 -ne $Object1.win32.ia32) {
+$Prefix = $EdgeDriver.ExecuteScript('return publishURL', $null)
+$Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
+
+if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
   Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
   $Task.Config.Notes = '各个架构的版本号不相同'
 }
 
 # Version
-$Task.CurrentState.Version = $Object.win32.x64
+$Task.CurrentState.Version = [regex]::Match($Object1.'win-x64'.version, 'V([\d\.]+)').Groups[1].Value
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://res.u-tools.cn/version2/uTools-$($Task.CurrentState.Version)-ia32.exe"
+  InstallerUrl = $Prefix + $Object1.'win-ia32'.package
 }
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://res.u-tools.cn/version2/uTools-$($Task.CurrentState.Version).exe"
+  InstallerUrl = $Prefix + $Object1.'win-x64'.package
 }
 
 switch (Compare-State) {
