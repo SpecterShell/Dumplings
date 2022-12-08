@@ -1,4 +1,4 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['846']
+$Task.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 846 -Version '10.0.0.0' -Locale 'en-US'
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{

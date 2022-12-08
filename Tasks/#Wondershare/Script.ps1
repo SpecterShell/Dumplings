@@ -5,7 +5,7 @@ $Temp.WondershareUpgradeInfo = [ordered]@{}
     $Arch = $_
     Invoke-RestMethod -Uri 'https://pc-api.300624.com/v2/product/batch-check-upgrade' -Method Post -Body (@{
         platform = "win_${Arch}"
-        versions = $Task.Config.Products.GetEnumerator().Where({ $_.Value.x86 -eq ($Arch -eq 'x86') }).ForEach({ @{pid = $_.Key; version = $_.Value.Version } })
+        versions = $Task.Config.Products.GetEnumerator().Where({ $_.Value.x86 -eq ($Arch -eq 'x86') }).ForEach({ @{ pid = $_.Key; version = $_.Value.Version } })
       } | ConvertTo-Json -Compress)
   }
 ).data.ForEach(
