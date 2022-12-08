@@ -61,7 +61,7 @@ switch (Compare-State) {
   ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
-  ({ $_ -ge 3 -and $Object1.win32.x64 -eq $Object1.win32.ia32 }) {
+  ({ $_ -ge 3 -and $Object1.'win-x64'.version -eq $Object1.'win-ia32'.version }) {
     New-Manifest
   }
 }
