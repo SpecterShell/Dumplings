@@ -87,13 +87,15 @@ $Global:DumplingsDefaultParameterValues = @{
 
 # Import Selenium and Initialize EdgeDriver
 Add-Type -Path (Join-Path $PSScriptRoot 'Assets' 'WebDriver.dll')
+$EdgeOptions = [OpenQA.Selenium.Edge.EdgeOptions]::new()
+$EdgeOptions.AddArgument('--headless')
 if ($Env:EDGEWEBDRIVER) {
   # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Env:EDGEWEBDRIVER)
+  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Env:EDGEWEBDRIVER, $EdgeOptions)
 } else {
-  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new()
+  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($EdgeOptions)
 }
-$EdgeDriver.Manage().Window.Maximize()
+$EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
 
 # Remove related events and event subscribers in case of conflicts
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
