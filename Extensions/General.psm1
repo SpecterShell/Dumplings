@@ -314,6 +314,28 @@ function ConvertTo-Https {
   }
 }
 
+function ConvertTo-UnescapedUri {
+  <#
+  .SYNOPSIS
+    Unescape the URI
+  .PARAMETER Uri
+    The Uniform Resource Identifier (URI) to be converted
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'Uniform Resource Identifier (URI)'
+    )]
+    [string]
+    $Uri
+  )
+
+  process {
+    [uri]::UnescapeDataString($Uri)
+  }
+}
+
 function ConvertTo-OrderedList {
   <#
   .SYNOPSIS

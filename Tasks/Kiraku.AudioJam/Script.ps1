@@ -1,7 +1,7 @@
 $Object = Invoke-RestMethod -Uri 'https://api.kirakuapp.com/auth/version/latest?appId=4&platform=0'
 
 # Installer
-$InstallerUrl = [uri]::UnescapeDataString($Object.data.downloadUrl)
+$InstallerUrl = $Object.data.downloadUrl | ConvertTo-UnescapedUri
 $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }

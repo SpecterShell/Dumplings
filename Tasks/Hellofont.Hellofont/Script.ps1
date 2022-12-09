@@ -13,7 +13,7 @@ if ((Compare-Version -ReferenceVersion $Object1.Version -DifferenceVersion $Obje
 
   # Installer
   $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = [uri]::UnescapeDataString($Object1.Url)
+    InstallerUrl = $Object1.Url | ConvertTo-UnescapedUri
   }
 
   # ReleaseTime

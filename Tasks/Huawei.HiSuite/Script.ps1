@@ -41,7 +41,7 @@ switch (Compare-State) {
   ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
     New-Manifest
   }
 }
