@@ -15,7 +15,27 @@ $Task.CurrentState.Installer += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    # TODO: Extract cabinet file
+    $Path = Get-TempFile -Uri 'http://iup.360safe.com/iv3/pc/360zip/360zipupd_manual.cab'
+    expand.exe -R $Path
+    $Object3 = Join-Path $Path '..' '360zipupd_manual.ini' -Resolve | Get-Item | Get-Content -Raw -Encoding 'gb18030' | ConvertFrom-Ini
+
+    try {
+      if ($Object3.'360App1'.ver -eq $Task.CurrentState.Version) {
+        # ReleaseTime
+        $Task.CurrentState.ReleaseTime = $Object3.'360App1'.date | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (zh-CN)
+        $Task.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object3.'360App1'.'tip_zh-CN' | Format-Text
+        }
+      } else {
+        Write-Host -Object "Task $($Task.Name): No ReleaseTime and ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+      }
+    } catch {
+      Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
+    }
 
     Write-State
   }
