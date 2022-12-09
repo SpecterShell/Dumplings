@@ -13,7 +13,7 @@ $Task.CurrentState.Version = $Object.Version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object.DownloadLink
+  InstallerUrl = [uri]::UnescapeDataString((Get-RedirectedUrl -Uri $Object.DownloadLink))
 }
 
 # ReleaseNotes (en-US)
