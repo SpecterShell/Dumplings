@@ -16,7 +16,7 @@ $Task.CurrentState.RealVersion = [regex]::Match(
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.SelectSingleNode('div[5]/a').Attributes['href'].Value
+  InstallerUrl = $Object.SelectSingleNode('div[5]/a').Attributes['href'].Value | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime

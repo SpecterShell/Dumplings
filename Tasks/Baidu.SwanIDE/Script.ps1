@@ -5,7 +5,7 @@ $Task.CurrentState.Version = $Object1.data.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.download_url
+  InstallerUrl = $Object1.data.download_url | ConvertTo-UnescapedUri
 }
 
 switch (Compare-State) {
