@@ -6,6 +6,9 @@ switch (Compare-State) {
   ({ $_ -ge 1 }) {
     $Object = Invoke-RestMethod -Uri 'https://hudong.alicdn.com/api/data/v2/698d45f854c64b95a87f2a947ed4e12b.js' | Get-EmbeddedJson -StartsFrom 'cbUpdateConfig(' | ConvertFrom-Json
 
+    # RealVersion
+    $Task.CurrentState.RealVersion = $Object.win.strategies[-1].method.targetVersion
+
     try {
       if ($Object.win.strategies[-1].method.targetVersion.Contains($Task.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
