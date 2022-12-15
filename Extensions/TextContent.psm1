@@ -5,14 +5,13 @@
 
 # Node types that will not be added to the final list
 $IgnoredNodes = @('img', 'script', 'style', 'video')
-# Node types that always start at new line
+# Node types that always start at new line, as well as <br> and <li>
 # https://developer.mozilla.org/docs/Web/HTML/Block-level_elements
 $BlockNodes = @(
-  'address', 'article', 'aside', 'blockquote', 'dd', 'div', 'dl',
+  'address', 'article', 'aside', 'blockquote', 'br', 'dd', 'div', 'dl',
   'fieldset', 'figcaption', 'figure', 'footer', 'form',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr',
-  'li', # Treat <li> as block node
-  'ol', 'p', 'pre', 'section', 'table', 'ul'
+  'li', 'ol', 'p', 'pre', 'section', 'table', 'ul'
 )
 
 function Expand-Node {
@@ -47,7 +46,7 @@ function Expand-Node {
       # Keep and add block nodes to the list
       ({ $_.Name -in $BlockNodes }) { $ChildNodes += $_; continue }
       # Extract the child nodes of the inline nodes and add them to the list
-      ({ $_.ChildNodes }) { $ChildNodes += Expand-Node -Node $_.ChildNodes; continue }
+      ({ $_.HasChildNodes }) { $ChildNodes += Expand-Node -Node $_.ChildNodes; continue }
       # In case something went wrong
       Default { $ChildNodes += $_; continue }
     }
@@ -99,47 +98,41 @@ function Get-TextContent {
     $NextNewLine = $false
 
     foreach ($Node in $Nodes) {
-      switch ($Node.Name) {
-        '#text' {
-          $Text = [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim())
-          # In case the text node is a fake node that works as a placeholder between the nodes
-          if (-not [string]::IsNullOrEmpty($Text)) {
-            if ($NextNewLine) {
-              $Content += "`n"
-              $NextNewLine = $false
-            }
-            $Content += $Text
-          }
-        }
-        'br' {
+      if ($Node.Name -eq '#text') {
+        $Text = [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim())
+        # In case the text node is a fake node that works as a placeholder between the nodes
+        if (-not [string]::IsNullOrEmpty($Text)) {
           if ($NextNewLine) {
             $Content += "`n"
             $NextNewLine = $false
+          } else {
+            if (-not [string]::IsNullOrEmpty($Content)) {
+              $Content += ' '
+            }
           }
+          $Content += $Text
+        }
+      } else {
+        if (-not [string]::IsNullOrEmpty($Content)) {
           $Content += "`n"
         }
-        Default {
-          if (-not [string]::IsNullOrEmpty($Content)) {
-            $Content += "`n"
-          }
-          switch ($Node.Name) {
-            # Unordered list
-            'ul' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Unordered'; Number = 1 } }
-            # Ordered list
-            'ol' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Ordered'; Number = 1 } }
-            # List entry
-            'li' {
-              if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
-                $Content += "$(($ListInfo.Number++)). "
-              } else {
-                $Content += '- '
-              }
-              $Content += (Get-TextContent $Node.ChildNodes $ListInfo).TrimStart()
+        switch ($Node.Name) {
+          # Unordered list
+          'ul' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Unordered'; Number = 1 } }
+          # Ordered list
+          'ol' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Ordered'; Number = 1 } }
+          # List entry
+          'li' {
+            if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
+              $Content += "$(($ListInfo.Number++)). "
+            } else {
+              $Content += '- '
             }
-            Default { $Content += Get-TextContent $Node.ChildNodes $ListInfo }
+            $Content += (Get-TextContent $Node.ChildNodes $ListInfo).TrimStart()
           }
-          $NextNewLine = $true
+          Default { $Content += Get-TextContent $Node.ChildNodes $ListInfo }
         }
+        $NextNewLine = $true
       }
     }
     return $Content
