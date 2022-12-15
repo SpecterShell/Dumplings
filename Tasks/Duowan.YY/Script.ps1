@@ -1,11 +1,15 @@
-$UniVer = $Task.LastState.UniVer ?? '9000F002'
+$UniVer = '9000F002'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
     [System.Text.Encoding]::UTF8.GetBytes("pid=yy&sv=${UniVer}&t=${Time}&k=sl3$@l43#yG34yY&4R0DF)d#DTe6f!t564%rdr54j6jswe4j")
   )
 ).Replace('-', '').ToLower()
-$Content1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}"
+$Content1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}" -StatusCodeVariable 'StatusCode'
+
+if ($StatusCode -eq 204) {
+  throw "Task $($Task.Name): The response content from the API is empty"
+}
 
 $Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Content1 | Split-LineEndings | Select-Object -First 1)"
 

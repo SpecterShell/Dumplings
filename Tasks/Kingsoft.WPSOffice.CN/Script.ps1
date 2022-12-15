@@ -1,17 +1,16 @@
 $Object = Invoke-WebRequest -Uri 'https://platform.wps.cn/' | ConvertFrom-Html
 
-# Installer
-$InstallerUrl = $Object.SelectSingleNode('//*[@id="nav"]/div/div/a[2]').Attributes['href'].Value
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
-}
-
 # Version
-$Task.CurrentState.Version = '11.1.0.' + [regex]::Match($InstallerUrl, 'WPS_Setup_(\d+)\.exe').Groups[1].Value
+$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[1]').InnerText.Trim()
+
+# Installer
+$Task.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://platform.wps.cn/download/query?os=win&os_version=Windows%2010%20or%20Windows%20Server%202016'
+}
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/text()').InnerText,
+  $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[2]').InnerText,
   '(\d{4}\.\d{1,2}\.\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
