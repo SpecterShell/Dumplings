@@ -96,21 +96,25 @@ function Get-TextContent {
     $Nodes = Expand-Node -Node $Nodes
     # If the previous node is a block element, add a newline before the next node
     $NextNewLine = $false
+    # If the previous inline node ends with whitespaces, or the current inline node starts with whitespaces,
+    # add a single whitespace between them
+    $NextWhiteSpace = $false
 
     foreach ($Node in $Nodes) {
       if ($Node.Name -eq '#text') {
-        $Text = [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim())
         # In case the text node is a fake node that works as a placeholder between the nodes
-        if (-not [string]::IsNullOrEmpty($Text)) {
+        if (-not [string]::IsNullOrWhiteSpace($Node.InnerText)) {
           if ($NextNewLine) {
             $Content += "`n"
             $NextNewLine = $false
-          } else {
-            if (-not [string]::IsNullOrEmpty($Content)) {
-              $Content += ' '
-            }
+          } elseif ($NextWhiteSpace -or $Node.InnerText -cmatch '^\s+') {
+            $Content += ' '
+            $NextWhiteSpace = $false
           }
-          $Content += $Text
+          $Content += [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim())
+          if ($Node.InnerText -cmatch '\s+$') {
+            $NextWhiteSpace = $true
+          }
         }
       } else {
         if (-not [string]::IsNullOrEmpty($Content)) {
@@ -133,6 +137,7 @@ function Get-TextContent {
           Default { $Content += Get-TextContent $Node.ChildNodes $ListInfo }
         }
         $NextNewLine = $true
+        $NextWhiteSpace = $false
       }
     }
     return $Content
