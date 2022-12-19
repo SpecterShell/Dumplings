@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/' | ConvertFrom-Html
 
 # Version
 $Task.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div[3]/p/text()').InnerText,
+  $Object1.SelectSingleNode('//*[@id="loadnew"]/em').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
