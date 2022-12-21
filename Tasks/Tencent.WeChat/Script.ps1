@@ -20,7 +20,7 @@ try {
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://dldir1.qq.com/weixin/Windows/update3.6.0.18.xml' | Read-ResponseContent | ConvertFrom-Xml
+    $Object2 = Invoke-WebRequest -Uri "https://dldir1.qq.com/weixin/Windows/update$($Task.CurrentState.Version).xml" | Read-ResponseContent | ConvertFrom-Xml
 
     try {
       # ReleaseNotes (en-US)
@@ -48,7 +48,7 @@ switch (Compare-State) {
     $Object3 = Invoke-WebRequest -Uri 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesUrlNode = $Object3.SelectSingleNode("/html/body/div/div[3]/div[1]/div[2]/section[contains(./h3/text(), 'Windows')]/ul/li[contains(./a/span[1], '$([regex]::Match($Task.CurrentState.Version, '([\d+\.\d+\.\d+])').Groups[1].Value)')]/a")
+      $ReleaseNotesUrlNode = $Object3.SelectSingleNode("/html/body/div/div[3]/div[1]/div[2]/section[contains(./h3/text(), 'Windows')]/ul/li[contains(./a/span[1], '$([regex]::Match($Task.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]/a")
       if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl (zh-Hans)
         $Task.CurrentState.Locale += [ordered]@{
@@ -64,6 +64,18 @@ switch (Compare-State) {
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseNotesUrl for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+        # ReleaseNotesUrl (zh-Hans)
+        $Task.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-Hans'
+          Key    = 'ReleaseNotesUrl'
+          Value  = 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list'
+        }
+        # ReleaseNotesUrl (zh-Hans-CN)
+        $Task.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-Hans-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list'
+        }
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
