@@ -37,7 +37,6 @@ switch (Compare-State) {
         # ReleaseNotes (zh-CN)
         $ReleaseNotesNode = $Object3.SelectSingleNode('//*[@id="js_content_box"]/div[2]/div/div/div/div[last()]')
         if ($ReleaseNotesNode) {
-          $Global:test = $ReleaseNotesNode | Get-TextContent
           $Task.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
