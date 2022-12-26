@@ -35,7 +35,9 @@ switch (Compare-State) {
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('./td[3]') | Get-TextContent | Format-Text
+          # This website treats <br> as block element, which causes Get-TextContent not working properly
+          # Use legacy parsing method instead
+          Value  = $ReleaseNotesNode.SelectSingleNode('./td[3]').InnerText | Format-Text
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
