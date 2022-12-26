@@ -1,19 +1,16 @@
-$Object = Invoke-RestMethod -Uri 'https://yungw.taobao.com/gw/invoke/taobao.jindoucloud.version.check2?clientSysName=Windows+PC&clientName=WangWang&clientVersion=9.12.10C&timestamp=0' -Headers @{ Referer = 'http://www.taobao.com/' }
+$EdgeDriver.Navigate().GoToUrl('https://market.m.taobao.com/app/im/ww-home/index.html')
 
-# Version
-$Task.CurrentState.Version = $Object.version
+$Button1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="root"]/div/div[1]/div[2]/div[2]'))
+[OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button1).Build().Perform()
 
 # Installer
+$InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='root']/div/div[1]/div[2]/div[2]/div/div/div/a[1]")).GetAttribute('href')
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.alicdn.com/wangwang/AliIM_taobao_($($Task.CurrentState.Version)).exe"
+  InstallerUrl = $InstallerUrl
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.feature | Format-Text
-}
+# Version
+$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '\((.+)\)\.exe').Groups[1].Value
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
