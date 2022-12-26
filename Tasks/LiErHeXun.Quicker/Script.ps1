@@ -1,19 +1,3 @@
-$Object1 = Invoke-RestMethod -Uri 'https://api.getquicker.net/api/account/authenticate2' -Method Post -Body (
-  @{
-    UserName    = 'demo@getquicker.net'
-    Password    = 'demo4321'
-    SoftVersion = $Task.LastState.Version ?? '1.35.42.0'
-    MachineName = [System.Environment]::MachineName
-    OsVersion   = [System.Environment]::OSVersion.VersionString
-    Is64Bit     = $true
-  } | ConvertTo-Json -Compress
-) -ContentType 'application/json; charset=utf-8'
-
-$Object2 = Invoke-RestMethod -Uri 'https://api.getquicker.net/api/account/CheckUpdate' -Method Post -Authentication Bearer -Token (ConvertTo-SecureString -String $Object1.data.userInfo.token -AsPlainText)
-
-# Version
-$Task.CurrentState.Version = $Object2.data.fastChannelVersion
-
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
@@ -23,6 +7,9 @@ $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Get-RedirectedUrl -Uri 'https://getquicker.net/download/item/fast_x64'
 }
+
+# Version
+$Task.CurrentState.Version = [regex]::Match($Task.CurrentState.Installer[1].InstallerUrl, '(\d+\.\d+\.\d+\.\d+)\.msi').Groups[1].Value
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
