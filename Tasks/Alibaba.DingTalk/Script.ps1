@@ -6,7 +6,7 @@ $Object2 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/release_
 $Object3 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/website/vista_later.json' | Read-ResponseContent | ConvertFrom-Json
 
 $Object = @($Object1, $Object2, $Object3) |
-  Sort-Object -Property { $_.releaseInfo.version -creplace '\d+', { $_.Value.PadLeft(20) } } -Descending |
+  Sort-Object -Property { $_.win.package.version -creplace '\d+', { $_.Value.PadLeft(20) } } -Descending |
   Select-Object -First 1
 
 # Version
