@@ -1,9 +1,4 @@
-$OldProtocol = [System.Net.ServicePointManager]::SecurityProtocol
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-
-$Object = Invoke-WebRequest -Uri 'https://download.flvcd.com/' | ConvertFrom-Html
-
-[System.Net.ServicePointManager]::SecurityProtocol = $OldProtocol
+$Object = Invoke-WebRequest -Uri 'https://download.flvcd.com/' -SslProtocol Tls12 | ConvertFrom-Html
 
 # Version
 $Task.CurrentState.Version = [regex]::Match(
