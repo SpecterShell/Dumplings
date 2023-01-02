@@ -112,7 +112,7 @@ function Get-TextContent {
               $Content += ' '
               $NextWhiteSpace = $false
             }
-            $Content += [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim())
+            $Content += [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim().ReplaceLineEndings(' '))
             if ($Node.InnerText -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
