@@ -4,7 +4,7 @@
 #>
 
 # Node types that will not be added to the final list
-$IgnoredNodes = @('img', 'script', 'style', 'video')
+$IgnoredNodes = @('img', 'script', 'style', 'video', '#comment')
 # Node types that always start at new line, as well as <br> and <li>
 # https://developer.mozilla.org/docs/Web/HTML/Block-level_elements
 $BlockNodes = @(
