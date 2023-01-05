@@ -3,7 +3,7 @@ $Object = Invoke-RestMethod -Uri 'https://godbiao.com/api/getv/' -Headers @{
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.2, 'v([\d\.]+)').Groups[1].Value
+$Task.CurrentState.Version = [regex]::Match($Object.2 ?? $Object[2], 'v([\d\.]+)').Groups[1].Value
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
