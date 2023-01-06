@@ -2,7 +2,9 @@ $UniVer = '9000F002'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes("pid=yy&sv=${UniVer}&t=${Time}&k=sl3$@l43#yG34yY&4R0DF)d#DTe6f!t564%rdr54j6jswe4j")
+    [System.Text.Encoding]::UTF8.GetBytes(
+      (('cGlkPXl5JnN2PXswfSZ0PXsxfSZrPXNsMyRAbDQzI3lHMzR5WSY0UjBERilkI0RUZTZmIXQ1NjQlcmRyNTRqNmpzd2U0ag==' | ConvertFrom-Base64) -f $UniVer, $Time)
+    )
   )
 ).Replace('-', '').ToLower()
 $Content1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}" -StatusCodeVariable 'StatusCode'

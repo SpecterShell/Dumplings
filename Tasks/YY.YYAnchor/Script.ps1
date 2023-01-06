@@ -1,8 +1,10 @@
-$UniVer = $Task.LastState.UniVer ?? '12C0F000'
+$UniVer = '12C0F000'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes("appid=yyanchor&timestamp=${Time}&k=BPX4%pISczDL5rd^2ot&1SRjpF7@0hET")
+    [System.Text.Encoding]::UTF8.GetBytes(
+      (('YXBwaWQ9eXlhbmNob3ImdGltZXN0YW1wPXswfSZrPUJQWDQlcElTY3pETDVyZF4yb3QmMVNSanBGN0AwaEVU' | ConvertFrom-Base64) -f $Time)
+    )
   )
 ).Replace('-', '').ToLower()
 $Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1"
