@@ -1,3 +1,8 @@
+# Version 2.4.3:
+
+- Export to image with better design.
+- Some minor improvements and bugs fixed.
+
 # Version 2.3.1:
 
 - Export to image with better design.
