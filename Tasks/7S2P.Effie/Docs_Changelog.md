@@ -1,3 +1,8 @@
+# Version 2.4.5:
+
+- Improved for 4K (150% scaling) displays.
+- Updated the editing performance.
+
 # Version 2.4.3:
 
 - Export to image with better design.
