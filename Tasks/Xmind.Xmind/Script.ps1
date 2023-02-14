@@ -5,14 +5,11 @@ $Task.CurrentState.Version = $Object1.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url
+  InstallerUrl = $InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
 }
 
 # Sometimes the installers do not match the version
-if ($Task.CurrentState.Installer[0].InstallerUrl.Contains($Task.CurrentState.Version -csplit '\.' -join '')) {
-  # ReleaseTime
-  $Task.CurrentState.ReleaseTime = [datetime]::ParseExact($Object.release_date, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-
+if ($InstallerUrl.Contains($Task.CurrentState.Version)) {
   # ReleaseNotes (en-US)
   $Task.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
@@ -29,10 +26,7 @@ if ($Task.CurrentState.Installer[0].InstallerUrl.Contains($Task.CurrentState.Ver
   Write-Host -Object "Task $($Task.Name): The installers do not match the version" -ForegroundColor Yellow
 
   # Version
-  $Task.CurrentState.Version = [regex]::Match(
-    $Task.CurrentState.Installer[0].InstallerUrl,
-    '([\d\.]+)\.exe'
-  ).Groups[1].Value
+  $Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 }
 
 switch (Compare-State) {
@@ -40,7 +34,7 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri 'https://xmind.app/desktop/release-notes/' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='release-notes']/div/div/div[contains(./h3/text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='release-notes']/div/div/div[contains(./h3/text(), '$([regex]::Replace($Task.CurrentState.Version, '(\d+\.\d+)\.(\d+)', '$1 ($2)'))')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./h5').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
