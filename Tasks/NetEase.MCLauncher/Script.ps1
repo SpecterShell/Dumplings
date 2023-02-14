@@ -1,14 +1,12 @@
-$Object = ("{$(Invoke-RestMethod -Uri 'https://x19.update.netease.com/pl/x19_java_patchlist')}" | ConvertFrom-Json -AsHashtable).GetEnumerator() |
-  Where-Object -FilterScript { $_.Value.url.Contains('.exe') } |
-  Select-Object -Last 1
-
-# Version
-$Task.CurrentState.Version = $Object[0].Name
+$Content = (Invoke-WebRequest -Uri 'https://adl.netease.com/d/g/mc/c/pc?type=pc').Content
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://x19.gdl.netease.com/MCLauncher_publish_$($Task.CurrentState.Version).exe"
+  InstallerUrl = $InstallerUrl = [regex]::Match($Content, 'pc_link\s*=\s*"(.+?)"').Groups[1].Value
 }
+
+# Version
+$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
