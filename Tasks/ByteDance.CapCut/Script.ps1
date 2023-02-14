@@ -1,7 +1,9 @@
-$Object = Invoke-WebRequest -Uri 'https://www.capcut.com/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.capcut.com/' | ConvertFrom-Html
+
+$Object2 = $Object1.SelectSingleNode('//*[@id="RENDER_DATA"]').InnerHtml.Trim() | ConvertTo-UnescapedUri | ConvertFrom-Json -AsHashtable
 
 # Installer
-$InstallerUrl = $Object.SelectSingleNode('//*[@id="root"]/div/div[3]/div[1]/div[3]/a[2]').Attributes['href'].Value
+$InstallerUrl = $Object2.values.tccData.download_link[0].windows_download_pkg.channel_default
 $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
