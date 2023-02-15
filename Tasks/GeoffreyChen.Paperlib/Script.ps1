@@ -12,7 +12,7 @@ switch (Compare-State) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]{3} \d{1,2} \d{4})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        # ReleaseNotes (zh-CN)
+        # ReleaseNotes (en-US)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
