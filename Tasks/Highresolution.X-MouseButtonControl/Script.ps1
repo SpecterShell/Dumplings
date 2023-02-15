@@ -26,7 +26,7 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
   ),
   (Get-Culture -Name 'en-US'),
   [System.Globalization.DateTimeStyles]::None
-)
+).ToString('yyyy-MM-dd')
 
 # ReleaseNotes (en-US)
 $Task.CurrentState.Locale += [ordered]@{
