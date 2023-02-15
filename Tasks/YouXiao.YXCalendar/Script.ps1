@@ -1,9 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.youxiao.cn/yxcalendar/' | ConvertFrom-Html
+$EdgeDriver.Navigate().GoToUrl('https://www.yxcal.com/')
 
 # Version
 $Task.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="home"]/div/div[1]/form/p[1]/text()[2]').InnerText,
-  '([\d\.]+)'
+  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form[1]/p[1]')).Text,
+  '最新版本: ([\d\.]+)'
 ).Groups[1].Value
 
 # Installer
@@ -13,10 +13,10 @@ $Task.CurrentState.Installer += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.youxiao.cn/index.php/yxcalendar/version-log/' | ConvertFrom-Html
+    $Object = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxcalendar/version-log/' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='post-350']/div[2]/ul[contains(./li/text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object.SelectSingleNode("//*[@id='post-350']/div[2]/ul[contains(./li/text(), '$($Task.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
