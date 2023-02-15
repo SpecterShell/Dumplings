@@ -18,7 +18,7 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri 'https://www.sweetscape.com/010editor/release_notes.html' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='contentdiv']/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='contentdiv'][1]/h2[contains(text(), '$($Task.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
