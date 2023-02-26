@@ -1,4 +1,4 @@
-$Task.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 4516 -Wae '3.0.3'
+$Task.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 4516 -Version '3.0.0' -Locale 'zh-CN'
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
