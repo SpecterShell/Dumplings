@@ -13,7 +13,7 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact($Task.CurrentState.Versi
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'http://qxys.3vfree.cn/ShowPost.asp?ThreadID=206' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?ThreadID=206' | ConvertFrom-Html
 
     try {
       $ReleaseNotesNodes = @()
