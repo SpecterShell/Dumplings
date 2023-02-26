@@ -73,7 +73,7 @@ function Invoke-WondershareJsonUpgradeApi {
       [ordered]@{
         Locale = $Locale
         Key    = 'ReleaseNotes'
-        Value  = $Object2.data.whats_new_content | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object2.data.whats_new_content | Format-Text
       }
     )
   }
@@ -110,7 +110,7 @@ function Invoke-WondershareXmlUpgradeApi {
       [ordered]@{
         Locale = $Locale
         Key    = 'ReleaseNotes'
-        Value  = $Object.Respone.WhatNews.Item[0].Text.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object.Respone.WhatNews.Item[0].Text.'#cdata-section' | Format-Text
       }
     )
   }
