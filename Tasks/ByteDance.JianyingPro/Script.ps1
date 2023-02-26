@@ -7,7 +7,7 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'Jianying_([\d_]+)_jianyingpro_0\.exe').Groups[1].Value.Replace('_', '.')
+$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'Jianying_([\d_]+)_jianyingpro').Groups[1].Value.Replace('_', '.')
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match($Object.windows_version_and_update_date, '(\d{4}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
