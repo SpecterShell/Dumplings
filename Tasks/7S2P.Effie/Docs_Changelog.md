@@ -1,3 +1,8 @@
+# Version 2.5.1:
+
+- Optimized sheet sync.
+- Some minor improvements and bugs fixed.
+
 # Version 2.4.5:
 
 - Improved for 4K (150% scaling) displays.
