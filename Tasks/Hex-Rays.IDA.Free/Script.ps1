@@ -9,7 +9,7 @@ $Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '^(\
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.SelectSingleNode('//*[@id="download"]/div/div/div[2]/div[1]/p/a').Attributes['href'].Value
+  InstallerUrl = $Object2.SelectSingleNode('//*[@id="download"]/div/div/div[2]/div/div[1]/p/a').Attributes['href'].Value
 }
 
 switch (Compare-State) {

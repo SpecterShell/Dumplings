@@ -2,7 +2,7 @@ $Object = Invoke-WebRequest -Uri 'https://highrez.co.uk/downloads/xmbc_changelog
 
 # Version
 $Task.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('/html/body/div[2]/b').InnerText,
+  $Object.SelectSingleNode('/html/body/div[2]/div/b').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
@@ -14,15 +14,15 @@ $Task.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
   [regex]::Match(
-    $Object.SelectSingleNode('/html/body/div[2]/text()').InnerText,
+    $Object.SelectSingleNode('/html/body/div[2]/div/text()').InnerText,
     '\((.+)\)'
   ).Groups[1].Value,
   # "[string[]]" is needed here to convert "array" object to string array
   [string[]]@(
-    "d'st' MMMM yyyy",
-    "d'nd' MMMM yyyy",
-    "d'rd' MMMM yyyy",
-    "d'th' MMMM yyyy"
+    "d'st' MMM yyyy",
+    "d'nd' MMM yyyy",
+    "d'rd' MMM yyyy",
+    "d'th' MMM yyyy"
   ),
   (Get-Culture -Name 'en-US'),
   [System.Globalization.DateTimeStyles]::None
@@ -32,7 +32,7 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object.SelectNodes('/html/body/ul[1]/li').InnerText.Replace("`t", ' ') | Format-Text | ConvertTo-UnorderedList
+  Value  = ($Object.SelectNodes('/html/body/div[2]/div/following-sibling::*') | Get-TextContent | Format-Text).Replace("`t", ' ')
 }
 
 switch (Compare-State) {
