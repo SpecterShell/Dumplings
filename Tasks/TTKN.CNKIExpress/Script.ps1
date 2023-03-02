@@ -11,7 +11,7 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+$Task.CurrentState.ReleaseTime = (Get-Date -Date $Object.releaseDate).ToUniversalTime()
 
 # ReleaseNotes (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
