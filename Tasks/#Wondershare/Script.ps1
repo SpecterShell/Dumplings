@@ -20,7 +20,7 @@ $Temp.WondershareUpgradeInfo = [ordered]@{}
         [ordered]@{
           Locale = $Task.Config.Products[$_.pid.ToString()].Locale
           Key    = 'ReleaseNotes'
-          Value  = $_.whats_new_content | ConvertFrom-Html | Format-Text
+          Value  = $_.whats_new_content | Format-Text
         }
       )
     }
