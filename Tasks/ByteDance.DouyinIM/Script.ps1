@@ -1,21 +1,16 @@
-$Object = Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/chat' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/chat' | ConvertFrom-Html
+$Object2 = ($Object1.SelectSingleNode('//*[@id="RENDER_DATA"]').InnerText | ConvertTo-UnescapedUri | ConvertFrom-Json -AsHashtable).Values.downloadImPcInfo
 
 # Version
-$Task.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="root"]/div/div[2]/div/div[3]/div/div[1]/div/div/div[2]').InnerText.Trim(),
-  '最新版本：([\d\.]+)'
-).Groups[1].Value
+$Task.CurrentState.Version = $Object2.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.SelectSingleNode('//*[@id="root"]/div/div[2]/div/div[3]/div/div[1]/div/div/div[1]/a[1]').Attributes['href'].Value
+  InstallerUrl = $Object2.apk
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="root"]/div/div[2]/div/div[3]/div/div[1]/div/div/div[2]').InnerText.Trim(),
-  '更新时间：(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$Task.CurrentState.ReleaseTime = $Object2.time | Get-Date -Format 'yyyy-MM-dd'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
