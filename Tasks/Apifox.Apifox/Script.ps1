@@ -9,7 +9,7 @@ switch (Compare-State) {
 
     try {
       # ReleaseNotes (zh-CN)
-      $ReleaseNotesTitleNode = $Object.SelectSingleNode("//*[@class='page']/section/div[2]/h2[contains(text(),'$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object.SelectSingleNode("//main/div/div/h2[contains(text(),'$($Task.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
