@@ -12,7 +12,7 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.data.releaseNote | Format-Text | ConvertTo-UnorderedList
+  Value  = $Object1.data.releaseNote | Format-Text
 }
 
 switch (Compare-State) {
