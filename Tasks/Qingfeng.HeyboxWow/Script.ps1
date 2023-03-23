@@ -1,4 +1,4 @@
-$Object = Invoke-RestMethod -Uri 'https://accoriapi.xiaoheihe.cn/wow/check_new_version_v2/'
+$Object = Invoke-RestMethod -Uri 'https://accoriapi.xiaoheihe.cn/wow/check_new_version_v2/' -Method Post
 
 # Version
 $Task.CurrentState.Version = $Object.result.version_list[0].Version
