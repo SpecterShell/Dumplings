@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/check-up
 $Task.CurrentState.Version = $Object1.data.version
 
 # Installer
-$InstallerUrl = Get-RedirectedUrl -Uri 'https://www.atominn.com/to/get-file/wonderpen?key=win-installer'
+$InstallerUrl = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-installer'
 $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
