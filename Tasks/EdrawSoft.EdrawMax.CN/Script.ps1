@@ -1,10 +1,5 @@
 $Task.CurrentState = $Temp.WondershareUpgradeInfo['5374']
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://cc-download.edrawsoft.cn/cbs_down/edraw-max_cn_$($Task.CurrentState.version)_full5374.exe"
-}
-
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     # RealVersion

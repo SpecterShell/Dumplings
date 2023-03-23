@@ -14,7 +14,11 @@ $Temp.WondershareUpgradeInfo = [ordered]@{}
       # Version
       Version   = $_.version
       # Installer
-      Installer = @()
+      Installer = @(
+        [ordered]@{
+          InstallerUrl = $_.full.url.Replace('upgrade', 'cbs_down') | ConvertTo-Https
+        }
+      )
       # ReleaseNotes
       Locale    = @(
         [ordered]@{

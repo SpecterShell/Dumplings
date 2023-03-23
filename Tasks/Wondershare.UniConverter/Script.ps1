@@ -1,10 +1,5 @@
 $Task.CurrentState = $Temp.WondershareUpgradeInfo['9629']
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/uniconverter13_$($Task.CurrentState.Version)_full9629.exe"
-}
-
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     # RealVersion

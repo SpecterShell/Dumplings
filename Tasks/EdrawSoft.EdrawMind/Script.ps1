@@ -1,10 +1,5 @@
 $Task.CurrentState = $Temp.WondershareUpgradeInfo['5370']
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.edrawsoft.com/cbs_down/edrawmind_$($Task.CurrentState.version)_full5370.exe"
-}
-
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     # RealVersion

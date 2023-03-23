@@ -1,10 +1,5 @@
 $Task.CurrentState = $Temp.WondershareUpgradeInfo['7771']
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/filmii_64bit_$($Task.CurrentState.Version)_full7771.exe"
-}
-
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     # RealVersion
