@@ -26,18 +26,20 @@ $Task.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object3 = Invoke-WebRequest -Uri 'https://www.billfish.cn/download/' | ConvertFrom-Html
+    $Object3 = Invoke-WebRequest -Uri 'https://www.billfish.cn/help/gengxinrizhi' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesNode = $Object3.SelectSingleNode("//*[@id='download-page']/div[2]/table/tr[contains(./td[2]/text(), '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[starts-with(@class, 'catalog_catalogContent')]/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node.Name -ne 'hr'; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          # This website treats <br> as block element, which causes Get-TextContent not working properly
-          # Use legacy parsing method instead
-          Value  = $ReleaseNotesNode.SelectSingleNode('./td[3]').InnerText | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
