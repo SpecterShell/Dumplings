@@ -42,9 +42,9 @@ $Task.CurrentState.Locale += [ordered]@{
 }
 # ReleaseNotesUrl (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Key             = 'ReleaseNotesUrl'
-  Value           = $ReleaseNotesUrl2 = $Object3.item.changelog
+  Locale = 'zh-CN'
+  Key    = 'ReleaseNotesUrl'
+  Value  = $ReleaseNotesUrl2 = $Object3.item.changelog
 }
 
 switch (Compare-State) {
@@ -58,8 +58,8 @@ switch (Compare-State) {
       # ReleaseNotes (en-US)
       $Task.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
-        Key   = 'ReleaseNotes'
-        Value = $Object5.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
+        Key    = 'ReleaseNotes'
+        Value  = $Object5.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
