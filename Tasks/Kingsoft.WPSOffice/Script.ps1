@@ -11,9 +11,6 @@ $Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'WPSOffice_([\d\.]+)\
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    Write-State
-  }
-  ({ $_ -ge 2 }) {
     $Object2 = Invoke-WebRequest -Uri 'https://www.wps.com/whatsnew/pc/' | ConvertFrom-Html
 
     try {
@@ -54,6 +51,9 @@ switch (Compare-State) {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
     }
 
+    Write-State
+  }
+  ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
   ({ $_ -ge 3 }) {

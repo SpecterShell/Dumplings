@@ -4,9 +4,6 @@ $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    Write-State
-  }
-  ({ $_ -ge 2 }) {
     $Object1 = Invoke-WebRequest -Uri 'https://flicker.cool/en/versions' | ConvertFrom-Html
 
     try {
@@ -43,6 +40,9 @@ switch (Compare-State) {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
     }
 
+    Write-State
+  }
+  ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
   ({ $_ -ge 3 }) {

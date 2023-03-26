@@ -17,9 +17,6 @@ $Task.CurrentState.Locale += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    Write-State
-  }
-  ({ $_ -ge 2 }) {
     $Object2 = Invoke-WebRequest -Uri 'https://docs.qianjiapp.com/change-log/change_log_pc.html' | ConvertFrom-Html
 
     try {
@@ -34,6 +31,9 @@ switch (Compare-State) {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
     }
 
+    Write-State
+  }
+  ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
   ({ $_ -ge 3 }) {
