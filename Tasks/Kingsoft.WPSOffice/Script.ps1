@@ -14,18 +14,22 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri 'https://www.wps.com/whatsnew/pc/' | ConvertFrom-Html
 
     try {
-      if ($Object2.SelectSingleNode('//*[@id="root"]/div[2]/div/div[1]/div[1]/a/div/p[2]').InnerText.Contains($Task.CurrentState.Version)) {
+      if ($Object2.SelectSingleNode('//*[@class="nav-list"]/a[1]/p[2]').InnerText.Contains($Task.CurrentState.Version)) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
-          $Object2.SelectSingleNode('//*[@id="root"]/div[2]/div/div[1]/div[1]/a/div/p[1]/span[1]').InnerText,
-          '(\d{1,2}/\d{1,2}/\d{4})'
-        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
+          [regex]::Match(
+            $Object2.SelectSingleNode('//*[@class="nav-list"]/a[1]/p[1]').InnerText,
+            '(\d{1,2}/\d{1,2}/\d{4})'
+          ).Groups[1].Value,
+          'MM/dd/yyyy',
+          $null
+        ).ToString('yyyy-MM-dd')
 
         # ReleaseNotes (en-US)
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[@id="root"]/div[2]/div/div[3]/div/*[position()>1]') | Get-TextContent | Format-Text
+          Value  = $Object2.SelectNodes('//*[@class="article-content"]/*[position()>1]') | Get-TextContent | Format-Text
         }
 
         try {
