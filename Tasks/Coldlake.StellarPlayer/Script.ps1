@@ -2,10 +2,11 @@
 $Object1 = Invoke-RestMethod -Uri 'https://player-update.coldlake1.com/version/info' | Get-EmbeddedJson -StartsFrom 'getVersionInfo(' | ConvertFrom-Json
 # Upgrade x64
 $Object2 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x64'
+$Version2 = [regex]::Match($Object2.data, '(\d{14})').Groups[1].Value
 # Upgrade x86
 $Object3 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x86'
 
-if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -DifferenceVersion ([regex]::Match($Object2.data, '(\d{14})').Groups[1].Value)) -gt 0) {
+if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -DifferenceVersion $Version2) -gt 0) {
   if ($Object2.data -ne $Object3.data) {
     Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
     $Task.Config.Notes = '各个架构的版本号不相同'
@@ -14,7 +15,7 @@ if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -
   }
 
   # Version
-  $Task.CurrentState.Version = [regex]::Match($Object2.data, '(\d{14})').Groups[1].Value
+  $Task.CurrentState.Version = $Version2
 
   # Installer
   $Task.CurrentState.Installer += [ordered]@{

@@ -6,7 +6,7 @@ $Task.CurrentState.Version = $Object.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.url
+  InstallerUrl = $Object.url.Replace('1002', '1001')
 }
 
 # ReleaseNotes (zh-CN)
