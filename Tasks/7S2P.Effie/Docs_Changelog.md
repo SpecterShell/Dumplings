@@ -1,3 +1,8 @@
+# Version 2.6.1:
+
+- Add lock for your folders.
+- Some minor improvements and bugs fixed.
+
 # Version 2.5.1:
 
 - Optimized sheet sync.
