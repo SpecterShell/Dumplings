@@ -4,10 +4,10 @@ $Object = Invoke-RestMethod -Uri "https://is.snssdk.com/service/settings/v3/?dev
 $Task.CurrentState.VersionCode = $Object.data.settings.update_reminder.lastest_stable_version
 
 # Version
-$VersionCodeBase = $Task.CurrentState.VersionCode - 188928
+$VersionCodeBase = $Task.CurrentState.VersionCode
 $Task.CurrentState.Version = @(
-  [math]::Floor($VersionCodeBase / 256 / 10).ToString()
-  [math]::Floor($VersionCodeBase / 256 % 10).ToString()
+  [math]::Floor($VersionCodeBase / 256 / 256).ToString()
+  [math]::Floor($VersionCodeBase / 256 % 256).ToString()
   [math]::Floor($VersionCodeBase % 256).ToString()
   $Object.data.settings.update_reminder.lastest_stable_builder_number.ToString()
 ) -join '.'

@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://downloads.sparkmailapp.com/Spark3/win/dist/appcast.xml'
 
 # Version
-$Task.CurrentState.Version = $Object1.enclosure.version
+$Task.CurrentState.Version = [regex]::Match($Object1.enclosure.version, '^(\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
@@ -23,7 +23,7 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     try {
-      if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains([regex]::Match($Task.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)) {
+      if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains($Task.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'

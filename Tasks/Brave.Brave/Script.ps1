@@ -29,19 +29,23 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri 'https://brave.com/latest/' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesNode = $Object2.SelectSingleNode('//*[contains(@class, "hero__content")]/div[./h2[@id="desktop"]]')
-      if ($ReleaseNotesNode.SelectSingleNode('./h3[1]/strong').InnerText.Trim().Contains(($Task.CurrentState.Version.Split('.') | Select-Object -Skip 1) -join '.')) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'hero__content')]/div[./h2[@id='desktop']]/h3[contains(@id, '$(($Task.CurrentState.Version.Split('.') | Select-Object -Skip 1) -join '')')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode.SelectSingleNode('./h3[1]/text()[2]').InnerText,
+          $ReleaseNotesTitleNode.SelectSingleNode('./text()[2]').InnerText,
           '\((.+)\)'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.Attributes['id'].Value?.Contains('release-notes') ; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectNodes('./*[@id="release-notes"]/following-sibling::*[position()!=last()]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow

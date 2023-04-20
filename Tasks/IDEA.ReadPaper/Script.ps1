@@ -1,4 +1,4 @@
-$Object = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-app-aiKnowledge/aiKnowledge/client/v1/getDownloadUrls' -Method Post
+$Object = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-app-aiKnowledge/aiKnowledge/client/v1/getDownloadUrls' -Method Post -ContentType 'application/json' -Body '{}'
 
 $Prefix = [uri]::new([uri]$Object.data.urls.windowsClient, '.').OriginalString
 
