@@ -6,6 +6,9 @@ $Object2 = Invoke-RestMethod -Uri 'https://www.diskgenius.cn/pro/statistics/upda
 # Version
 $Task.CurrentState.Version = $Object1.version.new
 
+# RealVersion
+$Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '^(\d+\.\d+\.\d+)').Groups[1].Value
+
 if ($Object1.version.new -ne $Object2.version.new) {
   Write-Host -Object "Task $($Task.Name): The versions are different between the locales"
   $Task.Config.Notes = '各个版本的版本号不相同'
