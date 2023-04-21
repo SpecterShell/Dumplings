@@ -12,7 +12,7 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.full[0].introduction | Split-LineEndings | Select-Object -Skip 1 | Select-Object -SkipLast 2 | Format-Text
+  Value  = $Object.full[0].introduction | Split-LineEndings | Select-Object -Skip 1 | Format-Text
 }
 
 switch (Compare-State) {
