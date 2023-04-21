@@ -17,7 +17,7 @@ switch (Compare-State) {
       $ReleaseNotesContent = $Content.Split("`r`n`r`n") | Where-Object -FilterScript { $_.StartsWith($ShortVersion) }
       if ($ReleaseNotesContent) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent, 'Released: (.+?)\n').Groups[1].Value
+        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent, 'Released: (.+?)\n').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $Task.CurrentState.Locale += [ordered]@{

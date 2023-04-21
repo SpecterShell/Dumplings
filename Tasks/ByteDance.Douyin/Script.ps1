@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/chat' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/pc' | ConvertFrom-Html
 $Object2 = ($Object1.SelectSingleNode('//*[@id="RENDER_DATA"]').InnerText | ConvertTo-UnescapedUri | ConvertFrom-Json -AsHashtable).Values.downloadInfo
 
 # Version
@@ -6,7 +6,7 @@ $Task.CurrentState.Version = $Object2.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.apk
+  InstallerUrl = $Object2.apk.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
 }
 
 # ReleaseTime
