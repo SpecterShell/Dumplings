@@ -1,5 +1,5 @@
 # Download
-$Object1 = Invoke-RestMethod -Uri 'https://player-update.coldlake1.com/version/info' | Get-EmbeddedJson -StartsFrom 'getVersionInfo(' | ConvertFrom-Json
+$Object1 = Invoke-RestMethod -Uri 'https://player-update.coldlake1.com/version/info' | Get-EmbeddedJson -StartsFrom 'getVersionInfo(' | ConvertFrom-Json -AsHashtable
 # Upgrade x64
 $Object2 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x64'
 $Version2 = [regex]::Match($Object2.data, '(\d{14})').Groups[1].Value
