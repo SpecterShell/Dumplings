@@ -2,11 +2,11 @@ $Task.CurrentState = Invoke-RestMethod -Uri "https://cdn.apifox.cn/download/late
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object = Invoke-WebRequest -Uri 'https://www.apifox.cn/help/app/changelog/' | ConvertFrom-Html
+    $Object = Invoke-WebRequest -Uri 'https://apifox.com/help/app/changelog/' | ConvertFrom-Html
 
     try {
       # ReleaseNotes (zh-CN)
-      $ReleaseNotesTitleNode = $Object.SelectSingleNode("//main/div/div/h2[contains(text(),'$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object.SelectSingleNode("//*[contains(@class, 'theme-doc-markdown')]/h2[contains(text(), '$($Task.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
