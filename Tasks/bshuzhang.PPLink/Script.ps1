@@ -1,4 +1,4 @@
-$Prefix = 'https://relay.ppzhilian.com/download/win/'
+$Prefix = 'https://www.ppzhilian.com/download/win/'
 
 $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
