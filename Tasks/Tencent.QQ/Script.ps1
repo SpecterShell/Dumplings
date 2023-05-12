@@ -1,7 +1,7 @@
-$Object = Invoke-WebRequest -Uri 'https://im.qq.com/download' | ConvertFrom-Html
+$Object = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq' | ConvertFrom-Html
 
 # Installer
-$InstallerUrl = $Object.SelectSingleNode('//*[@id="imedit_wordandurl_pctabdownurl"]').Attributes['href'].Value
+$InstallerUrl = $Object.SelectSingleNode('//*[@class="download"]').Attributes['href'].Value
 $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
@@ -11,15 +11,15 @@ $Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Gro
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="imedit_date_pctab"]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
+  $Object.SelectSingleNode('//*[@class="desc-date"]').InnerText,
+  '(\d{4}年\d{1,2}月\d{1,2}日)'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.SelectNodes('//*[@id="imedit_list_pctab"]/li').InnerText | Format-Text
+  Value  = $Object.SelectNodes('//*[@class="features"]').InnerText | Format-Text
 }
 
 switch (Compare-State) {
