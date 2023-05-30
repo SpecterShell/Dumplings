@@ -7,7 +7,7 @@ $Version1 = "$($Object1.data.packageVO.appver).$($Object1.data.packageVO.buildve
 
 # Download source
 $InstallerUrl2 = Get-RedirectedUrl -Uri 'https://music.163.com/api/pc/package/download/latest'
-$Version2 = [regex]::Match($InstallerUrl2, '([\d\.]+)\.exe').Groups[1].Value
+$Version2 = [regex]::Match($InstallerUrl2, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 if ((Compare-Version -ReferenceVersion $Version2 -DifferenceVersion $Version1 ) -ge 0) {
   $Task.Config.Notes = '升级源'
