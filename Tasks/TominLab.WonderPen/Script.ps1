@@ -4,13 +4,20 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/check-up
 $Task.CurrentState.Version = $Object1.data.version
 
 # Installer
-$InstallerUrl = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-installer'
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrl1 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-ia32'
+}
+$Task.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-x64'
 }
 
-if (!$InstallerUrl.Contains($Task.CurrentState.Version)) {
-  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($Task.CurrentState.Version)"
+if (!$InstallerUrl1.Contains($Task.CurrentState.Version)) {
+  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl1}`ndoesn't contain version $($Task.CurrentState.Version)"
+}
+if (!$InstallerUrl2.Contains($Task.CurrentState.Version)) {
+  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl2}`ndoesn't contain version $($Task.CurrentState.Version)"
 }
 
 switch (Compare-State) {
