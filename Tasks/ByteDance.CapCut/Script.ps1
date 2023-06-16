@@ -9,7 +9,7 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'CapCut_([\d_]+)_capcutpc_0\.exe').Groups[1].Value.Replace('_', '.')
+$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'CapCut_([\d_]+)_capcutpc').Groups[1].Value.Replace('_', '.')
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
