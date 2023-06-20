@@ -17,7 +17,7 @@ $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl    = $Object.SelectSingleNode('//*[@id="SERVER_LINK2"]').Attributes['href'].Value
 }
 
-$ReleaseNotesTitleNode = $Object.SelectNodes("//*[@id='page-top']/table/tbody/tr/td[2]/table/tbody/tr/td/h4[starts-with(./text(), 'AirGameServer')]") |
+$ReleaseNotesTitleNode = $Object.SelectNodes("//*[@id='page-top']/table/tbody/tr/td[2]/table/tbody/tr/td/h4[starts-with(./text(), 'AirGame')]") |
   Where-Object -FilterScript { $_.InnerText.EndsWith([regex]::Match($Task.CurrentState.Version, '([\d\.]+)').Groups[1].Value) }
 if ($ReleaseNotesTitleNode) {
   # ReleaseNotes (zh-CN)
