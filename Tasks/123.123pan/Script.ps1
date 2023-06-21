@@ -1,6 +1,11 @@
 $Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
-  'app-version' = 109
+  'app-version' = $Task.LastState.Version.Split('.')[2] ?? 109
+}
+
+if (-not $Object.data.hasNewVersion) {
+  Write-Host -Object "Task $($Task.Name): Version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  return
 }
 
 $Prefix = $Object.data.url + '/'
