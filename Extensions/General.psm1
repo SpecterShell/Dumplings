@@ -409,6 +409,31 @@ function Get-TempFile {
   return $FilePath
 }
 
+function Expand-TempArchive {
+  <#
+  .SYNOPSIS
+    Extract files from ZIP archive and return the path of root directory
+  .PARAMETER Path
+    The path to the root directory to which the files were extracted
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'The path to the ZIP archive'
+    )]
+    [string]
+    $Path
+  )
+
+  process {
+    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force
+    $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    Expand-Archive -Path $Path -DestinationPath $FolderPath
+    return $FolderPath
+  }
+}
+
 function Get-RedirectedUrl {
   <#
   .SYNOPSIS
