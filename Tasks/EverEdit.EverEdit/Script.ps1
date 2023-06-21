@@ -13,9 +13,9 @@ $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
 }
 
-# In case the installer does not match the version
 if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
-  throw 'Task $($Task.Name): The installer does not match the version'
+  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
+  $Task.Config.Notes = '各个版本的版本号不相同'
 }
 
 switch (Compare-State) {
