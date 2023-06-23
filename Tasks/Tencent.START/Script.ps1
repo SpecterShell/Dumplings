@@ -1,4 +1,4 @@
-$Object = (Invoke-RestMethod -Uri 'https://api.start.qq.com/cfg/get?biztypes=windows-update-info-start').configs.'windows-update-info-start'.value | ConvertFrom-Json
+$Object = (Invoke-RestMethod -Uri 'https://api.start.qq.com/cfg/get?biztypes=windows-update-info').configs.'windows-update-info'.value | ConvertFrom-Json
 
 # Version
 $Task.CurrentState.Version = $Object.latestversion
