@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml?noCache=$((New-Guid).Gui
 $Prefix3 = 'https://dldir1.qq.com/weiyun/electron-update/release/win32/'
 $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix3 -Locale 'zh-CN'
 
-if ($true -or (Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
+if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
   if ($Object2.Version -ne $Object3.Version) {
     Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
     $Task.Config.Notes = '各个架构的版本号不相同'
