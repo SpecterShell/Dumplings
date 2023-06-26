@@ -210,7 +210,7 @@ function Send-VersionMessage {
   }
   # Installer
   if ($State.Installer) {
-    $Message.Entries['地址'] = ($State.Installer | ForEach-Object -Process { [uri]::EscapeUriString($_.InstallerUrl) }) -join "`n"
+    $Message.Entries['地址'] = $State.Installer.InstallerUrl -join "`n"
   }
   # ReleaseTime
   if ($State.ReleaseTime) {
