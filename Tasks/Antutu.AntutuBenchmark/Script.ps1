@@ -14,9 +14,7 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = [System.Web.HttpUtility]::HtmlDecode(
-  $Node.SelectSingleNode('./div/p/span').InnerText
-).Trim() | Get-Date -Format 'yyyy-MM-dd'
+$Task.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {

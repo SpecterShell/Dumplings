@@ -21,7 +21,7 @@ switch (Compare-State) {
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $ReleaseNotesTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]')
-        $Task.CurrentState.ReleaseTime = [System.Web.HttpUtility]::HtmlDecode($ReleaseNotesTimeNode.InnerText).Trim() | Get-Date -Format 'yyyy-MM-dd'
+        $Task.CurrentState.ReleaseTime = ($ReleaseNotesTimeNode.InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = @()

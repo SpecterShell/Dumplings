@@ -54,13 +54,13 @@ switch (Compare-State) {
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-Hans'
           Key    = 'ReleaseNotesUrl'
-          Value  = 'https://weixin.qq.com' + [System.Web.HttpUtility]::HtmlDecode($ReleaseNotesUrlNode.Attributes['href'].Value).Replace('?ang', '?lang')
+          Value  = 'https://weixin.qq.com' + ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
         }
         # ReleaseNotesUrl (zh-Hans-CN)
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-Hans-CN'
           Key    = 'ReleaseNotesUrl'
-          Value  = 'https://weixin.qq.com' + [System.Web.HttpUtility]::HtmlDecode($ReleaseNotesUrlNode.Attributes['href'].Value).Replace('?ang', '?lang')
+          Value  = 'https://weixin.qq.com' + ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseNotesUrl for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
