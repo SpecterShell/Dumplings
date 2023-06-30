@@ -19,10 +19,10 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
   ).Groups[1].Value,
   # "[string[]]" is needed here to convert "array" object to string array
   [string[]]@(
-    "d'st' MMM yyyy",
-    "d'nd' MMM yyyy",
-    "d'rd' MMM yyyy",
-    "d'th' MMM yyyy"
+    "d'st' MMM yyyy", "d'st' MMMM yyyy",
+    "d'nd' MMM yyyy", "d'nd' MMMM yyyy",
+    "d'rd' MMM yyyy", "d'rd' MMMM yyyy",
+    "d'th' MMM yyyy", "d'th' MMMM yyyy"
   ),
   (Get-Culture -Name 'en-US'),
   [System.Globalization.DateTimeStyles]::None
