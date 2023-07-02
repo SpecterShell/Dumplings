@@ -1,17 +1,30 @@
-$EdgeDriver.Navigate().GoToUrl('https://xstudio.music.163.com/')
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="page_one"]/div/p[4]/a')).GetAttribute('href') | ConvertTo-UnescapedUri
+$Object = Invoke-RestMethod -Uri 'https://xstudio-singer.xiaoice.com/version/update' -Headers @{
+  'architecture-abi'      = 'x86_64'
+  'platform-with-version' = 'Windows'
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'XStudio_([\d\.]+)').Groups[1].Value
+$Task.CurrentState.Version = $Object.latest.name
+
+# Installer
+$Task.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object.latest.release.url
+}
+
+# ReleaseTime
+$Task.CurrentState.ReleaseTime = $Object.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
+
+# ReleaseNotes (zh-CN)
+$Task.CurrentState.Locale += [ordered]@{
+  Locale = 'zh-CN'
+  Key    = 'ReleaseNotes'
+  Value  = $Object.latest.release.content | Format-Text
+}
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $InstallerUrl | Read-ProductVersionFromExe
+    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
     Write-State
   }
