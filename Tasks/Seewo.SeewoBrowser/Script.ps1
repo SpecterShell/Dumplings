@@ -1,7 +1,7 @@
 $Object = $Temp.SeewoApps['seewobrowser']
 
 # Version
-$Task.CurrentState.Version = [regex]::Matches($Object.softInfos[0].softVersion, '([\d\.]+)').Groups[-1].Value
+$Task.CurrentState.Version = $Object.softInfos[0].softVersion
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
