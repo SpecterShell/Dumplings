@@ -25,7 +25,7 @@ $Version3 = [regex]::Match($InstallerUrl3, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Val
 $InstallerUrl4 = $Object3.data.'web-pc-beta-download-links'.pcPackage32
 $Version4 = [regex]::Match($InstallerUrl4, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
-if ((Compare-Version -ReferenceVersion $Version3 -DifferenceVersion $Version1 ) -ge 0) {
+if ((Compare-Version -ReferenceVersion $Version3 -DifferenceVersion $Version2 ) -ge 0) {
   $Task.Config.Notes = '升级源'
 
   if ($Version1 -ne $Version2) {
