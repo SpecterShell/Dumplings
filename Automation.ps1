@@ -48,14 +48,18 @@ if ([console]::IsOutputRedirected -or $Env:CI) {
   $ProgressPreference = 'SilentlyContinue'
 }
 
+# Set console output encoding to UTF-8
+[System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(65001)
+[System.Console]::InputEncoding = [System.Text.Encoding]::GetEncoding(65001)
+
 # Set default parameter values for extensions and modules
 $Global:DumplingsDefaultParameterValues = @{
-  'Invoke-WebRequest:TimeoutSec'        = 512
+  'Invoke-WebRequest:TimeoutSec'        = 100
   'Invoke-WebRequest:MaximumRetryCount' = 4
-  'Invoke-WebRequest:RetryIntervalSec'  = 16
-  'Invoke-RestMethod:TimeoutSec'        = 512
+  'Invoke-WebRequest:RetryIntervalSec'  = 10
+  'Invoke-RestMethod:TimeoutSec'        = 100
   'Invoke-RestMethod:MaximumRetryCount' = 4
-  'Invoke-RestMethod:RetryIntervalSec'  = 16
+  'Invoke-RestMethod:RetryIntervalSec'  = 10
 }
 
 # Install and import required PowerShell modules
@@ -73,6 +77,7 @@ $Global:DumplingsDefaultParameterValues = @{
 Add-Type -Path (Join-Path $PSScriptRoot 'Assets' 'WebDriver.dll')
 $EdgeOptions = [OpenQA.Selenium.Edge.EdgeOptions]::new()
 $EdgeOptions.AddArgument('--headless')
+$EdgeOptions.AddUserProfilePreference('profile.managed_default_content_settings.images', 2)
 if ($Env:EDGEWEBDRIVER) {
   # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
   $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Env:EDGEWEBDRIVER, $EdgeOptions)
