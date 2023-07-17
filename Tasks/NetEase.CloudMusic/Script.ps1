@@ -1,3 +1,5 @@
+Set-StrictMode -Version 3.0
+
 # Upgrade x64
 $Object1 = Invoke-RestMethod `
   -Uri 'https://interface.music.163.com/api/pc/upgrade/get' `
@@ -77,6 +79,8 @@ if ((Compare-Version -ReferenceVersion $Version3 -DifferenceVersion $Version2 ) 
     InstallerUrl = $InstallerUrl3
   }
 }
+
+Set-StrictMode -Off
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
