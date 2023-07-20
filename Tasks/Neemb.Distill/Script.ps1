@@ -1,6 +1,6 @@
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://utils.distill.io/electron/download/alpha/win32/x64/latest'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://utils.distill.io/electron/download/alpha/win32/x64/latest' | ConvertTo-UnescapedUri
 }
 
 # Version
