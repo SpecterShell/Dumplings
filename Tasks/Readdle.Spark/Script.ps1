@@ -16,10 +16,6 @@ $Task.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
 
 # ReleaseNotesUrl
 $ReleaseNotesUrl = $Object1.releaseNotesLink
-$Task.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl
-}
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
