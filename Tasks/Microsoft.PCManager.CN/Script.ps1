@@ -1,19 +1,29 @@
 $Param = @{
-  Uri            = 'https://pcmanager.microsoft.com/config/api/AppConfig?pattern=%7B%7D_%7B10000%7D&encrypt=False'
+  Uri            = 'https://pcmanager.microsoft.com/config/api/v2/AppConfig'
   Method         = 'Post'
   Authentication = 'Bearer'
   Token          = ConvertTo-SecureString -String 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE5NzIyODI5MjIsImlzcyI6Imh0dHBzOi8vcGNtY29uZmlnLmNoaW5hY2xvdWRzaXRlcy5jbiIsImF1ZCI6Imh0dHBzOi8vcGNtY29uZmlnLmNoaW5hY2xvdWRzaXRlcy5jbiJ9.ZRyRbJdeCaXA4a5v6NyiJGOZATJ0ifxV_E8453SmYK4' -AsPlainText
-  Body           = '["PcManager:AutoUpdateOptions"]'
+  Body           = (
+    @{
+      RequestKeys = @('PCM:AutoUpdateOptions')
+      Metadata    = @{
+        '%Channel%'    = '10000'
+        insiderAllowed = $true
+      }
+      Pattern     = '{}_{10000}'
+      Encrypt     = $false
+    } | ConvertTo-Json -Compress
+  )
   ContentType    = 'application/json; charset=utf-8'
 }
-$Object = (Invoke-RestMethod @Param).'PcManager:AutoUpdateOptions' | ConvertFrom-Json
+$Object = (Invoke-RestMethod @Param).results.'PCM:AutoUpdateOptions' | ConvertFrom-Json
 
 # Version
 $Task.CurrentState.Version = $Object.Version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object.DownloadLink | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl -Uri $Object.DownloadLink
 }
 
 # ReleaseNotes (en-US)
