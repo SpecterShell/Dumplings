@@ -1,7 +1,7 @@
 $Object = Invoke-WebRequest -Uri 'https://platform.wps.cn/' | ConvertFrom-Html
 
 # Version
-$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[1]').InnerText.Trim()
+$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[1]').InnerText.Split('/')[0].Trim()
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
