@@ -12,11 +12,11 @@ $Task.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.versi
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase | Select-String -Pattern 'download.catsxp.com' -Raw -SimpleMatch | ConvertTo-Https
+  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
 }
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase | Select-String -Pattern 'download.catsxp.com' -Raw -SimpleMatch | ConvertTo-Https
+  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
 }
 
 switch (Compare-State) {
