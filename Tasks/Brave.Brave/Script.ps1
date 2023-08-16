@@ -39,7 +39,7 @@ switch (Compare-State) {
 
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.Attributes['id'].Value?.Contains('release-notes') ; $Node = $Node.NextSibling) {
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'p' -and -not $Node.Attributes['id'].Value?.Contains('release-notes') ; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
         $Task.CurrentState.Locale += [ordered]@{
