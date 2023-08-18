@@ -3,9 +3,9 @@
   Get text content from HTML Agility Pack node(s)
 #>
 
-# Node types that will not be added to the final list
+# Node types that will be ignored during traversing
 $IgnoredNodes = @('img', 'script', 'style', 'video', '#comment')
-# Node types that always start at new line, as well as <br> and <li>
+# Node types that always start at new line, as well as <li>
 # https://developer.mozilla.org/docs/Web/HTML/Block-level_elements
 $BlockNodes = @(
   'address', 'article', 'aside', 'blockquote', 'dd', 'div', 'dl',

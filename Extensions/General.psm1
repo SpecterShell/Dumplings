@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  A set of helper functions
+  Helper functions
 #>
 
 # Apply default parameters
@@ -11,7 +11,7 @@ if ($DumplingsDefaultParameterValues) {
 function ConvertFrom-UnixTimeSeconds {
   <#
   .SYNOPSIS
-    Convert Unix time in seconds to UTC DateTime object
+    Convert Unix time in seconds to DateTime object in UTC timezone
   .PARAMETER Seconds
     The Unix time in seconds
   #>
@@ -33,7 +33,7 @@ function ConvertFrom-UnixTimeSeconds {
 function ConvertFrom-UnixTimeMilliseconds {
   <#
   .SYNOPSIS
-    Convert Unix time in milliseconds to UTC DateTime object
+    Convert Unix time in milliseconds to DateTime object in UTC timezone
   .PARAMETER Milliseconds
     The Unix time in milliseconds
   #>
@@ -55,11 +55,11 @@ function ConvertFrom-UnixTimeMilliseconds {
 function ConvertTo-UtcDateTime {
   <#
   .SYNOPSIS
-    Adjust the DateTime from specified timezone to UTC
+    Adjust DateTime object from specified timezone to UTC
   .PARAMETER DateTime
     The DateTime object to be converted
   .PARAMETER Id
-    TimeZoneInfo ID
+    The TimeZoneInfo ID of the source timezone of the DateTime object
   #>
   [OutputType([datetime])]
   param (
@@ -72,7 +72,7 @@ function ConvertTo-UtcDateTime {
 
     [parameter(
       Mandatory,
-      HelpMessage = 'TimeZoneInfo ID'
+      HelpMessage = 'The TimeZoneInfo ID of the source timezone of the DateTime object'
     )]
     [ArgumentCompleter({ [System.TimeZoneInfo]::GetSystemTimeZones() | Select-Object -ExpandProperty Id | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
     [ValidateScript({ [System.TimeZoneInfo]::FindSystemTimeZoneById($_) })]
@@ -425,7 +425,7 @@ function Get-TempFile {
     Download the file and return its path
   #>
 
-  $WorkingDirectory = New-Item -Path $env:TEMP -Name 'Dumplings' -ItemType Directory -Force
+  $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force
   $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
   Invoke-WebRequest -OutFile $FilePath @args
   return $FilePath
