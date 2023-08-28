@@ -47,11 +47,11 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # Installer (arm64)
-$Object4 = Invoke-RestMethod -Uri "${Prefix}latest-win32-arm64.yml" | ConvertFrom-Yaml
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Prefix + $Object4.files[0].url
-}
+# $Object4 = Invoke-RestMethod -Uri "${Prefix}latest-win32-arm64.yml" | ConvertFrom-Yaml
+# $Task.CurrentState.Installer += [ordered]@{
+#   Architecture = 'arm64'
+#   InstallerUrl = $Prefix + $Object4.files[0].url
+# }
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
