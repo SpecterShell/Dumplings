@@ -1,3 +1,9 @@
+# Version 2.7.1:
+
+- Add "New Mind Map" menu item.
+- Improved Dark mode.
+- Some minor improvements and bugs fixed.
+
 # Version 2.6.1:
 
 - Add lock for your folders.
