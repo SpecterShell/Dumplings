@@ -32,14 +32,14 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.values.client_version.news | Select-Object -Skip 1 | Format-Text
+  Value  = $Object1.values.client_version.news | Format-Text
 }
 
 # ReleaseNotes (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object2.values.client_version.news | Select-Object -Skip 1 | Format-Text
+  Value  = $Object2.values.client_version.news | Format-Text
 }
 
 switch (Compare-State) {
