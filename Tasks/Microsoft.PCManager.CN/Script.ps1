@@ -30,13 +30,13 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.UpdateInfoEx.en -csplit 'Version description[:：]\s*')[-1] -csplit '(?<=\.)\s*(?=\d{1,2}\.)', "`n" | Format-Text
+  Value  = ($Object.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
 }
 # ReleaseNotes (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.UpdateInfoEx.'zh-cn' -csplit '版本描述[:：]\s*')[-1] -csplit '(?<=；)\s*(?=\d{1,2})', "`n" | Format-Text
+  Value  = ($Object.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
 }
 
 switch (Compare-State) {
