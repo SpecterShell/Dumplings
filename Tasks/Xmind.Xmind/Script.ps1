@@ -5,28 +5,20 @@ $Task.CurrentState.Version = $Object1.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
+  InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
 }
 
-# Sometimes the installers do not match the version
-if ($InstallerUrl.Contains($Task.CurrentState.Version)) {
-  # ReleaseNotes (en-US)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $Object1.'releaseNotes-en-US' | Format-Text
-  }
-  # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object1.'releaseNotes-zh-CN' | Format-Text
-  }
-} else {
-  Write-Host -Object "Task $($Task.Name): The installers do not match the version" -ForegroundColor Yellow
-
-  # Version
-  $Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
+# ReleaseNotes (en-US)
+$Task.CurrentState.Locale += [ordered]@{
+  Locale = 'en-US'
+  Key    = 'ReleaseNotes'
+  Value  = $Object1.'releaseNotes-en-US' | Format-Text
+}
+# ReleaseNotes (zh-CN)
+$Task.CurrentState.Locale += [ordered]@{
+  Locale = 'zh-CN'
+  Key    = 'ReleaseNotes'
+  Value  = $Object1.'releaseNotes-zh-CN' | Format-Text
 }
 
 switch (Compare-State) {
