@@ -6,9 +6,19 @@ $Task.CurrentState.Version = [regex]::Match(
   '([\d\.]+)'
 ).Groups[1].Value
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/div[1]/a').Attributes['href'].Value
+try {
+  $InstallerUrl = "https://dl.todesk.com/irrigation/ToDesk_$($Task.CurrentState.Version).exe"
+  Invoke-WebRequest -Uri $InstallerUrl -Method Head | Out-Null
+  # Installer
+  $Task.CurrentState.Installer += [ordered]@{
+    InstallerUrl = $InstallerUrl
+  }
+} catch {
+  Write-Host -Object "Task $($Task.Name): ${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')" -ForegroundColor Yellow
+  # Installer
+  $Task.CurrentState.Installer += [ordered]@{
+    InstallerUrl = $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/div[1]/a').Attributes['href'].Value
+  }
 }
 
 switch (Compare-State) {
