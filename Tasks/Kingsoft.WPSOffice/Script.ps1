@@ -11,48 +11,44 @@ $Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'WPSOffice_([\d\.]+)\
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.wps.com/whatsnew/pc/' | ConvertFrom-Html
+    $Object2 = (Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc').data |
+      Where-Object -FilterScript { $_.post_excerpt.Contains($Task.CurrentState.Version) }
 
     try {
-      if ($Object2.SelectSingleNode('//*[@class="nav-list"]/a[1]/p[2]').InnerText.Contains($Task.CurrentState.Version)) {
+      if ($Object2) {
+        $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($Object2.more.slug)"
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match(
-            $Object2.SelectSingleNode('//*[@class="nav-list"]/a[1]/p[1]').InnerText,
-            '(\d{1,2}/\d{1,2}/\d{4})'
-          ).Groups[1].Value,
-          'MM/dd/yyyy',
-          $null
-        ).ToString('yyyy-MM-dd')
+        $Task.CurrentState.ReleaseTime = $Object3.data.published_time | ConvertFrom-UnixTimeSeconds
 
         # ReleaseNotes (en-US)
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[@class="article-content"]/*[position()>1]') | Get-TextContent | Format-Text
+          Value  = $Object3.data.post_content | ConvertFrom-Html | Get-TextContent | Format-Text
         }
 
-        try {
-          $ReleaseNotesUrl = "https://www.wps.com/whatsnew/pc/$($Task.CurrentState.ReleaseTime.Replace('-',''))/"
-          Invoke-WebRequest -Uri $ReleaseNotesUrl | Out-Null
-          # ReleaseNotesUrl
-          $Task.CurrentState.Locale += [ordered]@{
-            Key   = 'ReleaseNotesUrl'
-            Value = $ReleaseNotesUrl
-          }
-        } catch {
-          Write-Host -Object "Task $($Task.Name): Cannot reach $($ReleaseNotesUrl), fallback to https://www.wps.com/whatsnew/pc/" -ForegroundColor Yellow
-          # ReleaseNotesUrl
-          $Task.CurrentState.Locale += [ordered]@{
-            Key   = 'ReleaseNotesUrl'
-            Value = 'https://www.wps.com/whatsnew/pc/'
-          }
+        # ReleaseNotesUrl
+        $Task.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = "https://www.wps.com/whatsnew$($Object2.more.slug)/"
         }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+
+        # ReleaseNotesUrl
+        $Task.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = 'https://www.wps.com/whatsnew/pc/'
+        }
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
+
+      # ReleaseNotesUrl
+      $Task.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.wps.com/whatsnew/pc/'
+      }
     }
 
     Write-State
