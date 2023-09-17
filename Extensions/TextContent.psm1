@@ -94,58 +94,69 @@ function Get-TextContent {
   end {
     $Content = ''
     $Nodes = Expand-Node -Node $Nodes
-    # If the previous node is a block element, add a newline before the next node
-    $NextNewLine = $false
-    # If the previous inline node ends with whitespaces, or the current inline node starts with whitespaces,
-    # add a single whitespace between them
+    $LastNodeName = ''
+    # Append single whitespace if there are whitespace(s) between visble texts from two text nodes
     $NextWhiteSpace = $false
 
-    foreach ($Node in $Nodes) {
-      switch ($Node.Name) {
-        '#text' {
-          # In case the text node is a fake node that works as a placeholder between the nodes
-          if (-not [string]::IsNullOrWhiteSpace($Node.InnerText)) {
-            if ($NextNewLine) {
-              $Content += "`n"
-              $NextNewLine = $false
-            } elseif ($NextWhiteSpace -or $Node.InnerText -cmatch '^\s+') {
+    switch ($Nodes) {
+      ({ $_.Name -eq '#text' }) {
+        $NewContent = $_.InnerText -creplace '\s+', ' '
+        if ($LastNodeName -eq '#text') {
+          if ([string]::IsNullOrWhiteSpace($NewContent)) {
+            $NextWhiteSpace = $true
+          } else {
+            if ($NewContent -cmatch '^\s+') {
+              $NextWhiteSpace = $true
+            }
+            if ($NextWhiteSpace -eq $true) {
               $Content += ' '
               $NextWhiteSpace = $false
             }
-            $Content += [System.Web.HttpUtility]::HtmlDecode($Node.InnerText.Trim().ReplaceLineEndings(' '))
-            if ($Node.InnerText -cmatch '\s+$') {
+            $Content += [System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())
+            if ($NewContent -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
           }
-        }
-        'br' {
-          $Content += "`n"
-          $NextNewLine = $false
-          $NextWhiteSpace = $false
-        }
-        Default {
-          if (-not [string]::IsNullOrEmpty($Content)) {
-            $Content += "`n"
-          }
-          switch ($Node.Name) {
-            # Unordered list
-            'ul' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Unordered'; Number = 1 } }
-            # Ordered list
-            'ol' { $Content += Get-TextContent $Node.ChildNodes @{ Type = 'Ordered'; Number = 1 } }
-            # List entry
-            'li' {
-              if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
-                $Content += "$(($ListInfo.Number++)). "
-              } else {
-                $Content += '- '
-              }
-              $Content += (Get-TextContent $Node.ChildNodes $ListInfo).TrimStart()
+          $LastNodeName = $_.Name
+        } else {
+          if (-not [string]::IsNullOrWhiteSpace($NewContent)) {
+            if ($LastNodeName) {
+              $Content += "`n"
             }
-            Default { $Content += Get-TextContent $Node.ChildNodes $ListInfo }
+            $Content += [System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())
+            if ($NewContent -cmatch '\s+$') {
+              $NextWhiteSpace = $true
+            }
+            $LastNodeName = $_.Name
           }
-          $NextNewLine = $true
-          $NextWhiteSpace = $false
         }
+      }
+      ({ $_.Name -eq 'br' }) {
+        if ($LastNodeName -and $LastNodeName -ne '#text') {
+          $Content += "`n"
+        }
+        $NextWhiteSpace = $false
+        $LastNodeName = $_.Name
+      }
+      Default {
+        if ($LastNodeName) {
+          $Content += "`n"
+        }
+        if ($_.Name -eq 'ul') {
+          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Unordered'; Number = 1 }
+        } elseif ($_.Name -eq 'ol') {
+          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Ordered'; Number = 1 }
+        } elseif ($_.Name -eq 'li') {
+          $Prefix = '- '
+          if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
+            $Prefix = "$(($ListInfo.Number++)). "
+          }
+          $Content += ((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)
+        } else {
+          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo
+        }
+        $NextWhiteSpace = $false
+        $LastNodeName = $_.Name
       }
     }
     return $Content

@@ -113,8 +113,8 @@ function Format-Text {
 
     # Remove invisible characters at the beginning and the end of the text
     $Result = $Result.Trim()
-    # Remove invisible characters at the beginning and the end of each line
-    $Result = $Result -creplace "(?m)^[${INVISIBLE_EXCEPT_NEWLINE}]+", '' -creplace "(?m)[${INVISIBLE_EXCEPT_NEWLINE}]+$", ''
+    # Remove invisible characters at the end of each line
+    $Result = $Result -creplace "(?m)[${INVISIBLE_EXCEPT_NEWLINE}]+$", ''
 
     # Replace two more line endings with only two line endings
     $Result = $Result -creplace '(\r\n|\n){3,}', "`n`n"
