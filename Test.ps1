@@ -115,4 +115,3 @@ Wait-Event -SourceIdentifier 'DumplingsMessageFinished' | Out-Null
 Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Remove-Event
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
 Remove-Variable -Name DumplingsDefaultParameterValues -Scope Global
-Stop-EdgeDriver
