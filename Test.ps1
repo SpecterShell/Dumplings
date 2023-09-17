@@ -127,6 +127,5 @@ Wait-Event -SourceIdentifier 'DumplingsMessageFinished' | Out-Null
 # Remove related events, event subscribers, extensions, modules and variables
 Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Remove-Event
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
-Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
 Remove-Variable -Name DumplingsDefaultParameterValues -Scope Global
 $Global:EdgeDriver.Quit()
