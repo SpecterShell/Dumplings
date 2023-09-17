@@ -9,7 +9,7 @@ $Task.CurrentState.Version = [regex]::Match(
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://static.youxiao.cn/yxcalendar/yxcalendar_v$($Task.CurrentState.Version).exe"
+  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href')
 }
 
 switch (Compare-State) {
