@@ -1,4 +1,5 @@
-$Object = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2' -Method Post -Body @'
+for ($i = 0; $i -lt 10; $i++) {
+  $Object = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2' -Method Post -Body @'
 <?xml version="1.0" encoding="UTF-8"?>
 <request protocol="3.0">
   <os platform="win" version="10" arch="x64" />
@@ -7,6 +8,15 @@ $Object = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2'
   </app>
 </request>
 '@
+  if ($Object.response.app.cohortname -eq 'Stable') {
+    break
+  }
+  Start-Sleep 1
+}
+
+if ($Object.response.app.cohortname -ne 'Stable') {
+  throw "Task $($Task.Name): Could not fetch stable version. Current cohort is $($Object.response.app.cohortname)"
+}
 
 # Version
 $Task.CurrentState.Version = $Object.response.app.updatecheck.manifest.version
