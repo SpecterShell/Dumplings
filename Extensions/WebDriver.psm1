@@ -63,6 +63,7 @@ function Stop-EdgeDriver {
 
   if ($Script:IsEdgeDriverLoaded) {
     $Script:EdgeDriver.Quit()
+    $Script:IsEdgeDriverLoaded = $false
   }
 }
 
