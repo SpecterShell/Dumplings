@@ -105,14 +105,6 @@ Join-Path $PSScriptRoot 'Modules' 'Telegram.psm1' | Import-Module -Force -Argume
   $Env:TG_BOT_TOKEN, $Env:TG_CHAT_ID
 )
 
-# Initialize an Edge Driver instance
-try {
-  New-EdgeDriver
-} catch {
-  Write-Host -Object 'Dumplings: Failed to initialize Edge Driver' -ForegroundColor Red
-  $_ | Out-Host
-}
-
 # Invoke tasks
 Invoke-TaskPipeline | Out-Null
 
