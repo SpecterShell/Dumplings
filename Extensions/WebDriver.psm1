@@ -65,4 +65,7 @@ function Stop-EdgeDriver {
   }
 }
 
+# Stop Edge Driver when the module is being unloaded
+$ExecutionContext.SessionState.Module.OnRemove += { Stop-EdgeDriver }
+
 Export-ModuleMember -Function New-EdgeDriver, Get-EdgeDriver, Stop-EdgeDriver

@@ -122,4 +122,3 @@ Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplin
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
 Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
 Remove-Variable -Name DumplingsDefaultParameterValues -Scope Global
-Stop-EdgeDriver
