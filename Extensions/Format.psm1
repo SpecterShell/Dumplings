@@ -40,7 +40,7 @@ $INVISIBLE_EXCEPT_NEWLINE = '\f\t\v\u0085\p{Z}'
 # Dot based ellipsis after CJK characters. They should be replace by character based ellipsis "……"
 $HALFWIDTH_ELLIPSIS = "([${CJK}])(\.{3,})[${INVISIBLE_EXCEPT_NEWLINE}]*"
 # Half width symbols after CJK characters. They should be replace by the full width ones
-$HALFWIDTH_SYMBOLS = "(?m)(?<CJK>[${CJK}])(?<Symbols>[~!;:,.?]+)[${INVISIBLE_EXCEPT_NEWLINE}]*"
+$HALFWIDTH_SYMBOLS = "(?m)(?<CJK>[${CJK}])(?<Symbols>[~!;:,?]+)[${INVISIBLE_EXCEPT_NEWLINE}]*"
 
 # CJK characters before alphabets and numbers. A whitespace is needed between them
 $CJK_AN = "([${CJK}])([${A}${N}])"
@@ -123,6 +123,9 @@ function Format-Text {
     $Result = $Result -creplace $ORDERED_LIST_PREFIX, { ($_.Groups[2].Value -in $FULLWIDTH_LEFT_BRACKET ? '.' : '. ') + $_.Groups[2].Value }
     # Format the prefix of the unordered list
     $Result = $Result -creplace $UNORDERED_LIST_PREFIX, { ($_.Groups[2].Value -in $FULLWIDTH_LEFT_BRACKET ? '-' : '- ') + $_.Groups[2].Value }
+
+    # Replace ";" or "；" at the end of the text with "." or "。" respectively
+    $Result = $Result -creplace '(?s);$', '.' -creplace '(?s)；$', '。'
 
     return $Result
   }
