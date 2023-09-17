@@ -94,12 +94,14 @@ function Get-TextContent {
   end {
     $Content = ''
     $Nodes = Expand-Node -Node $Nodes
+    # The name of the last node. Leave blank to indicate it is at the beginning of the document/child node
     $LastNodeName = ''
     # Append single whitespace if there are whitespace(s) between visble texts from two text nodes
     $NextWhiteSpace = $false
 
     switch ($Nodes) {
       ({ $_.Name -eq '#text' }) {
+        # The browsers merge continuous invisible characters into one whitespace while HtmlAgilityPack doesn't. Do this manually
         $NewContent = $_.InnerText -creplace '\s+', ' '
         if ($LastNodeName -eq '#text') {
           if ([string]::IsNullOrWhiteSpace($NewContent)) {
@@ -120,6 +122,7 @@ function Get-TextContent {
           $LastNodeName = $_.Name
         } else {
           if (-not [string]::IsNullOrWhiteSpace($NewContent)) {
+            # Append newline if the last node is a block node
             if ($LastNodeName) {
               $Content += "`n"
             }
@@ -132,6 +135,7 @@ function Get-TextContent {
         }
       }
       ({ $_.Name -eq 'br' }) {
+        # Append additional newline only if the last node is a block element
         if ($LastNodeName -and $LastNodeName -ne '#text') {
           $Content += "`n"
         }
@@ -139,6 +143,7 @@ function Get-TextContent {
         $LastNodeName = $_.Name
       }
       Default {
+        # Append newline only if there are preceding nodes
         if ($LastNodeName) {
           $Content += "`n"
         }
@@ -151,6 +156,7 @@ function Get-TextContent {
           if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
             $Prefix = "$(($ListInfo.Number++)). "
           }
+          # Prepend whitespaces to every line, and replace whitespaces in the first line with prefix
           $Content += ((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)
         } else {
           $Content += Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo
