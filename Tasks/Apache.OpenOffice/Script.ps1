@@ -1,3 +1,4 @@
+$EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
 
 $Prefix1 = $EdgeDriver.ExecuteScript('return DL.SF', $null)

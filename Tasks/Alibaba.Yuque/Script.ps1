@@ -17,6 +17,7 @@ $Task.CurrentState.Locale += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
+    $EdgeDriver = Get-EdgeDriver
     $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
 
     try {

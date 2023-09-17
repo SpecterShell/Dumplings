@@ -1,3 +1,4 @@
+$EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.yxfile.com.cn/')
 
 # Version

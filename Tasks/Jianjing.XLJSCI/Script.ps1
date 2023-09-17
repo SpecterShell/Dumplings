@@ -10,6 +10,7 @@ $Task.CurrentState.Locale += [ordered]@{
   Value  = ($Object.data.intro | ConvertFrom-Html | Get-TextContent).Split("`n") | Select-Object -Skip 1 | Format-Text
 }
 
+$EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.xljsci.com/download.html')
 
 # Installer

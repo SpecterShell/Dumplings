@@ -17,6 +17,7 @@ $Task.CurrentState.Locale += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
+    $EdgeDriver = Get-EdgeDriver
     $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
     Start-Sleep -Seconds 10
 

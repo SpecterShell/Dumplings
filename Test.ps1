@@ -89,19 +89,6 @@ $Global:DumplingsDefaultParameterValues = @{
   }
 }
 
-# Import Selenium and Initialize EdgeDriver
-Add-Type -Path (Join-Path $PSScriptRoot 'Assets' 'WebDriver.dll')
-$EdgeOptions = [OpenQA.Selenium.Edge.EdgeOptions]::new()
-$EdgeOptions.AddUserProfilePreference('profile.managed_default_content_settings.images', 2)
-if ($Env:EDGEWEBDRIVER) {
-  # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Env:EDGEWEBDRIVER, $EdgeOptions)
-} else {
-  $Global:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($EdgeOptions)
-}
-$EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
-$EdgeDriver.Manage().Window.Minimize()
-
 # Remove related events and event subscribers in case of conflicts
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
 
@@ -118,6 +105,14 @@ Join-Path $PSScriptRoot 'Modules' 'Telegram.psm1' | Import-Module -Force -Argume
   $Env:TG_BOT_TOKEN, $Env:TG_CHAT_ID
 )
 
+# Initialize an Edge Driver instance
+try {
+  New-EdgeDriver
+} catch {
+  Write-Host -Object 'Dumplings: Failed to initialize Edge Driver' -ForegroundColor Red
+  $_ | Out-Host
+}
+
 # Invoke tasks
 Invoke-TaskPipeline | Out-Null
 
@@ -128,4 +123,4 @@ Wait-Event -SourceIdentifier 'DumplingsMessageFinished' | Out-Null
 Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Remove-Event
 Get-EventSubscriber | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Unregister-Event
 Remove-Variable -Name DumplingsDefaultParameterValues -Scope Global
-$Global:EdgeDriver.Quit()
+Stop-EdgeDriver

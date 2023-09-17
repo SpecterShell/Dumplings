@@ -1,3 +1,4 @@
+$EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://u.tools/')
 
 $Prefix = $EdgeDriver.ExecuteScript('return publishURL', $null)

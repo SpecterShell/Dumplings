@@ -1,3 +1,4 @@
+$EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.ixigua.com/app/')
 Start-Sleep -Seconds 10
 

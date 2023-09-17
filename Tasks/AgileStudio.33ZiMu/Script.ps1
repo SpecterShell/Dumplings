@@ -4,6 +4,7 @@ $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
+    $EdgeDriver = Get-EdgeDriver
     $EdgeDriver.Navigate().GoToUrl('https://zm.agilestudio.cn/changelog')
 
     try {
