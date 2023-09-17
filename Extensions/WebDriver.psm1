@@ -43,8 +43,6 @@ function Get-EdgeDriver {
   <#
   .SYNOPSIS
     Return Edge Driver instance
-  .PARAMETER Headless
-    Run Edge Driver in headless mode, with no windows shown
   #>
   [OutputType([OpenQA.Selenium.Edge.EdgeDriver])]
   param ()
