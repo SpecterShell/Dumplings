@@ -1,20 +1,21 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&keyword=%E5%BE%AE%E4%BF%A1').list.Where({ $_.SoftID -eq 31546 })[0].xmlInfo | ConvertFrom-Xml
+$Uri1 = 'https://dldir1.qq.com/weixin/Windows/WeChatSetup_x86.exe'
+$Path = Get-TempFile -Uri $Uri1
 
 # Version
-$Task.CurrentState.Version = $Object1.soft.versionname
+$Task.CurrentState.Version = [regex]::Match((7z l -ba -slt $Path), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
 try {
-  $InstallerUrl = "https://dldir1.qq.com/weixin/Windows/WeChat$($Task.CurrentState.Version).exe"
-  Invoke-WebRequest -Uri $InstallerUrl -Method Head | Out-Null
+  $Uri2 = "https://dldir1.qq.com/weixin/Windows/WeChat$($Task.CurrentState.Version).exe"
+  Invoke-WebRequest -Uri $Uri2 -Method Head | Out-Null
   # Installer
   $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $InstallerUrl
+    InstallerUrl = $Uri2
   }
 } catch {
-  Write-Host -Object "Task $($Task.Name): ${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')" -ForegroundColor Yellow
+  Write-Host -Object "Task $($Task.Name): ${Uri2} doesn't exist, fallback to ${Uri1}" -ForegroundColor Yellow
   # Installer
   $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $Object1.soft.https.'#cdata-section'
+    InstallerUrl = $Uri1
   }
 }
 
