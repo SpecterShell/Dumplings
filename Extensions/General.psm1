@@ -487,13 +487,22 @@ function Get-RedirectedUrl1st {
       HelpMessage = 'The user agent string for the web request'
     )]
     [string]
-    $UserAgent
+    $UserAgent,
+
+    [Parameter(
+      HelpMessage = 'The user agent string for the web request'
+    )]
+    [System.Collections.IDictionary]
+    $Headers
   )
 
   process {
     $Request = [System.Net.WebRequest]::Create($Uri)
     if ($UserAgent) {
       $Request.UserAgent = $UserAgent
+    }
+    if ($Headers) {
+      $Headers.GetEnumerator() | ForEach-Object -Process { $Request.Headers.Set($_.Key, $_.Value) }
     }
     $Request.AllowAutoRedirect = $false
     $Response = $Request.GetResponse()
