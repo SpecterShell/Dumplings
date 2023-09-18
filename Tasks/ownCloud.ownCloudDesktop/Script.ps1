@@ -52,7 +52,7 @@ switch (Compare-State) {
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:RNTest = $ReleaseNotesNodes | Get-TextContent
+          Value  = $ReleaseNotesNodes | Get-TextContent
         }
 
         # ReleaseNotesUrl
