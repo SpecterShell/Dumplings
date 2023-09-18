@@ -33,11 +33,28 @@ switch (Compare-State) {
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
+        # ReleaseNotesUrl
+        $Task.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = 'https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+        }
       } else {
         Write-Host -Object "Task $($Task.Name): No ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+
+        # ReleaseNotesUrl
+        $Task.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = 'https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md'
+        }
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
+
+      # ReleaseNotesUrl
+      $Task.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md'
+      }
     }
 
     Write-State
