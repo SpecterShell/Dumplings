@@ -1,6 +1,24 @@
 $Prefix = 'https://artifact.lx.netease.com/download/ynote-electron/'
 
-$Task.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest-windows.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object = Invoke-WebRequest -Uri "${Prefix}latest-windows.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
+
+# Version
+$Task.CurrentState.Version = $Object.version
+
+# Installer
+$Task.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Prefix + $Object.files[0].url
+}
+
+# ReleaseTime
+$Task.CurrentState.ReleaseTime = (Get-Date -Date $InputObject.releaseDate).ToUniversalTime()
+
+# ReleaseNotes (zh-CN)
+$Task.CurrentState.Locale += [ordered]@{
+  Locale = 'zh-CN'
+  Key    = 'ReleaseNotes'
+  Value  = ($Object.releaseNotes | ConvertTo-LF | Format-Text) -creplace '(?m)_+$', ''
+}
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
