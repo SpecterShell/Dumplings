@@ -25,7 +25,7 @@ $Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '(\d
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.values.client_version.downloadURL
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
 }
 
 # ReleaseNotes (en-US)
