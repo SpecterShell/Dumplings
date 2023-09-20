@@ -24,7 +24,7 @@ switch (Compare-State) {
     try {
       # ReleaseTime
       $Task.CurrentState.ReleaseTime = [regex]::Match(
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='doc']/div[1]/div[1]/div/div/h1[contains(./text(), '$($Task.CurrentState.Version)')]")).Text,
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[contains(@class, 'zone-container')]/div[contains(@class, 'heading-h1') and contains(.//text(), '$($Task.CurrentState.Version)')]")).Text,
         '(\d{4}-\d{1,2}-\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
