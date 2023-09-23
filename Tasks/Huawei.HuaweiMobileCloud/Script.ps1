@@ -17,54 +17,54 @@ $Params = @{
 }
 
 # Europe
-$Object1 = (Invoke-RestMethod -Uri 'https://conf-dre.cloud.dbankcloud.cn/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
+# $Object1 = (Invoke-RestMethod -Uri 'https://conf-dre.cloud.dbankcloud.cn/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
 
 # China
 $Object2 = (Invoke-RestMethod -Uri 'https://conf-drcn.cloud.dbankcloud.cn/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
 
 # Russia
-$Object3 = (Invoke-RestMethod -Uri 'https://conf-drru.cloud.dbankcloud.ru/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
+# $Object3 = (Invoke-RestMethod -Uri 'https://conf-drru.cloud.dbankcloud.ru/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object1.configurations.version
+$Task.CurrentState.Version = $Object2.configurations.version
 
 # Installer
+# $Task.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+# }
+# $Task.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x64'
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+# }
 $Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }).url
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }).url
-}
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-Hans-CN'
+  # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }).url
 }
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-Hans-CN'
+  # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }).url
 }
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'ru'
-  Architecture    = 'x86'
-  InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }).url
-}
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'ru'
-  Architecture    = 'x64'
-  InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }).url
-}
+# $Task.CurrentState.Installer += [ordered]@{
+#   InstallerLocale = 'ru'
+#   Architecture    = 'x86'
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+# }
+# $Task.CurrentState.Installer += [ordered]@{
+#   InstallerLocale = 'ru'
+#   Architecture    = 'x64'
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+# }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
+$Task.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
 
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object4 = Invoke-WebRequest -Uri $Object1.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
+    $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
 
     try {
       # ReleaseNotes (en-US)
