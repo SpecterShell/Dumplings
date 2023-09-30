@@ -8,7 +8,6 @@ $Task.CurrentState.Version = [regex]::Match(
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
   InstallerUrl = $Object1.SelectSingleNode('//a[contains(./span/text(), "Windows版")]').Attributes['href'].Value
 }
 
