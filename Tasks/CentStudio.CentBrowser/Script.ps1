@@ -24,7 +24,8 @@ $Task.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
 if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Length -gt 1) {
   Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
   $Task.Config.Notes = '检测到不同的版本'
-  $Task.Config.Diverse = $true
+} else {
+  $Identical = $true
 }
 
 # Installer
@@ -104,7 +105,7 @@ switch (Compare-State) {
   ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
-  ({ $_ -ge 3 -and -not $Diverse }) {
+  ({ $_ -ge 3 -and $Identical }) {
     New-Manifest
   }
 }
