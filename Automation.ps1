@@ -46,6 +46,7 @@ param (
 # Hide progress bar for Invoke-WebRequest
 if ([console]::IsOutputRedirected -or $Env:CI) {
   $ProgressPreference = 'SilentlyContinue'
+  $PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::Ansi
 }
 
 # Set console output encoding to UTF-8
