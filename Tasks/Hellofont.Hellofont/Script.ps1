@@ -1,7 +1,7 @@
 # Download
 $Object1 = Invoke-RestMethod -Uri 'https://back2.hellofont.cn/ziyou/ClientManagement/api/ClientVersion/LatestClientVersionItem' -Method Post -Body @{ PlatformId = 0 }
 # Upgrade
-$Prefix = 'https://hellofont.oss-cn-beijing.aliyuncs.com/Client/Release/'
+$Prefix = 'https://hellofont.oss-cn-beijing.aliyuncs.com/Client/freshRelease/'
 $Object2 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 if ((Compare-Version -ReferenceVersion $Object1.Version -DifferenceVersion $Object2.Version) -gt 0) {
