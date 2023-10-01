@@ -2,7 +2,7 @@ $Object = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq' | ConvertFrom-Html
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object.SelectSingleNode('//*[@class="download"]').Attributes['href'].Value.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $InstallerUrl = $Object.SelectSingleNode('//*[@class="download"][1]').Attributes['href'].Value.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version
@@ -10,7 +10,7 @@ $Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Gro
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@class="desc-date"]').InnerText,
+  $Object.SelectSingleNode('//*[@class="banner-container__box-desc"][1]').InnerText,
   '(\d{4}年\d{1,2}月\d{1,2}日)'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
