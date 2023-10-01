@@ -6,7 +6,7 @@ $Object = Invoke-RestMethod -Uri 'https://api.frdic.com/api/v2/appsupport/checkv
 $Task.CurrentState.Version = $Object.version
 
 # RealVersion
-$Task.CurrentState.RealVersion = "$($Object.version.Split('.')[0]).0.0"
+$Task.CurrentState.RealVersion = "$($Object.version.Split('.')[0]).0.0.0"
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{

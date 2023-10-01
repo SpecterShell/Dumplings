@@ -3,10 +3,10 @@ $Object = Invoke-RestMethod -Uri 'https://api.frdic.com/api/v2/appsupport/checkv
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.info, '(\d+\.\d+\.\d+)').Groups[1].Value
+$Task.CurrentState.Version = [regex]::Match($Object.url, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 # RealVersion
-$Task.CurrentState.RealVersion = $Task.CurrentState.Version.Split('.')[0] + '.0.0'
+$Task.CurrentState.RealVersion = $Task.CurrentState.Version.Split('.')[0] + '.0.0.0'
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
