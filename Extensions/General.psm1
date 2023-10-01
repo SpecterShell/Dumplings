@@ -766,7 +766,7 @@ function ConvertFrom-ElectronUpdater {
 
   # ReleaseTime
   if ($InputObject.releaseDate) {
-    $Result.ReleaseTime = (Get-Date -Date $InputObject.releaseDate).ToUniversalTime()
+    $Result.ReleaseTime = $InputObject.releaseDate | Get-Date -AsUTC
   }
 
   # ReleaseNotes
