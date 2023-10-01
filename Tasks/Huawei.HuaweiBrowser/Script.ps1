@@ -17,8 +17,8 @@ $Task.CurrentState.Version = $Version1 = [regex]::Match($InstallerUrl1, 'HuaweiB
 $Version2 = [regex]::Match($InstallerUrl2, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
 if ($Version1 -ne $Version2) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 switch (Compare-State) {

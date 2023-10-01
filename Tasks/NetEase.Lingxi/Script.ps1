@@ -15,8 +15,8 @@ $Version2 = [regex]::Matches($InstallerUrl2, '([\d\.]+)\.exe').Groups[-1].Value
 $Task.CurrentState.Version = $Version2
 
 if ($Version1 -ne $Version2) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 switch (Compare-State) {

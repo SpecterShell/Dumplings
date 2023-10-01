@@ -14,8 +14,8 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个版本的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 switch (Compare-State) {

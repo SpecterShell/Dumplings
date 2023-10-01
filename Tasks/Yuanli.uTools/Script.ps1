@@ -5,8 +5,8 @@ $Prefix = $EdgeDriver.ExecuteScript('return publishURL', $null)
 $Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
 
 if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Version

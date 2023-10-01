@@ -14,7 +14,7 @@ $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 if ($Object.data.lastVersion -ne $Task.CurrentState.Version) {
   Write-Host -Object "Task $($Task.Name): Distinct versions between two response objects"
-  $Task.Config.Notes = '各个响应对象的版本号不相同'
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # ReleaseTime

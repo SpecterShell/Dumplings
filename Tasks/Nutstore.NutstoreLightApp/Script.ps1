@@ -10,8 +10,8 @@ $Object3 = $Response | Where-Object -Property 'OS' -EQ -Value 'windows-lightapp-
 $Task.CurrentState.Version = $Object2.exVer
 
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Length -gt 1) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures" -ForegroundColor Yellow
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

@@ -8,8 +8,8 @@ $Object3 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=
 
 if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -DifferenceVersion $Version2) -gt 0) {
   if ($Object2.data -ne $Object3.data) {
-    Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-    $Task.Config.Notes = '各个架构的版本号不相同'
+    Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }
@@ -28,8 +28,8 @@ if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -
   }
 } else {
   if ($Object1.data.official.x64.full.version -ne $Object1.data.official.x86.full.version) {
-    Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-    $Task.Config.Notes = '各个架构的版本号不相同'
+    Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }

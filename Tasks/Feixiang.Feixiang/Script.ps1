@@ -7,8 +7,8 @@ $Object2 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgr
 $Task.CurrentState.Version = $Object2.data.version_number
 
 if ($Object1.data.version_number -ne $Object2.data.version_number) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

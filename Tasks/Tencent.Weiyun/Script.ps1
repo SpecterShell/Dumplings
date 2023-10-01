@@ -9,8 +9,8 @@ $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$((New-Gui
 
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
   if ($Object2.Version -ne $Object3.Version) {
-    Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-    $Task.Config.Notes = '各个架构的版本号不相同'
+    Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }
@@ -20,8 +20,8 @@ if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -Differen
   $Task.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
 } else {
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
-    Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-    $Task.Config.Notes = '各个架构的版本号不相同'
+    Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }

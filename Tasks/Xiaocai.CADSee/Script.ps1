@@ -7,8 +7,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://aec.pcw365.com/forceupdatenew.php?typ
 $Task.CurrentState.Version = $Object2.root.curversionnow_name
 
 if ($Object1.root.curversionnow_name -ne $Object2.root.curversionnow_name) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the architectures"
-  $Task.Config.Notes = '各个架构的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

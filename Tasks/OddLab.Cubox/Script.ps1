@@ -5,8 +5,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.cubox.pro/update.json'
 $Task.CurrentState.Version = $Object1.version
 
 if ($Object1.version -ne $Object2.version) {
-  Write-Host -Object "Task $($Task.Name): The versions are different between the locales"
-  $Task.Config.Notes = '各个版本的版本号不相同'
+  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
+  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer
