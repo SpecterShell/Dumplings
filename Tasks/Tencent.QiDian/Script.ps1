@@ -1,9 +1,8 @@
 $Object = (Invoke-RestMethod -Uri 'https://qidian.qq.com/store/qd_interface/Download.php').data | Where-Object -Property 'FPlatform' -EQ -Value '1'
 
 # Installer
-$InstallerUrl = $Object.FUrl
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object.FUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

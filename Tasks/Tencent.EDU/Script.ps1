@@ -1,9 +1,8 @@
 $Object = Invoke-RestMethod -Uri 'https://sas.qq.com/cgi-bin/ke_download_pcClient'
 
 # Installer
-$InstallerUrl = $Object.result.download_url
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object.result.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

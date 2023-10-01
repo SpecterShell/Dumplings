@@ -1,11 +1,11 @@
-$Uri1 = 'https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe'
+$Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 $Path = Get-TempFile -Uri $Uri1
 
 # Version
 $Task.CurrentState.Version = [regex]::Match((7z l -ba -slt $Path), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
 try {
-  $Uri2 = "https://dldir1.qq.com/weixin/Windows/WeChat$($Task.CurrentState.Version).exe"
+  $Uri2 = "https://dldir1v6.qq.com/weixin/Windows/WeChat$($Task.CurrentState.Version).exe"
   Invoke-WebRequest -Uri $Uri2 -Method Head | Out-Null
   # Installer
   $Task.CurrentState.Installer += [ordered]@{
@@ -21,7 +21,7 @@ try {
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri "https://dldir1.qq.com/weixin/Windows/update$($Task.CurrentState.Version).xml" | Read-ResponseContent | ConvertFrom-Xml
+    $Object2 = Invoke-WebRequest -Uri "https://dldir1v6.qq.com/weixin/Windows/update$($Task.CurrentState.Version).xml" | Read-ResponseContent | ConvertFrom-Xml
 
     try {
       # ReleaseNotes (en-US)

@@ -1,6 +1,6 @@
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://work.weixin.qq.com/wework_admin/commdownload?platform=win'
+  InstallerUrl = $InstallerUrl = (Get-RedirectedUrl -Uri 'https://work.weixin.qq.com/wework_admin/commdownload?platform=win').Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

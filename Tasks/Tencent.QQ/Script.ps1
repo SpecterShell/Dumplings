@@ -1,9 +1,8 @@
 $Object = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq' | ConvertFrom-Html
 
 # Installer
-$InstallerUrl = $Object.SelectSingleNode('//*[@class="download"]').Attributes['href'].Value
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object.SelectSingleNode('//*[@class="download"]').Attributes['href'].Value.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

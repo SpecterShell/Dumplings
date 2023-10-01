@@ -5,7 +5,7 @@ $Task.CurrentState.Version = $Object.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.package_url
+  InstallerUrl = $Object.package_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseNotes (zh-CN)

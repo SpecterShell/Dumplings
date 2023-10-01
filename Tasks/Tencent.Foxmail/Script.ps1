@@ -13,7 +13,7 @@ $Task.CurrentState.Version = $Object.UpdateNotify.NewVersion
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.UpdateNotify.PackageURL
+  InstallerUrl = $Object.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseNotes (zh-CN)

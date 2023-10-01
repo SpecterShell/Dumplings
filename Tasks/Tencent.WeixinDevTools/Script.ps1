@@ -7,11 +7,11 @@ $Task.CurrentState.Version = $Version.SubString(0, 1) + '.' + $Version.SubString
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Get-RedirectedUrl -Uri "https://servicewechat.com/wxa-dev-logic/download_redirect?os=win&type=ia32&download_version=$($Object.update_version)&version_type=1&pack_type=0"
+  InstallerUrl = (Get-RedirectedUrl -Uri "https://servicewechat.com/wxa-dev-logic/download_redirect?os=win&type=ia32&download_version=$($Object.update_version)&version_type=1&pack_type=0").Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl -Uri "https://servicewechat.com/wxa-dev-logic/download_redirect?os=win&type=x64&download_version=$($Object.update_version)&version_type=1&pack_type=0"
+  InstallerUrl = (Get-RedirectedUrl -Uri "https://servicewechat.com/wxa-dev-logic/download_redirect?os=win&type=x64&download_version=$($Object.update_version)&version_type=1&pack_type=0").Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime
@@ -27,8 +27,8 @@ $Task.CurrentState.Locale += [ordered]@{
 # ReleaseNotesUrl (zh-CN)
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object.changelog_url
+  Key    = 'ReleaseNotesUrl'
+  Value  = $Object.changelog_url
 }
 
 switch (Compare-State) {

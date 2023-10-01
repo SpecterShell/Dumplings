@@ -5,7 +5,7 @@ $Task.CurrentState.Version = $Object.latestversion
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.downloadurl
+  InstallerUrl = $Object.downloadurl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime

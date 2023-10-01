@@ -1,9 +1,8 @@
 $Object = Invoke-RestMethod -Uri 'https://im.qq.com/rainbow/TIMDownload/' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
 # Installer
-$InstallerUrl = $Object.app.download.pcLink
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object.app.download.pcLink.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

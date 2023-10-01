@@ -8,7 +8,7 @@ $Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '(\d
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.windows_sync.download_url
+  InstallerUrl = $Object.windows_sync.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime

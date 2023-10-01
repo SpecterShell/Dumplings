@@ -3,11 +3,11 @@ $Object1 = Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.ntDownloadUrl
+  InstallerUrl = $Object1.ntDownloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.ntDownloadX64Url
+  InstallerUrl = $InstallerUrl = $Object1.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

@@ -8,7 +8,7 @@ $Task.CurrentState.Version = [regex]::Match(
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/a').Attributes['href'].Value
+  InstallerUrl = $Object.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/a').Attributes['href'].Value.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime

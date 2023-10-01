@@ -18,7 +18,7 @@ $Task.CurrentState.Version = $Object1.'platform.uniteUpdate.UniteUpdateSvr.Query
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgUrl | ConvertTo-Https
+  InstallerUrl = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') | ConvertTo-Https
 }
 
 # ReleaseNotes (zh-CN)

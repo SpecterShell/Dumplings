@@ -30,20 +30,20 @@ $Task.CurrentState.Locale += [ordered]@{
   Value  = $ReleaseNotes | Select-Object -Skip 2 | Format-Text
 }
 
-$Prefix = "https://dldir1.qq.com/weiyun/tencentdocs/electron-update/release/$($Task.CurrentState.Version)/"
+$Prefix = "https://dldir1v6.qq.com/weiyun/tencentdocs/electron-update/release/$($Task.CurrentState.Version)/"
 
 # Installer (x86)
 $Object2 = Invoke-RestMethod -Uri "${Prefix}latest-win32-ia32.yml" | ConvertFrom-Yaml
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Prefix + $Object2.files[0].url
+  InstallerUrl = $Prefix + $Object2.files[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Installer (x64)
 $Object3 = Invoke-RestMethod -Uri "${Prefix}latest-win32-x64.yml" | ConvertFrom-Yaml
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object3.files[0].url
+  InstallerUrl = $Prefix + $Object3.files[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Installer (arm64)

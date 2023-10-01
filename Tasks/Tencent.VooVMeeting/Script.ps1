@@ -10,7 +10,7 @@ $Task.CurrentState.Version = $Object.data[0].version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data[0].url
+  InstallerUrl = $Object.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime
