@@ -7,7 +7,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.iflyrec.com/UpdateService/v1/upda
 ) -ContentType 'application/json'
 
 if ($Object1.biz.update -eq 0) {
-  Write-Host -Object "Task $($Task.Name): Version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
   return
 }
 

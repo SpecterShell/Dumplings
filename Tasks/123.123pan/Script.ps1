@@ -4,7 +4,7 @@ $Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -H
 }
 
 if (-not $Object.data.hasNewVersion) {
-  Write-Host -Object "Task $($Task.Name): Version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
   return
 }
 

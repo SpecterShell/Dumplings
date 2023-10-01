@@ -1,4 +1,9 @@
-$Object = Invoke-RestMethod -Uri 'https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=3.12.0.0'
+$Object = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($Task.LastState.Version ?? '3.19.22.426')"
+
+if ($Object.upgrade_policy -eq 0) {
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  return
+}
 
 # Version
 $Task.CurrentState.Version = $Object.version

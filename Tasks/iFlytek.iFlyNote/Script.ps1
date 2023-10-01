@@ -1,5 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri "https://api.iflynote.com/user/version/info?from=IFLYNOTE_PC_WINDOWS&clientVersion=$($Task.LastState.Version ?? '3.1.1254')"
 
+if ($Object1.code -eq 50002) {
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  return
+}
+
 # Version
 $Task.CurrentState.Version = $Object1.data.versionName
 

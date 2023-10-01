@@ -7,6 +7,11 @@ $Object = Invoke-RestMethod -Uri 'https://api.welink.huaweicloud.com/mcloud/mag/
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 
+if ($Object.data.status -eq 1) {
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  return
+}
+
 # Version
 $Task.CurrentState.Version = $Object.data.versionName
 
