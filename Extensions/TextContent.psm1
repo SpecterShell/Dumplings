@@ -92,7 +92,7 @@ function Get-TextContent {
   }
 
   end {
-    $Content = ''
+    $Content = [System.Text.StringBuilder]::new(2048)
     $Nodes = Expand-Node -Node $Nodes
     # The name of the last node. Leave blank to indicate it is at the beginning of the document/child node
     $LastNodeName = ''
@@ -111,10 +111,10 @@ function Get-TextContent {
               $NextWhiteSpace = $true
             }
             if ($NextWhiteSpace -eq $true) {
-              $Content += ' '
+              $Content.Append(' ') | Out-Null
               $NextWhiteSpace = $false
             }
-            $Content += [System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())
+            $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())) | Out-Null
             if ($NewContent -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
@@ -124,9 +124,9 @@ function Get-TextContent {
           if (-not [string]::IsNullOrWhiteSpace($NewContent)) {
             # Append newline if the last node is a block node
             if ($LastNodeName) {
-              $Content += "`n"
+              $Content.Append("`n") | Out-Null
             }
-            $Content += [System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())
+            $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())) | Out-Null
             if ($NewContent -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
@@ -137,7 +137,7 @@ function Get-TextContent {
       ({ $_.Name -eq 'br' }) {
         # Append additional newline only if the last node is a block element
         if ($LastNodeName -and $LastNodeName -ne '#text') {
-          $Content += "`n"
+          $Content.Append("`n") | Out-Null
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
@@ -145,27 +145,27 @@ function Get-TextContent {
       Default {
         # Append newline only if there are preceding nodes
         if ($LastNodeName) {
-          $Content += "`n"
+          $Content.Append("`n") | Out-Null
         }
         if ($_.Name -eq 'ul') {
-          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Unordered'; Number = 1 }
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Unordered'; Number = 1 })) | Out-Null
         } elseif ($_.Name -eq 'ol') {
-          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Ordered'; Number = 1 }
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Ordered'; Number = 1 })) | Out-Null
         } elseif ($_.Name -eq 'li') {
           $Prefix = '- '
           if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
             $Prefix = "$(($ListInfo.Number++)). "
           }
           # Prepend whitespaces to every line, and replace whitespaces in the first line with prefix
-          $Content += ((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)
+          $Content.Append(((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)) | Out-Null
         } else {
-          $Content += Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo)) | Out-Null
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
       }
     }
-    return $Content
+    return $Content.ToString()
   }
 }
 
