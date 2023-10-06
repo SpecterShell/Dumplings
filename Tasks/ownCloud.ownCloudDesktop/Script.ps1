@@ -1,45 +1,20 @@
-# x64
 $Object1 = Invoke-RestMethod -Uri 'https://updates.owncloud.com/client/?version=2.10.1.7187&platform=win32&buildArch=x86_64&msi=true'
-$Version1 = $Object1.owncloudclient.version
-$InstallerUrl1 = $Object1.owncloudclient.downloadurl
-
-# x86
-$Object2 = Invoke-RestMethod -Uri 'https://updates.owncloud.com/client/?version=2.10.1.7187&platform=win32&buildArch=x86_64&msi=true'
-$Version2 = $Object2.owncloudclient.version
-$InstallerUrl2 = $Object2.owncloudclient.downloadurl
-
-if ($Version1 -ne $Version2) {
-  Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
-  $Task.Config.Notes += '检测到不同的版本'
-} else {
-  $Identical = $True
-}
 
 # Version
-$Task.CurrentState.Version = $Version1
+$Task.CurrentState.Version = $Object1.owncloudclient.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerUrl2
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $InstallerUrl1
-}
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object1.owncloudclient.downloadurl
 }
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
     $ReleaseNotesUrl = 'https://owncloud.com/changelog/desktop'
-    $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[contains(@class, 'changelog')]/div/h1[contains(./a/text(), '$($Task.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'changelog')]/div/h1[contains(./a/text(), '$($Task.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -78,7 +53,7 @@ switch (Compare-State) {
   ({ $_ -ge 2 }) {
     Send-VersionMessage
   }
-  ({ $_ -ge 3 -and $Identical }) {
+  ({ $_ -ge 3 }) {
     New-Manifest
   }
 }
