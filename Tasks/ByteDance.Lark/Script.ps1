@@ -1,7 +1,7 @@
 $Object = Invoke-RestMethod -Uri 'https://www.larksuite.com/api/downloads'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
+$Task.CurrentState.Version = $Version = [regex]::Match($Object.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
