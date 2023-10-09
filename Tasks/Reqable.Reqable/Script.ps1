@@ -33,12 +33,6 @@ switch (Compare-State) {
 
       # ReleaseTime
       $Task.CurrentState.ReleaseTime = ($Object2.assets | Where-Object -Property name -CMatch '\.exe$').updated_at
-
-      # ReleaseNotesUrl
-      $Task.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/reqable/reqable-app/releases/tag/$($Task.CurrentState.Version)"
-      }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
     }
