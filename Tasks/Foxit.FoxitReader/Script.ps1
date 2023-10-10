@@ -36,6 +36,9 @@ switch (Compare-State) {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
     }
 
+    # RealVersion
+    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+
     Write-State
   }
   ({ $_ -ge 2 }) {
