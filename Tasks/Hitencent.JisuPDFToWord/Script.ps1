@@ -6,9 +6,6 @@ $Task.CurrentState.Version = [regex]::Match(
   'V([\d\.]+)'
 ).Groups[1].Value
 
-# RealVersion
-$Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '(\d+\.\d+)').Groups[1].Value
-
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.SelectSingleNode('//*[@id="bd"]/div/div[1]/div[2]/a').Attributes['href'].Value
