@@ -1,7 +1,10 @@
 $Object = Invoke-WebRequest -Uri 'https://consumer.huawei.com/cn/support/pc-clone/' | ConvertFrom-Html
 
 # Version
-$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@class="dows"]/span').InnerText.Trim()
+$Task.CurrentState.Version = [regex]::Match(
+  $Object.SelectSingleNode('//*[@class="txt-1"]').InnerText,
+  'V([\d\.]+)'
+).Groups[1].Value
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
