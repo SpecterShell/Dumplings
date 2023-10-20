@@ -1,18 +1,17 @@
-$Object1 = Invoke-WebRequest -Uri 'https://shurufa.baidu.com/' | ConvertFrom-Html
-
-# Installer
-$InstallerUrl = $Object1.SelectSingleNode('//*[@id="downloadInfo"]/div[1]/a').Attributes['href'].Value
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
-}
+$Object1 = Invoke-RestMethod -Uri 'https://imehd.baidu.com/nodeApi/getTplDetail?token=4b5b978065af11ee8148d75d569ec4b6'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
+$Task.CurrentState.Version = [regex]::Match($Object1.data.content.updataLogVersion, 'V([\d\.]+)').Groups[1].Value
+
+# Installer
+$Task.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.content.updataLogDown
+}
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="versionMsg"]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
+  $Object1.data.content.updataLogTime,
+  '(\d{4}\.\d{1,2}\.\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 switch (Compare-State) {
