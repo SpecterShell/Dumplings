@@ -1,13 +1,11 @@
 $Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 
-if ($Task.LastState.LastModified) {
-  $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $Task.LastState.LastModified } -SkipHttpErrorCheck
-  if ($Object1.StatusCode -eq 304) {
-    Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
-    return
-  }
-  $Task.CurrentState.LastModified = $Object1.Headers.'Last-Modified'
+$Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $Task.LastState.LastModified } -SkipHttpErrorCheck
+if ($Object1.StatusCode -eq 304) {
+  Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
+  return
 }
+$Task.CurrentState.LastModified = $Object1.Headers.'Last-Modified'
 
 $Path = Get-TempFile -Uri $Uri1
 
