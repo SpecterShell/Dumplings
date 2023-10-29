@@ -5,7 +5,7 @@ if ($Object1.StatusCode -eq 304) {
   Write-Host -Object "Task $($Task.Name): The last version $($Task.LastState.Version) is the latest, skip checking" -ForegroundColor Yellow
   return
 }
-$Task.CurrentState.LastModified = $Object1.Headers.'Last-Modified'
+$Task.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 
 $Path = Get-TempFile -Uri $Uri1
 
