@@ -16,9 +16,9 @@ $Task.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = $Object.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotes (zh-CN)
+# ReleaseNotes (en-US)
 $Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
+  Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = $Object.'mkvtoolnix-releases'.release[0].changes.change | ForEach-Object -Begin {
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
