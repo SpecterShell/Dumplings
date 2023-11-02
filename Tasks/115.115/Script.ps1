@@ -17,7 +17,7 @@ switch (Compare-State) {
 
     try {
       # ReleaseNotesUrl (zh-CN)
-      $ReleaseNotesUrl = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[1]/p/span/text()='115_Windows']/td[2]/p/a[contains(./span/text(),'$($Task.CurrentState.Version)')]").Attributes['href'].Value
+      $ReleaseNotesUrl = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[@rowspan='1'][1]/p//text()='115_Windows']/td[@rowspan='1'][2]/p//a[contains(.//text(),'$($Task.CurrentState.Version)')]").Attributes['href'].Value
       $Task.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = $ReleaseNotesUrl
