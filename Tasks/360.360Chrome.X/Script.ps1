@@ -13,22 +13,26 @@ $Task.CurrentState.Installer += [ordered]@{
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16005307-1-1.html' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16105183-1-1.html' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="postmessage_118543728"]/strong[5]').InnerText
-      if ($ReleaseNotesTitle.Contains($Task.CurrentState.Version)) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_119165366']/text()[contains(., '$($Task.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitle, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.InnerText.Contains('版本号'); $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[@id="postmessage_118543728"]/strong[5]/following-sibling::node()[count(.|//*[@id="postmessage_118543728"]/strong[6]/preceding-sibling::node())=count(//*[@id="postmessage_118543728"]/strong[6]/preceding-sibling::node())]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        Write-Host -Object "Task $($Task.Name): No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+        Write-Host -Object "Task $($Task.Name): No ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
