@@ -142,7 +142,7 @@ function Get-TextContent {
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
       }
-      Default {
+      ({ $_ -is [HtmlAgilityPack.HtmlNode] }) {
         # Append newline only if there are preceding nodes
         if ($LastNodeName) {
           $Content.Append("`n") | Out-Null
