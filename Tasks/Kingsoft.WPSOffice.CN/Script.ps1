@@ -1,18 +1,15 @@
-$Object = Invoke-WebRequest -Uri 'https://platform.wps.cn/' | ConvertFrom-Html
+$Object = (Invoke-RestMethod -Uri 'https://www.wps.cn/platformUrls').productList.Where({ $_.productId -eq 58 })
 
 # Version
-$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[1]').InnerText.Split('/')[0].Trim()
+$Task.CurrentState.Version = $Object.productVcode
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://platform.wps.cn/download/query?os=win&os_version=Windows%2010%20or%20Windows%20Server%202016'
+  InstallerUrl = $Object.productButtonUrl
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="intro"]/div[2]/div[1]/div[2]/div[1]/span[1]/span[2]').InnerText,
-  '(\d{4}\.\d{1,2}\.\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$Task.CurrentState.ReleaseTime = $Object.productDisplaydate | Get-Date -Format 'yyyy-MM-dd'
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
