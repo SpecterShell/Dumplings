@@ -13,11 +13,11 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact($Task.CurrentState.Versi
 
 switch (Compare-State) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?ThreadID=206' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?PostID=892' | ConvertFrom-Html
 
     try {
       $ReleaseNotesNodes = @()
-      switch ($Object2.SelectNodes("//*[@id='Post892']/td/table/tr[1]/td[2]/div[2]/div[2]/node()[string()='$($Task.CurrentState.Version)']/following-sibling::node()")) {
+      switch ($Object2.SelectNodes("//*[@class='ForumPostContentText'][1]/node()[starts-with(string(), '$($Task.CurrentState.Version)')]/following-sibling::node()")) {
         ({ $_.Name -eq 'br' -and $_.NextSibling.Name -eq 'br' }) { break }
         Default { $ReleaseNotesNodes += $_ }
       }
