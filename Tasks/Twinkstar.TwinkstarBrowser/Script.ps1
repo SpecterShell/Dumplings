@@ -21,16 +21,20 @@ switch (Compare-State) {
     $Object2 = Invoke-WebRequest -Uri 'https://bbs.twinkstar.com/forum.php?mod=viewthread&tid=4227' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitle = $Object2.SelectSingleNode('//*[@id="postmessage_14664"]/font[1]').InnerText
-      if ($ReleaseNotesTitle.Contains($Task.CurrentState.Version)) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_14664']/*[contains(.//text(), '$($Task.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[contains(.//text(), "changelog")][1]').NextSibling; $Node.InnerText -cnotmatch '下载地址|- - - - -'; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         $Task.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[@id="postmessage_14664"]/font[contains(.//text(), "changelog")][1]/following-sibling::node()[count(.|//*[@id="postmessage_14664"]/font[contains(.//text(), "下载地址")]/preceding-sibling::node())=count(//*[@id="postmessage_14664"]/font[contains(.//text(), "下载地址")]/preceding-sibling::node())]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        Write-Host -Object "Task $($Task.Name): No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
+        Write-Host -Object "Task $($Task.Name): No ReleaseNotes for version $($Task.CurrentState.Version)" -ForegroundColor Yellow
       }
     } catch {
       Write-Host -Object "Task $($Task.Name): ${_}" -ForegroundColor Yellow
