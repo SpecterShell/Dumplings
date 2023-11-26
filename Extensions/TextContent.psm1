@@ -133,6 +133,7 @@ function Get-TextContent {
             $LastNodeName = $_.Name
           }
         }
+        continue
       }
       ({ $_.Name -eq 'br' }) {
         # Append additional newline only if the last node is a block element
@@ -141,6 +142,7 @@ function Get-TextContent {
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
+        continue
       }
       ({ $_ -is [HtmlAgilityPack.HtmlNode] }) {
         # Append newline only if there are preceding nodes
@@ -163,6 +165,7 @@ function Get-TextContent {
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
+        continue
       }
     }
     return $Content.ToString()
