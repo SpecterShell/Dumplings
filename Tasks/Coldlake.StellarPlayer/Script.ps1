@@ -1,10 +1,10 @@
 # Download
 $Object1 = Invoke-RestMethod -Uri 'https://player-update.coldlake1.com/version/info' | Get-EmbeddedJson -StartsFrom 'getVersionInfo(' | ConvertFrom-Json -AsHashtable
 # Upgrade x64
-$Object2 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x64'
+$Object2 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x64&atype=show&channel=official'
 $Version2 = [regex]::Match($Object2.data, '(\d{14})').Groups[1].Value
 # Upgrade x86
-$Object3 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x86'
+$Object3 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x86&atype=show&channel=official'
 
 if ((Compare-Version -ReferenceVersion $Object1.data.official.x64.full.version -DifferenceVersion $Version2) -gt 0) {
   if ($Object2.data -ne $Object3.data) {
