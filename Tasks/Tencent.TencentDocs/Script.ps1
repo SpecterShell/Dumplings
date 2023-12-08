@@ -36,14 +36,14 @@ $Prefix = "https://dldir1v6.qq.com/weiyun/tencentdocs/electron-update/release/$(
 $Object2 = Invoke-RestMethod -Uri "${Prefix}latest-win32-ia32.yml" | ConvertFrom-Yaml
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Prefix + $Object2.files[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Prefix + $Object2.files[0].url
 }
 
 # Installer (x64)
 $Object3 = Invoke-RestMethod -Uri "${Prefix}latest-win32-x64.yml" | ConvertFrom-Yaml
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object3.files[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Prefix + $Object3.files[0].url
 }
 
 # Installer (arm64)
