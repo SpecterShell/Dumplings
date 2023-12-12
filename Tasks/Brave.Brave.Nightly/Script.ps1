@@ -8,10 +8,13 @@ $Object1 = Invoke-RestMethod -Uri 'https://updates.bravesoftware.com/service/upd
     <app appid="{C6CB981E-DB30-4876-8639-109F8933582C}" ap="x64-ni" version="" nextversion="" lang="" brand="" client="">
         <updatecheck />
     </app>
+    <app appid="{C6CB981E-DB30-4876-8639-109F8933582C}" ap="arm64-ni" version="" nextversion="" lang="" brand="" client="">
+        <updatecheck />
+    </app>
 </request>
 "@
 
-if ($Object1.response.app[0].updatecheck.manifest.version -ne $Object1.response.app[1].updatecheck.manifest.version) {
+if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Length -gt 1) {
   Write-Host -Object "Task $($Task.Name): Distinct versions detected" -ForegroundColor Yellow
   $Task.Config.Notes = '检测到不同的版本'
 }
@@ -27,6 +30,10 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
+}
+$Task.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
 }
 
 switch (Compare-State) {
