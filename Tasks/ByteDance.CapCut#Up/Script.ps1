@@ -1,7 +1,7 @@
 $Object = Invoke-RestMethod -Uri "https://editor-api-sg.capcut.com/service/settings/v3/?device_platform=windows&os_version=10&aid=359289&iid=0&version_code=$($Task.LastState.VersionCode ?? '66304')"
 
 if (-not $Object.data.settings.update_reminder) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

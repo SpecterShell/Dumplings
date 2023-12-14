@@ -1,7 +1,7 @@
 $Object = Invoke-RestMethod -Uri "https://is.snssdk.com/service/settings/v3/?device_platform=windows&os_version=10&aid=3704&iid=0&version_code=$($Task.LastState.VersionCode ?? '197888')"
 
 if (-not $Object.data.settings.update_reminder) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

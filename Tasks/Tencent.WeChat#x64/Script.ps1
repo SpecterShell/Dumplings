@@ -2,7 +2,7 @@ $Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 
 $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $Task.LastState.LastModified } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 $Task.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]

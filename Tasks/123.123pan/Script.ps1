@@ -4,7 +4,7 @@ $Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -H
 }
 
 if (-not $Object.data.hasNewVersion) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
