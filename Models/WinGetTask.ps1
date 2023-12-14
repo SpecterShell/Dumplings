@@ -196,7 +196,7 @@ class WinGetTask {
     # Installer
     if ($this.CurrentState.Installer) {
       $Delimiter = '`' + "`n" + '`'
-      $Message.Append("`n*地址:*`n``$($this.CurrentState.Installer.InstallerUrl -join $Delimiter | ConvertTo-TelegramEscapedCode)``")
+      $Message.Append("`n*地址:*`n``$(($this.CurrentState.Installer.InstallerUrl | ConvertTo-TelegramEscapedCode) -join $Delimiter)``")
     }
     # ReleaseTime
     if ($this.CurrentState.ReleaseTime) {
