@@ -5,7 +5,12 @@ $Task.CurrentState.Version = $Object.data.manifest.win32.version
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $Object.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }).path.ia32
+}
+$Task.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }).path.x64
 }
 
 # ReleaseTime
