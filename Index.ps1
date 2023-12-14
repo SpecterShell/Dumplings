@@ -133,7 +133,7 @@ $Private:Tasks = ($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object
         }
       }
     } catch {
-      Write-Log -Object "Dumplings: Failed to initialize task ${TaskName}:"
+      Write-Log -Object "Dumplings: Failed to initialize task ${TaskName}: ${_}" -Level Error
       $_ | Out-Host
     }
   }
@@ -144,15 +144,11 @@ $Script:Temp = [ordered]@{}
 
 # Invoke tasks
 foreach ($Task in $Tasks) {
-  if ($NoSkip -or -not $Task.Config.Skip) {
-    try {
-      $Task.Invoke()
-    } catch {
-      Write-Log -Object "Task $($Task.Name): An error occured while running the script:" -Level Error
-      $_ | Out-Host
-    }
-  } else {
-    Write-Log -Object "Task $($Task.Name): Skipped"
+  try {
+    $Task.Invoke()
+  } catch {
+    Write-Log -Object "Dumplings: An error occured while running the script for $($Task.Name): ${_}" -Level Error
+    $_ | Out-Host
   }
 }
 

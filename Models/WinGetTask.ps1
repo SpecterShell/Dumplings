@@ -68,8 +68,17 @@ class WinGetTask {
   }
 
   [void] Invoke() {
-    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
-    & $this.ScriptPath | Out-Null
+    if ($this.Preference.NoSkip -or -not $this.Config.Skip) {
+      try {
+        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
+        & $this.ScriptPath | Out-Null
+      } catch {
+        $this.Logging("An error occured while running the script: ${_}", 'Error')
+        $_ | Out-Host
+      }
+    } else {
+      $this.Logging('Skipped', 'Info')
+    }
   }
 
   # Compare version and installers between states
@@ -218,7 +227,7 @@ class WinGetTask {
 
   # Send default message to Telegram
   [void] Message() {
-    $this.ToMarkdown() | Show-Markdown | Out-Host
+    $this.ToMarkdown() | Show-Markdown | Write-Log
     if (-not $this.Preference.NoMessage) {
       $Message = $this.ToTelegramMarkdown()
       New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
@@ -229,7 +238,7 @@ class WinGetTask {
 
   # Send specified message to Telegram
   [void] Message([string]$Message) {
-    $Message | Out-Host
+    $Message | Write-Log
     if (-not $this.Preference.NoMessage) {
       $Message = $Message | ConvertTo-TelegramEscapedText
       New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
