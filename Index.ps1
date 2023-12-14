@@ -145,8 +145,6 @@ $Script:Temp = [ordered]@{}
 # Invoke tasks
 foreach ($Task in $Tasks) {
   if ($NoSkip -or -not $Task.Config.Skip) {
-    # Invoke script
-    Write-Log -Object "Task $($Task.Name): Run!"
     try {
       $Task.Invoke()
     } catch {

@@ -68,6 +68,7 @@ class WinGetTask {
   }
 
   [void] Invoke() {
+    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
     & $this.ScriptPath | Out-Null
   }
 
@@ -118,12 +119,12 @@ class WinGetTask {
     if (-not $this.Preference.NoWrite) {
       # Writing current state to log file
       $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
-      Write-Log -Object "WinGetTask $($this.Name): Writing current state to log file ${LogPath}"
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
       $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
-      Write-Log -Object "WinGetTask $($this.Name): Writing current state to state file ${StatePath}"
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to state file ${StatePath}"
       Copy-Item -Path $LogPath -Destination $StatePath -Force
     } else {
       $this.Logging('Skip writing states to manifests', 'Info')
