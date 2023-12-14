@@ -4,12 +4,12 @@ $EdgeDriver.Navigate().GoToUrl('https://consumer.huawei.com/cn/mobileservices/br
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for X64"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrl1 = $EdgeDriver.FindElements([OpenQA.Selenium.By]::CssSelector('.product-tabs-wrap .product-tabs__heading .a-btn-install-ga'))[0].GetAttribute('href')
 }
 
 $Task.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrl2 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for ARM"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrl2 = $EdgeDriver.FindElements([OpenQA.Selenium.By]::CssSelector('.product-tabs-wrap .product-tabs__heading .a-btn-install-ga'))[1].GetAttribute('href')
 }
 
 # Version
