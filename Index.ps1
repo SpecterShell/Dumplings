@@ -96,9 +96,9 @@ $Global:DumplingsDefaultParameterValues = @{
 $Private:InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
 @('PowerHTML', 'powershell-yaml') | ForEach-Object -Process {
   if ($InstalledModulesNames -notcontains $_) {
-    Write-Host -Object "Dumplings: Installing PowerShell module ${_}"
+    Write-Host -Object "`e[1mDumplings:`e[22m Installing PowerShell module ${_}"
     Install-Package -Name $_ -Source PSGallery -ProviderName PowerShellGet -Force | Out-Null
-    Write-Host -Object "Dumplings: PowerShell module ${_} is installed"
+    Write-Host -Object "`e[1mDumplings:`e[22m PowerShell module ${_} is installed"
   }
 }
 
@@ -133,11 +133,11 @@ $Private:Tasks = ($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object
         }
       }
     } catch {
-      Write-Log -Object "Dumplings: Failed to initialize task ${TaskName}:" -Level Error
+      Write-Log -Object "`e[1mDumplings:`e[22m Failed to initialize task ${TaskName}:" -Level Error
       $_ | Out-Host
     }
   }
-Write-Log -Object "Dumplings: $($Tasks.Length ?? 0) tasks loaded"
+Write-Log -Object "`e[1mDumplings:`e[22m $($Tasks.Length ?? 0) task(s) loaded"
 
 # Temp for tasks
 $Script:Temp = [ordered]@{}
@@ -147,7 +147,7 @@ foreach ($Task in $Tasks) {
   try {
     $Task.Invoke()
   } catch {
-    Write-Log -Object "Dumplings: An error occured while running the script for $($Task.Name):" -Level Error
+    Write-Log -Object "`e[1mDumplings:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
     $_ | Out-Host
   }
 }
@@ -156,7 +156,7 @@ Start-Sleep -Seconds 5
 
 if ($Env:CI) {
   if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
-    Write-Log -Object 'Dumplings: Committing and pushing changes' -Level Info
+    Write-Log -Object "`e[1mDumplings:`e[22m Committing and pushing changes" -Level Info
     git config user.name 'github-actions[bot]'
     git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
     git pull
@@ -164,7 +164,7 @@ if ($Env:CI) {
     git commit -m "Automation: Update states [$env:GITHUB_RUN_NUMBER]"
     git push
   } else {
-    Write-Log -Object 'Dumplings: No changes to commit' -Level Info
+    Write-Log -Object "`e[1mDumplings:`e[22m No changes to commit" -Level Info
   }
 }
 
