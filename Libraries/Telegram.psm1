@@ -62,7 +62,7 @@ function Send-TelegramMessage {
     try {
       Invoke-WebRequest @Request
     } catch {
-      Write-Log -Object "Telegram: An error occured while sending the message: ${_}" -Level Error
+      Write-Log -Object 'Telegram: An error occured while sending the message:' -Level Error
       $_ | Out-Host
     }
   }

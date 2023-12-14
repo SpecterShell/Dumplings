@@ -73,7 +73,7 @@ class WinGetTask {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
         & $this.ScriptPath | Out-Null
       } catch {
-        $this.Logging("An error occured while running the script: ${_}", 'Error')
+        $this.Logging('An error occured while running the script:', 'Error')
         $_ | Out-Host
       }
     } else {
