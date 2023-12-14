@@ -178,6 +178,10 @@ class WinGetTask {
         $Message.Append("`n*${Key}:* `n$($Entry.Value)")
       }
     }
+    # Log
+    if ($this.Log) {
+      $Message.Append("`n`n*日志:* `n$($this.Log -join "`n")")
+    }
 
     return $Message.ToString().Trim().ReplaceLineEndings("`n`n")
   }
@@ -220,6 +224,10 @@ class WinGetTask {
         }
         $Message.Append("`n*$($Key | ConvertTo-TelegramEscapedText):* `n$($Entry.Value | ConvertTo-TelegramEscapedText)")
       }
+    }
+    # Log
+    if ($this.Log) {
+      $Message.Append("`n`n*日志:* `n$($this.Log -join "`n" | ConvertTo-TelegramEscapedText)")
     }
 
     return $Message.ToString().Trim()
