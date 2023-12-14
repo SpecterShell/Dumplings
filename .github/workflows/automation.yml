@@ -4,8 +4,8 @@ on:
     - cron: "30 1-23/3 * * *"
   workflow_dispatch:
     inputs:
-      Name:
-        description: The name of the tasks to be automated. Leave blank to automate all tasks.
+      Params:
+        description: The parameters of the script
         required: false
         type: string
 jobs:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: .\Index.ps1 ${{ github.event.inputs.Name }}
+        run: .\Index.ps1 ${{ github.event.inputs.Params }}
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
