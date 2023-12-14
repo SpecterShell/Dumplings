@@ -58,12 +58,12 @@ class WinGetTask {
   }
 
   [void] Logging([string]$Message) {
-    Write-Log -Object "WinGetTask $($this.Name): ${Message}"
+    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}"
     $this.Log += $Message
   }
 
-  [void] Logging([string]$Message, [LogLevel]$Level = 'Log') {
-    Write-Log -Object "WinGetTask $($this.Name): ${Message}" -Level $Level
+  [void] Logging([string]$Message, [LogLevel]$Level) {
+    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}" -Level $Level
     $this.Log += $Message
   }
 
@@ -90,13 +90,13 @@ class WinGetTask {
 
       switch (Compare-Version -ReferenceVersion $this.LastState.Version -DifferenceVersion $this.CurrentState.Version) {
         1 {
-          $this.Logging("Updated: $($this.LastState.Version) -> $($this.CurrentState.Version)")
+          $this.Logging("Updated: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Info')
           return 3
         }
         0 {
           if (-not $this.Config.CheckVersionOnly) {
             if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
-              $this.Logging('Installers changed')
+              $this.Logging('Installers changed', 'Info')
               return 2
             }
           }
@@ -108,7 +108,7 @@ class WinGetTask {
 
       return 0
     } else {
-      $this.Logging('Skip checking states')
+      $this.Logging('Skip checking states', 'Info')
       return 2
     }
   }
@@ -126,7 +126,7 @@ class WinGetTask {
       Write-Log -Object "WinGetTask $($this.Name): Writing current state to state file ${StatePath}"
       Copy-Item -Path $LogPath -Destination $StatePath -Force
     } else {
-      $this.Logging('Skip writing states to manifests')
+      $this.Logging('Skip writing states to manifests', 'Info')
     }
   }
 
@@ -222,7 +222,7 @@ class WinGetTask {
       $Message = $this.ToTelegramMarkdown()
       New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
     } else {
-      $this.Logging('Skip sending messages')
+      $this.Logging('Skip sending messages', 'Info')
     }
   }
 
@@ -233,7 +233,7 @@ class WinGetTask {
       $Message = $Message | ConvertTo-TelegramEscapedText
       New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
     } else {
-      $this.Logging('Skip sending messages')
+      $this.Logging('Skip sending messages', 'Info')
     }
   }
 
@@ -241,7 +241,7 @@ class WinGetTask {
     if (-not $this.Preference.NoSubmit) {
       $this.Logging('Not implemented yet')
     } else {
-      $this.Logging('Skip submitting manifests')
+      $this.Logging('Skip submitting manifests', 'Info')
     }
   }
 }

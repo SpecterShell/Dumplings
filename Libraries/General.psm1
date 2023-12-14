@@ -803,22 +803,19 @@ function Write-Log {
     )]
     [ValidateSet('Verbose', 'Log', 'Info', 'Warning', 'Error')]
     [string]
-    $Level
+    $Level = 'Log'
   )
 
   process {
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLogMutex')
-    $Mutex.WaitOne() | Out-Null
-    [System.Console]::ResetColor()
+    $Color = $null
     switch ($Level) {
-      'Verbose' { [System.Console]::ForegroundColor = 'Blue' }
-      'Info' { [System.Console]::ForegroundColor = 'Green' }
-      'Warning' { [System.Console]::ForegroundColor = 'Yellow' }
-      'Error' { [System.Console]::ForegroundColor = 'Red' }
+      'Verbose' { $Color = "`e[32m" } # Green
+      'Info' { $Color = "`e[34m" } # Blue
+      'Warning' { $Color = "`e[33m" } # Yellow
+      'Error' { $Color = "`e[31m" } # Red
+      Default { $Color = "`e[39m" } # Default
     }
-    [System.Console]::WriteLine($Object)
-    [System.Console]::ResetColor()
-    $Mutex.ReleaseMutex()
+    [System.Console]::WriteLine("${Color}${Object}`e[0m")
   }
 }
 
