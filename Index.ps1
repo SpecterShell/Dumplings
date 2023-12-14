@@ -160,7 +160,7 @@ foreach ($Task in $Tasks) {
 
 Start-Sleep -Seconds 5
 
-if ($Env:CI) {
+if ($Env:CI -and -not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
   Write-Host -Object 'Dumplings: Committing and pushing changes'
   git config user.name 'github-actions[bot]'
   git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
