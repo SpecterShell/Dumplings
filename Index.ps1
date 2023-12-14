@@ -160,14 +160,18 @@ foreach ($Task in $Tasks) {
 
 Start-Sleep -Seconds 5
 
-if ($Env:CI -and -not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
-  Write-Host -Object 'Dumplings: Committing and pushing changes'
-  git config user.name 'github-actions[bot]'
-  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-  git pull
-  git add $Path
-  git commit -m "Automation: Update states [$env:GITHUB_RUN_NUMBER]"
-  git push
+if ($Env:CI) {
+  if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
+    Write-Log -Object 'Dumplings: Committing and pushing changes' -Level Info
+    git config user.name 'github-actions[bot]'
+    git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+    git pull
+    git add $Path
+    git commit -m "Automation: Update states [$env:GITHUB_RUN_NUMBER]"
+    git push
+  } else {
+    Write-Log -Object 'Dumplings: No changes to commit' -Level Info
+  }
 }
 
 # Remove related events, event subscribers, libraries and variables
