@@ -102,7 +102,7 @@ class WinGetTask {
           }
         }
         -1 {
-          $this.Logging("Revoked: $($this.CurrentState.Version) -> $($this.LastState.Version)", 'Warning')
+          $this.Logging("Rollbacked: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Warning')
         }
       }
 
