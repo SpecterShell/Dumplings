@@ -138,11 +138,21 @@ foreach ($i in 1..5) {
     Join-Path $using:PSScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
 
     # Load tasks
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsLoading')
     $Tasks = [System.Collections.Queue]::new()
     while ($true) {
-      try {
-        $TaskName = ($using:TaskNames).Dequeue()
-      } catch {
+      $Mutex.WaitOne(1000)
+      if (($using:TaskNames).Count -gt 0) {
+        try {
+          $TaskName = ($using:TaskNames).Dequeue()
+          $Mutex.ReleaseMutex()
+        } catch {
+          $Mutex.ReleaseMutex()
+          Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Failed to dequeue task names: ${_}" -Level Error
+          continue
+        }
+      } else {
+        $Mutex.ReleaseMutex()
         break
       }
 
