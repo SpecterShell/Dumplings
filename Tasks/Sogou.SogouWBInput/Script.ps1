@@ -1,24 +1,27 @@
 $Object1 = Invoke-WebRequest -Uri 'https://wubi.sogou.com/' | ConvertFrom-Html
 
-if ($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/a').Attributes['href'].Value -cmatch '.+?(/dl/gzindex/.+?/sogou_wubi_([a-zA-Z0-9]+)\.exe)') {
-  # Version
-  $Task.CurrentState.Version = $Matches[2]
+$PseudoInstallerUrl = $Object1.SelectSingleNode('//*[@id="bannerCon_new"]/a').Attributes['href'].Value
 
-  # Installer
-  $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = "https://ime.sogoucdn.com$($Matches[1])"
-  }
-}
+# Version
+$Task.CurrentState.Version = [regex]::Match($PseudoInstallerUrl, '.+?/pc/dl/gzindex/.+?/sogou_wubi_(.+?)\.exe').Groups[1].Value
 
 # ReleaseTime
 $Task.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/p[2]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 switch ($Task.Check()) {
   ({ $_ -ge 1 }) {
+    # RealVersion
+    $Task.CurrentState.RealVersion = Get-TempFile -Uri $PseudoInstallerUrl | Read-ProductVersionFromExe
+
+    # Installer
+    $Task.CurrentState.Installer += [ordered]@{
+      InstallerUrl = "https://ime.sogoucdn.com/sogou_wubi_$($Task.CurrentState.RealVersion).exe"
+    }
+
     $Object2 = Invoke-WebRequest -Uri 'https://wubi.sogou.com/log.php' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='log_con']/h2[contains(text(), '$($Task.CurrentState.Version.Insert(1, '.'))')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='log_con']/h2[contains(text(), '$($Task.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
         $Task.CurrentState.Locale += [ordered]@{
@@ -32,9 +35,6 @@ switch ($Task.Check()) {
     } catch {
       $Task.Logging($_, 'Warning')
     }
-
-    # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-FileVersionFromExe
 
     $Task.Write()
   }
