@@ -237,8 +237,7 @@ class WinGetTask {
   [void] Message() {
     $this.ToMarkdown() | Show-Markdown | Write-Log
     if (-not $this.Preference.NoMessage) {
-      $Message = $this.ToTelegramMarkdown()
-      New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
+      Send-TelegramMessage -Message $this.ToTelegramMarkdown()
     } else {
       $this.Logging('Skip sending messages', 'Info')
     }
@@ -248,8 +247,7 @@ class WinGetTask {
   [void] Message([string]$Message) {
     $Message | Write-Log
     if (-not $this.Preference.NoMessage) {
-      $Message = $Message | ConvertTo-TelegramEscapedText
-      New-Event -SourceIdentifier 'DumplingsMessageSend' -Sender 'Task' -EventArguments $Message | Out-Null
+      Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText)
     } else {
       $this.Logging('Skip sending messages', 'Info')
     }

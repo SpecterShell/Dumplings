@@ -60,18 +60,12 @@ function Send-TelegramMessage {
       ContentType = 'application/json'
     }
     try {
-      Invoke-WebRequest @Request
+      Invoke-WebRequest @Request | Out-Null
     } catch {
       Write-Log -Object "`e[1mTelegram:`e[22m An error occured while sending the message:" -Level Error
       $_ | Out-Host
     }
   }
 }
-
-Register-EngineEvent -SourceIdentifier 'DumplingsMessageSend' -Action {
-  Send-TelegramMessage -Message $event.SourceArgs[0]
-}
-
-$ExecutionContext.SessionState.Module.OnRemove += { Unregister-Event -SourceIdentifier 'DumplingsMessageSend' -ErrorAction Ignore }
 
 Export-ModuleMember -Function ConvertTo-TelegramEscapedText, ConvertTo-TelegramEscapedCode, Send-TelegramMessage

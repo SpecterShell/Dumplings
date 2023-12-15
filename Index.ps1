@@ -72,28 +72,26 @@ param (
 )
 
 # Set console input and output encoding to UTF-8
-$Private:OldOutputEncoding = [System.Console]::OutputEncoding
-$Private:OldInputEncoding = [System.Console]::InputEncoding
+$OldOutputEncoding = [System.Console]::OutputEncoding
+$OldInputEncoding = [System.Console]::InputEncoding
 [System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(65001)
 [System.Console]::InputEncoding = [System.Text.Encoding]::GetEncoding(65001)
 
-# Hide the progress bar of Invoke-WebRequest
-if ([console]::IsOutputRedirected -or $Env:CI) {
+# Restore original console input and output encoding when an error occured
+# trap {
+#   $_ | Out-Host
+#   [System.Console]::OutputEncoding = $OldOutputEncoding
+#   [System.Console]::InputEncoding = $OldInputEncoding
+#   exit
+# }
+
+# Hide the progress bar
+if ($Env:CI) {
   $ProgressPreference = 'SilentlyContinue'
 }
 
-# Set default parameter values for libraries
-$Global:DumplingsDefaultParameterValues = @{
-  'Invoke-WebRequest:TimeoutSec'        = 100
-  'Invoke-WebRequest:MaximumRetryCount' = 4
-  'Invoke-WebRequest:RetryIntervalSec'  = 10
-  'Invoke-RestMethod:TimeoutSec'        = 100
-  'Invoke-RestMethod:MaximumRetryCount' = 4
-  'Invoke-RestMethod:RetryIntervalSec'  = 10
-}
-
 # Install and import required PowerShell modules
-$Private:InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
+$InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
 @('PowerHTML', 'powershell-yaml') | ForEach-Object -Process {
   if ($InstalledModulesNames -notcontains $_) {
     Write-Host -Object "`e[1mDumplings:`e[22m Installing PowerShell module ${_}"
@@ -102,57 +100,95 @@ $Private:InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Nam
   }
 }
 
-# Remove related events and event subscribers to avoid conflicts
-Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Remove-Event
+# Remove related jobs to avoid conflicts
+Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
 
 # Import libraries
-Join-Path $PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+Join-Path $PSScriptRoot 'Libraries' 'General.psm1' | Import-Module -Force
 
-# Import models
-Join-Path $PSScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
+# Queue tasks to load
+$TaskNames = [System.Collections.Queue]($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
-# Find tasks
-$Private:Tasks = ($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)) |
-  ForEach-Object -Process {
-    $TaskName = $_
-    try {
-      # Load config
-      $TaskPath = Join-Path $Path $TaskName -Resolve
-      $TaskConfigPath = Join-Path $TaskPath 'Config.yaml' -Resolve
-      $TaskConfig = Get-Content -Path $TaskConfigPath -Raw | ConvertFrom-Yaml
-      New-Object -TypeName $TaskConfig.Type -ArgumentList @{
-        Name       = $TaskName
-        Path       = $TaskPath
-        ConfigPath = $TaskConfigPath
-        Config     = $TaskConfig
-        Preference = @{
-          NoCheck   = $NoCheck
-          NoWrite   = $NoWrite
-          NoMessage = $NoMessage
-          NoSubmit  = $NoSubmit
-        }
-      }
-    } catch {
-      Write-Log -Object "`e[1mDumplings:`e[22m Failed to initialize task ${TaskName}:" -Level Error
-      $_ | Out-Host
+$Jobs = @()
+foreach ($i in 1..5) {
+  $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
+    # Set default parameter values for libraries
+    $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
+      'Invoke-WebRequest:TimeoutSec'        = 30
+      'Invoke-WebRequest:MaximumRetryCount' = 3
+      'Invoke-WebRequest:RetryIntervalSec'  = 5
+      'Invoke-RestMethod:TimeoutSec'        = 30
+      'Invoke-RestMethod:MaximumRetryCount' = 3
+      'Invoke-RestMethod:RetryIntervalSec'  = 5
     }
-  }
-Write-Log -Object "`e[1mDumplings:`e[22m $($Tasks.Length ?? 0) task(s) loaded"
 
-# Temp for tasks
-$Script:Temp = [ordered]@{}
+    # Hide the progress bar
+    if ($Env:CI) {
+      $ProgressPreference = 'SilentlyContinue'
+    }
 
-# Invoke tasks
-foreach ($Task in $Tasks) {
-  try {
-    $Task.Invoke()
-  } catch {
-    Write-Log -Object "`e[1mDumplings:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
-    $_ | Out-Host
-  }
+    # Import libraries
+    Join-Path $using:PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+
+    # Import models
+    Join-Path $using:PSScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
+
+    # Load tasks
+    $Tasks = [System.Collections.Queue]::new()
+    while ($true) {
+      try {
+        $TaskName = ($using:TaskNames).Dequeue()
+      } catch {
+        break
+      }
+
+      try {
+        $TaskPath = Join-Path $using:Path $TaskName -Resolve
+        $TaskConfigPath = Join-Path $TaskPath 'Config.yaml' -Resolve
+        $TaskConfig = Get-Content -Path $TaskConfigPath -Raw | ConvertFrom-Yaml
+        $Task = New-Object -TypeName $TaskConfig.Type -ArgumentList @{
+          Name       = $TaskName
+          Path       = $TaskPath
+          ConfigPath = $TaskConfigPath
+          Config     = $TaskConfig
+          Preference = @{
+            NoCheck   = $using:NoCheck
+            NoWrite   = $using:NoWrite
+            NoMessage = $using:NoMessage
+            NoSubmit  = $using:NoSubmit
+          }
+        }
+        $Tasks.Enqueue($Task)
+      } catch {
+        Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
+        $_ | Out-Host
+      }
+    }
+    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count ?? 0) task(s) loaded"
+
+    # Temp for tasks
+    $Script:Temp = [ordered]@{}
+
+    # Invoke tasks
+    foreach ($Task in $Tasks) {
+      try {
+        $Task.Invoke()
+      } catch {
+        Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
+        $_ | Out-Host
+      }
+    }
+
+    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Done"
+
+    # Clean environment
+    Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
+  }.GetNewClosure()
 }
 
-Start-Sleep -Seconds 5
+# Wait until all jobs are done
+$Jobs | Wait-Job | Out-Null
 
 if ($Env:CI) {
   if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
@@ -168,10 +204,10 @@ if ($Env:CI) {
   }
 }
 
-# Remove related events, event subscribers, libraries and variables
-Get-Event | Where-Object -FilterScript { $_.SourceIdentifier.StartsWith('Dumplings') } | Remove-Event
-Remove-Variable -Name DumplingsDefaultParameterValues -Scope Global
+# Clean environment
+Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
+Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
 
 # Restore original console input and output encoding
-[System.Console]::OutputEncoding = $Private:OldOutputEncoding
-[System.Console]::InputEncoding = $Private:OldInputEncoding
+[System.Console]::OutputEncoding = $OldOutputEncoding
+[System.Console]::InputEncoding = $OldInputEncoding
