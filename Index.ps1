@@ -107,7 +107,7 @@ Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remov
 Join-Path $PSScriptRoot 'Libraries' 'General.psm1' | Import-Module -Force
 
 # Queue tasks to load
-$TaskNames = [System.Collections.Queue]($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+$TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
 Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
 # Temp for tasks
@@ -138,24 +138,10 @@ foreach ($i in 1..5) {
     Join-Path $using:PSScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
 
     # Load tasks
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsLoading')
-    $Tasks = [System.Collections.Queue]::new()
-    while ($true) {
-      $Mutex.WaitOne(1000)
-      if (($using:TaskNames).Count -gt 0) {
-        try {
-          $TaskName = ($using:TaskNames).Dequeue()
-          $Mutex.ReleaseMutex()
-        } catch {
-          $Mutex.ReleaseMutex()
-          Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Failed to dequeue task names: ${_}" -Level Error
-          continue
-        }
-      } else {
-        $Mutex.ReleaseMutex()
-        break
-      }
-
+    $Tasks = @()
+    $Index = 1..($using:TaskNames).Count | Where-Object -FilterScript { (($_ - 1) % 5) -eq ($using:i - 1) } | ForEach-Object -Process { $_ - 1 }
+    $FilteredTaskNames = ($using:TaskNames)[$Index]
+    foreach ($TaskName in $FilteredTaskNames) {
       try {
         $TaskPath = Join-Path $using:Path $TaskName -Resolve
         $TaskConfigPath = Join-Path $TaskPath 'Config.yaml' -Resolve
@@ -172,7 +158,7 @@ foreach ($i in 1..5) {
             NoSubmit  = $using:NoSubmit
           }
         }
-        $Tasks.Enqueue($Task)
+        $Tasks += $Task
       } catch {
         Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
         $_ | Out-Host
