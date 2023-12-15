@@ -1,18 +1,24 @@
 # International
 $Object1 = Invoke-RestMethod -Uri "https://intl.meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($Task.LastState.Version ?? '9.7.7')"
-$Version1 = $Object1.upgradeVersion
+if ($Object1.isConsistent) {
+  $Task.Logging("The last version for international edition $($Task.LastState.Version) is the latest, skip checking", 'Info')
+  return
+}
 
 # Chinese
 $Object2 = Invoke-RestMethod -Uri "https://meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($Task.LastState.Version ?? '9.7.7')"
-$Version2 = $Object2.upgradeVersion
+if ($Object2.isConsistent) {
+  $Task.Logging("The last version for Chinese edition $($Task.LastState.Version) is the latest, skip checking", 'Info')
+  return
+}
 
-if ($Version1 -ne $Version2) {
+if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
   $Task.Logging('Distinct versions detected', 'Warning')
   $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$Task.CurrentState.Version = $Object1.upgradeVersion
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
@@ -44,7 +50,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
+  ({ $_ -ge 3 -and $Object1.upgradeVersion -eq $Object2.upgradeVersion }) {
     $Task.Submit()
   }
 }
