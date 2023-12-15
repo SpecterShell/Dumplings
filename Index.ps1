@@ -110,6 +110,9 @@ Join-Path $PSScriptRoot 'Libraries' 'General.psm1' | Import-Module -Force
 $TaskNames = [System.Collections.Queue]($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
 Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
+# Temp for tasks
+$Temp = [ordered]@{}
+
 $Jobs = @()
 foreach ($i in 1..5) {
   $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
@@ -168,7 +171,7 @@ foreach ($i in 1..5) {
     Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count ?? 0) task(s) loaded"
 
     # Temp for tasks
-    $Script:Temp = [ordered]@{}
+    $Script:Temp = $using:Temp
 
     # Invoke tasks
     foreach ($Task in $Tasks) {
