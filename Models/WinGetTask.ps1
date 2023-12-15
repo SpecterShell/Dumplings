@@ -47,8 +47,6 @@ class WinGetTask {
     $LastStatePath ??= Join-Path $this.Path 'State.yaml'
     if (Test-Path -Path $LastStatePath) {
       $this.LastState = Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml
-    } else {
-      $this.Logging('New task')
     }
 
     # Log notes

@@ -17,6 +17,8 @@
   Skip sending messages
 .PARAMETER NoSubmit
   Skip creating manifest
+.PARAMETER ThrottleLimit
+  The number of threads to use concurrently
 .EXAMPLE
   .\Test.ps1
   Run tests on all tasks
@@ -68,7 +70,14 @@ param (
     HelpMessage = 'Skip creating manifests'
   )]
   [switch]
-  $NoSubmit = $false
+  $NoSubmit = $false,
+
+  [Parameter(
+    HelpMessage = 'The number of threads to use concurrently'
+  )]
+  [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
+  [int]
+  $ThrottleLimit = 5
 )
 
 # Set console input and output encoding to UTF-8
@@ -114,7 +123,7 @@ Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to loa
 $Temp = [ordered]@{}
 
 $Jobs = @()
-foreach ($i in 1..5) {
+foreach ($i in 1..$ThrottleLimit) {
   $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
     # Set default parameter values for libraries
     $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
@@ -164,7 +173,7 @@ foreach ($i in 1..5) {
         $_ | Out-Host
       }
     }
-    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count ?? 0) task(s) loaded"
+    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
     # Temp for tasks
     $Script:Temp = $using:Temp
