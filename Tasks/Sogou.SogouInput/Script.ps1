@@ -1,14 +1,9 @@
 $Content = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/').Content
 
-if ($Content -cmatch 'window\.location\.href\s*=\s*".+?(/dl/gzindex/.+?/sogou_pinyin_([a-zA-Z0-9]+)\.exe).+?"') {
-  # Version
-  $Task.CurrentState.Version = $Matches[2]
+$Match = [regex]::Match($Content, 'window\.location\.href\s*=\s*"(.+?/pc/dl/gzindex/.+?/sogou_pinyin_(.+?)\.exe.+?)"')
 
-  # Installer
-  $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = "https://ime.sogoucdn.com$($Matches[1])"
-  }
-}
+# Version
+$Task.CurrentState.Version = $Match.Groups[2].Value
 
 $Object1 = $Content | ConvertFrom-Html
 
@@ -17,6 +12,14 @@ $Task.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@
 
 switch ($Task.Check()) {
   ({ $_ -ge 1 }) {
+    # RealVersion
+    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Match.Groups[1].Value | Read-ProductVersionFromExe
+
+    # Installer
+    $Task.CurrentState.Installer += [ordered]@{
+      InstallerUrl = "https://ime.sogoucdn.com/sogou_pinyin_$($Task.CurrentState.RealVersion).exe"
+    }
+
     $Object2 = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/changelog.php' | ConvertFrom-Html
 
     try {
@@ -38,9 +41,6 @@ switch ($Task.Check()) {
     } catch {
       $Task.Logging($_, 'Warning')
     }
-
-    # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-FileVersionFromExe
 
     $Task.Write()
   }
