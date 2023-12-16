@@ -123,8 +123,11 @@ Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to loa
 $Temp = [ordered]@{}
 
 $Jobs = @()
-foreach ($i in 1..$ThrottleLimit) {
+foreach ($i in 0..($ThrottleLimit - 1)) {
   $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
+    # Enable strict mode to avoid non-existent or empty properties from the API
+    # Set-StrictMode -Version 3.0
+
     # Set default parameter values for libraries
     $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
       'Invoke-WebRequest:TimeoutSec'        = 30
@@ -136,7 +139,7 @@ foreach ($i in 1..$ThrottleLimit) {
     }
 
     # Hide the progress bar
-    if ($Env:CI) {
+    if (Test-Path -Path Env:\CI) {
       $ProgressPreference = 'SilentlyContinue'
     }
 
@@ -148,8 +151,8 @@ foreach ($i in 1..$ThrottleLimit) {
 
     # Load tasks
     $Tasks = @()
-    $Index = 1..($using:TaskNames).Count | Where-Object -FilterScript { (($_ - 1) % 5) -eq ($using:i - 1) } | ForEach-Object -Process { $_ - 1 }
-    $FilteredTaskNames = ($using:TaskNames)[$Index]
+    $Index = (0..(($using:TaskNames).Count - 1)).Where({ ($_ % $using:ThrottleLimit) -eq $using:i })
+    $FilteredTaskNames = (($using:TaskNames)[$Index])
     foreach ($TaskName in $FilteredTaskNames) {
       try {
         $TaskPath = Join-Path $using:Path $TaskName -Resolve
@@ -161,6 +164,7 @@ foreach ($i in 1..$ThrottleLimit) {
           ConfigPath = $TaskConfigPath
           Config     = $TaskConfig
           Preference = @{
+            NoSkip    = $using:NoSkip
             NoCheck   = $using:NoCheck
             NoWrite   = $using:NoWrite
             NoMessage = $using:NoMessage
@@ -192,13 +196,14 @@ foreach ($i in 1..$ThrottleLimit) {
 
     # Clean environment
     Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
+    # Set-StrictMode -Off
   }.GetNewClosure()
 }
 
 # Wait until all jobs are done
 $Jobs | Wait-Job | Out-Null
 
-if ($Env:CI) {
+if (Test-Path -Path Env:\CI) {
   if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
     Write-Log -Object "`e[1mDumplings:`e[22m Committing and pushing changes" -Level Info
     git config user.name 'github-actions[bot]'

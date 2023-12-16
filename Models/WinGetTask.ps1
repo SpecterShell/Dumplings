@@ -50,7 +50,7 @@ class WinGetTask {
     }
 
     # Log notes
-    if ($this.Config.Notes) {
+    if ($this.Config.Contains('Notes')) {
       $this.Log += $this.Config.Notes
     }
   }
@@ -81,18 +81,20 @@ class WinGetTask {
 
   # Compare version and installers between states
   [int] Check() {
-    if (-not $this.Preference.NoCheck) {
-      if (-not $this.CurrentState.Version) {
-        throw "WinGetTask $($this.Name): The property Version in the current state is undefined or invalid"
+    if (-not $this.Preference.Contains('NoCheck') -or -not $this.Preference.NoCheck) {
+      if (-not $this.CurrentState.Contains('Version')) {
+        throw "WinGetTask $($this.Name): The property Version in the current state does not exist"
+      } elseif ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+        throw "WinGetTask $($this.Name): The property Version in the current state is empty or invalid"
       }
 
-      if (-not $this.Config.CheckVersionOnly) {
+      if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
         if (-not $this.CurrentState.Installer.InstallerUrl) {
           throw "WinGetTask $($this.Name): The property InstallerUrl in the current state is undefined or invalid"
         }
       }
 
-      if (-not $this.LastState.Version) {
+      if (-not $this.LastState.Contains('Version')) {
         return 1
       }
 
@@ -102,7 +104,7 @@ class WinGetTask {
           return 3
         }
         0 {
-          if (-not $this.Config.CheckVersionOnly) {
+          if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
             if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
               $this.Logging('Installers changed', 'Info')
               return 2
@@ -142,42 +144,46 @@ class WinGetTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # Identifier
-    $Message.Append("*$($this.Config.Identifier)*`n")
+    if ($this.Config.Contains('Identifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.Identifier)) {
+      $Message.Append("*$($this.Config.Identifier)*`n")
+    }
 
     # RealVersion / Version
-    if ($this.CurrentState.RealVersion -or $this.CurrentState.Version) {
-      $Message.Append("`n*版本:* $($this.CurrentState.RealVersion ?? $this.CurrentState.Version)")
+    if ($this.CurrentState.Contains('RealVersion') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
+      $Message.Append("`n*版本:* $($this.CurrentState.RealVersion)")
+    } elseif ($this.CurrentState.Contains('Version') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+      $Message.Append("`n*版本:* $($this.CurrentState.Version)")
     }
 
     # Installer
-    if ($this.CurrentState.Installer) {
-      $Message.Append("`n*地址:*`n`n$($this.CurrentState.Installer.InstallerUrl -join "`n")")
-    }
+    $Message.Append("`n*地址:*`n`n$($this.CurrentState.Installer.InstallerUrl -join "`n")")
+
     # ReleaseTime
-    if ($this.CurrentState.ReleaseTime) {
+    if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
         $Message.Append("`n*日期:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
-      } else {
+      } elseif (-not [string]::IsNullOrWhiteSpace($this.CurrentState.ReleaseTime)) {
         $Message.Append("`n*日期:* $($this.CurrentState.ReleaseTime)")
       }
     }
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
-      if ($Entry.Value) {
+      if ($Entry.Contains('Key') -and $Entry.Contains('Value') -and -not [string]::IsNullOrWhiteSpace($Entry.Key)) {
         $Key = $null
         switch ($Entry.Key) {
           'ReleaseNotes' { $Key = '说明' }
           'ReleaseNotesUrl' { $Key = '链接' }
-          Default { $Key = $Entry.Key ?? '未知' }
+          Default { $Key = $Entry.Key }
         }
-        if ($Entry.Locale) {
+        if ($Entry.Contains('Locale')) {
           $Key += " ($($Entry.Locale))"
         }
         $Message.Append("`n*${Key}:* `n$($Entry.Value)")
       }
     }
+
     # Log
-    if ($this.Log) {
+    if ($this.Log.Count -gt 0) {
       $Message.Append("`n`n*日志:* `n$($this.Log -join "`n")")
     }
 
@@ -188,43 +194,47 @@ class WinGetTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # Identifier
-    $Message.Append("*$($this.Config.Identifier | ConvertTo-TelegramEscapedText)*`n")
+    if ($this.Config.Contains('Identifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.Identifier)) {
+      $Message.Append("*$($this.Config.Identifier | ConvertTo-TelegramEscapedText)*`n")
+    }
 
     # RealVersion / Version
-    if ($this.CurrentState.RealVersion -or $this.CurrentState.Version) {
-      $Message.Append("`n*版本:* ``$(($this.CurrentState.RealVersion ?? $this.CurrentState.Version) | ConvertTo-TelegramEscapedCode)``")
+    if ($this.CurrentState.Contains('RealVersion') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
+      $Message.Append("`n*版本:* ``$(($this.CurrentState.RealVersion) | ConvertTo-TelegramEscapedCode)``")
+    } elseif ($this.CurrentState.Contains('Version') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+      $Message.Append("`n*版本:* ``$(($this.CurrentState.Version) | ConvertTo-TelegramEscapedCode)``")
     }
 
     # Installer
-    if ($this.CurrentState.Installer) {
-      $Delimiter = '`' + "`n" + '`'
-      $Message.Append("`n*地址:*`n``$(($this.CurrentState.Installer.InstallerUrl | ConvertTo-TelegramEscapedCode) -join $Delimiter)``")
-    }
+    $Delimiter = '`' + "`n" + '`'
+    $Message.Append("`n*地址:*`n``$(($this.CurrentState.Installer.InstallerUrl | ConvertTo-TelegramEscapedCode) -join $Delimiter)``")
+
     # ReleaseTime
-    if ($this.CurrentState.ReleaseTime) {
+    if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
         $Message.Append("`n*日期:* ``$($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-TelegramEscapedCode)``")
-      } else {
+      } elseif (-not [string]::IsNullOrWhiteSpace($this.CurrentState.ReleaseTime)) {
         $Message.Append("`n*日期:* ``$($this.CurrentState.ReleaseTime | ConvertTo-TelegramEscapedCode)``")
       }
     }
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
-      if ($Entry.Value) {
+      if ($Entry.Contains('Key') -and $Entry.Contains('Value') -and -not [string]::IsNullOrWhiteSpace($Entry.Key)) {
         $Key = $null
         switch ($Entry.Key) {
           'ReleaseNotes' { $Key = '说明' }
           'ReleaseNotesUrl' { $Key = '链接' }
-          Default { $Key = $Entry.Key ?? '未知' }
+          Default { $Key = $Entry.Key }
         }
-        if ($Entry.Locale) {
+        if ($Entry.Contains('Locale')) {
           $Key += " ($($Entry.Locale))"
         }
         $Message.Append("`n*$($Key | ConvertTo-TelegramEscapedText):* `n$($Entry.Value | ConvertTo-TelegramEscapedText)")
       }
     }
+
     # Log
-    if ($this.Log) {
+    if ($this.Log.Count -gt 0) {
       $Message.Append("`n`n*日志:* `n$($this.Log -join "`n" | ConvertTo-TelegramEscapedText)")
     }
 
