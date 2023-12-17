@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['SeewoFileTransfer']
+$Object = $LocalStorage.SeewoApps['SeewoFileTransfer']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos[0].softVersion

@@ -1,4 +1,4 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['13143']
+$Task.CurrentState = $LocalStorage.WondershareUpgradeInfo['13143']
 
 # Installer
 $Task.CurrentState.Installer.Clear()

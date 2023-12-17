@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['EasiQuizManager']
+$Object = $LocalStorage.SeewoApps['EasiQuizManager']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos[0].softVersion

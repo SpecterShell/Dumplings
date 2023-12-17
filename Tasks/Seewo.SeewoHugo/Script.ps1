@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['SeewoHugoSetup']
+$Object = $LocalStorage.SeewoApps['SeewoHugoSetup']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos[0].softVersion

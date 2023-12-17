@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['seewobrowser']
+$Object = $LocalStorage.SeewoApps['seewobrowser']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos[0].softVersion

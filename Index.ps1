@@ -119,8 +119,8 @@ Join-Path $PSScriptRoot 'Libraries' 'General.psm1' | Import-Module -Force
 $TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
 Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
-# Temp for tasks
-$Temp = [ordered]@{}
+# Temp storage for tasks
+$LocalStorage = [ordered]@{}
 
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
@@ -179,8 +179,8 @@ foreach ($i in 0..($ThrottleLimit - 1)) {
     }
     Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
-    # Temp for tasks
-    $Script:Temp = $using:Temp
+    # Temp storage for tasks
+    $Script:LocalStorage = $using:LocalStorage
 
     # Invoke tasks
     foreach ($Task in $Tasks) {

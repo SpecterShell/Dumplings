@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['EasiClassPC']
+$Object = $LocalStorage.SeewoApps['EasiClassPC']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos[0].softVersion

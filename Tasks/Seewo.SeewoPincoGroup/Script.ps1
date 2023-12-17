@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['SeewoPinco']
+$Object = $LocalStorage.SeewoApps['SeewoPinco']
 
 # Version
 $Task.CurrentState.Version = $Object.softInfos.Where({ $_.softCode -eq 'seewoPincoGroup' }).softVersion

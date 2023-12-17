@@ -1,4 +1,4 @@
-$Object = $Temp.SeewoApps['PPTServiceSetup']
+$Object = $LocalStorage.SeewoApps['PPTServiceSetup']
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{

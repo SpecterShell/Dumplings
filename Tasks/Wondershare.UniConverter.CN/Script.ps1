@@ -1,4 +1,4 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['4981']
+$Task.CurrentState = $LocalStorage.WondershareUpgradeInfo['4981']
 
 switch ($Task.Check()) {
   ({ $_ -ge 1 }) {
