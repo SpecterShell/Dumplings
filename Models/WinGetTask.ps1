@@ -325,7 +325,7 @@ class WinGetTask {
       }
       $this.Logging('Validation passed', 'Verbose')
 
-      $this.Logging('Uploading and committing manifests', 'Verbose')
+      $this.Logging('Uploading manifests and committing', 'Verbose')
       try {
         $NewBranchName = "$($this.Config.Identifier)-$($this.CurrentState.Version)-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
         $NewCommitName = "New version: $($this.Config.Identifier) version $($this.CurrentState.Version)"
@@ -339,6 +339,7 @@ class WinGetTask {
         ).object.sha
 
         $ManifestsNameSha = Get-ChildItem -Path $Parameters.OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
+          $this.Logging("Uploading $($_.Name)", 'Verbose')
           @{
             name = $_.Name
             sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
@@ -372,7 +373,7 @@ class WinGetTask {
           sha = $CommitSha
         } | Out-Null
       } catch {
-        $this.Logging('Failed to upload manifests', 'Error')
+        $this.Logging('Failed to upload manifests or commit', 'Error')
         $_ | Out-Host
         return
       }

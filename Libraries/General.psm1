@@ -439,7 +439,7 @@ function Invoke-GitHubApi {
 
   $IndexOfBody = $args.IndexOf('-Body')
   if ($IndexOfBody -gt -1 -and $args[$IndexOfBody + 1] -is [System.Collections.IDictionary]) {
-    $args[$IndexOfBody + 1] = $args[$IndexOfBody + 1] | ConvertTo-Json -Compress
+    $args[$IndexOfBody + 1] = ConvertTo-Json -InputObject $args[$IndexOfBody + 1] -Depth 5 -Compress
   }
 
   $IndexOfToken = $args.IndexOf('-Token')
