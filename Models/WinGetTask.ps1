@@ -119,7 +119,7 @@ class WinGetTask {
       return 0
     } else {
       $this.Logging('Skip checking states', 'Info')
-      return 2
+      return 3
     }
   }
 
@@ -263,7 +263,153 @@ class WinGetTask {
 
   [void] Submit() {
     if (-not $this.Preference.NoSubmit) {
-      $this.Logging('Not implemented yet')
+      $UpstreamOwner = 'microsoft'
+      $UpstreamRepo = 'winget-pkgs'
+      $UpstreamBranch = 'master'
+      $OriginOwner = 'SpecterShell'
+      $OriginRepo = 'winget-pkgs'
+
+      $this.Logging('Checking existing PRs', 'Verbose')
+      if (-not $this.Config.Contains('SkipPRCheck') -or -not $this.Config.SkipPRCheck) {
+        $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($this.Config.Identifier -replace '\.', '%2F'))%2F$($this.CurrentState.Version)%20in%3Apath&per_page=1"
+        if ($PullRequests.total_count -gt 0) {
+          $this.Logging("Existing PR found: $($PullRequests.items[0].html_url) - $($PullRequests.items[0].title)", 'Error')
+          return
+        }
+      } else {
+        $this.Logging('Skip checking existing PR', 'Info')
+      }
+
+      $this.Logging('Creating manifests', 'Verbose')
+      try {
+        $Parameters = @{
+          PackageIdentifier = $this.Config.Identifier
+          PackageVersion    = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
+          PackageInstallers = $this.CurrentState.Installer
+          OutFolder         = (New-Item -Path $Global:LocalCache -Name (New-Guid).Guid -ItemType Directory -Force).FullName
+        }
+        if (Test-Path Env:\GITHUB_WORKSPACE) {
+          $Parameters.ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE 'winget-pkgs' 'manifests' -Resolve
+        } else {
+          $Parameters.ManifestsFolder = Join-Path $PSScriptRoot '..' '..' 'winget-pkgs' 'manifests' -Resolve
+        }
+        if ($this.CurrentState.Locale.Count -gt 0) {
+          $Parameters.Locales = $this.CurrentState.Locale
+        }
+        if ($this.CurrentState.ReleaseTime) {
+          if ($this.CurrentState.ReleaseTime -is [datetime]) {
+            $Parameters.PackageReleaseDate = $this.CurrentState.ReleaseTime.ToUniversalTime().ToString('yyyy-MM-dd')
+          } else {
+            $Parameters.PackageReleaseDate = $this.CurrentState.ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
+          }
+        }
+        & (Join-Path $PSScriptRoot '..' 'Assets' 'YamlCreate.ps1') @Parameters
+        $this.Logging('Manifests created', 'Verbose')
+      } catch {
+        $this.Logging('Failed to create manifests', 'Error')
+        $_ | Out-Host
+        return
+      }
+
+      $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsGetWinGet')
+      $Mutex.WaitOne(30000)
+      if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
+        try {
+          $this.Logging('Downloading WinGet', 'Verbose')
+          $WinGetPackage = Get-TempFile -Uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
+          $VCLibsPackage = Get-TempFile -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
+          $UILibsPackage = Get-TempFile -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx'
+          $this.Logging('Installing WinGet', 'Verbose')
+          Add-AppxPackage -Path $WinGetPackage -DependencyPath @($VCLibsPackage, $UILibsPackage)
+        } catch {
+          $this.Logging('Failed to install WinGet', 'Error')
+          $_ | Out-Host
+        }
+      }
+      $Mutex.ReleaseMutex()
+      try {
+        Get-Command 'winget' | Out-Null
+      } catch {
+        $this.Logging('Could not install and find WinGet', 'Error')
+        return
+      }
+
+      $this.Logging('Validating manifests', 'Verbose')
+      $WinGetOutput = ''
+      winget validate $Parameters.OutFolder | Out-String -OutVariable 'WinGetOutput'
+      if ($LASTEXITCODE -notin @(0, -1978335192)) {
+        $this.Logging("Validation failed: `n${WinGetOutput}", 'Error')
+        return
+      }
+      $this.Logging('Validation passed', 'Verbose')
+
+      $this.Logging('Uploading and committing manifests', 'Verbose')
+      try {
+        $NewBranchName = "$($this.Config.Identifier)-$($this.CurrentState.Version)-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
+        $NewCommitName = "New version: $($this.Config.Identifier) version $($this.CurrentState.Version)"
+
+        $Global:LocalStorage['UpstreamSha'] ??= (Invoke-RestMethod -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
+
+        $NewBranchSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs" -Method Post -Body @{
+            ref = 'refs/heads/' + $NewBranchName
+            sha = $Global:LocalStorage.UpstreamSha
+          }
+        ).object.sha
+
+        $ManifestsNameSha = Get-ChildItem -Path $Parameters.OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
+          @{
+            name = $_.Name
+            sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
+                content  = Get-Content -Path $_ -Raw -Encoding utf8NoBOM
+                encoding = 'utf-8'
+              }
+            ).sha
+          }
+        }
+
+        $TreeSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/trees" -Method Post -Body @{
+            tree      = @($ManifestsNameSha | ForEach-Object -Process {
+                @{
+                  path = "manifests/$($this.Config.Identifier.ToLower().Chars(0))/$($this.Config.Identifier.Replace('.', '/'))/$($this.CurrentState.Version)/$($_.name)"
+                  mode = '100644'
+                  type = 'blob'
+                  sha  = $_.sha
+                }
+              })
+            base_tree = $NewBranchSha
+          }).sha
+
+        $CommitSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/commits" -Method Post -Body @{
+            tree    = $TreeSha
+            message = $NewCommitName
+            parents = @($NewBranchSha)
+          }
+        ).sha
+
+        Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${NewBranchName}" -Method Post -Body @{
+          sha = $CommitSha
+        } | Out-Null
+      } catch {
+        $this.Logging('Failed to upload manifests', 'Error')
+        $_ | Out-Host
+        return
+      }
+      $this.Logging('Manifests uploaded and committed', 'Verbose')
+
+      $this.Logging('Creating PR', 'Verbose')
+      try {
+        $NewPRResponse = Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/pulls" -Method Post -Body @{
+          title = $NewCommitName
+          body  = 'Test'
+          head  = "${OriginOwner}:${NewBranchName}"
+          base  = 'master'
+        }
+        $this.Logging("PR created: $($NewPRResponse.html_url)", 'Verbose')
+      } catch {
+        $this.Logging('Failed to create PR', 'Error')
+        $_ | Out-Host
+        return
+      }
     } else {
       $this.Logging('Skip submitting manifests', 'Info')
     }

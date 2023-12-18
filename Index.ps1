@@ -122,6 +122,9 @@ Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to loa
 # Temp storage for tasks
 $LocalStorage = [ordered]@{}
 
+# Temp folder for tasks
+$LocalCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force).FullName
+
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
   $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
@@ -180,7 +183,10 @@ foreach ($i in 0..($ThrottleLimit - 1)) {
     Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
     # Temp storage for tasks
-    $Script:LocalStorage = $using:LocalStorage
+    $Global:LocalStorage = $using:LocalStorage
+
+    # Temp folder for tasks
+    $Global:LocalCache = $using:LocalCache
 
     # Invoke tasks
     foreach ($Task in $Tasks) {

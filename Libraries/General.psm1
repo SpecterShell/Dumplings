@@ -431,6 +431,29 @@ function Get-TempFile {
   return $FilePath
 }
 
+function Invoke-GitHubApi {
+  <#
+  .SYNOPSIS
+    Invoke GitHub API with default headers and provided token
+  #>
+
+  $IndexOfBody = $args.IndexOf('-Body')
+  if ($IndexOfBody -gt -1 -and $args[$IndexOfBody + 1] -is [System.Collections.IDictionary]) {
+    $args[$IndexOfBody + 1] = $args[$IndexOfBody + 1] | ConvertTo-Json -Compress
+  }
+
+  $IndexOfToken = $args.IndexOf('-Token')
+  if ($IndexOfToken -gt -1) {
+    $args[$IndexOfToken + 1] = ConvertTo-SecureString -String $args[$IndexOfToken + 1] -AsPlainText
+    Invoke-RestMethod -Authentication Bearer -Headers @{ Accept = 'application/vnd.github+json' } -ContentType 'application/json' @args
+  } elseif (Test-Path Env:\GH_DUMPLINGS_TOKEN) {
+    $Token = ConvertTo-SecureString -String $Env:GH_DUMPLINGS_TOKEN -AsPlainText
+    Invoke-RestMethod -Authentication Bearer -Token $Token -Headers @{ Accept = 'application/vnd.github+json' } -ContentType 'application/json' @args
+  } else {
+    throw 'A token required to invoke GitHub API is not provided through "-Token" parameter or defined in "GH_DUMPLINGS_TOKEN" environment variable'
+  }
+}
+
 function Expand-TempArchive {
   <#
   .SYNOPSIS
@@ -795,6 +818,7 @@ function Write-Log {
       Mandatory, ValueFromPipeline,
       HelpMessage = 'The message content'
     )]
+    [AllowEmptyString()]
     [string]
     $Object,
 
@@ -816,6 +840,35 @@ function Write-Log {
       Default { $Color = "`e[39m" } # Default
     }
     [System.Console]::WriteLine("${Color}${Object}`e[0m")
+  }
+}
+
+function Copy-Object {
+  <#
+  .SYNOPSIS
+    Clone an object
+  .PARAMETER InputObject
+    The object to be cloned
+  #>
+  param (
+    [Parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'The object to be cloned'
+    )]
+    $InputObject
+  )
+
+  begin {
+    $BinaryFormatter = [System.Runtime.Serialization.Formatters.Binary.BinaryFormatter]::new()
+    $BinaryFormatter.Context = [System.Runtime.Serialization.StreamingContext]::new([System.Runtime.Serialization.StreamingContextStates]::Clone)
+  }
+
+  process {
+    $MemoryStream = [System.IO.MemoryStream]::new()
+    $BinaryFormatter.Serialize($MemoryStream, $InputObject)
+    $MemoryStream.Position = 0
+    $BinaryFormatter.Deserialize($MemoryStream)
+    $MemoryStream.Close()
   }
 }
 

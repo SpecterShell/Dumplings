@@ -15,10 +15,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build
+        with:
+          path: Dumplings
+      - name: Checkout WinGet Repo
+        uses: actions/checkout@v3
+        with:
+          repository: microsoft/winget-pkgs
+          path: winget-pkgs
+      - name: Automation
         run: .\Index.ps1 ${{ github.event.inputs.Params }}
+        working-directory: .\Dumplings
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_DUMPLINGS_TOKEN: ${{ secrets.GH_DUMPLINGS_TOKEN }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
