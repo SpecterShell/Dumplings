@@ -425,7 +425,7 @@ function Get-TempFile {
     Download the file and return its path
   #>
 
-  $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force
+  $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
   $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
   Invoke-WebRequest -OutFile $FilePath @args
   return $FilePath
@@ -472,7 +472,7 @@ function Expand-TempArchive {
   )
 
   process {
-    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force
+    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
     $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
     Expand-Archive -Path $Path -DestinationPath $FolderPath
     return $FolderPath
