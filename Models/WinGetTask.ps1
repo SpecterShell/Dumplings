@@ -341,7 +341,7 @@ class WinGetTask {
         $ManifestsNameSha = Get-ChildItem -Path $Parameters.OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
           $this.Logging("Uploading $($_.Name)", 'Verbose')
           $Content = Get-Content -Path $_ -Raw -Encoding utf8NoBOM
-          ConvertTo-Json -InputObject @{ content = $Content; encoding = 'utf-8' } -Compress | Out-File -FilePath "${PSScriptRoot}/../Outputs/$($_.Name).json"
+          ConvertTo-Json -InputObject @{ content = $Content; encoding = 'utf-8' } -Compress -EscapeHandling EscapeNonAscii | Out-File -FilePath "${PSScriptRoot}/../Outputs/$($_.Name).json"
           @{
             name = $_.Name
             sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
