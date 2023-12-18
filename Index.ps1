@@ -78,7 +78,7 @@ param (
   )]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
   [int]
-  $ThrottleLimit = 5
+  $ThrottleLimit = 8
 )
 
 # Set console input and output encoding to UTF-8
