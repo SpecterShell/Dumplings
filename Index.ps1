@@ -1,4 +1,5 @@
 #Requires -Version 7
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultParameterValues', Justification = 'Shared across scripts')]
 
 <#
 .SYNOPSIS
