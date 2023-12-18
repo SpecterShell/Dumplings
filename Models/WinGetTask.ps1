@@ -322,15 +322,24 @@ class WinGetTask {
           $this.Logging('Installing WinGet', 'Verbose')
           Import-Module Appx -UseWindowsPowerShell -WarningAction SilentlyContinue
           Add-AppxPackage -Path $WinGetPackage -DependencyPath @($VCLibsPackage, $UILibsPackage)
+          $this.Logging('WinGet installed, wait for a moment to finalize', 'Verbose')
         } catch {
           $this.Logging('Failed to install WinGet', 'Error')
           $_ | Out-Host
         }
       }
       $Mutex.ReleaseMutex()
-      try {
-        Get-Command 'winget' | Out-Null
-      } catch {
+
+      foreach ($i in 1..5) {
+        if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
+          $this.Logging('WinGet did not pop up')
+          Start-Sleep -Seconds 3
+        } else {
+          $this.Logging('WinGet pops up')
+          break
+        }
+      }
+      if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
         $this.Logging('Could not install and find WinGet', 'Error')
         return
       }
