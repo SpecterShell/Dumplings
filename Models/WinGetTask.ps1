@@ -311,38 +311,8 @@ class WinGetTask {
         return
       }
 
-      $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsGetWinGet')
-      $Mutex.WaitOne(30000)
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-        try {
-          $this.Logging('Downloading WinGet', 'Verbose')
-          $VCLibsPackage = Get-TempFile -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
-          $UILibsPackage = Get-TempFile -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx'
-          $WinGetPackage = Get-TempFile -Uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
-          $this.Logging('Installing WinGet', 'Verbose')
-          Import-Module Appx -UseWindowsPowerShell -WarningAction SilentlyContinue
-          Add-AppxPackage -Path $VCLibsPackage
-          Add-AppxPackage -Path $UILibsPackage
-          Add-AppxPackage -Path $WinGetPackage
-          $this.Logging('WinGet installed, wait for a moment to finalize', 'Verbose')
-        } catch {
-          $this.Logging('Failed to install WinGet', 'Error')
-          $_ | Out-Host
-        }
-      }
-      $Mutex.ReleaseMutex()
-
-      foreach ($i in 1..5) {
-        if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-          $this.Logging('WinGet did not pop up')
-          Start-Sleep -Seconds 3
-        } else {
-          $this.Logging('WinGet pops up')
-          break
-        }
-      }
-      if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-        $this.Logging('Could not install and find WinGet', 'Error')
+        $this.Logging('WinGet not found', 'Error')
         return
       }
 
