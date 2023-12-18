@@ -23,6 +23,9 @@ class WinGetTask {
     Locale    = @()
   }
 
+  [bool]$MessageEnabled = $false
+  [int[]]$MessageID = [int[]]@()
+
   WinGetTask([System.Collections.IDictionary]$Properties) {
     $this.Init($Properties)
   }
@@ -58,11 +61,19 @@ class WinGetTask {
   [void] Logging([string]$Message) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}"
     $this.Log += $Message
+    if ($this.MessageEnabled) {
+      $this.Message()
+    }
   }
 
   [void] Logging([string]$Message, [LogLevel]$Level) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}" -Level $Level
-    $this.Log += $Message
+    if ($Level -ne 'Verbose') {
+      $this.Log += $Message
+      if ($this.MessageEnabled) {
+        $this.Message()
+      }
+    }
   }
 
   [void] Invoke() {
@@ -71,7 +82,7 @@ class WinGetTask {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
         & $this.ScriptPath | Out-Null
       } catch {
-        $this.Logging('An error occured while running the script:', 'Error')
+        $this.Logging("An error occured while running the script: ${_}", 'Error')
         $_ | Out-Host
       }
     } else {
@@ -243,21 +254,35 @@ class WinGetTask {
 
   # Send default message to Telegram
   [void] Message() {
-    $this.ToMarkdown() | Show-Markdown | Write-Log
+    if (-not $this.MessageEnabled) {
+      $this.ToMarkdown() | Show-Markdown | Write-Log
+      $this.MessageEnabled = $true
+    }
     if (-not $this.Preference.NoMessage) {
-      Send-TelegramMessage -Message $this.ToTelegramMarkdown()
+      try {
+        $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
+        $this.MessageID = $Response.result.message_id
+      } catch {
+        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
+        $this.Log += $_.ToString()
+      }
     } else {
-      $this.Logging('Skip sending messages', 'Info')
+      $this.Logging('Skip sending default messages', 'Info')
     }
   }
 
-  # Send specified message to Telegram
+  # Send custom message to Telegram
   [void] Message([string]$Message) {
     $Message | Write-Log
     if (-not $this.Preference.NoMessage) {
-      Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText)
+      try {
+        Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
+      } catch {
+        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
+        $this.Log += $_.ToString()
+      }
     } else {
-      $this.Logging('Skip sending messages', 'Info')
+      $this.Logging('Skip sending custom messages', 'Info')
     }
   }
 
@@ -269,11 +294,11 @@ class WinGetTask {
       $OriginOwner = 'SpecterShell'
       $OriginRepo = 'winget-pkgs'
 
-      $this.Logging('Checking existing PRs', 'Verbose')
+      $this.Logging('Checking existing pull requests', 'Verbose')
       if (-not $this.Config.Contains('SkipPRCheck') -or -not $this.Config.SkipPRCheck) {
         $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($this.Config.Identifier -replace '\.', '%2F'))%2F$($this.CurrentState.Version)%20in%3Apath&per_page=1"
         if ($PullRequests.total_count -gt 0) {
-          $this.Logging("Existing PR found: $($PullRequests.items[0].html_url) - $($PullRequests.items[0].title)", 'Error')
+          $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
           return
         }
       } else {
@@ -306,13 +331,13 @@ class WinGetTask {
         & (Join-Path $PSScriptRoot '..' 'Assets' 'YamlCreate.ps1') @Parameters
         $this.Logging('Manifests created', 'Verbose')
       } catch {
-        $this.Logging('Failed to create manifests', 'Error')
+        $this.Logging("Failed to create manifests: ${_}", 'Error')
         $_ | Out-Host
         return
       }
 
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-        $this.Logging('WinGet not found', 'Error')
+        $this.Logging('Can not find WinGet', 'Error')
         return
       }
 
@@ -372,7 +397,7 @@ class WinGetTask {
           sha = $CommitSha
         } | Out-Null
       } catch {
-        $this.Logging('Failed to upload manifests or commit', 'Error')
+        $this.Logging("Failed to upload manifests or commit: ${_}", 'Error')
         $_ | Out-Host
         return
       }
@@ -388,7 +413,7 @@ class WinGetTask {
         }
         $this.Logging("PR created: $($NewPRResponse.html_url)", 'Verbose')
       } catch {
-        $this.Logging('Failed to create PR', 'Error')
+        $this.Logging("Failed to create pull request: ${_}", 'Error')
         $_ | Out-Host
         return
       }
