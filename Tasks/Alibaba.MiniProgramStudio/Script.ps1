@@ -12,7 +12,7 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.guideMemo | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+  Value  = (($Object.guideMemo | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent) -creplace '^\d+\.\d+\.\d+\n', '' | Format-Text
 }
 
 switch ($Task.Check()) {
