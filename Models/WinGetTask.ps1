@@ -320,6 +320,7 @@ class WinGetTask {
           $VCLibsPackage = Get-TempFile -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
           $UILibsPackage = Get-TempFile -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx'
           $this.Logging('Installing WinGet', 'Verbose')
+          Import-Module Appx -UseWindowsPowerShell -WarningAction SilentlyContinue
           Add-AppxPackage -Path $WinGetPackage -DependencyPath @($VCLibsPackage, $UILibsPackage)
         } catch {
           $this.Logging('Failed to install WinGet', 'Error')
