@@ -123,7 +123,7 @@ Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to loa
 $LocalStorage = [ordered]@{}
 
 # Temp folder for tasks
-$LocalCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force).FullName
+$LocalCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item).FullName
 
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {

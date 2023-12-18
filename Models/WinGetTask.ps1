@@ -316,12 +316,14 @@ class WinGetTask {
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
         try {
           $this.Logging('Downloading WinGet', 'Verbose')
-          $WinGetPackage = Get-TempFile -Uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
           $VCLibsPackage = Get-TempFile -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
           $UILibsPackage = Get-TempFile -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx'
+          $WinGetPackage = Get-TempFile -Uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
           $this.Logging('Installing WinGet', 'Verbose')
           Import-Module Appx -UseWindowsPowerShell -WarningAction SilentlyContinue
-          Add-AppxPackage -Path $WinGetPackage -DependencyPath @($VCLibsPackage, $UILibsPackage)
+          Add-AppxPackage -Path $VCLibsPackage
+          Add-AppxPackage -Path $UILibsPackage
+          Add-AppxPackage -Path $WinGetPackage
           $this.Logging('WinGet installed, wait for a moment to finalize', 'Verbose')
         } catch {
           $this.Logging('Failed to install WinGet', 'Error')
