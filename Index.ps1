@@ -198,7 +198,7 @@ foreach ($i in 0..($ThrottleLimit - 1)) {
       }
     }
 
-    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Done"
+    Write-Log -Object "`e[1mDumplingsWok${using:i}:`e[22m Done" -Level Verbose
 
     # Clean environment
     Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
