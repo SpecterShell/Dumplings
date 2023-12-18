@@ -123,7 +123,7 @@ Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to loa
 $LocalStorage = [ordered]@{}
 
 # Temp folder for tasks
-$LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force | Get-Item).FullName
+$LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
 
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
@@ -160,7 +160,7 @@ foreach ($i in 0..($ThrottleLimit - 1)) {
       try {
         $TaskPath = Join-Path $using:Path $TaskName -Resolve
         $TaskConfigPath = Join-Path $TaskPath 'Config.yaml' -Resolve
-        $TaskConfig = Get-Content -Path $TaskConfigPath -Raw | ConvertFrom-Yaml
+        $TaskConfig = Get-Content -Path $TaskConfigPath -Raw | ConvertFrom-Yaml -Ordered
         $Task = New-Object -TypeName $TaskConfig.Type -ArgumentList @{
           Name       = $TaskName
           Path       = $TaskPath
