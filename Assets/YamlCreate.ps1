@@ -1057,6 +1057,11 @@ Function Write-LocaleManifest {
     }
   }
 
+  # Remove ReleaseNotes if too long
+  if ($LocaleManifest.Contains('ReleaseNotes') -and $LocaleManifest['ReleaseNotes'].Length -gt $Patterns.ReleaseNotesMaxLength) {
+    $LocaleManifest.Remove('ReleaseNotes')
+  }
+
   $LocaleManifest = Restore-YamlKeyOrder $LocaleManifest $LocaleProperties
 
   # Set the appropriate langage server depending on if it is a default locale file or generic locale file
@@ -1101,6 +1106,11 @@ Function Write-LocaleManifest {
               $OldLocaleManifest.Remove($Locale.Key)
             }
           }
+        }
+
+        # Remove ReleaseNotes if too long
+        if ($OldLocaleManifest.Contains('ReleaseNotes') -and $OldLocaleManifest['ReleaseNotes'].Length -gt $Patterns.ReleaseNotesMaxLength) {
+          $OldLocaleManifest.Remove('ReleaseNotes')
         }
 
         $script:OldLocaleManifest = Restore-YamlKeyOrder $script:OldLocaleManifest $LocaleProperties
