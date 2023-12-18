@@ -124,6 +124,7 @@ $LocalStorage = [ordered]@{}
 
 # Temp folder for tasks
 $LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
+Get-ChildItem $LocalCache | Remove-Item -Recurse -Force
 
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
