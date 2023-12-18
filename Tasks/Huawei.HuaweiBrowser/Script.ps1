@@ -1,5 +1,6 @@
 $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://consumer.huawei.com/cn/mobileservices/browser/')
+Start-Sleep -Seconds 5
 
 # Installer
 $Task.CurrentState.Installer += [ordered]@{
