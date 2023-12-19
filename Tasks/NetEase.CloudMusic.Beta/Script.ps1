@@ -18,10 +18,11 @@ $Object2 = Invoke-RestMethod `
 $Version2 = "$($Object2.data.packageVO.appver).$($Object2.data.packageVO.buildver)"
 $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
+
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
-} else {
-  $Identical = $True
+  $Identical = $false
 }
 
 # Version

@@ -6,8 +6,10 @@ $Object2 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgr
 # Version
 $Task.CurrentState.Version = $Object2.data.version_number
 
+$Identical = $true
 if ($Object1.data.version_number -ne $Object2.data.version_number) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -34,7 +36,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

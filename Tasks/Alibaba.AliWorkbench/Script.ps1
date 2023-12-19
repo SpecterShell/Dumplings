@@ -14,10 +14,10 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 $Version2 = [regex]::Match($InstallerUrl2, 'qianniu_\((.+)\)').Groups[1].Value
 
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
-} else {
-  $Identical = $True
+  $Identical = $false
 }
 
 # Version

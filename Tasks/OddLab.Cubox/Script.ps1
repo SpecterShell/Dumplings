@@ -4,8 +4,10 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.cubox.pro/update.json'
 # Version
 $Task.CurrentState.Version = $Object1.version
 
+$Identical = $true
 if ($Object1.version -ne $Object2.version) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -37,7 +39,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

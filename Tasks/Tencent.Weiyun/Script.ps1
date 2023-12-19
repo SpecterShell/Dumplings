@@ -8,20 +8,20 @@ $Prefix3 = 'https://dldir1v6.qq.com/weiyun/electron-update/release/win32/'
 $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix3 -Locale 'zh-CN'
 
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
+  $Identical = $true
   if ($Object2.Version -ne $Object3.Version) {
     $Task.Logging('Distinct versions detected', 'Warning')
-  } else {
-    $Identical = $True
+    $Identical = $false
   }
 
   $Task.CurrentState = $Object2
   $Task.CurrentState.Installer = $Object3.Installer + $Task.CurrentState.Installer
   $Task.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
 } else {
+  $Identical = $true
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
     $Task.Logging('Distinct versions detected', 'Warning')
-  } else {
-    $Identical = $True
+    $Identical = $false
   }
 
   # Version

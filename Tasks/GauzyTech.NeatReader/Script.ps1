@@ -9,8 +9,10 @@ $Version2 = [regex]::Match(
   '([\d\.]+)'
 ).Groups[1].Value
 
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Version
@@ -32,7 +34,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

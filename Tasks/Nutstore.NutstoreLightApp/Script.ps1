@@ -9,8 +9,10 @@ $Object3 = $Response | Where-Object -Property 'OS' -EQ -Value 'windows-lightapp-
 # Version
 $Task.CurrentState.Version = $Object2.exVer
 
+$Identical = $true
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -34,7 +36,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and (@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -eq 1 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

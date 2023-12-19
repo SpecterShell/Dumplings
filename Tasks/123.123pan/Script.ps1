@@ -12,8 +12,10 @@ $Prefix = $Object.data.url + '/'
 
 $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
+$Identical = $true
 if ($Object.data.lastVersion -ne $Task.CurrentState.Version) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # ReleaseTime
@@ -36,7 +38,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

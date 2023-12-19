@@ -21,10 +21,10 @@ $Response4 = $Request4.GetResponse()
 # Version
 $Task.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
 
+$Identical = $true
 if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
-} else {
-  $Identical = $true
+  $Identical = $false
 }
 
 # Installer

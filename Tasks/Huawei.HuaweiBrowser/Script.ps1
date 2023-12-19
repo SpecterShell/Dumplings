@@ -17,8 +17,10 @@ $Task.CurrentState.Installer += [ordered]@{
 $Task.CurrentState.Version = $Version1 = [regex]::Match($InstallerUrl1, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 $Version2 = [regex]::Match($InstallerUrl2, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 switch ($Task.Check()) {
@@ -28,7 +30,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

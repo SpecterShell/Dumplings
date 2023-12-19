@@ -9,8 +9,10 @@ $Task.CurrentState.Version = $Object1.version.new
 # RealVersion
 $Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '^(\d+\.\d+\.\d+)').Groups[1].Value
 
+$Identical = $true
 if ($Object1.version.new -ne $Object2.version.new) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -66,7 +68,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Object1.version.new -eq $Object2.version.new }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

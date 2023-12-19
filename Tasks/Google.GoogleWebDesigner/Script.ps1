@@ -22,8 +22,10 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 '@
 $Version2 = $Object2.response.app.updatecheck.manifest.version
 
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Version
@@ -46,7 +48,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

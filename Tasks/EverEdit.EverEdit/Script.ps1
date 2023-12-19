@@ -13,8 +13,10 @@ $Task.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
 }
 
+$Identical = $true
 if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 switch ($Task.Check()) {
@@ -66,7 +68,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

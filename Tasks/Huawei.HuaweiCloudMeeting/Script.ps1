@@ -12,8 +12,10 @@ if ($Object2.isConsistent) {
   return
 }
 
+$Identical = $true
 if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Version
@@ -49,7 +51,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Object1.upgradeVersion -eq $Object2.upgradeVersion }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

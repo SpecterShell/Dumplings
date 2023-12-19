@@ -6,8 +6,10 @@ $Object2 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationServic
 # Version
 $Task.CurrentState.Version = $Object1.data.versionCode
 
+$Identical = $true
 if ($Object1.data.versionCode -ne $Object2.data.versionCode) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -52,7 +54,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Object1.data.versionCode -eq $Object2.data.versionCode }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

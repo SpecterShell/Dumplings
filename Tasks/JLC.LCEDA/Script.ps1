@@ -13,10 +13,10 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 $Task.CurrentState.Version = $Version2 = [regex]::Match($InstallerUrl2, '(\d+\.\d+\.\d+)\.exe').Groups[1].Value
 
+$Identical = $true
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
-} else {
-  $Identical = $True
+  $Identical = $false
 }
 
 switch ($Task.Check()) {

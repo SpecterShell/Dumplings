@@ -4,8 +4,10 @@ $EdgeDriver.Navigate().GoToUrl('https://u.tools/')
 $Prefix = $EdgeDriver.ExecuteScript('return publishURL', $null)
 $Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
 
+$Identical = $true
 if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Version
@@ -61,7 +63,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Object1.'win-x64'.version -eq $Object1.'win-ia32'.version }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }

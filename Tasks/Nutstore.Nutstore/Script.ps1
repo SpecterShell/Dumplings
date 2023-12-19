@@ -7,8 +7,10 @@ $Object2 = $Response | Where-Object -Property 'OS' -EQ -Value 'win-wpf-client-ar
 # Version
 $Task.CurrentState.Version = $Object1.exVer
 
+$Identical = $true
 if ($Object1.exVer -ne $Object2.exVer) {
   $Task.Logging('Distinct versions detected', 'Warning')
+  $Identical = $false
 }
 
 # Installer
@@ -56,7 +58,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and $Object1.exVer -eq $Object2.exVer }) {
+  ({ $_ -ge 3 -and $Identical }) {
     $Task.Submit()
   }
 }
