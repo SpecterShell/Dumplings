@@ -209,7 +209,12 @@ foreach ($i in 0..($ThrottleLimit - 1)) {
 }
 
 # Wait until all jobs are done
-$Jobs | Wait-Job | Out-Null
+$Jobs | Wait-Job -Timeout 3600 | Out-Null
+
+if (Get-Job -State Running) {
+  Write-Log -Object "`e[1mDumplings:`e[22m Some jobs are still running"
+  Get-Job -State Running | Out-Host
+}
 
 if (Test-Path -Path Env:\CI) {
   if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
