@@ -839,7 +839,12 @@ function Write-Log {
       'Error' { $Color = "`e[31m" } # Red
       Default { $Color = "`e[39m" } # Default
     }
-    [System.Console]::WriteLine("${Color}${Object}`e[0m")
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLog')
+    $Mutex.WaitOne(2000) | Out-Null
+    Write-Host -Object "${Color}${Object}`e[0m"
+    $Mutex.ReleaseMutex()
+    $Mutex.Close()
   }
 }
 
