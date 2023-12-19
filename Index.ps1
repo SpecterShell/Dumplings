@@ -127,6 +127,9 @@ if (-not $Parallel) {
   [System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(65001)
   [System.Console]::InputEncoding = [System.Text.Encoding]::GetEncoding(65001)
 
+  # Remove related jobs to avoid conflicts
+  Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
+
   # Install and import required PowerShell modules
   $InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
   @('PowerHTML', 'powershell-yaml') | ForEach-Object -Process {
@@ -137,8 +140,8 @@ if (-not $Parallel) {
     }
   }
 
-  # Remove related jobs to avoid conflicts
-  Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
+  # Import libraries
+  Join-Path $PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
 
   # Queue tasks to load
   $TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
@@ -176,7 +179,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   }
 
   # Import libraries
-  Join-Path $ScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+  Join-Path $ScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module
 
   # Import models
   Join-Path $ScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
