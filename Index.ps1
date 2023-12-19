@@ -129,7 +129,7 @@ Get-ChildItem $LocalCache | Remove-Item -Recurse -Force
 
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
-  $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
+  $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -ThrottleLimit $ThrottleLimit -StreamingHost $Host -ScriptBlock {
     # Enable strict mode to avoid non-existent or empty properties from the API
     # Set-StrictMode -Version 3.0
 

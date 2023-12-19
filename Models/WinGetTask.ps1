@@ -267,7 +267,7 @@ class WinGetTask {
         $this.Log += $_.ToString()
       }
     } else {
-      $this.Logging('Skip sending default messages', 'Info')
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending default messages" -Level Info
     }
   }
 
@@ -282,7 +282,7 @@ class WinGetTask {
         $this.Log += $_.ToString()
       }
     } else {
-      $this.Logging('Skip sending custom messages', 'Info')
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending custom messages" -Level Info
     }
   }
 
@@ -295,7 +295,7 @@ class WinGetTask {
       $OriginRepo = 'winget-pkgs'
 
       $this.Logging('Checking existing pull requests', 'Verbose')
-      if (-not $this.Config.Contains('SkipPRCheck') -or -not $this.Config.SkipPRCheck) {
+      if (-not ($this.Config.Contains('SkipPRCheck') -and $this.Config.SkipPRCheck) -and -not ($this.Preference.Contains('NoCheck') -and $this.Preference.NoCheck)) {
         $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($this.Config.Identifier -replace '\.', '%2F'))%2F$($this.CurrentState.Version)%20in%3Apath&per_page=1"
         if ($PullRequests.total_count -gt 0) {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
