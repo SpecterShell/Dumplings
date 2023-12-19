@@ -127,9 +127,12 @@ $LocalStorage = [ordered]@{}
 $LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
 Get-ChildItem $LocalCache | Remove-Item -Recurse -Force
 
+# Run Start-ThreadJob once to set the throttle limit
+Start-ThreadJob -ScriptBlock {} -ThrottleLimit $ThrottleLimit | Wait-Job | Out-Null
+
 $Jobs = @()
 foreach ($i in 0..($ThrottleLimit - 1)) {
-  $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -ThrottleLimit $ThrottleLimit -StreamingHost $Host -ScriptBlock {
+  $Jobs += Start-ThreadJob -Name "DumplingsWok${i}" -StreamingHost $Host -ScriptBlock {
     # Enable strict mode to avoid non-existent or empty properties from the API
     # Set-StrictMode -Version 3.0
 
