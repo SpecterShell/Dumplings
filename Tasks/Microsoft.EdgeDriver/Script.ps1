@@ -1,10 +1,10 @@
 $Content = (Invoke-WebRequest -Uri 'https://msedgedriver.azureedge.net/LATEST_STABLE' | Read-ResponseContent).Trim()
 
 # Version
-$Task.CurrentState.Version = $Version = $Content
+$this.CurrentState.Version = $Version = $Content
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win32.zip"
   NestedInstallerFiles = @(
@@ -14,7 +14,7 @@ $Task.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win64.zip"
   NestedInstallerFiles = @(
@@ -24,7 +24,7 @@ $Task.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'arm64'
   InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_arm64.zip"
   NestedInstallerFiles = @(
@@ -35,14 +35,14 @@ $Task.CurrentState.Installer += [ordered]@{
   )
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,42 +1,42 @@
 # x86
-$Object1 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgrade_version?platform=5&version_number=$($Task.LastState.Version ?? '1.8.4')"
+$Object1 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgrade_version?platform=5&version_number=$($this.LastState.Version ?? '1.8.4')"
 # x64
-$Object2 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgrade_version?platform=4&version_number=$($Task.LastState.Version ?? '1.8.4')"
+$Object2 = Invoke-RestMethod -Uri "https://download.flyele.net/v1/downloads/upgrade_version?platform=4&version_number=$($this.LastState.Version ?? '1.8.4')"
 
 # Version
-$Task.CurrentState.Version = $Object2.data.version_number
+$this.CurrentState.Version = $Object2.data.version_number
 
 $Identical = $true
 if ($Object1.data.version_number -ne $Object2.data.version_number) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object1.data.downloads.full_version.link_url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.data.downloads.full_version.link_url
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object2.data.release_note | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,18 +1,18 @@
-$Task.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 526 -Version '1.1.0.0' -Locale 'en-US'
+$this.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 526 -Version '1.1.0.0' -Locale 'en-US'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.wondershare.com/cbs_down/pdf-password-remover_full526.exe'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

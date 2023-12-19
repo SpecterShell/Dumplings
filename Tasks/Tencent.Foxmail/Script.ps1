@@ -9,28 +9,28 @@ $Object = Invoke-WebRequest -Uri 'https://datacollect.foxmail.com.cn/cgi-bin/fox
 '@ | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
-$Task.CurrentState.Version = $Object.UpdateNotify.NewVersion
+$this.CurrentState.Version = $Object.UpdateNotify.NewVersion
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.UpdateNotify.Description.'#cdata-section'.Replace('\r\n', "`n").Replace('\n', "`n") | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

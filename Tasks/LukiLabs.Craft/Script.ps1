@@ -1,15 +1,15 @@
 $Prefix = 'https://res.craft.do/windows-app/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

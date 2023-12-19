@@ -1,34 +1,34 @@
 $Object = Invoke-RestMethod -Uri 'https://meeting.kdocs.cn/api/v1/app/version?os=win&app=meeting&try_get_gray=true'
 
 # Version
-$Task.CurrentState.Version = $Object.data.version
+$this.CurrentState.Version = $Object.data.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.data.market_url
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data.updated_at | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object.data.updated_at | ConvertFrom-UnixTimeSeconds
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.data.content | ConvertTo-OrderedList | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

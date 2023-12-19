@@ -7,36 +7,36 @@ $Object2 = $Response | Where-Object -Property 'OS' -EQ -Value 'windows-lightapp-
 $Object3 = $Response | Where-Object -Property 'OS' -EQ -Value 'windows-lightapp-electron-arm64'
 
 # Version
-$Task.CurrentState.Version = $Object2.exVer
+$this.CurrentState.Version = $Object2.exVer
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object1.exUrl
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.exUrl
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Object3.exUrl
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

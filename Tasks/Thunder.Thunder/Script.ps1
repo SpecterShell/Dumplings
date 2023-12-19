@@ -7,37 +7,37 @@ $Object2 = Invoke-RestMethod -Uri 'https://upgrade-pc-ssl.xunlei.com/pc?pid=1&ci
 
 if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Object2.data.v) -gt 0) {
   # Version
-  $Task.CurrentState.Version = $Object2.data.v
+  $this.CurrentState.Version = $Object2.data.v
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.data.url.Replace('upgrade.down.sandai.net', 'down.sandai.net').Replace('up.exe', '.exe')
   }
 
   # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
+  $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
     Value  = $Object2.data.desc | Format-Text
   }
 } else {
   # Version
-  $Task.CurrentState.Version = $Version1
+  $this.CurrentState.Version = $Version1
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object1.offline
   }
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

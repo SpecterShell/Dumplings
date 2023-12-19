@@ -2,24 +2,24 @@ $Object = Invoke-RestMethod -Uri 'https://lanhuapp.com/api/project/app_version?a
 
 # Installer
 $InstallerUrl = $Object.result.url
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.result.create_time | Get-Date
+$this.CurrentState.ReleaseTime = $Object.result.create_time | Get-Date
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,23 +1,23 @@
 $Object = Invoke-RestMethod -Uri 'https://mkvtoolnix.download/releases.xml'
 
 # Version
-$Task.CurrentState.Version = $Object.'mkvtoolnix-releases'.release[0].version
+$this.CurrentState.Version = $Object.'mkvtoolnix-releases'.release[0].version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($Task.CurrentState.Version)/mkvtoolnix-32-bit-$($Task.CurrentState.Version)-setup.exe"
+  InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($this.CurrentState.Version)/mkvtoolnix-32-bit-$($this.CurrentState.Version)-setup.exe"
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($Task.CurrentState.Version)/mkvtoolnix-64-bit-$($Task.CurrentState.Version)-setup.exe"
+  InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($this.CurrentState.Version)/mkvtoolnix-64-bit-$($this.CurrentState.Version)-setup.exe"
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = $Object.'mkvtoolnix-releases'.release[0].changes.change | ForEach-Object -Begin {
@@ -30,14 +30,14 @@ $Task.CurrentState.Locale += [ordered]@{
   }
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -6,24 +6,24 @@ $Object = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/confi
 )
 
 # Version
-$Task.CurrentState.Version = $Object.data[0].version
+$this.CurrentState.Version = $Object.data[0].version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

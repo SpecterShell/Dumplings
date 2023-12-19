@@ -1,13 +1,13 @@
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/84/'
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'insoft_([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'insoft_([\d\.]+)').Groups[1].Value
 
-if (!$InstallerUrl.Contains($Task.CurrentState.Version)) {
-  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($Task.CurrentState.Version)"
+if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
+  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($this.CurrentState.Version)"
 }
 
 $Content = (Invoke-WebRequest -Uri 'https://activity.10jqka.com.cn/acmake/cache/486.html').Content
@@ -24,20 +24,20 @@ if ($Content -cmatch "text3:\s*'([^']+)'") {
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $ReleaseNotes | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

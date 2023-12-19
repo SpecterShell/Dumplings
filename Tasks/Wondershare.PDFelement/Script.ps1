@@ -1,25 +1,25 @@
-$Task.CurrentState = $LocalStorage.WondershareUpgradeInfo['5239']
+$this.CurrentState = $LocalStorage.WondershareUpgradeInfo['5239']
 
 # Installer
-$Task.CurrentState.Installer = @(
+$this.CurrentState.Installer = @(
   [ordered]@{
     Architecture = 'x86'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_$($Task.CurrentState.Version)_full5239.exe"
+    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_$($this.CurrentState.Version)_full5239.exe"
   }
   [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_64bit_$($Task.CurrentState.Version)_full5239.exe"
+    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_64bit_$($this.CurrentState.Version)_full5239.exe"
   }
 )
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

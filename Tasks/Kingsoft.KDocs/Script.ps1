@@ -11,31 +11,31 @@ $Version2 = $Object3.version
 
 if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -gt 0) {
   # Version
-  $Task.CurrentState.Version = $Version2
+  $this.CurrentState.Version = $Version2
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object3.url.Replace('1002', '1001')
   }
 
   # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
+  $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
     Value  = $Object3.changes | Format-Text
   }
 } else {
   # Version
-  $Task.CurrentState.Version = $Version1
+  $this.CurrentState.Version = $Version1
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.kdesktopWin.1001
   }
 
   if ($Version1 -eq $Version2) {
     # ReleaseNotes (zh-CN)
-    $Task.CurrentState.Locale += [ordered]@{
+    $this.CurrentState.Locale += [ordered]@{
       Locale = 'zh-CN'
       Key    = 'ReleaseNotes'
       Value  = $Object3.changes | Format-Text
@@ -43,14 +43,14 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
   }
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

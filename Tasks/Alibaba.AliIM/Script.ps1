@@ -6,21 +6,21 @@ $Button1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="root"]/
 
 # Installer
 $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='root']/div/div[1]/div[2]/div[2]/div/div/div/a[1]")).GetAttribute('href')
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '\((.+)\)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '\((.+)\)\.exe').Groups[1].Value
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

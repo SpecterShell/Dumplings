@@ -9,41 +9,41 @@ $Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x8
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$Task.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Object4.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object3.url
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

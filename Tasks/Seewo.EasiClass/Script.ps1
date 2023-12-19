@@ -1,21 +1,21 @@
 $Object = $LocalStorage.SeewoApps['EasiClassPC']
 
 # Version
-$Task.CurrentState.Version = $Object.softInfos[0].softVersion
+$this.CurrentState.Version = $Object.softInfos[0].softVersion
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.softInfos[0].downloadUrl
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

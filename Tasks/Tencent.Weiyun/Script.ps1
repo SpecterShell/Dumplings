@@ -10,45 +10,45 @@ $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$((New-Gui
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
   $Identical = $true
   if ($Object2.Version -ne $Object3.Version) {
-    $Task.Logging('Distinct versions detected', 'Warning')
+    $this.Logging('Distinct versions detected', 'Warning')
     $Identical = $false
   }
 
-  $Task.CurrentState = $Object2
-  $Task.CurrentState.Installer = $Object3.Installer + $Task.CurrentState.Installer
-  $Task.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
+  $this.CurrentState = $Object2
+  $this.CurrentState.Installer = $Object3.Installer + $this.CurrentState.Installer
+  $this.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
 } else {
   $Identical = $true
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
-    $Task.Logging('Distinct versions detected', 'Warning')
+    $this.Logging('Distinct versions detected', 'Warning')
     $Identical = $false
   }
 
   # Version
-  $Task.CurrentState.Version = $Object1.electron_win64.version
+  $this.CurrentState.Version = $Object1.electron_win64.version
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x86'
     InstallerUrl = $Object1.electron_win32.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
   }
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x64'
     InstallerUrl = $Object1.electron_win64.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
   }
 
   # ReleaseTime
-  $Task.CurrentState.ReleaseTime = $Object1.electron_win64.date | Get-Date -Format 'yyyy-MM-dd'
+  $this.CurrentState.ReleaseTime = $Object1.electron_win64.date | Get-Date -Format 'yyyy-MM-dd'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

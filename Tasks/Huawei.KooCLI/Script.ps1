@@ -1,10 +1,10 @@
 $Content = Invoke-RestMethod -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
 
 # Version
-$Task.CurrentState.Version = $Version = $Content.Trim()
+$this.CurrentState.Version = $Version = $Content.Trim()
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/${Version}/huaweicloud-cli-windows-amd64.zip"
   NestedInstallerFiles = @(
     @{
@@ -14,14 +14,14 @@ $Task.CurrentState.Installer += [ordered]@{
   )
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

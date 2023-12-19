@@ -4,57 +4,57 @@ $Object1 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationServic
 $Object2 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationService/installer/getAppVersion?appId=10301011&versionCode=0.0.0.0&packageSystemSupport=1'
 
 # Version
-$Task.CurrentState.Version = $Object1.data.versionCode
+$this.CurrentState.Version = $Object1.data.versionCode
 
 $Identical = $true
 if ($Object1.data.versionCode -ne $Object2.data.versionCode) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.data.downloadUrl
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.data.downloadUrl
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+$this.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object3 = Invoke-WebRequest -Uri 'https://www.billfish.cn/help/gengxinrizhi' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[starts-with(@class, 'catalog_catalogContent')]/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[starts-with(@class, 'catalog_catalogContent')]/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node.Name -ne 'hr'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

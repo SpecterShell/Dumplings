@@ -5,47 +5,47 @@ $Object2 = Invoke-RestMethod -Uri 'http://upgrade.xl9.xunlei.com/pc?pid=2&cid=10
 
 if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Object1.version -DifferenceVersion $Object2.data.v) -gt 0) {
   # Version
-  $Task.CurrentState.Version = $Object2.data.v
+  $this.CurrentState.Version = $Object2.data.v
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.data.url.Replace('xmpup', 'xmp')
   }
 
   # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
+  $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
     Value  = $Object2.data.desc | Format-Text
   }
 } else {
   # Version
-  $Task.CurrentState.Version = $Object1.version
+  $this.CurrentState.Version = $Object1.version
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object1.url | ConvertTo-Https
   }
 
   # ReleaseTime
-  $Task.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
+  $this.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
 
   # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
+  $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
     Value  = $Object1.content | Format-Text
   }
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,19 +1,19 @@
 $Object1 = [regex]::Match((Invoke-RestMethod -Uri 'https://infekt.ws/prog/CurrentVersion.txt'), '(?s)\{\{\{(.+)\}\}\}').Groups[1].Value | ConvertFrom-Ini
 
 # Version
-$Task.CurrentState.Version = $Object1._.'latest[stable].1'
+$this.CurrentState.Version = $Object1._.'latest[stable].1'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1._.'autoupdate_download[stable].1/087'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object2 = Invoke-WebRequest -Uri 'https://infekt.ws/' | ConvertFrom-Html
 
     # ReleaseTime
-    $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
+    $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
       [regex]::Match(
         $Object2.SelectSingleNode('/html/body/div/header/p[2]/text()[2]').InnerText,
         '\((.+)\)'
@@ -29,12 +29,12 @@ switch ($Task.Check()) {
       [System.Globalization.DateTimeStyles]::None
     ).ToString('yyyy-MM-dd')
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

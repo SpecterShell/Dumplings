@@ -1,13 +1,13 @@
-$Task.CurrentState = $LocalStorage.WondershareUpgradeInfo['13164']
+$this.CurrentState = $LocalStorage.WondershareUpgradeInfo['13164']
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

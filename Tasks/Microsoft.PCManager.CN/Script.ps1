@@ -19,34 +19,34 @@ $Param = @{
 $Object = (Invoke-RestMethod @Param).results.'PCM:AutoUpdateOptions' | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object.Version
+$this.CurrentState.Version = $Object.Version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri $Object.DownloadLink
 }
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = ($Object.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
 }
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = ($Object.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

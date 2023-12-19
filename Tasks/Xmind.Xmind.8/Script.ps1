@@ -1,28 +1,28 @@
 $Object = Invoke-RestMethod -Uri 'https://www.xmind.net/_api/checkVersion/0?distrib=cathy_win32'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.buildId, '([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object.buildId, '([\d\.]+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.download
 }
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = $Object.whatsNew.Split("`n`n")[1] | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

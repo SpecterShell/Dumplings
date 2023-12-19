@@ -1,28 +1,28 @@
 $Object = Invoke-RestMethod -Uri 'https://www.yunzhijia.com/mixed/cloudhubx/win32_ia32/update.json'
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.BaseURL + $Object.fileUrl
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.descList | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

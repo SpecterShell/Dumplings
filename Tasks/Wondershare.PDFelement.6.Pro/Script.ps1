@@ -1,21 +1,21 @@
-$Task.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 2990 -Version '6.0.0.0' -Locale 'en-US'
+$this.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 2990 -Version '6.0.0.0' -Locale 'en-US'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.wondershare.com/cbs_down/pdfelement6-pro_full2990.exe'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

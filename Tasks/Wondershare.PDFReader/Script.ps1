@@ -1,25 +1,25 @@
-$Task.CurrentState = $LocalStorage.WondershareUpgradeInfo['13142']
+$this.CurrentState = $LocalStorage.WondershareUpgradeInfo['13142']
 
 # Installer
-$Task.CurrentState.Installer = @(
+$this.CurrentState.Installer = @(
   [ordered]@{
     Architecture = 'x86'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_$($Task.CurrentState.Version)_full13142.exe"
+    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_$($this.CurrentState.Version)_full13142.exe"
   }
   [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_64bit_$($Task.CurrentState.Version)_full13142.exe"
+    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_64bit_$($this.CurrentState.Version)_full13142.exe"
   }
 )
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

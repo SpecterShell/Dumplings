@@ -1,30 +1,30 @@
 $Object1 = Invoke-RestMethod -Uri 'https://appversion.115.com/1/web/1.0/api/chrome'
 
 # Version
-$Task.CurrentState.Version = $Object1.data.win.version_code
+$this.CurrentState.Version = $Object1.data.win.version_code
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.win.version_url
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.data.win.created_time | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object1.data.win.created_time | ConvertFrom-UnixTimeSeconds
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object2 = Invoke-WebRequest -Uri 'https://115.com/115/T504444.html' | ConvertFrom-Html
 
     try {
       # ReleaseNotesUrl (zh-CN)
-      $ReleaseNotesUrl = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[1]/p/span/text()='Windows']/td[2]/p/a[contains(./span/text(),'$($Task.CurrentState.Version)')]").Attributes['href'].Value
-      $Task.CurrentState.Locale += [ordered]@{
+      $ReleaseNotesUrl = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[1]/p/span/text()='Windows']/td[2]/p/a[contains(./span/text(),'$($this.CurrentState.Version)')]").Attributes['href'].Value
+      $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = $ReleaseNotesUrl
       }
     } catch {
-      $Task.Logging($_, 'Warning')
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.Logging($_, 'Warning')
+      $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = $null
       }
@@ -37,27 +37,27 @@ switch ($Task.Check()) {
         # ReleaseNotes (zh-CN)
         $ReleaseNotesNode = $Object3.SelectNodes('//*[@id="js_content_box"]/div[2]/div/div/div/div[last()]')
         if ($ReleaseNotesNode) {
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = ($ReleaseNotesNode | Get-TextContent) -csplit '(?m)^-+$' | Select-Object -First 1 | Format-Text
           }
         } else {
-          $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+          $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
         }
       } catch {
-        $Task.Logging($_, 'Warning')
+        $this.Logging($_, 'Warning')
       }
     } else {
-      $Task.Logging("No ReleaseNotesUrl for version $($Task.CurrentState.Version)", 'Warning')
+      $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

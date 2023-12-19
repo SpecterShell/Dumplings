@@ -14,31 +14,31 @@ $Version2 = [regex]::Match(
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerUrl2
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl1
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -5,15 +5,15 @@ $Object = Invoke-RestMethod -Uri 'https://fn.kirakuapp.com/admin/version/listNew
 
 # Installer
 $InstallerUrl = $Object.data[0].downloadUrl | ConvertTo-UnescapedUri
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.-]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.-]+)\.exe').Groups[1].Value
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data[0].createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+$this.CurrentState.ReleaseTime = $Object.data[0].createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
 # ReleaseNotes (zh-CN)
 $ReleaseNotesObject = $Object.data[0].updateLog | ConvertFrom-Json
@@ -27,20 +27,20 @@ if ($ReleaseNotesObject.changed) {
 if ($ReleaseNotesObject.fixed) {
   $ReleaseNotesList += $ReleaseNotesObject.fixed -creplace '^', '[-FIXED] '
 }
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $ReleaseNotesList | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

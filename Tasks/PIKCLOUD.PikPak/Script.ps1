@@ -18,38 +18,38 @@ $Object2 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_
 )
 
 # Version
-$Task.CurrentState.Version = $Object1.values.client_version.newVersionName
+$this.CurrentState.Version = $Object1.values.client_version.newVersionName
 
 # RealVersion
-$Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
 }
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = $Object1.values.client_version.news | Format-Text
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object2.values.client_version.news | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

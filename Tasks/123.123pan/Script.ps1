@@ -1,44 +1,44 @@
 $Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
-  'app-version' = $Task.LastState.Version.Split('.')[2] ?? 109
+  'app-version' = $this.LastState.Version.Split('.')[2] ?? 109
 }
 
 if (-not $Object.data.hasNewVersion) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
 $Prefix = $Object.data.url + '/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 $Identical = $true
-if ($Object.data.lastVersion -ne $Task.CurrentState.Version) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+if ($Object.data.lastVersion -ne $this.CurrentState.Version) {
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
+$this.CurrentState.ReleaseTime = $Object.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.data.desc | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

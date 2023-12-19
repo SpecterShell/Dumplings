@@ -1,18 +1,18 @@
-$Task.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 839
+$this.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 839
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.wondershare.com/cbs_down/pdf-converter-pro_full839.exe'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

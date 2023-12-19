@@ -4,7 +4,7 @@ $Params = @{
     client = @{
       app = @{
         id      = '100823621'
-        version = $Task.LastState.Version ?? '11.2.0.303'
+        version = $this.LastState.Version ?? '11.2.0.303'
       }
     }
   } | ConvertTo-Json -Compress
@@ -26,70 +26,70 @@ $Object2 = (Invoke-RestMethod -Uri 'https://conf-drcn.cloud.dbankcloud.cn/config
 # $Object3 = (Invoke-RestMethod -Uri 'https://conf-drru.cloud.dbankcloud.ru/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object2.configurations.version
+$this.CurrentState.Version = $Object2.configurations.version
 
 # Installer
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x86'
 #   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }).url
 # }
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
 #   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }).url
 # }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }).url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }).url
 }
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x86'
 #   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }).url
 # }
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x64'
 #   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }).url
 # }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
+$this.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
 
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
 
     try {
       # ReleaseNotes (en-US)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'en-US'.text.value | Format-Text
       }
 
       # ReleaseNotes (zh-CN)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

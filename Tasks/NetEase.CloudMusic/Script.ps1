@@ -5,26 +5,26 @@ $Object1 = Invoke-RestMethod `
   -Body 'action=manual&cpuBitWidth=32&e_r=false'
 
 # Version
-$Task.CurrentState.Version = "$($Object1.data.packageVO.appver).$($Object1.data.packageVO.buildver)"
+$this.CurrentState.Version = "$($Object1.data.packageVO.appver).$($Object1.data.packageVO.buildver)"
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object1.data.packageVO.downloadUrl
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = '"' + $Object1.data.upgradeContent + '"' | ConvertFrom-Json | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
 }

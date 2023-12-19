@@ -6,19 +6,19 @@ $Headers = @{
   uid          = ''
 }
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 # InstallerUrl
-$Task.CurrentState.Installer.ForEach({ $_.InstallerUrl = Get-RedirectedUrl -Uri $_.InstallerUrl -Headers $Headers })
+$this.CurrentState.Installer.ForEach({ $_.InstallerUrl = Get-RedirectedUrl -Uri $_.InstallerUrl -Headers $Headers })
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

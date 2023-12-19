@@ -10,40 +10,40 @@ $Hash = [System.BitConverter]::ToString(
 $Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1"
 
 if ($Object1.code -ne 0) {
-  throw "Task $($Task.Name): $($Object1.message)"
+  throw "Task $($this.Name): $($Object1.message)"
 }
 
 $Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
 
 # Version
-$Task.CurrentState.Version = $Object2.Product.Version.VerNo
+$this.CurrentState.Version = $Object2.Product.Version.VerNo
 
 # UniVer
-$Task.CurrentState.UniVer = $Object2.Product.Version.UniVer
+$this.CurrentState.UniVer = $Object2.Product.Version.UniVer
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://yydl.yy.com/$($Object2.Product.Version.Pack.FileUrl)"
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object1.data.discription | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

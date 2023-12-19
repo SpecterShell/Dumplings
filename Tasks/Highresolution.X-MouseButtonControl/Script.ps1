@@ -1,18 +1,18 @@
 $Object = Invoke-WebRequest -Uri 'https://highrez.co.uk/downloads/xmbc_changelog.htm' | ConvertFrom-Html
 
 # Version
-$Task.CurrentState.Version = [regex]::Match(
+$this.CurrentState.Version = [regex]::Match(
   $Object.SelectSingleNode('/html/body/div[2]/div/b').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.highrez.co.uk/scripts/download.asp?package=XMouse'
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
+$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
   [regex]::Match(
     $Object.SelectSingleNode('/html/body/div[2]/div/text()').InnerText,
     '\((.+)\)'
@@ -29,20 +29,20 @@ $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
 ).ToString('yyyy-MM-dd')
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = ($Object.SelectNodes('/html/body/div[2]/div/following-sibling::*') | Get-TextContent | Format-Text).Replace("`t", ' ')
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,25 +1,25 @@
 $Object1 = Invoke-RestMethod -Uri 'https://typora.io/releases/windows_64.json'
 
 # Version
-$Task.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.download.Replace('update', 'setup')
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object1.downloadCN.Replace('update', 'setup')
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object2 = Invoke-WebRequest -Uri 'https://typora.io/releases/stable' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='write']/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='write']/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = @()
         switch ($ReleaseNotesTitleNode.SelectNodes('./following-sibling::*')) {
@@ -35,27 +35,27 @@ switch ($Task.Check()) {
           }
         }
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
     # ReleaseNotesUrl
-    $Task.CurrentState.Locale += [ordered]@{
+    $this.CurrentState.Locale += [ordered]@{
       Key   = 'ReleaseNotesUrl'
       Value = $ReleaseNotesUrl ?? 'https://typora.io/releases/stable'
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
 }

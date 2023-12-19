@@ -4,34 +4,34 @@ $Object = Invoke-RestMethod -Uri 'https://xstudio-singer.xiaoice.com/version/upd
 }
 
 # Version
-$Task.CurrentState.Version = $Object.latest.name
+$this.CurrentState.Version = $Object.latest.name
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.latest.release.url
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
+$this.CurrentState.ReleaseTime = $Object.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.latest.release.content | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

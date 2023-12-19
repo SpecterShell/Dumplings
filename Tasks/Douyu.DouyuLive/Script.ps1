@@ -1,31 +1,31 @@
 $Object = Invoke-RestMethod -Uri 'https://venus.douyucdn.cn/venus/release/pc/checkPackage?appCode=Douyu_Live_PC_Client'
 
 # Version
-$Task.CurrentState.Version = $Object.data.versionName
+$this.CurrentState.Version = $Object.data.versionName
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.data.fileUrl
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data.updateTime | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object.data.updateTime | ConvertFrom-UnixTimeSeconds
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.data.changelog | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

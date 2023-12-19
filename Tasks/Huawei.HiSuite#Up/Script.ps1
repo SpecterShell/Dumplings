@@ -33,43 +33,43 @@ $Version2 = [regex]::Match(
 ).Groups[1].Value
 
 if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix1 + $Object2.root.files.file[1].spath
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   InstallerUrl    = $Prefix2 + $Object5.root.files.file[1].spath
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date
+$this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date
 
 # ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
   Value  = $Object3.root.language.Where({ $_.code -eq '1033' }).features.feature | Format-Text
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object6.root.language.Where({ $_.code -eq '2052' }).features.feature | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
 }

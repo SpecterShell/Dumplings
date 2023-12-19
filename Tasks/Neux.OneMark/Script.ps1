@@ -9,82 +9,82 @@ $Object4 = Invoke-RestMethod -Uri 'https://onemark.neuxlab.cn/updates/latest.xml
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.item.version } -Unique).Count -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$Task.CurrentState.Version = $Object1.item.version
+$this.CurrentState.Version = $Object1.item.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Object4.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object3.item.url
 }
 
 # ReleaseNotesUrl
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
   Value = $ReleaseNotesUrl1 = $Object1.item.changelog
 }
 # ReleaseNotesUrl (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotesUrl'
   Value  = $ReleaseNotesUrl2 = $Object3.item.changelog
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromMsi
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromMsi
 
     $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl1 | ConvertFrom-Html
 
     try {
       # ReleaseNotes (en-US)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object5.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
     $Object6 = Invoke-WebRequest -Uri $ReleaseNotesUrl2 | ConvertFrom-Html
 
     try {
       # ReleaseNotes (zh-CN)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object6.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

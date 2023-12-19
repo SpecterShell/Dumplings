@@ -6,20 +6,20 @@ $Hash = [System.BitConverter]::ToString(
   )
 ).Replace('-', '').ToLower().Substring(0, 8)
 
-$Task.CurrentState = Invoke-RestMethod -Uri "https://pan.quark.cn/update/win32/$($Task.LastState.Version ?? '2.5.1')/latest.yml" -Headers @{
+$this.CurrentState = Invoke-RestMethod -Uri "https://pan.quark.cn/update/win32/$($this.LastState.Version ?? '2.5.1')/latest.yml" -Headers @{
   'x-guid'        = $Guid
   'x-tm'          = $Time
   'authorization' = $Hash
 } | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

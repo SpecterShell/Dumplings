@@ -3,17 +3,17 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.feishu.cn/api/downloads' -Headers
 }
 
 # Version
-$Task.CurrentState.Version = $Version = [regex]::Match($Object1.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Version = [regex]::Match($Object1.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.versions.Windows.download_link
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.versions.Windows.release_time | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object1.versions.Windows.release_time | ConvertFrom-UnixTimeSeconds
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Uri2 = 'https://www.feishu.cn/hc/en-US/articles/360043073734'
     $Object2 = Invoke-WebRequest -Uri $Uri2 | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable |
@@ -29,14 +29,14 @@ switch ($Task.Check()) {
           for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "Updated")]|.//hr') ; $Node = $Node.NextSibling) {
             $ReleaseNotesNodes += $Node
           }
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
           # ReleaseNotesUrl (en-US)
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotesUrl'
             Value  = $ReleaseNotesTitleNode.SelectSingleNode('.//a').Attributes['href'].Value
@@ -44,16 +44,16 @@ switch ($Task.Check()) {
         }
       } else {
         # ReleaseNotesUrl (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
           Value  = $Uri2
         }
 
-        $Task.Logging("No ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
     $Uri3 = 'https://www.feishu.cn/hc/zh-CN/articles/360043073734'
@@ -70,14 +70,14 @@ switch ($Task.Check()) {
           for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "发布于")]|.//hr') ; $Node = $Node.NextSibling) {
             $ReleaseNotesNodes += $Node
           }
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
           # ReleaseNotesUrl (zh-CN)
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotesUrl'
             Value  = $ReleaseNotesTitleNode.SelectSingleNode('.//a').Attributes['href'].Value
@@ -85,24 +85,24 @@ switch ($Task.Check()) {
         }
       } else {
         # ReleaseNotesUrl (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
           Value  = $Uri3
         }
 
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

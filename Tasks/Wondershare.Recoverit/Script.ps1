@@ -1,21 +1,21 @@
-$Task.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 4134 -Version '7.0.0' -Locale 'en-US'
+$this.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 4134 -Version '7.0.0' -Locale 'en-US'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/recoverit_64bit_$($Task.CurrentState.Version)_full4134.exe"
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "https://download.wondershare.com/cbs_down/recoverit_64bit_$($this.CurrentState.Version)_full4134.exe"
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

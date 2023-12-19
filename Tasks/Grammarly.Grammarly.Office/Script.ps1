@@ -1,28 +1,28 @@
 $Object = Invoke-RestMethod -Uri 'https://update-officeaddin.grammarly.com/update' -Method Post -Body (
   @{
-    currentVersion = $Task.LastState.Version ?? '6.8.263'
+    currentVersion = $this.LastState.Version ?? '6.8.263'
   } | ConvertTo-Json -Compress
 )
 
 # Version
-$Task.CurrentState.Version = $Object.version -join '.'
+$this.CurrentState.Version = $Object.version -join '.'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.installerUrl
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+$this.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

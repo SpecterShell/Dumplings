@@ -1,35 +1,35 @@
 $Prefix = 'https://pcclient.download.youku.com/iku-win-release/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object = Invoke-RestMethod -Uri 'https://hudong.alicdn.com/api/data/v2/698d45f854c64b95a87f2a947ed4e12b.js' | Get-EmbeddedJson -StartsFrom 'cbUpdateConfig(' | ConvertFrom-Json
 
     # RealVersion
-    $Task.CurrentState.RealVersion = $Object.win.strategies[-1].method.targetVersion
+    $this.CurrentState.RealVersion = $Object.win.strategies[-1].method.targetVersion
 
     try {
-      if ($Object.win.strategies[-1].method.targetVersion.Contains($Task.CurrentState.Version)) {
+      if ($Object.win.strategies[-1].method.targetVersion.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $Object.win.strategies[-1].method.feature | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

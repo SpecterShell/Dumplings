@@ -1,21 +1,21 @@
 $Object = Invoke-RestMethod -Uri 'https://ideservice.alipay.com/ide/api/pluginVersion.json?platform=win&clientType=assistant' -Headers @{ Referer = 'https://openhome.alipay.com' }
 
 # Version
-$Task.CurrentState.Version = $Object.baseResponse.data.versionName
+$this.CurrentState.Version = $Object.baseResponse.data.versionName
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.baseResponse.data.downloadUrl
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -19,92 +19,92 @@ $Request4.AllowAutoRedirect = $false
 $Response4 = $Request4.GetResponse()
 
 # Version
-$Task.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
+$this.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
 
 $Identical = $true
 if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Response1.GetResponseHeader('Location') | ConvertTo-Https
 }
 $Response1.Close()
 
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Response2.GetResponseHeader('Location') | ConvertTo-Https
 }
 $Response2.Close()
 
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Response3.GetResponseHeader('Location') | ConvertTo-Https
 }
 $Response3.Close()
 
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Response4.GetResponseHeader('Location') | ConvertTo-Https
 }
 $Response4.Close()
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object1 = Invoke-WebRequest -Uri 'https://www.centbrowser.com/history.html' | ConvertFrom-Html
     $Object2 = Invoke-WebRequest -Uri 'https://www.centbrowser.cn/history.html' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesNode1 = $Object1.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesNode1 = $Object1.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode1) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
+        $this.CurrentState.ReleaseTime = [regex]::Match(
           $ReleaseNotesNode1.SelectSingleNode('./p/i').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode1.SelectSingleNode('./span') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      $ReleaseNotesNode2 = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesNode2 = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode2) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime ??= [regex]::Match(
+        $this.CurrentState.ReleaseTime ??= [regex]::Match(
           $ReleaseNotesNode2.SelectSingleNode('./p/i').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode2.SelectSingleNode('./span') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

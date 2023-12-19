@@ -5,60 +5,60 @@ $Object1 = $Response | Where-Object -Property 'OS' -EQ -Value 'win-wpf-client'
 $Object2 = $Response | Where-Object -Property 'OS' -EQ -Value 'win-wpf-client-arm64'
 
 # Version
-$Task.CurrentState.Version = $Object1.exVer
+$this.CurrentState.Version = $Object1.exVer
 
 $Identical = $true
 if ($Object1.exVer -ne $Object2.exVer) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($Task.CurrentState.Version)/NutstoreWindowsWPF_Full_$($Task.CurrentState.Version).exe"
+  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($this.CurrentState.Version)/NutstoreWindowsWPF_Full_$($this.CurrentState.Version).exe"
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($Task.CurrentState.Version)/NutstoreWindowsWPF_Full_$($Task.CurrentState.Version).exe"
+  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($this.CurrentState.Version)/NutstoreWindowsWPF_Full_$($this.CurrentState.Version).exe"
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($Task.CurrentState.Version)/NutstoreWindowsWPF_Full_$($Task.CurrentState.Version)_ARM64.exe"
+  InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($this.CurrentState.Version)/NutstoreWindowsWPF_Full_$($this.CurrentState.Version)_ARM64.exe"
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $Object3 = Invoke-WebRequest -Uri 'https://help.jianguoyun.com/?p=1415' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesNode = $Object3.SelectSingleNode("//*[@id='post-1415']/div/p[contains(./strong/text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesNode = $Object3.SelectSingleNode("//*[@id='post-1415']/div/p[contains(./strong/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
+        $this.CurrentState.ReleaseTime = [regex]::Match(
           $ReleaseNotesNode.SelectSingleNode('./strong').InnerText,
           '(\d{4}年\d{1,2}月\d{1,2}日)'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode.SelectSingleNode('./following-sibling::ol[1]') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

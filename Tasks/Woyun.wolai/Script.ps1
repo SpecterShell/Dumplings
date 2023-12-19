@@ -6,19 +6,19 @@ $Prefix2 = 'https://static2.wolai.com/dist/installers/'
 $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix2
 
 if ((Compare-Version -ReferenceVersion $Object1.Version -DifferenceVersion $Object2.Version) -gt 0) {
-  $Task.CurrentState = $Object2
+  $this.CurrentState = $Object2
 } else {
-  $Task.CurrentState = $Object1
+  $this.CurrentState = $Object1
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -19,58 +19,58 @@ $Version2 = $Object2.NewVer
 
 if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -gt 0) {
   # Version
-  $Task.CurrentState.Version = $Version2
+  $this.CurrentState.Version = $Version2
 
   # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
+  $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
     Value  = $Object2.Desp.Replace("`r`r", "`r") | Split-LineEndings | Select-Object -Skip 1 | Format-Text
   }
 } else {
   # Version
-  $Task.CurrentState.Version = $Version1
+  $this.CurrentState.Version = $Version1
 
   # ReleaseTime
-  $Task.CurrentState.ReleaseTime = [regex]::Match(
+  $this.CurrentState.ReleaseTime = [regex]::Match(
     $Object1.SelectSingleNode('//*[@id="banner_box_pinyin"]/div[2]/div[2]/p[2]').InnerText,
     '(\d{4}\.\d{1,2}\.\d{1,2})'
   ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 }
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://ime.sogoucdn.com/QQPinyin_Setup_$($Task.CurrentState.Version).exe"
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "https://ime.sogoucdn.com/QQPinyin_Setup_$($this.CurrentState.Version).exe"
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    if (-not $Task.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' })) {
+    if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' })) {
       $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
       try {
-        $ReleaseNotes = $Object3.vHistory | Where-Object -FilterScript { $_.version.Contains($Task.CurrentState.Version) }
+        $ReleaseNotes = $Object3.vHistory | Where-Object -FilterScript { $_.version.Contains($this.CurrentState.Version) }
         if ($ReleaseNotes) {
           # ReleaseNotes (zh-CN)
-          $Task.CurrentState.Locale += [ordered]@{
+          $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotes.version_features | Format-Text
           }
         } else {
-          $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+          $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
         }
       } catch {
-        $Task.Logging($_, 'Warning')
+        $this.Logging($_, 'Warning')
       }
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

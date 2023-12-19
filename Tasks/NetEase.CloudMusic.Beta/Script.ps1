@@ -21,25 +21,25 @@ $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerUrl2
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl1
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = '"' + $Object1.data.upgradeContent + '"' | ConvertFrom-Json | Format-Text
@@ -47,14 +47,14 @@ $Task.CurrentState.Locale += [ordered]@{
 
 Set-StrictMode -Off
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

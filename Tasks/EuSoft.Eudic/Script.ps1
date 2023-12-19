@@ -3,13 +3,13 @@ $Object = Invoke-RestMethod -Uri 'https://api.frdic.com/api/v2/appsupport/checkv
 }
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object.version
 
 # RealVersion
-$Task.CurrentState.RealVersion = "$($Object.version.Split('.')[0]).0.0.0"
+$this.CurrentState.RealVersion = "$($Object.version.Split('.')[0]).0.0.0"
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = 'https://static.frdic.com/pkg/eudic_win.zip'
   NestedInstallerFiles = @(
     @{
@@ -19,20 +19,20 @@ $Task.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.publish_date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object.publish_date | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.info.Split("`n") | Select-Object -Skip 1 | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
 }

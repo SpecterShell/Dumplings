@@ -1,18 +1,18 @@
-$Task.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 5372
+$this.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 5372
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.edrawsoft.com/cbs_down/edrawproject_full5372.exe'
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

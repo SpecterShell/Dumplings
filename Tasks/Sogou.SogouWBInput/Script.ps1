@@ -3,45 +3,45 @@ $Object1 = Invoke-WebRequest -Uri 'https://wubi.sogou.com/' | ConvertFrom-Html
 $PseudoInstallerUrl = $Object1.SelectSingleNode('//*[@id="bannerCon_new"]/a').Attributes['href'].Value
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($PseudoInstallerUrl, '.+?/pc/dl/gzindex/.+?/sogou_wubi_(.+?)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($PseudoInstallerUrl, '.+?/pc/dl/gzindex/.+?/sogou_wubi_(.+?)\.exe').Groups[1].Value
 
 # ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/p[2]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/p[2]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $PseudoInstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = Get-TempFile -Uri $PseudoInstallerUrl | Read-ProductVersionFromExe
 
     # Installer
-    $Task.CurrentState.Installer += [ordered]@{
-      InstallerUrl = "https://ime.sogoucdn.com/sogou_wubi_$($Task.CurrentState.RealVersion).exe"
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerUrl = "https://ime.sogoucdn.com/sogou_wubi_$($this.CurrentState.RealVersion).exe"
     }
 
     $Object2 = Invoke-WebRequest -Uri 'https://wubi.sogou.com/log.php' | ConvertFrom-Html
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='log_con']/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='log_con']/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::*') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $this.Logging($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -1,21 +1,21 @@
 $Object = Invoke-RestMethod -Uri 'https://sas.qq.com/cgi-bin/ke_download_speed'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = $Object.result.win.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'EduLiteInstall_([\d\.]+)_.+\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'EduLiteInstall_([\d\.]+)_.+\.exe').Groups[1].Value
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

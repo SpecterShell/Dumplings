@@ -1,28 +1,28 @@
 $Object = Invoke-RestMethod -Uri 'https://apps.chaoxing.com/apis/apk/apkInfos.jspx?apkid=com.chaoxing.pc'
 
 # Version
-$Task.CurrentState.Version = $Object.msg.apkInfo.version
+$this.CurrentState.Version = $Object.msg.apkInfo.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object.msg.apkInfo.downloadurl
 }
 
 # ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
+$this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $Object.msg.apkInfo.message | Split-LineEndings | Select-Object -Skip 1 | Format-Text
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }

@@ -11,30 +11,30 @@ $Version2 = [regex]::Match(
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
+  $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://neat-reader-release.oss-cn-hongkong.aliyuncs.com/NeatReader Setup ${Version1}.exe"
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   InstallerUrl    = $Object2.SelectSingleNode('/html/body/div[3]/div/div/div[1]/a[1]').Attributes['href'].Value | ConvertTo-UnescapedUri
 }
 
-switch ($Task.Check()) {
+switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Write()
   }
   ({ $_ -ge 2 }) {
-    $Task.Message()
+    $this.Message()
   }
   ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+    $this.Submit()
   }
 }
