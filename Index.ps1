@@ -85,7 +85,7 @@ param (
   )]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
   [int]
-  $ThrottleLimit = 8,
+  $ThrottleLimit = 5,
 
   [Parameter(
     DontShow, Position = 8,
