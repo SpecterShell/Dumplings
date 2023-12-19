@@ -11,7 +11,6 @@ $Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '^(\
 
 if ($Object1.version.new -ne $Object2.version.new) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

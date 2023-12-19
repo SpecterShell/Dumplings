@@ -11,7 +11,6 @@ $Task.CurrentState.Version = $Object2.exVer
 
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

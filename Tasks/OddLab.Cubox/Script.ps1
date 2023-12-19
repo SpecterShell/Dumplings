@@ -6,7 +6,6 @@ $Task.CurrentState.Version = $Object1.version
 
 if ($Object1.version -ne $Object2.version) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Installer

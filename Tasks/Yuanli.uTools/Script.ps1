@@ -6,7 +6,6 @@ $Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
 
 if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Version

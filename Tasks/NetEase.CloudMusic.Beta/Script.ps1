@@ -20,7 +20,6 @@ $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes += '检测到不同的版本'
 } else {
   $Identical = $True
 }

@@ -19,7 +19,6 @@ $Version2 = [regex]::Match($InstallerUrl2, 'HuaweiBrowser-([\d\.]+)').Groups[1].
 
 if ($Version1 -ne $Version2) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 switch ($Task.Check()) {

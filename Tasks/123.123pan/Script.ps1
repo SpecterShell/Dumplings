@@ -13,8 +13,7 @@ $Prefix = $Object.data.url + '/'
 $Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 if ($Object.data.lastVersion -ne $Task.CurrentState.Version) {
-  $Task.Logging('Distinct versions between two response objects', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+  $Task.Logging('Distinct versions detected', 'Warning')
 }
 
 # ReleaseTime

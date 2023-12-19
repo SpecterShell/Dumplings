@@ -10,7 +10,6 @@ $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$((New-Gui
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
   if ($Object2.Version -ne $Object3.Version) {
     $Task.Logging('Distinct versions detected', 'Warning')
-    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }
@@ -21,7 +20,6 @@ if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -Differen
 } else {
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
     $Task.Logging('Distinct versions detected', 'Warning')
-    $Task.Config.Notes = '检测到不同的版本'
   } else {
     $Identical = $True
   }

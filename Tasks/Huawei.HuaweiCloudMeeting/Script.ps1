@@ -14,7 +14,6 @@ if ($Object2.isConsistent) {
 
 if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 # Version

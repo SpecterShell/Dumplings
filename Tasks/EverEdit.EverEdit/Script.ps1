@@ -15,7 +15,6 @@ $Task.CurrentState.Installer += [ordered]@{
 
 if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
   $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
 }
 
 switch ($Task.Check()) {
