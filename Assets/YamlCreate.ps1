@@ -246,8 +246,16 @@ Function Get-InstallerFile {
   if (Test-ValidFileName $_Filename) { $_OutFile = Join-Path $env:TEMP -ChildPath $_Filename }
   else { $_OutFile = (New-TemporaryFile).FullName }
 
+  # Create a new web client for downloading the file
+  $_WebClient = [System.Net.WebClient]::new()
+  $_WebClient.Headers.Add('User-Agent', 'Microsoft-Delivery-Optimization/10.1')
+  # If the system has a default proxy set, use it
+  # Powershell Core will automatically use this, so it's only necessary for PS5
+  if ($PSVersionTable.PSVersion.Major -lt 6) { $_WebClient.Proxy = [System.Net.WebProxy]::GetDefaultProxy() }
   # Download the file
-  Invoke-WebRequest -Uri $URI -UserAgent 'Microsoft-Delivery-Optimization/10.1' -OutFile $_OutFile | Out-Null
+  $_WebClient.DownloadFile($URI, $_OutFile)
+  # Dispose of the web client to release the resources it uses
+  $_WebClient.Dispose()
 
   return $_OutFile
 }
