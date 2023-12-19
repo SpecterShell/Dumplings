@@ -14,7 +14,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updates.bravesoftware.com/service/upd
 </request>
 "@
 
-if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Length -gt 1) {
+if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
   $Task.Config.Notes = '检测到不同的版本'
 }

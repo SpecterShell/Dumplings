@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri "https://ota.nvidia.com/release/available?product=GFN-win&version=$($Task.LastState.Version ?? '2.0.47.119')&channel=OFFICIAL"
 
-if ($Object1.Length -eq 0) {
+if ($Object1.Count -eq 0) {
   $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Info')
   return
 }

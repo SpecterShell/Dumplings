@@ -9,7 +9,7 @@ $Object3 = $Response | Where-Object -Property 'OS' -EQ -Value 'windows-lightapp-
 # Version
 $Task.CurrentState.Version = $Object2.exVer
 
-if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Length -gt 1) {
+if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
   $Task.Config.Notes = '检测到不同的版本'
 }
@@ -35,7 +35,7 @@ switch ($Task.Check()) {
   ({ $_ -ge 2 }) {
     $Task.Message()
   }
-  ({ $_ -ge 3 -and (@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Length -eq 1 }) {
+  ({ $_ -ge 3 -and (@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -eq 1 }) {
     $Task.Submit()
   }
 }

@@ -21,7 +21,7 @@ $Response4 = $Request4.GetResponse()
 # Version
 $Task.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
 
-if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Length -gt 1) {
+if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
   $Task.Logging('Distinct versions detected', 'Warning')
   $Task.Config.Notes = '检测到不同的版本'
 } else {
