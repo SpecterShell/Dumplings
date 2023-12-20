@@ -656,6 +656,11 @@ Function Read-QuickInstallerEntry {
           $MSIProductCode = ([string](file $EffectiveInstallerPath) | Select-String -Pattern '{[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12}}').Matches.Value
         }
       }
+      if ((Get-EffectiveInstallerType $_NewInstaller) -eq 'burn') {
+        if ([System.Environment]::OSVersion.Platform -match 'Win') {
+          $MSIProductCode = Read-ProductCodeFromBurn -Path $EffectiveInstallerPath
+        }
+      }
       if (Test-String -not $MSIProductCode -IsNull) {
         $_NewInstaller['ProductCode'] = $MSIProductCode
         # Also replace the old product code in ARP entries with the new one
@@ -879,18 +884,18 @@ Function Write-InstallerManifest {
   # Add the properties to the manifest
   Add-YamlParameter -Object $InstallerManifest -Parameter 'PackageIdentifier' -Value $PackageIdentifier
   Add-YamlParameter -Object $InstallerManifest -Parameter 'PackageVersion' -Value $PackageVersion
-  If ($MinimumOSVersion) {
-    $InstallerManifest['MinimumOSVersion'] = $MinimumOSVersion
+  If ($script:Parameters['MinimumOSVersion']) {
+    $InstallerManifest['MinimumOSVersion'] = $script:Parameters['MinimumOSVersion']
   } Else {
     If ($InstallerManifest['MinimumOSVersion']) { $_InstallerManifest.Remove('MinimumOSVersion') }
   }
 
   $_ListSections = [ordered]@{
-    'FileExtensions'        = $FileExtensions
-    'Protocols'             = $Protocols
-    'Commands'              = $Commands
-    'InstallerSuccessCodes' = $InstallerSuccessCodes
-    'InstallModes'          = $InstallModes
+    'FileExtensions'        = $script:Parameters['FileExtensions']
+    'Protocols'             = $script:Parameters['Protocols']
+    'Commands'              = $script:Parameters['Commands']
+    'InstallerSuccessCodes' = $script:Parameters['InstallerSuccessCodes']
+    'InstallModes'          = $script:InstallModes
   }
   foreach ($Section in $_ListSections.GetEnumerator()) {
     If ($Section.Value) { Add-YamlListParameter -Object $InstallerManifest -Parameter $Section.Name -Values $Section.Value }
@@ -1006,29 +1011,29 @@ Function Write-LocaleManifest {
     'PackageIdentifier'   = $PackageIdentifier
     'PackageVersion'      = $PackageVersion
     'PackageLocale'       = $PackageLocale
-    'Publisher'           = $Publisher
-    'PublisherUrl'        = $PublisherUrl
-    'PublisherSupportUrl' = $PublisherSupportUrl
-    'PrivacyUrl'          = $PrivacyUrl
-    'Author'              = $Author
-    'PackageName'         = $PackageName
-    'PackageUrl'          = $PackageUrl
-    'License'             = $License
-    'LicenseUrl'          = $LicenseUrl
-    'Copyright'           = $Copyright
-    'CopyrightUrl'        = $CopyrightUrl
-    'ShortDescription'    = $ShortDescription
-    'Description'         = $Description
-    'ReleaseNotes'        = $ReleaseNotes
-    'ReleaseNotesUrl'     = $ReleaseNotesUrl
+    'Publisher'           = $script:Parameters['Publisher']
+    'PublisherUrl'        = $script:Parameters['PublisherUrl']
+    'PublisherSupportUrl' = $script:Parameters['PublisherSupportUrl']
+    'PrivacyUrl'          = $script:Parameters['PrivacyUrl']
+    'Author'              = $script:Parameters['Author']
+    'PackageName'         = $script:Parameters['PackageName']
+    'PackageUrl'          = $script:Parameters['PackageUrl']
+    'License'             = $script:Parameters['License']
+    'LicenseUrl'          = $script:Parameters['LicenseUrl']
+    'Copyright'           = $script:Parameters['Copyright']
+    'CopyrightUrl'        = $script:Parameters['CopyrightUrl']
+    'ShortDescription'    = $script:Parameters['ShortDescription']
+    'Description'         = $script:Parameters['Description']
+    'ReleaseNotes'        = $script:Parameters['ReleaseNotes']
+    'ReleaseNotesUrl'     = $script:Parameters['ReleaseNotesUrl']
   }
   foreach ($_Item in $_Singletons.GetEnumerator()) {
     If ($_Item.Value) { Add-YamlParameter -Object $LocaleManifest -Parameter $_Item.Name -Value $_Item.Value }
   }
 
-  If ($Tags) { Add-YamlListParameter -Object $LocaleManifest -Parameter 'Tags' -Values $Tags }
+  If ($script:Parameters['Tags']) { Add-YamlListParameter -Object $LocaleManifest -Parameter 'Tags' -Values $script:Parameters['Tags'] }
   If (!$LocaleManifest.ManifestType) { $LocaleManifest['ManifestType'] = 'defaultLocale' }
-  If ($Moniker -and $($LocaleManifest.ManifestType -eq 'defaultLocale')) { Add-YamlParameter -Object $LocaleManifest -Parameter 'Moniker' -Value $Moniker }
+  If ($script:Parameters['Moniker'] -and $($LocaleManifest.ManifestType -eq 'defaultLocale')) { Add-YamlParameter -Object $LocaleManifest -Parameter 'Moniker' -Value $script:Parameters['Moniker'] }
   Add-YamlParameter -Object $LocaleManifest -Parameter 'ManifestVersion' -Value $ManifestVersion
 
   # Clean up the existing files just in case
@@ -1271,6 +1276,7 @@ if ($OldManifests.Name -eq "$PackageIdentifier.installer.yaml" -and $OldManifest
 }
 
 # If the old manifests exist, read the manifest keys into their specific variables
+$script:Parameters = @{}
 if ($OldManifests) {
   $_Parameters = @(
     'Publisher'; 'PublisherUrl'; 'PublisherSupportUrl'; 'PrivacyUrl'
@@ -1292,7 +1298,7 @@ if ($OldManifests) {
   )
   Foreach ($param in $_Parameters) {
     $_ReadValue = $(if ($script:OldManifestType -eq 'MultiManifest') { (Get-MultiManifestParameter $param) } else { $script:OldVersionManifest[$param] })
-    if (Test-String -Not $_ReadValue -IsNull) { New-Variable -Name $param -Value $_ReadValue -Scope Script -Force }
+    if (Test-String -Not $_ReadValue -IsNull) { $script:Parameters[$param] = $_ReadValue }
   }
 }
 
