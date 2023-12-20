@@ -288,15 +288,26 @@ class WinGetTask {
 
   [void] Submit() {
     if (-not $this.Preference.NoSubmit) {
+      $this.Logging('Submitting manifests', 'Info')
+
       $UpstreamOwner = 'microsoft'
       $UpstreamRepo = 'winget-pkgs'
       $UpstreamBranch = 'master'
       $OriginOwner = 'SpecterShell'
       $OriginRepo = 'winget-pkgs'
 
+      $PackageIdentifier = $this.Config.Identifier
+      $PackageVersion = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
+      if (Test-Path Env:\GITHUB_WORKSPACE) {
+        $ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE 'winget-pkgs' 'manifests' -Resolve
+      } else {
+        $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' 'winget-pkgs' 'manifests' -Resolve
+      }
+      $OutFolder = (New-Item -Path $Global:LocalCache -Name $PackageIdentifier -ItemType Directory -Force).FullName
+
       $this.Logging('Checking existing pull requests', 'Verbose')
       if (-not ($this.Config.Contains('SkipPRCheck') -and $this.Config.SkipPRCheck) -and -not ($this.Preference.Contains('NoCheck') -and $this.Preference.NoCheck)) {
-        $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($this.Config.Identifier -replace '\.', '%2F'))%2F$($this.CurrentState.Version)%20in%3Apath&per_page=1"
+        $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
         if ($PullRequests.total_count -gt 0) {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
           return
@@ -308,18 +319,12 @@ class WinGetTask {
       $this.Logging('Creating manifests', 'Verbose')
       try {
         $Parameters = @{
-          PackageIdentifier = $this.Config.Identifier
-          PackageVersion    = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
+          PackageIdentifier = $PackageIdentifier
+          PackageVersion    = $PackageVersion
           PackageInstallers = $this.CurrentState.Installer
-          OutFolder         = (New-Item -Path $Global:LocalCache -Name $this.Config.Identifier -ItemType Directory -Force).FullName
-        }
-        if (Test-Path Env:\GITHUB_WORKSPACE) {
-          $Parameters.ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE 'winget-pkgs' 'manifests' -Resolve
-        } else {
-          $Parameters.ManifestsFolder = Join-Path $PSScriptRoot '..' '..' 'winget-pkgs' 'manifests' -Resolve
-        }
-        if ($this.CurrentState.Locale.Count -gt 0) {
-          $Parameters.Locales = $this.CurrentState.Locale
+          Locales           = $this.CurrentState.Locale
+          ManifestsFolder   = $ManifestsFolder
+          OutFolder         = $OutFolder
         }
         if ($this.CurrentState.ReleaseTime) {
           if ($this.CurrentState.ReleaseTime -is [datetime]) {
@@ -337,13 +342,13 @@ class WinGetTask {
       }
 
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-        $this.Logging('Can not find WinGet', 'Error')
+        $this.Logging('Could not find WinGet client', 'Error')
         return
       }
 
       $this.Logging('Validating manifests', 'Verbose')
       $WinGetOutput = ''
-      winget validate $Parameters.OutFolder | Out-String -OutVariable 'WinGetOutput'
+      winget validate $OutFolder | Out-String -OutVariable 'WinGetOutput'
       if ($LASTEXITCODE -notin @(0, -1978335192)) {
         $this.Logging("Validation failed: `n${WinGetOutput}", 'Error')
         return
@@ -352,21 +357,21 @@ class WinGetTask {
 
       $this.Logging('Uploading manifests and committing', 'Verbose')
       try {
-        $NewBranchName = "$($this.Config.Identifier)-$($this.CurrentState.Version)-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
-        $NewCommitName = "New version: $($this.Config.Identifier) version $($this.CurrentState.Version)"
+        $NewBranchName = "${PackageIdentifier}-${PackageVersion}-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
+        $NewCommitName = "New version: ${PackageIdentifier} version ${PackageVersion}"
 
-        $Global:LocalStorage['UpstreamSha'] ??= (Invoke-RestMethod -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
-
+        $UpstreamSha = $Global:LocalStorage['UpstreamSha'] ??= (Invoke-RestMethod -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
         $NewBranchSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs" -Method Post -Body @{
-            ref = 'refs/heads/' + $NewBranchName
-            sha = $Global:LocalStorage.UpstreamSha
+            ref = "refs/heads/${NewBranchName}"
+            sha = $UpstreamSha
           }
         ).object.sha
 
-        $ManifestsNameSha = Get-ChildItem -Path $Parameters.OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
-          @{
-            name = $_.Name
-            sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
+        $NewFileNameSha = @()
+        Get-ChildItem -Path $OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
+          $NewFileNameSha += @{
+            Path = "manifests/$($PackageIdentifier.ToLower().Chars(0))/$($PackageIdentifier.Replace('.', '/'))/${PackageVersion}/$($_.Name)"
+            Sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
                 content  = Get-Content -Path $_ -Raw -Encoding utf8NoBOM
                 encoding = 'utf-8'
               }
@@ -374,13 +379,30 @@ class WinGetTask {
           }
         }
 
+        if ($this.Config.Contains('RemoveLastVersion') -and $this.Config.RemoveLastVersion) {
+          $LastManifestVersion = Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\*\${PackageIdentifier}.yaml" -File |
+            Split-Path -Parent | Split-Path -Leaf |
+            Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Culture en-US | Select-Object -Last 1
+          if ($LastManifestVersion -ne $PackageVersion) {
+            $this.Logging("Manifests for last version ${LastManifestVersion} will be removed", 'Info')
+            Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {
+              $NewFileNameSha += @{
+                Path = "manifests/$($PackageIdentifier.ToLower().Chars(0))/$($PackageIdentifier.Replace('.', '/'))/${LastManifestVersion}/$($_.Name)"
+                Sha  = $null
+              }
+            }
+          } else {
+            $this.Logging("Manifests for last version ${LastManifestVersion} will be overrided", 'Info')
+          }
+        }
+
         $TreeSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/trees" -Method Post -Body @{
-            tree      = @($ManifestsNameSha | ForEach-Object -Process {
+            tree      = @($NewFileNameSha | ForEach-Object -Process {
                 @{
-                  path = "manifests/$($this.Config.Identifier.ToLower().Chars(0))/$($this.Config.Identifier.Replace('.', '/'))/$($this.CurrentState.Version)/$($_.name)"
+                  path = $_.Path
                   mode = '100644'
                   type = 'blob'
-                  sha  = $_.sha
+                  sha  = $_.Sha
                 }
               })
             base_tree = $NewBranchSha
