@@ -2,8 +2,12 @@ $this.CurrentState = $LocalStorage.WondershareUpgradeInfo['5374']
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object2 = (Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=2').data[0].content | ConvertFrom-Html
 

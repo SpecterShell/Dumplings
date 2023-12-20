@@ -14,7 +14,7 @@ $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.xljsci.com/download.html')
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/a')).GetAttribute('href') | ConvertTo-UnescapedUri
 }
 
@@ -30,8 +30,12 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Write()
   }

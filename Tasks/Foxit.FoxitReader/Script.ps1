@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdown
 $this.CurrentState.Version = $Version = $Object1.package_info.version[0]
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down
 }
@@ -18,6 +18,13 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.package_info.re
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
 
     try {
@@ -35,9 +42,6 @@ switch ($this.Check()) {
     } catch {
       $this.Logging($_, 'Warning')
     }
-
-    # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
 
     $this.Write()
   }

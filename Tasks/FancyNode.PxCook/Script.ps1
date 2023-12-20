@@ -4,12 +4,11 @@ $Object1 = Invoke-RestMethod -Uri 'http://www.fancynode.com.cn:8080/FancyApplica
 $this.CurrentState.Version = $Object1.config.version
 
 # Installer
-$InstallerUrl = $Object1.config.downloadWin64
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object1.config.downloadWin32
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.config.downloadWin64
 }
@@ -19,8 +18,12 @@ $this.CurrentState.ReleaseTime = $Object1.config.date | Get-Date | ConvertTo-Utc
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object2 = Invoke-WebRequest -Uri 'https://fancynode.com.cn/pxcook/version' | ConvertFrom-Html
     try {

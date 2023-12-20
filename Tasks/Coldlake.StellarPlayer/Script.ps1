@@ -26,8 +26,12 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object3 = Invoke-WebRequest -Uri "https://player-update.coldlake1.com/version/gray/$($this.CurrentState.Version)_x64.ini" | Read-ResponseContent | ConvertFrom-Ini
 

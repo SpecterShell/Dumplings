@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.xmind.app/xmind/update/latest-win
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
 }
 
@@ -23,8 +23,12 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object2 = Invoke-WebRequest -Uri 'https://xmind.app/desktop/release-notes/' | ConvertFrom-Html
 

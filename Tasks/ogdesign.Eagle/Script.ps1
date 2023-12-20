@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://eagle.cool/check-for-update'
 
 # Installer
 $InstallerUrl = 'https:' + $Object1.links.windows
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $InstallerUrl.Replace('eaglefile.oss-cn-shenzhen.aliyuncs.com', 'r2-app.eagle.cool').Replace('file.eagle.cool', 'r2-app.eagle.cool')
 }
 $this.CurrentState.Installer += [ordered]@{
@@ -15,8 +15,12 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'Eagle-([\d\.]+-build
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = $this.CurrentState.Installer[1]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object2 = Invoke-WebRequest -Uri 'https://eagle.cool/' | ConvertFrom-Html
 

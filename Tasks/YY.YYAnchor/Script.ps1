@@ -22,7 +22,7 @@ $this.CurrentState.Version = $Object2.Product.Version.VerNo
 $this.CurrentState.UniVer = $Object2.Product.Version.UniVer
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = "https://yydl.yy.com/$($Object2.Product.Version.Pack.FileUrl)"
 }
 
@@ -35,8 +35,12 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Write()
   }

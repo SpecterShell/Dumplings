@@ -7,7 +7,7 @@ $Object = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLat
 $this.CurrentState.Version = $Object.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object.win32_url
 }
 
@@ -16,8 +16,12 @@ $this.CurrentState.ReleaseTime = $Object.publish_time | ConvertFrom-UnixTimeSeco
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Write()
   }

@@ -4,25 +4,27 @@ $Object1 = Invoke-RestMethod -Uri 'https://downloads.imazing.com/com.DigiDNA.iMa
 $this.CurrentState.Version = $Object1[0].enclosure.version
 
 # Installer
-$InstallerUrl = $Object1[0].enclosure.url
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+$this.CurrentState.Installer += $Installer = [ordered]@{
+  InstallerUrl = $Object1[0].enclosure.url
 }
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1[0].pubDate | Get-Date -AsUTC
 
 # ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1[0].releaseNotesLink
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl
+  Value = $ReleaseNotesUrl = $Object1[0].releaseNotesLink
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

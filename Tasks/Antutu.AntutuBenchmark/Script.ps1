@@ -9,7 +9,7 @@ $this.CurrentState.Version = [regex]::Match(
 ).Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Node.SelectSingleNode('./div/a').Attributes['href'].Value
 }
 
@@ -18,8 +18,12 @@ $this.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerTe
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Write()
   }

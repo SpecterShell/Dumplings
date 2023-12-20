@@ -12,12 +12,15 @@ $this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Match.Groups[1].Value
+
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $Match.Groups[1].Value | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl = "https://ime.sogoucdn.com/sogou_pinyin_$($this.CurrentState.RealVersion).exe"
+      InstallerUrl    = "https://ime.sogoucdn.com/sogou_pinyin_$($this.CurrentState.RealVersion).exe"
+      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     }
 
     $Object2 = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/changelog.php' | ConvertFrom-Html

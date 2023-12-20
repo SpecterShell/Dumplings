@@ -4,7 +4,7 @@ $Object = Invoke-WebRequest -Uri "https://pcsuite-api.vivo.com/version/upgrade/d
 $this.CurrentState.Version = $Object.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri $Object.files.url
 }
 
@@ -24,8 +24,12 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Write()
   }
