@@ -17,12 +17,14 @@ try {
   Invoke-WebRequest -Uri $Uri2 -Method Head | Out-Null
   # Installer
   $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
     InstallerUrl = $Uri2
   }
 } catch {
   $this.Logging("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
   # Installer
   $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
     InstallerUrl = $Uri1
   }
 }

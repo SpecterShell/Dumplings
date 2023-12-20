@@ -11,9 +11,9 @@ switch ($this.Check()) {
 
     try {
       if ($Object2) {
-        # ReleaseNotes (zh-CN)
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $Object2.description_html | ConvertFrom-Html | Get-TextContent | Format-Text
         }

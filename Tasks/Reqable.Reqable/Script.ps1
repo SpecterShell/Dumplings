@@ -29,7 +29,7 @@ $this.CurrentState.Locale += [ordered]@{
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://api.github.com/repos/reqable/reqable-app/releases/tags/$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/reqable/reqable-app/releases/tags/$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = ($Object2.assets | Where-Object -Property name -CMatch '\.exe$').updated_at

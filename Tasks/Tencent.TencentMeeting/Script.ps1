@@ -17,7 +17,7 @@ switch ($this.Check()) {
 
     try {
       if ($Object2.upgrade_policy -eq 0 -or $this.CurrentState.Version -ne $Object2.version) {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Info')
+        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       } else {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
