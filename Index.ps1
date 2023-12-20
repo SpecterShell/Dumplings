@@ -233,7 +233,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 if (-not $Parallel) {
   if ($ThrottleLimit -gt 1) {
     # Wait until all jobs are done
-    $Jobs | Wait-Job -Timeout 3600 | Receive-Job
+    $Jobs | Wait-Job -Timeout 3600 | Out-Null
 
     # Check if all jobs are still running or not
     if (Get-Job -State Running) {
