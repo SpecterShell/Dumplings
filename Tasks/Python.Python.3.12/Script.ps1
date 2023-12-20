@@ -44,7 +44,7 @@ switch ($this.Check()) {
         DisplayName    = "Python ${Version} (32-bit)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerX86['ProductCode'] = $InstallerFileX86 | Read-ProductCodeFromBurn
-        UpgradeCode    = '{7D426D03-49F7-5C13-8BB0-53574B728B6E}'
+        UpgradeCode    = $InstallerFileX86 | Read-UpgradeCodeFromBurn
       })
 
     $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
@@ -52,7 +52,7 @@ switch ($this.Check()) {
         DisplayName    = "Python ${Version} (64-bit)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerX64['ProductCode'] = $InstallerFileX64 | Read-ProductCodeFromBurn
-        UpgradeCode    = '{114AEC44-152B-5746-952F-F20CE3CAB54A}'
+        UpgradeCode    = $InstallerFileX64 | Read-UpgradeCodeFromBurn
       })
 
     $InstallerARM64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileARM64 -Algorithm SHA256).Hash
@@ -60,7 +60,7 @@ switch ($this.Check()) {
         DisplayName    = "Python ${Version} (ARM64)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerARM64['ProductCode'] = $InstallerFileARM64 | Read-ProductCodeFromBurn
-        UpgradeCode    = '{1C6E0C70-86FC-5723-BB61-9555AC97B97E}'
+        UpgradeCode    = $InstallerFileARM64 | Read-UpgradeCodeFromBurn
       })
 
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
