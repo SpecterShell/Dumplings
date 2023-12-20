@@ -17,8 +17,7 @@ $Params = @{
 }
 if ($Env:GITHUB_TOKEN) {
   Write-Host 'GITHUB_TOKEN detected'
-  $Params['Authentication'] = 'Bearer'
-  $Params['Token'] = ConvertTo-SecureString -String $Env:GITHUB_TOKEN -AsPlainText -Force
+  $Params.Headers['Authorization'] = "Bearer ${Env:GITHUB_TOKEN}"
 }
 $WinGetRelease = Invoke-RestMethod @Params
 
@@ -33,7 +32,7 @@ Write-Host "Downloading ${WinGetLicenseUri}"
 Invoke-WebRequest -Uri $WinGetLicenseUri -OutFile $WinGetLicensePath
 
 Write-Host 'Installing WinGet'
-Add-AppxProvisionedPackage -Online -PackagePath $WinGetPath -DependencyPackagePath $VCLibsPath, $UILibsPath -LicensePath $WinGetLicensePath
+Add-AppxProvisionedPackage -Online -PackagePath $WinGetPath -DependencyPackagePath $VCLibsPath, $UILibsPath -LicensePath $WinGetLicensePath | Out-Null
 
 Write-Host 'Cleaning environment'
 Remove-Item -Path @($VCLibsPath, $UILibsPath, $WinGetPath, $WinGetLicensePath) -Force
