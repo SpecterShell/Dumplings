@@ -18,7 +18,7 @@ $Params = @{
 if ($Env:GITHUB_TOKEN) {
   Write-Host 'GITHUB_TOKEN detected'
   $Params['Authentication'] = 'Bearer'
-  $Params['Token'] = ConvertTo-SecureString -String $Env:GITHUB_TOKEN -AsPlainText
+  $Params['Token'] = ConvertTo-SecureString -String $Env:GITHUB_TOKEN -AsPlainText -Force
 }
 $WinGetRelease = Invoke-RestMethod @Params
 
