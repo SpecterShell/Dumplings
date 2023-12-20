@@ -47,6 +47,7 @@ function Get-EdgeDriver {
   [OutputType([OpenQA.Selenium.Edge.EdgeDriver])]
   param ()
 
+  return
   if (-not $Script:IsEdgeDriverLoaded) {
     New-EdgeDriver
   }
@@ -107,6 +108,7 @@ function Get-FirefoxDriver {
   [OutputType([OpenQA.Selenium.Firefox.FirefoxDriver])]
   param ()
 
+  return
   if (-not $Script:IsFirefoxDriverLoaded) {
     New-FirefoxDriver
   }
