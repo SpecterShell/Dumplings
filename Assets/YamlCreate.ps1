@@ -1062,6 +1062,11 @@ Function Write-LocaleManifest {
     $LocaleManifest.Remove('ReleaseNotes')
   }
 
+  # Update the year in Copyright
+  if ($LocaleManifest.Contains('Copyright') -and $LocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
+    $LocaleManifest['Copyright'] = $LocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
+  }
+
   $LocaleManifest = Restore-YamlKeyOrder $LocaleManifest $LocaleProperties
 
   # Set the appropriate langage server depending on if it is a default locale file or generic locale file
@@ -1111,6 +1116,11 @@ Function Write-LocaleManifest {
         # Remove ReleaseNotes if too long
         if ($OldLocaleManifest.Contains('ReleaseNotes') -and $OldLocaleManifest['ReleaseNotes'].Length -gt $Patterns.ReleaseNotesMaxLength) {
           $OldLocaleManifest.Remove('ReleaseNotes')
+        }
+
+        # Update the year in Copyright
+        if ($OldLocaleManifest.Contains('Copyright') -and $OldLocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
+          $OldLocaleManifest['Copyright'] = $OldLocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
         }
 
         $script:OldLocaleManifest = Restore-YamlKeyOrder $script:OldLocaleManifest $LocaleProperties
