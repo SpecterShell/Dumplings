@@ -723,7 +723,7 @@ function Read-ProductCodeFromBurn {
     $Path,
 
     [Parameter(
-      HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler tool'
+      HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool'
     )]
     [string]
     $DarkPath
@@ -755,6 +755,60 @@ function Read-ProductCodeFromBurn {
 
     $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     return $Xml.BootstrapperApplicationData.WixBundleProperties.Id
+  }
+}
+
+function Read-UpgradeCodeFromBurn {
+  <#
+  .SYNOPSIS
+    Read the UpgradeCode property of the WiX bundle file
+  .PARAMETER Path
+    The path to the WiX bundle file
+  .PARAMETER DarkPath
+    The path to the Windows Installer XML Toolset Decompiler tool
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'The path to the WiX bundle file'
+    )]
+    [string]
+    $Path,
+
+    [Parameter(
+      HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool'
+    )]
+    [string]
+    $DarkPath
+  )
+
+  begin {
+    if ([string]::IsNullOrEmpty($DarkPath)) {
+      if (Test-Path Env:\WIX) {
+        $DarkPath = Join-Path $Env:WIX 'bin' 'dark.exe' -Resolve
+      } elseif (Get-Command 'dark.exe' -ErrorAction SilentlyContinue) {
+        $DarkPath = (Get-Command 'dark.exe').Path
+      } else {
+        throw 'Dark tool not specified and not found'
+      }
+    }
+    if (-not (Test-Path -Path $DarkPath -IsValid)) {
+      throw 'The path to the dark tool specified is invalid'
+    }
+  }
+
+  process {
+    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
+    $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+
+    & $DarkPath -nologo -x $FolderPath $Path | Out-Host
+    if ($LASTEXITCODE) {
+      throw 'Failed to extract burn installer'
+    }
+
+    $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+    return $Xml.BootstrapperApplicationData.WixBundleProperties.UpgradeCode
   }
 }
 
