@@ -747,7 +747,7 @@ function Read-ProductCodeFromBurn {
   process {
     $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
     $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
-    $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path
+    $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
 
     & $DarkPath -nologo -x $FolderPath $Path | Out-Host
     if ($LASTEXITCODE) {
@@ -802,6 +802,7 @@ function Read-UpgradeCodeFromBurn {
   process {
     $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
     $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
 
     & $DarkPath -nologo -x $FolderPath $Path | Out-Host
     if ($LASTEXITCODE) {
