@@ -23,7 +23,9 @@ jobs:
           repository: microsoft/winget-pkgs
           path: winget-pkgs
       - name: Install WinGet
-        uses: Cyberboss/install-winget@v1
+        run: .\Assets\InstallWinGet.ps1
+        working-directory: Dumplings
+        shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Automation
