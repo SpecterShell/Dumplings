@@ -3,35 +3,38 @@
 
 <#
 .SYNOPSIS
-  Run tests on tasks, regardless of skipping mode and comparison status
+  A script to build and run tasks, in single-thread mode or in concurrent mode
 .PARAMETER Name
-  The name of the tasks to be tested. Leave blank to test all tasks
+  The name of the tasks to run. Leave blank to run all tasks
 .PARAMETER Path
   The path containing tasks
 .PARAMETER NoSkip
-  Do not skip tasks
+  Do not skip tasks even if they are meant to be skipped
 .PARAMETER NoCheck
-  Skip checking states
+  Skip checking state
 .PARAMETER NoWrite
-  Skip writing states
+  Skip writing current state to files
 .PARAMETER NoMessage
   Skip sending messages
 .PARAMETER NoSubmit
-  Skip creating manifest
+  Skip submitting manifests
 .PARAMETER ThrottleLimit
-  The number of threads to use concurrently
+  The number of workers for running tasks concurrently
 .EXAMPLE
-  .\Test.ps1
-  Run tests on all tasks
+  .\Index.ps1
+  Run all tasks
 .EXAMPLE
-  .\Test.ps1 -Name '115.115'
-  Run tests on task "115.115"
+  .\Index.ps1 -Name 'A', 'B'
+  Run tasks "A" and "B" only
+.EXAMPLE
+  .\Index.ps1 -NoSkip -NoCheck -NoWrite -NoMessage -NoSubmit -Name 'A', 'B'
+  Run tasks "A" and "B" only forcibly, skipping checking state, writing state, sending messages and submitting manifests
 #>
 [CmdletBinding()]
 param (
   [Parameter(
     ValueFromPipeline, Position = 0,
-    HelpMessage = 'The name of the tasks to be tested. Leave blank to test all tasks'
+    HelpMessage = 'The name of the tasks to run. Leave blank to run all tasks'
   )]
   [ArgumentCompleter({ Get-ChildItem -Path ($args[4].Path ?? (Join-Path $PSScriptRoot 'Tasks')) -Include "$($args[2])*" -Recurse -Directory | Select-Object -ExpandProperty 'Name' })]
   [string[]]
@@ -53,14 +56,14 @@ param (
 
   [Parameter(
     Position = 3,
-    HelpMessage = 'Skip checking states'
+    HelpMessage = 'Skip checking state'
   )]
   [switch]
   $NoCheck = $false,
 
   [Parameter(
     Position = 4,
-    HelpMessage = 'Skip writing states'
+    HelpMessage = 'Skip writing current state to files'
   )]
   [switch]
   $NoWrite = $false,
@@ -74,14 +77,14 @@ param (
 
   [Parameter(
     Position = 6,
-    HelpMessage = 'Skip creating manifests'
+    HelpMessage = 'Skip submitting manifests'
   )]
   [switch]
   $NoSubmit = $false,
 
   [Parameter(
     Position = 7,
-    HelpMessage = 'The number of threads to use concurrently'
+    HelpMessage = 'The number of workers for running tasks concurrently'
   )]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
   [int]
@@ -89,14 +92,14 @@ param (
 
   [Parameter(
     DontShow, Position = 8,
-    HelpMessage = 'Tell the script it is running in a thread to skip some regions'
+    HelpMessage = 'Tell the script it is running in a sub thread to skip some regions'
   )]
   [switch]
   $Parallel = $false,
 
   [Parameter(
     DontShow, Position = 9,
-    HelpMessage = 'Tell the script which thread it is'
+    HelpMessage = 'Tell the script which thread it is in'
   )]
   [int]
   $WokID = 0
@@ -105,12 +108,12 @@ param (
 # Enable strict mode to avoid non-existent or empty properties from the API
 # Set-StrictMode -Version 3.0
 
-# Hide the progress bar
+# Hide the progress bar in CI
 if (Test-Path -Path Env:\CI) {
   $ProgressPreference = 'SilentlyContinue'
 }
 
-# Set default parameter values for libraries
+# Set default parameter values for some functions
 $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
   'Invoke-WebRequest:TimeoutSec'        = 30
   'Invoke-WebRequest:MaximumRetryCount' = 3
@@ -145,7 +148,7 @@ if (-not $Parallel) {
 
   # Queue tasks to load
   $TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
-  Write-Host -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
+  Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
   # Set up temp storage for tasks
   $Global:LocalStorage = [ordered]@{}
@@ -156,9 +159,15 @@ if (-not $Parallel) {
 
   # Start multiple threads jobs and run tasks in them if the limit is greater than 1, otherwise run tasks in current thread
   if ($ThrottleLimit -gt 1) {
-    # Run Start-ThreadJob once to set the throttle limit
-    Start-ThreadJob -ScriptBlock {} -ThrottleLimit $ThrottleLimit | Wait-Job | Out-Null
+    # ThreadJob has the default number of concurrent threads of 5
+    if ($ThrottleLimit -gt 5) {
+      # Run Start-ThreadJob once to set the throttle limit
+      Start-ThreadJob -ScriptBlock {} -ThrottleLimit $ThrottleLimit | Wait-Job | Out-Null
+    }
 
+    Write-Log -Object "`e[1mDumplings:`e[22m Starting ${ThrottleLimit} thread jobs"
+
+    # Run the script itself in parallel mode multiple times
     $Jobs = @()
     foreach ($i in 0..($ThrottleLimit - 1)) {
       $Jobs += Start-ThreadJob -FilePath $MyInvocation.MyCommand.Definition -Name "DumplingsWok${i}" -StreamingHost $Host -ArgumentList @(
@@ -170,7 +179,7 @@ if (-not $Parallel) {
 
 # Run tasks in thread jobs if the limit is greater than 1, otherwise run tasks in current thread
 if ($Parallel -or $ThrottleLimit -eq 1) {
-  # Set up parameters for threads
+  # Set up parameters
   $ScriptRoot = $Parallel ? $using:PSScriptRoot : $PSScriptRoot
   if ($Parallel) {
     $TaskNames = $using:TaskNames
@@ -235,7 +244,7 @@ if (-not $Parallel) {
     # Wait until all jobs are done
     $Jobs | Wait-Job -Timeout 3600 | Out-Null
 
-    # Check if all jobs are still running or not
+    # Check if some jobs are still running or not
     if (Get-Job -State Running) {
       Write-Log -Object "`e[1mDumplings:`e[22m Some jobs didn't complete in time and will be stopped"
       Get-Job -State Running | Out-Host

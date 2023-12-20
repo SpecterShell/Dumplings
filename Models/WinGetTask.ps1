@@ -34,6 +34,7 @@ class WinGetTask {
     $this.Init(@{ Name = $Name; Path = $Path })
   }
 
+  # Initialize tasks
   [void] Init([System.Collections.IDictionary]$Properties) {
     foreach ($Property in $Properties.Keys) {
       $this.$Property = $Properties.$Property
@@ -43,7 +44,7 @@ class WinGetTask {
     $this.ConfigPath ??= Join-Path $this.Path 'Config.yaml' -Resolve
     $this.Config ??= Get-Content -Path $this.ConfigPath -Raw | ConvertFrom-Yaml -Ordered
 
-    # Test script
+    # Load script
     $this.ScriptPath ??= Join-Path $this.Path 'Script.ps1' -Resolve
 
     # Load last state
@@ -58,6 +59,7 @@ class WinGetTask {
     }
   }
 
+  # Log with template, without specifying log level
   [void] Logging([string]$Message) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}"
     $this.Log += $Message
@@ -66,6 +68,7 @@ class WinGetTask {
     }
   }
 
+  # Log with template, specifying log level
   [void] Logging([string]$Message, [LogLevel]$Level) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}" -Level $Level
     if ($Level -ne 'Verbose') {
@@ -76,6 +79,7 @@ class WinGetTask {
     }
   }
 
+  # Invoke script
   [void] Invoke() {
     if ($this.Preference.NoSkip -or -not $this.Config.Skip) {
       try {
@@ -90,7 +94,7 @@ class WinGetTask {
     }
   }
 
-  # Compare version and installers between states
+  # Compare current state with last state
   [int] Check() {
     if (-not $this.Preference.Contains('NoCheck') -or -not $this.Preference.NoCheck) {
       if (-not $this.CurrentState.Contains('Version')) {
@@ -151,6 +155,7 @@ class WinGetTask {
     }
   }
 
+  # Convert current state to Markdown message
   [string] ToMarkdown() {
     $Message = [System.Text.StringBuilder]::new(2048)
 
@@ -198,9 +203,11 @@ class WinGetTask {
       $Message.Append("`n`n*日志:* `n$($this.Log -join "`n")")
     }
 
+    # Standard Markdown use two line endings as newline
     return $Message.ToString().Trim().ReplaceLineEndings("`n`n")
   }
 
+  # Convert current state to Markdown message in Telegram standard
   [string] ToTelegramMarkdown() {
     $Message = [System.Text.StringBuilder]::new(2048)
 
@@ -286,6 +293,7 @@ class WinGetTask {
     }
   }
 
+  # Generate and upload manifests to origin repository and create pull request in upstream repository
   [void] Submit() {
     if (-not $this.Preference.NoSubmit) {
       $this.Logging('Submitting manifests', 'Info')
@@ -299,12 +307,13 @@ class WinGetTask {
       $PackageIdentifier = $this.Config.Identifier
       $PackageVersion = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
       if (Test-Path Env:\GITHUB_WORKSPACE) {
-        $ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE 'winget-pkgs' 'manifests' -Resolve
+        $ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE $UpstreamRepo 'manifests' -Resolve
       } else {
-        $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' 'winget-pkgs' 'manifests' -Resolve
+        $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' $UpstreamRepo 'manifests' -Resolve
       }
       $OutFolder = (New-Item -Path $Global:LocalCache -Name $PackageIdentifier -ItemType Directory -Force).FullName
 
+      # Check if there are existing pull requests in the upstream repository
       $this.Logging('Checking existing pull requests', 'Verbose')
       if (-not ($this.Config.Contains('SkipPRCheck') -and $this.Config.SkipPRCheck) -and -not ($this.Preference.Contains('NoCheck') -and $this.Preference.NoCheck)) {
         $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
@@ -316,6 +325,7 @@ class WinGetTask {
         $this.Logging('Skip checking existing PR', 'Info')
       }
 
+      # Use YamlCreate to create manifests
       $this.Logging('Creating manifests', 'Verbose')
       try {
         $Parameters = @{
@@ -334,19 +344,19 @@ class WinGetTask {
           }
         }
         & (Join-Path $PSScriptRoot '..' 'Assets' 'YamlCreate.ps1') @Parameters
-        $this.Logging('Manifests created', 'Verbose')
       } catch {
         $this.Logging("Failed to create manifests: ${_}", 'Error')
         $_ | Out-Host
         return
       }
+      $this.Logging('Manifests created', 'Verbose')
 
+      # Use WinGet client to validate the manifests generated in the last step
+      $this.Logging('Validating manifests', 'Verbose')
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
         $this.Logging('Could not find WinGet client', 'Error')
         return
       }
-
-      $this.Logging('Validating manifests', 'Verbose')
       $WinGetOutput = ''
       winget validate $OutFolder | Out-String -OutVariable 'WinGetOutput'
       if ($LASTEXITCODE -notin @(0, -1978335192)) {
@@ -355,6 +365,7 @@ class WinGetTask {
       }
       $this.Logging('Validation passed', 'Verbose')
 
+      # Upload new manifests, remove old ones if needed, and commit in the origin repository
       $this.Logging('Uploading manifests and committing', 'Verbose')
       try {
         $NewBranchName = "${PackageIdentifier}-${PackageVersion}-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
@@ -367,6 +378,7 @@ class WinGetTask {
           }
         ).object.sha
 
+        # Upload new manifests and obtain their SHA
         $NewFileNameSha = @()
         Get-ChildItem -Path $OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
           $NewFileNameSha += @{
@@ -379,6 +391,7 @@ class WinGetTask {
           }
         }
 
+        # Find the latest version of manifests to remove in the upstream repo, if needed
         if ($this.Config.Contains('RemoveLastVersion') -and $this.Config.RemoveLastVersion) {
           $LastManifestVersion = Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\*\${PackageIdentifier}.yaml" -File |
             Split-Path -Parent | Split-Path -Leaf |
@@ -396,6 +409,7 @@ class WinGetTask {
           }
         }
 
+        # Build a new tree with changes of creating new manifests and removing old manifests based on the branch, obtaining the SHA of the new tree
         $TreeSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/trees" -Method Post -Body @{
             tree      = @($NewFileNameSha | ForEach-Object -Process {
                 @{
@@ -408,6 +422,7 @@ class WinGetTask {
             base_tree = $NewBranchSha
           }).sha
 
+        # Commit with the new tree, obtaining the SHA of the commit
         $CommitSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/commits" -Method Post -Body @{
             tree    = $TreeSha
             message = $NewCommitName
@@ -415,6 +430,7 @@ class WinGetTask {
           }
         ).sha
 
+        # Move the HEAD of the branch to the commit
         Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${NewBranchName}" -Method Post -Body @{
           sha = $CommitSha
         } | Out-Null
@@ -425,6 +441,7 @@ class WinGetTask {
       }
       $this.Logging('Manifests uploaded and committed', 'Verbose')
 
+      # Create pull request in the upstream repository
       $this.Logging('Creating pull request', 'Verbose')
       try {
         if (Test-Path Env:\CI) {
@@ -438,12 +455,12 @@ class WinGetTask {
           head  = "${OriginOwner}:${NewBranchName}"
           base  = 'master'
         }
-        $this.Logging("PR created: $($NewPRResponse.html_url)", 'Info')
       } catch {
         $this.Logging("Failed to create pull request: ${_}", 'Error')
         $_ | Out-Host
         return
       }
+      $this.Logging("PR created: $($NewPRResponse.html_url)", 'Info')
     } else {
       $this.Logging('Skip submitting manifests', 'Info')
     }
