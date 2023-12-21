@@ -18,7 +18,7 @@ if ($Version1 -ne $Version2) {
 }
 
 # Version
-$this.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version = $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

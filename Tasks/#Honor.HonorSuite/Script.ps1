@@ -78,7 +78,7 @@ switch ($this.Check()) {
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN
     }
-    $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath
+    $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
 
     $this.Write()
   }
