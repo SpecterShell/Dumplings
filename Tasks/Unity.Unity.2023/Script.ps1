@@ -1,0 +1,90 @@
+$Query = @'
+query {
+  getUnityReleases(
+    stream: [TECH, LTS]
+    platform: WINDOWS
+    architecture: X86_64
+    version: "2023"
+  ) {
+    edges {
+      node {
+        version
+        releaseDate
+        releaseNotes {
+          url
+        }
+        downloads {
+          ... on UnityReleaseHubDownload {
+            url
+          }
+        }
+      }
+    }
+  }
+}
+'@
+
+$Object = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges[0].node
+
+# Version
+$this.CurrentState.Version = $Version = $Object.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object.downloads[0].url
+  ProductCode  = "Unity ${Version}"
+}
+
+# ReleaseTime
+$this.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+
+# ReleaseNotesUrl
+$this.CurrentState.Locale += [ordered]@{
+  Key   = 'ReleaseNotesUrl'
+  Value = "https://unity3d.com/unity/whats-new/$($Version -creplace 'f\d+', '')"
+}
+
+# Documentations
+$this.CurrentState.Locale += [ordered]@{
+  Locale = 'en-US'
+  Key    = 'Documentations'
+  Value  = @(
+    @{
+      DocumentLabel = 'Unity User Manual'
+      DocumentUrl   = "https://docs.unity3d.com/$($Version.Split('.')[0..1] -join '.')/Documentation/Manual/"
+    }
+  )
+}
+$this.CurrentState.Locale += [ordered]@{
+  Locale = 'zh-CN'
+  Key    = 'Documentations'
+  Value  = @(
+    @{
+      DocumentLabel = 'Unity 用户手册'
+      DocumentUrl   = "https://docs.unity3d.com/cn/$($Version.Split('.')[0..1] -join '.')/Manual/"
+    }
+  )
+}
+
+switch ($this.Check()) {
+  ({ $_ -ge 1 }) {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = (Invoke-RestMethod -Uri $Object.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $this.Logging($_, 'Warning')
+    }
+
+    $this.Write()
+  }
+  ({ $_ -ge 2 }) {
+    $this.Message()
+  }
+  ({ $_ -ge 3 }) {
+    $this.Submit()
+  }
+}
