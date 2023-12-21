@@ -739,7 +739,7 @@ function Read-ProductCodeFromBurn {
         throw 'Dark tool not specified and not found'
       }
     }
-    if (-not (Test-Path -Path $DarkPath -IsValid)) {
+    if (-not (Test-Path -Path $DarkPath)) {
       throw 'The path to the dark tool specified is invalid'
     }
   }
@@ -794,7 +794,7 @@ function Read-UpgradeCodeFromBurn {
         throw 'Dark tool not specified and not found'
       }
     }
-    if (-not (Test-Path -Path $DarkPath -IsValid)) {
+    if (-not (Test-Path -Path $DarkPath)) {
       throw 'The path to the dark tool specified is invalid'
     }
   }
