@@ -19,6 +19,20 @@ switch ($this.Check()) {
     $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $this.Submit()
+    $ToSubmit = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiguaVideo')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $LocalStorage.Contains('XiguaVideoSubmitting')) {
+      $LocalStorage['XiguaVideoSubmitting'] = $ToSubmit = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToSubmit) {
+      $this.Submit()
+    } else {
+      $this.Logging('Another task is submitting manifests for this package', 'Warning')
+    }
   }
 }

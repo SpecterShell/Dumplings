@@ -35,6 +35,22 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
   '(\d{4}\.\d{1,2}\.\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
+if ($LocalStorage.Contains('HiSuite') -and $LocalStorage.HiSuite.Contains($Version)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.HiSuite.$Version.ReleaseNotesEN
+  }
+
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.HiSuite.$Version.ReleaseNotesCN
+  }
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.Write()

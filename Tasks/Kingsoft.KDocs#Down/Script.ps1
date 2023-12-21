@@ -1,19 +1,13 @@
-$Object = (Invoke-RestMethod -Uri 'https://www.kdocs.cn/kdg/api/v1/configure?idList=kdesktopWinVersion').data.kdesktopWinVersion | ConvertFrom-Json
-# $Object = (Invoke-RestMethod -Uri 'https://www.kdocs.cn/kd/api/configure/list?idList=kdesktopWinVersion').data.kdesktopWinVersion | ConvertFrom-Json
+$Response = Invoke-RestMethod -Uri 'https://www.kdocs.cn/kd/api/configure/list?idList=kdesktopVersion,autoDownload'
+$Object1 = $Response.data.kdesktopVersion | ConvertFrom-Json
+$Object2 = $Response.data.autoDownload | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object.version
+$this.CurrentState.Version = [regex]::Match($Object1.win, 'v([\d\.]+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.url.Replace('1002', '1001')
-}
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.changes | Format-Text
+  InstallerUrl = $Object2.kdesktopWin.1001
 }
 
 switch ($this.Check()) {

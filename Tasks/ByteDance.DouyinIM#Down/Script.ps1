@@ -1,27 +1,20 @@
-$Object = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=7094550955558967563&branch=release&buildId=&uid='
+$Object = (Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/pc' | ConvertFrom-Html).SelectSingleNode('//*[@id="RENDER_DATA"]').InnerText | ConvertTo-UnescapedUri | ConvertFrom-Json -AsHashtable
 
 # Version
-$this.CurrentState.Version = $Object.data.manifest.win32.version
+$this.CurrentState.Version = $Object.app.tccConfig.download_impc_info.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }).path.ia32
+  InstallerUrl = $Object.app.tccConfig.download_impc_info.apk
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }).path.x64
+  InstallerUrl = $Object.app.tccConfig.download_impc_info.win64Apk
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.data.releaseNote | Format-Text
-}
+$this.CurrentState.ReleaseTime = $Object.app.tccConfig.download_impc_info.time | Get-Date -Format 'yyyy-MM-dd'
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

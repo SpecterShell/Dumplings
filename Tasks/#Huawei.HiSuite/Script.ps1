@@ -37,7 +37,7 @@ if ($Version1 -ne $Version2) {
 }
 
 # Version
-$this.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version = $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -55,18 +55,31 @@ $this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createti
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object3.root.language.Where({ $_.code -eq '1033' }).features.feature | Format-Text
+  Value  = $ReleaseNotesEN = $Object3.root.language.Where({ $_.code -eq '1033' }).features.feature | Format-Text
 }
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object6.root.language.Where({ $_.code -eq '2052' }).features.feature | Format-Text
+  Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' }).features.feature | Format-Text
+}
+
+$OldReleaseNotesPath = Join-Path $PSScriptRoot 'ReleaseNotes.yaml'
+if (Test-Path -Path $OldReleaseNotesPath) {
+  $LocalStorage['HiSuite'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+} else {
+  $LocalStorage['HiSuite'] = $OldReleaseNotes = [ordered]@{}
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $OldReleaseNotes[$Version] = @{
+      ReleaseNotesEN = $ReleaseNotesEN
+      ReleaseNotesCN = $ReleaseNotesCN
+    }
+    $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath
+
     $this.Write()
   }
   ({ $_ -ge 2 }) {
