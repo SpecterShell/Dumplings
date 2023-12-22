@@ -1,7 +1,7 @@
 $Object = Invoke-RestMethod -Uri 'https://api.adguard.org/api/2.0/checkupdate.html?app_id=64dbc91754f34b0ebcc6eecadf83eb81&channel=Release&appname=adguard_ru&version=7.0.0.0&force=1'
 
 # Version
-$this.CurrentState.Version = $Object.response.version.'#cdata-section'
+$this.CurrentState.Version = $Version = $Object.response.version.'#cdata-section'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -9,11 +9,19 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseNotes (en-US)
-# TODO: Select corresponding ReleaseNotes
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.response.'release-notes'.'#cdata-section' | Format-Text
+$ReleaseNotesTitleNode = (($Object.response.'release-notes'.'#cdata-section' | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectSingleNode("./h1[text()='${Version}']")
+if ($ReleaseNotesTitleNode) {
+  $ReleaseNotesNodes = @()
+  for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
+    $ReleaseNotesNodes += $Node
+  }
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl
