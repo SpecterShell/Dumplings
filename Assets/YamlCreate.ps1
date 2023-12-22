@@ -626,7 +626,8 @@ Function Read-QuickInstallerEntry {
       Write-Log -Object "`e[1mYamlCreate:`e[22m Downloading Installer..." -Level Verbose
       $script:dest = Get-InstallerFile -URI $_NewInstaller['InstallerUrl'] -PackageIdentifier $PackageIdentifier -PackageVersion $PackageVersion
       # Check that MSI's aren't actually WIX, and EXE's aren't NSIS, INNO or BURN
-      Write-Log -Object "`e[1mYamlCreate:`e[22m Installer Downloaded!`nProcessing installer data..." -Level Verbose
+      Write-Log -Object "`e[1mYamlCreate:`e[22m Installer Downloaded!" -Level Verbose
+      Write-Log -Object "`e[1mYamlCreate:`e[22m Processing installer data..." -Level Verbose
       if ($_NewInstaller['InstallerType'] -in @('msi'; 'exe')) {
         $DetectedType = Get-PathInstallerType $script:dest
         if ($DetectedType -in @('msi'; 'wix'; 'nullsoft'; 'inno'; 'burn')) { $_NewInstaller['InstallerType'] = $DetectedType }
