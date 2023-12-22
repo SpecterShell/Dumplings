@@ -268,7 +268,7 @@ class WinGetTask {
     if (-not $this.Preference.NoMessage) {
       try {
         $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
-        $this.MessageID = $Response.result.message_id
+        $this.MessageID = $Response
       } catch {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
         $this.Log += $_.ToString()

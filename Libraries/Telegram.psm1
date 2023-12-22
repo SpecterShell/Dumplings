@@ -40,10 +40,11 @@ function Invoke-TelegramApi {
   )
 
   $Params = @{
-    Uri         = "https://api.telegram.org/bot${Token}/${Method}"
-    Method      = 'Post'
-    Body        = [System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $Body -Compress -EscapeHandling EscapeNonAscii))
-    ContentType = 'application/json'
+    Uri                = "https://api.telegram.org/bot${Token}/${Method}"
+    Method             = 'Post'
+    Body               = [System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject $Body -Compress -EscapeHandling EscapeNonAscii))
+    ContentType        = 'application/json'
+    SkipHttpErrorCheck = $true
   }
   Invoke-RestMethod @Params
 }
@@ -203,24 +204,44 @@ function Send-TelegramMessage {
     $Messages += $Message.Substring($i, [System.Math]::Min(4096, $Message.Length - $i))
   }
 
-  $Responses = @()
+  $IDs = @()
   if ($MessageID.Count -eq 0) {
     foreach ($Message in $Messages) {
-      $Responses += New-TelegramMessage -Message $Message -Token $Token -ChatID $ChatID
+      $Response = New-TelegramMessage -Message $Message -Token $Token -ChatID $ChatID
+      if ($Response.ok -eq $false) {
+        throw "$($Response.error_code): $($Response.description)"
+      }
+      $IDs += $Response.result.message_id
     }
   } elseif ($MessageID.Count -gt 0 -and $Messages.Count -eq $MessageID.Count) {
     for ($i = 0; $i -lt $MessageID.Count; $i++) {
-      $Responses += Update-TelegramMessage -Message $Messages[$i] -MessageID $MessageID[$i] -Token $Token -ChatID $ChatID
+      $Response = Update-TelegramMessage -Message $Messages[$i] -MessageID $MessageID[$i] -Token $Token -ChatID $ChatID
+      if ($Response.ok -eq $false) {
+        if ($Response.error_code -ne 400) {
+          throw "$($Response.error_code): $($Response.description)"
+        } else {
+          $IDs += $MessageID[$i]
+        }
+      } else {
+        $IDs += $Response.result.message_id
+      }
     }
   } elseif ($MessageID.Count -gt 0 -and $Messages.Count -ne $MessageID.Count) {
     foreach ($ID in $MessageID) {
-      Remove-TelegramMessage -MessageID $MessageID -Token $Token -ChatID $ChatID | Out-Null
+      $Response = Remove-TelegramMessage -MessageID $MessageID -Token $Token -ChatID $ChatID | Out-Null
+      if ($Response.ok -eq $false) {
+        throw "$($Response.error_code): $($Response.description)"
+      }
     }
     foreach ($Message in $Messages) {
-      $Responses += New-TelegramMessage -Message $Message -Token $Token -ChatID $ChatID
+      $Response = New-TelegramMessage -Message $Message -Token $Token -ChatID $ChatID
+      if ($Response.ok -eq $false) {
+        throw "$($Response.error_code): $($Response.description)"
+      }
+      $IDs += $Response.result.message_id
     }
   }
-  return $Responses
+  return $IDs
 }
 
 Export-ModuleMember -Function *
