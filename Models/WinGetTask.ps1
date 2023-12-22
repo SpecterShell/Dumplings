@@ -274,7 +274,7 @@ class WinGetTask {
         $this.Log += $_.ToString()
       }
     } else {
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending default messages" -Level Info
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending default message" -Level Info
     }
   }
 
@@ -289,7 +289,7 @@ class WinGetTask {
         $this.Log += $_.ToString()
       }
     } else {
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending custom messages" -Level Info
+      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending custom message" -Level Info
     }
   }
 
@@ -460,7 +460,7 @@ class WinGetTask {
         $_ | Out-Host
         return
       }
-      $this.Logging("PR created: $($NewPRResponse.html_url)", 'Info')
+      $this.Logging("Pull request created: $($NewPRResponse.html_url)", 'Info')
     } else {
       $this.Logging('Skip submitting manifests', 'Info')
     }
