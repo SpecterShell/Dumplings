@@ -15,11 +15,46 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl       = "${Prefix1}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe/download"
   InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
 }
-$this.CurrentState.Installer += $Lang | Where-Object -FilterScript { $_ -ne 'en-US' } | ForEach-Object -Process {
-  [ordered]@{
-    InstallerLocale    = $_
-    InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
-    InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+switch ($Lang) {
+  # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
+  'en-US' { continue }
+  # The language-only locales gd and sr are not supported by WinGet client
+  'ast' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'ast-ES'
+      InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  'gd' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'gd-GB'
+      InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  'sr' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'sr-Cyrl'
+      InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'sr-Latn'
+      InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  Default {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = $_
+      InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
   }
 }
 
@@ -36,6 +71,7 @@ switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.CurrentState.Installer | ForEach-Object -Process {
       $_.InstallerSha256 = (Invoke-RestMethod -Uri $_.InstallerSha256Url).Split()[0].ToUpper()
+      $_.Remove('InstallerSha256Url')
     }
 
     $Object = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
