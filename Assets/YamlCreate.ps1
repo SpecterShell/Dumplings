@@ -573,6 +573,8 @@ Function Read-QuickInstallerEntry {
       foreach ($_key in @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope')) {
         if ($_NewInstaller.Contains($_key) -and $PackageInstaller.Contains($_key) -and $_NewInstaller.$_key -ne $PackageInstaller.$_key) {
           $ToUpdate = $false
+        } elseif (-not $_NewInstaller.Contains($_key) -and $PackageInstaller.Contains($_key)) {
+          $ToUpdate = $false
         }
       }
       if ($ToUpdate) {
