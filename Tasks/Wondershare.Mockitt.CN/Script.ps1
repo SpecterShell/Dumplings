@@ -16,23 +16,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="download-win64"]').Attributes['href'].Value
 }
 
-if ($LocalStorage.Contains('MockittCN') -and $LocalStorage.MockittCN.Contains($Version)) {
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.MockittCN.$Version.ReleaseNotesEN
-  }
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.MockittCN.$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.Write()

@@ -17,7 +17,7 @@ $this.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri $Object1.releaseNotesLink | ConvertFrom-Html
 
       if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains($this.CurrentState.RealVersion)) {
         # ReleaseNotes (en-US)

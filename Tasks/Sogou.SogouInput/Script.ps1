@@ -26,7 +26,7 @@ switch ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/changelog.php' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='changebox']/h2[contains(text(), '$($this.CurrentState.Version.Insert(2, '.'))')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='changebox']/h2[contains(text(), '$($this.CurrentState.Version -creplace 'a$', '')')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {

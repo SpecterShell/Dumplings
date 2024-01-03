@@ -1,16 +1,10 @@
 # x64
 $InstallerUrl1 = Get-RedirectedUrl -Uri 'https://www.swi-prolog.org/download/stable/bin/swipl-latest.x64.exe'
-$Version1 = [regex]::Match(
-  $InstallerUrl1,
-  'swipl-(\d+\.\d+\.\d+)'
-).Groups[1].Value
+$Version1 = [regex]::Match($InstallerUrl1, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 # x86
 $InstallerUrl2 = Get-RedirectedUrl -Uri 'https://www.swi-prolog.org/download/stable/bin/swipl-latest.x86.exe'
-$Version2 = [regex]::Match(
-  $InstallerUrl2,
-  'swipl-(\d+\.\d+\.\d+)'
-).Groups[1].Value
+$Version2 = [regex]::Match($InstallerUrl2, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 $Identical = $true
 if ($Version1 -ne $Version2) {

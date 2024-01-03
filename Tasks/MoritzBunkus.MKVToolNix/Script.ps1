@@ -8,7 +8,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($this.CurrentState.Version)/mkvtoolnix-32-bit-$($this.CurrentState.Version)-setup.exe"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://mkvtoolnix.download/windows/releases/$($this.CurrentState.Version)/mkvtoolnix-64-bit-$($this.CurrentState.Version)-setup.exe"
 }
@@ -32,6 +32,13 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     $this.Write()
   }
   ({ $_ -ge 2 }) {

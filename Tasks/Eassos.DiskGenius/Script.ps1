@@ -42,19 +42,19 @@ switch ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.diskgenius.com/' | ConvertFrom-Html
 
-      if ($Object3.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[1]').InnerText.Contains($this.CurrentState.Version)) {
+      if ($Object3.SelectSingleNode('//div[@class="idx-latest"]//div[@class="info"]//div[@class="font"]').InnerText.Contains($this.CurrentState.Version)) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
-          $Object3.SelectSingleNode('/html/body/div[6]/div[1]/div/div/div[2]/div[1]/span[3]').InnerText,
+          $Object3.SelectSingleNode('//div[@class="idx-latest"]//div[@class="info"]//div[@class="font"]').InnerText,
           'Updated:\s*(.+)'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
         $Object4 = Invoke-WebRequest -Uri 'https://www.diskgenius.cn/download.php' | ConvertFrom-Html
 
-        if ($Object4.SelectSingleNode('/html/body/div[3]/div/div[4]/h4/text()').InnerText.Contains($this.CurrentState.Version)) {
+        if ($Object4.SelectSingleNode('//div[@class="smfz"]').InnerText.Contains($this.CurrentState.Version)) {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = [regex]::Match(
-            $Object4.SelectSingleNode('/html/body/div[3]/div/div[3]/p').InnerText,
+            $Object4.SelectSingleNode('//div[@class="smfz"]').InnerText,
             '(\d{4}-\d{1,2}-\d{1,2})'
           ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
         } else {

@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://cloud.r-project.org/bin/windows/base/
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match(
   $Object1.SelectSingleNode('/html/head/meta').Attributes['CONTENT'].Value,
-  '(\d+\.\d+\.\d+)'
+  '-(\d+\.\d+\.\d+)[-.]'
 ).Groups[1].Value
 
 # Installer

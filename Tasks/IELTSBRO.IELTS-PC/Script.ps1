@@ -13,7 +13,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri "https://hcp-server.ieltsbro.com/hcp/base/base/getPcUpdateVersion?osType=pc&appVersion=$($this.LastState.Version ?? '2.1.2')"
 
-      if ($Object2.content.version -eq $this.CurrentState.Version) {
+      if ($Object2.content.status -ne 0 -and $Object2.content.version -eq $this.CurrentState.Version) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'

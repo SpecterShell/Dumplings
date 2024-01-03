@@ -1,31 +1,24 @@
+$Object1 = Invoke-RestMethod -Uri 'http://update.everedit.net/checkver.php' | ConvertFrom-Ini
+
+# Version
+$this.CurrentState.Version = $Object1.Version.Version
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
+  InstallerUrl = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
 }
-$VersionX86 = [regex]::Match($InstallerUrlX86, '_(\d+)_').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
-
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
+  InstallerUrl = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
 }
-$VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d+)_').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
-
-$Identical = $true
-if ($VersionX86 -ne $VersionX64) {
-  $this.Logging('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
-
-# Version
-$this.CurrentState.Version = $VersionX64
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object1 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
+      $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
-      $ReleaseNotesNode = $Object1 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
+      $ReleaseNotesNode = $Object2 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'

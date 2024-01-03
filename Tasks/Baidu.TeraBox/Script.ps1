@@ -1,10 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.terabox.com/api/getsyscfg?clienttype=0&language_type=&cfg_category_keys=[]&version=0'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, 'v(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
 
 # RealVersion
-$this.CurrentState.RealVersion = $RealVersion = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, 'v(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.RealVersion = $RealVersion = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

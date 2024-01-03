@@ -19,7 +19,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='content']/article/table/tbody/tr[contains(./td[1]/text(), '$([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='content']/article/table/tbody/tr[contains(./td[1]/text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

@@ -9,7 +9,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '\.(\d+\.\d+\.\d+\.\d+)\.').Groups[1].Value
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

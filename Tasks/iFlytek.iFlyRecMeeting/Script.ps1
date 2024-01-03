@@ -4,7 +4,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_v([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_v([\d\.]+)[_.]').Groups[1].Value
 
 if ($LocalStorage.Contains('iFlyRecMeeting') -and $LocalStorage.iFlyRecMeeting.Contains($Version)) {
   # ReleaseNotes (en-US)

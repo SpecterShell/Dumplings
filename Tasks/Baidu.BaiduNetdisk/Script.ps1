@@ -1,7 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri 'https://pan.baidu.com/disk/cmsdata?platform=guanjia'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.list[0].version, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+
+# RealVersion
+$this.CurrentState.RealVersion = [regex]::Match($Object1.list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

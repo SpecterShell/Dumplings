@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://tron-sg.bytelemon.com/api/sdk/check_update?pid=7094553681491663140&uid=1&branch=master&buildId='
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.data.manifest.win32.version, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.data.manifest.win32.version.Split('.')[0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

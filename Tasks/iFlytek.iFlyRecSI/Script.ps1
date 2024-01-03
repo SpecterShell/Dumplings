@@ -4,7 +4,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
 if ($LocalStorage.Contains('iFlyRecSI1') -and $LocalStorage['iFlyRecSI1'].Contains($Version)) {
   # ReleaseTime

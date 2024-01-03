@@ -21,7 +21,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_
 $this.CurrentState.Version = $Object1.values.client_version.newVersionName
 
 # RealVersion
-$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.RealVersion = $Object1.values.client_version.newVersionName.Split('.')[0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
