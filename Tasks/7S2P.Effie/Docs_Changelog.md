@@ -1,3 +1,8 @@
+# Version 3.1.1:
+
+- Appearance (dark/light mode) supports 'Match System'.
+- Some minor improvements and bugs fixed.
+
 # Version 3.0.3:
 
 Latest Launched： Effie AI
