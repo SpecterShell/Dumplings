@@ -315,11 +315,13 @@ class WinGetTask {
 
       # Check if there are existing pull requests in the upstream repository
       $this.Logging('Checking existing pull requests', 'Verbose')
-      if (-not ($this.Config.Contains('SkipPRCheck') -and $this.Config.SkipPRCheck) -and -not ($this.Preference.Contains('NoCheck') -and $this.Preference.NoCheck)) {
-        $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
-        if ($PullRequests.total_count -gt 0) {
+      $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
+      if ($PullRequests.total_count -gt 0) {
+        if (-not $this.Config.Contains('IgnorePRCheck') -or -not $this.Config.IgnorePRCheck) {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
           return
+        } else {
+          $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Warning')
         }
       } else {
         $this.Logging('Skip checking existing PR', 'Info')
