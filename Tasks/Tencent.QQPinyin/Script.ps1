@@ -49,13 +49,13 @@ switch ($this.Check()) {
       try {
         $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
-        $ReleaseNotes = $Object3.vHistory | Where-Object -FilterScript { $_.version.Contains($this.CurrentState.Version) }
-        if ($ReleaseNotes) {
+        $ReleaseNotesObject = $Object3.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) })
+        if ($ReleaseNotesObject) {
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotes.version_features | Format-Text
+            Value  = $ReleaseNotesObject[0].version_features | Format-Text
           }
         } else {
           $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

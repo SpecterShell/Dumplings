@@ -18,16 +18,16 @@ switch ($this.Check()) {
     try {
       $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
-      $ReleaseNotesNode = $Object2 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
+      $ReleaseNotesNode = $Object2.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") })
       if ($ReleaseNotesNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
+        $this.CurrentState.ReleaseTime = $ReleaseNotesNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNode.content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = ($ReleaseNotesNode[0].content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -40,16 +40,16 @@ switch ($this.Check()) {
     try {
       $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
-      $ReleaseNotesNode = $Object3 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
-      if ($ReleaseNotesNode) {
+      $ReleaseNotesCNNode = $Object3.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") })
+      if ($ReleaseNotesCNNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime ??= $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNode.content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = ($ReleaseNotesCNNode[0].content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

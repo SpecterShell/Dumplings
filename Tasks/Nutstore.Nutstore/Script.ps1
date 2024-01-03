@@ -1,8 +1,8 @@
 $Response = Invoke-RestMethod -Uri 'https://www.jianguoyun.com/static/exe/latestVersion'
 # x86 + x64
-$Object1 = $Response | Where-Object -Property 'OS' -EQ -Value 'win-wpf-client'
+$Object1 = $Response.Where({ $_.OS -eq 'win-wpf-client' })[0]
 # arm64
-$Object2 = $Response | Where-Object -Property 'OS' -EQ -Value 'win-wpf-client-arm64'
+$Object2 = $Response.Where({ $_.OS -eq 'win-wpf-client-arm64' })[0]
 
 # Version
 $this.CurrentState.Version = $Object1.exVer

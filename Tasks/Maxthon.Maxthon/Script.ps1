@@ -1,11 +1,11 @@
 # International x64
-$Object1 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
+$Object1 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater.json').maxthon.Where({ $_.channels -contains 'stable' })[0]
 # International x86
-$Object2 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater_x86.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
+$Object2 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater_x86.json').maxthon.Where({ $_.channels -contains 'stable' })[0]
 # Chinese x64
-$Object3 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
+$Object3 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater.json').maxthon.Where({ $_.channels -contains 'stable' })[0]
 # Chinese x86
-$Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x86.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
+$Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x86.json').maxthon.Where({ $_.channels -contains 'stable' })[0]
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
