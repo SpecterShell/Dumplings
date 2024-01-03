@@ -323,8 +323,6 @@ class WinGetTask {
         } else {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Warning')
         }
-      } else {
-        $this.Logging('Skip checking existing PR', 'Info')
       }
 
       # Use YamlCreate to create manifests
