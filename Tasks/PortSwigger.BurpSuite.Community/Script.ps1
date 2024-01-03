@@ -17,10 +17,9 @@ $this.CurrentState.Locale += [ordered]@{
 }
 
 # ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1.updates[0].releaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl
+  Value = $ReleaseNotesUrl = $Object1.updates[0].releaseNotesUrl
 }
 
 switch ($this.Check()) {

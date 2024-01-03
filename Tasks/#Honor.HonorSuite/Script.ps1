@@ -1,3 +1,10 @@
+$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
+if (Test-Path -Path $OldReleaseNotesPath) {
+  $LocalStorage['HonorSuite'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+} else {
+  $LocalStorage['HonorSuite'] = $OldReleaseNotes = [ordered]@{}
+}
+
 # International
 $Object1 = Invoke-RestMethod -Uri 'https://update.platform.hihonorcloud.com/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -33,7 +40,7 @@ $Version2 = [regex]::Match(
 ).Groups[1].Value
 
 if ($Version1 -ne $Version2) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  throw 'Distinct versions detected'
 }
 
 # Version
@@ -63,13 +70,6 @@ $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
   Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' })[0].features.feature | Format-Text
-}
-
-$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
-if (Test-Path -Path $OldReleaseNotesPath) {
-  $LocalStorage['HonorSuite'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
-} else {
-  $LocalStorage['HonorSuite'] = $OldReleaseNotes = [ordered]@{}
 }
 
 switch ($this.Check()) {

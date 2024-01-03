@@ -4,9 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://fn.kirakuapp.com/admin/version/listNe
 }
 
 # Installer
-$InstallerUrl = $Object1.data[0].downloadUrl | ConvertTo-UnescapedUri
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object1.data[0].downloadUrl | ConvertTo-UnescapedUri
 }
 
 # Version

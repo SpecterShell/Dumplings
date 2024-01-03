@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl -Uri 'https://www.dida365.com/static/getApp/download?type=win64'
 }
 
-$VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
-$VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+$VersionX86 = [regex]::Match($InstallerUrlX86, '_(\d{4})[_.]').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+$VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d{4})[_.]').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
 
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {

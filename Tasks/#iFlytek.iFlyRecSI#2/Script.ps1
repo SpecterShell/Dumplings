@@ -15,7 +15,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://tongchuan.iflyrec.com/UpdateService/v
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.biz.latestVersionUrl
+  InstallerUrl = $InstallerUrl = $Object1.biz.downloadUrl
 }
 
 # Version

@@ -4,9 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://ai.10jqka.com.cn/java-extended-api/vo
 $this.CurrentState.Version = $Object1.data.version
 
 # Installer
-$InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/275/'
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/275/'
 }
 
 if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
