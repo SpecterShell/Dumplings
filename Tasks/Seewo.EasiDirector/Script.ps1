@@ -1,14 +1,14 @@
-$Object = $LocalStorage.SeewoApps['EasiDirector']
+$Object1 = $LocalStorage.SeewoApps['EasiDirector']
 
 # Version
-$this.CurrentState.Version = $Object.softInfos[0].softVersion
+$this.CurrentState.Version = $Object1.softInfos[0].softVersion
 
 # RealVersion
 $this.CurrentState.RealVersion = '1.0.0.0'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.softInfos[0].downloadUrl
+  InstallerUrl = $Object1.softInfos[0].downloadUrl
 }
 
 switch ($this.Check()) {

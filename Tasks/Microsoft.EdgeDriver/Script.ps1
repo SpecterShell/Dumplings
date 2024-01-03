@@ -1,12 +1,12 @@
-$Content = (Invoke-WebRequest -Uri 'https://msedgedriver.azureedge.net/LATEST_STABLE' | Read-ResponseContent).Trim()
+$Object1 = (Invoke-WebRequest -Uri 'https://msedgedriver.azureedge.net/LATEST_STABLE' | Read-ResponseContent).Trim()
 
 # Version
-$this.CurrentState.Version = $Version = $Content
+$this.CurrentState.Version = $Object1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win32.zip"
+  InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_win32.zip"
   NestedInstallerFiles = @(
     @{
       RelativeFilePath     = 'msedgedriver.exe'
@@ -16,7 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win64.zip"
+  InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_win64.zip"
   NestedInstallerFiles = @(
     @{
       RelativeFilePath     = 'msedgedriver.exe'
@@ -26,7 +26,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'arm64'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_arm64.zip"
+  InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_arm64.zip"
   NestedInstallerFiles = @(
     @{
       RelativeFilePath     = 'msedgedriver.exe'

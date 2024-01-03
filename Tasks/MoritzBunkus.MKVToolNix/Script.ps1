@@ -1,7 +1,7 @@
-$Object = Invoke-RestMethod -Uri 'https://mkvtoolnix.download/releases.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://mkvtoolnix.download/releases.xml'
 
 # Version
-$this.CurrentState.Version = $Object.'mkvtoolnix-releases'.release[0].version
+$this.CurrentState.Version = $Object1.'mkvtoolnix-releases'.release[0].version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -14,13 +14,13 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object.'mkvtoolnix-releases'.release[0].changes.change | ForEach-Object -Begin {
+  Value  = $Object1.'mkvtoolnix-releases'.release[0].changes.change | ForEach-Object -Begin {
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
     $ReleaseNotesList = [ordered]@{}
   } -Process {

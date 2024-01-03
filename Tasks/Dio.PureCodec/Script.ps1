@@ -13,15 +13,14 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Versi
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?PostID=892' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?PostID=892' | ConvertFrom-Html
+
       $ReleaseNotesNodes = @()
       switch ($Object2.SelectNodes("//*[@class='ForumPostContentText'][1]/node()[starts-with(string(), '$($this.CurrentState.Version)')]/following-sibling::node()")) {
         ({ $_.Name -eq 'br' -and $_.NextSibling.Name -eq 'br' }) { break }
         Default { $ReleaseNotesNodes += $_ }
       }
-
       if ($ReleaseNotesNodes) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
@@ -30,9 +29,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

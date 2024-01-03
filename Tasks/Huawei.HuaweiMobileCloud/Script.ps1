@@ -31,31 +31,31 @@ $this.CurrentState.Version = $Object2.configurations.version
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x86'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
 # }
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
 # }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x86'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x64'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x86'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
 # }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x64'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
 # }
 
 # ReleaseTime
@@ -64,9 +64,9 @@ $this.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFr
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
-
     try {
+      $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -81,6 +81,7 @@ switch ($this.Check()) {
         Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -26,9 +26,9 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -36,6 +36,7 @@ switch ($this.Check()) {
         Value  = $Object2.SelectNodes('/html/body/div/p[2]/following-sibling::*') | Get-TextContent | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

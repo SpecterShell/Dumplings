@@ -4,10 +4,10 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object = Invoke-WebRequest -Uri 'https://pdflux.com/log/' | Read-ResponseContent | ConvertFrom-Html
-
     try {
-      $ReleaseNotesNode = $Object.SelectSingleNode("//div[contains(./@class, 'version-item') and contains(./div[3]/h3[1]/text(), '$($this.CurrentState.Version)')]")
+      $Object1 = Invoke-WebRequest -Uri 'https://pdflux.com/log/' | Read-ResponseContent | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object1.SelectSingleNode("//div[contains(./@class, 'version-item') and contains(./div[3]/h3[1]/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
@@ -16,9 +16,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="version-subtitle"]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

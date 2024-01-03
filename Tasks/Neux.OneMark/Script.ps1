@@ -39,13 +39,13 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl1 = $Object1.item.changelog
+  Value = $ReleaseNotesUrlEN = $Object1.item.changelog
 }
 # ReleaseNotesUrl (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotesUrl'
-  Value  = $ReleaseNotesUrl2 = $Object3.item.changelog
+  Value  = $ReleaseNotesUrlCN = $Object3.item.changelog
 }
 
 switch ($this.Check()) {
@@ -53,9 +53,9 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromMsi
 
-    $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl1 | ConvertFrom-Html
-
     try {
+      $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrlEN | ConvertFrom-Html
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -63,12 +63,13 @@ switch ($this.Check()) {
         Value  = $Object5.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
-    $Object6 = Invoke-WebRequest -Uri $ReleaseNotesUrl2 | ConvertFrom-Html
-
     try {
+      $Object6 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
+
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
@@ -76,6 +77,7 @@ switch ($this.Check()) {
         Value  = $Object6.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -30,9 +30,9 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri 'https://xmind.app/desktop/release-notes/' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://xmind.app/desktop/release-notes/' | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='release-notes']/div/div/div[contains(./h3/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
@@ -41,6 +41,7 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

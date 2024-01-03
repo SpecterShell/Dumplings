@@ -1,21 +1,21 @@
-$Object = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=6922326164589517070&branch=master&buildId=&uid='
+$Object1 = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=6922326164589517070&branch=master&buildId=&uid='
 
 # Version
-$this.CurrentState.Version = $Object.data.manifest.win32.version[0]
+$this.CurrentState.Version = $Object1.data.manifest.win32.version[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data.manifest.win32.urls
+  InstallerUrl = $Object1.data.manifest.win32.urls
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
+$this.CurrentState.ReleaseTime = $Object1.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
 
 # ReleaseNotes (zh-CN)
 # $this.CurrentState.Locale += [ordered]@{
 #   Locale = 'zh-CN'
 #   Key    = 'ReleaseNotes'
-#   Value  = $Object.data.releaseNote | Format-Text
+#   Value  = $Object1.data.releaseNote | Format-Text
 # }
 
 switch ($this.Check()) {
@@ -30,8 +30,8 @@ switch ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiguaVideo')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains('XiguaVideoSubmitting')) {
-      $LocalStorage['XiguaVideoSubmitting'] = $ToSubmit = $true
+    if (-not $LocalStorage.Contains("XiguaVideoSubmitting-$($this.CurrentState.Version)")) {
+      $LocalStorage["XiguaVideoSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

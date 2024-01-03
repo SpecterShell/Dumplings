@@ -9,9 +9,9 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = (Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=2').data[0].content | ConvertFrom-Html
-
     try {
+      $Object2 = (Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=2').data[0].content | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h1[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
@@ -20,6 +20,7 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

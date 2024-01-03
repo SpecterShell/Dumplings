@@ -1,18 +1,18 @@
 $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
 
-$Object = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
+$Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
 
 # Version
-$this.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object.win32_url
+  InstallerUrl = $Object1.win32_url
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.publish_time | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object1.publish_time | ConvertFrom-UnixTimeSeconds
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

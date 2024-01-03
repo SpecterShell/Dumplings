@@ -4,12 +4,12 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://gateway.hellonext.co/api/v2/changelogs' -Headers @{
-        'x-organization' = 'feedback.remnote.com'
-      }
-    ) | Where-Object -Property title -EQ -Value $this.CurrentState.Version
-
     try {
+      $Object2 = (Invoke-RestMethod -Uri 'https://gateway.hellonext.co/api/v2/changelogs' -Headers @{
+          'x-organization' = 'feedback.remnote.com'
+        }
+      ).Where({ $_.title -eq $this.CurrentState.Version })[0]
+
       if ($Object2) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -18,9 +18,10 @@ switch ($this.Check()) {
           Value  = $Object2.description_html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -4,16 +4,17 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object = Invoke-RestMethod -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)"
-
     try {
+      $Object1 = Invoke-RestMethod -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)"
+
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object1.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

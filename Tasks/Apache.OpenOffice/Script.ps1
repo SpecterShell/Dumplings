@@ -74,10 +74,10 @@ switch ($this.Check()) {
       $_.Remove('InstallerSha256Url')
     }
 
-    $Object = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
-      $ReleaseNotesTitleNode = $Object.SelectSingleNode('//div[@id="main-content"]/h2[contains(@id, "GeneralRemarks")]')
+      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object1.SelectSingleNode('//div[@id="main-content"]/h2[contains(@id, "GeneralRemarks")]')
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
@@ -90,9 +90,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

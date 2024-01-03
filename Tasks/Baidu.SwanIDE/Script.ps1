@@ -10,9 +10,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = ((Invoke-RestMethod -Uri 'https://smartprogram.baidu.com/forum/api/docs_detail?path=%2Fdevelop%2Fdevtools%2Fuplog_tool_normal').data.content.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
-
     try {
+      $Object2 = ((Invoke-RestMethod -Uri 'https://smartprogram.baidu.com/forum/api/docs_detail?path=%2Fdevelop%2Fdevtools%2Fuplog_tool_normal').data.content.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
+
       $ReleaseNotesNode = $Object2.SelectSingleNode("/table/tbody/tr[contains(./td[1]/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
@@ -28,9 +28,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectSingleNode('./td[3]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

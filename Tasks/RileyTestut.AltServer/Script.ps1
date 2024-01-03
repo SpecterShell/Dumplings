@@ -1,21 +1,21 @@
-$Object = Invoke-RestMethod -Uri 'https://altstore.io/altserver/sparkle-windows.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://altstore.io/altserver/sparkle-windows.xml'
 
 # Version
-$this.CurrentState.Version = $Object[0].enclosure.version
+$this.CurrentState.Version = $Object1[0].enclosure.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object[0].enclosure.url
+  InstallerUrl = $Object1[0].enclosure.url
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object[0].pubDate | Get-Date -AsUTC
+$this.CurrentState.ReleaseTime = $Object1[0].pubDate | Get-Date -AsUTC
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+  Value  = $Object1[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
 }
 
 switch ($this.Check()) {

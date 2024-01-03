@@ -5,38 +5,36 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[2]/div/span/a').Attributes['href'].Value
 }
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerUrl.Replace('x64', 'ia32')
-}
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://pro.easyeda.com/page/update-record' | ConvertFrom-Html
-
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'doc-body-left')]/p[contains(./strong/text(), '${Version}')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://pro.easyeda.com/page/update-record' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'doc-body-left')]/p[contains(./strong/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
         $ReleaseNotesTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]')
+        # ReleaseTime
         $this.CurrentState.ReleaseTime = ($ReleaseNotesTimeNode.InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-        # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTimeNode.NextSibling; -not $Node.SelectSingleNode('./strong'); $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

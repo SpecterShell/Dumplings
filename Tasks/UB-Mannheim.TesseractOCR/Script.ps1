@@ -1,9 +1,9 @@
 $Prefix = 'https://digi.bib.uni-mannheim.de/tesseract/'
 
-$Content = (Invoke-WebRequest -Uri "${Prefix}?C=M;O=D;F=0;P=*.exe").Content
+$Object1 = (Invoke-WebRequest -Uri "${Prefix}?C=M;O=D;F=0;P=*.exe").Content
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Content, 'tesseract-ocr-w64-setup-(v[\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1, 'tesseract-ocr-w64-setup-(v[\d\.]+)\.exe').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -24,9 +24,9 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/wiki/UB-Mannheim/tesseract/Home.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
-
     try {
+      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/wiki/UB-Mannheim/tesseract/Home.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+
       # ReleaseNotes (en-US)
       $ReleaseNotesNode = $Object2.SelectSingleNode("/ul[2]/li[contains(./text(), '$([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesNode) {
@@ -36,9 +36,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectSingleNode('./text()').InnerText | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

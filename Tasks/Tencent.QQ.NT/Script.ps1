@@ -18,20 +18,22 @@ $this.CurrentState.ReleaseTime = $Object1.ntPublishTime | Get-Date -Format 'yyyy
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsQQVersionList.js' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json).ntLogs | Where-Object -FilterScript { $_.version.EndsWith($Object1.ntVersion) }
-
     try {
-      if ($Object2) {
+      $Object2 = Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsQQVersionList.js' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
+
+      $ReleaseNotesObject = $Object2.ntLogs.Where({ $_.version.EndsWith($Object1.ntVersion) })
+      if ($ReleaseNotesObject) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.features.text | Format-Text
+          Value  = $ReleaseNotesObject[0].features.text | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

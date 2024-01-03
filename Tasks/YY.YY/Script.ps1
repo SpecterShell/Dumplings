@@ -7,13 +7,13 @@ $Hash = [System.BitConverter]::ToString(
     )
   )
 ).Replace('-', '').ToLower()
-$Content1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}" -StatusCodeVariable 'StatusCode'
+$Object1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
   throw "Task $($this.Name): The response content from the API is empty"
 }
 
-$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Content1 | Split-LineEndings | Select-Object -First 1)"
+$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$(($Object1 | Split-LineEndings)[0])"
 
 # Version
 $this.CurrentState.Version = $Object2.Product.Version.Dir
@@ -28,16 +28,17 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Content3 = Invoke-WebRequest -Uri "https://forceupdate.yy.com/$($Object2.Product.Version.VersionNote)" | Read-ResponseContent
-
     try {
+      $Object3 = Invoke-WebRequest -Uri "https://forceupdate.yy.com/$($Object2.Product.Version.VersionNote)" | Read-ResponseContent
+
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Content3 | Split-LineEndings | Select-Object -Skip 1 | Format-Text
+        Value  = $Object3 | Split-LineEndings | Select-Object -Skip 1 | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

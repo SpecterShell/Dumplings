@@ -1,8 +1,8 @@
-$Object = Invoke-WebRequest -Uri 'https://schinagl.priv.at/nt/hardlinkshellext/hardlinkshellext.html' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://schinagl.priv.at/nt/hardlinkshellext/hardlinkshellext.html' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('/html/body/table/tr[2]/td/div/i').InnerText,
+  $Object1.SelectSingleNode('/html/body/table/tr[2]/td/div/i').InnerText,
   'Version ([\d\.]+)'
 ).Groups[1].Value
 
@@ -16,19 +16,19 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://schinagl.priv.at/nt/hardlinkshellext/save/$($this.CurrentState.Version.Replace('.', ''))/HardLinkShellExt_X64.exe"
 }
 
-$ReleaseNotesTitleNode = $Object.SelectSingleNode("/html/body/table/tr[54]/td[2]/table/tr[contains(./td[2]/text()[1], '$($this.CurrentState.Version)')]")
+$ReleaseNotesTitleNode = $Object1.SelectSingleNode("/html/body/table/tr[54]/td[2]/table/tr[contains(./td[2]/text()[1], '$($this.CurrentState.Version)')]")
 if ($ReleaseNotesTitleNode) {
   # ReleaseTime
   $this.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./td[1]/a').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-  # ReleaseNotes (zh-CN)
+  # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
+    Locale = 'en-US'
     Key    = 'ReleaseNotes'
     Value  = $ReleaseNotesTitleNode.SelectSingleNode('./td[2]/text()[1]/following-sibling::*') | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+  $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

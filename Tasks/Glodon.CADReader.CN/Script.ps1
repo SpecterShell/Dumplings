@@ -9,17 +9,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1.body.pageUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl
+  Value = $ReleaseNotesUrl = $Object1.body.pageUrl
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
@@ -27,6 +26,7 @@ switch ($this.Check()) {
         Value  = $Object2.SelectNodes('/html/body/div/p[@style="margin-top: 30px;"]/following-sibling::p[count(.|/html/body/div/p[@style="margin-top:30px;"]/preceding-sibling::p)=count(/html/body/div/p[@style="margin-top:30px;"]/preceding-sibling::p)]').InnerText | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

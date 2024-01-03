@@ -14,14 +14,11 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
 
-# ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1.releaseNotesLink
-
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains($this.CurrentState.RealVersion)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -30,9 +27,10 @@ switch ($this.Check()) {
           Value  = $Object2.SelectNodes('/html/body/text()[2]/following-sibling::node()[count(.|/html/body/p[2]/preceding-sibling::node())=count(/html/body/p[2]/preceding-sibling::node())]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

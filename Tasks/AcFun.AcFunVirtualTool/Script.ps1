@@ -17,28 +17,34 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Headers = @{
-      Referer = 'https://livetool.kuaishou.com'
-    }
-    $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
-    $Object2 = Invoke-RestMethod -Uri "https://ytech-ai.kuaishou.cn/ytech/api/virtual/reconstruct/record?api_key=${Key}&timestamp=$([System.DateTimeOffset]::Now.ToUnixTimeMilliseconds())" -Headers $Headers -SkipHeaderValidation
-
     try {
-      $ReleaseNotesUrl = $Object2.data.data.Where({ $_.iconText.Contains([regex]::Match($this.CurrentState.Version, '(\d+\.\d+)').Groups[1].Value) })[0].link
-      if ($ReleaseNotesUrl) {
+      $Headers = @{ Referer = 'https://livetool.kuaishou.com' }
+      $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
+      $Object2 = Invoke-RestMethod -Uri "https://ytech-ai.kuaishou.cn/ytech/api/virtual/reconstruct/record?api_key=${Key}&timestamp=$([System.DateTimeOffset]::Now.ToUnixTimeMilliseconds())" -Headers $Headers -SkipHeaderValidation
+
+      $ReleaseNotesUrlNode = $Object2.data.data.Where({ $_.iconText.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') })
+      if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl
+          Value = $ReleaseNotesUrlNode[0].link
         }
       } else {
+        $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
           Value = $null
         }
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
+      }
     }
 
     $this.Write()

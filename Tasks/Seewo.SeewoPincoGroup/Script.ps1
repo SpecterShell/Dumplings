@@ -1,11 +1,11 @@
-$Object = $LocalStorage.SeewoApps['SeewoPinco']
+$Object1 = $LocalStorage.SeewoApps['SeewoPinco']
 
 # Version
-$this.CurrentState.Version = $Object.softInfos.Where({ $_.softCode -eq 'seewoPincoGroup' }).softVersion
+$this.CurrentState.Version = $Object1.softInfos.Where({ $_.softCode -eq 'seewoPincoGroup' })[0].softVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.softInfos.Where({ $_.softCode -eq 'seewoPincoGroup' }).downloadUrl
+  InstallerUrl = $Object1.softInfos.Where({ $_.softCode -eq 'seewoPincoGroup' })[0].downloadUrl
 }
 
 switch ($this.Check()) {

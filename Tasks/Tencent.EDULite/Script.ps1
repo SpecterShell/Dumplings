@@ -1,8 +1,8 @@
-$Object = Invoke-RestMethod -Uri 'https://sas.qq.com/cgi-bin/ke_download_speed'
+$Object1 = Invoke-RestMethod -Uri 'https://sas.qq.com/cgi-bin/ke_download_speed'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object.result.win.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $InstallerUrl = $Object1.result.win.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version

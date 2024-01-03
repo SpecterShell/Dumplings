@@ -31,9 +31,9 @@ try {
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri "https://dldir1v6.qq.com/weixin/Windows/update$($this.CurrentState.Version).xml" | Read-ResponseContent | ConvertFrom-Xml
-
     try {
+      $Object2 = Invoke-WebRequest -Uri "https://dldir1v6.qq.com/weixin/Windows/update$($this.CurrentState.Version).xml" | Read-ResponseContent | ConvertFrom-Xml
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -53,12 +53,13 @@ switch ($this.Check()) {
         Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'zh_CN' })[0].ChildNodes.'#text' | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
-    $Object3 = Invoke-WebRequest -Uri 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list' | ConvertFrom-Html
-
     try {
+      $Object3 = Invoke-WebRequest -Uri 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list' | ConvertFrom-Html
+
       $ReleaseNotesUrlNode = $Object3.SelectSingleNode("/html/body/div/div[3]/div[1]/div[2]/section[contains(./h3/text(), 'Windows')]/ul/li[contains(./a/span[1], '$([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]/a")
       if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl (zh-Hans)
@@ -89,6 +90,7 @@ switch ($this.Check()) {
         }
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

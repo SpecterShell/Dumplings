@@ -1,13 +1,13 @@
-$Object = Invoke-RestMethod -Uri 'https://www.xljsci.com/whale/api/client/version' -Method Post
+$Object1 = Invoke-RestMethod -Uri 'https://www.xljsci.com/whale/api/client/version' -Method Post
 
 # Version
-$this.CurrentState.Version = $Version = $Object.data.showVersion
+$this.CurrentState.Version = $Object1.data.showVersion
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.data.intro | ConvertFrom-Html | Get-TextContent).Split("`n") | Select-Object -Skip 1 | Format-Text
+  Value  = $Object1.data.intro | ConvertFrom-Html | Get-TextContent | Split-LineEndings | Select-Object -Skip 1 | Format-Text
 }
 
 $EdgeDriver = Get-EdgeDriver
@@ -18,8 +18,8 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/a')).GetAttribute('href') | ConvertTo-UnescapedUri
 }
 
-if (!$InstallerUrl.Contains($Version)) {
-  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($Version)"
+if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
+  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($this.CurrentState.Version)"
 }
 
 # ReleaseTime

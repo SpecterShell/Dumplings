@@ -13,21 +13,21 @@ $Object1 = (
       )
     } | ConvertTo-Json -Compress
   ) -ContentType 'application/json'
-).config.items.Where({ $_.group -eq 'Prod.Common.Update' }).key_values.Where({ $_.key -eq 'update_info' })[0].value | ConvertFrom-Json
+).config.items.Where({ $_.group -eq 'Prod.Common.Update' })[0].key_values.Where({ $_.key -eq 'update_info' })[0].value | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
-$ReleaseNotes = $Object1.update_info.Split("`n`n")[0] | Split-LineEndings
+$ReleaseNotesContent = $Object1.update_info.Split("`n`n")[0] | Split-LineEndings
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotes[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotes | Select-Object -Skip 2 | Format-Text
+  Value  = $ReleaseNotesContent | Select-Object -Skip 2 | Format-Text
 }
 
 $Prefix = "https://dldir1v6.qq.com/weiyun/tencentdocs/electron-update/release/$($this.CurrentState.Version)/"

@@ -13,43 +13,44 @@ $this.CurrentState.ReleaseTime = $Object1.data.win.created_time | ConvertFrom-Un
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://115.com/115/T504444.html' | ConvertFrom-Html
-
     try {
-      # ReleaseNotesUrl (zh-CN)
-      $ReleaseNotesUrl = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[1]/p/span/text()='Windows']/td[2]/p/a[contains(./span/text(),'$($this.CurrentState.Version)')]").Attributes['href'].Value
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
-      }
-    } catch {
-      $this.Logging($_, 'Warning')
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $null
-      }
-    }
+      $Object2 = Invoke-WebRequest -Uri 'https://115.com/115/T504444.html' | ConvertFrom-Html
 
-    if ($ReleaseNotesUrl) {
-      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[@rowspan='1'][1]/p//text()='Windows']/td[@rowspan='1'][2]/p//a[contains(.//text(),'$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesUrlNode) {
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrl = $ReleaseNotesUrlNode.Attributes['href'].Value
+        }
 
-      try {
-        # ReleaseNotes (zh-CN)
-        $ReleaseNotesNode = $Object3.SelectNodes('//*[@id="js_content_box"]/div[2]/div/div/div/div[last()]')
+        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+        $ReleaseNotesNode = $Object3.SelectSingleNode('//div[contains(@class, "esta-contents")]/div/div[last()]')
         if ($ReleaseNotesNode) {
+          # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = ($ReleaseNotesNode | Get-TextContent) -csplit '(?m)^-+$' | Select-Object -First 1 | Format-Text
+            Value  = (($ReleaseNotesNode | Get-TextContent) -csplit '(?m)^-+$')[0] | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
-      } catch {
-        $this.Logging($_, 'Warning')
+      } else {
+        $this.Logging("No ReleaseNotesUrl and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = 'https://115.com/115/T504444.html'
+        }
       }
-    } else {
-      $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+    } catch {
+      $_ | Out-Host
+      $this.Logging($_, 'Warning')
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://115.com/115/T504444.html'
+      }
     }
 
     $this.Write()

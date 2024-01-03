@@ -22,8 +22,8 @@ switch ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsKDocs')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains('KDocsSubmitting')) {
-      $LocalStorage['KDocsSubmitting'] = $ToSubmit = $true
+    if (-not $LocalStorage.Contains("KDocsSubmitting-$($this.CurrentState.Version)")) {
+      $LocalStorage["KDocsSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

@@ -18,25 +18,26 @@ $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode('//a[contains(@class,
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://bbs.twinkstar.com/forum.php?mod=viewthread&tid=4227' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://bbs.twinkstar.com/forum.php?mod=viewthread&tid=4227' | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_14664']/*[contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[contains(.//text(), "changelog")][1]').NextSibling; $Node.InnerText -cnotmatch '下载地址|- - - - -'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

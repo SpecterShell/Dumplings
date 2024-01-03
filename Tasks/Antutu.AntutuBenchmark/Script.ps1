@@ -1,6 +1,6 @@
-$Object = Invoke-WebRequest -Uri 'https://www.antutu.com/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.antutu.com/' | ConvertFrom-Html
 
-$Node = $Object.SelectNodes('//*[@class="download" and contains(./div/h4/text()[1], "安兔兔评测") and contains(./div/h4/span, "Win")]')
+$Node = $Object1.SelectNodes('//*[@class="download" and contains(./div/h4/text()[1], "安兔兔评测") and contains(./div/h4/span, "Win")]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match(

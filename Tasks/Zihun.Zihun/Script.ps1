@@ -1,17 +1,17 @@
 $Prefix = 'https://oss.izihun.com/client/download/'
 
-$Object = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Prefix + $Object.files.url
+  InstallerUrl = $Prefix + $Object1.files.url
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = (Get-Date -Date $Object.releaseDate).ToUniversalTime()
+$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

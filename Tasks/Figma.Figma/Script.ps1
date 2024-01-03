@@ -1,7 +1,7 @@
-$Content = Invoke-RestMethod -Uri 'https://desktop.figma.com/win/RELEASES'
+$Object1 = Invoke-RestMethod -Uri 'https://desktop.figma.com/win/RELEASES'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Content.Split(' ')[1], 'Figma-([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Split(' ')[1], '(\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

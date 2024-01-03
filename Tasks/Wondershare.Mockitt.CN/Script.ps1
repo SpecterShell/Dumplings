@@ -16,34 +16,25 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="download-win64"]').Attributes['href'].Value
 }
 
+if ($LocalStorage.Contains('MockittCN') -and $LocalStorage.MockittCN.Contains($Version)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.MockittCN.$Version.ReleaseNotesEN
+  }
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.MockittCN.$Version.ReleaseNotesCN
+  }
+} else {
+  $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-RestMethod -Uri "https://modao.cc/api/v2/client/desktop/check_update.json?region=CN&version=$($this.LastState.Version ?? '1.2.5')&platform=win32&arch=x64"
-
-    try {
-      if ($Object2.version -eq $this.CurrentState.Version) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Object2.pub_date.ToUniversalTime()
-
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.release_notes_en | Format-Text
-        }
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.release_notes_zh | Format-Text
-        }
-      } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $this.Logging($_, 'Warning')
-    }
-
     $this.Write()
   }
   ({ $_ -ge 2 }) {

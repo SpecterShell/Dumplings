@@ -4,11 +4,10 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://help.knotesapp.com/changelog-posts/' | ConvertFrom-Html
-    $Object3 = Invoke-WebRequest -Uri 'https://help.knotesapp.cn/changelog-posts/' -SkipCertificateCheck | ConvertFrom-Html
-
     try {
-      $ReleaseNotesNode = $Object2.SelectSingleNode("/html/body/div[2]/div/article[contains(./div[1]/h2, '$($this.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://help.knotesapp.com/changelog-posts/' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//article[contains(@class, 'uk-article') and contains(./div[1]/h2, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -20,20 +19,21 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      $ReleaseNotesCNNode = $Object3.SelectSingleNode("/html/body/div[2]/div/article[contains(./div[1]/h2, '$($this.CurrentState.Version)')]")
+      $Object3 = Invoke-WebRequest -Uri 'https://help.knotesapp.cn/changelog-posts/' -SkipCertificateCheck | ConvertFrom-Html
+
+      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//article[contains(@class, 'uk-article') and contains(./div[1]/h2, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesCNNode.SelectNodes('./div[2]//*[self::span or self::li]') |
-            ForEach-Object -Process { ($_.Name -eq 'li' ? '- ' : '') + $_.InnerText } |
-            Format-Text
+          Value  = $ReleaseNotesCNNode.SelectNodes('./div[2]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

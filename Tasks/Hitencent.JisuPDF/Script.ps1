@@ -19,9 +19,9 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-WebRequest -Uri 'https://upd.jisupdf.com/version.php' | Read-ResponseContent -Encoding GBK).Replace('**', "`n") | ConvertFrom-StringData
-
     try {
+      $Object2 = (Invoke-WebRequest -Uri 'https://upd.jisupdf.com/version.php' | Read-ResponseContent -Encoding GBK).Replace('**', "`n") | ConvertFrom-StringData
+
       if ($Object2.v -eq $this.CurrentState.Version) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
@@ -30,9 +30,10 @@ switch ($this.Check()) {
           Value  = $Object2.GetEnumerator() | Where-Object -Property Key -CMatch -Value '^t\d+$' | Sort-Object -Property Key | Select-Object -ExpandProperty Value | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

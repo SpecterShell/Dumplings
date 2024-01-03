@@ -1,29 +1,25 @@
-$Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
+$Object1 = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
   'app-version' = $this.LastState.Version.Split('.')[2] ?? 109
 }
 
-if (-not $Object.data.hasNewVersion) {
+if (-not $Object1.data.hasNewVersion) {
   $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
-$Prefix = $Object.data.url + '/'
+$Prefix = $Object1.data.url + '/'
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
-if ($Object.data.lastVersion -ne $this.CurrentState.Version) {
-  $this.Logging('Distinct versions detected', 'Warning')
-}
-
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
+$this.CurrentState.ReleaseTime = $Object1.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.data.desc | Format-Text
+  Value  = $Object1.data.desc | Format-Text
 }
 
 switch ($this.Check()) {

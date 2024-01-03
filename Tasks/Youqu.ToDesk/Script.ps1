@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.todesk.com/download.html' | Conve
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/a').InnerText,
+  $Object1.SelectSingleNode('//div[contains(@class, "win")]/section/a[@class="vinfo"]').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
@@ -17,20 +17,20 @@ try {
   $this.Logging("${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')", 'Warning')
   # Installer
   $this.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/div[1]/a').Attributes['href'].Value
+    InstallerUrl = $Object1.SelectSingleNode('//div[@class="win_download"]').Attributes['href'].Value
   }
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://update.todesk.com/windows/uplog.html' | ConvertFrom-Html
-
     try {
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row' and contains(./div[1]/div[1]/div[1], '$($this.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://update.todesk.com/windows/uplog.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row' and contains(.//div[@class='text'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode.SelectSingleNode('./div[1]/div[2]').InnerText,
+          $ReleaseNotesNode.SelectSingleNode('.//div[@class="release-date"]').InnerText,
           '(\d{4}\.\d{1,2}\.\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
@@ -38,12 +38,13 @@ switch ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('./div[2]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "release-note")]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

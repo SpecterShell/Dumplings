@@ -1,11 +1,11 @@
-$Content = Invoke-RestMethod -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
+$Object1 = Invoke-RestMethod -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
 
 # Version
-$this.CurrentState.Version = $Version = $Content.Trim()
+$this.CurrentState.Version = $Object1.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/${Version}/huaweicloud-cli-windows-amd64.zip"
+  InstallerUrl         = "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/$($this.CurrentState.Version)/huaweicloud-cli-windows-amd64.zip"
   NestedInstallerFiles = @(
     @{
       RelativeFilePath     = 'hcloud.exe'

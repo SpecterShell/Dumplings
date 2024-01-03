@@ -30,9 +30,9 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://y.qq.com/download/download.html' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://y.qq.com/download/download.html' | ConvertFrom-Html
+
       if ($Object2.SelectSingleNode('/html/body/div[2]/div[2]/ul/li[1]/h3/span').InnerText.Contains($this.CurrentState.Version)) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
@@ -43,6 +43,7 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

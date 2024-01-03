@@ -36,8 +36,8 @@ $Query = @"
   }
 }
 "@
-$Object = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{ query = $Query }
-$Branches = $Object.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes[0].state -eq 'MERGED' }).ForEach({ $_.name })
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{ query = $Query }
+$Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes[0].state -eq 'MERGED' }).ForEach({ $_.name })
 
 $this.Logging("$($Branches.Count) branch(es) in ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
 

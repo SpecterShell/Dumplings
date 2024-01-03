@@ -39,9 +39,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://brave.com/latest/' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://brave.com/latest/' | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'hero__content')]/div[./h2[@id='desktop']]/h3[contains(@id, '$(($this.CurrentState.Version.Split('.') | Select-Object -Skip 1) -join '')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
@@ -50,20 +50,21 @@ switch ($this.Check()) {
           '\((.+)\)'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        # ReleaseNotes (en-US)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'p' -and -not $Node.Attributes['id'].Value?.Contains('release-notes') ; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = ($ReleaseNotesNodes | Get-TextContent) -creplace '\(Changelog for [\d\.]+\)', '' | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -26,9 +26,9 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/div/h3[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
@@ -38,9 +38,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesTitleNode.SelectNodes('.|./following-sibling::ul[1]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

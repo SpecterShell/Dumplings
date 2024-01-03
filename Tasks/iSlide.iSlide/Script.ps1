@@ -1,7 +1,6 @@
 # Installer
-$InstallerUrl = Get-RedirectedUrl -Uri 'https://api.islide.cc/download/package/exe'
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://api.islide.cc/download/package/exe'
 }
 
 # Version

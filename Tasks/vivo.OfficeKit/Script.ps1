@@ -1,25 +1,25 @@
-$Object = Invoke-WebRequest -Uri "https://pcsuite-api.vivo.com/version/upgrade/detail/windows/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
+$Object1 = Invoke-WebRequest -Uri "https://pcsuite-api.vivo.com/version/upgrade/detail/windows/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object.files.url
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.files.url
 }
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Object.releaseData,
+  $Object1.releaseData,
   "ddd MMM dd HH:mm:ss 'CST' yyyy",
-  [cultureinfo]::GetCultureInfo('en-US')
+  (Get-Culture -Name 'en-US')
 ).ToUniversalTime()
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.releaseNotes | Format-Text
+  Value  = $Object1.releaseNotes | Format-Text
 }
 
 switch ($this.Check()) {

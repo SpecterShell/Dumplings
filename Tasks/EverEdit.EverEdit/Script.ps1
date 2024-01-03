@@ -1,30 +1,31 @@
-$Object1 = Invoke-RestMethod -Uri 'http://update.everedit.net/checkver.php' | ConvertFrom-Ini
-
-# Version
-$this.CurrentState.Version = $Version = $Object1.Version.Version
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrl1 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
+  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
 }
+$VersionX86 = [regex]::Match($InstallerUrlX86, '_(\d+)_').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
+  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
 }
+$VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d+)_').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
 
 $Identical = $true
-if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
+if ($VersionX86 -ne $VersionX64) {
   $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
+# Version
+$this.CurrentState.Version = $VersionX64
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
-
     try {
-      $ReleaseNotesNode = $Object2 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit ${Version}") }
+      $Object1 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
+
+      $ReleaseNotesNode = $Object1 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
@@ -36,16 +37,17 @@ switch ($this.Check()) {
           Value  = ($ReleaseNotesNode.content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
-    $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
-
     try {
-      $ReleaseNotesNode = $Object3 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit ${Version}") }
+      $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
+
+      $ReleaseNotesNode = $Object3 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
@@ -60,6 +62,7 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

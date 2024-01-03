@@ -1,6 +1,6 @@
-$Object = Invoke-WebRequest -Uri 'https://www.ugnas.com/download' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.ugnas.com/download' | ConvertFrom-Html
 
-$Node = $Object.SelectSingleNode('//div[contains(@class, "type1")]/div[contains(./div[5], "Windows")]')
+$Node = $Object1.SelectSingleNode('//div[contains(@class, "type1")]/div[contains(./div[5], "Windows")]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Node.SelectSingleNode('./div[2]').InnerText, 'V([\d\.]+)').Groups[1].Value

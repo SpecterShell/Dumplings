@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://qiyukf.com/download' | ConvertFrom-Ht
 $Node = $Object1.SelectSingleNode('//div[@class="m-kefu"][1]')
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Node.SelectSingleNode('./div[@class="mid"]/p').InnerText, 'v([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Version = [regex]::Match($Node.SelectSingleNode('./div[@class="mid"]/p').InnerText, 'v([\d\.]+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -16,26 +16,19 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
   '(\d{4}-\d{1,2}-\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
+if ($LocalStorage.Contains('QIYU') -and $LocalStorage['QIYU'].Contains($Version)) {
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage['QIYU'].$Version.ReleaseNotesCN
+  }
+} else {
+  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Prefix = 'http://res.qiyukf.net/qiyu-desktop/prod/'
-    $Object2 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
-
-    try {
-      if ($Object2.version -eq $this.CurrentState.Version) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.releaseNotes | Format-Text
-        }
-      } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $this.Logging($_, 'Warning')
-    }
-
     $this.Write()
   }
   ({ $_ -ge 2 }) {

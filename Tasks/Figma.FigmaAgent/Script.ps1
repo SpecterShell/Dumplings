@@ -1,11 +1,11 @@
-$Object = Invoke-RestMethod -Uri 'https://desktop.figma.com/agent/win/RELEASE.json'
+$Object1 = Invoke-RestMethod -Uri 'https://desktop.figma.com/agent/win/RELEASE.json'
 
 # Version
-$this.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.url
+  InstallerUrl = $Object1.url
 }
 
 switch ($this.Check()) {

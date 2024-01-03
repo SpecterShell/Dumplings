@@ -1,4 +1,4 @@
-$Object = Invoke-RestMethod -Uri 'https://lecloud-pc.lenovo.com/omsapi/v1/pc/upgradecheck' -Method Post -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://lecloud-pc.lenovo.com/omsapi/v1/pc/upgradecheck' -Method Post -Body (
   @{
     uuid        = (New-Guid).Guid
     pkg         = 'lecloud.pc'
@@ -9,18 +9,18 @@ $Object = Invoke-RestMethod -Uri 'https://lecloud-pc.lenovo.com/omsapi/v1/pc/upg
 )
 
 # Version
-$this.CurrentState.Version = $Object.data.versionName
+$this.CurrentState.Version = $Object1.data.versionName
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object.data.dldUrl
+  InstallerUrl = $Object1.data.dldUrl
 }
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.data.description | ConvertFrom-Html | Get-TextContent | Format-Text
+  Value  = $Object1.data.description | ConvertFrom-Html | Get-TextContent | Format-Text
 }
 
 switch ($this.Check()) {

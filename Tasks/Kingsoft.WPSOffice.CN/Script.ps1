@@ -1,15 +1,15 @@
-$Object = (Invoke-RestMethod -Uri 'https://www.wps.cn/platformUrls').productList.Where({ $_.productId -eq 58 })
+$Object1 = (Invoke-RestMethod -Uri 'https://www.wps.cn/platformUrls').productList.Where({ $_.productId -eq 58 })[0]
 
 # Version
-$this.CurrentState.Version = $Object.productVcode
+$this.CurrentState.Version = $Object1.productVcode
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.productButtonUrl
+  InstallerUrl = $Object1.productButtonUrl
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.productDisplaydate | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.productDisplaydate | Get-Date -Format 'yyyy-MM-dd'
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

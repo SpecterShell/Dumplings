@@ -1,21 +1,21 @@
-$Object = Invoke-RestMethod -Uri 'https://meeting.kdocs.cn/api/v1/app/version?os=win&app=meeting&try_get_gray=true'
+$Object1 = Invoke-RestMethod -Uri 'https://meeting.kdocs.cn/api/v1/app/version?os=win&app=meeting&try_get_gray=true'
 
 # Version
-$this.CurrentState.Version = $Object.data.version
+$this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object.data.market_url
+  InstallerUrl = $Object1.data.market_url
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data.updated_at | ConvertFrom-UnixTimeSeconds
+$this.CurrentState.ReleaseTime = $Object1.data.updated_at | ConvertFrom-UnixTimeSeconds
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object.data.content | ConvertTo-OrderedList | Format-Text
+  Value  = $Object1.data.content | ConvertTo-OrderedList | Format-Text
 }
 
 switch ($this.Check()) {

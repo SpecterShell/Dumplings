@@ -1,8 +1,8 @@
-$Object = $LocalStorage.SeewoApps['PPTServiceSetup']
+$Object1 = $LocalStorage.SeewoApps['PPTServiceSetup']
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object.softInfos[0].downloadUrl
+  InstallerUrl = $InstallerUrl = $Object1.softInfos[0].downloadUrl
 }
 
 # Version

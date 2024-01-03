@@ -4,15 +4,15 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object1 = Invoke-WebRequest -Uri 'https://flicker.cool/en/versions' | ConvertFrom-Html
-
     try {
+      $Object1 = Invoke-WebRequest -Uri 'https://flicker.cool/en/versions' | ConvertFrom-Html
+
       # ReleaseTime
       $this.CurrentState.ReleaseTime ??= $Object1.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (en-US)
       $ReleaseNotesNode = $Object1.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
@@ -22,18 +22,19 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
-    $Object2 = Invoke-WebRequest -Uri 'https://flicker.cool/versions' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://flicker.cool/versions' | ConvertFrom-Html
+
       # ReleaseTime
       $this.CurrentState.ReleaseTime ??= $Object2.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (zh-CN)
       $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
@@ -43,6 +44,7 @@ switch ($this.Check()) {
         $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

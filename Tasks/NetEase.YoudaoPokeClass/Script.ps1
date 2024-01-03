@@ -1,6 +1,6 @@
-$Object = Invoke-WebRequest -Uri 'https://xblive.youdao.com/api/v1/getConfig' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+$Object1 = Invoke-WebRequest -Uri 'https://xblive.youdao.com/api/v1/getConfig' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-$Prefix = $Object[$Object.latest.version].download
+$Prefix = $Object1[$Object1.latest.version].download
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
@@ -8,7 +8,7 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object[$Object.latest.version].versionMessage | Format-Text
+  Value  = $Object1[$Object1.latest.version].versionMessage | Format-Text
 }
 
 switch ($this.Check()) {

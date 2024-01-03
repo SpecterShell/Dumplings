@@ -5,13 +5,12 @@ $Button1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="root"]/
 [OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button1).Build().Perform()
 
 # Installer
-$InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='root']/div/div[1]/div[2]/div[2]/div/div/div/a[1]")).GetAttribute('href')
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@id='root']/div/div[1]/div[2]/div[2]/div/div/div/a[1]")).GetAttribute('href')
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '\((.+)\)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '\((\d+\.\d+\.\d+[A-Za-z]*)\)').Groups[1].Value
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

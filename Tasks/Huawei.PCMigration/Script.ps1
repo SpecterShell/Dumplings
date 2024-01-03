@@ -1,14 +1,14 @@
-$Object = Invoke-WebRequest -Uri 'https://consumer.huawei.com/cn/support/pc-clone/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://consumer.huawei.com/cn/support/pc-clone/' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('//*[@class="txt-1"]').InnerText,
+  $Object1.SelectSingleNode('//*[@class="txt-1"]').InnerText,
   'V([\d\.]+)'
 ).Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object.SelectSingleNode('//*[@class="buttoncontent"]/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="buttoncontent"]/a').Attributes['href'].Value
 }
 
 switch ($this.Check()) {

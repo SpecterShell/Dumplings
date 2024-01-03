@@ -1,11 +1,11 @@
-$Object = Invoke-WebRequest -Uri 'https://staticcdn.duckduckgo.com/windows-desktop-browser/DuckDuckGo.appinstaller' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://staticcdn.duckduckgo.com/windows-desktop-browser/DuckDuckGo.appinstaller' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
-$this.CurrentState.Version = $Object.AppInstaller.Version
+$this.CurrentState.Version = $Object1.AppInstaller.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.AppInstaller.MainBundle.Uri
+  InstallerUrl = $Object1.AppInstaller.MainBundle.Uri
 }
 
 switch ($this.Check()) {

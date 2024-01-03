@@ -1,11 +1,11 @@
-$Object = $LocalStorage.SeewoApps['SmartpenService']
+$Object1 = $LocalStorage.SeewoApps['SmartpenService']
 
 # Version
-$this.CurrentState.Version = $Object.softInfos[0].softVersion
+$this.CurrentState.Version = $Object1.softInfos[0].softVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.softInfos[0].downloadUrl
+  InstallerUrl = $Object1.softInfos[0].downloadUrl
 }
 
 switch ($this.Check()) {

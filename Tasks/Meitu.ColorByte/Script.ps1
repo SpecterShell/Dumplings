@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://close.mtlab.meitu.com/api/v1/client/latest?system=1'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.data.version
+$this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -20,16 +20,17 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-RestMethod -Uri 'https://api-compos.yunxiu.meitu.com/api/v1/client/article_category?with_article=1'
-
     try {
       $Prefix = 'https://yunxiu.meitu.com/document/daily-record'
-      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 }).articles.Where({ $_.title.StartsWith("V${Version} ") })
+
+      $Object2 = Invoke-RestMethod -Uri 'https://api-compos.yunxiu.meitu.com/api/v1/client/article_category?with_article=1'
+
+      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 })[0].articles.Where({ $_.title.StartsWith("V$($this.CurrentState.Version) ") })
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $Prefix + '?id=' + $ReleaseNotesUrlObject.id
+          Value = $Prefix + '?id=' + $ReleaseNotesUrlObject[0].id
         }
       } else {
         $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
@@ -40,6 +41,7 @@ switch ($this.Check()) {
         }
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

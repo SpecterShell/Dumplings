@@ -36,7 +36,6 @@ $this.CurrentState.Locale += [ordered]@{
   Key    = 'ReleaseNotes'
   Value  = $Object1.versionDescriptionEn | Format-Text
 }
-
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'

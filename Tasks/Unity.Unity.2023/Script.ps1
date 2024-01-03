@@ -24,19 +24,19 @@ query {
 }
 '@
 
-$Object = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges[0].node
+$Object1 = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges[0].node
 
 # Version
-$this.CurrentState.Version = $Version = $Object.version
+$this.CurrentState.Version = $Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.downloads[0].url
+  InstallerUrl = $Object1.downloads[0].url
   ProductCode  = "Unity ${Version}"
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+$this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
 
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
@@ -73,9 +73,10 @@ switch ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = (Invoke-RestMethod -Uri $Object.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = (Invoke-RestMethod -Uri $Object1.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

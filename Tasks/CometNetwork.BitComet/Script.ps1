@@ -10,41 +10,52 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/en/changelog' | ConvertFrom-Html
-    $Object3 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/cn/changelog' | ConvertFrom-Html
-
     try {
-      $ReleaseNotesTitle = $Object2.SelectSingleNode('/html/body/div/div/dl/dt[1]').InnerText
-      if ($ReleaseNotesTitle.Contains($this.CurrentState.Version)) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitle, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $Object2 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/en/changelog' | ConvertFrom-Html
 
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'changelog')]/dl/dt[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'dt'; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('/html/body/div/div/dl/dt[1]/following-sibling::dd[count(.|/html/body/div/div/dl/dt[2]/preceding-sibling::dd)=count(/html/body/div/div/dl/dt[2]/preceding-sibling::dd)]').InnerText | Format-Text | ConvertTo-UnorderedList
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
     try {
-      $ReleaseNotesTitle = $Object3.SelectSingleNode('/html/body/div/div/dl/dt[1]').InnerText
-      if ($ReleaseNotesTitle.Contains($this.CurrentState.Version)) {
-        # ReleaseNotes (zh-CN)
+      $Object3 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/cn/changelog' | ConvertFrom-Html
+
+      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'changelog')]/dl/dt[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesCNTitleNode) {
+        $ReleaseNotesCNNodes = @()
+        for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node.Name -ne 'dt'; $Node = $Node.NextSibling) {
+          $ReleaseNotesCNNodes += $Node
+        }
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectNodes('/html/body/div/div/dl/dt[1]/following-sibling::dd[count(.|/html/body/div/div/dl/dt[2]/preceding-sibling::dd)=count(/html/body/div/div/dl/dt[2]/preceding-sibling::dd)]').InnerText | Format-Text | ConvertTo-UnorderedList
+          Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

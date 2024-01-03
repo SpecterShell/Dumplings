@@ -9,17 +9,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1.main.NewsURL
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl
+  Value = $ReleaseNotesUrl = $Object1.main.NewsURL
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='content']/article/table/tbody/tr[contains(./td[1]/text(), '$([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
@@ -29,9 +28,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectSingleNode('./td[2]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

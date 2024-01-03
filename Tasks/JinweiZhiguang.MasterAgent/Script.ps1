@@ -1,7 +1,7 @@
-$Object = (Invoke-RestMethod -Uri 'https://mastergo.com/api/v1/config').data | ConvertFrom-Json
+$Object1 = (Invoke-RestMethod -Uri 'https://mastergo.com/api/v1/config').data | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object.fontWindow
+$this.CurrentState.Version = $Object1.fontWindow
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,8 +1,8 @@
-$Object = Invoke-WebRequest -Uri 'https://highrez.co.uk/downloads/xmbc_changelog.htm' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://highrez.co.uk/downloads/xmbc_changelog.htm' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('/html/body/div[2]/div/b').InnerText,
+  $Object1.SelectSingleNode('/html/body/div[2]/div/b').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
@@ -14,7 +14,7 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
   [regex]::Match(
-    $Object.SelectSingleNode('/html/body/div[2]/div/text()').InnerText,
+    $Object1.SelectSingleNode('/html/body/div[2]/div/text()').InnerText,
     '\((.+)\)'
   ).Groups[1].Value,
   # "[string[]]" is needed here to convert "array" object to string array
@@ -32,7 +32,7 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.SelectNodes('/html/body/div[2]/div/following-sibling::*') | Get-TextContent | Format-Text).Replace("`t", ' ')
+  Value  = ($Object1.SelectNodes('/html/body/div[2]/div/following-sibling::*') | Get-TextContent | Format-Text).Replace("`t", ' ')
 }
 
 switch ($this.Check()) {

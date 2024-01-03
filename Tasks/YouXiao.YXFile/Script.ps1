@@ -14,10 +14,10 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    # $Object = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxfile/log/' | ConvertFrom-Html
+    # $Object1 = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxfile/log/' | ConvertFrom-Html
 
     # try {
-    #   $ReleaseNotesTitleNode = $Object.SelectSingleNode("//*[@id='post-930']/div[2]/ul[contains(./li/text(), '$($this.CurrentState.Version)')]")
+    #   $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//*[@id='post-930']/div[2]/ul[contains(./li/text(), '$($this.CurrentState.Version)')]")
     #   if ($ReleaseNotesTitleNode) {
     #     # ReleaseTime
     #     $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -29,7 +29,7 @@ switch ($this.Check()) {
     #       Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ol[1]') | Get-TextContent | Format-Text
     #     }
     #   } else {
-    #     $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+    #     $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     #   }
     # } catch {
     #   $this.Logging($_, 'Warning')

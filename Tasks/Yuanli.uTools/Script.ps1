@@ -11,7 +11,7 @@ if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.'win-x64'.version, 'V([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.'win-x64'.version, '([\d\.]+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -25,37 +25,45 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    # ReleaseNotesUrl
-    $ReleaseNotesUrl = Get-RedirectedUrl -Uri "https://open.u-tools.cn/redirect?target=update_description&version=$($this.CurrentState.Version)"
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl
-    }
-
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
-      if ($Object2.SelectSingleNode('/html/body/h2[1]').InnerText.Contains($this.CurrentState.Version)) {
-        if ($Object2.SelectSingleNode('/html/body/h2[2]')) {
-          # ReleaseNotes (zh-CN)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
-            Key    = 'ReleaseNotes'
-            Value  = $Object2.SelectNodes('/html/body/p[1]/following-sibling::node()[count(.|/html/body/h2[2]/preceding-sibling::node())=count(/html/body/h2[2]/preceding-sibling::node())]') | Get-TextContent | Format-Text
-          }
-        } else {
-          # ReleaseNotes (zh-CN)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
-            Key    = 'ReleaseNotes'
-            Value  = $Object2.SelectNodes('/html/body/p[1]/following-sibling::*') | Get-TextContent | Format-Text
-          }
-        }
-      } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = Get-RedirectedUrl -Uri "https://open.u-tools.cn/redirect?target=update_description&version=$($this.CurrentState.Version)"
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
+      }
+    }
+
+    if ($ReleaseNotesUrl) {
+      try {
+        $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+        $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/h1[contains(text(), '$($this.CurrentState.Version)')]")
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = @()
+          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
+            $ReleaseNotesNodes += $Node
+          }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        }
+      } catch {
+        $_ | Out-Host
+        $this.Logging($_, 'Warning')
+      }
     }
 
     $this.Write()

@@ -16,27 +16,27 @@ $Param = @{
   )
   ContentType    = 'application/json; charset=utf-8'
 }
-$Object = (Invoke-RestMethod @Param).results.'PCM:AutoUpdateOptions' | ConvertFrom-Json
+$Object1 = (Invoke-RestMethod @Param).results.'PCM:AutoUpdateOptions' | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object.Version
+$this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object.DownloadLink
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.DownloadLink
 }
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
+  Value  = ($Object1.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
 }
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = ($Object.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
+  Value  = ($Object1.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
 }
 
 switch ($this.Check()) {

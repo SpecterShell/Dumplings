@@ -20,18 +20,19 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-WebRequest -Uri 'https://cran.r-project.org/bin/windows/base/').Content
-
     try {
+      $Object2 = (Invoke-WebRequest -Uri 'https://cran.r-project.org/bin/windows/base/').Content
+
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2, 'Last change: (\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
-    $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='container']/h3[contains(text(), '${Version}')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
@@ -45,9 +46,10 @@ switch ($this.Check()) {
           Value  = ($ReleaseNotesNodes | Get-TextContent).Replace("`u{2060}", '') | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

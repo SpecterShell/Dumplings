@@ -1,23 +1,13 @@
-# Download
 $Object1 = Invoke-RestMethod -Uri 'https://update-server.micloud.xiaomi.net/api/v1/releases'
-$InstallerUrl1 = $Object1.data.winx64
-$Version1 = [regex]::Match($InstallerUrl1, 'XiaomiCloud-(\d+\.\d+\.\d+)').Groups[1].Value
 
-# Upgrade
-$Prefix = 'https://cdn.cnbj1.fds.api.mi-img.com/archive/update-server/public/win32/x64/'
-$Object2 = Invoke-RestMethod -Uri "https://update-server.micloud.xiaomi.net/api/v1/latest.yml?channel=public&platform=win32&arch=x64&machine_id=$((New-Guid).Guid)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
-
-if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Object2.Version) -gt 0) {
-  $this.CurrentState = $Object2
-} else {
-  # Version
-  $this.CurrentState.Version = $Version1
-
-  # Installer
-  $this.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $InstallerUrl1
-  }
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl = $Object1.data.winx64
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'XiaomiCloud-(\d+\.\d+\.\d+)').Groups[1].Value
+
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
@@ -27,6 +17,20 @@ switch ($this.Check()) {
     $this.Message()
   }
   ({ $_ -ge 3 }) {
-    $this.Submit()
+    $ToSubmit = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiaomiCloud')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $LocalStorage.Contains("XiaomiCloudSubmitting-$($this.CurrentState.Version)")) {
+      $LocalStorage["XiaomiCloudSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToSubmit) {
+      $this.Submit()
+    } else {
+      $this.Logging('Another task is submitting manifests for this package', 'Warning')
+    }
   }
 }

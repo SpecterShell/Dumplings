@@ -1,4 +1,4 @@
-$Object = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/config/query-download-info' -Method Post -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/config/query-download-info' -Method Post -Body (
   @{
     instance = 'windows'
     type     = '1410000197'
@@ -6,15 +6,15 @@ $Object = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/confi
 )
 
 # Version
-$this.CurrentState.Version = $Object.data[0].version
+$this.CurrentState.Version = $Object1.data[0].version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Object1.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

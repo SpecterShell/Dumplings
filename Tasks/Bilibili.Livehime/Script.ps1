@@ -17,14 +17,19 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-RestMethod -Uri 'https://api.live.bilibili.com/client/v1/LiveHime/getVerList?type=3'
+    try {
+      $Object2 = Invoke-RestMethod -Uri 'https://api.live.bilibili.com/client/v1/LiveHime/getVerList?type=3'
 
-    $ReleaseNotesObject = $Object2.data.list.Where({ $_.title.Contains($this.CurrentState.Version) })
-    if ($ReleaseNotesObject) {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesObject.title, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-    } else {
-      $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      $ReleaseNotesObject = $Object2.data.list.Where({ $_.title.Contains($this.CurrentState.Version) })
+      if ($ReleaseNotesObject) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesObject[0].title, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      } else {
+        $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Logging($_, 'Warning')
     }
 
     $this.Write()

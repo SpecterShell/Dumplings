@@ -17,17 +17,18 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $EdgeDriver = Get-EdgeDriver
-    $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
-    Start-Sleep -Seconds 10
-
     try {
+      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
+      Start-Sleep -Seconds 10
+
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
         $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[contains(@class, 'zone-container')]/div[contains(@class, 'heading-h1') and contains(.//text(), '$($this.CurrentState.Version)')]")).Text,
         '(\d{4}-\d{1,2}-\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

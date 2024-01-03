@@ -17,9 +17,10 @@ $this.Config.Notes = "https://docs.posit.co/ide/desktop-pro/$($this.CurrentState
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $ReleaseNotesUrl = 'https://docs.posit.co/ide/news/'
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='quarto-document-content']/section[contains(@id, '$($this.CurrentState.Version.Split('+')[0])')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
@@ -35,16 +36,21 @@ switch ($this.Check()) {
           Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
           Value = $ReleaseNotesUrl
         }
-
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl
+      }
     }
 
     $this.Write()

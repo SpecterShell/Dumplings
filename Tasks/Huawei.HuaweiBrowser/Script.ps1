@@ -5,23 +5,24 @@ Start-Sleep -Seconds 5
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for X64"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlX64 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for X64"]')).GetAttribute('href')
 }
+$VersionX64 = [regex]::Match($InstallerUrlX64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrl2 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for ARM"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlX86 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for ARM"]')).GetAttribute('href')
 }
-
-# Version
-$this.CurrentState.Version = $Version1 = [regex]::Match($InstallerUrl1, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
-$Version2 = [regex]::Match($InstallerUrl2, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
+$VersionX86 = [regex]::Match($InstallerUrlX86, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
 $Identical = $true
-if ($Version1 -ne $Version2) {
+if ($VersionX64 -ne $VersionX86) {
   $this.Logging('Distinct versions detected', 'Warning')
   $Identical = $false
 }
+
+# Version
+$this.CurrentState.Version = $VersionX64
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

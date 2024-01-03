@@ -22,15 +22,16 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri 'https://eagle.cool/' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://eagle.cool/' | ConvertFrom-Html
+
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
         $Object2.SelectSingleNode('//*[@id="hero"]/div/div/div/div/div[3]/text()[2]').InnerText,
         '(\d{4}/\d{1,2}/\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

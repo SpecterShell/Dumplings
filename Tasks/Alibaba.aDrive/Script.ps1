@@ -1,6 +1,6 @@
-$Object = Invoke-RestMethod -Uri 'https://www.aliyundrive.com/desktop/version/update.json'
+$Object1 = Invoke-RestMethod -Uri 'https://www.aliyundrive.com/desktop/version/update.json'
 
-$this.CurrentState = Invoke-RestMethod -Uri "$($Object.url)/win32/ia32/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "$($Object1.url)/win32/ia32/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

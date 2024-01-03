@@ -1,22 +1,21 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://params.wps.com/api/map/web/newwpsapk?pttoken=newwinpackages').staticjs.website.wpsnewpackages.downloads | ConvertFrom-Base64 | ConvertFrom-Json
 
 # Installer
-$InstallerUrl = $Object1.'500.1001'.downloadurl
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object1.'500.1001'.downloadurl
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'WPSOffice_([\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc').data |
-      Where-Object -FilterScript { $_.post_excerpt.Contains($this.CurrentState.Version) }
-
     try {
-      if ($Object2) {
-        $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($Object2.more.slug)"
+      $Object2 = Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc'
+
+      $ReleaseNotesListObject = $Object2.data.Where({ $_.post_excerpt.Contains($this.CurrentState.Version) })
+      if ($ReleaseNotesListObject) {
+        $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($ReleaseNotesListObject[0].more.slug)"
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Object3.data.published_time | ConvertFrom-UnixTimeSeconds
 
@@ -30,11 +29,10 @@ switch ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = "https://www.wps.com/whatsnew$($Object2.more.slug)/"
+          Value = "https://www.wps.com/whatsnew$($ReleaseNotesListObject[0].more.slug)/"
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
-
+        $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -42,8 +40,8 @@ switch ($this.Check()) {
         }
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'

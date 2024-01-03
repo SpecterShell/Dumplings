@@ -1,19 +1,17 @@
-$Object = Invoke-RestMethod -Uri 'https://api.kirakuapp.com/auth/version/latest?appId=4&platform=0'
+$Object1 = Invoke-RestMethod -Uri 'https://api.kirakuapp.com/auth/version/latest?appId=4&platform=0'
 
 # Installer
-$InstallerUrl = $Object.data.downloadUrl | ConvertTo-UnescapedUri
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = $InstallerUrl = $Object1.data.downloadUrl | ConvertTo-UnescapedUri
 }
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\-\d+)').Groups[1].Value
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object.data.createTime | ConvertFrom-UnixTimeMilliseconds
+$this.CurrentState.ReleaseTime = $Object1.data.createTime | ConvertFrom-UnixTimeMilliseconds
 
-# ReleaseNotes (zh-CN)
-$ReleaseNotesObject = $Object.data.updateLog | ConvertFrom-Json
+$ReleaseNotesObject = $Object1.data.updateLog | ConvertFrom-Json
 $ReleaseNotesList = @()
 if ($ReleaseNotesObject.added) {
   $ReleaseNotesList += $ReleaseNotesObject.added -creplace '^', '[+ADDED] '
@@ -24,6 +22,7 @@ if ($ReleaseNotesObject.changed) {
 if ($ReleaseNotesObject.fixed) {
   $ReleaseNotesList += $ReleaseNotesObject.fixed -creplace '^', '[-FIXED] '
 }
+# ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'

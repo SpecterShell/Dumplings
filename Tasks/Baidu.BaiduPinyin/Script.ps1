@@ -16,20 +16,26 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://shurufa.baidu.com/update' | ConvertFrom-Html
-
     try {
-      if ($Object2.SelectSingleNode('//*[@id="update_body"]/div/div/div[1]/span[2]').InnerText.Contains($this.CurrentState.Version)) {
+      $Object2 = Invoke-WebRequest -Uri 'https://shurufa.baidu.com/update' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='update-item-tit' and contains(./span[@class='update-item-tit-font']/text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[@class="update-item-con"]'); -not $Node.Attributes.Contains('class') -or -not $Node.Attributes['class'].Value.Contains('update-item-tit'); $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[@class="update-item-split"][1]/following::*[@class="update-item-con"][count(.|//*[@class="update-item-tit"][2]/preceding::*[@class="update-item-con"])=count(//*[@class="update-item-tit"][2]/preceding::*[@class="update-item-con"])]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -1,11 +1,11 @@
-$Object = Invoke-RestMethod -Uri 'https://updater.prntscr.com/getver/lightshot'
+$Object1 = Invoke-RestMethod -Uri 'https://updater.prntscr.com/getver/lightshot'
 
 # Version
-$this.CurrentState.Version = $Object.update.version
+$this.CurrentState.Version = $Object1.update.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.update.installerurl | ConvertTo-Https
+  InstallerUrl = $Object1.update.installerurl | ConvertTo-Https
 }
 
 switch ($this.Check()) {

@@ -19,9 +19,9 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://input.kfsafe.cn/logs.html' | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri 'https://input.kfsafe.cn/logs.html' | ConvertFrom-Html
+
       $ReleaseNotesNode = $Object2.SelectSingleNode("/html/body/div/div[2]/div/div[contains(./h3/span[1]/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
@@ -31,9 +31,10 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectNodes('./h3/following-sibling::*').InnerText | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

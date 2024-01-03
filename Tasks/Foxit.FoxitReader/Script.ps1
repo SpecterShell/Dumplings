@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&product=Foxit-Enterprise-Reader&formId=pdf-reader-enterprise-register'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.package_info.version[0]
+$this.CurrentState.Version = $Object1.package_info.version[0]
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
@@ -25,21 +25,22 @@ switch ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
-
     try {
-      # ReleaseNotes (en-US)
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='version_${Version}_detail']")
+      $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='version_$($this.CurrentState.Version)_detail']")
       if ($ReleaseNotesNode) {
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode.SelectNodes('./*[position()>2]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

@@ -1,7 +1,7 @@
-$Content = (Invoke-RestMethod -Uri 'https://appdownload.deepl.com/windows/x64/RELEASES').Split(' ')
+$Object1 = (Invoke-RestMethod -Uri 'https://appdownload.deepl.com/windows/x64/RELEASES').Split(' ')
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Content[1], 'DeepL-([\d\.]+)-full\.nupkg').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1[1], 'DeepL-([\d\.]+)-full\.nupkg').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

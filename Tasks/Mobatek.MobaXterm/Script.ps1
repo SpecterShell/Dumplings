@@ -22,14 +22,14 @@ $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//div[@class='tight_paragrap
 $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./p').InnerText, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 if ($ReleaseNotesTitleNode) {
-  # ReleaseNotes (zh-CN)
+  # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
+    Locale = 'en-US'
     Key    = 'ReleaseNotes'
     Value  = $ReleaseNotesTitleNode.SelectNodes('./p/following-sibling::node()') | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+  $this.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

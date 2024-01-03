@@ -4,10 +4,10 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $EdgeDriver = Get-EdgeDriver
-    $EdgeDriver.Navigate().GoToUrl('https://zm.agilestudio.cn/changelog')
-
     try {
+      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver.Navigate().GoToUrl('https://zm.agilestudio.cn/changelog')
+
       $ReleaseNotesNode = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//article/div[./h1/span/text()='V$($this.CurrentState.Version.Split('.')[0, 1] -join '.')']"))
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
@@ -16,6 +16,7 @@ switch ($this.Check()) {
         Value  = $ReleaseNotesNode.FindElement([OpenQA.Selenium.By]::XPath('./ol')).Text | ConvertTo-OrderedList | Format-Text
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

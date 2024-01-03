@@ -11,19 +11,20 @@ $this.CurrentState.Installer += [ordered]@{
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $ReleaseNotesUrl = 'https://owncloud.com/changelog/desktop'
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'changelog')]/div/h1[contains(./a/text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        # ReleaseNotes (en-US)
         $ReleaseNotesNodes = @()
         for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]').NextSibling; $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
@@ -42,10 +43,16 @@ switch ($this.Check()) {
           Value = $ReleaseNotesUrl
         }
 
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl
+      }
     }
 
     $this.Write()

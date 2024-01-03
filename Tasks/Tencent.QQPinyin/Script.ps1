@@ -46,9 +46,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' })) {
-      $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
-
       try {
+        $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
+
         $ReleaseNotes = $Object3.vHistory | Where-Object -FilterScript { $_.version.Contains($this.CurrentState.Version) }
         if ($ReleaseNotes) {
           # ReleaseNotes (zh-CN)
@@ -58,7 +58,7 @@ switch ($this.Check()) {
             Value  = $ReleaseNotes.version_features | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } catch {
         $this.Logging($_, 'Warning')

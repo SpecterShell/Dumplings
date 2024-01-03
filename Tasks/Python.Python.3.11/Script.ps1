@@ -1,10 +1,10 @@
 $Prefix = 'https://www.python.org/ftp/python/'
 
-$Object = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = $Version = (
-  $Object.SelectNodes('/html/body/pre/a').ForEach({ $_.Attributes['href'].Value }) |
+  $Object1.SelectNodes('/html/body/pre/a').ForEach({ $_.Attributes['href'].Value }) |
     Select-String -Pattern '3\.11\.\d+/' -Raw |
     Sort-Object -Property $ToNatural |
     Select-Object -Last 1
@@ -63,9 +63,9 @@ switch ($this.Check()) {
         UpgradeCode    = $InstallerFileARM64 | Read-UpgradeCodeFromBurn
       })
 
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
     try {
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
       $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='python-$($Version.Replace('.', '-'))-final']")
 
       # ReleaseTime
@@ -81,6 +81,7 @@ switch ($this.Check()) {
         Value  = ($ReleaseNotesNode.SelectNodes('./p[1]/following-sibling::node()') | Get-TextContent | Format-Text).Replace('¶', '')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

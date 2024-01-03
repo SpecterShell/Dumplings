@@ -19,21 +19,22 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Object2 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
-
     try {
-      $ReleaseNotes = ($Object2.vHistory | Where-Object -FilterScript { $_.version.Contains($this.CurrentState.Version) }).version_features | Split-LineEndings
-      if ($ReleaseNotes) {
+      $Object2 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
+
+      $ReleaseNotesObject = $Object2.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) })
+      if ($ReleaseNotesObject) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotes | Select-Object -Skip 1 | Format-Text
+          Value  = $ReleaseNotesObject[0].version_features | Split-LineEndings | Select-Object -Skip 1 | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 

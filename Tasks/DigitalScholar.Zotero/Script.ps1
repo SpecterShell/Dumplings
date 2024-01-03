@@ -1,15 +1,15 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.zotero.org/download/client/update/0/0/WINNT_x86/en-US/release/update.xml'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.updates.update.version
+$this.CurrentState.Version = $Object1.updates.update.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win32&version=${Version}"
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win32&version=$($this.CurrentState.Version)"
 }
 
 # Sometimes the installer does not match the version
-if (-not $InstallerUrl.Contains($Version)) {
+if (-not $InstallerUrl.Contains($this.CurrentState.Version)) {
   $this.Logging('The installer does not match the version', 'Warning')
 
   # Version
@@ -18,11 +18,11 @@ if (-not $InstallerUrl.Contains($Version)) {
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $Uri2 = 'https://www.zotero.org/support/changelog'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
-
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[starts-with(@id, 'changes_in_$($Version.Replace('.', ''))')]")
+      $Uri2 = 'https://www.zotero.org/support/changelog'
+      $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[starts-with(@id, 'changes_in_$($this.CurrentState.Version.Replace('.', ''))')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '\((.+?)\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -31,7 +31,6 @@ switch ($this.Check()) {
         for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
-
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
@@ -45,15 +44,15 @@ switch ($this.Check()) {
           Value = $Uri2 + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
+        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
           Value = $Uri2
         }
-
-        $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
+      $_ | Out-Host
       $this.Logging($_, 'Warning')
     }
 
