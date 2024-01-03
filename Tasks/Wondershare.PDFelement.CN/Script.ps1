@@ -10,6 +10,12 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://cc-download.wondershare.cc/cbs_down/pdfelement_64bit_$($this.CurrentState.Version)_full5387.exe"
 }
 
+$ToBeSubmitted = $true
+if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
+  $this.Logging('The ProductCode needs to be updated', 'Error')
+  $ToBeSubmitted = $false
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.Write()
@@ -17,7 +23,7 @@ switch ($this.Check()) {
   ({ $_ -ge 2 }) {
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $ToBeSubmitted }) {
     $this.Submit()
   }
 }

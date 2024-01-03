@@ -24,6 +24,7 @@ $this.CurrentState.UniVer = $Object2.Product.Version.UniVer
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://yydl.yy.com/4/setup/YYSetup-$($this.CurrentState.Version)-zh-CN.exe"
+  ProductCode  = "YY$($this.CurrentState.Version.Split('.')[0])"
 }
 
 switch ($this.Check()) {

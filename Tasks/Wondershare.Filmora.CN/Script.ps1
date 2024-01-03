@@ -1,5 +1,12 @@
 $this.CurrentState = $LocalStorage.WondershareUpgradeInfo['3223']
 
+$this.CurrentState.Installer[0].AppsAndFeaturesEntries = @(
+  [ordered]@{
+    DisplayName = "万兴喵影(Build $($this.CurrentState.Version))"
+    ProductCode = '万兴喵影_is1'
+  }
+)
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl

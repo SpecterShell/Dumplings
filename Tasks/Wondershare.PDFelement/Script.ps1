@@ -12,6 +12,12 @@ $this.CurrentState.Installer = @(
   }
 )
 
+$ToBeSubmitted = $true
+if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
+  $this.Logging('The PackageIdentifier and the ProductCode need to be updated', 'Error')
+  $ToBeSubmitted = $false
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.Write()
@@ -19,7 +25,7 @@ switch ($this.Check()) {
   ({ $_ -ge 2 }) {
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  ({ $_ -ge 3 -and $ToBeSubmitted }) {
     $this.Submit()
   }
 }

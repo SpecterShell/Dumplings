@@ -25,6 +25,12 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl1
 }
 
+# ReleaseNotesUrl
+$this.CurrentState.Locale += [ordered]@{
+  Key   = 'ReleaseNotesUrl'
+  Value = "https://www.swi-prolog.org/ChangeLog?branch=stable&from=$($this.LastState.Version)&to=$($this.CurrentState.Version)"
+}
+
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $this.Write()

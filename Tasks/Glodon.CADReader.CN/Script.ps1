@@ -5,7 +5,13 @@ $this.CurrentState.Version = $Object1.body.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.body.url
+  InstallerUrl           = $Object1.body.url
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName = "CAD快速看图v$($this.CurrentState.Version)"
+      ProductCode = '{DDD659B5-6B07-4F5A-A0D3-9E8D3147E165}_is1'
+    }
+  )
 }
 
 # ReleaseNotesUrl

@@ -10,6 +10,7 @@ $this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Version, '^(\
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.SelectSingleNode('//*[@id="download"]/div/div/div[2]/div/div[1]/p/a').Attributes['href'].Value
+  ProductCode  = "IDA Freeware $($this.CurrentState.RealVersion)"
 }
 
 switch ($this.Check()) {

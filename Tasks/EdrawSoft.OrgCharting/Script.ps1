@@ -5,7 +5,15 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Version, '(\d+\.\
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://download.edrawsoft.com/cbs_down/orgchartcreator_full5373.exe'
+  InstallerUrl           = 'https://download.edrawsoft.com/cbs_down/orgchartcreator_full5373.exe'
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName   = "OrgCharting $($this.CurrentState.Version)"
+      Publisher     = 'EdrawSoft'
+      ProductCode   = 'OrgCharting_is1'
+      InstallerType = 'inno'
+    }
+  )
 }
 
 switch ($this.Check()) {

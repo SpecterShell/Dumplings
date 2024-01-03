@@ -5,7 +5,13 @@ $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.url
+  InstallerUrl           = $Object1.data.url
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName = "CADReader v$($this.CurrentState.Version)"
+      ProductCode = '{F820B3E7-90F4-4420-8C49-3B0107740927}_is1'
+    }
+  )
 }
 
 # ReleaseNotesUrl

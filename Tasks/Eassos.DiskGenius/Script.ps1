@@ -17,11 +17,23 @@ if ($Object1.version.new -ne $Object2.version.new) {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://engdownload.eassos.cn/DGEngSetup$($Object1.version.new.Replace('.','')).exe"
+  InstallerUrl           = "https://engdownload.eassos.cn/DGEngSetup$($Object1.version.new.Replace('.','')).exe"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName = "DiskGenius V$($this.CurrentState.RealVersion)"
+      ProductCode = '{2661F2FA-56A7-415D-8196-C4CB3D3ACFFE}_is1'
+    }
+  )
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = "https://download.eassos.cn/DGSetup$($Object2.version.new.Replace('.','')).exe"
+  InstallerLocale        = 'zh-CN'
+  InstallerUrl           = "https://download.eassos.cn/DGSetup$($Object2.version.new.Replace('.','')).exe"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName = "DiskGenius V$($this.CurrentState.RealVersion)"
+      ProductCode = '{6F458B5F-B99E-43E0-8E08-FF9326130BD7}_is1'
+    }
+  )
 }
 
 # ReleaseNotes (en-US)

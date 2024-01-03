@@ -2,7 +2,13 @@ $this.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 619 -Version '4.
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/dvd-creator_$($this.CurrentState.Version)_full619.exe"
+  InstallerUrl           = "https://download.wondershare.com/cbs_down/dvd-creator_$($this.CurrentState.Version)_full619.exe"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayName = "Wondershare DVD Creator(Build $($this.CurrentState.Version))"
+      ProductCode = 'Wondershare DVD Creator_is1'
+    }
+  )
 }
 
 switch ($this.Check()) {
