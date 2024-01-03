@@ -12,7 +12,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0] + '.0.
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = 'https://static.frdic.com/pkg/dhsetup.zip'
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = 'dhsetup.exe'
     }
   )

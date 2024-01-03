@@ -30,7 +30,9 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $OldReleaseNotes[$this.CurrentState.Version] = @{ ReleaseTime = $this.CurrentState.ReleaseTime }
+    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+      ReleaseTime = $this.CurrentState.ReleaseTime
+    }
     if (-not $this.Preference.NoWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
     }

@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.SelectSingleNode('//*[@id="m346i0"]').Attributes['href'].Value | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = 'AxMath_Setup_Win.exe'
     }
   )

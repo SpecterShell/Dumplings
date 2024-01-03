@@ -12,7 +12,7 @@ $this.CurrentState.RealVersion = "$($Object1.version.Split('.')[0]).0.0.0"
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = 'https://static.frdic.com/pkg/eudic_win.zip'
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = 'eudic_win.exe'
     }
   )

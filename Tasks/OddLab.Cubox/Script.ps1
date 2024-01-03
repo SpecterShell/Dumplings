@@ -14,7 +14,7 @@ if ($Object1.version -ne $Object2.version) {
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = "Cubox_$($this.CurrentState.Version)_x64_en-US.msi"
     }
   )
@@ -23,7 +23,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerLocale      = 'zh-CN'
   InstallerUrl         = $Object2.platforms.'windows-x86_64'.url
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = "Cubox_$($this.CurrentState.Version)_x64_zh-CN.msi"
     }
   )

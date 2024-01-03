@@ -40,28 +40,34 @@ switch ($this.Check()) {
     $RealVersion = $InstallerFileX64 | Read-ProductVersionFromExe
 
     $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX86 -Algorithm SHA256).Hash
-    $InstallerX86['AppsAndFeaturesEntries'] = @(@{
+    $InstallerX86['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
         DisplayName    = "Python ${Version} (32-bit)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerX86['ProductCode'] = $InstallerFileX86 | Read-ProductCodeFromBurn
         UpgradeCode    = $InstallerFileX86 | Read-UpgradeCodeFromBurn
-      })
+      }
+    )
 
     $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
-    $InstallerX64['AppsAndFeaturesEntries'] = @(@{
+    $InstallerX64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
         DisplayName    = "Python ${Version} (64-bit)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerX64['ProductCode'] = $InstallerFileX64 | Read-ProductCodeFromBurn
         UpgradeCode    = $InstallerFileX64 | Read-UpgradeCodeFromBurn
-      })
+      }
+    )
 
     $InstallerARM64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileARM64 -Algorithm SHA256).Hash
-    $InstallerARM64['AppsAndFeaturesEntries'] = @(@{
+    $InstallerARM64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
         DisplayName    = "Python ${Version} (ARM64)"
         DisplayVersion = $RealVersion
         ProductCode    = $InstallerARM64['ProductCode'] = $InstallerFileARM64 | Read-ProductCodeFromBurn
         UpgradeCode    = $InstallerFileARM64 | Read-UpgradeCodeFromBurn
-      })
+      }
+    )
 
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html

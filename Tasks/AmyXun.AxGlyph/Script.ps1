@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.SelectSingleNode('//*[@id="m346i1"]').Attributes['href'].Value | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = 'AxGlyph_Setup_Win.exe'
     }
   )

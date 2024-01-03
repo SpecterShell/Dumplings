@@ -9,7 +9,7 @@ $this.CurrentState = Invoke-RestMethod -Uri 'https://im.dingtalk.com/manifest/dt
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $OldReleaseNotes[$this.CurrentState.Version] = @{
+    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }
     if (-not $this.Preference.NoWrite) {

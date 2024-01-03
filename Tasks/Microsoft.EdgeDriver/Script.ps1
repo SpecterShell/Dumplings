@@ -8,7 +8,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_win32.zip"
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath     = 'msedgedriver.exe'
       PortableCommandAlias = 'msedgedriver'
     }
@@ -18,7 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_win64.zip"
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath     = 'msedgedriver.exe'
       PortableCommandAlias = 'msedgedriver'
     }
@@ -28,7 +28,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'arm64'
   InstallerUrl         = "https://msedgedriver.azureedge.net/$($this.CurrentState.Version)/edgedriver_arm64.zip"
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath     = 'msedgedriver.exe'
       PortableCommandAlias = 'msedgedriver'
     }

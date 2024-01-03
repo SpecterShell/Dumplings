@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.SelectSingleNode('//*[@id="off-canvas-wrap"]/div/div/div[2]/section[1]/div[2]/div[2]/a').Attributes['href'].Value
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = "MobaXterm_installer_$($this.CurrentState.Version).msi"
     }
   )

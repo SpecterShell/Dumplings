@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $InstallerUrl1 = $Object1.SelectSingleNode('//*[@class="carousel-centered"]/a[contains(./text(), "Win32")]').Attributes['href'].Value
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = (Split-Path -Path $InstallerUrl1 -Leaf) -creplace '\.zip$', '.exe'
     }
   )
@@ -20,7 +20,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $InstallerUrl2 = $Object1.SelectSingleNode('//*[@class="carousel-centered"]/a[contains(./text(), "Win64")]').Attributes['href'].Value
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath = (Split-Path -Path $InstallerUrl2 -Leaf) -creplace '\.zip$', '.exe'
     }
   )
