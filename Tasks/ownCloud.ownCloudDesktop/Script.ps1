@@ -10,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    $ReleaseNotesUrl = 'https://owncloud.com/changelog/desktop'
+    $ReleaseNotesUrl = 'https://owncloud.com/changelog/desktop/'
 
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -34,7 +34,7 @@ switch ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\s\-]+', '' -creplace '\s+', '-').ToLower()
         }
       } else {
         # ReleaseNotesUrl
