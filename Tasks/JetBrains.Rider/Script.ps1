@@ -1,28 +1,30 @@
-$Object1 = $LocalStorage.JetBrainsApps.GO.eap
+$Object1 = $LocalStorage.JetBrainsApps.RD.release
 
 # Version
-$this.CurrentState.Version = $Object1.build
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "GoLand $($Object1.build)"
+  ProductCode            = "JetBrains Rider $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "GoLand $($Object1.build)"
-      ProductCode = "GoLand $($Object1.build)"
+      DisplayName    = "JetBrains Rider $($this.CurrentState.Version)"
+      DisplayVersion = $Object1.build
+      ProductCode    = "JetBrains Rider $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "GoLand $($Object1.build)"
+  ProductCode            = "JetBrains Rider $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "GoLand $($Object1.build)"
-      ProductCode = "GoLand $($Object1.build)"
+      DisplayName    = "JetBrains Rider $($this.CurrentState.Version)"
+      DisplayVersion = $Object1.build
+      ProductCode    = "JetBrains Rider $($this.CurrentState.Version)"
     }
   )
 }
@@ -51,12 +53,12 @@ if ($Object1.notesLink) {
   # ReleaseNotesUrl
   $this.CurrentState.Locale += [ordered]@{
     Key   = 'ReleaseNotesUrl'
-    Value = 'https://www.jetbrains.com/go/whatsnew/'
+    Value = 'https://www.jetbrains.com/rider/whatsnew/'
   }
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotesUrl'
-    Value  = 'https://www.jetbrains.com/zh-cn/go/whatsnew/'
+    Value  = 'https://www.jetbrains.com/zh-cn/rider/whatsnew/'
   }
 }
 

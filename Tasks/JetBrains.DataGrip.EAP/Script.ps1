@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.JetBrainsApps.GO.eap
+$Object1 = $LocalStorage.JetBrainsApps.DG.eap
 
 # Version
 $this.CurrentState.Version = $Object1.build
@@ -7,22 +7,22 @@ $this.CurrentState.Version = $Object1.build
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "GoLand $($Object1.build)"
+  ProductCode            = "DataGrip $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "GoLand $($Object1.build)"
-      ProductCode = "GoLand $($Object1.build)"
+      DisplayName = "DataGrip $($Object1.build)"
+      ProductCode = "DataGrip $($Object1.build)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "GoLand $($Object1.build)"
+  ProductCode            = "DataGrip $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "GoLand $($Object1.build)"
-      ProductCode = "GoLand $($Object1.build)"
+      DisplayName = "DataGrip $($Object1.build)"
+      ProductCode = "DataGrip $($Object1.build)"
     }
   )
 }
@@ -51,12 +51,12 @@ if ($Object1.notesLink) {
   # ReleaseNotesUrl
   $this.CurrentState.Locale += [ordered]@{
     Key   = 'ReleaseNotesUrl'
-    Value = 'https://www.jetbrains.com/go/whatsnew/'
+    Value = 'https://www.jetbrains.com/datagrip/whatsnew/'
   }
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotesUrl'
-    Value  = 'https://www.jetbrains.com/zh-cn/go/whatsnew/'
+    Value  = 'https://www.jetbrains.com/zh-cn/datagrip/whatsnew/'
   }
 }
 

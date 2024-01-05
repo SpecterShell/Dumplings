@@ -43,10 +43,23 @@ if ($Object1.whatsnew) {
   $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object1.notesLink
+if ($Object1.notesLink) {
+  # ReleaseNotesUrl
+  $this.CurrentState.Locale += [ordered]@{
+    Key   = 'ReleaseNotesUrl'
+    Value = $Object1.notesLink
+  }
+} else {
+  # ReleaseNotesUrl
+  $this.CurrentState.Locale += [ordered]@{
+    Key   = 'ReleaseNotesUrl'
+    Value = 'https://www.jetbrains.com/pycharm/whatsnew/'
+  }
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotesUrl'
+    Value  = 'https://www.jetbrains.com/zh-cn/pycharm/whatsnew/'
+  }
 }
 
 switch ($this.Check()) {
