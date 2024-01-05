@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.JetBrainsApps.PCC.eap
+$Object1 = $LocalStorage.JetBrainsApps.QA.preview
 
 # Version
 $this.CurrentState.Version = $Object1.build
@@ -7,22 +7,22 @@ $this.CurrentState.Version = $Object1.build
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "PyCharm Community Edition $($Object1.build)"
+  ProductCode            = "Aqua $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "PyCharm Community Edition $($Object1.build)"
-      ProductCode = "PyCharm Community Edition $($Object1.build)"
+      DisplayName = "Aqua $($this.CurrentState.Version)"
+      ProductCode = "Aqua $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "PyCharm Community Edition $($Object1.build)"
+  ProductCode            = "Aqua $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "PyCharm Community Edition $($Object1.build)"
-      ProductCode = "PyCharm Community Edition $($Object1.build)"
+      DisplayName = "Aqua $($this.CurrentState.Version)"
+      ProductCode = "Aqua $($this.CurrentState.Version)"
     }
   )
 }

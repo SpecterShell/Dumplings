@@ -10,8 +10,8 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   ProductCode            = "IntelliJ IDEA Community Edition $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.build)"
-      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.build)"
+      DisplayName = "IntelliJ IDEA Community Edition $($Object1.build)"
+      ProductCode = "IntelliJ IDEA Community Edition $($Object1.build)"
     }
   )
 }
@@ -21,8 +21,8 @@ $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   ProductCode            = "IntelliJ IDEA Community Edition $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.build)"
-      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.build)"
+      DisplayName = "IntelliJ IDEA Community Edition $($Object1.build)"
+      ProductCode = "IntelliJ IDEA Community Edition $($Object1.build)"
     }
   )
 }
@@ -30,11 +30,15 @@ $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.whatsnew | ConvertFrom-Html | Get-TextContent | Format-Text
+if ($Object1.whatsnew) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.whatsnew | ConvertFrom-Html | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl

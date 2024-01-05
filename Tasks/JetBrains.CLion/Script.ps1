@@ -1,28 +1,30 @@
-$Object1 = $LocalStorage.JetBrainsApps.PCC.eap
+$Object1 = $LocalStorage.JetBrainsApps.CL.release
 
 # Version
-$this.CurrentState.Version = $Object1.build
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "PyCharm Community Edition $($Object1.build)"
+  ProductCode            = "CLion $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "PyCharm Community Edition $($Object1.build)"
-      ProductCode = "PyCharm Community Edition $($Object1.build)"
+      DisplayName    = "CLion $($this.CurrentState.Version)"
+      DisplayVersion = $Object1.build
+      ProductCode    = "CLion $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "PyCharm Community Edition $($Object1.build)"
+  ProductCode            = "CLion $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "PyCharm Community Edition $($Object1.build)"
-      ProductCode = "PyCharm Community Edition $($Object1.build)"
+      DisplayName    = "CLion $($this.CurrentState.Version)"
+      DisplayVersion = $Object1.build
+      ProductCode    = "CLion $($this.CurrentState.Version)"
     }
   )
 }
