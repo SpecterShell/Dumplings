@@ -1,11 +1,17 @@
 $LocalStorage['JetBrainsApps'] = [ordered]@{}
 
-foreach ($Type in $this.Config.Products.GetEnumerator()) {
-  $Object1 = Invoke-RestMethod -Uri "https://data.services.jetbrains.com/products/releases?latest=true&type=$($Type.Name)&code=$($Type.Value -join '&code=')"
-  foreach ($Code in $Type.Value) {
-    if (-not $LocalStorage.JetBrainsApps.Contains($Code)) {
-      $LocalStorage.JetBrainsApps[$Code] = [ordered]@{}
+$this.Config.Products.GetEnumerator() |
+  # Map
+  ForEach-Object -Process { foreach ($Type in $_.Value) { @{ Code = $_.Name; Type = $Type } } } |
+  # Shuffle
+  Group-Object -Property { $_.Type } |
+  # Reduce
+  ForEach-Object -Process {
+    $Object1 = Invoke-RestMethod -Uri "https://data.services.jetbrains.com/products/releases?latest=true&type=$($_.Name)&code=$($_.Group.Code -join '&code=')"
+    foreach ($Code in $_.Group.Code) {
+      if (-not $LocalStorage.JetBrainsApps.Contains($Code)) {
+        $LocalStorage.JetBrainsApps[$Code] = [ordered]@{}
+      }
+      $LocalStorage.JetBrainsApps.$Code[$_.Name] = $Object1.$Code[0]
     }
-    $LocalStorage.JetBrainsApps.$Code[$Type.Name] = $Object1.$Code[0]
   }
-}
