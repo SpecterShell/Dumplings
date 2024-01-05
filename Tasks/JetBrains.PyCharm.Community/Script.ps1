@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.JetBrainsApps.IIC.release
+$Object1 = $LocalStorage.JetBrainsApps.PCC.release
 
 # Version
 $this.CurrentState.Version = $Object1.version
@@ -7,24 +7,24 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+  ProductCode            = "PyCharm Community Edition $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+      DisplayName    = "PyCharm Community Edition $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+      ProductCode    = "PyCharm Community Edition $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+  ProductCode            = "PyCharm Community Edition $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+      DisplayName    = "PyCharm Community Edition $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "IntelliJ IDEA Community Edition $($this.CurrentState.Version)"
+      ProductCode    = "PyCharm Community Edition $($this.CurrentState.Version)"
     }
   )
 }

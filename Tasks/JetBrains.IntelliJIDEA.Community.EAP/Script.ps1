@@ -1,55 +1,53 @@
-$Object1 = Invoke-RestMethod -Uri 'https://data.services.jetbrains.com/products/releases?latest=true&type=eap&code=IIC'
+$Object1 = $LocalStorage.JetBrainsApps.IIC.eap
 
 # Version
-$this.CurrentState.Version = $Object1.IIC[0].build
+$this.CurrentState.Version = $Object1.build
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
-  InstallerUrl           = $Object1.IIC[0].downloads.windows.link
-  ProductCode            = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
+  InstallerUrl           = $Object1.downloads.windows.link
+  ProductCode            = "IntelliJ IDEA Community Edition $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
-      DisplayVersion = $Object1.IIC[0].build
-      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
+      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.build)"
+      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.build)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
-  InstallerUrl           = $Object1.IIC[0].downloads.windowsARM64.link
-  ProductCode            = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
+  InstallerUrl           = $Object1.downloads.windowsARM64.link
+  ProductCode            = "IntelliJ IDEA Community Edition $($Object1.build)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
-      DisplayVersion = $Object1.IIC[0].build
-      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.IIC[0].build)"
+      DisplayName    = "IntelliJ IDEA Community Edition $($Object1.build)"
+      ProductCode    = "IntelliJ IDEA Community Edition $($Object1.build)"
     }
   )
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.IIC[0].date | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.IIC[0].whatsnew | ConvertFrom-Html | Get-TextContent | Format-Text
+  Value  = $Object1.whatsnew | ConvertFrom-Html | Get-TextContent | Format-Text
 }
 
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $Object1.IIC[0].notesLink
+  Value = $Object1.notesLink
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.IIC[0].downloads.windows.checksumLink).Split()[0].ToUpper()
-    $InstallerARM64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.IIC[0].downloads.windowsARM64.checksumLink).Split()[0].ToUpper()
+    $InstallerX64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windows.checksumLink).Split()[0].ToUpper()
+    $InstallerARM64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsARM64.checksumLink).Split()[0].ToUpper()
 
     $this.Write()
   }
