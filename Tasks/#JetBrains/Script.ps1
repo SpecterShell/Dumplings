@@ -7,7 +7,7 @@ $this.Config.Products.GetEnumerator() |
   Group-Object -Property { $_.Type } |
   # Reduce
   ForEach-Object -Process {
-    $Object1 = Invoke-RestMethod -Uri "https://data.services.jetbrains.com/products/releases?latest=true&type=$($_.Name)&code=$($_.Group.Code -join '&code=')"
+    $Object1 = Invoke-RestMethod -Uri "https://data.services.jetbrains.com/products/releases?latest=true&type=$($_.Name)&code=$($_.Group.Code -join ',')"
     foreach ($Code in $_.Group.Code) {
       if (-not $LocalStorage.JetBrainsApps.Contains($Code)) {
         $LocalStorage.JetBrainsApps[$Code] = [ordered]@{}
