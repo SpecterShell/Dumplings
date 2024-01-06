@@ -3,7 +3,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $InstallerUrl = Get-RedirectedUrl -Uri 'https://mid.zineapi.com/to/get-lattics/win-installer-x64'
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = (Split-Path -Path $InstallerUrl -Leaf) -creplace '\.zip$', '.exe'
+      RelativeFilePath = (Split-Path -Path $InstallerUrl -Leaf) -creplace '\.zip$', ''
     }
   )
 }
