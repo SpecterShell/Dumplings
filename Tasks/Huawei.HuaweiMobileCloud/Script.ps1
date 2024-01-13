@@ -73,10 +73,15 @@ switch ($this.Check()) {
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'en-US'.text.value | Format-Text
       }
-
-      # ReleaseNotes (zh-CN)
+      # ReleaseNotes (zh-Hans)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
+        Locale = 'zh-Hans'
+        Key    = 'ReleaseNotes'
+        Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
+      }
+      # ReleaseNotes (zh-Hans-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-Hans-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
       }
