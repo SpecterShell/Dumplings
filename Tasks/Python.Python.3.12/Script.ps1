@@ -76,7 +76,7 @@ switch ($this.Check()) {
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
-        $ReleaseNotesNode.SelectSingleNode('./p[1]/em').InnerText,
+        $ReleaseNotesNode.SelectSingleNode('./p[1]//text()').InnerText,
         '(\d{4}-\d{1,2}-\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
