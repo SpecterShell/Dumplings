@@ -1,3 +1,8 @@
+# Version 3.2.1:
+
+- Create your ideal writing environment: support switching theme colors. Choose from 8 designed styles.
+- Some minor improvements and bugs fixed.
+
 # Version 3.1.1:
 
 - Appearance (dark/light mode) supports 'Match System'.
