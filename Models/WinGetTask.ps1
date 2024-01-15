@@ -311,7 +311,7 @@ class WinGetTask {
       } else {
         $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' $UpstreamRepo 'manifests' -Resolve
       }
-      $OutFolder = (New-Item -Path $Global:LocalCache -Name $PackageIdentifier -ItemType Directory -Force).FullName
+      $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
 
       # Check if there are existing pull requests in the upstream repository
       $this.Logging('Checking existing pull requests', 'Verbose')
