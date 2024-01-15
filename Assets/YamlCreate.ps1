@@ -836,7 +836,7 @@ Function Write-ManifestContent {
       "# yaml-language-server: `$schema=$Schema"
       ''
       # This regex looks for lines with the special character ⍰ and comments them out
-      $(ConvertTo-Yaml $YamlContent).TrimEnd() -replace "(.*) $([char]0x2370)", "# `$1"
+      $(ConvertTo-Yaml $YamlContent -Options DisableAliases).TrimEnd() -replace "(.*) $([char]0x2370)", "# `$1"
     ), $Utf8NoBomEncoding)
 
   Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Yaml file created: ${FilePath}" -Level Verbose
