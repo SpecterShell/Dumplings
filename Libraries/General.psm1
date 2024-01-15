@@ -704,6 +704,94 @@ function Read-ProductVersionFromMsi {
   # }
 }
 
+function Read-ProductCodeFromMsi {
+  <#
+  .SYNOPSIS
+    Read the ProductCode property of the MSI file
+  .PARAMETER Path
+    The path to the MSI file
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'The path to the MSI file'
+    )]
+    [string]
+    $Path
+  )
+
+  begin {
+    $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
+  }
+
+  process {
+    $Database = $WindowsInstaller.OpenDatabase($Path, 0)
+    $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='ProductCode'")
+    $View.Execute() | Out-Null
+    $Record = $View.Fetch()
+    Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
+  }
+
+  end {
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+    [System.GC]::Collect()
+    [System.GC]::WaitForPendingFinalizers()
+  }
+
+  # clean {
+  #   [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+  #   [System.GC]::Collect()
+  #   [System.GC]::WaitForPendingFinalizers()
+  # }
+}
+
+function Read-UpgradeCodeFromMsi {
+  <#
+  .SYNOPSIS
+    Read the UpgradeCode property of the MSI file
+  .PARAMETER Path
+    The path to the MSI file
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(
+      Mandatory, ValueFromPipeline,
+      HelpMessage = 'The path to the MSI file'
+    )]
+    [string]
+    $Path
+  )
+
+  begin {
+    $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
+  }
+
+  process {
+    $Database = $WindowsInstaller.OpenDatabase($Path, 0)
+    $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='UpgradeCode'")
+    $View.Execute() | Out-Null
+    $Record = $View.Fetch()
+    Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
+  }
+
+  end {
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+    [System.GC]::Collect()
+    [System.GC]::WaitForPendingFinalizers()
+  }
+
+  # clean {
+  #   [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+  #   [System.GC]::Collect()
+  #   [System.GC]::WaitForPendingFinalizers()
+  # }
+}
+
 function Read-ProductCodeFromBurn {
   <#
   .SYNOPSIS
