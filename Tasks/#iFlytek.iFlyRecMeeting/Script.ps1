@@ -25,13 +25,13 @@ $this.CurrentState.Version = $Object1.biz.latestVersion
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.biz.latestVersionInfo.Split('&')[0] | Format-Text
+  Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo.Split('&')[0] | Format-Text
 }
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
+  Value  = $ReleaseNotesEN = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
 }
 
 switch ($this.Check()) {
