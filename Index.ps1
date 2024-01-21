@@ -147,11 +147,15 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 
   # Split the tasks equally for each worker
   $Index = (0..(($TaskNames).Count - 1)).Where({ ($_ % $ThrottleLimit) -eq $WorkerID })
-  $FilteredTaskNames = (($TaskNames)[$Index])
+  $SubTaskNames = ($TaskNames)[$Index]
 
-  # Load tasks
-  $Tasks = @()
-  foreach ($TaskName in $FilteredTaskNames) {
+  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m $($SubTaskNames.Count) to run"
+
+  # Build and run tasks
+  for ($i = 0; $i -lt $SubTaskNames.Count; $i++) {
+    $TaskName = $SubTaskNames[$i]
+
+    # Build task
     try {
       $TaskPath = Join-Path $Path $TaskName -Resolve
       $TaskConfig = Join-Path $TaskPath 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
@@ -161,21 +165,18 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
         Config     = $TaskConfig
         Preference = $Params
       }
-      $Tasks += $Task
     } catch {
       Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
       $_ | Out-Host
+      continue
     }
-  }
-  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
-  # Invoke tasks
-  for ($i = 0; $i -lt $Tasks.Count; $i++) {
+    # Run task
     try {
-      Write-Progress -Activity "DumplingsWok${WorkerID}" -Id $WorkerID -PercentComplete ($i / $Tasks.Count * 100) -Status $Tasks[$i].Name
-      $Tasks[$i].Invoke()
+      Write-Progress -Activity "DumplingsWok${WorkerID}" -Id $WorkerID -PercentComplete ($i / $SubTaskNames.Count * 100) -Status $TaskName
+      $Task.Invoke()
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for $($Tasks[$i].Name):" -Level Error
+      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for ${TaskName}:" -Level Error
       $_ | Out-Host
     }
   }
