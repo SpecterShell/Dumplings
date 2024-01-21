@@ -1,108 +1,56 @@
 #Requires -Version 7
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultParameterValues', Justification = 'Shared across scripts')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultParameterValues', Justification = 'This variable is shared across scripts')]
 
 <#
 .SYNOPSIS
-  A script to build and run tasks, in single-thread mode or in concurrent mode
+  A bootstrapping script to build and run tasks, in either single-thread mode or multi-threads mode
 .PARAMETER Name
-  The name of the tasks to run. Leave blank to run all tasks
+  The names of the tasks to run. Leave blank to run all tasks
 .PARAMETER Path
-  The path containing tasks
-.PARAMETER NoSkip
-  Do not skip tasks even if they are meant to be skipped
-.PARAMETER NoCheck
-  Skip checking state
-.PARAMETER NoWrite
-  Skip writing current state to files
-.PARAMETER NoMessage
-  Skip sending messages
-.PARAMETER NoSubmit
-  Skip submitting manifests
+  The path to the folder containing the task files
 .PARAMETER ThrottleLimit
-  The number of workers for running tasks concurrently
+  The number of workers used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode
+.PARAMETER Params
+  Additional parameters to be passed to the model instances
 .EXAMPLE
   .\Index.ps1
-  Run all tasks
+  Run all the tasks in the default directory (The 'Tasks' folder in the same directory as the script)
 .EXAMPLE
   .\Index.ps1 -Name 'A', 'B'
-  Run tasks "A" and "B" only
+  Run tasks "A" and "B" in the default directory
 .EXAMPLE
-  .\Index.ps1 -NoSkip -NoCheck -NoWrite -NoMessage -NoSubmit -Name 'A', 'B'
-  Run tasks "A" and "B" only forcibly, skipping checking state, writing state, sending messages and submitting manifests
+  .\Index.ps1 -Name 'A', 'B' -Path '/path/to/another/folder'
+  Run tasks "A" and "B" in another directory
+.EXAMPLE
+  .\Index.ps1 -Name 'A', 'B' -ThrottleLimit 1
+  Run tasks "A" and "B" in the default directory under single-thread mode
 #>
 [CmdletBinding()]
 param (
-  [Parameter(
-    ValueFromPipeline, Position = 0,
-    HelpMessage = 'The name of the tasks to run. Leave blank to run all tasks'
-  )]
+  [Parameter(Position = 0, ValueFromPipeline, HelpMessage = 'The names of the tasks to run. Leave blank to run all tasks')]
   [ArgumentCompleter({ Get-ChildItem -Path ($args[4].Path ?? (Join-Path $PSScriptRoot 'Tasks')) -Include "$($args[2])*" -Recurse -Directory | Select-Object -ExpandProperty 'Name' })]
   [string[]]
   $Name,
 
-  [Parameter(
-    Position = 1,
-    HelpMessage = 'The path containing tasks'
-  )]
+  [Parameter(Position = 1, HelpMessage = 'The path to the folder containing the task files')]
   [string]
   $Path = (Join-Path $PSScriptRoot 'Tasks'),
 
-  [Parameter(
-    Position = 2,
-    HelpMessage = 'Do not skip tasks even if they are meant to be skipped'
-  )]
-  [switch]
-  $NoSkip = $false,
-
-  [Parameter(
-    Position = 3,
-    HelpMessage = 'Skip checking state'
-  )]
-  [switch]
-  $NoCheck = $false,
-
-  [Parameter(
-    Position = 4,
-    HelpMessage = 'Skip writing current state to files'
-  )]
-  [switch]
-  $NoWrite = $false,
-
-  [Parameter(
-    Position = 5,
-    HelpMessage = 'Skip sending messages'
-  )]
-  [switch]
-  $NoMessage = $false,
-
-  [Parameter(
-    Position = 6,
-    HelpMessage = 'Skip submitting manifests'
-  )]
-  [switch]
-  $NoSubmit = $false,
-
-  [Parameter(
-    Position = 7,
-    HelpMessage = 'The number of workers for running tasks concurrently'
-  )]
+  [Parameter(Position = 2, HelpMessage = 'The number of workers used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode')]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
-  [int]
+  [ushort]
   $ThrottleLimit = 3,
 
-  [Parameter(
-    DontShow, Position = 8,
-    HelpMessage = 'Tell the script it is running in a sub thread to skip some regions'
-  )]
+  [Parameter(Position = 3, DontShow, HelpMessage = 'Tell the script if it is running in a sub-thread to skip some regions')]
   [switch]
   $Parallel = $false,
 
-  [Parameter(
-    DontShow, Position = 9,
-    HelpMessage = 'Tell the script which thread it is in'
-  )]
-  [int]
-  $WokID = 0
+  [Parameter(Position = 4, DontShow, HelpMessage = 'The ID of the thread')]
+  [ushort]
+  $WorkerID = 0,
+
+  [Parameter(Position = 5, ValueFromRemainingArguments, HelpMessage = 'Additional parameters to be passed to the model instances')]
+  $Params = (Join-Path $PSScriptRoot 'Tasks')
 )
 
 # Enable strict mode to avoid non-existent or empty properties from the API
@@ -123,6 +71,9 @@ $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
   'Invoke-RestMethod:RetryIntervalSec'  = 5
 }
 
+# Set the PowerShell modules to be installed and imported
+$DumplingsPowerShellModules = @('PowerHTML', 'powershell-yaml')
+
 if (-not $Parallel) {
   # Set console input and output encoding to UTF-8
   $OldOutputEncoding = [System.Console]::OutputEncoding
@@ -130,12 +81,12 @@ if (-not $Parallel) {
   [System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(65001)
   [System.Console]::InputEncoding = [System.Text.Encoding]::GetEncoding(65001)
 
-  # Remove related jobs to avoid conflicts
+  # Remove old jobs to avoid conflicts
   Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
 
   # Install and import required PowerShell modules
   $InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
-  @('PowerHTML', 'powershell-yaml') | ForEach-Object -Process {
+  $DumplingsPowerShellModules | ForEach-Object -Process {
     if ($InstalledModulesNames -notcontains $_) {
       Write-Host -Object "`e[1mDumplings:`e[22m Installing PowerShell module ${_}"
       Install-Package -Name $_ -Source PSGallery -ProviderName PowerShellGet -Force | Out-Null
@@ -146,7 +97,7 @@ if (-not $Parallel) {
   # Import libraries
   Join-Path $PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
 
-  # Queue tasks to load
+  # Queue the tasks to load
   $TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
   Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
 
@@ -157,27 +108,27 @@ if (-not $Parallel) {
   $Global:LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
   Get-ChildItem $LocalCache | Remove-Item -Recurse -Force
 
-  # Start multiple threads jobs and run tasks in them if the limit is greater than 1, otherwise run tasks in current thread
+  # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {
-    # ThreadJob has the default number of concurrent threads of 5
+    # The default number of maximum concurrent threads of ThreadJob is 5. Increase it if necessary
     if ($ThrottleLimit -gt 5) {
-      # Run Start-ThreadJob once to set the throttle limit
+      # Run Start-ThreadJob once to increase the throttle limit
       Start-ThreadJob -ScriptBlock {} -ThrottleLimit $ThrottleLimit | Wait-Job | Out-Null
     }
 
     Write-Log -Object "`e[1mDumplings:`e[22m Starting ${ThrottleLimit} thread jobs"
 
-    # Run the script itself in parallel mode multiple times
+    # Re-run this script in sub-threads
     $Jobs = @()
     foreach ($i in 0..($ThrottleLimit - 1)) {
       $Jobs += Start-ThreadJob -FilePath $MyInvocation.MyCommand.Definition -Name "DumplingsWok${i}" -StreamingHost $Host -ArgumentList @(
-        $Name, $Path, $NoSkip, $NoCheck, $NoWrite, $NoMessage, $NoSubmit, $ThrottleLimit, $true, $i
+        $Name, $Path, $ThrottleLimit, $true, $i, $Params
       )
     }
   }
 }
 
-# Run tasks in thread jobs if the limit is greater than 1, otherwise run tasks in current thread
+# Run tasks in sub-threads if the number of workers is greater than 1, otherwise run tasks in current thread
 if ($Parallel -or $ThrottleLimit -eq 1) {
   # Set up parameters
   $ScriptRoot = $Parallel ? $using:PSScriptRoot : $PSScriptRoot
@@ -193,49 +144,43 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   # Import models
   Join-Path $ScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
 
+  # Split the tasks equally for each worker
+  $Index = (0..(($TaskNames).Count - 1)).Where({ ($_ % $ThrottleLimit) -eq $WorkerID })
+  $FilteredTaskNames = (($TaskNames)[$Index])
+
   # Load tasks
   $Tasks = @()
-  $Index = (0..(($TaskNames).Count - 1)).Where({ ($_ % $ThrottleLimit) -eq $WokID })
-  $FilteredTaskNames = (($TaskNames)[$Index])
   foreach ($TaskName in $FilteredTaskNames) {
     try {
       $TaskPath = Join-Path $Path $TaskName -Resolve
-      $TaskConfigPath = Join-Path $TaskPath 'Config.yaml' -Resolve
-      $TaskConfig = Get-Content -Path $TaskConfigPath -Raw | ConvertFrom-Yaml -Ordered
+      $TaskConfig = Join-Path $TaskPath 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
       $Task = New-Object -TypeName $TaskConfig.Type -ArgumentList @{
         Name       = $TaskName
         Path       = $TaskPath
-        ConfigPath = $TaskConfigPath
         Config     = $TaskConfig
-        Preference = @{
-          NoSkip    = $NoSkip
-          NoCheck   = $NoCheck
-          NoWrite   = $NoWrite
-          NoMessage = $NoMessage
-          NoSubmit  = $NoSubmit
-        }
+        Preference = $Params
       }
       $Tasks += $Task
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WokID}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
+      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
       $_ | Out-Host
     }
   }
-  Write-Log -Object "`e[1mDumplingsWok${WokID}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
+  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
   # Invoke tasks
   foreach ($Task in $Tasks) {
     try {
       $Task.Invoke()
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WokID}:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
+      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
       $_ | Out-Host
     }
   }
 
-  Write-Log -Object "`e[1mDumplingsWok${WokID}:`e[22m Done" -Level Verbose
+  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Done" -Level Verbose
 
-  # Clean environment
+  # Clean the environment of the sub-thread
   if ($Parallel) { Get-Module | Where-Object -FilterScript { $_.Path.Contains($using:PSScriptRoot) } | Remove-Module }
 }
 
@@ -265,7 +210,7 @@ if (-not $Parallel) {
     }
   }
 
-  # Clean environment
+  # Clean the environment of the main-thread
   Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
   Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
   # Set-StrictMode -Off

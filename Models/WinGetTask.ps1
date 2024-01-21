@@ -7,50 +7,73 @@ enum LogLevel {
 }
 
 class WinGetTask {
+  #region Properties
   [ValidateNotNullOrEmpty()][string]$Name
 
   [ValidateNotNullOrEmpty()][string]$Path
-  [string]$ConfigPath
   [string]$ScriptPath
 
   [System.Collections.IDictionary]$Config = [ordered]@{}
   [System.Collections.IDictionary]$Preference = [ordered]@{}
-  [string[]]$Log = [string[]]@()
 
-  [System.Collections.IDictionary]$LastState = [ordered]@{}
+  [System.Collections.IDictionary]$LastState = [ordered]@{
+    Installer = @()
+    Locale    = @()
+  }
   [System.Collections.IDictionary]$CurrentState = [ordered]@{
     Installer = @()
     Locale    = @()
   }
 
+  [string[]]$Log = [string[]]@()
   [bool]$MessageEnabled = $false
   [int[]]$MessageID = [int[]]@()
+  #endregion
 
+  # Initialize task
   WinGetTask([System.Collections.IDictionary]$Properties) {
-    $this.Init($Properties)
-  }
-
-  WinGetTask([string]$Name, [string]$Path) {
-    $this.Init(@{ Name = $Name; Path = $Path })
-  }
-
-  # Initialize tasks
-  [void] Init([System.Collections.IDictionary]$Properties) {
-    foreach ($Property in $Properties.Keys) {
-      $this.$Property = $Properties.$Property
+    # Load name
+    if (-not $Properties.Contains('Name')) {
+      throw 'WinGetTask: The property Name is undefined and should be specified'
     }
+    $this.Name = $Properties.Name
 
-    # Load config
-    $this.ConfigPath ??= Join-Path $this.Path 'Config.yaml' -Resolve
-    $this.Config ??= Get-Content -Path $this.ConfigPath -Raw | ConvertFrom-Yaml -Ordered
+    # Load path
+    if (-not $Properties.Contains('Path')) {
+      throw 'WinGetTask: The property Path is undefined and should be specified'
+    }
+    if (-not (Test-Path -Path $Properties.Path)) {
+      throw 'WinGetTask: The property Path is not reachable'
+    }
+    $this.Path = $Properties.Path
 
-    # Load script
+    # Probe script
     $this.ScriptPath ??= Join-Path $this.Path 'Script.ps1' -Resolve
 
+    # Load config
+    if ($Properties.Contains('Config') -and $Properties.Config -is [System.Collections.IDictionary]) {
+      $this.Config = $Properties.Config
+    } else {
+      $this.Config ??= Join-Path $this.Path 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
+    }
+
+    # Load preference
+    if ($Properties.Contains('Preference') -and $Properties.Preference -is [System.Collections.IEnumerable]) {
+      $LastKey = $null
+      foreach ($Item in $Properties.Preference) {
+        if ($Item -cmatch '^-') {
+          $LastKey = $Item -creplace '^-'
+          $this.Preference[$LastKey] = $true
+        } else {
+          $this.Preference[$LastKey] = $Item
+        }
+      }
+    }
+
     # Load last state
-    $LastStatePath ??= Join-Path $this.Path 'State.yaml'
+    $LastStatePath = Join-Path $this.Path 'State.yaml'
     if (Test-Path -Path $LastStatePath) {
-      $this.LastState = Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml -Ordered
+      $this.LastState ??= Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml -Ordered
     }
 
     # Log notes
@@ -140,7 +163,7 @@ class WinGetTask {
 
   # Write the state to a log file and a state file in YAML format
   [void] Write() {
-    if (-not $this.Preference.NoWrite) {
+    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
       # Writing current state to log file
       $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
       Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
@@ -150,8 +173,6 @@ class WinGetTask {
       $StatePath = Join-Path $this.Path 'State.yaml'
       Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to state file ${StatePath}"
       Copy-Item -Path $LogPath -Destination $StatePath -Force
-    } else {
-      $this.Logging('Skip writing states to manifests', 'Info')
     }
   }
 
@@ -265,7 +286,7 @@ class WinGetTask {
       $this.ToMarkdown() | Show-Markdown | Write-Log
       $this.MessageEnabled = $true
     }
-    if (-not $this.Preference.NoMessage) {
+    if ($this.Preference.Contains('EnableMessage') -and $this.Preference.EnableMessage) {
       try {
         $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
         $this.MessageID = $Response
@@ -273,29 +294,25 @@ class WinGetTask {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
         $this.Log += $_.ToString()
       }
-    } else {
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending default message" -Level Info
     }
   }
 
   # Send custom message to Telegram
   [void] Message([string]$Message) {
     $Message | Write-Log
-    if (-not $this.Preference.NoMessage) {
+    if ($this.Preference.Contains('EnableMessage') -and $this.Preference.EnableMessage) {
       try {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
         $this.Log += $_.ToString()
       }
-    } else {
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Skip sending custom message" -Level Info
     }
   }
 
-  # Generate and upload manifests to origin repository and create pull request in upstream repository
+  # Generate manifests and upload them to the origin repository, and then create pull request in the upstream repository
   [void] Submit() {
-    if (-not $this.Preference.NoSubmit) {
+    if ($this.Preference.Contains('EnableSubmit') -and $this.Preference.EnableSubmit) {
       $this.Logging('Submitting manifests', 'Info')
 
       $UpstreamOwner = 'microsoft'
@@ -313,7 +330,7 @@ class WinGetTask {
       }
       $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
 
-      # Check if there are existing pull requests in the upstream repository
+      #region Check existing pull requests in the upstream repository
       $this.Logging('Checking existing pull requests', 'Verbose')
       $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
       if ($PullRequests.total_count -gt 0) {
@@ -324,8 +341,9 @@ class WinGetTask {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Warning')
         }
       }
+      #endregion
 
-      # Use YamlCreate to create manifests
+      #region Create manifests using YamlCreate
       $this.Logging('Creating manifests', 'Verbose')
       try {
         $Parameters = @{
@@ -350,8 +368,9 @@ class WinGetTask {
         return
       }
       $this.Logging('Manifests created', 'Verbose')
+      #endregion
 
-      # Use WinGet client to validate the manifests generated in the last step
+      #region Validate manifests using WinGet client
       $this.Logging('Validating manifests', 'Verbose')
       if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
         $this.Logging('Could not find WinGet client', 'Error')
@@ -364,8 +383,9 @@ class WinGetTask {
         return
       }
       $this.Logging('Validation passed', 'Verbose')
+      #endregion
 
-      # Upload new manifests, remove old ones if needed, and commit in the origin repository
+      #region Upload new manifests, remove old manifests if needed, and commit in the origin repository
       $this.Logging('Uploading manifests and committing', 'Verbose')
       try {
         $NewBranchName = "${PackageIdentifier}-${PackageVersion}-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
@@ -440,8 +460,9 @@ class WinGetTask {
         return
       }
       $this.Logging('Manifests uploaded and committed', 'Verbose')
+      #endregion
 
-      # Create pull request in the upstream repository
+      #region Create pull request in the upstream repository
       $this.Logging('Creating pull request', 'Verbose')
       try {
         if (Test-Path Env:\CI) {
@@ -461,8 +482,7 @@ class WinGetTask {
         return
       }
       $this.Logging("Pull request created: $($NewPRResponse.html_url)", 'Info')
-    } else {
-      $this.Logging('Skip submitting manifests', 'Info')
+      #endregion
     }
   }
 }

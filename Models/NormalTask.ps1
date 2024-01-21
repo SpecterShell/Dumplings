@@ -7,35 +7,54 @@ enum LogLevel {
 }
 
 class NormalTask {
+  #region Properties
   [ValidateNotNullOrEmpty()][string]$Name
 
   [ValidateNotNullOrEmpty()][string]$Path
-  [string]$ConfigPath
   [string]$ScriptPath
 
   [System.Collections.IDictionary]$Config = [ordered]@{}
   [System.Collections.IDictionary]$Preference = [ordered]@{}
+  #endregion
 
   NormalTask([System.Collections.IDictionary]$Properties) {
-    $this.Init($Properties)
-  }
-
-  NormalTask([string]$Name, [string]$Path) {
-    $this.Init(@{ Name = $Name; Path = $Path })
-  }
-
-  # Initialize tasks
-  [void] Init([System.Collections.IDictionary]$Properties) {
-    foreach ($Property in $Properties.Keys) {
-      $this.$Property = $Properties.$Property
+    # Load name
+    if (-not $Properties.Contains('Name')) {
+      throw 'WinGetTask: The property Name is undefined and should be specified'
     }
+    $this.Name = $Properties.Name
+
+    # Load path
+    if (-not $Properties.Contains('Path')) {
+      throw 'WinGetTask: The property Path is undefined and should be specified'
+    }
+    if (-not (Test-Path -Path $Properties.Path)) {
+      throw 'WinGetTask: The property Path is not reachable'
+    }
+    $this.Path = $Properties.Path
+
+    # Probe script
+    $this.ScriptPath ??= Join-Path $this.Path 'Script.ps1' -Resolve
 
     # Load config
-    $this.ConfigPath ??= Join-Path $this.Path 'Config.yaml' -Resolve
-    $this.Config ??= Get-Content -Path $this.ConfigPath -Raw | ConvertFrom-Yaml -Ordered
+    if ($Properties.Contains('Config') -and $Properties.Config -is [System.Collections.IDictionary]) {
+      $this.Config = $Properties.Config
+    } else {
+      $this.Config ??= Join-Path $this.Path 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
+    }
 
-    # Load script
-    $this.ScriptPath ??= Join-Path $this.Path 'Script.ps1' -Resolve
+    # Load preference
+    if ($Properties.Contains('Preference') -and $Properties.Preference -is [System.Collections.IEnumerable]) {
+      $LastKey = $null
+      foreach ($Item in $Properties.Preference) {
+        if ($Item -cmatch '^-') {
+          $LastKey = $Item -creplace '^-'
+          $this.Preference[$LastKey] = $true
+        } else {
+          $this.Preference[$LastKey] = $Item
+        }
+      }
+    }
   }
 
   # Log with template, without specifying log level
