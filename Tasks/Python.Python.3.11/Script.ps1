@@ -6,7 +6,7 @@ $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 $this.CurrentState.Version = $Version = (
   $Object1.SelectNodes('/html/body/pre/a').ForEach({ $_.Attributes['href'].Value }) |
     Select-String -Pattern '3\.11\.\d+/' -Raw |
-    Sort-Object -Property $ToNatural |
+    Sort-Object -Property { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } |
     Select-Object -Last 1
 ).Replace('/', '')
 

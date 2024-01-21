@@ -1075,6 +1075,4 @@ function Copy-Object {
   }
 }
 
-$ToNatural = { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) }
-
-Export-ModuleMember -Function * -Variable ToNatural
+Export-ModuleMember -Function *
