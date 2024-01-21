@@ -73,7 +73,7 @@ class WinGetTask {
     # Load last state
     $LastStatePath = Join-Path $this.Path 'State.yaml'
     if (Test-Path -Path $LastStatePath) {
-      $this.LastState ??= Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml -Ordered
+      $this.LastState = Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml -Ordered
     }
 
     # Log notes
