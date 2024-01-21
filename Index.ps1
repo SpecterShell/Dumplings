@@ -51,16 +51,15 @@ param (
   $WorkerID = 0,
 
   [Parameter(Position = 5, ValueFromRemainingArguments, HelpMessage = 'Additional parameters to be passed to the model instances')]
-  $Params
+  [System.Collections.IEnumerable]
+  $Params = @()
 )
 
 # Enable strict mode to avoid non-existent or empty properties from the API
 # Set-StrictMode -Version 3.0
 
-# Hide the progress bar in CI
-if (Test-Path -Path Env:\CI) {
-  $ProgressPreference = 'SilentlyContinue'
-}
+# In GitHub Actions, hide the progress bar to avoid pollutions to console output
+if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
 # Set default parameter values for some functions
 $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
@@ -171,11 +170,12 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m $($Tasks.Count) task(s) loaded, $($FilteredTaskNames.Count - $Tasks.Count) task(s) not loaded"
 
   # Invoke tasks
-  foreach ($Task in $Tasks) {
+  for ($i = 0; $i -lt $Tasks.Count; $i++) {
     try {
-      $Task.Invoke()
+      Write-Progress -Activity "DumplingsWok${WorkerID}" -Id $WorkerID -PercentComplete ($i / $Tasks.Count * 100) -Status $Tasks[$i].Name
+      $Tasks[$i].Invoke()
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for $($Task.Name):" -Level Error
+      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for $($Tasks[$i].Name):" -Level Error
       $_ | Out-Host
     }
   }
