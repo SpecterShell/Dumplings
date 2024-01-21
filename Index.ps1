@@ -1,6 +1,3 @@
-#Requires -Version 7
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultParameterValues', Justification = 'This variable is shared across scripts')]
-
 <#
 .SYNOPSIS
   A bootstrapping script to build and run tasks, in either single-thread mode or multi-threads mode
@@ -25,6 +22,10 @@
   .\Index.ps1 -Name 'A', 'B' -ThrottleLimit 1
   Run tasks "A" and "B" in the default directory under single-thread mode
 #>
+
+#Requires -Version 7
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultParameterValues', Justification = 'This variable is shared across scripts')]
+
 [CmdletBinding()]
 param (
   [Parameter(Position = 0, ValueFromPipeline, HelpMessage = 'The names of the tasks to run. Leave blank to run all tasks')]
@@ -50,7 +51,7 @@ param (
   $WorkerID = 0,
 
   [Parameter(Position = 5, ValueFromRemainingArguments, HelpMessage = 'Additional parameters to be passed to the model instances')]
-  $Params = (Join-Path $PSScriptRoot 'Tasks')
+  $Params
 )
 
 # Enable strict mode to avoid non-existent or empty properties from the API
