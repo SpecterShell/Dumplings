@@ -39,7 +39,7 @@ param (
   [Parameter(Position = 2, HelpMessage = 'The number of workers used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode')]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
   [ushort]
-  $ThrottleLimit = 3,
+  $ThrottleLimit = 1,
 
   [Parameter(Position = 3, DontShow, HelpMessage = 'Tell the script if it is running in a sub-thread to skip some regions')]
   [switch]
@@ -128,7 +128,8 @@ if (-not $Parallel) {
   }
 }
 
-# Run tasks in sub-threads if the number of workers is greater than 1, otherwise run tasks in current thread
+# In multi-threads mode, run tasks in sub-threads and let the main thread skip this region
+# In single-thread mode, run tasks in the main thread directly
 if ($Parallel -or $ThrottleLimit -eq 1) {
   # Set up parameters
   $ScriptRoot = $Parallel ? $using:PSScriptRoot : $PSScriptRoot
@@ -180,22 +181,24 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 
   Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Done" -Level Verbose
 
-  # Clean the environment of the sub-thread
+  # Clean the environment for the sub-thread
   if ($Parallel) { Get-Module | Where-Object -FilterScript { $_.Path.Contains($using:PSScriptRoot) } | Remove-Module }
 }
 
 if (-not $Parallel) {
+  # In multi-threads mode, let the main thread wait for all sub-threads first
   if ($ThrottleLimit -gt 1) {
-    # Wait until all jobs are done
+    # Wait for all threads with a maximum waiting time of 1 hour
     $Jobs | Wait-Job -Timeout 3600 | Out-Null
 
-    # Check if some jobs are still running or not
+    # Check if some threads are still running, especially after timeout
     if (Get-Job -State Running) {
-      Write-Log -Object "`e[1mDumplings:`e[22m Some jobs didn't complete in time and will be stopped"
+      Write-Log -Object "`e[1mDumplings:`e[22m Some threads are still running and will be stopped forcibly"
       Get-Job -State Running | Out-Host
     }
   }
 
+  # In GitHub Actions, commit and push the changes if present
   if (Test-Path -Path Env:\CI) {
     if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
       Write-Log -Object "`e[1mDumplings:`e[22m Committing and pushing changes" -Level Info
@@ -210,12 +213,10 @@ if (-not $Parallel) {
     }
   }
 
-  # Clean the environment of the main-thread
+  # Clean and restore the environment for the main thread
   Get-Module | Where-Object -FilterScript { $_.Path.Contains($PSScriptRoot) } | Remove-Module
   Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
-  # Set-StrictMode -Off
-
-  # Restore original console input and output encoding
   [System.Console]::OutputEncoding = $OldOutputEncoding
   [System.Console]::InputEncoding = $OldInputEncoding
+  # Set-StrictMode -Off
 }
