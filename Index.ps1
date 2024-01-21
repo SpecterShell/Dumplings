@@ -94,6 +94,28 @@ if (-not $Parallel) {
     }
   }
 
+  # Load preference from file
+  $PreferencePath = Join-Path $PSScriptRoot 'Preference.yaml'
+  $Global:DumplingsPreference = $null
+  if (Test-Path -Path $PreferencePath) {
+    $Global:DumplingsPreference = Get-Content -Path $PreferencePath -Raw | ConvertFrom-Yaml -Ordered
+  }
+  if (-not $Global:DumplingsPreference) {
+    $Global:DumplingsPreference = [ordered]@{}
+  }
+  # Load preference from parameters, with higher priority
+  if ($Params -and $Params -is [System.Collections.IEnumerable]) {
+    $LastKey = $null
+    foreach ($Item in $Params) {
+      if ($Item -cmatch '^-') {
+        $LastKey = $Item -creplace '^-'
+        $Global:DumplingsPreference[$LastKey] = $true
+      } else {
+        $Global:DumplingsPreference[$LastKey] = $Item
+      }
+    }
+  }
+
   # Import libraries
   Join-Path $PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
 
@@ -137,6 +159,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     $TaskNames = $using:TaskNames
     $Global:LocalStorage = $using:LocalStorage
     $Global:LocalCache = $using:LocalCache
+    $Global:DumplingsPreference = $using:DumplingsPreference
   }
 
   # Import libraries
@@ -160,10 +183,9 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
       $TaskPath = Join-Path $Path $TaskName -Resolve
       $TaskConfig = Join-Path $TaskPath 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
       $Task = New-Object -TypeName $TaskConfig.Type -ArgumentList @{
-        Name       = $TaskName
-        Path       = $TaskPath
-        Config     = $TaskConfig
-        Preference = $Params
+        Name   = $TaskName
+        Path   = $TaskPath
+        Config = $TaskConfig
       }
     } catch {
       Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Failed to initialize task ${TaskName}:" -Level Error

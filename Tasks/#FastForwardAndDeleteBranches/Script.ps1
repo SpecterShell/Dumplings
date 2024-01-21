@@ -1,9 +1,9 @@
-$UpstreamOwner = 'microsoft'
-$UpstreamRepo = 'winget-pkgs'
-$UpstreamBranch = 'master'
-$OriginOwner = 'SpecterShell'
-$OriginRepo = 'winget-pkgs'
-$OriginBranch = 'master'
+$UpstreamOwner = $Global:DumplingsPreference['UpstreamOwner'] ?? $this.Config['UpstreamOwner']
+$UpstreamRepo = $Global:DumplingsPreference['UpstreamRepo'] ?? $this.Config['UpstreamRepo']
+$UpstreamBranch = $Global:DumplingsPreference['UpstreamBranch'] ?? $this.Config['UpstreamBranch']
+$OriginOwner = $Global:DumplingsPreference['OriginOwner'] ?? $this.Config['OriginOwner']
+$OriginRepo = $Global:DumplingsPreference['OriginRepo'] ?? $this.Config['OriginRepo']
+$OriginBranch = $Global:DumplingsPreference['OriginBranch'] ?? $this.Config['OriginBranch']
 
 $Query = @"
 {

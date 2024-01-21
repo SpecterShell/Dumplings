@@ -9,12 +9,9 @@ enum LogLevel {
 class WinGetTask {
   #region Properties
   [ValidateNotNullOrEmpty()][string]$Name
-
   [ValidateNotNullOrEmpty()][string]$Path
   [string]$ScriptPath
-
   [System.Collections.IDictionary]$Config = [ordered]@{}
-  [System.Collections.IDictionary]$Preference = [ordered]@{}
 
   [System.Collections.IDictionary]$LastState = [ordered]@{
     Installer = @()
@@ -57,19 +54,6 @@ class WinGetTask {
       $this.Config ??= Join-Path $this.Path 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
     }
 
-    # Load preference
-    if ($Properties.Contains('Preference') -and $Properties.Preference -is [System.Collections.IEnumerable]) {
-      $LastKey = $null
-      foreach ($Item in $Properties.Preference) {
-        if ($Item -cmatch '^-') {
-          $LastKey = $Item -creplace '^-'
-          $this.Preference[$LastKey] = $true
-        } else {
-          $this.Preference[$LastKey] = $Item
-        }
-      }
-    }
-
     # Load last state
     $LastStatePath = Join-Path $this.Path 'State.yaml'
     if (Test-Path -Path $LastStatePath) {
@@ -104,7 +88,7 @@ class WinGetTask {
 
   # Invoke script
   [void] Invoke() {
-    if ($this.Preference.NoSkip -or -not $this.Config.Skip) {
+    if ($Global:DumplingsPreference.NoSkip -or -not $this.Config.Skip) {
       try {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
         & $this.ScriptPath | Out-Null
@@ -119,7 +103,7 @@ class WinGetTask {
 
   # Compare current state with last state
   [int] Check() {
-    if (-not $this.Preference.Contains('NoCheck') -or -not $this.Preference.NoCheck) {
+    if (-not $Global:DumplingsPreference.Contains('NoCheck') -or -not $Global:DumplingsPreference.NoCheck) {
       if (-not $this.CurrentState.Contains('Version')) {
         throw "WinGetTask $($this.Name): The property Version in the current state does not exist"
       } elseif ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
@@ -163,7 +147,7 @@ class WinGetTask {
 
   # Write the state to a log file and a state file in YAML format
   [void] Write() {
-    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
+    if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       # Writing current state to log file
       $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
       Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
@@ -286,7 +270,7 @@ class WinGetTask {
       $this.ToMarkdown() | Show-Markdown | Write-Log
       $this.MessageEnabled = $true
     }
-    if ($this.Preference.Contains('EnableMessage') -and $this.Preference.EnableMessage) {
+    if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
         $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
         $this.MessageID = $Response
@@ -300,7 +284,7 @@ class WinGetTask {
   # Send custom message to Telegram
   [void] Message([string]$Message) {
     $Message | Write-Log
-    if ($this.Preference.Contains('EnableMessage') -and $this.Preference.EnableMessage) {
+    if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
@@ -312,14 +296,15 @@ class WinGetTask {
 
   # Generate manifests and upload them to the origin repository, and then create pull request in the upstream repository
   [void] Submit() {
-    if ($this.Preference.Contains('EnableSubmit') -and $this.Preference.EnableSubmit) {
+    if ($Global:DumplingsPreference.Contains('EnableSubmit') -and $Global:DumplingsPreference.EnableSubmit) {
       $this.Logging('Submitting manifests', 'Info')
 
-      $UpstreamOwner = 'microsoft'
-      $UpstreamRepo = 'winget-pkgs'
-      $UpstreamBranch = 'master'
-      $OriginOwner = 'SpecterShell'
-      $OriginRepo = 'winget-pkgs'
+      #region Parameters
+      $UpstreamOwner = $Global:DumplingsPreference.UpstreamOwner
+      $UpstreamRepo = $Global:DumplingsPreference.UpstreamRepo
+      $UpstreamBranch = $Global:DumplingsPreference.UpstreamBranch
+      $OriginOwner = $Global:DumplingsPreference.OriginOwner
+      $OriginRepo = $Global:DumplingsPreference.OriginRepo
 
       $PackageIdentifier = $this.Config.Identifier
       $PackageVersion = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
@@ -329,12 +314,13 @@ class WinGetTask {
         $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' $UpstreamRepo 'manifests' -Resolve
       }
       $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
+      #endregion
 
       #region Check existing pull requests in the upstream repository
       $this.Logging('Checking existing pull requests', 'Verbose')
       $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
       if ($PullRequests.total_count -gt 0) {
-        if (-not ($this.Preference.Contains('NoCheck') -and $this.Preference.NoCheck) -and -not ($this.Config.Contains('IgnorePRCheck') -and $this.Config.IgnorePRCheck)) {
+        if (-not ($Global:DumplingsPreference.Contains('NoCheck') -and $Global:DumplingsPreference.NoCheck) -and -not ($this.Config.Contains('IgnorePRCheck') -and $this.Config.IgnorePRCheck)) {
           $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
           return
         } else {
