@@ -31,7 +31,8 @@ jobs:
       - name: Install and cache PowerShell modules
         uses: potatoqualitee/psmodulecache@v6.0
         with:
-          modules-to-cache: "powershell-yaml::, PowerHTML::"
+          modules-to-cache: powershell-yaml, PowerHTML
+          updatable: true
       - name: Automation
         run: .\Index.ps1 -ThrottleLimit 3 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.Params }}
         working-directory: Dumplings
