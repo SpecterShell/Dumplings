@@ -22,7 +22,7 @@ class WinGetTask {
     Locale    = @()
   }
 
-  [string[]]$Log = [string[]]@()
+  [System.Collections.Generic.List[string]]$Log = [System.Collections.Generic.List[string]]@()
   [bool]$MessageEnabled = $false
   [int[]]$MessageID = [int[]]@()
   #endregion
@@ -62,14 +62,14 @@ class WinGetTask {
 
     # Log notes
     if ($this.Config.Contains('Notes')) {
-      $this.Log += $this.Config.Notes
+      $this.Log.Add($this.Config.Notes)
     }
   }
 
   # Log with template, without specifying log level
   [void] Logging([string]$Message) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}"
-    $this.Log += $Message
+    $this.Log.Add($Message)
     if ($this.MessageEnabled) {
       $this.Message()
     }
@@ -79,7 +79,7 @@ class WinGetTask {
   [void] Logging([string]$Message, [LogLevel]$Level) {
     Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}" -Level $Level
     if ($Level -ne 'Verbose') {
-      $this.Log += $Message
+      $this.Log.Add($Message)
       if ($this.MessageEnabled) {
         $this.Message()
       }
@@ -276,7 +276,7 @@ class WinGetTask {
         $this.MessageID = $Response
       } catch {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
-        $this.Log += $_.ToString()
+        $this.Log.Add($_.ToString())
       }
     }
   }
@@ -289,7 +289,7 @@ class WinGetTask {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
         Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
-        $this.Log += $_.ToString()
+        $this.Log.Add($_.ToString())
       }
     }
   }
