@@ -85,11 +85,10 @@ if (-not $Parallel) {
   Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
 
   # Install and import required PowerShell modules
-  $InstalledModulesNames = Get-Package | Select-Object -ExpandProperty Name
   $DumplingsPowerShellModules | ForEach-Object -Process {
-    if ($InstalledModulesNames -notcontains $_) {
+    if (-not (Get-Module -Name $_ -ListAvailable)) {
       Write-Host -Object "`e[1mDumplings:`e[22m Installing PowerShell module ${_}"
-      Install-Package -Name $_ -Source PSGallery -ProviderName PowerShellGet -Force | Out-Null
+      Install-Module -Name $_ -Force -ErrorAction Stop | Out-Null
       Write-Host -Object "`e[1mDumplings:`e[22m PowerShell module ${_} is installed"
     }
   }
