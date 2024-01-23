@@ -120,8 +120,9 @@ if (-not $Parallel) {
   Join-Path $PSScriptRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
 
   # Queue the tasks to load
-  $TaskNames = $Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name)
-  Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNames.Count ?? 0) task(s) to load"
+  $TaskNames = [System.Collections.Concurrent.ConcurrentQueue[string]]($Name ?? (Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+  $TaskNamesTotalCount = $TaskNames.Count
+  Write-Log -Object "`e[1mDumplings:`e[22m $($TaskNamesTotalCount ?? 0) task(s) to load"
 
   # Set up temp storage for tasks
   $Global:LocalStorage = [ordered]@{}
@@ -157,6 +158,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   $ScriptRoot = $Parallel ? $using:PSScriptRoot : $PSScriptRoot
   if ($Parallel) {
     $TaskNames = $using:TaskNames
+    $TaskNamesTotalCount = $using:TaskNamesTotalCount
     $Global:LocalStorage = $using:LocalStorage
     $Global:LocalCache = $using:LocalCache
     $Global:DumplingsPreference = $using:DumplingsPreference
@@ -168,15 +170,10 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   # Import models
   Join-Path $ScriptRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
 
-  # Split the tasks equally for each worker
-  $Index = (0..(($TaskNames).Count - 1)).Where({ ($_ % $ThrottleLimit) -eq $WorkerID })
-  $SubTaskNames = ($TaskNames)[$Index]
-
-  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m $($SubTaskNames.Count) to run"
-
   # Build and run tasks
-  for ($i = 0; $i -lt $SubTaskNames.Count; $i++) {
-    $TaskName = $SubTaskNames[$i]
+  $TaskName = [string]$null
+  while ($TaskNames.TryDequeue([ref]$TaskName)) {
+    Write-Progress -Activity 'Dumplings' -PercentComplete (100 - $TaskNames.Count / $TaskNamesTotalCount * 100) -Status "$($TaskNamesTotalCount - $TaskNames.Count)/$($TaskNamesTotalCount) $TaskName"
 
     # Build task
     try {
@@ -195,7 +192,6 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 
     # Run task
     try {
-      Write-Progress -Activity "DumplingsWok${WorkerID}" -Id $WorkerID -PercentComplete ($i / $SubTaskNames.Count * 100) -Status $TaskName
       $Task.Invoke()
     } catch {
       Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for ${TaskName}:" -Level Error
