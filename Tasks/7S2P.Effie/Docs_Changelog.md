@@ -1,3 +1,10 @@
+# Version 3.3.1:
+
+- New Export to Image Style (Light);
+- Added support for setting paragraph spacing;
+- More flexible line height adjustments;
+- Some minor improvements and bugs fixed.
+
 # Version 3.2.1:
 
 - Create your ideal writing environment: support switching theme colors. Choose from 8 designed styles.
