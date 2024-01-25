@@ -33,21 +33,17 @@ switch ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      if ($this.LastState.Contains('Version')) {
-        $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/html/body/h2[contains(text(), '$($this.LastState.Version -creplace '(\d+\.\d+)\.(\d+\.\d+)', '$1 ($2)')')]")
-        if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = @()
-          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
-            $ReleaseNotesNodes += $Node
-          }
-          # ReleaseNotes (zh-CN)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-          }
-        } else {
-          $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/html/body/h2[contains(text(), 'Changelog since')][1]")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = @()
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes += $Node
+        }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
