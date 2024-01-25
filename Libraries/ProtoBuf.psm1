@@ -108,7 +108,7 @@ function ConvertFrom-ProtoBuf {
     [System.IO.Stream]
     $RawContentStream,
 
-    [Parameter(Position = 0, ValueFromPipeline, ParameterSetName = 'Array', Mandatory, HelpMessage = 'The raw byte array of the ProtoBuf message')]
+    [Parameter(Position = 0, ParameterSetName = 'Array', Mandatory, HelpMessage = 'The raw byte array of the ProtoBuf message')]
     [byte[]]
     $Content,
 
@@ -165,14 +165,14 @@ function ConvertFrom-ProtoBuf {
           $Buffer = [byte[]]::new($Length)
           $Stream.Read($Buffer, 0, $Length) | Out-Null
           try {
-            # Try decoding to string first. If an invalid character occurred, an error will be thrown
+            # Try to decode to string first. If an invalid character occurred, an error will be thrown
             $Value = [System.Text.UTF8Encoding]::new($false, $true).GetString($Buffer)
           } catch {
             try {
-              # Try decoding as a sub message
+              # Try to decode as a sub message
               $Value = ConvertFrom-ProtoBuf -RawContentStream ([System.IO.MemoryStream]::new($Buffer)) -VarintType $VarintType -Fixed64Type $Fixed64Type -Fixed32Type $Fixed32Type
             } catch {
-              # Pass the byte array if there is no appropriate type for the object
+              # Pass the byte array if no appropriate type is found for this object
               $Value = $Buffer
             }
           }
@@ -182,7 +182,7 @@ function ConvertFrom-ProtoBuf {
         # Possible types include Int32, UInt32, Float and ZigZag encodings
         5 { $Value = Read-Fixed32 -Stream $Stream -OutputType $Fixed32Type; continue }
         # StartGroup (3), EndGroup (4) and others
-        Default { throw "Unsupported or unknown WireType ${Type}" }
+        Default { throw "Unsupported or unknown WireType ${WireType}" }
       }
 
       # If there are repeated objects (objects with the same field number) at the same level, wrap them into a list
