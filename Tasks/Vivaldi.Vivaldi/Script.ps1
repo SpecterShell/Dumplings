@@ -15,11 +15,11 @@ if ($Object1.enclosure.version -ne $Object2.enclosure.version) {
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.enclosure.url
+  InstallerUrl = $Object1.enclosure.url.Replace('stable-auto', 'stable')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.enclosure.url
+  InstallerUrl = $Object2.enclosure.url.Replace('stable-auto', 'stable')
 }
 
 # ReleaseNotesUrl
