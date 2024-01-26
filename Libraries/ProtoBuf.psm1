@@ -15,7 +15,7 @@ function Read-Varint {
     do {
       $Byte = $Stream.ReadByte()
       $Buffer.Add($Byte)
-    } while ($Byte -band 0x80) # 0b10000000
+    } while ($Byte -band 0b10000000u)
 
     switch ($OutputType) {
       'UInt64' { $Value = [UInt64]0; continue }
@@ -27,7 +27,7 @@ function Read-Varint {
     }
 
     for ($i = $Buffer.Count - 1; $i -ge 0; $i--) {
-      $Value = ($Value -shl 7) -bor ($Buffer[$i] -band 0x7f) # 0b01111111
+      $Value = ($Value -shl 7) -bor ($Buffer[$i] -band 0b01111111u)
     }
     return $Value
   }
@@ -147,8 +147,8 @@ function ConvertFrom-ProtoBuf {
       $Stream.Position -= 1
 
       $Metadata = Read-Varint -Stream $Stream -OutputType UInt64
-      $FieldNumber = ($Metadata -shr 3).ToString() # 0b11111000
-      $WireType = $Metadata -band 7 # 0b00000111
+      $FieldNumber = ($Metadata -shr 3).ToString()
+      $WireType = $Metadata -band 0b00000111u
       Write-Verbose -Message "Offset: $($Stream.Position);`tField Number: ${FieldNumber};`tWire Type: ${WireType}"
 
       switch ($WireType) {
