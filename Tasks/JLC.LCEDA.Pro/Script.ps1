@@ -5,6 +5,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[2]/div/span/a').Attributes['href'].Value
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrl.Replace('-x64-', '-ia32-')
+}
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
