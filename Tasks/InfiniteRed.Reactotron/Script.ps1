@@ -40,10 +40,10 @@ switch ($this.Check()) {
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/infinitered/reactotron/master/apps/reactotron-app/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/*[self::h2 or self::h3][contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/*[self::h2 or self::h3][contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -notin @('h2', 'h3'); $Node = $Node.NextSibling) {
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -notin @('h2', 'h3') -or $Node.InnerText -notmatch '\d+\.\d+\.\d+'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
         # ReleaseNotes (en-US)
