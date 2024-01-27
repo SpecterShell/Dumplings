@@ -19,11 +19,15 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl
