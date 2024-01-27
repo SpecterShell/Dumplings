@@ -1,5 +1,5 @@
-$RepoOwner = 'httpie'
-$RepoName = 'desktop'
+$RepoOwner = 'Bin-Huang'
+$RepoName = 'chatbox'
 
 $Object1 = Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/latest.yml" | ConvertFrom-Yaml
 
@@ -30,11 +30,12 @@ switch ($this.Check()) {
 
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
-        $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.InnerText -notmatch '(full|https?://).+?changelog'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes.Add($Node)
-        }
-        if ($ReleaseNotesNodes) {
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./*[contains(text(), "This update includes the following:")]')
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
+          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('Download the latest version:'); $Node = $Node.NextSibling) {
+            $ReleaseNotesNodes.Add($Node)
+          }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'

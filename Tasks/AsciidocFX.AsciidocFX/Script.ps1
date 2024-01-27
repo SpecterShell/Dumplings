@@ -1,21 +1,19 @@
-$RepoOwner = 'httpie'
-$RepoName = 'desktop'
+$RepoOwner = 'asciidocfx'
+$RepoName = 'AsciidocFX'
 
-$Object1 = Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/latest.yml" | ConvertFrom-Yaml
+$Object1 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/updates.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '86' })[0]
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object1.newVersion
 
 $Prefix = "https://github.com/${RepoOwner}/${RepoName}/releases/download/v$($this.CurrentState.Version)/"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object1.files[0].url
+  Architecture    = 'x64'
+  InstallerUrl    = $Prefix + $Object1.fileName
+  InstallerSha256 = $Object1.sha256Sum.ToUpper()
 }
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
@@ -28,13 +26,17 @@ switch ($this.Check()) {
     try {
       $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") })[0]
 
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.updated | Get-Date -AsUTC
+
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
-        $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.InnerText -notmatch '(full|https?://).+?changelog'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes.Add($Node)
-        }
-        if ($ReleaseNotesNodes) {
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(.//text(), `"Version`")]")
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
+          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+            $ReleaseNotesNodes.Add($Node)
+          }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
