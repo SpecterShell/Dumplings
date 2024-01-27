@@ -112,7 +112,7 @@ function ConvertFrom-ProtoBuf {
     [byte[]]
     $Content,
 
-    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'Path', Mandatory, HelpMessage = 'The path to the file containing the ProtoBuf message')]
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'File', Mandatory, HelpMessage = 'The path to the file containing the ProtoBuf message')]
     [string]
     $Path,
 
@@ -135,10 +135,13 @@ function ConvertFrom-ProtoBuf {
   process {
     # Bare Stream is preferred over StreamReader as StreamReader is buggy on WebResponseContentMemoryStream
     if ($RawContentStream) {
+      $StreamType = 'Stream'
       $Stream = $RawContentStream
     } elseif ($Content) {
+      $StreamType = 'Array'
       $Stream = [System.IO.MemoryStream]::new($Content)
     } else {
+      $StreamType = 'File'
       $Stream = [System.IO.FileStream]::new((Resolve-Path $Path), [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
     }
 
@@ -170,10 +173,13 @@ function ConvertFrom-ProtoBuf {
           } catch {
             try {
               # Try to decode as a sub message
-              $Value = ConvertFrom-ProtoBuf -RawContentStream ([System.IO.MemoryStream]::new($Buffer)) -VarintType $VarintType -Fixed64Type $Fixed64Type -Fixed32Type $Fixed32Type
+              $SubStream = [System.IO.MemoryStream]::new($Buffer)
+              $Value = ConvertFrom-ProtoBuf -RawContentStream $SubStream -VarintType $VarintType -Fixed64Type $Fixed64Type -Fixed32Type $Fixed32Type
             } catch {
               # Pass the byte array if no appropriate type is found for this object
               $Value = $Buffer
+            } finally {
+              $SubStream.Close()
             }
           }
           continue
@@ -196,6 +202,7 @@ function ConvertFrom-ProtoBuf {
       }
     }
 
+    if ($StreamType -in @('Array', 'File')) { $Stream.Close() }
     return $Result
   }
 }
