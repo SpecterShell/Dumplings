@@ -25,13 +25,13 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.biz.latestVersionInfo | Format-Text
+  Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo | Format-Text
 }
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
-      ReleaseTime = $this.CurrentState.ReleaseTime
+      ReleaseNotesCN = $ReleaseNotesCN
     }
     if (-not $this.Preference.NoWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
