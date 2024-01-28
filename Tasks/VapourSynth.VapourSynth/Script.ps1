@@ -1,14 +1,15 @@
-$RepoOwner = 'BartoszCichecki'
-$RepoName = 'LenovoLegionToolkit'
+$RepoOwner = 'vapoursynth'
+$RepoName = 'vapoursynth'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') })[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
@@ -19,7 +20,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+    Value  = $Object1.body | Format-Text
   }
 } else {
   $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

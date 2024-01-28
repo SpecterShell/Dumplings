@@ -1,5 +1,5 @@
-$RepoOwner = 'BartoszCichecki'
-$RepoName = 'LenovoLegionToolkit'
+$RepoOwner = 'volta-cli'
+$RepoName = 'volta'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -8,7 +8,8 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') })[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('windows') -and $_.name.Contains('x86_64') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime

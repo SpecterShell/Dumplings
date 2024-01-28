@@ -10,7 +10,6 @@ $Prefix = "https://github.com/${RepoOwner}/${RepoName}/releases/download/v$($thi
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
   InstallerUrl = $Prefix + $Object1.files[0].url
 }
 
