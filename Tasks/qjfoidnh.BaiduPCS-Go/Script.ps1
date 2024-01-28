@@ -12,7 +12,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x86') })[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-x86\BaiduPCS-Go.exe"
+      RelativeFilePath     = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-x86\BaiduPCS-Go.exe"
+      PortableCommandAlias = 'BaiduPCS-Go'
     }
   )
 }
@@ -21,7 +22,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') })[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-x64\BaiduPCS-Go.exe"
+      RelativeFilePath     = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-x64\BaiduPCS-Go.exe"
+      PortableCommandAlias = 'BaiduPCS-Go'
     }
   )
 }
@@ -30,7 +32,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name -match '[^a-zA-Z0-9]arm[^a-zA-Z0-9]' })[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-arm\BaiduPCS-Go.exe"
+      RelativeFilePath     = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-arm\BaiduPCS-Go.exe"
+      PortableCommandAlias = 'BaiduPCS-Go'
     }
   )
 }
