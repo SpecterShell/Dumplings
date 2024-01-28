@@ -38,7 +38,7 @@ switch ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerWixFile | Read-ProductVersionFromMsi
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/infinitered/reactotron/master/apps/reactotron-app/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/apps/reactotron-app/CHANGELOG.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/*[self::h2 or self::h3][contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -56,14 +56,14 @@ switch ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://github.com/infinitered/reactotron/blob/master/apps/reactotron-app/CHANGELOG.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = "https://github.com/${RepoOwner}/${RepoName}/blob/master/apps/reactotron-app/CHANGELOG.md#" + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
         }
       } else {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://github.com/infinitered/reactotron/blob/master/apps/reactotron-app/CHANGELOG.md'
+          Value = "https://github.com/${RepoOwner}/${RepoName}/blob/master/apps/reactotron-app/CHANGELOG.md"
         }
       }
     } catch {
@@ -72,7 +72,7 @@ switch ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = 'https://github.com/infinitered/reactotron/blob/master/apps/reactotron-app/CHANGELOG.md'
+        Value = "https://github.com/${RepoOwner}/${RepoName}/blob/master/apps/reactotron-app/CHANGELOG.md"
       }
     }
 

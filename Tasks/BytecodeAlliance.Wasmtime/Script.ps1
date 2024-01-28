@@ -18,7 +18,7 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/bytecodealliance/wasmtime/main/RELEASES.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/main/RELEASES.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -36,14 +36,14 @@ switch ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://github.com/bytecodealliance/wasmtime/blob/main/RELEASES.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = "https://github.com/${RepoOwner}/${RepoName}/blob/main/RELEASES.md#" + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
         }
       } else {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://github.com/bytecodealliance/wasmtime/blob/main/RELEASES.md'
+          Value = "https://github.com/${RepoOwner}/${RepoName}/blob/main/RELEASES.md"
         }
       }
     } catch {
@@ -52,7 +52,7 @@ switch ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = 'https://github.com/bytecodealliance/wasmtime/blob/main/RELEASES.md'
+        Value = "https://github.com/${RepoOwner}/${RepoName}/blob/main/RELEASES.md"
       }
     }
 
