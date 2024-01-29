@@ -1,5 +1,7 @@
 #Requires -Version 7
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification = 'This script is not intended to have any outputs piped')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Scope = 'Function', Target = '*Metadata',
+  Justification = 'Metadata is used as a mass noun and is therefore singular in the cases used in this script')]
 
 Param
 (
@@ -21,7 +23,7 @@ Param
 )
 $ProgressPreference = 'SilentlyContinue'
 
-$ScriptHeader = '# Created with YamlCreate.ps1 v2.2.12 by Dumplings'
+$ScriptHeader = '# Created with YamlCreate.ps1 v2.3.1 Dumplings Mod'
 $ManifestVersion = '1.5.0'
 $PSDefaultParameterValues = @{ '*:Encoding' = 'UTF8' }
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
@@ -341,7 +343,7 @@ Function Get-MsiDatabase {
   do {
     $_Table = $_TablesView.Fetch()
     if ($_Table) {
-      $_TableName = Get-Property $_Table StringData 1
+      $_TableName = Get-Property -Object $_Table -PropertyName StringData -ArgumentList 1
       $_Database["$_TableName"] = @{}
     }
   } while ($_Table)
@@ -354,8 +356,8 @@ Function Get-MsiDatabase {
       $_Item = $_ItemView.Fetch()
       if ($_Item) {
         $_ItemValue = $null
-        $_ItemName = Get-Property $_Item StringData 1
-        if ($_Table -eq 'Property') { $_ItemValue = Get-Property $_Item StringData 2 -ErrorAction SilentlyContinue }
+        $_ItemName = Get-Property -Object $_Item -PropertyName StringData -ArgumentList 1
+        if ($_Table -eq 'Property') { $_ItemValue = Get-Property -Object $_Item -PropertyName StringData -ArgumentList 2 -ErrorAction SilentlyContinue }
         $_Database.$_Table["$_ItemName"] = $_ItemValue
       }
     } while ($_Item)
@@ -707,6 +709,8 @@ Function Read-QuickInstallerEntry {
 # If a key does not exist, it sets the value to a special character to be removed / commented later
 # Returns the result as a new object
 Function Restore-YamlKeyOrder {
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'InputObject', Justification = 'The variable is used inside a conditional but ScriptAnalyser does not recognize the scope')]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'NoComments', Justification = 'The variable is used inside a conditional but ScriptAnalyser does not recognize the scope')]
   Param
   (
     [Parameter(Mandatory = $true, Position = 0)]
