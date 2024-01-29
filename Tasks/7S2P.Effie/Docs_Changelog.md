@@ -1,3 +1,9 @@
+# Version 3.4.1:
+
+- Added support for statistics of selected text;
+- Introduced "Ask AI" feature for sheet content;
+- Some minor improvements and bugs fixed.
+
 # Version 3.3.1:
 
 - New Export to Image Style (Light);
