@@ -1,5 +1,5 @@
-$RepoOwner = 'twitchdev'
-$RepoName = 'twitch-cli'
+$RepoOwner = 'xournalpp'
+$RepoName = 'xournalpp'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -7,25 +7,12 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('Windows') -and $_.name.Contains('i386') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and -not $_.name.Contains('portable') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\twitch.exe"
-      PortableCommandAlias = 'twitch'
-    }
-  )
-}
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('Windows') -and $_.name.Contains('x86_64') })[0]
-$this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\twitch.exe"
-      PortableCommandAlias = 'twitch'
+      RelativeFilePath = $Asset.name -replace '\.zip$', '.exe'
     }
   )
 }
@@ -36,7 +23,7 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
   $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-  for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('Changelog')); $Node = $Node.NextSibling) {
+  for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h1' -and $Node.InnerText.Contains('Changes:')); $Node = $Node.NextSibling) {
     $ReleaseNotesNodes.Add($Node)
   }
   if ($ReleaseNotesNodes) {

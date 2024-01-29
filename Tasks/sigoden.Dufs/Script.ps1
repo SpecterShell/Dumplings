@@ -1,5 +1,5 @@
-$RepoOwner = 'bookstairs'
-$RepoName = 'bookhunter'
+$RepoOwner = 'sigoden'
+$RepoName = 'dufs'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -7,16 +7,17 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bookhunter.exe"
-      PortableCommandAlias = 'bookhunter'
-    }
-  )
+  Architecture = 'x86'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('i686') })[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x86_64') })[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('aarch64') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime

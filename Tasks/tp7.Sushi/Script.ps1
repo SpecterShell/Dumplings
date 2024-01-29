@@ -1,22 +1,14 @@
-$RepoOwner = 'bookstairs'
-$RepoName = 'bookhunter'
+$RepoOwner = 'tp7'
+$RepoName = 'Sushi'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases")[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bookhunter.exe"
-      PortableCommandAlias = 'bookhunter'
-    }
-  )
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime

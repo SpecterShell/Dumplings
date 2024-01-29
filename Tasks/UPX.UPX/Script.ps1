@@ -1,5 +1,5 @@
-$RepoOwner = 'GyanD'
-$RepoName = 'codexffmpeg'
+$RepoOwner = 'upx'
+$RepoName = 'upx'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -7,21 +7,25 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('full') -and -not $_.name.Contains('shared') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') })[0]
 $this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffmpeg.exe"
-      PortableCommandAlias = 'ffmpeg'
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\upx.exe"
+      PortableCommandAlias = 'upx'
     }
+  )
+}
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') })[0]
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffplay.exe"
-      PortableCommandAlias = 'ffplay'
-    }
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffprobe.exe"
-      PortableCommandAlias = 'ffprobe'
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\upx.exe"
+      PortableCommandAlias = 'upx'
     }
   )
 }
@@ -32,7 +36,7 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://raw.githubusercontent.com/FFmpeg/FFmpeg/release/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/Changelog"
+  Value = $ReleaseNotesUrl = 'https://upx.github.io/upx-news.txt'
 }
 
 switch ($this.Check()) {
@@ -40,13 +44,13 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri $ReleaseNotesUrl
 
-      $ReleaseNotesObject = ($Object2 -split '(?m)(?=^version [\d\.]+:?\n)').Where({ $_.Contains($this.CurrentState.Version) })[0]
+      $ReleaseNotesObject = ($Object2 -split '(?m)(?=^Changes in [\d\.]+ \(.+?\):\n)').Where({ $_.Contains($this.CurrentState.Version) })[0]
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject -creplace '^version [\d\.]+:?\n' | Format-Text
+          Value  = $ReleaseNotesObject -creplace '^Changes in [\d\.]+ \(.+?\):\n' | Format-Text
         }
       } else {
         $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

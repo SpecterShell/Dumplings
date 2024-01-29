@@ -7,19 +7,20 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('full') -and $_.name.Contains('shared') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('full') -and $_.name.Contains('shared') })[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath     = "ffmpeg-$($this.CurrentState.Version)-full_build-shared\bin\ffmpeg.exe"
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffmpeg.exe"
       PortableCommandAlias = 'ffmpeg'
     }
     [ordered]@{
-      RelativeFilePath     = "ffmpeg-$($this.CurrentState.Version)-full_build-shared\bin\ffplay.exe"
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffplay.exe"
       PortableCommandAlias = 'ffplay'
     }
     [ordered]@{
-      RelativeFilePath     = "ffmpeg-$($this.CurrentState.Version)-full_build-shared\bin\ffprobe.exe"
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffprobe.exe"
       PortableCommandAlias = 'ffprobe'
     }
   )

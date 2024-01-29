@@ -7,12 +7,13 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') })[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') })[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "RT-$($this.CurrentState.Version)-windows-x64\RT-$($this.CurrentState.Version).exe"
+      RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\RT-$($this.CurrentState.Version).exe"
     }
   )
 }
