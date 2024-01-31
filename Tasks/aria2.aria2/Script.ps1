@@ -1,5 +1,5 @@
-$RepoOwner = 'foamzou'
-$RepoName = 'media-get'
+$RepoOwner = 'aria2'
+$RepoName = 'aria2'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -7,8 +7,27 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('32bit') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') })[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'x86'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\aria2c.exe"
+      PortableCommandAlias = 'aria2c'
+    }
+  )
+}
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('64bit') })[0]
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\aria2c.exe"
+      PortableCommandAlias = 'aria2c'
+    }
+  )
 }
 
 # ReleaseTime

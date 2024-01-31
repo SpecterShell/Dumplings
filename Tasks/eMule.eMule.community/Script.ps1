@@ -1,14 +1,19 @@
-$RepoOwner = 'foamzou'
-$RepoName = 'media-get'
+$RepoOwner = 'irwir'
+$RepoName = 'eMule'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = [regex]::Match($Object1.tag_name, 'v(.+?)-').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') })[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture = 'x86'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('Installer.exe') })[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('Installer64.exe') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
@@ -17,7 +22,7 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
   $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-  for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Full Changelog:'); $Node = $Node.NextSibling) {
+  for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Available downloads'); $Node = $Node.NextSibling) {
     $ReleaseNotesNodes.Add($Node)
   }
   if ($ReleaseNotesNodes) {

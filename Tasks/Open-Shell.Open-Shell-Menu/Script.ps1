@@ -1,5 +1,5 @@
-$RepoOwner = 'foamzou'
-$RepoName = 'media-get'
+$RepoOwner = 'Open-Shell'
+$RepoName = 'Open-Shell-Menu'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -8,7 +8,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') })[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
