@@ -14,7 +14,7 @@ $this.CurrentState.Version = $Object1.data.login_version_note.version
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.data.login_version_note.content.ForEach({ $_.category_name + "`n" + $_.list.ForEach({ $_.title + "`n" + $_.content }) -join "`n" }) -join "`n`n" | Format-Text
+  Value  = $ReleaseNotesCN = $Object1.data.login_version_note.content.ForEach({ $_.category_name + "`n" + ($_.list.ForEach({ $_.title + "`n" + $_.content }) -join "`n") }) -join "`n`n" | Format-Text
 }
 
 switch ($this.Check()) {
