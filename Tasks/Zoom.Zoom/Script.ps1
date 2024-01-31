@@ -46,17 +46,17 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiX86 = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'msi'
   InstallerUrl  = "https://zoom.us/client/$($this.CurrentState.Version)/ZoomInstallerFull.msi"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiX64 = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
   InstallerUrl  = "https://zoom.us/client/$($this.CurrentState.Version)/ZoomInstallerFull.msi?archType=x64"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiArm64 = [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'msi'
   InstallerUrl  = "https://zoom.us/client/$($this.CurrentState.Version)/ZoomInstallerFull.msi?archType=winarm64"
@@ -76,6 +76,43 @@ if ($ReleaseNotesObject) {
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
+    # AppsAndFeaturesEntries
+    $InstallerFileMsiX86 = Get-TempFile -Uri $InstallerMsiX86.InstallerUrl
+    $InstallerFileMsiX64 = Get-TempFile -Uri $InstallerMsiX64.InstallerUrl
+    $InstallerFileMsiArm64 = Get-TempFile -Uri $InstallerMsiArm64.InstallerUrl
+
+    $RealVersion = $InstallerFileMsiX64 | Read-ProductVersionFromMsi
+
+    $InstallerMsiX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileMsiX86 -Algorithm SHA256).Hash
+    $InstallerMsiX86['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayName    = 'Zoom (32-bit)'
+        DisplayVersion = $RealVersion
+        ProductCode    = $InstallerMsiX86['ProductCode'] = $InstallerFileMsiX86 | Read-ProductCodeFromMsi
+        UpgradeCode    = $InstallerFileMsiX86 | Read-UpgradeCodeFromMsi
+      }
+    )
+
+    $InstallerMsiX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileMsiX64 -Algorithm SHA256).Hash
+    $InstallerMsiX64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayName    = 'Zoom (64-bit)'
+        DisplayVersion = $RealVersion
+        ProductCode    = $InstallerMsiX64['ProductCode'] = $InstallerFileMsiX64 | Read-ProductCodeFromMsi
+        UpgradeCode    = $InstallerFileMsiX64 | Read-UpgradeCodeFromMsi
+      }
+    )
+
+    $InstallerMsiArm64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileMsiArm64 -Algorithm SHA256).Hash
+    $InstallerMsiArm64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayName    = 'Zoom (ARM64)'
+        DisplayVersion = $RealVersion
+        ProductCode    = $InstallerMsiArm64['ProductCode'] = $InstallerFileMsiArm64 | Read-ProductCodeFromMsi
+        UpgradeCode    = $InstallerFileMsiArm64 | Read-UpgradeCodeFromMsi
+      }
+    )
+
     $this.Write()
   }
   ({ $_ -ge 2 }) {
