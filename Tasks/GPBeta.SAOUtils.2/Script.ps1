@@ -1,5 +1,5 @@
-$RepoOwner = 'GopeedLab'
-$RepoName = 'gopeed'
+$RepoOwner = 'NERvGear'
+$RepoName = 'SAO-Utils'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -7,15 +7,8 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') -and -not $_.name.Contains('web') -and -not $_.name.Contains('portable') })[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = $Asset.name -replace '\.zip$', '.exe'
-    }
-  )
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') })[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
@@ -24,10 +17,10 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-  $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='Changes']")
+  $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./*[text()='Change Log']")
   if ($ReleaseNotesTitleNode) {
     $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
+    for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Name.Contains('变更日志'); $Node = $Node.NextSibling) {
       $ReleaseNotesNodes.Add($Node)
     }
     # ReleaseNotes (en-US)
@@ -40,7 +33,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
     $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
   }
 
-  $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='更新日志']")
+  $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./*[text()='变更日志']")
   if ($ReleaseNotesCNTitleNode) {
     $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
     for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
