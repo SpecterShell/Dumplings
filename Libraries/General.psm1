@@ -1,14 +1,12 @@
-<#
-.SYNOPSIS
-  Helper functions
-#>
+#Requires -Version 7.4
 
-# Apply default parameters
-if ($DumplingsDefaultParameterValues) {
-  $PSDefaultParameterValues = $DumplingsDefaultParameterValues
-}
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
 
+# Force stop on error
 $ErrorActionPreference = 'Stop'
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'PSNativeCommandUseErrorActionPreference', Justification = 'This is a built-in variable of PowerShell')]
+$PSNativeCommandUseErrorActionPreference = $true
 
 function ConvertFrom-UnixTimeSeconds {
   <#
@@ -19,10 +17,7 @@ function ConvertFrom-UnixTimeSeconds {
   #>
   [OutputType([datetime])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The Unix time in seconds'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Unix time in seconds')]
     [long]
     $Seconds
   )
@@ -41,10 +36,7 @@ function ConvertFrom-UnixTimeMilliseconds {
   #>
   [OutputType([datetime])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The Unix time in milliseconds'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Unix time in milliseconds')]
     [long]
     $Milliseconds
   )
@@ -65,17 +57,11 @@ function ConvertTo-UtcDateTime {
   #>
   [OutputType([datetime])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The DateTime object to be converted'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The DateTime object to be converted')]
     [datetime]
     $DateTime,
 
-    [parameter(
-      Mandatory,
-      HelpMessage = 'The TimeZoneInfo ID of the source timezone of the DateTime object'
-    )]
+    [parameter(Mandatory, HelpMessage = 'The TimeZoneInfo ID of the source timezone of the DateTime object')]
     [ArgumentCompleter({ [System.TimeZoneInfo]::GetSystemTimeZones() | Select-Object -ExpandProperty Id | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
     [ValidateScript({ [System.TimeZoneInfo]::FindSystemTimeZoneById($_) })]
     [string]
@@ -100,10 +86,7 @@ function ConvertFrom-Xml {
   #>
   [OutputType([xml])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The XML string to be converted'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The XML string to be converted')]
     [string]
     $InputObject
   )
@@ -154,10 +137,7 @@ function ConvertFrom-Ini {
   #>
   # [OutputType([ordered])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The INI string to be converted'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The INI string to be converted')]
     [string]
     $InputObject,
 
@@ -237,10 +217,7 @@ function ConvertFrom-Base64 {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The Base64 string to be decoded'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Base64 string to be decoded')]
     [string]
     $InputObject
   )
@@ -259,10 +236,7 @@ function ConvertTo-LF {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The string to be converted'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be converted')]
     [string]
     $InputObject
   )
@@ -281,10 +255,7 @@ function Split-LineEndings {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The string to be splitted'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be splitted')]
     [string]
     $InputObject
   )
@@ -303,10 +274,7 @@ function ConvertTo-Https {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'Uniform Resource Identifier (URI)'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
     [string]
     $Uri
   )
@@ -325,10 +293,7 @@ function ConvertTo-UnescapedUri {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'Uniform Resource Identifier (URI)'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
     [string]
     $Uri
   )
@@ -347,10 +312,7 @@ function ConvertTo-HtmlDecodedText {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The string to be decoded'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be decoded')]
     [string]
     $InputObject
   )
@@ -369,10 +331,7 @@ function ConvertTo-OrderedList {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The strings to be prepended'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
     [string[]]
     $InputObject
   )
@@ -400,10 +359,7 @@ function ConvertTo-UnorderedList {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The strings to be prepended'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
     [string[]]
     $InputObject
   )
@@ -465,10 +421,7 @@ function Expand-TempArchive {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the ZIP archive'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the ZIP archive')]
     [string]
     $Path
   )
@@ -501,22 +454,15 @@ function Get-RedirectedUrl1st {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The URI that will be redirected'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The URI that will be redirected')]
     [string]
     $Uri,
 
-    [Parameter(
-      HelpMessage = 'The user agent string for the web request'
-    )]
+    [Parameter(HelpMessage = 'The user agent string for the web request')]
     [string]
     $UserAgent,
 
-    [Parameter(
-      HelpMessage = 'The user agent string for the web request'
-    )]
+    [Parameter(HelpMessage = 'The user agent string for the web request')]
     [System.Collections.IDictionary]
     $Headers
   )
@@ -547,16 +493,11 @@ function Read-ResponseContent {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The response object from the Invoke-WebRequest command'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The response object from the Invoke-WebRequest command')]
     [Microsoft.PowerShell.Commands.WebResponseObject]
     $Response,
 
-    [Parameter(
-      HelpMessage = 'The encoding of the content'
-    )]
+    [Parameter(HelpMessage = 'The encoding of the content')]
     [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
     [string]
     $Encoding
@@ -590,17 +531,11 @@ function Get-EmbeddedJson {
   #>
   [OutputType([string])]
   param (
-    [parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The string containing the JSON'
-    )]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string containing the JSON')]
     [string]
     $InputObject,
 
-    [parameter(
-      Mandatory,
-      HelpMessage = 'The string indicating where the JSON starts after'
-    )]
+    [parameter(Mandatory, HelpMessage = 'The string indicating where the JSON starts after')]
     [ValidateNotNullOrEmpty()]
     [string]
     $StartsFrom
@@ -627,10 +562,7 @@ function Read-ProductVersionFromExe {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The message content'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
     [string]
     $Path
   )
@@ -649,10 +581,7 @@ function Read-FileVersionFromExe {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The message content'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
     [string]
     $Path
   )
@@ -671,10 +600,7 @@ function Read-ProductVersionFromMsi {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the MSI file'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
     [string]
     $Path
   )
@@ -715,10 +641,7 @@ function Read-ProductCodeFromMsi {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the MSI file'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
     [string]
     $Path
   )
@@ -759,10 +682,7 @@ function Read-UpgradeCodeFromMsi {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the MSI file'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
     [string]
     $Path
   )
@@ -805,16 +725,11 @@ function Read-ProductCodeFromBurn {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the WiX bundle file'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the WiX bundle file')]
     [string]
     $Path,
 
-    [Parameter(
-      HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool'
-    )]
+    [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
     [string]
     $DarkPath
   )
@@ -860,16 +775,11 @@ function Read-UpgradeCodeFromBurn {
   #>
   [OutputType([string])]
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The path to the WiX bundle file'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the WiX bundle file')]
     [string]
     $Path,
 
-    [Parameter(
-      HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool'
-    )]
+    [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
     [string]
     $DarkPath
   )
@@ -915,17 +825,11 @@ function Compare-Version {
   #>
   [OutputType([int])]
   param (
-    [Parameter(
-      Mandatory,
-      HelpMessage = 'The version used as a reference for comparison'
-    )]
+    [Parameter(Mandatory, HelpMessage = 'The version used as a reference for comparison')]
     [string]
     $ReferenceVersion,
 
-    [Parameter(
-      Mandatory,
-      HelpMessage = 'The version that is compared to the reference version'
-    )]
+    [Parameter(Mandatory, HelpMessage = 'The version that is compared to the reference version')]
     [string]
     $DifferenceVersion
   )
@@ -955,21 +859,14 @@ function ConvertFrom-ElectronUpdater {
     The locale of the ReleaseNotes
   #>
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The YAML object of the Electron Updater manifest to be handled'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The YAML object of the Electron Updater manifest to be handled')]
     $InputObject,
 
-    [Parameter(
-      HelpMessage = 'The prefix of the InstallerUrl'
-    )]
+    [Parameter(HelpMessage = 'The prefix of the InstallerUrl')]
     [string]
     $Prefix = '',
 
-    [Parameter(
-      HelpMessage = 'The locale of the ReleaseNotes'
-    )]
+    [Parameter(HelpMessage = 'The locale of the ReleaseNotes')]
     [string]
     $Locale = 'en-US'
   )
@@ -1014,17 +911,12 @@ function Write-Log {
     Log level - Verbose, Log, Info, Warning or Error
   #>
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The message content'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
     [AllowEmptyString()]
     [string]
     $Object,
 
-    [Parameter(
-      HelpMessage = 'Log level - Verbose, Log, Info, Warning or Error'
-    )]
+    [Parameter(HelpMessage = 'Log level - Verbose, Log, Info, Warning or Error')]
     [ValidateSet('Verbose', 'Log', 'Info', 'Warning', 'Error')]
     [string]
     $Level = 'Log'
@@ -1056,10 +948,7 @@ function Copy-Object {
     The object to be cloned
   #>
   param (
-    [Parameter(
-      Mandatory, ValueFromPipeline,
-      HelpMessage = 'The object to be cloned'
-    )]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The object to be cloned')]
     $InputObject
   )
 

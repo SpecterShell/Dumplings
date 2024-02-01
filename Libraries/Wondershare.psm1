@@ -1,12 +1,8 @@
-<#
-.SYNOPSIS
-  Invoke Wondershare's API
-#>
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
 
-# Apply default parameters
-if ($DumplingsDefaultParameterValues) {
-  $PSDefaultParameterValues = $DumplingsDefaultParameterValues
-}
+# Force stop on error
+$ErrorActionPreference = 'Stop'
 
 function Invoke-WondershareJsonUpgradeApi {
   <#

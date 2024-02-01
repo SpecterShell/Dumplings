@@ -1,7 +1,8 @@
-# Apply default parameters for web requests
-if ($DumplingsDefaultParameterValues) {
-  $PSDefaultParameterValues = $DumplingsDefaultParameterValues
-}
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
+
+# Force stop on error
+$ErrorActionPreference = 'Stop'
 
 filter ConvertTo-TelegramEscapedText {
   $_ -creplace '([_*\[\]()~`>#+\-=|{}.!])', '\$1'

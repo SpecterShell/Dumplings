@@ -1,7 +1,8 @@
-<#
-.SYNOPSIS
-  Get text content from HTML Agility Pack node(s)
-#>
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
+
+# Force stop on error
+$ErrorActionPreference = 'Stop'
 
 # Node types that will be ignored during traversing
 $IgnoredNodes = @('img', 'script', 'style', 'video', '#comment')

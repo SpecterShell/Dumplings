@@ -1,7 +1,8 @@
-<#
-.SYNOPSIS
-  Initialize WebDriver and return the object on demand
-#>
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
+
+# Force stop on error
+$ErrorActionPreference = 'Stop'
 
 Add-Type -Path (Join-Path $PSScriptRoot '..' 'Assets' 'WebDriver.dll' -Resolve)
 

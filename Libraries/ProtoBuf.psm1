@@ -1,3 +1,9 @@
+# Apply default function parameters
+if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
+
+# Force stop on error
+$ErrorActionPreference = 'Stop'
+
 function Read-Varint {
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory)]
