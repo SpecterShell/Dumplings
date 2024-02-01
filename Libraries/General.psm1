@@ -8,6 +8,8 @@ if ($DumplingsDefaultParameterValues) {
   $PSDefaultParameterValues = $DumplingsDefaultParameterValues
 }
 
+$ErrorActionPreference = 'Stop'
+
 function ConvertFrom-UnixTimeSeconds {
   <#
   .SYNOPSIS

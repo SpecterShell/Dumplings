@@ -61,6 +61,9 @@ param (
 # In GitHub Actions, hide the progress bar to avoid pollutions to console output
 if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
+# Exit on error
+$ErrorActionPreference = 'Stop'
+
 # Set default parameter values for some functions
 $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
   'Invoke-WebRequest:TimeoutSec'        = 30
