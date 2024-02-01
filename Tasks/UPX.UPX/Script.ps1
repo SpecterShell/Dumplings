@@ -7,7 +7,7 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -18,7 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -44,7 +44,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri $ReleaseNotesUrl
 
-      $ReleaseNotesObject = ($Object2 -split '(?m)(?=^Changes in [\d\.]+ \(.+?\):\n)').Where({ $_.Contains($this.CurrentState.Version) })[0]
+      $ReleaseNotesObject = ($Object2 -split '(?m)(?=^Changes in [\d\.]+ \(.+?\):\n)').Where({ $_.Contains($this.CurrentState.Version) }, 'First')[0]
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

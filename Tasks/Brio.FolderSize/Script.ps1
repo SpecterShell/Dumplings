@@ -13,16 +13,16 @@ $Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^/foldersize/$([reg
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x86') })[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x86') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') })[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') })[0].pubDate,
+  $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') }, 'First')[0].pubDate,
   'ddd, dd MMM yyyy HH:mm:ss "UT"',
   (Get-Culture -Name 'en-US')
 ) | ConvertTo-UtcDateTime -Id 'UTC'

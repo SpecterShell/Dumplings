@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.data.manifest.win32.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' })[0].path.ia32
+  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }, 'First')[0].path.ia32
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' })[0].path.x64
+  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }, 'First')[0].path.x64
 }
 
 # ReleaseTime

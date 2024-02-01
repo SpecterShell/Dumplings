@@ -14,7 +14,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://s3.amazonaws.com/sapien/software/UpdateToolData/PowerShell%20Studio%202023.log'
 
-      $ReleaseNotesContent = $Object2.Split("`r`n`r`n").Where({ $_.StartsWith($ShortVersion) })
+      $ReleaseNotesContent = $Object2.Split("`r`n`r`n").Where({ $_.StartsWith($ShortVersion) }, 'First')
       if ($ReleaseNotesContent) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent[0], 'Released: (.+?)\n').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

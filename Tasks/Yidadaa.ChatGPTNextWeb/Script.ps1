@@ -24,7 +24,7 @@ $this.CurrentState.Locale += [ordered]@{
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") })[0]
+      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") }, 'First')[0]
 
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html

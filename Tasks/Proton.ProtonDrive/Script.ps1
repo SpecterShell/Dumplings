@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://proton.me/download/drive/windows/version.json').Releases.Where({ $_.CategoryName -eq 'Stable' })[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://proton.me/download/drive/windows/version.json').Releases.Where({ $_.CategoryName -eq 'Stable' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.Version

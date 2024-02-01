@@ -17,13 +17,13 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.release_date, '
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesEN = $Object1.data.Where({ $_.lang -eq 'en' })[0].content | Format-Text
+  Value  = $ReleaseNotesEN = $Object1.data.Where({ $_.lang -eq 'en' }, 'First')[0].content | Format-Text
 }
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.data.Where({ $_.lang -eq 'zh_cn' })[0].content | Format-Text
+  Value  = $ReleaseNotesCN = $Object1.data.Where({ $_.lang -eq 'zh_cn' }, 'First')[0].content | Format-Text
 }
 
 switch ($this.Check()) {

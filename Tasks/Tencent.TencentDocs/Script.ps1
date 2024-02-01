@@ -13,7 +13,7 @@ $Object1 = (
       )
     } | ConvertTo-Json -Compress
   ) -ContentType 'application/json'
-).config.items.Where({ $_.group -eq 'Prod.Common.Update' })[0].key_values.Where({ $_.key -eq 'update_info' })[0].value | ConvertFrom-Json
+).config.items.Where({ $_.group -eq 'Prod.Common.Update' }, 'First')[0].key_values.Where({ $_.key -eq 'update_info' }, 'First')[0].value | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.version

@@ -62,14 +62,14 @@ $this.CurrentState.ReleaseTime = $Object4.root.components.component[-1].createti
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesEN = $Object3.root.language.Where({ $_.code -eq '1033' })[0].features.feature | Format-Text
+  Value  = $ReleaseNotesEN = $Object3.root.language.Where({ $_.code -eq '1033' }, 'First')[0].features.feature | Format-Text
 }
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' })[0].features.feature | Format-Text
+  Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' }, 'First')[0].features.feature | Format-Text
 }
 
 switch ($this.Check()) {

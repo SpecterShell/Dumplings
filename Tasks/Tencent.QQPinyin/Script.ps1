@@ -45,11 +45,11 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' })) {
+    if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' }, 'First')) {
       try {
         $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
-        $ReleaseNotesObject = $Object3.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) })
+        $ReleaseNotesObject = $Object3.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) }, 'First')
         if ($ReleaseNotesObject) {
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{

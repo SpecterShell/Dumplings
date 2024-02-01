@@ -8,7 +8,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.downloadVersion, '（([\d\.
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = (($Object1.download | ConvertFrom-Json).event.Where({ $_.type -eq 'openLink' }))[0].params.url
+  InstallerUrl = ($Object1.download | ConvertFrom-Json).event.Where({ $_.type -eq 'openLink' }, 'First')[0].params.url
 }
 
 # ReleaseTime

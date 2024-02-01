@@ -18,7 +18,7 @@ switch ($this.Check()) {
     try {
       $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
-      $ReleaseNotesNode = $Object2.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") })
+      $ReleaseNotesNode = $Object2.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
@@ -40,7 +40,7 @@ switch ($this.Check()) {
     try {
       $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
-      $ReleaseNotesCNNode = $Object3.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") })
+      $ReleaseNotesCNNode = $Object3.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesCNNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'

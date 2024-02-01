@@ -21,7 +21,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsQQVersionList.js' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
-      $ReleaseNotesObject = $Object2.ntLogs.Where({ $_.version.EndsWith($Object1.ntVersion) })
+      $ReleaseNotesObject = $Object2.ntLogs.Where({ $_.version.EndsWith($Object1.ntVersion) }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

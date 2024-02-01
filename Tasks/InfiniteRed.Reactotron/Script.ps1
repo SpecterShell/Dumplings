@@ -1,7 +1,7 @@
 $RepoOwner = 'infinitered'
 $RepoName = 'reactotron'
 
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.StartsWith('reactotron-app') })[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.StartsWith('reactotron-app') }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace 'reactotron-app@'
@@ -9,11 +9,11 @@ $this.CurrentState.Version = $Object1.tag_name -creplace 'reactotron-app@'
 # Installer
 $this.CurrentState.Installer += $InstallerWix = [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') })[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType          = 'nullsoft'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') })[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName    = "Reactotron $($this.CurrentState.Version.Split('.')[0..2] -join '.')"

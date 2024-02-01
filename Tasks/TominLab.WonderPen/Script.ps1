@@ -23,7 +23,7 @@ if (!$InstallerUrlX64.Contains($this.CurrentState.Version)) {
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/update-detail?app=wonderpen').data.Where({ $_.version -eq $this.CurrentState.Version })
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/update-detail?app=wonderpen').data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
 
       if ($Object2) {
         # ReleaseTime

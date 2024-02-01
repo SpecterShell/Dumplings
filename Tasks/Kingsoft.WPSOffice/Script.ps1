@@ -13,7 +13,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc'
 
-      $ReleaseNotesListObject = $Object2.data.Where({ $_.post_excerpt.Contains($this.CurrentState.Version) })
+      $ReleaseNotesListObject = $Object2.data.Where({ $_.post_excerpt.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesListObject) {
         $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($ReleaseNotesListObject[0].more.slug)"
         # ReleaseTime

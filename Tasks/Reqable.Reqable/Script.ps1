@@ -32,7 +32,7 @@ switch ($this.Check()) {
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/reqable/reqable-app/releases/tags/$($this.CurrentState.Version)"
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.assets.Where({ $_.name -cmatch '\.exe$' })[0].updated_at
+      $this.CurrentState.ReleaseTime = $Object2.assets.Where({ $_.name -cmatch '\.exe$' }, 'First')[0].updated_at
     } catch {
       $_ | Out-Host
       $this.Logging($_, 'Warning')

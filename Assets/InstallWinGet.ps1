@@ -21,12 +21,12 @@ if ($Env:GITHUB_TOKEN) {
 }
 $WinGetRelease = Invoke-RestMethod @Params
 
-$WinGetUri = $WinGetRelease.assets.Where({ $_.name.EndsWith('.msixbundle') })[0].browser_download_url
+$WinGetUri = $WinGetRelease.assets.Where({ $_.name.EndsWith('.msixbundle') }, 'First')[0].browser_download_url
 $WinGetPath = New-TemporaryFile
 Write-Host "Downloading ${WinGetUri}"
 Invoke-WebRequest -Uri $WinGetUri -OutFile $WinGetPath
 
-$WinGetLicenseUri = $WinGetRelease.assets.Where({ $_.name.EndsWith('_License1.xml') })[0].browser_download_url
+$WinGetLicenseUri = $WinGetRelease.assets.Where({ $_.name.EndsWith('_License1.xml') }, 'First')[0].browser_download_url
 $WinGetLicensePath = New-TemporaryFile
 Write-Host "Downloading ${WinGetLicenseUri}"
 Invoke-WebRequest -Uri $WinGetLicenseUri -OutFile $WinGetLicensePath

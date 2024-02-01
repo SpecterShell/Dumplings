@@ -13,7 +13,7 @@ $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' })[0].run
+  InstallerUrl = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' }, 'First')[0].run
 }
 
 switch ($this.Check()) {

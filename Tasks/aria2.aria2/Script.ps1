@@ -7,7 +7,7 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('32bit') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('32bit') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -18,7 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('64bit') })[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('64bit') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri

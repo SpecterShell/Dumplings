@@ -62,7 +62,7 @@ $this.CurrentState.Installer += $InstallerMsiArm64 = [ordered]@{
   InstallerUrl  = "https://zoom.us/client/$($this.CurrentState.Version)/ZoomInstallerFull.msi?archType=winarm64"
 }
 
-$ReleaseNotesObject = ($Object1['11'] -split '(?=Release notes of \d+\.\d+\.\d+ \(\d+\))').Where({ $_.Contains($DisplayVersion) })[0]
+$ReleaseNotesObject = ($Object1['11'] -split '(?=Release notes of \d+\.\d+\.\d+ \(\d+\))').Where({ $_.Contains($DisplayVersion) }, 'First')[0]
 if ($ReleaseNotesObject) {
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{

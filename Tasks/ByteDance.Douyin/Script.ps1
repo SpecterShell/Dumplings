@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.data.manifest.win32.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' })[0].path.ia32.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
+  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }, 'First')[0].path.ia32.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
 }
 
 # ReleaseTime

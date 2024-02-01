@@ -7,7 +7,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://gateway.hellonext.co/api/v2/changelogs' -Headers @{ 'x-organization' = 'feedback.remnote.com' }
 
-      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains($this.CurrentState.Version) })
+      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

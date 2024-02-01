@@ -15,16 +15,16 @@ $Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^/v?$([regex]::Esca
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('GCC') })[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') })[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') })[0].pubDate,
+  $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].pubDate,
   'ddd, dd MMM yyyy HH:mm:ss "UT"',
   (Get-Culture -Name 'en-US')
 ) | ConvertTo-UtcDateTime -Id 'UTC'
@@ -82,7 +82,7 @@ switch ($this.Check()) {
     try {
       $Object4 = Invoke-RestMethod -Uri 'https://gitee.com/royqh1979/redpandacpp/raw/public/blog/index.xml'
 
-      $ReleaseNotesUrlCNObject = $Object4.Where({ $_.title.Contains($this.CurrentState.Version) })
+      $ReleaseNotesUrlCNObject = $Object4.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesUrlCNObject) {
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

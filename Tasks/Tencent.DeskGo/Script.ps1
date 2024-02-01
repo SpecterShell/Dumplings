@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&keyword=腾讯桌面整理').list.Where({ $_.SoftID -eq 23125 })[0].xmlInfo | ConvertFrom-Xml
+$Object1 = (Invoke-RestMethod -Uri 'https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&keyword=腾讯桌面整理').list.Where({ $_.SoftID -eq 23125 }, 'First')[0].xmlInfo | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.soft.versionname

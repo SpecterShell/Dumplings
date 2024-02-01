@@ -6,27 +6,27 @@ $Object1 = Invoke-RestMethod -Uri 'https://stores1.hispace.hicloud.com/hwmarket/
 }
 
 # Version
-$this.CurrentState.Version = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' })[0].versionName
+$this.CurrentState.Version = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].versionName
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' })[0].downurl
+  InstallerUrl = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].downurl
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' })[0].releaseDate | ConvertFrom-UnixTimeMilliseconds
+$this.CurrentState.ReleaseTime = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].releaseDate | ConvertFrom-UnixTimeMilliseconds
 
 # ReleaseNotes (zh-Hans)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-Hans'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' })[0].newFeatures | Format-Text
+  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
 }
 # ReleaseNotes (zh-Hans-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-Hans-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' })[0].newFeatures | Format-Text
+  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
 }
 
 switch ($this.Check()) {

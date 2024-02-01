@@ -22,7 +22,7 @@ switch ($this.Check()) {
     try {
       $Object2 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
-      $ReleaseNotesObject = $Object2.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) })
+      $ReleaseNotesObject = $Object2.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

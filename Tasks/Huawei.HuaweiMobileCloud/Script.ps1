@@ -31,31 +31,31 @@ $this.CurrentState.Version = $Object2.configurations.version
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x86'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
 # }
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x86'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
+  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
   Architecture    = 'x64'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
+  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x86'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 })[0].url
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
 # }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x64'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 })[0].url
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
 
 # ReleaseTime

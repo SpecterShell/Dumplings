@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://qidian.qq.com/store/qd_interface/Download.php').data.Where({ $_.FPlatform -eq '1' })[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://qidian.qq.com/store/qd_interface/Download.php').data.Where({ $_.FPlatform -eq '1' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

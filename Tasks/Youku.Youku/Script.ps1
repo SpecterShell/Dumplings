@@ -10,7 +10,7 @@ switch ($this.Check()) {
     try {
       $Object1 = Invoke-RestMethod -Uri 'https://hudong.alicdn.com/api/data/v2/698d45f854c64b95a87f2a947ed4e12b.js' | Get-EmbeddedJson -StartsFrom 'cbUpdateConfig(' | ConvertFrom-Json
 
-      $ReleaseNotesNode = $Object1.win.strategies.Where({ $_.method.targetVersion -eq $RealVersion })
+      $ReleaseNotesNode = $Object1.win.strategies.Where({ $_.method.targetVersion -eq $RealVersion }, 'First')
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

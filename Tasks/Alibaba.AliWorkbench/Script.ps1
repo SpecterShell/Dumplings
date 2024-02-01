@@ -23,7 +23,7 @@ if ($VersionX86 -ne $VersionX64) {
 # Version
 $this.CurrentState.Version = $VersionX64
 
-$ReleaseNotesObject = $Object1.iterativeDiary.Where({ $_.end.Contains('Windows') })[0].diaryList.Where({ $_.versionTitle.Contains([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d)').Groups[1].Value) })
+$ReleaseNotesObject = $Object1.iterativeDiary.Where({ $_.end.Contains('Windows') }, 'First')[0].diaryList.Where({ $_.versionTitle.Contains([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d)').Groups[1].Value) }, 'First')
 if ($ReleaseNotesObject) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{

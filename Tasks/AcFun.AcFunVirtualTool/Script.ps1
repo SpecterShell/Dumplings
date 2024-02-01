@@ -22,7 +22,7 @@ switch ($this.Check()) {
       $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
       $Object2 = Invoke-RestMethod -Uri "https://ytech-ai.kuaishou.cn/ytech/api/virtual/reconstruct/record?api_key=${Key}&timestamp=$([System.DateTimeOffset]::Now.ToUnixTimeMilliseconds())" -Headers $Headers -SkipHeaderValidation
 
-      $ReleaseNotesUrlNode = $Object2.data.data.Where({ $_.iconText.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') })
+      $ReleaseNotesUrlNode = $Object2.data.data.Where({ $_.iconText.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') }, 'First')
       if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{

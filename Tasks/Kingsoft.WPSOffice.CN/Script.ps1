@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.wps.cn/platformUrls').productList.Where({ $_.productId -eq 58 })[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://www.wps.cn/platformUrls').productList.Where({ $_.productId -eq 58 }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.productVcode

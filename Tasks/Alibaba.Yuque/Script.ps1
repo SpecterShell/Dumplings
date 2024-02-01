@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.files.Where({ $_.updateType -eq 'package' })[0].url
+  InstallerUrl = $Object1.files.Where({ $_.updateType -eq 'package' }, 'First')[0].url
 }
 
 # ReleaseNotes (zh-CN)
@@ -22,7 +22,7 @@ switch ($this.Check()) {
       $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
 
       $Object2 = $EdgeDriver.ExecuteScript('return window.appData', $null)
-      $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.StartsWith($this.CurrentState.Version.Split('.')[0..1] -join '.') })
+      $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.StartsWith($this.CurrentState.Version.Split('.')[0..1] -join '.') }, 'First')
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{

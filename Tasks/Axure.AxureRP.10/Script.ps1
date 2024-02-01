@@ -20,7 +20,7 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'en-US'
   Key    = 'ReleaseNotes'
-  Value  = [regex]::Match($Object1, '(?s)message=(.+)').Groups[1].Value.Split('<title>').Where({ $_.Contains($this.CurrentState.Version) })[0] | Split-LineEndings | Select-Object -Skip 2 | Format-Text
+  Value  = [regex]::Match($Object1, '(?s)message=(.+)').Groups[1].Value.Split('<title>').Where({ $_.Contains($this.CurrentState.Version) }, 'First')[0] | Split-LineEndings | Select-Object -Skip 2 | Format-Text
 }
 
 switch ($this.Check()) {

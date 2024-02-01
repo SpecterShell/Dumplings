@@ -1,7 +1,7 @@
 $RepoOwner = 'asciidocfx'
 $RepoName = 'AsciidocFX'
 
-$Object1 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/updates.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '86' })[0]
+$Object1 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/updates.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '86' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.newVersion
@@ -23,7 +23,7 @@ $this.CurrentState.Locale += [ordered]@{
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") })[0]
+      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") }, 'First')[0]
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.updated | Get-Date -AsUTC

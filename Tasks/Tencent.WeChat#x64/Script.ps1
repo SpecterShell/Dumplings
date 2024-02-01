@@ -38,19 +38,19 @@ switch ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'en' })[0].ChildNodes.'#text' | Format-Text
+        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'en' }, 'First')[0].ChildNodes.'#text' | Format-Text
       }
       # ReleaseNotes (zh-Hans)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-Hans'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'zh_CN' })[0].ChildNodes.'#text' | Format-Text
+        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'zh_CN' }, 'First')[0].ChildNodes.'#text' | Format-Text
       }
       # ReleaseNotes (zh-Hans-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-Hans-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'zh_CN' })[0].ChildNodes.'#text' | Format-Text
+        Value  = $Object2.updateConfig.UpdateNotice.language.Where({ $_.code -eq 'zh_CN' }, 'First')[0].ChildNodes.'#text' | Format-Text
       }
     } catch {
       $_ | Out-Host

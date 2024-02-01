@@ -25,7 +25,7 @@ switch ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://api-compos.yunxiu.meitu.com/api/v1/client/article_category?with_article=1'
 
-      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 })[0].articles.Where({ $_.title.StartsWith("V$($this.CurrentState.Version) ") })
+      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 }, 'First')[0].articles.Where({ $_.title.StartsWith("V$($this.CurrentState.Version) ") }, 'First')
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
