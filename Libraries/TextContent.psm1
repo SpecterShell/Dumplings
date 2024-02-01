@@ -61,8 +61,6 @@ function Get-TextContent {
     Get text content from HTML Agility Pack node(s)
   .PARAMETER Node
     The HTML Agility Pack nodes containing the text
-  .PARAMETER ListInfo
-    The hashtable containing the list type and the list number, designed for internal use
   .EXAMPLE
     Invoke-WebRequest -Uri 'https://example.com/' | ConvertFrom-Html | Get-TextContent | Format-Text
     ConvertFrom-HTML is a function from the PowerShell module PowerHTML
@@ -75,6 +73,13 @@ function Get-TextContent {
       HelpMessage = 'The nodes that containing the text'
     )]
     $Node,
+
+    [Parameter(
+      DontShow,
+      HelpMessage = 'Disable merging continuous invisible characters'
+    )]
+    [bool]
+    $Raw = $false,
 
     [Parameter(
       DontShow,
@@ -101,8 +106,13 @@ function Get-TextContent {
 
     switch ($Nodes) {
       ({ $_.Name -eq '#text' }) {
-        # The browsers merge continuous invisible characters into one whitespace while HtmlAgilityPack doesn't. Do this manually
-        $NewContent = $_.InnerText -creplace '\s+', ' '
+        if ($Raw) {
+          # In some elements such as <pre> invisible character is rendered as is
+          $NewContent = $_.InnerText
+        } else {
+          # The browsers merge continuous invisible characters into one whitespace while HtmlAgilityPack doesn't. Do this manually
+          $NewContent = $_.InnerText -creplace '\s+', ' '
+        }
         if ($LastNodeName -eq '#text') {
           if ([string]::IsNullOrWhiteSpace($NewContent)) {
             $NextWhiteSpace = $true
@@ -150,18 +160,20 @@ function Get-TextContent {
           $Content.Append("`n") | Out-Null
         }
         if ($_.Name -eq 'ul') {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Unordered'; Number = 1 })) | Out-Null
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Unordered'; Number = 1 })) | Out-Null
         } elseif ($_.Name -eq 'ol') {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo @{ Type = 'Ordered'; Number = 1 })) | Out-Null
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = 1 })) | Out-Null
         } elseif ($_.Name -eq 'li') {
           $Prefix = '- '
           if ($ListInfo -and $ListInfo.Type -eq 'Ordered') {
             $Prefix = "$(($ListInfo.Number++)). "
           }
           # Prepend whitespaces to every line, and replace whitespaces in the first line with prefix
-          $Content.Append(((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)) | Out-Null
+          $Content.Append(((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)) | Out-Null
+        } elseif ($_.Name -eq 'pre') {
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $true -ListInfo $ListInfo)) | Out-Null
         } else {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -ListInfo $ListInfo)) | Out-Null
+          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo)) | Out-Null
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
