@@ -22,7 +22,7 @@ switch ($this.Check()) {
       if ($ReleaseNotesNode) {
         $ReleaseNotesTitleNode = ($ReleaseNotesNode[0].html.html | ConvertFrom-Html).SelectSingleNode("/div/div/div[contains(.//text(), 'V$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
         $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "Updated")]|.//hr') ; $Node = $Node.NextSibling) {
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "Updated")]|.//hr'); $Node = $Node.NextSibling) {
           $ReleaseNotesNodes += $Node
         }
         # ReleaseNotes (en-US)
@@ -64,7 +64,7 @@ switch ($this.Check()) {
       if ($ReleaseNotesCNNode) {
         $ReleaseNotesCNTitleNode = ($ReleaseNotesCNNode[0].html.html | ConvertFrom-Html).SelectSingleNode("/div/div/div[contains(.//text(), 'V$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
         $ReleaseNotesCNNodes = @()
-        for ($Node = $ReleaseNotesCNTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "发布于")]|.//hr') ; $Node = $Node.NextSibling) {
+        for ($Node = $ReleaseNotesCNTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "发布于")]|.//hr'); $Node = $Node.NextSibling) {
           $ReleaseNotesCNNodes += $Node
         }
         # ReleaseNotes (zh-CN)

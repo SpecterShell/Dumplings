@@ -22,7 +22,7 @@ switch ($this.Check()) {
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/blockquote[contains(./h5/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'blockquote' ; $Node = $Node.NextSibling) {
+        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'blockquote'; $Node = $Node.NextSibling) {
           $ReleaseNotesNodes.Add($Node)
         }
         # ReleaseNotes (en-US)
