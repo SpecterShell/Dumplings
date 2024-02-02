@@ -1,7 +1,7 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://proxyman.io/v1/apps/win/check-update' -Headers @{ 'X-NSProxy-Client' = '11' }).Data.Payload | ConvertFrom-Json
 
 $Prefix = $Object1.feedURL
-$this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$((Get-Random).ToString())" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+$this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
 
 $ReleaseNotesObjects = $Object1.changelog.Where({ $_.build_number -eq $this.CurrentState.Version }, 'First')
 if ($ReleaseNotesObjects) {

@@ -1,6 +1,6 @@
 $Prefix = 'https://he3-1309519128.cos.accelerate.myqcloud.com/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest/latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

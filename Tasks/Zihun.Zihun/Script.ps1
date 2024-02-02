@@ -1,6 +1,6 @@
 $Prefix = 'https://oss.izihun.com/client/download/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

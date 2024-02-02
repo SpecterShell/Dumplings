@@ -10,7 +10,7 @@ if (-not $Object1.data.hasNewVersion) {
 
 $Prefix = $Object1.data.url + '/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'

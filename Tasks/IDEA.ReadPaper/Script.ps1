@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-app-ai
 
 $Prefix = [uri]::new([uri]$Object1.data.urls.windowsClient, '.').OriginalString
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

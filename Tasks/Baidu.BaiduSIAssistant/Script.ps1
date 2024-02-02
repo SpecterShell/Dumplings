@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
+$Object1 = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

@@ -6,7 +6,7 @@ $Headers = @{
   uid          = ''
 }
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
 # InstallerUrl
 $this.CurrentState.Installer.ForEach({ $_.InstallerUrl = Get-RedirectedUrl -Uri $_.InstallerUrl -Headers $Headers })

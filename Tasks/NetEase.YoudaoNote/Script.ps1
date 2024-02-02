@@ -1,6 +1,6 @@
 $Prefix = 'https://artifact.lx.netease.com/download/ynote-electron/'
 
-$Object1 = Invoke-WebRequest -Uri "${Prefix}latest-windows.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest-windows.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
