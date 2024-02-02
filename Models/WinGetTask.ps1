@@ -347,7 +347,7 @@ class WinGetTask {
             $Parameters.PackageReleaseDate = $this.CurrentState.ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
           }
         }
-        & (Join-Path $PSScriptRoot '..' 'Assets' 'YamlCreate.ps1') @Parameters
+        & (Join-Path $PSScriptRoot '..' 'Utilities' 'YamlCreate.ps1') @Parameters
       } catch {
         $this.Logging("Failed to create manifests: ${_}", 'Error')
         $_ | Out-Host
