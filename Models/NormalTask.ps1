@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+  A model with the minimum logic necessary to run a script
+.DESCRIPTION
+  This model provides necessary interfaces for bootstrapping script and common method for task scripts.
+  Generally it does the following:
+  1. Implement a constructor and a method Invoke() to be called by the bootstrapping script:
+     The constructor receives the properties and probes the script.
+     The Invoke() method runs the script file ("Script.ps1") in the same folder as the task config file ("Config.yaml").
+  2. Implement common method to be called by the task scripts including Logging():
+     - Logging() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
+.PARAMETER NoSkip
+  Force run the script even if the task is set not to run
+#>
+
 enum LogLevel {
   Verbose
   Log

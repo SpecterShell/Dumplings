@@ -1,3 +1,55 @@
+<#
+.SYNOPSIS
+  A model to check updates, send messages and submit manifests for WinGet packages
+.DESCRIPTION
+  This model provides necessary interfaces for bootstrapping script and common methods for task scripts to automate checking updates for WinGet packages.
+  Specifially it does the following:
+  1. Implement a constructor and a method Invoke() to be called by the bootstrapping script:
+     The constructor receives the properties, probes the script, and loads the last state ("State.yaml", if existed) which contains the information stored during previous runs.
+     The Invoke() method runs the script file ("Script.ps1") in the same folder as the task config file ("Config.yaml").
+  2. Implement common methods to be called by the task scripts including Logging(), Write(), Message() and Submit(), Check():
+     - Logging() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
+     - Write() writes current state to the files "State.yaml" and "Log*.yaml", where the former file will be read in the subsequent runs.
+     - Message() enables sending current state to Telegram formatted with a built-in template.
+       This method then will be invoked every time the Logging() method is invoked.
+     - Submit() does the following:
+       1. Check existing pull requests in upstream.
+       2. Generate new manifests using the information from current state.
+       3. Validate new manifests.
+       4. Upload new manifests to origin.
+       5. Create pull requests in upstream.
+     - Check() compares the information obtained in current run (aka current state) with that obtained in previous runs (aka last state).
+       The general rule is as follows:
+       1. If last state is not present, the method returns 1 and only Write() will be invoked.
+       2. If last state is present and there is no difference in versions and installer URLs, the method ruturns 0 and nothing gonna happen.
+       3. If last state is present and only the installer URLs are changed, the method returns 2, and Write() and Message() will be invoked.
+       4. If last state is present and the version is increased, the method returns 3, and Write(), Message() and Submit() will be invoked().
+       The rule for those set to check versions only is as follows:
+       1. If last state is not present, the method returns 1 and only Write() will be invoked.
+       2. If last state is present and there is no difference in versions, the method ruturns 0 and nothing gonna happen.
+       3. If last state is present and the version is increased, the method returns 3, and Write(), Message() and Submit() will be invoked().
+.PARAMETER NoSkip
+  Force run the script even if the task is set not to run
+.PARAMETER NoCheck
+  Check() will always return 3 regardless of the difference between the states
+.PARAMETER EnableWrite
+  Allow Write() to write states to files
+.PARAMETER EnableMessage
+  Allow Message() to send states to Telegram
+.PARAMETER EnableSubmit
+  Allow Submit() to submit new manifests to upstream
+.PARAMETER UpstreamOwner
+  The owner of the upstream repository
+.PARAMETER UpstreamRepo
+  The name of the upstream repository
+.PARAMETER UpstreamBranch
+  The branch of the upstream repository
+.PARAMETER OriginOwner
+  The name of the origin repository
+.PARAMETER OriginRepo
+  The name of the origin repository
+#>
+
 enum LogLevel {
   Verbose
   Log
