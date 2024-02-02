@@ -14,6 +14,17 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
+if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+}
+
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
@@ -22,25 +33,6 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {
-    try {
-      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith($this.CurrentState.Version) }, 'First')[0]
-
-      if ($Object2.content.'#text' -ne 'No content.') {
-        # ReleaseNotes (zh-CN)
-        # Markdig is buggy on the markdown release notes from GitHub API. Use HTML one from GitHub RSS instead
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.content.'#text' | ConvertFrom-Html | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Logging($_, 'Warning')
-    }
-
     $this.Write()
   }
   ({ $_ -ge 2 }) {

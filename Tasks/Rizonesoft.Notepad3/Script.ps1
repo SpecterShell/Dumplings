@@ -38,7 +38,6 @@ switch ($this.Check()) {
       }
       if ($Enumerator.MoveNext()) {
         # ReleaseNotes (en-US)
-        # Markdig is buggy on the markdown release notes from GitHub API. Use HTML one from GitHub RSS instead
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'

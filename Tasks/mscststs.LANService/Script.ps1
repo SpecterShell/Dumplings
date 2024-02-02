@@ -19,7 +19,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $Object1.body | ConvertFrom-Html | Get-TextContent | Format-Text
+    Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
   }
 } else {
   $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
