@@ -163,7 +163,7 @@ if (-not $Parallel) {
 
     # Re-run this script in sub-threads
     $Jobs = 0..($ThrottleLimit - 1) | ForEach-Object -Process {
-      Start-ThreadJob -FilePath $MyInvocation.MyCommand.Definition -Name "DumplingsWok${i}" -StreamingHost $Host -ArgumentList @($Name, $Path, $PassThru, $ThrottleLimit, $true, $i, $Params)
+      Start-ThreadJob -FilePath $MyInvocation.MyCommand.Definition -Name "DumplingsWok${_}" -StreamingHost $Host -ArgumentList @($Name, $Path, $PassThru, $ThrottleLimit, $true, $_, $Params)
     }
   }
 }
