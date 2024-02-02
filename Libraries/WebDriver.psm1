@@ -37,7 +37,7 @@ function New-EdgeDriver {
   $EdgeOptions = [OpenQA.Selenium.Edge.EdgeOptions]::new()
   # Disable images downloading to speed up page loading
   $EdgeOptions.AddUserProfilePreference('profile.managed_default_content_settings.images', 2)
-  if ($Headless) { $EdgeOptions.AddArgument('--headless') }
+  if ($Headless) { $EdgeOptions.AddArgument('--headless=new') }
 
   $Script:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Script:EdgeDriverPath, $EdgeOptions)
   $Script:EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
