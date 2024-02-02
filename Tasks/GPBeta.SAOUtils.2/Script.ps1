@@ -19,10 +19,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
 
   $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./*[text()='Change Log']")
   if ($ReleaseNotesTitleNode) {
-    $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Name.Contains('变更日志'); $Node = $Node.NextSibling) {
-      $ReleaseNotesNodes.Add($Node)
-    }
+    $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Name.Contains('变更日志'); $Node = $Node.NextSibling) { $Node }
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'

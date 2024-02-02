@@ -31,10 +31,7 @@ switch ($this.Check()) {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./*[contains(text(), "This update includes the following:")]')
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('Download the latest version:'); $Node = $Node.NextSibling) {
-            $ReleaseNotesNodes.Add($Node)
-          }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('Download the latest version:'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'

@@ -59,10 +59,7 @@ switch ($this.Check()) {
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
         $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h2[contains(text(), "Changes")]')
-        $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes.Add($Node)
-        }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{

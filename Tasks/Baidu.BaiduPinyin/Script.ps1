@@ -21,10 +21,7 @@ switch ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='update-item-tit' and contains(./span[@class='update-item-tit-font']/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[@class="update-item-con"]'); -not $Node.Attributes.Contains('class') -or -not $Node.Attributes['class'].Value.Contains('update-item-tit'); $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
-        }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[@class="update-item-con"]'); -not $Node.Attributes.Contains('class') -or -not $Node.Attributes['class'].Value.Contains('update-item-tit'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'

@@ -26,10 +26,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
 
   $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='Changes']")
   if ($ReleaseNotesTitleNode) {
-    $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
-      $ReleaseNotesNodes.Add($Node)
-    }
+    $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
@@ -42,10 +39,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
 
   $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='更新日志']")
   if ($ReleaseNotesCNTitleNode) {
-    $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
-      $ReleaseNotesNodes.Add($Node)
-    }
+    $ReleaseNotesNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
     # ReleaseNotes (zh-CN)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'zh-CN'

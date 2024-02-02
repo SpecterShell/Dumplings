@@ -29,10 +29,9 @@ switch ($this.Check()) {
 
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
-        $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Full Changelog:'); $Node = $Node.NextSibling) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Full Changelog:'); $Node = $Node.NextSibling) {
           if ($Node.Name -ne 'table') {
-            $ReleaseNotesNodes.Add($Node)
+            $Node
           }
         }
         if ($ReleaseNotesNodes) {

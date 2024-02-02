@@ -37,10 +37,7 @@ switch ($this.Check()) {
 
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
-        $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-        for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('Download')); $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes.Add($Node)
-        }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('Download')); $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{

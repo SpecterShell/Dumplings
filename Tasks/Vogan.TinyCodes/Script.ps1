@@ -18,10 +18,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
   $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), `"What's Changed`")]")
   if ($ReleaseNotesTitleNode) {
-    $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('Full Changelog:'); $Node = $Node.NextSibling) {
-      $ReleaseNotesNodes.Add($Node)
-    }
+    $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('Full Changelog:'); $Node = $Node.NextSibling) { $Node }
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'

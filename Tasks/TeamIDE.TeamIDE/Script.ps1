@@ -31,10 +31,7 @@ switch ($this.Check()) {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./p[text()="发布功能"]')
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
-            $ReleaseNotesNodes.Add($Node)
-          }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'

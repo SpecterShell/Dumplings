@@ -21,10 +21,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
   $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(text(), "变更日志")]').NextSibling ?? $ReleaseNotesObject.ChildNodes[0]
   if ($ReleaseNotesTitleNode) {
-    $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-    for ($Node = $ReleaseNotesTitleNode; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) {
-      $ReleaseNotesNodes.Add($Node)
-    }
+    $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
     # ReleaseNotes (zh-CN)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'zh-CN'

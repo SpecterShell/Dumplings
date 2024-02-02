@@ -32,10 +32,7 @@ switch ($this.Check()) {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(.//text(), `"Version`")]")
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-          for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
-            $ReleaseNotesNodes.Add($Node)
-          }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'

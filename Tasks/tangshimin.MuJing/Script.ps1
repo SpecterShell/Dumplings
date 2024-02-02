@@ -16,10 +16,7 @@ $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
 if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
   $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
-  $ReleaseNotesNodes = [System.Collections.Generic.List[System.Object]]::new()
-  for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) {
-    $ReleaseNotesNodes.Add($Node)
-  }
+  $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
   if ($ReleaseNotesNodes) {
     # ReleaseNotes (zh-CN)
     $this.CurrentState.Locale += [ordered]@{
