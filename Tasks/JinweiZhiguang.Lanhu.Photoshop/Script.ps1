@@ -9,7 +9,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.result.create_time | Get-Date
+$this.CurrentState.ReleaseTime = $Object1.result.create_time | Get-Date -AsUTC
 
 switch ($this.Check()) {
   ({ $_ -ge 1 }) {

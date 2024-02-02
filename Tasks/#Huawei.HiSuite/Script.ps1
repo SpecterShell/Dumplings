@@ -56,7 +56,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date
+$this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date -AsUTC
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
