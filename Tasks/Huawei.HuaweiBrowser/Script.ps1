@@ -1,19 +1,19 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://consumer.huawei.com/cn/mobileservices/browser/')
-Start-Sleep -Seconds 5
+$Prefix = 'https://consumer.huawei.com'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}/content/dam/huawei-cbg-site/cn/mkt/mobileservices/browser/new-version/js/nav.js"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for X64"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlX64 = $Prefix + [regex]::Match($Object1, 'btnDown0\.attr\("href", "(.+?)"\)').Groups[1].Value
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrlX86 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for ARM"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlArm64 = $Prefix + [regex]::Match($Object1, 'btnDown1\.attr\("href", "(.+?)"\)').Groups[1].Value
 }
-$VersionX86 = [regex]::Match($InstallerUrlX86, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
+$VersionX86 = [regex]::Match($InstallerUrlArm64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
 $Identical = $true
 if ($VersionX64 -ne $VersionX86) {

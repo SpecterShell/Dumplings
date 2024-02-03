@@ -1,10 +1,8 @@
 $Prefix = 'https://ftpmirror.gnu.org/octave/windows/'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://ftp.gnu.org/gnu/octave/windows/?C=N;O=D;V=1;F=0;P=*-w64-installer.exe' | ConvertFrom-Html
 
-$InstallerName = $Object1.SelectNodes('/html/body/pre/a').ForEach({ $_.Attributes['href'].Value }) |
-  Where-Object -FilterScript { $_.EndsWith('installer.exe') -and $_.Contains('w64') -and -not $_.Contains('-64') } |
-  Select-Object -Last 1
+$InstallerName = $Object1.SelectSingleNode('/html/body/ul/li[2]/a').Attributes['href'].Value
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, '(\d+\.\d+\.\d+)').Groups[1].Value
@@ -13,13 +11,13 @@ $this.CurrentState.Version = [regex]::Match($InstallerName, '(\d+\.\d+\.\d+)').G
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
-  InstallerUrl = "${Prefix}${InstallerName}"
+  InstallerUrl = $Prefix + $InstallerName
   ProductCode  = "Octave-${InstallerName} (Local)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'machine'
-  InstallerUrl = "${Prefix}${InstallerName}"
+  InstallerUrl = $Prefix + $InstallerName
   ProductCode  = "Octave-${InstallerName}"
 }
 
