@@ -12,12 +12,7 @@
      - Write() writes current state to the files "State.yaml" and "Log*.yaml", where the former file will be read in the subsequent runs.
      - Message() enables sending current state to Telegram formatted with a built-in template.
        This method then will be invoked every time the Logging() method is invoked.
-     - Submit() does the following:
-       1. Check existing pull requests in upstream.
-       2. Generate new manifests using the information from current state.
-       3. Validate new manifests.
-       4. Upload new manifests to origin.
-       5. Create pull requests in upstream.
+     - Submit() creates and submits the package to WinGet / Scoop repository
      - Check() compares the information obtained in current run (aka current state) with that obtained in previous runs (aka last state).
        The general rule is as follows:
        1. If last state is not present, the method returns 1 and only Write() will be invoked.
@@ -58,7 +53,7 @@ enum LogLevel {
   Error
 }
 
-class WinGetTask {
+class PackageTask {
   #region Properties
   [ValidateNotNullOrEmpty()][string]$Name
   [ValidateNotNullOrEmpty()][string]$Path
@@ -80,19 +75,19 @@ class WinGetTask {
   #endregion
 
   # Initialize task
-  WinGetTask([System.Collections.IDictionary]$Properties) {
+  PackageTask([System.Collections.IDictionary]$Properties) {
     # Load name
     if (-not $Properties.Contains('Name')) {
-      throw 'WinGetTask: The property Name is undefined and should be specified'
+      throw 'PackageTask: The property Name is undefined and should be specified'
     }
     $this.Name = $Properties.Name
 
     # Load path
     if (-not $Properties.Contains('Path')) {
-      throw 'WinGetTask: The property Path is undefined and should be specified'
+      throw 'PackageTask: The property Path is undefined and should be specified'
     }
     if (-not (Test-Path -Path $Properties.Path)) {
-      throw 'WinGetTask: The property Path is not reachable'
+      throw 'PackageTask: The property Path is not reachable'
     }
     $this.Path = $Properties.Path
 
@@ -120,7 +115,7 @@ class WinGetTask {
 
   # Log with template, without specifying log level
   [void] Logging([string]$Message) {
-    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}"
+    Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m ${Message}"
     $this.Log.Add($Message)
     if ($this.MessageEnabled) {
       $this.Message()
@@ -129,7 +124,7 @@ class WinGetTask {
 
   # Log with template, specifying log level
   [void] Logging([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m ${Message}" -Level $Level
+    Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m ${Message}" -Level $Level
     if ($Level -ne 'Verbose') {
       $this.Log.Add($Message)
       if ($this.MessageEnabled) {
@@ -142,7 +137,7 @@ class WinGetTask {
   [void] Invoke() {
     if ($Global:DumplingsPreference.NoSkip -or -not $this.Config.Skip) {
       try {
-        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Run!"
+        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Run!"
         & $this.ScriptPath | Out-Null
       } catch {
         $this.Logging("An error occured while running the script: ${_}", 'Error')
@@ -157,14 +152,14 @@ class WinGetTask {
   [int] Check() {
     if (-not $Global:DumplingsPreference.Contains('NoCheck') -or -not $Global:DumplingsPreference.NoCheck) {
       if (-not $this.CurrentState.Contains('Version')) {
-        throw "WinGetTask $($this.Name): The property Version in the current state does not exist"
+        throw "PackageTask $($this.Name): The property Version in the current state does not exist"
       } elseif ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-        throw "WinGetTask $($this.Name): The property Version in the current state is empty or invalid"
+        throw "PackageTask $($this.Name): The property Version in the current state is empty or invalid"
       }
 
       if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
         if (-not $this.CurrentState.Installer.InstallerUrl) {
-          throw "WinGetTask $($this.Name): The property InstallerUrl in the current state is undefined or invalid"
+          throw "PackageTask $($this.Name): The property InstallerUrl in the current state is undefined or invalid"
         }
       }
 
@@ -202,12 +197,12 @@ class WinGetTask {
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       # Writing current state to log file
       $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
+      Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
       $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
-      Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Writing current state to state file ${StatePath}"
+      Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Writing current state to state file ${StatePath}"
       Copy-Item -Path $LogPath -Destination $StatePath -Force
     }
   }
@@ -216,9 +211,9 @@ class WinGetTask {
   [string] ToMarkdown() {
     $Message = [System.Text.StringBuilder]::new(2048)
 
-    # Identifier
-    if ($this.Config.Contains('Identifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.Identifier)) {
-      $Message.Append("*$($this.Config.Identifier)*`n")
+    # WinGetIdentifier
+    if ($this.Config.Contains('WinGetIdentifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.WinGetIdentifier)) {
+      $Message.Append("*$($this.Config.WinGetIdentifier)*`n")
     }
 
     # RealVersion / Version
@@ -268,9 +263,9 @@ class WinGetTask {
   [string] ToTelegramMarkdown() {
     $Message = [System.Text.StringBuilder]::new(2048)
 
-    # Identifier
-    if ($this.Config.Contains('Identifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.Identifier)) {
-      $Message.Append("*$($this.Config.Identifier | ConvertTo-TelegramEscapedText)*`n")
+    # WinGetIdentifier
+    if ($this.Config.Contains('WinGetIdentifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.WinGetIdentifier)) {
+      $Message.Append("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*`n")
     }
 
     # RealVersion / Version
@@ -327,7 +322,7 @@ class WinGetTask {
         $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
         $this.MessageID = $Response
       } catch {
-        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
+        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
         $this.Log.Add($_.ToString())
       }
     }
@@ -340,7 +335,7 @@ class WinGetTask {
       try {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
-        Write-Log -Object "`e[1mWinGetTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
+        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
         $this.Log.Add($_.ToString())
       }
     }
@@ -349,177 +344,12 @@ class WinGetTask {
   # Generate manifests and upload them to the origin repository, and then create pull request in the upstream repository
   [void] Submit() {
     if ($Global:DumplingsPreference.Contains('EnableSubmit') -and $Global:DumplingsPreference.EnableSubmit) {
-      $this.Logging('Submitting manifests', 'Info')
-
-      #region Parameters
-      $UpstreamOwner = $Global:DumplingsPreference.UpstreamOwner
-      $UpstreamRepo = $Global:DumplingsPreference.UpstreamRepo
-      $UpstreamBranch = $Global:DumplingsPreference.UpstreamBranch
-      $OriginOwner = $Global:DumplingsPreference.OriginOwner
-      $OriginRepo = $Global:DumplingsPreference.OriginRepo
-
-      $PackageIdentifier = $this.Config.Identifier
-      $PackageVersion = $this.CurrentState['RealVersion'] ?? $this.CurrentState['Version']
-      if (Test-Path Env:\GITHUB_WORKSPACE) {
-        $ManifestsFolder = Join-Path $Env:GITHUB_WORKSPACE $UpstreamRepo 'manifests' -Resolve
-      } else {
-        $ManifestsFolder = Join-Path $PSScriptRoot '..' '..' $UpstreamRepo 'manifests' -Resolve
+      #region WinGet
+      if ($this.Config.Contains('WinGetIdentifier')) {
+        $this.Logging('Submitting WinGet manifests', 'Info')
+        Join-Path $Global:DumplingsRoot 'Modules' 'WinGet.psm1' | Import-Module
+        New-WinGetManifest -Task $this
       }
-      $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
-      #endregion
-
-      #region Check existing pull requests in the upstream repository
-      $this.Logging('Checking existing pull requests', 'Verbose')
-      $PullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath&per_page=1"
-      if ($PullRequests.total_count -gt 0) {
-        if (-not ($Global:DumplingsPreference.Contains('NoCheck') -and $Global:DumplingsPreference.NoCheck) -and -not ($this.Config.Contains('IgnorePRCheck') -and $this.Config.IgnorePRCheck)) {
-          $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Error')
-          return
-        } else {
-          $this.Logging("Existing pull request found: $($PullRequests.items[0].title) - $($PullRequests.items[0].html_url)", 'Warning')
-        }
-      }
-      #endregion
-
-      #region Create manifests using YamlCreate
-      $this.Logging('Creating manifests', 'Verbose')
-      try {
-        $Parameters = @{
-          PackageIdentifier = $PackageIdentifier
-          PackageVersion    = $PackageVersion
-          PackageInstallers = $this.CurrentState.Installer
-          Locales           = $this.CurrentState.Locale
-          ManifestsFolder   = $ManifestsFolder
-          OutFolder         = $OutFolder
-        }
-        if ($this.CurrentState.ReleaseTime) {
-          if ($this.CurrentState.ReleaseTime -is [datetime]) {
-            $Parameters.PackageReleaseDate = $this.CurrentState.ReleaseTime.ToUniversalTime().ToString('yyyy-MM-dd')
-          } else {
-            $Parameters.PackageReleaseDate = $this.CurrentState.ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
-          }
-        }
-        & (Join-Path $PSScriptRoot '..' 'Utilities' 'YamlCreate.ps1') @Parameters
-      } catch {
-        $this.Logging("Failed to create manifests: ${_}", 'Error')
-        $_ | Out-Host
-        return
-      }
-      $this.Logging('Manifests created', 'Verbose')
-      #endregion
-
-      #region Validate manifests using WinGet client
-      $this.Logging('Validating manifests', 'Verbose')
-      if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-        $this.Logging('Could not find WinGet client', 'Error')
-        return
-      }
-      $WinGetOutput = ''
-      winget validate $OutFolder | Out-String -OutVariable 'WinGetOutput'
-      if ($LASTEXITCODE -notin @(0, -1978335192)) {
-        $this.Logging("Validation failed: `n${WinGetOutput}", 'Error')
-        return
-      }
-      $this.Logging('Validation passed', 'Verbose')
-      #endregion
-
-      #region Upload new manifests, remove old manifests if needed, and commit in the origin repository
-      $this.Logging('Uploading manifests and committing', 'Verbose')
-      try {
-        $NewBranchName = "${PackageIdentifier}-${PackageVersion}-$((New-Guid).Guid.Split('-')[-1])" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
-        $NewCommitName = "New version: ${PackageIdentifier} version ${PackageVersion}"
-
-        $UpstreamSha = $Global:LocalStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
-        $NewBranchSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs" -Method Post -Body @{
-            ref = "refs/heads/${NewBranchName}"
-            sha = $UpstreamSha
-          }
-        ).object.sha
-
-        # Upload new manifests and obtain their SHA
-        $NewFileNameSha = @()
-        Get-ChildItem -Path $OutFolder -Include '*.yaml' -Recurse -File | ForEach-Object -Process {
-          $NewFileNameSha += @{
-            Path = "manifests/$($PackageIdentifier.ToLower().Chars(0))/$($PackageIdentifier.Replace('.', '/'))/${PackageVersion}/$($_.Name)"
-            Sha  = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/blobs" -Method Post -Body @{
-                content  = Get-Content -Path $_ -Raw -Encoding utf8NoBOM
-                encoding = 'utf-8'
-              }
-            ).sha
-          }
-        }
-
-        # Find the latest version of manifests to remove in the upstream repo, if needed
-        if ($this.Config.Contains('RemoveLastVersion') -and $this.Config.RemoveLastVersion) {
-          $LastManifestVersion = Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\*\${PackageIdentifier}.yaml" -File |
-            Split-Path -Parent | Split-Path -Leaf |
-            Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Culture en-US | Select-Object -Last 1
-          if ($LastManifestVersion -ne $PackageVersion) {
-            $this.Logging("Manifests for last version ${LastManifestVersion} will be removed", 'Info')
-            Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {
-              $NewFileNameSha += @{
-                Path = "manifests/$($PackageIdentifier.ToLower().Chars(0))/$($PackageIdentifier.Replace('.', '/'))/${LastManifestVersion}/$($_.Name)"
-                Sha  = $null
-              }
-            }
-          } else {
-            $this.Logging("Manifests for last version ${LastManifestVersion} will be overrided", 'Info')
-          }
-        }
-
-        # Build a new tree with changes of creating new manifests and removing old manifests based on the branch, obtaining the SHA of the new tree
-        $TreeSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/trees" -Method Post -Body @{
-            tree      = @($NewFileNameSha | ForEach-Object -Process {
-                @{
-                  path = $_.Path
-                  mode = '100644'
-                  type = 'blob'
-                  sha  = $_.Sha
-                }
-              })
-            base_tree = $NewBranchSha
-          }).sha
-
-        # Commit with the new tree, obtaining the SHA of the commit
-        $CommitSha = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/commits" -Method Post -Body @{
-            tree    = $TreeSha
-            message = $NewCommitName
-            parents = @($NewBranchSha)
-          }
-        ).sha
-
-        # Move the HEAD of the branch to the commit
-        Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${NewBranchName}" -Method Post -Body @{
-          sha = $CommitSha
-        } | Out-Null
-      } catch {
-        $this.Logging("Failed to upload manifests or commit: ${_}", 'Error')
-        $_ | Out-Host
-        return
-      }
-      $this.Logging('Manifests uploaded and committed', 'Verbose')
-      #endregion
-
-      #region Create pull request in the upstream repository
-      $this.Logging('Creating pull request', 'Verbose')
-      try {
-        if (Test-Path Env:\CI) {
-          $NewPRBody = "This pull request is automatically generated by [🥟 Dumplings](https://github.com/SpecterShell/Dumplings) in [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${OriginOwner}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID})"
-        } else {
-          $NewPRBody = 'This pull request is automatically generated by [🥟 Dumplings](https://github.com/SpecterShell/Dumplings)'
-        }
-        $NewPRResponse = Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/pulls" -Method Post -Body @{
-          title = $NewCommitName
-          body  = $NewPRBody
-          head  = "${OriginOwner}:${NewBranchName}"
-          base  = 'master'
-        }
-      } catch {
-        $this.Logging("Failed to create pull request: ${_}", 'Error')
-        $_ | Out-Host
-        return
-      }
-      $this.Logging("Pull request created: $($NewPRResponse.html_url)", 'Info')
       #endregion
     }
   }
