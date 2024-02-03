@@ -10,7 +10,7 @@ try {
   Add-Type -Path $WebDriverPath
   $WebDriverLoaded = $true
 } catch {
-  Write-Host 'Could not find WebDriver assembly. WebDriver functions will not be working'
+  Write-Host -Object 'Could not find WebDriver assembly. WebDriver functions will not be working' -ForegroundColor Yellow
 }
 
 #region Edge Driver

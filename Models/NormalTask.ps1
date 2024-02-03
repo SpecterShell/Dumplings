@@ -35,16 +35,16 @@ class NormalTask {
   NormalTask([System.Collections.IDictionary]$Properties) {
     # Load name
     if (-not $Properties.Contains('Name')) {
-      throw 'WinGetTask: The property Name is undefined and should be specified'
+      throw 'NormalTask: The property Name is undefined and should be specified'
     }
     $this.Name = $Properties.Name
 
     # Load path
     if (-not $Properties.Contains('Path')) {
-      throw 'WinGetTask: The property Path is undefined and should be specified'
+      throw 'NormalTask: The property Path is undefined and should be specified'
     }
     if (-not (Test-Path -Path $Properties.Path)) {
-      throw 'WinGetTask: The property Path is not reachable'
+      throw 'NormalTask: The property Path is not reachable'
     }
     $this.Path = $Properties.Path
 
