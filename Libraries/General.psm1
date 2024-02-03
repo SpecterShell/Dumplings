@@ -137,9 +137,10 @@ function ConvertFrom-Ini {
   #>
   # [OutputType([ordered])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The INI string to be converted')]
+    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, HelpMessage = 'The INI string to be converted')]
+    [AllowEmptyString()]
     [string]
-    $InputObject,
+    $Content,
 
     [Parameter(
       HelpMessage = 'The characters that describe a comment'
@@ -161,49 +162,59 @@ function ConvertFrom-Ini {
 
     # Name of the section, in case the INI string had none
     $RootSection = '_'
+
+    $Object = [ordered]@{}
+    $CommentCount = 0
   }
 
   process {
-    $Object = [ordered]@{}
-    $CommentCount = 0
-    switch -Regex ($InputObject.Split([string[]]@("`r`n", "`n"), [System.StringSplitOptions]::None)) {
-      $SectionRegex {
-        $Section = $Matches[1]
-        $Object[$Section] = [ordered]@{}
-        $CommentCount = 0
-        continue
-      }
-      $CommentRegex {
-        if (-not $IgnoreComments) {
+    $StringReader = [System.IO.StringReader]::new($Content)
+
+    for ($Text = $StringReader.ReadLine(); $null -ne $Text; $Text = $StringReader.ReadLine()) {
+      switch -Regex ($Text) {
+        $SectionRegex {
+          $Section = $Matches[1]
+          $Object[$Section] = [ordered]@{}
+          $CommentCount = 0
+          continue
+        }
+        $CommentRegex {
+          if (-not $IgnoreComments) {
+            if (-not $Section) {
+              $Section = $RootSection
+              $Object[$Section] = [ordered]@{}
+            }
+            $Key = '#Comment' + ($CommentCount++)
+            $Value = $Matches[1]
+            $Object[$Section][$Key] = $Value
+          }
+          continue
+        }
+        $KeyRegex {
           if (-not $Section) {
             $Section = $RootSection
             $Object[$Section] = [ordered]@{}
           }
-          $Key = '#Comment' + ($CommentCount++)
-          $Value = $Matches[1]
-          $Object[$Section][$Key] = $Value
-        }
-        continue
-      }
-      $KeyRegex {
-        if (-not $Section) {
-          $Section = $RootSection
-          $Object[$Section] = [ordered]@{}
-        }
-        $Key = $Matches[1]
-        $Value = $Matches[3].Replace('\r', "`r").Replace('\n', "`n")
-        if ($Object[$Section][$Key]) {
-          if ($Object[$Section][$Key] -is [array]) {
-            $Object[$Section][$Key] += $Value
+          $Key = $Matches[1]
+          $Value = $Matches[3].Replace('\r', "`r").Replace('\n', "`n")
+          if ($Object[$Section][$Key]) {
+            if ($Object[$Section][$Key] -is [array]) {
+              $Object[$Section][$Key] += $Value
+            } else {
+              $Object[$Section][$Key] = @($Object[$Section][$Key], $Value)
+            }
           } else {
-            $Object[$Section][$Key] = @($Object[$Section][$Key], $Value)
+            $Object[$Section][$Key] = $Value
           }
-        } else {
-          $Object[$Section][$Key] = $Value
+          continue
         }
-        continue
       }
     }
+
+    $StringReader.Dispose()
+  }
+
+  end {
     return $Object
   }
 }
