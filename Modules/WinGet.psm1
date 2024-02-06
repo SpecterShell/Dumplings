@@ -1,8 +1,12 @@
+#Requires -Version 7.4
+
 # Apply default function parameters
 if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDefaultParameterValues }
 
 # Force stop on error
 $ErrorActionPreference = 'Stop'
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'PSNativeCommandUseErrorActionPreference', Justification = 'This is a built-in variable of PowerShell')]
+$PSNativeCommandUseErrorActionPreference = $true
 
 # Common parameters
 $UpstreamOwner = $Global:DumplingsPreference.UpstreamOwner
@@ -82,15 +86,18 @@ function New-WinGetManifest {
 
   #region Validate manifests using WinGet client
   $Task.Logging('Validating manifests', 'Verbose')
-  if (-not (Get-Command 'winget' -ErrorAction SilentlyContinue)) {
-    $Task.Logging('Could not find WinGet client', 'Error')
-    return
-  }
   $WinGetOutput = ''
-  winget validate $OutFolder | Out-String -OutVariable 'WinGetOutput'
-  if ($LASTEXITCODE -notin @(0, -1978335192)) {
-    $Task.Logging("Validation failed: `n${WinGetOutput}", 'Error')
-    return
+  try {
+    winget validate $OutFolder | Out-String -Stream -OutVariable 'WinGetOutput'
+  } catch {
+    if ($_.FullyQualifiedErrorId -eq 'CommandNotFoundException') {
+      $Task.Logging('Could not find WinGet client', 'Error')
+      return
+    }
+    if ($_.FullyQualifiedErrorId -ne 'ProgramExitedWithNonZeroCode' -or $_.Exception.ExitCode -ne -1978335192) {
+      $Task.Logging("Validation failed: `n$($WinGetOutput -join "`n")", 'Error')
+      return
+    }
   }
   $Task.Logging('Validation passed', 'Verbose')
   #endregion
@@ -193,5 +200,4 @@ function New-WinGetManifest {
   }
   $Task.Logging("Pull request created: $($NewPRResponse.html_url)", 'Info')
   #endregion
-
 }
