@@ -65,6 +65,7 @@ function New-WinGetManifest {
     -1 { 'Add version' }
   }
   $CommitName = "${CommitType}: ${PackageIdentifier} version ${PackageVersion}"
+  if ($Task.CurrentState.Contains('RealVersion') -and $Task.LastState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
 
   $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
   #endregion
@@ -133,7 +134,7 @@ function New-WinGetManifest {
 
   $Task.Logging('Manifests validation passed', 'Verbose')
   #endregion
-  return
+
   #region Upload new manifests, remove old manifests if needed, and commit in the origin repository
   $Task.Logging('Uploading manifests and committing', 'Verbose')
 
