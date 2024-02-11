@@ -917,15 +917,20 @@ function Write-Log {
   .SYNOPSIS
     Write message to the host under specified level
   .PARAMETER Message
-    Message content
+    The message content
+  .PARAMETER Identifier
+    The identifier to be prepended to the message
   .PARAMETER Level
     Log level - Verbose, Log, Info, Warning or Error
   #>
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The message content')]
+    $Object,
+
+    [Parameter(HelpMessage = 'The identifier to be prepended to the message')]
     [AllowEmptyString()]
     [string]
-    $Object,
+    $Identifier,
 
     [Parameter(HelpMessage = 'Log level - Verbose, Log, Info, Warning or Error')]
     [ValidateSet('Verbose', 'Log', 'Info', 'Warning', 'Error')]
@@ -934,18 +939,21 @@ function Write-Log {
   )
 
   process {
-    $Color = $null
-    switch ($Level) {
-      'Verbose' { $Color = "`e[32m" } # Green
-      'Info' { $Color = "`e[34m" } # Blue
-      'Warning' { $Color = "`e[33m" } # Yellow
-      'Error' { $Color = "`e[31m" } # Red
-      Default { $Color = "`e[39m" } # Default
+    $Color = switch ($Level) {
+      'Verbose' { "`e[32m" } # Green
+      'Info' { "`e[34m" } # Blue
+      'Warning' { "`e[33m" } # Yellow
+      'Error' { "`e[31m" } # Red
+      Default { "`e[39m" } # Default
     }
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLog')
     $Mutex.WaitOne(2000) | Out-Null
-    Write-Host -Object "${Color}${Object}`e[0m"
+    if (-not [string]::IsNullOrWhiteSpace($Identifier)) {
+      [System.Console]::WriteLine("${Color}`e[1m${Identifier}:`e[22m ${Object}`e[0m")
+    } else {
+      [System.Console]::WriteLine("${Color}${Object}`e[0m")
+    }
     $Mutex.ReleaseMutex()
     $Mutex.Close()
   }

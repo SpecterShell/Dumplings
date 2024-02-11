@@ -74,19 +74,19 @@ class NormalTask {
 
   # Log with template, without specifying log level
   [void] Logging([string]$Message) {
-    Write-Log -Object "`e[1mNormalTask $($this.Name):`e[22m ${Message}"
+    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)"
   }
 
   # Log with template, specifying log level
   [void] Logging([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object "`e[1mNormalTask $($this.Name):`e[22m ${Message}" -Level $Level
+    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)" -Level $Level
   }
 
   # Invoke script
   [void] Invoke() {
     if ($this.Preference.NoSkip -or -not $this.Config.Skip) {
       try {
-        Write-Log -Object "`e[1mNormalTask $($this.Name):`e[22m Run!"
+        Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
         & $this.ScriptPath | Out-Null
       } catch {
         $this.Logging("An error occured while running the script: ${_}", 'Error')

@@ -115,7 +115,7 @@ class PackageTask {
 
   # Log with template, without specifying log level
   [void] Logging([string]$Message) {
-    Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m ${Message}"
+    Write-Log -Object $Message -Identifier "PackageTask $($this.Name)"
     $this.Log.Add($Message)
     if ($this.MessageEnabled) {
       $this.Message()
@@ -124,7 +124,7 @@ class PackageTask {
 
   # Log with template, specifying log level
   [void] Logging([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m ${Message}" -Level $Level
+    Write-Log -Object $Message -Identifier "PackageTask $($this.Name)" -Level $Level
     if ($Level -ne 'Verbose') {
       $this.Log.Add($Message)
       if ($this.MessageEnabled) {
@@ -137,7 +137,7 @@ class PackageTask {
   [void] Invoke() {
     if ($Global:DumplingsPreference.NoSkip -or -not $this.Config.Skip) {
       try {
-        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Run!"
+        Write-Log -Object 'Run!' -Identifier "PackageTask $($this.Name)"
         & $this.ScriptPath | Out-Null
       } catch {
         $this.Logging("An error occured while running the script: ${_}", 'Error')
@@ -197,12 +197,12 @@ class PackageTask {
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       # Writing current state to log file
       $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
-      Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Writing current state to log file ${LogPath}"
+      Write-Log -Object "Writing current state to log file ${LogPath}" -Identifier "PackageTask $($this.Name)"
       $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
-      Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Writing current state to state file ${StatePath}"
+      Write-Log -Object "Writing current state to state file ${StatePath}" -Identifier "PackageTask $($this.Name)"
       Copy-Item -Path $LogPath -Destination $StatePath -Force
     }
   }
@@ -322,7 +322,7 @@ class PackageTask {
         $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
         $this.MessageID = $Response
       } catch {
-        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Failed to send default message: ${_}" -Level Error
+        Write-Log -Object "Failed to send default message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
         $this.Log.Add($_.ToString())
       }
     }
@@ -335,7 +335,7 @@ class PackageTask {
       try {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
-        Write-Log -Object "`e[1mPackageTask $($this.Name):`e[22m Failed to send custom message: ${_}" -Level Error
+        Write-Log -Object "Failed to send custom message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
         $this.Log.Add($_.ToString())
       }
     }

@@ -334,7 +334,7 @@ Function Get-MsiDatabase {
     [Parameter(Mandatory = $true)]
     [string] $FilePath
   )
-  Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Reading Installer Database. This may take some time..." -Level Verbose
+  Write-Log -Object 'Reading Installer Database. This may take some time...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
   $windowsInstaller = New-Object -com WindowsInstaller.Installer
   $MSI = $windowsInstaller.OpenDatabase($FilePath, 0)
   $_TablesView = $MSI.OpenView('select * from _Tables')
@@ -365,7 +365,7 @@ Function Get-MsiDatabase {
   }
   [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($MSI)
   [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($windowsInstaller)
-  Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Closing Installer Database..." -Level Verbose
+  Write-Log -Object 'Closing Installer Database...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
   return $_Database
 }
 
@@ -566,7 +566,7 @@ Function Read-QuickInstallerEntry {
     $_NewInstaller.Remove('InstallerSha256')
 
     # Show the user which installer is being updated
-    Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Updating installer #${_iteration} [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['tNestedInstallerType']), $($_NewInstaller['Scope'])]" -Level Verbose
+    Write-Log -Object "Updating installer #${_iteration} [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['tNestedInstallerType']), $($_NewInstaller['Scope'])]" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
 
     # Apply inputs
     $Updated = $false
@@ -589,10 +589,10 @@ Function Read-QuickInstallerEntry {
             $_NewInstaller[$_key] = $PackageInstaller.$_key.Replace(' ', '%20')
           } elseif ($_key -in $InstallerEntryProperties -and $_key -notin @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope', 'InstallerUrl')) {
             if ($PackageInstaller.$_key -is [string] -and (Test-String $PackageInstaller.$_key -IsNull)) {
-              Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m The new value for installer property ${_key} is invalid and thus discarded: $($PackageInstaller.$_key)" -Level Warning
+              Write-Log -Object "The new value for installer property ${_key} is invalid and thus discarded: $($PackageInstaller.$_key)" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
               continue
             } elseif ($PackageInstaller.$_key -isnot [string] -and $null -eq $PackageInstaller.$_key) {
-              Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m The new value for installer property ${_key} is invalid and thus discarded" -Level Warning
+              Write-Log -Object "The new value for installer property ${_key} is invalid and thus discarded" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
               continue
             }
             $_NewInstaller[$_key] = $PackageInstaller.$_key
@@ -619,11 +619,11 @@ Function Read-QuickInstallerEntry {
     }
 
     if ($_NewInstaller.Keys -notcontains 'InstallerSha256') {
-      Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Downloading installer..." -Level Verbose
+      Write-Log -Object 'Downloading installer...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
       $script:dest = Get-InstallerFile -URI $_NewInstaller['InstallerUrl'] -PackageIdentifier $PackageIdentifier -PackageVersion $PackageVersion
       # Check that MSI's aren't actually WIX, and EXE's aren't NSIS, INNO or BURN
-      Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Installer downloaded!" -Level Verbose
-      Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Processing installer data..." -Level Verbose
+      Write-Log -Object 'Installer downloaded!' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+      Write-Log -Object 'Processing installer data...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
       if ($_NewInstaller['InstallerType'] -in @('msi'; 'exe')) {
         $DetectedType = Get-PathInstallerType $script:dest
         if ($DetectedType -in @('msi'; 'wix'; 'nullsoft'; 'inno'; 'burn')) { $_NewInstaller['InstallerType'] = $DetectedType }
@@ -695,7 +695,7 @@ Function Read-QuickInstallerEntry {
       }
       # Remove the downloaded files
       Remove-Item -Path $script:dest
-      Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Installer updated!" -Level Verbose
+      Write-Log -Object 'Installer updated!' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
     }
 
     # Add the updated installer to the new installers array
@@ -843,7 +843,7 @@ Function Write-ManifestContent {
       $(ConvertTo-Yaml $YamlContent -Options DisableAliases).TrimEnd() -replace "(.*) $([char]0x2370)", "# `$1"
     ), $Utf8NoBomEncoding)
 
-  Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Yaml file created: ${FilePath}" -Level Verbose
+  Write-Log -Object "Yaml file created: ${FilePath}" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
 }
 
 # Take all the entered values and write the version manifest file
@@ -917,7 +917,7 @@ Function Write-InstallerManifest {
         $_Installer['ReleaseDate'] = $_ValidDate
       } catch {
         # Release date isn't valid
-        Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Release date is invalid and thus discarded" -Level Warning
+        Write-Log -Object 'Release date is invalid and thus discarded' -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
       }
     }
   }
@@ -1168,7 +1168,7 @@ if (-not (Test-Path -Path "$AppFolder\..")) {
 try {
   $script:LastVersion = Split-Path (Split-Path (Get-ChildItem -Path "$AppFolder\..\" -Recurse -Depth 1 -File -Filter '*.yaml' -ErrorAction SilentlyContinue).FullName ) -Leaf | Sort-Object $ToNatural -Culture $Culture | Select-Object -Last 1
   $script:ExistingVersions = Split-Path (Split-Path (Get-ChildItem -Path "$AppFolder\..\" -Recurse -Depth 1 -File -Filter '*.yaml' -ErrorAction SilentlyContinue).FullName ) -Leaf | Sort-Object $ToNatural -Culture $Culture | Select-Object -Unique
-  Write-Log -Object "`e[1mYamlCreate ${PackageIdentifier}:`e[22m Found existing version: ${LastVersion}" -Level Verbose
+  Write-Log -Object "Found existing version: ${LastVersion}" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
   $script:OldManifests = Get-ChildItem -Path "$AppFolder\..\$LastVersion"
 } catch {
   # Take no action here, we just want to catch the exceptions as a precaution

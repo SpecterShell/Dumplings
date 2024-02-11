@@ -205,7 +205,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
         Config = $TaskConfig
       }
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Failed to initialize task ${TaskName}:" -Level Error
+      Write-Log -Object "Failed to initialize task ${TaskName}:" -Identifier "DumplingsWok${WorkerID}" -Level Error
       $_ | Out-Host
       continue
     }
@@ -214,7 +214,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     try {
       $Task.Invoke()
     } catch {
-      Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m An error occured while running the script for ${TaskName}:" -Level Error
+      Write-Log -Object "An error occured while running the script for ${TaskName}:" -Identifier "DumplingsWok${WorkerID}" -Level Error
       $_ | Out-Host
     }
 
@@ -222,7 +222,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     if ($PassThru) { Write-Output -InputObject $Task }
   }
 
-  Write-Log -Object "`e[1mDumplingsWok${WorkerID}:`e[22m Done" -Level Verbose
+  Write-Log -Object 'Done' -Identifier "DumplingsWok${WorkerID}" -Level Verbose
 
   # Clean the environment for the sub-thread
   Get-Module | Where-Object -FilterScript { $_.Path.Contains($Global:DumplingsRoot) } | Remove-Module
