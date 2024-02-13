@@ -950,9 +950,9 @@ function Write-Log {
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLog')
     $Mutex.WaitOne(2000) | Out-Null
     if (-not [string]::IsNullOrWhiteSpace($Identifier)) {
-      [System.Console]::WriteLine("${Color}`e[1m${Identifier}:`e[22m ${Object}`e[0m")
+      Write-Host -Object "${Color}`e[1m${Identifier}:`e[22m ${Object}`e[0m"
     } else {
-      [System.Console]::WriteLine("${Color}${Object}`e[0m")
+      Write-Host -Object "${Color}${Object}`e[0m"
     }
     $Mutex.ReleaseMutex()
     $Mutex.Close()
