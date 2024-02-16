@@ -185,14 +185,15 @@ class PackageTask {
   [void] Write() {
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       # Writing current state to log file
-      $LogPath = Join-Path $this.Path "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
+      $LogName = "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
+      $LogPath = Join-Path $this.Path $LogName
       Write-Log -Object "Writing current state to log file ${LogPath}" -Identifier "PackageTask $($this.Name)"
       $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
       Write-Log -Object "Linking current state to the latest log file ${StatePath}" -Identifier "PackageTask $($this.Name)"
-      New-Item -Path $StatePath -ItemType SymbolicLink -Value $LogPath -Force
+      New-Item -Path $StatePath -ItemType SymbolicLink -Value $LogName -Force
     }
   }
 
