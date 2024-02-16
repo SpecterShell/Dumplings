@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://is.snssdk.com/service/settings/v3/?device_platform=windows&os_version=10&aid=3704&iid=0&version_code=$($this.LastState.VersionCode ?? '197888')"
 
 if (-not $Object1.data.settings.update_reminder) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
@@ -49,7 +49,7 @@ switch ($this.Check()) {
     if ($ToSubmit) {
       $this.Submit()
     } else {
-      $this.Logging('Another task is submitting manifests for this package', 'Warning')
+      $this.Log('Another task is submitting manifests for this package', 'Warning')
     }
   }
 }

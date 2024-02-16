@@ -9,7 +9,7 @@ $Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x8
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

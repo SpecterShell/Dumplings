@@ -16,7 +16,7 @@ $this.CurrentState.Version = $VersionX64
 
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

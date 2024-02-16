@@ -21,7 +21,7 @@ $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

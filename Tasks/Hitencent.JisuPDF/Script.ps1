@@ -30,11 +30,11 @@ switch ($this.Check()) {
           Value  = $Object2.GetEnumerator() | Where-Object -Property Key -CMatch -Value '^t\d+$' | Sort-Object -Property Key | Select-Object -ExpandProperty Value | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

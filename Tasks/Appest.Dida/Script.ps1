@@ -13,7 +13,7 @@ $VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d{4})[_.]').Groups[1].Value -
 
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
@@ -37,7 +37,7 @@ if ($LocalStorage.Contains('Dida') -and $LocalStorage.Dida.Contains($Version)) {
     Value  = $LocalStorage.Dida.$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

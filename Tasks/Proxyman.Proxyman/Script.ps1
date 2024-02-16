@@ -22,7 +22,7 @@ if ($ReleaseNotesObjects) {
     Value  = $ReleaseNotes -join "`n`n" | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

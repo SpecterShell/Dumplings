@@ -14,7 +14,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.iflyrec.com/UpdateService/v1/upda
 ) -ContentType 'application/json'
 
 if ($Object1.biz.update -eq 0) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

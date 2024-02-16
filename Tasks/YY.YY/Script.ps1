@@ -40,7 +40,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

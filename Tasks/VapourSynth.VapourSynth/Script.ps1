@@ -23,7 +23,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
     Value  = $Object1.body | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl

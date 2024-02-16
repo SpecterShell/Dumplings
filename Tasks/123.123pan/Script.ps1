@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -
 }
 
 if (-not $Object1.data.hasNewVersion) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

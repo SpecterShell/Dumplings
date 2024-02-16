@@ -55,36 +55,40 @@ function New-WinGetManifest {
 
   #region Parameters
   $PackageIdentifier = $Task.Config.WinGetIdentifier
-  $PackageVersion = $Task.CurrentState['RealVersion'] ?? $Task.CurrentState['Version']
-  $PackageLastVersion = $Task.LastState['RealVersion'] ?? $Task.LastState['Version']
+  $PackageVersion = $Task.CurrentState.Contains('RealVersion') ? $Task.CurrentState.RealVersion : $Task.CurrentState.Version
+  $PackageLastVersion = $Task.LastState.Contains('RealVersion') ? $Task.LastState.RealVersion : $Task.LastState.Version
 
   $BranchName = "${PackageIdentifier}-${PackageVersion}-$(Get-Random)" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
-  $CommitType = switch (Compare-Version -ReferenceVersion $PackageLastVersion -DifferenceVersion $PackageVersion) {
-    1 { 'New version' }
-    0 { 'Update' }
-    -1 { 'Add version' }
+  $CommitType = if ($Task.LastState.Contains('Version')) {
+    switch (Compare-Version -ReferenceVersion $PackageLastVersion -DifferenceVersion $PackageVersion) {
+      1 { 'New version' }
+      0 { 'Update' }
+      -1 { 'Add version' }
+    }
+  } else {
+    'New version'
   }
   $CommitName = "${CommitType}: ${PackageIdentifier} version ${PackageVersion}"
-  if ($Task.CurrentState.Contains('RealVersion') -and $Task.LastState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
+  if ($Task.CurrentState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
 
   $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
   #endregion
 
   #region Check existing pull requests in the upstream repository
-  $Task.Logging('Checking existing pull requests', 'Verbose')
+  $Task.Log('Checking existing pull requests', 'Verbose')
 
   $OldPRObject = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo:${Script:UpstreamOwner}/${Script:UpstreamRepo} is:pr $($PackageIdentifier.Replace('.', '/'))/${PackageVersion} in:path&per_page=1"
   if ($OldPRObject.total_count -gt 0) {
     if (-not ($Global:DumplingsPreference.Contains('NoCheck') -and $Global:DumplingsPreference.NoCheck) -and -not ($Task.Config.Contains('IgnorePRCheck') -and $Task.Config.IgnorePRCheck)) {
       throw "Existing pull request found: $($OldPRObject.items[0].title) - $($OldPRObject.items[0].html_url)"
     } else {
-      $Task.Logging("Existing pull request found: $($OldPRObject.items[0].title) - $($OldPRObject.items[0].html_url)", 'Warning')
+      $Task.Log("Existing pull request found: $($OldPRObject.items[0].title) - $($OldPRObject.items[0].html_url)", 'Warning')
     }
   }
   #endregion
 
   #region Create manifests using YamlCreate
-  $Task.Logging('Creating manifests', 'Verbose')
+  $Task.Log('Creating manifests', 'Verbose')
 
   try {
     $Parameters = @{
@@ -104,39 +108,39 @@ function New-WinGetManifest {
     }
     & (Join-Path $PSScriptRoot '..' 'Utilities' 'YamlCreate.ps1') @Parameters
   } catch {
-    $Task.Logging('Failed to create manifests', 'Error')
+    $Task.Log('Failed to create manifests', 'Error')
     throw $_
   }
 
-  $Task.Logging('Manifests created', 'Verbose')
+  $Task.Log('Manifests created', 'Verbose')
   #endregion
 
   #region Validate manifests using WinGet client
-  $Task.Logging('Validating manifests', 'Verbose')
+  $Task.Log('Validating manifests', 'Verbose')
 
   $WinGetOutput = ''
   try {
     winget validate $OutFolder | Out-String -Stream -OutVariable 'WinGetOutput'
   } catch {
     if ($_.FullyQualifiedErrorId -eq 'CommandNotFoundException') {
-      $Task.Logging('Could not find WinGet client for validating manifests. Is it installed and added to PATH?', 'Error')
+      $Task.Log('Could not find WinGet client for validating manifests. Is it installed and added to PATH?', 'Error')
       throw $_
     } elseif ($_.FullyQualifiedErrorId -eq 'ProgramExitedWithNonZeroCode' -and $_.Exception.ExitCode -ne -1978335192) {
       # WinGet may throw warnings for, for example, not specifying the installer switches for EXE installers
       # Ignore these warnings by checking the exit code as it actually doesn't matter
-      $Task.Logging('Failed to pass the validation', 'Error')
+      $Task.Log('Failed to pass the validation', 'Error')
       throw ($WinGetOutput -join "`n")
     } elseif ($_.FullyQualifiedErrorId -ne 'ProgramExitedWithNonZeroCode') {
-      $Task.Logging('Failed to validate', 'Error')
+      $Task.Log('Failed to validate', 'Error')
       throw $_
     }
   }
 
-  $Task.Logging('Manifests validation passed', 'Verbose')
+  $Task.Log('Manifests validation passed', 'Verbose')
   #endregion
 
   #region Upload new manifests, remove old manifests if needed, and commit in the origin repository
-  $Task.Logging('Uploading manifests and committing', 'Verbose')
+  $Task.Log('Uploading manifests and committing', 'Verbose')
 
   # Create a new branch
   # The new branch is created from the default branch of the origin repo rather than the one of the upstream repo
@@ -149,7 +153,7 @@ function New-WinGetManifest {
       sha = $Script:BaseRefSha
     }
   } catch {
-    $Task.Logging('Failed to create branch', 'Error')
+    $Task.Log('Failed to create branch', 'Error')
     throw $_
   }
 
@@ -170,7 +174,7 @@ function New-WinGetManifest {
       throw 'Could not find any file to be uploaded'
     }
   } catch {
-    $Task.Logging('Failed to upload files', 'Error')
+    $Task.Log('Failed to upload files', 'Error')
     throw $_
   }
 
@@ -181,7 +185,7 @@ function New-WinGetManifest {
         Split-Path -Parent | Split-Path -Leaf |
         Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Culture en-US | Select-Object -Last 1
       if ($LastManifestVersion -ne $PackageVersion) {
-        $Task.Logging("Manifests for last version ${LastManifestVersion} will be removed", 'Info')
+        $Task.Log("The manifests for the last version ${LastManifestVersion} will be removed", 'Info')
         Get-ChildItem -Path "${Script:ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {
           $FilePathSha += @{
             Path = "manifests/$($PackageIdentifier.ToLower().Chars(0))/$($PackageIdentifier.Replace('.', '/'))/${LastManifestVersion}/$($_.Name)"
@@ -189,11 +193,11 @@ function New-WinGetManifest {
           }
         }
       } else {
-        $Task.Logging("Manifests for last version ${LastManifestVersion} will be overrided", 'Info')
+        $Task.Log("The manifests for the last version ${LastManifestVersion} will be overrided", 'Info')
       }
     }
   } catch {
-    $Task.Logging('Failed to remove files', 'Error')
+    $Task.Log('Failed to remove files', 'Error')
     throw $_
   }
 
@@ -213,7 +217,7 @@ function New-WinGetManifest {
       base_tree = $NewRefObject.object.sha
     }
   } catch {
-    $Task.Logging('Failed to build tree', 'Error')
+    $Task.Log('Failed to build tree', 'Error')
     throw $_
   }
 
@@ -225,7 +229,7 @@ function New-WinGetManifest {
       parents = @($NewRefObject.object.sha)
     }
   } catch {
-    $Task.Logging('Failed to create commit', 'Error')
+    $Task.Log('Failed to create commit', 'Error')
     throw $_
   }
 
@@ -235,14 +239,16 @@ function New-WinGetManifest {
       sha = $CommitObject.sha
     } | Out-Null
   } catch {
-    $Task.Logging('Failed to opearate branch', 'Error')
+    $Task.Log('Failed to opearate branch', 'Error')
     throw $_
   }
-  $Task.Logging('Manifests uploaded and committed', 'Verbose')
+
+  $Task.Log('Manifests uploaded and committed', 'Verbose')
   #endregion
 
   #region Create pull request in the upstream repository
-  $Task.Logging('Creating pull request', 'Verbose')
+  $Task.Log('Creating pull request', 'Verbose')
+
   try {
     if (Test-Path Env:\CI) {
       $NewPRBody = "Created by [🥟 Dumplings](https://github.com/SpecterShell/Dumplings) in Run [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${Script:OriginOwner}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID})."
@@ -256,9 +262,10 @@ function New-WinGetManifest {
       base  = 'master'
     }
   } catch {
-    $Task.Logging('Failed to create pull request', 'Error')
+    $Task.Log('Failed to create pull request', 'Error')
     throw $_
   }
-  $Task.Logging("Pull request created: $($NewPRObject.html_url)", 'Info')
+
+  $Task.Log("Pull request created: $($NewPRObject.html_url)", 'Info')
   #endregion
 }

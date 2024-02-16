@@ -35,10 +35,10 @@ switch ($this.Check()) {
             Value  = (($ReleaseNotesNode | Get-TextContent) -csplit '(?m)^-+$')[0] | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Logging("No ReleaseNotesUrl and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
           Value = 'https://115.com/115/T504444.html'
@@ -46,7 +46,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = 'https://115.com/115/T504444.html'

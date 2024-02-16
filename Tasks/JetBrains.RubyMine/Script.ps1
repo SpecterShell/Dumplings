@@ -40,7 +40,7 @@ if ($Object1.whatsnew) {
     Value  = $Object1.whatsnew | ConvertFrom-Html | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 if ($Object1.notesLink) {

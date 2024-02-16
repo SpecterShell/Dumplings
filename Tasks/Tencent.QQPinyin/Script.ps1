@@ -58,10 +58,10 @@ switch ($this.Check()) {
             Value  = $ReleaseNotesObject[0].version_features | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } catch {
-        $this.Logging($_, 'Warning')
+        $this.Log($_, 'Warning')
       }
     }
 

@@ -27,7 +27,7 @@ switch ($this.Check()) {
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2, 'Last change: (\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     try {
@@ -43,11 +43,11 @@ switch ($this.Check()) {
           Value  = ($ReleaseNotesNodes | Get-TextContent).Replace("`u{2060}", '') | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

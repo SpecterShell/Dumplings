@@ -14,14 +14,14 @@ if ($LocalStorage.Contains('iFlyNote1') -and $LocalStorage['iFlyNote1'].Contains
     Value  = $LocalStorage['iFlyNote1'].$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 if ($LocalStorage.Contains('iFlyNote2') -and $LocalStorage['iFlyNote2'].Contains($Version)) {
   # ReleaseTime
   $this.CurrentState.ReleaseTime = $LocalStorage['iFlyNote2'].$Version.ReleaseTime
 } else {
-  $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

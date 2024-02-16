@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 $ToBeSubmitted = $true
 if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
-  $this.Logging('The ProductCode needs to be updated', 'Error')
+  $this.Log('The ProductCode needs to be updated', 'Error')
   $ToBeSubmitted = $false
 }
 

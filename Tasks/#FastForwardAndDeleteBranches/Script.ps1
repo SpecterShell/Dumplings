@@ -39,23 +39,23 @@ $Query = @"
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{ query = $Query }
 $Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes[0].state -eq 'MERGED' }).ForEach({ $_.name })
 
-$this.Logging("$($Branches.Count) branch(es) in ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
+$this.Log("$($Branches.Count) branch(es) in ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
 
 $Count = 0
 foreach ($Branch in $Branches) {
   try {
-    $this.Logging("Deleting ${Branch}")
+    $this.Log("Deleting ${Branch}")
     Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${Branch}" -Method Delete | Out-Null
     $Count++
   } catch {
-    $this.Logging("Failed to delete branch ${Branch}", 'Error')
+    $this.Log("Failed to delete branch ${Branch}", 'Error')
     $_ | Out-Host
   }
 }
 
-$this.Logging("$($Branches.Count) branch(es) to delete, ${Count} deleted, $($Branches.Count - $Count) not deleted")
+$this.Log("$($Branches.Count) branch(es) to delete, ${Count} deleted, $($Branches.Count - $Count) not deleted")
 
-$this.Logging("Updating ${OriginOwner}/${OriginRepo}/${OriginBranch} to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
+$this.Log("Updating ${OriginOwner}/${OriginRepo}/${OriginBranch} to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
 
 $UpstreamSha = $Global:LocalStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
 
@@ -63,4 +63,4 @@ Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}
   sha = $UpstreamSha
 } | Out-Null
 
-$this.Logging("${OriginOwner}/${OriginRepo}/${OriginBranch} has been fast-forwarded to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
+$this.Log("${OriginOwner}/${OriginRepo}/${OriginBranch} has been fast-forwarded to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")

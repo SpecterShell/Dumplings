@@ -22,7 +22,7 @@ if ($LocalStorage.Contains('TeraBox') -and $LocalStorage.TeraBox.Contains($Versi
     Value  = $LocalStorage.TeraBox.$Version.ReleaseNotesEN
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

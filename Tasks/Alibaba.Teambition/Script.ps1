@@ -12,7 +12,7 @@ if ($LocalStorage.Contains('Teambition') -and $LocalStorage.Teambition.Contains(
   # ReleaseTime
   $this.CurrentState.ReleaseTime = $LocalStorage.Teambition.$Version.ReleaseTime
 } else {
-  $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

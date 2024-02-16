@@ -14,7 +14,7 @@ try {
     InstallerUrl = $InstallerUrl
   }
 } catch {
-  $this.Logging("${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')", 'Warning')
+  $this.Log("${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')", 'Warning')
   # Installer
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object1.SelectSingleNode('//div[@class="win_download"]').Attributes['href'].Value
@@ -41,11 +41,11 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "release-note")]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

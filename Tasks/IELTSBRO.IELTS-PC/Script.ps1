@@ -26,11 +26,11 @@ switch ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Object3.ReleaseTime
       } else {
-        $this.Logging("No ReleaseNotes (zh-CN) and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

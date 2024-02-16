@@ -11,7 +11,7 @@ $this.CurrentState.Locale += [ordered]@{
 
 $ToBeSubmitted = $true
 if ($this.CurrentState.Version.Split('.')[0] -ne '14') {
-  $this.Logging('The PackageIdentifier needs to be updated', 'Error')
+  $this.Log('The PackageIdentifier needs to be updated', 'Error')
   $ToBeSubmitted = $false
 }
 

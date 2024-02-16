@@ -46,7 +46,7 @@ if ($this.CurrentState.Version -eq $Object3.version) {
 
 $Identical = $true
 if (-not $this.LastState.Installer.Architecture -or (Compare-Object -ReferenceObject $this.LastState.Installer.Architecture -DifferenceObject $this.CurrentState.Installer.Architecture)) {
-  $this.Logging('Distinct architecture detected', 'Warning')
+  $this.Log('Distinct architecture detected', 'Warning')
   $Identical = $false
 }
 
@@ -77,11 +77,11 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     # ReleaseNotesUrl

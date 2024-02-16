@@ -25,10 +25,10 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
       Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
     }
   } else {
-    $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl

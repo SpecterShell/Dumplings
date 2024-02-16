@@ -40,11 +40,11 @@ switch ($this.Check()) {
           '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

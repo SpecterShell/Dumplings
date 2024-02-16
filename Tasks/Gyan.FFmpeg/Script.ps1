@@ -49,11 +49,11 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesObject -creplace '^version [\d\.]+:?\n' | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

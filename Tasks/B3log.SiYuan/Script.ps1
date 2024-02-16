@@ -46,14 +46,14 @@ switch ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     # try {
@@ -67,7 +67,7 @@ switch ($this.Check()) {
     #   }
     # } catch {
     #   $_ | Out-Host
-    #   $this.Logging($_, 'Warning')
+    #   $this.Log($_, 'Warning')
     # }
 
     $this.Write()

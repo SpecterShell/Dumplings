@@ -33,7 +33,7 @@ switch ($this.Check()) {
           Value = $Prefix + '?id=' + $ReleaseNotesUrlObject[0].id
         }
       } else {
-        $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -42,7 +42,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

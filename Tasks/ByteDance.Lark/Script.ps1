@@ -35,7 +35,7 @@ switch ($this.Check()) {
           Value = $ReleaseNotesTitleNode.SelectSingleNode('.//a').Attributes['href'].Value
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) and ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -44,7 +44,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
@@ -75,7 +75,7 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesCNTitleNode.SelectSingleNode('.//a').Attributes['href'].Value
         }
       } else {
-        $this.Logging("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
@@ -85,7 +85,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'

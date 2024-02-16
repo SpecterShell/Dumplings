@@ -25,10 +25,10 @@ switch ($this.Check()) {
     #     # ReleaseTime
     #     $this.CurrentState.ReleaseTime = $ReleaseNotesNode.SelectSingleNode('./following-sibling::p[1]').InnerText | Get-Date -Format 'yyyy-MM-dd'
     #   } else {
-    #     $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+    #     $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
     #   }
     # } catch {
-    #   $this.Logging($_, 'Warning')
+    #   $this.Log($_, 'Warning')
     # }
 
     $this.Write()

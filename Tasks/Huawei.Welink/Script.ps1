@@ -8,7 +8,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.welink.huaweicloud.com/mcloud/mag
 ) -ContentType 'application/json'
 
 if ($Object1.data.status -eq 1) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

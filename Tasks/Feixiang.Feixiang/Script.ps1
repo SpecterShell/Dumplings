@@ -8,7 +8,7 @@ $this.CurrentState.Version = $Object2.data.version_number
 
 $Identical = $true
 if ($Object1.data.version_number -ne $Object2.data.version_number) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

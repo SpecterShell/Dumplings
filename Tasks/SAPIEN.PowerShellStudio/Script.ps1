@@ -26,11 +26,11 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesContent[0].Replace("`r`n`t", ' ') | Split-LineEndings | Select-Object -Skip 1 | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

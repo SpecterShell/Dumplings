@@ -6,7 +6,7 @@ $Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
 
 $Identical = $true
 if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
@@ -33,7 +33,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
@@ -55,11 +55,11 @@ switch ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } catch {
         $_ | Out-Host
-        $this.Logging($_, 'Warning')
+        $this.Log($_, 'Warning')
       }
     }
 

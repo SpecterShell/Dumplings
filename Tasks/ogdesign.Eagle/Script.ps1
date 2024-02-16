@@ -32,7 +32,7 @@ switch ($this.Check()) {
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

@@ -1,20 +1,20 @@
 # International
 $Object1 = Invoke-RestMethod -Uri "https://intl.meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($this.LastState.Version ?? '9.7.7')"
 if ($Object1.isConsistent) {
-  $this.Logging("The last version for international edition $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version for international edition $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
 # Chinese
 $Object2 = Invoke-RestMethod -Uri "https://meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($this.LastState.Version ?? '9.7.7')"
 if ($Object2.isConsistent) {
-  $this.Logging("The last version for Chinese edition $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version for Chinese edition $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 
 $Identical = $true
 if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

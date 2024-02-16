@@ -25,7 +25,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
     Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl

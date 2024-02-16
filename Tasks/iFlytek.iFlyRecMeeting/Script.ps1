@@ -20,7 +20,7 @@ if ($LocalStorage.Contains('iFlyRecMeeting') -and $LocalStorage.iFlyRecMeeting.C
     Value  = $LocalStorage.iFlyRecMeeting.$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

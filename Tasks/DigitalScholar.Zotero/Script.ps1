@@ -10,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 # Sometimes the installer does not match the version
 if (-not $InstallerUrl.Contains($this.CurrentState.Version)) {
-  $this.Logging('The installer does not match the version', 'Warning')
+  $this.Log('The installer does not match the version', 'Warning')
 
   # Version
   $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'Zotero-([\d\.]+)').Groups[1].Value
@@ -41,7 +41,7 @@ switch ($this.Check()) {
           Value = $Uri2 + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -50,7 +50,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

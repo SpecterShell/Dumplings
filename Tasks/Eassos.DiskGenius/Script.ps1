@@ -11,7 +11,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -jo
 
 $Identical = $true
 if ($Object1.version.new -ne $Object2.version.new) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
@@ -70,12 +70,12 @@ switch ($this.Check()) {
             '(\d{4}-\d{1,2}-\d{1,2})'
           ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
         } else {
-          $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
         }
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

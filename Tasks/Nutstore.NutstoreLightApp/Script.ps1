@@ -11,7 +11,7 @@ $this.CurrentState.Version = $Object2.exVer
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

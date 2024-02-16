@@ -12,7 +12,7 @@ if ($LocalStorage.Contains('5EClient') -and $LocalStorage['5EClient'].Contains($
     Value  = $LocalStorage['5EClient'].$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

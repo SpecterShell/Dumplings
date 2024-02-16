@@ -29,7 +29,7 @@ if ($LocalStorage.Contains('Lattics') -and $LocalStorage['Lattics'].Contains($Sh
     Value  = $LocalStorage['Lattics'].$ShortVersion.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

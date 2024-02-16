@@ -2,7 +2,7 @@ $Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 
 $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState.LastModified } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
@@ -21,7 +21,7 @@ try {
     InstallerUrl = $Uri2
   }
 } catch {
-  $this.Logging("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
+  $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
   # Installer
   $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x64'
@@ -54,7 +54,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     try {
@@ -75,7 +75,7 @@ switch ($this.Check()) {
           Value  = 'https://weixin.qq.com' + ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
         }
       } else {
-        $this.Logging("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl (zh-Hans)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-Hans'
@@ -91,7 +91,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

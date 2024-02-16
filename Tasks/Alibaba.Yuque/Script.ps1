@@ -36,7 +36,7 @@ switch ($this.Check()) {
         #   '发布时间[:：]\s*(\d{4}\.\d{1,2}\.\d{1,2})'
         # ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $this.Logging("No ReleaseNotesUrl and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -45,7 +45,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

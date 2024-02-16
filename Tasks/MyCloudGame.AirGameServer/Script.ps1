@@ -26,7 +26,7 @@ if ($ReleaseNotesTitleNode) {
     Value  = $ReleaseNotesTitleNode[0].SelectSingleNode('./following-sibling::ul[1]') | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

@@ -31,7 +31,7 @@ switch ($this.Check()) {
       ).ToString('yyyy-MM-dd')
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

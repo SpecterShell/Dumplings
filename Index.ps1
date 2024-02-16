@@ -214,7 +214,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     try {
       $Task.Invoke()
     } catch {
-      Write-Log -Object "An error occured while running the script for ${TaskName}:" -Identifier "DumplingsWok${WorkerID}" -Level Error
+      $Task.Log("An error occured when the script is running: ${_}", 'Error')
       $_ | Out-Host
     }
 

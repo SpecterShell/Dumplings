@@ -36,7 +36,7 @@ switch ($this.Check()) {
           Value  = "https://mogan.app/guide/ChangeLog_v$($this.CurrentState.Version).html"
         }
       } else {
-        $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
@@ -46,7 +46,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -74,7 +74,7 @@ switch ($this.Check()) {
           Value  = "https://mogan.app/zh/guide/ChangeLog_v$($this.CurrentState.Version).html"
         }
       } else {
-        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
@@ -84,7 +84,7 @@ switch ($this.Check()) {
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'

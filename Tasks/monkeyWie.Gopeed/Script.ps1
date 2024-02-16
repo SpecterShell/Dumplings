@@ -34,7 +34,7 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
       Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
     }
   } else {
-    $this.Logging("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
   }
 
   $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='更新日志']")
@@ -47,10 +47,10 @@ if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
       Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
     }
   } else {
-    $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+    $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
   }
 } else {
-  $this.Logging("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 # ReleaseNotesUrl

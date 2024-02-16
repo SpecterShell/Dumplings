@@ -8,7 +8,7 @@ if (Test-Path -Path $OldReleaseNotesPath) {
 $Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.LastState.Version ?? '3.22.1.449')"
 
 if ($Object1.upgrade_policy -eq 0) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

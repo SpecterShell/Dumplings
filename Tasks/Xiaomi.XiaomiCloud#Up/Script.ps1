@@ -23,7 +23,7 @@ switch ($this.Check()) {
     if ($ToSubmit) {
       $this.Submit()
     } else {
-      $this.Logging('Another task is submitting manifests for this package', 'Warning')
+      $this.Log('Another task is submitting manifests for this package', 'Warning')
     }
   }
 }

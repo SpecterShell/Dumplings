@@ -24,7 +24,7 @@ if ($LocalStorage.Contains('360Zip') -and $LocalStorage['360Zip'].Contains($Vers
     Value  = $LocalStorage['360Zip'].$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

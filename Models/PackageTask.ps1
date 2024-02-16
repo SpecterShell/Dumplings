@@ -8,7 +8,7 @@
      The constructor receives the properties, probes the script, and loads the last state ("State.yaml", if existed) which contains the information stored during previous runs.
      The Invoke() method runs the script file ("Script.ps1") in the same folder as the task config file ("Config.yaml").
   2. Implement common methods to be called by the task scripts including Logging(), Write(), Message() and Submit(), Check():
-     - Logging() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
+     - Log() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
      - Write() writes current state to the files "State.yaml" and "Log*.yaml", where the former file will be read in the subsequent runs.
      - Message() enables sending current state to Telegram formatted with a built-in template.
        This method then will be invoked every time the Logging() method is invoked.
@@ -69,7 +69,7 @@ class PackageTask {
     Locale    = @()
   }
 
-  [System.Collections.Generic.List[string]]$Log = [System.Collections.Generic.List[string]]@()
+  [System.Collections.Generic.List[string]]$Logs = [System.Collections.Generic.List[string]]@()
   [bool]$MessageEnabled = $false
   [int[]]$MessageID = [int[]]@()
   #endregion
@@ -109,42 +109,31 @@ class PackageTask {
 
     # Log notes
     if ($this.Config.Contains('Notes')) {
-      $this.Log.Add($this.Config.Notes)
+      $this.Logs.Add($this.Config.Notes)
     }
   }
 
-  # Log with template, without specifying log level
-  [void] Logging([string]$Message) {
-    Write-Log -Object $Message -Identifier "PackageTask $($this.Name)"
-    $this.Log.Add($Message)
-    if ($this.MessageEnabled) {
-      $this.Message()
-    }
-  }
-
-  # Log with template, specifying log level
-  [void] Logging([string]$Message, [LogLevel]$Level) {
+  # Log in specified level
+  [void] Log([string]$Message, [LogLevel]$Level) {
     Write-Log -Object $Message -Identifier "PackageTask $($this.Name)" -Level $Level
     if ($Level -ne 'Verbose') {
-      $this.Log.Add($Message)
-      if ($this.MessageEnabled) {
-        $this.Message()
-      }
+      $this.Logs.Add($Message)
+      if ($this.MessageEnabled) { $this.Message() }
     }
+  }
+
+  # Log in default level
+  [void] Log([string]$Message) {
+    $this.Log($Message, 'Log')
   }
 
   # Invoke script
   [void] Invoke() {
-    if ($Global:DumplingsPreference.NoSkip -or -not $this.Config.Skip) {
-      try {
-        Write-Log -Object 'Run!' -Identifier "PackageTask $($this.Name)"
-        & $this.ScriptPath | Out-Null
-      } catch {
-        $this.Logging("An error occured while running the script: ${_}", 'Error')
-        $_ | Out-Host
-      }
+    if ($this.Preference.NoSkip -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
+      Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
+      & $this.ScriptPath | Out-Null
     } else {
-      $this.Logging('Skipped', 'Info')
+      $this.Log('Skipped', 'Info')
     }
   }
 
@@ -169,25 +158,25 @@ class PackageTask {
 
       switch (Compare-Version -ReferenceVersion $this.LastState.Version -DifferenceVersion $this.CurrentState.Version) {
         1 {
-          $this.Logging("Updated: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Info')
+          $this.Log("Updated: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Info')
           return 3
         }
         0 {
           if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
             if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
-              $this.Logging('Installers changed', 'Info')
+              $this.Log('Installers changed', 'Info')
               return 2
             }
           }
         }
         -1 {
-          $this.Logging("Rollbacked: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Warning')
+          $this.Log("Rollbacked: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Warning')
         }
       }
 
       return 0
     } else {
-      $this.Logging('Skip checking states', 'Info')
+      $this.Log('Skip checking states', 'Info')
       return 3
     }
   }
@@ -202,8 +191,8 @@ class PackageTask {
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
-      Write-Log -Object "Writing current state to state file ${StatePath}" -Identifier "PackageTask $($this.Name)"
-      Copy-Item -Path $LogPath -Destination $StatePath -Force
+      Write-Log -Object "Linking current state to the latest log file ${StatePath}" -Identifier "PackageTask $($this.Name)"
+      New-Item -Path $StatePath -ItemType SymbolicLink -Value $LogPath -Force
     }
   }
 
@@ -212,47 +201,39 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.WinGetIdentifier)) {
-      $Message.Append("*$($this.Config.WinGetIdentifier)*`n")
+    if ($this.Config.Contains('WinGetIdentifier')) {
+      $Message.AppendLine("*$($this.Config.WinGetIdentifier)*")
     }
 
-    # RealVersion / Version
-    if ($this.CurrentState.Contains('RealVersion') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
-      $Message.Append("`n*版本:* $($this.CurrentState.RealVersion)")
-    } elseif ($this.CurrentState.Contains('Version') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-      $Message.Append("`n*版本:* $($this.CurrentState.Version)")
-    }
+    $Message.AppendLine()
+
+    # Version
+    $Message.AppendLine("*Version:* $($this.CurrentState['Version'])")
+    # RealVersion
+    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'])") }
 
     # Installer
-    $Message.Append("`n*地址:*`n`n$($this.CurrentState.Installer.InstallerUrl -join "`n")")
+    for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
+      $Installer = $this.CurrentState.Installer[$i]
+      $Message.AppendLine("*Installer #${i} ($($Installer['InstallerLocale']), $($Installer['Architecture']), $($Installer['InstallerType']), $($Installer['NestedInstallerType']), $($Installer['Scope'])):*")
+      $Message.AppendLine($Installer['InstallerUrl'])
+    }
 
-    # ReleaseTime
+    # ReleaseDate
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.Append("`n*日期:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
-      } elseif (-not [string]::IsNullOrWhiteSpace($this.CurrentState.ReleaseTime)) {
-        $Message.Append("`n*日期:* $($this.CurrentState.ReleaseTime)")
-      }
-    }
-    # Locale
-    foreach ($Entry in $this.CurrentState.Locale) {
-      if ($Entry.Contains('Key') -and $Entry.Contains('Value') -and -not [string]::IsNullOrWhiteSpace($Entry.Key)) {
-        $Key = $null
-        switch ($Entry.Key) {
-          'ReleaseNotes' { $Key = '说明' }
-          'ReleaseNotesUrl' { $Key = '链接' }
-          Default { $Key = $Entry.Key }
-        }
-        if ($Entry.Contains('Locale')) {
-          $Key += " ($($Entry.Locale))"
-        }
-        $Message.Append("`n*${Key}:* `n$($Entry.Value)")
+        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
+      } else {
+        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime)")
       }
     }
 
-    # Log
-    if ($this.Log.Count -gt 0) {
-      $Message.Append("`n`n*日志:* `n$($this.Log -join "`n")")
+    # Locale
+    foreach ($Entry in $this.CurrentState.Locale) {
+      if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
+        $Message.AppendLine("*$($Entry['Key']) ($($Entry['Locale']))*")
+        $Message.AppendLine(($Entry['Value']))
+      }
     }
 
     # Standard Markdown use two line endings as newline
@@ -264,48 +245,48 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier') -and -not [string]::IsNullOrWhiteSpace($this.Config.WinGetIdentifier)) {
-      $Message.Append("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*`n")
+    if ($this.Config.Contains('WinGetIdentifier')) {
+      $Message.AppendLine("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*")
     }
 
-    # RealVersion / Version
-    if ($this.CurrentState.Contains('RealVersion') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
-      $Message.Append("`n*版本:* ``$(($this.CurrentState.RealVersion) | ConvertTo-TelegramEscapedCode)``")
-    } elseif ($this.CurrentState.Contains('Version') -and -not [string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-      $Message.Append("`n*版本:* ``$(($this.CurrentState.Version) | ConvertTo-TelegramEscapedCode)``")
-    }
+    $Message.AppendLine()
+
+    # Version
+    $Message.AppendLine("*Version:* $($this.CurrentState['Version'] | ConvertTo-TelegramEscapedText)")
+    # RealVersion
+    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'] | ConvertTo-TelegramEscapedText)") }
 
     # Installer
-    $Delimiter = '`' + "`n" + '`'
-    $Message.Append("`n*地址:*`n``$(($this.CurrentState.Installer.InstallerUrl | ConvertTo-TelegramEscapedCode) -join $Delimiter)``")
+    for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
+      $Installer = $this.CurrentState.Installer[$i]
+      $Message.Append('*')
+      $Message.Append(("Installer #${i} ($($Installer['InstallerLocale']), $($Installer['Architecture']), $($Installer['InstallerType']), $($Installer['NestedInstallerType']), $($Installer['Scope'])):" | ConvertTo-TelegramEscapedText))
+      $Message.AppendLine('*')
+      $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-TelegramEscapedText))
+    }
 
     # ReleaseTime
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.Append("`n*日期:* ``$($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-TelegramEscapedCode)``")
-      } elseif (-not [string]::IsNullOrWhiteSpace($this.CurrentState.ReleaseTime)) {
-        $Message.Append("`n*日期:* ``$($this.CurrentState.ReleaseTime | ConvertTo-TelegramEscapedCode)``")
-      }
-    }
-    # Locale
-    foreach ($Entry in $this.CurrentState.Locale) {
-      if ($Entry.Contains('Key') -and $Entry.Contains('Value') -and -not [string]::IsNullOrWhiteSpace($Entry.Key)) {
-        $Key = $null
-        switch ($Entry.Key) {
-          'ReleaseNotes' { $Key = '说明' }
-          'ReleaseNotesUrl' { $Key = '链接' }
-          Default { $Key = $Entry.Key }
-        }
-        if ($Entry.Contains('Locale')) {
-          $Key += " ($($Entry.Locale))"
-        }
-        $Message.Append("`n*$($Key | ConvertTo-TelegramEscapedText):* `n$($Entry.Value | ConvertTo-TelegramEscapedText)")
+        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-TelegramEscapedText)")
+      } else {
+        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime | ConvertTo-TelegramEscapedText)")
       }
     }
 
+    # Locale
+    foreach ($Entry in $this.CurrentState.Locale) {
+      if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
+        $Message.AppendLine("*$($Entry['Key']) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\)*")
+        $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
+      }
+    }
+
+    $Message.AppendLine()
+
     # Log
-    if ($this.Log.Count -gt 0) {
-      $Message.Append("`n`n*日志:* `n$($this.Log -join "`n" | ConvertTo-TelegramEscapedText)")
+    if ($this.Logs.Count -gt 0) {
+      $Message.AppendLine("*Log:* `n$($this.Logs -join "`n" | ConvertTo-TelegramEscapedText)")
     }
 
     return $Message.ToString().Trim()
@@ -323,7 +304,7 @@ class PackageTask {
         $this.MessageID = $Response
       } catch {
         Write-Log -Object "Failed to send default message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
-        $this.Log.Add($_.ToString())
+        $this.Logs.Add($_.ToString())
       }
     }
   }
@@ -336,7 +317,7 @@ class PackageTask {
         Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
       } catch {
         Write-Log -Object "Failed to send custom message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
-        $this.Log.Add($_.ToString())
+        $this.Logs.Add($_.ToString())
       }
     }
   }
@@ -346,7 +327,7 @@ class PackageTask {
     if ($Global:DumplingsPreference.Contains('EnableSubmit') -and $Global:DumplingsPreference.EnableSubmit) {
       #region WinGet
       if ($this.Config.Contains('WinGetIdentifier')) {
-        $this.Logging('Submitting WinGet manifests', 'Info')
+        $this.Log('Submitting WinGet manifests', 'Info')
         Join-Path $Global:DumplingsRoot 'Modules' 'WinGet.psm1' | Import-Module
         New-WinGetManifest -Task $this
       }

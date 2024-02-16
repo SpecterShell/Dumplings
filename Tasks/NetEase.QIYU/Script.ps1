@@ -24,7 +24,7 @@ if ($LocalStorage.Contains('QIYU') -and $LocalStorage['QIYU'].Contains($Version)
     Value  = $LocalStorage['QIYU'].$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

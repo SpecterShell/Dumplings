@@ -17,7 +17,7 @@ $VersionX86 = [regex]::Match($InstallerUrlArm64, 'HuaweiBrowser-([\d\.]+)').Grou
 
 $Identical = $true
 if ($VersionX64 -ne $VersionX86) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

@@ -29,10 +29,10 @@ switch ($this.Check()) {
     #       Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ol[1]') | Get-TextContent | Format-Text
     #     }
     #   } else {
-    #     $this.Logging("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+    #     $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     #   }
     # } catch {
-    #   $this.Logging($_, 'Warning')
+    #   $this.Log($_, 'Warning')
     # }
 
     $this.Write()

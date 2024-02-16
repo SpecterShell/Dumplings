@@ -35,7 +35,7 @@ switch ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object2.assets.Where({ $_.name -cmatch '\.exe$' }, 'First')[0].updated_at
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

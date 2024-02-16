@@ -16,7 +16,7 @@ $VersionX64 = [regex]::Match($InstallerUrlX64, 'qianniu_\((.+)\)').Groups[1].Val
 
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
@@ -32,7 +32,7 @@ if ($ReleaseNotesObject) {
     Value  = $ReleaseNotesObject[0].versionContent | ConvertFrom-Html | Get-TextContent | Format-Text
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

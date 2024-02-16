@@ -10,7 +10,7 @@ if ($LocalStorage.Contains('iFlyRecSI1') -and $LocalStorage['iFlyRecSI1'].Contai
   # ReleaseTime
   $this.CurrentState.ReleaseTime = $LocalStorage['iFlyRecSI1'].$Version.ReleaseTime
 } else {
-  $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 }
 
 if ($LocalStorage.Contains('iFlyRecSI2') -and $LocalStorage['iFlyRecSI2'].Contains($Version)) {
@@ -21,7 +21,7 @@ if ($LocalStorage.Contains('iFlyRecSI2') -and $LocalStorage['iFlyRecSI2'].Contai
     Value  = $LocalStorage['iFlyRecSI2'].$Version.ReleaseNotesCN
   }
 } else {
-  $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch ($this.Check()) {

@@ -8,7 +8,7 @@ if (Test-Path -Path $OldReleaseNotesPath) {
 $Object1 = Invoke-RestMethod -Uri "https://api.iflynote.com/user/version/info?from=IFLYNOTE_PC_WINDOWS&clientVersion=$($this.LastState.Version ?? '3.1.1254')"
 
 if ($Object1.code -eq 50002) {
-  $this.Logging("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
   return
 }
 

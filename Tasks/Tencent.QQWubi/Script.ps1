@@ -31,11 +31,11 @@ switch ($this.Check()) {
           Value  = $ReleaseNotesObject[0].version_features | Split-LineEndings | Select-Object -Skip 1 | Format-Text
         }
       } else {
-        $this.Logging("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

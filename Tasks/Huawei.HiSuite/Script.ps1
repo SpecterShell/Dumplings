@@ -13,7 +13,7 @@ $Version2 = [regex]::Match(
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $this.Logging('Distinct versions detected', 'Warning')
+  $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 

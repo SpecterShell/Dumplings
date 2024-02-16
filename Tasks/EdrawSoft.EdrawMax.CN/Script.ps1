@@ -17,11 +17,11 @@ switch ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]/span').InnerText | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $this.Logging("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
-      $this.Logging($_, 'Warning')
+      $this.Log($_, 'Warning')
     }
 
     $this.Write()

@@ -7,8 +7,8 @@
   1. Implement a constructor and a method Invoke() to be called by the bootstrapping script:
      The constructor receives the properties and probes the script.
      The Invoke() method runs the script file ("Script.ps1") in the same folder as the task config file ("Config.yaml").
-  2. Implement common method to be called by the task scripts including Logging():
-     - Logging() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
+  2. Implement common method to be called by the task scripts including Log():
+     - Log() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
 .PARAMETER NoSkip
   Force run the script even if the task is set not to run
 #>
@@ -72,28 +72,23 @@ class NormalTask {
     }
   }
 
-  # Log with template, without specifying log level
-  [void] Logging([string]$Message) {
-    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)"
+  # Log with template, specifying log level
+  [void] Log([string]$Message, [LogLevel]$Level) {
+    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)" -Level $Level
   }
 
-  # Log with template, specifying log level
-  [void] Logging([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)" -Level $Level
+  # Log in default level
+  [void] Log([string]$Message) {
+    $this.Log($Message, 'Log')
   }
 
   # Invoke script
   [void] Invoke() {
-    if ($this.Preference.NoSkip -or -not $this.Config.Skip) {
-      try {
-        Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
-        & $this.ScriptPath | Out-Null
-      } catch {
-        $this.Logging("An error occured while running the script: ${_}", 'Error')
-        $_ | Out-Host
-      }
+    if ($this.Preference.NoSkip -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
+      Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
+      & $this.ScriptPath | Out-Null
     } else {
-      $this.Logging('Skipped', 'Info')
+      $this.Log('Skipped', 'Info')
     }
   }
 }
