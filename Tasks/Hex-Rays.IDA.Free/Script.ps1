@@ -19,5 +19,6 @@ switch ($this.Check()) {
   }
   ({ $_ -ge 2 }) {
     $this.Message()
+    $this.Submit()
   }
 }
