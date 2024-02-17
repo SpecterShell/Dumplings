@@ -35,6 +35,7 @@ switch ($this.Check()) {
     $this.Write()
   }
   ({ $_ -ge 2 }) {
+    $this.Print()
     $this.Message()
   }
 }

@@ -298,12 +298,15 @@ class PackageTask {
     return $Message.ToString().Trim()
   }
 
+  # Print current state to console
+  [void] Print() {
+    $this.ToMarkdown() | Show-Markdown | Write-Log
+  }
+
   # Send default message to Telegram
   [void] Message() {
-    if (-not $this.MessageEnabled) {
-      $this.ToMarkdown() | Show-Markdown | Write-Log
-      $this.MessageEnabled = $true
-    }
+    # Enable pushing new logs to Telegram once this method is called
+    if (-not $this.MessageEnabled) { $this.MessageEnabled = $true }
     if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
         $this.MessageID = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -AsMarkdown -MessageID $this.MessageID
