@@ -202,38 +202,44 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier')) {
-      $Message.AppendLine("*$($this.Config.WinGetIdentifier)*")
-    }
+    if ($this.Config.Contains('WinGetIdentifier')) { $Message.AppendLine("**$($this.Config.WinGetIdentifier)**") }
 
     $Message.AppendLine()
 
     # Version
-    $Message.AppendLine("*Version:* $($this.CurrentState['Version'])")
+    $Message.AppendLine("**Version:** $($this.CurrentState['Version'])")
     # RealVersion
-    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'])") }
+    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("**RealVersion:** $($this.CurrentState['RealVersion'])") }
 
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.AppendLine("*Installer #${i} ($($Installer['InstallerLocale']), $($Installer['Architecture']), $($Installer['InstallerType']), $($Installer['NestedInstallerType']), $($Installer['Scope'])):*")
+      $Message.AppendLine("**Installer #${i} ($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ')):**")
       $Message.AppendLine($Installer['InstallerUrl'])
     }
 
     # ReleaseDate
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
+        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
       } else {
-        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime)")
+        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime)")
       }
     }
 
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("*$($Entry['Key']) ($($Entry['Locale']))*")
+        $Message.AppendLine("**$($Entry['Key']) ($($Entry['Locale'])):**")
         $Message.AppendLine(($Entry['Value']))
+      }
+    }
+
+    # Log
+    if ($this.Logs.Count -gt 0) {
+      $Message.AppendLine('**Log:**')
+      foreach ($Log in $this.Logs) {
+        $Message.AppendLine($Log)
       }
     }
 
@@ -246,9 +252,7 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier')) {
-      $Message.AppendLine("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*")
-    }
+    if ($this.Config.Contains('WinGetIdentifier')) { $Message.AppendLine("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*") }
 
     $Message.AppendLine()
 
@@ -260,9 +264,7 @@ class PackageTask {
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.Append('*')
-      $Message.Append(("Installer #${i} ($($Installer['InstallerLocale']), $($Installer['Architecture']), $($Installer['InstallerType']), $($Installer['NestedInstallerType']), $($Installer['Scope'])):" | ConvertTo-TelegramEscapedText))
-      $Message.AppendLine('*')
+      $Message.AppendLine("*Installer \#${i} \($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ' | ConvertTo-TelegramEscapedText)\):*")
       $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-TelegramEscapedText))
     }
 
@@ -287,7 +289,10 @@ class PackageTask {
 
     # Log
     if ($this.Logs.Count -gt 0) {
-      $Message.AppendLine("*Log:* `n$($this.Logs -join "`n" | ConvertTo-TelegramEscapedText)")
+      $Message.AppendLine('*Log:*')
+      foreach ($Log in $this.Logs) {
+        $Message.AppendLine(($Log | ConvertTo-TelegramEscapedText))
+      }
     }
 
     return $Message.ToString().Trim()
@@ -301,8 +306,7 @@ class PackageTask {
     }
     if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
-        $Response = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -MessageID $this.MessageID
-        $this.MessageID = $Response
+        $this.MessageID = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -AsMarkdown -MessageID $this.MessageID
       } catch {
         Write-Log -Object "Failed to send default message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
         $this.Logs.Add($_.ToString())
@@ -312,10 +316,9 @@ class PackageTask {
 
   # Send custom message to Telegram
   [void] Message([string]$Message) {
-    $Message | Write-Log
     if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
-        Send-TelegramMessage -Message ($Message | ConvertTo-TelegramEscapedText) | Out-Null
+        Send-TelegramMessage -Message $Message | Out-Null
       } catch {
         Write-Log -Object "Failed to send custom message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
         $this.Logs.Add($_.ToString())
