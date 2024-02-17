@@ -2,15 +2,17 @@ $Prefix = 'https://cloud.r-project.org/bin/windows/Rtools/'
 
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
-# Version
-$this.CurrentState.Version = [regex]::Match(
+$MinorVersion = [regex]::Match(
   $Object1.SelectSingleNode('/html/body/table/tr[1]/td[1]/a').InnerText,
   'RTools ([\d\.]+)'
 ).Groups[1].Value
-$ShortVersion = $this.CurrentState.Version.Replace('.', '')
+$ShortVersion = $MinorVersion.Replace('.', '')
 
 $Object2 = (Invoke-WebRequest -Uri "${Prefix}rtools${ShortVersion}/files/").Content
 $VersionMatches = [regex]::Match($Object2, "(rtools${ShortVersion}-(\d+)-\d+\.exe)")
+
+# Version
+$this.CurrentState.Version = "${MinorVersion}.$($VersionMatches.Groups[2].Value)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
