@@ -314,6 +314,26 @@ function ConvertTo-UnescapedUri {
   }
 }
 
+function ConvertTo-MarkdownEscapedText {
+  <#
+  .SYNOPSIS
+    Escape the text to make it not parsed as Markdown syntax
+  .PARAMETER InputObject
+    The text to be escaped
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The text to be escaped')]
+    [AllowEmptyString()]
+    [string]
+    $InputObject
+  )
+
+  process {
+    $InputObject -replace '([_*\[\]()~`<>#+\-|{}.!\\])', '\$1'
+  }
+}
+
 function ConvertTo-HtmlDecodedText {
   <#
   .SYNOPSIS

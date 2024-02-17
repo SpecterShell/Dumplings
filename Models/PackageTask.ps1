@@ -207,31 +207,31 @@ class PackageTask {
     $Message.AppendLine()
 
     # Version
-    $Message.AppendLine("**Version:** $($this.CurrentState['Version'])")
+    $Message.AppendLine("**Version:** $($this.CurrentState['Version'] | ConvertTo-MarkdownEscapedText)")
     # RealVersion
-    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("**RealVersion:** $($this.CurrentState['RealVersion'])") }
+    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("**RealVersion:** $($this.CurrentState['RealVersion'] | ConvertTo-MarkdownEscapedText)") }
 
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.AppendLine("**Installer #${i} ($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ')):**")
-      $Message.AppendLine($Installer['InstallerUrl'])
+      $Message.AppendLine("**Installer \#${i} \($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ' | ConvertTo-MarkdownEscapedText)\):**")
+      $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-MarkdownEscapedText))
     }
 
     # ReleaseDate
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd'))")
+        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-MarkdownEscapedText)")
       } else {
-        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime)")
+        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime | ConvertTo-MarkdownEscapedText)")
       }
     }
 
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("**$($Entry['Key']) ($($Entry['Locale'])):**")
-        $Message.AppendLine(($Entry['Value']))
+        $Message.AppendLine("**$($Entry['Key'] | ConvertTo-MarkdownEscapedText) \($($Entry['Locale'] | ConvertTo-MarkdownEscapedText)\):**")
+        $Message.AppendLine(($Entry['Value'] | ConvertTo-MarkdownEscapedText))
       }
     }
 
@@ -239,7 +239,7 @@ class PackageTask {
     if ($this.Logs.Count -gt 0) {
       $Message.AppendLine('**Log:**')
       foreach ($Log in $this.Logs) {
-        $Message.AppendLine($Log)
+        $Message.AppendLine(($Log | ConvertTo-MarkdownEscapedText))
       }
     }
 
@@ -280,7 +280,7 @@ class PackageTask {
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("*$($Entry['Key']) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\)*")
+        $Message.AppendLine("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\)*")
         $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
       }
     }

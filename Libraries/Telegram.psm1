@@ -5,11 +5,11 @@ if ($DumplingsDefaultParameterValues) { $PSDefaultParameterValues = $DumplingsDe
 $ErrorActionPreference = 'Stop'
 
 filter ConvertTo-TelegramEscapedText {
-  $_ -creplace '([_*\[\]()~`>#+\-=|{}.!])', '\$1'
+  $_ -replace '([_*\[\]()~`>#+\-=|{}.!\\])', '\$1'
 }
 
 filter ConvertTo-TelegramEscapedCode {
-  $_ -creplace '([`\\])', '\$1'
+  $_ -replace '([`\\])', '\$1'
 }
 
 function Invoke-TelegramApi {
@@ -290,7 +290,7 @@ function Send-TelegramMessage {
     foreach ($Message in $Messages) {
       $Response = New-TelegramMessage @Params -Message $Message -ChatID $ChatID
       if ($Response.ok -eq $false) {
-        throw "Telegram: Failed to send the message: $($Response.error_code) $($Response.description)"
+        throw "$($Response.error_code) $($Response.description)"
       }
       $IDs.Add($Response.result.message_id)
     }
@@ -302,7 +302,7 @@ function Send-TelegramMessage {
         # Telegram API will throw an error if the new message content is the same as the old one
         # Here we ignore this kind of error and add the original message ID
         if ($Response.error_code -ne 400) {
-          throw "Telegram: Failed to update the message: $($Response.error_code) $($Response.description)"
+          throw "$($Response.error_code) $($Response.description)"
         } else {
           $IDs.Add($MessageID[$i])
         }
@@ -315,13 +315,13 @@ function Send-TelegramMessage {
     foreach ($ID in $MessageID) {
       $Response = Remove-TelegramMessage -MessageID $MessageID -ChatID $ChatID -Token $Token
       if ($Response.ok -eq $false) {
-        throw "Telegram: Failed to delete the old message: $($Response.error_code) $($Response.description)"
+        throw "$($Response.error_code) $($Response.description)"
       }
     }
     foreach ($Message in $Messages) {
       $Response = New-TelegramMessage @Params -Message $Message -ChatID $ChatID
       if ($Response.ok -eq $false) {
-        throw "Telegram: Failed to send the new message: $($Response.error_code) $($Response.description)"
+        throw "$($Response.error_code) $($Response.description)"
       }
       $IDs.Add($Response.result.message_id)
     }
