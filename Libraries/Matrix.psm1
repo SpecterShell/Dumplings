@@ -129,7 +129,8 @@ function New-MatrixMessage {
   }
   if ($AsMarkdown) {
     $Params.Body.format = 'org.matrix.custom.html'
-    $Params.Body.formatted_body = ($Message | ConvertFrom-Markdown).Html
+    # Matrix automatically inserts a line break between </p> and <p>. Replace <p> with <br>
+    $Params.Body.formatted_body = ($Message | ConvertFrom-Markdown).Html -replace '<p>(.*?)</p>', '$1<br>'
     $Params.Body.body = $Params.Body.formatted_body | ConvertFrom-Html | Get-TextContent
   }
   Invoke-MatrixApi @Params
