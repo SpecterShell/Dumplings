@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
       ReleaseTime    = $ReleaseTime
       ReleaseNotesCN = $ReleaseNotesCN
     }
-    if (-not $this.Preference.NoWrite) {
+    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
     }
 
