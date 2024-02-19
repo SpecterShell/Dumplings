@@ -296,7 +296,7 @@ class PackageTask {
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\)*")
+        $Message.AppendLine("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\):*")
         $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
       }
     }
