@@ -16,8 +16,8 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'v([\d\.]+)').Groups[
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode('//a[contains(@class, "download-win")]//div[@class="download-date"][2]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://bbs.twinkstar.com/forum.php?mod=viewthread&tid=4227' | ConvertFrom-Html
 
@@ -40,11 +40,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

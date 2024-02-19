@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-15913525-1-1.html' | ConvertFrom-Html
 
@@ -35,11 +35,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

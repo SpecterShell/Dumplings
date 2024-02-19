@@ -5,8 +5,8 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = "https://download.wondershare.com/cbs_down/famisafe_$($this.CurrentState.Version)_full7740.exe"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256
@@ -16,11 +16,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

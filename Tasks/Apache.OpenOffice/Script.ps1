@@ -67,8 +67,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = $ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.CurrentState.Installer | ForEach-Object -Process {
       $_.InstallerSha256 = (Invoke-RestMethod -Uri $_.InstallerSha256Url).Split()[0].ToUpper()
       $_.Remove('InstallerSha256Url')
@@ -96,11 +96,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

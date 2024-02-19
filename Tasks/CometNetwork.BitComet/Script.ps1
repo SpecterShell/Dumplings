@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://download.bitcomet.com/achive/BitComet_$($this.CurrentState.Version)_setup.exe"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/en/changelog' | ConvertFrom-Html
 
@@ -55,11 +55,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

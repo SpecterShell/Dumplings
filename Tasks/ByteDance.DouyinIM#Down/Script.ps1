@@ -16,15 +16,15 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.app.tccConfig.download_impc_info.time | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $ToSubmit = $false
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsDouyinIM')

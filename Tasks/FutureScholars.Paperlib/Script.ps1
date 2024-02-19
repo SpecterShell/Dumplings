@@ -2,8 +2,8 @@ $Prefix = 'https://paperlib.app/distribution/electron-win/'
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object1 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/GeoffreyChen777/paperlib/master/CHANGELOG_EN.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
@@ -56,11 +56,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

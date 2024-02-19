@@ -11,15 +11,15 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '_v([\d\.]+)_').Group
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.status.now | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

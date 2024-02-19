@@ -2,15 +2,15 @@ $Prefix = 'https://cdn.cnbj1.fds.api.mi-img.com/archive/update-server/public/win
 
 $this.CurrentState = Invoke-RestMethod -Uri "https://update-server.micloud.xiaomi.net/api/v1/latest.yml?channel=public&platform=win32&arch=x64&machine_id=$((New-Guid).Guid)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $ToSubmit = $false
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiaomiCloud')

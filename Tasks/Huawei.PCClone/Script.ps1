@@ -11,8 +11,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="buttoncontent"]/a').Attributes['href'].Value
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     # RealVersion
     $this.CurrentState.RealVersion = [regex]::Match(
       (Invoke-WebRequest -Uri $InstallerUrl -Method Head).Headers.'Content-Disposition',
@@ -21,11 +21,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

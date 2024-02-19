@@ -14,11 +14,11 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "ECLiPSe $($Version.Split('_')[0]) (64 bit)"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }

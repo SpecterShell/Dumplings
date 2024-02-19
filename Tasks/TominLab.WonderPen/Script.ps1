@@ -20,8 +20,8 @@ if (!$InstallerUrlX64.Contains($this.CurrentState.Version)) {
   throw "Task $($this.Name): The InstallerUrl`n${InstallerUrlX64}`ndoesn't contain version $($this.CurrentState.Version)"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/update-detail?app=wonderpen').data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
 
@@ -52,11 +52,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

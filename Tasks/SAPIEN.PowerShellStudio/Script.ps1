@@ -9,8 +9,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.'9BF12014-25F9-4dc2-9313-C2F6C55B872C'.download64
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://s3.amazonaws.com/sapien/software/UpdateToolData/PowerShell%20Studio%202023.log'
 
@@ -35,11 +35,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -35,8 +35,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = $ReleaseNotesUrl = "https://raw.githubusercontent.com/FFmpeg/FFmpeg/release/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/Changelog"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-RestMethod -Uri $ReleaseNotesUrl
 
@@ -58,11 +58,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

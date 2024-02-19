@@ -12,8 +12,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href')
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     # $Object1 = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxcalendar/version-log/' | ConvertFrom-Html
 
     # try {
@@ -37,11 +37,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -14,8 +14,8 @@ $this.CurrentState.ReleaseTime = $Object1.last_modified | Get-Date -Format 'yyyy
 # TODO: Implement modifications on Documentations
 $this.Config.Notes = "https://docs.posit.co/ide/desktop-pro/$($this.CurrentState.Version)/"
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $ReleaseNotesUrl = 'https://docs.posit.co/ide/news/'
 
     try {
@@ -55,11 +55,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

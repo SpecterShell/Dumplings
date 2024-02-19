@@ -41,15 +41,15 @@ if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -Differen
   $this.CurrentState.ReleaseTime = $Object1.electron_win64.date | Get-Date -Format 'yyyy-MM-dd'
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
+  ({ $_ -match 'Updated' -and $Identical }) {
     $this.Submit()
   }
 }

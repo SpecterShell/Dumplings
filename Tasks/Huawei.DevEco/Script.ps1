@@ -18,8 +18,8 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     # RealVersion
     $Object2 = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Expand-TempArchive | 
       Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | 
@@ -28,11 +28,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

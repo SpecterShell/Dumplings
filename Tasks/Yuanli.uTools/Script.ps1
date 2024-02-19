@@ -23,8 +23,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix + $Object1.'win-x64'.package
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
@@ -65,11 +65,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
+  ({ $_ -match 'Updated' -and $Identical }) {
     $this.Submit()
   }
 }

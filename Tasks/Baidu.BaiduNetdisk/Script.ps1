@@ -21,15 +21,15 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = $Object1.list[0].detail.more | Format-Text | ConvertTo-OrderedList
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

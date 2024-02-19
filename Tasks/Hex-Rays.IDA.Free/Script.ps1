@@ -13,11 +13,11 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "IDA Freeware $($this.CurrentState.RealVersion)"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
     $this.Submit()

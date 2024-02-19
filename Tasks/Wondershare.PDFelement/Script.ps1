@@ -12,21 +12,19 @@ $this.CurrentState.Installer = @(
   }
 )
 
-$ToBeSubmitted = $true
-if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
-  $this.Log('The PackageIdentifier and the ProductCode need to be updated', 'Error')
-  $ToBeSubmitted = $false
-}
-
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $ToBeSubmitted }) {
-    $this.Submit()
+  'Updated' {
+    if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
+      $this.Log('The PackageIdentifier and the ProductCode need to be updated', 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

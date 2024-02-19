@@ -22,8 +22,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = $ReleaseNotesCN = $Object1.data.updateDetail | Format-Text
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesCN = $ReleaseNotesCN
     }
@@ -33,7 +33,7 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }

@@ -34,8 +34,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = $ReleaseNotesEN = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN
@@ -46,7 +46,7 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }

@@ -14,8 +14,8 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://update.hitecloud.cn/api/firewares/upwarenew?productmodel=HitePai6&buildversion=0'
 
@@ -36,11 +36,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

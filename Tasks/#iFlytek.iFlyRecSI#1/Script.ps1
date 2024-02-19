@@ -13,8 +13,8 @@ $this.CurrentState.Version = $Object1.packageVersion
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.releaseDate | ConvertFrom-UnixTimeMilliseconds
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }
@@ -24,7 +24,7 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }

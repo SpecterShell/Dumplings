@@ -26,8 +26,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = $ReleaseNotesUrl = "${Prefix}rtools${ShortVersion}/news.html"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
@@ -50,7 +50,7 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
     $this.Submit()

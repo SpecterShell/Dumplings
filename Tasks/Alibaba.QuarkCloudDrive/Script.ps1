@@ -12,15 +12,15 @@ $this.CurrentState = Invoke-RestMethod -Uri "https://pan.quark.cn/update/win32/$
   'authorization' = $Hash
 } | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

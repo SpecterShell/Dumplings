@@ -10,15 +10,15 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.kdesktopWin.1001
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $ToSubmit = $false
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsKDocs')

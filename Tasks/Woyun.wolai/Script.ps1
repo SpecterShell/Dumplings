@@ -2,15 +2,15 @@ $Prefix = 'https://cdn.wostatic.cn/dist/installers/'
 
 $this.CurrentState = (Invoke-RestMethod -Uri "${Prefix}electron-versions.json").win | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -14,8 +14,8 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::Parse([regex]::Match($Object1, '(\d{2}-\w{3}-\d{4} \d{2}:\d{2})').Groups[1].Value, (Get-Culture -Name 'pt')) | ConvertTo-UtcDateTime -Id 'E. South America Standard Time'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://tinn-r.org/update/patch_notes.html' | ConvertFrom-Html
 
@@ -38,11 +38,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

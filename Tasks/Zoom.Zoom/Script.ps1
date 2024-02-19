@@ -74,8 +74,8 @@ if ($ReleaseNotesObject) {
   $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     # AppsAndFeaturesEntries
     $InstallerFileMsiX86 = Get-TempFile -Uri $InstallerMsiX86.InstallerUrl
     $InstallerFileMsiX64 = Get-TempFile -Uri $InstallerMsiX64.InstallerUrl
@@ -115,11 +115,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

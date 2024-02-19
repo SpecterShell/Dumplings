@@ -57,8 +57,8 @@ if ($VersionArm64 -eq $LatestVersion) {
   }
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ImageMagick/Website/main/ChangeLog.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
@@ -100,11 +100,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
+  ({ $_ -match 'Updated' -and $Identical }) {
     $this.Submit()
   }
 }

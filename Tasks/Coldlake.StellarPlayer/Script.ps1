@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.offical_http_address
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
@@ -33,11 +33,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $ToSubmit = $false
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsStellarPlayer')

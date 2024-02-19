@@ -27,8 +27,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://pkg-cdn.jianguoyun.com/static/exe/installer/$($this.CurrentState.Version)/NutstoreWindowsWPF_Full_$($this.CurrentState.Version)_ARM64.exe"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://help.jianguoyun.com/?p=1415' | ConvertFrom-Html
 
@@ -56,11 +56,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
+  ({ $_ -match 'Updated' -and $Identical }) {
     $this.Submit()
   }
 }

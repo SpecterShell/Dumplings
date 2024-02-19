@@ -43,8 +43,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://ime.sogoucdn.com/QQPinyin_Setup_$($this.CurrentState.Version).exe"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' }, 'First')) {
       try {
         $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
@@ -67,11 +67,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -27,8 +27,8 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
   (Get-Culture -Name 'en-US')
 ) | ConvertTo-UtcDateTime -Id 'UTC'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://foldersize.sourceforge.net/changelog.html' | ConvertFrom-Html
 
@@ -51,11 +51,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

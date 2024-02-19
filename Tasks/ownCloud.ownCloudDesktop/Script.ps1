@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.owncloudclient.downloadurl
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $ReleaseNotesUrl = 'https://owncloud.com/changelog/desktop/'
 
     try {
@@ -54,11 +54,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

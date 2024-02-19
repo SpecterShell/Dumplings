@@ -27,7 +27,7 @@ $this.CurrentState.Locale += [ordered]@{
 }
 
 switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+  'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $this.CurrentState.ReleaseTime
       ReleaseNotesEN = $ReleaseNotesEN
@@ -39,7 +39,7 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }

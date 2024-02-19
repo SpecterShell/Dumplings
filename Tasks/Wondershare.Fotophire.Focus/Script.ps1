@@ -5,15 +5,15 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.wondershare.com/cbs_down/fotophire-focus_full3314.exe'
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

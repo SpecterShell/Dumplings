@@ -18,8 +18,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = $ReleaseNotesUrl = "https://cloud.r-project.org/bin/windows/base/old/${Version}/NEWS.R-${Version}.html"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = (Invoke-WebRequest -Uri 'https://cran.r-project.org/bin/windows/base/').Content
 
@@ -52,11 +52,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

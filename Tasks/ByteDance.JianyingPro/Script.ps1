@@ -28,15 +28,15 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = $Object1.data.settings.update_reminder.lastest_stable_update_content | Format-Text
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $ToSubmit = $false
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsJianyingPro')

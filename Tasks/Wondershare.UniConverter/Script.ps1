@@ -9,14 +9,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = "Wondershare UniConverter $($this.CurrentState.Version.Split('.')[0])"
 }
 
-$ToBeSubmitted = $true
-if ($this.CurrentState.Version.Split('.')[0] -ne '14') {
-  $this.Log('The PackageIdentifier needs to be updated', 'Error')
-  $ToBeSubmitted = $false
-}
-
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
@@ -26,11 +20,15 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 -and $ToBeSubmitted }) {
-    $this.Submit()
+  'Updated' {
+    if ($this.CurrentState.Version.Split('.')[0] -ne '14') {
+      $this.Log('The PackageIdentifier needs to be updated', 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

@@ -10,8 +10,8 @@ $this.CurrentState.Installer += [ordered]@{
 
 $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode("//tbody[@id='v$($this.CurrentState.Version)']/tr[1]/td[2]").InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://www.den4b.com/news.atom').Where({ $_.title.Contains('RandPass') -and $_.title.Contains($this.CurrentState.Version) }, 'First')
 
@@ -32,11 +32,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

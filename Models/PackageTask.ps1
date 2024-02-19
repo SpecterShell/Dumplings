@@ -68,6 +68,7 @@ class PackageTask {
     Installer = @()
     Locale    = @()
   }
+  [System.Collections.Generic.List[string]]$Status = [System.Collections.Generic.List[string]]@()
 
   [System.Collections.Generic.List[string]]$Logs = [System.Collections.Generic.List[string]]@()
   [bool]$MessageEnabled = $false
@@ -105,6 +106,8 @@ class PackageTask {
     $LastStatePath = Join-Path $this.Path 'State.yaml'
     if (Test-Path -Path $LastStatePath) {
       $this.LastState = Get-Content -Path $LastStatePath -Raw | ConvertFrom-Yaml -Ordered
+    } else {
+      $this.Status.Add('New')
     }
 
     # Log notes
@@ -138,47 +141,59 @@ class PackageTask {
   }
 
   # Compare current state with last state
-  [int] Check() {
+  [string] Check() {
     if (-not $Global:DumplingsPreference.Contains('NoCheck') -or -not $Global:DumplingsPreference.NoCheck) {
+      # Check whether the version property is present and valid
       if (-not $this.CurrentState.Contains('Version')) {
-        throw "PackageTask $($this.Name): The property Version in the current state does not exist"
-      } elseif ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-        throw "PackageTask $($this.Name): The property Version in the current state is empty or invalid"
+        throw 'The current state has no version'
+      }
+      if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+        throw 'The current state has an invalid version'
       }
 
+      # Check whether the installer URL(s) is present and valid
       if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
-        if (-not $this.CurrentState.Installer.InstallerUrl) {
-          throw "PackageTask $($this.Name): The property InstallerUrl in the current state is undefined or invalid"
-        }
-      }
-
-      if (-not $this.LastState.Contains('Version')) {
-        return 1
-      }
-
-      switch (Compare-Version -ReferenceVersion $this.LastState.Version -DifferenceVersion $this.CurrentState.Version) {
-        1 {
-          $this.Log("Updated: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Info')
-          return 3
-        }
-        0 {
-          if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
-            if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
-              $this.Log('Installers changed', 'Info')
-              return 2
-            }
+        foreach ($Installer in $this.CurrentState.Installer) {
+          if (-not $Installer.Contains('InstallerUrl')) {
+            throw 'One of the installer entries in the current state does not contain InstallerUrl'
+          }
+          if ([string]::IsNullOrWhiteSpace($Installer.InstallerUrl)) {
+            throw 'One of the installer entries in the current state has an invalid InstallerUrl'
           }
         }
-        -1 {
-          $this.Log("Rollbacked: $($this.LastState.Version) -> $($this.CurrentState.Version)", 'Warning')
-        }
       }
 
-      return 0
+      if ($this.Status.Contains('New')) {
+        # If this is a new task (no last state exists), skip the steps below
+        $this.Log('New task', 'Info')
+      } else {
+        switch (Compare-Version -ReferenceVersion $this.LastState.Version -DifferenceVersion $this.CurrentState.Version) {
+          1 {
+            $this.Log("Updated: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Info')
+            $this.Status.Add('Updated')
+            continue
+          }
+          0 {
+            if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
+              if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
+                $this.Log('Installer URLs changed', 'Info')
+                $this.Status.Add('Changed')
+              }
+            }
+            continue
+          }
+          -1 {
+            $this.Log("Rollbacked: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Warning')
+            $this.Status.Add('Rollbacked')
+            continue
+          }
+        }
+      }
     } else {
       $this.Log('Skip checking states', 'Info')
-      return 3
+      $this.Status.AddRange([string[]]@('Changed', 'Updated'))
     }
+    return ($this.Status -join '|')
   }
 
   # Write the state to a log file and a state file in YAML format

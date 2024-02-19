@@ -8,8 +8,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://down.360safe.com/se/360se$($this.CurrentState.Version).exe"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16096544-1-1.html' | ConvertFrom-Html
 
@@ -35,11 +35,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }

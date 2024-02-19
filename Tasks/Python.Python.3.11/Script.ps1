@@ -30,8 +30,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value = $ReleaseNotesUrl = "https://docs.python.org/release/${Version}/whatsnew/changelog.html"
 }
 
-switch ($this.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     # AppsAndFeaturesEntries
     $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
     $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
@@ -93,11 +93,11 @@ switch ($this.Check()) {
 
     $this.Write()
   }
-  ({ $_ -ge 2 }) {
+  'Changed|Updated' {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -ge 3 }) {
+  'Updated' {
     $this.Submit()
   }
 }
