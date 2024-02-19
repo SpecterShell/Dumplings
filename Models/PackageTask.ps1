@@ -10,19 +10,20 @@
   2. Implement common methods to be called by the task scripts including Logging(), Write(), Message() and Submit(), Check():
      - Log() prints the message to the console. If messaging is enabled, it will also be sent to Telegram.
      - Write() writes current state to the files "State.yaml" and "Log*.yaml", where the former file will be read in the subsequent runs.
+     - Print() prints current state to console
      - Message() enables sending current state to Telegram formatted with a built-in template.
        This method then will be invoked every time the Logging() method is invoked.
-     - Submit() creates and submits the package to WinGet / Scoop repository
+     - Submit() creates and submits the package to multiple repos
      - Check() compares the information obtained in current run (aka current state) with that obtained in previous runs (aka last state).
        The general rule is as follows:
-       1. If last state is not present, the method returns 1 and only Write() will be invoked.
-       2. If last state is present and there is no difference in versions and installer URLs, the method ruturns 0 and nothing gonna happen.
-       3. If last state is present and only the installer URLs are changed, the method returns 2, and Write() and Message() will be invoked.
-       4. If last state is present and the version is increased, the method returns 3, and Write(), Message() and Submit() will be invoked().
+       1. If last state is not present, the init method adds "New" to status and only Write() will be invoked.
+       2. If last state is present and there is no difference in versions and installer URLs, the method adds nothing to status and nothing gonna happen.
+       3. If last state is present and only the installer URLs are changed, the method adds "Chnaged" to status, and Write() and Message() will be invoked.
+       4. If last state is present and the version is increased, the method adds "Updated" to status, and Write(), Message() and Submit() will be invoked.
        The rule for those set to check versions only is as follows:
-       1. If last state is not present, the method returns 1 and only Write() will be invoked.
-       2. If last state is present and there is no difference in versions, the method ruturns 0 and nothing gonna happen.
-       3. If last state is present and the version is increased, the method returns 3, and Write(), Message() and Submit() will be invoked().
+       1. If last state is not present, the init method adds "New" to status and only Write() will be invoked.
+       2. If last state is present and there is no difference in versions, the method adds nothing to status and nothing gonna happen.
+       3. If last state is present and the version is increased, the method adds "Updated" to status, and Write(), Message() and Submit() will be invoked.
 .PARAMETER NoSkip
   Force run the script even if the task is set not to run
 .PARAMETER NoCheck
