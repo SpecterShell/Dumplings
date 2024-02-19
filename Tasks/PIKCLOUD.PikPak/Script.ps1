@@ -1,45 +1,40 @@
-# en-US
-$Object1 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_version' -Method Post -Body (
-  @{
-    data   = @{
-      language = 'en-US'
-    }
-    client = 'windows'
-  } | ConvertTo-Json -Compress
-)
-# zh-CN
-$Object2 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_version' -Method Post -Body (
-  @{
-    data   = @{
-      language = 'zh-CN'
-    }
-    client = 'windows'
-  } | ConvertTo-Json -Compress
-)
+$Uri1 = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
+
+$Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState.LastModified } -SkipHttpErrorCheck
+if ($Object1.StatusCode -eq 304) {
+  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  return
+}
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+
+$Path = Get-TempFile -Uri $Uri1
 
 # Version
-$this.CurrentState.Version = $Object1.values.client_version.newVersionName
+$this.CurrentState.Version = $Version = Read-FileVersionFromExe -Path $Path
 
 # RealVersion
-$this.CurrentState.RealVersion = $Object1.values.client_version.newVersionName.Split('.')[0..2] -join '.'
+$this.CurrentState.RealVersion = Read-ProductVersionFromExe -Path $Path
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
+  InstallerUrl = $Uri1
 }
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.values.client_version.news | Format-Text
-}
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object2.values.client_version.news | Format-Text
+if ($LocalStorage.Contains('PikPak') -and $LocalStorage.PikPak.Contains($Version)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.PikPak.$Version.ReleaseNotesEN
+  }
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $LocalStorage.PikPak.$Version.ReleaseNotesCN
+  }
+} else {
+  $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch -Regex ($this.Check()) {
