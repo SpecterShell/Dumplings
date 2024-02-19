@@ -125,12 +125,12 @@ function New-MatrixMessage {
   if ($AsHtml) {
     $Params.Body.format = 'org.matrix.custom.html'
     $Params.Body.formatted_body = $Message
-    $Params.Body.body = $Params.Body.formatted_body | Get-TextContent
+    $Params.Body.body = $Params.Body.formatted_body | ConvertFrom-Html | Get-TextContent
   }
   if ($AsMarkdown) {
     $Params.Body.format = 'org.matrix.custom.html'
     $Params.Body.formatted_body = ($Message | ConvertFrom-Markdown).Html
-    $Params.Body.body = $Params.Body.formatted_body | Get-TextContent
+    $Params.Body.body = $Params.Body.formatted_body | ConvertFrom-Html | Get-TextContent
   }
   Invoke-MatrixApi @Params
 }
@@ -268,12 +268,12 @@ function Update-MatrixMessage {
   if ($AsHtml) {
     $Params.Body.format = $Params.Body.'m.new_content'.format = 'org.matrix.custom.html'
     $Params.Body.formatted_body = $Params.Body.'m.new_content'.formatted_body = $Message
-    $Params.Body.body = $Params.Body.'m.new_content'.body = $Params.Body.formatted_body | Get-TextContent
+    $Params.Body.body = $Params.Body.'m.new_content'.body = $Params.Body.formatted_body | ConvertFrom-Html | Get-TextContent
   }
   if ($AsMarkdown) {
     $Params.Body.format = $Params.Body.'m.new_content'.format = 'org.matrix.custom.html'
     $Params.Body.formatted_body = $Params.Body.'m.new_content'.formatted_body = ($Message | ConvertFrom-Markdown).Html
-    $Params.Body.body = $Params.Body.'m.new_content'.body = $Params.Body.formatted_body | Get-TextContent
+    $Params.Body.body = $Params.Body.'m.new_content'.body = $Params.Body.formatted_body | ConvertFrom-Html | Get-TextContent
   }
   Invoke-MatrixApi @Params
 }
