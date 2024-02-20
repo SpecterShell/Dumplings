@@ -1,5 +1,6 @@
 $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://www.yxfile.com.cn/')
+Start-Sleep -Seconds 5
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
@@ -9,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href')
+  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href') | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
