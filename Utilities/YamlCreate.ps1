@@ -36,6 +36,12 @@ $SchemaUrls = @{
   locale        = "https://aka.ms/winget-manifest.locale.$ManifestVersion.schema.json"
   installer     = "https://aka.ms/winget-manifest.installer.$ManifestVersion.schema.json"
 }
+$DirectSchemaUrls = @{
+  version       = "https://raw.githubusercontent.com/microsoft/winget-cli/master/schemas/JSON/manifests/v$ManifestVersion/manifest.version.$ManifestVersion.json"
+  defaultLocale = "https://raw.githubusercontent.com/microsoft/winget-cli/master/schemas/JSON/manifests/v$ManifestVersion/manifest.defaultLocale.$ManifestVersion.json"
+  locale        = "https://raw.githubusercontent.com/microsoft/winget-cli/master/schemas/JSON/manifests/v$ManifestVersion/manifest.locale.$ManifestVersion.json"
+  installer     = "https://raw.githubusercontent.com/microsoft/winget-cli/master/schemas/JSON/manifests/v$ManifestVersion/manifest.installer.$ManifestVersion.json"
+}
 
 <#
 .SYNOPSIS
@@ -62,16 +68,16 @@ $SchemaUrls = @{
 
 # Fetch Schema data from github for entry validation, key ordering, and automatic commenting
 try {
-  $LocaleSchema = $Global:LocalStorage['LocaleSchema'] ??= @(Invoke-WebRequest $SchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
-  $LocaleProperties = $Global:LocalStorage['LocaleProperties'] ??= (ConvertTo-Yaml $LocaleSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $VersionSchema = $Global:LocalStorage['VersionSchema'] ??= @(Invoke-WebRequest $SchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
-  $VersionProperties = $Global:LocalStorage['VersionProperties'] ??= (ConvertTo-Yaml $VersionSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerSchema = $Global:LocalStorage['InstallerSchema'] ??= @(Invoke-WebRequest $SchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
-  $InstallerProperties = $Global:LocalStorage['InstallerProperties'] ??= (ConvertTo-Yaml $InstallerSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerSwitchProperties = $Global:LocalStorage['InstallerSwitchProperties'] ??= (ConvertTo-Yaml $InstallerSchema.definitions.InstallerSwitches.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerEntryProperties = $Global:LocalStorage['InstallerEntryProperties'] ??= (ConvertTo-Yaml $InstallerSchema.definitions.Installer.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerDependencyProperties = $Global:LocalStorage['InstallerDependencyProperties'] ??= (ConvertTo-Yaml $InstallerSchema.definitions.Dependencies.properties | ConvertFrom-Yaml -Ordered).Keys
-  $AppsAndFeaturesEntryProperties = $Global:LocalStorage['AppsAndFeaturesEntryProperties'] ??= (ConvertTo-Yaml $InstallerSchema.definitions.AppsAndFeaturesEntry.properties | ConvertFrom-Yaml -Ordered).Keys
+  $LocaleSchema = @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
+  $LocaleProperties = (ConvertTo-Yaml $LocaleSchema.properties | ConvertFrom-Yaml -Ordered).Keys
+  $VersionSchema = @(Invoke-WebRequest $DirectSchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
+  $VersionProperties = (ConvertTo-Yaml $VersionSchema.properties | ConvertFrom-Yaml -Ordered).Keys
+  $InstallerSchema = @(Invoke-WebRequest $DirectSchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
+  $InstallerProperties = (ConvertTo-Yaml $InstallerSchema.properties | ConvertFrom-Yaml -Ordered).Keys
+  $InstallerSwitchProperties = (ConvertTo-Yaml $InstallerSchema.definitions.InstallerSwitches.properties | ConvertFrom-Yaml -Ordered).Keys
+  $InstallerEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Installer.properties | ConvertFrom-Yaml -Ordered).Keys
+  $InstallerDependencyProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Dependencies.properties | ConvertFrom-Yaml -Ordered).Keys
+  $AppsAndFeaturesEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.AppsAndFeaturesEntry.properties | ConvertFrom-Yaml -Ordered).Keys
 } catch {
   # Here we want to pass the exception as an inner exception for debugging if necessary
   throw [System.Net.WebException]::new('Manifest schemas could not be downloaded. Try running the script again', $_.Exception)
