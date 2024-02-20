@@ -1,0 +1,57 @@
+$RepoOwner = 'Alex313031'
+$RepoName = 'Thorium-Win'
+
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+
+# Version
+$this.CurrentState.Version = $Object1.tag_name -creplace '^M'
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('SSE3') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+
+# ReleaseTime
+$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+}
+
+# ReleaseNotesUrl
+$this.CurrentState.Locale += [ordered]@{
+  Key   = 'ReleaseNotesUrl'
+  Value = $Object1.html_url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $RepoNameARM64 = 'Thorium-WOA'
+    $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoNameARM64}/releases/latest"
+
+    $VersionARM64 = $Object2.tag_name -creplace '^M'
+    if ($this.CurrentState.Version -ne $VersionARM64) { throw 'ARM64 installer not released' }
+
+    # Installer
+    $this.CurrentState.Installer += [ordered]@{
+      Architecture = 'arm64'
+      InstallerUrl = $Object2.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('ARM64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+    }
+
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Print()
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}
