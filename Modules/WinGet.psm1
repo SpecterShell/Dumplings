@@ -56,17 +56,17 @@ function New-WinGetManifest {
   #region Parameters
   $PackageIdentifier = $Task.Config.WinGetIdentifier
   $PackageVersion = $Task.CurrentState.Contains('RealVersion') ? $Task.CurrentState.RealVersion : $Task.CurrentState.Version
-  $PackageLastVersion = $Task.LastState.Contains('RealVersion') ? $Task.LastState.RealVersion : $Task.LastState.Version
+  if ([string]::IsNullOrWhiteSpace($PackageVersion)) { throw 'The current state has an invalid Version/RealVersion' }
+  $LastManifestVersion = Get-ChildItem -Path "${Script:ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\*\${PackageIdentifier}.yaml" -File |
+    Split-Path -Parent | Split-Path -Leaf |
+    Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Culture en-US -Bottom 1
+  if ([string]::IsNullOrWhiteSpace($LastManifestVersion)) { throw 'Could not find the manifest of previous version of the package' }
 
   $BranchName = "${PackageIdentifier}-${PackageVersion}-$(Get-Random)" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
-  $CommitType = if ($Task.LastState.Contains('Version')) {
-    switch (Compare-Version -ReferenceVersion $PackageLastVersion -DifferenceVersion $PackageVersion) {
-      1 { 'New version' }
-      0 { 'Update' }
-      -1 { 'Add version' }
-    }
-  } else {
-    'New version'
+  $CommitType = switch (Compare-Version -ReferenceVersion $LastManifestVersion -DifferenceVersion $PackageVersion) {
+    1 { 'New version'; continue }
+    0 { 'Update'; continue }
+    -1 { 'Add version'; continue }
   }
   $CommitName = "${CommitType}: ${PackageIdentifier} version ${PackageVersion}"
   if ($Task.CurrentState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
@@ -180,10 +180,7 @@ function New-WinGetManifest {
 
   # Remove old manifests, if needed
   try {
-    if ($Task.Config.Contains('RemoveLastVersion') -and $Task.Config.RemoveLastVersion) {
-      $LastManifestVersion = Get-ChildItem -Path "${Script:ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\*\${PackageIdentifier}.yaml" -File |
-        Split-Path -Parent | Split-Path -Leaf |
-        Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Culture en-US | Select-Object -Last 1
+    if (($Task.Config.Contains('RemoveLastVersion') -and $Task.Config.RemoveLastVersion) -or ($Task.Status.Contains('Updated') -and -not $Task.Status.Contains('Changed'))) {
       if ($LastManifestVersion -ne $PackageVersion) {
         $Task.Log("The manifests for the last version ${LastManifestVersion} will be removed", 'Info')
         Get-ChildItem -Path "${Script:ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {

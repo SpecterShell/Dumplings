@@ -172,6 +172,11 @@ class PackageTask {
           1 {
             $this.Log("Updated: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Info')
             $this.Status.Add('Updated')
+            if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
+              if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl }) {
+                $this.Status.Add('Changed')
+              }
+            }
             continue
           }
           0 {
