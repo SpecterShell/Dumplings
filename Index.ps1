@@ -214,7 +214,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     try {
       $Task.Invoke()
     } catch {
-      $Task.Log("An error occured when the script is running: ${_}", 'Error')
+      $Task.Log("Error: ${_}", 'Error')
       $_ | Out-Host
     }
 
