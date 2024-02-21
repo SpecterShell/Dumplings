@@ -1,14 +1,25 @@
 $RepoOwner = 'Alex313031'
 $RepoName = 'Thorium-Win'
+$RepoNameARM64 = 'Thorium-WOA'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Version = $Object1.tag_name -creplace '^M'
+
+$Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoNameARM64}/releases/latest"
+$VersionARM64 = $Object2.tag_name -creplace '^M'
+
+if ($Version -ne $VersionARM64) { throw 'ARM64 installer not released' }
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^M'
+$this.CurrentState.Version = $Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('SSE3') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object2.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('ARM64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
@@ -33,18 +44,6 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $RepoNameARM64 = 'Thorium-WOA'
-    $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoNameARM64}/releases/latest"
-
-    $VersionARM64 = $Object2.tag_name -creplace '^M'
-    if ($this.CurrentState.Version -ne $VersionARM64) { throw 'ARM64 installer not released' }
-
-    # Installer
-    $this.CurrentState.Installer += [ordered]@{
-      Architecture = 'arm64'
-      InstallerUrl = $Object2.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('ARM64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-    }
-
     $this.Write()
   }
   'Changed|Updated' {
