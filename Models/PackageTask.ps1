@@ -235,7 +235,17 @@ class PackageTask {
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.AppendLine("**Installer \#${i} \($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ' | ConvertTo-MarkdownEscapedText)\):**")
+      $Message.Append("**Installer \#${i} \(")
+      $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message.AppendLine('\):**')
       $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-MarkdownEscapedText))
     }
 
@@ -251,7 +261,9 @@ class PackageTask {
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("**$($Entry['Key'] | ConvertTo-MarkdownEscapedText) \($($Entry['Locale'] | ConvertTo-MarkdownEscapedText)\):**")
+        $Message.Append("**$($Entry['Key'] | ConvertTo-MarkdownEscapedText) \(")
+        $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-MarkdownEscapedText) : '\*'))
+        $Message.AppendLine('\):**')
         $Message.AppendLine(($Entry['Value'] | ConvertTo-MarkdownEscapedText))
       }
     }
@@ -285,7 +297,17 @@ class PackageTask {
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.AppendLine("*Installer \#${i} \($(@($Installer['InstallerLocale'], $Installer['Architecture'], $Installer['InstallerType'], $Installer['NestedInstallerType'], $Installer['Scope']) -join ', ' | ConvertTo-TelegramEscapedText)\):*")
+      $Message.Append("*Installer \#${i} \(")
+      $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message.Append(', ')
+      $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message.AppendLine('\):*')
       $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-TelegramEscapedText))
     }
 
@@ -301,7 +323,9 @@ class PackageTask {
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.AppendLine("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \($($Entry['Locale'] | ConvertTo-TelegramEscapedText)\):*")
+        $Message.Append("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \(")
+        $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-TelegramEscapedText) : '\*'))
+        $Message.AppendLine('\):*')
         $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
       }
     }
