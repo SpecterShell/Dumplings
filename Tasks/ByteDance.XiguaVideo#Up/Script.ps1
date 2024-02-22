@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.data.manifest.win32.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.manifest.win32.urls[0]
+  InstallerUrl = $Object1.data.manifest.win32.urls[0] | ConvertTo-Https
 }
 
 # ReleaseTime
