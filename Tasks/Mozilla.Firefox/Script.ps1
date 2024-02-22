@@ -119,7 +119,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = $ReleaseNotes = $Object3.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -130,9 +130,17 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated' {
     $this.Print()
-    # Not working well with Telegram...
-    # $this.Message()
-    $this.Message("Mozilla.Firefox`n`nVersion: ${Version}")
+    # Too many installers...
+    $this.Message(@"
+Mozilla.Firefox
+
+Version: ${Version}
+ReleaseDate: $($this.CurrentState.ReleaseTime)
+ReleaseNotes (en-US):
+${ReleaseNotes}
+ReleaseNotesUrl (*):
+${ReleaseNotesUrl}
+"@)
   }
   'Updated' {
     $this.Submit()
