@@ -42,7 +42,7 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
       }
       continue
     }
-    # The language-only locales gd and sr are not supported by WinGet client
+    # The language-only locales ast, gd and sr are not supported by WinGet client
     'ast' {
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'ast-ES'
@@ -76,6 +76,18 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
       }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'sr-Latn'
+        Architecture    = $Arch.Key
+        InstallerType   = 'exe'
+        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Firefox Setup ${Version}.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup ${Version}.exe"]
+        ProductCode     = "Mozilla Firefox ${Version} ($($Arch.Key) ${_})"
+      }
+      continue
+    }
+    # Replace ca-valencia with ca-ES
+    'ca-valencia' {
+      $this.CurrentState.Installer += [ordered]@{
+        InstallerLocale = 'ca-ES'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
         InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Firefox Setup ${Version}.exe"
