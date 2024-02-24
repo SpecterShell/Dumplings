@@ -1,4 +1,4 @@
-# The following locales can't be matched by WinGet properly and thus are omitted: ach (Acoli), cak, ia (Interlingua), lij (Ligurian), sc (Sardinian), sco (Scots), son, szl (Silesian), trs
+# The following locales can't be matched by WinGet properly and thus are omitted: ach (Acholi/Acoli), cak (Kaqchikel), ia (Interlingua), lij (Ligurian), sc (Sardinian), sco (Scots), son (Songhai), szl (Silesian), trs (Triqui)
 $Locales = @('af', 'an', 'ar', 'ast', 'az', 'be', 'bg', 'bn', 'br', 'bs', 'ca-valencia', 'ca', 'cs', 'cy', 'da', 'de', 'dsb', 'el', 'en-CA', 'en-GB', 'en-US', 'eo', 'es-AR', 'es-CL', 'es-ES', 'es-MX', 'et', 'eu', 'fa', 'ff', 'fi', 'fr', 'fur', 'fy-NL', 'ga-IE', 'gd', 'gl', 'gn', 'gu-IN', 'he', 'hi-IN', 'hr', 'hsb', 'hu', 'hy-AM', 'id', 'is', 'it', 'ja', 'ka', 'kab', 'kk', 'km', 'kn', 'ko', 'lt', 'lv', 'mk', 'mr', 'ms', 'multi', 'my', 'nb-NO', 'ne-NP', 'nl', 'nn-NO', 'oc', 'pa-IN', 'pl', 'pt-BR', 'pt-PT', 'rm', 'ro', 'ru', 'sat', 'si', 'sk', 'sl', 'sq', 'sr', 'sv-SE', 'ta', 'te', 'tg', 'th', 'tl', 'tr', 'uk', 'ur', 'uz', 'vi', 'xh', 'zh-CN', 'zh-TW')
 $ArchMap = [ordered]@{
   x86   = 'win32'
