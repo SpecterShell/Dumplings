@@ -12,7 +12,8 @@ $BlockNodes = @(
   'address', 'article', 'aside', 'blockquote', 'dd', 'div', 'dl',
   'fieldset', 'figcaption', 'figure', 'footer', 'form',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr',
-  'li', 'ol', 'p', 'pre', 'section', 'table', 'ul'
+  'li', 'ol', 'p', 'pre', 'section', 'table', 'ul',
+  'tr'
 )
 
 function Expand-Node {
