@@ -16,8 +16,6 @@ try {
 #region Edge Driver
 $EdgeDriver = $null
 $EdgeDriverLoaded = $false
-# https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-$EdgeDriverPath = $Env:EDGEWEBDRIVER ? $Env:EDGEWEBDRIVER : (Get-Command -Name 'msedgedriver.exe').Path
 
 function New-EdgeDriver {
   <#
@@ -39,7 +37,14 @@ function New-EdgeDriver {
   $EdgeOptions.AddUserProfilePreference('profile.managed_default_content_settings.images', 2)
   if ($Headless) { $EdgeOptions.AddArgument('--headless=new') }
 
-  $Script:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Script:EdgeDriverPath, $EdgeOptions)
+  if (Test-Path -Path Env:\EDGEWEBDRIVER) {
+    # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+    $Script:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new($Env:EDGEWEBDRIVER, $EdgeOptions)
+  } elseif (Get-Command -Name 'msedgedriver.exe' -ErrorAction SilentlyContinue) {
+    $Script:EdgeDriver = [OpenQA.Selenium.Edge.EdgeDriver]::new((Get-Command -Name 'msedgedriver.exe').Path, $EdgeOptions)
+  } else {
+    throw 'Could not find msedgedriver.exe'
+  }
   $Script:EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
   $Script:EdgeDriverLoaded = $true
 }
@@ -72,8 +77,6 @@ function Stop-EdgeDriver {
 #region FirefoxDriver
 $FirefoxDriver = $null
 $FirefoxDriverLoaded = $false
-# https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-$FirefoxDriverPath = $Env:GECKOWEBDRIVER ? $Env:GECKOWEBDRIVER : (Get-Command -Name 'geckodriver.exe').Path
 
 function New-FirefoxDriver {
   <#
@@ -95,7 +98,14 @@ function New-FirefoxDriver {
   $FirefoxOptions.SetPreference('permissions.default.image', 2)
   if ($Headless) { $FirefoxOptions.AddArgument('--headless') }
 
-  $Script:FirefoxDriver = [OpenQA.Selenium.Firefox.FirefoxDriver]::new($Script:FirefoxDriverPath, $FirefoxOptions)
+  if (Test-Path Env:\GECKOWEBDRIVER) {
+    # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+    $Script:FirefoxDriver = [OpenQA.Selenium.Firefox.FirefoxDriver]::new($Env:GECKOWEBDRIVER, $FirefoxOptions)
+  } elseif (Get-Command -Name 'geckodriver.exe' -ErrorAction SilentlyContinue) {
+    $Script:FirefoxDriver = [OpenQA.Selenium.Firefox.FirefoxDriver]::new((Get-Command -Name 'geckodriver.exe').Path, $FirefoxOptions)
+  } else {
+    throw 'Could not find geckodriver.exe'
+  }
   $Script:FirefoxDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
   $Script:FirefoxDriverLoaded = $true
 }
