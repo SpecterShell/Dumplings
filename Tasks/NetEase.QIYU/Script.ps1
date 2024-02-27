@@ -16,12 +16,12 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
   '(\d{4}-\d{1,2}-\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-if ($LocalStorage.Contains('QIYU') -and $LocalStorage['QIYU'].Contains($Version)) {
+if ($Global:LocalStorage.Contains('QIYU') -and $Global:LocalStorage['QIYU'].Contains($Version)) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage['QIYU'].$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage['QIYU'].$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

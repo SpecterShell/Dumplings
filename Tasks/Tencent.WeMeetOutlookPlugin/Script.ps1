@@ -1,7 +1,7 @@
 # Download
-$Version1 = @($LocalStorage['WeMeetOutlookPlugin1'].Keys)[-1] ?? '0'
+$Version1 = @($Global:LocalStorage['WeMeetOutlookPlugin1'].Keys)[-1] ?? '0'
 # Upgrade
-$Version2 = @($LocalStorage['WeMeetOutlookPlugin2'].Keys)[-1] ?? '0'
+$Version2 = @($Global:LocalStorage['WeMeetOutlookPlugin2'].Keys)[-1] ?? '0'
 
 if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -le 0) {
   # Version
@@ -9,7 +9,7 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
 
   # Installer
   $this.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $LocalStorage['WeMeetOutlookPlugin1'].$Version1.InstallerUrl
+    InstallerUrl = $Global:LocalStorage['WeMeetOutlookPlugin1'].$Version1.InstallerUrl
   }
 } else {
   # Version
@@ -17,21 +17,21 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
 
   # Installer
   $this.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $LocalStorage['WeMeetOutlookPlugin2'].$Version2.InstallerUrl
+    InstallerUrl = $Global:LocalStorage['WeMeetOutlookPlugin2'].$Version2.InstallerUrl
   }
 }
 
-if ($LocalStorage['WeMeetOutlookPlugin1'].Contains($Version)) {
+if ($Global:LocalStorage['WeMeetOutlookPlugin1'].Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $LocalStorage['WeMeetOutlookPlugin1'].$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:LocalStorage['WeMeetOutlookPlugin1'].$Version.ReleaseTime
 }
 
-if ($LocalStorage['WeMeetOutlookPlugin2'].Contains($Version)) {
+if ($Global:LocalStorage['WeMeetOutlookPlugin2'].Contains($Version)) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage['WeMeetOutlookPlugin2'].$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage['WeMeetOutlookPlugin2'].$Version.ReleaseNotesCN
   }
 }
 

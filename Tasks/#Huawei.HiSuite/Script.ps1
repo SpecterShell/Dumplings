@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $LocalStorage['HiSuite'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:LocalStorage['HiSuite'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $LocalStorage['HiSuite'] = $OldReleaseNotes = [ordered]@{}
+  $Global:LocalStorage['HiSuite'] = $OldReleaseNotes = [ordered]@{}
 }
 
 # International
@@ -78,7 +78,7 @@ switch -Regex ($this.Check()) {
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN
     }
-    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
+    if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
     }
 

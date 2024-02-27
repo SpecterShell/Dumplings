@@ -29,8 +29,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsDouyinIM')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains("DouyinIMSubmitting-$($this.CurrentState.Version)")) {
-      $LocalStorage["DouyinIMSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:LocalStorage.Contains("DouyinIMSubmitting-$($this.CurrentState.Version)")) {
+      $Global:LocalStorage["DouyinIMSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

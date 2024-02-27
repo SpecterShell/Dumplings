@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['EasiRecorder']
+$Object1 = $Global:LocalStorage.SeewoApps['EasiRecorder']
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

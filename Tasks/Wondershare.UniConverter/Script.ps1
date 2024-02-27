@@ -1,4 +1,4 @@
-$this.CurrentState = $LocalStorage.WondershareUpgradeInfo['9629']
+$this.CurrentState = $Global:LocalStorage.WondershareUpgradeInfo['9629']
 
 # ProductCode
 $this.CurrentState.Installer[0]['ProductCode'] = "UniConverter $($this.CurrentState.Version.Split('.')[0])_is1"

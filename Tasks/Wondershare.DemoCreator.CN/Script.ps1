@@ -1,4 +1,4 @@
-$this.CurrentState = $LocalStorage.WondershareUpgradeInfo['13164']
+$this.CurrentState = $Global:LocalStorage.WondershareUpgradeInfo['13164']
 
 $this.CurrentState.Installer[0].AppsAndFeaturesEntries = @(
   [ordered]@{

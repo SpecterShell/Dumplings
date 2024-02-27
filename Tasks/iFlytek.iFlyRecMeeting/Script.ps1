@@ -6,18 +6,18 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_v([\d\.]+)[_.]').Groups[1].Value
 
-if ($LocalStorage.Contains('iFlyRecMeeting') -and $LocalStorage.iFlyRecMeeting.Contains($Version)) {
+if ($Global:LocalStorage.Contains('iFlyRecMeeting') -and $Global:LocalStorage.iFlyRecMeeting.Contains($Version)) {
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.iFlyRecMeeting.$Version.ReleaseNotesEN
+    Value  = $Global:LocalStorage.iFlyRecMeeting.$Version.ReleaseNotesEN
   }
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.iFlyRecMeeting.$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage.iFlyRecMeeting.$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

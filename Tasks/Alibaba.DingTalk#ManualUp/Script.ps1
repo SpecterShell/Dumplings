@@ -37,8 +37,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsDingTalk')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains("DingTalkSubmitting-$($this.CurrentState.Version)")) {
-      $LocalStorage["DingTalkSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:LocalStorage.Contains("DingTalkSubmitting-$($this.CurrentState.Version)")) {
+      $Global:LocalStorage["DingTalkSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

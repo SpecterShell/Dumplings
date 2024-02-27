@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $LocalStorage['QIYU'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:LocalStorage['QIYU'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $LocalStorage['QIYU'] = $OldReleaseNotes = [ordered]@{}
+  $Global:LocalStorage['QIYU'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Prefix = 'http://res.qiyukf.net/qiyu-desktop/prod/'
@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesCN = $ReleaseNotesCN
     }
-    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
+    if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
     }
 

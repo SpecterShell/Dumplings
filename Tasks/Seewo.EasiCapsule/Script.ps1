@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['EasiCapsule']
+$Object1 = $Global:LocalStorage.SeewoApps['EasiCapsule']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion

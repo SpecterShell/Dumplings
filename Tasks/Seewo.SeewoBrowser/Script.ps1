@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['seewobrowser']
+$Object1 = $Global:LocalStorage.SeewoApps['seewobrowser']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion

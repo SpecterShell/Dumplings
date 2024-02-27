@@ -21,8 +21,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsCapCut')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains("CapCutSubmitting-$($this.CurrentState.Version)")) {
-      $LocalStorage["CapCutSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:LocalStorage.Contains("CapCutSubmitting-$($this.CurrentState.Version)")) {
+      $Global:LocalStorage["CapCutSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

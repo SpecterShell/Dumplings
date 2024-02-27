@@ -133,7 +133,7 @@ class PackageTask {
 
   # Invoke script
   [void] Invoke() {
-    if ($this.Preference.NoSkip -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
+    if (($Global:DumplingsPreference.Contains('NoSkip') -and $this.Preference.NoSkip) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
       Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
       & $this.ScriptPath | Out-Null
     } else {

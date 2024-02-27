@@ -154,7 +154,7 @@ if (-not $Parallel) {
 
   # Set up temp folder for tasks
   $Global:LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
-  Get-ChildItem $LocalCache | Remove-Item -Recurse -Force
+  Get-ChildItem $Global:LocalCache | Remove-Item -Recurse -Force
 
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {

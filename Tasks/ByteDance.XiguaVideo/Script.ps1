@@ -23,8 +23,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiguaVideo')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $LocalStorage.Contains("XiguaVideoSubmitting-$($this.CurrentState.Version)")) {
-      $LocalStorage["XiguaVideoSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:LocalStorage.Contains("XiguaVideoSubmitting-$($this.CurrentState.Version)")) {
+      $Global:LocalStorage["XiguaVideoSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

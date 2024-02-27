@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['AirTeach']
+$Object1 = $Global:LocalStorage.SeewoApps['AirTeach']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion

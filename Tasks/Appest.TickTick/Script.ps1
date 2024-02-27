@@ -20,21 +20,21 @@ if ($VersionX86 -ne $VersionX64) {
 # Version
 $this.CurrentState.Version = $Version = $VersionX64
 
-if ($LocalStorage.Contains('TickTick') -and $LocalStorage.TickTick.Contains($Version)) {
+if ($Global:LocalStorage.Contains('TickTick') -and $Global:LocalStorage.TickTick.Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $LocalStorage.TickTick.$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:LocalStorage.TickTick.$Version.ReleaseTime
 
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.TickTick.$Version.ReleaseNotesEN
+    Value  = $Global:LocalStorage.TickTick.$Version.ReleaseNotesEN
   }
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.TickTick.$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage.TickTick.$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

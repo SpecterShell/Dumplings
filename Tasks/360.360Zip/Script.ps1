@@ -13,15 +13,15 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https:' + $Object2.SelectSingleNode('//*[@id="download-intro"]/div[1]/a').Attributes['href'].Value
 }
 
-if ($LocalStorage.Contains('360Zip') -and $LocalStorage['360Zip'].Contains($Version)) {
+if ($Global:LocalStorage.Contains('360Zip') -and $Global:LocalStorage['360Zip'].Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $LocalStorage['360Zip'].$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:LocalStorage['360Zip'].$Version.ReleaseTime
 
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage['360Zip'].$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage['360Zip'].$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

@@ -57,19 +57,6 @@ class NormalTask {
     } else {
       $this.Config ??= Join-Path $this.Path 'Config.yaml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Yaml -Ordered
     }
-
-    # Load preference
-    if ($Properties.Contains('Preference') -and $Properties.Preference -is [System.Collections.IEnumerable]) {
-      $LastKey = $null
-      foreach ($Item in $Properties.Preference) {
-        if ($Item -cmatch '^-') {
-          $LastKey = $Item -creplace '^-'
-          $this.Preference[$LastKey] = $true
-        } else {
-          $this.Preference[$LastKey] = $Item
-        }
-      }
-    }
   }
 
   # Log with template, specifying log level
@@ -84,7 +71,7 @@ class NormalTask {
 
   # Invoke script
   [void] Invoke() {
-    if ($this.Preference.NoSkip -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
+    if (($Global:DumplingsPreference.Contains('NoSkip') -and $this.Preference.NoSkip) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
       Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
       & $this.ScriptPath | Out-Null
     } else {

@@ -20,18 +20,18 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Uri1
 }
 
-if ($LocalStorage.Contains('PikPak') -and $LocalStorage.PikPak.Contains($Version)) {
+if ($Global:LocalStorage.Contains('PikPak') -and $Global:LocalStorage.PikPak.Contains($Version)) {
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.PikPak.$Version.ReleaseNotesEN
+    Value  = $Global:LocalStorage.PikPak.$Version.ReleaseNotesEN
   }
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.PikPak.$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage.PikPak.$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

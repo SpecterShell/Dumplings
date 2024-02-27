@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['SeewoIotManageWebApp']
+$Object1 = $Global:LocalStorage.SeewoApps['SeewoIotManageWebApp']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion

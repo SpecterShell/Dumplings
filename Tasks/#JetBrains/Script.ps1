@@ -1,4 +1,4 @@
-$LocalStorage['JetBrainsApps'] = [ordered]@{}
+$Global:LocalStorage['JetBrainsApps'] = [ordered]@{}
 
 $this.Config.Products.GetEnumerator() |
   # Map
@@ -9,9 +9,9 @@ $this.Config.Products.GetEnumerator() |
   ForEach-Object -Process {
     $Object1 = Invoke-RestMethod -Uri "https://data.services.jetbrains.com/products/releases?latest=true&type=$($_.Name)&code=$($_.Group.Code -join ',')"
     foreach ($Code in $_.Group.Code) {
-      if (-not $LocalStorage.JetBrainsApps.Contains($Code)) {
-        $LocalStorage.JetBrainsApps[$Code] = [ordered]@{}
+      if (-not $Global:LocalStorage.JetBrainsApps.Contains($Code)) {
+        $Global:LocalStorage.JetBrainsApps[$Code] = [ordered]@{}
       }
-      $LocalStorage.JetBrainsApps.$Code[$_.Name] = $Object1.$Code[0]
+      $Global:LocalStorage.JetBrainsApps.$Code[$_.Name] = $Object1.$Code[0]
     }
   }

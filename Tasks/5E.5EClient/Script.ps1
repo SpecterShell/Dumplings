@@ -4,12 +4,12 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 
 $Version = $this.CurrentState.Version
 
-if ($LocalStorage.Contains('5EClient') -and $LocalStorage['5EClient'].Contains($Version)) {
+if ($Global:LocalStorage.Contains('5EClient') -and $Global:LocalStorage['5EClient'].Contains($Version)) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage['5EClient'].$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage['5EClient'].$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

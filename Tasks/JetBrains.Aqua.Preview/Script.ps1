@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.JetBrainsApps.QA.preview
+$Object1 = $Global:LocalStorage.JetBrainsApps.QA.preview
 
 # Version
 $this.CurrentState.Version = $Object1.build

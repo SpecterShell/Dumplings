@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.JetBrainsApps.FLL.preview
+$Object1 = $Global:LocalStorage.JetBrainsApps.FLL.preview
 
 # Version
 $this.CurrentState.Version = $Object1.build

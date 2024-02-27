@@ -20,21 +20,21 @@ if ($VersionX86 -ne $VersionX64) {
 # Version
 $this.CurrentState.Version = $Version = $VersionX64
 
-if ($LocalStorage.Contains('Dida') -and $LocalStorage.Dida.Contains($Version)) {
+if ($Global:LocalStorage.Contains('Dida') -and $Global:LocalStorage.Dida.Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $LocalStorage.Dida.$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:LocalStorage.Dida.$Version.ReleaseTime
 
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.Dida.$Version.ReleaseNotesEN
+    Value  = $Global:LocalStorage.Dida.$Version.ReleaseNotesEN
   }
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $LocalStorage.Dida.$Version.ReleaseNotesCN
+    Value  = $Global:LocalStorage.Dida.$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

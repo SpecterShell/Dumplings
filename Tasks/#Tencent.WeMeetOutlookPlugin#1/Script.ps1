@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $LocalStorage['WeMeetOutlookPlugin1'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:LocalStorage['WeMeetOutlookPlugin1'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $LocalStorage['WeMeetOutlookPlugin1'] = $OldReleaseNotes = [ordered]@{}
+  $Global:LocalStorage['WeMeetOutlookPlugin1'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-RestMethod -Uri 'https://meeting.tencent.com/web-service/query-download-info?q=[{"package-type":"outlook","channel":"0300000000","platform":"windows"}]&nonce=AAAAAAAAAAAAAAAA'
@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
       InstallerUrl = $InstallerUrl
       ReleaseTime  = $this.CurrentState.ReleaseTime
     }
-    if ($this.Preference.Contains('EnableWrite') -and $this.Preference.EnableWrite) {
+    if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
     }
 

@@ -1,4 +1,4 @@
-$Object1 = $LocalStorage.SeewoApps['SeewoFileTransfer']
+$Object1 = $Global:LocalStorage.SeewoApps['SeewoFileTransfer']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion
