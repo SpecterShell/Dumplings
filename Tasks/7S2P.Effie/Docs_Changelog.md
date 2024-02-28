@@ -1,3 +1,8 @@
+# Version 3.5.3:
+
+- Support for adding Windows local folders to Effie. Sheets in the local folders will not be uploaded to Effie Cloud.
+- Some minor improvements and bugs fixed.
+
 # Version 3.5.1:
 
 - Support for adding Windows local folders to Effie. Sheets in the local folders will not be uploaded to Effie Cloud.
