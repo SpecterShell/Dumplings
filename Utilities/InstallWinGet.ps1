@@ -11,7 +11,7 @@ Write-Host "Downloading ${UILibsUri}"
 Invoke-WebRequest -Uri $UILibsUri -OutFile $UILibsPath
 
 $Params = @{
-  Uri         = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
+  Uri         = 'https://api.github.com/repos/microsoft/winget-cli/releases/tags/v1.6.3482'
   Headers     = @{ Accept = 'application/vnd.github+json' }
   ContentType = 'application/json'
 }
