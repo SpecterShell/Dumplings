@@ -5,7 +5,7 @@ $VCLibsPath = New-TemporaryFile
 Write-Host "Downloading ${VCLibsUri}"
 Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile $VCLibsPath
 
-$UILibsUri = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx'
+$UILibsUri = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.5/Microsoft.UI.Xaml.2.8.x64.appx'
 $UILibsPath = New-TemporaryFile
 Write-Host "Downloading ${UILibsUri}"
 Invoke-WebRequest -Uri $UILibsUri -OutFile $UILibsPath
