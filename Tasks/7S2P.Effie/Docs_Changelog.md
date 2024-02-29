@@ -1,3 +1,8 @@
+# Version 3.6.3:
+
+- Added "AI Review" feature, see how AI evaluates your article.
+- Some minor improvements and bugs fixed.
+
 # Version 3.6.1:
 
 - Added "AI Review" feature, see how AI evaluates your article.
