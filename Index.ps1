@@ -67,7 +67,7 @@ param (
 )
 
 # Enable strict mode to avoid non-existent or empty properties from the API
-# Set-StrictMode -Version 3.0
+Set-StrictMode -Version 3.0
 
 # In GitHub Actions, hide the progress bar to avoid pollutions to console output
 if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
@@ -268,5 +268,5 @@ if (-not $Parallel) {
   # Clean and restore the environment for the main thread
   [System.Console]::OutputEncoding = $Private:OldOutputEncoding
   [System.Console]::InputEncoding = $Private:OldInputEncoding
-  # Set-StrictMode -Off
+  Set-StrictMode -Off
 }
