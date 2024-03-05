@@ -1,7 +1,5 @@
-name: Automation
+name: Test
 on:
-  schedule:
-    - cron: 30 0/3 * * *
   workflow_dispatch:
     inputs:
       params:
@@ -33,7 +31,7 @@ jobs:
         with:
           modules-to-cache: powershell-yaml, PowerHTML
       - name: Run tasks
-        run: .\Index.ps1 -ThrottleLimit 3 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
+        run: .\Index.ps1 ${{ github.event.inputs.params }}
         working-directory: Dumplings
         shell: pwsh
         env:
@@ -41,3 +39,8 @@ jobs:
           GH_DUMPLINGS_TOKEN: ${{ secrets.GH_DUMPLINGS_TOKEN }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+      - name: Get outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Outputs
+          path: ./Dumplings/Outputs/

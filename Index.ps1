@@ -258,7 +258,7 @@ if (-not $Parallel) {
       git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
       git pull
       git add $Path
-      git commit -m "Automation: Update states [$env:GITHUB_RUN_NUMBER]"
+      git commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]"
       git push
     } else {
       Write-Host -Object "`e[1mDumplings:`e[22m No changes to commit"
