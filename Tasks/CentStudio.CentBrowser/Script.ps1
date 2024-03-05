@@ -19,7 +19,7 @@ $RequestCNX64.AllowAutoRedirect = $false
 $ResponseCNX64 = $RequestCNX64.GetResponse()
 
 $Identical = $true
-if ((@($ResponseX86, $ResponseX64, $ResponseCNX86, $ResponseCNX64) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
+if (@(@($ResponseX86, $ResponseX64, $ResponseCNX86, $ResponseCNX64) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }

@@ -11,15 +11,15 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\-\d+)
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.data.createTime | ConvertFrom-UnixTimeMilliseconds
 
-$ReleaseNotesObject = $Object1.data.updateLog | ConvertFrom-Json
+$ReleaseNotesObject = $Object1.data.updateLog | ConvertFrom-Json -AsHashtable
 $ReleaseNotesList = @()
-if ($ReleaseNotesObject.added) {
+if ($ReleaseNotesObject.Contains('added')) {
   $ReleaseNotesList += $ReleaseNotesObject.added -creplace '^', '[+ADDED] '
 }
-if ($ReleaseNotesObject.changed) {
+if ($ReleaseNotesObject.Contains('changed')) {
   $ReleaseNotesList += $ReleaseNotesObject.changed -creplace '^', '[*CHANGED] '
 }
-if ($ReleaseNotesObject.fixed) {
+if ($ReleaseNotesObject.Contains('fixed')) {
   $ReleaseNotesList += $ReleaseNotesObject.fixed -creplace '^', '[-FIXED] '
 }
 # ReleaseNotes (zh-CN)

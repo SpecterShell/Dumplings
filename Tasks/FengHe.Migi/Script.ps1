@@ -15,15 +15,15 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.-]+)\.exe').Gr
 $this.CurrentState.ReleaseTime = $Object1.data[0].createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
 # ReleaseNotes (zh-CN)
-$ReleaseNotesObject = $Object1.data[0].updateLog | ConvertFrom-Json
+$ReleaseNotesObject = $Object1.data[0].updateLog | ConvertFrom-Json -AsHashtable
 $ReleaseNotesList = @()
-if ($ReleaseNotesObject.added) {
+if ($ReleaseNotesObject.Contains('added')) {
   $ReleaseNotesList += $ReleaseNotesObject.added -creplace '^', '[+ADDED] '
 }
-if ($ReleaseNotesObject.changed) {
+if ($ReleaseNotesObject.Contains('changed')) {
   $ReleaseNotesList += $ReleaseNotesObject.changed -creplace '^', '[*CHANGED] '
 }
-if ($ReleaseNotesObject.fixed) {
+if ($ReleaseNotesObject.Contains('fixed')) {
   $ReleaseNotesList += $ReleaseNotesObject.fixed -creplace '^', '[-FIXED] '
 }
 $this.CurrentState.Locale += [ordered]@{

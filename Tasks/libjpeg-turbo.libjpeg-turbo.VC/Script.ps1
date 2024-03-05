@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode            = "libjpeg-turbo $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.RealVersion) for Visual C++"
+      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.Version) for Visual C++"
       ProductCode = "libjpeg-turbo $($this.CurrentState.Version)"
     }
   )
@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode            = "libjpeg-turbo64 $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.RealVersion) for Visual C++ 64-bit"
+      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.Version) for Visual C++ 64-bit"
       ProductCode = "libjpeg-turbo64 $($this.CurrentState.Version)"
     }
   )

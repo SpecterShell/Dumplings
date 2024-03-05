@@ -19,12 +19,12 @@ $VersionArm64 = [regex]::Match($InstallerObjectArm64.about, '(\d+\.\d+\.\d+-\d+)
 $InstallerArm64 = $Prefix + $InstallerObjectArm64.about
 
 $Identical = $true
-if ((@($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Unique).Count -gt 1) {
+if (@(@($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
-$LatestVersion = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { $_.about -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$LatestVersion = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $LatestVersion.Replace('-', '.')

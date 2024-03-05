@@ -19,7 +19,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 # ReleaseNotes (zh-CN)
-if ($Object1.releaseNotes) {
+if ($Object1.Contains('releaseNotes')) {
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'

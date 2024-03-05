@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://zoom.us/releasenotes' -Method Post -U
   type         = 'manual'
   upgrade64Bit = 1
 } | ConvertFrom-ProtoBuf
-$Object2 = $Object1['12'].Split(';') | ConvertFrom-StringData
+$Object2 = $Object1['12'].Replace(';', "`n") | ConvertFrom-StringData
 
 # Version
 $this.CurrentState.Version = $Object2.'Real-version'

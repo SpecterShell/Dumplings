@@ -15,7 +15,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updates.bravesoftware.com/service/upd
 "@
 
 $Identical = $true
-if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Count -gt 1) {
+if (@($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
