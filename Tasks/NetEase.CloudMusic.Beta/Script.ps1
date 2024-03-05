@@ -1,5 +1,3 @@
-Set-StrictMode -Version 3.0
-
 # x64
 $Object1 = Invoke-RestMethod `
   -Uri 'https://interface.music.163.com/api/pc/upgrade/get' `
@@ -44,8 +42,6 @@ $this.CurrentState.Locale += [ordered]@{
   Key    = 'ReleaseNotes'
   Value  = '"' + $Object1.data.upgradeContent + '"' | ConvertFrom-Json | Format-Text
 }
-
-Set-StrictMode -Off
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
