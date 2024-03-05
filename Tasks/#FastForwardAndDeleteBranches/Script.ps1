@@ -37,18 +37,18 @@ $Query = @"
 }
 "@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{ query = $Query }
-$Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes[0].state -eq 'MERGED' }).ForEach({ $_.name })
+$Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
 
 $this.Log("$($Branches.Count) branch(es) in ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
 
 $Count = 0
 foreach ($Branch in $Branches) {
   try {
-    $this.Log("Deleting ${Branch}")
-    Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${Branch}" -Method Delete | Out-Null
+    $this.Log("Deleting $($Branch.name)")
+    Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/$($Branch.name)" -Method Delete | Out-Null
     $Count++
   } catch {
-    $this.Log("Failed to delete branch ${Branch}", 'Error')
+    $this.Log("Failed to delete branch $($Branch.name)", 'Error')
     $_ | Out-Host
   }
 }
