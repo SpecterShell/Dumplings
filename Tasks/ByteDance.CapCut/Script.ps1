@@ -1,4 +1,4 @@
-$Object1 = (Invoke-WebRequest -Uri "https://editor-api-sg.capcut.com/service/settings/v3/?device_platform=windows&os_version=10&aid=359289&iid=0&version_code=$($this.LastState.VersionCode ?? '66304')").Content | ConvertFrom-Json -AsHashtable
+$Object1 = (Invoke-WebRequest -Uri 'https://editor-api-sg.capcut.com/service/settings/v3/?device_platform=windows&os_version=10&aid=359289&iid=0&version_code=66304').Content | ConvertFrom-Json -AsHashtable
 
 if (-not $Object1.data.settings.Contains('update_reminder')) {
   $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
