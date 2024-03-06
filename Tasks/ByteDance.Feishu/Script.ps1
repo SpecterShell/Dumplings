@@ -15,10 +15,9 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       $Uri2 = 'https://www.feishu.cn/hc/en-US/articles/360043073734'
-      $Object2 = Invoke-WebRequest -Uri $Uri2 | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable |
-        Select-Object -ExpandProperty Values | Where-Object -FilterScript { $_ -is [array] -and $_.tabName }
+      $Object2 = ((Invoke-WebRequest -Uri $Uri2).Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
 
-      $ReleaseNotesNode = $Object2.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
+      $ReleaseNotesNode = $Object2[0].Value.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
       if ($ReleaseNotesNode) {
         $ReleaseNotesTitleNode = ($ReleaseNotesNode[0].html.html | ConvertFrom-Html).SelectSingleNode("/div/div/div[contains(.//text(), 'V$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "Updated")]|.//hr'); $Node = $Node.NextSibling) { $Node }
@@ -54,10 +53,9 @@ switch -Regex ($this.Check()) {
 
     try {
       $Uri3 = 'https://www.feishu.cn/hc/zh-CN/articles/360043073734'
-      $Object3 = Invoke-WebRequest -Uri $Uri3 | Read-ResponseContent | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable |
-        Select-Object -ExpandProperty Values | Where-Object -FilterScript { $_ -is [array] -and $_.tabName }
+      $Object3 = ((Invoke-WebRequest -Uri $Uri3).Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
 
-      $ReleaseNotesCNNode = $Object3.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
+      $ReleaseNotesCNNode = $Object3[0].Value.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
       if ($ReleaseNotesCNNode) {
         $ReleaseNotesCNTitleNode = ($ReleaseNotesCNNode[0].html.html | ConvertFrom-Html).SelectSingleNode("/div/div/div[contains(.//text(), 'V$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
         $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; -not $Node.SelectSingleNode('.//text()[contains(., "发布于")]|.//hr'); $Node = $Node.NextSibling) { $Node }
