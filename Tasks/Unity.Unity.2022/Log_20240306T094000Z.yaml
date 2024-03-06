@@ -1,0 +1,201 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/bf09ca542b87/Windows64EditorInstaller/UnitySetup64-2022.3.21f1.exe
+  ProductCode: Unity 2022.3.21f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2022.3.21
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2022.3/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.21f1
+    - 3D Physics: Physics.ComputePenetration returns False when two colliders overlap (UUM-15831)
+    - Asset - Database: Crash in CollectManagedImportDependencyGetters inside OpenScene in batch mode (UUM-57742)
+    - Asset Importers: Crash on ConvertBlenderToFBX while importing a specific .blend file (UUM-63758)
+    - Culling: Changes to MeshRenderer.shadowCastingMode don't take effect immediately when being made in OnPreRender (UUM-64799)
+    - DirectX12: Crash on D3D12Fence::Wait when using Forward+ Rendering Path with Better Shaders asset (UUM-57113)
+    - DOTS: [Android] [Entities] Build fails with the error “Asset has disappeared while building player to 'globalgamemanagers.assets' - path '', instancedID '-xxxxxx'“ when building (UUM-41830)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - RP Foundation: Stacked camera is not rendering when using custom post effects is done in PreRender PostRender and Camera is not in HDR (UUM-22444)
+    - Scene Management: Crash on GameObject::QueryComponentByType when opening a project (UUM-58461)
+    - Shortcut Management: [MacOS] The Scene Pan Tool does not work when "Pan Focus Tool" and "Temporary Pan Tool 1" shortcuts are conflicting by default (UUM-63983)
+    - Universal RP: Using both RTHandle and Dynamic Resolution outputs ArgumentNullException, eventually causing a crash (UUM-58686)
+    2022.3.21f1 Release Notes
+    Improvements
+    - AI: The instantiation of NavMeshes into the scene happens slightly faster.
+    - Graphics: Improved performance and memory requirements of Texture API calls such as LoadRawTextureData that write to a Texture2D that was created with the TextureCreationFlags.DontUploadUponCreate flag. (UUM-35989)
+    - Graphics: [com.unity.template.3d] Defaulting color space to "Linear". (UUM-49327)
+    - Graphics Tests: Improving BRG gfx test test coverage.
+    - HDRP: Improved performance entering and leaving playmode for scenes containing large numbers of decal projectors.
+    - HDRP: Improved scene culling performance when APV is enabled in the project.
+    - VisionOS: Added VisionOS as a target for Windows and Linux. (UUM-63466)
+    API Changes
+    - Editor: Added: Added a flag for recursive dependency calculation. For use with the Compatibility Pipeline API. (UUM-52195)
+    Changes
+    - Android: Added support for Android SDK 31, 32 and 33. (UUM-43580)
+    - Universal RP: The Auto option in SH Evaluation Mode, in the URP Asset, now chooses Per Vertex instead of Per Pixel on mobile and similar devices. (UUM-60483)
+    - XR: The Oculus XR Plugin package has been updated to 4.2.0.
+    Fixes
+    - 2D: Fixed (Case UUM-61407) Fix Editor crash when Atlas content is edited in Play Mode. (UUM-61407)
+    - 2D: Fixed Case where Sprite Atlas's secondary texture is not rendered when used in a ShaderGraph. (UUM-46398)
+    - 2D: Fixed Invalid SortingGroup index set in Renderer error message appearing when a SortingGroup is created and another is deleted at the same time. (UUM-62716)
+    - 2D: Fixed issue where textures set from the ShaderGraph shader are not applied for use in the TilemapRenderer. (UUM-62066)
+    - 2D: Fixed missing stencil draw calls when rendering normals with SpriteMask. (UUM-63214)
+    - AI: Fixed crash that happens when NavMesh Agents with active avoidance try to move between obstacles that carve the NavMesh in some particular locations. (UUM-49214)
+    - Android: Fixed back gesture invoking UI elements. (UUM-48818)
+    - Android: SoftInput layout issue on some Android device (Samsung Android 12+ devices). (UUM-59379)
+    - Android: SoftInput visibility issue on some Android device when hideInput is enabled (Samsung Android 12+ devices). (UUM-57858)
+    - Animation: Blend Tree assets are now correctly deleted when overwritten by an Animation Clip in an Animator. (UUM-62807)
+    - Animation: Fixed Editor spike when selecting a GameObject with a Playable Director Component. (UUM-59654)
+    - Asset Bundles: Added note about texture streaming in the AssetBundle.UnloadAllAssetBundles docs. (UUM-62176)
+    - Asset Import: Updated PVRTexTool from v4.17 to v5.5. Fixes Mac texture size limit bug and Arm64 macOS compatibility. (UUM-3775)
+    - Audio: Fixed an issue that would sometimes cause a game object to throw an error in the log when drawing the game objects inspector, if the game object implements OnAudioFilterRead. (UUM-61145)
+    - Build Pipeline: Fixed an issue where Editor would crash due to a corrupted json file. (UUM-48603)
+    - Documentation: Fixed example code for AudioSource.GetSpectrumData by using AudioSource instead of AudioListener. (UUM-52561)
+    - Documentation: Removed mentions of web player in Microphone.Start. (UUM-52555)
+    - Editor: Added null check to audio filter read callback. (UUM-59618)
+    - Editor: Added support for the enableProxyAutoconfig property in the service configuration file. Setting it to true enables automatic proxy configuration based on Windows system proxy setup, as well as proxy authentication support based on Credential Manager. (UUM-58216)
+    - Editor: Bug fix for Crash on NSException when the display dialog contains a long message containing multibyte characters which are clipped when the message is abbreviated by ellipses. (UUM-62757)
+    - Editor: Clarified that the slope in GetSteepness is always positive.
+    - Editor: Disabled native render pass on DX12 on 2022.3, because it is not ready for use on this version. (UUM-41530)
+    - Editor: Double cliking on a SearchQuery assets sets it as the current query in QuickSearch. (UUM-61209)
+    - Editor: Ensured the resize cursor doesn't show up when hovering over a draggable tab. (UUM-59161)
+    - Editor: Fields that could still be edited even though multi-editing is not supported when multiple Game Objects are selected should no longer be visible. (UUM-61080)
+    - Editor: Fixed a bug where dangling mouse shortcuts are called on a MouseUp event with a null context. (UUM-56283)
+    - Editor: Fixed a bug where GUI in the Scene were using an incorrect offset when Scene filtering was active. (UUM-61753)
+    - Editor: Fixed a crash related to throwing BuildFailedException in BuildProcessor.PrepareForBuild. (UUM-62231)
+    - Editor: Fixed a crash when destroying a GameObject while selecting it in the Scene View. (UUM-10412)
+    - Editor: Fixed a performance regression in the TextureImporter. (UUM-36303)
+    - Editor: Fixed an issue where the Columns and Rows values are not updating in a TextureImporter preset. (UUM-59090)
+    - Editor: Fixed backport of a MPEG codec bug resolution. (UUM-59571)
+    - Editor: Fixed casting integers to memory labels. (UUM-57246)
+    - Editor: Fixed DnD in a QueryBuilder with an object reference. (UUM-61214)
+    - Editor: Fixed incorrect color sample results with the eyedropper tool Color Picker on macOS. (UUM-60339)
+    - Editor: Fixed Index manager doesn't override file or folder if user cancels the OpenDialog. (UUM-58792)
+    - Editor: Fixed indexing in playmode: when in playmode we do not start asset indexing. When the user stops playmode, the relevant asset indexing tasks will start. (UUM-58793)
+    - Editor: Fixed issue where the Selection's active context would be set to null after importing an asset. (UUM-51712)
+    - Editor: Fixed memory spikes when macOS player is offscreen or minimized. (UUM-30049)
+    - Editor: Fixed pressing the Esc key changing the values of other properties when editing a property of the RectTransform. (UUM-56007)
+    - Editor: Fixed scene template dependency list view in inspector window. (UUM-59838)
+    - Editor: Fixed searchquery path validation for mac. (UUM-63375)
+    - Editor: Fixed tangents returning nan in MikkTSpace tangent calculation in strict vertex mode. (UUM-35817)
+    - Editor: Fixed type remapping for : asmdef, animation and terrain. (UUM-58791)
+    - Editor: Improved UI for light culling mask in Forward+ mode. (UUM-41683)
+    - Editor: Menus items are now visible after loading large projects. (UUM-56482)
+    - Editor: On activity the videoplayer is stuck if called after the standby/resume state. (UUM-54785)
+    - Editor: Preset have their own searchpropositions (query block). (UUM-59118)
+    - Editor: Project Browser in AdvanceSearchEngine treats all t: and l: as t= and l=. (UUM-61220)
+    - Editor: Protected against crashes when passing invalid dimensions to an editor window (NaN or Infinity). (UUM-53656)
+    - Editor: Removing error. (UUM-34635)
+    - Editor: The Editor no longer crashes with a callstack resulting in validateMenuItem. (UUM-33727)
+    - Editor: When opening searchWindow in table view you can use ArrowDown to change selection immediatly. (UUM-61197)
+    - Entities Graphics: Fixed an issue where runtime created materials registered with the BRG/EntitiesGraphics would sometimes get unloaded when maximising the game view. (UUM-54573)
+    - GI: Removed logging which has caused users, supporters and developers to waste time and leave the user with no solution. (UUM-64413)
+    - Graphics: Corrected issue of setting mismatched Color and Depth buffers encountered with Single-buffered CustomRenderTextures. (UUM-55999)
+    - Graphics: Ensured non-background materials aren't rendered as six-faced skyboxes. (UUM-62526)
+    - Graphics: Fixed a regression in DrawProceduralIndirect in the Directx 11 backend when it was erroneously throwing "Draw indirect argument buffer too small" when using an argument buffer of 4 ints. (UUM-63246)
+    - Graphics: Fixed flickering in shadows when TAA is enabled in the built-in render pipeline. (UUM-63814)
+    - Graphics: Fixed potential crash in URP Forward+ due to out-of-bounds buffer access.
+    - Graphics: Fixed undefined behavior in Texture2D.Compress / EditorUtility.CompressTexture / EditorUtility.CompressCubemapTexture when these were dealing with partial mip-chain textures. The APIs now leave the mipmap count of textures untouched. (UUM-35985)
+    - Graphics: Improved performance of CopyTexture when copying from a readable Texture2D just after it was scheduled for uploading (Texture2D::Apply()). (UUM-35167)
+    - Graphics: Invoke the PostRender callback when SceneView uses EditorDrawOutline. (UUM-57025)
+    - HDRP: Fixed XR texture 2D creation failure due to invalid slice configuration. The slice is misconfigured to 2 when creating Texture2D, causing internal failures. (UUM-57001)
+    - HDRP: Optimize the OnDisable of DecalProjector component when disabling a lot of decals at the same time. (UUM-64279)
+    - HDRP: Removed screen space overlay UI being rendered in offscreen camera. (UUM-61898)
+    - HDRP: Removed the error message "Decal texture atlas out of space..." in release builds (it now only appears in the Editor or Development Builds). (UUM-64275)
+    - iOS: Added missing privacy manifest entry for System Boot time API usage.
+    - iOS: Fixed "Symlink Trampoline" build option failing to link UnityViewControllerBase+visionOS.h/.mm. (UUM-63256)
+    - iOS: If Image and Background launch screen is used without proper image setup, issue warning and fallback to default launch screen. (UUM-60545)
+    - Kernel: Re-enabled job batching to fix job system performance regression. (DOTS-9474)
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-53175)
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-56334)
+    - Mono: Disallow unrestricted polymorphic deserialization in DataSet. (UUM-62270)
+    - Networking: Throw exception instead of crashing if UnityWebRequest is sent during app quit, such as from Destroy(). (UUM-63150)
+    - Networking: UnityWebRequest scripting API improved and updated.
+    - Package Manager: Package Import window retains its functionality when collapsing the root folder of a package. (UUM-52889)
+    - Physics: Added a new parameter to the physics settings -- fast motion threshold. It allows to improve the CCD response for fast moving small bodies that collide with larger ones. (UUM-57910)
+    - Profiler: Fixed an issue whereby the Physics2D module did not display counters in the Profiler. (UUM-57758)
+    - Scene/Game View: Fixed an issue where the Transform Tool would not respect the global handle rotation setting. (UUM-62487)
+    - Scene/Game View: Fixed missing Alt + Left Mouse Button pan shortcut when in 2D scene mode. (UUM-61554)
+    - Scene/Game View: Reverting fix for potential null reference exception. (UUM-59891)
+    - Scripting: Ensure that we use a Logical Path rather than an Absolute Path when looking up InstanceIDs. (UUM-63675)
+    - Scripting: Fixed an issue where debugging a .net 6 project with Visual Studio would make the editor hang on startup. (UUM-60296)
+    - Scripting: Fixed reload not happening when multiple compilations happens in same editor tick. (UUM-62508)
+    - Scripting: Fixed when a change of version of a package was involving a move of a Plugin, we didn't register the new file correctly. (UUM-58284)
+    - Search: Added new square icon for AssetLabel. (UUM-62795)
+    - Search: Allows index to be saved in local package. (UUM-62277)
+    - Search: Ensure Index have a dependency id computed from their type name. (UUM-62159)
+    - Search: Ensure we index types of assets that are not .prefab. (UUM-62327)
+    - Search: Fixed "filtermode" not adding a query block. (UUM-61219)
+    - Search: Fixed Synchronous search at unity startup or after domain reload. Ensure DB are initialized. (UUM-61251)
+    - Search: In IndexManager, disable SubObject options editing if the index is Scene or Prefab. (UUM-62150)
+    - Search: When directory are renamed, properly invalidate propertydb. (UUM-59213)
+    - Shaders: Added mem_flags::mem_texture to AllMemoryBarrier*. (UUM-55302)
+    - Shaders: Do not try to prewarm stereo-instancing variants since they require specific RT setup (for "layered" rendering). (UUM-54697)
+    - Shaders: Fixed code generated for Texture.Load with offset. (UUM-56574)
+    - Shaders: Improved message in the player log when sending the shader variant to the GPU driver. (UUM-62527)
+    - Terrain: Entering detail painting mode no longer crashes the Editor when the TerrainData contains corrupt data. (UUM-62515)
+    - Tests: Removed unstable test, StreamingTests, from Runtime Tests, as it has already been ported to UTF. (UUM-10084)
+    - Tests: [INSTABILITY]: KeyboardEventsAreSentToFocusedPanel. (UUM-37704)
+    - Text: Fixed un-detected sprite asset changes after adding new sprites. (UUM-55614)
+    - TextCore: Ensure Dynamic FontAsset have a readable Atlas. (UUM-59596)
+    - TextCore: Ensure GetPreferredValues and GenerateTextMesh return the same size. (UUM-61577)
+    - uGUI: Setting the game object layer for the Dropdown blocker game object to match the Canvas value. (UUM-62470)
+    - UI Elements: Fixed touchscreen keyboard input not being updated in TextFields on Platforms where input is only provided after the keyboard has closed. (UUM-53137)
+    - UI Elements: Updated the logic to use the proper source count removing the dependency from the source type and layout version. (UUM-55415)
+    - UI Toolkit: Fixed and reenabled all previously instable UGUIEventSystemTests. (UUM-22461)
+    - UI Toolkit: Fixed composite field values remain displayed as mixed when their showMixedValue is set back to false. (UUM-33760)
+    - UI Toolkit: Fixed CompositeField subfield value setting when multi-editing. (UUM-63331)
+    - UI Toolkit: Fixed default runtime theme creation in the UI Builder. (UUM-56954)
+    - UI Toolkit: Fixed disappearing elements when an ancestor goes to a null-scale transform. (UUM-62401)
+    - UI Toolkit: Fixed documentation links for UI Toolkit assets and scripts. (UUM-28715)
+    - UI Toolkit: Fixed DropdownField default values being classed as overridden in UI Builder. (UUM-62249)
+    - UI Toolkit: Fixed elements size when a new control is dragged onto the UI Builder hierarchy. (UUM-61553)
+    - UI Toolkit: Fixed FloatField showMixedValue has a different behavior than IMGUI's showMixedValue. (UUM-3456)
+    - UI Toolkit: Fixed pointer events on the secondary display received as though they were occuring on the main display when using new Input System and adding an EventSystem on the scene. (UUM-47650)
+    - UI Toolkit: Fixed property has disappeared error in ObjectField element. (UUM-62802)
+    - UI Toolkit: Fixed SaveToVectorImage() bounds wrongly calculated. (UUM-41589)
+    - UI Toolkit: Fixed StackOverflowException from EnumFlagsField when showing mixed values. (UUM-60654)
+    - UI Toolkit: Fixed USS alias variables are not displayed in the USS variable list. (UUM-60500)
+    - UI Toolkit: Fixed view data states not being saved for children of ListView. (UUM-62717)
+    - UI Toolkit: Fixed wrong clickCount during PointerDown when using InputSystemUIInputModule after clicking on another object. (UUM-57082)
+    - UI Toolkit: Fixed wrong help link for TextMeshPro Sprite Asset. (UUM-48801)
+    - Universal RP: Added UI features to encourage the use of Rendering Layers in URP to control selective lighting, instead of using culling mask. The former works across Deferred, Forward and Forward+, while the latter only works with Forward. (UUM-64171)
+    - Universal RP: Fixed an issue where downsampled SSAO had serious artefacts on Android. (UUM-49557)
+    - Universal RP: Fixed an issue where keywords were incorrectly enabled/disabled when shadows were enabled in the URP Asset and "Transparent Receive Shadows" was disabled on the renderer. (UUM-64416)
+    - Universal RP: Fixed an issue where Screen Space Decals keyword was missing when Strip Unused Variants was turned off.
+    - Universal RP: Fixed an issue where using Alpha Clipped shaders and Depth Priming resulted in invisible objects. (UUM-64447)
+    - Universal RP: Fixed incorrect alpha-clip behavior on transparent surfaces. (UUM-56601)
+    - Universal RP: Fixed RenderRequest using wrong renderer. (UUM-38158)
+    - URP: Ensure motion vector depth buffer is valid for cameras with motion vectors enabled. (UUM-61466)
+    - VFX Graph: Disabled MeshToSDFBaker shaders on GLES3 to avoid warnings. (UUM-53994)
+    - VFX Graph: Incompatibility with HLSL 2021. (UUM-63956)
+    - VFX Graph: Instancing when gradient selection was based on a branch was wrong. (UUM-58615)
+    - VFX Graph: PCache exporter insure color in linear space. (UUM-41837)
+    - VFX Graph: Removed GetParticleIndex shader warning in particle strip systems. (UUM-51867)
+    - VFX Graph: Unexpected material listing in animation window. (UUM-46719)
+    - VisionOS: Fixed compiler errors in generated Xcode projects when application attempts to use web cam APIs. (UUM-64167)
+    - WebGL: WebGL: Fix for Render Texture depth buffers sometimes not being cleared properly. (UUM-57343)
+    - Windows: Fixed Double backslash becoming single backslash when passing a Network path as a command line argument. (UUM-55979)
+    Package changes in 2022.3.21f1
+    Packages updated
+    - com.unity.mobile.notifications: 2.3.1 → 2.3.2
+    - com.unity.polybrush: 1.1.5 → 1.1.6
+    - com.unity.xr.oculus: 4.1.2 → 4.2.0
+    - com.unity.netcode.gameobjects: 1.8.0 → 1.8.1
+    Packages added
+    - com.unity.dt.app-ui@1.0.1
+Version: 2022.3.21f1
+ReleaseTime: 2024-03-05T16:04:04.8580000Z
