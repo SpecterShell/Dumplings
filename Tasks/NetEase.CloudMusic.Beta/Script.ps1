@@ -16,11 +16,7 @@ $Object2 = Invoke-RestMethod `
 $Version2 = "$($Object2.data.packageVO.appver).$($Object2.data.packageVO.buildver)"
 $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
-$Identical = $true
-if ($Version1 -ne $Version2) {
-  $this.Log('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
+if ($Version1 -ne $Version2) { throw 'Distinct versions detected' }
 
 # Version
 $this.CurrentState.Version = $Version1
@@ -50,7 +46,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
