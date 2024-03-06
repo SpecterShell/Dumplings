@@ -495,7 +495,7 @@ Function Get-PathInstallerType {
   }
   if ($Path -match '\.appx(bundle){0,1}$') { return 'appx' }
   if ($Path -match '\.zip$') { return 'zip' }
-  if ($Path -match '\.exe$') { return Get-ExeType($Path) }
+  if ($Path -match '\.exe$') { return Get-ExeType -Path $Path }
 
   return $null
 }
@@ -942,9 +942,9 @@ Function Write-InstallerManifest {
         # Go into each of the subkeys to see if they are the same
         foreach ($_InstallerSwitchKey in $InstallerManifest.Installers[0].$_Key.Keys) {
           $_AllAreSame = $true
-          $_FirstInstallerSwitchKeyValue = ConvertTo-Json($InstallerManifest.Installers[0].$_Key.$_InstallerSwitchKey)
+          $_FirstInstallerSwitchKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key.$_InstallerSwitchKey
           foreach ($_Installer in $InstallerManifest.Installers) {
-            $_CurrentInstallerSwitchKeyValue = ConvertTo-Json($_Installer.$_Key.$_InstallerSwitchKey)
+            $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key.$_InstallerSwitchKey
             if (Test-String $_CurrentInstallerSwitchKeyValue -IsNull) { $_AllAreSame = $false }
             else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerSwitchKeyValue $_FirstInstallerSwitchKeyValue).Length -eq 0) }
           }
@@ -967,9 +967,9 @@ Function Write-InstallerManifest {
       } else {
         # Check if all installers are the same
         $_AllAreSame = $true
-        $_FirstInstallerKeyValue = ConvertTo-Json($InstallerManifest.Installers[0].$_Key)
+        $_FirstInstallerKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key
         foreach ($_Installer in $InstallerManifest.Installers) {
-          $_CurrentInstallerKeyValue = ConvertTo-Json($_Installer.$_Key)
+          $_CurrentInstallerKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key
           if (Test-String $_CurrentInstallerKeyValue -IsNull) { $_AllAreSame = $false }
           else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerKeyValue $_FirstInstallerKeyValue).Length -eq 0) }
         }
