@@ -1,0 +1,149 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/157b46ce122a/Windows64EditorInstaller/UnitySetup64-2021.3.35f1.exe
+  ProductCode: Unity 2021.3.35f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2021.3.35
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2021.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2021.3/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2021.3.35f1
+    - 3D Physics: Physics.ComputePenetration returns False when two colliders overlap (UUM-15831)
+    - Asset Bundles: UV1 data is lost during AssetBundle build when Optimize Mesh Data is on (UUM-57201)
+    - Editor Platform: Crash on -[CocoaMainMenu validateMenuItem:] when pressing/searching in Help (UUM-33727)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Input: Crash on InputDeviceIOCTL when closing Unity editor (UUM-10774)
+    - Input: High polling rate mice are causing performance issues (windows, editor) (UUM-1484)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - UI Toolkit Framework: Game view introduces banding and renders differently from UI Builder when Gradients from opaque-to-transparent white are selected (UUM-62389)
+    - Universal RP: Objects are invisible in Scene view when using Wireframe Shading Mode (UUM-36914)
+    2021.3.35f1 Release Notes
+    Features
+    - iOS: Added Apple Privacy Manifest support.
+    Improvements
+    - Build System: Make bee_backend's directory deletion explicitly handle readonly files on windows.
+    API Changes
+    - Package: Changed: XR Interaction Toolkit (com.unity.xr.interaction.toolkit) 3.0.0-pre.1 added as next version to package manifest to allow discoverability.
+    Changes
+    - Package: Updated code coverage package to version 1.2.5.
+    Fixes
+    - 2D: Fixed an issue where multiple light sources could cause shadows to fail. (UUM-1855)
+    - 2D: Fixed issue where Sprite Editor Window does not preview the image in proper filter mode. (UUM-57832)
+    - 2D: Fixed local bounds of 2D Freeform Light from changing when scene is reloaded. (UUM-49000)
+    - 2D: Fixed Shadows being rendered twice. (UUM-59844)
+    - Android: Added Auto Rotation behavior to the Orientation section. (UUM-44021)
+    - Android: Fixed ad banner disappearance after suspend/resume. (UUM-57151)
+    - Android: Fixed OnDemandRendering's ignored renderFrameInterval. (UUM-32486)
+    - Android: Upgraded Google's Frame Pacing library from v1.7 to v1.10 to fix various stability and performance issues with Optimized Frame Pacing. (UUM-57566)
+    - Animation: Fixed for transition preview ending before the target state has fully played. (UUM-59080)
+    - Animation: Fixed synced layers that were mistakenly deleted when the user removed an unrelated layer in the Animator window. (UUM-59649)
+    - Asset Import: Fixed issue where "Multiple plugins with the same name" error occurs when importing bundle files in .androidpack folders on Mac. (UUM-35317)
+    - Audio: Fixed AudioMixer clicks when abruptly changing volume in Start(). (UUM-368)
+    - Build System: Don't crash on windows if there are duplicate environment variable keys.
+    - Build System: Fixed an issue where building a player could fail because of file paths being longer than 260 characters on Windows. (UUM-49428)
+    - Editor: Avoid a type initialization exception that can occur on Apple Silicon when a .NET executable is run as part of the Unity Editor tooling. (UUM-44304)
+    - Editor: Fixed a bug on Linux where the Edit menu was displaying the wrong default shortcut for Delete. (UUM-59833)
+    - Editor: Fixed build errors due when switching between build targets using buildPlayer command line options. (UUM-34899)
+    - Editor: Fixed crash in shortcut generation on Mac OS. (UUM-56950)
+    - Editor: Fixed how we index folder and folder combinations for the dir: filter. (UUM-56923)
+    - Editor: Fixed LODGroup inspector that sometimes collapsed on LOD adding/removal. (UUM-48823)
+    - Editor: Fixed material validation scene view mode UI. (UUM-59786)
+    - Editor: Fixed Opaque Layer Mask filters out meshes that use the 31st Layer. (UUM-17764)
+    - Editor: Fixed the crash on linux for visual graph. (UUM-53154)
+    - Editor: Global Settings will always be ensured no matter what RP is active. (UUM-47264)
+    - Editor: Increased Undo buffer maximum size to prevent 'Failed to create Object Undo, because the action is too large' error in console. (UUM-19657)
+    - Editor: Linux CheckedMenu submenu items not displaying as Checked in some occasions. (UUM-58878)
+    - Editor: Prevented a crash in PreviewTextureManager when changing materials while play-mode is active. (UUM-44179)
+    - Editor: Upgraded libcurl to 8.5.0. (UUM-60184)
+    - Editor: [Android][2021.3] Upgrading BundleTool version to 1.11.1 to fix issue where asset packs couldn't be downloaded or have their state/size queried on Google Pixel devices on 2021.3. Setting CompileSdkVersion to at least 30 to avoid associated Gradle errors. (UUM-56939)
+    - GI: Fixed crash on Apple Silicon in llvmVectorTypeget when opening a specific project. (UUM-59133)
+    - GI: Use the hash of the vertex stream instead of the taking per instance props into account for meta pass. (UUM-55090)
+    - Graphics: DrawProceduralNow family of functions also provide emulated vertexbuffers. (UUM-51751)
+    - Graphics: Fixed vertex color input when frame buffer fetch is used on GLES. (UUM-34725)
+    - Graphics: Surface shader path has correct parameters set when emulating vertexbuffers. (UUM-52930)
+    - Graphics: When using CaptureScreenshotAsTexture during the rendering process with Metal API, if the results are undefined then Unity now outputs an error instead of crashing. (UUM-47096)
+    - IL2CPP: Fixed C++ compilation error on missing type reference is generic code. (UUM-56231)
+    - IL2CPP: Fixed C++ compilation error when Enum.HasFlag was called with a Nullable enum value. (UUM-58451)
+    - IL2CPP: Fixed conversion errors on constrained calls in shared generic code. (UUM-55756)
+    - IL2CPP: Fixed crash when calling Type.IsGenericTypeParameter and Type.IsGenericMethodParameter. (UUM-56064)
+    - IL2CPP: Fixed null value on P/Invoke method with an [Out] marshalled blittable class parameter. (UUM-57901)
+    - iOS: Fixed adding multiple plugins with embedded frameworks. (UUM-58170)
+    - Linux: Fixed Editor getting focused when saving script files with Jetbraines Rider. (UUM-36463)
+    - Linux: Fixed Editor progress window labels doesn't updating. (UUM-51402)
+    - Linux: Fixed Progress modal window stays on top of every other window and cannot be moved. (UUM-51429)
+    - Mono: Fixed GC heap reporting to report reserved (free) sections. (UUM-53413)
+    - Mono: Fixed issue where invoking a virtual method on a delegate would only consider the method's overrides on the first call. (UUM-55774)
+    - Package: Updated XR Interaction Toolkit (com.unity.xr.interaction.toolkit) to 2.5.2.
+    - Package Manager: Fixed the issue where bundled plugins cannot be exported into a .unitypackage file. (UUM-37376)
+    - Package Manager: Fixed the issue where Package Manager displays the wrong "Recommended" version. (UUM-57577)
+    - Physics: Fixed a spelling issue in a BoxCollider warning message. (UUM-57944)
+    - Profiler: Fixed an issue whereby all Rendering statistics could be zero in Play Mode when the application's target frame rate was set. (UUM-58128)
+    - Profiler: Maximizing the Profiler window no longer logs an error to the console. (UUM-59893)
+    - Scene/Game View: Fixed an issue where continuously panning an orthographic SceneView camera would eventually cause the rendered geometry to be clipped. (UUM-56425)
+    - Scripting: RequiredComponents of different MonoScripts with the same name are now resolved correctly. (UUM-1928)
+    - Scripting: Ensure that we use a Logical Path rather than an Absolute Path when looking up InstanceIDs. (UUM-63675)
+    - Shaders: Ensured that compute shaders register include dependencies properly in some edge cases. This way fixing errors in include files will recompile the shader as expected. (UUM-35111)
+    - Shaders: Ensures internal shader compiler errors such as losing connection to a compiler process aren't cached like compilation errors are. (UUM-28802)
+    - Shaders: Fixed an incorrect warning being shown when doing paired calls to SetAsyncCompilation / RestoreAsyncCompilation on RenderingCommandBuffer. (UUM-59508)
+    - Shaders: For shaders compiled using DXC for Vulkan, fixed "maximal supported UAV limit" errors being generated on UAV resource declarations when they shouldn't be. (UUM-56264)
+    - uGUI: Added issue surrounding dropdown not closing correctly in certain situations. (UUM-33691)
+    - UI Toolkit: Fixed an issue in the UI Builder where it wouldn't use the custom uxml type name defined in the UxmlFactory class. (UUM-41831)
+    - UI Toolkit: Fixed focus-related events not received when switching EditorWindow tab. (UUM-57083)
+    - UI Toolkit: Fixed for changes after project launch are not discarded properly in UI Builder. (UUM-55872)
+    - UI Toolkit: Fixed instability in UGUIEventSystemTests by excluding LinuxEditor for 2 tests. (UUM-49226)
+    - UI Toolkit: Fixed missing ChangeEvent when using the function name dropdown of the UnityEvent inspector. (UUM-30674)
+    - UI Toolkit: Fixed missing dirty-repaint when setting the DynamicColor hint. (UUM-59393)
+    - UI Toolkit: Fixed some fields showing :hover style instead of :focus style when both are true. (UUM-7339)
+    - UI Toolkit: Fixed wrong pointer event target when an element's visibility or pickingMode is modified without moving the pointer. (UUM-20723)
+    - UI Toolkit: [UI Builder] Fixed an issue where a Unity.UI.Builder.UnityUIBuilderSelectionMarker would be cloned in play mode and in builds. (UUM-60883)
+    - Universal RP: Fixed incorrect volume stack dispose when switching between volume update modes. (UUM-54394)
+    - Universal RP: Fixed issue where disabling/enabling ShadowCaster2Ds can create duplicate shadows. (UUM-16927)
+    - Universal RP: Fixed URP shader stripping performance.
+    - Universal Windows Platform: Corrected Application.runInBackground internal implementation which sometimes caused crashes when the option is set to false after the application has lost focus. (UUM-43306)
+    - VFX Graph: Fixed a performance issue with parameters gizmos. (UUM-41329)
+    - VFX Graph: Fixed very very long system name could lead to freeze the Editor. (UUM-55369)
+    - Web: Set PYTHONUTF8 environment variable to enable UTF-8 encoding by default. (UUM-20185)
+    - WebGL: Fixed a bug causing audio to skip forward when using AudioClip.Pause() and AudioClip.Resume(). (UUM-54675)
+    - WebGL: Fixed a bug that causes a parsing error due to misplaced regex. (UUM-21896)
+    - WebGL: Improved texture memory usage for Text Mesh Pro font textures on WebGL2 by enabling support for Alpha8 texture format. (UUM-59366)
+    - Windows: Fixed automatic resizing of an unfocused player window once the mouse button is released. (UUM-49236)
+    - Windows: Fixed crash when reading data from non-compliant HID peripherals. (UUM-59628)
+    Package changes in 2021.3.35f1
+    Packages updated
+    - com.unity.2d.animation: 7.0.13 → 7.1.0
+    - com.unity.2d.psdimporter: 6.0.8 → 6.0.9
+    - com.unity.2d.aseprite: 1.1.0 → 1.1.1
+    - com.unity.mobile.notifications: 2.3.0 → 2.3.1
+    - com.unity.render-pipelines.core: 12.1.13 → 12.1.14
+    - com.unity.render-pipelines.high-definition: 12.1.13 → 12.1.14
+    - com.unity.render-pipelines.high-definition-config: 12.1.13 → 12.1.14
+    - com.unity.render-pipelines.universal: 12.1.13 → 12.1.14
+    - com.unity.services.core: 1.12.0 → 1.12.2
+    - com.unity.shadergraph: 12.1.13 → 12.1.14
+    - com.unity.testtools.codecoverage: 1.2.4 → 1.2.5
+    - com.unity.visualeffectgraph: 12.1.13 → 12.1.14
+    - com.unity.xr.arcore: 4.2.9 → 4.2.10
+    - com.unity.xr.arfoundation: 4.2.9 → 4.2.10
+    - com.unity.xr.arkit: 4.2.9 → 4.2.10
+    - com.unity.xr.arkit-face-tracking: 4.2.9 → 4.2.10
+    - com.unity.xr.arsubsystems: 4.2.9 → 4.2.10
+    - com.unity.xr.core-utils: 2.2.3 → 2.3.0
+    - com.unity.xr.interaction.toolkit: 2.5.1 → 2.5.2
+    - com.unity.netcode.gameobjects: 1.7.1 → 1.8.0
+    - com.unity.services.deployment: 1.2.0 → 1.3.0
+    Pre-release packages added
+    - com.unity.xr.interaction.toolkit@3.0.0-pre.1
+Version: 2021.3.35f1
+ReleaseTime: 2024-02-06T15:40:15.5830000Z
