@@ -1,6 +1,12 @@
-$Prefix = 'https://oss.agilestudio.cn/app/zimu/'
+$Object1 = Invoke-WebRequest -Uri 'https://www.33subs.com/download' | ConvertFrom-Html
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//*[@id="app"]/div[2]/div/h1/div').InnerText, 'V([\d\.]+)').Groups[1].Value
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download-win"]').Attributes['href'].Value
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -8,7 +14,7 @@ switch -Regex ($this.Check()) {
       $EdgeDriver = Get-EdgeDriver
       $EdgeDriver.Navigate().GoToUrl('https://zm.agilestudio.cn/changelog')
 
-      $ReleaseNotesNode = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//article/div[./h1/span/text()='V$($this.CurrentState.Version.Split('.')[0, 1] -join '.')']"))
+      $ReleaseNotesNode = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//article/div[./h1/span/text()='V$($this.CurrentState.Version)']"))
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'

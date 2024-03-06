@@ -40,25 +40,19 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://brave.com/latest/' | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/brave/brave-browser/master/CHANGELOG_DESKTOP.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'hero__content')]/div[./h2[@id='desktop']]/h3[contains(@id, '$(($this.CurrentState.Version.Split('.') | Select-Object -Skip 1) -join '')')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(.//text(), '$($this.CurrentState.Version.Split('.')[1..3] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesTitleNode.SelectSingleNode('./text()[2]').InnerText,
-          '\((.+)\)'
-        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'p' -and -not $Node.Attributes['id'].Value?.Contains('release-notes'); $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNodes | Get-TextContent) -creplace '\(Changelog for [\d\.]+\)', '' | Format-Text
+          Value  = ($ReleaseNotesNodes | Get-TextContent) -creplace 'Released \d{4}-\d{1,2}-\d{1,2}\n' | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

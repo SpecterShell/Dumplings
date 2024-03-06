@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/qbittorrent/qBittorrent-website/master/src/news.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(.//text(), '${LatestVersion}')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # Remove the header of the library version table
         $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::details/table/thead')?.Remove()

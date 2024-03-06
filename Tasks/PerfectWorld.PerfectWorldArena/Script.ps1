@@ -7,11 +7,15 @@ switch -Regex ($this.Check()) {
     try {
       $Object1 = Invoke-RestMethod -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)"
 
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Object1.data.content)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

@@ -60,11 +60,8 @@ function Invoke-WondershareJsonUpgradeApi {
   }
 
   return [ordered]@{
-    # Version
     Version   = $Object2.data.version
-    # Installer
     Installer = @()
-    # ReleaseNotes
     Locale    = @(
       [ordered]@{
         Locale = $Locale
@@ -97,11 +94,8 @@ function Invoke-WondershareXmlUpgradeApi {
   $Object = [xml](Invoke-WebRequest -Uri $Uri | Read-ResponseContent)
 
   return [ordered]@{
-    # Version
     Version   = $Object.Respone.WhatNews.Item[0].Version
-    # Installer
     Installer = @()
-    # ReleaseNotes
     Locale    = @(
       [ordered]@{
         Locale = $Locale
@@ -130,10 +124,9 @@ function Invoke-WondershareXmlDownloadApi {
   $Object = Invoke-RestMethod -Uri $Uri
 
   return [ordered]@{
-    # Version
     Version   = $Object.wsrp.downloader.runtime.version.'#cdata-section'
-    # Installer
     Installer = @()
+    Locale    = @()
   }
 }
 

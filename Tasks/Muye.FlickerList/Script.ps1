@@ -4,50 +4,6 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $Object1 = Invoke-WebRequest -Uri 'https://flicker.cool/en/versions' | ConvertFrom-Html
-
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime ??= $Object1.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-
-      $ReleaseNotesNode = $Object1.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="el-card__body"]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      $Object2 = Invoke-WebRequest -Uri 'https://flicker.cool/versions' | ConvertFrom-Html
-
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime ??= $Object2.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="el-card__body"]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Write()
   }
   'Changed|Updated' {

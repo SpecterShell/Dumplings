@@ -53,7 +53,8 @@ if (-not $this.LastState.Installer.Architecture -or (Compare-Object -ReferenceOb
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object4 = Invoke-WebRequest -Uri 'https://typora.io/releases/stable' | ConvertFrom-Html
+      $ReleaseNotesUrl = 'https://typora.io/releases/stable'
+      $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//*[@id='write']/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -87,7 +88,7 @@ switch -Regex ($this.Check()) {
     # ReleaseNotesUrl
     $this.CurrentState.Locale += [ordered]@{
       Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl ?? 'https://typora.io/releases/stable'
+      Value = $ReleaseNotesUrl
     }
 
     $this.Write()

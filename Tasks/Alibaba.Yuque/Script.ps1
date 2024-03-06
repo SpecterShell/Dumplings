@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
       $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
 
       $Object2 = $EdgeDriver.ExecuteScript('return window.appData', $null)
-      $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.StartsWith($this.CurrentState.Version.Split('.')[0..1] -join '.') }, 'First')
+      $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.Contains($this.CurrentState.Version) -or $_.title.Contains("$($this.CurrentState.Version.Split('.')[0..1] -join '.').x") }, 'First')
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
         #   '发布时间[:：]\s*(\d{4}\.\d{1,2}\.\d{1,2})'
         # ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $this.Log("No ReleaseNotesUrl and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -46,6 +46,11 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.yuque.com/yuque/yuque-desktop/'
+      }
     }
 
     $this.Write()

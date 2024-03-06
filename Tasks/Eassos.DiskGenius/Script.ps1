@@ -1,23 +1,14 @@
-# International
-$Object1 = Invoke-RestMethod -Uri 'https://internal.eassos.com/update/diskgenius/update.php' | ConvertFrom-Ini
-# Chinese
-$Object2 = Invoke-RestMethod -Uri 'https://www.diskgenius.cn/pro/statistics/update.php' | ConvertFrom-Ini
+$Object1 = Invoke-WebRequest -Uri 'https://www.diskgenius.com/download.php' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Object1.version.new
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//div[@class="fz1"]/span[1]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
-$Identical = $true
-if ($Object1.version.new -ne $Object2.version.new) {
-  $this.Log('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = "https://engdownload.eassos.cn/DGEngSetup$($Object1.version.new.Replace('.','')).exe"
+  InstallerUrl           = "https://download2.eassos.com/DGEngSetup$($this.CurrentState.Version.Replace('.','')).exe"
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "DiskGenius V$($this.CurrentState.RealVersion)"
@@ -25,53 +16,38 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale        = 'zh-CN'
-  InstallerUrl           = "https://download.eassos.cn/DGSetup$($Object2.version.new.Replace('.','')).exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "DiskGenius V$($this.CurrentState.RealVersion)"
-      ProductCode = '{6F458B5F-B99E-43E0-8E08-FF9326130BD7}_is1'
-    }
-  )
-}
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1[$Object1.version.new].releasenote.Split('`|') | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object2[$Object2.version.new].releasenote.Split('`|') | Format-Text
+# ReleaseTime
+$this.CurrentState.ReleaseTime = [regex]::Match(
+  $Object1.SelectSingleNode('//div[@class="fz1"]/span[2]').InnerText,
+  'Updated:\s*(.+)&emsp;'
+).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+if ($Object1.SelectSingleNode('//div[@class="ver"]').InnerText.Contains($this.CurrentState.Version)) {
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.SelectSingleNode('//ul[@class="list"]') | Get-TextContent | Format-Text
+  }
+} else {
+  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.diskgenius.com/' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.diskgenius.cn/download.php' | ConvertFrom-Html
 
-      if ($Object3.SelectSingleNode('//div[@class="idx-latest"]//div[@class="info"]//div[@class="font"]').InnerText.Contains($this.CurrentState.Version)) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match(
-          $Object3.SelectSingleNode('//div[@class="idx-latest"]//div[@class="info"]//div[@class="font"]').InnerText,
-          'Updated:\s*(.+)'
-        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-      } else {
-        $Object4 = Invoke-WebRequest -Uri 'https://www.diskgenius.cn/download.php' | ConvertFrom-Html
-
-        if ($Object4.SelectSingleNode('//div[@class="smfz"]').InnerText.Contains($this.CurrentState.Version)) {
-          # ReleaseTime
-          $this.CurrentState.ReleaseTime = [regex]::Match(
-            $Object4.SelectSingleNode('//div[@class="smfz"]').InnerText,
-            '(\d{4}-\d{1,2}-\d{1,2})'
-          ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-        } else {
-          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      if ($Object2.SelectSingleNode('//ul[contains(@class, "logmenu")]/li[contains(@class, "cur")]').InnerText.Contains($this.CurrentState.Version.Split('.')[0..2] -join '.')) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.SelectSingleNode('//div[@class="descrip"]') | Get-TextContent | Format-Text
         }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -84,7 +60,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -16,7 +16,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://115.com/115/T504444.html' | ConvertFrom-Html
 
-      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[@rowspan='1'][1]/p//text()='115_Windows']/td[@rowspan='1'][2]/p//a[contains(.//text(),'$($this.CurrentState.Version)')]")
+      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("//*[@id='js_content_box']/table/tbody/tr[./td[@rowspan='1'][1]/p//text()='115pc_Windows']/td[@rowspan='1'][2]/p//a[contains(.//text(),'$($this.CurrentState.Version)')]")
       if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{

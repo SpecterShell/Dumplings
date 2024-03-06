@@ -65,7 +65,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

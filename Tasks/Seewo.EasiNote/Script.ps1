@@ -13,9 +13,9 @@ $this.CurrentState.ReleaseTime = $Object1.data[0].softPublishtime | ConvertFrom-
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $Object2 = (Invoke-RestMethod -Uri 'https://easinote.seewo.com/com/apis?api=GET_LOG').data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
-
     try {
+      $Object2 = (Invoke-RestMethod -Uri 'https://easinote.seewo.com/com/apis?api=GET_LOG').data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+
       if ($Object2) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

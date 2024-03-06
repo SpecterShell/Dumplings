@@ -1,4 +1,4 @@
-$Prefix = 'https://download.remnote.io/'
+$Prefix = 'https://download.remnote.io/remnote-desktop/'
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix
 
