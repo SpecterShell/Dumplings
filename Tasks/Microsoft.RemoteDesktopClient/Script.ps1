@@ -1,0 +1,42 @@
+# x86
+$Object1 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=2099065'
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=2098963'
+# arm64
+$Object3 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=2099066'
+
+$Identical = $true
+if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
+  $this.Log('Distinct versions detected', 'Warning')
+  $Identical = $false
+}
+
+# Version
+$this.CurrentState.Version = $Object2.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $Object1.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object2.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object3.url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Print()
+    $this.Message()
+  }
+  ({ $_ -match 'Updated' -and $Identical }) {
+    $this.Submit()
+  }
+}
