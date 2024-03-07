@@ -1,0 +1,127 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/70197a359f36/Windows64EditorInstaller/UnitySetup64-2023.2.13f1.exe
+  ProductCode: Unity 2023.2.13f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2023.2.13
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2023.2/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2023.2/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2023.2.13f1
+    - Asset - Database: Crash in CollectManagedImportDependencyGetters inside OpenScene in batch mode (UUM-57742)
+    - Asset Importers: Crash on ConvertBlenderToFBX while importing a specific .blend file (UUM-63758)
+    - Audio Authoring: Crash on AudioUtil_CUSTOM_HasAudioCallback when exiting Play Mode while the Inspector is displaying a GameObject with a script attached (UUM-58481)
+    - HD RP: Prefab preview thumbnails are not being rendered when a Project uses HDRP (UUM-60000)
+    - HD RP: [AMD] Crash on GfxDeviceD3D12Base::DrawBuffersCommon when Baking Light with Virtual Offset on Probe Volumes (UUM-59522)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Input: Crash on InputDeviceIOCTL when closing Unity editor (UUM-10774)
+    - Inspector Framework: The Curve Editor window is not shown when attempting to open it in the Timeline window (UUM-65172)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - Progressive Lightmapper: The Editor becomes unresponsive and memory allocation errors are spammed in the Console when Generating Lightning (UUM-58017)
+    - RP Foundation: Stacked camera is not rendering when using custom post effects is done in PreRender PostRender and Camera is not in HDR (UUM-22444)
+    - Scene Management: Crash on GameObject::QueryComponentByType when opening a project (UUM-58461)
+    - UI Toolkit Framework: "TextureImporterInspector.OnInspectorGUI must call ApplyRevertGUI to avoid unexpected behaviour." thrown when selecting Asset then selecting and deselecting Texture 2D (UUM-35998)
+    2023.2.13f1 Release Notes
+    Improvements
+    - AI: The instantiation of NavMeshes into the scene happens slightly faster.
+    - HDRP: Improved scene culling performance when APV is enabled in the project.
+    Fixes
+    - 2D: Fixed an editor crash when Atlas content is edited in Play Mode. (UUM-61407)
+    - Accessibility: Fixed fully off-screen accessibility nodes being skipped by TalkBack. (UUM-63462)
+    - AI: Fixed crash that happens when NavMesh Agents with active avoidance try to move between obstacles that carve the NavMesh in some particular locations. (UUM-49214)
+    - Android: Remove UTF BOM from SDK tools commands. (UUM-60488)
+    - Android: Temporarily hide 'Upgrade templates to C#...' button in Player Settings.
+    - Android: Temporarily hide AndroidProjectFiles properties - GradleProperties, GradleSettings, LauncherBuildGradle, LauncherManifest, ProjectLevelBuildGradle, UnityLibraryBuildGradle, UnityLibraryManifest until Google's EDM4U will no longer requires templates.
+    - Animation: Blend Tree assets are now correctly deleted when overwritten by an Animation Clip in an Animator. (UUM-62807)
+    - Animation: Fixed deleting StateMachine leaking outgoing transitions. (UUM-58996)
+    - Animation: Fixed Editor spike when selecting a GameObject with a Playable Director Component. (UUM-59654)
+    - Asset Import: Update PVRTexTool from v4.17 to v5.5. Fixes Mac texture size limit bug and Arm64 macOS compatibility. (UUM-3775)
+    - Asset Pipeline: Fixed a crash when loading large Content Archive. (UUM-60469)
+    - Bug Reporter: Fixed an issue that could cause Bug Reporter project archives to fail when creating multiple editor instances with the MPMM package. (UUM-53115)
+    - Build Pipeline: Fixed an issue where Editor would crash due to a corrupted json file. (UUM-48603)
+    - Editor: Fixed an issue to ensure that if we use a default ObjectField it doesn't throw a null context exception. (UUM-64366)
+    - Editor: Fixed an issue to ensured the resize cursor doesn't show up when hovering over a draggable tab. (UUM-59161)
+    - Editor: Fixed an issue to protected against crashes when passing invalid dimensions to an editor window (NaN or Infinity). (UUM-53656)
+    - Editor: Fixed an issue when fields that could still be edited even though multi-editing is not supported when multiple Game Objects are selected should no longer be visible. (UUM-61080)
+    - Editor: Fixed an issue when On activity the videoplayer was stuck if called after the standby/resume state. (UUM-54785)
+    - Editor: Fixed edge cases for Same Properties query generation. (UUM-61273)
+    - Editor: Fixed GameObject Prefab in the Hierarchy window having a bigger font size when it is disabled. (UUM-61447)
+    - Editor: Fixed issue with IsEllided property in TextHandle sometimes being invalid. (UUM-58784)
+    - Editor: Fixed issue with sprite text asset selection in the inspector. (UUM-48683)
+    - Editor: Fixed Preset have their own searchpropositions (query block). (UUM-59118)
+    - Editor: Fixed Project Browser in AdvanceSearchEngine treats all t: and l: as t= and l=. (UUM-61220)
+    - Editor: Fixed Project window content font size not matching the Editor font size when the icons are minimized. (UUM-61754)
+    - Editor: Fixed scene template dependency list view in inspector window. (UUM-59838)
+    - Editor: Fixed Search Sort type is nicified. (UUM-63888)
+    - Editor: Fixed searchquery path validation for mac. (UUM-63375)
+    - Editor: Fixed wrong menu item getting the checked state when it had a duplicate name. (UUM-3533)
+    - Editor: GameActivity ANR fix when fullscreen videoplayer playback ends. (UUM-34306)
+    - Editor: Index null ObjectReference. These can be searched with <propertyName>=none (UUM-61256)
+    - Editor: Preset Selector shows in text mode since there is no search propositions available. (UUM-62701)
+    - Entities Graphics: Fixed an issue where runtime created materials registered with the BRG/EntitiesGraphics would sometimes get unloaded when maximising the game view. (UUM-54573)
+    - Graphics: CommandBuffer.SetComputeTextureParam when used with a non-RenderTexture rt and a non-default RenderTextureSubElement element parameter could crash due to expecting a RenderTexture. Now the element parameter is correctly ignored for non-RenderTextures. (UUM-63700)
+    - Graphics: Fixed a regression in DrawProceduralIndirect in the Directx 11 backend when it was erroneously throwing "Draw indirect argument buffer too small" when using an argument buffer of 4 ints. (UUM-63246)
+    - Graphics: Fixed an issue to invoke the PostRender callback when SceneView uses EditorDrawOutline. (UUM-57025)
+    - Graphics: Fixed editor crash when trying to perform recursive rendering on the frame exiting PlayMode. (UUM-60383)
+    - Graphics: Fixed flickering in shadows when TAA is enabled in the built-in render pipeline. (UUM-63814)
+    - Graphics: Fixed VertexLM path lighting setup. (UUM-59676)
+    - Graphics: Stop allocating full resolution Vulkan Swapchain images when using an external Swapchain. (UUM-56851)
+    - iOS: Fixed an issue by adding a missing privacy manifest entry for System Boot time API usage.
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-53175)
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-56334)
+    - Networking: Throw exception instead of crashing if UnityWebRequest is sent during app quit, such as from Destroy(). (UUM-63150)
+    - Profiler: Fixed an issue whereby the Physics2D module did not display counters in the Profiler. (UUM-57758)
+    - Scene/Game View: Fixed Transform Tool rotation handle not respecting increment snap setting. (UUM-61749)
+    - Scene/Game View: Reverting fix for potential null reference exception. (UUM-59891)
+    - Scripting: Fixed an issue to ensure the completion of Awaitable.NextFrameAsync is not raised too early. (UUM-44012)
+    - Scripting: Fixed an issue where debugging a .net 6 project with Visual Studio would make the editor hang on startup. (UUM-60296)
+    - Scripting: Fixed deadlock being created for Awaitable async methods NextFrameAsync, EndOfFrameAsync when Time.timeScale is 0. (UUM-64086)
+    - Scripting: Fixed reload not happening when multiple compilations happens in same editor tick. (UUM-62508)
+    - Search: Fixed "filtermode" not adding a query block. (UUM-61219)
+    - Search: Fixed "filtermode" search proposition appearing twice. (UUM-61247)
+    - Search: Fixed an issue to allows index to be saved in local package. (UUM-62277)
+    - Search: Fixed an issue to ensure Index have a dependency id computed from their type name. (UUM-62159)
+    - Search: Fixed an issue to ensure we index types of assets that are not .prefab. (UUM-62327)
+    - Search: Fixed an issue when directory are renamed, properly invalidate propertydb. (UUM-59213)
+    - Search: Fixed Synchronous search at unity startup or after domain reload. Ensure DB are initialized. (UUM-61251)
+    - Search: In IndexManager, disable SubObject options editing if the index is Scene or Prefab (UUM-62150)
+    - Terrain: Entering detail painting mode no longer crashes the Editor when the TerrainData contains corrupt data. (UUM-62515)
+    - TextCore: Fixed an issue to ensure Dynamic FontAsset have a readable Atlas. (UUM-59596)
+    - UI Elements: Fixed some errors when parsing a menu item name that was just whitespace. (UUM-64241)
+    - UI Toolkit: Fixed disappearing elements when an ancestor goes to a null-scale transform. (UUM-62401)
+    - UI Toolkit: Fixed elements size when a new control is dragged onto the UI Builder hierarchy. (UUM-61553)
+    - UI Toolkit: Fixed pointer events on the secondary display received as though they were occuring on the main display when using new Input System and adding an EventSystem on the scene. (UUM-47650)
+    - UI Toolkit: Fixed SaveToVectorImage() bounds wrongly calculated. (UUM-41589)
+    - UI Toolkit: Fixed setting variable makes position text fields disappear. (UUM-36708)
+    - UI Toolkit: Fixed StackOverflowException from EnumFlagsField when showing mixed values. (UUM-60654)
+    - UI Toolkit: Fixed USS alias variables are not displayed in the USS variable list. (UUM-60500)
+    - UI Toolkit: Fixed wrong clickCount during PointerDown when using InputSystemUIInputModule after clicking on another object. (UUM-57082)
+    - UI Toolkit: Fixed wrong help link for TextMeshPro Sprite Asset. (UUM-48801)
+    - Universal RP: Add UI features to encourage the use of Rendering Layers in URP to control selective lighting, instead of using culling mask. The former works across Deferred, Forward and Forward+, while the latter only works with Forward. (UUM-64171)
+    - Universal RP: Fixed an issue where using Alpha Clipped shaders and Depth Priming resulted in invisible objects. (UUM-64447)
+    - Universal RP: Fixed incorrect alpha-clip behavior on transparent surfaces. (UUM-56601)
+    - Universal RP: Fixed overlays not visible when using FXAA with Full Screen Pass Renderer Features set to "AfterRenderingPostProcessing". (UUM-57542)
+    - Universal RP: Fixed the FinalPostPass executing before "AfterRenderingPostProcessing" instead of after it. (UUM-48857)
+    - Universal Windows Platform: Fixed "FormatException: The input is not a valid Base-64 string" is thrown when setting EditorUserBuildSettings.windowsDevicePortalUsername. (UUM-58808)
+    - URP: Ensure motion vector depth buffer is valid for cameras with motion vectors enabled. (UUM-61466)
+    - Video: Fixed a crash on BaseVideoTexture::InitVideoMemory when capturing Theta V's output texture. (UUM-60361)
+    - WebGL: Update AudioClip.frequency to return the effective WebAudio AudioBuffer sampleRate value. (UUM-47637)
+    - Windows: Fixed Double backslash becoming single backslash when passing a Network path as a command line argument. (UUM-55979)
+    Package changes in 2023.2.13f1
+    Packages updated
+    - com.unity.mobile.notifications: 2.3.1 → 2.3.2
+    - com.unity.netcode.gameobjects: 1.8.0 → 1.8.1
+Version: 2023.2.13f1
+ReleaseTime: 2024-03-05T20:41:13.8390000Z
