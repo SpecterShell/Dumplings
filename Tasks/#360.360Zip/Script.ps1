@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['360Zip'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['360Zip'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['360Zip'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['360Zip'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Path = Get-TempFile -Uri 'http://iup.360safe.com/iv3/pc/360zip/360zipupd_manual.cab'

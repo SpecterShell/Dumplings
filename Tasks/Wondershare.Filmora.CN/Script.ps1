@@ -1,4 +1,4 @@
-$this.CurrentState = $Global:LocalStorage.WondershareUpgradeInfo['3223']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['3223']
 
 $this.CurrentState.Installer[0].AppsAndFeaturesEntries = @(
   [ordered]@{

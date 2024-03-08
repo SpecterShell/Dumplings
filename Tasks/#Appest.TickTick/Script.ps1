@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['TickTick'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['TickTick'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['TickTick'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['TickTick'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://pull.ticktick.com/windows/release_note.json' | Read-ResponseContent | ConvertFrom-Json

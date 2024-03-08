@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['iFlyNote1'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['iFlyNote1'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['iFlyNote1'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['iFlyNote1'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-RestMethod -Uri "https://api.iflynote.com/user/version/info?from=IFLYNOTE_PC_WINDOWS&clientVersion=$($this.LastState.Version ?? '3.1.1254')"

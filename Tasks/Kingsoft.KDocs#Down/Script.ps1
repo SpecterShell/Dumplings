@@ -23,8 +23,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsKDocs')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:LocalStorage.Contains("KDocsSubmitting-$($this.CurrentState.Version)")) {
-      $Global:LocalStorage["KDocsSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("KDocsSubmitting-$($this.CurrentState.Version)")) {
+      $Global:DumplingsStorage["KDocsSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['TeraBox'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['TeraBox'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['TeraBox'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['TeraBox'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.terabox.com/autoupdate' -Headers @{

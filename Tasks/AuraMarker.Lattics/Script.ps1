@@ -12,21 +12,21 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)\(\d+\)').Groups[1].Value
 
 $ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
-if ($Global:LocalStorage.Contains('Lattics') -and $Global:LocalStorage['Lattics'].Contains($ShortVersion)) {
+if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:LocalStorage['Lattics'].$ShortVersion.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime
 
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage['Lattics'].$ShortVersion.ReleaseNotesEN
+    Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesEN
   }
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage['Lattics'].$ShortVersion.ReleaseNotesCN
+    Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

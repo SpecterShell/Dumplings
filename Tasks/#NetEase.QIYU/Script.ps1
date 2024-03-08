@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['QIYU'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['QIYU'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['QIYU'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['QIYU'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Prefix = 'http://res.qiyukf.net/qiyu-desktop/prod/'

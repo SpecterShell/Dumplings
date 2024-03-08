@@ -15,8 +15,8 @@ switch -Regex ($this.Check()) {
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiaomiCloud')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:LocalStorage.Contains("XiaomiCloudSubmitting-$($this.CurrentState.Version)")) {
-      $Global:LocalStorage["XiaomiCloudSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("XiaomiCloudSubmitting-$($this.CurrentState.Version)")) {
+      $Global:DumplingsStorage["XiaomiCloudSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

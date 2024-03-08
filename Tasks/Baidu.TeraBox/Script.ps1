@@ -14,12 +14,12 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.fe_web_guide_setting.cfg_list[0].update_time | Get-Date -Format 'yyyy-MM-dd'
 
-if ($Global:LocalStorage.Contains('TeraBox') -and $Global:LocalStorage.TeraBox.Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.TeraBox.Contains($Version)) {
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage.TeraBox.$Version.ReleaseNotesEN
+    Value  = $Global:DumplingsStorage.TeraBox.$Version.ReleaseNotesEN
   }
 } else {
   $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

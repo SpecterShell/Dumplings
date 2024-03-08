@@ -1,4 +1,4 @@
-$Object1 = $Global:LocalStorage.JetBrainsApps.RM.release
+$Object1 = $Global:DumplingsStorage.JetBrainsApps.RM.release
 
 # Version
 $this.CurrentState.Version = $Object1.version

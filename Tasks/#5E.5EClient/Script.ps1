@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['5EClient'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['5EClient'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['5EClient'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['5EClient'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-RestMethod -Uri 'https://api-client-arena.5eplay.com/api/home'

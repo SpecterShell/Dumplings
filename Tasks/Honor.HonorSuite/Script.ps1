@@ -36,19 +36,19 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
   '(\d{4}\.\d{1,2}\.\d{1,2})'
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-if ($Global:LocalStorage.Contains('HonorSuite') -and $Global:LocalStorage.HonorSuite.Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('HonorSuite') -and $Global:DumplingsStorage.HonorSuite.Contains($Version)) {
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage.HonorSuite.$Version.ReleaseNotesEN
+    Value  = $Global:DumplingsStorage.HonorSuite.$Version.ReleaseNotesEN
   }
 
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage.HonorSuite.$Version.ReleaseNotesCN
+    Value  = $Global:DumplingsStorage.HonorSuite.$Version.ReleaseNotesCN
   }
 }
 

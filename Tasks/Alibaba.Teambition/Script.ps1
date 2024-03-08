@@ -8,9 +8,9 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.download_links.pc
 }
 
-if ($Global:LocalStorage.Contains('Teambition') -and $Global:LocalStorage.Teambition.Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:LocalStorage.Teambition.$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime
 } else {
   $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 }

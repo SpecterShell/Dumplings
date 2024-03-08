@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['WeMeetOutlookPlugin2'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['WeMeetOutlookPlugin2'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['WeMeetOutlookPlugin2'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['WeMeetOutlookPlugin2'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-plugin-update-info/?platform=windows&channel=0300000000&pluginuid=plugin_876be383ea1c01576b2676d34d75f9a6&nonce=AAAAAAAAAAAAAAAA&plugin-ver=$($this.LastState.Version ?? '1.2.0.0')"

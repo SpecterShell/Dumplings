@@ -1,4 +1,4 @@
-$Object1 = $Global:LocalStorage.JetBrainsApps.PCP.eap
+$Object1 = $Global:DumplingsStorage.JetBrainsApps.PCP.eap
 
 # Version
 $this.CurrentState.Version = $Object1.build

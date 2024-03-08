@@ -238,60 +238,22 @@ function ConvertFrom-Base64 {
   }
 }
 
-function ConvertTo-LF {
+function ConvertTo-HtmlDecodedText {
   <#
   .SYNOPSIS
-    Replace all types of line endings with LF
+    Converts a string that has been HTML-encoded for HTTP transmission into a decoded string.
   .PARAMETER InputObject
-    The string to be converted
+    The string to be decoded
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be converted')]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be decoded')]
     [string]
     $InputObject
   )
 
   process {
-    $InputObject.ReplaceLineEndings("`n")
-  }
-}
-
-function Split-LineEndings {
-  <#
-  .SYNOPSIS
-    Split string on all types of line endings
-  .PARAMETER InputObject
-    The string to be splitted
-  #>
-  [OutputType([string])]
-  param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be splitted')]
-    [string]
-    $InputObject
-  )
-
-  process {
-    $InputObject.Split([string[]]@("`r`n", "`n"), [System.StringSplitOptions]::None)
-  }
-}
-
-function ConvertTo-Https {
-  <#
-  .SYNOPSIS
-    Change the scheme of the URI from HTTP to HTTPS
-  .PARAMETER Uri
-    The Uniform Resource Identifier (URI) to be converted
-  #>
-  [OutputType([string])]
-  param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
-    [string]
-    $Uri
-  )
-
-  process {
-    $Uri -creplace '^http://', 'https://'
+    [System.Net.WebUtility]::HtmlDecode($InputObject)
   }
 }
 
@@ -334,35 +296,77 @@ function ConvertTo-MarkdownEscapedText {
   }
 }
 
-function ConvertTo-HtmlDecodedText {
+function Split-LineEndings {
   <#
   .SYNOPSIS
-    Converts a string that has been HTML-encoded for HTTP transmission into a decoded string.
+    Split string on all types of line endings
   .PARAMETER InputObject
-    The string to be decoded
+    The string to be splitted
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be decoded')]
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be splitted')]
     [string]
     $InputObject
   )
 
   process {
-    [System.Net.WebUtility]::HtmlDecode($InputObject)
+    $InputObject.Split([string[]]@("`r`n", "`n"), [System.StringSplitOptions]::None)
+  }
+}
+
+function ConvertTo-LF {
+  <#
+  .SYNOPSIS
+    Replace all types of line endings with LF
+  .PARAMETER InputObject
+    The string to be converted
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be converted')]
+    [string]
+    $InputObject
+  )
+
+  process {
+    $InputObject.ReplaceLineEndings("`n")
+  }
+}
+
+function ConvertTo-Https {
+  <#
+  .SYNOPSIS
+    Change the scheme of the URI from HTTP to HTTPS
+  .PARAMETER Uri
+    The Uniform Resource Identifier (URI) to be converted
+  .OUTPUTS
+    The URI with its scheme converted to HTTPS
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
+    [string]
+    $Uri
+  )
+
+  process {
+    $Uri -creplace '^http://', 'https://'
   }
 }
 
 function ConvertTo-OrderedList {
   <#
   .SYNOPSIS
-    Prepend numbers to each string
+    Prepend ordered numbers ("1. ", "2. ", ...) to each line of the strings and then concatenate the strings into one
   .PARAMETER InputObject
     The strings to be prepended
+  .OUTPUTS
+    The concatenated string with each line prepended with ordered numbers
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
+    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
     [string[]]
     $InputObject
   )
@@ -384,13 +388,15 @@ function ConvertTo-OrderedList {
 function ConvertTo-UnorderedList {
   <#
   .SYNOPSIS
-    Prepend "- " to each string
+    Prepend "- " to each line of the strings and then concatenate the strings into one
   .PARAMETER InputObject
     The strings to be prepended
+  .OUTPUTS
+    The concatenated string with each line prepended with "- "
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
+    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
     [string[]]
     $InputObject
   )
@@ -408,16 +414,71 @@ function ConvertTo-UnorderedList {
   }
 }
 
+function New-TempFile {
+  <#
+  .SYNOPSIS
+    Create a new temporary file in DumplingsCache or system temp folder
+  .OUTPUTS
+    The path to the new temporary file
+  #>
+  [OutputType([string])]
+
+  $Parent = (Test-Path -Path Global:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
+  $Path = (New-Item -Path $Parent -Name (New-Guid).Guid -ItemType File -Force).FullName
+  return $Path
+}
+
+function New-TempFolder {
+  <#
+  .SYNOPSIS
+    Create a new temporary folder in DumplingsCache or system temp folder
+  .OUTPUTS
+    The path to the new temporary folder
+  #>
+  [OutputType([string])]
+
+  $Parent = (Test-Path -Path Global:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
+  $Path = (New-Item -Path $Parent -Name (New-Guid).Guid -ItemType Directory -Force).FullName
+  return $Path
+}
+
 function Get-TempFile {
   <#
   .SYNOPSIS
-    Download the file and return its path
+    Download the file from the given URL to a temporary file and return its path
+  .NOTES
+    All the parameters except '-OutFile' will be passed to Invoke-WebRequest
+  .OUTPUTS
+    The path to the new temporary file
   #>
+  [OutputType([string])]
 
-  $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
-  $FilePath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+  $FilePath = New-TempFile
   Invoke-WebRequest -OutFile $FilePath @args
   return $FilePath
+}
+
+function Expand-TempArchive {
+  <#
+  .SYNOPSIS
+    Extract files from the given ZIP archive to a temporary folder and return the path of the destination folder
+  .PARAMETER Path
+    The path of the ZIP archive to be extracted
+  .OUTPUTS
+    The path of the destination folder
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the ZIP archive')]
+    [string]
+    $Path
+  )
+
+  process {
+    $FolderPath = New-TempFolder
+    Expand-Archive -Path $Path -DestinationPath $FolderPath
+    return $FolderPath
+  }
 }
 
 function Invoke-GitHubApi {
@@ -440,28 +501,6 @@ function Invoke-GitHubApi {
     Invoke-RestMethod -Authentication Bearer -Token $Token -Headers @{ Accept = 'application/vnd.github+json' } -ContentType 'application/json' @args
   } else {
     throw 'A token required to invoke GitHub API is not provided through "-Token" parameter or defined in "GH_DUMPLINGS_TOKEN" environment variable'
-  }
-}
-
-function Expand-TempArchive {
-  <#
-  .SYNOPSIS
-    Extract files from ZIP archive and return the path of root directory
-  .PARAMETER Path
-    The path to the root directory to which the files were extracted
-  #>
-  [OutputType([string])]
-  param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the ZIP archive')]
-    [string]
-    $Path
-  )
-
-  process {
-    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
-    $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
-    Expand-Archive -Path $Path -DestinationPath $FolderPath
-    return $FolderPath
   }
 }
 
@@ -513,40 +552,6 @@ function Get-RedirectedUrl1st {
   }
 }
 
-function Read-ResponseContent {
-  <#
-  .SYNOPSIS
-    Get garble-less content from the response object
-  .PARAMETER Response
-    The response object from the Invoke-WebRequest command
-  .PARAMETER Encoding
-    The encoding of the content
-  #>
-  [OutputType([string])]
-  param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The response object from the Invoke-WebRequest command')]
-    [Microsoft.PowerShell.Commands.WebResponseObject]
-    $Response,
-
-    [Parameter(HelpMessage = 'The encoding of the content')]
-    [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
-    [string]
-    $Encoding
-  )
-
-  process {
-    $Stream = $Response.RawContentStream
-    # The stream of the response content passed to function may be closed.
-    # Force open the stream by setting the pointer to the beginning
-    $Stream.Position = 0
-    if ($Encoding) {
-      return [System.IO.StreamReader]::new($Stream, [System.Text.Encoding]::GetEncoding($Encoding)).ReadToEnd()
-    } else {
-      return [System.IO.StreamReader]::new($Stream).ReadToEnd()
-    }
-  }
-}
-
 function Get-EmbeddedJson {
   <#
   .SYNOPSIS
@@ -581,6 +586,40 @@ function Get-EmbeddedJson {
         CheckAdditionalContent   = $false
       }
     ).ToString()
+  }
+}
+
+function Read-ResponseContent {
+  <#
+  .SYNOPSIS
+    Get garble-less content from the response object
+  .PARAMETER Response
+    The response object from the Invoke-WebRequest command
+  .PARAMETER Encoding
+    The encoding of the content
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The response object from the Invoke-WebRequest command')]
+    [Microsoft.PowerShell.Commands.WebResponseObject]
+    $Response,
+
+    [Parameter(HelpMessage = 'The encoding of the content')]
+    [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
+    [string]
+    $Encoding
+  )
+
+  process {
+    $Stream = $Response.RawContentStream
+    # The stream of the response content passed to function may be closed.
+    # Force open the stream by setting the pointer to the beginning
+    $Stream.Position = 0
+    if ($Encoding) {
+      return [System.IO.StreamReader]::new($Stream, [System.Text.Encoding]::GetEncoding($Encoding)).ReadToEnd()
+    } else {
+      return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+    }
   }
 }
 
@@ -656,11 +695,13 @@ function Read-ProductVersionFromMsi {
     [System.GC]::WaitForPendingFinalizers()
   }
 
-  # clean {
-  #   [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-  #   [System.GC]::Collect()
-  #   [System.GC]::WaitForPendingFinalizers()
-  # }
+  clean {
+    if ($WindowsInstaller) { 
+      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+    }
+  }
 }
 
 function Read-ProductCodeFromMsi {
@@ -697,11 +738,13 @@ function Read-ProductCodeFromMsi {
     [System.GC]::WaitForPendingFinalizers()
   }
 
-  # clean {
-  #   [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-  #   [System.GC]::Collect()
-  #   [System.GC]::WaitForPendingFinalizers()
-  # }
+  clean {
+    if ($WindowsInstaller) { 
+      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+    }
+  }
 }
 
 function Read-UpgradeCodeFromMsi {
@@ -738,11 +781,13 @@ function Read-UpgradeCodeFromMsi {
     [System.GC]::WaitForPendingFinalizers()
   }
 
-  # clean {
-  #   [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-  #   [System.GC]::Collect()
-  #   [System.GC]::WaitForPendingFinalizers()
-  # }
+  clean {
+    if ($WindowsInstaller) { 
+      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+    }
+  }
 }
 
 function Read-ProductCodeFromBurn {
@@ -781,8 +826,7 @@ function Read-ProductCodeFromBurn {
   }
 
   process {
-    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
-    $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    $FolderPath = New-TempFolder
     $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
 
     & $DarkPath -nologo -x $FolderPath $Path | Out-Host
@@ -791,7 +835,8 @@ function Read-ProductCodeFromBurn {
     }
 
     $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    return $Xml.BootstrapperApplicationData.WixBundleProperties.Id
+    Write-Output -InputObject $Xml.BootstrapperApplicationData.WixBundleProperties.Id
+    Remove-Item -Path $FolderPath -Recurse -Force
   }
 }
 
@@ -831,8 +876,7 @@ function Read-UpgradeCodeFromBurn {
   }
 
   process {
-    $WorkingDirectory = New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force | Get-Item
-    $FolderPath = Join-Path -Path $WorkingDirectory -ChildPath (New-Guid).Guid
+    $FolderPath = New-TempFolder
     $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
 
     & $DarkPath -nologo -x $FolderPath $Path | Out-Host
@@ -841,7 +885,8 @@ function Read-UpgradeCodeFromBurn {
     }
 
     $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    return $Xml.BootstrapperApplicationData.WixBundleProperties.UpgradeCode
+    Write-Output -InputObject $Xml.BootstrapperApplicationData.WixBundleProperties.UpgradeCode
+    Remove-Item -Path $FolderPath -Recurse -Force
   }
 }
 

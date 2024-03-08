@@ -71,7 +71,7 @@ function New-WinGetManifest {
   $CommitName = "${CommitType}: ${PackageIdentifier} version ${PackageVersion}"
   if ($Task.CurrentState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
 
-  $OutFolder = (New-Item -Path (Join-Path $Global:LocalCache $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
+  $OutFolder = (New-Item -Path (Join-Path $Global:DumplingsOutput $PackageIdentifier $PackageVersion) -ItemType Directory -Force).FullName
   #endregion
 
   #region Check existing pull requests in the upstream repository

@@ -1,4 +1,4 @@
-$Object1 = $Global:LocalStorage.SeewoApps['SmartpenService']
+$Object1 = $Global:DumplingsStorage.SeewoApps['SmartpenService']
 
 # Version
 $this.CurrentState.Version = $Object1.softInfos[0].softVersion

@@ -1,4 +1,4 @@
-$Object1 = $Global:LocalStorage.HiteVisionApps['6AD336C7-7204-444D-BAE6-B1010B13888B']
+$Object1 = $Global:DumplingsStorage.HiteVisionApps['6AD336C7-7204-444D-BAE6-B1010B13888B']
 
 # Version
 $this.CurrentState.Version = $Version = $Object1.appVersion
@@ -14,12 +14,12 @@ $this.CurrentState.Installer += [ordered]@{
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-if ($Global:LocalStorage.Contains('HitePai6') -and $Global:LocalStorage['HitePai6'].Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('HitePai6') -and $Global:DumplingsStorage['HitePai6'].Contains($Version)) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage['HitePai6'].$Version.ReleaseNotesCN
+    Value  = $Global:DumplingsStorage['HitePai6'].$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

@@ -57,7 +57,7 @@ $this.Log("$($Branches.Count) branch(es) to delete, ${Count} deleted, $($Branche
 
 $this.Log("Updating ${OriginOwner}/${OriginRepo}/${OriginBranch} to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
 
-$UpstreamSha = $Global:LocalStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
+$UpstreamSha = $Global:DumplingsStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
 
 Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${OriginBranch}" -Method Patch -Body @{
   sha = $UpstreamSha

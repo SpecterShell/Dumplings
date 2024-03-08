@@ -150,11 +150,14 @@ if (-not $Parallel) {
   Write-Host -Object "`e[1mDumplings:`e[22m $($TaskNamesTotalCount ?? 0) task(s) found"
 
   # Set up temp storage for tasks
-  $Global:LocalStorage = [ordered]@{}
+  $Global:DumplingsStorage = [ordered]@{}
 
   # Set up temp folder for tasks
-  $Global:LocalCache = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
-  Get-ChildItem $Global:LocalCache | Remove-Item -Recurse -Force
+  $Global:DumplingsCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force).FullName
+
+  # Set up output folder for tasks
+  $Global:DumplingsOutput = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
+  Get-ChildItem $Global:DumplingsOutput | Remove-Item -Recurse -Force
 
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {
@@ -178,8 +181,9 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   if ($Parallel) {
     $TaskNames = $using:TaskNames
     $TaskNamesTotalCount = $using:TaskNamesTotalCount
-    $Global:LocalStorage = $using:LocalStorage
-    $Global:LocalCache = $using:LocalCache
+    $Global:DumplingsStorage = $using:DumplingsStorage
+    $Global:DumplingsCache = $using:DumplingsCache
+    $Global:DumplingsOutput = $using:DumplingsOutput
     $Global:DumplingsPreference = $using:DumplingsPreference
   }
 
@@ -268,5 +272,6 @@ if (-not $Parallel) {
   # Clean and restore the environment for the main thread
   [System.Console]::OutputEncoding = $Private:OldOutputEncoding
   [System.Console]::InputEncoding = $Private:OldInputEncoding
+  Remove-Item -Path $Global:DumplingsCache -Recurse -Force
   Set-StrictMode -Off
 }

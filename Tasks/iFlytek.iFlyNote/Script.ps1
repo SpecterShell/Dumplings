@@ -6,20 +6,20 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
-if ($Global:LocalStorage.Contains('iFlyNote1') -and $Global:LocalStorage['iFlyNote1'].Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('iFlyNote1') -and $Global:DumplingsStorage['iFlyNote1'].Contains($Version)) {
   # ReleaseNotes (zh-CN)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'zh-CN'
     Key    = 'ReleaseNotes'
-    Value  = $Global:LocalStorage['iFlyNote1'].$Version.ReleaseNotesCN
+    Value  = $Global:DumplingsStorage['iFlyNote1'].$Version.ReleaseNotesCN
   }
 } else {
   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
 }
 
-if ($Global:LocalStorage.Contains('iFlyNote2') -and $Global:LocalStorage['iFlyNote2'].Contains($Version)) {
+if ($Global:DumplingsStorage.Contains('iFlyNote2') -and $Global:DumplingsStorage['iFlyNote2'].Contains($Version)) {
   # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:LocalStorage['iFlyNote2'].$Version.ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['iFlyNote2'].$Version.ReleaseTime
 } else {
   $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 }

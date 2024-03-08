@@ -1,8 +1,8 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:LocalStorage['iFlyNote2'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['iFlyNote2'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:LocalStorage['iFlyNote2'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['iFlyNote2'] = $OldReleaseNotes = [ordered]@{}
 }
 
 $Prefix = 'https://bj.openstorage.cn/v1/yuji/public/release/'

@@ -1,4 +1,4 @@
-$this.CurrentState = $Global:LocalStorage.WondershareUpgradeInfo['5239']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5239']
 
 # Installer
 $this.CurrentState.Installer = @(

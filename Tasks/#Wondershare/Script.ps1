@@ -1,4 +1,4 @@
-$Global:LocalStorage.WondershareUpgradeInfo = [ordered]@{}
+$Global:DumplingsStorage.WondershareUpgradeInfo = [ordered]@{}
 
 @('x64', 'x86').ForEach(
   {
@@ -10,7 +10,7 @@ $Global:LocalStorage.WondershareUpgradeInfo = [ordered]@{}
   }
 ).data.ForEach(
   {
-    $Global:LocalStorage.WondershareUpgradeInfo[$_.pid.ToString()] = [ordered]@{
+    $Global:DumplingsStorage.WondershareUpgradeInfo[$_.pid.ToString()] = [ordered]@{
       # Version
       Version   = $_.version
       # Installer
