@@ -7,10 +7,6 @@ $this.CurrentState.Version = $Object1.name
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api.reqable.com/download?platform=windows&arch=x86_64' -Headers @{ 'Accept-Language' = 'en' }
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object1.url
-}
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
@@ -24,7 +20,6 @@ $this.CurrentState.Locale += [ordered]@{
   Key    = 'ReleaseNotes'
   Value  = $Object1.changelogs.'zh-CN' | Format-Text
 }
-
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
