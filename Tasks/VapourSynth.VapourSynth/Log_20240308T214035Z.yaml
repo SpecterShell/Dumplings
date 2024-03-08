@@ -1,0 +1,33 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/vapoursynth/vapoursynth/releases/download/R66/VapourSynth-x64-R66.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    updated the supported python versions to 3.12 and 3.8
+    added an option to write a full filter graph with time information to file when done processing in vspipe
+    clarified where different information will be output in vspipe
+    fixed backslashes and linebreaks not being properly escaped in dot graph output
+    copyframeprops can now optionally copy only a subset of properties
+    removeframeprops function now accepts wildcards in property names
+    added prop_src argument to shuffleplanes
+    added an access pattern mode when only repeatedly requesting the last frame of a clip
+    added approximate_gamma option to resizers (saindriches)
+    added plugin_path property to plugin object in python
+    audio is now clamped instead of wrapped around in audiomix and audiogain, these functions can also now warn when clipping happens
+    the vfw wrapper now provides simple waveformatex information automatically if the audio is mono or flagged as plain stereo and samples contain no padding bits
+    increased the get_frame error message buffer size in python, fewer messages should be truncated now
+    added missing st428 transfer characteristics to resize
+    made most graph information functions part of the stable api and bumped the version to 4.1
+    added new frame request pattern where only the last frame is requested multiple times to further improve cache usage
+    added new api functions for cache clearing
+    fixed request pattern set for selectevery with multiple identical offsets
+    fixed request pattern set for premultiply
+    expose number of bytes used by cache in python and clean up version and str representations of things (setsugennoao)
+    fixed modifyframe filter not properly copying its own videoinfo which may cause crashes if nothing else references the format node (jsaowji)
+    fixed setcache function leaking a node reference (jsaowji)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/vapoursynth/vapoursynth/releases/tag/R66
+Version: R66
+ReleaseTime: 2024-03-08T21:37:31.0000000Z
