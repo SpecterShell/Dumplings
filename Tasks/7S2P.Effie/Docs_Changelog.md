@@ -1,3 +1,7 @@
+# Version 3.7.3:
+
+- Some minor improvements and bugs fixed.
+
 # Version 3.7.1:
 
 - Added "AI Review" feature, see how AI evaluates your article.
