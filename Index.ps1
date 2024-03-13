@@ -235,8 +235,8 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 if (-not $Parallel) {
   # In multi-threads mode, let the main thread wait for all sub-threads first
   if ($ThrottleLimit -gt 1) {
-    # Wait for all threads with a maximum waiting time of 1 hour
-    $Jobs | Wait-Job -Timeout 3600 | Out-Null
+    # Wait for all threads with a maximum waiting time of 55 minutes
+    $Jobs | Wait-Job -Timeout 3300 | Out-Null
 
     # Check if some threads are still running, especially after timeout
     if ($Jobs.State -eq 'Running') {
