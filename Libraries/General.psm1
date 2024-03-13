@@ -694,14 +694,6 @@ function Read-ProductVersionFromMsi {
     [System.GC]::Collect()
     [System.GC]::WaitForPendingFinalizers()
   }
-
-  clean {
-    if ($WindowsInstaller) { 
-      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-      [System.GC]::Collect()
-      [System.GC]::WaitForPendingFinalizers()
-    }
-  }
 }
 
 function Read-ProductCodeFromMsi {
@@ -737,14 +729,6 @@ function Read-ProductCodeFromMsi {
     [System.GC]::Collect()
     [System.GC]::WaitForPendingFinalizers()
   }
-
-  clean {
-    if ($WindowsInstaller) { 
-      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-      [System.GC]::Collect()
-      [System.GC]::WaitForPendingFinalizers()
-    }
-  }
 }
 
 function Read-UpgradeCodeFromMsi {
@@ -779,14 +763,6 @@ function Read-UpgradeCodeFromMsi {
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
     [System.GC]::Collect()
     [System.GC]::WaitForPendingFinalizers()
-  }
-
-  clean {
-    if ($WindowsInstaller) { 
-      [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-      [System.GC]::Collect()
-      [System.GC]::WaitForPendingFinalizers()
-    }
   }
 }
 
