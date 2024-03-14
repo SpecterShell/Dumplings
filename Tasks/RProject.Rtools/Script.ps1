@@ -3,7 +3,7 @@ $Prefix = 'https://cloud.r-project.org/bin/windows/Rtools/'
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
 $MinorVersion = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/table/tr[1]/td[1]/a').InnerText,
+  $Object1.SelectSingleNode('/html/body/table/tr[contains(./td[2]/text(), "R-release")]/td[1]/a').InnerText,
   'RTools ([\d\.]+)'
 ).Groups[1].Value
 $ShortVersion = $MinorVersion.Replace('.', '')
