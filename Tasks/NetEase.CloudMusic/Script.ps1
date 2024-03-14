@@ -28,4 +28,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Message()
   }
+  'Updated' {
+    $this.Submit()
+  }
 }
