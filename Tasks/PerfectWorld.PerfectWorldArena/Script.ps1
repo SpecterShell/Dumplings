@@ -5,9 +5,9 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = Invoke-RestMethod -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)"
+      $Object1 = (Invoke-WebRequest -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)").Content | ConvertFrom-Json -AsHashtable
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.data.content)) {
+      if ($Object1.data.Contains('content')) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
