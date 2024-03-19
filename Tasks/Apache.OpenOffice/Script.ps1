@@ -11,13 +11,13 @@ $Build = $EdgeDriver.ExecuteScript('return DL.BUILD', $null)
 $this.CurrentState.Version = [regex]::Replace($Version, '(\d+)\.(\d+)\.(\d+)', '$1.$2$3') + '.' + $Build
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl       = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe/download"
-  InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl       = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe/download"
+#   InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
+# }
 switch ($Lang) {
-  # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
-  'en-US' { continue }
+  # # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
+  # 'en-US' { continue }
   # The language-only locales gd and sr are not supported by WinGet client
   'ast' {
     $this.CurrentState.Installer += [ordered]@{

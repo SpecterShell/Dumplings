@@ -22,16 +22,16 @@ Invoke-RestMethod -Uri "${Prefix}${Version}/SHA256SUMS" | Split-LineEndings |
 
 # Installer
 foreach ($Arch in $ArchMap.GetEnumerator()) {
-  $this.CurrentState.Installer += [ordered]@{
-    Architecture    = $Arch.Key
-    InstallerType   = 'exe'
-    InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"
-    InstallerSha256 = $Object2["$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"]
-    ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) en-US)"
-  }
+  # $this.CurrentState.Installer += [ordered]@{
+  #   Architecture    = $Arch.Key
+  #   InstallerType   = 'exe'
+  #   InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"
+  #   InstallerSha256 = $Object2["$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"]
+  #   ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) en-US)"
+  # }
   switch ($Locales) {
-    # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
-    'en-US' { continue }
+    # # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
+    # 'en-US' { continue }
     # MSIX installers (ARM64 not available)
     'multi' {
       if ($Arch.Key -ne 'arm64') {
