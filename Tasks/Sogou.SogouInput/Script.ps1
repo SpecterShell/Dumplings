@@ -19,8 +19,7 @@ switch -Regex ($this.Check()) {
 
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl    = "https://ime.sogoucdn.com/sogou_pinyin_$($this.CurrentState.RealVersion).exe"
-      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      InstallerUrl    = "https://ime.gtimg.com/pc/build/_sogou_pinyin_[Release]_$($this.CurrentState.RealVersion)_0.exe"
     }
 
     try {
