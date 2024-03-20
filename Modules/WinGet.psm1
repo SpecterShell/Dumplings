@@ -125,12 +125,14 @@ function New-WinGetManifest {
     if ($_.FullyQualifiedErrorId -eq 'CommandNotFoundException') {
       $Task.Log('Could not find WinGet client for validating manifests. Is it installed and added to PATH?', 'Error')
       throw $_
-    } elseif ($_.FullyQualifiedErrorId -eq 'ProgramExitedWithNonZeroCode' -and $_.Exception.ExitCode -ne -1978335192) {
-      # WinGet may throw warnings for, for example, not specifying the installer switches for EXE installers
-      # Ignore these warnings by checking the exit code as it actually doesn't matter
-      $Task.Log('Failed to pass the validation', 'Error')
-      throw ($WinGetOutput -join "`n")
-    } elseif ($_.FullyQualifiedErrorId -ne 'ProgramExitedWithNonZeroCode') {
+    } elseif ($_.FullyQualifiedErrorId -eq 'ProgramExitedWithNonZeroCode') {
+      if ($_.Exception.ExitCode -ne -1978335192) {
+        # WinGet may throw warnings for, for example, not specifying the installer switches for EXE installers
+        # Ignore these warnings by checking the exit code as it actually doesn't matter
+        $Task.Log("Failed to pass the validation: $($WinGetOutput -join "`n")", 'Error')
+        throw $_
+      }
+    } else {
       $Task.Log('Failed to validate', 'Error')
       throw $_
     }
