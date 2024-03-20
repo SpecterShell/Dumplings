@@ -1,0 +1,123 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe
+  ProductCode: Unity 2022.3.22f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2022.3.22
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2022.3/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.22f1
+    - 3D Physics: Physics.ComputePenetration returns False when two colliders overlap (UUM-15831)
+    - Animation: Crash on AnimatorStateMachine::RemoveTransitionsWithDeletingObject when deleting a newly created Empty State in Animator Controller (UUM-66549)
+    - Asset - Database: Crash in CollectManagedImportDependencyGetters inside OpenScene in batch mode (UUM-57742)
+    - Asset - Database: Crash on UnityEditor.AssetDatabase:OpenAsset because assertion fails on prefabInstance.GetRootGameObject().IsValid() expression while opening a specific Scene (UUM-66207)
+    - Asset Bundles: Memory leak when building AssetBundle with Sprite Atlas enabled on macOS (UUM-56323)
+    - Asset Importers: Crash on StackAllocator<0>::GetOverheadSize when importing the “POLYGON City - Low Poly 3D Art by Synty“ asset pack (UUM-55981)
+    - Asset Importers: Unity crashes on strtol_l when importing a specific .obj file (UUM-42697)
+    - Culling: Changes to MeshRenderer.shadowCastingMode don't take effect immediately when being made in OnPreRender (UUM-64799)
+    - DOTS: [Android] [Entities] Build fails with the error “Asset has disappeared while building player to 'globalgamemanagers.assets' - path '', instancedID '-xxxxxx'“ when building (UUM-41830)
+    - HD RP: "Assertion failed on expression: ..." and "Invalid AABB ..." errors spammed in the Console when entering Play Mode (UUM-59026)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - RP Foundation: Stacked camera is not rendering when using custom post effects is done in PreRender PostRender and Camera is not in HDR (UUM-22444)
+    - Scene Management: Crash on GameObject::QueryComponentByType when opening a project (UUM-58461)
+    - WebRequest: UnityWebRequest crashes if invoked when player is quitting (UUM-63150)
+    2022.3.22f1 Release Notes
+    Features
+    - Version Control: New tab view to list and manage locks.
+    Changes
+    - Editor: AnimationEvent and NamedAnimationEvent Nodes icon changed in favor of the AnimationClip icon instead of the Animation Component icon.
+    - Package Manager: Changed the service package grouping in the Services tab.
+    Fixes
+    - 2D: Fixed crash on SpriteAtlas::GroupSprites when attempting to generate a Sprite Atlas without calling AssetDatabase.CreateAsset first. (UUM-62272)
+    - 2D: Fixed exception error when slicing Sprite after an Undo. (UUM-62818)
+    - 2D: Fixed Freeform Lights causing random values to be deterministic. (UUM-65629)
+    - 2D: Fixed Invalid sprite atlas asset encountered warning is shown when editing a texture Asset. (UUM-63813)
+    - Android: Fixed freeze when opening Icons section of Player Settings. (UUM-61146)
+    - Android: Fullscreen mediaplayer autoresume. (UUM-57153)
+    - Animation: Fixed crash when loading asset bundle with animation clip serialized before 2022.1. (UUM-63344)
+    - Build Pipeline: Fixed a regression where mesh components are stripped if its shader is made of UsePass only references. (UUM-57201)
+    - Build Pipeline: Fixed the build failure when changing platform and build player are called together. (UUM-54379)
+    - Documentation: Fixed description for AudioSource.GetDSPBufferSize by pointing to the correct DSP buffer size setting. (UUM-52557)
+    - Documentation: Fixed descriptions for AudioImporter public methods to reflect an updated list of options for platform strings. (UUM-52593)
+    - Editor: Added support for LinkerFlagsFile. (UUM-64176)
+    - Editor: Adjusted IL2CPP IDE command line generation to include AdditionalIl2CppArgs. (UUM-64177)
+    - Editor: Color picker preview can now sample from the menu bar and the dock area. (UUM-52823)
+    - Editor: Documentation links have been fixed for Visual Scripting MonoBehaviours. (UVSB-2475, UVSB-2496)
+    - Editor: Ensure that if we use a default ObjectField it doesn't throw a null context exception. (UUM-64366)
+    - Editor: Fixed a bug where the hotkey would appear in the label of the selected item of a UIElements.PopupField and a EditorGUILayout.Popup. (UUM-6243)
+    - Editor: Fixed a crash when trying to import too much mesh vertex blend shape data. (UUM-53148)
+    - Editor: Fixed a memory leak when drawing shadow maps using the BRG and additional lights in some circumstances. (UUM-65871)
+    - Editor: Fixed an exception happening when maximizing a window while Preview window is docked outside of the inspector. (UUM-62792)
+    - Editor: Fixed case where closing a docked window could result in overlapping sibling windows. (UUM-41817)
+    - Editor: Fixed context menu not showing up when right-clicking a UnityEvent in Inspector. (UUM-59240)
+    - Editor: Fixed edge cases for Same Properties query generation. (UUM-61273)
+    - Editor: Fixed incorrect duplicate menu items being removed when menu system is updated. (UUM-14958)
+    - Editor: Fixed null reference when disabling a component in a prefab. (UUM-65893)
+    - Editor: Fixed wrong menu item getting the checked state when it had a duplicate name. (UUM-3533)
+    - Editor: Fixed Xcode selection in Build Profiles window for iOS platform ("Other" option). (UUM-64007)
+    - Editor: Index null ObjectReference. These can be searched with <propertyName>=none. (UUM-61256)
+    - Editor: Items with a very long name will no longer make the arrow indicator disappear in Add Component dropdown popup. (UUM-60655)
+    - Editor: Per-platform formats on the TextureImporter will default to the platform default if not initialized properly. (UUM-33166)
+    - Graphics: Fixed crash when importing an unsupported 2x2 mipmapped, BC-compressed asset created in an older version of Unity. (UUM-48520)
+    - Graphics: Support requesting a DXT compressed texture using ImageConversion.LoadImage and Texture2D.LoadImage on Android. (UUM-52927)
+    - HDRP: Fixed artifacts on low resolution SSGI when dynamic resolution values are low. (UUM-57785)
+    - HDRP: Fixed internally created Game Objects being deallocated on scene changes. (UUM-53128)
+    - IL2CPP: Fixed MemoryMappedFile on posix systems to query page size from the system, instead of hardcoding it. (UUM-54598)
+    - iOS: [Privacy Manifests] Fixed duplicates elements filtering when merging multiple manifests if the children elements of the duplicates are in different order. (UUM-59885)
+    - Mono: Fixed issue where custom client and server certificates were not correctly being validated by HttpClient. (UUM-57031)
+    - Mono: Fixed race condition in ManagedWebSocket release of semaphore and buffer. (UUM-61544)
+    - Package Manager: Fixed the issue where 299 error is thrown when launching a project where UPM packages on Asset Store are installed. (UUM-62647)
+    - Particles: Fixed an issue where using GPU instanced mesh particles could result in visual corruption. (UUM-64297)
+    - Physics: Fixed an issue where Player builds could crash due to collision meshes being released too late into the shutdown sequence of the engine. (UUM-61878)
+    - Prefabs: Overrides inside a managed reference didn't appear as Read Only when using Show Overrides. (UUM-65819)
+    - Serialization: Avoid error when opening a Prefab with an overriden managed reference and Show Overrides is enabled. (UUM-46566)
+    - Serialization: Fixed corruption when the serialized data size changed through SerializedProperty.boxedValue. (UUM-66350)
+    - Terrain: Fixed a bug relating to loading AssetBundles in recent versions of Unity that were serialized with Unity 2017. (UUM-63701)
+    - Terrain: Now checks the bounds in ComputeDetailInstanceTransforms to avoid crashing. (UUM-27936)
+    - TextCore: Ensure space and underline are always added to Static FontAsset. (UUM-45512)
+    - uGUI: When Interacting with Occluded Button Areas using UGUI and GraphicRaycaster, the clickability is now consistent. (UUM-60672)
+    - UI Elements: Fixed the disabled ListView's footer styling. (UUM-61636)
+    - UI Elements: Fixed the keyboard navigation for ListView's foldout. (UUM-60999)
+    - UI Elements: Made the ListView's toggle focus state to match IMGUI. (UUM-37800)
+    - UI Toolkit: Lower the default max character bound of value fields. (UUM-61180)
+    - UI Toolkit: The ScrollView now stops a touch scroll at a greater velocity, thus eliminating the "trail off" effect. (UUM-58479)
+    - UI Toolkit: The ScrollView touch scroll inertia now behaves similarly across multiple framerates. (UUM-59847)
+    - UI Toolkit: UI Toolkit: Fixed "margin: auto" applied even when the visual Element has it's Display is set to none. (UUM-40647)
+    - Version Control: Ensured branch creations start from the latest changeset.
+    - Version Control: Fixed Diff option unavailable for .prefab.
+    - Version Control: Fixed DropdownField not working properly on a ModalUtility window on MacOS.
+    - Version Control: Fixed finding changes operation being firing constantly.
+    - Version Control: Fixed issue with existing checkout operations locking the workspace.
+    - Version Control: Fixed layout error when switching checkout status in the inspector.
+    - Version Control: Fixed typo in locks tooltip.
+    - Version Control: Fixed UI error when opening and closing multiple closable tabs.
+    - Version Control: Pending Changes context menu had the view file history greyed out for asset+meta.
+    - Version Control: Preconfigured date format was not recognized as a valid DateTime.
+    - Version Control: Removed obsolete content in package documentation.
+    - Version Control: Replaced "plasticscm.com" by a "https://unity.com/solutions/version-control" in the package.json.
+    - Version Control: Reviewed initialization and application lifecycle.
+    - Version Control: Unable to expand added item list after collapsing.
+    - WebGL: Fixed the name files as hashes feature and corresponding integration test. (UUM-35863)
+    Package changes in 2022.3.22f1
+    Packages updated
+    - com.unity.collab-proxy: 2.2.0 → 2.3.1
+    - com.unity.ide.rider: 3.0.27 → 3.0.28
+    - com.unity.services.core: 1.12.2 → 1.12.4
+    - com.unity.visualscripting: 1.9.1 → 1.9.2
+    - com.unity.dt.app-ui: 1.0.1 → 1.0.2
+Version: 2022.3.22f1
+ReleaseTime: 2024-03-19T11:06:29.3290000Z
