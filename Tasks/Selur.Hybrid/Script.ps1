@@ -1,4 +1,6 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.selur.de/downloads' | ConvertFrom-Html
+$Prefix = 'https://www.selur.de'
+
+$Object1 = Invoke-WebRequest -Uri "${Prefix}/downloads" | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
@@ -8,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//div[contains(@class, "field-item")]/ul/li/a').Attributes['href'].Value
+  InstallerUrl = $Prefix + $Object1.SelectSingleNode('//div[contains(@class, "field-item")]/ul/li/a').Attributes['href'].Value
 }
 
 # ReleaseTime
@@ -27,7 +29,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.selur.de/changelog' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri "${Prefix}/changelog" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'field-item')]/ul/li[contains(./strong/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
