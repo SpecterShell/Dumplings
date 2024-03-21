@@ -36,12 +36,12 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.bitcomet.com/cn/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'changelog')]/dl/dt[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'changelog')]/dl/dt[contains(text(), 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNTitleNode) {
         $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node.Name -ne 'dt'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
         }
