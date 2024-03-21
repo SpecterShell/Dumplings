@@ -14,19 +14,15 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Versi
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'http://qxys.hkfree.work/ShowPost.asp?PostID=892' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'http://diodiy.top/?thread-1.htm' | ConvertFrom-Html
 
-      $ReleaseNotesNodes = @()
-      switch ($Object2.SelectNodes("//*[@class='ForumPostContentText'][1]/node()[starts-with(string(), '$($this.CurrentState.Version)')]/following-sibling::node()")) {
-        ({ $_.Name -eq 'br' -and $_.NextSibling.Name -eq 'br' }) { break }
-        Default { $ReleaseNotesNodes += $_ }
-      }
-      if ($ReleaseNotesNodes) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@isfirst='1']/p[starts-with(string(), '$($this.CurrentState.Version)')]/text()[1]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
