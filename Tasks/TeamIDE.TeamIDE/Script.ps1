@@ -31,12 +31,11 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./p[text()="发布功能"]')
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
           }
         } else {
           $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
