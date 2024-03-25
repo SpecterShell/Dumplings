@@ -249,10 +249,18 @@ function New-WinGetManifest {
   $Task.Log('Creating pull request', 'Verbose')
 
   try {
-    if (Test-Path Env:\CI) {
-      $NewPRBody = "Created by [🥟 Dumplings](https://github.com/SpecterShell/Dumplings) in Run [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${Script:OriginOwner}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID})."
+    if (Test-Path Env:\GITHUB_ACTIONS) {
+      $NewPRBody = @"
+Created by [🥟 Dumplings](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings) in workflow run [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID}).
+
+*Logs*
+``````
+$($Task.Logs -join "`n" | ConvertTo-MarkdownEscapedText)
+``````
+"@
     } else {
-      $NewPRBody = 'Created by [🥟 Dumplings](https://github.com/SpecterShell/Dumplings).'
+      # Here we assume that the Dumplings repository is under the same user as the winget-pkgs repository
+      $NewPRBody = "Created by [🥟 Dumplings](https://github.com/${Script:OriginOwner}/Dumplings)."
     }
     $NewPRObject = Invoke-GitHubApi -Uri "https://api.github.com/repos/${Script:UpstreamOwner}/${Script:UpstreamRepo}/pulls" -Method Post -Body @{
       title = $CommitName
