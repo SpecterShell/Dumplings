@@ -423,7 +423,7 @@ function New-TempFile {
   #>
   [OutputType([string])]
 
-  $Parent = (Test-Path -Path Global:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
+  $Parent = (Test-Path -Path Variable:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
   $Path = (New-Item -Path $Parent -Name (New-Guid).Guid -ItemType File -Force).FullName
   return $Path
 }
@@ -437,7 +437,7 @@ function New-TempFolder {
   #>
   [OutputType([string])]
 
-  $Parent = (Test-Path -Path Global:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
+  $Parent = (Test-Path -Path Variable:\DumplingsCache) -and (Test-Path -Path $Global:DumplingsCache) ? $Global:DumplingsCache : $Env:TEMP
   $Path = (New-Item -Path $Parent -Name (New-Guid).Guid -ItemType Directory -Force).FullName
   return $Path
 }
