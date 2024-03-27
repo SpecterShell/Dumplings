@@ -60,13 +60,13 @@ switch -Regex ($this.Check()) {
       if (Test-Path -Path Env:\LD246_TOKEN) {
         $Object3 = Invoke-RestMethod -Uri $Object1.release_zh_CN.Replace('ld246.com', 'ld246.com/api/v2') -Headers @{ Authorization = $Env:LD246_TOKEN }
 
-        $ReleaseNotesObject = $Object3.data.article.articleContent | ConvertFrom-Html
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesCNObject = $Object3.data.article.articleContent | ConvertFrom-Html
+        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
