@@ -1,3 +1,8 @@
+# Version 3.8.3:
+
+- Support "Paste as Plain Text".
+- Some minor improvements and bugs fixed.
+
 # Version 3.8.1:
 
 - Support "Paste as Plain Text".
