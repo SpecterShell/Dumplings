@@ -28,6 +28,7 @@ $ManifestVersion = '1.6.0'
 $PSDefaultParameterValues = @{ '*:Encoding' = 'UTF8' }
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $Culture = 'en-US'
+$UserAgent = 'Microsoft-Delivery-Optimization/10.0'
 if (-not ([System.Environment]::OSVersion.Platform -match 'Win')) { $env:TEMP = '/tmp/' }
 
 $SchemaUrls = @{
@@ -255,7 +256,19 @@ Function Get-InstallerFile {
   else { $_OutFile = (New-TemporaryFile).FullName }
 
   # Download the file
-  Invoke-WebRequest -Uri $URI -UserAgent 'Microsoft-Delivery-Optimization/10.1' -OutFile $_OutFile
+  try {
+    Invoke-WebRequest -Uri $URI -UserAgent $UserAgent -OutFile $_OutFile
+  } catch {
+    # Some sites ban the default user agent. Retry with the alternative one
+    if ($UserAgent -eq 'Microsoft-Delivery-Optimization/10.0') {
+      Write-Log -Object 'Failed to download the installer. Retry using the alternative user agent' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+      $UserAgent = 'winget-cli WindowsPackageManager/1.7.10661 DesktopAppInstaller/Microsoft.DesktopAppInstaller v1.22.10661.0'
+      Invoke-WebRequest -Uri $URI -UserAgent $UserAgent -OutFile $_OutFile
+      Write-Log -Object 'The server may have banned the default user agent. Default to the alternative user agent' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+    } else {
+      throw $_
+    }
+  }
 
   return $_OutFile
 }
