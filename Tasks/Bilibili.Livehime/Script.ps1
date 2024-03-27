@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Object1.data.instruction | Format-Text
+  Value  = $Object1.data.instruction -replace '\n(?!【)' | Format-Text
 }
 
 switch -Regex ($this.Check()) {
