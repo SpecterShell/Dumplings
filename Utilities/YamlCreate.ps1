@@ -21,7 +21,7 @@ Param
   [Parameter(Mandatory = $false)]
   [string] $PackageReleaseDate
 )
-$ProgressPreference = 'SilentlyContinue'
+if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
 $ScriptHeader = '# Created with YamlCreate.ps1 v2.3.4 Dumplings Mod'
 $ManifestVersion = '1.6.0'
