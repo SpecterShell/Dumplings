@@ -1,6 +1,6 @@
-$Path = Get-TempFile -Uri 'https://dellupdater.dell.com/non_du/ClientService/Catalog/CatalogIndexPC.cab'
+$Path = Get-TempFile -Uri 'https://dellupdater.dell.com/non_du/ClientService/Catalog/Platform/PrecedenceCatalog.cab'
 expand.exe -R $Path
-$Object1 = (Join-Path $Path '..' 'PrecedenceCatalog.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml).Precedence.Demoted.SoftwareComponent.Where({ $_.identifier -eq '191da0a1-0e22-41ff-a9d9-aa942c4f8581' }, 'First')[0]
+$Object1 = (Join-Path $Path '..' 'PrecedenceCatalog.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml).Precedence.Demoted.SoftwareComponent.Where({ $_.Name.Display.'#cdata-section' -eq 'Dell Command | Update Windows Universal Application' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.vendorVersion
