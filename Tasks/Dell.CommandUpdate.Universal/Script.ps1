@@ -11,7 +11,7 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.dateTime | Get-Date -AsUTC
 
 # PackageName
 $this.CurrentState.Locale += [ordered]@{
