@@ -34,14 +34,14 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'field-item')]/ul/li[contains(./strong/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'li'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (zh-CN)
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
