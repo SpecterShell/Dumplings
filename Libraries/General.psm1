@@ -481,6 +481,38 @@ function Expand-TempArchive {
   }
 }
 
+function Expand-InstallShield {
+  <#
+  .SYNOPSIS
+    Extract files from an InstallShield executable file to the same folder using ISx
+  .PARAMETER Path
+    The path of the InstallShield executable file to be extracted
+  .PARAMETER ISxPath
+    The path to the InstallShield installer extractor (ISx) tool
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path of the InstallShield executable file to be extracted')]
+    [string]
+    $Path,
+
+    [Parameter(HelpMessage = 'The path to the InstallShield installer extractor (ISx) tool')]
+    [string]
+    $ISxPath = (Test-Path -Path Variable:\DumplingsRoot) ? (Join-Path $DumplingsRoot 'Assets' 'ISx.exe') : (Join-Path $PSScriptRoot '..' 'Assets' 'ISx.exe')
+  )
+
+  begin {
+    if (-not (Test-Path -Path $ISxPath)) {
+      throw 'The path to the ISx tool specified is invalid'
+    }
+  }
+
+  process {
+    & $ISxPath $Path | Out-Host
+    return "$(Join-Path (Split-Path -Path $Path -Parent) (Split-Path -Path $Path -LeafBase))_u"
+  }
+}
+
 function Invoke-GitHubApi {
   <#
   .SYNOPSIS
