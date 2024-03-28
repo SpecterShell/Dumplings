@@ -82,10 +82,12 @@ $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
   'Invoke-WebRequest:OperationTimeoutSeconds'  = 30
   'Invoke-WebRequest:MaximumRetryCount'        = 3
   'Invoke-WebRequest:RetryIntervalSec'         = 3
+  'Invoke-WebRequest:SslProtocol'              = 'Tls12'
   'Invoke-RestMethod:ConnectionTimeoutSeconds' = 30
   'Invoke-RestMethod:OperationTimeoutSeconds'  = 30
   'Invoke-RestMethod:MaximumRetryCount'        = 3
   'Invoke-RestMethod:RetryIntervalSec'         = 3
+  'Invoke-RestMethod:SslProtocol'              = 'Tls12'
 }
 
 # Set the PowerShell modules to be installed and imported

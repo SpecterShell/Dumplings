@@ -25,7 +25,7 @@ if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
 $ScriptHeader = '# Created with YamlCreate.ps1 v2.3.4 Dumplings Mod'
 $ManifestVersion = '1.6.0'
-$PSDefaultParameterValues = @{ '*:Encoding' = 'UTF8' }
+$PSDefaultParameterValues['*:Encoding'] = 'UTF8'
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $Culture = 'en-US'
 $UserAgent = 'Microsoft-Delivery-Optimization/10.0'
