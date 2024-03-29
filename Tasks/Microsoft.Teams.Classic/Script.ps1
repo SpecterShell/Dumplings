@@ -1,54 +1,45 @@
-# x86
-$Object1 = Invoke-RestMethod -Uri 'https://teams.live.com/downloads/getinstaller?arch=x86'
-$VersionX86 = [regex]::Match($Object1.installerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
-
-# x64
-$Object2 = Invoke-RestMethod -Uri 'https://teams.live.com/downloads/getinstaller?arch=x64'
-$VersionX64 = [regex]::Match($Object2.installerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
-
-# arm64
-$Object3 = Invoke-RestMethod -Uri 'https://teams.live.com/downloads/getinstaller?arch=arm64'
-$VersionArm64 = [regex]::Match($Object3.installerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$Object1 = (Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1/MicrosoftTeams/27_1.0.0.0?environment=prod&agents=TeamsBuilds').TeamsBuilds.BuildSettings.Desktop
 
 $Identical = $true
-if (@(@($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Unique).Count -gt 1) {
+if (@(@('windows', 'windows64', 'arm64') | Sort-Object -Property { $Object1.$_.latestVersion } -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.windows64.latestVersion
 
 # Installer
+$Prefix = 'https://statics.teams.cdn.office.net'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'exe'
-  InstallerUrl  = $Object1.installerUrl
+  InstallerUrl  = "${Prefix}/production-windows/$($Object1.windows.latestVersion)/Teams_windows.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'exe'
-  InstallerUrl  = $Object2.installerUrl
+  InstallerUrl  = "${Prefix}/production-windows-x64/$($Object1.windows64.latestVersion)/Teams_windows_x64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'exe'
-  InstallerUrl  = $Object3.installerUrl
+  InstallerUrl  = "${Prefix}/production-windows-arm64/$($Object1.arm64.latestVersion)/Teams_windows_arm64.exe"
 }
 $this.CurrentState.Installer += $InstallerWixX86 = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = $Object1.installerUrl -replace '\.exe$', '.msi'
+  InstallerUrl  = "${Prefix}/production-windows/$($Object1.windows.latestVersion)/Teams_windows.msi"
 }
 $this.CurrentState.Installer += $InstallerWixX64 = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = $Object2.installerUrl -replace '\.exe$', '.msi'
+  InstallerUrl  = "${Prefix}/production-windows-x64/$($Object1.windows64.latestVersion)/Teams_windows_x64.msi"
 }
 $this.CurrentState.Installer += $InstallerWixARM64 = [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = $Object3.installerUrl -replace '\.exe$', '.msi'
+  InstallerUrl  = "${Prefix}/production-windows-arm64/$($Object1.arm64.latestVersion)/Teams_windows_arm64.msi"
 }
 
 switch -Regex ($this.Check()) {
