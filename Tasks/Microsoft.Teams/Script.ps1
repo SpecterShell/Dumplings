@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1/MicrosoftTeams/49?agents=TeamsBuilds&environment=prod'
+$Object1 = Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1/MicrosoftTeams/49_1.0.0.0?environment=prod&agents=TeamsBuilds'
 
 $Identical = $true
 if (@(@('x86', 'x64', 'arm64') | Sort-Object -Property { $Object1.TeamsBuilds.BuildSettings.WebView2Canary.$_.latestVersion } -Unique).Count -gt 1) {
