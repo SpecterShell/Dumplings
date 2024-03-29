@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://developer.harmonyos.com/cn/develop/deveco-studio' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://developer.huawei.com/consumer/cn/deveco-studio/' | ConvertFrom-Html
 
 $InstallerNameNode = $Object1.SelectSingleNode('//div[contains(@class,"isdownLoad") and contains(./p/text(), "devecostudio") and contains(./p/text(), "windows")]')
 
@@ -21,8 +21,8 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     # RealVersion
-    $Object2 = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Expand-TempArchive | 
-      Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | 
+    $Object2 = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Expand-TempArchive |
+      Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath |
       ForEach-Object -Process { 7z x -so $_ 'product-info.json' } | ConvertFrom-Json
     $this.CurrentState.RealVersion = $Object2.buildNumber
 
