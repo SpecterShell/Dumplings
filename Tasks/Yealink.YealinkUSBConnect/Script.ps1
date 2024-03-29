@@ -29,10 +29,10 @@ if ($Global:DumplingsStorage.Contains('YealinkUSBConnect') -and $Global:Dumpling
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

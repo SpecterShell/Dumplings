@@ -16,10 +16,10 @@ $this.CurrentState.ReleaseTime = [regex]::Match($Object1.downloadVersion, '(\d{4
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

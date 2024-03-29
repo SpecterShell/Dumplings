@@ -17,10 +17,10 @@ if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorag
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

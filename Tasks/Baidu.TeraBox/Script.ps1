@@ -27,10 +27,10 @@ if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.T
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

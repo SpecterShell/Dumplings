@@ -19,10 +19,10 @@ switch -Regex ($this.Check()) {
       '([\d\.]+\(.+?\))\.exe'
     ).Groups[1].Value
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

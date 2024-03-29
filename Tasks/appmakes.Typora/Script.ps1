@@ -91,10 +91,10 @@ switch -Regex ($this.Check()) {
       Value = $ReleaseNotesUrl
     }
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   ({ $_ -match 'Updated' -and $Identical }) {

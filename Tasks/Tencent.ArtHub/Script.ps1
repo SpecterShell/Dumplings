@@ -6,10 +6,10 @@ $this.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

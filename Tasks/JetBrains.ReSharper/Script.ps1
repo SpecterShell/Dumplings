@@ -33,10 +33,10 @@ switch -Regex ($this.Check()) {
     # InstallerSha256
     $Installer['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsWeb.checksumLink).Split()[0].ToUpper()
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

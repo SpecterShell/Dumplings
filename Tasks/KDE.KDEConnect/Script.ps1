@@ -15,10 +15,10 @@ switch -Regex ($this.Check()) {
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = $Object2.Split()[0].ToUpper()
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

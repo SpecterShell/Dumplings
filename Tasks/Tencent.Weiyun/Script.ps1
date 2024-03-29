@@ -43,10 +43,10 @@ if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -Differen
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   ({ $_ -match 'Updated' -and $Identical }) {

@@ -29,10 +29,10 @@ if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage['QIY
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

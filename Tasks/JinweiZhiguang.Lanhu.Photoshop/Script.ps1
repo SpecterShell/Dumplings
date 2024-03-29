@@ -13,10 +13,10 @@ $this.CurrentState.ReleaseTime = $Object1.result.create_time | Get-Date -AsUTC
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

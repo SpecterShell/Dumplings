@@ -32,10 +32,10 @@ if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Version1 -Diffe
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

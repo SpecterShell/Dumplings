@@ -54,10 +54,10 @@ switch -Regex ($this.Check()) {
       }
     }
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

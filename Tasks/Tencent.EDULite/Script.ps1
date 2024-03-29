@@ -10,10 +10,10 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'EduLiteInstall_([\d\
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

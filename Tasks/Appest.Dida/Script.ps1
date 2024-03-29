@@ -42,10 +42,10 @@ if ($Global:DumplingsStorage.Contains('Dida') -and $Global:DumplingsStorage.Dida
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   ({ $_ -match 'Updated' -and $Identical }) {

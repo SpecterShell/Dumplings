@@ -37,10 +37,10 @@ if ($Global:DumplingsStorage['WeMeetOutlookPlugin2'].Contains($Version)) {
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

@@ -13,10 +13,10 @@ $this.CurrentState.ReleaseTime = $Object1.app.tccConfig.download_info.time | Get
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

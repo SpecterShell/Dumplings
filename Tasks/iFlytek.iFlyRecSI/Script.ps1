@@ -26,10 +26,10 @@ if ($Global:DumplingsStorage.Contains('iFlyRecSI2') -and $Global:DumplingsStorag
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

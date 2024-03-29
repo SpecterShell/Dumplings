@@ -8,10 +8,10 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'win32-x64-(.+)\.exe'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

@@ -52,10 +52,10 @@ document.querySelector("head").appendChild(element)
       }
     }
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

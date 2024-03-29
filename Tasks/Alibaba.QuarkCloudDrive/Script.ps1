@@ -14,10 +14,10 @@ $this.CurrentState = Invoke-RestMethod -Uri "https://pan.quark.cn/update/win32/$
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

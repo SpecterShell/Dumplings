@@ -29,10 +29,10 @@ if ($Global:DumplingsStorage.Contains('360Zip') -and $Global:DumplingsStorage['3
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

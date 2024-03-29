@@ -39,10 +39,10 @@ if ($Global:DumplingsStorage.Contains('PikPak') -and $Global:DumplingsStorage.Pi
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

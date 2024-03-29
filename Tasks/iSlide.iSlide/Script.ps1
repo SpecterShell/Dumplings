@@ -11,10 +11,10 @@ $this.CurrentState.ReleaseTime = [regex]::Match($InstallerUrl, '(\d{4}-\d{1,2}-\
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

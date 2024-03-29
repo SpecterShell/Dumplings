@@ -10,10 +10,10 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'V(\d+\.\d+\.\d+\.\d+
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

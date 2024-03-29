@@ -13,10 +13,10 @@ $this.CurrentState.ReleaseTime = [regex]::Match($Object1.windows_version_and_upd
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

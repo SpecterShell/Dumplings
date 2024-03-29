@@ -13,10 +13,10 @@ $this.CurrentState.ReleaseTime = $Object1.'info-list'[0].'sub-date' | Get-Date -
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

@@ -27,10 +27,10 @@ if ($Global:DumplingsStorage.Contains('HitePai6') -and $Global:DumplingsStorage[
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {

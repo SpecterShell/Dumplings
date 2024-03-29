@@ -26,10 +26,10 @@ switch -Regex ($this.Check()) {
       ForEach-Object -Process { 7z x -so $_ 'product-info.json' } | ConvertFrom-Json
     $this.CurrentState.RealVersion = $Object2.buildNumber
 
+    $this.Print()
     $this.Write()
   }
   'Changed|Updated' {
-    $this.Print()
     $this.Message()
   }
   'Updated' {
