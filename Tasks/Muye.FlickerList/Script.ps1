@@ -1,6 +1,15 @@
-$Prefix = 'https://static.vifird.com/flicker/download/release/win32_x32/'
+$Object1 = Invoke-RestMethod -Uri "https://static.flicker.cool/flicker/download/release/win32/latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "https://static.flicker.cool/flicker/download/stable/$($this.CurrentState.Version)/win32/$($Object1.files[0].url)"
+}
+
+# ReleaseTime
+$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
