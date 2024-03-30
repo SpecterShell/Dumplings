@@ -10,6 +10,12 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = "https://www.telerik.com/support/whats-new/fiddler/release-history/fiddler-v$($this.CurrentState.Version.Split('.')[0..2] -join '.')"
+    }
+
     try {
       while (-not $Object1.EndOfStream) {
         $String = $Object1.ReadLine()
