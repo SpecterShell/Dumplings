@@ -246,7 +246,7 @@ class PackageTask {
       $Message.Append(', ')
       $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-MarkdownEscapedText) : '\*'))
       $Message.AppendLine('\):**')
-      $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-MarkdownEscapedText))
+      $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-MarkdownEscapedText))
     }
 
     # ReleaseDate
@@ -308,7 +308,7 @@ class PackageTask {
       $Message.Append(', ')
       $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-TelegramEscapedText) : '\*'))
       $Message.AppendLine('\):*')
-      $Message.AppendLine(($Installer['InstallerUrl'] | ConvertTo-TelegramEscapedText))
+      $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-TelegramEscapedText))
     }
 
     # ReleaseTime
