@@ -164,7 +164,8 @@ if (-not $Parallel) {
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {
     # The default number of maximum concurrent threads of ThreadJob is 5. Run Start-ThreadJob once to increase the throttle limit
-    if ($ThrottleLimit -gt 5) { Start-ThreadJob -ScriptBlock {} -ThrottleLimit $ThrottleLimit | Wait-Job | Out-Null }
+    # Add the value by 5 to allow the tasks to run ThreadJob immediately instead of waiting for the sub-threads exiting
+    Start-ThreadJob -ScriptBlock {} -ThrottleLimit ($ThrottleLimit + 5) | Wait-Job | Out-Null
 
     Write-Host -Object "`e[1mDumplings:`e[22m Starting ${ThrottleLimit} thread jobs"
 
