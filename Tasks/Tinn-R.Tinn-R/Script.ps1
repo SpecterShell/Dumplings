@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://tinn-r.org/update/new_version.txt'
 $this.CurrentState.Version = [regex]::Match($Object1, '(\d{1}\.\d{2}\.\d{2}\.\d{2})(?=_(setup.exe|portable.zip))').Groups[1].Value
 
 # RealVersion
-$this.CurrentState.RealVersion = $this.CurrentState.Version -replace '(?<=^|\.)0+'
+$this.CurrentState.RealVersion = $this.CurrentState.Version -replace '0+(?=\d)'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
