@@ -1,12 +1,12 @@
 $Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/' | ConvertFrom-Html
 
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//*[@class="browser_ver"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://down.360safe.com/se/360se$($this.CurrentState.Version).exe"
+  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//a[@class="bat_64"]').Attributes['href'].Value
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
