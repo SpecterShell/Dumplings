@@ -1,27 +1,26 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://u.tools/')
+$Object1 = Invoke-WebRequest -Uri 'https://u.tools/download/' | ConvertFrom-Html
 
-$Prefix = $EdgeDriver.ExecuteScript('return publishURL', $null)
-$Object1 = $EdgeDriver.ExecuteScript('return publishPlatform', $null)
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrlX86 = $Object1.SelectSingleNode('//div[contains(@class, "Dl_dlItems")]/a[contains(.//text(), "32")]').Attributes['href'].Value
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//div[contains(@class, "Dl_dlItems")]/a[contains(.//text(), "64")]').Attributes['href'].Value
+}
+
+$VersionX86 = [regex]::Match($InstallerUrlX86, '_([\d\.]+)[-\.]').Groups[1].Value
+$VersionX64 = [regex]::Match($InstallerUrlX64, '-([\d\.]+)[-\.]').Groups[1].Value
 
 $Identical = $true
-if ($Object1.'win-x64'.version -ne $Object1.'win-ia32'.version) {
+if ($VersionX86 -ne $VersionX64) {
   $this.Log('Distinct versions detected', 'Warning')
   $Identical = $false
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.'win-x64'.version, '([\d\.]+)').Groups[1].Value
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Prefix + $Object1.'win-ia32'.package
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object1.'win-x64'.package
-}
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -47,7 +46,7 @@ switch -Regex ($this.Check()) {
 
         $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/h1[contains(text(), '$($this.CurrentState.Version)')]")
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
