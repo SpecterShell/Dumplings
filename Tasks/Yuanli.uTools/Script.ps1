@@ -10,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//div[contains(@class, "Dl_dlItems")]/a[contains(.//text(), "64")]').Attributes['href'].Value
 }
 
-$VersionX86 = [regex]::Match($InstallerUrlX86, '_([\d\.]+)[-\.]').Groups[1].Value
+$VersionX86 = [regex]::Match($InstallerUrlX86, '-([\d\.]+)[-\.]').Groups[1].Value
 $VersionX64 = [regex]::Match($InstallerUrlX64, '-([\d\.]+)[-\.]').Groups[1].Value
 
 $Identical = $true
