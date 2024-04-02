@@ -1,13 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://u.tools/download/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://u.tools/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.SelectSingleNode('//div[contains(@class, "Dl_dlItems")]/a[contains(.//text(), "32")]').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX86 = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Select-String -Pattern '\.exe$' -Raw | Select-String -Pattern 'ia32' -SimpleMatch -Raw | Select-Object -First 1
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//div[contains(@class, "Dl_dlItems")]/a[contains(.//text(), "64")]').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX64 = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Select-String -Pattern '\.exe$' -Raw | Select-String -Pattern 'ia32' -SimpleMatch -NotMatch -Raw | Select-Object -First 1
 }
 
 $VersionX86 = [regex]::Match($InstallerUrlX86, '-([\d\.]+)[-\.]').Groups[1].Value
