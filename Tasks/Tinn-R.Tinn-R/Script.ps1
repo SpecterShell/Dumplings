@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://tinn-r.org/update/patch_notes.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/blockquote[contains(./h5/text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/blockquote[contains(./h5/text(), '$($this.CurrentState.RealVersion)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'blockquote'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
