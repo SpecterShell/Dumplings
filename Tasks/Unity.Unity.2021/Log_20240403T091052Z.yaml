@@ -1,0 +1,143 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/3b6005ad5ad6/Windows64EditorInstaller/UnitySetup64-2021.3.37f1.exe
+  ProductCode: Unity 2021.3.37f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2021.3.37
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/2021.3/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2021.3/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2021.3.37f1
+    - Asset Importers: Unity crashes on strtol_l when importing a specific .obj file (UUM-42697)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Input: Crash on InputDeviceIOCTL when closing Unity editor (UUM-10774)
+    - Input: High polling rate mice are causing performance issues (windows, editor) (UUM-1484)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: Crash on FMODCodecMPEGsetPositionInternal when a mobile platform is selected and a specific audio clip is played (UUM-62086)
+    - uGUI: Canvas is drawn twice to the same render target when rendering into camera with render texture output (UUM-23063)
+    - Universal RP: Objects are invisible in Scene view when using Wireframe Shading Mode (UUM-36914)
+    - WebRequest: UnityWebRequest crashes if invoked when player is quitting (UUM-63150)
+    2021.3.37f1 Release Notes
+    Features
+    - Editor: Added .xcframework plugins support.
+    - Package: Added Apple privacy manifest in moderation package.
+    - Version Control: New tab view to list and manage locks.
+    Changes
+    - Android: Updated Android Gradle Plugin to 4.2.2 (from 4.0.1).
+    - Build System: Bee is now using <RestoreAdditionalProjectSources> instead of <RestoreSources> in C# Project files to reference Default Nuget Packages sources. This will prevent issues where Bee was disregarding Nuget packages configuration files. Please refer to [Microsoft's Configuring Nuget Behavior Documentation](https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior\#nuget-defaults-file\) to control nuget sources in your build environments. (BUILD-417)
+    - Editor: AnimationEvent and NamedAnimationEvent Nodes icon changed in favor of the AnimationClip icon instead of the Animation Component icon.
+    - Services: Updated text on the project link screen.
+    - XR: The Oculus XR Plugin package has been updated to 3.4.0.
+    Fixes
+    - 2D: Fixed exception error when slicing Sprite after an Undo. (UUM-62818)
+    - 2D: Fixed Freeform Lights causing random values to be deterministic. (UUM-65629)
+    - Android: Fixed freeze when opening Icons section of Player Settings. (UUM-61146)
+    - Android: Fullscreen mediaplayer autoresume. (UUM-57153)
+    - Android: Provide control over Unity killing external ADB instances, there's a new option in Preferences->External Tools->Kill External ADB instances. (UUM-56519)
+    - Android: Provide user friendly dialog if application install fails due previous app installation, but with different signature. The dialog will ask you if you want to remove previous attempt before attempting to install again. (UUM-65655)
+    - Android: Show warning when Input Handling is set to Both, since Both is not supported on Android and can cause both - input and performance issues. (UUM-65273)
+    - Asset Pipeline: Fixed security issue with LZ4 library. (UUM-35753)
+    - Build Pipeline: Fixed a regression where mesh components are stripped if its shader is made of UsePass only references. (UUM-57201)
+    - Build Pipeline: Fixed an issue where a build would not behave correctly when using StreamingAssets folder or file names ending with a ~. (UUM-48097)
+    - Build Pipeline: Fixed the build failure when we switch the platform and build player are called together. (UUM-54379)
+    - Documentation: Fixed description for AudioSource.GetDSPBufferSize by pointing to the correct DSP buffer size setting. (UUM-52557)
+    - Documentation: Fixed descriptions for AudioImporter public methods to reflect an updated list of options for platform strings. (UUM-52593)
+    - Documentation: Fixed enum descriptions for FFTWindow to show correct formulas. (UUM-51065)
+    - Editor: Added support for LinkerFlagsFile. (UUM-64176)
+    - Editor: Adjusted IL2CPP IDE command line generation to include AdditionalIl2CppArgs. (UUM-64177)
+    - Editor: Bug fix for Crash on NSException when the display dialog contains a long message containing multibyte characters which are clipped when the message is abbreviated by ellipses. (UUM-62757)
+    - Editor: Capitalize the compiler generated name of serialized field. (UUM-45789)
+    - Editor: Color picker preview can now sample from the menu bar and the dock area. (UUM-52823)
+    - Editor: Crash fix when CreateExternalTexture uses non compatible format. (UUM-44947)
+    - Editor: Documentation links have been fixed for Visual Scripting MonoBehaviours. (UVSB-2475, UVSB-2496)
+    - Editor: Editor: ObjectPool counter returns wrong count if returning instance to full pool. (UUM-49060)
+    - Editor: Fixed a bug where orgs would not show for guest users in the UGS Project Linking Window. (UUM-66543)
+    - Editor: Fixed a bug where the second player input device controlled all objects when using InputSystem event nodes. (UVSB-2499)
+    - Editor: Fixed a crash when trying to import too much mesh vertex blend shape data. (UUM-53148)
+    - Editor: Fixed case where closing a docked window could result in overlapping sibling windows. (UUM-41817)
+    - Editor: Fixed Deep Profiling Support label is labeled differently depending on if Development Build is enabled. (UUM-61605)
+    - Editor: Fixed incorrect duplicate menu items being removed when menu system is updated. (UUM-14958)
+    - Editor: Fixed unrelated Objects/Metadata that showed up assigned to samples in the CPU Timeline view and were repeating the data from the last sample in the thread & frame that had valid Object/Metadata information associated with it. (UUM-66592)
+    - Editor: Fixed Xcode selection in Build Profiles window for iOS platform ("Other" option). (UUM-64007)
+    - Editor: Items with a very long name will no longer make the arrow indicator disappear in Add Component dropdown popup. (UUM-60655)
+    - Editor: Overrides inside a managed reference didn't appear as Read Only when using Show Overrides. (UUM-65819)
+    - Editor: Per-platform formats on the TextureImporter will default to the platform default if not initialized properly. (UUM-33166)
+    - Editor: Updated the EditorToolbar to allow for a VisualElement based VersionControl Toolbar Button to resolve the button being misaligned. (UUM-36270)
+    - Editor: Updated the FBX SDK version to 2020.3.4. (UUM-60185)
+    - Graphics: Fixed crash when importing an unsupported 2x2 mipmapped, BC-compressed asset created in an older version of Unity. (UUM-48520)
+    - Graphics: Fixed possible null ref when there is corrupted occlusion tome data that may lead to a crash. (UUM-30735)
+    - Graphics: Prevent swizzling of ARGB32 format. (UUM-45872)
+    - Graphics: Support requesting a DXT compressed texture using ImageConversion.LoadImage and Texture2D.LoadImage on Android. (UUM-52927)
+    - HDRP: Fixed shader compilation issues related to ternary operater misuse. (UUM-66198)
+    - IL2CPP: Fixed correctness of lock statement on ARM architectures under high contention. (UUM-65254)
+    - IL2CPP: Fixed crash when calling special Array Set/Get/Address methods via reflection. (UUM-64457)
+    - IL2CPP: Fixed MemoryMappedFile on posix systems to query page size from the system, instead of hardcoding it. (UUM-54598)
+    - IL2CPP: Prevent additional IL2CPP arguments that contains --compiler-flags or --linker-flags from overriding the default values for these arguments. Instead combine them and pass them to the compiler or linker. (UUM-59355)
+    - IL2CPP: Updated zlib to v 1.3.1. (UUM-64803)
+    - iOS: Fixed AppDomain.UnhandledException not invoked before crashing due to unhandled exception when using "Fast but no exceptions" scripting calls. (UUM-62773)
+    - iOS: Fixed potential memory leak when reallocating memory. (UUM-64048)
+    - macOS: Fixed memory spikes when macOS player is offscreen or minimized. (UUM-30049)
+    - macOS: Fixed resolution change in fullscreen mode when it has been changed via System Settings. (UUM-64959)
+    - Mono: Fixed issue where custom client and server certificates were not correctly being validated by HttpClient. (UUM-57031)
+    - Package: Fixed a bug in moderation package where initialization would fail on certain occasion.
+    - Package Manager: Fixed the issue where 299 error is thrown when launching a project where UPM packages on Asset Store are installed. (UUM-62647)
+    - Particles: Fixed an issue where using GPU instanced mesh particles could result in visual corruption. (UUM-64297)
+    - Profiler: Fixed an issue whereby the Physics2D module did not display counters in the Profiler. (UUM-57758)
+    - Scripting: Scripting: Corrected crashes due to excessive use of thread local data slots. (UUM-58965)
+    - Shaders: Fixed code generated for Texture.Load with offset. (UUM-56574)
+    - SRP Core: Fixed DebugUI.Button not working in Rendering Debugger runtime UI. (UUM-65457)
+    - Terrain: Now checks the bounds in ComputeDetailInstanceTransforms to avoid crashing. (UUM-27936)
+    - uGUI: Fixed bug that dirties prefab upon opening it when configured with a layout group + content size fitter. (UUM-19577)
+    - uGUI: When Interacting with Occluded Button Areas using UGUI and GraphicRaycaster, the clickability is now consistent. (UUM-60672)
+    - UI Elements: Added a way to opt out of asset monitoring on specific editor windows to avoid performance issues with panels that contain many VisualElements. (UUM-60233)
+    - UI Elements: Fixed the disabled ListView's footer styling. (UUM-61636)
+    - UI Elements: Made the ListView's toggle focus state to match IMGUI. (UUM-37800)
+    - UI Toolkit: Fixed attribute overrides when it's multiple levels deep in the Hierarchy in the UI Builder. (UUM-59501)
+    - UI Toolkit: Fixed elements size when a new control is dragged onto the UI Builder hierarchy. (UUM-61553)
+    - UI Toolkit: UI Toolkit: Fixed "margin: auto" applied even when the visual Element has it's Display is set to none. (UUM-40647)
+    - UI Toolkit: UI Toolkit: The ScrollView now stops a touch scroll at a greater velocity, thus eliminating the "trail off" effect. (UUM-58479)
+    - UI Toolkit: UI Toolkit: The ScrollView touch scroll inertia now behaves similarly across multiple framerates. (UUM-59847)
+    - Universal Windows Platform: "FormatException: The input is not a valid Base-64 string" is thrown when setting EditorUserBuildSettings.windowsDevicePortalUsername. (UUM-58808)
+    - Universal Windows Platform: A customized "Package.appxmanifest" is overwritten when building the project for UWP. (UUM-64455)
+    - Version Control: Ensured branch creations start from the latest changeset.
+    - Version Control: Fixed Diff option unavailable for .prefab.
+    - Version Control: Fixed DropdownField not working properly on a ModalUtility window on MacOS.
+    - Version Control: Fixed finding changes operation being firing constantly.
+    - Version Control: Fixed issue with existing checkout operations locking the workspace.
+    - Version Control: Fixed layout error when switching checkout status in the inspector.
+    - Version Control: Fixed typo in locks tooltip.
+    - Version Control: Fixed UI error when opening and closing multiple closable tabs.
+    - Version Control: Pending Changes context menu had the view file history greyed out for asset+meta.
+    - Version Control: Preconfigured date format was not recognized as a valid DateTime.
+    - Version Control: Removed obsolete content in package documentation.
+    - Version Control: Replaced "plasticscm.com" by a "https://unity.com/solutions/version-control" in the package.json.
+    - Version Control: Reviewed initialization and application lifecycle.
+    - Version Control: Unable to expand added item list after collapsing.
+    - Video: Error "0xc00d36b4 while reading" is being thrown when turning on Transcode in the Import Settings of Video Clip Assets. (UUM-56816)
+    - Video: The "loopPointReached" event is continuously triggered when a Video Clip with looping and skip-on-drop disabled restarts playback after reaching the end. (UUM-64804)
+    - WebGL: Fixed the name files as hashes feature and corresponding integration test. (UUM-35863)
+    - WebGL: Removed "The PlayerLoop has been called recursively." error message spam. (UUM-55075)
+    Package changes in 2021.3.37f1
+    Packages updated
+    - com.unity.2d.aseprite: 1.1.1 → 1.1.2
+    - com.unity.collab-proxy: 2.2.0 → 2.3.1
+    - com.unity.ide.rider: 3.0.27 → 3.0.28
+    - com.unity.services.core: 1.12.2 → 1.12.4
+    - com.unity.services.qos: 1.2.1 → 1.3.0
+    - com.unity.services.wire: 1.2.2 → 1.2.3
+    - com.unity.visualscripting: 1.9.1 → 1.9.2
+    - com.unity.xr.oculus: 3.3.0 → 3.4.0
+    - com.unity.dt.app-ui: 1.0.1 → 1.0.2
+Version: 2021.3.37f1
+ReleaseTime: 2024-04-02T13:12:43.5310000Z
