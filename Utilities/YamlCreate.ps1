@@ -23,13 +23,14 @@ Param
 )
 if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
-$ScriptHeader = '# Created with YamlCreate.ps1 v2.3.4 Dumplings Mod'
+$ScriptHeader = '# Created with YamlCreate.ps1 v2.4.1 Dumplings Mod'
 $ManifestVersion = '1.6.0'
 $PSDefaultParameterValues['*:Encoding'] = 'UTF8'
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $Culture = 'en-US'
-$UserAgent = 'Microsoft-Delivery-Optimization/10.0'
 if (-not ([System.Environment]::OSVersion.Platform -match 'Win')) { $env:TEMP = '/tmp/' }
+$script:UserAgent = 'Microsoft-Delivery-Optimization/10.0'
+$script:BackupUserAgent = 'winget-cli WindowsPackageManager/1.7.10661 DesktopAppInstaller/Microsoft.DesktopAppInstaller v1.22.10661.0'
 
 $SchemaUrls = @{
   version       = "https://aka.ms/winget-manifest.version.$ManifestVersion.schema.json"
@@ -257,17 +258,10 @@ Function Get-InstallerFile {
 
   # Download the file
   try {
-    Invoke-WebRequest -Uri $URI -UserAgent $UserAgent -OutFile $_OutFile
+    Invoke-WebRequest -Uri $URI -UserAgent $script:UserAgent -OutFile $_OutFile
   } catch {
-    # Some sites ban the default user agent. Retry with the alternative one
-    if ($UserAgent -eq 'Microsoft-Delivery-Optimization/10.0') {
-      Write-Log -Object 'Failed to download the installer. Retry using the alternative user agent' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-      $UserAgent = 'winget-cli WindowsPackageManager/1.7.10661 DesktopAppInstaller/Microsoft.DesktopAppInstaller v1.22.10661.0'
-      Invoke-WebRequest -Uri $URI -UserAgent $UserAgent -OutFile $_OutFile
-      Write-Log -Object 'The server may have banned the default user agent. Default to the alternative user agent' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-    } else {
-      throw $_
-    }
+    # Failed to download with the Delivery-Optimization User Agent, so try again with the WinINet User Agent
+    Invoke-WebRequest -Uri $URI -UserAgent $script:BackupUserAgent -OutFile $_OutFile
   }
 
   return $_OutFile
