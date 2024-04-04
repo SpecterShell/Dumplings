@@ -1,19 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://msedge.api.cdp.microsoft.com/api/v2/contents/Browser/namespaces/Default/names?action=batchupdates' -Method Post -Body (
-  @(
-    @{ 'Product' = 'msedgewebview-stable-win-x86'; 'targetingAttributes' = @{} }
-    @{ 'Product' = 'msedgewebview-stable-win-x64'; 'targetingAttributes' = @{} }
-    @{ 'Product' = 'msedgewebview-stable-win-arm64'; 'targetingAttributes' = @{} }
-  ) | ConvertTo-Json -Compress -AsArray
-) -ContentType 'application/json'
-
-$Identical = $true
-if (@($Object1.ContentId.Version | Sort-Object -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
+$Object1 = Invoke-WebRequest -Uri 'https://developer.microsoft.com/en-us/microsoft-edge/webview2/' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Object1[2].ContentId.Version
+$this.CurrentState.Version = $Object1.SelectSingleNode('//button[@id="version"]/span').InnerText.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -30,17 +18,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
-    $this.Message()
-  }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl } -IncludeEqual -ExcludeDifferent) {
       throw 'Not all installers have been updated'
     } else {
+      $this.Write()
+      $this.Message()
       $this.Submit()
     }
   }
