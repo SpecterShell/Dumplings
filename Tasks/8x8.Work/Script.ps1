@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://cloud8.8x8.com/vos-update/public/api/v2/asset?application=work&channel=GA&platform=win32_x64&version=$($this.LastState.Contains('Version') ? $this.LastState.Version : 'v0.0.0-0-0')" -StatusCodeVariable 'StatusCode'
+$Object1 = Invoke-RestMethod -Uri "https://cloud8.8x8.com/vos-update/public/api/v2/asset?application=work&channel=GA&platform=win32_x64&version=$($this.LastState.Contains('FullVersion') ? $this.LastState.FullVersion : 'v0.0.0-0-0')" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
   $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
@@ -10,6 +10,12 @@ $VersionMatches = [regex]::Match($Object1.version, 'v((\d+\.\d+)[\d\.]+)-(\d+)')
 # Version
 $this.CurrentState.Version = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[3].Value)"
 
+# RealVersion
+$this.CurrentState.RealVersion = $VersionMatches.Groups[1].Value
+
+# FullVersion
+$this.CurrentState.FullVersion = $Object1.version
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType          = 'exe'
@@ -20,16 +26,28 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerWix = [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = "https://vod-updates.8x8.com/ga/work-64-msi-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).msi"
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, H:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, h:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    # AppsAndFeaturesEntries
+    $InstallerFileWix = Get-TempFile -Uri $InstallerWix.InstallerUrl
+    $InstallerWix['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWix -Algorithm SHA256).Hash
+    $InstallerWix['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayVersion = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[3].Value)"
+        ProductCode    = $InstallerWix['ProductCode'] = $InstallerFileWix | Read-ProductCodeFromMsi
+        UpgradeCode    = $InstallerFileWix | Read-UpgradeCodeFromMsi
+      }
+    )
+
     try {
       # Only parse version for major updates
       if (-not $this.LastState.Contains('Version') -or $VersionMatches.Groups[2].Value -ne ($this.LastState.Version.Split('.')[0..1] -join '.')) {
