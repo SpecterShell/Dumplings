@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/website/vista_later.json' | Read-ResponseContent | ConvertFrom-Json
+$Object1 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/x64/website/vista_later.json' | Read-ResponseContent | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.win.package.version
