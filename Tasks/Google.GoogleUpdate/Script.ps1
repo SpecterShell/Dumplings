@@ -13,11 +13,27 @@ $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' }, 'First')[0].run
+  InstallerUrl         = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' }, 'First')[0].run
+  InstallationMetadata = @{
+    DefaultInstallLocation = '%LOCALAPPDATA%\Google\Update'
+    Files                  = @(
+      @{
+        RelativeFilePath = ".\$($this.CurrentState.Version)\GoogleUpdate.exe"
+      }
+    )
+  }
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # InstallationMetadata > Files > FileSha256
+    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/update' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
+    $this.CurrentState.Installer[0].InstallationMetadata.Files[0]['FileSha256'] = (Join-Path $Env:LOCALAPPDATA 'Google' 'Update' $this.CurrentState.Version 'GoogleUpdate.exe' | Get-FileHash -Algorithm SHA256).Hash
+
     $this.Print()
     $this.Write()
   }
