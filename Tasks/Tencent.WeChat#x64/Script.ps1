@@ -1,16 +1,19 @@
 $Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 
-$Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState.LastModified } -SkipHttpErrorCheck
+$Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModified'] } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
-  return
+  $this.Log("The last version $($this.LastState.Version) is the latest", 'Info')
+  # Version
+  $this.CurrentState.Version = $this.LastState.Version
+  # LastModified
+  $this.CurrentState.LastModified = $this.LastState.LastModified
+} else {
+  $InstallerFile = Get-TempFile -Uri $Uri1
+  # Version
+  $this.CurrentState.Version = [regex]::Match((7z l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
+  # LastModified
+  $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 }
-$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
-
-$Path = Get-TempFile -Uri $Uri1
-
-# Version
-$this.CurrentState.Version = [regex]::Match((7z l -ba -slt $Path), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
 try {
   $Uri2 = "https://dldir1v6.qq.com/weixin/Windows/WeChat$($this.CurrentState.Version).exe"
