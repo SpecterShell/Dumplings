@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     $this.Write()
   }
   'Updated' {
-    if (Compare-Object -ReferenceObject $this.LastState -DifferenceObject $this.CurrentState -Property { $_.Installer.InstallerUrl } -IncludeEqual -ExcludeDifferent) {
+    if (Compare-Object -ReferenceObject $this.LastState.Installer.InstallerUrl -DifferenceObject $this.CurrentState.Installer.InstallerUrl -IncludeEqual -ExcludeDifferent) {
       throw 'Not all installers have been updated'
     } else {
       $this.Write()
