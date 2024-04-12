@@ -72,6 +72,26 @@ switch -Regex ($this.Check()) {
       }
     )
 
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://support.ringcentral.com/release-notes/mvp/app/desktop-webapp.html' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'root')]//div[contains(@class, 'grid-item__parsys')]/div[contains(@class, 'custom-text') and contains(., 'Version $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[2]'); $Node; $Node = $Node.NextSibling) { $Node }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
