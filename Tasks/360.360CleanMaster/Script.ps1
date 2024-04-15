@@ -1,5 +1,5 @@
 $Path = Get-TempFile -Uri 'https://ini.update.360safe.com/v3/360csaupd_manual.cab'
-expand.exe -R $Path
+expand.exe -R $Path | Out-Host
 $Object1 = Join-Path $Path '..' '360csaupd_manual.ini' -Resolve | Get-Item | Get-Content -Raw -Encoding 'gb18030' | ConvertFrom-Ini
 
 # Version

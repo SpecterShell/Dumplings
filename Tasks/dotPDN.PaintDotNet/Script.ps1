@@ -56,7 +56,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
     $NestedInstallerFileX64 = $InstallerFileX64 | Expand-TempArchive | Join-Path -ChildPath $InstallerX64.NestedInstallerFiles[0].RelativeFilePath
     $ExtractedNestedInstallerFileX64 = New-TempFolder
-    7z e -aoa -ba -bd -o"${ExtractedNestedInstallerFileX64}" $NestedInstallerFileX64 'x64\PaintDotNet_x64.msi'
+    7z e -aoa -ba -bd -o"${ExtractedNestedInstallerFileX64}" $NestedInstallerFileX64 'x64\PaintDotNet_x64.msi' | Out-Host
     $RealInstallerFileX64 = Join-Path $ExtractedNestedInstallerFileX64 'PaintDotNet_x64.msi'
 
     $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
@@ -71,7 +71,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileARM64 = Get-TempFile -Uri $InstallerARM64.InstallerUrl
     $NestedInstallerFileARM64 = $InstallerFileARM64 | Expand-TempArchive | Join-Path -ChildPath $InstallerARM64.NestedInstallerFiles[0].RelativeFilePath
     $ExtractedNestedInstallerFileARM64 = New-TempFolder
-    7z e -aoa -ba -bd -o"${ExtractedNestedInstallerFileARM64}" $NestedInstallerFileARM64 'arm64\PaintDotNet_arm64.msi'
+    7z e -aoa -ba -bd -o"${ExtractedNestedInstallerFileARM64}" $NestedInstallerFileARM64 'arm64\PaintDotNet_arm64.msi' | Out-Host
     $RealInstallerFileARM64 = Join-Path $ExtractedNestedInstallerFileARM64 'PaintDotNet_arm64.msi'
 
     $InstallerARM64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileARM64 -Algorithm SHA256).Hash

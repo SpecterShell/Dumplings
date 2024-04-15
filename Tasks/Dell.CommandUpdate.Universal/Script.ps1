@@ -1,5 +1,5 @@
 $Path = Get-TempFile -Uri 'https://dellupdater.dell.com/non_du/ClientService/Catalog/Platform/PrecedenceCatalog.cab'
-expand.exe -R $Path
+expand.exe -R $Path | Out-Host
 $Object1 = (Join-Path $Path '..' 'PrecedenceCatalog.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml).Precedence.Demoted.SoftwareComponent.Where({ $_.Name.Display.'#cdata-section' -eq 'Dell Command | Update Windows Universal Application' }, 'First')[0]
 
 # Version
@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
     $InstallerFileExtracted = New-TempFolder
-    7z e -aoa -ba -bd -o"${InstallerFileExtracted}" $InstallerFile
+    7z e -aoa -ba -bd -o"${InstallerFileExtracted}" $InstallerFile | Out-Host
 
     $Object2 = Join-Path $InstallerFileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     $NestedInstallerFile = Join-Path $InstallerFileExtracted $Object2.MUPDefinition.executable.executablename
