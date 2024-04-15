@@ -693,18 +693,24 @@ function Read-FileVersionFromExe {
   }
 }
 
-function Read-ProductVersionFromMsi {
+function Read-MsiProperty {
   <#
   .SYNOPSIS
-    Read the ProductVersion property of the MSI file
+    Read property value from a table of the specified MSI file using SQL-like query
   .PARAMETER Path
     The path to the MSI file
+  .PARAMETER Query
+    The SQL-like query
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
+    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
     [string]
-    $Path
+    $Path,
+
+    [Parameter(Position = 1, Mandatory, HelpMessage = 'The SQL-like query')]
+    [string]
+    $Query
   )
 
   begin {
@@ -713,7 +719,7 @@ function Read-ProductVersionFromMsi {
 
   process {
     $Database = $WindowsInstaller.OpenDatabase($Path, 0)
-    $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='ProductVersion'")
+    $View = $Database.OpenView($Query)
     $View.Execute() | Out-Null
     $Record = $View.Fetch()
     Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
@@ -725,13 +731,32 @@ function Read-ProductVersionFromMsi {
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
     [System.GC]::Collect()
     [System.GC]::WaitForPendingFinalizers()
+  }
+}
+
+function Read-ProductVersionFromMsi {
+  <#
+  .SYNOPSIS
+    Read the value of the ProductVersion property from the MSI file
+  .PARAMETER Path
+    The path to the MSI file
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
+    [string]
+    $Path
+  )
+
+  process {
+    Read-MsiProperty -Path $Path -Query "SELECT Value FROM Property WHERE Property='ProductVersion'"
   }
 }
 
 function Read-ProductCodeFromMsi {
   <#
   .SYNOPSIS
-    Read the ProductCode property of the MSI file
+    Read the value of the ProductCode property from the MSI file
   .PARAMETER Path
     The path to the MSI file
   #>
@@ -742,31 +767,15 @@ function Read-ProductCodeFromMsi {
     $Path
   )
 
-  begin {
-    $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
-  }
-
   process {
-    $Database = $WindowsInstaller.OpenDatabase($Path, 0)
-    $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='ProductCode'")
-    $View.Execute() | Out-Null
-    $Record = $View.Fetch()
-    Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
-  }
-
-  end {
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($WindowsInstaller) | Out-Null
-    [System.GC]::Collect()
-    [System.GC]::WaitForPendingFinalizers()
+    Read-MsiProperty -Path $Path -Query "SELECT Value FROM Property WHERE Property='ProductCode'"
   }
 }
 
 function Read-UpgradeCodeFromMsi {
   <#
   .SYNOPSIS
-    Read the UpgradeCode property of the MSI file
+    Read the value of the UpgradeCode property from the MSI file
   .PARAMETER Path
     The path to the MSI file
   #>
@@ -777,17 +786,61 @@ function Read-UpgradeCodeFromMsi {
     $Path
   )
 
+  process {
+    Read-MsiProperty -Path $Path -Query "SELECT Value FROM Property WHERE Property='UpgradeCode'"
+  }
+}
+
+function Read-MsiSummaryValue {
+  <#
+  .SYNOPSIS
+    Read property value from the summary of the MSI file
+  .PARAMETER Path
+    The path to the MSI file
+  .PARAMETER Name
+    The name of the property
+  #>
+  param (
+    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
+    [string]
+    $Path,
+
+    [Parameter(Position = 1, Mandatory, HelpMessage = 'The name of the property')]
+    [ValidateSet('Codepage', 'Title', 'Subject', 'Author', 'Keywords', 'Comments', 'Template', 'LastAuthor', 'RevNumber', 'EditTime', 'LastPrinted', 'CreateDtm', 'LastSaveDtm', 'PageCount', 'WordCount', 'CharCount', 'AppName', 'Security')]
+    [string]
+    $Name
+  )
+
   begin {
     $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
   }
 
   process {
+    $Index = switch ($Name) {
+      'Codepage' { 1 }
+      'Title' { 2 }
+      'Subject' { 3 }
+      'Author' { 4 }
+      'Keywords' { 5 }
+      'Comments' { 6 }
+      'Template' { 7 }
+      'LastAuthor' { 8 }
+      'RevNumber' { 9 }
+      'EditTime' { 10 }
+      'LastPrinted' { 11 }
+      'CreateDtm' { 12 }
+      'LastSaveDtm' { 13 }
+      'PageCount' { 14 }
+      'WordCount' { 15 }
+      'CharCount' { 16 }
+      'AppName' { 18 }
+      'Security' { 19 }
+      Default { throw 'No such property or property not supported' }
+    }
     $Database = $WindowsInstaller.OpenDatabase($Path, 0)
-    $View = $Database.OpenView("SELECT Value FROM Property WHERE Property='UpgradeCode'")
-    $View.Execute() | Out-Null
-    $Record = $View.Fetch()
-    Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
+    $SummaryInfo = $Database.GetType().InvokeMember('SummaryInformation', 'GetProperty', $null , $Database, $null)
+    Write-Output -InputObject ($SummaryInfo.GetType().InvokeMember('Property', 'GetProperty', $Null, $SummaryInfo, $Index))
+    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($SummaryInfo) | Out-Null
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
   }
 
