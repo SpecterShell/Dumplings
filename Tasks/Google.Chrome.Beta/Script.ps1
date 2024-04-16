@@ -21,8 +21,14 @@ if ($Object2.StatusCode -eq 304) {
 
 $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 
-# InstallerSha256
+# InstallerSha256 + AppsAndFeaturesEntries
 $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerX64File -Algorithm SHA256).Hash
+$InstallerX64['AppsAndFeaturesEntries'] = @(
+  [ordered]@{
+    ProductCode = $InstallerX64['ProductCode'] = $InstallerX64File | Read-ProductCodeFromMsi
+    UpgradeCode = $InstallerX64File | Read-UpgradeCodeFromMsi
+  }
+)
 
 # Version
 $this.CurrentState.Version = (Read-MsiSummaryValue -Path $InstallerX64File -Name Comments).Split(' ')[0].Trim()
