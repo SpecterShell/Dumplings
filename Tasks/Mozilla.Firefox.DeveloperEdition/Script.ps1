@@ -283,7 +283,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     # Too many installers...
     $this.Message(@"
-Mozilla.Firefox
+Mozilla.Firefox.DeveloperEdition
 
 Version: $($this.CurrentState.Version)
 ReleaseDate: $($this.CurrentState.ReleaseTime)
