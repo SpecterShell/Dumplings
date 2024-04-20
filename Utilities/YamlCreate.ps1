@@ -625,6 +625,8 @@ Function Read-QuickInstallerEntry {
       if ($_MatchingInstaller.InstallerType) { $_NewInstaller['InstallerType'] = $_MatchingInstaller.InstallerType }
       if ($_MatchingInstaller.ProductCode) { $_NewInstaller['ProductCode'] = $_MatchingInstaller.ProductCode }
       elseif ( ($_NewInstaller.Keys -contains 'ProductCode') -and ($script:dest -notmatch '.exe$')) { $_NewInstaller.Remove('ProductCode') }
+      if ($_MatchingInstaller.AppsAndFeaturesEntries) { $_NewInstaller['AppsAndFeaturesEntries'] = $_MatchingInstaller.AppsAndFeaturesEntries }
+      elseif ($_NewInstaller.Keys -contains 'AppsAndFeaturesEntries') { $_NewInstaller.Remove('AppsAndFeaturesEntries') }
       if ($_MatchingInstaller.PackageFamilyName) { $_NewInstaller['PackageFamilyName'] = $_MatchingInstaller.PackageFamilyName }
       elseif ($_NewInstaller.Keys -contains 'PackageFamilyName') { $_NewInstaller.Remove('PackageFamilyName') }
       if ($_MatchingInstaller.SignatureSha256) { $_NewInstaller['SignatureSha256'] = $_MatchingInstaller.SignatureSha256 }
