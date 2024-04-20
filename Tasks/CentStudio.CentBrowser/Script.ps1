@@ -1,65 +1,37 @@
-# International x86
-$RequestX86 = [System.Net.WebRequest]::Create('https://www.centbrowser.com/update.php?switches&cb-check-update&version=4.3.9.248')
-$RequestX86.AllowAutoRedirect = $false
-$ResponseX86 = $RequestX86.GetResponse()
+$Prefix = 'https://static.centbrowser.com/win_stable/'
+$PrefixCN = 'https://static.centbrowser.cn/win_stable/'
 
-# International x64
-$RequestX64 = [System.Net.WebRequest]::Create('https://www.centbrowser.com/update.php?switches&64bit&cb-check-update&version=4.3.9.248')
-$RequestX64.AllowAutoRedirect = $false
-$ResponseX64 = $RequestX64.GetResponse()
-
-# Chinese x86
-$RequestCNX86 = [System.Net.WebRequest]::Create('https://www.centbrowser.cn/update.php?switches&cb-check-update&version=4.3.9.248')
-$RequestCNX86.AllowAutoRedirect = $false
-$ResponseCNX86 = $RequestCNX86.GetResponse()
-
-# Chinese x64
-$RequestCNX64 = [System.Net.WebRequest]::Create('https://www.centbrowser.cn/update.php?switches&64bit&cb-check-update&version=4.3.9.248')
-$RequestCNX64.AllowAutoRedirect = $false
-$ResponseCNX64 = $RequestCNX64.GetResponse()
-
-$Identical = $true
-if (@(@($ResponseX86, $ResponseX64, $ResponseCNX86, $ResponseCNX64) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Version
-$this.CurrentState.Version = $ResponseCNX64.GetResponseHeader('Cent-Version')
+$this.CurrentState.Version = ($Object1.Links.href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $ResponseX86.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl = "${Prefix}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version).exe"
 }
-$ResponseX86.Close()
-
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $ResponseX64.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl = "${Prefix}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version)_x64.exe"
 }
-$ResponseX64.Close()
-
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
-  InstallerUrl    = $ResponseCNX86.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl    = "${PrefixCN}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version).exe"
 }
-$ResponseCNX86.Close()
-
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
-  InstallerUrl    = $ResponseCNX64.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl    = "${PrefixCN}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version)_x64.exe"
 }
-$ResponseCNX64.Close()
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = Invoke-WebRequest -Uri 'https://www.centbrowser.com/history.html' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.centbrowser.com/history.html' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object1.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
@@ -82,9 +54,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.centbrowser.cn/history.html' | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri 'https://www.centbrowser.cn/history.html' | ConvertFrom-Html
 
-      $ReleaseNotesCNNode = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
+      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match(
@@ -112,7 +84,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
