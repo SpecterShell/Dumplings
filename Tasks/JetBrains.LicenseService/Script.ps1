@@ -21,10 +21,17 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+      }
+    )
 
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
