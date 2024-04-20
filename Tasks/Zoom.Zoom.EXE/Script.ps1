@@ -9,24 +9,23 @@ $Object2 = $Object1['12'].Replace(';', "`n") | ConvertFrom-StringData
 $this.CurrentState.Version = $Object2.'Real-version'
 
 # RealVersion
-$VersionParts = $Object2.'Real-version'.Split('.')
-$this.CurrentState.RealVersion = "$($VersionParts[0]).$($VersionParts[1]).$($VersionParts[3])"
+$this.CurrentState.RealVersion = $Object2.'Display-version'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
-  InstallerType = 'msi'
-  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.msi"
+  InstallerType = 'exe'
+  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'msi'
-  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.msi?archType=x64"
+  InstallerType = 'exe'
+  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe?archType=x64"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
-  InstallerType = 'msi'
-  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.msi?archType=winarm64"
+  InstallerType = 'exe'
+  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe?archType=winarm64"
 }
 
 $ReleaseNotesObject = ($Object1['11'] -split '(?=Release notes of \d+\.\d+\.\d+ \(\d+\))').Where({ $_.Contains($Object2.'Display-version') }, 'First')[0]
