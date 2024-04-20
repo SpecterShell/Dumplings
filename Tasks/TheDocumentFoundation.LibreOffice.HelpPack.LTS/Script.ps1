@@ -1,5 +1,5 @@
 # The following locales can't be matched by WinGet properly and thus are omitted: sid
-$Locales = @('am', 'ar', 'ast', 'bg', 'bn-IN', 'bn', 'bo', 'bs', 'ca-valencia', 'ca', 'cs', 'da', 'de', 'dsb', 'dz', 'el', 'en-GB', 'en-US', 'en-ZA', 'eo', 'es', 'et', 'eu', 'fi', 'fr', 'gl', 'gu', 'he', 'hi', 'hr', 'hsb', 'hu', 'id', 'is', 'it', 'ja', 'ka', 'km', 'ko', 'lo', 'lt', 'lv', 'mk', 'nb', 'ne', 'nl', 'nn', 'om', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'si', 'sid', 'sk', 'sl', 'sq', 'sv', 'ta', 'tg', 'tr', 'ug', 'uk', 'vi', 'zh-CN', 'zh-TW')
+$Locales = @('am', 'ar', 'ast', 'bg', 'bn-IN', 'bn', 'bo', 'bs', 'ca-valencia', 'ca', 'cs', 'da', 'de', 'dsb', 'dz', 'el', 'en-GB', 'en-US', 'en-ZA', 'eo', 'es', 'et', 'eu', 'fi', 'fr', 'gl', 'gu', 'he', 'hi', 'hr', 'hsb', 'hu', 'id', 'is', 'it', 'ja', 'ka', 'km', 'ko', 'lo', 'lt', 'lv', 'mk', 'nb', 'ne', 'nl', 'nn', 'om', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'sq', 'sv', 'ta', 'tg', 'tr', 'ug', 'uk', 'vi', 'zh-CN', 'zh-TW')
 $ArchMap = [ordered]@{
   x86   = 'x86'
   x64   = 'x86_64'
