@@ -1,6 +1,21 @@
 $Prefix = 'https://download.todesktop.com/2003241lzgn20jd/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+# See: https://github.com/microsoft/winget-pkgs/pull/146880#discussion_r1571129412
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl = $Prefix + $Object1.files[0].url
+# }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://download.beeper.com/windows/nsis/x64'
+}
+
+# ReleaseTime
+$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
