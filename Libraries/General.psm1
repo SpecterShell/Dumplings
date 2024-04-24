@@ -1111,4 +1111,7 @@ function Copy-Object {
   }
 }
 
-Export-ModuleMember -Function *
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultUserAgent', Justification = 'This variable will be exported')]
+$DumplingsDefaultUserAgent = [Microsoft.PowerShell.Commands.PSUserAgent].GetProperty('UserAgent', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static).GetValue($null)
+
+Export-ModuleMember -Function * -Variable 'DumplingsDefaultUserAgent'
