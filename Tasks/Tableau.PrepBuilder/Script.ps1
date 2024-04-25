@@ -1,15 +1,15 @@
-$this.Log($DumplingsDefaultUserAgent, 'Warning')
+$UserAgent = 'Tableau Desktop 20233.23.1017.0948; public; libcurl-client; 64-bit; en_US; Microsoft Windows 10 Pro (Build 19045);'
 
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/support/releases/prep/latest' -Headers @{ Accept = '*/*'; 'User-Agent' = $DumplingsDefaultUserAgent }
+  Value = $ReleaseNotesUrl = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/support/releases/prep/latest' -Headers @{ Accept = '*/*'; 'User-Agent' = $UserAgent }
 }
 # ReleaseNotesUrl (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotesUrl'
-  Value  = $ReleaseNotesUrlCN = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/zh-cn/support/releases/prep/latest' -Headers @{ Accept = '*/*'; 'User-Agent' = $DumplingsDefaultUserAgent }
+  Value  = $ReleaseNotesUrlCN = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/zh-cn/support/releases/prep/latest' -Headers @{ Accept = '*/*'; 'User-Agent' = $UserAgent }
 }
 
 $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl -Headers @{ Accept = '*/*' } | ConvertFrom-Html
