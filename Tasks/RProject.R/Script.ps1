@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://cloud.r-project.org/bin/windows/base/
 
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/head/meta').Attributes['CONTENT'].Value,
+  $Object1.SelectSingleNode('/html/head/meta[@http-equiv="Refresh"]').Attributes['CONTENT'].Value,
   '-(\d+\.\d+\.\d+)[-.]'
 ).Groups[1].Value
 
@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='container']/h3[contains(text(), '${Version}')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='container']//h3[contains(text(), '${Version}')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
