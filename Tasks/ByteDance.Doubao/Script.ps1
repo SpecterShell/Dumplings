@@ -25,20 +25,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $ToSubmit = $false
-
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsDouyinIM')
-    $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("DouyinIMSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["DouyinIMSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
-    }
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
-
-    if ($ToSubmit) {
-      $this.Submit()
-    } else {
-      $this.Log('Another task is submitting manifests for this package', 'Warning')
-    }
+    $this.Submit()
   }
 }
