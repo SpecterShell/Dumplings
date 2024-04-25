@@ -1,3 +1,5 @@
+$this.Log($DumplingsDefaultUserAgent, 'Warning')
+
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
