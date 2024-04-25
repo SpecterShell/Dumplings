@@ -1,9 +1,6 @@
-$Headers = @{
-  Accept       = '*/*'
-  'User-Agent' = 'Tableau Desktop 20233.23.1017.0948; public; libcurl-client; 64-bit; en_US; Microsoft Windows 10 Pro (Build 19045);'
-}
+$UserAgent = 'libcurl-client'
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.tableau.com/support/releases/prep/latest' -Headers $Headers -SkipHeaderValidation
+$Object1 = Invoke-WebRequest -Uri 'https://www.tableau.com/support/releases/prep/latest' -UserAgent $UserAgent
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
@@ -12,7 +9,7 @@ $this.CurrentState.Locale += [ordered]@{
 
 $Object2 = $Object1 | ConvertFrom-Html
 $Object3 = $Object2.SelectSingleNode('//script[@data-drupal-selector="drupal-settings-json"]').InnerText.Trim() | ConvertFrom-Json
-$Object4 = Invoke-RestMethod -Uri $Object3.tableauReleaseDownloadLinks.url -Headers $Headers -SkipHeaderValidation | Get-EmbeddedJson -StartsFrom 'jsonCallback(' | ConvertFrom-Json
+$Object4 = Invoke-RestMethod -Uri $Object3.tableauReleaseDownloadLinks.url -UserAgent $UserAgent | Get-EmbeddedJson -StartsFrom 'jsonCallback(' | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object4.release[0].version
@@ -27,7 +24,7 @@ $this.CurrentState.ReleaseTime = $Object4.release[0].release_date | Get-Date -Fo
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -Headers $Headers -SkipHeaderValidation
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $UserAgent
 
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -54,7 +51,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object5 = Invoke-WebRequest -Uri 'https://www.tableau.com/zh-cn/support/releases/prep/latest' -Headers $Headers -SkipHeaderValidation
+      $Object5 = Invoke-WebRequest -Uri 'https://www.tableau.com/zh-cn/support/releases/prep/latest' -UserAgent $UserAgent
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'

@@ -1,6 +1,8 @@
+$UserAgent = 'libcurl-client'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/downloads/public/pc64' -Headers @{ Accept = '*/*'; 'User-Agent' = $DumplingsDefaultUserAgent }
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/downloads/public/pc64' -Headers @{ 'User-Agent' = $UserAgent }
 }
 
 # Version
@@ -8,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(\-\d+){1,3})').
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -Headers @{ Accept = '*/*' }
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $UserAgent
 
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
