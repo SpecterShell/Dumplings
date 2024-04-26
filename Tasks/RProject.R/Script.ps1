@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='container']//h3[contains(text(), '${Version}')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'

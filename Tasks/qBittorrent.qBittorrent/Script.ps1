@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
         # Remove the header of the library version table
         $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::details/table/thead')?.Remove()
 
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'

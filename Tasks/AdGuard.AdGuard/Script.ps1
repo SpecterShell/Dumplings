@@ -10,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 $ReleaseNotesTitleNode = (($Object1.response.'release-notes'.'#cdata-section' | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectSingleNode("./h1[text()='$($this.CurrentState.Version)']")
 if ($ReleaseNotesTitleNode) {
-  $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
+  $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'

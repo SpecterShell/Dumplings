@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_14664']/*[contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[contains(.//text(), "changelog")][1]').NextSibling; $Node.InnerText -cnotmatch '下载地址|- - - - -'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[contains(.//text(), "changelog")][1]').NextSibling; $Node -and $Node.InnerText -cnotmatch '下载地址|- - - - -'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
