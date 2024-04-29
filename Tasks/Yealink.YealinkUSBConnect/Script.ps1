@@ -1,8 +1,10 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.yealink.com/en/product-detail/usb-connect-management' | ConvertFrom-Html
 
 # Installer
+$InstallerUrl = $Object1.SelectSingleNode('/html/body/main/div/article[1]/div/div[1]/div/small/p/span/a[1]').Attributes['href'].Value
+if ($InstallerUrl.StartsWith('/')) { $InstallerUrl = 'https://www.yealink.com' + $InstallerUrl }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('/html/body/main/div/article[1]/div/div[1]/div/small/p/span/a[1]').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl
 }
 
 # Version
