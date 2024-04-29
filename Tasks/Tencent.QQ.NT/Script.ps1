@@ -1,8 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsDownloadUrl.js' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
-# Version
-$this.CurrentState.Version = $Object1.ntVersion
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
@@ -10,8 +7,11 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $InstallerUrl = $Object1.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = $Object1.ntPublishTime | Get-Date -Format 'yyyy-MM-dd'
