@@ -16,18 +16,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    try {
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = Invoke-RestMethod -Uri "https://release-notes.evernote.com/desktop/$($this.CurrentState.Version)/desktop/zh-cn.txt" | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
