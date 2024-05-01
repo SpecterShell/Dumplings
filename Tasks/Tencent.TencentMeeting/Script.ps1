@@ -9,7 +9,12 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
 
   # Installer
   $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
     InstallerUrl = $Global:DumplingsStorage['TencentMeeting1'].$Version1.InstallerUrl
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x64'
+    InstallerUrl = $Global:DumplingsStorage['TencentMeeting1'].$Version1.InstallerUrlX64
   }
 } else {
   # Version
@@ -17,7 +22,12 @@ if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -
 
   # Installer
   $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
     InstallerUrl = $Global:DumplingsStorage['TencentMeeting2'].$Version2.InstallerUrl
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x64'
+    InstallerUrl = $Global:DumplingsStorage['TencentMeeting2'].$Version2.InstallerUrlX64
   }
 }
 
