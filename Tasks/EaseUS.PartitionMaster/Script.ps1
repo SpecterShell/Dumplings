@@ -1,11 +1,15 @@
-$Object1 = Invoke-RestMethod -Uri 'https://download.easeus.com/api/index.php/Home/Index/productInstall?pid=5&version=free'
+$Object1 = Invoke-RestMethod -Uri 'http://download.easeus.com/api2/index.php/Apicp/Drwdl202004/index/' -Method Post -Body @{
+  exeNumber = 100000
+  pid       = 5
+  version   = 'free'
+}
 
 # Version
 $this.CurrentState.Version = $Object1.data.curNum
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.download3
+  InstallerUrl = $Object1.data.download
 }
 
 switch -Regex ($this.Check()) {
