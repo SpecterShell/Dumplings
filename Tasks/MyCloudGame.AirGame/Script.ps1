@@ -10,11 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[@id="WIN_APP_LINK2"]').Attributes['href'].Value
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object1.SelectSingleNode('//*[@id="WIN_APP_LINK"]').Attributes['href'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//*[@id="WIN_APP_LINK2" or @id="WIN_APP_LINK3"]').Attributes['href'].Value
 }
 
 $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//*[@id='page-top']/table/tbody/tr/td[2]/table/tbody/tr/td/h4[starts-with(./text(), 'AirGame')]").Where({ $_.InnerText.EndsWith([regex]::Match($this.CurrentState.Version, '([\d\.]+)').Groups[1].Value) }, 'First')
