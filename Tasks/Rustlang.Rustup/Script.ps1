@@ -1,7 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/rust-lang/rustup/master/Cargo.toml'
+$Object1 = Invoke-RestMethod -Uri 'https://static.rust-lang.org/rustup/release-stable.toml'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1, 'version\s*=\s*"([\d.]+)"').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1, "(?m)^version\s*=\s*[`"'](.+)['`"]$").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
