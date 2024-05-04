@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = "https://mogan.app/guide/ChangeLog_v$($this.CurrentState.Version).html"
+          Value  = "https://mogan.app/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2]).html"
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -73,7 +73,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
-          Value  = "https://mogan.app/zh/guide/ChangeLog_v$($this.CurrentState.Version).html"
+          Value  = "https://mogan.app/zh/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2]).html"
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
