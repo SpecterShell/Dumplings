@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://swcatalog.apple.com/content/catalogs/others/index-windows-1.sucatalog' | ConvertFrom-PropertyList
+$Object1 = $Global:DumplingsStorage.AppleProducts
 
 $Object2 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMetadataURL') -and $_.Value.ServerMetadataURL.Contains('WINDOWS64_iTunes.smd') })[-1].Value
 $Object3 = Invoke-RestMethod -Uri $Object2.Distributions.English
@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
