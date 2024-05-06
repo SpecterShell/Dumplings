@@ -10,7 +10,10 @@ if (Compare-Object -ReferenceObject $Object1.distro_version -DifferenceObject $O
 }
 
 # Version
-$this.CurrentState.Version = $Object2.distro_version[0..2] -join '.'
+$this.CurrentState.Version = $Object1.distro_version -join '.'
+
+# RealVersion
+$this.CurrentState.RealVersion = $Object1.distro_version[0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
