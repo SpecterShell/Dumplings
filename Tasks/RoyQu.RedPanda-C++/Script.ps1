@@ -1,30 +1,27 @@
 $RepoOwner = 'royqh1979'
 $RepoName = 'RedPanda-CPP'
 $ProjectName = 'redpanda-cpp'
+$ProjectPath = ''
 
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=/"
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${ProjectPath}"
+$Assets = $Object1 | Where-Object -FilterScript { $_.title.'#cdata-section' -match "^$([regex]::Escape($ProjectPath))/v?[\d\.]+/RedPanda.+Setup\.exe$" }
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  ($Object1.title.'#cdata-section' -match '^/v?[\d\.]+/RedPanda\.C\+\+\.[\d\.]+\.w.+\.Setup\.exe$')[0],
-  '^/v?([\d\.]+)/'
-).Groups[1].Value
-
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^/v?$([regex]::Escape($this.CurrentState.Version))/RedPanda\.C\+\+\.[\d\.]+\.w.+\.Setup\.exe$" })
+$this.CurrentState.Version = $Assets[0].title.'#cdata-section' -replace "^$([regex]::Escape($ProjectPath))/v?([\d\.]+)/.+", '$1'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
 # ReleaseTime
 $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('GCC') }, 'First')[0].pubDate,
+  $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].pubDate,
   'ddd, dd MMM yyyy HH:mm:ss "UT"',
   (Get-Culture -Name 'en-US')
 ) | ConvertTo-UtcDateTime -Id 'UTC'
