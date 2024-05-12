@@ -579,7 +579,7 @@ Function Read-QuickInstallerEntry {
     $_NewInstaller.Remove('InstallerSha256')
 
     # Show the user which installer is being updated
-    Write-Log -Object "Updating installer #${_iteration} [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['NestedInstallerType']), $($_NewInstaller['Scope'])]" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+    Write-Log -Object "Updating installer #${_iteration}/$($_OldInstallers.Count) [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['NestedInstallerType']), $($_NewInstaller['Scope'])]" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
 
     # Apply inputs
     $Updated = $false

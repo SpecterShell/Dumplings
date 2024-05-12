@@ -235,7 +235,7 @@ class PackageTask {
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.Append("**Installer \#${i} \(")
+      $Message.Append("**Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
       $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-MarkdownEscapedText) : '\*'))
       $Message.Append(', ')
       $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-MarkdownEscapedText) : '\*'))
@@ -295,9 +295,9 @@ class PackageTask {
     if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'] | ConvertTo-TelegramEscapedText)") }
 
     # Installer
-    for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
+    for ($i = 0; $i -lt $this.CurrentState.Installer.Count -and $i -lt 10; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.Append("*Installer \#${i} \(")
+      $Message.Append("*Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
       $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-TelegramEscapedText) : '\*'))
       $Message.Append(', ')
       $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-TelegramEscapedText) : '\*'))
