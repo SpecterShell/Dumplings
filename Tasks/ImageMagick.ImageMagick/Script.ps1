@@ -3,26 +3,36 @@ $Prefix = 'https://imagemagick.org/archive/binaries/'
 $Object1 = Invoke-RestMethod -Uri "${Prefix}digest.rdf"
 
 $InstallerObjects = $Object1.RDF.Content |
-  Where-Object -FilterScript { $_.about.EndsWith('.exe') -and $_.about.Contains('Q16') -and $_.about.Contains('HDRI') -and $_.about.Contains('dll') } |
+  Where-Object -FilterScript { $_.about -match '\.(exe|zip)' -and $_.about.Contains('Q16') -and $_.about.Contains('HDRI') } |
   Sort-Object -Property { $_.about -replace '\d+', { $_.Value.PadLeft(20) } }
 
-$InstallerObjectX86 = $InstallerObjects.Where({ $_.about.Contains('x86') }, 'Last')[0]
+$InstallerObjectX86 = $InstallerObjects.Where({ $_.about.Contains('x86') -and $_.about.Contains('dll') }, 'Last')[0]
 $VersionX86 = [regex]::Match($InstallerObjectX86.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
 
-$InstallerObjectX64 = $InstallerObjects.Where({ $_.about.Contains('x64') }, 'Last')[0]
+$InstallerObjectX64 = $InstallerObjects.Where({ $_.about.Contains('x64') -and $_.about.Contains('dll') }, 'Last')[0]
 $VersionX64 = [regex]::Match($InstallerObjectX64.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
 
-$InstallerObjectArm64 = $InstallerObjects.Where({ $_.about.Contains('arm64') }, 'Last')[0]
+$InstallerObjectArm64 = $InstallerObjects.Where({ $_.about.Contains('arm64') -and $_.about.Contains('dll') }, 'Last')[0]
 $VersionArm64 = [regex]::Match($InstallerObjectArm64.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
+
+$InstallerObjectZipX86 = $InstallerObjects.Where({ $_.about.Contains('x86') -and $_.about.Contains('portable') }, 'Last')[0]
+$VersionZipX86 = [regex]::Match($InstallerObjectZipX86.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
+
+$InstallerObjectZipX64 = $InstallerObjects.Where({ $_.about.Contains('x64') -and $_.about.Contains('portable') }, 'Last')[0]
+$VersionZipX64 = [regex]::Match($InstallerObjectZipX64.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
+
+$InstallerObjectZipArm64 = $InstallerObjects.Where({ $_.about.Contains('arm64') -and $_.about.Contains('portable') }, 'Last')[0]
+$VersionZipArm64 = [regex]::Match($InstallerObjectZipArm64.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
 
 $Object2 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/ImageMagick/ImageMagick/releases/latest'
 $VersionMSIX = $Object2.tag_name -creplace '^v'
 
-if (@(@($VersionX86, $VersionX64, $VersionArm64, $VersionMSIX) | Sort-Object -Unique).Count -gt 1) {
+if (@(@($VersionX86, $VersionX64, $VersionArm64, $VersionMSIX, $VersionZipX86, $VersionZipX64, $VersionZipArm64) | Sort-Object -Unique).Count -gt 1) {
   throw 'Distinct versions detected'
 }
 
 $Version = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Commands = @('compare', 'composite', 'conjure', 'convert', 'identify', 'magick', 'mogrify', 'montage', 'stream')
 
 # Version
 $this.CurrentState.Version = $Version.Replace('-', '.')
@@ -52,6 +62,42 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msix'
   InstallerUrl  = $Object2.assets.Where({ $_.name.EndsWith('.msixbundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x86'
+  InstallerType        = 'zip'
+  NestedInstallerFiles = $Commands | ForEach-Object -Process {
+    [ordered]@{
+      RelativeFilePath     = "$(Split-Path -Path $InstallerObjectZipX86.about -LeafBase)\${_}.exe"
+      PortableCommandAlias = $_
+    }
+  }
+  InstallerUrl         = $Prefix + $InstallerObjectZipX86.about
+  InstallerSha256      = $InstallerObjectZipX86.sha256.ToUpper()
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  NestedInstallerFiles = $Commands | ForEach-Object -Process {
+    [ordered]@{
+      RelativeFilePath     = "$(Split-Path -Path $InstallerObjectZipX64.about -LeafBase)\${_}.exe"
+      PortableCommandAlias = $_
+    }
+  }
+  InstallerUrl         = $Prefix + $InstallerObjectZipX64.about
+  InstallerSha256      = $InstallerObjectZipX64.sha256.ToUpper()
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  InstallerType        = 'zip'
+  NestedInstallerFiles = $Commands | ForEach-Object -Process {
+    [ordered]@{
+      RelativeFilePath     = "$(Split-Path -Path $InstallerObjectZipArm64.about -LeafBase)\${_}.exe"
+      PortableCommandAlias = $_
+    }
+  }
+  InstallerUrl         = $Prefix + $InstallerObjectZipArm64.about
+  InstallerSha256      = $InstallerObjectZipArm64.sha256.ToUpper()
 }
 
 switch -Regex ($this.Check()) {
