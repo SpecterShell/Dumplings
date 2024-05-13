@@ -61,7 +61,8 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = @(
     [ordered]@{
       DocumentLabel = 'Unity 用户手册'
-      DocumentUrl   = "https://docs.unity3d.com/cn/$($Version.Split('.')[0..1] -join '.')/Manual/"
+      DocumentUrl   = "https://docs.unity3d.com/$($Version.Split('.')[0..1] -join '.')/Documentation/Manual/"
+      # DocumentUrl   = "https://docs.unity3d.com/cn/$($Version.Split('.')[0..1] -join '.')/Manual/"
     }
   )
 }
