@@ -1,9 +1,9 @@
 $Query = @'
-query {
+{
   getUnityReleases(
     stream: [TECH, LTS]
     platform: WINDOWS
-    architecture: X86_64
+    architecture: [X86_64, ARM64]
     version: "6000"
   ) {
     edges {
@@ -16,6 +16,11 @@ query {
         downloads {
           ... on UnityReleaseHubDownload {
             url
+            architecture
+            modules {
+              url
+              id
+            }
           }
         }
       }
@@ -31,7 +36,13 @@ $this.CurrentState.Version = $Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.downloads[0].url
+  Architecture = 'x64'
+  InstallerUrl = $Object1.downloads.Where({ $_.architecture -eq 'X86_64' }, 'First')[0].url
+  ProductCode  = "Unity ${Version}"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.downloads.Where({ $_.architecture -eq 'ARM64' }, 'First')[0].url
   ProductCode  = "Unity ${Version}"
 }
 
