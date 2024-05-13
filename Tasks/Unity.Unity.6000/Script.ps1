@@ -109,6 +109,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
 
     # Also submit manifests for sub modules
+    $OldWinGetIdentifier = $this.Config.WinGetIdentifier
     $this.CurrentState.Locale = $OldLocale
     foreach ($KVP in $this.Config.WinGetIdentifierModules.GetEnumerator()) {
       $this.Log("Handling $($KVP.Value)...", 'Info')
@@ -116,6 +117,14 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Installer = @(
         [ordered]@{
           InstallerUrl = $this.CurrentState.Modules[$KVP.Key]
+          Dependencies = [ordered]@{
+            PackageDependencies = @(
+              [ordered]@{
+                PackageIdentifier = $OldWinGetIdentifier
+                MinimumVersion    = $this.CurrentState.Version
+              }
+            )
+          }
         }
       )
       try {
