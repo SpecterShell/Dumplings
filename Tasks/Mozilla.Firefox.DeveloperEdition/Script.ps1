@@ -270,7 +270,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes = $Object3.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = $Object3.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -281,17 +281,7 @@ switch -Regex ($this.Check()) {
     $this.Write()
   }
   'Changed|Updated' {
-    # Too many installers...
-    $this.Message(@"
-Mozilla.Firefox.DeveloperEdition
-
-Version: $($this.CurrentState.Version)
-ReleaseDate: $($this.CurrentState.ReleaseTime)
-ReleaseNotes (en-US):
-${ReleaseNotes}
-ReleaseNotesUrl (*):
-${ReleaseNotesUrl}
-"@)
+    $this.Message()
   }
   'Updated' {
     $this.Submit()

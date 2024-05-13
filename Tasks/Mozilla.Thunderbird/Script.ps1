@@ -175,7 +175,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes = $Object4.SelectSingleNode('/html/body/main/section[3]') | Get-TextContent | Format-Text
+        Value  = $Object4.SelectSingleNode('/html/body/main/section[3]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -186,17 +186,7 @@ switch -Regex ($this.Check()) {
     $this.Write()
   }
   'Changed|Updated' {
-    # Too many installers...
-    $this.Message(@"
-Mozilla.Thunderbird
-
-Version: ${Version}
-ReleaseDate: $($this.CurrentState.ReleaseTime)
-ReleaseNotes (en-US):
-${ReleaseNotes}
-ReleaseNotesUrl (*):
-${ReleaseNotesUrl}
-"@)
+    $this.Message()
   }
   'Updated' {
     $this.Submit()
