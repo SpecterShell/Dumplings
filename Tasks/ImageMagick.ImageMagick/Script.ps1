@@ -31,7 +31,7 @@ if (@(@($VersionX86, $VersionX64, $VersionArm64, $VersionMSIX, $VersionZipX86, $
   throw 'Distinct versions detected'
 }
 
-$Version = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Version = @($VersionX86, $VersionX64, $VersionArm64, $VersionZipX86, $VersionZipX64, $VersionZipArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 $Commands = @('compare', 'composite', 'conjure', 'convert', 'identify', 'magick', 'mogrify', 'montage', 'stream')
 
 # Version
