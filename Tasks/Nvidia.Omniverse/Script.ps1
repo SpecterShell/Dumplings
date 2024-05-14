@@ -3,7 +3,7 @@ $Prefix = 'https://install.launcher.omniverse.nvidia.com/installers/'
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     try {
       $Object2 = Invoke-WebRequest -Uri "https://docs.omniverse.nvidia.com/launcher/latest/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html" | ConvertFrom-Html
 
@@ -24,10 +24,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

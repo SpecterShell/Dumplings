@@ -38,14 +38,14 @@ $this.CurrentState.LastModifiedX86 = $Object1.Headers.'Last-Modified'[0]
 $this.CurrentState.LastModifiedX64 = $Object2.Headers.'Last-Modified'[0]
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

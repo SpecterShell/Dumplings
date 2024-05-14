@@ -18,7 +18,7 @@ $this.CurrentState.ReleaseTime = [regex]::Match(
 ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://input.kfsafe.cn/logs.html' | ConvertFrom-Html
 
@@ -41,10 +41,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

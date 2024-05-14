@@ -31,7 +31,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.ReleaseTime = $Object2.'info-list'[0].'sub-date' | Get-Date -Format 'yyyy-MM-dd'
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       InstallerUrl    = $InstallerUrl
       InstallerUrlX64 = $InstallerUrlX64
@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
 }
