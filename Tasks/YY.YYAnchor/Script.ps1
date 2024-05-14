@@ -1,4 +1,4 @@
-$UniVer = '12C0F000'
+$UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '2030F000'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
