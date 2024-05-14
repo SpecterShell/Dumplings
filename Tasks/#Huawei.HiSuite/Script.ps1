@@ -73,7 +73,7 @@ $this.CurrentState.Locale += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
+  'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN
@@ -85,7 +85,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  'Changed|Updated' {
     $this.Message()
   }
 }
