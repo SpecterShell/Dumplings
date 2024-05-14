@@ -1,6 +1,4 @@
-$NS = [System.Xml.XmlNamespaceManager]::new($Global:DumplingsStorage.DellCatalog.NameTable)
-$NS.AddNamespace('dm', $Global:DumplingsStorage.DellCatalog.Manifest.xmlns)
-$Object1 = $Global:DumplingsStorage.DellCatalog.SelectSingleNode('/dm:Manifest/dm:SoftwareComponent[./dm:SupportedDevices/dm:Device/@componentID="107174"][last()]', $NS)
+$Object1 = $Global:DumplingsStorage.DellCatalog | Select-Xml -XPath '/dm:Manifest/dm:SoftwareComponent[./dm:SupportedDevices/dm:Device/@componentID="107174"]' -Namespace @{ dm = $Global:DumplingsStorage.DellCatalog.Manifest.xmlns } | Select-Object -ExpandProperty 'Node' -Last 1
 
 # Version
 $this.CurrentState.Version = $Object1.vendorVersion
