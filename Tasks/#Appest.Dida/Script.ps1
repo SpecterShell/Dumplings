@@ -26,7 +26,7 @@ $this.CurrentState.Locale += [ordered]@{
   Value  = $ReleaseNotesCN = $Object1.data.Where({ $_.lang -eq 'zh_cn' }, 'First')[0].content | Format-Text
 }
 
-switch ($this.Check()) {
+switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $this.CurrentState.ReleaseTime
