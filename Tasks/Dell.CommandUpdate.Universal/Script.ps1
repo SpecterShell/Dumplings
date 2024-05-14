@@ -1,6 +1,6 @@
-$Path = Get-TempFile -Uri 'https://dellupdater.dell.com/non_du/ClientService/Catalog/Platform/PrecedenceCatalog.cab'
-expand.exe -R $Path | Out-Host
-$Object1 = (Join-Path $Path '..' 'PrecedenceCatalog.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml).Precedence.Demoted.SoftwareComponent.Where({ $_.Name.Display.'#cdata-section' -eq 'Dell Command | Update Windows Universal Application' }, 'First')[0]
+$NS = [System.Xml.XmlNamespaceManager]::new($Global:DumplingsStorage.DellCatalog.NameTable)
+$NS.AddNamespace('dm', $Global:DumplingsStorage.DellCatalog.Manifest.xmlns)
+$Object1 = $Global:DumplingsStorage.DellCatalog.SelectSingleNode('/dm:Manifest/dm:SoftwareComponent[./dm:SupportedDevices/dm:Device/@componentID="107174"][last()]', $NS)
 
 # Version
 $this.CurrentState.Version = $Object1.vendorVersion
