@@ -12,14 +12,14 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.ReleaseTime = $Object1.released | Get-Date -Format 'yyyy-MM-dd'
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

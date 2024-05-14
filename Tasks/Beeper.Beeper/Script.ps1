@@ -18,7 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     try {
       # TODO: Parse Notion
       $EdgeDriver = Get-EdgeDriver
@@ -46,10 +46,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

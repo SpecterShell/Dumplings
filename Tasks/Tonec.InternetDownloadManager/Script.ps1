@@ -11,7 +11,7 @@ $VersionMatches = [regex]::Match($InstallerUrl, 'idman((\d)(\d+)build(\d+))')
 $this.CurrentState.Version = $VersionMatches.Groups[1].Value
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
 
     # InstallerSha256
@@ -50,10 +50,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }

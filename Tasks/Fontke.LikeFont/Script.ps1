@@ -9,14 +9,14 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }
