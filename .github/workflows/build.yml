@@ -18,29 +18,43 @@ jobs:
           repository: SpecterShell/winget-cli
           ref: powershell-module-system
           path: winget-cli
+
       - name: Install WinGet client
-        run: .\Utilities\InstallWinGet.ps1
+        run: |-
+          .\Utilities\InstallWinGet.ps1
+          Start-Sleep -Seconds 15
         working-directory: Dumplings
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Wait for 15 seconds
-        shell: pwsh
-        run: Start-Sleep -Seconds 15
-      - name: Configure system
-        run: winget configure .configurations/configuration.dsc.yaml --accept-configuration-agreements --disable-interactivity
+
+      - name: Configure System
+        run: winget configure .configurations\configuration.dsc.yaml --accept-configuration-agreements --disable-interactivity
         working-directory: winget-cli
-        shell: pwsh
-      - name: Add msbuild to PATH
+      - name: Setup Nuget
+        uses: nuget/setup-nuget@v2
+      - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
+
+      - name: Restore Solution
+        run: nuget restore src\AppInstallerCLI.sln
+        working-directory: winget-cli
+      - name: Restore AppInstallerCLIPackage
+        run: nuget restore src\AppInstallerCLIPackage\AppInstallerCLIPackage.wapproj
+        working-directory: winget-cli
+      - name: Restore AppInstallerTestMsixInstaller
+        run: nuget restore src\AppInstallerTestMsixInstaller\AppInstallerTestMsixInstaller.wapproj
+        working-directory: winget-cli
+      - name: DotNet Restore
+        run: Get-ChildItem '*.csproj' -Recurse | ForEach-Object -Process { dotnet restore $_.FullName } -ErrorAction SilentlyContinue
+        working-directory: winget-cli
       - name: Integrate vcpkg
         run: vcpkg integrate install
         working-directory: winget-cli
-        shell: pwsh
+
       - name: Build
         run: msbuild .\src\AppInstallerCLI.sln /property:Configuration=PowerShell /property:Platform=x64 /property:Project=AppInstallerCLIPackage /property:UseProdCLSIDs=true
         working-directory: winget-cli
-        shell: pwsh
       - name: Copy files
         working-directory: winget-cli
         shell: pwsh
