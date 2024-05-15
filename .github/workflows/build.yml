@@ -24,6 +24,9 @@ jobs:
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Wait for 15 seconds
+        shell: pwsh
+        run: Start-Sleep -Seconds 15
       - name: Configure system
         run: winget configure .configurations/configuration.dsc.yaml --accept-configuration-agreements --disable-interactivity
         working-directory: winget-cli
