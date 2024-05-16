@@ -1,7 +1,7 @@
 $RepoOwner = 'toeverything'
 $RepoName = 'AFFiNE'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v0.14.5"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
