@@ -25,7 +25,45 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://fastcopy.jp/help/fastcopy_cn.htm' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object3.SelectSingleNode("//h2[@id='history']/following-sibling::div[@class='help_section'][1]/table/tr[./td[1]/text()='v$($this.CurrentState.Version)'][1]/td[2]")
+      if ($ReleaseNotesNode) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Object4 = Invoke-WebRequest -Uri 'https://fastcopy.jp/help/fastcopy.htm' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object4.SelectSingleNode("//h2[@id='history']/following-sibling::div[@class='help_section'][1]/table/tr[./td[1]/text()='v$($this.CurrentState.Version)'][1]/td[2]")
+      if ($ReleaseNotesNode) {
+        # ReleaseNotes (ja-JP)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'ja-JP'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (ja-JP) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
