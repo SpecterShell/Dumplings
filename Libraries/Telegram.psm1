@@ -313,7 +313,7 @@ function Send-TelegramMessage {
   } else {
     # If message IDs are provided and the numbers of the old messages and the new messages are not equal, remove the old ones first and then send the new ones to keep messages consistent
     foreach ($ID in $MessageID) {
-      $Response = Remove-TelegramMessage -MessageID $MessageID -ChatID $ChatID -Token $Token
+      $Response = Remove-TelegramMessage -MessageID $ID -ChatID $ChatID -Token $Token
       if ($Response.ok -eq $false) {
         throw "$($Response.error_code) $($Response.description)"
       }
