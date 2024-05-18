@@ -1,5 +1,5 @@
 # Version
-$this.CurrentState.Version = $Global:DumplingsStorage.ApacheGroovyFolders.data.text -match '^groovy-4\.[\d\.]+$' -replace '^groovy-([\d\.]+)$', '$1' |
+$this.CurrentState.Version = $Global:DumplingsStorage.ApacheGroovyFolders.data.text -match '^groovy-2\.[\d\.]+$' -replace '^groovy-([\d\.]+)$', '$1' |
   Sort-Object -Property { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } -Bottom 1
 
 $Object2 = Invoke-RestMethod -Uri 'https://groovy.jfrog.io/ui/api/v1/ui/v2/treebrowser' -Method Post -Headers @{ 'X-Requested-With' = 'XMLHttpRequest' } -ContentType 'application/json' -Body @(
