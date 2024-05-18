@@ -1,9 +1,21 @@
-$Prefix = 'https://releases.zine.la/lattics/win/'
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl         = $InstallerUrl = Get-RedirectedUrl -Uri 'https://mid.zineapi.com/to/get-lattics/win-installer-x64'
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = (Split-Path -Path $InstallerUrl -Leaf) -creplace '\.zip$', ''
+    }
+  )
+}
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 $ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
 if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
+  # ReleaseTime
+  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime
+
   # ReleaseNotes (en-US)
   $this.CurrentState.Locale += [ordered]@{
     Locale = 'en-US'
