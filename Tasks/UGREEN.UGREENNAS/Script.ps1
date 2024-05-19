@@ -1,23 +1,25 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ugnas.com/download' | ConvertFrom-Html
-
-$Node = $Object1.SelectSingleNode('//div[contains(@class, "type1")]/div[contains(./div[5], "Windows")]')
+$Object1 = Invoke-RestMethod -Uri 'https://cloud.ugreengroup.com/api/system/v1/softVer/latest' -Method Post -Body (
+  @{
+    appNo = 'com.ugreenNas.win'
+  } | ConvertTo-Json -Compress
+) -ContentType 'application/json'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Node.SelectSingleNode('./div[2]').InnerText, 'V([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.data.verName -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Node.SelectSingleNode('./div[8]/a').Attributes['href'].Value.Trim()
+  InstallerUrl = $Object1.data.pkgUrl
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = $Node.SelectSingleNode('./div[3]').InnerText | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.data.pubTime | ConvertFrom-UnixTimeMilliseconds
 
 # ReleaseNotes (zh-CN)
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $Node.SelectSingleNode('./div[6]/div[2]/div') | Get-TextContent | Format-Text
+  Value  = $Object1.data.desc | Format-Text
 }
 
 switch -Regex ($this.Check()) {
