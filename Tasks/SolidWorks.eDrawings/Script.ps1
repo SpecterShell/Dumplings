@@ -13,18 +13,18 @@ $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.DATERELEASED, '
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-    # $MsiInstallerFile = Join-Path $InstallerFileExtracted 'eDrawings.msi'
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
+    $MsiInstallerFile = Join-Path $InstallerFileExtracted 'eDrawings.msi'
 
-    # $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # $Installer['AppsAndFeaturesEntries'] = @(
-    #   [ordered]@{
-    #     ProductCode   = $Installer['ProductCode'] = $MsiInstallerFile | Read-ProductCodeFromMsi
-    #     UpgradeCode   = $MsiInstallerFile | Read-UpgradeCodeFromMsi
-    #     InstallerType = 'msi'
-    #   }
-    # )
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $Installer['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        ProductCode   = $Installer['ProductCode'] = $MsiInstallerFile | Read-ProductCodeFromMsi
+        UpgradeCode   = $MsiInstallerFile | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
 
     $this.Print()
     $this.Write()
