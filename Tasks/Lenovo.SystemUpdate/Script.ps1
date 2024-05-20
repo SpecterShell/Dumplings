@@ -14,6 +14,24 @@ $this.CurrentState.ReleaseTime = $Object2.Date.Unix | ConvertFrom-UnixTimeMillis
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $Object3 = $Object1.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.txt') })[0]
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object3.URL
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
+      }
+    }
+
     $this.Print()
     $this.Write()
   }
