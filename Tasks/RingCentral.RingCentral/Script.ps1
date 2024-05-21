@@ -1,13 +1,6 @@
 $Prefix = 'https://app.ringcentral.com/download/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
-$Object2 = Invoke-WebRequest -Uri "${Prefix}latest-arm64.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
-
-$Identical = $true
-if ($Object1.version -ne $Object2.version) {
-  $this.Log('Distinct versions detected', 'Warning')
-  $Identical = $false
-}
 
 # Version
 $this.CurrentState.Version = $Object1.version
@@ -32,10 +25,10 @@ $this.CurrentState.Installer += $InstallerWixX64 = [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'arm64'
   InstallerType          = 'nullsoft'
-  InstallerUrl           = $Prefix + $Object2.files[0].url
+  InstallerUrl           = $Prefix + $Object1.files[0].url.Replace('.exe', '-arm64.exe')
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayVersion = $Object2.version
+      DisplayVersion = $Object1.version
       ProductCode    = '584acf4c-ebc3-56fa-9cfd-586227f098ba'
     }
   )
@@ -43,7 +36,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += $InstallerWixARM64 = [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = $Prefix + $Object2.files[0].url.Replace('.exe', '.msi')
+  InstallerUrl  = $Prefix + $Object1.files[0].url.Replace('.exe', '-arm64.msi')
 }
 
 # ReleaseTime
@@ -98,7 +91,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
