@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # ProductCode / AppsAndFeaturesEntries (DisplayName)
     $PythonVersion = [regex]::Match(
-      (7z x -so $InstallerFile 'conda-meta\history' | Select-String -Pattern '::python' -Raw),
+      (7z x -so $InstallerFile 'conda-meta\history' | Select-String -Pattern '::python-' -Raw | Select-Object -First 1),
       '::python-([\d\.]+)'
     ).Groups[1].Value
     $this.CurrentState.Installer[0]['ProductCode'] = "Anaconda3 $($this.CurrentState.Version) (Python ${PythonVersion} 64-bit)"
