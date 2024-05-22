@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.soft.versionname
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.soft.url.'#cdata-section'
+  InstallerUrl = $Object1.soft.url.'#cdata-section' -replace 'sw\.pcmgr\.qq\.com/.+?/.+?/', 'webcdn.m.qq.com/'
 }
 
 # ReleaseTime
