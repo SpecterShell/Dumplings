@@ -10,6 +10,13 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # RealVersion
+    $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionFromExe).Split('.')[0..2] -join '.'
+
     $this.Print()
     $this.Write()
   }
