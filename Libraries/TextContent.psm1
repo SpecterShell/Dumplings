@@ -164,7 +164,7 @@ function Get-TextContent {
         if ($_.Name -eq 'ul') {
           $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Unordered'; Number = 1 })) | Out-Null
         } elseif ($_.Name -eq 'ol') {
-          if ($_.Attributes.Contains('Start')) {
+          if ($_.Attributes.Contains('Start') -and [int]::TryParse($_.Attributes['Start'].Value, [ref]$null)) {
             $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = [int]$_.Attributes['Start'].Value })) | Out-Null
           } else {
             $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = 1 })) | Out-Null
