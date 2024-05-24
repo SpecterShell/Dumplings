@@ -10,6 +10,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -jo
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = ($Object1.details | ConvertFrom-Html).SelectSingleNode('//a[contains(@href, ".exe")]').Attributes['href'].Value
+  ProductCode  = "{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_CUDAToolkit_$($this.CurrentState.RealVersion)"
 }
 
 switch -Regex ($this.Check()) {
