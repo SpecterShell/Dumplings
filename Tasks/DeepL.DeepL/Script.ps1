@@ -5,7 +5,14 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://appdownload.deepl.com/windows/0install/DeepLSetup.exe'
+  InstallerUrl = $InstallerUrl = 'https://appdownload.deepl.com/windows/0install/DeepLSetup.exe'
+}
+
+# The installer could be updated independently from the update feed
+$Object2 = Invoke-WebRequest -Uri $InstallerUrl -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModified'] } -SkipHttpErrorCheck
+if ($Object2.StatusCode -ne 304) {
+  $this.Status.Add('Changed')
+  $this.Config.IgnorePRCheck = $true
 }
 
 # ReleaseTime
