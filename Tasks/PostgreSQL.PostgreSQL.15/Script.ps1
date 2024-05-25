@@ -24,9 +24,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.LastState.Contains('Version') -and ($this.LastState.Version.Split('.')[0..1] -join '.') -eq $MinorVersion) {
-      $this.Config.RemoveLastVersion = $true
-    }
     $this.Submit()
   }
 }
