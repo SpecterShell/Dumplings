@@ -1,12 +1,10 @@
-$Object1 = $Global:DumplingsStorage.SeewoApps['EasiCapsule']
-
-# Version
-$this.CurrentState.Version = $Object1.softInfos[0].softVersion
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.softInfos[0].downloadUrl
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://e.seewo.com/download/file?code=EasiCapsule'
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'EasiCapsuleSetup_(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
