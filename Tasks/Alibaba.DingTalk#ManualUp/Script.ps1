@@ -8,20 +8,39 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.win.install.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($Object1.win.install.description[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+try {
+  # ReleaseTime
+  $this.CurrentState.ReleaseTime = [regex]::Match($Object1.win.install.description[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.win.install.multi_lang_description.en_US | Select-Object -Skip 1 | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.win.install.description | Select-Object -Skip 1 | Format-Text
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.win.install.multi_lang_description.en_US | Select-Object -Skip 1 | Format-Text
+  }
+
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.win.install.description | Select-Object -Skip 1 | Format-Text
+  }
+} catch {
+  $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+
+  # ReleaseNotes (en-US)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'en-US'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.win.install.multi_lang_description.en_US | Format-Text
+  }
+
+  # ReleaseNotes (zh-CN)
+  $this.CurrentState.Locale += [ordered]@{
+    Locale = 'zh-CN'
+    Key    = 'ReleaseNotes'
+    Value  = $Object1.win.install.description | Format-Text
+  }
 }
 
 switch -Regex ($this.Check()) {
