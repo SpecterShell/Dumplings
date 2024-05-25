@@ -41,8 +41,12 @@ switch -Regex ($this.Check()) {
       while (-not $Object2.EndOfStream) {
         $String = $Object2.ReadLine()
         if ($String.StartsWith($this.CurrentState.Version.Replace('.0', ''))) {
-          # ReleaseTime
-          $this.CurrentState.ReleaseTime = [regex]::Match($String, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+          try {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime = [regex]::Match($String, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+          } catch {
+            $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+          }
           break
         }
       }
