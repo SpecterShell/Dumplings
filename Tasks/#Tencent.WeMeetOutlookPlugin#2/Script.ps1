@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Locale += [ordered]@{
   Locale = 'zh-CN'
   Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.target.features_description | Format-Text
+  Value  = $ReleaseNotesCN = $Object1.target.'features-description' | Format-Text
 }
 
 switch -Regex ($this.Check()) {
