@@ -1,4 +1,4 @@
-$Prefix = 'https://pixso-public.oss-accelerate.aliyuncs.com/cms/download/desktop/'
+$Prefix = 'https://api.pixso.cn/api/upgrade/desktop/bosyun/'
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
 
