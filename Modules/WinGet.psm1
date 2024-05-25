@@ -180,9 +180,11 @@ function New-WinGetManifest {
     throw $_
   }
 
-  # Remove old manifests, if needed
+  # Remove old manifests, if
+  # 1. The task is configured to remove the last version, or
+  # 2. The installer URLs are the same between the last and current states
   try {
-    if (($Task.Config.Contains('RemoveLastVersion') -and $Task.Config.RemoveLastVersion) -or ($Task.Status.Contains('Updated') -and -not $Task.Status.Contains('Changed'))) {
+    if (($Task.Config.Contains('RemoveLastVersion') -and $Task.Config.RemoveLastVersion) -or -not (Compare-Object -ReferenceObject $Task.LastState -DifferenceObject $Task.CurrentState -Property { $_.Installer.InstallerUrl })) {
       if ($LastManifestVersion -ne $PackageVersion) {
         $Task.Log("The manifests for the last version ${LastManifestVersion} will be removed", 'Info')
         Get-ChildItem -Path "${Script:ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {
