@@ -10,9 +10,16 @@ $this.CurrentState.Installer += [ordered]@{
 
 # The installer could be updated independently from the update feed
 $Object2 = Invoke-WebRequest -Uri $InstallerUrl -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModified'] } -SkipHttpErrorCheck
-if ($Object2.StatusCode -ne 304) {
-  $this.Status.Add('Changed')
-  $this.Config.IgnorePRCheck = $true
+if ($Object2.StatusCode -eq 304) {
+  # LastModified
+  $this.CurrentState.LastModified = $this.LastState.LastModified
+} else {
+  if ($this.LastState.Contains('Version')) {
+    $this.Status.Add('Changed')
+    $this.Config.IgnorePRCheck = $true
+  }
+  # LastModified
+  $this.CurrentState.LastModified = $Object2.Headers.'Last-Modified'[0]
 }
 
 # ReleaseTime
@@ -25,8 +32,6 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated|Rollbacked' {
     $this.Message()
-  }
-  'Updated|Rollbacked' {
     $this.Submit()
   }
 }
