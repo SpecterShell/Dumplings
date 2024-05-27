@@ -1,4 +1,6 @@
 $Object1 = Invoke-WebRequest -Uri 'https://zoom.us/releasenotes' -Method Post -UserAgent 'Mozilla/5.0 (ZOOM.Win 10.0 x64)' -Form @{
+  # channel      = '_zXODjj7SDia3m8DOuSc3w' # Slow
+  # channel      = 'v0dhhyOtTJKlah6a3sTLpA' # Fast
   os           = 'win7'
   type         = 'manual'
   upgrade64Bit = 1
