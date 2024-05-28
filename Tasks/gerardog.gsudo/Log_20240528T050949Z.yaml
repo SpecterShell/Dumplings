@@ -1,0 +1,31 @@
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/gerardog/gsudo/releases/download/v2.5.0/gsudo.setup.x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/gerardog/gsudo/releases/download/v2.5.0/gsudo.setup.x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/gerardog/gsudo/releases/download/v2.5.0/gsudo.setup.arm64.msi
+- InstallerType: zip
+  InstallerUrl: https://github.com/gerardog/gsudo/releases/download/v2.5.0/gsudo.portable.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    With the release of Microsoft Sudo in Windows 11 24H2, both needs to coexist peacefully. When Microsoft Sudo is present, the sudo command no longer redirects to gsudo by default, so:
+    - Added a new config setting PathPrecedence: When set to true, it will ensure gsudo appears first in the PATH variable, ensuring the sudo keyword starts gsudo instead of Microsoft Sudo.
+      - Call gsudo config PathPrecedence true to activate. Please restart all your consoles to ensure the change makes effect.
+      - Set it back to false to go back to normal.
+    If a user with ms-sudo muscle memory, accidentally runs gsudo, let's ensure gets a good user experience with:
+    - Added support for ms-sudo styled arguments such as --inline, --disable-input, --preserve-env, --new-window
+    - Added the ability to start the elevation in a specified folder with --chdir {directory} (or uppercase -D {directory}) in https://github.com/gerardog/gsudo/pull/355
+    Also:
+    - Added text descriptions to gsudo config command, so users can read each config use, in https://github.com/gerardog/gsudo/pull/354
+    - Added SecurityEnforceUacIsolation/DisableInput handling also in Attached and TokenSwitch elevation Modes.
+    - For some reason Windows doesn't focus the UAC popup if it is configured as Do Not Dim. The fix (#85) makes gsudo focus the popup.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gerardog/gsudo/releases/tag/v2.5.0
+Version: 2.5.0
+ReleaseTime: 2024-05-28T04:13:14.0000000Z
