@@ -5,6 +5,7 @@ $this.CurrentState.Version = $Object1.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = "https://download.calibre-ebook.com/$($this.CurrentState.Version)/calibre-64bit-$($this.CurrentState.Version).msi"
 }
 
