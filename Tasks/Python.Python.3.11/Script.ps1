@@ -1,33 +1,30 @@
-$Prefix = 'https://www.python.org/ftp/python/'
+$Object1 = (Invoke-RestMethod -Uri 'https://www.python.org/api/v2/downloads/release/?version=3&pre_release=false') |
+  Where-Object -FilterScript { $_.name.Contains('3.11.') } |
+  Sort-Object -Property { $_.name -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
-$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object2 = (Invoke-RestMethod -Uri "https://www.python.org/api/v2/downloads/release_file/?os=1&release=$([regex]::Match($Object1.resource_uri, 'release/(\d+)/').Groups[1].Value)")
 
 # Version
-$this.CurrentState.Version = $Version = (
-  $Object1.SelectNodes('/html/body/pre/a').ForEach({ $_.Attributes['href'].Value }) |
-    Select-String -Pattern '3\.11\.\d+/' -Raw |
-    Sort-Object -Property { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) } |
-    Select-Object -Last 1
-).Replace('/', '')
+$this.CurrentState.Version = $Version = [regex]::Match($Object1.name, 'Python ([\d\.]+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "${Prefix}${Version}/python-${Version}.exe"
+  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match '32\s*-bit' }, 'First')[0].url
 }
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "${Prefix}${Version}/python-${Version}-amd64.exe"
+  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match '64\s*-bit' }, 'First')[0].url
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "${Prefix}${Version}/python-${Version}-arm64.exe"
+  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match 'ARM64' }, 'First')[0].url
 }
 
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://docs.python.org/release/${Version}/whatsnew/changelog.html"
+  Value = $ReleaseNotesUrl = $Object1.release_notes_url
 }
 
 switch -Regex ($this.Check()) {
