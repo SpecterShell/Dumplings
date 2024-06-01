@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @"
+$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @'
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
     <CheckForUpdates xmlns="http://localhost/TSCUpdater">
@@ -11,7 +11,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
     </CheckForUpdates>
   </soap:Body>
 </soap:Envelope>
-"@ -ContentType 'text/xml; charset=utf-8'
+'@ -ContentType 'text/xml; charset=utf-8'
 
 if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [string]) {
   $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
@@ -46,7 +46,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = ([uri](Get-RedirectedUrl -Uri $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.InfoLink)).GetLeftPart([System.UriPartial]::Path)
+        Value = $ReleaseNotesUrl = Get-RedirectedUrl -Uri $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.InfoLink | Split-Uri -LeftPart Path
       }
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html

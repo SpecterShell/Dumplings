@@ -2,7 +2,7 @@ $Object1 = (Invoke-RestMethod -Uri 'https://restapiext.solidworks.com/FreeDL/v1.
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = ([uri](Get-RedirectedUrl -Uri $Object1.FILEURL)).GetLeftPart([System.UriPartial]::Path)
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.FILEURL | Split-Uri -LeftPart Path
 }
 
 # Version

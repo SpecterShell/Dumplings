@@ -8,7 +8,7 @@ $Object2 = Invoke-WebRequest -Uri "https://www.charlesproxy.com/latest-release/d
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = [uri]::new("https://www.charlesproxy.com$([regex]::Match($Object2.SelectSingleNode('//meta[@http-equiv="refresh"]').Attributes['content'].Value, 'url=(.+)').Groups[1].Value)").GetLeftPart([System.UriPartial]::Path)
+  InstallerUrl = "https://www.charlesproxy.com$([regex]::Match($Object2.SelectSingleNode('//meta[@http-equiv="refresh"]').Attributes['content'].Value, 'url=(.+)').Groups[1].Value)" | Split-Uri -LeftPart Path
 }
 
 switch -Regex ($this.Check()) {
