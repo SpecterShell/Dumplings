@@ -1,21 +1,18 @@
-$Object1 = Invoke-RestMethod -Uri 'https://github.com/qgis/QGIS-Website/raw/master/source/schedule.py'
-
-$Release = [regex]::Match($Object1, "release\s*=\s*'(.+?)'").Groups[1].Value
-$Binary = [regex]::Match($Object1, "binary\s*=\s*'(.+?)'").Groups[1].Value
+$Object1 = Invoke-RestMethod -Uri 'https://qgis.org/version.json'
 
 # Version
-$this.CurrentState.Version = "${Release}-${Binary}"
+$this.CurrentState.Version = "$($Object1.latest.version)-$($Object1.latest.binary)"
 
 # RealVersion
-$this.CurrentState.RealVersion = $Release
+$this.CurrentState.RealVersion = $Object1.latest.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-${Release}-${Binary}.msi"
+  InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-$($Object1.latest.version)-$($Object1.latest.binary).msi"
 }
 
 # ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($Object1, 'releasedate\s*=\s*date\((\d{4}\s*,\s*\d{1,2}\s*,\s*\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$this.CurrentState.ReleaseTime = $Object1.latest.date | Get-Date -Format 'yyyy-MM-dd'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
