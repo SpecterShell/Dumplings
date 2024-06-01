@@ -81,18 +81,26 @@ function ConvertFrom-Xml {
   <#
   .SYNOPSIS
     Convert XML string to XMLDocument object
-  .PARAMETER InputObject
+  .PARAMETER Content
     The XML string to be converted
   #>
   [OutputType([xml])]
   param (
     [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The XML string to be converted')]
     [string]
-    $InputObject
+    $Content
   )
 
+  begin {
+    $Buffer = [System.Collections.Generic.List[string]]::new()
+  }
+
   process {
-    [xml]$InputObject
+    $Buffer.Add($Content)
+  }
+
+  end {
+    [xml]($Buffer -join "`n")
   }
 }
 
@@ -293,6 +301,65 @@ function ConvertTo-MarkdownEscapedText {
 
   process {
     $InputObject -replace '([_*\[\]()~`<>#+\-|{}.!\\])', '\$1'
+  }
+}
+
+function Split-Uri {
+  <#
+  .SYNOPSIS
+    Split the URI
+  .PARAMETER Uri
+    The Uniform Resource Identifier (URI) to be splitted
+  .PARAMETER Parent
+    The parent part of the URI
+  .PARAMETER LeftPart
+    The left part of the URI
+  .PARAMETER Components
+    The component of the URI
+  .PARAMETER Format
+    Control how special characters are escaped
+  #>
+  [OutputType([string])]
+  [CmdletBinding(DefaultParameterSetName = 'ParentSet')]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'Result', Justification = 'False positive')]
+  param (
+    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The Uniform Resource Identifier (URI) to be splitted')]
+    [uri]
+    $Uri,
+
+    [parameter(ParameterSetName = 'ParentSet', HelpMessage = 'The parent part of the URI')]
+    [switch]
+    $Parent,
+
+    [parameter(ParameterSetName = 'LeftPartSet', HelpMessage = 'The left part of the URI')]
+    [System.UriPartial]
+    $LeftPart = [System.UriPartial]::Path,
+
+    [parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'The component of the URI')]
+    [System.UriComponents[]]
+    $Components,
+
+    [parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'Control how special characters are escaped')]
+    [System.UriFormat]
+    $Format = [System.UriFormat]::UriEscaped
+  )
+
+  process {
+    switch ($PSCmdlet.ParameterSetName) {
+      'ParentSet' {
+        return [uri]::new($Uri, '.').OriginalString
+      }
+      'LeftPartSet' {
+        return $Uri.GetLeftPart($LeftPart)
+      }
+      'ComponentSet' {
+        $Components = $Components | ForEach-Object -Begin { $Result = $null } -Process { $Result = $_ -bor $Result } -End { $Result }
+        return $Uri.GetComponents($Components, $Format)
+      }
+      Default {
+        throw 'Invalid parameter set'
+      }
+    }
   }
 }
 
