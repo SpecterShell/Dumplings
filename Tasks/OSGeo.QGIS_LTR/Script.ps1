@@ -1,16 +1,18 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.qgis.org/en/site/forusers/download.html' | ConvertFrom-Html
+$Object1 = Invoke-RestMethod -Uri 'https://github.com/qgis/QGIS-Website/raw/master/source/schedule.py'
+
+$Release = [regex]::Match($Object1, "ltrrelease\s*=\s*'(.+?)'").Groups[1].Value
+$Binary = [regex]::Match($Object1, "ltrbinary\s*=\s*'(.+?)'").Groups[1].Value
+
+# Version
+$this.CurrentState.Version = "${Release}-${Binary}"
+
+# RealVersion
+$this.CurrentState.RealVersion = $Release
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//div[@id="windows"]//a[contains(@href, ".msi") and contains(@class, "secondary-download-link")]').Attributes['href'].Value
+  InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-${Release}-${Binary}.msi"
 }
-
-# Version
-$VersionMatches = [regex]::Match($InstallerUrl, '((\d+\.\d+\.\d+)-\d+)')
-$this.CurrentState.Version = $VersionMatches.Groups[1].Value
-
-# RealVersion
-$this.CurrentState.RealVersion = $VersionMatches.Groups[2].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
