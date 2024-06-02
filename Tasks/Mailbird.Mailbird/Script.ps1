@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
     $NestedInstallerFileRoot = Split-Path -Path $InstallerFile -Parent
-    $NestedInstallerFile = Get-ChildItem -Path "${NestedInstallerFileRoot}\*\MailbirdSetup.x64.msi" -Recurse -File | Select-Object -First 1
+    $NestedInstallerFile = Get-ChildItem -Path "${NestedInstallerFileRoot}\*\MailbirdSetup.x64.msi" -File | Select-Object -First 1
 
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
