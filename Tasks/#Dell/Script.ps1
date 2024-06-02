@@ -1,5 +1,4 @@
-# XPS 17 9730 Catalog
-$Model = '0BDA'
+$Model = $Global:DumplingsSecret.DELL_MODEL
 
 $CabPath = Get-TempFile -Uri 'https://downloads.dell.com/catalog/CatalogIndexPC.cab'
 expand.exe -R $CabPath | Out-Host
@@ -9,7 +8,7 @@ $CatalogPath = $Object1.ManifestIndex.GroupManifest.Where({ $_.SupportedSystems.
 $CatalogName = (Split-Path -Path $CatalogPath -Leaf) -replace '\.cab$', '.xml'
 
 $CabPath = Get-TempFile -Uri "https://downloads.dell.com/${CatalogPath}"
-expand.exe -R $CabPath | Out-Host
+expand.exe -R $CabPath | Out-Null
 $Global:DumplingsStorage.DellCatalog = Join-Path $CabPath '..' $CatalogName | Get-Item | Get-Content -Raw | ConvertFrom-Xml
 
 # Precedence Catalog

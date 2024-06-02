@@ -1,4 +1,4 @@
-$Object1 = ((Invoke-WebRequest -Uri 'https://julialang-s3.julialang.org/bin/versions.json').Content | ConvertFrom-Json -AsHashtable).GetEnumerator() | Where-Object -FilterScript { $_.Value.stable } | Sort-Object -Property { $_.Key -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = ((Invoke-WebRequest -Uri 'https://julialang-s3.julialang.org/bin/versions.json').Content | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value.stable }) | Sort-Object -Property { $_.Key -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Object1.Name
