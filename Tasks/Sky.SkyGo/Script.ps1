@@ -14,7 +14,9 @@ if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.pla
   $this.Log("German version: $($Object2.platforms.win.version)")
   $this.Log("Italy version: $($Object3.platforms.win.version)")
   $this.Log("Austria version: $($Object4.platforms.win.version)")
-  $Identical = $false
+  if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.platforms.win.version } -Unique).Count -gt 1) {
+    $Identical = $false
+  }
 }
 
 # Version
