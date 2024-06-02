@@ -142,6 +142,19 @@ if (-not $Parallel) {
     }
   }
 
+  $Global:DumplingsSecret = $null
+  if (Test-Path -Path Env:\DUMPLINGS_SECRET) {
+    try {
+      $Global:DumplingsSecret = $Env:DUMPLINGS_SECRET | ConvertFrom-Yaml -Ordered
+    } catch {
+      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the preference and an empty hashtable will be used: ${_}"
+    }
+  }
+  # ConvertFrom-Yaml will return $null if the file is empty. Assign an empty hashtable if that happened
+  if (-not $Global:DumplingsSecret) {
+    $Global:DumplingsSecret = [ordered]@{}
+  }
+
   # Queue the tasks to load
   if ($Name) {
     $TaskNames = [System.Collections.Concurrent.ConcurrentQueue[string]]$Name
@@ -188,6 +201,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     $Global:DumplingsCache = $using:DumplingsCache
     $Global:DumplingsOutput = $using:DumplingsOutput
     $Global:DumplingsPreference = $using:DumplingsPreference
+    $Global:DumplingsSecret = $using:DumplingsSecret
   }
 
   # Import libraries
