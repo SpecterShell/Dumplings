@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
 
       while (-not $Object2.EndOfStream) {
         $String = $Object2.ReadLine()
-        if ($String.StartsWith($this.CurrentState.Version.Replace('.0', ''))) {
+        if ($String.StartsWith($this.CurrentState.Version -replace '(\.0)+$')) {
           try {
             # ReleaseTime
             $this.CurrentState.ReleaseTime = [regex]::Match($String, '\((\d{4}-\d{1,2}-\d{1,2})\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

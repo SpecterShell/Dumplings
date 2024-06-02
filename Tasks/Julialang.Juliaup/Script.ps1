@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
       $RepoOwner = 'JuliaLang'
       $RepoName = 'juliaup'
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version.Replace('.0', ''))"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version -replace '(\.0)+$')"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

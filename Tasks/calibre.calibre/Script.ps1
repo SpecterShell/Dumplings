@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://calibre-ebook.com/whats-new' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='release' and contains(./h2[@class='release-title'], '$($this.CurrentState.Version.Replace('.0', ''))')]/h2[@class='release-title']")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='release' and contains(./h2[@class='release-title'], '$($this.CurrentState.Version -replace '(\.0)+$')')]/h2[@class='release-title']")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2} [a-zA-Z]+, \d{4})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

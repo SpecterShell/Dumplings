@@ -8,7 +8,7 @@ if (Test-Path -Path $OldReleaseNotesPath) {
 $Object1 = Invoke-RestMethod -Uri 'https://update.easeus.com/update/epm/epm_update.ini' | ConvertFrom-Ini
 
 # Version
-$this.CurrentState.Version = $Object1.VERSION.'Product Version'.Replace('.0', '')
+$this.CurrentState.Version = $Object1.VERSION.'Product Version' -replace '(\.0)+$'
 
 # ReleaseNotes (en-US)
 $this.CurrentState.Locale += [ordered]@{
