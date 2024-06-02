@@ -95,10 +95,12 @@ function New-WinGetManifest {
   if ($OldPRObject.total_count -gt 0) {
     $OldPRList = $OldPRObject.items | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n"
     $Task.Log("Found existing pull requests:`n${OldPRList}", 'Warning')
-    if (-not ($Global:DumplingsPreference['Force']) -and -not ($Task.Config['IgnorePRCheck'])) {
-      throw 'Found existing pull requests'
-    } else {
+    if ($Global:DumplingsPreference['Force']) {
+      $Task.Log('Ignoring existing pull requests', 'Info')
+    } elseif ($Task.Config['IgnorePRCheck']) {
       $Task.Log('This task is configured to ignore existing pull requests', 'Info')
+    } else {
+      throw 'Found existing pull requests'
     }
   }
   #endregion
