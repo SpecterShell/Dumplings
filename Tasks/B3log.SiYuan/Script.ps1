@@ -57,19 +57,15 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      if (Test-Path -Path Env:\LD246_TOKEN) {
-        $Object3 = Invoke-RestMethod -Uri $Object1.release_zh_CN.Replace('ld246.com', 'ld246.com/api/v2') -Headers @{ Authorization = $Env:LD246_TOKEN } -UserAgent "$([Microsoft.PowerShell.Commands.PSUserAgent].GetProperty('UserAgent', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static).GetValue($null)) Dumplings/3.0"
+      $Object3 = Invoke-RestMethod -Uri $Object1.release_zh_CN.Replace('ld246.com', 'ld246.com/api/v2') -Headers @{ Authorization = $Global:DumplingsSecret.LD246_TOKEN } -UserAgent "$([Microsoft.PowerShell.Commands.PSUserAgent].GetProperty('UserAgent', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static).GetValue($null)) Dumplings/3.0"
 
-        $ReleaseNotesCNObject = $Object3.data.article.articleContent | ConvertFrom-Html
-        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      $ReleaseNotesCNObject = $Object3.data.article.articleContent | ConvertFrom-Html
+      $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
