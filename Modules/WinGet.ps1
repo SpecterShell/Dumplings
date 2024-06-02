@@ -96,7 +96,7 @@ function New-WinGetManifest {
     $OldPRList = $OldPRObject.items | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n"
     $Task.Log("Found existing pull requests:`n${OldPRList}", 'Warning')
     if ($Global:DumplingsPreference['Force']) {
-      $Task.Log('Ignoring existing pull requests', 'Info')
+      $Task.Log('Forced to ignore existing pull requests', 'Info')
     } elseif ($Task.Config['IgnorePRCheck']) {
       $Task.Log('This task is configured to ignore existing pull requests', 'Info')
     } else {
@@ -168,6 +168,7 @@ function New-WinGetManifest {
 
   # Do not upload manifests in dry mode
   if ($Global:DumplingsPreference['Dry']) {
+    $Task.Log('Running in dry mode. Exiting...', 'Info')
     return
   }
 
