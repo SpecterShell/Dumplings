@@ -3,6 +3,8 @@ $RepoName = 'create-tauri-app'
 
 $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.tag_name.StartsWith('js') }, 'First')[0]
 
+if ($Object1.tag_name.Contains('dev')) { throw 'Pre-release detected' }
+
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^create-tauri-app-v'
 
