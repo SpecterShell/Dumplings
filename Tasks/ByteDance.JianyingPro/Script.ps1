@@ -1,7 +1,7 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://is.snssdk.com/service/settings/v3/?device_platform=windows&os_version=10&aid=3704&iid=0&version_code=197888').Content | ConvertFrom-Json -AsHashtable
 
 if (-not $Object1.data.settings.Contains('update_reminder')) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

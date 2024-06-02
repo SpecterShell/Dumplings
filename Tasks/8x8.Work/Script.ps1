@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://cloud8.8x8.com/vos-update/public/api/v2/asset?application=work&channel=GA&platform=win32_x64&version=$($this.LastState.Contains('FullVersion') ? $this.LastState.FullVersion : 'v0.0.0-0-0')" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

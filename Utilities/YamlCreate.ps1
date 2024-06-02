@@ -70,11 +70,11 @@ $DirectSchemaUrls = @{
 
 # Fetch Schema data from github for entry validation, key ordering, and automatic commenting
 try {
-  $LocaleSchema = @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
+  $LocaleSchema = $Global:DumplingsSessionStorage['WinGetLocaleSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
   $LocaleProperties = (ConvertTo-Yaml $LocaleSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $VersionSchema = @(Invoke-WebRequest $DirectSchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
+  $VersionSchema = $Global:DumplingsSessionStorage['WinGetVersionSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
   $VersionProperties = (ConvertTo-Yaml $VersionSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerSchema = @(Invoke-WebRequest $DirectSchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
+  $InstallerSchema = $Global:DumplingsSessionStorage['WinGetInstallerSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
   $InstallerProperties = (ConvertTo-Yaml $InstallerSchema.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerSwitchProperties = (ConvertTo-Yaml $InstallerSchema.definitions.InstallerSwitches.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Installer.properties | ConvertFrom-Yaml -Ordered).Keys
@@ -295,218 +295,6 @@ Function Get-MSIProperty {
   }
 }
 
-Function Get-ItemMetadata {
-  Param
-  (
-    [Parameter(Mandatory = $true)]
-    [string] $FilePath
-  )
-  try {
-    $MetaDataObject = [ordered] @{}
-    $FileInformation = (Get-Item $FilePath)
-    $ShellApplication = New-Object -ComObject Shell.Application
-    $ShellFolder = $ShellApplication.Namespace($FileInformation.Directory.FullName)
-    $ShellFile = $ShellFolder.ParseName($FileInformation.Name)
-    $MetaDataProperties = [ordered] @{}
-    0..400 | ForEach-Object -Process {
-      $DataValue = $ShellFolder.GetDetailsOf($null, $_)
-      $PropertyValue = (Get-Culture).TextInfo.ToTitleCase($DataValue.Trim()).Replace(' ', '')
-      if ($PropertyValue -ne '') {
-        $MetaDataProperties["$_"] = $PropertyValue
-      }
-    }
-    foreach ($Key in $MetaDataProperties.Keys) {
-      $Property = $MetaDataProperties[$Key]
-      $Value = $ShellFolder.GetDetailsOf($ShellFile, [int] $Key)
-      if ($Property -in 'Attributes', 'Folder', 'Type', 'SpaceFree', 'TotalSize', 'SpaceUsed') {
-        continue
-      }
-      If (($null -ne $Value) -and ($Value -ne '')) {
-        $MetaDataObject["$Property"] = $Value
-      }
-    }
-    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($ShellFile)
-    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($ShellFolder)
-    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($ShellApplication)
-    [System.GC]::Collect()
-    [System.GC]::WaitForPendingFinalizers()
-    return $MetaDataObject
-  } catch {
-    Write-Error -Message $_.ToString()
-    break
-  }
-}
-
-function Get-Property ($Object, $PropertyName, [object[]]$ArgumentList) {
-  return $Object.GetType().InvokeMember($PropertyName, 'Public, Instance, GetProperty', $null, $Object, $ArgumentList)
-}
-
-Function Get-MsiDatabase {
-  Param
-  (
-    [Parameter(Mandatory = $true)]
-    [string] $FilePath
-  )
-  Write-Log -Object 'Reading Installer Database. This may take some time...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-  $windowsInstaller = New-Object -com WindowsInstaller.Installer
-  $MSI = $windowsInstaller.OpenDatabase($FilePath, 0)
-  $_TablesView = $MSI.OpenView('select * from _Tables')
-  $_TablesView.Execute()
-  $_Database = @{}
-  do {
-    $_Table = $_TablesView.Fetch()
-    if ($_Table) {
-      $_TableName = Get-Property -Object $_Table -PropertyName StringData -ArgumentList 1
-      $_Database["$_TableName"] = @{}
-    }
-  } while ($_Table)
-  [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($_TablesView)
-  foreach ($_Table in $_Database.Keys) {
-    # Write-Host $_Table
-    $_ItemView = $MSI.OpenView("select * from $_Table")
-    $_ItemView.Execute()
-    do {
-      $_Item = $_ItemView.Fetch()
-      if ($_Item) {
-        $_ItemValue = $null
-        $_ItemName = Get-Property -Object $_Item -PropertyName StringData -ArgumentList 1
-        if ($_Table -eq 'Property') { $_ItemValue = Get-Property -Object $_Item -PropertyName StringData -ArgumentList 2 -ErrorAction SilentlyContinue }
-        $_Database.$_Table["$_ItemName"] = $_ItemValue
-      }
-    } while ($_Item)
-    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($_ItemView)
-  }
-  [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($MSI)
-  [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($windowsInstaller)
-  Write-Log -Object 'Closing Installer Database...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-  return $_Database
-}
-
-Function Test-IsWix {
-  Param
-  (
-    [Parameter(Mandatory = $true)]
-    [object] $Database,
-    [Parameter(Mandatory = $true)]
-    [object] $MetaDataObject
-  )
-  # If any of the table names match wix
-  if ($Database.Keys -match 'wix') { return $true }
-  # If any of the keys in the property table match wix
-  if ($Database.Property.Keys.Where({ $_ -match 'wix' })) { return $true }
-  # If the CreatedBy value matches wix
-  if ($MetaDataObject.ProgramName -match 'wix') { return $true }
-  # If the CreatedBy value matches xml
-  if ($MetaDataObject.ProgramName -match 'xml') { return $true }
-  return $false
-}
-
-Function Get-ExeType {
-  Param
-  (
-    [Parameter(Mandatory = $true)]
-    [String] $Path
-  )
-
-  $nsis = @(
-    77; 90; -112; 0; 3; 0; 0; 0; 4; 0; 0; 0; -1; -1; 0; 0
-    -72; 0; 0; 0; 0; 0; 0; 0; 64; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; -40; 0; 0; 0; 14; 31; -70; 14; 0; -76
-    9; -51; 33; -72; 1; 76; -51; 33; 84; 104; 105; 115
-    32; 112; 114; 111; 103; 114; 97; 109; 32; 99; 97
-    110; 110; 111; 116; 32; 98; 101; 32; 114; 117; 110
-    32; 105; 110; 32; 68; 79; 83; 32; 109; 111; 100
-    101; 46; 13; 13; 10; 36; 0; 0; 0; 0; 0; 0; 0; -83; 49
-    8; -127; -23; 80; 102; -46; -23; 80; 102; -46; -23
-    80; 102; -46; 42; 95; 57; -46; -21; 80; 102; -46
-    -23; 80; 103; -46; 76; 80; 102; -46; 42; 95; 59; -46
-    -26; 80; 102; -46; -67; 115; 86; -46; -29; 80; 102
-    -46; 46; 86; 96; -46; -24; 80; 102; -46; 82; 105; 99
-    104; -23; 80; 102; -46; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 80; 69; 0; 0; 76
-    1; 5; 0
-  )
-
-  $inno = @(
-    77; 90; 80; 0; 2; 0; 0; 0; 4; 0; 15; 0; 255; 255; 0; 0
-    184; 0; 0; 0; 0; 0; 0; 0; 64; 0; 26; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 1; 0; 0; 186; 16; 0; 14; 31; 180; 9
-    205; 33; 184; 1; 76; 205; 33; 144; 144; 84; 104; 105
-    115; 32; 112; 114; 111; 103; 114; 97; 109; 32; 109
-    117; 115; 116; 32; 98; 101; 32; 114; 117; 110; 32
-    117; 110; 100; 101; 114; 32; 87; 105; 110; 51; 50
-    13; 10; 36; 55; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0
-    0; 0; 80; 69; 0; 0; 76; 1; 10; 0)
-
-  $burn = @(46; 119; 105; 120; 98; 117; 114; 110)
-
-  $exeType = $null
-
-  $fileStream = New-Object -TypeName System.IO.FileStream -ArgumentList ($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
-  $reader = New-Object -TypeName System.IO.BinaryReader -ArgumentList $fileStream
-  $bytes = $reader.ReadBytes(264)
-
-  if (($bytes[0..223] -join '') -eq ($nsis -join '')) { $exeType = 'nullsoft' }
-  elseif (($bytes -join '') -eq ($inno -join '')) { $exeType = 'inno' }
-  # The burn header can appear before a certain point in the binary. Check to see if it's present in the first 264 bytes read
-  elseif (($bytes -join '') -match ($burn -join '')) { $exeType = 'burn' }
-  # If the burn header isn't present in the first 264 bytes, scan through the rest of the binary
-  elseif ($IdentifyBurnInstallers -eq 'true') {
-    $rollingBytes = $bytes[ - $burn.Length..-1]
-    for ($i = 265; $i -lt ($fileStream.Length, 524280 | Measure-Object -Minimum).Minimum; $i++) {
-      $rollingBytes = $rollingBytes[1..$rollingBytes.Length]
-      $rollingBytes += $reader.ReadByte()
-      if (($rollingBytes -join '') -match ($burn -join '')) {
-        $exeType = 'burn'
-        break
-      }
-    }
-  }
-
-  $reader.Dispose()
-  $fileStream.Dispose()
-  return $exeType
-}
-
-Function Get-PathInstallerType {
-  Param
-  (
-    [Parameter(Mandatory = $true, Position = 0)]
-    [string] $Path
-  )
-
-  if ($Path -match '\.msix(bundle){0,1}$') { return 'msix' }
-  if ($Path -match '\.msi$') {
-    if ([System.Environment]::OSVersion.Platform -match 'Unix') {
-      $ObjectDatabase = @{}
-      $ObjectMetadata = @{
-        ProgramName = $(([string](file $script:dest) | Select-String -Pattern 'Creating Application.+,').Matches.Value)
-      }
-    } else {
-      $ObjectMetadata = Get-ItemMetadata $Path
-      $ObjectDatabase = Get-MsiDatabase $Path
-    }
-
-    if (Test-IsWix -Database $ObjectDatabase -MetaDataObject $ObjectMetadata ) {
-      return 'wix'
-    }
-    return 'msi'
-  }
-  if ($Path -match '\.appx(bundle){0,1}$') { return 'appx' }
-  if ($Path -match '\.zip$') { return 'zip' }
-  if ($Path -match '\.exe$') { return Get-ExeType -Path $Path }
-
-  return $null
-}
-
 function Get-PublisherHash($publisherName) {
   # Sourced from https://marcinotorowski.com/2021/12/19/calculating-hash-part-of-msix-package-family-name
   $publisherNameAsUnicode = [System.Text.Encoding]::Unicode.GetBytes($publisherName)
@@ -551,7 +339,7 @@ Function Get-PackageFamilyName {
   $_AppxManifest = Get-ChildItem $_ZipFolder -Recurse -File -Filter '*.xml' | Where-Object { $_.Name -match '^Appx(Bundle)?Manifest.xml$' } | Select-Object -First 1
   [XML] $_XMLContent = Get-Content $_AppxManifest.FullName -Raw
   # The path to the node is different between single package and bundles, this should work to get either
-  $_Identity = @($_XMLContent.Bundle.Identity) + @($_XMLContent.Package.Identity)
+  $_Identity = $_XMLContent.GetElementsByTagName('Identity')[0]
   # Cleanup the files that were created
   Remove-Item $_Zip -Force
   Remove-Item $_ZipFolder -Recurse -Force
@@ -619,17 +407,17 @@ Function Read-QuickInstallerEntry {
       throw "The InstallerUrl for [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['tNestedInstallerType']), $($_NewInstaller['Scope'])] was not properly updated"
     }
 
-    if ($_NewInstaller.InstallerUrl -in ($_NewInstallers).InstallerUrl) {
+    if ($_NewInstallers.Count -gt 0 -and $_NewInstaller.InstallerUrl -in $_NewInstallers.InstallerUrl) {
       $_MatchingInstaller = $_NewInstallers | Where-Object { $_.InstallerUrl -eq $_NewInstaller.InstallerUrl } | Select-Object -First 1
-      if ($_MatchingInstaller.InstallerSha256) { $_NewInstaller['InstallerSha256'] = $_MatchingInstaller.InstallerSha256 }
-      if ($_MatchingInstaller.InstallerType) { $_NewInstaller['InstallerType'] = $_MatchingInstaller.InstallerType }
-      if ($_MatchingInstaller.ProductCode) { $_NewInstaller['ProductCode'] = $_MatchingInstaller.ProductCode }
+      if ($_MatchingInstaller['InstallerSha256']) { $_NewInstaller['InstallerSha256'] = $_MatchingInstaller.InstallerSha256 }
+      if ($_MatchingInstaller['InstallerType']) { $_NewInstaller['InstallerType'] = $_MatchingInstaller.InstallerType }
+      if ($_MatchingInstaller['ProductCode']) { $_NewInstaller['ProductCode'] = $_MatchingInstaller.ProductCode }
       elseif ( ($_NewInstaller.Keys -contains 'ProductCode') -and ($script:dest -notmatch '.exe$')) { $_NewInstaller.Remove('ProductCode') }
-      if ($_MatchingInstaller.AppsAndFeaturesEntries) { $_NewInstaller['AppsAndFeaturesEntries'] = $_MatchingInstaller.AppsAndFeaturesEntries }
+      if ($_MatchingInstaller['AppsAndFeaturesEntries']) { $_NewInstaller['AppsAndFeaturesEntries'] = $_MatchingInstaller.AppsAndFeaturesEntries }
       elseif ($_NewInstaller.Keys -contains 'AppsAndFeaturesEntries') { $_NewInstaller.Remove('AppsAndFeaturesEntries') }
-      if ($_MatchingInstaller.PackageFamilyName) { $_NewInstaller['PackageFamilyName'] = $_MatchingInstaller.PackageFamilyName }
+      if ($_MatchingInstaller['PackageFamilyName']) { $_NewInstaller['PackageFamilyName'] = $_MatchingInstaller.PackageFamilyName }
       elseif ($_NewInstaller.Keys -contains 'PackageFamilyName') { $_NewInstaller.Remove('PackageFamilyName') }
-      if ($_MatchingInstaller.SignatureSha256) { $_NewInstaller['SignatureSha256'] = $_MatchingInstaller.SignatureSha256 }
+      if ($_MatchingInstaller['SignatureSha256']) { $_NewInstaller['SignatureSha256'] = $_MatchingInstaller.SignatureSha256 }
       elseif ($_NewInstaller.Keys -contains 'SignatureSha256') { $_NewInstaller.Remove('SignatureSha256') }
     }
 
@@ -639,10 +427,6 @@ Function Read-QuickInstallerEntry {
       # Check that MSI's aren't actually WIX, and EXE's aren't NSIS, INNO or BURN
       Write-Log -Object 'Installer downloaded!' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
       Write-Log -Object 'Processing installer data...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-      if ($_NewInstaller['InstallerType'] -in @('msi'; 'exe')) {
-        $DetectedType = Get-PathInstallerType $script:dest
-        if ($DetectedType -in @('msi'; 'wix'; 'nullsoft'; 'inno'; 'burn')) { $_NewInstaller['InstallerType'] = $DetectedType }
-      }
       # Get the Sha256
       $_NewInstaller['InstallerSha256'] = (Get-FileHash -Path $script:dest -Algorithm SHA256).Hash
       # If the installer is archive and nested installer is msi or wix, expand the archive first
@@ -652,11 +436,6 @@ Function Read-QuickInstallerEntry {
         $EffectiveInstallerPath = Join-Path $ExpandedArchivePath -ChildPath $_NewInstaller.NestedInstallerFiles[0].RelativeFilePath
       } else {
         $EffectiveInstallerPath = $script:dest
-      }
-      # Check that nested MSI's aren't actually WIX, and nested EXE's aren't NSIS, INNO or BURN
-      if ($_NewInstaller.InstallerType -cin @($Patterns.ArchiveInstallerTypes) -and $_NewInstaller.NestedInstallerType -in @('msi'; 'exe')) {
-        $DetectedType = Get-PathInstallerType $EffectiveInstallerPath
-        if ($DetectedType -in @('msi'; 'wix'; 'nullsoft'; 'inno'; 'burn')) { $_NewInstaller['NestedInstallerType'] = $DetectedType }
       }
       # Update the product code, if a new one exists
       # If a new product code doesn't exist, and the installer isn't an `.exe` file, remove the product code if it exists
@@ -978,7 +757,7 @@ Function Write-InstallerManifest {
         $_AllAreSame = $true
         $_FirstInstallerKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key
         foreach ($_Installer in $InstallerManifest.Installers) {
-          $_CurrentInstallerKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key
+          $_CurrentInstallerKeyValue = ConvertTo-Json -InputObject $_Installer[$_Key]
           if (Test-String $_CurrentInstallerKeyValue -IsNull) { $_AllAreSame = $false }
           else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerKeyValue $_FirstInstallerKeyValue).Length -eq 0) }
         }
@@ -1152,6 +931,7 @@ Function Write-LocaleManifest {
 ## START OF MAIN SCRIPT ##
 
 $script:Option = 'QuickUpdateVersion'
+$script:SaveOption = $null
 
 # Request Package Identifier and Validate
 $PackageIdentifierFolder = $PackageIdentifier.Replace('.', '\')

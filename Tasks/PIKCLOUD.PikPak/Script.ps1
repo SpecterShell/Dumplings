@@ -2,7 +2,7 @@ $Uri1 = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/dow
 
 $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState.LastModified } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]

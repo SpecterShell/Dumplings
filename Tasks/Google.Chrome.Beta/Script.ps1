@@ -5,7 +5,7 @@ $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
 }
 $Object1 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModifiedX86'] } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 }
 $Object2 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModifiedX64'] } -SkipHttpErrorCheck
 if ($Object2.StatusCode -eq 304) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

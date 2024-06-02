@@ -1,7 +1,7 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://conf.qishui.com/service/settings/v3/?aid=386088').Content | ConvertFrom-Json -AsHashtable
 
 if (-not $Object1.data.settings.Contains('update_info')) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

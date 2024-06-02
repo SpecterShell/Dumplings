@@ -8,7 +8,7 @@ if (Test-Path -Path $OldReleaseNotesPath) {
 $Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-plugin-update-info/?platform=windows&channel=0300000000&pluginuid=plugin_876be383ea1c01576b2676d34d75f9a6&nonce=AAAAAAAAAAAAAAAA&plugin-ver=$($this.LastState.Version ?? '1.2.0.0')"
 
 if ($null -eq $Object1.target) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

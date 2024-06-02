@@ -11,7 +11,7 @@ $Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query
 $Object2 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.LastState.Contains('Version') ? $this.LastState.Version : '3.25.11.412')&arch=x86_64"
 
 if ($Object1.upgrade_policy -eq 0) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

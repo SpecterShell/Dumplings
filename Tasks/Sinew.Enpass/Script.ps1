@@ -3,7 +3,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://rest.enpass.io/enpass/alert/?package=in.sinew.enpass.win&version=$($this.LastState.Contains('VersionParts') ? $this.LastState.VersionParts[0] : '6.9.5')&version_code=$($this.LastState.Contains('VersionParts') ? $this.LastState.VersionParts[1] : '1639')&language=en|us"
 
 if (-not $Object1.update) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

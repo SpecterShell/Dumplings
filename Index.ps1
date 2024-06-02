@@ -166,6 +166,7 @@ if (-not $Parallel) {
 
   # Set up temp storage for tasks
   $Global:DumplingsStorage = [ordered]@{}
+  $Global:DumplingsSessionStorage = [ordered]@{}
 
   # Set up temp folder for tasks
   $Global:DumplingsCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force).FullName
@@ -198,6 +199,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     $TaskNames = $using:TaskNames
     $TaskNamesTotalCount = $using:TaskNamesTotalCount
     $Global:DumplingsStorage = $using:DumplingsStorage
+    $Global:DumplingsSessionStorage = [ordered]@{}
     $Global:DumplingsCache = $using:DumplingsCache
     $Global:DumplingsOutput = $using:DumplingsOutput
     $Global:DumplingsPreference = $using:DumplingsPreference

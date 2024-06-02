@@ -133,7 +133,7 @@ class PackageTask {
 
   # Invoke script
   [void] Invoke() {
-    if (($Global:DumplingsPreference.Contains('NoSkip') -and $Global:DumplingsPreference.NoSkip) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
+    if (($Global:DumplingsPreference.Contains('Force') -and $Global:DumplingsPreference.Force) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
       Write-Log -Object 'Run!' -Identifier "PackageTask $($this.Name)"
       & $this.ScriptPath | Out-Null
     } else {
@@ -143,7 +143,7 @@ class PackageTask {
 
   # Compare current state with last state
   [string] Check() {
-    if (-not $Global:DumplingsPreference.Contains('NoCheck') -or -not $Global:DumplingsPreference.NoCheck) {
+    if (-not $Global:DumplingsPreference.Contains('Force') -or -not $Global:DumplingsPreference.Force) {
       # Check whether the version property is present and valid
       if (-not $this.CurrentState.Contains('Version')) {
         throw 'The current state has no version'
@@ -380,7 +380,7 @@ class PackageTask {
       #region WinGet
       if ($this.Config.Contains('WinGetIdentifier')) {
         $this.Log('Submitting WinGet manifests', 'Info')
-        Join-Path $Global:DumplingsRoot 'Modules' 'WinGet.psm1' | Import-Module
+        . (Join-Path $Global:DumplingsRoot 'Modules' 'WinGet.ps1')
         New-WinGetManifest -Task $this
       }
       #endregion

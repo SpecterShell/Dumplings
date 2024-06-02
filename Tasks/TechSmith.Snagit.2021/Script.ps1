@@ -14,7 +14,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
 '@ -ContentType 'text/xml; charset=utf-8'
 
 if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [string]) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

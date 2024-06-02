@@ -2,7 +2,7 @@ $Uri1 = 'https://dldir1v6.qq.com/weixin/Windows/WeChatSetup.exe'
 
 $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModified'] } -SkipHttpErrorCheck
 if ($Object1.StatusCode -eq 304) {
-  $this.Log("The last version $($this.LastState.Version) is the latest", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   # Version
   $this.CurrentState.Version = $this.LastState.Version
   # LastModified

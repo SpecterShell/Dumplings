@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://ota.nvidia.com/release/available?product=GFN-win&version=$($this.LastState.Version ?? '2.0.47.119')&channel=OFFICIAL"
 
 if ($Object1.Count -eq 0) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

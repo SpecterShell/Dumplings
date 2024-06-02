@@ -6,7 +6,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://lastpass.com/lmiapi/check-win-install
 )
 
 if ($Object1.isUpdateAvailable -eq $false) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 

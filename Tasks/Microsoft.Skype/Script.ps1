@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://get.skype.com/s4l-update?version=$($this.LastState.Contains('Version') ? $this.LastState.Version : '8.112.0.203')&os=win&ring=production&app=s4l" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
-  $this.Log("The last version $($this.LastState.Version) is the latest, skip checking", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
