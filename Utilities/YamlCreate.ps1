@@ -688,7 +688,7 @@ Function Write-InstallerManifest {
     'Protocols'             = $script:Parameters['Protocols']
     'Commands'              = $script:Parameters['Commands']
     'InstallerSuccessCodes' = $script:Parameters['InstallerSuccessCodes']
-    'InstallModes'          = $script:InstallModes
+    'InstallModes'          = $script:Parameters['InstallModes']
   }
   foreach ($Section in $_ListSections.GetEnumerator()) {
     If ($Section.Value) { Add-YamlListParameter -Object $InstallerManifest -Parameter $Section.Name -Values $Section.Value }
@@ -732,7 +732,7 @@ Function Write-InstallerManifest {
           $_AllAreSame = $true
           $_FirstInstallerSwitchKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key.$_InstallerSwitchKey
           foreach ($_Installer in $InstallerManifest.Installers) {
-            $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key.$_InstallerSwitchKey
+            $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key[$_InstallerSwitchKey]
             if (Test-String $_CurrentInstallerSwitchKeyValue -IsNull) { $_AllAreSame = $false }
             else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerSwitchKeyValue $_FirstInstallerSwitchKeyValue).Length -eq 0) }
           }
@@ -1002,7 +1002,6 @@ if ($OldManifests.Name -eq "$PackageIdentifier.installer.yaml" -and $OldManifest
         continue
       } else {
         foreach ($_Installer in $script:OldInstallerManifest['Installers']) {
-          if ($_Key -eq 'InstallModes') { $script:InstallModes = [string]$script:OldInstallerManifest.$_Key }
           if ($_Key -notin $_Installer.Keys) {
             $_Installer[$_Key] = $script:OldInstallerManifest.$_Key
           }
@@ -1055,7 +1054,6 @@ if ($OldManifests.Name -eq "$PackageIdentifier.installer.yaml" -and $OldManifest
         continue
       } else {
         foreach ($_Installer in $script:OldInstallerManifest['Installers']) {
-          if ($_Key -eq 'InstallModes') { $script:InstallModes = [string]$script:OldInstallerManifest.$_Key }
           if ($_Key -notin $_Installer.Keys) {
             $_Installer[$_Key] = $script:OldInstallerManifest.$_Key
           }
@@ -1089,6 +1087,7 @@ if ($OldManifests) {
     'Protocols'; 'Commands'
     'InstallerSuccessCodes'
     'Capabilities'; 'RestrictedCapabilities'
+    'InstallModes'
   )
   Foreach ($param in $_Parameters) {
     $_ReadValue = $(if ($script:OldManifestType -eq 'MultiManifest') { (Get-MultiManifestParameter $param) } else { $script:OldVersionManifest[$param] })
