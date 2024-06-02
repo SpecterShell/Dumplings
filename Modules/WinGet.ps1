@@ -211,7 +211,7 @@ function New-WinGetManifest {
   if ($Task.LastState.Contains('Version') -and ($Task.LastState.Version -ne $Task.CurrentState.Version) -and -not (Compare-Object -ReferenceObject $Task.LastState -DifferenceObject $Task.CurrentState -Property { $_.Installer.InstallerUrl })) {
     $RemoveLastVersionReason = 'No installer URL is changed compared with the last state while the version is updated'
   }
-  if ($LastManifestVersion) {
+  if ($RemoveLastVersionReason) {
     if ($LastManifestVersion -ne $PackageVersion) {
       $Task.Log("The manifests for the last version ${LastManifestVersion} will be removed. Reason: ${RemoveLastVersionReason}", 'Info')
       Get-ChildItem -Path "${ManifestsFolder}\$($PackageIdentifier.ToLower().Chars(0))\$($PackageIdentifier.Replace('.', '\'))\${LastManifestVersion}\*.yaml" -File | ForEach-Object -Process {
