@@ -274,6 +274,7 @@ $($Task.Logs -join "`n")
 ````````
 
 </details>
+
 "@
   } else {
     # Here we assume that the Dumplings repository is under the same user as the winget-pkgs repository
