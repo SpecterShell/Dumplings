@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
 
       $NestedInstallerFile = $InstallerFile | Expand-TempArchive | Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
       $NestedInstallerFileExtracted = New-TempFolder
-      7z e -aoa -ba -bd -o"${NestedInstallerFileExtracted}" $NestedInstallerFile 'readme.txt' | Out-Host
+      7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileExtracted}" $NestedInstallerFile 'readme.txt' | Out-Host
       $ReleaseNotesFile = Join-Path $NestedInstallerFileExtracted 'readme.txt'
       $ReleaseNotesObject = [System.IO.StreamReader]::new($ReleaseNotesFile, [System.Text.Encoding]::GetEncoding('gb18030'))
 

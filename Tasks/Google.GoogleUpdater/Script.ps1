@@ -42,10 +42,10 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFile2Root = New-TempFolder
-    7z e -aoa -ba -bd -o"${InstallerFile2Root}" $InstallerFile 'updater.7z' | Out-Host
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Root}" $InstallerFile 'updater.7z' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFile2Root 'updater.7z'
     $InstallerFile3Root = New-TempFolder
-    7z e -aoa -ba -bd -o"${InstallerFile3Root}" $InstallerFile2 'bin\updater.exe' | Out-Host
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFile3Root}" $InstallerFile2 'bin\updater.exe' | Out-Host
     $InstallerFile3 = Join-Path $InstallerFile3Root 'updater.exe'
 
     # InstallerSha256 + InstallationMetadata > Files > FileSha256

@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
     $InstallerFileExtracted = New-TempFolder
-    7z e -aoa -ba -bd -o"${InstallerFileExtracted}" $InstallerFile | Out-Host
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile | Out-Host
 
     $Object2 = Join-Path $InstallerFileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     $NestedInstallerFile = Join-Path $InstallerFileExtracted $Object2.MUPDefinition.executable.executablename

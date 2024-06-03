@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerFile2Root = New-TempFolder
-    7z e -aoa -ba -bd '-t#' -o"${InstallerFile2Root}" $InstallerFile '2.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Root}" $InstallerFile '2.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFile2Root '2.msi'
 
     # RealVersion

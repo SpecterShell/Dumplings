@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $NestedInstallerFileRoot = New-TempFolder
-    7z e -aoa -ba -bd -o"${NestedInstallerFileRoot}" $InstallerFile 'Bluebeam Revu x64 21.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile 'Bluebeam Revu x64 21.msi' | Out-Host
     $NestedInstallerFile = Join-Path $NestedInstallerFileRoot 'Bluebeam Revu x64 21.msi'
 
     # InstallerSha256
@@ -60,7 +60,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale = @()
       $this.Config.IgnorePRCheck = $true
 
-      7z e -aoa -ba -bd -o"${NestedInstallerFileRoot}" $InstallerFile 'BluebeamOCR x64 21.msi' | Out-Host
+      7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile 'BluebeamOCR x64 21.msi' | Out-Host
       $NestedInstallerFile2 = Join-Path $NestedInstallerFileRoot 'BluebeamOCR x64 21.msi'
 
       # Version

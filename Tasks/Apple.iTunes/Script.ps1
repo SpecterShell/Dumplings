@@ -20,7 +20,7 @@ if ($this.LastState.Installer.Count -gt 0 -and $this.LastState.Installer.Where({
 # InstallerSha256 + ProductCode + AppsAndFeaturesEntries
 $InstallerX86File = Get-TempFile -Uri $InstallerX86.InstallerUrl
 $InstallerX86FileExtracted = New-TempFolder
-7z e -aoa -ba -bd -o"${InstallerX86FileExtracted}" $InstallerX86File 'iTunes.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y -o"${InstallerX86FileExtracted}" $InstallerX86File 'iTunes.msi' | Out-Host
 $InstallerX86MsiFile = Join-Path $InstallerX86FileExtracted 'iTunes.msi'
 $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerX86File -Algorithm SHA256).Hash
 $InstallerX86['AppsAndFeaturesEntries'] = @(
@@ -35,7 +35,7 @@ $this.Log("x86 version: ${VersionX86}")
 
 $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 $InstallerX64FileExtracted = New-TempFolder
-7z e -aoa -ba -bd -o"${InstallerX64FileExtracted}" $InstallerX64File 'iTunes64.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File 'iTunes64.msi' | Out-Host
 $InstallerX64MsiFile = Join-Path $InstallerX64FileExtracted 'iTunes64.msi'
 $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerX64File -Algorithm SHA256).Hash
 $InstallerX64['AppsAndFeaturesEntries'] = @(

@@ -10,7 +10,7 @@ if ($Object1.StatusCode -eq 304) {
 } else {
   $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
-  $this.CurrentState.Version = [regex]::Match((7z l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
+  $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
   # LastModified
   $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 }

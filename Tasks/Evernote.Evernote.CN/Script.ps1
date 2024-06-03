@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $NestedInstallerFileRoot = New-TempFolder
-    7z e -aoa -ba -bd '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host
     $NestedInstallerFile = Join-Path $NestedInstallerFileRoot '2.msi'
 
     # InstallerSha256

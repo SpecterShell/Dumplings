@@ -41,7 +41,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
     $NestedInstallerFileX86Root = New-TempFolder
-    7z e -aoa -ba -bd '-t#' -o"${NestedInstallerFileX86Root}" $InstallerFileX86 '2.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileX86Root}" $InstallerFileX86 '2.msi' | Out-Host
     $NestedInstallerFileX86 = Join-Path $NestedInstallerFileX86Root '2.msi'
 
     $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX86 -Algorithm SHA256).Hash
@@ -55,7 +55,7 @@ switch -Regex ($this.Check()) {
 
     $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
     $NestedInstallerFileX64Root = New-TempFolder
-    7z e -aoa -ba -bd '-t#' -o"${NestedInstallerFileX64Root}" $InstallerFileX64 '2.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileX64Root}" $InstallerFileX64 '2.msi' | Out-Host
     $NestedInstallerFileX64 = Join-Path $NestedInstallerFileX64Root '2.msi'
 
     $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
