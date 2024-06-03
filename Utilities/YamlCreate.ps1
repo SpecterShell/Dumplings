@@ -21,11 +21,9 @@ Param
   [Parameter(Mandatory = $false)]
   [string] $PackageReleaseDate
 )
-if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
 $ScriptHeader = '# Created with YamlCreate.ps1 v2.4.1 Dumplings Mod'
 $ManifestVersion = '1.6.0'
-$PSDefaultParameterValues['*:Encoding'] = 'UTF8'
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $Culture = 'en-US'
 if (-not ([System.Environment]::OSVersion.Platform -match 'Win')) { $env:TEMP = '/tmp/' }
@@ -327,17 +325,11 @@ Function Get-PackageFamilyName {
   $_Zip = Join-Path $_MSIX.Directory.FullName -ChildPath 'MSIX_YamlCreate.zip'
   $_ZipFolder = [System.IO.Path]::GetDirectoryName($_ZIp) + '\' + [System.IO.Path]::GetFileNameWithoutExtension($_Zip)
   Copy-Item -Path $_MSIX.FullName -Destination $_Zip
-  # Progress preference has to be set globally for Expand-Archive
-  # https://github.com/PowerShell/Microsoft.PowerShell.Archive/issues/77#issuecomment-601947496
-  $globalPreference = $global:ProgressPreference
-  $global:ProgressPreference = 'SilentlyContinue'
   # Expand the zip file to access the manifest inside
   Expand-Archive $_Zip -DestinationPath $_ZipFolder -Force
-  # Restore the old progress preference
-  $global:ProgressPreference = $globalPreference
   # Package could be a single package or a bundle, so regex search for either of them
   $_AppxManifest = Get-ChildItem $_ZipFolder -Recurse -File -Filter '*.xml' | Where-Object { $_.Name -match '^Appx(Bundle)?Manifest.xml$' } | Select-Object -First 1
-  [XML] $_XMLContent = Get-Content $_AppxManifest.FullName -Raw
+  [XML] $_XMLContent = Get-Content $_AppxManifest.FullName -Raw -Encoding $Utf8NoBomEncoding
   # The path to the node is different between single package and bundles, this should work to get either
   $_Identity = $_XMLContent.GetElementsByTagName('Identity')[0]
   # Cleanup the files that were created
@@ -882,7 +874,7 @@ Function Write-LocaleManifest {
     ForEach ($DifLocale in $OldManifests) {
       if ($DifLocale.Name -notin @("$PackageIdentifier.yaml", "$PackageIdentifier.installer.yaml", "$PackageIdentifier.locale.$PackageLocale.yaml")) {
         if (!(Test-Path $OutFolder)) { New-Item -ItemType 'Directory' -Force -Path $OutFolder | Out-Null }
-        $script:OldLocaleManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $DifLocale.FullName -Encoding UTF8) -join "`n") -Ordered
+        $script:OldLocaleManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $DifLocale.FullName -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
         $script:OldLocaleManifest['PackageVersion'] = $PackageVersion
         if ($script:OldLocaleManifest.Keys -contains 'Moniker') { $script:OldLocaleManifest.Remove('Moniker') }
         $script:OldLocaleManifest['ManifestVersion'] = $ManifestVersion
@@ -974,7 +966,7 @@ try {
 if ($OldManifests.Name -match "$([Regex]::Escape($PackageIdentifier))\.locale\..*\.yaml") {
   $_LocaleManifests = $OldManifests | Where-Object { $_.Name -match "$([Regex]::Escape($PackageIdentifier))\.locale\..*\.yaml" }
   foreach ($_Manifest in $_LocaleManifests) {
-    $_ManifestContent = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $($_Manifest.FullName) -Encoding UTF8) -join "`n") -Ordered
+    $_ManifestContent = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $($_Manifest.FullName) -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
     if ($_ManifestContent.ManifestType -eq 'defaultLocale') { $PackageLocale = $_ManifestContent.PackageLocale }
   }
 }
@@ -983,7 +975,7 @@ if ($OldManifests.Name -match "$([Regex]::Escape($PackageIdentifier))\.locale\..
 # Also ensure additional requirements are met for creating or updating files
 if ($OldManifests.Name -eq "$PackageIdentifier.installer.yaml" -and $OldManifests.Name -eq "$PackageIdentifier.locale.$PackageLocale.yaml" -and $OldManifests.Name -eq "$PackageIdentifier.yaml") {
   $script:OldManifestType = 'MultiManifest'
-  $script:OldInstallerManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.installer.yaml") -Encoding UTF8) -join "`n") -Ordered
+  $script:OldInstallerManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.installer.yaml") -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
   # Move Manifest Level Keys to installer Level
   $_KeysToMove = $InstallerEntryProperties | Where-Object { $_ -in $InstallerProperties }
   foreach ($_Key in $_KeysToMove) {
@@ -1011,11 +1003,11 @@ if ($OldManifests.Name -eq "$PackageIdentifier.installer.yaml" -and $OldManifest
       $script:OldInstallerManifest.Remove($_Key)
     }
   }
-  $script:OldLocaleManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.locale.$PackageLocale.yaml") -Encoding UTF8) -join "`n") -Ordered
-  $script:OldVersionManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.yaml") -Encoding UTF8) -join "`n") -Ordered
+  $script:OldLocaleManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.locale.$PackageLocale.yaml") -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
+  $script:OldVersionManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.yaml") -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
 } elseif ($OldManifests.Name -eq "$PackageIdentifier.yaml") {
   $script:OldManifestType = 'MultiManifest'
-  $script:OldSingletonManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.yaml") -Encoding UTF8) -join "`n") -Ordered
+  $script:OldSingletonManifest = ConvertFrom-Yaml -Yaml ($(Get-Content -Path $(Resolve-Path "$AppFolder\..\$LastVersion\$PackageIdentifier.yaml") -Encoding $Utf8NoBomEncoding) -join "`n") -Ordered
   $PackageLocale = $script:OldSingletonManifest.PackageLocale
   # Create new empty manifests
   $script:OldInstallerManifest = [ordered]@{}
