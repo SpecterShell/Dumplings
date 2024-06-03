@@ -9,11 +9,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.URL
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object2.Date.Unix | ConvertFrom-UnixTimeMilliseconds
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.Date.Unix | ConvertFrom-UnixTimeMilliseconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = $Object1.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.txt') })[0]
 

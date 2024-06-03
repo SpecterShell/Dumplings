@@ -11,11 +11,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = ($Object1 | Split-LineEndings)[0].Trim()
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::Parse([regex]::Match($Object1, '(\d{2}-\w{3}-\d{4} \d{2}:\d{2})').Groups[1].Value, (Get-Culture -Name 'pt')) | ConvertTo-UtcDateTime -Id 'E. South America Standard Time'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::Parse([regex]::Match($Object1, '(\d{2}-\w{3}-\d{4} \d{2}:\d{2})').Groups[1].Value, (Get-Culture -Name 'pt')) | ConvertTo-UtcDateTime -Id 'E. South America Standard Time'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://tinn-r.org/update/patch_notes.html' | ConvertFrom-Html
 

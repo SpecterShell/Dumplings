@@ -9,6 +9,8 @@ $this.CurrentState.Version = $Object1.data.versionCode
 $Identical = $true
 if ($Object1.data.versionCode -ne $Object2.data.versionCode) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 version: $($Object2.data.versionCode)")
+  $this.Log("x64 version: $($Object1.data.versionCode)")
   $Identical = $false
 }
 
@@ -22,11 +24,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.downloadUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.billfish.cn/help/gengxinrizhi' | ConvertFrom-Html
 

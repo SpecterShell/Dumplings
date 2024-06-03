@@ -11,15 +11,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.update.url
 }
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.description.'#cdata-section' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.description.'#cdata-section' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

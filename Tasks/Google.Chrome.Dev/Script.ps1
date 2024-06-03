@@ -32,6 +32,9 @@ $Object3 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 '@
 
 if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.response.app.updatecheck.manifest.version } -Unique).Count -gt 1) {
+  $this.Log("x86 version: $($Object2.response.app.updatecheck.manifest.version)")
+  $this.Log("x64 version: $($Object1.response.app.updatecheck.manifest.version)")
+  $this.Log("arm64 version: $($Object3.response.app.updatecheck.manifest.version)")
   throw 'Distinct versions detected'
 }
 

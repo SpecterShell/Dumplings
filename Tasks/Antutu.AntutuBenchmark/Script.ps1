@@ -13,11 +13,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Node.SelectSingleNode('./div/a').Attributes['href'].Value
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://$($Object1[$Object1.IndexOf('sites') + 3])$($Object1[$Object1.IndexOf('path') + 2])"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1[$Object1.IndexOf('time') + 2], 'yyyyMMddHHmmss', $null) | ConvertTo-UtcDatetime -Id 'Tokyo Standard Time'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1[$Object1.IndexOf('time') + 2], 'yyyyMMddHHmmss', $null) | ConvertTo-UtcDatetime -Id 'Tokyo Standard Time'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://fastcopy.jp/help/fastcopy_eng.htm' | ConvertFrom-Html
 

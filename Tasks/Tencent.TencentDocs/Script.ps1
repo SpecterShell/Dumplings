@@ -3,18 +3,6 @@ $Object1 = (Invoke-RestMethod -Uri 'https://docs.qq.com/api/package/update').res
 # Version
 $this.CurrentState.Version = $Object1.version
 
-$ReleaseNotesContent = $Object1.update_info.Split("`n`n")[0] | Split-LineEndings
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesContent | Select-Object -Skip 2 | Format-Text
-}
-
 $Prefix = "https://desktop.docs.qq.com/update/release/$($this.CurrentState.Version)/"
 
 # Installer (x86)
@@ -40,6 +28,23 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $ReleaseNotesContent = $Object1.update_info.Split("`n`n")[0] | Split-LineEndings
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesContent | Select-Object -Skip 2 | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

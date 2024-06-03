@@ -246,17 +246,22 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
   }
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.LAST_RELEASE_DATE | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${Version}/releasenotes/"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.LAST_RELEASE_DATE | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${Version}/releasenotes/"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

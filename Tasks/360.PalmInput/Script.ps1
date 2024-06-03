@@ -8,21 +8,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value | ConvertTo-Https
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.SelectSingleNode('//*[@id="doc"]/div[3]/div[3]/div[2]/div') | Get-TextContent | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.SelectSingleNode('//*[@id="doc"]/div[3]/div[3]/div[2]/div') | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

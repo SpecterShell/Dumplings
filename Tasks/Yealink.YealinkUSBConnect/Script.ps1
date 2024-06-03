@@ -10,27 +10,32 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
-if ($Global:DumplingsStorage.Contains('YealinkUSBConnect') -and $Global:DumplingsStorage['YealinkUSBConnect'].Contains($Version)) {
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseTime
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseNotes
-  }
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseTime, ReleaseTime (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('YealinkUSBConnect') -and $Global:DumplingsStorage['YealinkUSBConnect'].Contains($Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseTime
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseNotes
+        }
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['YealinkUSBConnect'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseTime, ReleaseTime (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

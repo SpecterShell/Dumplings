@@ -21,14 +21,19 @@ $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match 'ARM64' }, 'First')[0].url
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object1.release_notes_url
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object1.release_notes_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     # AppsAndFeaturesEntries
     $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
     $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl

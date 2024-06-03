@@ -8,22 +8,27 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = 'https://dl.dell.com/' + $Object1.path
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.dateTime | Get-Date -AsUTC
-
-# PackageName
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'PackageUrl'
-  Value = "https://www.dell.com/support/home/drivers/DriversDetails?driverId=$($Object1.releaseID)"
-}
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'PackageUrl'
-  Value  = "https://www.dell.com/support/home/zh-cn/drivers/DriversDetails?driverId=$($Object1.releaseID)"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.dateTime | Get-Date -AsUTC
+
+      # PackageName
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'PackageUrl'
+        Value = "https://www.dell.com/support/home/drivers/DriversDetails?driverId=$($Object1.releaseID)"
+      }
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'PackageUrl'
+        Value  = "https://www.dell.com/support/home/zh-cn/drivers/DriversDetails?driverId=$($Object1.releaseID)"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile | Out-Host

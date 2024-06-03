@@ -17,25 +17,30 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//div[@class="fz1"]/span[2]').InnerText,
-  'Updated:\s*(.+)&emsp;'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-if ($Object1.SelectSingleNode('//div[@class="ver"]').InnerText.Contains($this.CurrentState.Version)) {
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $Object1.SelectSingleNode('//ul[@class="list"]') | Get-TextContent | Format-Text
-  }
-} else {
-  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//div[@class="fz1"]/span[2]').InnerText,
+        'Updated:\s*(.+)&emsp;'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      if ($Object1.SelectSingleNode('//div[@class="ver"]').InnerText.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.SelectSingleNode('//ul[@class="list"]') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.diskgenius.cn/download.php' | ConvertFrom-Html
 

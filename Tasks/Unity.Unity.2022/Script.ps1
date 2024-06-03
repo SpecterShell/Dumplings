@@ -35,39 +35,44 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "Unity ${Version}"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = "https://unity3d.com/unity/whats-new/$($Version -creplace 'f\d+', '')"
-}
-
-# Documentations
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'Documentations'
-  Value  = @(
-    @{
-      DocumentLabel = 'Unity User Manual'
-      DocumentUrl   = "https://docs.unity3d.com/$($Version.Split('.')[0..1] -join '.')/Documentation/Manual/"
-    }
-  )
-}
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'Documentations'
-  Value  = @(
-    [ordered]@{
-      DocumentLabel = 'Unity 用户手册'
-      DocumentUrl   = "https://docs.unity3d.com/cn/$($Version.Split('.')[0..1] -join '.')/Manual/"
-    }
-  )
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://unity3d.com/unity/whats-new/$($Version -creplace 'f\d+', '')"
+      }
+
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'Documentations'
+        Value  = @(
+          @{
+            DocumentLabel = 'Unity User Manual'
+            DocumentUrl   = "https://docs.unity3d.com/$($Version.Split('.')[0..1] -join '.')/Documentation/Manual/"
+          }
+        )
+      }
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = 'Unity 用户手册'
+            DocumentUrl   = "https://docs.unity3d.com/cn/$($Version.Split('.')[0..1] -join '.')/Manual/"
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{

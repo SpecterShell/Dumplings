@@ -15,11 +15,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://corretto.aws/downloads/resources/$($this.CurrentState.Version)/amazon-corretto-$($this.CurrentState.Version)-windows-x64.msi"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

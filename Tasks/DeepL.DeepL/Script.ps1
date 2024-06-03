@@ -22,11 +22,16 @@ if ($Object2.StatusCode -eq 304) {
   $this.CurrentState.LastModified = $Object2.Headers.'Last-Modified'[0]
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.released | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.released | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

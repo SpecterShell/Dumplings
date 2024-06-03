@@ -8,12 +8,21 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.last_modified | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $ReleaseNotesUrl = 'https://docs.posit.co/ide/news/'
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.last_modified | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl = 'https://docs.posit.co/ide/news/'
+    }
 
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -34,20 +43,10 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
-      }
     }
 
     $this.Print()

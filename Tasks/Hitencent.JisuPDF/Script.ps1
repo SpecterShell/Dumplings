@@ -11,15 +11,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="reader-jisupdf"]/div[1]/div[1]').Attributes['href'].Value
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="reader-jisupdf"]/div[1]/p[3]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      try {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match(
+          $Object1.SelectSingleNode('//*[@id="reader-jisupdf"]/div[1]/p[3]').InnerText,
+          '(\d{4}-\d{1,2}-\d{1,2})'
+        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      } catch {
+        $_ | Out-Host
+        $this.Log($_, 'Warning')
+      }
+
       $Object2 = (Invoke-WebRequest -Uri 'https://upd.jisupdf.com/version.php' | Read-ResponseContent -Encoding GBK).Replace('**', "`n") | ConvertFrom-StringData
 
       if ($Object2.v -eq $this.CurrentState.Version) {

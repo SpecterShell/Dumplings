@@ -17,19 +17,24 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

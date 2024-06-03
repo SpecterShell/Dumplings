@@ -8,15 +8,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloadUrl
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.description.Replace('；', "；`n") | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.description.Replace('；', "；`n") | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -58,17 +58,22 @@ switch ($Lang) {
   }
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null) | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null) | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.CurrentState.Installer | ForEach-Object -Process {
       $_.InstallerSha256 = (Invoke-RestMethod -Uri $_.InstallerSha256Url).Split()[0].ToUpper()
       $_.Remove('InstallerSha256Url')

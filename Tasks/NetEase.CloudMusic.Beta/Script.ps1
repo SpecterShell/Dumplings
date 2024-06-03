@@ -16,7 +16,11 @@ $Object2 = Invoke-RestMethod `
 $Version2 = "$($Object2.data.packageVO.appver).$($Object2.data.packageVO.buildver)"
 $InstallerUrl2 = $Object2.data.packageVO.downloadUrl
 
-if ($Version1 -ne $Version2) { throw 'Distinct versions detected' }
+if ($Version1 -ne $Version2) {
+  $this.Log("x86 version: ${Version2}")
+  $this.Log("x64 version: ${Version1}")
+  throw 'Distinct versions detected'
+}
 
 # Version
 $this.CurrentState.Version = $Version1
@@ -31,15 +35,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl1
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = '"' + $Object1.data.upgradeContent + '"' | ConvertFrom-Json | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = '"' + $Object1.data.upgradeContent + '"' | ConvertFrom-Json | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

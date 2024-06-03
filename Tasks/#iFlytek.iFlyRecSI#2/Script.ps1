@@ -21,15 +21,20 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesCN = $ReleaseNotesCN
     }

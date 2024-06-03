@@ -17,22 +17,27 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix + $Object1.SelectSingleNode('/html/body/div[2]/a[1]').Attributes['href'].Value
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  [regex]::Match($ReleaseNotesTitle, '(\d{2}/\d{2}/\d{2})').Groups[1].Value,
-  'MM/dd/yy',
-  $null
-).ToString('yyyy-MM-dd')
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.SelectSingleNode('/html/body/ul[2]') | Get-TextContent | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($ReleaseNotesTitle, '(\d{2}/\d{2}/\d{2})').Groups[1].Value,
+        'MM/dd/yy',
+        $null
+      ).ToString('yyyy-MM-dd')
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.SelectSingleNode('/html/body/ul[2]') | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

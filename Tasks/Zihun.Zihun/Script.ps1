@@ -10,11 +10,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Prefix + $Object1.files.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

@@ -8,15 +8,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.download_links.pc
 }
 
-if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($Version)) {
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime
-} else {
-  $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -11,11 +11,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-$($Object1.latest.version)-$($Object1.latest.binary).msi"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.latest.date | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.latest.date | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256

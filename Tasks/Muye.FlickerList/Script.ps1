@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://static.flicker.cool/flicker/download/stable/$($this.CurrentState.Version)/win32/$($Object1.files[0].url)"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

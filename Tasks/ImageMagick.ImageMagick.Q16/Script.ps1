@@ -32,6 +32,12 @@ $VersionZipArm64 = [regex]::Match($InstallerObjectZipArm64.about, '(\d+\.\d+\.\d
 # }
 
 if (@(@($VersionX86, $VersionX64, $VersionArm64, $VersionZipX86, $VersionZipX64, $VersionZipArm64) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Inno x86 version: ${VersionX86}")
+  $this.Log("Inno x64 version: ${VersionX64}")
+  $this.Log("Inno arm64 version: ${VersionArm64}")
+  $this.Log("Portable x86 version: ${VersionZipX86}")
+  $this.Log("Portable x64 version: ${VersionZipX64}")
+  $this.Log("Portable arm64 version: ${VersionZipArm64}")
   throw 'Distinct versions detected'
 }
 

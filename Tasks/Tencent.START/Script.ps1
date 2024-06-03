@@ -8,18 +8,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloadurl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.updatedate | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.whatsnew | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.updatedate | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.whatsnew | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

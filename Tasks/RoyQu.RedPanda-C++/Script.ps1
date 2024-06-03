@@ -19,22 +19,27 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].pubDate,
-  'ddd, dd MMM yyyy HH:mm:ss "UT"',
-  (Get-Culture -Name 'en-US')
-) | ConvertTo-UtcDateTime -Id 'UTC'
-
-# ReleaseNotesUrl (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotesUrl'
-  Value  = "https://sourceforge.net/projects/${ProjectName}/files" + [regex]::Match($Assets[0].title.'#cdata-section', '^(/v?[\d\.]+/)').Groups[1].Value
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].pubDate,
+        'ddd, dd MMM yyyy HH:mm:ss "UT"',
+  (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'UTC'
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://sourceforge.net/projects/${ProjectName}/files" + [regex]::Match($Assets[0].title.'#cdata-section', '^(/v?[\d\.]+/)').Groups[1].Value
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/NEWS.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
 

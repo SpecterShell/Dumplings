@@ -3,14 +3,19 @@ $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['9629']
 # ProductCode
 $this.CurrentState.Installer[0]['ProductCode'] = "UniConverter $($this.CurrentState.Version.Split('.')[0])_is1"
 
-# PackageName
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'PackageName'
-  Value = "Wondershare UniConverter $($this.CurrentState.Version.Split('.')[0])"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # PackageName
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'PackageName'
+        Value = "Wondershare UniConverter $($this.CurrentState.Version.Split('.')[0])"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256

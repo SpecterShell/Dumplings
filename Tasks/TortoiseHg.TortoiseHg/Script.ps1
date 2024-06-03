@@ -4,6 +4,8 @@ $InstallerObjectX86 = $Object1 | Where-Object -FilterScript { $_.InstallerUrl.Co
 $InstallerObjectX64 = $Object1 | Where-Object -FilterScript { $_.InstallerUrl.Contains('x64') -and $_.InstallerUrl.EndsWith('.msi') } | Sort-Object -Property { $_.Version -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 if (@(@($InstallerObjectX86, $InstallerObjectX64) | Sort-Object -Property { $_.Version } -Unique).Count -gt 1) {
+  $this.Log("x86 version: $($InstallerObjectX86.Version)")
+  $this.Log("x64 version: $($InstallerObjectX64.Version)")
   throw 'Distinct versions detected'
 }
 

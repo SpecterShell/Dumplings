@@ -16,14 +16,19 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="corpTitle"]/h1/span[2]/div/span[2]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@id="corpTitle"]/h1/span[2]/div/span[2]').InnerText,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+      ).Groups[1].Value
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.amyxun.com/nd.jsp?id=10' | ConvertFrom-Html
 

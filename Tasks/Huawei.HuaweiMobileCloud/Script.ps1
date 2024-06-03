@@ -39,13 +39,13 @@ $this.CurrentState.Version = $Object2.configurations.version
 # }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
-  Architecture    = 'x86'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
+  Architecture = 'x86'
+  InstallerUrl = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
-  Architecture    = 'x64'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
+  Architecture = 'x64'
+  InstallerUrl = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
@@ -58,12 +58,16 @@ $this.CurrentState.Installer += [ordered]@{
 #   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
-
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
 

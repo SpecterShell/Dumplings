@@ -12,18 +12,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.pkgUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.pubTime | ConvertFrom-UnixTimeMilliseconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.desc | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.pubTime | ConvertFrom-UnixTimeMilliseconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.desc | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

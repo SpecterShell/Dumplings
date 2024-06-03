@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="download_group"]/li[9]/dl/dd/a').Attributes['href'].Value.Replace('https://', 'http://')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Version, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Version, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'http://diodiy.top/?thread-1.htm' | ConvertFrom-Html
 

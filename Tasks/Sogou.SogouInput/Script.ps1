@@ -5,13 +5,18 @@ $Match = [regex]::Match($Object1, 'window\.location\.href\s*=\s*"(.+?/pc/dl/gzin
 # Version
 $this.CurrentState.Version = $Match.Groups[2].Value
 
-$Object2 = $Object1 | ConvertFrom-Html
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('//*[@id="banner0_text3"]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $Object2 = $Object1 | ConvertFrom-Html
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('//*[@id="banner0_text3"]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Match.Groups[1].Value
 
     # RealVersion
@@ -19,7 +24,7 @@ switch -Regex ($this.Check()) {
 
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl    = "https://ime.gtimg.com/pc/build/_sogou_pinyin_[Release]_$($this.CurrentState.RealVersion)_0.exe"
+      InstallerUrl = "https://ime.gtimg.com/pc/build/_sogou_pinyin_[Release]_$($this.CurrentState.RealVersion)_0.exe"
     }
 
     try {

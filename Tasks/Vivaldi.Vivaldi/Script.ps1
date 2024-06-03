@@ -9,6 +9,8 @@ $this.CurrentState.Version = $Object2.enclosure.version
 $Identical = $true
 if ($Object1.enclosure.version -ne $Object2.enclosure.version) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 version: $($Object1.enclosure.version)")
+  $this.Log("x64 version: $($Object2.enclosure.version)")
   $Identical = $false
 }
 
@@ -22,14 +24,19 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.enclosure.url.Replace('stable-auto', 'stable')
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object2.releaseNotesLink
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object2.releaseNotesLink
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

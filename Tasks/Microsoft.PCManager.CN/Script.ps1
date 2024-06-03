@@ -26,21 +26,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.DownloadLink
 }
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = ($Object1.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = ($Object1.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = ($Object1.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = ($Object1.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

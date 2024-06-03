@@ -11,21 +11,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/a').Attributes['href'].Value.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/div/span[3]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/div/span[4]/div/ul') | Get-TextContent | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/div/span[3]').InnerText,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.SelectSingleNode('//*[@id="mod_container"]/div[2]/div[1]/div[1]/div/span[4]/div/ul') | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

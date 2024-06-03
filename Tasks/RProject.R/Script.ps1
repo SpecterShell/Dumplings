@@ -12,14 +12,19 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "R for Windows ${Version}_is1"
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://cloud.r-project.org/bin/windows/base/old/${Version}/NEWS.R-${Version}.html"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = "https://cloud.r-project.org/bin/windows/base/old/${Version}/NEWS.R-${Version}.html"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = (Invoke-WebRequest -Uri 'https://cran.r-project.org/bin/windows/base/').Content
 

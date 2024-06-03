@@ -8,21 +8,26 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
 }
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.'releaseNotes-en-US' | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.'releaseNotes-zh-CN' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.'releaseNotes-en-US' | Format-Text
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.'releaseNotes-zh-CN' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

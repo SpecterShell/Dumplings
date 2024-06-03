@@ -23,11 +23,16 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerWixFile = Get-TempFile -Uri $InstallerWix.InstallerUrl
 
     # InstallerSha256

@@ -13,11 +13,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('.exe', '_Prom.exe')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.package_info.release, 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.package_info.release, 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

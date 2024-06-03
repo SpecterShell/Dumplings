@@ -15,11 +15,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix + $Object1.files.Where({ $_.url.Contains('arm64') }, 'First')[0].url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

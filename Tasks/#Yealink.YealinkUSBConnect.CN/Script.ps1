@@ -22,7 +22,11 @@ $Object1 = Invoke-RestMethod @Params
 # zh_CN
 $Object2 = Invoke-RestMethod @Params -Headers @{ language = 'zh_CN' }
 
-if ($Object1.data.version -ne $Object2.data.version) { throw 'Distinct versions detected' }
+if ($Object1.data.version -ne $Object2.data.version) {
+  $this.Log("en-US release notes version: $($Object1.data.version)")
+  $this.Log("zh-CN release notes version: $($Object2.data.version)")
+  throw 'Distinct versions detected'
+}
 
 # Version
 $this.CurrentState.Version = $Object1.data.version
@@ -32,24 +36,29 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.file.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.data.releaseDate | Get-Date | ConvertTo-UtcDateTime -Id UTC
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotes = $Object1.data.releaseNote | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object2.data.releaseNote | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.data.releaseDate | Get-Date | ConvertTo-UtcDateTime -Id UTC
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotes = $Object1.data.releaseNote | Format-Text
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object2.data.releaseNote | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $ReleaseTime
       ReleaseNotes   = $ReleaseNotes

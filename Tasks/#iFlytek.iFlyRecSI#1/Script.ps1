@@ -10,11 +10,16 @@ $Object1 = (Invoke-RestMethod -Uri 'https://tongchuan.iflyrec.com/exhibition/v1/
 # Version
 $this.CurrentState.Version = $Object1.packageVersion
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | ConvertFrom-UnixTimeMilliseconds
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | ConvertFrom-UnixTimeMilliseconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }

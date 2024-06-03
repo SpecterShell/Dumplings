@@ -33,6 +33,12 @@ switch -Regex ($this.Check()) {
       }
     )
 
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl
+    }
+
     try {
       $ReleaseNotesUrl = 'https://docs.anaconda.com/free/miniconda/miniconda-release-notes/'
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -60,20 +66,10 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
-      }
     }
 
     $this.Print()

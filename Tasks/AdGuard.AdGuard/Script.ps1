@@ -8,27 +8,32 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.response.'update-url'.'#cdata-section'
 }
 
-$ReleaseNotesTitleNode = (($Object1.response.'release-notes'.'#cdata-section' | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectSingleNode("./h1[text()='$($this.CurrentState.Version)']")
-if ($ReleaseNotesTitleNode) {
-  $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-  }
-} else {
-  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-}
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object1.response.'more-info-url'.'#cdata-section'
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $ReleaseNotesTitleNode = (($Object1.response.'release-notes'.'#cdata-section' | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectSingleNode("./h1[text()='$($this.CurrentState.Version)']")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.response.'more-info-url'.'#cdata-section'
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

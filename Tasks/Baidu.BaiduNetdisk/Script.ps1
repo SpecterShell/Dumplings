@@ -11,18 +11,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.list[0].url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.list[0].publish | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.list[0].detail.more | Format-Text | ConvertTo-OrderedList
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.list[0].publish | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.list[0].detail.more | Format-Text | ConvertTo-OrderedList
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

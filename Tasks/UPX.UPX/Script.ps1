@@ -30,17 +30,22 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = 'https://upx.github.io/upx-news.txt'
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = 'https://upx.github.io/upx-news.txt'
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-RestMethod -Uri $ReleaseNotesUrl
 

@@ -8,18 +8,23 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.data.market_url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.updated_at | ConvertFrom-UnixTimeSeconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.content | ConvertTo-OrderedList | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.updated_at | ConvertFrom-UnixTimeSeconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.content | ConvertTo-OrderedList | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

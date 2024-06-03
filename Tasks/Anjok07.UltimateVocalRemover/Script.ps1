@@ -12,17 +12,22 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($Asset.name, 'v([\d\.]+)').Groups[1].Value
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Asset.updated_at.ToUniversalTime()
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object1.html_url
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Asset.updated_at.ToUniversalTime()
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -16,6 +16,8 @@ if ($Object1.upgrade_policy -eq 0) {
 }
 
 if ($Object1.version -ne $Object2.version) {
+  $this.Log("x86 version: $($Object1.version)")
+  $this.Log("x64 version: $($Object2.version)")
   throw 'Distinct versions detected'
 }
 
@@ -32,15 +34,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrlX64 = $Object2.package_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object2.features_description | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object2.features_description | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       InstallerUrl    = $InstallerUrl
       InstallerUrlX64 = $InstallerUrlX64

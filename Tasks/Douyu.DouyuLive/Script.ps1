@@ -8,18 +8,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.fileUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.updateTime | ConvertFrom-UnixTimeSeconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.changelog | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.updateTime | ConvertFrom-UnixTimeSeconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.changelog | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

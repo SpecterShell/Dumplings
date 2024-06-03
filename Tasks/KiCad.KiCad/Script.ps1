@@ -16,34 +16,39 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
-# Documentations
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'Documentations'
-  Value = @(
-    [ordered]@{
-      DocumentLabel = 'Documentation'
-      DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/"
-    }
-  )
-}
-
-# Documentations (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'Documentations'
-  Value  = @(
-    [ordered]@{
-      DocumentLabel = '文档'
-      DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/zh/"
-    }
-  )
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'Documentations'
+        Value = @(
+          [ordered]@{
+            DocumentLabel = 'Documentation'
+            DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/"
+          }
+        )
+      }
+
+      # Documentations (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = '文档'
+            DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/zh/"
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://downloads.kicad.org/api/v1/update' -Method Post -Body (
         @{

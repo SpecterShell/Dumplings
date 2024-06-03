@@ -14,11 +14,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://download.beeper.com/windows/nsis/x64'
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       # TODO: Parse Notion
       $EdgeDriver = Get-EdgeDriver

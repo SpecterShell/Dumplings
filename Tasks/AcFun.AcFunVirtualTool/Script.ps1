@@ -8,15 +8,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.releaseInfo.downloadUrl
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.releaseInfo.message | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.releaseInfo.message | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $null
+    }
+
     try {
       $Headers = @{ Referer = 'https://livetool.kuaishou.com' }
       $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
@@ -31,20 +42,10 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $null
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $null
-      }
     }
 
     $this.Print()

@@ -8,22 +8,27 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.files.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Object1.releaseData,
-  "ddd MMM dd HH:mm:ss 'CST' yyyy",
-  (Get-Culture -Name 'en-US')
-).ToUniversalTime()
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.releaseNotes | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Object1.releaseData,
+        "ddd MMM dd HH:mm:ss 'CST' yyyy",
+  (Get-Culture -Name 'en-US')
+      ).ToUniversalTime()
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.releaseNotes | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

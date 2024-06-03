@@ -8,15 +8,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = $Object1.updater.TypeWin.package_url + $Object1.updater.TypeWin.package.name | ConvertTo-Https
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  [regex]::Match($InstallerUrl, '(\d{8})').Groups[1].Value,
-  'yyyyMMdd',
-  $null
-).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($InstallerUrl, '(\d{8})').Groups[1].Value,
+        'yyyyMMdd',
+        $null
+      ).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-RestMethod -Uri "http://pa.udongman.cn/index.php/v2/version/detail?version=$($this.CurrentState.Version)"
 

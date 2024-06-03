@@ -11,11 +11,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.windows_sync.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.windows_sync.date | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.windows_sync.date | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -19,11 +19,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object4.release[0].windows_desktop_installers[0].download_link
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object4.release[0].release_date | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object4.release[0].release_date | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $UserAgent
 
     # InstallerSha256

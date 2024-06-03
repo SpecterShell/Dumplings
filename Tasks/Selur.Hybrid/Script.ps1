@@ -13,14 +13,19 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Prefix + $Object1.SelectSingleNode('//div[contains(@class, "field-item")]/ul/li/a').Attributes['href'].Value
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $this.CurrentState.Version,
-  '(\d{4}\.\d{1,2}\.\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $this.CurrentState.Version,
+        '(\d{4}\.\d{1,2}\.\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

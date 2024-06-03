@@ -146,14 +146,19 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
   }
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://www.thunderbird.net/thunderbird/${Version}/releasenotes/"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = "https://www.thunderbird.net/thunderbird/${Version}/releasenotes/"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/thunderbird.json'
 

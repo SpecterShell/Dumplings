@@ -11,11 +11,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = ($Object1.download | ConvertFrom-Json).event.Where({ $_.type -eq 'openLink' }, 'First')[0].params.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($Object1.downloadVersion, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.downloadVersion, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

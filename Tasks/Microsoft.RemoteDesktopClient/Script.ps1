@@ -8,6 +8,9 @@ $Object3 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=20990
 $Identical = $true
 if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 version: $($Object1.version)")
+  $this.Log("x64 version: $($Object2.version)")
+  $this.Log("arm64 version: $($Object3.version)")
   $Identical = $false
 }
 

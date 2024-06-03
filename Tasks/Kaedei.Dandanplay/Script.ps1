@@ -9,14 +9,19 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//div[@class="memo" and contains(text(), "发布日期")]').InnerText,
-  '(\d{4}年\d{1,2}月\d{1,2}日)'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//div[@class="memo" and contains(text(), "发布日期")]').InnerText,
+        '(\d{4}年\d{1,2}月\d{1,2}日)'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.dandanplay.com/blog.html' | ConvertFrom-Html
 

@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.app.tccConfig.download_info.apk.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.app.tccConfig.download_info.time | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.app.tccConfig.download_info.time | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

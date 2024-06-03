@@ -9,6 +9,8 @@ $Version2 = [regex]::Match($InstallerUrl2, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Val
 $Identical = $true
 if ($Version1 -ne $Version2) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 version: ${Version2}")
+  $this.Log("x64 version: ${Version1}")
   $Identical = $false
 }
 
@@ -25,14 +27,19 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl1
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = "https://www.swi-prolog.org/ChangeLog?branch=stable&from=$($this.LastState.Version)&to=$($this.CurrentState.Version)"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://www.swi-prolog.org/ChangeLog?branch=stable&from=$($this.LastState.Version)&to=$($this.CurrentState.Version)"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

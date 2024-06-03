@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.productButtonUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.productDisplaydate | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.productDisplaydate | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -8,28 +8,33 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.File.Url | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = (
-    $Object1.ReleaseNotes | ForEach-Object -Process {
-      $TypeName = switch ($_.Type) {
-        'Improvement' { 'Improvements' }
-        'Fix' { 'Bug Fixes' }
-        'Feature' { 'New Features' }
-        Default { $_ }
-      }
-      "${TypeName}`n$($_.Notes | ConvertTo-UnorderedList)"
-    }
-  ) -join "`n" | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = (
+          $Object1.ReleaseNotes | ForEach-Object -Process {
+            $TypeName = switch ($_.Type) {
+              'Improvement' { 'Improvements' }
+              'Fix' { 'Bug Fixes' }
+              'Feature' { 'New Features' }
+              Default { $_ }
+            }
+            "${TypeName}`n$($_.Notes | ConvertTo-UnorderedList)"
+          }
+        ) -join "`n" | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

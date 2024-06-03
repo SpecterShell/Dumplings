@@ -11,18 +11,23 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'worktile-([\d\.]+)')
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.date | ConvertFrom-UnixTimeSeconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.desc | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.date | ConvertFrom-UnixTimeSeconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.desc | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -15,15 +15,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.firewareurl
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.data.firewarelog | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.data.firewarelog | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesCN = $ReleaseNotesCN
     }

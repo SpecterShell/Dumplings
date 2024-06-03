@@ -12,15 +12,20 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.terabox.com/autoupdate' -Headers 
 # Version
 $this.CurrentState.Version = $Object1.AutoUpdate.Module.version
 
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesEN = ('"' + ($Object1.AutoUpdate.Module.FullPackage.hint_en ?? $Object1.AutoUpdate.Module.Upgrade.hint_en) + '"') | ConvertFrom-Json | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesEN = ('"' + ($Object1.AutoUpdate.Module.FullPackage.hint_en ?? $Object1.AutoUpdate.Module.Upgrade.hint_en) + '"') | ConvertFrom-Json | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesEN = $ReleaseNotesEN
     }

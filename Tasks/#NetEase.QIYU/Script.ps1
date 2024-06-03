@@ -17,18 +17,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix + $Object1.files[0].url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.releaseNotes | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.releaseNotes | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesCN = $ReleaseNotesCN
     }

@@ -8,15 +8,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.path.Trim()
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = (($Object1.guideMemo | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent) -creplace '^\d+\.\d+\.\d+\n', '' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = (($Object1.guideMemo | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent) -creplace '^\d+\.\d+\.\d+\n', '' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -12,15 +12,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Assets[0].link | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets[0].pubDate,
-  'ddd, dd MMM yyyy HH:mm:ss "UT"',
-  (Get-Culture -Name 'en-US')
-) | ConvertTo-UtcDateTime -Id 'UTC'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Assets[0].pubDate,
+        'ddd, dd MMM yyyy HH:mm:ss "UT"',
+        (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'UTC'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://crystalmark.info/en/software/crystaldiskinfo/crystaldiskinfo-history/' | ConvertFrom-Html
 

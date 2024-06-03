@@ -39,11 +39,16 @@ $this.CurrentState.Installer += $InstallerWixARM64 = [ordered]@{
   InstallerUrl  = $Prefix + $Object1.files[0].url.Replace('.exe', '-arm64.msi')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     # RealVersion + AppsAndFeaturesEntries
     $InstallerFileX64 = Get-TempFile -Uri $InstallerWixX64.InstallerUrl
     $InstallerWixX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash

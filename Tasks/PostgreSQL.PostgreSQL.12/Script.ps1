@@ -9,14 +9,19 @@ $this.CurrentState.Installer += [ordered]@{
 $VersionMatches = [regex]::Match($InstallerUrl, '((12(\.\d+)+)-\d+)')
 $this.CurrentState.Version = $VersionMatches.Groups[1].Value
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = "https://www.postgresql.org/docs/release/$($VersionMatches.Groups[2].Value)/"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://www.postgresql.org/docs/release/$($VersionMatches.Groups[2].Value)/"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

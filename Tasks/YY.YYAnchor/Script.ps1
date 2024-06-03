@@ -26,13 +26,6 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = "https://yydl.yy.com/$($Object2.Product.Version.Pack.FileUrl)"
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.discription | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
@@ -41,6 +34,18 @@ switch -Regex ($this.Check()) {
     $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.discription | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
     $this.Print()
     $this.Write()

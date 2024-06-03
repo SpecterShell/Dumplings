@@ -14,18 +14,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloadUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.buildDate
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = ($Object1.highlights -split '-+\n')[-1] | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.buildDate
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = ($Object1.highlights -split '-+\n')[-1] | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $NestedInstallerFileRoot = New-TempFolder
     7z.exe e -aoa -ba -bd '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host

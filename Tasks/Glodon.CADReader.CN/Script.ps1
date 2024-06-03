@@ -14,15 +14,20 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object1.body.pageUrl
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      try {
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrl = $Object1.body.pageUrl
+        }
+      } catch {
+        $_ | Out-Host
+        $this.Log($_, 'Warning')
+      }
+
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       # ReleaseNotes (zh-CN)

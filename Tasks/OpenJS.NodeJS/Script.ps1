@@ -23,42 +23,47 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-arm64.msi"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
-
-# Documentations
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'Documentations'
-  Value = @(
-    [ordered]@{
-      DocumentLabel = 'Learn'
-      DocumentUrl   = 'https://nodejs.org/en/learn/'
-    }
-    [ordered]@{
-      DocumentLabel = 'Documentation'
-      DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
-    }
-  )
-}
-
-# Documentations (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'Documentations'
-  Value  = @(
-    [ordered]@{
-      DocumentLabel = '学习'
-      DocumentUrl   = 'https://nodejs.org/en/learn/'
-    }
-    [ordered]@{
-      DocumentLabel = '文档'
-      DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
-    }
-  )
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
+
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'Documentations'
+        Value = @(
+          [ordered]@{
+            DocumentLabel = 'Learn'
+            DocumentUrl   = 'https://nodejs.org/en/learn/'
+          }
+          [ordered]@{
+            DocumentLabel = 'Documentation'
+            DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
+          }
+        )
+      }
+
+      # Documentations (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = '学习'
+            DocumentUrl   = 'https://nodejs.org/en/learn/'
+          }
+          [ordered]@{
+            DocumentLabel = '文档'
+            DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 

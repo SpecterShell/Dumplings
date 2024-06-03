@@ -8,15 +8,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.files.Where({ $_.updateType -eq 'package' }, 'First')[0].url
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.releaseNotes | Format-Text | ConvertTo-UnorderedList
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.releaseNotes | Format-Text | ConvertTo-UnorderedList
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = 'https://www.yuque.com/yuque/yuque-desktop/'
+    }
+
     try {
       $EdgeDriver = Get-EdgeDriver
       $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
@@ -37,20 +48,10 @@ switch -Regex ($this.Check()) {
         # ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
         $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://www.yuque.com/yuque/yuque-desktop/'
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.yuque.com/yuque/yuque-desktop/'
-      }
     }
 
     $this.Print()

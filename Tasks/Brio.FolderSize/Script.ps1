@@ -20,15 +20,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') }, 'First')[0].pubDate,
-  'ddd, dd MMM yyyy HH:mm:ss "UT"',
-  (Get-Culture -Name 'en-US')
-) | ConvertTo-UtcDateTime -Id 'UTC'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') -and $_.title.'#cdata-section'.Contains('x64') }, 'First')[0].pubDate,
+        'ddd, dd MMM yyyy HH:mm:ss "UT"',
+        (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'UTC'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://foldersize.sourceforge.net/changelog.html' | ConvertFrom-Html
 

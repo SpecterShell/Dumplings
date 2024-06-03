@@ -48,11 +48,16 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
     $NestedInstallerFileX64 = $InstallerFileX64 | Expand-TempArchive | Join-Path -ChildPath $InstallerX64.NestedInstallerFiles[0].RelativeFilePath
     $ExtractedNestedInstallerFileX64 = New-TempFolder

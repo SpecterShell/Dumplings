@@ -1,4 +1,6 @@
+# Global
 $Object1 = Invoke-RestMethod -Uri 'https://cubox-official-resource.s3.us-west-1.amazonaws.com/desktop/update.json'
+# China
 $Object2 = Invoke-RestMethod -Uri 'https://update.cubox.pro/update.json'
 
 # Version
@@ -7,6 +9,8 @@ $this.CurrentState.Version = $Object1.version
 $Identical = $true
 if ($Object1.version -ne $Object2.version) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("Global version: $($Object1.version)")
+  $this.Log("China version: $($Object2.version)")
   $Identical = $false
 }
 
@@ -29,11 +33,16 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.pub_date.ToUniversalTime() ?? $Object2.pub_date.ToUniversalTime()
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.pub_date.ToUniversalTime() ?? $Object2.pub_date.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

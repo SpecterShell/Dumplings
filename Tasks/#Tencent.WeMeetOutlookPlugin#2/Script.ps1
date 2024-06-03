@@ -20,15 +20,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = $Object1.target.url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.target.'features-description' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.target.'features-description' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       InstallerUrl   = $InstallerUrl
       ReleaseNotesCN = $ReleaseNotesCN

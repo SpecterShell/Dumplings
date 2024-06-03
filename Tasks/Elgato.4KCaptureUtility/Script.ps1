@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.Update.ReleaseManualUpdate.DownloadUrl64
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.Update.ReleaseManualUpdate.Date, 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.Update.ReleaseManualUpdate.Date, 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = $Object1.Update.ReleaseManualUpdate.ReleaseNotes.LocalizedText.Where({ $_.Language -eq 'English' }, 'First')[0].Text.'#cdata-section' | ConvertFrom-Html
 

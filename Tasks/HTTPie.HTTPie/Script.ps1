@@ -1,34 +1,24 @@
 $RepoOwner = 'httpie'
 $RepoName = 'desktop'
 
-$Object1 = Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/latest.yml" | ConvertFrom-Yaml
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.version
-
-$Prefix = "https://github.com/${RepoOwner}/${RepoName}/releases/download/v$($this.CurrentState.Version)/"
+$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Prefix + $Object1.files[0].url
-}
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") }, 'First')[0]
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      if ($Object2.content.'#text' -ne 'No content.') {
-        $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.InnerText -notmatch '(full|https?://).+?changelog'; $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
           # ReleaseNotes (en-US)
@@ -42,6 +32,12 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
       }
     } catch {
       $_ | Out-Host

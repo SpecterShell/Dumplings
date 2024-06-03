@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.versions.Windows.download_link
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.versions.Windows.release_time | ConvertFrom-UnixTimeSeconds
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.versions.Windows.release_time | ConvertFrom-UnixTimeSeconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Uri2 = 'https://www.feishu.cn/hc/en-US/articles/360043073734'
       $Object2 = ((Invoke-WebRequest -Uri $Uri2).Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')

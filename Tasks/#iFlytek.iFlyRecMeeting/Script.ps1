@@ -21,21 +21,26 @@ if ($Object1.biz.update -eq 0) {
 # Version
 $this.CurrentState.Version = $Object1.biz.latestVersion
 
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo.Split('&')[0] | Format-Text
-}
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesEN = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo.Split('&')[0] | Format-Text
+      }
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesEN = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN

@@ -12,11 +12,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.installerUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -17,26 +17,33 @@ $VersionX64 = [regex]::Match($InstallerUrlX64, 'qianniu_\((.+)\)').Groups[1].Val
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
   $Identical = $false
 }
 
 # Version
 $this.CurrentState.Version = $VersionX64
 
-$ReleaseNotesObject = $Object1.iterativeDiary.Where({ $_.end.Contains('Windows') }, 'First')[0].diaryList.Where({ $_.versionTitle.Contains([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d)').Groups[1].Value) }, 'First')
-if ($ReleaseNotesObject) {
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $ReleaseNotesObject[0].versionContent | ConvertFrom-Html | Get-TextContent | Format-Text
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $ReleaseNotesObject = $Object1.iterativeDiary.Where({ $_.end.Contains('Windows') }, 'First')[0].diaryList.Where({ $_.versionTitle.Contains([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d)').Groups[1].Value) }, 'First')
+      if ($ReleaseNotesObject) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject[0].versionContent | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

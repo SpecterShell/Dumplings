@@ -13,11 +13,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.ntPublishTime | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.ntPublishTime | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

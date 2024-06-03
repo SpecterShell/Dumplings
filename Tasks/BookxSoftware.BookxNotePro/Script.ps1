@@ -26,14 +26,19 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('//*[@class="carousel-centered"]/div/p[2]').InnerText,
-  '(\d{4}年\d{1,2}月\d{1,2}日)'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//*[@class="carousel-centered"]/div/p[2]').InnerText,
+        '(\d{4}年\d{1,2}月\d{1,2}日)'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
       $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash

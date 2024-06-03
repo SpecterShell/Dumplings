@@ -15,11 +15,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = $Object1.'info-list'[0].url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.'info-list'[0].'sub-date' | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.'info-list'[0].'sub-date' | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       InstallerUrl = $InstallerUrl
       ReleaseTime  = $this.CurrentState.ReleaseTime

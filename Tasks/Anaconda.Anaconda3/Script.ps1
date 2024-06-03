@@ -26,6 +26,12 @@ switch -Regex ($this.Check()) {
     ).Groups[1].Value
     $this.CurrentState.Installer[0]['ProductCode'] = "Anaconda3 $($this.CurrentState.Version) (Python ${PythonVersion} 64-bit)"
 
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl
+    }
+
     try {
       $ReleaseNotesUrl = 'https://docs.anaconda.com/free/anaconda/release-notes/'
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -53,20 +59,10 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
-      }
     }
 
     $this.Print()

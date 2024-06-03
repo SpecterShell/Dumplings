@@ -1,3 +1,6 @@
+$RepoOwner = 'JuliaLang'
+$RepoName = 'juliaup'
+
 $Object1 = Invoke-RestMethod -Uri 'https://install.julialang.org/Julia.appinstaller'
 
 $Prefix = $Object1.AppInstaller.MainBundle.Uri | Split-Uri -Parent
@@ -21,9 +24,6 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $RepoOwner = 'JuliaLang'
-      $RepoName = 'juliaup'
-
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version -replace '(\.0)+$')"
 
       # ReleaseTime

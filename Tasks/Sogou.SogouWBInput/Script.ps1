@@ -5,11 +5,16 @@ $PseudoInstallerUrl = $Object1.SelectSingleNode('//*[@id="bannerCon_new"]/a').At
 # Version
 $this.CurrentState.Version = [regex]::Match($PseudoInstallerUrl, '.+?/pc/dl/gzindex/.+?/sogou_wubi_(.+?)\.exe').Groups[1].Value
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/p[2]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//*[@id="bannerCon_new"]/p[2]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $PseudoInstallerUrl
 
     # RealVersion

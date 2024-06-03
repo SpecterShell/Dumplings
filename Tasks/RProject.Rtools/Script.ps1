@@ -20,14 +20,19 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "Rtools${ShortVersion}_is1"
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "${Prefix}rtools${ShortVersion}/news.html"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = "${Prefix}rtools${ShortVersion}/news.html"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

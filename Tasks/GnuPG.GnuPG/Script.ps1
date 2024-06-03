@@ -12,11 +12,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Prefix + $InstallerName
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact([regex]::Match($InstallerName, 'gnupg-w32-[\d\.]+_(\d+)\.exe').Groups[1].Value, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact([regex]::Match($InstallerName, 'gnupg-w32-[\d\.]+_(\d+)\.exe').Groups[1].Value, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob_plain;f=NEWS;hb=HEAD').RawContentStream)
 

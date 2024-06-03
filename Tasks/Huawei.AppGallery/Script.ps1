@@ -13,24 +13,29 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].downurl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].releaseDate | ConvertFrom-UnixTimeMilliseconds
-
-# ReleaseNotes (zh-Hans)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-Hans'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
-}
-# ReleaseNotes (zh-Hans-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-Hans-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].releaseDate | ConvertFrom-UnixTimeMilliseconds
+
+      # ReleaseNotes (zh-Hans)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-Hans'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
+      }
+      # ReleaseNotes (zh-Hans-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-Hans-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.onlineApps.Where({ $_.package -eq 'AppGallery' }, 'First')[0].newFeatures | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -8,18 +8,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.soft.url.'#cdata-section' -replace 'sw\.pcmgr\.qq\.com/.+?/.+?/', 'webcdn.m.qq.com/'
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.soft.publishdate | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.soft.whatsnew.'#cdata-section' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.soft.publishdate | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.soft.whatsnew.'#cdata-section' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

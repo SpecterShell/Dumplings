@@ -15,15 +15,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "${Prefix}tesseract-ocr-w64-setup-$($this.CurrentState.Version).exe"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  [regex]::Match($this.CurrentState.Version, '(\d{8})').Groups[1].Value,
-  'yyyyMMdd',
-  $null
-).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match($this.CurrentState.Version, '(\d{8})').Groups[1].Value,
+        'yyyyMMdd',
+        $null
+      ).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/wiki/UB-Mannheim/tesseract/Home.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 

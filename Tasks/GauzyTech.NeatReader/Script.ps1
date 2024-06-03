@@ -1,8 +1,8 @@
-# International
+# Global
 $Object1 = Invoke-WebRequest -Uri 'https://www.neat-reader.com/download/start-download?target=windows' | ConvertFrom-Html
 $Version1 = $Object1.SelectSingleNode('/html/body/input[2]').Attributes['value'].Value.Trim()
 
-# Chinese
+# China
 $Object2 = Invoke-WebRequest -Uri 'https://www.neat-reader.cn/downloads/windows' | ConvertFrom-Html
 $Version2 = [regex]::Match(
   $Object2.SelectSingleNode('/html/body/div[3]/div/div/p[3]').InnerText,
@@ -12,6 +12,8 @@ $Version2 = [regex]::Match(
 $Identical = $true
 if ($Version1 -ne $Version2) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("Global version: ${Version1}")
+  $this.Log("China version: ${Version2}")
   $Identical = $false
 }
 

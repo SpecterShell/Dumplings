@@ -8,14 +8,19 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.content.updataLogDown
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.data.content.updataLogTime,
-  '(\d{4}\.\d{1,2}\.\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.data.content.updataLogTime,
+        '(\d{4}\.\d{1,2}\.\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://shurufa.baidu.com/update' | ConvertFrom-Html
 

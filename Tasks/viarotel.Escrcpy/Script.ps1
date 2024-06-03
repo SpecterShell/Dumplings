@@ -1,47 +1,48 @@
 $RepoOwner = 'viarotel-org'
 $RepoName = 'escrcpy'
 
-$Object1 = Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/latest.yml" | ConvertFrom-Yaml
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.version
-
-$Prefix = "https://github.com/${RepoOwner}/${RepoName}/releases/download/v$($this.CurrentState.Version)/"
+$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') -and $_.name.Contains('setup') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Prefix + $Object1.files.Where({ $_.url.Contains('arm64') }, 'First')[0].url
-}
-
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') -and $_.name.Contains('setup') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases.atom").Where({ $_.id.EndsWith("v$($this.CurrentState.Version)") }, 'First')[0]
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      if ($Object2.content.'#text' -ne 'No content.') {
-        $ReleaseNotesObject = $Object2.content.'#text' | ConvertFrom-Html
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes("/h2[contains(., '$($this.CurrentState.Version)')][1]/following-sibling::node()") | Get-TextContent | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(., '$($this.CurrentState.Version)')]")
+        if ($ReleaseNotesTitleNode) {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
       }
     } catch {
       $_ | Out-Host

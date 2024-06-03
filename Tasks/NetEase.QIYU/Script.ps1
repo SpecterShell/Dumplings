@@ -10,25 +10,30 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Node.SelectSingleNode('./div[@class="bottom"]/a').Attributes['href'].Value.Trim()
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $Node.SelectSingleNode('./div[@class="mid"]/p').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage['QIYU'].Contains($Version)) {
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['QIYU'].$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Node.SelectSingleNode('./div[@class="mid"]/p').InnerText,
+        '(\d{4}-\d{1,2}-\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage['QIYU'].Contains($Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['QIYU'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

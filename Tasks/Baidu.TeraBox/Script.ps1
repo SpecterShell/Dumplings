@@ -11,22 +11,27 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.fe_web_guide_setting.cfg_list[0].url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.fe_web_guide_setting.cfg_list[0].update_time | Get-Date -Format 'yyyy-MM-dd'
-
-if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.TeraBox.Contains($Version)) {
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage.TeraBox.$Version.ReleaseNotesEN
-  }
-} else {
-  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.fe_web_guide_setting.cfg_list[0].update_time | Get-Date -Format 'yyyy-MM-dd'
+
+      if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.TeraBox.Contains($Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.TeraBox.$Version.ReleaseNotesEN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -13,22 +13,27 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https:' + $Object2.SelectSingleNode('//*[@id="download-intro"]/div[1]/a').Attributes['href'].Value
 }
 
-if ($Global:DumplingsStorage.Contains('360Zip') -and $Global:DumplingsStorage['360Zip'].Contains($Version)) {
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['360Zip'].$Version.ReleaseTime
-
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['360Zip'].$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('360Zip') -and $Global:DumplingsStorage['360Zip'].Contains($Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['360Zip'].$Version.ReleaseTime
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['360Zip'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

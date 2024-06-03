@@ -8,21 +8,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.enclosure.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Object1.pubDate,
-  'ddd MMM d HH:mm:ss "PDT" yyyy',
-  (Get-Culture -Name 'en-US')
-) | ConvertTo-UtcDateTime -Id 'Pacific Standard Time'
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object1.releaseNotesLink
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Object1.pubDate,
+        'ddd MMM d HH:mm:ss "PDT" yyyy',
+        (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'Pacific Standard Time'
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object1.releaseNotesLink
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

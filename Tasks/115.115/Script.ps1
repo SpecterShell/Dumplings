@@ -8,11 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.window_115.version_url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.data.window_115.created_time | ConvertFrom-UnixTimeSeconds
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.window_115.created_time | ConvertFrom-UnixTimeSeconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://115.com/115/T504444.html' | ConvertFrom-Html
 

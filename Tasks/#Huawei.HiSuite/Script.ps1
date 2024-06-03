@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleaseNotesPath) {
   $Global:DumplingsStorage['HiSuite'] = $OldReleaseNotes = [ordered]@{}
 }
 
-# International
+# Global
 $Object1 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @'
 <?xml version="1.0" encoding="utf-8"?>
 <root>
@@ -22,7 +22,7 @@ $Version1 = [regex]::Match(
   '([\d\.]+)'
 ).Groups[1].Value
 
-# Chinese
+# China
 $Object4 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @'
 <?xml version="1.0" encoding="utf-8"?>
 <root>
@@ -40,6 +40,8 @@ $Version2 = [regex]::Match(
 ).Groups[1].Value
 
 if ($Version1 -ne $Version2) {
+  $this.Log("Global version: ${Version1}")
+  $this.Log("China version: ${Version2}")
   throw 'Distinct versions detected'
 }
 
@@ -55,25 +57,30 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = $Prefix2 + $Object5.root.files.file[1].spath
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date -AsUTC
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesEN = $Object3.root.language.Where({ $_.code -eq '1033' }, 'First')[0].features.feature | Format-Text
-}
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' }, 'First')[0].features.feature | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date -AsUTC
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesEN = $Object3.root.language.Where({ $_.code -eq '1033' }, 'First')[0].features.feature | Format-Text
+      }
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object6.root.language.Where({ $_.code -eq '2052' }, 'First')[0].features.feature | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN

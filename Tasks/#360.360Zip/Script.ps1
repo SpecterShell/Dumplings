@@ -12,18 +12,23 @@ $Object1 = Join-Path $Path '..' '360zipupd_manual.ini' -Resolve | Get-Item | Get
 # Version
 $this.CurrentState.Version = $Object1.'360App1'.ver
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.'360App1'.date | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotesCN = $Object1.'360App1'.'tip_zh-CN' | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.'360App1'.date | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN = $Object1.'360App1'.'tip_zh-CN' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $ReleaseTime
       ReleaseNotesCN = $ReleaseNotesCN

@@ -13,15 +13,20 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('offline') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('offline') }, 'First')[0].pubDate,
-  'ddd, dd MMM yyyy HH:mm:ss "UT"',
-  (Get-Culture -Name 'en-US')
-) | ConvertTo-UtcDateTime -Id 'UTC'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('offline') }, 'First')[0].pubDate,
+        'ddd, dd MMM yyyy HH:mm:ss "UT"',
+        (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'UTC'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

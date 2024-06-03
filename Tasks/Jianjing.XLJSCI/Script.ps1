@@ -22,14 +22,19 @@ if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
   throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($this.CurrentState.Version)"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [regex]::Match(
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/p[2]')).Text,
-  '(\d{4}\.\d{1,2}\.\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/p[2]')).Text,
+        '(\d{4}\.\d{1,2}\.\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

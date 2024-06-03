@@ -14,25 +14,30 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = (Get-RedirectedUrl -Uri "https://servicewechat.com/wxa-dev-logic/download_redirect?os=win&type=x64&download_version=$($Object1.update_version)&version_type=1&pack_type=0").Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Version.SubString(3, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.changelog_desc | Format-Text
-}
-
-# ReleaseNotesUrl (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotesUrl'
-  Value  = $Object1.changelog_url
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Version.SubString(3, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.changelog_desc | Format-Text
+      }
+
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.changelog_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

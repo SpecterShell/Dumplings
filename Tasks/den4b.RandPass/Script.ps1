@@ -8,10 +8,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://www.den4b.com/download/randpass/installer/$($this.CurrentState.Version)?token=winget"
 }
 
-$this.CurrentState.ReleaseTime = $Object1.SelectSingleNode("//tbody[@id='v$($this.CurrentState.Version)']/tr[1]/td[2]").InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode("//tbody[@id='v$($this.CurrentState.Version)']/tr[1]/td[2]").InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://www.den4b.com/news.atom').Where({ $_.title.Contains('RandPass') -and $_.title.Contains($this.CurrentState.Version) }, 'First')
 

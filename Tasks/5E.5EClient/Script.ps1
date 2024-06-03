@@ -4,19 +4,24 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 
 $Version = $this.CurrentState.Version
 
-if ($Global:DumplingsStorage.Contains('5EClient') -and $Global:DumplingsStorage['5EClient'].Contains($Version)) {
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['5EClient'].$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('5EClient') -and $Global:DumplingsStorage['5EClient'].Contains($Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['5EClient'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

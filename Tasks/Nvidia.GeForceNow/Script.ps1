@@ -13,11 +13,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1[0].download_url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1[0].created_date
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1[0].created_date
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.nvidia.com/en-us/geforce-now/release-highlights/' | ConvertFrom-Html
 

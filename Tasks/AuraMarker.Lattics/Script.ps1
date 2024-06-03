@@ -11,29 +11,34 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
-$ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
-if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime
-
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesEN
-  }
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
+      if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesEN
+        }
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

@@ -31,10 +31,6 @@ $this.CurrentState.Installer += $InstallerWix = [ordered]@{
   InstallerUrl  = "https://vod-updates.8x8.com/ga/work-64-msi-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).msi"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, h:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
-
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     # AppsAndFeaturesEntries
@@ -49,6 +45,9 @@ switch -Regex ($this.Check()) {
     )
 
     try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, h:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+
       # Only parse version for major updates
       if (-not $this.LastState.Contains('Version') -or $VersionMatches.Groups[2].Value -ne ($this.LastState.Version.Split('.')[0..1] -join '.')) {
         $Object2 = Invoke-WebRequest -Uri 'https://docs.8x8.com/8x8WebHelp/8x8-work-for-desktop/Content/workd/what-is-new.htm' | ConvertFrom-Html

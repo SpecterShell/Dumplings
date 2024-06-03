@@ -13,20 +13,25 @@ $this.CurrentState.Version = "$($Object1.version).$($Object1.version_code)"
 # For filling in the URL queries
 $this.CurrentState.VersionParts = @($Object1.version, $Object1.version_code)
 
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.download_url
-}
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.release_note | ConvertFrom-Html | Get-TextContent | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # Installer
+      $this.CurrentState.Installer += [ordered]@{
+        InstallerUrl = $Object1.download_url
+      }
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.release_note | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

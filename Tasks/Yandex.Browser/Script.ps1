@@ -12,11 +12,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://download.cdn.yandex.net/browser/int/$([regex]::Match($Object1.guid64, '/(\d+_\d+_\d+_\d+_\d+)').Groups[1].Value)/en/Yandex.exe"
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UTC"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UTC"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

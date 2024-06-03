@@ -14,35 +14,40 @@ $this.CurrentState.Installer += [ordered]@{
 # RealVersion
 $this.CurrentState.RealVersion = [regex]::Match($InstallerUrl, "-($($this.CurrentState.Version)\+\d+)-").Groups[1].Value
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
-
-if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-  $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
-  $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(text(), "变更日志")]').NextSibling ?? $ReleaseNotesObject.ChildNodes[0]
-  if ($ReleaseNotesTitleNode) {
-    $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
-    # ReleaseNotes (zh-CN)
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'zh-CN'
-      Key    = 'ReleaseNotes'
-      Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-    }
-  } else {
-    $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object1.html_url
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(text(), "变更日志")]').NextSibling ?? $ReleaseNotesObject.ChildNodes[0]
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

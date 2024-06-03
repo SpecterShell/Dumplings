@@ -11,18 +11,23 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.latest.release.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.latest.release.content | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.latest.release.content | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

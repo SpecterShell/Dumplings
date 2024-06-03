@@ -246,14 +246,19 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
   }
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${Version}/releasenotes/"
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${Version}/releasenotes/"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 

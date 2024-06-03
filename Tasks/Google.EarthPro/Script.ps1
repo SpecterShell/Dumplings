@@ -22,7 +22,11 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 '@
 $Version2 = $Object2.response.app.updatecheck.manifest.version
 
-if ($Version1 -ne $Version2) { throw 'Distinct versions detected' }
+if ($Version1 -ne $Version2) {
+  $this.Log("x86 version: ${Version2}")
+  $this.Log("x64 version: ${Version1}")
+  throw 'Distinct versions detected'
+}
 
 # Version
 $this.CurrentState.Version = $Version1

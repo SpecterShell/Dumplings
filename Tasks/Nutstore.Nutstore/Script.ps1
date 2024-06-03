@@ -10,6 +10,8 @@ $this.CurrentState.Version = $Object1.exVer
 $Identical = $true
 if ($Object1.exVer -ne $Object2.exVer) {
   $this.Log('Distinct versions detected', 'Warning')
+  $this.Log("x86 + x64 version: $($Object1.exVer)")
+  $this.Log("arm64 version: $($Object2.exVer)")
   $Identical = $false
 }
 

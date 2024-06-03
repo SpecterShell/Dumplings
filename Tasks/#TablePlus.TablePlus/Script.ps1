@@ -15,18 +15,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.enclosure.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
-
-# ReleaseNotes (en-US)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $ReleaseNotes = $Object1.description | ConvertFrom-Html | Get-TextContent | Format-Text
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotes = $Object1.description | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime  = $this.CurrentState.ReleaseTime
       ReleaseNotes = $ReleaseNotes

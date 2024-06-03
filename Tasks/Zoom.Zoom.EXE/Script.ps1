@@ -28,20 +28,25 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe?archType=winarm64"
 }
 
-$ReleaseNotesObject = ($Object1['11'] -split '(?=Release notes of \d+\.\d+\.\d+ \(\d+\))').Where({ $_.Contains($Object2.'Display-version') }, 'First')[0]
-if ($ReleaseNotesObject) {
-  # ReleaseNotes (en-US)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = $ReleaseNotesObject -creplace 'Release notes of \d+\.\d+\.\d+ \(\d+\)' | Format-Text
-  }
-} else {
-  $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $ReleaseNotesObject = ($Object1['11'] -split '(?=Release notes of \d+\.\d+\.\d+ \(\d+\))').Where({ $_.Contains($Object2.'Display-version') }, 'First')[0]
+      if ($ReleaseNotesObject) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject -creplace 'Release notes of \d+\.\d+\.\d+ \(\d+\)' | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

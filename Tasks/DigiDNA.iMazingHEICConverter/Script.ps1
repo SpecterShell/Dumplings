@@ -8,17 +8,22 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1[0].enclosure.url
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1[0].pubDate | Get-Date -AsUTC
-
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object1[0].releaseNotesLink
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1[0].pubDate | Get-Date -AsUTC
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object1[0].releaseNotesLink
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

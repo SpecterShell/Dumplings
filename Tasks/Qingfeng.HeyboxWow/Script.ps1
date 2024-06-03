@@ -8,18 +8,23 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.result.version_list[0].DownloadPath
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.result.version_list[0].PublishTime | ConvertFrom-UnixTimeMilliseconds
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = [regex]::Matches($Object1.result.version_list[0].VersionLog, '(?<=<li>).+?(?=</li>)').Value | Format-Text | ConvertTo-UnorderedList
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.result.version_list[0].PublishTime | ConvertFrom-UnixTimeMilliseconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = [regex]::Matches($Object1.result.version_list[0].VersionLog, '(?<=<li>).+?(?=</li>)').Value | Format-Text | ConvertTo-UnorderedList
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

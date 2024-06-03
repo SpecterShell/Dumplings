@@ -8,11 +8,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 # Version
 $this.CurrentState.Version = $Installer.InstallerUrl -replace '.+/(\d+)\.(\d+)\.(\d+)\.(\d+).+', '$1.$2$3.$4'
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.DATERELEASED, 'MM/dd/yyyy', $null).ToString('yyyy-MM-dd')
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.DATERELEASED, 'MM/dd/yyyy', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
     $MsiInstallerFile = Join-Path $InstallerFileExtracted 'eDrawings.msi'

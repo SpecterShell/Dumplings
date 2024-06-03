@@ -1,6 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.mercurial-scm.org/release/windows/latest.dat' | ConvertFrom-Csv -Header @('Identifier', 'Version', 'Platform', 'InstallerUrl', 'Description') -Delimiter "`t"
 
 if (@($Object1.Version | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Versions: $($Object1.Version | Sort-Object -Unique | Join-String -Separator ', ')")
   throw 'Distinct versions detected'
 }
 

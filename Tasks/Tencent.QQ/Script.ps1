@@ -8,11 +8,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '((\d+\.\d+\.\d+).\d+)').Groups[1].Value
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.publishTime | Get-Date -Format 'yyyy-MM-dd'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.publishTime | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

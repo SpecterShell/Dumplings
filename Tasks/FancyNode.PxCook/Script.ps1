@@ -13,11 +13,16 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.config.downloadWin64
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.config.date | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.config.date | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
 
     # InstallerSha256

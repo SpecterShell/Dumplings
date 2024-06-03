@@ -11,22 +11,27 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.packageDownloadUrl
 }
 
-# ReleaseTime
-$this.CurrentState.ReleaseTime = $Object1.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
-
-if ($Global:DumplingsStorage.Contains('HitePai6') -and $Global:DumplingsStorage['HitePai6'].Contains($Version)) {
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Global:DumplingsStorage['HitePai6'].$Version.ReleaseNotesCN
-  }
-} else {
-  $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+
+      if ($Global:DumplingsStorage.Contains('HitePai6') -and $Global:DumplingsStorage['HitePai6'].Contains($Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['HitePai6'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
