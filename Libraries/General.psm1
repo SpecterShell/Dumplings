@@ -699,9 +699,9 @@ function Read-ResponseContent {
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The response object from the Invoke-WebRequest command')]
-    [Microsoft.PowerShell.Commands.WebResponseObject]
-    $Response,
+    [parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, HelpMessage = 'The response object from the Invoke-WebRequest command')]
+    [System.IO.Stream]
+    $RawContentStream,
 
     [Parameter(HelpMessage = 'The encoding of the content')]
     [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
@@ -710,14 +710,13 @@ function Read-ResponseContent {
   )
 
   process {
-    $Stream = $Response.RawContentStream
     # The stream of the response content passed to function may be closed.
     # Force open the stream by setting the pointer to the beginning
-    $Stream.Position = 0
+    $RawContentStream.Position = 0
     if ($Encoding) {
-      return [System.IO.StreamReader]::new($Stream, [System.Text.Encoding]::GetEncoding($Encoding)).ReadToEnd()
+      return [System.IO.StreamReader]::new($RawContentStream, [System.Text.Encoding]::GetEncoding($Encoding)).ReadToEnd()
     } else {
-      return [System.IO.StreamReader]::new($Stream).ReadToEnd()
+      return [System.IO.StreamReader]::new($RawContentStream).ReadToEnd()
     }
   }
 }
