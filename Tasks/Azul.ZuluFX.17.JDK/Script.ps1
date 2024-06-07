@@ -18,14 +18,13 @@ switch -Regex ($this.Check()) {
 
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
+    # ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
         DisplayName = "Azul Zulu JDK $($this.CurrentState.Version) ($($Object1.java_version -join '.')), 64-bit"
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
       }
     )
+    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
 
     $this.Print()
     $this.Write()

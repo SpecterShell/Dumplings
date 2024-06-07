@@ -22,10 +22,9 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
         DisplayName = "Azul Zulu JDK $($this.CurrentState.Version) ($($Object1.java_version -join '.')), 64-bit"
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
       }
     )
+    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
 
     $this.Print()
     $this.Write()
