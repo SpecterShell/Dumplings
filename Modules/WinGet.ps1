@@ -77,10 +77,14 @@ function New-WinGetManifest {
   if ([string]::IsNullOrWhiteSpace($LastManifestVersion)) { throw 'Could not find the manifest of previous version of the package' }
 
   $BranchName = "${PackageIdentifier}-${PackageVersion}-$(Get-Random)" -replace '[\~,\^,\:,\\,\?,\@\{,\*,\[,\s]{1,}|[.lock|/|\.]*$|^\.{1,}|\.\.', ''
-  $CommitType = switch (Compare-Version -ReferenceVersion $LastManifestVersion -DifferenceVersion $PackageVersion) {
-    1 { 'New version'; continue }
-    0 { 'Update'; continue }
-    -1 { 'Add version'; continue }
+  if ($Global:DumplingsPreference['CommitType']) {
+    $CommitType = $Global:DumplingsPreference.CommitType
+  } else {
+    $CommitType = switch (Compare-Version -ReferenceVersion $LastManifestVersion -DifferenceVersion $PackageVersion) {
+      1 { 'New version'; continue }
+      0 { 'Update'; continue }
+      -1 { 'Add version'; continue }
+    }
   }
   $CommitName = "${CommitType}: ${PackageIdentifier} version ${PackageVersion}"
   if ($Task.CurrentState.Contains('RealVersion')) { $CommitName += " ($($Task.CurrentState.Version))" }
