@@ -23,23 +23,37 @@ $this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.DownloadLink
+  InstallerUrl = $Object1.DownloadLink
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = ($Object1.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Object1.UpdateInfoEx.en)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = ($Object1.UpdateInfoEx.en | ConvertFrom-Json).details | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = ($Object1.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      if (-not [string]::IsNullOrWhiteSpace($Object1.UpdateInfoEx.'zh-cn')) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = ($Object1.UpdateInfoEx.'zh-cn' | ConvertFrom-Json).details | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
