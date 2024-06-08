@@ -1,5 +1,5 @@
 $Param = @{
-  Uri         = 'https://pcmanagerconfig.azurewebsites.net/api/v3/AppConfig'
+  Uri         = 'https://pcmconfig.chinacloudsites.cn/api/v3/AppConfig'
   Method      = 'Post'
   Body        = (
     @{
@@ -10,6 +10,8 @@ $Param = @{
       )
       Metadata = @{
         '%Channel%' = '250000'
+        # Platform    = 'X64'
+        # Platform    = 'ARM64'
       }
       Pattern  = '{}_{250000}'
     } | ConvertTo-Json -Compress
