@@ -1,5 +1,5 @@
 $Param = @{
-  Uri         = 'https://pcmconfig.chinacloudsites.cn/api/v3/AppConfig'
+  Uri         = 'https://pcmanagerconfig.azurewebsites.net/api/v3/AppConfig'
   Method      = 'Post'
   Body        = (
     @{
