@@ -10,9 +10,6 @@ if ($Object1 -is [string]) {
 # Version
 $this.CurrentState.Version = $Object1.version
 
-# RealVersion
-$this.CurrentState.RealVersion = "$($Object1.version).0"
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://static.frdic.com/pkg/eudic_win.exe'
