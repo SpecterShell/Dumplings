@@ -1,12 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1/MicrosoftTeams/49_1.0.0.0?environment=prod&agents=TeamsBuilds'
 
-$Identical = $true
 if (@(@('x86', 'x64', 'arm64') | Sort-Object -Property { $Object1.TeamsBuilds.BuildSettings.WebView2Canary.$_.latestVersion } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
   $this.Log("x86 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.x86.latestVersion)")
   $this.Log("x64 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.x64.latestVersion)")
   $this.Log("arm64 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.arm64.latestVersion)")
-  $Identical = $false
+  throw 'Distinct versions detected'
 }
 
 # Version
@@ -34,7 +32,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
