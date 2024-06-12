@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Updated' {
     try {
       if ($Global:DumplingsStorage.Contains('PartitionMaster') -and $Global:DumplingsStorage.PartitionMaster.Contains($Version)) {
         # ReleaseNotes (en-US)
@@ -40,10 +40,8 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
-    $this.Message()
-  }
   'Updated' {
+    $this.Message()
     $this.Submit()
   }
 }
