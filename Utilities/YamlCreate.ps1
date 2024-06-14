@@ -724,9 +724,13 @@ Function Write-InstallerManifest {
           $_AllAreSame = $true
           $_FirstInstallerSwitchKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key.$_InstallerSwitchKey
           foreach ($_Installer in $InstallerManifest.Installers) {
-            $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key[$_InstallerSwitchKey]
-            if (Test-String $_CurrentInstallerSwitchKeyValue -IsNull) { $_AllAreSame = $false }
-            else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerSwitchKeyValue $_FirstInstallerSwitchKeyValue).Length -eq 0) }
+            if ($_Installer.Contains($_Key) -and $_Installer.$_Key.Contains($_InstallerSwitchKey)){
+              $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key.$_InstallerSwitchKey
+              if (Test-String $_CurrentInstallerSwitchKeyValue -IsNull) { $_AllAreSame = $false }
+              else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerSwitchKeyValue $_FirstInstallerSwitchKeyValue).Length -eq 0) }
+            } else {
+              $_AllAreSame = $false
+            }
           }
           if ($_AllAreSame) {
             if ($_Key -notin $InstallerManifest.Keys) { $InstallerManifest[$_Key] = @{} }
