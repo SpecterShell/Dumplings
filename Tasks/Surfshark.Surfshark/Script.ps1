@@ -3,9 +3,6 @@ $Object1 = (Invoke-WebRequest -Uri 'https://downloads.surfshark.com/windows/meta
 # Version
 $this.CurrentState.Version = $Object1.version
 
-# RealVersion
-$this.CurrentState.RealVersion = $this.CurrentState.Version -replace '(?<=^\d+\.\d+\.\d+)\.'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.update.url
