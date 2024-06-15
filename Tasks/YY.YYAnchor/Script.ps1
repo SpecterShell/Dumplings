@@ -2,15 +2,14 @@ $UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '2030F00
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes(
-      (('YXBwaWQ9eXlhbmNob3ImdGltZXN0YW1wPXswfSZrPUJQWDQlcElTY3pETDVyZF4yb3QmMVNSanBGN0AwaEVU' | ConvertFrom-Base64) -f $Time)
-    )
+    [System.Text.Encoding]::UTF8.GetBytes("appid=yyanchor&timestamp=${Time}&k=$($Global:DumplingsSecret.YYAnchorKey)")
   )
 ).Replace('-', '').ToLower()
 $Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1"
 
-if ($Object1.code -ne 0) {
-  throw "Task $($this.Name): $($Object1.message)"
+if ($Object1.code -eq 404) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
 }
 
 $Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
