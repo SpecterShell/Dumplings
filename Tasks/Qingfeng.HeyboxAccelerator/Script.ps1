@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://accoriapi.xiaoheihe.cn/proxy/pc_has_new_version/'
+$Object1 = Invoke-RestMethod -Uri 'https://accoriapi.xiaoheihe.cn/proxy/pc_has_new_version/?os_type=pc_proxy'
 
 # Version
 $this.CurrentState.Version = $Object1.result.new_version
