@@ -20,7 +20,20 @@ $Param = @{
 }
 $Object1 = (Invoke-RestMethod @Param).results.Where({ $_.name -eq 'PCM:AutoUpdateOptions' }, 'First')[0]
 
-Invoke-Expression -Command $DumplingsSecret.PCManagerScript | Out-Null
+$Content = [Convert]::FromBase64String($Object1.content)
+
+$Aes = [System.Security.Cryptography.AesManaged]@{
+  Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+  Mode    = [System.Security.Cryptography.CipherMode]::CBC
+  Key     = [Convert]::FromBase64String($Global:DumplingsSecret.PCManagerKey)
+  IV      = [byte[]]($Content[0..15])
+}
+$AesDecryptor = $Aes.CreateDecryptor()
+
+$Object2 = [System.Text.Encoding]::UTF8.GetString($AesDecryptor.TransformFinalBlock($Content, 16, $Content.Length - 16)) | ConvertFrom-Json
+
+$Aes.Dispose()
+$AesDecryptor.Dispose()
 
 # Version
 $this.CurrentState.Version = $Object2.Version
