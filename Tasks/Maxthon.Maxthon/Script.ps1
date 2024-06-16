@@ -1,43 +1,60 @@
-# Global x64
-$Object1 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater.json').maxthon.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object1 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/bloodchen/mxfast/main/u1.txt'
+
+$Content = [Convert]::FromBase64String($Object1)
+
+$Aes = [System.Security.Cryptography.AesManaged]@{
+  Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+  Mode    = [System.Security.Cryptography.CipherMode]::CBC
+  Key     = [System.Text.Encoding]::UTF8.GetBytes($Global:DumplingsSecret.MaxthonKey)
+  IV      = [byte[]]($Content[0..15])
+}
+$AesDecryptor = $Aes.CreateDecryptor()
+
+$Object2 = [System.Text.Encoding]::UTF8.GetString($AesDecryptor.TransformFinalBlock($Content, 16, $Content.Length - 16)) | ConvertFrom-Json
+
+$Aes.Dispose()
+$AesDecryptor.Dispose()
+
 # Global x86
-$Object2 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater_x86.json').maxthon.Where({ $_.channels -contains 'stable' }, 'First')[0]
-# China x64
-$Object3 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater.json').maxthon.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object3 = $Object2.win.en.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+# Global x64
+$Object4 = $Object2.win.en.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
 # China x86
-$Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x86.json').maxthon.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object5 = $Object2.win.cn.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+# China x64
+$Object6 = $Object2.win.cn.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
 
 $Identical = $true
-if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
+if ((@($Object3, $Object4, $Object5, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
   $this.Log('Distinct versions detected', 'Warning')
-  $this.Log("Global x86 version: $($Object2.version)")
-  $this.Log("Global x64 version: $($Object1.version)")
-  $this.Log("China x86 version: $($Object4.version)")
-  $this.Log("China x64 version: $($Object3.version)")
+  $this.Log("Global x86 version: $($Object3.version)")
+  $this.Log("Global x64 version: $($Object4.version)")
+  $this.Log("China x86 version: $($Object5.version)")
+  $this.Log("China x64 version: $($Object6.version)")
   $Identical = $false
 }
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object4.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.url
+  InstallerUrl = $Object3.url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object4.url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
-  InstallerUrl    = $Object4.url
+  InstallerUrl    = $Object5.url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
-  InstallerUrl    = $Object3.url
+  InstallerUrl    = $Object6.url
 }
 
 switch -Regex ($this.Check()) {
