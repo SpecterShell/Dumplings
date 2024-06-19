@@ -9,6 +9,10 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl = $Object1.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.ntDownloadARMUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+}
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
