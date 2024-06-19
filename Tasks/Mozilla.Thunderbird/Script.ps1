@@ -174,13 +174,13 @@ switch -Regex ($this.Check()) {
       $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       # Remove headers
-      $Object4.SelectNodes('/html/body/main/section[3]/aside/aside/h4').ForEach({ $_.Remove() })
+      $Object4.SelectNodes('/html/body/main/section[contains(./div/@class, "release-notes-container")]//div[@class="see-all-releases"]').ForEach({ $_.Remove() })
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object4.SelectSingleNode('/html/body/main/section[3]') | Get-TextContent | Format-Text
+        Value  = $Object4.SelectSingleNode('/html/body/main/section[contains(./div/@class, "release-notes-container")]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
