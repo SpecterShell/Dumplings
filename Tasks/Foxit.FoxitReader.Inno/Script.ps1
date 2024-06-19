@@ -5,8 +5,8 @@ $this.CurrentState.Version = $Object1.package_info.version[0]
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerType = 'exe'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down
+  InstallerType = 'inno'
+  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('.exe', '_Prom.exe')
 }
 
 switch -Regex ($this.Check()) {
