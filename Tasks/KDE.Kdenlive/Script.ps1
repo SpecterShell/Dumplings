@@ -11,6 +11,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'kdenlive-([\d\.]+(?:
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      $Object2 = Invoke-RestMethod -Uri 'https://kdenlive.org/en/feed/'
       $Object2 = $Object2.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
