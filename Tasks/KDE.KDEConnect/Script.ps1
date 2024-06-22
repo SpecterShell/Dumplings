@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://kdeconnect.kde.org/download.html' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://kdeconnect.kde.org/download.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//a[contains(text(), "Offline installers")]').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = $Object1.Links.href | Where-Object -FilterScript { $_.EndsWith('.exe') } | Select-Object -First 1
 }
 
 # Version
