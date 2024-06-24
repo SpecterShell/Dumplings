@@ -41,6 +41,10 @@ switch -Regex ($this.Check()) {
             DocumentLabel = 'Documentation'
             DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
           }
+          [ordered]@{
+            DocumentLabel = 'About'
+            DocumentUrl   = 'https://nodejs.org/about/'
+          }
         )
       }
 
@@ -57,7 +61,23 @@ switch -Regex ($this.Check()) {
             DocumentLabel = '文档'
             DocumentUrl   = "https://nodejs.org/docs/v$($this.CurrentState.Version)/api/"
           }
+          [ordered]@{
+            DocumentLabel = '关于'
+            DocumentUrl   = 'https://nodejs.org/about/'
+          }
         )
+      }
+
+      # LicenseUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'LicenseUrl'
+        Value = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/LICENSE"
+      }
+
+      # PublisherSupportUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'PublisherSupportUrl'
+        Value = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/.github/SUPPORT.md"
       }
     } catch {
       $_ | Out-Host
