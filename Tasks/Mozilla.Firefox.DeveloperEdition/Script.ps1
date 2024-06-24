@@ -61,14 +61,14 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
     }
     # Azerbaijani (Cyrillic and Latin)
     'az' {
-      $this.CurrentState.Installer += [ordered]@{
-        InstallerLocale = 'az-Cyrl'
-        Architecture    = $Arch.Key
-        InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
-        ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
-      }
+      # $this.CurrentState.Installer += [ordered]@{
+      #   InstallerLocale = 'az-Cyrl'
+      #   Architecture    = $Arch.Key
+      #   InstallerType   = 'exe'
+      #   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
+      #   InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
+      #   ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
+      # }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'az-Latn'
         Architecture    = $Arch.Key
@@ -105,14 +105,14 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
     }
     # Fulah (Adlam and Latin)
     'ff' {
-      $this.CurrentState.Installer += [ordered]@{
-        InstallerLocale = 'ff-Adlm'
-        Architecture    = $Arch.Key
-        InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
-        ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
-      }
+      # $this.CurrentState.Installer += [ordered]@{
+      #   InstallerLocale = 'ff-Adlm'
+      #   Architecture    = $Arch.Key
+      #   InstallerType   = 'exe'
+      #   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
+      #   InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
+      #   ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
+      # }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'ff-Latn'
         Architecture    = $Arch.Key
@@ -193,14 +193,14 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
         ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
       }
-      $this.CurrentState.Installer += [ordered]@{
-        InstallerLocale = 'sr-Latn'
-        Architecture    = $Arch.Key
-        InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
-        ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
-      }
+      # $this.CurrentState.Installer += [ordered]@{
+      #   InstallerLocale = 'sr-Latn'
+      #   Architecture    = $Arch.Key
+      #   InstallerType   = 'exe'
+      #   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
+      #   InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
+      #   ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
+      # }
       continue
     }
     # Tajik (Tajikistan)
@@ -217,14 +217,14 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
     }
     # Uzbek (Cyrillic and Latin)
     'uz' {
-      $this.CurrentState.Installer += [ordered]@{
-        InstallerLocale = 'uz-Cyrl'
-        Architecture    = $Arch.Key
-        InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
-        ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
-      }
+      # $this.CurrentState.Installer += [ordered]@{
+      #   InstallerLocale = 'uz-Cyrl'
+      #   Architecture    = $Arch.Key
+      #   InstallerType   = 'exe'
+      #   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"
+      #   InstallerSha256 = $Object2["$($Arch.Value)/${_}/Firefox Setup $($this.CurrentState.Version).exe"]
+      #   ProductCode     = "Firefox Developer Edition $($this.CurrentState.RealVersion) ($($Arch.Key) ${_})"
+      # }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'uz-Latn'
         Architecture    = $Arch.Key
