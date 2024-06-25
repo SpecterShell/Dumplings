@@ -50,8 +50,6 @@ document.querySelector("head").appendChild(element)
         Key   = 'ReleaseNotesUrl'
         Value = $Uri1
       }
-    } finally {
-      Stop-EdgeDriver
     }
 
     $this.Print()

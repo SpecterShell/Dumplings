@@ -11,8 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = ($Object1.download | ConvertFrom-Json).event.Where({ $_.type -eq 'openLink' }, 'First')[0].params.url
 }
 
-Stop-EdgeDriver
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
