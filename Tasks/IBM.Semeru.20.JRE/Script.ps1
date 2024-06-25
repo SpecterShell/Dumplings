@@ -1,5 +1,5 @@
 $RepoOwner = 'ibmruntimes'
-$RepoName = 'semeru21-binaries'
+$RepoName = 'semeru20-binaries'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 

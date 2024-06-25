@@ -1,5 +1,5 @@
 $RepoOwner = 'ibmruntimes'
-$RepoName = 'semeru21-binaries'
+$RepoName = 'semeru11-binaries'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
@@ -17,7 +17,7 @@ $this.CurrentState.Version = $VersionBuilder.ToString()
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('jre') }, 'First').browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('jdk') }, 'First').browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
