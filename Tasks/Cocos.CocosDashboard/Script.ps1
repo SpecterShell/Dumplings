@@ -11,6 +11,8 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object1.win32_url
 }
 
+Stop-EdgeDriver
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {

@@ -58,6 +58,8 @@ switch ($Lang) {
   }
 }
 
+Stop-EdgeDriver
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {

@@ -10,6 +10,8 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
+Stop-EdgeDriver
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.Print()

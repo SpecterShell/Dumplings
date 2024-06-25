@@ -35,6 +35,8 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+    } finally {
+      Stop-EdgeDriver
     }
 
     $this.Print()
