@@ -1,7 +1,7 @@
 $RepoOwner = 'SAP'
 $RepoName = 'SapMachine'
 
-$Object1 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/SAP/SapMachine/gh-pages/assets/data/sapmachine_releases.json').assets.'21'.releases[0]
+$Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'21'.releases[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag -creplace '^sapmachine-'
