@@ -29,11 +29,10 @@ switch -Regex ($this.Check()) {
     # ReleaseNotesUrl
     $this.CurrentState.Locale += [ordered]@{
       Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl
+      Value = $ReleaseNotesUrl = 'https://docs.anaconda.com/free/anaconda/release-notes/'
     }
 
     try {
-      $ReleaseNotesUrl = 'https://docs.anaconda.com/free/anaconda/release-notes/'
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//section[@id='anaconda-release-notes']/section[contains(./h2/text(), '$($this.CurrentState.Version)')]")
