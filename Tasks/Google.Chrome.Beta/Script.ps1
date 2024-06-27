@@ -19,6 +19,16 @@ if ($Object2.StatusCode -eq 304) {
   return
 }
 
+$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = 'https://dl.google.com/dl/chrome/install/beta/googlechromebetastandaloneenterprise_arm64.msi'
+}
+$Object3 = Invoke-WebRequest -Uri $InstallerARM64.InstallerUrl -Method Head -Headers @{'If-Modified-Since' = $this.LastState['LastModifiedARM64'] } -SkipHttpErrorCheck
+if ($Object3.StatusCode -eq 304) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 
 # InstallerSha256 + AppsAndFeaturesEntries
@@ -36,6 +46,7 @@ $this.CurrentState.Version = (Read-MsiSummaryValue -Path $InstallerX64File -Name
 # LastModified
 $this.CurrentState.LastModifiedX86 = $Object1.Headers.'Last-Modified'[0]
 $this.CurrentState.LastModifiedX64 = $Object2.Headers.'Last-Modified'[0]
+$this.CurrentState.LastModifiedARM64 = $Object3.Headers.'Last-Modified'[0]
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
