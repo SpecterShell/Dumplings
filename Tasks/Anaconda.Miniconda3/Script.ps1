@@ -1,6 +1,8 @@
 $Prefix = 'https://repo.anaconda.com/miniconda/'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
+# Retry is disabled for this package as the Anaconda server may return 429 with a large Retry-After number (up to one day),
+# which PowerShell will follow even if RetryIntervalSec is specified.
+$Object1 = Invoke-WebRequest -Uri $Prefix -MaximumRetryCount 0
 
 $InstallerName = $Object1.Links.href | Where-Object -FilterScript { $_.EndsWith('.exe') -and $_.Contains('x86_64') -and $_.Contains('Miniconda3-py') } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
