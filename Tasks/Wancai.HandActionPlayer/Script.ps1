@@ -1,8 +1,8 @@
 # x64
-$Object1 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=64'
+$Object1 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=64' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
 
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=32'
+$Object2 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=32' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
 
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
   $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
@@ -26,7 +26,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/history?app=focusky&os=win'
+      $Object3 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/history?app=handmaster&os=win'
 
       $ReleaseNotesObject = $Object3.data.list.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
@@ -35,12 +35,12 @@ switch -Regex ($this.Check()) {
 
         $ReleaseNotes = [System.Text.StringBuilder]::new()
         if ($ReleaseNotesObject[0].new) {
-          $ReleaseNotes.AppendLine('新增')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].new | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine('新增功能')
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.new.Split('##') | ConvertTo-OrderedList))
         }
         if ($ReleaseNotesObject[0].fix) {
-          $ReleaseNotes.AppendLine('修复')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].fix | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine('修复 bug')
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.fix.Split('##') | ConvertTo-OrderedList))
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

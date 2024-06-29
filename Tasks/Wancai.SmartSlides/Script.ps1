@@ -1,32 +1,32 @@
 # x64
-$Object1 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=64'
+$Object1 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=64'
 
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=32'
+$Object2 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=32'
 
-if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
-  $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
-  $this.Log("x64 version: $($Object1.CurrentVersionNumber)")
+if ($Object1.data.CurrentVersionNumber -ne $Object2.data.CurrentVersionNumber) {
+  $this.Log("x86 version: $($Object2.data.CurrentVersionNumber)")
+  $this.Log("x64 version: $($Object1.data.CurrentVersionNumber)")
   throw 'Distinct versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object1.CurrentVersionNumber
+$this.CurrentState.Version = $Object1.data.CurrentVersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.FileURL | ConvertTo-Https
+  InstallerUrl = $Object2.data.FileURL | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.FileURL | ConvertTo-Https
+  InstallerUrl = $Object1.data.FileURL | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/history?app=focusky&os=win'
+      $Object3 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/history?app=smartslides&os=win'
 
       $ReleaseNotesObject = $Object3.data.list.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
@@ -36,11 +36,11 @@ switch -Regex ($this.Check()) {
         $ReleaseNotes = [System.Text.StringBuilder]::new()
         if ($ReleaseNotesObject[0].new) {
           $ReleaseNotes.AppendLine('新增')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].new | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.new.Split('##') | ConvertTo-OrderedList))
         }
         if ($ReleaseNotesObject[0].fix) {
           $ReleaseNotes.AppendLine('修复')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].fix | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.fix.Split('##') | ConvertTo-OrderedList))
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

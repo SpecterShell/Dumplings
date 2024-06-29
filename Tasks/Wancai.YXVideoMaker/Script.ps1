@@ -1,8 +1,8 @@
 # x64
-$Object1 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=64'
+$Object1 = Invoke-RestMethod -Uri 'https://www.wmvideo.com/client/api/updatecheck?digit=64&os=Windows%2010'
 
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=32'
+$Object2 = Invoke-RestMethod -Uri 'https://www.wmvideo.com/client/api/updatecheck?digit=32&os=Windows%2010'
 
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
   $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
@@ -26,9 +26,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/history?app=focusky&os=win'
+      $Object3 = Invoke-RestMethod -Uri 'https://www.wmvideo.com/download/update_history?page=1&pagesize=5'
 
-      $ReleaseNotesObject = $Object3.data.list.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesObject = $Object3.data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].date | Get-Date -Format 'yyyy-MM-dd'
@@ -36,11 +36,11 @@ switch -Regex ($this.Check()) {
         $ReleaseNotes = [System.Text.StringBuilder]::new()
         if ($ReleaseNotesObject[0].new) {
           $ReleaseNotes.AppendLine('新增')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].new | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.new.Split('##') | ConvertTo-OrderedList))
         }
         if ($ReleaseNotesObject[0].fix) {
           $ReleaseNotes.AppendLine('修复')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject[0].fix | ConvertTo-OrderedList))
+          $ReleaseNotes.AppendLine(($ReleaseNotesObject.fix.Split('##') | ConvertTo-OrderedList))
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
