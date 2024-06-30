@@ -1,4 +1,4 @@
-$Prefix = 'https://paperlib.app/distribution/electron-win/'
+$Prefix = 'https://distribution.paperlib.app/electron-win/'
 
 $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
 
