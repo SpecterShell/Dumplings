@@ -1,12 +1,12 @@
-$Object1 = Invoke-RestMethod -Uri 'https://api.adoptium.net/v3/assets/latest/18/hotspot?image_type=jdk&os=windows'
+$Object1 = (Invoke-WebRequest -Uri 'https://api.adoptium.net/v3/assets/latest/18/hotspot?image_type=jdk&os=windows').Content | ConvertFrom-Json -AsHashtable
 
 # x86
 $Object2 = $Object1 | Where-Object -FilterScript { $_.binary.architecture -eq 'x32' } | Select-Object -First 1
-$VersionX86 = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.security).$($Object2.version.build)"
+$VersionX86 = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.security).$(($Object2.version.Contains('patch') ? $Object2.version.patch * 100 : 0) + $Object2.version.build)"
 
 # x64
 $Object3 = $Object1 | Where-Object -FilterScript { $_.binary.architecture -eq 'x64' } | Select-Object -First 1
-$VersionX64 = "$($Object3.version.major).$($Object3.version.minor).$($Object3.version.security).$($Object3.version.build)"
+$VersionX64 = "$($Object3.version.major).$($Object3.version.minor).$($Object3.version.security).$(($Object3.version.Contains('patch') ? $Object3.version.patch * 100 : 0) + $Object3.version.build)"
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")

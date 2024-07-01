@@ -1,9 +1,9 @@
-$Object1 = Invoke-RestMethod -Uri 'https://api.adoptium.net/v3/assets/latest/21/hotspot?image_type=jdk&os=windows'
+$Object1 = (Invoke-WebRequest -Uri 'https://api.adoptium.net/v3/assets/latest/21/hotspot?image_type=jdk&os=windows').Content | ConvertFrom-Json -AsHashtable
 
 $Object2 = $Object1 | Where-Object -FilterScript { $_.binary.architecture -eq 'x64' } | Select-Object -First 1
 
 # Version
-$this.CurrentState.Version = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.security).$($Object2.version.build)"
+$this.CurrentState.Version = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.security).$(($Object2.version.Contains('patch') ? $Object2.version.patch * 100 : 0) + $Object2.version.build)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
