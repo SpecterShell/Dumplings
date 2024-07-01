@@ -121,7 +121,7 @@ if (-not $Parallel) {
     try {
       $Global:DumplingsPreference = Get-Content -Path $Private:DumplingsPreferencePath -Raw | ConvertFrom-Yaml -Ordered
     } catch {
-      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the preference and an empty hashtable will be used: ${_}"
+      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the preference. Assigning an empty hashtable: ${_}"
     }
   }
   # ConvertFrom-Yaml will return $null if the file is empty. Assign an empty hashtable if that happened
@@ -142,12 +142,13 @@ if (-not $Parallel) {
     }
   }
 
+  # Load secret from environmental variables
   $Global:DumplingsSecret = $null
   if (Test-Path -Path Env:\DUMPLINGS_SECRET) {
     try {
       $Global:DumplingsSecret = $Env:DUMPLINGS_SECRET | ConvertFrom-Yaml -Ordered
     } catch {
-      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the preference and an empty hashtable will be used: ${_}"
+      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the secret. Assigning an empty hashtable: ${_}"
     }
   }
   # ConvertFrom-Yaml will return $null if the file is empty. Assign an empty hashtable if that happened

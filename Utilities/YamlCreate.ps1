@@ -857,9 +857,9 @@ Function Write-LocaleManifest {
   }
 
   # Update the year in Copyright
-  # if ($LocaleManifest.Contains('Copyright') -and $LocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
-  #   $LocaleManifest['Copyright'] = $LocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
-  # }
+  if ($LocaleManifest.Contains('Copyright') -and $LocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
+    $LocaleManifest['Copyright'] = $LocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
+  }
 
   $LocaleManifest = Restore-YamlKeyOrder $LocaleManifest $LocaleProperties
 
@@ -913,9 +913,9 @@ Function Write-LocaleManifest {
         }
 
         # Update the year in Copyright
-        # if ($OldLocaleManifest.Contains('Copyright') -and $OldLocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
-        #   $OldLocaleManifest['Copyright'] = $OldLocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
-        # }
+        if ($OldLocaleManifest.Contains('Copyright') -and $OldLocaleManifest['Copyright'].Contains(((Get-Date -AsUTC).Year - 1).ToString())) {
+          $OldLocaleManifest['Copyright'] = $OldLocaleManifest['Copyright'].Replace(((Get-Date -AsUTC).Year - 1).ToString(), (Get-Date -AsUTC).Year.ToString())
+        }
 
         $script:OldLocaleManifest = Restore-YamlKeyOrder $script:OldLocaleManifest $LocaleProperties
         Write-ManifestContent -FilePath $(Join-Path $OutFolder -ChildPath $DifLocale.Name) -YamlContent $OldLocaleManifest -Schema $SchemaUrls.locale
