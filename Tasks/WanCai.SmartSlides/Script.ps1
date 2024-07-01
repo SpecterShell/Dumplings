@@ -16,11 +16,11 @@ $this.CurrentState.Version = $Object1.data.CurrentVersionNumber
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.data.FileURL | ConvertTo-Https
+  InstallerUrl = $Object2.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.FileURL | ConvertTo-Https
+  InstallerUrl = $Object1.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
