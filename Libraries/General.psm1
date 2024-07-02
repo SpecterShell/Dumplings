@@ -238,11 +238,20 @@ function ConvertFrom-Base64 {
   param (
     [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Base64 string to be decoded')]
     [string]
-    $InputObject
+    $InputObject,
+
+    [Parameter(HelpMessage = 'The encoding of the content')]
+    [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
+    [string]
+    $Encoding
   )
 
   process {
-    [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputObject))
+    if ($Encoding) {
+      [System.Text.Encoding]::GetEncoding($Encoding).GetString([System.Convert]::FromBase64String($InputObject))
+    } else {
+      [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputObject))
+    }
   }
 }
 
