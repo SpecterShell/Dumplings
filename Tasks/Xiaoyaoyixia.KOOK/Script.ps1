@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.number
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object1.url | Split-Uri -LeftPart Path
 }
 
 switch -Regex ($this.Check()) {
