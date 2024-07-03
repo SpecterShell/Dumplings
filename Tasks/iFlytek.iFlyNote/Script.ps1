@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
 
       if ($Global:DumplingsStorage.Contains('iFlyNote2') -and $Global:DumplingsStorage['iFlyNote2'].Contains($Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['iFlyNote2'].$Version.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['iFlyNote2'].$Version.ReleaseTime | Get-Date -AsUTC
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }

@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     try {
       if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime | Get-Date -AsUTC
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
