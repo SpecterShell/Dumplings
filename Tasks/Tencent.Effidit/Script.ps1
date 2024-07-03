@@ -1,8 +1,8 @@
 $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://effidit.qq.com/')
+Start-Sleep -Seconds 5
 
 $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//li[@class="english"]')).Click()
-$EdgeDriver.GetScreenshot().SaveAsFile("$($Global:DumplingsOutput)\Tencent.Effidit.png") # Debug
 $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[@class="down"]')).Click()
 
 # Installer
