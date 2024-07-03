@@ -1,4 +1,4 @@
-$Prefix = 'https://releases.lusun.com/'
+$Prefix = 'https://lusun-releases.oss-cn-beijing.aliyuncs.com/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
 
