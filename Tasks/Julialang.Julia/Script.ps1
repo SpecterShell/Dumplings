@@ -1,5 +1,7 @@
-Invoke-WebRequest -Uri 'https://julialang-s3.julialang.org/bin/versions.json' -OutFile $Global:DumplingsOutput # Debug
-$Object1 = ((Invoke-WebRequest -Uri 'https://julialang-s3.julialang.org/bin/versions.json').Content | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value.stable }) | Sort-Object -Property { $_.Key -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+# Debug
+$Object0 = (Invoke-WebRequest -Uri 'https://julialang-s3.julialang.org/bin/versions.json').Content | ConvertFrom-Json -AsHashtable
+$Object0 | ConvertTo-Json -Depth 5 | Out-File -FilePath "${Global:DumplingsOutput}\version.json"
+$Object1 = $Object0.GetEnumerator().Where({ $_.Value.stable }) | Sort-Object -Property { $_.Key -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Object1.Name
