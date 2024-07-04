@@ -95,15 +95,19 @@ function New-WinGetManifest {
   #region Check existing pull requests in the upstream repository
   $Task.Log('Checking existing pull requests', 'Verbose')
 
-  $OldPRObject = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo:${UpstreamOwner}/${UpstreamRepo} is:pr $($PackageIdentifier.Replace('.', '/'))/${PackageVersion} in:path&per_page=1"
+  $OldPRObject = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamOwner}%2F${UpstreamRepo}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath"
   if ($OldPRObject.total_count -gt 0) {
-    $OldPRList = $OldPRObject.items | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n"
-    $Task.Log("Found existing pull requests:`n${OldPRList}", 'Warning')
+    $Task.Log("Found existing pull requests:`n$($OldPRObject.items | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n")", 'Warning')
     if ($Global:DumplingsPreference['Force']) {
       $Task.Log('Forced to ignore existing pull requests', 'Info')
     } elseif ($Task.Config['IgnorePRCheck']) {
       $Task.Log('This task is configured to ignore existing pull requests', 'Info')
-    } else {
+    } elseif ($Task.Config['StrictPRCheck']) {
+      throw 'Found existing pull requests'
+    } elseif ($Task.LastState.Contains('Version') -and $Task.LastState.Contains('RealVersion') -and ($Task.LastState.Version -ne $Task.CurrentState.Version) -and ($Task.LastState.RealVersion -eq $Task.CurrentState.RealVersion)) {
+      $Task.Log("The existing pull requests are ignored as the version is updated while the real version isn't", 'Info')
+    } elseif ($OldPRObject.items | Where-Object -FilterScript { $_.title -match "(\s|^)$([regex]::Escape($PackageIdentifier))(\s|$)" -and $_.title -match "(\s|^)$([regex]::Escape($PackageVersion))(\s|$)" }) {
+      # In some cases, a shorter package identifier may be matched to a longer one, e.g., "Google.Chrome" matches "Google.Chrome.Beta". Check word boundary to avoid this issue
       throw 'Found existing pull requests'
     }
   }
