@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.advancedinstaller.com/downloads/updates.ini' | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('advinst') }, 'First')[0].Value
+$Object1 = (Invoke-WebRequest -Uri 'https://www.advancedinstaller.com/downloads/updates.ini' | Read-ResponseContent -Encoding 'windows-1252' | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('advinst') }, 'First')[0].Value
 
 # Version
 $this.CurrentState.Version = $Object1.Version
