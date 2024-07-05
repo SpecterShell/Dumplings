@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
 
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -46,6 +46,7 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated|Rollbacked' {
+    $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
     $this.Submit()
   }
 }
