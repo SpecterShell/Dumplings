@@ -1,0 +1,219 @@
+Installer:
+- Architecture: x86
+  InstallerType: msi
+  InstallerUrl: https://zoom.us/download/vdi/6.0.10.25100/ZoomInstallerVDI.msi
+- Architecture: x64
+  InstallerType: msi
+  InstallerUrl: https://zoom.us/download/vdi/6.0.10.25100/ZoomInstallerVDI.msi?archType=x64
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release notes for Virtual Desktop Infrastructure
+
+    Changes to existing features
+    General features
+    - Zoom app now named Zoom VDI Workplace app
+    The Zoom app is now named Zoom VDI Workplace, to align the app name with Zoom’s extensive product offerings that are designed to help users reimagine the way they collaborate. Users updating to this version will see the new Zoom Workplace branding in the app and as the app name in their app directory.
+
+    - Block VDI Plugin updates for Windows 7/8/8.1
+    Windows OS platforms 7, 8, and 8.1 are no longer supported. Beginning with this 6.0.10 release, VDI Plugin Management will block updating an older plugin to a newer release if the device is running on an older unsupported platform.
+
+    - Update VDILogTool to notify when plugin logs are missing and show log level
+    A notification has been added to the VDILogTool to notify the user if they are using the option to collect logs, but no logs from the plugin are found, and the log level is displayed as missing logs (usually because the log level is too low).
+
+    - Change the logging path for debug log files
+    The log path has been changed from %appdata%/ZoomVDI/logs to %localappdata%/ZoomVDI/logs on the Windows platform. The VDILogTool will check both the new path and the previous path when collecting logs to continue to support older releases.
+
+    - Disable Spatial Audio for VDI
+    Additional work is required to support Spatial Audio in the VDI plugin and the feature has been disabled.
+
+    - Disable Dynamic Emoji Video Effect for VDI
+    A future update will be required to support the dynamic emoji video effect in the VDI plugin and the feature has been disabled for now.
+
+    New and enhanced features
+    General features
+    - Zoom desktop app color themes and visual overhaul
+    The appearance of the Zoom desktop app is overhauled with a new color scheme and icons. These color schemes, including bloom (blue), agave (green), and rose (red), are available when running the desktop app in the light mode and can be chosen through app settings. These color themes are applied to the app's global navigation bar and the in-meeting window. Please note that color themes require a new 6.0.10 VDI Plugin.
+
+    - Persistent More menu and global navigation behavior in the Zoom Workplace app
+    In the global navigation toolbar on the Zoom Workplace desktop app, users can click any item in the More menu to automatically pin it to the toolbar to keep frequently used products available for quick access. Additionally, if users attempt to move all product tabs into the More menu, they will be notified that at least one tab must remain active.
+
+    - macOS proxy support for VDI Plugin Management
+    When using VDI Plugin Management for macOS clients, support has been added to allow the VDI plugin package to be downloaded through a proxy.
+
+    - Policy to force silent updates for the VDI Plugin
+    The policy called ForceSilentVDIPluginUpdate provides administrators with the option to detect an outdated or missing plugin. It also provides the option to download and install the required VDI Plugin after the user disconnects from their virtual desktop without prompting or informing the user that a new VDI Plugin is being downloaded and installed. Please review our article for more information on how to use this policy and its limitations.
+
+    - Support custom text for VDI Plugin Management dialogs
+    A policy called VDIPluginAutoUpdateDescription provides administrators with the ability to customize the dialog text in the VDI Plugin Management prompt dialog for missing or out-of-date plugins.
+
+    - VDI Win Plugin support for ARM64
+    A new VDI media plugin provides native ARM64 support for devices running on ARM64 processors.
+
+    - VDI plugin support for the new eLux 7 release
+    The new VDI plugin supports eLux 7. This will ensure full compatibility and optimal performance with the latest version of eLux. The existing VDI plugin for eLux 6 will continue to be maintained. This ongoing support will ensure stability and compatibility for users who have not yet upgraded to eLux 7.
+
+    - Additional policies for Zoom Device Management (ZDM)
+    The following policies have been added for ZDM: DisableMMRDirect, DisableUDPBridge, DisableICABridge, DisableMMRDirect_Phone, DisableUDPBridge_Phone, DisableChannelBridge_Phone.
+
+    - Language translation for the Windows Universal Installer
+    Starting with this 6.0.10 release the Windows Universal Installer has been updated to translate the installer into all supported languages.
+
+    Meeting/webinar features
+    - Improved collaboration with Google Drive and Microsoft OneDrive files
+    Sharing files from Google Drive and Microsoft OneDrive is updated to make it easier to select files and share them for in-meeting viewing or collaboration. First, the third-party service’s native file picker will be used to select a file, instead of the Zoom file picker. After selecting a file from Google Drive or Microsoft OneDrive, choosing Collaborate (which will grant participants file editing permissions), invites all participants to join in collaborating on the document using their system browsers.
+
+    - Updated icons and meeting visuals
+    The in-meeting experience is updated with new icons and other visual changes to menus and toolbars.
+
+    - Personalized in-meeting toolbars
+    Zoom Meeting participants can personalize the in-meeting toolbar by dragging and dropping to add, move, and remove meeting feature options to suit their needs. Buttons can be reordered, or dragged to/from the More menu. Personalizations for signed-in users will be synced across their desktop experiences. Additionally, the default in-meeting toolbar has fewer buttons and consolidated many options under the More menu to support improved ease of use. The Audio, Video, More, and End options cannot be removed from the in-meeting toolbar. Additionally, the floating screen-sharing toolbar is updated and simplified to make it easier to use and more focused on core tasks while presenting during a meeting.
+
+    - Customized Webinar Waiting Rooms
+    Users can customize the waiting room experience for their webinars by applying their own branding with custom messages and videos that can play automatically for attendees. VDI participants will be able to experience the customizations by upgrading to the 6.0.10 VDI Zoom Meeting client and VDI plugin.
+
+    - Portrait lighting for video
+    The portrait lighting setting allows Zoom to dim your background while brightening you in the foreground, making you stand out even more in your meetings. This is available through in-app video settings and has hardware prerequisites similar to using virtual backgrounds without a green screen. This feature requires updating the VDI Plugin to version 6.0.10 or greater.
+    Note: This feature is not currently supported in the Linux VDI plugins.
+
+    Meeting features
+    - Multi-speaker video layout
+    The multi-speaker video layout helps provide meeting participants a more engaging experience, dynamically adapting to current speakers by highlighting and enlarging their video tiles over others, while still providing a view of other participants in a smaller gallery view below. This will also be available when viewing shared content in side-by-side mode, with the speakers being more prominently displayed next to the shared screen or app window. This feature requires updating the VDI Plugin to version 6.0.10 or greater.
+
+    - Meeting wallpapers
+    Meeting hosts can customize the wallpaper in their meeting, adding more color and customization to their meeting view. The host or co-host can choose from preset images provided by Zoom or their account admins. With a selection made, they can also adjust how much to blend the participant videos with the wallpaper image. Admins can control the use of this at the account level, as well as provide additional default images, which are available to the host and co-host during meetings. Images uploaded through the web portal by admins must be JPG/JPEG or 24-bit PNG with a maximum size of 15 MB. The recommended resolution is 1920x1080px. This feature requires updating the VDI Plugin to version 6.0.10 or greater.
+
+    - Multi-share - View the newest share tab
+    The multi-share feature allows participants to share multiple content items and types simultaneously in a meeting. This capability benefits users by organizing each shared item into tabs, making it easier to follow along with the meeting activities. With the latest enhancement to this feature, participants will be directed to the newest share tab so they can stay up-to-date with the meeting.
+
+    - Personalized speech denoise
+    To provide the best audio quality possible for Zoom Meetings in busy environments, users can configure Personalized Denoise in the Zoom desktop app audio settings directly, which will capture and analyze a clip of your audio from meetings to differentiate your voice from and suppress background noise in meetings. Zoom does not receive or retain this clip or analysis, which stays on your device and is only used for noise suppression in meetings you join. This feature requires updating the VDI
+    Plugin to version 6.0.10 or greater.
+
+    - Disable and hide Auto-Accept for Remote Control
+    A configuration has been added to web settings to provide administrators with the option to disable the user’s ability to select auto-accept for remote control and to hide that feature in the user interface.
+
+    Resolved Issues
+    General fixes
+    - Security enhancements
+
+    - Use separate audio device to play ringtones simultaneously
+    An issue has been addressed where changing Audio Settings during a meeting for the Use separate audio device to play ringtone simultaneously option was not persistent and would revert to the setting state before the meeting. This issue was reported in version 5.16.10.
+
+    - Allow non-VDI users to request permission to record locally
+    While a VDI participant cannot record a meeting locally, an issue has been corrected where a request from a non-VDI participant to record locally was blocked. Non-VDI participants can request and be given permission to record locally.
+
+    - Compatibility change for older plugins and local device selections
+    In 5.16.10, a feature was added to save the user’s device selections on the thin client. When connecting to an older plugin, changes have been made to use the previous logic to select the default device. This change was also made in EP Release 5.17.13.
+
+    - Changes for Enhanced Multi-Share Mode
+    Enhanced Multi-Share Mode is disabled for the VDI Zoom Meeting client, but changes have been made to support a VDI Zoom Meeting client as a participant in a meeting where the host uses Enhanced Multi-Share Mode.
+
+    - Share session blocked by invisible window
+    An issue where users were not seeing the share session has been addressed by adding the ability to find and account for invisible windows owned by other applications. Customers must work with engineering to add a registry entry for Zoom to account for any application with an invisible window. This change was also made in EP release 5.17.13.
+
+    - Correction when moving a window in dual screen mode
+    A problem has been fixed for an issue that occurred when dragging or resizing a greenroom video window, CCI video window, a second active video window, or a second share window in dual-screen mode, where the window would flash to another screen. This change was also made in EP release 5.17.13.
+
+    - Incorrect IP Address displayed for VDI Plugin
+    Dashboard reports have been corrected to filter out invalid network IP addresses. This change was also made in EP release 5.17.13.
+
+    - Share session frame rates
+    VDI share sessions default to a frame rate of 5 FPS. A recent change (5.17.5 and 5.17.10) resulted in a higher frame rate being applied. The issue has been corrected and frame rates are correctly limited to 5 FPS or less. This change was also made in EP release 5.17.12.
+
+    - Update the calendar client if the time zone is changed
+    A problem has been corrected where changing the time zone while Zoom is running was not applying the update to the calendar client and the original time zone was still used.
+
+    - Clean up cosmetic issues related to dialog/popup shadows
+    Some dialogs and popups had a dark black border that had been removed to clean up the look. The problem was traced to release 5.17.6.
+
+    macOS fixes
+    - Mute/unmute AirPods
+    Two issues were addressed related to AirPods and mute/unmute functionality. One issue was toggling the Sync headset checkbox off and back on, which would lose the ability to mute and unmute AirPods. Another change was made to wait for the VDI Plugin connection before sending the commands to sync. The changes only affect the use of AirPods with Zoom Phone.
+
+    - Share audio no longer working after Citrix Workspace update
+    An update for the macOS release of the Citrix Workspace application added a new feature to support multiple audio devices. Unfortunately, the solution to share audio during a presentation requires a virtual audio driver that was affected by the change. To address the issue in this release, the Citrix feature is disabled when installing the plugin for macOS.
+
+    - Page controls when using a minimized video window
+    Minimizing a meeting with enough participants to require providing buttons to select different pages was found to have an issue where an extra click was required before the control was displayed. The page buttons are now displayed when switching to a minimized view.
+
+    Linux fixes
+    - Screenshot optimization for 4K monitors
+    A timeout was increased to account for the additional time required to process and transmit a screenshot when using a higher-resolution 4K monitor.
+
+    - Transparent annotation toolbar
+    An issue happened when setting the qt render mode to "basic" and using the qt transparent window at the same time The problem was reported in 5.17.13.
+
+    - Network disconnect and reconnect failure
+    A problem has been fixed where disconnecting and reconnecting using a LAN cable could fail and the client would exit when reconnecting to the Azure virtual desktop. This change was also made in EP Release 5.17.13.
+
+    - Video tracking lost when returning to Webinar Backstage
+    An issue was found when a panelist joined a webinar and moved from backstage to the live webinar area, and then backstage again. On the return to the webinar backstage, the video was unresponsive when the user adjusted the window size or position.
+
+    - Audio device selection not saved
+    An issue has been fixed where an audio device selection, changed in the Audio settings pane, was not saved when restarting the client. The problem was from a change made in 5.17.5. This change was also made in EP Release 5.17.13.
+
+    - Device unresponsive when video rendering increases
+    An issue was reported where thin clients could become unresponsive due to a combination of factors resulting in a significant increase in the processing required for video rendering.
+
+    - Missing HID Support for Thinpro7
+    A change was made for the Linux Universal installer to correct an issue where the zoommedia_hid.rules file was not installed for ThinPro7. This change was also made in EP release 5.17.13.
+
+    - Circular annotation not displayed on edge of shared content
+    If a shared screen was put into windowed mode and resized there was a condition that has been corrected where the tooltip for the circular annotation tool would no longer be displayed when moved to the edge of the window. The problem was reported in 5.15.10.
+
+    - Clean up video artifact for eLux viewing share session
+    When viewing a share session in a side-by-side gallery view using an eLux plugin, entering or exiting full-screen mode could result in a video artifact from the participant video being displayed on top of the share session. The issue was introduced in version 5.14.0.
+
+    VMware fixes
+    - Video lost after restarting Horizon with Linux
+    An issue for Linux has been corrected where the user started a meeting with video on, restarted VMware Horizon during the meeting, and the next meeting had no video. This change was also made in EP release 5.17.13.
+
+    - Incorrect video alignment when moving between monitors
+    A fix was made to address an issue when resizing and moving windows from one monitor to another could result in the video no longer aligning with the window. The problem could also occur when going in and out of full-screen mode. This change was also made in EP release 5.17.13.
+
+    - Clean up older 32-bit files after updating both Zoom and Horizon to 64-bit
+    After installing the 64-bit version of the VMware Horizon client followed by the 64-bit Universal Installer for Windows, the update of the 64-bit Zoom VDI Plugin did not remove all of the older 32-bit files. The installer has been updated to check for installations in the older 32-bit path and remove any remaining files for the older plugin.
+
+    Amazon fixes
+    - Installation change for AWS PCoIP
+    The installer has been modified to skip the installation of the Teradici VChan DLL when installing for Amazon Workspaces using PCoIP to avoid some connectivity issues that could result. This change was also made in EP release 5.17.13.
+
+    - Remove older extension when updating from 32-bit to 64-bit
+    The zWspExtension.exe was not removed when updating from the 32-bit VDI Zoom Meeting client to the 64-bit release. The issue has been corrected in this release.
+
+    HP Anyware fixes
+    - Video overlay not hidden when minimizing client
+    When using two monitors and going into full-screen mode for the HP Anyware client, an issue was found where the video preview displayed in the Video Settings dialog was not hidden if the HP Anyware client was minimized.
+
+    - Reconnect to VDI Plugin after a session takeover
+    Changes were made to account for a condition where the VDI Plugin would not connect if the same account used a new computer to “take over” a virtual desktop that was still connected to another computer they had been using for the same desktop.
+
+    - Terminate VDI Plugin process when closing HP Anyware
+    Closing the HP Anyware desktop session window was not ending the VDI Process which could result in audio still being transmitted. The VDI Plugin process is now terminated when the virtual desktop is closed.
+
+    - Video on the wrong monitor when using dual monitors
+    Changes have been made to address an issue where the video was not displayed correctly for an HP Anyware desktop configuration using two monitors. This fix was also released in EP release 5.17.11.
+
+    Zoom Phone fixes
+    - Volume changes not applied after switching speaker selection
+    A problem was fixed where the speaker volume could not be adjusted after changing the device selection.
+
+    - “Confirm emergency address” prompt not displayed
+    A change was made to detect a change to a new WiFi network for the VDI Plugin and prompt the user to confirm the emergency address.
+
+    - Update GPS location in CDR to last location if client moves during call
+    GPS location information has been corrected to update to the last location used when disconnecting the call if the location changes during the call.
+
+    - Block SMS in Fallback mode when using Allowed Call/SMS Locations
+    SMS messages are blocked for VDI users in fallback if the public IP of the virtual desktop is not configured for Allowed Call/SMS Locations.
+
+    Zoom Contact Center fixes
+    - Notification on top of video
+    An issue has been addressed where a portion of the video window was covered before the recording started.
+
+    - Remove the caret indication for the More menu from the video tab
+    Moving the mouse on top of the video tab was incorrectly displaying a caret indication for the More menu.
+Version: 6.0.10.25100
+RealVersion: 6.0.25100
