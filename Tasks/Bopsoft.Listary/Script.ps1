@@ -70,6 +70,23 @@ $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -
 # ETag
 $this.CurrentState.ETag = $Object1.Headers.ETag[0]
 
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
@@ -85,7 +102,7 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The installer file on the server was not updated
+# Case 2: The ETag was not updated
 if ($this.CurrentState.ETag -eq $this.LastState.ETag) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
@@ -104,16 +121,17 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
 
 Get-ReleaseNotes
 
-# Case 4: The installer file on the server was updated, but the hash didn't change
+# Case 4: The ETag was updated, but the hash wasn't
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log('The ETag was changed, but the hash is the same', 'Info')
   $this.Write()
   return
 }
 
-# Case 5: The installer file on the server was updated, and the hash changed, but the version isn't
+# Case 5: Both the ETag and the hash were updated, but the version wasn't
 if ($this.CurrentState.Version -eq $this.LastState.Version) {
   $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
+  $this.Config.IgnorePRCheck = $true
   $this.Print()
   $this.Write()
   $this.Message()
@@ -121,7 +139,7 @@ if ($this.CurrentState.Version -eq $this.LastState.Version) {
   return
 }
 
-# Case 6: The installer file on the server was updated, and the version is changed
+# Case 6: The ETag, hash, and version were updated
 switch -Regex ($this.Check()) {
   'Updated|Rollbacked' {
     $this.Print()
