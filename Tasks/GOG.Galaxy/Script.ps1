@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.content.windows.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.content.windows.downloadLink
+  InstallerUrl = $Object1.content.windows.downloadLink
 }
 
 switch -Regex ($this.Check()) {
