@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//p[@class="version"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//span[@class="se_main_btn_ver"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -11,9 +11,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16096544-1-1.html' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16123090-1-1.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_119112293']/strong[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_119262946']/strong[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
