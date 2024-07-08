@@ -1,23 +1,52 @@
-$Object1 = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/config/query-download-info' -Method Post -Body (
-  @{
-    instance = 'windows'
-    type     = '1410000197'
-  } | ConvertTo-Json -Compress -AsArray
-)
+# Download
+$Version1 = @($Global:DumplingsStorage['VooVMeeting1'].Keys)[-1] ?? '0'
+# Upgrade
+$Version2 = @($Global:DumplingsStorage['VooVMeeting2'].Keys)[-1] ?? '0'
 
-# Version
-$this.CurrentState.Version = $Object1.data[0].version
+if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -le 0) {
+  # Version
+  $this.CurrentState.Version = $Version = $Version1
 
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $Global:DumplingsStorage['VooVMeeting1'].$Version1.InstallerUrl
+  }
+  # $this.CurrentState.Installer += [ordered]@{
+  #   Architecture = 'x64'
+  #   InstallerUrl = $Global:DumplingsStorage['VooVMeeting1'].$Version1.InstallerUrlX64
+  # }
+} else {
+  # Version
+  $this.CurrentState.Version = $Version = $Version2
+
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $Global:DumplingsStorage['VooVMeeting2'].$Version2.InstallerUrl
+  }
+  # $this.CurrentState.Installer += [ordered]@{
+  #   Architecture = 'x64'
+  #   InstallerUrl = $Global:DumplingsStorage['VooVMeeting2'].$Version2.InstallerUrlX64
+  # }
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
+      if ($Global:DumplingsStorage['VooVMeeting1'].Contains($Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['VooVMeeting1'].$Version.ReleaseTime
+      }
+
+      if ($Global:DumplingsStorage['VooVMeeting2'].Contains($Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['VooVMeeting2'].$Version.ReleaseNotesCN
+        }
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
