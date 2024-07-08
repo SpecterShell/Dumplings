@@ -28,8 +28,8 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# ETag
-$this.CurrentState.ETag = $Object1.Headers.ETag[0]
+# MD5
+$this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -67,8 +67,8 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The ETag was not updated
-if ($this.CurrentState.ETag -eq $this.LastState.ETag) {
+# Case 2: The MD5 was not updated
+if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
@@ -91,27 +91,20 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
 
 Get-ReleaseNotes
 
-# Case 4: The ETag was updated, but the hash wasn't
-if ($this.CurrentState.Installer[0].InstallerUrl -eq $this.LastState.Installer[0].InstallerUrl -and $this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
-  $this.Log('The ETag was changed, but the hash is the same', 'Info')
-  $this.Write()
-  return
-}
-
 switch -Regex ($this.Check()) {
+  # Case 5: The installer URL was updated
   'Changed|Updated|Rollbacked' {
-    # Case 6: The installer URL was updated
     $this.Print()
     $this.Write()
     $this.Message()
   }
+  # Case 6: The MD5 and the version were updated
   'Updated|Rollbacked' {
-    # Case 7: The ETag, hash, and version were updated
     $this.Submit()
   }
+  # Case 4: The MD5 was updated, but the version wasn't
   Default {
-    # Case 5: Both the ETag and the hash were updated, but the version wasn't
-    $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
+    $this.Log('The MD5 was changed, but the version is the same', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
