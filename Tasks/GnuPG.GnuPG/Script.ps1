@@ -1,8 +1,8 @@
-$Prefix = 'https://gnupg.org/ftp/gcrypt/binary/'
+$Prefix = 'https://gnupg.org'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-WebRequest -Uri "${Prefix}/download/index.html"
 
-$InstallerName = $Object1.Links.href | Where-Object -FilterScript { $_ -match '^gnupg-w32-[\d\.]+_\d+\.exe$' } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerName = $Object1.Links | Where-Object -Property 'href' -Match -Value 'gnupg-w32-[\d\.]+_\d+\.exe$' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty 'href' -First 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, 'gnupg-w32-([\d\.]+)_\d+\.exe').Groups[1].Value
