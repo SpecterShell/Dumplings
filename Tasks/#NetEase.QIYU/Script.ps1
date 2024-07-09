@@ -35,6 +35,7 @@ switch -Regex ($this.Check()) {
     }
 
     $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+      ReleaseTime    = $this.CurrentState.ReleaseTime
       ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
