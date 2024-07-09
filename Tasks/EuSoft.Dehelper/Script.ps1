@@ -1,52 +1,110 @@
-$Object1 = Invoke-RestMethod -Uri 'https://api.frdic.com/api/v2/appsupport/checkversion' -Headers @{
-  EudicUserAgent = "/eusoft_maindb_de_win32/$($this.LastState.Contains('Version') ? $this.LastState.Version : '13.0.0')//"
-}
-
-if ($Object1 -is [string]) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
-  return
-}
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.url, '(\d+\.\d+\.\d+)').Groups[1].Value
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://static.frdic.com/pkg/dhsetup.exe'
-}
-
-switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
-    try {
+function Get-ReleaseNotes {
+  try {
+    $ShortVersion = $Version.Split('.')[0..2] -join '.'
+    if ($Global:DumplingsStorage.Contains('Dehelper') -and $Global:DumplingsStorage.Dehelper.Contains($ShortVersion)) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dehelper.$ShortVersion.ReleaseTime | Get-Date -AsUTC
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
+        Value  = $Global:DumplingsStorage.Dehelper.$ShortVersion.ReleaseNotesCN
       }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    } else {
+      $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
     }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
 
-    $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://static.frdic.com/pkg/fhsetup.exe'
+}
 
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# ETag
+$this.CurrentState.ETag = $Object1.Headers.ETag[0]
 
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+  # Version
+  $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is newly created
+if ($this.Status.Contains('New')) {
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+  # Version
+  $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The ETag was not updated
+if ($this.CurrentState.ETag -eq $this.LastState.ETag) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+$InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+# Version
+$this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
+# InstallerSha256
+$this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+# Case 3: The installer file has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+# Case 4: The ETag was updated, but the hash wasn't
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The ETag was changed, but the hash is the same', 'Info')
+  $this.Write()
+  return
+}
+
+switch -Regex ($this.Check()) {
+  # Case 6: The ETag, hash, and version were updated
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated|Rollbacked' {
-    $this.Message()
-  }
-  'Updated|Rollbacked' {
     $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+    $this.Message()
+    $this.Submit()
+  }
+  # Case 5: Both the ETag and the hash were updated, but the version wasn't
+  Default {
+    $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+    $this.Message()
     $this.Submit()
   }
 }
