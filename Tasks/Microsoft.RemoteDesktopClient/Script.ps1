@@ -5,13 +5,11 @@ $Object2 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=20989
 # arm64
 $Object3 = Invoke-RestMethod -Uri 'https://go.microsoft.com/fwlink/?linkid=2099066'
 
-$Identical = $true
 if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
   $this.Log("x86 version: $($Object1.version)")
   $this.Log("x64 version: $($Object2.version)")
   $this.Log("arm64 version: $($Object3.version)")
-  $Identical = $false
+  throw 'Distinct versions detected'
 }
 
 # Version
@@ -39,7 +37,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
