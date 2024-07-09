@@ -10,6 +10,11 @@ $Object1 = Invoke-RestMethod -Uri "https://mesh.if.iqiyi.com/player/client/versi
 # Version
 $this.CurrentState.Version = $Object1.data.update.version
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.update.cubelink
+}
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {

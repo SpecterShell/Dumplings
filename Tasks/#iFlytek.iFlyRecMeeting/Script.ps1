@@ -21,6 +21,11 @@ if ($Object1.biz.update -eq 0) {
 # Version
 $this.CurrentState.Version = $Object1.biz.latestVersion
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.biz.downloadUrl
+}
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {
