@@ -72,6 +72,8 @@ $this.CurrentState.ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
@@ -89,6 +91,8 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
@@ -128,27 +132,21 @@ if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installe
   return
 }
 
-# Case 5: Both the ETag and the hash were updated, but the version wasn't
-if ($this.CurrentState.Version -eq $this.LastState.Version) {
-  $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
-  $this.Config.IgnorePRCheck = $true
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 6: The ETag, hash, and version were updated
 switch -Regex ($this.Check()) {
+  # Case 6: The ETag, hash, and version were updated
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
-    return
   }
+  # Case 5: Both the ETag and the hash were updated, but the version wasn't
   Default {
-    throw 'This region should not be reached'
+    $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
 }

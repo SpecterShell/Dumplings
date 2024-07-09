@@ -33,6 +33,8 @@ $this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
@@ -52,6 +54,8 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe

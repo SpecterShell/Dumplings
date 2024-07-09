@@ -31,6 +31,8 @@ $this.CurrentState.ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
@@ -49,6 +51,8 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe

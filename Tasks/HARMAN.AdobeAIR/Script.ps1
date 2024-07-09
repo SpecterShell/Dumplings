@@ -32,9 +32,11 @@ $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -49,9 +51,11 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -70,7 +74,7 @@ if ($this.CurrentState.LastModified -eq $this.LastState.LastModified) {
 
 $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 # Version
-$this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+$this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
 # InstallerSha256
 $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -89,22 +93,20 @@ if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installe
 }
 
 switch -Regex ($this.Check()) {
+  # Case 6: The Last Modified, hash, and version were updated
   'Updated|Rollbacked' {
-    # Case 6: The Last Modified, hash, and version were updated
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
-    return
   }
+  # Case 5: Both the Last Modified and the hash were updated, but the version wasn't
   Default {
-    # Case 5: Both the Last Modified and the hash were updated, but the version wasn't
     $this.Log('The Last Modified and the hash were changed, but the version is the same', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
-    return
   }
 }

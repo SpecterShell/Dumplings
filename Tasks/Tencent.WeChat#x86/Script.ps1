@@ -70,6 +70,8 @@ $this.CurrentState.MD5 = $Object1.Headers.'X-COS-META-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
@@ -109,6 +111,8 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
 # Case 1: The task is newly created
 if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
   $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
@@ -237,18 +241,18 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   Get-ReleaseNotes
 
   switch -Regex ($this.Check()) {
+    # Case 7: The installer URL was updated
     'Changed|Updated|Rollbacked' {
-      # Case 7: The installer URL was updated
       $this.Print()
       $this.Write()
       $this.Message()
     }
+    # Case 8: The MD5 and the version were updated
     'Updated|Rollbacked' {
-      # Case 8: The MD5 and the version were updated
       $this.Submit()
     }
+    # Case 6: The MD5 was updated, but the version wasn't
     Default {
-      # Case 6: The MD5 was updated, but the version wasn't
       $this.Log('The MD5 was updated, but the version is the same', 'Info')
       $this.Config.IgnorePRCheck = $true
       $this.Print()
