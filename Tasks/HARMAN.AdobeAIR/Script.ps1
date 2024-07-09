@@ -1,13 +1,16 @@
 function Get-ReleaseNotes {
   try {
-    if ($Global:DumplingsStorage.Contains('AdobeAIR') -and $Global:DumplingsStorage.AdobeAIR.Contains($Version)) {
+    $Object2 = (Invoke-RestMethod -Uri 'https://airsdk.harman.com/api/versions/release-notes').Where({ $_.versionName -eq $this.CurrentState.Version })
+
+    if ($Object2) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.AdobeAIR.$Version.ReleaseTime | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Object2[0].releasedDate | ConvertFrom-UnixTimeMilliseconds
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Global:DumplingsStorage.AdobeAIR.$Version.ReleaseNotes
+        Value  = $Object2[0].releaseNotes | ForEach-Object -Process { "$($_.title): $($_.description)" } | Format-Text
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
