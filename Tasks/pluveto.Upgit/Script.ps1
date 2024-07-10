@@ -3,6 +3,10 @@ $RepoName = 'Upgit'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
+if ($Object1.tag_name -eq 'main') {
+  throw 'The latest release is a pre-release.'
+}
+
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
