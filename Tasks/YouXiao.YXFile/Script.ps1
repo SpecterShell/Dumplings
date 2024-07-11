@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href') | ConvertTo-UnescapedUri
+  InstallerUrl = 'https://static.youxiao.cn/yxfile/lastest.exe'
 }
 
 switch -Regex ($this.Check()) {
