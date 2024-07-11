@@ -30,34 +30,43 @@ switch -Regex ($this.Check()) {
     # ProductCode
     $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
 
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = 'https://wiki.documentfoundation.org/ReleaseNotes'
+    }
+
     try {
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = $ReleaseNotesUrl = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=en-US"
       }
 
-      if ($ReleaseNotesUrl.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
-        $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      # The release notes part has been disabled, as it always has a length over 10000 characters
+      # if ($ReleaseNotesUrl.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
+      #   $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-        # Remove images and footnotes
-        $Object2.SelectNodes('.//*[contains(@class, "gallery")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
+      #   # Remove images and footnotes
+      #   $Object2.SelectNodes('.//*[contains(@class, "gallery")]').ForEach({ $_.Remove() })
+      #   # ReleaseNotes (en-US)
+      #   $this.CurrentState.Locale += [ordered]@{
+      #     Locale = 'en-US'
+      #     Key    = 'ReleaseNotes'
+      #     Value  = $Object2.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
+      #   }
+      # } else {
+      #   $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://wiki.documentfoundation.org/ReleaseNotes'
-      }
+    }
+
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotesUrl'
+      Value  = 'https://wiki.documentfoundation.org/ReleaseNotes'
     }
 
     try {
@@ -67,29 +76,23 @@ switch -Regex ($this.Check()) {
         Value  = $ReleaseNotesUrlCN = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=zh-CN"
       }
 
-      if ($ReleaseNotesUrlCN.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
-        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
+      # if ($ReleaseNotesUrlCN.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
+      #   $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
 
-        # Remove images and footnotes
-        $Object3.SelectNodes('.//*[contains(@class, "gallery")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-      }
+      #   # Remove images and footnotes
+      #   $Object3.SelectNodes('.//*[contains(@class, "gallery")]').ForEach({ $_.Remove() })
+      #   # ReleaseNotes (zh-CN)
+      #   $this.CurrentState.Locale += [ordered]@{
+      #     Locale = 'zh-CN'
+      #     Key    = 'ReleaseNotes'
+      #     Value  = $Object3.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
+      #   }
+      # } else {
+      #   $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://wiki.documentfoundation.org/ReleaseNotes'
-      }
     }
 
     $this.Print()
