@@ -2,7 +2,7 @@ $Object1 = (Invoke-WebRequest -Uri 'https://adl.netease.com/d/g/mc/c/pc?type=pc'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = [regex]::Match($Object1, 'pc_link\s*=\s*"(.+?)"').Groups[1].Value
+  InstallerUrl = $InstallerUrl = [regex]::Match($Object1, 'pc_link\s*=\s*"(.+?)"').Groups[1].Value | Split-Uri -LeftPart Path
 }
 
 # Version
