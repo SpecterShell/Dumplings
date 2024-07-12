@@ -123,10 +123,10 @@ function Get-TextContent {
               $NextWhiteSpace = $true
             }
             if ($NextWhiteSpace -eq $true) {
-              $Content.Append(' ') | Out-Null
+              $Content = $Content.Append(' ')
               $NextWhiteSpace = $false
             }
-            $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())) | Out-Null
+            $Content = $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim()))
             if ($NewContent -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
@@ -136,9 +136,9 @@ function Get-TextContent {
           if (-not [string]::IsNullOrWhiteSpace($NewContent)) {
             # Append newline if the last node is a block node
             if ($LastNodeName) {
-              $Content.Append("`n") | Out-Null
+              $Content = $Content.Append("`n")
             }
-            $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim())) | Out-Null
+            $Content = $Content.Append([System.Web.HttpUtility]::HtmlDecode($NewContent.Trim()))
             if ($NewContent -cmatch '\s+$') {
               $NextWhiteSpace = $true
             }
@@ -150,7 +150,7 @@ function Get-TextContent {
       ({ $_.Name -eq 'br' }) {
         # Append additional newline only if the last node is a block element
         if ($LastNodeName -and $LastNodeName -ne '#text') {
-          $Content.Append("`n") | Out-Null
+          $Content = $Content.Append("`n")
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name
@@ -159,15 +159,15 @@ function Get-TextContent {
       ({ $_ -is [HtmlAgilityPack.HtmlNode] }) {
         # Append newline only if there are preceding nodes
         if ($LastNodeName) {
-          $Content.Append("`n") | Out-Null
+          $Content = $Content.Append("`n")
         }
         if ($_.Name -eq 'ul') {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Unordered'; Number = 1 })) | Out-Null
+          $Content = $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Unordered'; Number = 1 }))
         } elseif ($_.Name -eq 'ol') {
           if ($_.Attributes.Contains('Start') -and [int]::TryParse($_.Attributes['Start'].Value, [ref]$null)) {
-            $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = [int]$_.Attributes['Start'].Value })) | Out-Null
+            $Content = $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = [int]$_.Attributes['Start'].Value }))
           } else {
-            $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = 1 })) | Out-Null
+            $Content = $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo @{ Type = 'Ordered'; Number = 1 }))
           }
         } elseif ($_.Name -eq 'li') {
           $Prefix = '- '
@@ -175,11 +175,11 @@ function Get-TextContent {
             $Prefix = "$(($ListInfo.Number++)). "
           }
           # Prepend whitespaces to every line, and replace whitespaces in the first line with prefix
-          $Content.Append(((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix)) | Out-Null
+          $Content = $Content.Append(((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo) -creplace '(?m)^', (' ' * $Prefix.Length)).Remove(0, $Prefix.Length).Insert(0, $Prefix))
         } elseif ($_.Name -eq 'pre') {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $true -ListInfo $ListInfo)) | Out-Null
+          $Content = $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $true -ListInfo $ListInfo))
         } else {
-          $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo)) | Out-Null
+          $Content = $Content.Append((Get-TextContent -Node $_.ChildNodes -Raw $Raw -ListInfo $ListInfo))
         }
         $NextWhiteSpace = $false
         $LastNodeName = $_.Name

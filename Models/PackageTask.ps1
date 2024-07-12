@@ -223,56 +223,56 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier')) { $Message.AppendLine("**$($this.Config.WinGetIdentifier)**") }
+    if ($this.Config.Contains('WinGetIdentifier')) { $Message = $Message.AppendLine("**$($this.Config.WinGetIdentifier)**") }
 
-    $Message.AppendLine()
+    $Message = $Message.AppendLine()
 
     # Version
-    $Message.AppendLine("**Version:** $($this.CurrentState['Version'] | ConvertTo-MarkdownEscapedText)")
+    $Message = $Message.AppendLine("**Version:** $($this.CurrentState['Version'] | ConvertTo-MarkdownEscapedText)")
     # RealVersion
-    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("**RealVersion:** $($this.CurrentState['RealVersion'] | ConvertTo-MarkdownEscapedText)") }
+    if ($this.CurrentState.Contains('RealVersion')) { $Message = $Message.AppendLine("**RealVersion:** $($this.CurrentState['RealVersion'] | ConvertTo-MarkdownEscapedText)") }
 
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.Append("**Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
-      $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-MarkdownEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-MarkdownEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-MarkdownEscapedText) : '\*'))
-      $Message.AppendLine('\):**')
-      $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-MarkdownEscapedText))
+      $Message = $Message.Append("**Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
+      $Message = $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-MarkdownEscapedText) : '\*'))
+      $Message = $Message.AppendLine('\):**')
+      $Message = $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-MarkdownEscapedText))
     }
 
     # ReleaseDate
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-MarkdownEscapedText)")
+        $Message = $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-MarkdownEscapedText)")
       } else {
-        $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime | ConvertTo-MarkdownEscapedText)")
+        $Message = $Message.AppendLine("**ReleaseDate:** $($this.CurrentState.ReleaseTime | ConvertTo-MarkdownEscapedText)")
       }
     }
 
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.Append("**$($Entry['Key'] | ConvertTo-MarkdownEscapedText) \(")
-        $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-MarkdownEscapedText) : '\*'))
-        $Message.AppendLine('\):**')
-        $Message.AppendLine(($Entry['Value'] | ConvertTo-MarkdownEscapedText))
+        $Message = $Message.Append("**$($Entry['Key'] | ConvertTo-MarkdownEscapedText) \(")
+        $Message = $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-MarkdownEscapedText) : '\*'))
+        $Message = $Message.AppendLine('\):**')
+        $Message = $Message.AppendLine(($Entry['Value'] | ConvertTo-MarkdownEscapedText))
       }
     }
 
     # Log
     if ($this.Logs.Count -gt 0) {
-      $Message.AppendLine('**Log:**')
+      $Message = $Message.AppendLine('**Log:**')
       foreach ($Log in $this.Logs) {
-        $Message.AppendLine(($Log | ConvertTo-MarkdownEscapedText))
+        $Message = $Message.AppendLine(($Log | ConvertTo-MarkdownEscapedText))
       }
     }
 
@@ -285,58 +285,58 @@ class PackageTask {
     $Message = [System.Text.StringBuilder]::new(2048)
 
     # WinGetIdentifier
-    if ($this.Config.Contains('WinGetIdentifier')) { $Message.AppendLine("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*") }
+    if ($this.Config.Contains('WinGetIdentifier')) { $Message = $Message.AppendLine("*$($this.Config.WinGetIdentifier | ConvertTo-TelegramEscapedText)*") }
 
-    $Message.AppendLine()
+    $Message = $Message.AppendLine()
 
     # Version
-    $Message.AppendLine("*Version:* $($this.CurrentState['Version'] | ConvertTo-TelegramEscapedText)")
+    $Message = $Message.AppendLine("*Version:* $($this.CurrentState['Version'] | ConvertTo-TelegramEscapedText)")
     # RealVersion
-    if ($this.CurrentState.Contains('RealVersion')) { $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'] | ConvertTo-TelegramEscapedText)") }
+    if ($this.CurrentState.Contains('RealVersion')) { $Message = $Message.AppendLine("*RealVersion:* $($this.CurrentState['RealVersion'] | ConvertTo-TelegramEscapedText)") }
 
     # Installer
     for ($i = 0; $i -lt $this.CurrentState.Installer.Count -and $i -lt 10; $i++) {
       $Installer = $this.CurrentState.Installer[$i]
-      $Message.Append("*Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
-      $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-TelegramEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-TelegramEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
-      $Message.Append(', ')
-      $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-TelegramEscapedText) : '\*'))
-      $Message.AppendLine('\):*')
-      $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-TelegramEscapedText))
+      $Message = $Message.Append("*Installer \#$($i + 1)/$($this.CurrentState.Installer.Count) \(")
+      $Message = $Message.Append(($Installer.Contains('InstallerLocale') ? ($Installer['InstallerLocale'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('Architecture') ? ($Installer['Architecture'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('InstallerType') ? ($Installer['InstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('NestedInstallerType') ? ($Installer['NestedInstallerType'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message = $Message.Append(', ')
+      $Message = $Message.Append(($Installer.Contains('Scope') ? ($Installer['Scope'] | ConvertTo-TelegramEscapedText) : '\*'))
+      $Message = $Message.AppendLine('\):*')
+      $Message = $Message.AppendLine(($Installer['InstallerUrl'].Replace(' ', '%20') | ConvertTo-TelegramEscapedText))
     }
 
     # ReleaseTime
     if ($this.CurrentState.Contains('ReleaseTime')) {
       if ($this.CurrentState.ReleaseTime -is [datetime]) {
-        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-TelegramEscapedText)")
+        $Message = $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime.ToString('yyyy-MM-dd') | ConvertTo-TelegramEscapedText)")
       } else {
-        $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime | ConvertTo-TelegramEscapedText)")
+        $Message = $Message.AppendLine("*ReleaseDate:* $($this.CurrentState.ReleaseTime | ConvertTo-TelegramEscapedText)")
       }
     }
 
     # Locale
     foreach ($Entry in $this.CurrentState.Locale) {
       if ($Entry.Contains('Key') -and $Entry.Key -in @('ReleaseNotes', 'ReleaseNotesUrl')) {
-        $Message.Append("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \(")
-        $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-TelegramEscapedText) : '\*'))
-        $Message.AppendLine('\):*')
-        $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
+        $Message = $Message.Append("*$($Entry['Key'] | ConvertTo-TelegramEscapedText) \(")
+        $Message = $Message.Append(($Entry.Contains('Locale') ? ($Entry['Locale'] | ConvertTo-TelegramEscapedText) : '\*'))
+        $Message = $Message.AppendLine('\):*')
+        $Message = $Message.AppendLine(($Entry['Value'] | ConvertTo-TelegramEscapedText))
       }
     }
 
-    $Message.AppendLine()
+    $Message = $Message.AppendLine()
 
     # Log
     if ($this.Logs.Count -gt 0) {
-      $Message.AppendLine('*Log:*')
+      $Message = $Message.AppendLine('*Log:*')
       foreach ($Log in $this.Logs) {
-        $Message.AppendLine(($Log | ConvertTo-TelegramEscapedText))
+        $Message = $Message.AppendLine(($Log | ConvertTo-TelegramEscapedText))
       }
     }
 

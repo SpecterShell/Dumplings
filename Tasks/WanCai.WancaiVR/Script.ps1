@@ -35,12 +35,12 @@ switch -Regex ($this.Check()) {
 
         $ReleaseNotes = [System.Text.StringBuilder]::new()
         if ($ReleaseNotesObject[0].new) {
-          $ReleaseNotes.AppendLine('新增')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject.new.Split('##') | Join-String -Separator "`n"))
+          $ReleaseNotes = $ReleaseNotes.AppendLine('新增')
+          $ReleaseNotes = $ReleaseNotes.AppendLine(($ReleaseNotesObject.new.Split('##') | Join-String -Separator "`n"))
         }
         if ($ReleaseNotesObject[0].fix) {
-          $ReleaseNotes.AppendLine('修复')
-          $ReleaseNotes.AppendLine(($ReleaseNotesObject.fix.Split('##') | Join-String -Separator "`n"))
+          $ReleaseNotes = $ReleaseNotes.AppendLine('修复')
+          $ReleaseNotes = $ReleaseNotes.AppendLine(($ReleaseNotesObject.fix.Split('##') | Join-String -Separator "`n"))
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
