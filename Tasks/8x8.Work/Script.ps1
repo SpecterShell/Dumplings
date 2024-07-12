@@ -19,7 +19,7 @@ $this.CurrentState.FullVersion = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType          = 'exe'
-  InstallerUrl           = "https://vod-updates.8x8.com/ga/work-64-exe-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).exe"
+  InstallerUrl           = "https://work-desktop-assets.8x8.com/prod-publish/ga/work-64-exe-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).exe"
   AppsAndFeaturesEntries = @(
     @{
       DisplayVersion = "$($VersionMatches.Groups[1].Value)-b$($VersionMatches.Groups[3].Value)"
@@ -28,7 +28,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += $InstallerWix = [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://vod-updates.8x8.com/ga/work-64-msi-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).msi"
+  InstallerUrl  = "https://work-desktop-assets.8x8.com/prod-publish/ga/work-64-msi-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).msi"
 }
 
 switch -Regex ($this.Check()) {
