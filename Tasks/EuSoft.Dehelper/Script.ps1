@@ -22,7 +22,7 @@ function Get-ReleaseNotes {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://static.frdic.com/pkg/fhsetup.exe'
+  InstallerUrl = 'https://static.frdic.com/pkg/dhsetup.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
