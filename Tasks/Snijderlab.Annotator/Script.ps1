@@ -22,17 +22,17 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('See the assets to download') -and -not $Node.InnerText.Contains('debug为调试版本'); $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
-          # ReleaseNotes (zh-CN)
+          # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
+            Locale = 'en-US'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl
