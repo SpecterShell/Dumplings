@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://qgis.org/version.json'
+$Object1 = Invoke-RestMethod -Uri 'https://version.qgis.org/version.json'
 
 # Version
 $this.CurrentState.Version = "$($Object1.latest.version)-$($Object1.latest.binary)"
