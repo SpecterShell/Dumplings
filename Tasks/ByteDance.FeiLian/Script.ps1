@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://lf3-beecdn.bytetos.com/obj/ies-fe-bee/bee_prod/biz_950/bee_prod_950_bee_publish_12983.json').Where({ $Object1.key -eq 'windows' })[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://lf3-beecdn.bytetos.com/obj/ies-fe-bee/bee_prod/biz_950/bee_prod_950_bee_publish_12983.json').Where({ $_.key -eq 'windows' })[0]
 
 # Version
 $this.CurrentState.Version = $Object1.version -replace '^V'
