@@ -26,12 +26,14 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# ETag
-$this.CurrentState.ETag = $Object1.Headers.ETag[0]
+$ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
 
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
@@ -53,6 +55,9 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
@@ -67,7 +72,7 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The ETag was not updated
-if ($this.CurrentState.ETag -eq $this.LastState.ETag) {
+if ($ETag -in $this.LastState.ETag) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
@@ -88,9 +93,16 @@ Get-ReleaseNotes
 # Case 4: The ETag was updated, but the hash wasn't
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log('The ETag was changed, but the hash is the same', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+
   $this.Write()
   return
 }
+
+# ETag
+$this.CurrentState.ETag = @($ETag)
 
 switch -Regex ($this.Check()) {
   # Case 6: The ETag, hash, and version were updated
