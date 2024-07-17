@@ -1,13 +1,13 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.dandanplay.com/' | ConvertFrom-Html
 
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//div[@class="memo" and contains(., "版本")]').InnerText, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//a[contains(@class, "button")][1]').Attributes['href'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@class, "button")][1]').Attributes['href'].Value
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
