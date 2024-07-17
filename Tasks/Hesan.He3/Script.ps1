@@ -1,4 +1,4 @@
-$Prefix = 'https://he3-1309519128.cos.accelerate.myqcloud.com/'
+$Prefix = 'https://dl.he3app.com/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest/latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
 
