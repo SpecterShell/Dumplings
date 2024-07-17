@@ -1,7 +1,7 @@
 $RepoOwner = 'SAP'
 $RepoName = 'SapMachine'
 
-$Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'17'.releases[0]
+$Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'17'.releases.Where({ $_.jre.Contains('windows-x64-installer') }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag -creplace '^sapmachine-'
