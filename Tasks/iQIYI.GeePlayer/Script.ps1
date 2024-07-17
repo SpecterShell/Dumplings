@@ -1,12 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.iqiyi.com/appstore.html'
+$Object1 = Invoke-WebRequest -Uri 'https://www.iqiyi.com/appstore.html' | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//li[contains(@class, "app-item") and contains(.//h3[@class="main-title"], "爱奇艺万能播放器")]')
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('.//p[@class="sub-ver"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.exe') -and $_.href.Contains('GeePlayer') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $Object2.SelectSingleNode('.//a[@class="mod-btn"]').Attributes['href'].Value
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
