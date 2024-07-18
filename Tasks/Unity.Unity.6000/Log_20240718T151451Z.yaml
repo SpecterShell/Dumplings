@@ -1,0 +1,156 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/fa01dd6b76d5/Windows64EditorInstaller/UnitySetup64-6000.0.11f1.exe
+  ProductCode: Unity 6000.0.11f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/fa01dd6b76d5/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.11f1.exe
+  ProductCode: Unity 6000.0.11f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/6000.0.11
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.11f1
+    - Asset - Database: OnAfterDeserialize is not called when Prefabs are instantiated using InstantiateAsync (UUM-71810)
+    - Asset Bundles: The resource is not properly referenced when there is a dependency on another asset bundle (UUM-74871)
+    - DirectX12: Crash on D3D12 when entering Play Mode in High Definition 3D Core project's Environment scene (UUM-74769)
+    - DirectX12: Crash on GfxDeviceD3D12Base::DrawBuffersCommon when selecting the “Cloud Layer“ option in Visual Environment component (UUM-75220)
+    - DirectX12: [DX12] Player crash on UnityMain when building HDRP Sample on Windows (UUM-75100)
+    - DOTS: Job allocator contention causes slow job execution (UUM-73194)
+    - Editor Platform: The "Hold On" dialog box persists when entering the Play Mode (UUM-74916)
+    - Kernel: Profiler does not profile after building the Project with Autoconnect Profiler Option enabled (UUM-71750)
+    - Kernel: VirtualFileSystem crash because of data races. (UUM-72557)
+    - Lighting: Block compression leads to lightbaking artifacts in HDRP (UUM-74735)
+    - Material: Crash on SourceAssetDBReadTxn::SourceAssetDBReadTxn when opening a project after deleting an Asset (UUM-75191)
+    - PhysX Integration: A 1000 times heavier GameObject will stutter when colliding with a lighter GameObject (UUM-65366)
+    - Serialization: Crash on TypeTreeQueries::GetFullTypeNameFromReferencedType when an xoJunction GameObject is selected in the Hierarchy Window (UUM-74373)
+    - UI Toolkit Controls: MultiColumnListView causes a memory leak when repeatedly shown and hidden (UUM-72241)
+    - Vulkan: Editor crash when changing Vulkan Number of Swapchain Buffers (UUM-60016)
+    6000.0.11f1 Release Notes
+    Improvements
+    - Animation: Improved Animation Mode performance when using custom properties. (UUM-73525)
+    - Documentation: Added information about Player Build cache to PostProcessScene documentation. (UUM-69256)
+    - QNX: Video playback enabled
+    API Changes
+    - Editor: Added: Adds RequestAsyncReadbackIntoNativeArray API to the Unsafe Pass. (UUM-73907)
+    - Physics 2D: Changed: Rigidbody2D.angularDrag is now Rigidbody2D.angularDamping.
+    - Physics 2D: Changed: Rigidbody2D.drag is now Rigidbody2D.linearDamping.
+    - Physics 2D: Changed: Rigidbody2D.velocity is now Rigidbody2D.linearVelocity.
+    - Physics 2D: Changed: Rigidbody2D.velocityX is now Rigidbody2D.linearVelocityX.
+    - Physics 2D: Changed: Rigidbody2D.velocityY is now Rigidbody2D.linearVelocityY.
+    - Physics 2D: Deprecated: Rigidbody2D.isKinematic is deprecated. Use Rigidbody2D.bodyType instead.
+    Changes
+    - SRP Core: Adding What's New in Unity 6 to SRP Core Package
+    Fixes
+    - 2D: Fix issue where R 16 bit textures have banding effect when packed into a Sprite Atlas (UUM-73396)
+    - AI: Fixed an issue where NavMeshData belonging to a scene would remain loaded after the scene had been offloaded. This issue only occurred when the "Do not reload scene"-option has been checked in the editor settings. (UUM-29346)
+    - Android: AndroidX use is always true. Fixed problem with Gradle AAB build fail when Split App Binary is on, but there are no asset packs in the generated Gradle project. (UUM-73808)
+    - Android: Fixed player crash when changing cursor multiple times. (UUM-74941)
+    - Android: Resolved an issue where the OK button was absent in the Mobile Input Field of the soft keyboard. (UUM-74675)
+    - Asset Bundles: Improved performance of AssetBundle.UnloadAsync. In certain large bundles with many scenes, the async unloading could take an excessively long time.
+    - Audio: Fixed an issue that would cause the pan control on audio sources to not work properly in some cases. (UUM-65071)
+    - Audio: Fixed empty playback when instantiating an AudioSource game object set to play on awake with AudioRandomContainer resource. (UUM-74723)
+    - Audio: Make fmodprofiling command line argument a diagnostic switch and update docs to show how to profile audio mixer effects (UUM-41887)
+    - Core: Fixed errors when duplicating scene. (UUM-74732)
+    - Documentation: Fixed a typo in the Create your own overlay page of the documentation.
+    - DX12: Fixed incorrect values for GetNextFrameFenceValue() in render plugins (UUM-72389)
+    - Editor: Enabled hiding layers above current RP limit except when they are selected. (UUM-69315)
+    - Editor: Enabled Search Window available providers to display consistently across the Editor. (UUM-72552)
+    - Editor: Filter out dynamic branch keywords when computing shader variants. (UUM-48599)
+    - Editor: Fix Exception Thrown When Minor Unity Version is Zero (UUM-73851)
+    - Editor: Fixed 100% editor freeze that occurs when clearing tracked shader variants. (UUM-74754)
+    - Editor: Fixed a bug where UI Canvas using Screen Space render mode would use an incorrect game view size and behave erratically. (UUM-73707)
+    - Editor: Fixed an error regarding invalid serialized properties when removing and adding multiple items to a UnityEvent. (UUM-72670)
+    - Editor: Fixed an issue where an empty menu item was executed from within the AddComponent window. (UUM-64144)
+    - Editor: Fixed crash when hot-loading renderdoc in editor and GPU Resident Drawer running. (UUM-73405)
+    - Editor: Fixed incorrect safeArea reported values and an error at the bottom of the screen for iOS versions 15 and below. (UUM-51667)
+    - Editor: Fixed issues with menu item Id values going out of sync on windows. (UUM-73047)
+    - Editor: Fixed log spamming and small chance of freezing due to missing sleep implemenation. (UUM-72409)
+    - Editor: Fixed low resolution artefacts when atmospheric scattering is on. (UUM-75115)
+    - Editor: Fixed saving a new scene with cloned dependencies to no longer overwrite the existing folder. (UUM-66799)
+    - Editor: Fixed wrong exception messages in RenderGraph files. (UUM-74144)
+    - Editor: GameObjects can be selected in the Scene View when GPU Resident Drawer is enabled. (UUM-73317)
+    - Editor: Moved Realtime CPU Usage property above VSync Count. (UUM-73719)
+    - Editor: Reduced severity of AutoLocale validation message on Linux. (UUM-74127)
+    - Editor: When closing a modal dialog, the previous window's tabs are now properly restored. (UUM-74407)
+    - GI: Apply matching presets in Preset Manager when generating lightmaps and reflection probes. (UUM-70818)
+    - GI: Fixed noise when using Sky Occlusion with APV. (UUM-71590)
+    - Graphics: Different reflections on GameObject in Player compared to the Game View when DisplayP3 Color Gamut For Mac is selected on Silicon macOS (UUM-46003)
+    - Graphics: Fixed culling split exclusion mask not working for Unity terrain. (UUM-74139)
+    - Graphics: Fixed Linear01DepthFromNear shader utility function on APIs with reversed Z buffer. (UUM-19101)
+    - HDRP: Fix clouds interaction with thin geometry (UUM-74923)
+    - HDRP: Fix clouds rendering on top of geometry (UUM-74934)
+    - HDRP: Fixed a disc area light calculation used for light unit conversion, which was previously incorrect by a factor of Pi. (UUM-74727)
+    - HDRP: Fixed light culling for raytracing. (UUM-70779)
+    - HDRP: Fixed time of day script in environement sample.
+    - iOS: Added missing header files for plugins to Xcode project. (UUM-74318)
+    - iOS: Updated capability list (UUM-65394)
+    - License: Https://github.cds.internal.unity3d.com/unity/licensing.entitlement/releases/tag/v1.16.0-alpha.1.
+    - Package: Fixed Cinemachine bugs.
+    - Package Manager: Fixed the issue where My Assets page search result does not match that from the Asset Store website. (UUM-74477)
+    - Package Manager: Fixed the issues where Null Exception will be thrown sometimes in My Assets page. (UUM-72068)
+    - Particles: Fix potential unbounded memory and excessive work when using Ring Buffer mode (UUM-72277)
+    - Particles: Updated ParticleSystem.Start() documentation to reflect correct behavior. (UUM-72281)
+    - Scripting: Fixed an exception when calling destroy cancellation token after destroying the game object (UUM-71988)
+    - Search: Enabled SearchContext attribute to work with arrays and lists. (UUM-65462)
+    - Search: Ensured rebinding properties when docking or undocking the SearchWindow if the Detail view is open. (UUM-73162)
+    - Search: Fixed Search behaviour so that executing a temp query (e.g. narrow area query) doesn't set it as the activeQuery. (UUM-72858)
+    - Shaders: Fixed "#pragma argument" being ignored in certain cases. (UUM-74358)
+    - uGUI: UGUI elements can be correctly selected in Scene view. (UUM-74758)
+    - UI Toolkit: Fixed a stack overflow and provided users with proper logs explaining the situation when it occurs. (UUM-69438)
+    - UI Toolkit: Fixed an issue where a binding that is triggered in WhenSourceChanged mode would be continuously updated when the resolved data source is null. (UUM-74720)
+    - UI Toolkit: Fixed an issue where a data source was being unregistered twice when set on a children during an AttachToPanelEvent callback. (UUM-75077)
+    - UI Toolkit: Fixed an issue where the source generator of the the Unity.Properties module was targeting net6 instead of netstandard2.0, causing issues in VisualStudio. (UUM-74852)
+    - UI Toolkit: Fixed artifacts when rendering world-space UI Toolkit with WebGL. (UUM-73117)
+    - UI Toolkit: The TwoPaneSplitView's CollapseChild method can now be called during initialization. (UUM-66400)
+    - UI Toolkit: The TwoPaneSplitView's drag line no longer hides its panes. (UUM-53998)
+    - UI Toolkit: The TwoPaneSplitView's drag line no longer jumps when constrained by the minimum sizes of the panes. (UUM-53665)
+    - Universal RP: Fixed BlitAndSwapColorPass sample. (UUM-74427)
+    - Universal RP: Update template (Create > Rendering > URP Post-Processing Effect (Renderer Feature with Volume) (UUM-72249)
+    - URP: Fixed an issue where reflection probes would render incorrectly on some platforms. (UUM-54060)
+    - VFX Graph: Fixed a crash that occurred when visualizing a VFX preview with raytracing enabled. (UUM-75069)
+    - VFX Graph: Fixed random texture rendered with instancing when using exposed texture set to None. (UUM-74364)
+    - Web: Fixed an issue that Application.persistentDataPath would not automatically persist, by adding a new JS config option "autoSyncPersistentDataPath: true" to enable automatic synchronization of Application.persistentDataPath over to IndexedDB. (UUM-60385)
+    - Web: Fixed compiler error when emscripten option "-sERROR_ON_UNDEFINED_SYMBOLS=0" is used. (UUM-74261)
+    Package changes in 6000.0.11f1
+    Packages updated
+    - com.unity.addressables: 2.1.0 to 2.2.2
+    - com.unity.cinemachine: 2.10.0 to 2.10.1
+    - com.unity.scriptablebuildpipeline: 2.1.3 to 2.1.4
+    - com.unity.services.wire: 1.2.3 to 1.2.6
+    - com.unity.addressables.android: 1.0.2 to 1.0.3
+Version: 6000.0.11f1
+Modules:
+  visualstudio: https://go.microsoft.com/fwlink/?linkid=2189815
+  visualstudioprofessionalunityworkload: https://aka.ms/vs/17/release/vs_Professional.exe
+  visualstudioenterpriseunityworkload: https://aka.ms/vs/17/release/vs_Enterprise.exe
+  android: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.11f1.exe
+  ios: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-iOS-Support-for-Editor-6000.0.11f1.exe
+  appletv: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-AppleTV-Support-for-Editor-6000.0.11f1.exe
+  visionos: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-VisionOS-Support-for-Editor-6000.0.11f1.exe
+  linux-il2cpp: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Linux-IL2CPP-Support-for-Editor-6000.0.11f1.exe
+  linux-mono: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Linux-Mono-Support-for-Editor-6000.0.11f1.exe
+  linux-server: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Linux-Server-Support-for-Editor-6000.0.11f1.exe
+  mac-mono: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Mac-Mono-Support-for-Editor-6000.0.11f1.exe
+  mac-server: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Mac-Server-Support-for-Editor-6000.0.11f1.exe
+  universal-windows-platform: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Universal-Windows-Platform-Support-for-Editor-6000.0.11f1.exe
+  webgl: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-WebGL-Support-for-Editor-6000.0.11f1.exe
+  windows-il2cpp: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-6000.0.11f1.exe
+  windows-server: https://download.unity3d.com/download_unity/fa01dd6b76d5/TargetSupportInstaller/UnitySetup-Windows-Server-Support-for-Editor-6000.0.11f1.exe
+  language-ja: https://new-translate.unity3d.jp/v1/live/54/6000.0/ja
+  language-ko: https://new-translate.unity3d.jp/v1/live/54/6000.0/ko
+  language-zh-hant: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hant
+  language-zh-hans: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hans
+  documentation: https://cloudmedia-docs.unity3d.com/docscloudstorage/6000.0/UnityDocumentation.zip
+ReleaseTime: 2024-07-17T10:16:09.0230000Z
