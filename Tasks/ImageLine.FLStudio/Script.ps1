@@ -1,4 +1,6 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://support.image-line.com/flstudiorss/product_version_xml.php').ilversioninfo.item.Where({ $_.guid -eq '320' -and $_.os -eq 'windows' })[0]
+$UserAgent = 'FL Studio'
+
+$Object1 = (Invoke-RestMethod -Uri 'http://support.image-line.com/flstudiorss/product_version_xml.php' -UserAgent $UserAgent).ilversioninfo.item.Where({ $_.guid -eq '320' -and $_.os -eq 'windows' })[0]
 
 # Version
 $this.CurrentState.Version = $Object1.version
@@ -20,7 +22,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/WhatsNew.htm' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'http://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/WhatsNew.htm' -UserAgent $UserAgent | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//td[@id='rightcol']/h3[contains(text(), '${ShortVersion}')]")
       if ($ReleaseNotesTitleNode) {
