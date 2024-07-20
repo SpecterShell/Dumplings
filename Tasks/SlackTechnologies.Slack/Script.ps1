@@ -8,7 +8,7 @@ $Object3 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?a
 if ($Object1.version -ne $Object2.version) {
   $this.Log('Distinct versions detected', 'Warning')
   $this.Log("x64 EXE version: $($Object1.version)")
-  $this.Log("x64 MSI version: $($Object2.version)")
+  $this.Log("x64 WiX version: $($Object2.version)")
   $this.Log("arm64 MSIX version: $($Object3.version)")
   throw 'Distinct versions detected'
 }
@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += $InstallerX64WiX = [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = $Object2.download_url
 }
 $this.CurrentState.Installer += [ordered]@{
