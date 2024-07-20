@@ -56,7 +56,7 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The SHA256 was not updated
-if ($Uri -eq $this.LastState.Installer[0].InstallerUrl) {
+if ($InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
