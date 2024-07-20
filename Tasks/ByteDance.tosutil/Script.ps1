@@ -37,12 +37,12 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The SHA256 was not updated
-if ($this.CurrentState.Installer[0].InstallerUrl -eq $this.LastState.Installer[0].InstallerUrl) {
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
 
-$InstallerFile = Get-TempFile -Uri $InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+$InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
 # Version
 Get-Version
 
