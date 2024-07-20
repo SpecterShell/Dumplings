@@ -20,11 +20,14 @@ $this.CurrentState.Installer += [ordered]@{
 
 $Object2 = Invoke-WebRequest -Uri $InstallerUrl -Method Head
 # ETag
-$this.CurrentState.ETag = $Object2.Headers.ETag[0]
+$ETag = $Object2.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
 
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # InstallerSha256
@@ -43,6 +46,9 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -57,6 +63,9 @@ if ($this.Status.Contains('New')) {
 # Case 2: The version was updated or rollbacked
 switch -Regex ($this.Check()) {
   'Updated|Rollbacked' {
+    # ETag
+    $this.CurrentState.ETag = @($ETag)
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -72,7 +81,7 @@ switch -Regex ($this.Check()) {
 }
 
 # Case 3: The version is the same, but the ETag was not updated
-if ($this.CurrentState.ETag -eq $this.LastState.ETag) {
+if ($ETag -in $this.LastState.ETag) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
@@ -91,9 +100,16 @@ Get-ReleaseTime
 # Case 5: The ETag was updated, but the hash wasn't
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log('The ETag was changed, but the hash is the same', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+
   $this.Write()
   return
 }
+
+# ETag
+$this.CurrentState.ETag = @($ETag)
 
 # Case 6: Both the ETag and the hash were updated
 $this.Log('The ETag and the hash were changed', 'Info')
