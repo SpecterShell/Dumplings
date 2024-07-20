@@ -85,7 +85,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  'Updated'{
+  'Updated' {
     $this.Submit()
   }
 }
