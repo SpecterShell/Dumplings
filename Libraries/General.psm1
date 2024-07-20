@@ -970,8 +970,19 @@ function Read-ProductCodeFromBurn {
       throw 'Failed to extract burn installer'
     }
 
-    $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    Write-Output -InputObject $Xml.BootstrapperApplicationData.WixBundleProperties.Id
+    $BootstrapperApplicationDataPath = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml'
+    $ManifestPath = Join-Path $FolderPath 'UX' 'manifest.xml'
+    if (Test-Path -Path $BootstrapperApplicationDataPath) {
+      $BootstrapperApplicationData = Get-Content -Path $BootstrapperApplicationDataPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $BootstrapperApplicationData.BootstrapperApplicationData.WixBundleProperties.Id
+    } elseif (Test-Path -Path $ManifestPath) {
+      Write-Host -Object 'Fallbacking to the manifest file'
+      $Manifest = Get-Content -Path $ManifestPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $Manifest.BurnManifest.Registration.Id
+    } else {
+      throw 'The BootstrapperApplicationData and manifest files do not exist'
+    }
+
     Remove-Item -Path $FolderPath -Recurse -Force
   }
 }
@@ -1020,8 +1031,19 @@ function Read-UpgradeCodeFromBurn {
       throw 'Failed to extract burn installer'
     }
 
-    $Xml = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml' -Resolve | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    Write-Output -InputObject $Xml.BootstrapperApplicationData.WixBundleProperties.UpgradeCode
+    $BootstrapperApplicationDataPath = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml'
+    $ManifestPath = Join-Path $FolderPath 'UX' 'manifest.xml'
+    if (Test-Path -Path $BootstrapperApplicationDataPath) {
+      $BootstrapperApplicationData = Get-Content -Path $BootstrapperApplicationDataPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $BootstrapperApplicationData.BootstrapperApplicationData.WixBundleProperties.UpgradeCode
+    } elseif (Test-Path -Path $ManifestPath) {
+      Write-Host -Object 'Fallbacking to the manifest file'
+      $Manifest = Get-Content -Path $ManifestPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $Manifest.BurnManifest.RelatedBundle.Id
+    } else {
+      throw 'The BootstrapperApplicationData and manifest files do not exist'
+    }
+
     Remove-Item -Path $FolderPath -Recurse -Force
   }
 }
