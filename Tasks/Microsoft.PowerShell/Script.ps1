@@ -22,10 +22,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msix'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msixbundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
