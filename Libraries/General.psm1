@@ -733,13 +733,13 @@ function Read-ResponseContent {
 function Read-ProductVersionFromExe {
   <#
   .SYNOPSIS
-    Read the ProductVersion property of the EXE file
+    Read the product version property of the EXE file
   .PARAMETER Path
-    The message content
+    The path to the EXE file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
     [string]
     $Path
   )
@@ -749,22 +749,60 @@ function Read-ProductVersionFromExe {
   }
 }
 
+function Read-ProductVersionRawFromExe {
+  <#
+  .SYNOPSIS
+    Read the raw product version property of the EXE file
+  .PARAMETER Path
+    The path to the EXE file
+  #>
+  [OutputType([version])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
+    [string]
+    $Path
+  )
+
+  process {
+    [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersionRaw
+  }
+}
+
 function Read-FileVersionFromExe {
   <#
   .SYNOPSIS
-    Read the FileVersion property of the EXE file
+    Read the file version property of the EXE file
   .PARAMETER Path
-    The message content
+    The path to the EXE file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The message content')]
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
     [string]
     $Path
   )
 
   process {
     [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).FileVersion.Trim()
+  }
+}
+
+function Read-FileVersionRawFromExe {
+  <#
+  .SYNOPSIS
+    Read the raw file version property of the EXE file
+  .PARAMETER Path
+    The path to the EXE file
+  #>
+  [OutputType([version])]
+  param (
+    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
+    [string]
+    $Path
+  )
+
+  process {
+    [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).FileVersionRaw
   }
 }
 
