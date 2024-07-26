@@ -372,6 +372,45 @@ function Split-Uri {
   }
 }
 
+function Join-Uri {
+  <#
+  .SYNOPSIS
+    Join the URIs
+  .PARAMETER Uri
+    The main URI to which the child URI is appended
+  .PARAMETER ChildUri
+    The elements to be applied to the main URI
+  .PARAMETER AdditionalChildUri
+    Additional elements to be applied to the main URI
+  #>
+  [OutputType([string])]
+  param (
+    [parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The main URI to which the child URI is appended')]
+    [uri[]]
+    $Uri,
+
+    [parameter(Position = 1, Mandatory, HelpMessage = 'The elements to be applied to the main URI')]
+    [string[]]
+    $ChildUri,
+
+    [parameter(Position = 2, ValueFromRemainingArguments, HelpMessage = 'Additional elements to be applied to the main URI')]
+    [string[]]
+    $AdditionalChildUri
+  )
+
+  process {
+    foreach ($SubUri in $Uri) {
+      foreach ($SubChildUri in $ChildUri) {
+        $SubUri = [uri]::new($SubUri, $SubChildUri)
+      }
+      foreach ($SubAdditionalChildUri in $AdditionalChildUri) {
+        $SubUri = [uri]::new($SubUri, $SubAdditionalChildUri)
+      }
+      Write-Output -InputObject $SubUri.AbsoluteUri
+    }
+  }
+}
+
 function Split-LineEndings {
   <#
   .SYNOPSIS
