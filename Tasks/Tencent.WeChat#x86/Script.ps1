@@ -81,7 +81,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture = 'x64'
+      Architecture = 'x86'
       InstallerUrl = $Uri2
     }
     # MD5 alternative
@@ -92,7 +92,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture    = 'x64'
+      Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     }
@@ -122,7 +122,7 @@ if ($this.Status.Contains('New')) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture = 'x64'
+      Architecture = 'x86'
       InstallerUrl = $Uri2
     }
     # MD5 alternative
@@ -133,7 +133,7 @@ if ($this.Status.Contains('New')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture    = 'x64'
+      Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     }
@@ -155,7 +155,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   if ($this.LastState.Mode -eq $true) {
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture = 'x64'
+      Architecture = 'x86'
       InstallerUrl = $Uri2 = $this.LastState.Installer[0].InstallerUrl
     }
     # Mode
@@ -187,7 +187,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
       $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
       # Installer
       $this.CurrentState.Installer += [ordered]@{
-        Architecture = 'x64'
+        Architecture = 'x86'
         InstallerUrl = $Uri2
       }
       # MD5 alternative
@@ -218,7 +218,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture = 'x64'
+      Architecture = 'x86'
       InstallerUrl = $Uri2
     }
     # MD5 alternative
@@ -230,7 +230,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture    = 'x64'
+      Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     }
