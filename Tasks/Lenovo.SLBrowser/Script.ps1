@@ -7,6 +7,12 @@ $Object1 = Invoke-RestMethod -Uri 'https://hao.lenovo.com.cn/browser-service-api
     sn             = '0'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
+
+if ($Object1.code -eq '40001') {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 $Object2 = Invoke-RestMethod -Uri "$($Object1.data.releaseUrl)SLBUpdate.ini" | ConvertFrom-Ini
 $Object3 = $Object2.files.GetEnumerator().Where({ $_.Value.Split('#')[2].Contains('\installer\') }, 'First')[0].Value.Split('#')
 
