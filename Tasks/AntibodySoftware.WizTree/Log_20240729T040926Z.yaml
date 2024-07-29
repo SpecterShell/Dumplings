@@ -1,0 +1,19 @@
+Installer:
+- InstallerUrl: https://diskanalyzer.com/files/wiztree_4_20_setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - New tweak option added (Options->Tweaks):
+      "Scan MFT (if possible) when a folder is selected for analysis" - default is off
+      Normally, when a folder is selected for analysis WizTree will scan using the Windows API (MFT scanning is not used). This method is generally quicker when analyzing small to medium sized folders, but for very large folders it can be much quicker to scan the entire MFT file instead.
+      If this option is enabled WizTree will always scan the MFT file (is possible) when a folder is selected. You can also force WizTree to scan the MFT when a folder is selected by holding down the CTRL key when starting a new scan. The CTRL key must be down when the scanning process starts for this to work.
+    - Fixed possible reverse order sorting issue in File View when scanning multiple drives/folders
+    - Cut/Copy files to clipboard working again on Windows XP/2000/2003 (stopped working in 4.18 due to compatibility issues with new code)
+    - Processing of folders with millions of files with unique file extensions greatly sped up. Previously WizTree could appear to stop responding when loading such folders into the tree view or when generating the tree map.
+    - Tree map export now always processes files and folders in size order as the resulting output looks much nicer this way
+    - Windows Explorer context menu shortcut key for WizTree changed from W to Z (from &WizTree to Wi&zTree) to prevent conflict with "New" option
+    - Fixed issue where file sizes/allocated sizes could incorrectly be set to 0 for hard linked files in some cases
+    - MFT scanning speed up to 15% faster in certain cases over previous version
+Version: "4.20"
+ReleaseTime: 2024-07-29
