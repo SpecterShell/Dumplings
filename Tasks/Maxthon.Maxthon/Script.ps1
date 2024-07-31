@@ -49,14 +49,14 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
-  InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object5.version)_x64.exe"
-  # InstallerUrl    = $Object5.url
+  # InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object5.version)_x64.exe"
+  InstallerUrl    = $Object5.url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
-  InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object6.version)_x64.exe"
-  # InstallerUrl    = $Object6.url
+  # InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object6.version)_x64.exe"
+  InstallerUrl    = $Object6.url
 }
 
 switch -Regex ($this.Check()) {
