@@ -11,7 +11,8 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'Eagle-([\d\.]+-build\d+)').Groups[1].Value
+$VersionMatches = [regex]::Match($InstallerUrl, 'Eagle-([\d\.]+).*(build\d+)')
+$this.CurrentState.Version = "$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[2].Value)"
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
