@@ -15,7 +15,11 @@ switch -Regex ($this.Check()) {
     # InstallerSha256
     $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+    $Installer['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
+      }
+    )
 
     try {
       $Object2 = ((Invoke-RestMethod -Uri 'https://invent.kde.org/education/rkward/-/raw/master/ChangeLog') -split '\s+--- ').Where({ $_.Contains($this.CurrentState.Version) }, 'First')
