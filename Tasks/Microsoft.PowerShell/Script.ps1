@@ -47,6 +47,20 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
+      $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+
+      # RealVersion
+      $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+      # InstallerSha256
+      $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      # AppsAndFeaturesEntries + ProductCode
+      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+        }
+      )
+
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
