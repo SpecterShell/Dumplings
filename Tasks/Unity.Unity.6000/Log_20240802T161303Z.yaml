@@ -1,0 +1,158 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/53a692e3fca9/Windows64EditorInstaller/UnitySetup64-6000.0.13f1.exe
+  ProductCode: Unity 6000.0.13f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/53a692e3fca9/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.13f1.exe
+  ProductCode: Unity 6000.0.13f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/6000.0.13
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.13f1
+    - Asset - Database: Crash on MonoBehaviour::Transfer when the XR Interaction Toolkit Sample Assets are updated (UUM-76934)
+    - Kernel: Crash on TypeTreeQueries::IsStreamedBinaryCompatible when waiting for Unity’s code in UnityEditor.CoreModule.dll to finish executing (UUM-77033)
+    - Kernel: Profiler does not profile after building the Project with Autoconnect Profiler Option enabled (UUM-71750)
+    - Kernel: VirtualFileSystem crash because of data races. (UUM-72557)
+    - Lighting: Block compression leads to lightbaking artifacts in HDRP (UUM-74735)
+    - PhysX Integration: A 1000 times heavier GameObject will stutter when colliding with a lighter GameObject (UUM-65366)
+    - Serialization: Crash on TypeTreeQueries::GetFullTypeNameFromReferencedType when an xoJunction GameObject is selected in the Hierarchy Window (UUM-74373)
+    - SRP Architecture & API: URP internal shader errors when the iOS is selected as a Build Target on the Windows Editor (UUM-75654)
+    - SRP Templates: A bunch of Shader Warnings are thrown after switching platform to Linux/Linux Server when using Universal 3D Template (UUM-76186)
+    - SRP XR: Error is thrown when Shader Graph Material is changed to "Decal" (UUM-76172)
+    - UI Toolkit Controls: MultiColumnListView causes a memory leak when repeatedly shown and hidden (UUM-72241)
+    - Vulkan: Editor crash when changing Vulkan Number of Swapchain Buffers (UUM-60016)
+    6000.0.13f1 Release Notes
+    Improvements
+    - HDRP: Improved the batching of the Lit shaders in HDRP. (UUM-70368)
+    - Package Manager: Improved code coverage for BasePage, SimplePage and MyAssetpage classes.
+    API Changes
+    - Editor: Added: Added ShaderUtil.CreateRayTracingShaderAsset() to the Editor API
+    Changes
+    - Android: Updated default androidMaxAspectRatio from 2.1 to 2.4.
+    - Burst: Improved error message for pointer-like types in non-readonly static fields.
+    - Burst: Improved performance of Burst-compiled code in the Windows x64 Editor by only emitting context-saving code when the code being compiled contains a throw.
+    - URP: Sprite Default Material - Moved to Graphics Settings, Sprite Settings from Renderer2DData. (UUM-74931)
+    Fixes
+    - 2D: Fixed a crash that would occur when a user does an infinite recursion loop using a Tile's StartUp call by limiting the recursion. (UUM-74939)
+    - 2D: Fixed a null exception that would occur when a user tries to copy and paste a Sprite Outline to all Sprites when no SpriteRect in the Sprite Editor is selected. (UUM-75806)
+    - 2D: Fixed an issue where generate outline turned sprites a solid black. (UUM-75316)
+    - 2D: Fixed an issue where SpriteRenderer sprite visual would appear unchanged when the sprite changed. (UUM-73222)
+    - 2D: Fixed crash associated with VertexUtility::CopyChannel. (UUM-72866)
+    - 2D: Fixed errors that were thrown when errors are thrown when packing the Sprite Atlas due to TilingNotScheduled. (UUM-75224)
+    - 2D: Fixed Sprite Mask not correctly masking out normals pass.
+    - 2D: Set a minimum width for the Tile Palette window based on the size of the toolbar for Tile Palette Tools when undocked. (UUM-75187)
+    - 2D: Update Tile Palette Clipboard immediately when user activates a toggle on the Tile Palette Clipboard (UUM-75498)
+    - Android: Fixed an issue that prevented Gradle from buildingon API Level Targets bellow 30. (UUM-71048)
+    - Android: Fixed AndroidConfiguration so keyboard/keyboardHidden is properly set for GameActivity. (UUM-72217)
+    - Android: Re-set the minimum width for Android symbol format dropdowns to ensure it fits to width correctly. (UUM-60933)
+    - Android: Removed a crash workaround on UnityPlayerGameActivity.java applyInsetListener, where we need to handle null instance for instance. GameActivity 3.0.4 now correctly handles this situation.
+    - Asset Pipeline: Fixed invalid iterator in AcceleratorClient. (UUM-69264)
+    - Audio: Added better error handling in AudioClipPlayable in the case of FMOD errors. (UUM-65779)
+    - Build System: Removed forked 7za binaries and Workspace.SevenZipPath. (UUM-37529)
+    - Burst: BurstAotSettings files are no longer written to disk unless default settings are changed.
+    - Burst: Fixed a compiler crash caused by faulty alias analysis.
+    - Burst: Fixed an issue that would cause Mathf.Approximately to return the wrong result.
+    - Burst: Fixed an issue where creating a project with a space in the path would cause burst to fail on Windows arm64.
+    - Burst: Fixed an issue where direct negation of enums was not correctly promoting the underlying type, causing wrong results.
+    - Burst: Fixed an issue with default interface methods which would result in compiler errors due to IL corruption.
+    - Editor: Fixed a bug where the Console log would only ping objects the first time they were clicked on. (UUM-76179)
+    - Editor: Fixed a crash that would occur on FlareManager::DeleteFrame when exiting Play mode. (UUM-64098)
+    - Editor: Fixed a potential crash or freeze that occured in the Editor with DX12. (UUM-74842)
+    - Editor: Fixed a shader compile error in the Production Ready Shaders sample in Shader Graph. (UUM-75983)
+    - Editor: Fixed an issue where properties for prefabs in Preview mode were treated as though they were being animated when they were not. (UUM-61742)
+    - Editor: Fixed an issue where repaint injection on Linux was not allowed. (UUM-70769)
+    - Editor: Fixed an issue where Texture2D could not have changes applied if the Inspector was in Debug mode. (UUM-51993)
+    - Editor: Fixed an issue where the scroll bar would not appear when a Volume Component was added. (UUM-74506)
+    - Editor: Fixed an issue with the computation of the width of tabs when an icon is above 16px. (UUM-74176)
+    - Editor: Fixed an open button from the Adaptive Probe Volume component. (UUM-71680)
+    - Editor: Fixed build failure when setting custom iPhone splash screen storyboard. (UUM-75293)
+    - Editor: Fixed jam parameters for building player library from the Editor. (UUM-73389)
+    - Editor: Fixed multiple warnings from the same RP. (UUM-74947)
+    - Editor: Fixed overlay popups so they display correctly under their collapsed overlay. (UUM-71222)
+    - Editor: Improved the caching performance of the Uxml Serialization store during domain reloads. (UUM-75268)
+    - Editor: Reduced the overhead of the macOS Editor task progress bar. This improves performance when many tasks are running in succession that require their own progress bar. (UUM-52922)
+    - Editor: Removed alpha channel on gtk windows to prevent gnome from blending the window with other window's when our windows alpha is set to 0. (UUM-67512)
+    - Graphics: Fixed a crash that would occur when calling the C# function MaterialPropertyBlock.CopySHCoefficientArraysFrom on a non-empty property block. (UUM-74614)
+    - Graphics: Fixed an issue where Editor crashes on GfxDeviceVK::UpdateComputeResources when using compute shader with Vulkan Graphics API. (UUM-74110)
+    - HDRP: Fixed broken link in fullscreen samples. (UUM-71042)
+    - Kernel: Fixed an issue with connection to Profiler when using Autoconnect Profiler build option. (UUM-71750)
+    - N/A (internal): Fixed instability in TexturePatched_MaterialsUpdateReferences. (UUM-73853)
+    - Package Manager: Fixed an error caused by deleting the Unity App Data folder by regenerating that folder when neccessary. (UUM-72430)
+    - Particles: Fixed an issue where Particle System's "Texture Sheet Animation" module failed to load Sprite Atlas texture after exiting the Play mode. (UUM-69612)
+    - Particles: Limited the tile count in the Texture Sheet Animation module to 511 to avoid a potential crash scenario. (UUM-75642)
+    - Physics: Fixed an issue where negative scale would incorrectly affect the joint axis computation. Resulting in explosive behavior for the first few frames. (UUM-75908)
+    - Search: Fixed error "AssetDatabase.SaveAssets are restricted during asset importing" when assigning Icons to a Saved Search if the project contained Scene Templates. (UUM-72672)
+    - Search: Fixed navigating between Saved Searches resulting in broken search results. (UUM-75505)
+    - Search: Fixed NullReference exception when opening scenes with Window > Search > Scenes. (UUM-73863)
+    - Search: Fixed QueryBuilder vectors showing uneditable values. (UUM-74901)
+    - Search: Fixed Search's autocomplete window not closing when the text field loses focus. (UUM-75254)
+    - Search: Fixed shortcuts in the Search window not working depending on the focus area. (UUM-75244)
+    - SRP Core: [GLES3] Fixed an issue where Blitter.GetBlitMaterial(TextureDimension.Tex2DArray) returns null. (UUM-75623)
+    - uGUI: Fixed an issue where Anchor foldout in RectTransform doesn't get keyboard focus. (UUM-71130)
+    - UI Toolkit: Fixed an issue in the UI Builder where the parts of a selector were displayed without a space between them. (UUM-72728)
+    - UI Toolkit: Fixed an issue that would cause a null reference exception when adding an element to an array. (UUM-54028)
+    - UI Toolkit: Fixed an issue that would cause a null reference exception when using custom type property drawer on an array or list. (UUM-74491)
+    - UI Toolkit: Fixed an issue where ListView's allowAdd and allowRemove properties would call an unnecessary rebuild. (UUM-72630)
+    - UI Toolkit: Fixed an issue where reorderable ListView handles with custom display style being overridden by inline styles. (UUM-66690)
+    - UI Toolkit: Fixed an issue with ToggleButtonGroup so it has more padding around buttons. (UUM-73306)
+    - UI Toolkit: Fixed InspectorElement so it supports editing multiple objects. (UUM-74891)
+    - UI Toolkit: Fixed ListView focus order so it follows: Foldout > Size Field > Contents > Add Button > Remove Button. (UUM-32041)
+    - UI Toolkit: Fixed performance issues related to saving a document in the builder. (UUM-75704)
+    - UI Toolkit: Fixed separators so they are not allowed to be the first item in a submenu in the dropdown menu. (UUM-75495)
+    - UI Toolkit: Fixed StackOverflowException in ListView when scrolling to an item. (UUM-69616)
+    - UI Toolkit: Foldout can now be bound to a simple boolean. (UUM-72868)
+    - UI Toolkit: Made significant improvements to selection performance when dealing with a large number of indices in BaseVerticalCollectionView. This should be noticeable in the ListView, TreeView, MultiColumnTreeVIew and MultiColumnListView. (UUM-74996)
+    - UI Toolkit: Reduced mesh allocation when using background repeat. (UUM-73770)
+    - URP: Fixed an issue with the Inspector of Render2DData when selecting custom default material. (UUM-74931)
+    - Version Control: Fixed an issue where the Unity Editor would get stuck on Creating workspace when Use Unity Version Control was selected from the Hub.
+    - VFX Graph: Fixed a potential division by zero in RayBoxIntersection code. (UUM-73448)
+    - VFX Graph: Fixed an issue where copying or pasting in a different asset in a context with a block that used a custom attribute would lose the custom attribute type and fallback to float. (UUM-75894)
+    - VFX Graph: Fixed missing drag area to change a value for inline float, uint and int operators. (UUM-75981)
+    - VisionOS: Added support for using WebCamTexture to obtain the Persona feed on visionOS.
+    - Web: Fixed an issue where the key state of the 'v' key could sometimes remain active even after released when pasting from the clipboard. (UUM-71733)
+    - WebGL: [WebGPU] Fixed an issue that caused Unity WebGPU builds to fail on Chrome Canary.
+    - WebGL: [WebGPU] Fixed an issue with Graphics.CopyTexture.
+    Package changes in 6000.0.13f1
+    Packages updated
+    - com.unity.burst: 1.8.16 to 1.8.17
+    - com.unity.collab-proxy: 2.4.3 to 2.4.4
+    - com.unity.polybrush: 1.1.6 to 1.1.8
+    - com.unity.purchasing: 4.12.1 to 4.12.2
+    - com.unity.sequences: 2.1.1 to 2.1.2
+Version: 6000.0.13f1
+Modules:
+  visualstudio: https://go.microsoft.com/fwlink/?linkid=2189815
+  visualstudioprofessionalunityworkload: https://aka.ms/vs/17/release/vs_Professional.exe
+  visualstudioenterpriseunityworkload: https://aka.ms/vs/17/release/vs_Enterprise.exe
+  android: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.13f1.exe
+  ios: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-iOS-Support-for-Editor-6000.0.13f1.exe
+  appletv: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-AppleTV-Support-for-Editor-6000.0.13f1.exe
+  visionos: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-VisionOS-Support-for-Editor-6000.0.13f1.exe
+  linux-il2cpp: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Linux-IL2CPP-Support-for-Editor-6000.0.13f1.exe
+  linux-mono: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Linux-Mono-Support-for-Editor-6000.0.13f1.exe
+  linux-server: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Linux-Server-Support-for-Editor-6000.0.13f1.exe
+  mac-mono: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Mac-Mono-Support-for-Editor-6000.0.13f1.exe
+  mac-server: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Mac-Server-Support-for-Editor-6000.0.13f1.exe
+  universal-windows-platform: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Universal-Windows-Platform-Support-for-Editor-6000.0.13f1.exe
+  webgl: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-WebGL-Support-for-Editor-6000.0.13f1.exe
+  windows-il2cpp: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-6000.0.13f1.exe
+  windows-server: https://download.unity3d.com/download_unity/53a692e3fca9/TargetSupportInstaller/UnitySetup-Windows-Server-Support-for-Editor-6000.0.13f1.exe
+  language-ja: https://new-translate.unity3d.jp/v1/live/54/6000.0/ja
+  language-ko: https://new-translate.unity3d.jp/v1/live/54/6000.0/ko
+  language-zh-hant: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hant
+  language-zh-hans: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hans
+  documentation: https://cloudmedia-docs.unity3d.com/docscloudstorage/6000.0/UnityDocumentation.zip
+ReleaseTime: 2024-07-31T18:30:12.3520000Z
