@@ -1,14 +1,14 @@
 $Object1 = Invoke-RestMethod -Uri 'https://version.qgis.org/version.json'
 
 # Version
-$this.CurrentState.Version = "$($Object1.ltr.version)-$($Object1.ltr.binary)"
+$this.CurrentState.Version = "$($Object1.ltr.major).$($Object1.ltr.minor).$($Object1.ltr.patch)-$($Object1.ltr.binary)"
 
 # RealVersion
-$this.CurrentState.RealVersion = $Object1.ltr.version
+$this.CurrentState.RealVersion = "$($Object1.ltr.major).$($Object1.ltr.minor).$($Object1.ltr.patch)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-$($Object1.ltr.version)-$($Object1.ltr.binary).msi"
+  InstallerUrl = "https://qgis.org/downloads/QGIS-OSGeo4W-$($Object1.ltr.major).$($Object1.ltr.minor).$($Object1.ltr.patch)-$($Object1.ltr.binary).msi"
 }
 
 switch -Regex ($this.Check()) {
