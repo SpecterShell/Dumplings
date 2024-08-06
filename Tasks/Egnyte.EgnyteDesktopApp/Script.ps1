@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://helpdesk.egnyte.com/hc/en-us/articles/205237150-Desktop-App-Installers' -UserAgent $DumplingsDefaultUserAgent.Substring(0, $DumplingsDefaultUserAgent.IndexOf('PowerShell'))
+$Object1 = Invoke-WebRequest -Uri 'https://helpdesk.egnyte.com/hc/en-us/articles/205237150-Desktop-App-Installers' -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.22631; en-US)'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
