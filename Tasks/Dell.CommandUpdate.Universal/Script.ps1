@@ -1,12 +1,26 @@
+# x64
 $Object1 = $Global:DumplingsStorage.DellCatalog | Select-Xml -XPath '/dm:Manifest/dm:SoftwareComponent[./dm:SupportedDevices/dm:Device/@componentID="107174"]' -Namespace @{ dm = $Global:DumplingsStorage.DellCatalog.Manifest.xmlns } | Select-Object -ExpandProperty 'Node' -Last 1
+# arm64
+# $Object2 = $Global:DumplingsStorage.DellCatalog2 | Select-Xml -XPath '/dm:Manifest/dm:SoftwareComponent[./dm:SupportedDevices/dm:Device/@componentID="113762"]' -Namespace @{ dm = $Global:DumplingsStorage.DellCatalog2.Manifest.xmlns } | Select-Object -ExpandProperty 'Node' -Last 1
+
+# if ($Object1.vendorVersion -ne $Object2.vendorVersion) {
+#   $this.Log("x64 version: $($Object1.vendorVersion)")
+#   $this.Log("arm64 version: $($Object2.vendorVersion)")
+#   throw 'Distinct versions detected'
+# }
 
 # Version
 $this.CurrentState.Version = $Object1.vendorVersion
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = 'https://dl.dell.com/' + $Object1.path
 }
+# $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
+#   Architecture = 'arm64'
+#   InstallerUrl = 'https://dl.dell.com/' + $Object2.path
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -29,33 +43,52 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile | Out-Host
+    $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
+    $InstallerX64FileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File | Out-Host
 
-    $Object2 = Join-Path $InstallerFileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    $NestedInstallerFile = Join-Path $InstallerFileExtracted $Object2.MUPDefinition.executable.executablename
-    $NestedInstallerFileExtracted = $NestedInstallerFile | Expand-InstallShield
+    $Object3 = Join-Path $InstallerX64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+    $InstallerX64File2 = Join-Path $InstallerX64FileExtracted $Object3.MUPDefinition.executable.executablename
+    $InstallerX64File2Extracted = $InstallerX64File2 | Expand-InstallShield
 
-    $MsiInstallerFile = Join-Path $NestedInstallerFileExtracted 'DellCommandUpdateApp.msi'
+    $InstallerX64File3 = Join-Path $InstallerX64File2Extracted 'DellCommandUpdateApp.msi'
 
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    $Installer['AppsAndFeaturesEntries'] = @(
+    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerX64File -Algorithm SHA256).Hash
+    $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $Installer['ProductCode'] = $MsiInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode   = $MsiInstallerFile | Read-UpgradeCodeFromMsi
+        ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64File3 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerX64File3 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )
 
+    # $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
+    # $InstallerARM64FileExtracted = New-TempFolder
+    # 7z.exe e -aoa -ba -bd -y -o"${InstallerARM64FileExtracted}" $InstallerARM64File | Out-Host
+
+    # $Object4 = Join-Path $InstallerARM64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+    # $InstallerARM64File2 = Join-Path $InstallerARM64FileExtracted $Object4.MUPDefinition.executable.executablename
+    # $InstallerARM64File2Extracted = $InstallerARM64File2 | Expand-InstallShield
+
+    # $InstallerARM64File3 = Join-Path $InstallerARM64File2Extracted 'DellCommandUpdateApp.msi'
+
+    # $InstallerARM64['InstallerSha256'] = (Get-FileHash -Path $InstallerARM64File -Algorithm SHA256).Hash
+    # $InstallerARM64['AppsAndFeaturesEntries'] = @(
+    #   [ordered]@{
+    #     ProductCode   = $InstallerARM64['ProductCode'] = $InstallerARM64File3 | Read-ProductCodeFromMsi
+    #     UpgradeCode   = $InstallerARM64File3 | Read-UpgradeCodeFromMsi
+    #     InstallerType = 'msi'
+    #   }
+    # )
+
     try {
-      $Object3 = Join-Path $InstallerFileExtracted 'package.xml' | Get-Item | Get-Content -Raw -Encoding unicode | ConvertFrom-Xml
+      $Object4 = Join-Path $InstallerX64FileExtracted 'package.xml' | Get-Item | Get-Content -Raw -Encoding unicode | ConvertFrom-Xml
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.SoftwareComponent.RevisionHistory.Display.'#cdata-section' | Format-Text
+        Value  = $Object4.SoftwareComponent.RevisionHistory.Display.'#cdata-section' | Format-Text
       }
     } catch {
       $_ | Out-Host
