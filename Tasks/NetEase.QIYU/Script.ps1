@@ -1,23 +1,18 @@
-$Object1 = Invoke-WebRequest -Uri 'https://qiyukf.com/download' | ConvertFrom-Html
-
-$Node = $Object1.SelectSingleNode('//div[@class="m-kefu"][1]')
+$Object1 = ((Invoke-WebRequest -Uri 'https://b.163.com/home/download').Content | Get-EmbeddedJson -StartsFrom 'window._wInitData =' | ConvertFrom-Json -AsHashtable).appInfo.routeConf.schema.body.Where({ $_.Contains('detail') }, 'First')[0].detail.pcWorkstation
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($Node.SelectSingleNode('./div[@class="mid"]/p').InnerText, 'v([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Version = $Object1.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Node.SelectSingleNode('./div[@class="bottom"]/a').Attributes['href'].Value.Trim()
+  InstallerUrl = $Object1.app
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match(
-        $Node.SelectSingleNode('./div[@class="mid"]/p').InnerText,
-        '(\d{4}-\d{1,2}-\d{1,2})'
-      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object1.updateTime | Get-Date -Format 'yyyy-MM-dd'
 
       if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage['QIYU'].Contains($Version)) {
         # ReleaseNotes (zh-CN)
