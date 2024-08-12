@@ -1,0 +1,51 @@
+Installer:
+- Architecture: x86
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2408.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.08"
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2408-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.08"
+- Architecture: arm
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2408-arm.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.08"
+- Architecture: arm64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2408-arm64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.08"
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2408.msi
+  InstallerSha256: 66C495F8AB1316C8BCF4196B7942B4A65AFE0AF97D958B4999358684B02411A0
+  ProductCode: '{23170F69-40C1-2701-2408-000001000000}'
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 24.08.00.0
+    ProductCode: '{23170F69-40C1-2701-2408-000001000000}'
+    UpgradeCode: '{23170F69-40C1-2701-0000-000004000000}'
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2408-x64.msi
+  InstallerSha256: 98330E7E6DB3507B444D576DC437A9AC4D82333A88A6BB6EF36A91FE3D85FA92
+  ProductCode: '{23170F69-40C1-2702-2408-000001000000}'
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 24.08.00.0
+    ProductCode: '{23170F69-40C1-2702-2408-000001000000}'
+    UpgradeCode: '{23170F69-40C1-2702-0000-000004000000}'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - The bug in 7-Zip 24.00-24.07 was fixed: For creating a zip archive: 7-Zip could write extra zero bytes after the end of the archive, if a file included to archive cannot be compressed to a size smaller than original. The created zip archive is correct except for the useless zero bytes after the end of the archive. When unpacking such a zip archive, 7-Zip displays a warning: "WARNING: There are data after the end of archive".
+    - The bug was fixed: there was a leak of GDI objects (internal resources in Windows) in "Confirm File Replace" window, causing problems after 1600 displays of "Confirm File Replace" window from same running 7-Zip process.
+    - Some optimizations for displaying file icons in 7-Zip File Manager and in "Confirm File Replace" window.
+    - Some bugs were fixed.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/ip7z/7zip/releases/tag/24.08
+Version: "24.08"
+ReleaseTime: 2024-08-12T12:01:23.0000000Z
