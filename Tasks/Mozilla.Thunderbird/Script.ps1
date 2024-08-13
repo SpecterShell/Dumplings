@@ -10,10 +10,10 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/thunderbird/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/thunderbird_versions.json'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.LATEST_THUNDERBIRD_VERSION
+$this.CurrentState.Version = $Version = $Object1.THUNDERBIRD_ESR_NEXT.Replace('esr', '')
 
 $Object2 = [ordered]@{}
-Invoke-RestMethod -Uri "${Prefix}${Version}/SHA256SUMS" | Split-LineEndings |
+Invoke-RestMethod -Uri "${Prefix}${Version}esr/SHA256SUMS" | Split-LineEndings |
   Where-Object -FilterScript { $_ -match '(win32|win64|win64-aarch64)/' -and $_ -match '\.(exe|msix)$' -and -not $_.Contains('Thunderbird Installer') } |
   ForEach-Object -Process {
     $Entries = $_.Split('  ')
@@ -25,8 +25,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
   # $this.CurrentState.Installer += [ordered]@{
   #   Architecture    = $Arch.Key
   #   InstallerType   = 'exe'
-  #   InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"
-  #   InstallerSha256 = $Object2["$($Arch.Value)/en-US/Thunderbird Setup ${Version}.exe"]
+  #   InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/en-US/Thunderbird Setup ${Version}esr.exe"
+  #   InstallerSha256 = $Object2["$($Arch.Value)/en-US/Thunderbird Setup ${Version}esr.exe"]
   #   ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) en-US)"
   # }
   switch ($Locales) {
@@ -38,7 +38,7 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         $this.CurrentState.Installer += [ordered]@{
           Architecture  = $Arch.Key
           InstallerType = 'msix'
-          InstallerUrl  = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.msix"
+          InstallerUrl  = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.msix"
         }
       }
       continue
@@ -50,8 +50,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'ast-ES'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -62,8 +62,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'br-FR'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -74,8 +74,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'gd-GB'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -86,8 +86,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'kab-DZ'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -98,16 +98,16 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'sr-Cyrl'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'sr-Latn'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -118,16 +118,16 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = 'uz-Cyrl'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = 'uz-Latn'
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -137,8 +137,8 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
         InstallerLocale = $_
         Architecture    = $Arch.Key
         InstallerType   = 'exe'
-        InstallerUrl    = "${Prefix}${Version}/$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"
-        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}.exe"]
+        InstallerUrl    = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"
+        InstallerSha256 = $Object2["$($Arch.Value)/${_}/Thunderbird Setup ${Version}esr.exe"]
         ProductCode     = "Mozilla Thunderbird ${Version} ($($Arch.Key) ${_})"
       }
       continue
@@ -152,7 +152,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.thunderbird.net/thunderbird/${Version}/releasenotes/"
+        Value = $ReleaseNotesUrl = "https://www.thunderbird.net/thunderbird/${Version}esr/releasenotes/"
       }
     } catch {
       $_ | Out-Host
@@ -163,7 +163,7 @@ switch -Regex ($this.Check()) {
       $Object3 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/thunderbird.json'
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object3.releases."thunderbird-${Version}".date | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object3.releases."thunderbird-${Version}esr".date | Get-Date -Format 'yyyy-MM-dd'
 
     } catch {
       $_ | Out-Host
