@@ -29,9 +29,10 @@ switch -Regex ($this.Check()) {
     try {
       # Only parse version for major updates
       if (-not $this.LastState.Contains('Version') -or ($this.CurrentState.Version.Split('.')[0..2] -join '.') -ne ($this.LastState.Version.Split('.')[0..2] -join '.')) {
-        $Object3 = Invoke-RestMethod -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsQQVersionList.js' | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
+        $Object3 = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq/support.html'
+        $Object4 = Invoke-RestMethod -Uri ([regex]::Match($Object3.Content, 'rainbowConfigUrl\s*=\s*"(.+?)"').Groups[1].Value) | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
-        $ReleaseNotesObject = $Object3.ntLogs.Where({ $_.version.EndsWith($Object2.version) }, 'First')
+        $ReleaseNotesObject = $Object4.logs.Where({ $_.version.EndsWith($Object2.version) }, 'First')
         if ($ReleaseNotesObject) {
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
