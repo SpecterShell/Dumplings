@@ -4,7 +4,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'insoft_([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'insoft_?(\d+(?:\.\d+){2,})').Groups[1].Value
 
 if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
   throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($this.CurrentState.Version)"
