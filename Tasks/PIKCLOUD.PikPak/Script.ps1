@@ -27,7 +27,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
 # MD5
 $this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
 
@@ -35,7 +35,7 @@ $this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
   # RealVersion
@@ -56,7 +56,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
   # RealVersion
@@ -77,7 +77,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   return
 }
 
-$InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+$InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
 # Version
 $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
 # RealVersion
