@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
 
       if ($Object2) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Object2[0].release_date | ConvertFrom-UnixTimeSeconds
+        $this.CurrentState.ReleaseTime = ($Object2[0].release_date + 28800) | ConvertFrom-UnixTimeSeconds
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
