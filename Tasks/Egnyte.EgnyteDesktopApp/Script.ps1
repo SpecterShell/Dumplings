@@ -1,15 +1,27 @@
-$Object1 = Invoke-WebRequest -Uri 'https://helpdesk.egnyte.com/hc/en-us/articles/205237150-Desktop-App-Installers' -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.22631; en-US)'
+$Object1 = Invoke-RestMethod -Uri 'https://egnyte-cdn.egnyte.com/egnytedrive/win/en-us/versions/default.xml'
+
+# Version
+$this.CurrentState.Version = $Object1.enclosure.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.msi') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $Object1.enclosure.url
 }
-
-# Version
-$this.CurrentState.Version = $InstallerUrl -replace '.+(\d+\.\d+\.\d+)_(\d+).+', '$1.$2'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
