@@ -2,8 +2,8 @@ $EdgeDriver = Get-EdgeDriver
 $EdgeDriver.Navigate().GoToUrl('https://effidit.qq.com/')
 Start-Sleep -Seconds 5
 
-$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//li[@class="english"]')).Click()
 $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[@class="down"]')).Click()
+$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "lag-k") and (text()="英文" or text()="EN")]')).Click()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -13,9 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'v([\d\.]+)').Groups[1].Value
 
-$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[@class="close"]')).Click()
-$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//li[text()="中"]')).Click()
-$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[@class="down"]')).Click()
+$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "lag-k") and (text()="中文" or text()="ZH")]')).Click()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
