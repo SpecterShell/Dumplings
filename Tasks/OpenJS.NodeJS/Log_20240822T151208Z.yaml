@@ -1,0 +1,207 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://nodejs.org/dist/v22.7.0/node-v22.7.0-x86.msi
+- Architecture: x64
+  InstallerUrl: https://nodejs.org/dist/v22.7.0/node-v22.7.0-x64.msi
+- Architecture: arm64
+  InstallerUrl: https://nodejs.org/dist/v22.7.0/node-v22.7.0-arm64.msi
+Locale:
+- Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/en/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v22.7.0/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/en/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v22.7.0/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/about/
+- Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v22.7.0/LICENSE
+- Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v22.7.0/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Experimental transform types support
+    With the new flag --experimental-transform-types it is possible to enable the transformation of TypeScript-only syntax into JavaScript code.
+    This feature allows Node.js to support TypeScript syntax such as Enum and namespace.
+    Thanks to Marco Ippolito for making this work on #54283.
+    Module syntax detection is now enabled by default.
+    Module syntax detection (the --experimental-detect-module flag) is now enabled by default. Use --no-experimental-detect-module to disable it if needed.
+    Syntax detection attempts to run ambiguous files as CommonJS, and if the module fails to parse as CommonJS due to ES module syntax, Node.js tries again and runs the file as an ES module. Ambiguous files are those with a .js or no extension, where the nearest parent package.json has no "type" field (either "type": "module" or "type": "commonjs"). Syntax detection should have no performance impact on CommonJS modules, but it incurs a slight performance penalty for ES modules; add "type": "module" to the nearest parent package.json file to eliminate the performance cost. A use case unlocked by this feature is the ability to use ES module syntax in extensionless scripts with no nearby package.json.
+    Thanks to Geoffrey Booth for making this work on #53619.
+    Performance Improvements to Buffer
+    Performance of Node.js Buffers have been optimized through multiple PR's with significant improvements to the Buffer.copy and Buffer.write methods. These are used throughout the codebase and should give a nice boost across the board.
+    Thanks to Robert Nagy for making this work on #54311, #54324, and #54087.
+    Other Notable Changes
+    - [911de7dd6d] - (SEMVER-MINOR) inspector: support Network.loadingFailed event (Kohei Ueno) #54246
+    - [9ee4b16bd8] - (SEMVER-MINOR) lib: rewrite AsyncLocalStorage without async_hooks (Stephen Belanger) #48528
+    Commits
+    - [c6544ff5a6] - benchmark: use assert.ok searchparams (Rafael Gonzaga) #54334
+    - [51b8576897] - benchmark: add stream.compose benchmark (jakecastelli) #54308
+    - [c166036515] - benchmark: rename count to n (Rafael Gonzaga) #54271
+    - [1be0ee76ef] - benchmark: change assert() to assert.ok() (Rafael Gonzaga) #54254
+    - [4dd229f546] - benchmark: support --help in CLI (Aviv Keller) #53358
+    - [a5a320cd5b] - benchmark: remove force option as force defaults to true (Yelim Koo) #54203
+    - [db0a80a0eb] - benchmark: use assert.ok instead of assert (Rafael Gonzaga) #54176
+    - [8ba53ae7b7] - buffer: properly apply dst offset and src length on fast path (Robert Nagy) #54391
+    - [a5a60e6823] - buffer: use fast API for writing one-byte strings (Robert Nagy) #54311
+    - [7b641bc2bd] - buffer: optimize byteLength for short strings (Robert Nagy) #54345
+    - [28ca678f81] - buffer: optimize byteLength for common encodings (Robert Nagy) #54342
+    - [12785559be] - buffer: optimize createFromString (Robert Nagy) #54324
+    - [f7f7b0c498] - buffer: optimize for common encodings (Robert Nagy) #54319
+    - [37631f826b] - buffer: add JSDoc to blob bytes method (Roberto Simonini) #54117
+    - [ab6fae9dbf] - buffer: faster type check (Robert Nagy) #54088
+    - [9f8f26eb2f] - buffer: use native copy impl (Robert Nagy) #54087
+    - [019ebf03c1] - buffer: use faster integer argument check (Robert Nagy) #54089
+    - [c640a2f24c] - build: always disable strict aliasing (Michaël Zasso) #54339
+    - [6aa1d9e855] - build: update ruff to 0.5.2 (Aviv Keller) #53909
+    - [350e699443] - build: support lint-js-fix in vcbuild.bat (Aviv Keller) #53695
+    - [98fed763f7] - build: add --without-amaro build flag (Antoine du Hamel) #54136
+    - [1ca598c5ce] - cli: allow --test-[name/skip]-pattern in NODE_OPTIONS (Aviv Keller) #53001
+    - [37960a67ae] - console: use validateOneOf for colorMode validation (HEESEUNG) #54245
+    - [d52f515bab] - crypto: include NODE_EXTRA_CA_CERTS in all secure contexts by default (Eric Bickle) #44529
+    - [b6a3e61353] - deps: update amaro to 0.1.6 (Node.js GitHub Bot) #54374
+    - [0d716ad3f3] - deps: update simdutf to 5.3.4 (Node.js GitHub Bot) #54312
+    - [18bfea5f33] - deps: update zlib to 1.3.0.1-motley-71660e1 (Node.js GitHub Bot) #53464
+    - [d0c23f332f] - deps: update zlib to 1.3.0.1-motley-c2469fd (Node.js GitHub Bot) #53464
+    - [e7db63972c] - deps: update zlib to 1.3.0.1-motley-68e57e6 (Node.js GitHub Bot) #53464
+    - [713ae95555] - deps: update zlib to 1.3.0.1-motley-8b7eff8 (Node.js GitHub Bot) #53464
+    - [758c9df36e] - deps: update zlib to 1.3.0.1-motley-e432200 (Node.js GitHub Bot) #53464
+    - [fe7e6c9563] - deps: update zlib to 1.3.0.1-motley-887bb57 (Node.js GitHub Bot) #53464
+    - [35722b7bca] - deps: update simdjson to 3.10.0 (Node.js GitHub Bot) #54197
+    - [a2a41557db] - deps: fix GN build warning in ncrypto (Cheng) #54222
+    - [869da204d7] - deps: update c-ares to v1.33.0 (Node.js GitHub Bot) #54198
+    - [e0d503a715] - deps: update nbytes to 0.1.1 (Node.js GitHub Bot) #54277
+    - [b0c768dae1] - deps: update undici to 6.19.7 (Node.js GitHub Bot) #54286
+    - [ef9a950cb9] - deps: update acorn to 8.12.1 (Node.js GitHub Bot) #53465
+    - [1597a1139a] - deps: update undici to 6.19.5 (Node.js GitHub Bot) #54076
+    - [103e4db3e0] - deps: update simdutf to 5.3.1 (Node.js GitHub Bot) #54196
+    - [9f115ba9e9] - doc: fix error description of the max header size (Egawa Ryo) #54125
+    - [f967ab3810] - doc: add git node security --cleanup (Rafael Gonzaga) #54381
+    - [8883c01afa] - doc: add note on weakness of permission model (Tobias Nießen) #54268
+    - [824bd58bc5] - doc: add versions when --watch-preserve-output was added (Théo LUDWIG) #54328
+    - [33795cfd49] - doc: replace v19 mention in Current release (Rafael Gonzaga) #54361
+    - [aa6e770ea5] - doc: correct peformance entry types (Jason Zhang) #54263
+    - [4b099ce1bd] - doc: fix typo in method name in the sea doc (Eliyah Sundström) #54027
+    - [8a8d1d2281] - doc: mark process.nextTick legacy (Marco Ippolito) #51280
+    - [6f4b5d998e] - doc: add esm examples to node:http2 (Alfredo González) #54292
+    - [1535469c12] - doc: explicitly mention node:fs module restriction (Rafael Gonzaga) #54269
+    - [26c37f7910] - doc: remove module-based permission doc (Rafael Gonzaga) #54266
+    - [971b9f31f5] - doc: update buffer.constants.MAX_LENGTH size (Samuli Asmala) #54207
+    - [3106149965] - doc: warn for windows build bug (Jason Zhang) #54217
+    - [55f8ac3e89] - doc: make some parameters optional in tracingChannel.traceCallback (Deokjin Kim) #54068
+    - [e3e2f22cab] - doc: add esm examples to node:dns (Alfredo González) #54172
+    - [0429b1eb9d] - doc: add KevinEady as a triager (Chengzhong Wu) #54179
+    - [4bfa7d8e54] - doc: add esm examples to node:console (Alfredo González) #54108
+    - [2f5309fc22] - doc: fix sea assets example (Sadzurami) #54192
+    - [88aef5a39d] - doc: add links to security steward companies (Aviv Keller) #52981
+    - [5175903c23] - doc: move onread option from socket.connect() to new net.socket() (sendoru) #54194
+    - [144637e845] - doc: move release key for Myles Borins (Richard Lau) #54059
+    - [358fdacec6] - doc: refresh instructions for building node from source (Liran Tal) #53768
+    - [11fdaa6ad2] - doc: add documentation for blob.bytes() method (jaexxin) #54114
+    - [db3b0df42c] - doc: add missing new lines to custom test reporter examples (Eddie Abbondanzio) #54152
+    - [1cafefd2cf] - doc: fix worker threadId/destination typo (Thomas Hunter II) #53933
+    - [7772b46038] - doc: update list of Triagers on the README.md (Antoine du Hamel) #54138
+    - [af99ba3dc9] - doc: remove unused imports from worker_threads.md (Yelim Koo) #54147
+    - [826edc4341] - doc: expand troubleshooting section (Liran Tal) #53808
+    - [923195b624] - doc: clarify useCodeCache setting for cross-platform SEA generation (Yelim Koo) #53994
+    - [7c305a4900] - doc, meta: replace command with link to keys (Aviv Keller) #53745
+    - [6f986e0ee6] - doc, test: simplify test README table (Aviv Keller) #53971
+    - [112228c15a] - fs: remove unnecessary option argument validation (Jonas) #53958
+    - [911de7dd6d] - (SEMVER-MINOR) inspector: support Network.loadingFailed event (Kohei Ueno) #54246
+    - [1e825915d5] - inspector: provide detailed info to fix DevTools frontend errors (Kohei Ueno) #54156
+    - [417120a3a3] - lib: replace spread operator with primordials function (YoonSoo_Shin) #54053
+    - [09f411e6f6] - lib: avoid for of loop and remove unnecessary variable in zlib (YoonSoo_Shin) #54258
+    - [b8970570b0] - lib: improve async_context_frame structure (Stephen Belanger) #54239
+    - [783322fa16] - lib: fix unhandled errors in webstream adapters (Fedor Indutny) #54206
+    - [425b9562b9] - lib: fix typos in comments within internal/streams (YoonSoo_Shin) #54093
+    - [9ee4b16bd8] - (SEMVER-MINOR) lib: rewrite AsyncLocalStorage without async_hooks (Stephen Belanger) #48528
+    - [8c9a4ae12b] - lib,permission: support Buffer to permission.has (Rafael Gonzaga) #54104
+    - [c8e358c96c] - meta: add test-permission-* CODEOWNERS (Rafael Gonzaga) #54267
+    - [581c155cf8] - meta: move one or more collaborators to emeritus (Node.js GitHub Bot) #54210
+    - [3f0d7344e3] - meta: add module label for the lib/internal/modules folder (Aviv Keller) #52858
+    - [0157ec6bbd] - meta: bump actions/upload-artifact from 4.3.3 to 4.3.4 (dependabot[bot]) #54166
+    - [7fa95d2360] - meta: bump actions/download-artifact from 4.1.7 to 4.1.8 (dependabot[bot]) #54167
+    - [acc5b9a0c5] - meta: bump actions/setup-python from 5.1.0 to 5.1.1 (dependabot[bot]) #54165
+    - [dede30a8d0] - meta: bump step-security/harden-runner from 2.8.1 to 2.9.0 (dependabot[bot]) #54169
+    - [b733854eac] - meta: bump actions/setup-node from 4.0.2 to 4.0.3 (dependabot[bot]) #54170
+    - [6a9f168cc6] - meta: bump github/codeql-action from 3.25.11 to 3.25.15 (dependabot[bot]) #54168
+    - [9bbd85e4fe] - meta: bump ossf/scorecard-action from 2.3.3 to 2.4.0 (dependabot[bot]) #54171
+    - [33633eebd9] - meta: add typescript team to codeowners (Marco Ippolito) #54101
+    - [240d9296c1] - (SEMVER-MINOR) module: add --experimental-transform-types flag (Marco Ippolito) #54283
+    - [66dcb2a571] - (SEMVER-MINOR) module: unflag detect-module (Geoffrey Booth) #53619
+    - [100225fbe1] - module: do not attempt to strip type when there's no source (Antoine du Hamel) #54287
+    - [1ba2000703] - module: refactor ts parser loading (Marco Ippolito) #54243
+    - [13cc480030] - module: remove outdated comment (Michaël Zasso) #54118
+    - [e676d98435] - module,win: fix long path resolve (Hüseyin Açacak) #53294
+    - [9aec536083] - path: change posix.join to use array (Wiyeong Seo) #54331
+    - [8a770cf5c9] - path: fix relative on Windows (Hüseyin Açacak) #53991
+    - [267cd7f361] - path: use the correct name in validateString (Benjamin Pasero) #53669
+    - [31adeea855] - sea: don't set code cache flags when snapshot is used (Joyee Cheung) #54120
+    - [7f1bf1ce24] - sqlite: split up large test file (Colin Ihrig) #54014
+    - [94e2ea6f5c] - sqlite: ensure statement finalization on db close (Colin Ihrig) #54014
+    - [e077ff1f38] - src: update compile cache storage structure (Joyee Cheung) #54291
+    - [4e4d1def7e] - src: refactor http parser binding initialization (Joyee Cheung) #54276
+    - [409d9eb09b] - src: shift even moar x509 to ncrypto (James M Snell) #54340
+    - [f87aa27274] - src: don't match after -- in Dotenv::GetPathFromArgs (Aviv Keller) #54237
+    - [b6927dd981] - src: move some X509Certificate stuff to ncrypto (James M Snell) #54241
+    - [a394219fa5] - src: skip inspector wait in internal workers (Chengzhong Wu) #54219
+    - [8daeccfe92] - src: shift more crypto impl details to ncrypto (James M Snell) #54028
+    - [e619133ac9] - src: move spkac methods to ncrypto (James M Snell) #53985
+    - [b52c2fff75] - src: account for OpenSSL unexpected version (Shelley Vohr) #54038
+    - [0b16af1689] - src,test: track URL.canParse fast API calls (Michaël Zasso) #54356
+    - [2be78b03c3] - src,test: ensure that V8 fast APIs are called (Michaël Zasso) #54317
+    - [9297d29cdb] - stream: make checking pendingcb on WritableStream backward compatible (jakecastelli) #54142
+    - [2a6a12e493] - stream: throw TypeError when criteria fulfilled in getIterator (jakecastelli) #53825
+    - [7f68cc0f7f] - test: make snapshot comparison more flexible (Shelley Vohr) #54375
+    - [3df7938832] - test: make sure current run result is pushed and reset (jakecastelli) #54332
+    - [3e25be7b28] - test: use relative paths in test-cli-permission tests (sendoru) #54188
+    - [f49f1bb3e9] - test: unmark test-sqlite as flaky (Colin Ihrig) #54014
+    - [2f68a74702] - test: fix timeout not being cleared (Isaac-yz-Liu) #54242
+    - [f5cfa4454e] - test: refactor test-runner-module-mocking (Antoine du Hamel) #54233
+    - [b85b13b418] - test: use assert.{s,deepS}trictEqual() (Luigi Pinca) #54208
+    - [6bcbfcd7bc] - test: add subtests to test-node-run (sungpaks) #54204
+    - [dafe97548f] - test: set test-structuredclone-jstransferable non-flaky (Stefan Stojanovic) #54115
+    - [be61793db5] - test: update wpt test for streams (devstone) #54129
+    - [670c796449] - test: fix typo in test (Sonny) #54137
+    - [1a15f3f613] - test: add initial pull delay and prototype pollution prevention tests (Sonny) #54061
+    - [5dbff81b71] - test: add coverage for webstorage quota (jakecastelli) #53964
+    - [141e9fe7cc] - test_runner: use validateStringArray for timers.enable() (Deokjin Kim) #49534
+    - [e70711e190] - test_runner: report failures in filtered suites (Colin Ihrig) #54387
+    - [7766c1dc9b] - test_runner: remove parseCommandLine() from test.js (Colin Ihrig) #54353
+    - [961cbf0be0] - test_runner: refactor hook creation (Colin Ihrig) #54353
+    - [69c78ca2f5] - test_runner: return setup() from parseCommandLine() (Colin Ihrig) #54353
+    - [ed1ede8c26] - test_runner: pass global options to createTestTree() (Colin Ihrig) #54353
+    - [1e88045a69] - test_runner: pass harness object as option to root test (Colin Ihrig) #54353
+    - [e3378f0679] - test_runner: use run() argument names in parseCommandLine() (Colin Ihrig) #54353
+    - [676bbd5c09] - test_runner: fix delete test file cause dependency file not watched (jakecastelli) #53533
+    - [fe793a6103] - test_runner: do not expose internal loader (Antoine du Hamel) #54106
+    - [7fad771bbf] - test_runner: fix erroneous diagnostic warning when only: false (Pietro Marchini) #54116
+    - [dc465736fb] - test_runner: make mock_loader not confuse CJS and ESM resolution (Sung Ye In) #53846
+    - [5a1afb2139] - test_runner: remove outdated comment (Colin Ihrig) #54146
+    - [20a01fcc39] - test_runner: run after hooks even if test is aborted (Colin Ihrig) #54151
+    - [df428adb6c] - tools: remove header from c-ares license (Aviv Keller) #54335
+    - [b659fc0f2b] - tools: add find pyenv path on windows (Marco Ippolito) #54314
+    - [b93c6d9f38] - tools: make undici updater build wasm from src (Michael Dawson) #54128
+    - [3835131559] - tools: add workflow to ensure README lists are in sync with gh teams (Antoine du Hamel) #53901
+    - [e218b7ca8a] - tools: add strip-types to label system (Marco Ippolito) #54185
+    - [8b35f0e601] - tools: update eslint to 9.8.0 (Node.js GitHub Bot) #54073
+    - [d83421fbe5] - tty: initialize winSize array with values (Michaël Zasso) #54281
+    - [a4768374f2] - typings: add util.styleText type definition (Rafael Gonzaga) #54252
+    - [a4aecd2755] - typings: add missing binding function writeFileUtf8() (Jungku Lee) #54110
+    - [0bed600df9] - url: modify pathToFileURL to handle extended UNC path (Early Riser) #54262
+    - [037672f15d] - url: improve resolveObject with ObjectAssign (Early Riser) #54092
+    - [4d8b53e475] - watch: reload changes in contents of --env-file (Marek Piechut) #54109
+- Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v22.7.0
+Version: 22.7.0
+ReleaseTime: 2024-08-21
