@@ -9,8 +9,14 @@ $this.CurrentState.Version = [regex]::Match(
 ).Groups[1].Value
 
 # Installer
+$InstallerUrlRaw = [uri]$Node.SelectSingleNode('./div/a').Attributes['href'].Value
+$Hash = [System.BitConverter]::ToString(
+  [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
+    [System.Text.Encoding]::UTF8.GetBytes("$($InstallerUrlRaw.AbsolutePath)$($Global:DumplingsSecret.AntutuKey)2147483647")
+  )
+).Replace('-', '').ToLower()
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Node.SelectSingleNode('./div/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlRaw.AbsoluteUri + '?auth_key=' + $Hash + '&expires=2147483647'
 }
 
 switch -Regex ($this.Check()) {
