@@ -1,4 +1,4 @@
-$EdgeDriver = Get-EdgeDriver
+$EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
 
 $Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)

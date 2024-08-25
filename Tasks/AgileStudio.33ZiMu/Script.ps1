@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://zm.agilestudio.cn/changelog')
 
       $ReleaseNotesNode = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//article/div[./h1/span/text()='V$($this.CurrentState.Version)']"))

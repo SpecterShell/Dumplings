@@ -6,7 +6,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {
       # TODO: Parse Notion
-      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://beeper.notion.site/Beeper-Product-Changelog-cdbc7b68526d45f7b8ced8d4ba170c8d')
       Start-Sleep -Seconds 5
 

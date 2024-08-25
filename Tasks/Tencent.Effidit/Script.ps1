@@ -1,4 +1,4 @@
-$EdgeDriver = Get-EdgeDriver
+$EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://effidit.qq.com/')
 Start-Sleep -Seconds 5
 

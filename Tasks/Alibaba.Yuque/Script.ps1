@@ -29,7 +29,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
 
       $Object2 = $EdgeDriver.ExecuteScript('return window.appData', $null)

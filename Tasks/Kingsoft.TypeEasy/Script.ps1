@@ -1,4 +1,4 @@
-$EdgeDriver = Get-EdgeDriver
+$EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://www.51dzt.com/rubik-ssr/51dzt')
 
 $Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.state.application.project_components.filter(obj => obj.name === "dzt-banner")[0].user_props', $null)

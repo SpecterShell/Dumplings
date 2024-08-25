@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
       Start-Sleep -Seconds 10
 

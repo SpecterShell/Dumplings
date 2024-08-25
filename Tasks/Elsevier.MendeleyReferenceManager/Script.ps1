@@ -7,7 +7,7 @@ switch -Regex ($this.Check()) {
     try {
       $Uri1 = 'https://www.mendeley.com/release-notes-reference-manager/'
 
-      $EdgeDriver = Get-EdgeDriver
+      $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl($Uri1)
 
       # Hide cookies banner
