@@ -22,10 +22,10 @@ function New-EdgeDriver {
   .SYNOPSIS
     Initialize an Edge Driver instance
   .PARAMETER Headless
-    Run Edge Driver in headless mode, with no window shown
+    Initialize the Edge Driver instance in headless mode, where no window pops up
   #>
   param (
-    [parameter(HelpMessage = 'Run Edge Driver in headless mode, with no windows shown')]
+    [parameter(HelpMessage = 'Initialize the Edge Driver instance in headless mode, where no window pops up')]
     [switch]
     $Headless
   )
@@ -57,7 +57,7 @@ function Get-EdgeDriver {
   [OutputType([OpenQA.Selenium.Edge.EdgeDriver])]
   param ()
 
-  if (-not $Script:EdgeDriverLoaded) { New-EdgeDriver }
+  if (-not $Script:EdgeDriverLoaded) { New-EdgeDriver @args }
   return $Script:EdgeDriver
 }
 
@@ -83,10 +83,10 @@ function New-FirefoxDriver {
   .SYNOPSIS
     Initialize an Firefox Driver instance
   .PARAMETER Headless
-    Run Firefox Driver in headless mode, with no window shown
+    Initialize the Firefox Driver instance in headless mode, where no window pops up
   #>
   param (
-    [parameter(HelpMessage = 'Run Firefox Driver in headless mode, with no windows shown')]
+    [parameter(HelpMessage = 'Initialize the Firefox Driver instance in headless mode, where no window pops up')]
     [switch]
     $Headless
   )
@@ -118,7 +118,7 @@ function Get-FirefoxDriver {
   [OutputType([OpenQA.Selenium.Firefox.FirefoxDriver])]
   param ()
 
-  if (-not $Script:FirefoxDriverLoaded) { New-FirefoxDriver }
+  if (-not $Script:FirefoxDriverLoaded) { New-FirefoxDriver @args }
   return $Script:FirefoxDriver
 }
 
