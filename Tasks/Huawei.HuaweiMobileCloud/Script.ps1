@@ -2,9 +2,12 @@ $Params = @{
   Method               = 'Post'
   Body                 = @{
     client = @{
-      app = @{
+      app    = @{
         id      = '100823621'
         version = $this.LastState.Version ?? '11.2.0.303'
+      }
+      device = @{
+        osVersion = '10.0.22000.0'
       }
     }
   } | ConvertTo-Json -Compress
@@ -30,28 +33,14 @@ $this.CurrentState.Version = $Object2.configurations.version
 
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x86'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
-# }
-# $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
 #   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
-  Architecture = 'x86'
-  InstallerUrl = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
-}
-$this.CurrentState.Installer += [ordered]@{
-  # InstallerLocale = 'zh-Hans-CN'
   Architecture = 'x64'
   InstallerUrl = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   InstallerLocale = 'ru'
-#   Architecture    = 'x86'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }, 'First')[0].url
-# }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x64'
