@@ -1,11 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.zotero.org/download/client/update/0/0/WINNT_x86/en-US/release/update.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://www.zotero.org/download/client/update/0/0/WINNT_x86/en-US/release/update.xml?force=1'
 
 # Version
 $this.CurrentState.Version = $Object1.updates.update.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win32&version=$($this.CurrentState.Version)"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win-x64&version=$($this.CurrentState.Version)"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win-arm64&version=$($this.CurrentState.Version)"
 }
 
 # Sometimes the installer does not match the version
