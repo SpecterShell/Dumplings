@@ -23,7 +23,12 @@ $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.Chec
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Split('.')[0..2] -join '')/snagit.exe"
+  InstallerType = 'burn'
+  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Split('.')[0..2] -join '')/snagit.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'wix'
+  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Split('.')[0..2] -join '')/snagit.msi"
 }
 
 switch -Regex ($this.Check()) {
@@ -51,7 +56,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/h2[contains(./a/@id, '20$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(./a/@id, '20$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
