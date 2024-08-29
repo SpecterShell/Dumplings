@@ -19,8 +19,8 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.CurrentState.Version.Split('.')[0] -ne '10') {
-      $this.Log('The ProductCode needs to be updated', 'Error')
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.LastState.Version.Split('.')[0]) {
+      throw 'The ProductCode needs to be updated'
     } else {
       $this.Submit()
     }
