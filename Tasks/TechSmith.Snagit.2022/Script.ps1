@@ -22,28 +22,38 @@ if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [st
 $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerBurn = [ordered]@{
   InstallerType = 'burn'
-  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Split('.')[0..2] -join '')/snagit.exe"
+  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Replace('.', ''))/snagit.exe"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Split('.')[0..2] -join '')/snagit.msi"
+  InstallerUrl  = "https://download.techsmith.com/snagit/releases/$($this.CurrentState.Version.Replace('.', ''))/snagit.msi"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
+    $InstallerFileBurn = Get-TempFile -Uri $InstallerBurn.InstallerUrl
     # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+    $InstallerBurn['InstallerSha256'] = (Get-FileHash -Path $InstallerFileBurn -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
+    $InstallerBurn['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromBurn
-        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
+        DisplayVersion = $InstallerFileBurn | Read-ProductVersionFromExe
+        ProductCode    = $InstallerBurn['ProductCode'] = $InstallerFileBurn | Read-ProductCodeFromBurn
+        UpgradeCode    = $InstallerFileBurn | Read-UpgradeCodeFromBurn
+      }
+    )
+
+    $InstallerFileWiX = Get-TempFile -Uri $InstallerWiX.InstallerUrl
+    # InstallerSha256
+    $InstallerWiX['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWiX -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
+    $InstallerWiX['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayVersion = $this.CurrentState.Version
+        ProductCode    = $InstallerWiX['ProductCode'] = $InstallerFileWiX | Read-ProductCodeFromMsi
+        UpgradeCode    = $InstallerFileWiX | Read-UpgradeCodeFromMsi
       }
     )
 
