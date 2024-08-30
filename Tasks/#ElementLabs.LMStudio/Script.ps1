@@ -13,11 +13,22 @@ $this.CurrentState.Version = $Object1.version
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes = ($Object1.releaseNotes | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+      $ReleaseNotesObject = ($Object1.releaseNotes | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotes = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotes = $ReleaseNotesObject | Get-TextContent | Format-Text
+        }
       }
     } catch {
       $_ | Out-Host
