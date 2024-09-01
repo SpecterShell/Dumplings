@@ -13,7 +13,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -30,7 +30,7 @@ if ($this.Status.Contains('New')) {
 
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -47,7 +47,7 @@ if ($this.CurrentState.LastModified -eq $this.LastState.LastModified) {
 
 $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 # Version
-$this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 # InstallerSha256
 $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
