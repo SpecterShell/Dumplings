@@ -46,11 +46,11 @@ $this.CurrentState.Installer += [ordered]@{
   ProductCode  = "Unity ${Version}"
 }
 
-# Modules
-$this.CurrentState.Modules = [ordered]@{}
-foreach ($Module in $Object1.downloads.Where({ $_.architecture -eq 'X86_64' }, 'First')[0].modules) {
-  $this.CurrentState.Modules[$Module.id] = $Module.url
-}
+# # Modules
+# $this.CurrentState.Modules = [ordered]@{}
+# foreach ($Module in $Object1.downloads.Where({ $_.architecture -eq 'X86_64' }, 'First')[0].modules) {
+#   $this.CurrentState.Modules[$Module.id] = $Module.url
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -92,7 +92,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $OldLocale = $this.CurrentState.Locale
+      # $OldLocale = $this.CurrentState.Locale
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -113,31 +113,31 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $this.Submit()
 
-    # Also submit manifests for sub modules
-    $OldWinGetIdentifier = $this.Config.WinGetIdentifier
-    $this.CurrentState.Locale = $OldLocale
-    foreach ($KVP in $this.Config.WinGetIdentifierModules.GetEnumerator()) {
-      $this.Log("Handling $($KVP.Value)...", 'Info')
-      $this.Config.WinGetIdentifier = $KVP.Value
-      $this.CurrentState.Installer = @(
-        [ordered]@{
-          InstallerUrl = $this.CurrentState.Modules[$KVP.Key]
-          Dependencies = [ordered]@{
-            PackageDependencies = @(
-              [ordered]@{
-                PackageIdentifier = $OldWinGetIdentifier
-                MinimumVersion    = $this.CurrentState.Version
-              }
-            )
-          }
-        }
-      )
-      try {
-        $this.Submit()
-      } catch {
-        $_ | Out-Host
-        $this.Log($_, 'Warning')
-      }
-    }
+    # # Also submit manifests for sub modules
+    # $OldWinGetIdentifier = $this.Config.WinGetIdentifier
+    # $this.CurrentState.Locale = $OldLocale
+    # foreach ($KVP in $this.Config.WinGetIdentifierModules.GetEnumerator()) {
+    #   $this.Log("Handling $($KVP.Value)...", 'Info')
+    #   $this.Config.WinGetIdentifier = $KVP.Value
+    #   $this.CurrentState.Installer = @(
+    #     [ordered]@{
+    #       InstallerUrl = $this.CurrentState.Modules[$KVP.Key]
+    #       Dependencies = [ordered]@{
+    #         PackageDependencies = @(
+    #           [ordered]@{
+    #             PackageIdentifier = $OldWinGetIdentifier
+    #             MinimumVersion    = $this.CurrentState.Version
+    #           }
+    #         )
+    #       }
+    #     }
+    #   )
+    #   try {
+    #     $this.Submit()
+    #   } catch {
+    #     $_ | Out-Host
+    #     $this.Log($_, 'Warning')
+    #   }
+    # }
   }
 }
