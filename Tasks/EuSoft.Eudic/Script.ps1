@@ -3,7 +3,7 @@ function Get-ReleaseNotes {
     $ShortVersion = $Version.Split('.')[0..2] -join '.'
     if ($Global:DumplingsStorage.Contains('Eudic') -and $Global:DumplingsStorage.Eudic.Contains($ShortVersion)) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Eudic.$ShortVersion.ReleaseTime | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Eudic.$ShortVersion.ReleaseTime
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{

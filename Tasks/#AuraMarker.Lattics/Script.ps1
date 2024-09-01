@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.results[0].currentVersionReleaseDate
+      $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.results[0].currentVersionReleaseDate.ToUniversalTime()
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{

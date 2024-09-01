@@ -3,7 +3,7 @@ function Get-ReleaseNotes {
     $ShortVersion = $Version.Split('.')[0..2] -join '.'
     if ($Global:DumplingsStorage.Contains('Eshelper') -and $Global:DumplingsStorage.Eshelper.Contains($ShortVersion)) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Eshelper.$ShortVersion.ReleaseTime | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Eshelper.$ShortVersion.ReleaseTime
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{

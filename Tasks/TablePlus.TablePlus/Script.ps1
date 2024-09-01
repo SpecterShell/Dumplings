@@ -11,7 +11,7 @@ switch -Regex ($this.Check()) {
     try {
       if ($Global:DumplingsStorage['TablePlus'].Contains($Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['TablePlus'].$Version.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['TablePlus'].$Version.ReleaseTime | Get-Date -AsUTC
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

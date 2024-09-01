@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
       $ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
       if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseTime | Get-Date -AsUTC
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
