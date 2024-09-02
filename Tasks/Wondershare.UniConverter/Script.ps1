@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.CurrentState.Version.Split('.')[0] -ne '15') {
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
       $this.Log('The PackageIdentifier needs to be updated', 'Error')
     } else {
       $this.Submit()
