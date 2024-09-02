@@ -1,4 +1,4 @@
-$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['9629']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['14204']
 
 # ProductCode
 $this.CurrentState.Installer[0]['ProductCode'] = "UniConverter $($this.CurrentState.Version.Split('.')[0])_is1"
@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.CurrentState.Version.Split('.')[0] -ne '14') {
+    if ($this.CurrentState.Version.Split('.')[0] -ne '15') {
       $this.Log('The PackageIdentifier needs to be updated', 'Error')
     } else {
       $this.Submit()
