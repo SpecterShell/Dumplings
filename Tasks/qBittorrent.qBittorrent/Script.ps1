@@ -1,17 +1,16 @@
-$Object1 = Invoke-RestMethod -Uri 'https://sourceforge.net/projects/qbittorrent/rss?path=/qbittorrent-win32'
+$ProjectName = 'qbittorrent'
+$RootPath = '/qbittorrent-win32'
+
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/qbittorrent-[\d\.]+/.+setup\.exe$" })
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  ($Object1.title.'#cdata-section' -match 'setup\.exe$')[0],
-  '/qbittorrent-([\d\.]+)/'
-).Groups[1].Value
-
-$Assets = $Object1.Where({ $_.title.'#cdata-section'.Contains($this.CurrentState.Version) -and $_.title.'#cdata-section'.EndsWith('setup.exe') })
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/qbittorrent-([\d\.]+)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Global:InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('x64') -and -not $_.title.'#cdata-section'.Contains('lt20') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('x64') -and -not $_.title.'#cdata-section'.Contains('lt20') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

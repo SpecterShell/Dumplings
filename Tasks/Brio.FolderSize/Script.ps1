@@ -1,14 +1,11 @@
 $ProjectName = 'foldersize'
+$RootPath = '/foldersize'
 
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=/foldersize"
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+/FolderSize-.+\.msi$" })
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  ($Object1.title.'#cdata-section' -match '^/foldersize/[\d\.]+/FolderSize-.+\.msi$')[0],
-  '^/foldersize/([\d\.]+)/'
-).Groups[1].Value
-
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^/foldersize/$([regex]::Escape($this.CurrentState.Version))/FolderSize-.+\.msi$" })
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

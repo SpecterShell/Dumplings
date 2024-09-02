@@ -1,13 +1,11 @@
-$RepoOwner = 'royqh1979'
-$RepoName = 'RedPanda-CPP'
 $ProjectName = 'redpanda-cpp'
-$ProjectPath = ''
+$RootPath = ''
 
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${ProjectPath}"
-$Assets = $Object1 | Where-Object -FilterScript { $_.title.'#cdata-section' -match "^$([regex]::Escape($ProjectPath))/v?[\d\.]+/RedPanda.+Setup\.exe$" }
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/v?[\d\.]+/RedPanda.+Setup\.exe$" })
 
 # Version
-$this.CurrentState.Version = $Assets[0].title.'#cdata-section' -replace "^$([regex]::Escape($ProjectPath))/v?([\d\.]+)/.+", '$1'
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/v?([\d\.]+)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -41,6 +39,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      $RepoOwner = 'royqh1979'
+      $RepoName = 'RedPanda-CPP'
+
       $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/NEWS.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("./p[text()='Red Panda C++ Version $($this.CurrentState.Version)']")

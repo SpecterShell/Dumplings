@@ -1,11 +1,11 @@
 $ProjectName = 'crystaldiskinfo'
-$ProjectPath = ''
+$RootPath = ''
 
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${ProjectPath}"
-$Assets = $Object1 | Where-Object -FilterScript { $_.title.'#cdata-section' -match "^$([regex]::Escape($ProjectPath))/[\d\.]+/CrystalDiskInfo.+Shizuku\.exe$" }
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+/CrystalDiskInfo.+Shizuku\.exe$" })
 
 # Version
-$this.CurrentState.Version = $Assets[0].title.'#cdata-section' -replace "^$([regex]::Escape($ProjectPath))/([\d\.]+)/.+", '$1'
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

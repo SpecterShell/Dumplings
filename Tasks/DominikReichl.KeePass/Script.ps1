@@ -1,15 +1,11 @@
 $ProjectName = 'keepass'
-$ProjectPath = '/KeePass 2.x'
+$RootPath = '/KeePass 2.x'
 
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${ProjectPath}"
+$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+/KeePass-.+\.(msi|exe)$" })
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  ($Object1.title.'#cdata-section' -match "^$([regex]::Escape($ProjectPath))/[\d\.]+/KeePass-.+\.(msi|exe)$")[0],
-  "^$([regex]::Escape($ProjectPath))/([\d\.]+)/"
-).Groups[1].Value
-
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($ProjectPath))/$([regex]::Escape($this.CurrentState.Version))/KeePass-.+\.(msi|exe)$" })
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += $InstallerMsi = [ordered]@{
