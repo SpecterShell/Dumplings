@@ -1,13 +1,6 @@
-function Get-Version {
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'setupLockCursor.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'setupLockCursor.exe'
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromExe
-}
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://digola.com/setupLockCursor.zip'
+  InstallerUrl = 'https://digola.com/setupLockCursor.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
@@ -23,7 +16,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  Get-Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -43,7 +36,7 @@ if ($this.Status.Contains('New')) {
 
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  Get-Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
@@ -60,7 +53,7 @@ if ($ETag -in $this.LastState.ETag) {
 
 $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 # Version
-Get-Version
+$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 # InstallerSha256
 $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
