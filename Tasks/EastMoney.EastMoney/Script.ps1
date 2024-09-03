@@ -7,7 +7,7 @@ function Get-Version {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = 'https://swdlcdn.eastmoney.com/swc8_free_new/dfcft8.exe'
+  InstallerUrl = 'https://swdlcdn.eastmoney.com/swc8_free_new/dfcft8.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
@@ -52,7 +52,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   return
 }
 
-$InstallerFile = Get-TempFile -Uri $InstallerUrl
+$InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 # Version
 Get-Version
 # InstallerSha256
