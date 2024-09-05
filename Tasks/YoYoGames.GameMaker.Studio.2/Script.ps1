@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://gms.yoyogames.com/update-win.rss'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1[-1].title, '([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1[-1].title, '([\d\.]+)').Groups[1].Value -replace '(?<=^|\.)0+(?=\d)'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
