@@ -1,16 +1,11 @@
-$this.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 4516 -Version '3.0.0' -Locale 'zh-CN'
-
-# Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = "https://cc-download.wondershare.cc/cbs_down/data-recovery-64bit_$($this.CurrentState.Version)_full4516.exe"
-}
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['4516']
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

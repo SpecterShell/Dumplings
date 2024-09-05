@@ -1,9 +1,4 @@
-$this.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 3316 -Version '1.0.0' -Locale 'en-US'
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://download.wondershare.com/cbs_down/fotophire_full3316.exe'
-}
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['3316']
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

@@ -1,9 +1,4 @@
-$this.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 839
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://download.wondershare.com/cbs_down/pdf-converter-pro_full839.exe'
-}
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['839']
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

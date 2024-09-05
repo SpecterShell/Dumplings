@@ -1,16 +1,11 @@
-$this.CurrentState = Invoke-WondershareXmlUpgradeApi -ProductId 2989 -Version '6.0.0.0' -Locale 'en-US'
-
-# Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = 'https://download.wondershare.com/cbs_down/pdfelement6_full2989.exe'
-}
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['2989']
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
