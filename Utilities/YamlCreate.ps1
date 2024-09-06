@@ -5,7 +5,6 @@
 
 Param
 (
-  [switch]$IdentifyBurnInstallers,
   [Parameter(Mandatory = $true)]
   [string] $ManifestsFolder,
   [Parameter(Mandatory = $true)]
@@ -15,11 +14,9 @@ Param
   [Parameter(Mandatory = $true)]
   [string] $PackageVersion,
   [Parameter(Mandatory = $true)]
-  [Object[]] $PackageInstallers,
+  [Object[]] $InstallerEntries,
   [Parameter(Mandatory = $false)]
-  [Object[]] $Locales,
-  [Parameter(Mandatory = $false)]
-  [string] $PackageReleaseDate
+  [Object[]] $LocaleEntries
 )
 
 $ScriptHeader = '# Created with YamlCreate.ps1 v2.4.1 Dumplings Mod'
@@ -362,41 +359,43 @@ Function Read-QuickInstallerEntry {
     Write-Log -Object "Updating installer #${_iteration}/$($_OldInstallers.Count) [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['NestedInstallerType']), $($_NewInstaller['Scope'])]" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
 
     # Apply inputs
-    $Updated = $false
-    foreach ($PackageInstaller in $PackageInstallers) {
-      $ToUpdate = $true
+    $ToUpdate = $false
+    foreach ($InstallerEntry in $InstallerEntries) {
+      $Updatable = $true
       foreach ($_key in @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope')) {
-        if ($_NewInstaller.Contains($_key) -and $PackageInstaller.Contains($_key) -and $_NewInstaller.$_key -ne $PackageInstaller.$_key) {
-          $ToUpdate = $false
-        } elseif (-not $_NewInstaller.Contains($_key) -and $PackageInstaller.Contains($_key)) {
-          $ToUpdate = $false
+        if ($_NewInstaller.Contains($_key) -and $InstallerEntry.Contains($_key) -and $_NewInstaller.$_key -ne $InstallerEntry.$_key) {
+          $Updatable = $false
+        } elseif (-not $_NewInstaller.Contains($_key) -and $InstallerEntry.Contains($_key)) {
+          $Updatable = $false
         }
       }
-      if ($ToUpdate) {
-        $Updated = $true
-        foreach ($_key in $PackageInstaller.Keys) {
-          if ($_key -eq 'InstallerUrl') {
-            if (Test-String $PackageInstaller.$_key -IsNull) { throw "The new value for installer property ${_key} is invalid: $($PackageInstaller.$_key)" }
-            if (Test-String -not $PackageInstaller.$_key -MaxLength $Patterns.InstallerUrlMaxLength) { throw [System.ArgumentException]::new("The value must has a length between 1 and $($Patterns.InstallerUrlMaxLength) characters") }
-            if (Test-String -not $PackageInstaller.$_key -MatchPattern $Patterns.InstallerUrl) { throw [System.ArgumentException]::new('The value entered does not match the pattern requirements defined in the manifest schema') }
-            $_NewInstaller[$_key] = $PackageInstaller.$_key.Replace(' ', '%20')
-          } elseif ($_key -in $InstallerEntryProperties -and $_key -notin @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope', 'InstallerUrl')) {
-            if ($PackageInstaller.$_key -is [string] -and (Test-String $PackageInstaller.$_key -IsNull)) {
-              Write-Log -Object "The new value for installer property ${_key} is invalid and thus discarded: $($PackageInstaller.$_key)" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
-              continue
-            } elseif ($PackageInstaller.$_key -isnot [string] -and $null -eq $PackageInstaller.$_key) {
-              Write-Log -Object "The new value for installer property ${_key} is invalid and thus discarded" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
-              continue
-            }
-            $_NewInstaller[$_key] = $PackageInstaller.$_key
-          } elseif ($_key -notin $InstallerEntryProperties) {
-            throw "The installer property ${_key} is invalid: $($PackageInstaller.$_key)"
-          }
-        }
+      if ($Updatable) {
+        $ToUpdate = $true
+        $MatchingInstallerEntry = $InstallerEntry
       }
     }
-    if (-not $Updated) {
-      throw "The InstallerUrl for [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['tNestedInstallerType']), $($_NewInstaller['Scope'])] was not properly updated"
+    if ($ToUpdate) {
+      foreach ($_key in $MatchingInstallerEntry.Keys) {
+        if ($_key -eq 'InstallerUrl') {
+          if (Test-String $MatchingInstallerEntry.$_key -IsNull) { throw "The new value for installer property ${_key} is invalid: $($MatchingInstallerEntry.$_key)" }
+          if (Test-String -not $MatchingInstallerEntry.$_key -MaxLength $Patterns.InstallerUrlMaxLength) { throw [System.ArgumentException]::new("The value must has a length between 1 and $($Patterns.InstallerUrlMaxLength) characters") }
+          if (Test-String -not $MatchingInstallerEntry.$_key -MatchPattern $Patterns.InstallerUrl) { throw [System.ArgumentException]::new('The value entered does not match the pattern requirements defined in the manifest schema') }
+          $_NewInstaller[$_key] = $MatchingInstallerEntry.$_key.Replace(' ', '%20')
+        } elseif ($_key -in $InstallerEntryProperties -and $_key -notin @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope', 'InstallerUrl')) {
+          if ($MatchingInstallerEntry.$_key -is [string] -and (Test-String $MatchingInstallerEntry.$_key -IsNull)) {
+            Write-Log -Object "The new value of the installer property ${_key} is invalid and thus discarded: $($MatchingInstallerEntry.$_key)" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
+            continue
+          } elseif ($MatchingInstallerEntry.$_key -isnot [string] -and $null -eq $MatchingInstallerEntry.$_key) {
+            Write-Log -Object "The new value of the installer property ${_key} is invalid and thus discarded" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
+            continue
+          }
+          $_NewInstaller[$_key] = $MatchingInstallerEntry.$_key
+        } elseif ($_key -notin $InstallerEntryProperties) {
+          throw "The installer property ${_key} is invalid: $($MatchingInstallerEntry.$_key)"
+        }
+      }
+    } else {
+      throw "No matching installer entry for [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['tNestedInstallerType']), $($_NewInstaller['Scope'])]"
     }
 
     if ($_NewInstallers.Count -gt 0 -and $_NewInstaller.InstallerUrl -in $_NewInstallers.InstallerUrl) {
@@ -411,6 +410,8 @@ Function Read-QuickInstallerEntry {
       elseif ($_NewInstaller.Keys -contains 'PackageFamilyName') { $_NewInstaller.Remove('PackageFamilyName') }
       if ($_MatchingInstaller['SignatureSha256']) { $_NewInstaller['SignatureSha256'] = $_MatchingInstaller.SignatureSha256 }
       elseif ($_NewInstaller.Keys -contains 'SignatureSha256') { $_NewInstaller.Remove('SignatureSha256') }
+      if ($_MatchingInstaller['ReleaseDate']) { $_NewInstaller['ReleaseDate'] = $_MatchingInstaller.ReleaseDate }
+      elseif ($_NewInstaller.Keys -contains 'ReleaseDate') { $_NewInstaller.Remove('ReleaseDate') }
     }
 
     if ($_NewInstaller.Keys -notcontains 'InstallerSha256') {
@@ -694,20 +695,6 @@ Function Write-InstallerManifest {
     $InstallerManifest['Installers'] = $script:OldVersionManifest['Installers']
   }
 
-  foreach ($_Installer in $InstallerManifest.Installers) {
-    if ($_Installer['ReleaseDate']) { $_Installer.Remove('ReleaseDate') }
-    # Apply inputs
-    if ($PackageReleaseDate) {
-      try {
-        $_ValidDate = $PackageReleaseDate | Get-Date -Format 'yyyy-MM-dd'
-        $_Installer['ReleaseDate'] = $_ValidDate
-      } catch {
-        # Release date isn't valid
-        Write-Log -Object 'Release date is invalid and thus discarded' -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
-      }
-    }
-  }
-
   Add-YamlParameter -Object $InstallerManifest -Parameter 'ManifestType' -Value 'installer'
   Add-YamlParameter -Object $InstallerManifest -Parameter 'ManifestVersion' -Value $ManifestVersion
   If ($InstallerManifest['Dependencies']) {
@@ -833,20 +820,20 @@ Function Write-LocaleManifest {
   if ($LocaleManifest['ReleaseNotes']) { $LocaleManifest.Remove('ReleaseNotes') }
 
   # Apply inputs
-  if ($Locales) {
-    foreach ($Locale in $Locales) {
-      if (-not $Locale.Contains('Key') -or -not $Locale.Contains('Value') -or (Test-String $Locale.Key -IsNull)) {
+  if ($LocaleEntries) {
+    foreach ($LocaleEntry in $LocaleEntries) {
+      if (-not $LocaleEntry.Contains('Key') -or -not $LocaleEntry.Contains('Value') -or (Test-String $LocaleEntry.Key -IsNull)) {
         throw 'Detected an invalid locale property updates'
-      } elseif ($Locale.Key -notin $LocaleProperties) {
-        throw "The locale property ${_key} is invalid: $($Locale.Value)"
-      } elseif ($Locale.Contains('Locale') -and $Locale.Locale -ne $PackageLocale) {
+      } elseif ($LocaleEntry.Key -notin $LocaleProperties) {
+        throw "The locale property ${_key} is invalid: $($LocaleEntry.Value)"
+      } elseif ($LocaleEntry.Contains('Locale') -and $LocaleEntry.Locale -ne $PackageLocale) {
         continue
-      } elseif ($Locale.Value -is [string] -and (Test-String -Not $Locale.Value -IsNull)) {
-        $LocaleManifest[$Locale.Key] = $Locale.Value
-      } elseif ($Locale.Value -isnot [string] -and $null -ne $Locale.Value) {
-        $LocaleManifest[$Locale.Key] = $Locale.Value
+      } elseif ($LocaleEntry.Value -is [string] -and (Test-String -Not $LocaleEntry.Value -IsNull)) {
+        $LocaleManifest[$LocaleEntry.Key] = $LocaleEntry.Value
+      } elseif ($LocaleEntry.Value -isnot [string] -and $null -ne $LocaleEntry.Value) {
+        $LocaleManifest[$LocaleEntry.Key] = $LocaleEntry.Value
       } else {
-        $LocaleManifest.Remove($Locale.Key)
+        $LocaleManifest.Remove($LocaleEntry.Key)
       }
     }
   }
@@ -889,20 +876,20 @@ Function Write-LocaleManifest {
         if ($OldLocaleManifest['ReleaseNotes']) { $OldLocaleManifest.Remove('ReleaseNotes') }
 
         # Apply inputs
-        if ($null -ne $Locales) {
-          foreach ($Locale in $Locales) {
-            if (-not $Locale.Contains('Key') -or -not $Locale.Contains('Value') -or (Test-String $Locale.Key -IsNull)) {
+        if ($null -ne $LocaleEntries) {
+          foreach ($LocaleEntry in $LocaleEntries) {
+            if (-not $LocaleEntry.Contains('Key') -or -not $LocaleEntry.Contains('Value') -or (Test-String $LocaleEntry.Key -IsNull)) {
               throw 'Detected an invalid locale property updates'
-            } elseif ($Locale.Key -notin $LocaleProperties) {
-              throw "The locale property ${_key} is invalid: $($Locale.Value)"
-            } elseif ($Locale.Contains('Locale') -and $Locale.Locale -ne $OldLocaleManifest.PackageLocale) {
+            } elseif ($LocaleEntry.Key -notin $LocaleProperties) {
+              throw "The locale property ${_key} is invalid: $($LocaleEntry.Value)"
+            } elseif ($LocaleEntry.Contains('Locale') -and $LocaleEntry.Locale -ne $OldLocaleManifest.PackageLocale) {
               continue
-            } elseif ($Locale.Value -is [string] -and (Test-String -Not $Locale.Value -IsNull)) {
-              $OldLocaleManifest[$Locale.Key] = $Locale.Value
-            } elseif ($Locale.Value -isnot [string] -and $null -ne $Locale.Value) {
-              $OldLocaleManifest[$Locale.Key] = $Locale.Value
+            } elseif ($LocaleEntry.Value -is [string] -and (Test-String -Not $LocaleEntry.Value -IsNull)) {
+              $OldLocaleManifest[$LocaleEntry.Key] = $LocaleEntry.Value
+            } elseif ($LocaleEntry.Value -isnot [string] -and $null -ne $LocaleEntry.Value) {
+              $OldLocaleManifest[$LocaleEntry.Key] = $LocaleEntry.Value
             } else {
-              $OldLocaleManifest.Remove($Locale.Key)
+              $OldLocaleManifest.Remove($LocaleEntry.Key)
             }
           }
         }

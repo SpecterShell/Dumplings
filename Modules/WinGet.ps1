@@ -120,17 +120,18 @@ function New-WinGetManifest {
     $Parameters = @{
       PackageIdentifier = $PackageIdentifier
       PackageVersion    = $PackageVersion
-      PackageInstallers = $Task.CurrentState.Installer
-      Locales           = $Task.CurrentState.Locale
+      InstallerEntries  = $Task.CurrentState.Installer
+      LocaleEntries     = $Task.CurrentState.Locale
       ManifestsFolder   = $ManifestsFolder
       OutFolder         = $OutFolder
     }
     if ($Task.CurrentState['ReleaseTime']) {
       if ($Task.CurrentState.ReleaseTime -is [datetime] -or $Task.CurrentState.ReleaseTime -is [System.DateTimeOffset]) {
-        $Parameters.PackageReleaseDate = $Task.CurrentState.ReleaseTime.ToUniversalTime().ToString('yyyy-MM-dd')
+        $ReleaseDate = $Task.CurrentState.ReleaseTime.ToUniversalTime().ToString('yyyy-MM-dd')
       } else {
-        $Parameters.PackageReleaseDate = $Task.CurrentState.ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
+        $ReleaseDate = $Task.CurrentState.ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
       }
+      $Task.CurrentState.Installer | ForEach-Object -Process { if (-not $_.Contains('ReleaseDate')) { $_['ReleaseDate'] = $ReleaseDate } }
     }
     & (Join-Path $PSScriptRoot '..' 'Utilities' 'YamlCreate.ps1') @Parameters
   } catch {
