@@ -14,9 +14,7 @@ if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.pla
   $this.Log("Germany version: $($Object2.platforms.win.version)")
   $this.Log("Italy version: $($Object3.platforms.win.version)")
   $this.Log("Austria version: $($Object4.platforms.win.version)")
-  if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.platforms.win.version } -Unique).Count -gt 1) {
-    $Identical = $false
-  }
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -54,7 +52,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
