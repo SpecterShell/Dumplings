@@ -6,6 +6,11 @@ $Object1 = Invoke-RestMethod $Global:DumplingsSecret.iMonitorUrl -Method Post -B
   } | ConvertTo-Json -Compress
 ) -Certificate $Certificate -SkipCertificateCheck
 
+if ($Object1.data.latest) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.data.new_version
 
