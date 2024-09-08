@@ -1,16 +1,15 @@
-$UniVer = '9000F002'
+$UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '9000F002'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes(
-      (('cGlkPXl5JnN2PXswfSZ0PXsxfSZrPXNsMyRAbDQzI3lHMzR5WSY0UjBERilkI0RUZTZmIXQ1NjQlcmRyNTRqNmpzd2U0ag==' | ConvertFrom-Base64) -f $UniVer, $Time)
-    )
+    [System.Text.Encoding]::UTF8.GetBytes("pid=yy&sv=${UniVer}&t=${Time}&k=$($Global:DumplingsSecret.YYKey)")
   )
 ).Replace('-', '').ToLower()
 $Object1 = Invoke-RestMethod -Uri "https://update.yy.com/check4update?pid=yy&t=${Time}&sv=${UniVer}&f=1&n=${Hash}" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
-  throw "Task $($this.Name): The response content from the API is empty"
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
 }
 
 $Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$(($Object1 | Split-LineEndings)[0])"

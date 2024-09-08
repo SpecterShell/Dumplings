@@ -1,11 +1,11 @@
-$UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '2030F000'
+$UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '10b0f000'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes("appid=yyanchor&timestamp=${Time}&k=$($Global:DumplingsSecret.YYAnchorKey)")
+    [System.Text.Encoding]::UTF8.GetBytes("appid=yyaudio&timestamp=${Time}&k=$($Global:DumplingsSecret.YYAnchorKey)")
   )
 ).Replace('-', '').ToLower()
-$Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1&hdid="
+$Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyaudio/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1&hdid="
 
 if ($Object1.code -eq 404) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
