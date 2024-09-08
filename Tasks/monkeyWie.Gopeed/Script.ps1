@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='Changes']")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='Changes' or text()='Release notes']")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
