@@ -11,6 +11,9 @@ if ($Object1.code -eq 404) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
+if ($Object1.code -ne 0) {
+  throw "The server returned an error: $($Object1.message)"
+}
 
 $Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
 
