@@ -1,7 +1,7 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://cc.co/16YS3k'
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://cc.co/16YS3k'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
