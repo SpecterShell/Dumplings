@@ -26,7 +26,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Prefix = 'https://yunxiu.meitu.com/document/daily-record'
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = 'https://yunxiu.meitu.com/document/daily-record'
+      }
 
       $Object2 = Invoke-RestMethod -Uri 'https://api-compos.yunxiu.meitu.com/api/v1/client/article_category?with_article=1'
 
@@ -35,15 +39,10 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $Prefix + '?id=' + $ReleaseNotesUrlObject[0].id
+          Value = $ReleaseNotesUrl + '?id=' + $ReleaseNotesUrlObject[0].id
         }
       } else {
         $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Prefix
-        }
       }
     } catch {
       $_ | Out-Host

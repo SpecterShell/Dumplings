@@ -1,48 +1,78 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.yxfile.com.cn/')
-Start-Sleep -Seconds 5
-
-# Version
-$this.CurrentState.Version = [regex]::Match(
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/p[1]')).Text,
-  '最新版本: ([\d\.]+)'
-).Groups[1].Value
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://static.youxiao.cn/yxfile/lastest.exe'
 }
 
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# MD5
+$this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is newly created
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The MD5 was not updated
+if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+$InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+# Version
+$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+# InstallerSha256
+$this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+
+# Case 3: The installer file has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    # $Object1 = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxfile/log/' | ConvertFrom-Html
-
-    # try {
-    #   $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//*[@id='post-930']/div[2]/ul[contains(./li/text(), '$($this.CurrentState.Version)')]")
-    #   if ($ReleaseNotesTitleNode) {
-    #     # ReleaseTime
-    #     $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-    #     # ReleaseNotes (zh-CN)
-    #     $this.CurrentState.Locale += [ordered]@{
-    #       Locale = 'zh-CN'
-    #       Key    = 'ReleaseNotes'
-    #       Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ol[1]') | Get-TextContent | Format-Text
-    #     }
-    #   } else {
-    #     $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-    #   }
-    # } catch {
-    #   $this.Log($_, 'Warning')
-    # }
-
+  # Case 5: The MD5 and the version were updated
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 4: The MD5 was updated, but the version wasn't
+  # The installer might be updated without changing the version (e.g., virus database update)
+  # Force submit the manifest even if neither the version nor the installer has changed
+  Default {
+    $this.Log('The MD5 was changed, but the version is the same', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }

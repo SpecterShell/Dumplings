@@ -1,8 +1,8 @@
 $Object1 = Invoke-WebRequest -Uri 'https://servicewechat.com/wxa-dev-logic/checkupdate?force=1' | Read-ResponseContent | ConvertFrom-Json
 
 # Version
-$Version = $Object1.update_version.ToString()
-$this.CurrentState.Version = $Version.SubString(0, 1) + '.' + $Version.SubString(1, 2) + '.' + $Version.SubString(3)
+$VersionLength = $Object1.update_version.ToString().Length
+$this.CurrentState.Version = $Object1.update_version.ToString().Insert($VersionLength - 7, '.').Insert($VersionLength - 9, '.')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Version.SubString(3, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Version.SubString(3, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{

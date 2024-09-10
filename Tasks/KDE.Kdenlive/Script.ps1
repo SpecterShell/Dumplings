@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://kdenlive.org/en/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links | Where-Object -FilterScript { (Get-Member -Name 'href' -InputObject $_ -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.exe') -and -not $_.href.Contains('standalone') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('standalone') } catch {} }, 'First')[0].href
 }
 
 # Version

@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Version = [regex]::Match(
 ).Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//section[@data-driver-details="windows"]//div[@class="drivers-system__drivers"]//a').Attributes['href'].Value
 }
 
@@ -68,7 +68,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'install.exe' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'install.exe'
@@ -76,11 +76,11 @@ switch -Regex ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # AppsAndFeaturesEntries + ProductCode
-    $Installer['AppsAndFeaturesEntries'] = @(
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromBurn
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromBurn
         UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromBurn
         InstallerType = 'burn'
       }

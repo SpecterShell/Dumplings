@@ -2,7 +2,7 @@ $Prefix = 'https://files.gpg4win.org/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;P=*.exe;F=0"
 
-$InstallerName = $Object1.Links.href | Where-Object -FilterScript { $_ -match '^gpg4win-[\d\.]+(-\d+)?\.exe$' } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerName = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_ -match '^gpg4win-[\d\.]+(-\d+)?\.exe$' } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, 'gpg4win-([\d\.]+(-\d+)?)\.exe').Groups[1].Value

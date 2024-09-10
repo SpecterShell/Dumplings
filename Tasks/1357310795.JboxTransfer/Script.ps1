@@ -1,11 +1,13 @@
+$Object1 = Invoke-WebRequest -Uri 'https://pan.sjtu.edu.cn/jboxtransfer/download.html'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = 'https://pan.sjtu.edu.cn/jboxtransfer/bin/jboxtransfer-x64-installer-online.msi'
+  InstallerUrl = Join-Uri 'https://pan.sjtu.edu.cn' $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('online') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object1.Headers.ETag[0]
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$ETag = $Object2.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {

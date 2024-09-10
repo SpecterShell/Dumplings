@@ -26,36 +26,37 @@ function Get-ReleaseNotes {
   }
 
   try {
-    $Object4 = Invoke-WebRequest -Uri 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list' | ConvertFrom-Html
+    # ReleaseNotesUrl (zh-Hans)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-Hans'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $ReleaseNotesUrl = 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list'
+    }
+    # ReleaseNotesUrl (zh-Hans-CN)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-Hans-CN'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $ReleaseNotesUrl
+    }
 
-    $ReleaseNotesUrlNode = $Object4.SelectSingleNode("/html/body/div/div[3]/div[1]/div[2]/section[contains(./h3/text(), 'Windows')]/ul/li[contains(./a/span[1], '$([regex]::Match($this.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value)')]/a")
+    $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+    $ReleaseNotesUrlNode = $Object4.SelectSingleNode("/html/body/div/div[3]/div[1]/div[2]/section[contains(./h3/text(), 'Windows')]/ul/li[contains(./a/span[1], '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]/a")
     if ($ReleaseNotesUrlNode) {
       # ReleaseNotesUrl (zh-Hans)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-Hans'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://weixin.qq.com' + ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
+        Value  = Join-Uri 'https://weixin.qq.com' ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
       }
       # ReleaseNotesUrl (zh-Hans-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-Hans-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://weixin.qq.com' + ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
+        Value  = Join-Uri 'https://weixin.qq.com' ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
       }
     } else {
       $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-      # ReleaseNotesUrl (zh-Hans)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-Hans'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list'
-      }
-      # ReleaseNotesUrl (zh-Hans-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-Hans-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&t=weixin_faq_list'
-      }
     }
   } catch {
     $_ | Out-Host

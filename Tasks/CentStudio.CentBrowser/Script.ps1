@@ -4,7 +4,7 @@ $PrefixCN = 'https://static.centbrowser.cn/win_stable/'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Version
-$this.CurrentState.Version = ($Object1.Links.href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
+$this.CurrentState.Version = ($Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

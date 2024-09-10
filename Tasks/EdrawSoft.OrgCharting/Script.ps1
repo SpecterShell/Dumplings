@@ -1,11 +1,11 @@
-$this.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 5373
+$Object1 = Invoke-RestMethod -Uri 'http://platform.wondershare.com/rest/v2/downloader/runtime/?product_id=5373&wae='
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Version, '(\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.wsrp.downloader.runtime.version.'#cdata-section'.Split('.')[0..1] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = 'https://download.edrawsoft.com/cbs_down/orgchartcreator_full5373.exe'
+  InstallerUrl           = $Object1.wsrp.downloader.runtime.download_url.'#cdata-section' | ConvertTo-Https
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName   = "OrgCharting $($this.CurrentState.Version)"

@@ -3,11 +3,11 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.azul.com/products/components/iced
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.msi') -and $_.href.Contains('win') -and $_.href.Contains('i686') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('win') -and $_.href.Contains('i686') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.msi') -and $_.href.Contains('win') -and $_.href.Contains('x64') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('win') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 
 # Version

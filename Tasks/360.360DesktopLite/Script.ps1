@@ -1,11 +1,13 @@
+$Object1 = Invoke-WebRequest -Uri 'http://www.360.cn/desktop/'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://wsdl.360safe.com/DesktopLite/360DesktopLite_zm000001.exe'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('360DesktopLite') } catch {} }, 'First')[0].href
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # Last Modified
-$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+$this.CurrentState.LastModified = $Object2.Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {

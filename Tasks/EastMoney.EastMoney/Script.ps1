@@ -5,14 +5,16 @@ function Get-Version {
   $this.CurrentState.Version = [regex]::Match($Object2.root.app.name, '(\d+\.\d+\.\d+)').Groups[1].Value
 }
 
+$Object1 = Invoke-WebRequest -Uri 'https://emdesk.eastmoney.com/pc_activity/Pages/VIPTrade/pages/' | ConvertFrom-Html
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://swdlcdn.eastmoney.com/swc8_free_new/dfcft8.exe'
+  InstallerUrl = 'https:' + $Object1.SelectSingleNode('//a[@id="down-a"]').Attributes['href'].Value
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # MD5
-$this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
+$this.CurrentState.MD5 = $Object2.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {

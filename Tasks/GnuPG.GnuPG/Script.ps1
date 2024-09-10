@@ -2,7 +2,7 @@ $Prefix = 'https://gnupg.org'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}/download/index.html"
 
-$InstallerName = $Object1.Links | Where-Object -Property 'href' -Match -Value 'gnupg-w32-[\d\.]+_\d+\.exe$' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty 'href' -First 1
+$InstallerName = $Object1.Links.Where({ try { $_.href -match 'gnupg-w32-[\d\.]+_\d+\.exe$' } catch {} }, 'First')[0].href
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, 'gnupg-w32-([\d\.]+)_\d+\.exe').Groups[1].Value

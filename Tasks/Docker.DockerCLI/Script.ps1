@@ -2,7 +2,7 @@ $Prefix = 'https://download.docker.com/win/static/stable/x86_64/'
 
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$InstallerName = $Object1.Links.href | Where-Object -FilterScript { $_ -ne '../' -and $_ -match 'docker-[\d\.]+\.zip' } | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerName = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_ -ne '../' -and $_ -match 'docker-[\d\.]+\.zip' } | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, 'docker-([\d\.]+)\.zip').Groups[1].Value

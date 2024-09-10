@@ -10,11 +10,11 @@ $this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains("$($this.CurrentState.Version)/") -and $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains("$($this.CurrentState.Version)/") -and $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -39,10 +39,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $RepoOwner = 'royqh1979'
-      $RepoName = 'RedPanda-CPP'
-
-      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/NEWS.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/royqh1979/RedPanda-CPP/master/NEWS.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("./p[text()='Red Panda C++ Version $($this.CurrentState.Version)']")
       if ($ReleaseNotesTitleNode) {
@@ -63,6 +60,7 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object3 = (Invoke-RestMethod -Uri "https://gitee.com/royqh1979/redpandacpp/raw/master/sources/main/content/blog/version.$($this.CurrentState.Version).md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+
       $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("/h4[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNTitleNode) {
         # ReleaseNotes (zh-CN)

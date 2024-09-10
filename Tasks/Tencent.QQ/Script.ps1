@@ -2,12 +2,12 @@ $Object1 = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq/index.shtml'
 $Object2 = Invoke-RestMethod -Uri ([regex]::Match($Object1.Content, 'rainbowConfigUrl\s*=\s*"(.+?)"').Groups[1].Value) | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object2.downloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object2.downloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '((\d+\.\d+\.\d+).\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '((\d+\.\d+\.\d+).\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -19,10 +19,10 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-FileVersionFromExe
 

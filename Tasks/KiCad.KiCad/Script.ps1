@@ -50,6 +50,12 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.kicad.org/blog/'
+      }
+
       $Object2 = Invoke-RestMethod -Uri 'https://downloads.kicad.org/api/v1/update' -Method Post -Body (
         @{
           platform        = 'windows'
@@ -58,9 +64,9 @@ switch -Regex ($this.Check()) {
           lang            = ''
           last_check      = ''
         } | ConvertTo-Json -Compress
-      ) -ContentType 'application/json'
+      ) -ContentType 'application/json' -StatusCodeVariable 'StatusCode'
 
-      if ($Object2.version -eq $this.CurrentState.Version) {
+      if ($StatusCode -ne 204 -and $Object2.version -eq $this.CurrentState.Version) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
@@ -77,20 +83,10 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://www.kicad.org/blog/'
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.kicad.org/blog/'
-      }
     }
 
     $this.Print()

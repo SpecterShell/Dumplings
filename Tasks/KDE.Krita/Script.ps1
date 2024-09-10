@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.Content, 'Download Krita ([
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links | Where-Object -FilterScript { (Get-Member -Name 'id' -InputObject $_ -ErrorAction SilentlyContinue) -and $_.id -eq 'windows-download' } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $Object1.Links.Where({ try { $_.id -eq 'windows-download' } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {

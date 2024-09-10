@@ -8,7 +8,7 @@
 
 $Object1 = Invoke-WebRequest -Uri 'https://onecommander.com/'
 
-$InstallerName = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.msi') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+$InstallerName = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, '([\d\.]+)\.msi').Groups[1].Value
@@ -16,7 +16,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerName, '([\d\.]+)\.msi').Gr
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://onecommander.com/${InstallerName}"
+  InstallerUrl = Join-Uri 'https://onecommander.com/' $InstallerName
 }
 
 switch -Regex ($this.Check()) {

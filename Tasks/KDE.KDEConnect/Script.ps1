@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://kdeconnect.kde.org/download.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links.href | Where-Object -FilterScript { $_.EndsWith('.exe') } | Select-Object -First 1
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version

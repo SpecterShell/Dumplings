@@ -1,11 +1,11 @@
 function Get-ReleaseNotes {
-  # ReleaseNotesUrl
-  $this.CurrentState.Locale += [ordered]@{
-    Key   = 'ReleaseNotesUrl'
-    Value = $ReleaseNotesUrl = 'https://trustsing.com/idefender/'
-  }
-
   try {
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl = 'https://trustsing.com/idefender/'
+    }
+
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(text(), '$($this.CurrentState.Version)')]")

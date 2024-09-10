@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.package_info.version[0]
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down
 }
 
 switch -Regex ($this.Check()) {

@@ -13,12 +13,12 @@ $Object2 = Invoke-WebRequest -Uri "${Prefix}rtools${MainVersionShort}/files/"
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = "${Prefix}rtools${MainVersionShort}/files/" + $Object2.Links.href.Where({ $_.EndsWith('.exe') -and -not $_.Contains('aarch64') }, 'First')
+  InstallerUrl = $InstallerUrlX64 = "${Prefix}rtools${MainVersionShort}/files/$($Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('aarch64') } catch {} }, 'First')[0].href)"
   ProductCode  = "Rtools${MainVersionShort}_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrlARM64 = "${Prefix}rtools${MainVersionShort}/files/" + $Object2.Links.href.Where({ $_.EndsWith('.exe') -and $_.Contains('aarch64') }, 'First')
+  InstallerUrl = $InstallerUrlARM64 = "${Prefix}rtools${MainVersionShort}/files/$($Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('aarch64') } catch {} }, 'First')[0].href)"
   ProductCode  = "Rtools${MainVersionShort}-aarch64_is1"
 }
 

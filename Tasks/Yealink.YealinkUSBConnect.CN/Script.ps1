@@ -1,14 +1,12 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.yealink.com.cn/product-detail/usb-connect-management' | ConvertFrom-Html
 
 # Installer
-$InstallerUrl = $Object1.SelectSingleNode('/html/body/main/div[1]/article[1]/div/div[1]/div/small/p/span/a[1]').Attributes['href'].Value
-if ($InstallerUrl.StartsWith('/')) { $InstallerUrl = 'https://www.yealink.com.cn' + $InstallerUrl }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+  InstallerUrl = Join-Uri 'https://www.yealink.com.cn' $Object1.SelectSingleNode('/html/body/main/div[1]/article[1]/div/div[1]/div/small/p/span/a[1]').Attributes['href'].Value
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

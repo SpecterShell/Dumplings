@@ -4,9 +4,11 @@ function Get-Version {
   $this.CurrentState.Version = Join-Path $InstallerFileExtracted 'YoudaoTC.exe' | Read-ProductVersionFromExe
 }
 
+$Object1 = Invoke-WebRequest -Uri 'https://tongchuan.youdao.com/'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://codown.youdao.com/cidian/static/tongchuan/YoudaoTongchuan.exe'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('Commercial') } catch {} }, 'First')[0].href
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

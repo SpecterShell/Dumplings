@@ -4,7 +4,7 @@ $Prefix = 'https://repo.anaconda.com/archive/'
 # which PowerShell will follow even if RetryIntervalSec is specified.
 $Object1 = Invoke-WebRequest -Uri $Prefix -MaximumRetryCount 0
 
-$InstallerName = $Object1.Links.href | Where-Object -FilterScript { $_.EndsWith('.exe') -and $_.Contains('x86_64') -and $_.Contains('Anaconda3-') } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerName = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.EndsWith('.exe') -and $_.Contains('x86_64') -and $_.Contains('Anaconda3-') } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, '-([\d\.]+(-\d+)?)-').Groups[1].Value

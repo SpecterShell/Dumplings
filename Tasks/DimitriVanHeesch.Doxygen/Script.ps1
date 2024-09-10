@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.doxygen.nl/download.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
 }
 
 # Version

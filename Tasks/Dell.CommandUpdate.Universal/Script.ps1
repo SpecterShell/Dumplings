@@ -15,11 +15,11 @@ $this.CurrentState.Version = $Object1.vendorVersion
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = 'https://dl.dell.com/' + $Object1.path
+  InstallerUrl = Join-Uri 'https://dl.dell.com/' $Object1.path
 }
 # $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
 #   Architecture = 'arm64'
-#   InstallerUrl = 'https://dl.dell.com/' + $Object2.path
+#   InstallerUrl = Join-Uri 'https://dl.dell.com/' $Object2.path
 # }
 
 switch -Regex ($this.Check()) {

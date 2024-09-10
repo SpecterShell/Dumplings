@@ -46,34 +46,21 @@ switch -Regex ($this.Check()) {
     )
 
     try {
-      $Object2 = (Invoke-WebRequest -Uri 'https://keepass.info/news/news_all.html').Links.href.Where({ $_.Contains($this.CurrentState.Version) }, 'First')
-
-      if ($Object2) {
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl = 'https://keepass.info/news/' + $Object2[0]
-        }
-      } else {
-        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://keepass.info/news/news_all.html'
-        }
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = 'https://keepass.info/news/news_all.html'
       }
-    }
 
-    try {
+      $Object2 = (Invoke-WebRequest -Uri 'https://keepass.info/news/news_all.html').Links.Where({ try { $_.href.Contains($this.CurrentState.Version) } catch {} }, 'First')
+
       if ($Object2) {
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrl = 'https://keepass.info/news/' + $Object2[0].href
+        }
+
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
         # ReleaseNotes (en-US)
@@ -82,8 +69,9 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Object3.SelectNodes('/html/body/table/tr[1]/td[2]/node()[contains(., "Changes from")]/following-sibling::node()') | Get-TextContent | Format-Text
         }
+
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

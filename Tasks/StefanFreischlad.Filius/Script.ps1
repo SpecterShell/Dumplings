@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.lernsoftware-filius.de/Herunterla
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.Links | Where-Object -FilterScript { ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.exe') } | Select-Object -First 1 | Select-Object -ExpandProperty 'href'
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -12,6 +12,12 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Gro
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = 'https://gitlab.com/filius1/filius/-/blob/master/Changelog.md'
+      }
+
       $Object2 = (Invoke-RestMethod -Uri 'https://gitlab.com/filius1/filius/-/raw/master/Changelog.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(.//text(), '[$($this.CurrentState.Version)]')]")
@@ -30,24 +36,14 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://gitlab.com/filius1/filius/-/blob/master/Changelog.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-]+').ToLower()
+          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-]+').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://gitlab.com/filius1/filius/-/blob/master/Changelog.md'
-        }
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://gitlab.com/filius1/filius/-/blob/master/Changelog.md'
-      }
     }
 
     $this.Print()

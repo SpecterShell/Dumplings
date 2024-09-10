@@ -1,7 +1,17 @@
 function Get-ReleaseNotes {
   try {
-    $ReleaseNotesUrl = 'https://help.listary.com/changelog'
-    $ReleaseNotesUrlCN = 'https://help.listary.com/zh-Hans/changelog'
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl = 'https://help.listary.com/changelog'
+    }
+    # ReleaseNotesUrl (zh-CN)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $ReleaseNotesUrlCN = 'https://help.listary.com/zh-Hans/changelog'
+    }
+
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
     $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//header/following-sibling::h3[contains(., '$($this.CurrentState.Version)')]")
@@ -34,30 +44,10 @@ function Get-ReleaseNotes {
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
-      }
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrlCN
-      }
     }
   } catch {
     $_ | Out-Host
     $this.Log($_, 'Warning')
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl
-    }
-    # ReleaseNotesUrl (zh-CN)
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrlCN
-    }
   }
 }
 

@@ -82,7 +82,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.raidrive.com/update/' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//main/div[contains(@class, 'container')]/div[contains(@class, 'container')]/div[contains(., 'RaiDrive $($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//main/div[contains(@class, 'container')]/div[contains(@class, 'container')]/div[contains(., 'RaiDrive $($this.CurrentState.Version -replace '\.1$')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Attributes.Contains('class') -and $Node.Attributes['class'].Value -match 'h3|small'); $Node = $Node.NextSibling) { $Node }

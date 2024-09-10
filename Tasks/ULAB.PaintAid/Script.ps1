@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'http://pa.udongman.cn/index.php/upgrade/'
 
 # Version
-$this.CurrentState.Version = $Object1.updater.pa_mversion + '.' + $Object1.updater.pa_subversion
+$this.CurrentState.Version = "$($Object1.updater.pa_mversion).$($Object1.updater.pa_subversion)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

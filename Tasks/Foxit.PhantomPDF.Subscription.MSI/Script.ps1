@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.package_info.version[0]
 # Installer
 $this.CurrentState.Installer += $InstallerExe = [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '_Prom.exe')
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '_Prom.exe')
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '.msi')
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '.msi')
 }
 
 switch -Regex ($this.Check()) {

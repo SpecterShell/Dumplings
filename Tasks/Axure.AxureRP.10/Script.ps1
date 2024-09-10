@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.axure.com/update-check/CheckForUp
 
 # Version
 $Build = [regex]::Match($Object1, '(?m)^id=([\d]+)$').Groups[1].Value
-$this.CurrentState.Version = '10.0.0.' + $Build
+$this.CurrentState.Version = "10.0.0.${Build}"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

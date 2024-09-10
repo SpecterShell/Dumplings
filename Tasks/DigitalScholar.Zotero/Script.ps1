@@ -28,8 +28,13 @@ if (-not $InstallerUrl.Contains($this.CurrentState.Version)) {
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Uri2 = 'https://www.zotero.org/support/changelog'
-      $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $RelaseNotesUrl = 'https://www.zotero.org/support/changelog'
+      }
+
+      $Object2 = Invoke-WebRequest -Uri $RelaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[starts-with(@id, 'changes_in_$($this.CurrentState.Version.Replace('.', ''))')]")
       if ($ReleaseNotesTitleNode) {
@@ -47,15 +52,10 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $Uri2 + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Value = $RelaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Uri2
-        }
       }
     } catch {
       $_ | Out-Host

@@ -12,10 +12,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website.exe', '.msi')
 }
-# $this.CurrentState.Installer += $Installer = [ordered]@{
-#   InstallerType = 'exe'
-#   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '_Prom.exe')
-# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -26,24 +22,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    # $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # $InstallerFile2Root = New-TempFolder
-    # 7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Root}" $InstallerFile '2.msi' | Out-Host
-    # $InstallerFile2 = Join-Path $InstallerFile2Root '2.msi'
-
-    # # RealVersion
-    # $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-    # # InstallerSha256
-    # $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # # AppsAndFeaturesEntries
-    # $Installer['AppsAndFeaturesEntries'] = @(
-    #   [ordered]@{
-    #     ProductCode   = $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    #     UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-    #     InstallerType = 'wix'
-    #   }
-    # )
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html

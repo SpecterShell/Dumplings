@@ -4,18 +4,18 @@ $Object1 = Invoke-WebRequest -Uri 'https://rkward.kde.org/RKWard_on_Windows.html
 $this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('/html/body/main/ul[1]/li/text()[1]').InnerText, 'RKWard (.+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('/html/body/main/ul[1]/li/a').Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
-    $Installer['AppsAndFeaturesEntries'] = @(
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
         DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
       }

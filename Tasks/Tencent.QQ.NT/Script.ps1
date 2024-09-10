@@ -8,7 +8,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object2.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Object2.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
@@ -16,7 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
+$this.CurrentState.Version = [regex]::Match($Installer.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

@@ -8,7 +8,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri ('https:' + $Object1.SelectSingleNode('//div[contains(@class, "down_winbox")]/div[2]/a').Attributes['href'].Value)
+  InstallerUrl = Get-RedirectedUrl1st -Uri "https:$($Object1.SelectSingleNode('//div[contains(@class, "down_winbox")]/div[2]/a').Attributes['href'].Value)"
 }
 
 switch -Regex ($this.Check()) {

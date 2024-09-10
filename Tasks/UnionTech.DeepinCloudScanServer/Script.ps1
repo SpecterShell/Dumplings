@@ -4,7 +4,7 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Prefix + $Object1.Links.Where({ (Get-Member -Name 'href' -InputObject $_ -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.exe') })[0].href
+  InstallerUrl = $InstallerUrl = $Prefix + $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'

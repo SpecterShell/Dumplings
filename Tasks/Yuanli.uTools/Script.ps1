@@ -3,11 +3,11 @@ $Object1 = Invoke-WebRequest -Uri 'https://u.tools/download/'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Select-String -Pattern '\.exe$' -Raw | Select-String -Pattern 'ia32' -SimpleMatch -Raw | Select-Object -First 1
+  InstallerUrl = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('ia32') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Select-String -Pattern '\.exe$' -Raw | Select-String -Pattern 'ia32' -SimpleMatch -NotMatch -Raw | Select-Object -First 1
+  InstallerUrl = $InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('ia32') } catch {} }, 'First')[0].href
 }
 
 $VersionX86 = [regex]::Match($InstallerUrlX86, '-([\d\.]+)[-\.]').Groups[1].Value

@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.Content, 'Version: (\d+(?:\
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Links.Where({ ($_ | Get-Member -Name 'href' -ErrorAction SilentlyContinue) -and $_.href.EndsWith('.zip') }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {

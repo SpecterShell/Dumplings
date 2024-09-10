@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.internetdownloadmanager.com/downl
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Select-String -Pattern '\.exe' -Raw | Select-Object -First 1 | ConvertTo-HtmlDecodedText | Split-Uri -LeftPart Path
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href | ConvertTo-HtmlDecodedText | Split-Uri -LeftPart Path
 }
 
 $VersionMatches = [regex]::Match($InstallerUrl, 'idman((\d)(\d+)build(\d+))')

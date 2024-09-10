@@ -5,7 +5,6 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
   InstallerUrl = 'https://wifbox.wlhex.com/download/wifbox_setup.exe'
 }
 
