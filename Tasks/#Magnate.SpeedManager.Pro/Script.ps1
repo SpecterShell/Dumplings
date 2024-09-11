@@ -1,11 +1,11 @@
 $OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:DumplingsStorage['SpeedManager'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['SpeedManagerPro'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['SpeedManager'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['SpeedManagerPro'] = $OldReleaseNotes = [ordered]@{}
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://file2.speedtest.cn/pc/win64/version.json' | Read-ResponseContent | ConvertFrom-Json
+$Object1 = Invoke-WebRequest -Uri 'https://file2.speedtest.cn/pc-pro/win64/version.json' | Read-ResponseContent | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.version
