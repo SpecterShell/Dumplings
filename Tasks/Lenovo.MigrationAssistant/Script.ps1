@@ -1,31 +1,35 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://support.lenovo.com/us/en/downloads/ds502567').Content | Get-EmbeddedJson -StartsFrom 'window.customData || ' | ConvertFrom-Json
-$Object2 = $Object1.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.exe') })[0]
+$Object1 = Invoke-WebRequest -Uri 'https://support.lenovo.com/us/en/downloads/ds502567' -Headers @{
+  'Accept'          = 'text/html'
+  'Accept-Language' = 'en-US'
+} -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Firefox/131.0'
+$Object2 = $Object1.Content | Get-EmbeddedJson -StartsFrom 'window.customData || ' | ConvertFrom-Json
+$Object3 = $Object2.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.exe') })[0]
 
 # Version
-$this.CurrentState.Version = $Object2.Version
+$this.CurrentState.Version = $Object3.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.URL
+  InstallerUrl = $Object3.URL
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.Date.Unix | ConvertFrom-UnixTimeMilliseconds
+      $this.CurrentState.ReleaseTime = $Object3.Date.Unix | ConvertFrom-UnixTimeMilliseconds
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
     try {
-      $Object3 = $Object1.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.txt') })[0]
+      $Object4 = $Object2.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.txt') })[0]
 
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $Object3.URL
+        Value = $Object4.URL
       }
     } catch {
       $_ | Out-Host
