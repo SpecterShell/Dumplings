@@ -2,16 +2,17 @@
 $Object1 = Invoke-RestMethod -Uri 'https://update.vivaldi.com/update/1.0/public/appcast.xml'
 # x64
 $Object2 = Invoke-RestMethod -Uri 'https://update.vivaldi.com/update/1.0/public/appcast.x64.xml'
+# arm64
+$Object3 = Invoke-RestMethod -Uri 'https://update.vivaldi.com/update/1.0/public/appcast.arm64.xml'
 
 # Version
 $this.CurrentState.Version = $Object2.enclosure.version
 
-$Identical = $true
-if ($Object1.enclosure.version -ne $Object2.enclosure.version) {
-  $this.Log('Distinct versions detected', 'Warning')
+if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.enclosure.version } -Unique).Count -gt 1) {
   $this.Log("x86 version: $($Object1.enclosure.version)")
   $this.Log("x64 version: $($Object2.enclosure.version)")
-  $Identical = $false
+  $this.Log("arm64 version: $($Object3.enclosure.version)")
+  throw 'Distinct versions detected'
 }
 
 # Installer
@@ -22,6 +23,10 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.enclosure.url.Replace('stable-auto', 'stable')
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object3.enclosure.url.Replace('stable-auto', 'stable')
 }
 
 switch -Regex ($this.Check()) {
@@ -38,9 +43,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//body/h2[contains(text(), 'Changelog since')][1]")
+      $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//body/h2[contains(text(), 'Changelog since')][1]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
@@ -63,7 +68,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
