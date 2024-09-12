@@ -13,10 +13,6 @@ $this.CurrentState.Version = $Object1.current_version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://get.geo.opera.com/pub/opera/desktop/$($this.CurrentState.Version)/win/Opera_$($this.CurrentState.Version)_Setup.exe"
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://get.geo.opera.com/pub/opera/desktop/$($this.CurrentState.Version)/win/Opera_$($this.CurrentState.Version)_Setup_x64.exe"
 }
