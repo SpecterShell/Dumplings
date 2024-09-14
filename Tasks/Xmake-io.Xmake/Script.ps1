@@ -8,12 +8,24 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') -and $_.name.Contains($this.CurrentState.Version) }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture  = 'x86'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') -and $_.name.Contains($this.CurrentState.Version) -and -not $_.name.Contains('bundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') -and $_.name.Contains($this.CurrentState.Version) }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') -and $_.name.Contains($this.CurrentState.Version) -and -not $_.name.Contains('bundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'portable'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') -and $_.name.Contains($this.CurrentState.Version) -and $_.name.Contains('bundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'portable'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') -and $_.name.Contains($this.CurrentState.Version) -and $_.name.Contains('bundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -40,7 +52,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/xmake-io/xmake/master/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/xmake-io/xmake/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')][1]")
       if ($ReleaseNotesTitleNode) {
