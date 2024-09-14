@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://download.cntv.cn/cbox/update_config.t
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.result.update_url
+  InstallerUrl = $InstallerUrl = $Object1.result.update_url | ConvertTo-Https
 }
 
 # Version
