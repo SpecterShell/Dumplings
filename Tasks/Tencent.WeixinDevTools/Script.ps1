@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Version.SubString(3, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($this.CurrentState.Version.Split('.')[2].SubString(0, 6), 'yyMMdd', $null).ToString('yyyy-MM-dd')
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
