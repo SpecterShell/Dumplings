@@ -1,7 +1,27 @@
+<#
+.SYNOPSIS
+    WinGet Manifest creation helper script
+.DESCRIPTION
+    The intent of this file is to help you generate a manifest for publishing
+    to the Windows Package Manager repository.
+
+    It'll attempt to download an installer from the user-provided URL to calculate
+    a checksum. That checksum and the rest of the input data will be compiled in a
+    .YAML file.
+.EXAMPLE
+    PS C:\Projects\winget-pkgs> Get-Help .\Tools\YamlCreate.ps1 -Full
+    Show this script's help
+.EXAMPLE
+    PS C:\Projects\winget-pkgs> .\Tools\YamlCreate.ps1
+    Run the script to create a manifest file
+.NOTES
+    Please file an issue if you run into errors with this script:
+    https://github.com/microsoft/winget-pkgs/issues/
+.LINK
+    https://github.com/microsoft/winget-pkgs/blob/master/Tools/YamlCreate.ps1
+#>
 #Requires -Version 7
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification = 'This script is not intended to have any outputs piped')]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Scope = 'Function', Target = '*Metadata',
-  Justification = 'Metadata is used as a mass noun and is therefore singular in the cases used in this script')]
 
 Param
 (
@@ -40,29 +60,6 @@ $DirectSchemaUrls = @{
   installer     = "https://raw.githubusercontent.com/microsoft/winget-cli/master/schemas/JSON/manifests/v$ManifestVersion/manifest.installer.$ManifestVersion.json"
 }
 
-<#
-.SYNOPSIS
-    WinGet Manifest creation helper script
-.DESCRIPTION
-    The intent of this file is to help you generate a manifest for publishing
-    to the Windows Package Manager repository.
-
-    It'll attempt to download an installer from the user-provided URL to calculate
-    a checksum. That checksum and the rest of the input data will be compiled in a
-    .YAML file.
-.EXAMPLE
-    PS C:\Projects\winget-pkgs> Get-Help .\Tools\YamlCreate.ps1 -Full
-    Show this script's help
-.EXAMPLE
-    PS C:\Projects\winget-pkgs> .\Tools\YamlCreate.ps1
-    Run the script to create a manifest file
-.NOTES
-    Please file an issue if you run into errors with this script:
-    https://github.com/microsoft/winget-pkgs/issues/
-.LINK
-    https://github.com/microsoft/winget-pkgs/blob/master/Tools/YamlCreate.ps1
-#>
-
 # Fetch Schema data from github for entry validation, key ordering, and automatic commenting
 try {
   $LocaleSchema = $Global:DumplingsSessionStorage['WinGetLocaleSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
@@ -74,7 +71,6 @@ try {
   $InstallerSwitchProperties = (ConvertTo-Yaml $InstallerSchema.definitions.InstallerSwitches.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Installer.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerDependencyProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Dependencies.properties | ConvertFrom-Yaml -Ordered).Keys
-  $AppsAndFeaturesEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.AppsAndFeaturesEntry.properties | ConvertFrom-Yaml -Ordered).Keys
 } catch {
   # Here we want to pass the exception as an inner exception for debugging if necessary
   throw [System.Net.WebException]::new('Manifest schemas could not be downloaded. Try running the script again', $_.Exception)
@@ -232,7 +228,6 @@ Function Test-ValidFileName {
   return $IndexOfInvalidChar -eq -1
 }
 
-
 Function Get-InstallerFile {
   Param
   (
@@ -375,6 +370,7 @@ Function Read-QuickInstallerEntry {
       }
     }
     if ($ToUpdate) {
+      if ($_NewInstaller['ReleaseDate']) { $_NewInstaller.Remove('ReleaseDate') }
       foreach ($_key in $MatchingInstallerEntry.Keys) {
         if ($_key -eq 'InstallerUrl') {
           if (Test-String $MatchingInstallerEntry.$_key -IsNull) { throw "The new value for installer property ${_key} is invalid: $($MatchingInstallerEntry.$_key)" }
@@ -711,7 +707,7 @@ Function Write-InstallerManifest {
           $_AllAreSame = $true
           $_FirstInstallerSwitchKeyValue = ConvertTo-Json -InputObject $InstallerManifest.Installers[0].$_Key.$_InstallerSwitchKey
           foreach ($_Installer in $InstallerManifest.Installers) {
-            if ($_Installer.Contains($_Key) -and $_Installer.$_Key.Contains($_InstallerSwitchKey)){
+            if ($_Installer.Contains($_Key) -and $_Installer.$_Key.Contains($_InstallerSwitchKey)) {
               $_CurrentInstallerSwitchKeyValue = ConvertTo-Json -InputObject $_Installer.$_Key.$_InstallerSwitchKey
               if (Test-String $_CurrentInstallerSwitchKeyValue -IsNull) { $_AllAreSame = $false }
               else { $_AllAreSame = $_AllAreSame -and (@(Compare-Object $_CurrentInstallerSwitchKeyValue $_FirstInstallerSwitchKeyValue).Length -eq 0) }
