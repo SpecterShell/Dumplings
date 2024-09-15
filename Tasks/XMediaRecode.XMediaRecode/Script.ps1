@@ -10,9 +10,9 @@
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/download.php' | ConvertFrom-Html
 # x86
-$Object2 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(./h2, "32 bit") or contains(./h2, "32bit")) and contains(./h2, "Installer")][1]/table[@class="download_table"]/tbody')
+$Object2 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(.//h2/text(), "32 bit") or contains(.//h2/text(), "32bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 # x64
-$Object3 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(./h2, "64 bit") or contains(./h2, "64bit")) and contains(./h2, "Installer")][1]/table[@class="download_table"]/tbody')
+$Object3 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(.//h2/text(), "64 bit") or contains(.//h2/text(), "64bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 
 $VersionX86 = $Object2.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
 $VersionX64 = $Object3.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
