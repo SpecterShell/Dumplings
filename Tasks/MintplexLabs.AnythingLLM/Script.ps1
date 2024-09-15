@@ -26,6 +26,12 @@ switch -Regex ($this.Check()) {
         Key    = 'ReleaseNotes'
         Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
       }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://docs.anythingllm.com/changelog/v$($this.CurrentState.Version)"
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
