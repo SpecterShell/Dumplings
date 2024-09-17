@@ -12,10 +12,8 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
-    $this.Message()
-  }
   'Updated' {
+    $this.Message()
     $this.Submit()
   }
 }
