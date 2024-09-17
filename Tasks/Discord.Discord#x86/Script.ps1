@@ -8,11 +8,11 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '/(\d+\.\d+\.\d+(?:\.\d+)*)/').Groups[1].Value
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Updated' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Updated' {
     $this.Message()
   }
 }
