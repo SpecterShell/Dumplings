@@ -6,8 +6,13 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.downloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
+if ($this.CurrentState.Installer[0].InstallerUrl -notmatch '\d+\.\d+\.\d+.\d{5}') {
+  $this.Log('The version does not contain 5-digits build number', 'Info')
+  return
+}
+
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '((\d+\.\d+\.\d+).\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+\.\d+\.\d+.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -18,13 +23,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-FileVersionFromExe
 
     try {
       # Only parse version for major updates
