@@ -6,15 +6,15 @@ $this.CurrentState.Version = [regex]::Match($Object1.Content, 'v(\d+(?:\.\d+){1,
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://www.foobar2000.org/getfile/foobar2000_v$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://www.foobar2000.org/files/foobar2000_v$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://www.foobar2000.org/getfile/foobar2000-x64_v$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://www.foobar2000.org/files/foobar2000-x64_v$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "https://www.foobar2000.org/getfile/foobar2000-arm64ec_v$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://www.foobar2000.org/files/foobar2000-arm64ec_v$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
