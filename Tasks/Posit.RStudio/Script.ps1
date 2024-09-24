@@ -11,14 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.last_modified | Get-Date -Format 'yyyy-MM-dd'
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
