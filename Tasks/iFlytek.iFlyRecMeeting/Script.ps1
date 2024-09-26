@@ -10,17 +10,23 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       if ($Global:DumplingsStorage.Contains('iFlyRecMeeting') -and $Global:DumplingsStorage.iFlyRecMeeting.Contains($Version)) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.iFlyRecMeeting.$Version.ReleaseNotesEN
-        }
+        # # ReleaseNotes (en-US)
+        # $this.CurrentState.Locale += [ordered]@{
+        #   Locale = 'en-US'
+        #   Key    = 'ReleaseNotes'
+        #   Value  = $Global:DumplingsStorage.iFlyRecMeeting.$Version.ReleaseNotesEN
+        # }
+        # # ReleaseNotes (zh-CN)
+        # $this.CurrentState.Locale += [ordered]@{
+        #   Locale = 'zh-CN'
+        #   Key    = 'ReleaseNotes'
+        #   Value  = $Global:DumplingsStorage.iFlyRecMeeting.$Version.ReleaseNotesCN
+        # }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.iFlyRecMeeting.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.iFlyRecMeeting.$Version.ReleaseNotes
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
