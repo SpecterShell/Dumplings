@@ -7,6 +7,11 @@ if (Test-Path -Path $OldReleaseNotesPath) {
 
 $Object1 = Invoke-RestMethod -Uri 'https://api-client-arena.5eplay.com/api/home'
 
+if ($null -eq $Object1.data.login_version_note) {
+  $this.Log('The API returned an invalid response', 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.data.login_version_note.version
 
