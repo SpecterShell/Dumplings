@@ -1,7 +1,7 @@
 $Object1 = $Global:DumplingsStorage.HiteVisionApps['6AD336C7-7204-444D-BAE6-B1010B13888B']
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.appVersion
+$this.CurrentState.Version = $Version = $Object1.appVersion -replace '^V'
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
