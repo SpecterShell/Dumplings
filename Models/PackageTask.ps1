@@ -272,7 +272,7 @@ class PackageTask {
     if ($this.Logs.Count -gt 0) {
       $Message = $Message.AppendLine('**Log:**')
       foreach ($Log in $this.Logs) {
-        $Message = $Message.AppendLine(($Log | ConvertTo-MarkdownEscapedText))
+        $Message = $Message.AppendLine((($Log.Length -gt 1024 ? ($Log.SubString(0, 1024) + '...[truncated]') : $Log) | ConvertTo-MarkdownEscapedText))
       }
     }
 
@@ -336,7 +336,7 @@ class PackageTask {
     if ($this.Logs.Count -gt 0) {
       $Message = $Message.AppendLine('*Log:*')
       foreach ($Log in $this.Logs) {
-        $Message = $Message.AppendLine(($Log | ConvertTo-TelegramEscapedText))
+        $Message = $Message.AppendLine((($Log.Length -gt 1024 ? ($Log.SubString(0, 1024) + '...[truncated]') : $Log) | ConvertTo-TelegramEscapedText))
       }
     }
 
