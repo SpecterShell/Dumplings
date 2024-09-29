@@ -19,6 +19,27 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.checkforupdate.latestversion.builddate | Get-Date -Format 'yyyy-MM-dd'
 
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = 'https://www.screenpresso.com/releases/'
+    }
+
+    try {
+      $Object2 = Invoke-WebRequest -Uri $Object1.checkforupdate.latestversion.releasesummary | ConvertFrom-Html
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.SelectSingleNode('//div[contains(@class, "container")]') | Get-TextContent | Format-Text
+      }
+
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
@@ -33,20 +54,6 @@ switch -Regex ($this.Check()) {
         Locale = 'fr-FR'
         Key    = 'ReleaseNotesUrl'
         Value  = $Object1.checkforupdate.latestversion.releaseurl.Replace('releases', 'fr/versions')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      $Object2 = Invoke-WebRequest -Uri $Object1.checkforupdate.latestversion.releasesummary | ConvertFrom-Html
-
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectSingleNode('//div[contains(@class, "container")]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
