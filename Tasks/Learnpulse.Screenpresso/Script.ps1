@@ -29,6 +29,16 @@ switch -Regex ($this.Check()) {
       Key   = 'ReleaseNotesUrl'
       Value = 'https://www.screenpresso.com/releases/'
     }
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'de-DE'
+      Key    = 'ReleaseNotesUrl'
+      Value  = 'https://www.screenpresso.com/de/softwareveroffentlichung/'
+    }
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'fr-FR'
+      Key    = 'ReleaseNotesUrl'
+      Value  = 'https://www.screenpresso.com/fr/versions/'
+    }
 
     try {
       $Object2 = Invoke-WebRequest -Uri $Object1.checkforupdate.latestversion.releasesummary | ConvertFrom-Html
