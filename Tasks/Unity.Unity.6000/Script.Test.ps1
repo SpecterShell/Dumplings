@@ -27,7 +27,7 @@ $this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
 # ReleaseNotesUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'ReleaseNotesUrl'
-  Value = "https://unity3d.com/unity/whats-new/$($Version -creplace 'f\d+', '')"
+  Value = "https://unity.com/releases/editor/whats-new/$($Version -creplace 'f\d+', '')"
 }
 
 # Documentations
