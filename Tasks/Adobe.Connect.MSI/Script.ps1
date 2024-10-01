@@ -7,28 +7,18 @@ if ($Object1.UpdateDescr.Windows.Release[0].Version -ne $Object1.UpdateDescr.Win
 }
 
 # Version
-$this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version
+$this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version -replace '^20'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x86'
-  InstallerType          = 'exe'
-  InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32AppStandalone'
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = "$($this.CurrentState.Version).32"
-    }
-  )
+  Architecture  = 'x86'
+  InstallerType = 'msi'
+  InstallerUrl  = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32msi'
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'exe'
-  InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11AppStandalone'
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = "$($this.CurrentState.Version).64"
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'msi'
+  InstallerUrl  = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11msi'
 }
 
 switch -Regex ($this.Check()) {
