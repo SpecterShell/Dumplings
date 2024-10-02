@@ -57,9 +57,6 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
-    $this.Message()
-  }
   'Updated' {
     $Object4 = [ordered]@{}
     Invoke-RestMethod -Uri "${Prefix}${OriginalVersion}/SHA256SUMS" | Split-LineEndings |
@@ -104,10 +101,13 @@ switch -Regex ($this.Check()) {
 
       try {
         $this.Submit()
-      }
-      catch {
+      } catch {
         $_ | Out-Host
+        $this.Log($_, 'Warning')
       }
     }
+  }
+  'Changed|Updated' {
+    $this.Message()
   }
 }
