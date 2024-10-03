@@ -33,9 +33,11 @@ function New-EdgeDriver {
   if (-not $Script:WebDriverLoaded) { throw 'WebDriver is not loaded' }
 
   $EdgeOptions = [OpenQA.Selenium.Edge.EdgeOptions]::new()
+
+  # Run Edge in the background with no window popping up
+  if ($Headless) { $EdgeOptions.AddArgument('--headless=new') }
   # Disable images downloading to speed up page loading
   $EdgeOptions.AddUserProfilePreference('profile.managed_default_content_settings.images', 2)
-  if ($Headless) { $EdgeOptions.AddArgument('--headless=new') }
 
   if (Test-Path -Path Env:\EDGEWEBDRIVER) {
     # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
@@ -45,8 +47,17 @@ function New-EdgeDriver {
   } else {
     throw 'Could not find msedgedriver.exe'
   }
-  $Script:EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
+
   $Script:EdgeDriverLoaded = $true
+
+  # Resize the window to 1920x1080 to ensure the page is not rendered in mobile mode
+  $Script:EdgeDriver.Manage().Window.Size = [System.Drawing.Size]::new(1920, 1080)
+  # Block images, videos, and other media files to speed up page loading and reduce resource consumption
+  $Dict = [System.Collections.Generic.Dictionary[string, object]]::new()
+  $Dict.Add('urls', @('*.jpg*', '*.jpeg*', '*.bmp*', '*.png*', '*.webp*', '*.gif*', '*.svg*', '*.mp4*', '*.webm*', '*.flv*'))
+  $null = $Script:EdgeDriver.ExecuteCdpCommand('Network.setBlockedURLs', $Dict)
+  $Dict = [System.Collections.Generic.Dictionary[string, object]]::new()
+  $null = $Script:EdgeDriver.ExecuteCdpCommand('Network.enable', $Dict)
 }
 
 function Get-EdgeDriver {
