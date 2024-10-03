@@ -44,7 +44,13 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated|Rollbacked' {
-    $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+    try {
+      $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Submit()
   }
 }
