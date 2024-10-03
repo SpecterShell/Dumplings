@@ -40,7 +40,7 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The Last Modified was not updated
-if ($this.CurrentState.LastModified -eq $this.LastState.LastModified) {
+if ($this.CurrentState.LastModified -le $this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
