@@ -25,7 +25,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://static.frdic.com/pkg/ehsetup.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
