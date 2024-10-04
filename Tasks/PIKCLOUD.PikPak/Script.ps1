@@ -47,7 +47,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $this.Print()
   $this.Write()
-  $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+  $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
   $this.Message()
   $this.Submit()
   return
@@ -101,7 +101,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
   }
   # Case 6: The MD5 and the version were updated
@@ -114,7 +114,7 @@ switch -Regex ($this.Check()) {
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer.ForEach({ $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" })
+    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
