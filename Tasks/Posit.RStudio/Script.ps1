@@ -1,15 +1,23 @@
-$Object1 = Invoke-WebRequest -Uri 'https://posit.co/download/rstudio-desktop/'
+$Object1 = (Invoke-RestMethod -Uri 'https://posit.co/wp-content/uploads/downloads.json').rstudio.open_source.stable.desktop.installer.windows
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'Version:\s*([\d\.\+]+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.last_modified | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
