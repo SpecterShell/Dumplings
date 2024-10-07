@@ -13,8 +13,43 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://unity.com/releases/editor/whats-new/$($OriginalVersion -creplace 'f\d+', '')"
+      }
 
-    $Query = @'
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'Documentations'
+        Value  = @(
+          @{
+            DocumentLabel = 'Unity User Manual'
+            DocumentUrl   = "https://docs.unity3d.com/$($OriginalVersion.Split('.')[0..1] -join '.')/Documentation/Manual/"
+          }
+        )
+      }
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = 'Unity 用户手册'
+            DocumentUrl   = "https://docs.unity3d.com/$($OriginalVersion.Split('.')[0..1] -join '.')/Documentation/Manual/"
+            # DocumentUrl   = "https://docs.unity3d.com/cn/$($OriginalVersion.Split('.')[0..1] -join '.')/Manual/"
+          }
+        )
+      }
+
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Query = @'
 {
   getUnityReleases(
     stream: [TECH, LTS]
@@ -44,42 +79,18 @@ switch -Regex ($this.Check()) {
   }
 }
 '@
-    $Object2 = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges.Where({ $_.node.version -eq $OriginalVersion }, 'First')[0].node
+      $Object2 = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges.Where({ $_.node.version -eq $OriginalVersion }, 'First')[0].node
 
-    # ReleaseNotes (en-US)
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'en-US'
-      Key    = 'ReleaseNotes'
-      Value  = (Invoke-RestMethod -Uri $Object2.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
-    }
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = (Invoke-RestMethod -Uri $Object2.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
 
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = "https://unity.com/releases/editor/whats-new/$($OriginalVersion -creplace 'f\d+', '')"
-    }
-
-    # Documentations
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'en-US'
-      Key    = 'Documentations'
-      Value  = @(
-        @{
-          DocumentLabel = 'Unity User Manual'
-          DocumentUrl   = "https://docs.unity3d.com/$($OriginalVersion.Split('.')[0..1] -join '.')/Documentation/Manual/"
-        }
-      )
-    }
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'zh-CN'
-      Key    = 'Documentations'
-      Value  = @(
-        [ordered]@{
-          DocumentLabel = 'Unity 用户手册'
-          DocumentUrl   = "https://docs.unity3d.com/$($OriginalVersion.Split('.')[0..1] -join '.')/Documentation/Manual/"
-          # DocumentUrl   = "https://docs.unity3d.com/cn/$($OriginalVersion.Split('.')[0..1] -join '.')/Manual/"
-        }
-      )
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
     $this.Print()
