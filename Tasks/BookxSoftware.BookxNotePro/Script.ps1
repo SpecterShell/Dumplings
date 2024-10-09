@@ -52,7 +52,15 @@ switch -Regex ($this.Check()) {
       while (-not $ReleaseNotesObject.EndOfStream) {
         if ($ReleaseNotesObject.ReadLine().StartsWith("V$($this.CurrentState.Version)")) {
           # ReleaseTime
-          $this.CurrentState.ReleaseTime = [datetime]::ParseExact($ReleaseNotesObject.ReadLine(), 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+          $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+            $ReleaseNotesObject.ReadLine(),
+            [string[]]@(
+              'yyyyMMdd',
+              'yyyy-MM-dd'
+            ),
+            (Get-Culture -Name 'en-US'),
+            [System.Globalization.DateTimeStyles]::None
+          ).ToString('yyyy-MM-dd')
           break
         }
       }
