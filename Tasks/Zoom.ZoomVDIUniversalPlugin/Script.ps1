@@ -1,4 +1,10 @@
-$Object1 = Invoke-WebRequest -Uri 'https://zoom.us/product/version?productName=vdi&platform=Universal&os=Win32&pluginOS=win&cv=6.1.10' -UserAgent 'Mozilla/5.0 (ZOOM.Win 10.0 x64)' | ConvertFrom-ProtoBuf
+$Object1 = Invoke-WebRequest -Uri 'https://zoom.us/product/version' -UserAgent 'Mozilla/5.0 (ZOOM.Win 10.0 x64)' -Body @{
+  productName = 'vdi'
+  platform    = 'Universal'
+  os          = 'Win32'
+  pluginOS    = 'win'
+  cv          = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.1.10'
+} | ConvertFrom-ProtoBuf
 $Object2 = $Object1['12'] | ConvertFrom-Json
 
 # Version
