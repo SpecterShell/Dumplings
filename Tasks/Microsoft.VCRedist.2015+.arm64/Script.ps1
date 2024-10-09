@@ -4,7 +4,7 @@ $StreamReader = [System.IO.StreamReader]::new($ManifestFile)
 $JsonTextReader = [Newtonsoft.Json.JsonTextReader]::new($StreamReader)
 
 $PackageId = 'Microsoft.VisualCpp.Redist.14'
-$PackageChip = 'x86'
+$PackageChip = 'arm64'
 
 $Mode = 0
 
@@ -33,7 +33,7 @@ while ($JsonTextReader.Read()) {
     }
   } elseif ($Mode -eq 2) {
     if ($JsonTextReader.TokenType -eq [Newtonsoft.Json.JsonToken]::PropertyName -and $JsonTextReader.Value -eq 'fileName') {
-      if ($JsonTextReader.Read() -and $JsonTextReader.TokenType -eq [Newtonsoft.Json.JsonToken]::String -and $JsonTextReader.Value -eq 'VC_redist.x86.exe') {
+      if ($JsonTextReader.Read() -and $JsonTextReader.TokenType -eq [Newtonsoft.Json.JsonToken]::String -and $JsonTextReader.Value -eq 'VC_redist.arm64.exe') {
         $Mode = 3
       }
     }
@@ -42,7 +42,7 @@ while ($JsonTextReader.Read()) {
       if ($JsonTextReader.Read() -and $JsonTextReader.TokenType -eq [Newtonsoft.Json.JsonToken]::String) {
         # Installer
         $this.CurrentState.Installer += [ordered]@{
-          Architecture = 'x86'
+          Architecture = 'arm64'
           InstallerUrl = $JsonTextReader.Value
         }
         break
