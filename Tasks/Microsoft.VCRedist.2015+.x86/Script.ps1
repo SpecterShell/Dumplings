@@ -42,7 +42,7 @@ while ($JsonTextReader.Read()) {
       if ($JsonTextReader.Read() -and $JsonTextReader.TokenType -eq [Newtonsoft.Json.JsonToken]::String) {
         # Installer
         $this.CurrentState.Installer += [ordered]@{
-          Architecture = 'x64'
+          Architecture = 'x86'
           InstallerUrl = $JsonTextReader.Value
         }
         break
