@@ -1,12 +1,12 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.axure.com/update-check/CheckForUpdate?info=%7B%22ClientVersion%22%3A%2210.0.0.0000%22%2C%22ClientOS%22%3A%22Windows%7C64bit%22%7D'
+$Object1 = Invoke-RestMethod -Uri 'https://www.axure.com/update-check/CheckForUpdate?info=%7B%22ClientVersion%22%3A%2211.0.0.0000%22%2C%22ClientOS%22%3A%22Windows%7C64bit%22%7D'
 
 # Version
 $Build = [regex]::Match($Object1, '(?m)^id=([\d]+)$').Groups[1].Value
-$this.CurrentState.Version = "10.0.0.${Build}"
+$this.CurrentState.Version = "11.0.0.${Build}"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://axure.cachefly.net/versions/10-0/AxureRP-Setup-${Build}.exe"
+  InstallerUrl = "https://axure.cachefly.net/versions/11-0/AxureRP-Setup-${Build}.exe"
 }
 
 switch -Regex ($this.Check()) {
