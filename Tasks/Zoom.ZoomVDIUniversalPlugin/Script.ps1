@@ -9,6 +9,10 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[@(0, 1, 3
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = Join-Uri 'https://zoom.us/' $Object2.url
+}
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri 'https://zoom.us/' $Object2.x64.url
 }
