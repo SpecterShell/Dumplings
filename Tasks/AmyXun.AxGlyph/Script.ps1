@@ -16,6 +16,10 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
+if ($this.CurrentState.Installer[0].InstallerUrl.Contains('...')) {
+  throw 'The installer URL is invalid'
+}
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
