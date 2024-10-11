@@ -49,8 +49,45 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated' {
     $this.Message()
+    $this.MessageEnabled = $false
   }
   'Updated' {
-    $this.Submit()
+    foreach ($License in @('GPL', 'LGPL')) {
+      foreach ($Shared in @($false, $true)) {
+        foreach ($Branch in @('master', '5.1', '6.1', '7.1')) {
+          $this.Config.WinGetIdentifier = "BtbN.FFmpeg.${License}$($Shared ? '.Shared' : '')$($Branch -eq 'master' ? '' : ".${Branch}")"
+          $this.CurrentState.Installer = @()
+
+          $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name.Contains("-$($License.ToLower())") -and ($Shared -eq $_.name.Contains('shared')) -and ($Branch -eq 'master' ? $_.name.Contains('N-') : $_.name.Contains("n${Branch}")) }, 'First')[0]
+          $this.CurrentState.Installer += [ordered]@{
+            InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+            NestedInstallerFiles = @(
+              [ordered]@{
+                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffmpeg.exe"
+                PortableCommandAlias = 'ffmpeg'
+              }
+              [ordered]@{
+                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffplay.exe"
+                PortableCommandAlias = 'ffplay'
+              }
+              [ordered]@{
+                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffprobe.exe"
+                PortableCommandAlias = 'ffprobe'
+              }
+            )
+          }
+
+          try {
+            $this.Submit()
+          } catch {
+            $_ | Out-Host
+            $this.Log($_, 'Warning')
+          }
+        }
+      }
+    }
+  }
+  'Changed|Updated' {
+    $this.Message()
   }
 }
