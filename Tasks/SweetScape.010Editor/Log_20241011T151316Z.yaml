@@ -1,0 +1,171 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://download.sweetscape.com/010EditorWin32Installer15.0.1.exe
+- Architecture: x64
+  InstallerUrl: https://download.sweetscape.com/010EditorWin64Installer15.0.1.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The following is an overview of the new functionality in version 15.0 of 010 Editor:
+    - Added support for Tree-sitter syntaxes which provide real-time syntax parsing.
+    - Tree-sitter allows high-quality syntax highlighting including coloring function names, custom data types, struct definitions, etc.
+    - Over 45 Tree-sitter syntaxes are included and more can be installed from the internet.
+    - Brace and Tag Matching: Placing the caret over a bracket '(' or ')' will underline that bracket and the corresponding bracket in the syntax. Works with HTML and XML tags too.
+    - Jump between matching braces or tags with 'Find > Jump to Matching Brace/Tag'.
+    - Double-clicking on a word in the text editor will automatically highlight all occurrences of that word in the document.
+    - Dotted lines are now drawn vertically between code sections as identified by a Tree-sitter syntax (for example, 'if' or 'while' statements).
+    - Added new 'Select' menu to the main menu with 'Select Word', 'Select Line' and 'Expand Selection'.
+    - Use 'Expand Selection' to increase the current selection by stepping up the syntax tree (requires a Tree-sitter syntax or Binary Template).
+    - Added animated scrolling when using page up/page down or jumping to positions in the file using Find, Goto, etc.
+    - On Windows added Full Screen mode using 'View > Enter Full Screen'.
+    - Added new themes 'Sunset Sky' and 'Bright Sky' which adjust syntax highlighting colors.
+    The following is a list of all new features in version 15.0 of 010 Editor:
+    - Tree-sitter
+      - Added support for Tree-sitter syntaxes in addition to regular syntaxes from Binary Templates.
+      - Tree-sitter performs real-time parsing of source code into a syntax tree and allows high-quality syntax highlighting, matching braces/tags, expand selection, drawing section lines, etc.
+      - Tree-sitter syntaxes added for Ada, ASM, Bash, Common Lisp, C/C++, C#, CSS, D, Dart, Elixir, Fortran, GLSL, Go, Haskell, HTML, Java, JavaScript, JSON, JSON5, Julia, Kotlin, LaTeX, LLVM, LUA, Make, Markdown, MATLAB, Objective-C, OCaml, Pascal, Perl, PHP, Powershell, Python, R, Ruby, Rust, Scala, Scheme, SQL, Swift, Syntax010, TypeScript, XML, YAML, and Zig.
+      - Supports injections where source code from one syntax is placed inside of source code from another syntax and both are highlighted (for example, HTML containing JavaScript or CSS code).
+      - Select a syntax using 'View > Syntax' or by clicking the Syntax section of the Status Bar (both Tree-sitter and Binary Template syntaxes can be selected).
+      - The 'View > Syntax' menu shows recently used syntaxes and use 'View > Syntax > All Syntaxes (Tree-sitter)' to view all available syntaxes.
+      - Updating the Tree-sitter tree when editing is done using threads to preserve fast editing with large source code files.
+      - Additional Tree-sitter syntaxes can be downloaded from the internet and installed.
+      - Can print the current syntax tree to the Output panel using 'View > Syntax > Print Syntax Tree'. If bytes are selected only nodes that intersect those bytes and their parent nodes are displayed.
+      - If a different syntax is chosen for a file, the syntax is remembered the next time the file is loaded (see Remember Last Syntax in the Opening Files Options dialog).
+      - Large source code files are supported by dividing the file into multiple large blocks and each block is placed into a cache that can be cleared when too much memory is used.
+      - The block sizes and cache sizes can be controlled with the Cache Options dialog.
+      - When opening a file, the syntax is auto-detected using the file extension or a regular expression.
+      - Can parse big and little endian unicode files.
+      - New 'Syntax' page of the Options dialog to control the available Tree-sitter syntaxes.
+      - Syntaxes can be assigned a default 'Edit As' using the Syntax Option dialog.
+      - An option exists to turn off all Tree-sitter syntaxes in the Syntax Options dialog.
+    - Syntax highlighting
+      - More detailed syntax highlighting is available using Tree-sitter syntaxes including coloring for functions, custom data types, struct definitions, etc.
+      - Renamed syntax style names to be consistent with Tree-sitter. For example 'code-comment' becomes 'comment' and 'tag-comment' becomes 'tag.comment'.
+      - Syntax styles can now display text as bold. Struct and function definitions are marked as bold in Templates and Scripts.
+      - Syntax highlighting works inside injections (one syntax inside another syntax).
+      - In Templates, the HighlightFindStyle function can use either the old or new syntax style naming scheme to locate styles.
+      - Better syntax highlighting of Binary Template .bt and Script .1sc files using Tree-sitter.
+      - Added 'tag.error' style for coloring unmatched tags.
+    - Creating and Editing Syntaxes
+      - 010 Editor Tree-sitter syntaxes require two things: a dynamic link library (.dll/.so/.dylib) that parses the file into a set of symbols, and a .syntax010 file that maps from symbols to syntax styles.
+      - Syntax010 files are text files that can be edited within 010 Editor to customize the syntax highlighting.
+      - Use 'View > Syntax > Edit Syntax File' to edit the Syntax010 file for the current syntax.
+      - A Syntax010 file contain a series of S-expressions that can match part of a syntax tree and then use the @ operator to map to a syntax style name.
+      - Once a Syntax010 file has been edited, use 'View > Syntax > Refresh Syntax' to apply the changes or click the icon in the top-right corner of the editor.
+      - A Syntax010 file is similar to Tree-sitter's 'highlights.scm' file but with some extensions using #section.
+      - Use '#section match' to control how brace matching works for a syntax.
+      - Use '#section injection' to control how other syntaxes are injected into the current syntax.
+      - Use '#section fold' to specify which sections have fold lines drawn (code folding will be available in future versions).
+      - Supports regular expression matching with the #match? keyword.
+    - Matching Braces/Tags
+      - When using a Tree-sitter syntax, placing the caret over a brace '(' or ')' will cause that brace and the matching brace in the syntax to be underlined.
+      - Brace matching can be used for different types of symbols such as {}, [], ().
+      - Underlining also works with tags such as HTML tags (e.g. <b>, </b>) or XML tags.
+      - Use 'Find > Jump to Matching Brace/Tag' to jump the caret from one matching brace or tag to the other.
+      - Click 'View > Syntax > Highlight Matching Braces/Tag' to toggle the display of the underlines.
+      - The background color of the braces can also be changed using the Match Brace/Tag color in the Theme/Colors Options dialog.
+      - Which braces or tags are matched can be controlled by editing the '#section match' area of the Syntax010 file (use 'View > Syntax > Edit Syntax File' to view the file).
+    - Section Lines
+      - Dotted lines are now drawn vertically between code sections as identified by a Tree-sitter syntax.
+      - The lines can be turned off using 'View > Syntax > Show Section Lines'.
+      - Use the '#section fold' area of the current Syntax010 file to control where the lines are drawn (use 'View > Syntax > Edit Syntax File' to view the file).
+      - In the future these lines will indicate sections of code that can be folded.
+      - Control the color of the section lines using the Section Lines color in the Theme/Colors Options dialog.
+    - Auto-Highlight Selection
+      - Double-clicking on a word in the text editor will select that word and also automatically highlight all other occurrences of the word in the file.
+      - By default a rectangle is drawn around each matching word in the document.
+      - The background color can also be set using the Auto-Highlight Selection color in the Theme/Colors Options dialog.
+      - Turn off highlighting by clicking 'View > Highlighting > Auto-Highlight Selection'.
+      - Auto-highlight is turned off by default for hex files but can be enabled using 'View > Highlighting > Auto-Highlight Selection'.
+    - Selection
+      - Added new 'Select' menu to the main menu.
+      - Added 'Select Word' to select the word the caret is on. If the word is already selected, the next word in the file is selected.
+      - Added 'Select Line' to select the whole line the caret is on or expand the selection to include the starting and end lines.
+      - Added 'Expand Selection' to increase the current selection by stepping up the syntax tree (requires a Tree-sitter syntax to be active). Expand Selection also works when a Binary Template is active by selecting the parent variables in the hierarchy.
+      - Added 'Reverse Selection' to move the caret from the start of the selection to the end of the selection, or from the end of the selection to the start of the selection.
+      - Added 'Mark Selection Start' to mark the beginning of a selection at the current caret position and 'Mark Selection End' to mark the end. If both a start and end point are set then the bytes are selected.
+      - Added 'Move Selection Back' and 'Move Selection Forward' to move the selection forward or back by the number of bytes that are selected (useful in hex editing).
+      - Moved 'Select All', 'Select Range' and 'Column Mode' to the Select menu.
+    - Tables
+      - Using the mouse wheel to scroll in tables no longer selects a different row.
+      - Re-enable selecting rows using the mouse wheel by right-clicking on a table and selecting 'Column Display Format > Select by > Mouse Wheel Changes Selection'.
+    - Themes
+      - Added new themes 'Sunset Sky' and 'Bright Sky' which adjust syntax highlighting colors.
+      - Added the 'View > Themes' menu for easily changing the theme.
+      - Adjustments and fixes for many theme colors.
+      - Added separate color for text line numbers and tool bar handles.
+    - Editor
+      - Added animated scrolling when using page up/page down or jumping to positions in the file using Find, Goto, etc.
+      - Animated scrolling can be turned off in the Editor Options dialog.
+      - Changed the indicator when the editor is scrolled to the right from a shadow to a single line.
+      - Added 'Clear Replace Results' toggle to the Editor right-click menu to remove coloring from the editor after doing a replace all operation.
+      - Line numbers are now displayed by default.
+      - Added an extra space before line numbers (use the Text Editor Options dialog to turn this off).
+      - Breakpoints are displayed in the left-most column when line numbers are turned on.
+      - Highlighting the current line in the text editor now uses alpha blending.
+    - Find
+      - Renamed the 'Search' menu to 'Find' on the main menu.
+      - When searching for hex bytes using wildcards, ?? now indicates a single hex byte.
+      - When scrolling through find results, the editor will favor the left side of the editor (turn this off by unchecking Minimize Horizontal Scrolling in the Editor Options dialog).
+      - When searching for a Variable Name, search for a Variable Name and Value at the same time using the syntax <varname>=<varvalue>.
+    - Workspace
+      - The 'Path' column is now hidden by default.
+      - Show the 'Path' column by right-clicking on the Workspace or the header and choosing 'Show Path Column'.
+    - Inspector
+      - Right click on a value and choose 'Goto Address <value>' or 'Goto Sector <value>'.
+    - General
+      - Added Full Screen mode using 'View > Enter Full Screen'. Exit Full Screen mode using 'View > Leave Full Screen'.
+      - The default character set for text files is now UTF-8.
+      - Updated the Welcome page with multiple pages. Added a new page for selecting the theme and line number visibility.
+      - Auto-detect file type now tries to detect UTF-8 files.
+    - Templates and Scripts
+      - Added the SRand function to provide a seed value for Random.
+      - Added the BitfieldGetCurrentShift function to return the number of bits already read when defining bitfields.
+      - When searching for a Variable Name, search for a Variable Name and Value at the same time using the syntax <varname>=<varvalue>.
+      - Increased the number of levels the Template Results can open from 32 to MAXINT.
+      - Added default types int8, INT8, uint8 and UINT8.
+      - Using the Tab key to select the Template Results no longer resets the current selection.
+      - When editing a Template or Script, the syntax can now be chosen in the status bar (used to be hidden).
+      - Adjusted template style colors.
+    - Options
+      - On the Editor page, New File Types can be set to use a Tree-sitter syntax or a Template syntax.
+      - On the Editor page, added Animated Scrolling toggle.
+      - On the Editor page, added Minimize Horizontal Scrolling toggle.
+      - On the Editor page, Caret Animation can be set to 'None' to create a solid, non-blinking caret.
+      - On the Text Editor page, added Show Spaces before Line Numbers.
+      - On the Opening Files page, added Remember Last Syntax toggle.
+      - On the Opening Files page, added Open Syntax Files drop-down list.
+      - On the Theme/Colors page, added Tool Bar Handle, Auto-Highlight Selection, Address Highlight, Match Brace/Tag, Auto-Highlight Selection, Section Lines, Hex Editor Addresses.
+      - On the Theme/Colors page, renamed a number of syntax styles.
+      - On the Theme/Colors page, renamed Scroll Shadow to Scroll Indicator Line.
+      - On the Directories page, added Syntax Directory and Syntax DLL Directory.
+      - Added Syntax page with a list of all available Tree-sitter syntaxes.
+      - On the Cache page, added Tree-sitter Block Size and Cache size.
+    - Bugs
+      - Fixed a crash on macOS using drag-and-drop from an empty space in a file tab.
+      - Fixed a crash with regular expressions using look-behind when called from FindFirst/FindAll (possible in PDF.bt).
+      - Fixed sizeof was not properly returning an int64 in some cases.
+      - Fixed Find in Files was not remembering the Current Project setting when 010 Editor was restarted.
+      - Fixed using Find in Files when no files are open should use the character set from the Text Edit As (as using ANSI).
+      - Fixed in Find in Files, the 'in Files' field was not taking up the full width of the edit field.
+      - Fixed a possible crash with SScanf if passing a string to the wrong parameter.
+      - Fixed a crash in an unoptimized array inside an on-demand struct that was generated in a read function (possible in DEX.bt).
+      - Fixed selected tabs in each group were not restored properly when restarting and the startup action was 'Restore Open Files'.
+      - Fixed some issues using find whole word with numbers.
+      - Fixed problems using auto-indent on unicode source code.
+      - Fixed Move Lines Up/Down should not move a line that touches just the end of the selection.
+      - Fixed the Run Template at Offset action could not be assigned a shortcut key.
+      - Fixed when debugging, placing the mouse cursor over a string did not correctly show the value in certain cases.
+      - Fixed the end of file marker was sometimes not displayed when scrolling if line numbers were turned off.
+      - Fixed a bug using Select Range when the Template the Results panel was focused.
+      - Fixed StringToUTF8 was not properly converting characters in the range 0x80..0x9F (was using latin1 instead of ANSI).
+      - Fixed files having a BOM caused XML to not be detected correctly.
+      - Fixed a possible crash with HighlightCheckSingleLineRule when using an invalid regular expression.
+      - Fixed a problem displaying word wrap symbols on macOS.
+      - Fixed on macOS, path information is now added to the .zshrc file.
+      - Fixed issues with the end-of-file test when using unpadding bitfields.
+      - Fixed some issues drawing the enum drop-down button in the Template Results.
+      - Fixed a problem using fgcolor/bgcolor custom functions with big-endian data.
+Version: "15.0"
+ReleaseTime: 2024-07-31
