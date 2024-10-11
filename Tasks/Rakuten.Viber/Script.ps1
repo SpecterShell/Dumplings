@@ -26,13 +26,8 @@ $this.CurrentState.Version = $Object1.ClientUpdateResponse.ViberVersion
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'burn'
-  InstallerUrl  = 'https://download.cdn.viber.com/desktop/windows/ViberSetup.exe'
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = 'https://download.cdn.viber.com/desktop/windows/ViberSetup.msi'
+  InstallerUrl  = "https://download.cdn.viber.com/desktop/windows/$($this.CurrentState.Version.Split('.')[0..2] -join '.')/ViberSetup.msi"
 }
 
 switch -Regex ($this.Check()) {
@@ -44,13 +39,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated|Rollbacked' {
-    try {
-      $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Submit()
   }
 }
