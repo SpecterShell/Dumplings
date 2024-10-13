@@ -81,9 +81,16 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
+  'Changed|Updated' {
+    $this.Message()
+    $this.MessageEnabled = $false
+  }
   'Updated' {
+    $LogSnapshot = $this.Logs
+
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
+      $this.Logs = [System.Collections.Generic.List[string]]::new($LogSnapshot)
 
       if ($Locale -eq 'multi') {
         $this.Config.WinGetIdentifier = 'Mozilla.Firefox.DeveloperEdition.MSIX'
