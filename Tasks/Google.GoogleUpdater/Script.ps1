@@ -16,10 +16,10 @@ $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
 $this.CurrentState.Installer += [ordered]@{
   Scope                = 'user'
   InstallerUrl         = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.packages.package.name
-  InstallationMetadata = @{
+  InstallationMetadata = [ordered]@{
     DefaultInstallLocation = "%LOCALAPPDATA%\Google\GoogleUpdater\$($this.CurrentState.Version)"
     Files                  = @(
-      @{
+      [ordered]@{
         RelativeFilePath = 'updater.exe'
       }
     )
@@ -28,10 +28,10 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Scope                = 'machine'
   InstallerUrl         = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.packages.package.name
-  InstallationMetadata = @{
+  InstallationMetadata = [ordered]@{
     DefaultInstallLocation = "%ProgramFiles(x86)%\Google\GoogleUpdater\$($this.CurrentState.Version)"
     Files                  = @(
-      @{
+      [ordered]@{
         RelativeFilePath = 'updater.exe'
       }
     )

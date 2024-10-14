@@ -15,10 +15,10 @@ $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
 $this.CurrentState.Installer += [ordered]@{
   Scope                = 'user'
   InstallerUrl         = $Object1.response.app.updatecheck.urls.url.codebase + $Object1.response.app.updatecheck.manifest.packages.package.name
-  InstallationMetadata = @{
+  InstallationMetadata = [ordered]@{
     DefaultInstallLocation = "%LOCALAPPDATA%\BraveSoftware\Update\$($this.CurrentState.Version)"
     Files                  = @(
-      @{
+      [ordered]@{
         RelativeFilePath = 'BraveUpdate.exe'
       }
     )
@@ -27,10 +27,10 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Scope                = 'machine'
   InstallerUrl         = $Object1.response.app.updatecheck.urls.url.codebase + $Object1.response.app.updatecheck.manifest.packages.package.name
-  InstallationMetadata = @{
+  InstallationMetadata = [ordered]@{
     DefaultInstallLocation = "%ProgramFiles(x86)%\BraveSoftware\Update\$($this.CurrentState.Version)"
     Files                  = @(
-      @{
+      [ordered]@{
         RelativeFilePath = 'BraveUpdate.exe'
       }
     )
