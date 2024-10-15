@@ -32,12 +32,6 @@ switch -Regex ($this.Check()) {
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
-
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
