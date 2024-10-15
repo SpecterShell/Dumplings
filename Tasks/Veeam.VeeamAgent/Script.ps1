@@ -8,6 +8,12 @@ $Object1 = Invoke-RestMethod -Uri 'https://autolk.veeam.com/json-rpc.php' -Metho
     }
   } | ConvertTo-Json -Compress
 )
+
+if ($Object1.result.status -eq 'NoUpdates') {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 $Object2 = $Object1.result.data | ConvertFrom-Base64 | ConvertFrom-Xml
 
 # Version
