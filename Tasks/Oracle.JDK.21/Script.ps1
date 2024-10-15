@@ -8,19 +8,13 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $InstallerFile = Get-TempFile -Uri $Uri
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
-  $ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+  $ShortVersion = $this.CurrentState.Version -replace '(\.0)+$'
   # Installer
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl    = "https://download.oracle.com/java/21/archive/jdk-${ShortVersion}_windows-x64_bin.msi"
     InstallerSha256 = $InstallerSha256
+    ProductCode     = $InstallerFile | Read-ProductCodeFromMsi
   }
-  # AppsAndFeaturesEntries + ProductCode
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-    }
-  )
 
   $this.Print()
   $this.Write()
@@ -36,19 +30,13 @@ if ($this.Status.Contains('New')) {
   $InstallerFile = Get-TempFile -Uri $Uri
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
-  $ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+  $ShortVersion = $this.CurrentState.Version -replace '(\.0)+$'
   # Installer
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl    = "https://download.oracle.com/java/21/archive/jdk-${ShortVersion}_windows-x64_bin.msi"
     InstallerSha256 = $InstallerSha256
+    ProductCode     = $InstallerFile | Read-ProductCodeFromMsi
   }
-  # AppsAndFeaturesEntries + ProductCode
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-    }
-  )
 
   $this.Print()
   $this.Write()
@@ -64,19 +52,13 @@ if ($InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
 $InstallerFile = Get-TempFile -Uri $Uri
 # Version
 $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
-$ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+$ShortVersion = $this.CurrentState.Version -replace '(\.0)+$'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = "https://download.oracle.com/java/21/archive/jdk-${ShortVersion}_windows-x64_bin.msi"
   InstallerSha256 = $InstallerSha256
+  ProductCode     = $InstallerFile | Read-ProductCodeFromMsi
 }
-# AppsAndFeaturesEntries + ProductCode
-$this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-  [ordered]@{
-    ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-    UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-  }
-)
 
 # Case 3: The installer file has an invalid version
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
