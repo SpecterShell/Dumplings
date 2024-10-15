@@ -12,7 +12,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.updated_at
+      $this.CurrentState.ReleaseTime = $Object1.data.updated_at.ToUniversalTime()
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://api-compos.yunxiu.meitu.com/api/v1/client/article_category?with_article=1'
 
-      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 }, 'First')[0].articles.Where({ $_.title.StartsWith("V$($this.CurrentState.Version) ") }, 'First')
+      $ReleaseNotesUrlObject = $Object2.data.data.Where({ $_.id -eq 2 }, 'First')[0].articles.Where({ $_.title.StartsWith("V$($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
