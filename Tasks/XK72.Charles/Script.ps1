@@ -1,9 +1,15 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.charlesproxy.com/download/latest-release/' | ConvertFrom-Html
+$Session = [Microsoft.PowerShell.Commands.WebRequestSession]::new()
+$Object1 = Invoke-WebRequest -Uri 'https://www.charlesproxy.com/download/latest-release/' -WebSession $Session | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = $Object1.SelectSingleNode('//form[@class="download-form"]//input[@name="version"]').Attributes['Value'].Value
 
-$Object2 = Invoke-WebRequest -Uri "https://www.charlesproxy.com/latest-release/download.do?os=windows64&beta=false&version=$($this.CurrentState.Version)" | ConvertFrom-Html
+$Object2 = Invoke-WebRequest -Uri 'https://www.charlesproxy.com/latest-release/download.do' -Method Post -Body @{
+  __csrf  = $Session.Cookies.GetAllCookies().Where({ $_.Name -eq 'cactuslab.csrf' }, 'First')[0].Value
+  os      = 'windows64'
+  beta    = 'false'
+  version = $this.CurrentState.Version
+} -WebSession $Session | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
