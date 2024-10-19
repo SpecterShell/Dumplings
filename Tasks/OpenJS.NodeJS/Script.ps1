@@ -11,10 +11,6 @@ $this.CurrentState.Version = $Object1.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x86.msi"
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x64.msi"
 }
