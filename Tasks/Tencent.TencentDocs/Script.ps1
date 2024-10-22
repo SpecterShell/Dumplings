@@ -1,7 +1,7 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://docs.qq.com/api/package/update').result.update_info | ConvertFrom-Json
 
 if ([string]::IsNullOrWhiteSpace($Object1.version)) {
-  $this.Log('The API returned an invalid response', 'Info')
+  $this.Log('The API returned an invalid response', 'Warning')
   return
 }
 

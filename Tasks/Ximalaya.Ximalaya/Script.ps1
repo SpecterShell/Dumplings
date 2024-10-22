@@ -9,7 +9,7 @@ $Headers = @{
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" -Headers $Headers | ConvertFrom-Yaml
 
 if ($Object1.version -eq '0.0.0') {
-  $this.Log('The endpoint returned an invalid response', 'Info')
+  $this.Log('The endpoint returned an invalid response', 'Warning')
   return
 }
 
