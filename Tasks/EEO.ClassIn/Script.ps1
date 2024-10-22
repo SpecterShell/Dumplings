@@ -1,19 +1,19 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.eeo.cn/sysshare/custom/download_conf.json').Where({ $_.id -eq 3 }, 'First')[0]
+$Object1 = Invoke-RestMethod -Uri 'https://www.eeo.cn/sysshare/custom/download_conf.json'
+
+# Version
+$this.CurrentState.Version = $Object1.Where({ $_.id -eq 81 }, 'First')[0].confValue
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = 'https:' + $Object1.confValue
+  InstallerUrl = 'https:' + $Object1.Where({ $_.id -eq 3 }, 'First')[0].confValue
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.updatedTime | ConvertFrom-UnixTimeSeconds
+      $this.CurrentState.ReleaseTime = $Object1.Where({ $_.id -eq 3 }, 'First')[0].updatedTime | ConvertFrom-UnixTimeSeconds
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
