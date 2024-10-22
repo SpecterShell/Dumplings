@@ -1,21 +1,16 @@
-$InstallerUrl = Get-RedirectedUrl -Uri 'https://download.geogebra.org/package/win-autoupdate'
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+-\d+-\d+)').Groups[1].Value.Replace('-', '.')
-
-# Installer
+# Version + Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType          = 'exe'
-  InstallerUrl           = $InstallerUrl
+  InstallerUrl           = $InstallerUrl = Get-RedirectedUrl -Uri 'https://download.geogebra.org/package/win-autoupdate'
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
+      DisplayVersion = $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+-\d+-\d+)').Groups[1].Value.Replace('-', '.')
     }
   )
 }
 $this.CurrentState.Installer += $InstallerWix = [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = $InstallerUrl = Get-RedirectedUrl -Uri 'https://download.geogebra.org/package/win-msi6'
+  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msi'
 }
 
 switch -Regex ($this.Check()) {
