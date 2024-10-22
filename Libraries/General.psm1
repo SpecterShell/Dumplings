@@ -1260,7 +1260,7 @@ function ConvertFrom-ElectronUpdater {
 
   # InstallerUrl
   $Result.Installer += [ordered]@{
-    InstallerUrl = $Prefix + $InputObject.files[0].url
+    InstallerUrl = [string]::IsNullOrWhiteSpace($Prefix) ? $InputObject.files[0].url : (Join-Uri $Prefix $InputObject.files[0].url)
   }
 
   # ReleaseTime
