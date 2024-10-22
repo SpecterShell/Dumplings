@@ -401,10 +401,10 @@ function Join-Uri {
   process {
     foreach ($SubUri in $Uri) {
       foreach ($SubChildUri in $ChildUri) {
-        $SubUri = [uri]::new($SubUri, $SubChildUri)
+        $SubUri = [uri]::new($SubUri, $SubChildUri, $true)
       }
       foreach ($SubAdditionalChildUri in $AdditionalChildUri) {
-        $SubUri = [uri]::new($SubUri, $SubAdditionalChildUri)
+        $SubUri = [uri]::new($SubUri, $SubAdditionalChildUri, $true)
       }
       Write-Output -InputObject $SubUri.AbsoluteUri
     }
