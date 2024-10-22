@@ -5,7 +5,15 @@ if (Test-Path -Path $OldReleaseNotesPath) {
   $Global:DumplingsStorage['HitePai6'] = $OldReleaseNotes = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri 'https://update.hitecloud.cn/api/firewares/upwarenew?productmodel=HitePai6&buildversion=0'
+$Object1 = Invoke-RestMethod -Uri 'https://update.hitecloud.cn/api/firewares/upwarenew' -Body @{
+  productmodel = 'HitePai6'
+  buildversion = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.2.311.20231030'
+}
+
+if ($Object1.data.hasupdate -ne 1) {
+  $this.Log($Object1.message, 'Warning')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.data.version
