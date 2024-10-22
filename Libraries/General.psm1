@@ -1232,20 +1232,21 @@ function ConvertFrom-ElectronUpdater {
   .PARAMETER InputObject
     The YAML object of the Electron Updater manifest to be handled
   .PARAMETER Prefix
-    The prefix of the InstallerUrl
-    If the installer is located in the same directory as the manifest, the prefix of its URL will be ignored
+    The prefix of the installer URL
   .PARAMETER Locale
-    The locale of the ReleaseNotes
+    The locale of the release notes (if present)
   #>
   param (
     [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The YAML object of the Electron Updater manifest to be handled')]
     $InputObject,
 
-    [Parameter(HelpMessage = 'The prefix of the InstallerUrl')]
+    [Parameter(HelpMessage = 'The prefix of the installer URL')]
+    [ValidateNotNullOrWhiteSpace()]
     [string]
-    $Prefix = '',
+    $Prefix,
 
-    [Parameter(HelpMessage = 'The locale of the ReleaseNotes')]
+    [Parameter(HelpMessage = 'The locale of the release notes (if present)')]
+    [ValidateNotNullOrWhiteSpace()]
     [string]
     $Locale = 'en-US'
   )
@@ -1259,8 +1260,16 @@ function ConvertFrom-ElectronUpdater {
   $Result.Version = $InputObject.version
 
   # InstallerUrl
-  $Result.Installer += [ordered]@{
-    InstallerUrl = [string]::IsNullOrWhiteSpace($Prefix) ? $InputObject.files[0].url : (Join-Uri $Prefix $InputObject.files[0].url)
+  try {
+    # The prefix is a valid URL
+    $Result.Installer += [ordered]@{
+      InstallerUrl = Join-Uri $Prefix $InputObject.files[0].url
+    }
+  } catch {
+    # The prefix is not a valid URL
+    $Result.Installer += [ordered]@{
+      InstallerUrl = $Prefix + $InputObject.files[0].url
+    }
   }
 
   # ReleaseTime
