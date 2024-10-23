@@ -1,0 +1,31 @@
+Installer:
+- Architecture: x64
+  InstallerType: msi
+  InstallerUrl: https://zoom.us/download/vdi/6.1.12.25370/ZoomInstallerVDI.msi?archType=x64
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Resolved Issues
+    General fixes
+    - Account settings to disable editing/deleting message
+    This release supports new account controls to provide administrators with the ability to disable the option to edit or delete messages in Team Chat.
+
+    Windows fixes
+    - OpenSSL Control Flow Guard
+    Changes have been made to address an issue where the 64-bit Zoom Meeting client (both standard and VDI builds) would exit after signing in. This fix provides a solution that keeps Control Flow Guard enabled. Customers affected by this issue that are unable to update can disable Control Flow Guard for earlier builds by following the instructions in this article.
+
+    - Prevent VDI Plugin from loading during an update
+    To avoid possible race conditions where a virtual desktop session is started during a VDI Plugin installation, a change has been made to disable the VDI plugin at the start of an installation or uninstall.
+
+    - Auto-update support when %appdata% path is on a network drive
+    An issue has been corrected where auto-update for the VDI Zoom Meeting client would fail if the %appdata% directory pointed to a network drive that required user credentials.
+
+    Amazon fixes
+    - Video rendered on wrong monitor when using multiple monitors
+    An issue has been corrected where offloaded video could be rendered on the wrong monitor when using full screen multi monitor mode.
+
+    - Support for command line option to skip rebooting when installing
+    For customers using the MSI command line option “MSIRestartManagerControl=Disable” changes were made to allow the administrator to apply reboot and complete the installation. Note: This also applies to the HP Anyware platform.
+Version: 6.1.12.25370
+RealVersion: 6.1.25370
