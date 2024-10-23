@@ -5,7 +5,7 @@ $ArchMap = [ordered]@{
   x64   = 'win64'
   arm64 = 'win64-aarch64'
 }
-$Prefix = 'https://download-installer.cdn.mozilla.net/pub/firefox/devedition/'
+$Prefix = 'https://download-installer.cdn.mozilla.net/pub/devedition/releases/'
 
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/firefox_versions.json'
 
