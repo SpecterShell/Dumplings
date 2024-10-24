@@ -38,6 +38,23 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
+    if (-not $this.Status.Contains('New')) {
+      $CurrentState = $this.CurrentState
+      $this.CurrentState = $this.LastState | Copy-Object
+      $this.CurrentState.Installer = @(
+        [ordered]@{
+          InstallerUrl = "https://diskanalyzer.com/files/archive/wiztree_$($this.CurrentState.Version.Replace('.', '_'))_setup.exe"
+        }
+      )
+      try {
+        $this.Submit()
+      } catch {
+        $_ | Out-Host
+        $this.Log($_, 'Warning')
+      }
+      $this.CurrentState = $CurrentState
+    }
+
     $this.Submit()
   }
 }
