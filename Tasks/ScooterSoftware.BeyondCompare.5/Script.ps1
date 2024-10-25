@@ -17,7 +17,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'ja-JP'
-  InstallerUrl    = "https://www.scootersoftware.com/files/BCompare-ja-$($this.CurrentState.Version).exe"
+  InstallerUrl    = "https://www.scootersoftware.com/files/BCompare-jp-$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
