@@ -10,7 +10,7 @@ if ($this.LastState.Installer.Count -gt 0 -and $this.LastState.Installer.Where({
 
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = 'https://www.apple.com/itunes/download/win64'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.apple.com/itunes/download/win64'
 }
 if ($this.LastState.Installer.Count -gt 0 -and $this.LastState.Installer.Where({ $_.Architecture -eq 'x64' }, 'First')[0].InstallerUrl -eq $InstallerX64.InstallerUrl) {
   $this.Log("The x64 installer for the version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
