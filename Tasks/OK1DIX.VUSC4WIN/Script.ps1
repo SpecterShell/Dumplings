@@ -3,9 +3,12 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.ok2kkw.com/vusc4win_eng.htm'
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.Content, 'VUSC(?:\s|&nbsp;)+4(?:\s|&nbsp;)+WIN(?:\s|&nbsp;)+(\d+(?:\.\d+)+)').Groups[1].Value
 
+$Prefix = 'https://www.ok2kkw.com/vusc/vusc4win/'
+$Object2 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;F=0;P=*.exe"
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
+  InstallerUrl         = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href -match 'vusc' -and $_.href -match 'setup' -and $_.href.Contains($this.CurrentState.Version.Replace('.', '')) } catch {} }, 'First')[0].href
   InstallationMetadata = [ordered]@{
     DefaultInstallLocation = '%HOMEDRIVE%\VUSC'
     Files                  = @(
