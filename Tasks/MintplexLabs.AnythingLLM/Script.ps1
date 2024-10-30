@@ -1,7 +1,7 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://s3.us-west-1.amazonaws.com/public.useanything.com/latest/version.txt').Content
+$Object1 = Invoke-WebRequest -Uri 'https://s3.us-west-1.amazonaws.com/public.useanything.com/latest/version.txt'
 
 # Version
-$this.CurrentState.Version = $Object1.Trim()
+$this.CurrentState.Version = $Object1.Content.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
