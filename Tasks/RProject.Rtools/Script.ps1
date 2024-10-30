@@ -39,6 +39,12 @@ $this.CurrentState.Version = $FullVersionX64
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # PackageUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'PackageUrl'
+        Value = "${Prefix}rtools${MainVersionShort}/rtools.html"
+      }
+
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
