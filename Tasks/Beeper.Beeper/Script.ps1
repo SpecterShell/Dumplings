@@ -1,9 +1,24 @@
-$Prefix = 'https://download.todesktop.com/2003241lzgn20jd/'
+$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/2003241lzgn20jd/td-latest.json'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       # TODO: Parse Notion
       $EdgeDriver = Get-EdgeDriver -Headless
@@ -31,10 +46,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  'Changed|Updated' {
     $this.Message()
   }
-  'Updated|Rollbacked' {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -1,9 +1,30 @@
-$Prefix = 'https://download.todesktop.com/221003ra4tebclw/'
+$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/221003ra4tebclw/td-latest.json'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.artifacts.msi.x64.url | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

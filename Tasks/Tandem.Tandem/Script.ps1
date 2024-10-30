@@ -1,32 +1,35 @@
-$Prefix = 'https://download.todesktop.com/200527auaqaacsy/'
-
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/200527auaqaacsy/td-latest.json'
 
 # Version
 $this.CurrentState.Version = $Object1.version
-$ShortVersion = $Object1.Version.Split('.')[0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Prefix + $Object1.files[0].url
+  InstallerUrl  = $Object1.artifacts.nsis.ia32.url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = "https://dl.todesktop.com/200527auaqaacsy/versions/${ShortVersion}/windows/msi/ia32"
+  InstallerUrl  = $Object1.artifacts.msi.ia32.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://dl.todesktop.com/200527auaqaacsy/versions/${ShortVersion}/windows/msi/x64"
+  InstallerUrl  = $Object1.artifacts.msi.x64.url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
