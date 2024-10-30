@@ -1,7 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
+$Object1 = Invoke-WebRequest -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
 
 # Version
-$this.CurrentState.Version = $Object1.Trim()
+$this.CurrentState.Version = $Object1.Content.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
