@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.artifacts.nsis.x64.url
+  InstallerUrl = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.artifacts.nsis.arm64.url
+  InstallerUrl = $Object1.artifacts.nsis.arm64.url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
