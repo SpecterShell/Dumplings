@@ -5,62 +5,72 @@ $OriginOwner = $Global:DumplingsPreference['OriginOwner'] ?? $this.Config['Origi
 $OriginRepo = $Global:DumplingsPreference['OriginRepo'] ?? $this.Config['OriginRepo']
 $OriginBranch = $Global:DumplingsPreference['OriginBranch'] ?? $this.Config['OriginBranch']
 
-$Query = @"
+#region Delete merged branches
+$Branches = @()
+$Cursor = $null
+do {
+  $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{
+    query = @"
 {
   repository(owner: "${OriginOwner}", name: "${OriginRepo}") {
     refs(
       refPrefix: "refs/heads/"
-      last: 100
-      orderBy: { field: TAG_COMMIT_DATE, direction: ASC }
+      orderBy: { field: TAG_COMMIT_DATE, direction: DESC }
+      first: 100
+      after: "$($Cursor ?? 'null')"
     ) {
       nodes {
         name
-        associatedPullRequests(last: 1, orderBy: { field: CREATED_AT, direction: DESC }) {
+        associatedPullRequests(
+          states: [MERGED]
+          orderBy: { field: CREATED_AT, direction: DESC }
+          first: 100
+        ) {
           nodes {
             number
             state
-            isDraft
+            title
             url
-            timelineItems(
-              last: 1
-              itemTypes: [HEAD_REF_DELETED_EVENT, HEAD_REF_RESTORED_EVENT]
-            ) {
-              nodes {
-                __typename
-              }
-            }
           }
         }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
 }
 "@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{ query = $Query }
-$Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
+  }
+  $Branches += $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
+  $Cursor = $Object1.data.repository.refs.pageInfo.endCursor
+} while ($Object1.data.repository.refs.pageInfo.hasNextPage)
 
-$this.Log("$($Branches.Count) branch(es) in ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
-
-$Count = 0
+$this.Log("$($Branches.Count) branch(es) in the repo ${OriginOwner}/${OriginRepo} have been merged. Deleting...")
 foreach ($Branch in $Branches) {
   try {
-    $this.Log("Deleting $($Branch.name)")
-    Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/$($Branch.name)" -Method Delete | Out-Null
-    $Count++
+    $this.Log("Deleting the branch $($Branch.name). Merged in:")
+    foreach ($PullRequest in $Branch.associatedPullRequests.nodes) {
+      $this.Log("  [$($PullRequest.state)] #$($PullRequest.number) - $($PullRequest.title) - $($PullRequest.url)")
+    }
+    $null = Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/$($Branch.name)" -Method Delete
   } catch {
-    $this.Log("Failed to delete branch $($Branch.name)", 'Error')
+    $this.Log("Failed to delete the branch $($Branch.name): ${_}", 'Warning')
     $_ | Out-Host
   }
 }
+#endregion
 
-$this.Log("$($Branches.Count) branch(es) to delete, ${Count} deleted, $($Branches.Count - $Count) not deleted")
+#region Fast-forward
+$this.Log("Updating the branch ${OriginOwner}/${OriginRepo}/${OriginBranch} to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
 
-$this.Log("Updating ${OriginOwner}/${OriginRepo}/${OriginBranch} to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
-
-$UpstreamSha = $Global:DumplingsStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
-
-Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${OriginBranch}" -Method Patch -Body @{
-  sha = $UpstreamSha
-} | Out-Null
-
-$this.Log("${OriginOwner}/${OriginRepo}/${OriginBranch} has been fast-forwarded to ${UpstreamOwner}/${UpstreamRepo}/${UpstreamBranch}")
+try {
+  $null = Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs/heads/${OriginBranch}" -Method Patch -Body @{
+    sha = $Global:DumplingsStorage['UpstreamSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamOwner}/${UpstreamRepo}/git/ref/heads/${UpstreamBranch}").object.sha
+  }
+} catch {
+  $this.Log("Failed to update the branch: ${_}", 'Warning')
+  $_ | Out-Host
+}
+#endregion
