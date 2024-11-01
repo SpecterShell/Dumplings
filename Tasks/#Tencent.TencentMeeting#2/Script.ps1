@@ -18,7 +18,7 @@ if ($Object1.upgrade_policy -eq 0) {
 if ($Object1.version -ne $Object2.version) {
   $this.Log("x86 version: $($Object1.version)")
   $this.Log("x64 version: $($Object2.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

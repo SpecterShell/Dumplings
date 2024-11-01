@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.privateinternetaccess.com/clients
 if ($Object1.latest_version_piax.windows_x64.version -ne $Object1.latest_version_piax.windows_x86.version) {
   $this.Log("x86 version: $($Object1.latest_version_piax.windows_x86.version)")
   $this.Log("x64 version: $($Object1.latest_version_piax.windows_x64.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

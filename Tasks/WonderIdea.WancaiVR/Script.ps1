@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/clien
 if ($Object1.data.CurrentVersionNumber -ne $Object2.data.CurrentVersionNumber) {
   $this.Log("x86 version: $($Object2.data.CurrentVersionNumber)")
   $this.Log("x64 version: $($Object1.data.CurrentVersionNumber)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

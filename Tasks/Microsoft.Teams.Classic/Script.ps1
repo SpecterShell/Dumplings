@@ -2,7 +2,7 @@ $Object1 = (Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1
 
 $Identical = $true
 if (@(@('windows', 'windows64', 'arm64') | Sort-Object -Property { $Object1.$_.latestVersion } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Windows x86 version: $($Object1.windows.latestVersion)")
   $this.Log("Windows x64 version: $($Object1.windows64.latestVersion)")
   $this.Log("Windows arm64 version: $($Object1.arm64.latestVersion)")

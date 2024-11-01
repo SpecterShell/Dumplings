@@ -30,7 +30,7 @@ $FullVersionARM64 = "${MainVersion}.${BuildARM64}"
 if ($FullVersionX64 -ne $FullVersionARM64) {
   $this.Log("x64 version: ${FullVersionX64}")
   $this.Log("arm64 version: ${FullVersionARM64}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

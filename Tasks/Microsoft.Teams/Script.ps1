@@ -4,7 +4,7 @@ if (@(@('x86', 'x64', 'arm64') | Sort-Object -Property { $Object1.TeamsBuilds.Bu
   $this.Log("x86 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.x86.latestVersion)")
   $this.Log("x64 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.x64.latestVersion)")
   $this.Log("arm64 version: $($Object1.TeamsBuilds.BuildSettings.WebView2Canary.arm64.latestVersion)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

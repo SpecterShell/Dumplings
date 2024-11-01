@@ -25,7 +25,7 @@ if (@($Object1.ContentId.Version | Sort-Object -Unique).Count -gt 1) {
   $this.Log("x86 version: $($Object1[0].ContentId.Version)")
   $this.Log("x64 version: $($Object1[1].ContentId.Version)")
   $this.Log("arm64 version: $($Object1[2].ContentId.Version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

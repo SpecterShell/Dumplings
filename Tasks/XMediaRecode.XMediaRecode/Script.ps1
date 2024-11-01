@@ -20,7 +20,7 @@ $VersionX64 = $Object3.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

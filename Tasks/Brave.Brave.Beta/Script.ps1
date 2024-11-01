@@ -18,7 +18,7 @@ if (@($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).
   $this.Log("x86 version: $($Object1.response.app[0].updatecheck.manifest.version)")
   $this.Log("x64 version: $($Object1.response.app[1].updatecheck.manifest.version)")
   $this.Log("arm64 version: $($Object1.response.app[2].updatecheck.manifest.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

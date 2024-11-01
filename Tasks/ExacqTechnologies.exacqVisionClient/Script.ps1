@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.exacq.com/downloads/evFileInfo.txt' | ConvertFrom-Ini
 
 if ($Object1.'ev-Client-x64'.Version -ne $Object1.'ev-Client-x64-msi'.Version) {
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

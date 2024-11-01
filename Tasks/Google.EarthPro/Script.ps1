@@ -25,7 +25,7 @@ $Version2 = $Object2.response.app.updatecheck.manifest.version
 if ($Version1 -ne $Version2) {
   $this.Log("x86 version: ${Version2}")
   $this.Log("x64 version: ${Version1}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

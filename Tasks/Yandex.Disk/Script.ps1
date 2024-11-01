@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://cloud-api.yandex.net/v1/disk/clients/
 if (@(@($Object1, $Object2) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
   $this.Log("x86 version: $($Object2.version)")
   $this.Log("x64 version: $($Object1.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

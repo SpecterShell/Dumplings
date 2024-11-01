@@ -40,7 +40,7 @@ $Version2 = [regex]::Match(
 ).Groups[1].Value
 
 # if ($Version1 -ne $Version2) {
-#   throw 'Distinct versions detected'
+#   throw 'Inconsistent versions detected'
 # }
 
 # Version

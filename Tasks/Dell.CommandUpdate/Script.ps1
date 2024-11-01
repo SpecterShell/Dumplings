@@ -6,7 +6,7 @@ $Object1 = $Global:DumplingsStorage.DellCatalog | Select-Xml -XPath '/dm:Manifes
 # if ($Object1.vendorVersion -ne $Object2.vendorVersion) {
 #   $this.Log("x64 version: $($Object1.vendorVersion)")
 #   $this.Log("arm64 version: $($Object2.vendorVersion)")
-#   throw 'Distinct versions detected'
+#   throw 'Inconsistent versions detected'
 # }
 
 # Version

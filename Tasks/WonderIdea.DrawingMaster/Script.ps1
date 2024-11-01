@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://drawingmaster.wmindmap.cn/download/cl
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
   $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
   $this.Log("x64 version: $($Object1.CurrentVersionNumber)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

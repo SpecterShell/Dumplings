@@ -6,7 +6,7 @@ $InstallerObjectX64 = $Object1 | Where-Object -FilterScript { $_.InstallerUrl.Co
 if (@(@($InstallerObjectX86, $InstallerObjectX64) | Sort-Object -Property { $_.Version } -Unique).Count -gt 1) {
   $this.Log("x86 version: $($InstallerObjectX86.Version)")
   $this.Log("x64 version: $($InstallerObjectX64.Version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

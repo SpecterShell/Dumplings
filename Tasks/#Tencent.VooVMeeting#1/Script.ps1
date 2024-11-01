@@ -13,7 +13,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://voovmeeting.com/web-service/query-dow
 # if ($Object1.'info-list'[0].version -ne $Object2.'info-list'[0].version) {
 #   $this.Log("x86 version: $($Object1.'info-list'[0].version)")
 #   $this.Log("x64 version: $($Object2.'info-list'[0].version)")
-#   throw 'Distinct versions detected'
+#   throw 'Inconsistent versions detected'
 # }
 
 # Version

@@ -14,10 +14,10 @@ $VersionX86 = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+\.\d+\.\d+(?:\.\d+
 $VersionX64 = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+\.\d+\.\d+(?:\.\d+)*)').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
 
 if ($VersionX86 -ne $VersionX64) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

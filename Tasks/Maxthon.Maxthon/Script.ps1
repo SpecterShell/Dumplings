@@ -26,7 +26,7 @@ $Object6 = $Object2.win.cn.maxthon64.Where({ $_.channels -contains 'stable' }, '
 
 $Identical = $true
 if ((@($Object3, $Object4, $Object5, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global x86 version: $($Object3.version)")
   $this.Log("Global x64 version: $($Object4.version)")
   $this.Log("China x86 version: $($Object5.version)")

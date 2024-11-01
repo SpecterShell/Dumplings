@@ -12,7 +12,7 @@ if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.enclosure.ver
   $this.Log("x86 version: $($Object1.enclosure.version)")
   $this.Log("x64 version: $($Object2.enclosure.version)")
   $this.Log("arm64 version: $($Object3.enclosure.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Installer

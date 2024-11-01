@@ -9,7 +9,7 @@ $Object3 = Invoke-RestMethod -Uri ($Global:DumplingsSecret.SkyGoUrl -f 'it') -Ce
 $Object4 = Invoke-RestMethod -Uri ($Global:DumplingsSecret.SkyGoUrl -f 'at') -Certificate $Certificate
 
 if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.platforms.win.version } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("United Kingdom version: $($Object1.platforms.win.version)")
   $this.Log("Germany version: $($Object2.platforms.win.version)")
   $this.Log("Italy version: $($Object3.platforms.win.version)")

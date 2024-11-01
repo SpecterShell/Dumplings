@@ -5,7 +5,7 @@ $Object2 = $Global:DumplingsStorage.AzulZuluBuilds | Where-Object -FilterScript 
 
 $Identical = $true
 if (Compare-Object -ReferenceObject $Object1.distro_version -DifferenceObject $Object2.distro_version) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("arm64 version: $($Object1.distro_version -join '.')")
   $this.Log("x64 version: $($Object2.distro_version -join '.')")
   $Identical = $false

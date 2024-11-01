@@ -35,7 +35,7 @@ $Object3 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 )
 
 if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.response.app.updatecheck.manifest.version } -Unique).Count -gt 1) {
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

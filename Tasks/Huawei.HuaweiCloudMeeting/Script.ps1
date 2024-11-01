@@ -14,7 +14,7 @@ if ($Object2.isConsistent) {
 
 $Identical = $true
 if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: $($Object1.upgradeVersion)")
   $this.Log("China version: $($Object2.upgradeVersion)")
   $Identical = $false

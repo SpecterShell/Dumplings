@@ -9,7 +9,7 @@ if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.version } -Un
   $this.Log("x86 version: $($Object1.version)")
   $this.Log("x64 version: $($Object2.version)")
   $this.Log("arm64 version: $($Object3.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

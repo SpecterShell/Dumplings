@@ -8,7 +8,7 @@ $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml?noCache=$(Get-Random)" |
 if ($Object1.version -ne $Object2.version) {
   $this.Log("x86 version: $($Object1.version)")
   $this.Log("x64 version: $($Object2.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

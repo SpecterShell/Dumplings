@@ -11,7 +11,7 @@ $this.CurrentState.Version = $Object2.exVer
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: $($Object1.exVer)")
   $this.Log("x64 version: $($Object2.exVer)")
   $this.Log("arm64 version: $($Object3.exVer)")

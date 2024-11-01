@@ -14,7 +14,7 @@ $Version2 = [regex]::Match(
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: ${Version1}")
   $this.Log("China version: ${Version2}")
   $Identical = $false

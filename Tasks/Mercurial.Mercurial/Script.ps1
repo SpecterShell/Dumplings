@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.mercurial-scm.org/release/windows
 
 if (@($Object1.Version | Sort-Object -Unique).Count -gt 1) {
   $this.Log("Versions: $($Object1.Version | Sort-Object -Unique | Join-String -Separator ', ')")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

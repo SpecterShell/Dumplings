@@ -35,7 +35,7 @@ if (@(@($VersionX86, $VersionX64, $VersionArm64, $VersionMSIX, $VersionZipX86, $
   $this.Log("Portable x86 version: ${VersionZipX86}")
   $this.Log("Portable x64 version: ${VersionZipX64}")
   $this.Log("Portable arm64 version: ${VersionZipArm64}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 $Version = @($VersionX86, $VersionX64, $VersionArm64, $VersionZipX86, $VersionZipX64, $VersionZipArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1

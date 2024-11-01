@@ -4,7 +4,7 @@ $Object1 = (Invoke-WebRequest -Uri 'https://updates.emeditor.com/emed32_updates5
 $Object2 = (Invoke-WebRequest -Uri 'https://updates.emeditor.com/emed64_updates5u.txt' | Read-ResponseContent | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('update64') }, 'First')[0].Value
 
 if ($Object1.Version -ne $Object2.Version) {
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

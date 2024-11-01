@@ -10,7 +10,7 @@ $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$(Get-Rand
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
   $Identical = $true
   if ($Object2.Version -ne $Object3.Version) {
-    $this.Log('Distinct versions detected', 'Warning')
+    $this.Log('Inconsistent versions detected', 'Warning')
     $this.Log("x86 version: $($Object3.version)")
     $this.Log("x64 version: $($Object2.version)")
     $Identical = $false
@@ -22,7 +22,7 @@ if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -Differen
 } else {
   $Identical = $true
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
-    $this.Log('Distinct versions detected', 'Warning')
+    $this.Log('Inconsistent versions detected', 'Warning')
     $this.Log("x86 version: $($Object1.electron_win32.version)")
     $this.Log("x64 version: $($Object1.electron_win64.version)")
     $Identical = $false

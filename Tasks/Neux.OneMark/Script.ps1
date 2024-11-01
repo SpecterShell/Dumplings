@@ -9,7 +9,7 @@ $Object4 = Invoke-RestMethod -Uri 'https://onemark.neuxlab.cn/updates/latest.xml
 
 $Identical = $true
 if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.item.version } -Unique).Count -gt 1) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global x86 version: $($Object2.item.version)")
   $this.Log("Global x64 version: $($Object1.item.version)")
   $this.Log("China x86 version: $($Object4.item.version)")

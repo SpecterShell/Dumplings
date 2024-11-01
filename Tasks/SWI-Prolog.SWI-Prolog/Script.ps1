@@ -8,7 +8,7 @@ $Version2 = [regex]::Match($InstallerUrl2, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Val
 
 $Identical = $true
 if ($Version1 -ne $Version2) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${Version2}")
   $this.Log("x64 version: ${Version1}")
   $Identical = $false

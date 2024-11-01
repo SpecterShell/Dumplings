@@ -8,7 +8,7 @@ $this.CurrentState.Version = $Object1.version
 
 $Identical = $true
 if ($Object1.version -ne $Object2.version) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: $($Object1.version)")
   $this.Log("China version: $($Object2.version)")
   $Identical = $false

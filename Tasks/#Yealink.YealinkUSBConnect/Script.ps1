@@ -25,7 +25,7 @@ $Object2 = Invoke-RestMethod @Params -Headers @{ language = 'zh_CN' }
 if ($Object1.data.version -ne $Object2.data.version) {
   $this.Log("en-US release notes version: $($Object1.data.version)")
   $this.Log("zh-CN release notes version: $($Object2.data.version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

@@ -14,7 +14,7 @@ $VersionX64 = [regex]::Match($InstallerUrlX64, '/(\d+\.\d+\.\d+)/').Groups[1].Va
 
 $Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Log('Distinct versions detected', 'Warning')
+  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
   $Identical = $false

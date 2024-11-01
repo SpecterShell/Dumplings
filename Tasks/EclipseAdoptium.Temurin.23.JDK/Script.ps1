@@ -11,7 +11,7 @@ $VersionArm64 = "$($Object3.version.major).$($Object3.version.minor).$($Object3.
 if ($VersionX64 -ne $VersionArm64) {
   $this.Log("x64 version: ${VersionX64}")
   $this.Log("arm64 version: ${VersionArm64}")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version

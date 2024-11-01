@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri "https://my.adobeconnect.com/common/UpdateDesc
 if ($Object1.UpdateDescr.Windows.Release[0].Version -ne $Object1.UpdateDescr.Win32.Release[0].Version) {
   $this.Log("x86 version: $($Object1.UpdateDescr.Win32.Release[0].Version)")
   $this.Log("x64 version: $($Object1.UpdateDescr.Windows.Release[0].Version)")
-  throw 'Distinct versions detected'
+  throw 'Inconsistent versions detected'
 }
 
 # Version
