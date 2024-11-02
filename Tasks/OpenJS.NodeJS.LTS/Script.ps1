@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
         Value = @(
           [ordered]@{
             DocumentLabel = 'Learn'
-            DocumentUrl   = 'https://nodejs.org/en/learn/'
+            DocumentUrl   = 'https://nodejs.org/learn/'
           }
           [ordered]@{
             DocumentLabel = 'Documentation'
@@ -55,7 +55,7 @@ switch -Regex ($this.Check()) {
         Value  = @(
           [ordered]@{
             DocumentLabel = '学习'
-            DocumentUrl   = 'https://nodejs.org/en/learn/'
+            DocumentUrl   = 'https://nodejs.org/zh-cn/learn/'
           }
           [ordered]@{
             DocumentLabel = '文档'
@@ -63,7 +63,7 @@ switch -Regex ($this.Check()) {
           }
           [ordered]@{
             DocumentLabel = '关于'
-            DocumentUrl   = 'https://nodejs.org/about/'
+            DocumentUrl   = 'https://nodejs.org/zh-cn/about/'
           }
         )
       }
