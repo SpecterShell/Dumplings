@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://sk-data.special-k.info/repository.json'
+$Object1 = (Invoke-WebRequest -Uri 'https://sk-data.special-k.info/repository.json').Content | ConvertFrom-Json -AsHashtable
 
 # Version
 $this.CurrentState.Version = $Object1.Main.Versions[0].Name
