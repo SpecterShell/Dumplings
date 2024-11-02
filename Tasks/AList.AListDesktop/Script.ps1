@@ -1,4 +1,4 @@
-$RepoOwner = 'alist-org'
+$RepoOwner = 'AlistGo'
 $RepoName = 'desktop-release'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
