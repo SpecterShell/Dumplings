@@ -1,0 +1,52 @@
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.31.0/netbird_installer_0.31.0_windows_amd64.msi
+  InstallerSha256: 9B0819E37CEBE6D1A6E26DF1A390F14784EDE6AD7D1A720AB0EAE9A04892812E
+  ProductCode: '{2BF47814-1D9D-4C79-A7CD-B9FB76FF85D5}'
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.31.0
+    ProductCode: '{2BF47814-1D9D-4C79-A7CD-B9FB76FF85D5}'
+    UpgradeCode: '{6456EC4E-3AD6-4B9B-A2BE-98E81CB21CCF}'
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.31.0/netbird_installer_0.31.0_windows_amd64.exe
+  InstallerSha256: A4620E9E6D0219A27E87F529C1ECC3EF05032E9359E3923E69689690E1E73452
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.31.0.11631635054
+    Publisher: Netbird
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    [management] Setup key improvements #2775
+    - We added support to setup-key deletion, allowing account cleanup of revoked or expired keys.
+    - The max expiration time was removed, allowing users to define any date for key expiration.
+    - Setup-keys are now stored as hashs, improving security for systems.
+    Because of a database migration where the setup-keys are being hashed, a downgrade is no longer possible without restoring a backup. So, testing and making sure a backup is done before upgrading is highly recommended. See backup docs here: https://docs.netbird.io/selfhosted/selfhosted-guide#backup
+    Improvements
+    - [client] Make native firewall init fail firewall creation #2784
+    - [misc] Update Zitadel from v2.54.10 to v2.64.1 #2793
+    - [client] allow relay leader on iOS #2795
+    - [management] remove network map diff calculations #2820
+    - [management] Add DB access duration to logs for context cancel #2781
+    - [client] Log windows panics #2829
+    Bug fixes
+    - [client] Ignore route rules with no sources instead of erroring out #2786
+    - [client] Fix multiple peer name filtering in netbird status command #2798
+    - [client] Fix the broken dependency gvisor.dev/gvisor #2789
+    - [management] Fix peer meta isEqual #2807
+    - [client] Nil check on ICE remote conn #2806
+    - [client] Allocate new buffer for every package #2823
+    - [client] Fix unused servers cleanup #2826
+    - [client] Remove legacy forwarding rules in userspace mode #2782
+    New Contributors
+    - @Codixer made their first contribution in #2793
+    - @mgarces made their first contribution in #2798
+    - @milantracy made their first contribution in #2789
+    Full Changelog: https://github.com/netbirdio/netbird/compare/v0.30.3...v0.31.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/netbirdio/netbird/releases/tag/v0.31.0
+Version: 0.31.0
+ReleaseTime: 2024-11-01T15:05:30.0000000Z
