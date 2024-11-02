@@ -1,5 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri "https://app-updates.agilebits.com/check/2/10.0.22000/x86_64/OPW8/en/$($this.LastState.Contains('RawVersion') ? $this.LastState.RawVersion: '81026039')/A1/N"
 
+if ($Object1.available -eq '0') {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.version
 
