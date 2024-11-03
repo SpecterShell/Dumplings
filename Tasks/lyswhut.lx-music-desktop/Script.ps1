@@ -26,17 +26,17 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('File MD5'); $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
-          # ReleaseNotes (en-US)
+          # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
+            Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl
