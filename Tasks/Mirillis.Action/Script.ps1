@@ -14,15 +14,22 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://mirillis.com/newsroom' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://updates.mirillis.com/liveupdate/news/0804/news.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(text(), 'Action! $($this.CurrentState.RealVersion)')]")
-      if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//table[@class='news_table']/tr[contains(.//div[@class='itemHeader'], 'Action! $($this.CurrentState.RealVersion)')]")
+      if ($ReleaseNotesNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+          [regex]::Match($ReleaseNotesNode.SelectSingleNode('./td[1]//div[@class="itemDate2"]').InnerText, '(\d{1,2}/\d{1,2}/\d{4})').Groups[1].Value,
+          'MM/dd/yyyy',
+          $null
+        ).ToString('yyyy-MM-dd')
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::ul[1]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectNodes('.//div[@class="itemText"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
