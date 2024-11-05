@@ -40,9 +40,9 @@ switch -Regex ($this.Check()) {
           Value = $ReleaseNotesUrl = Join-Uri 'https://support.bluestacks.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
         }
 
-        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+        $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+        $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
             if ($Node.InnerText.Contains('Released on:')) {
@@ -59,7 +59,7 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
 
         # ReleaseNotesUrl (zh-CN)
@@ -69,9 +69,9 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesUrlCN = Join-Uri 'https://support.bluestacks.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/zh-tw/' -replace '(?<=articles/\d+)-.+')
         }
 
-        $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
+        $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
 
-        $ReleaseNotesCNTitleNode = $Object4.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+        $ReleaseNotesCNTitleNode = $Object5.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesCNTitleNode) {
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
             if ($Node.InnerText.Contains('發布日期：')) {
@@ -82,16 +82,16 @@ switch -Regex ($this.Check()) {
             }
           }
           $ReleaseNotesCN = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
-          $Object5 = Invoke-RestMethod -Uri 'https://api.zhconvert.org/convert' -Method Post -Body @{ text = $ReleaseNotesCN; converter = 'Simplified' }
+          $Object6 = Invoke-RestMethod -Uri 'https://api.zhconvert.org/convert' -Method Post -Body @{ text = $ReleaseNotesCN; converter = 'Simplified' }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $Object5.data.text
+            Value  = $Object6.data.text
           }
           $this.Log('Powered by zhconvert API: https://zhconvert.org/')
         } else {
-          $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
         $this.Log("No ReleaseNotesUrl and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
