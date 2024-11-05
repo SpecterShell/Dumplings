@@ -8,7 +8,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.high-logic.com/process.php' -Body
   mod = '0'
 }
 
-if (-not $Object1.versioninfo.haveupdate) {
+if ($Object1.versioninfo.haveupdate -eq 'false') {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
@@ -23,7 +23,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://www.high-logic.com/process.php' -Body
   mod = '0'
 }
 
-if (-not $Object2.versioninfo.haveupdate) {
+if ($Object2.versioninfo.haveupdate -eq 'false') {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
