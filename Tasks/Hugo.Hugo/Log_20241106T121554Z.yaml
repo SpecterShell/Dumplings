@@ -1,0 +1,18 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/gohugoio/hugo/releases/download/v0.138.0/hugo_0.138.0_windows-amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/gohugoio/hugo/releases/download/v0.138.0/hugo_0.138.0_windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release soft deprecates Page.Scratch and aliases it to Page.Store. The only difference between the two has been that the Page.Scratch was reset on rebuilds, which becomes problematic when state is written by cached content (typically .Content). The original motivation behind adding a new and not changing the existing method was to avoid breakage, but in hind-sight, it would have fixed more than it broke.
+    This release also includes a fix for a data race that I, @bep, introduced in v0.137.0.
+    What's Changed
+    - Fix concurrent map read and map write in short page lookups 95e2d5beb @bep #13019
+    - Alias Page.Scratch to Page.Store (note) 2c3efc810 @bep #13016
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gohugoio/hugo/releases/tag/v0.138.0
+Version: 0.138.0
+ReleaseTime: 2024-11-06T12:00:43.0000000Z
