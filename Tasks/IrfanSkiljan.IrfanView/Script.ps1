@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.irfanview.com/checkversion.php' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Object1.SelectSingleNode('/html/body/b[1]').InnerText.Trim()
+$this.CurrentState.Version = $Object1.SelectSingleNode('/html/body/b[1]').InnerText.Trim().PadRight(4, '0')
 
 # Installer
 # The links on the homepage requires referer. Use TechSpot mirror for the links.
