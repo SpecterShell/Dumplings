@@ -68,7 +68,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msix'
-  InstallerUrl  = $Object2.assets.Where({ $_.name.EndsWith('.msixbundle') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object2.assets.Where({ $_.name.EndsWith('.msixbundle') -and $_.name.Contains('Q16-HDRI') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
