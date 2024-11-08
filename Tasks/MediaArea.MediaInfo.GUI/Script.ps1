@@ -5,7 +5,6 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'NewVersion;([\d\.]+)').Gr
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
   InstallerUrl = "https://mediaarea.net/download/binary/mediainfo-gui/$($this.CurrentState.Version)/MediaInfo_GUI_$($this.CurrentState.Version)_Windows.exe"
 }
 
