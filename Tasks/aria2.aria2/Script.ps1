@@ -4,7 +4,7 @@ $RepoName = 'aria2'
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -creplace '^release-'
 
 # Installer
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') -and $_.name.Contains('32bit') }, 'First')[0]
