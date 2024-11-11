@@ -1289,6 +1289,92 @@ function ConvertFrom-ElectronUpdater {
   return $Result
 }
 
+function ConvertFrom-SquirrelReleases {
+  <#
+  .SYNOPSIS
+    Convert Squirrel releases into organized hashtable
+  .PARAMETER Content
+    The content of the Squirrel releases
+  .LINK
+    https://github.com/Squirrel/Squirrel.Windows/blob/HEAD/src/Squirrel/Utility.cs
+  #>
+  param (
+    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The content of the Squirrel releases')]
+    [string]
+    $Content
+  )
+
+  begin {
+    $EntryRegex = [regex]::new('^([0-9a-fA-F]{40})\s+(\S+)\s+(\d+)[\r]*$', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+    $CommentRegex = [regex]::new('\s*#.*$', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+    $StagingRegex = [regex]::new('#\s+(\d{1,3})%$', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+    $SuffixRegex = [regex]::new('(-full|-delta)?\.nupkg$', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+    $VersionRegex = [regex]::new('\d+(\.\d+){0,3}(-[A-Za-z][0-9A-Za-z-]*)?', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+
+    $Result = @()
+  }
+
+  process {
+    $Result += $Content | Split-LineEndings | Where-Object -FilterScript { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object -Process {
+      $Entry = $_
+
+      $StagingPercentage = $Entry -match $StagingRegex ? $Matches[1] / 100 : $null
+
+      $Entry = $Entry -replace $CommentRegex
+      if ([string]::IsNullOrWhiteSpace($Entry)) {
+        return
+      }
+
+      $Match = $EntryRegex.Match($Entry)
+      if (-not $Match.Success -or $Match.Groups.Count -ne 4) {
+        throw "Invalid release entry: ${Entry}"
+      }
+
+      $Filename = $Match.Groups[2].Value
+
+      $BaseUrl = $null
+      $Query = $null
+
+      $Uri = [uri]$null
+      if ([uri]::TryCreate($Filename, [System.UriKind]::Absolute, [ref]$Uri) -and $Uri.Scheme -in @([uri]::UriSchemeHttp, [uri]::UriSchemeHttps)) {
+        $Path = $Uri.LocalPath
+        $Authority = $Uri.GetLeftPart([System.UriPartial]::Authority)
+
+        if ([string]::IsNullOrEmpty($Path) -or [string]::IsNullOrEmpty($Authority)) {
+          throw "Invalid URL: ${Filename}"
+        }
+
+        $IndexOfLastPathSeparator = $Path.LastIndexOf('/') + 1
+        $BaseUrl = $Authority + $Path.Substring(0, $IndexOfLastPathSeparator)
+        $Filename = $Path.Substring($IndexOfLastPathSeparator)
+
+        if (-not [string]::IsNullOrEmpty($Uri.Query)) {
+          $Query = $Uri.Query
+        }
+      }
+
+      if ($Filename.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -gt -1) {
+        throw "Filename can either be an absolute HTTP[s] URL, *or* a file name: ${Filename}"
+      }
+
+      return [pscustomobject]@{
+        Version           = $VersionRegex.Match($SuffixRegex.Replace($Filename, '')).Value
+        Sha1              = $Match.Groups[1].Value
+        Filename          = $Filename
+        Filesize          = [Int64]::Parse($Match.Groups[3].Value)
+        IsDelta           = $Filename.EndsWith('-delta.nupkg', [System.StringComparison]::InvariantCultureIgnoreCase)
+        BaseUrl           = $BaseUrl
+        Query             = $Query
+        StagingPercentage = $StagingPercentage
+      }
+    }
+  }
+
+  end {
+    return $Result
+  }
+}
+
 function Write-Log {
   <#
   .SYNOPSIS
