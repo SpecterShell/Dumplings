@@ -1,7 +1,7 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://presentment-api.laihua.com/common/config?type=120').data.perfooUpdatePC | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object1.versionCode
+$this.CurrentState.Version = $Object1.versionCode -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
