@@ -1,7 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://ugit.qq.com/downloads/ugit_public/RELEASES'
+$Object1 = Invoke-WebRequest -Uri 'https://ugit.qq.com/downloads/ugit_public/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1, 'UGit-(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

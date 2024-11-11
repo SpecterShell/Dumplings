@@ -1,19 +1,17 @@
 # x64
-$Object1 = Invoke-RestMethod -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/RELEASES'
-$VersionX64 = [regex]::Match($Object1.Split(' ')[1], 'AnthropicClaude-(\d+(?:\.\d+)+)-full').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # arm64
-$Object2 = Invoke-RestMethod -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/RELEASES'
-$VersionArm64 = [regex]::Match($Object2.Split(' ')[1], 'AnthropicClaude-(\d+(?:\.\d+)+)-full').Groups[1].Value
+$Object2 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
-if ($VersionX64 -ne $VersionArm64) {
-  $this.Log("x64 version: ${VersionX64}")
-  $this.Log("arm64 version: ${VersionArm64}")
+if ($Object1.Version -ne $Object2.Version) {
+  $this.Log("x64 version: $($Object1.Version)")
+  $this.Log("arm64 version: $($Object2.Version)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
