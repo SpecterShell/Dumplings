@@ -1375,53 +1375,6 @@ function ConvertFrom-SquirrelReleases {
   }
 }
 
-function Write-Log {
-  <#
-  .SYNOPSIS
-    Write message to the host under specified level
-  .PARAMETER Message
-    The message content
-  .PARAMETER Identifier
-    The identifier to be prepended to the message
-  .PARAMETER Level
-    Log level - Verbose, Log, Info, Warning or Error
-  #>
-  param (
-    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The message content')]
-    $Object,
-
-    [Parameter(HelpMessage = 'The identifier to be prepended to the message')]
-    [AllowEmptyString()]
-    [string]
-    $Identifier,
-
-    [Parameter(HelpMessage = 'Log level - Verbose, Log, Info, Warning or Error')]
-    [ValidateSet('Verbose', 'Log', 'Info', 'Warning', 'Error')]
-    [string]
-    $Level = 'Log'
-  )
-
-  process {
-    $Color = switch ($Level) {
-      'Verbose' { "`e[32m" } # Green
-      'Info' { "`e[34m" } # Blue
-      'Warning' { "`e[33m" } # Yellow
-      'Error' { "`e[31m" } # Red
-      Default { "`e[39m" } # Default
-    }
-
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLog')
-    $Mutex.WaitOne(2000) | Out-Null
-    if (-not [string]::IsNullOrWhiteSpace($Identifier)) {
-      Write-Host -Object "${Color}`e[1m${Identifier}:`e[22m ${Object}`e[0m"
-    } else {
-      Write-Host -Object "${Color}${Object}`e[0m"
-    }
-    $Mutex.ReleaseMutex()
-    $Mutex.Close()
-  }
-}
-
 function Copy-Object {
   <#
   .SYNOPSIS

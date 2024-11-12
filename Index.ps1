@@ -69,7 +69,7 @@ param (
 # Enable strict mode to avoid non-existent or empty properties from the API
 Set-StrictMode -Version 3.0
 
-# In GitHub Actions, hide the progress bar to avoid pollutions to console output
+# In CI, hide the progress bar to avoid pollutions to console output
 if (Test-Path -Path Env:\CI) { $ProgressPreference = 'SilentlyContinue' }
 
 # Force stop on error
@@ -90,12 +90,49 @@ $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
   'Invoke-RestMethod:SslProtocol'              = 'Tls12'
 }
 
-# Set the PowerShell modules to be installed and imported
-$Private:DumplingsPowerShellModules = @('PowerHTML', 'powershell-yaml')
+function Write-Log {
+  <#
+  .SYNOPSIS
+    Write message to the host under specified level
+  .PARAMETER Message
+    The message content
+  .PARAMETER Identifier
+    The identifier to be prepended to the message
+  .PARAMETER Level
+    The message level
+  #>
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The message content')]
+    $Object,
+
+    [Parameter(HelpMessage = 'The identifier to be prepended to the message')]
+    [AllowEmptyString()]
+    [string]$Identifier,
+
+    [Parameter(HelpMessage = 'The message level')]
+    [ValidateSet('Verbose', 'Log', 'Info', 'Warning', 'Error')]
+    [string]$Level = 'Log'
+  )
+
+  process {
+    $Color = switch ($Level) {
+      'Verbose' { "`e[32m" } # Green
+      'Info' { "`e[34m" } # Blue
+      'Warning' { "`e[33m" } # Yellow
+      'Error' { "`e[31m" } # Red
+      Default { "`e[39m" } # Default
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($Identifier)) {
+      Write-Host -Object "${Color}`e[1m${Identifier}:`e[22m ${Object}`e[0m"
+    } else {
+      Write-Host -Object "${Color}${Object}`e[0m"
+    }
+  }
+}
 
 if (-not $Parallel) {
-  # Set console input and output encoding to UTF-8
-  # This also affects sub threads
+  # Set console input and output encoding to UTF-8. This will also affect sub-threads
   $Private:OldOutputEncoding = [System.Console]::OutputEncoding
   $Private:OldInputEncoding = [System.Console]::InputEncoding
   [System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(65001)
@@ -104,32 +141,30 @@ if (-not $Parallel) {
   # Remove old jobs to avoid conflicts
   Get-Job | Where-Object -FilterScript { $_.Name.StartsWith('Dumplings') } | Remove-Job -Force
 
-  # Install PowerShell modules
-  $Private:DumplingsPowerShellModules | ForEach-Object -Process {
+  # Install necessary module
+  @('powershell-yaml') | ForEach-Object -Process {
     if (-not (Get-Module -Name $_ -ListAvailable)) {
-      Write-Host -Object "`e[1mDumplings:`e[22m Installing PowerShell module ${_}"
+      Write-Log -Object "Installing PowerShell module: ${_}" -Identifier 'Dumplings'
       Install-Module -Name $_ -Force -ErrorAction Stop | Out-Null
-      Write-Host -Object "`e[1mDumplings:`e[22m PowerShell module ${_} is installed"
+      Write-Log -Object "The PowerShell module ${_} has been installed" -Identifier 'Dumplings'
     }
   }
 
+  # Load preferences from the preference file
   $Global:DumplingsPreference = $null
-
-  # Load preference from file
   $Private:DumplingsPreferencePath = Join-Path $PSScriptRoot 'Preference.yaml'
   if (Test-Path -Path $Private:DumplingsPreferencePath) {
     try {
       $Global:DumplingsPreference = Get-Content -Path $Private:DumplingsPreferencePath -Raw | ConvertFrom-Yaml -Ordered
     } catch {
-      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the preference. Assigning an empty hashtable: ${_}"
+      Write-Log -Object "Failed to load the preference. Assigning an empty hashtable: ${_}" -Identifier 'Dumplings'
     }
   }
-  # ConvertFrom-Yaml will return $null if the file is empty. Assign an empty hashtable if that happened
+  # ConvertFrom-Yaml will return $null if the file exists but its content is empty. Assign an empty hashtable if that occurred
   if (-not $Global:DumplingsPreference) {
     $Global:DumplingsPreference = [ordered]@{}
   }
-
-  # Load preference from parameters. They have higher priority as the existing ones with the same names will be overrided
+  # Then load preferences from parameters. They have higher priority so the existing ones of the same names will be overrided
   if ($Params -and $Params -is [System.Collections.IEnumerable]) {
     $LastKey = $null
     foreach ($Item in $Params) {
@@ -142,18 +177,29 @@ if (-not $Parallel) {
     }
   }
 
-  # Load secret from environmental variables
+  # Load secrets from the environmental variable
   $Global:DumplingsSecret = $null
   if (Test-Path -Path Env:\DUMPLINGS_SECRET) {
     try {
       $Global:DumplingsSecret = $Env:DUMPLINGS_SECRET | ConvertFrom-Yaml -Ordered
     } catch {
-      Write-Host -Object "`e[1mDumplings:`e[22m Failed to load the secret. Assigning an empty hashtable: ${_}"
+      Write-Log -Object "Failed to load the secret. Assigning an empty hashtable: ${_}" -Identifier 'Dumplings'
     }
   }
-  # ConvertFrom-Yaml will return $null if the file is empty. Assign an empty hashtable if that happened
+  # ConvertFrom-Yaml will return $null if the environmental variable exists but its value is empty. Assign an empty hashtable if that occurred
   if (-not $Global:DumplingsSecret) {
     $Global:DumplingsSecret = [ordered]@{}
+  }
+
+  # Install specified PowerShell modules
+  if ($Global:DumplingsPreference.Contains('PowerShellModules') -and $Global:DumplingsPreference.PowerShellModules -is [System.Collections.IEnumerable]) {
+    $Global:DumplingsPreference.PowerShellModules | ForEach-Object -Process {
+      if (-not (Get-Module -Name $_ -ListAvailable)) {
+        Write-Log -Object "Installing PowerShell module: ${_}" -Identifier 'Dumplings'
+        Install-Module -Name $_ -Force -ErrorAction Stop | Out-Null
+        Write-Log -Object "The PowerShell module ${_} has been installed" -Identifier 'Dumplings'
+      }
+    }
   }
 
   # Queue the tasks to load
@@ -163,11 +209,10 @@ if (-not $Parallel) {
     $TaskNames = [System.Collections.Concurrent.ConcurrentQueue[string]](Join-Path $Path '*' 'Config.yaml' | Get-ChildItem -Recurse | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name)
   }
   $TaskNamesTotalCount = $TaskNames.Count
-  Write-Host -Object "`e[1mDumplings:`e[22m $($TaskNamesTotalCount ?? 0) task(s) found"
+  Write-Log -Object "$($TaskNamesTotalCount ?? 0) task(s) found" -Identifier 'Dumplings'
 
-  # Set up temp storage for tasks
+  # Set up a shared hashtable across sub-threads
   $Global:DumplingsStorage = [ordered]@{}
-  $Global:DumplingsSessionStorage = [ordered]@{}
 
   # Set up temp folder for tasks
   $Global:DumplingsCache = (New-Item -Path $Env:TEMP -Name 'Dumplings' -ItemType Directory -Force).FullName
@@ -176,13 +221,19 @@ if (-not $Parallel) {
   $Global:DumplingsOutput = (New-Item -Path $PSScriptRoot -Name 'Outputs' -ItemType Directory -Force).FullName
   Get-ChildItem $Global:DumplingsOutput | Remove-Item -Recurse -Force
 
+  # In CI, git pull first to ensure the local repo is up-to-date
+  if (Test-Path -Path Env:\CI) {
+    Write-Log -Object 'Pulling changes' -Identifier 'Dumplings'
+    git pull
+  }
+
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {
     # The default number of maximum concurrent threads of ThreadJob is 5. Run Start-ThreadJob once to increase the throttle limit
     # Add the value by 5 to allow the tasks to run ThreadJob immediately instead of waiting for the sub-threads exiting
     Start-ThreadJob -ScriptBlock {} -ThrottleLimit ($ThrottleLimit + 5) | Wait-Job | Out-Null
 
-    Write-Host -Object "`e[1mDumplings:`e[22m Starting ${ThrottleLimit} thread jobs"
+    Write-Log -Object "Starting ${ThrottleLimit} thread jobs" -Identifier 'Dumplings'
 
     # Re-run this script in sub-threads
     $Jobs = 0..($ThrottleLimit - 1) | ForEach-Object -Process {
@@ -191,20 +242,22 @@ if (-not $Parallel) {
   }
 }
 
-# In multi-threads mode, run tasks in sub-threads and let the main thread skip this region
 # In single-thread mode, run tasks in the main thread directly
+# In multi-threads mode, run tasks in sub-threads, and the main thread will skip this region
 if ($Parallel -or $ThrottleLimit -eq 1) {
   # Set up parameters
   $Global:DumplingsRoot = $Parallel ? $using:PSScriptRoot : $PSScriptRoot
+  # Set up a shared hashtable within each sub-thread
+  $Global:DumplingsSessionStorage = [ordered]@{}
+  # If in sub-threads, get the shared variables from the main thread
   if ($Parallel) {
     $TaskNames = $using:TaskNames
     $TaskNamesTotalCount = $using:TaskNamesTotalCount
-    $Global:DumplingsStorage = $using:DumplingsStorage
-    $Global:DumplingsSessionStorage = [ordered]@{}
-    $Global:DumplingsCache = $using:DumplingsCache
-    $Global:DumplingsOutput = $using:DumplingsOutput
     $Global:DumplingsPreference = $using:DumplingsPreference
     $Global:DumplingsSecret = $using:DumplingsSecret
+    $Global:DumplingsStorage = $using:DumplingsStorage
+    $Global:DumplingsCache = $using:DumplingsCache
+    $Global:DumplingsOutput = $using:DumplingsOutput
   }
 
   # Import libraries
@@ -256,11 +309,12 @@ if (-not $Parallel) {
   # In multi-threads mode, let the main thread wait for all sub-threads first
   if ($ThrottleLimit -gt 1) {
     # Wait for all threads with a maximum waiting time of 50 minutes
-    $Jobs | Wait-Job -Timeout 3000 | Out-Null
+    $Timeout = $Global:DumplingsPreference.Contains('Timeout') ? $Global:DumplingsPreference.Timeout : 3000
+    $Jobs | Wait-Job -Timeout $Timeout | Out-Null
 
-    # Check if some threads are still running, especially after timeout
+    # Check running sub-threads after timeout
     if ($Jobs.State -eq 'Running') {
-      Write-Host -Object "`e[1mDumplings:`e[22m Some threads are still running and will be stopped forcibly"
+      Write-Log -Object 'The following sub-threads exceeds the time limit and will be stopped forcibly:' -Identifier 'Dumplings'
       $Jobs | Where-Object -Property State -EQ -Value 'Running' | Out-Host
       Write-Progress -Activity 'Dumplings' -Completed -Status 'Stopped'
     } else {
@@ -274,18 +328,21 @@ if (-not $Parallel) {
     $Jobs | Remove-Job -Force
   }
 
-  # In GitHub Actions, commit and push the changes if present
+  # In CI, commit and push the changes if present
   if (Test-Path -Path Env:\CI) {
     if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
-      Write-Host -Object "`e[1mDumplings:`e[22m Committing and pushing changes"
-      git config user.name 'github-actions[bot]'
-      git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      Write-Log -Object 'Committing and pushing changes' -Identifier 'Dumplings'
+      # In GitHub Actions, set the bot's name and email
+      if (Test-Path -Path Env:\GITHUB_ACTIONS) {
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      }
       git pull
       git add $Path
       git commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]"
       git push
     } else {
-      Write-Host -Object "`e[1mDumplings:`e[22m No changes to commit"
+      Write-Log -Object 'No changes to commit' -Identifier 'Dumplings'
     }
   }
 
