@@ -36,7 +36,9 @@ Param
   [Parameter(Mandatory = $true)]
   [Object[]] $InstallerEntries,
   [Parameter(Mandatory = $false)]
-  [Object[]] $LocaleEntries
+  [Object[]] $LocaleEntries,
+  [Parameter(Mandatory = $true)]
+  [System.Management.Automation.PSMethod]$Logger
 )
 
 $ScriptHeader = '# Created with YamlCreate.ps1 v2.4.1 Dumplings Mod'
@@ -46,6 +48,7 @@ $Culture = 'en-US'
 if (-not ([System.Environment]::OSVersion.Platform -match 'Win')) { $env:TEMP = '/tmp/' }
 $script:UserAgent = 'Microsoft-Delivery-Optimization/10.0'
 $script:BackupUserAgent = 'winget-cli WindowsPackageManager/1.7.10661 DesktopAppInstaller/Microsoft.DesktopAppInstaller v1.22.10661.0'
+$DumplingsLogIdentifier = $DumplingsLogIdentifier + 'YamlCreate'
 
 $SchemaUrls = @{
   version       = "https://aka.ms/winget-manifest.version.$ManifestVersion.schema.json"
@@ -62,11 +65,11 @@ $DirectSchemaUrls = @{
 
 # Fetch Schema data from github for entry validation, key ordering, and automatic commenting
 try {
-  $LocaleSchema = $Global:DumplingsSessionStorage['WinGetLocaleSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
+  $LocaleSchema = $DumplingsSessionStorage['WinGetLocaleSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.defaultLocale -UseBasicParsing | ConvertFrom-Json)
   $LocaleProperties = (ConvertTo-Yaml $LocaleSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $VersionSchema = $Global:DumplingsSessionStorage['WinGetVersionSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
+  $VersionSchema = $DumplingsSessionStorage['WinGetVersionSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.version -UseBasicParsing | ConvertFrom-Json)
   $VersionProperties = (ConvertTo-Yaml $VersionSchema.properties | ConvertFrom-Yaml -Ordered).Keys
-  $InstallerSchema = $Global:DumplingsSessionStorage['WinGetInstallerSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
+  $InstallerSchema = $DumplingsSessionStorage['WinGetInstallerSchema'] ??= @(Invoke-WebRequest $DirectSchemaUrls.installer -UseBasicParsing | ConvertFrom-Json)
   $InstallerProperties = (ConvertTo-Yaml $InstallerSchema.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerSwitchProperties = (ConvertTo-Yaml $InstallerSchema.definitions.InstallerSwitches.properties | ConvertFrom-Yaml -Ordered).Keys
   $InstallerEntryProperties = (ConvertTo-Yaml $InstallerSchema.definitions.Installer.properties | ConvertFrom-Yaml -Ordered).Keys
@@ -351,7 +354,7 @@ Function Read-QuickInstallerEntry {
     $_NewInstaller.Remove('InstallerSha256')
 
     # Show the user which installer is being updated
-    Write-Log -Object "Updating installer #${_iteration}/$($_OldInstallers.Count) [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['NestedInstallerType']), $($_NewInstaller['Scope'])]" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+    $Logger.Invoke("Updating installer #${_iteration}/$($_OldInstallers.Count) [$($_NewInstaller['InstallerLocale']), $($_NewInstaller['Architecture']), $($_NewInstaller['InstallerType']), $($_NewInstaller['NestedInstallerType']), $($_NewInstaller['Scope'])]", 'Verbose')
 
     # Apply inputs
     $ToUpdate = $false
@@ -379,10 +382,10 @@ Function Read-QuickInstallerEntry {
           $_NewInstaller[$_key] = $MatchingInstallerEntry.$_key.Replace(' ', '%20')
         } elseif ($_key -in $InstallerEntryProperties -and $_key -notin @('InstallerLocale', 'Architecture', 'InstallerType', 'NestedInstallerType', 'Scope', 'InstallerUrl')) {
           if ($MatchingInstallerEntry.$_key -is [string] -and (Test-String $MatchingInstallerEntry.$_key -IsNull)) {
-            Write-Log -Object "The new value of the installer property ${_key} is invalid and thus discarded: $($MatchingInstallerEntry.$_key)" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
+            $Logger.Invoke("The new value of the installer property ${_key} is invalid and thus discarded: $($MatchingInstallerEntry.$_key)", 'Warning')
             continue
           } elseif ($MatchingInstallerEntry.$_key -isnot [string] -and $null -eq $MatchingInstallerEntry.$_key) {
-            Write-Log -Object "The new value of the installer property ${_key} is invalid and thus discarded" -Identifier "YamlCreate ${PackageIdentifier}" -Level Warning
+            $Logger.Invoke("The new value of the installer property ${_key} is invalid and thus discarded", 'Warning')
             continue
           }
           $_NewInstaller[$_key] = $MatchingInstallerEntry.$_key
@@ -411,11 +414,11 @@ Function Read-QuickInstallerEntry {
     }
 
     if ($_NewInstaller.Keys -notcontains 'InstallerSha256') {
-      Write-Log -Object 'Downloading installer...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+      $Logger.Invoke('Downloading installer...', 'Verbose')
       $script:dest = Get-InstallerFile -URI $_NewInstaller['InstallerUrl'] -PackageIdentifier $PackageIdentifier -PackageVersion $PackageVersion
       # Check that MSI's aren't actually WIX, and EXE's aren't NSIS, INNO or BURN
-      Write-Log -Object 'Installer downloaded!' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
-      Write-Log -Object 'Processing installer data...' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+      $Logger.Invoke('Installer downloaded!', 'Verbose')
+      $Logger.Invoke('Processing installer data...', 'Verbose')
       # Get the Sha256
       $_NewInstaller['InstallerSha256'] = (Get-FileHash -Path $script:dest -Algorithm SHA256).Hash
       # If the installer is archive and nested installer is msi or wix, expand the archive first
@@ -478,7 +481,7 @@ Function Read-QuickInstallerEntry {
       }
       # Remove the downloaded files
       Remove-Item -Path $script:dest
-      Write-Log -Object 'Installer updated!' -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+      $Logger.Invoke('Installer updated!', 'Verbose')
     }
 
     # Add the updated installer to the new installers array
@@ -626,7 +629,7 @@ Function Write-ManifestContent {
       $(ConvertTo-Yaml $YamlContent -Options DisableAliases).TrimEnd() -replace "(.*) $([char]0x2370)", "# `$1"
     ), $Utf8NoBomEncoding)
 
-  Write-Log -Object "Yaml file created: ${FilePath}" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+  $Logger.Invoke("Yaml file created: ${FilePath}", 'Verbose')
 }
 
 # Take all the entered values and write the version manifest file
@@ -942,7 +945,7 @@ if (-not (Test-Path -Path "$AppFolder\..")) {
 try {
   $script:LastVersion = Split-Path (Split-Path (Get-ChildItem -Path "$AppFolder\..\" -Recurse -Depth 1 -File -Filter '*.yaml' -ErrorAction SilentlyContinue).FullName ) -Leaf | Sort-Object $ToNatural -Culture $Culture | Select-Object -Last 1
   $script:ExistingVersions = Split-Path (Split-Path (Get-ChildItem -Path "$AppFolder\..\" -Recurse -Depth 1 -File -Filter '*.yaml' -ErrorAction SilentlyContinue).FullName ) -Leaf | Sort-Object $ToNatural -Culture $Culture | Select-Object -Unique
-  Write-Log -Object "Found existing version: ${LastVersion}" -Identifier "YamlCreate ${PackageIdentifier}" -Level Verbose
+  $Logger.Invoke("Found existing version: ${LastVersion}", 'Verbose')
   $script:OldManifests = Get-ChildItem -Path "$AppFolder\..\$LastVersion"
 } catch {
   # Take no action here, we just want to catch the exceptions as a precaution

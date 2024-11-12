@@ -119,7 +119,7 @@ class PackageTask {
 
   # Log in specified level
   [void] Log([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object $Message -Identifier "PackageTask $($this.Name)" -Level $Level
+    Write-Log -Object $Message -Level $Level
     if ($Level -ne 'Verbose') {
       $this.Logs.Add($Message)
       if ($this.MessageEnabled) { $this.Message() }
@@ -133,9 +133,15 @@ class PackageTask {
 
   # Invoke script
   [void] Invoke() {
+    $DumplingsLogIdentifier = $Script:DumplingsLogIdentifier + "PackageTask $($this.Name)"
     if (($Global:DumplingsPreference.Contains('Force') -and $Global:DumplingsPreference.Force) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
-      Write-Log -Object 'Run!' -Identifier "PackageTask $($this.Name)"
-      & $this.ScriptPath | Out-Null
+      Write-Log -Object 'Run!'
+      try {
+        $null = & $this.ScriptPath
+      } catch {
+        $_ | Out-Host
+        $this.Log("Unexpected error: ${_}", 'Error')
+      }
     } else {
       $this.Log('Skipped', 'Info')
     }
@@ -208,12 +214,12 @@ class PackageTask {
       # Writing current state to log file
       $LogName = "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
       $LogPath = Join-Path $this.Path $LogName
-      Write-Log -Object "Writing current state to log file ${LogPath}" -Identifier "PackageTask $($this.Name)"
+      Write-Log -Object "Writing current state to log file ${LogPath}"
       $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
-      Write-Log -Object "Linking current state to the latest log file ${StatePath}" -Identifier "PackageTask $($this.Name)"
+      Write-Log -Object "Linking current state to the latest log file ${StatePath}"
       New-Item -Path $StatePath -ItemType SymbolicLink -Value $LogName -Force
     }
   }
@@ -356,7 +362,7 @@ class PackageTask {
       try {
         $this.MessageID = Send-TelegramMessage -Message $this.ToTelegramMarkdown() -AsMarkdown -MessageID $this.MessageID
       } catch {
-        Write-Log -Object "Failed to send default message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
+        Write-Log -Object "Failed to send default message: ${_}" -Level Error
         $this.Logs.Add($_.ToString())
       }
     }
@@ -366,9 +372,9 @@ class PackageTask {
   [void] Message([string]$Message) {
     if ($Global:DumplingsPreference.Contains('EnableMessage') -and $Global:DumplingsPreference.EnableMessage) {
       try {
-        Send-TelegramMessage -Message $Message | Out-Null
+        $null = Send-TelegramMessage -Message $Message
       } catch {
-        Write-Log -Object "Failed to send custom message: ${_}" -Identifier "PackageTask $($this.Name)" -Level Error
+        Write-Log -Object "Failed to send custom message: ${_}" -Level Error
         $this.Logs.Add($_.ToString())
       }
     }

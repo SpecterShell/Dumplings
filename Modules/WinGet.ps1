@@ -124,6 +124,7 @@ function New-WinGetManifest {
       LocaleEntries     = $Task.CurrentState.Locale
       ManifestsFolder   = $ManifestsFolder
       OutFolder         = $OutFolder
+      Logger            = $Task.Log
     }
     if ($Task.CurrentState['ReleaseTime']) {
       if ($Task.CurrentState.ReleaseTime -is [datetime] -or $Task.CurrentState.ReleaseTime -is [System.DateTimeOffset]) {
