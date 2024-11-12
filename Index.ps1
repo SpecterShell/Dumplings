@@ -227,7 +227,7 @@ if (-not $Parallel) {
   # In CI, git pull first to ensure the local repo is up-to-date
   if (Test-Path -Path Env:\CI) {
     Write-Log -Object 'Pulling changes' -Identifier 'Dumplings'
-    git pull
+    git.exe pull | Out-Host
   }
 
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
@@ -336,17 +336,17 @@ if (-not $Parallel) {
 
   # In CI, commit and push the changes if present
   if (Test-Path -Path Env:\CI) {
-    if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
+    if (-not [string]::IsNullOrWhiteSpace((git.exe ls-files --other --modified --exclude-standard $Path))) {
       Write-Log -Object 'Committing and pushing changes' -Identifier 'Dumplings'
       # In GitHub Actions, set the bot's name and email
       if (Test-Path -Path Env:\GITHUB_ACTIONS) {
-        git config user.name 'github-actions[bot]'
-        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git.exe config user.name 'github-actions[bot]' | Out-Host
+        git.exe config user.email '41898282+github-actions[bot]@users.noreply.github.com' | Out-Host
       }
-      git pull
-      git add $Path
-      git commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]"
-      git push
+      git.exe pull | Out-Host
+      git.exe add $Path | Out-Host
+      git.exe commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]" | Out-Host
+      git.exe push | Out-Host
     } else {
       Write-Log -Object 'No changes to commit' -Identifier 'Dumplings'
     }
