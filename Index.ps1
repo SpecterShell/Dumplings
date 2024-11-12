@@ -94,6 +94,9 @@ function Write-Log {
   <#
   .SYNOPSIS
     Write message to the host under specified level
+  .DESCRIPTION
+    Write message to the host under specified level
+    The function aims to replace Write-Host which suppresses colorized output when the console output is redirected (e.g., CI)
   .PARAMETER Message
     The message content
   .PARAMETER Identifier
