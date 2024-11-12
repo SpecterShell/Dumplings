@@ -8,7 +8,7 @@
 .PARAMETER PassThru
   Pass the task objects to output
 .PARAMETER ThrottleLimit
-  The number of workers used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode
+  The number of sub-threads used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode
 .PARAMETER Params
   Additional parameters to be used by model constructors and instances. See the source code of the models for more parameters
 .EXAMPLE
@@ -48,7 +48,7 @@ param (
   [switch]
   $PassThru = $false,
 
-  [Parameter(Position = 3, HelpMessage = 'The number of workers used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode')]
+  [Parameter(Position = 3, HelpMessage = 'The number of sub-threads used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode')]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
   [ushort]
   $ThrottleLimit = 1,
@@ -59,7 +59,7 @@ param (
 
   [Parameter(Position = 5, DontShow, HelpMessage = 'The ID of the thread')]
   [ushort]
-  $WorkerID = 0,
+  $WokID = 0,
 
   [Parameter(Position = 6, ValueFromRemainingArguments, HelpMessage = 'Additional parameters to be passed to the model instances')]
   [System.Collections.IEnumerable]
@@ -285,7 +285,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
         Config = $TaskConfig
       }
     } catch {
-      Write-Log -Object "Failed to initialize task ${TaskName}:" -Identifier "DumplingsWok${WorkerID}" -Level Error
+      Write-Log -Object "Failed to initialize task ${TaskName}:" -Identifier "DumplingsWok${WokID}" -Level Error
       $_ | Out-Host
       continue
     }
@@ -302,7 +302,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
     if ($PassThru) { Write-Output -InputObject $Task }
   }
 
-  Write-Log -Object 'Done' -Identifier "DumplingsWok${WorkerID}" -Level Verbose
+  Write-Log -Object 'Done' -Identifier "DumplingsWok${WokID}" -Level Verbose
 
   # Clean the environment for the sub-thread
   Get-Module | Where-Object -FilterScript { $_.Path.Contains($Global:DumplingsRoot) } | Remove-Module
