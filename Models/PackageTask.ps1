@@ -133,7 +133,7 @@ class PackageTask {
 
   # Invoke script
   [void] Invoke() {
-    $DumplingsLogIdentifier = $Script:DumplingsLogIdentifier + "PackageTask $($this.Name)"
+    $DumplingsLogIdentifier = $Script:DumplingsLogIdentifier + $this.Name
     if (($Global:DumplingsPreference.Contains('Force') -and $Global:DumplingsPreference.Force) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
       Write-Log -Object 'Run!'
       try {

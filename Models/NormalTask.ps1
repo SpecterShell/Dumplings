@@ -61,7 +61,7 @@ class NormalTask {
 
   # Log with template, specifying log level
   [void] Log([string]$Message, [LogLevel]$Level) {
-    Write-Log -Object $Message -Identifier "NormalTask $($this.Name)" -Level $Level
+    Write-Log -Object $Message -Level $Level
   }
 
   # Log in default level
@@ -71,9 +71,15 @@ class NormalTask {
 
   # Invoke script
   [void] Invoke() {
+    $DumplingsLogIdentifier = $Script:DumplingsLogIdentifier + $this.Name
     if (($Global:DumplingsPreference.Contains('NoSkip') -and $Global:DumplingsPreference.NoSkip) -or -not ($this.Config.Contains('Skip') -and $this.Config.Skip)) {
-      Write-Log -Object 'Run!' -Identifier "NormalTask $($this.Name)"
-      & $this.ScriptPath | Out-Null
+      Write-Log -Object 'Run!'
+      try {
+        $null = & $this.ScriptPath
+      } catch {
+        $_ | Out-Host
+        $this.Log("Unexpected error: ${_}", 'Error')
+      }
     } else {
       $this.Log('Skipped', 'Info')
     }
