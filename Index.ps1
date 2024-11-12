@@ -308,8 +308,11 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
 if (-not $Parallel) {
   # In multi-threads mode, let the main thread wait for all sub-threads first
   if ($ThrottleLimit -gt 1) {
-    # Wait for all threads with a maximum waiting time of 50 minutes
-    $Timeout = $Global:DumplingsPreference.Contains('Timeout') ? $Global:DumplingsPreference.Timeout : 3000
+    # Read the timeout from the preference or use the default value - 50 minutes
+    $NewTimeout = $null
+    $Timeout = $Global:DumplingsPreference.Contains('Timeout') -and [int]::TryParse($Global:DumplingsPreference, [ref]$NewTimeout) ? $NewTimeout : 3000
+
+    # Wait for all threads with the specified timeout
     $Jobs | Wait-Job -Timeout $Timeout | Out-Null
 
     # Check running sub-threads after timeout
