@@ -193,10 +193,10 @@ function New-WinGetManifest {
   # This is to mitigate the occasional and weird issue of "ref not found" when creating a new branch from the default branch of the upstream repo
   # The origin repo should be synced as early as possible to avoid conflicts with other commits
   $Task.Log('Creating a new branch', 'Verbose')
-  $Global:DumplingsSessionStorage['BaseRefSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/ref/heads/${OriginBranch}").object.sha
+  $DumplingsSessionStorage['BaseRefSha'] ??= (Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/ref/heads/${OriginBranch}").object.sha
   $NewRefObject = Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginOwner}/${OriginRepo}/git/refs" -Method Post -Body @{
     ref = "refs/heads/${BranchName}"
-    sha = $Global:DumplingsSessionStorage.BaseRefSha
+    sha = $DumplingsSessionStorage.BaseRefSha
   }
 
   # Upload new manifests
