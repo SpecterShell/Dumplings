@@ -1,4 +1,5 @@
 $Object1 = Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVVersion15.txt'
+# $Object1 = Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVMSIVersion15.txt'
 
 # Version
 $this.CurrentState.Version = $Object1.Content.Trim()
@@ -30,26 +31,22 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-WebRequest -Uri "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json").Content | ConvertFrom-Json -AsHashtable
+      $Object2 = Invoke-RestMethod -Uri "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json"
 
       # ReleaseNotes (en-US)
-      $ReleaseNotes = [System.Text.StringBuilder]::new()
-      if ($Object2.changelog.Contains('features')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('New Features')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object2.changelog.features.html | ConvertFrom-Html | Get-TextContent))
-      }
-      if ($Object2.changelog.Contains('improvements')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('Improvements')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object2.changelog.improvements.html | ConvertFrom-Html | Get-TextContent))
-      }
-      if ($Object2.changelog.Contains('bugfixes')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('Bugfixes')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent))
-      }
       $Task.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes.ToString() | Format-Text
+        Value  = @"
+New Features
+$($Object2.changelog.features.html | ConvertFrom-Html | Get-TextContent)
+
+Improvements
+$($Object2.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
+
+Bugfixes
+$($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
+"@ | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -57,26 +54,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = (Invoke-WebRequest -Uri "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json").Content | ConvertFrom-Json -AsHashtable
+      $Object3 = Invoke-RestMethod -Uri "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json"
 
       # ReleaseNotes (de-DE)
-      $ReleaseNotes = [System.Text.StringBuilder]::new()
-      if ($Object3.changelog.Contains('features')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('Neue Funktionen')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object3.changelog.features.html | ConvertFrom-Html | Get-TextContent))
-      }
-      if ($Object3.changelog.Contains('improvements')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('Verbesserungen')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object3.changelog.improvements.html | ConvertFrom-Html | Get-TextContent))
-      }
-      if ($Object3.changelog.Contains('bugfixes')) {
-        $ReleaseNotes = $ReleaseNotes.AppendLine('Fehlerkorrekturen')
-        $ReleaseNotes = $ReleaseNotes.AppendLine(($Object3.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent))
-      }
       $Task.CurrentState.Locale += [ordered]@{
         Locale = 'de-DE'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes.ToString() | Format-Text
+        Value  = @"
+New Features
+$($Object3.changelog.features.html | ConvertFrom-Html | Get-TextContent)
+
+Improvements
+$($Object3.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
+
+Bugfixes
+$($Object3.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
+"@ | Format-Text
       }
     } catch {
       $_ | Out-Host
