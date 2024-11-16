@@ -260,53 +260,6 @@ Function Get-InstallerFile {
   return $_OutFile
 }
 
-Function Get-MSIProperty {
-  Param
-  (
-    [Parameter(Mandatory = $true)]
-    [string] $MSIPath,
-    [Parameter(Mandatory = $true)]
-    [string] $Parameter
-  )
-  try {
-    $windowsInstaller = New-Object -com WindowsInstaller.Installer
-    $database = $windowsInstaller.GetType().InvokeMember('OpenDatabase', 'InvokeMethod', $null, $windowsInstaller, @($MSIPath, 0))
-    $view = $database.GetType().InvokeMember('OpenView', 'InvokeMethod', $null, $database, ("SELECT Value FROM Property WHERE Property = '$Parameter'"))
-    $view.GetType().InvokeMember('Execute', 'InvokeMethod', $null, $view, $null)
-    $record = $view.GetType().InvokeMember('Fetch', 'InvokeMethod', $null, $view, $null)
-    $outputObject = $($record.GetType().InvokeMember('StringData', 'GetProperty', $null, $record, 1))
-    $view.GetType().InvokeMember('Close', 'InvokeMethod', $null, $view, $null)
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($view)
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($database)
-    [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($windowsInstaller)
-    [System.GC]::Collect()
-    [System.GC]::WaitForPendingFinalizers()
-    return $outputObject
-  } catch {
-    Write-Error -Message $_.ToString()
-    break
-  }
-}
-
-function Get-PublisherHash($publisherName) {
-  # Sourced from https://marcinotorowski.com/2021/12/19/calculating-hash-part-of-msix-package-family-name
-  $publisherNameAsUnicode = [System.Text.Encoding]::Unicode.GetBytes($publisherName)
-  $publisherSha256 = [System.Security.Cryptography.HashAlgorithm]::Create('SHA256').ComputeHash($publisherNameAsUnicode)
-  $publisherSha256First8Bytes = $publisherSha256 | Select-Object -First 8
-  $publisherSha256AsBinary = $publisherSha256First8Bytes | ForEach-Object { [System.Convert]::ToString($_, 2).PadLeft(8, '0') }
-  $asBinaryStringWithPadding = [System.String]::Concat($publisherSha256AsBinary).PadRight(65, '0')
-
-  $encodingTable = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
-
-  $result = ''
-  for ($i = 0; $i -lt $asBinaryStringWithPadding.Length; $i += 5) {
-    $asIndex = [System.Convert]::ToInt32($asBinaryStringWithPadding.Substring($i, 5), 2)
-    $result += $encodingTable[$asIndex]
-  }
-
-  return $result.ToLower()
-}
-
 Function Get-PackageFamilyName {
   Param
   (
@@ -331,7 +284,7 @@ Function Get-PackageFamilyName {
   Remove-Item $_Zip -Force
   Remove-Item $_ZipFolder -Recurse -Force
   # Return the PFN
-  return $_Identity.Name + '_' + $(Get-PublisherHash $_Identity.Publisher)
+  return $_Identity.Name + '_' + $(Get-MSIXPublisherHash -PublisherName $_Identity.Publisher)
 }
 
 # Prompts user for Installer Values using the `Quick Update` Method
@@ -434,7 +387,7 @@ Function Read-QuickInstallerEntry {
       $MSIProductCode = $null
       if ((Get-EffectiveInstallerType $_NewInstaller) -in @('msi'; 'wix')) {
         if ([System.Environment]::OSVersion.Platform -match 'Win') {
-          $MSIProductCode = ([string](Get-MSIProperty -MSIPath $EffectiveInstallerPath -Parameter 'ProductCode') | Select-String -Pattern '{[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12}}').Matches.Value
+          $MSIProductCode = $EffectiveInstallerPath | Read-ProductCodeFromMsi
         } elseif ([System.Environment]::OSVersion.Platform -match 'Unix') {
           $MSIProductCode = ([string](file $EffectiveInstallerPath) | Select-String -Pattern '{[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12}}').Matches.Value
         }
@@ -1086,11 +1039,6 @@ Read-QuickInstallerEntry
 Write-LocaleManifest
 Write-InstallerManifest
 Write-VersionManifest
-
-class UnmetDependencyException : Exception {
-  UnmetDependencyException([string] $message) : base($message) {}
-  UnmetDependencyException([string] $message, [Exception] $exception) : base($message, $exception) {}
-}
 
 class ManifestException : Exception {
   ManifestException([string] $message) : base($message) {}

@@ -26,8 +26,7 @@ function New-EdgeDriver {
   #>
   param (
     [parameter(HelpMessage = 'Initialize the Edge Driver instance in headless mode, where no window pops up')]
-    [switch]
-    $Headless
+    [switch]$Headless
   )
 
   if (-not $Script:WebDriverLoaded) { throw 'WebDriver is not loaded' }
@@ -98,8 +97,7 @@ function New-FirefoxDriver {
   #>
   param (
     [parameter(HelpMessage = 'Initialize the Firefox Driver instance in headless mode, where no window pops up')]
-    [switch]
-    $Headless
+    [switch]$Headless
   )
 
   if (-not $Script:WebDriverLoaded) { throw 'WebDriver is not loaded' }

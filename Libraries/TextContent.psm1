@@ -24,10 +24,7 @@ function Expand-Node {
     The HTML Agility Pack nodes that will be expanded
   #>
   param (
-    [Parameter(
-      ValueFromPipeline,
-      HelpMessage = 'The nodes list that will be expanded'
-    )]
+    [Parameter(ValueFromPipeline, HelpMessage = 'The nodes list that will be expanded')]
     $Node
   )
 
@@ -70,23 +67,14 @@ function Get-TextContent {
     (Invoke-WebRequest -Uri 'https://example.com/' | ConvertFrom-Html).SelectSingleNode('/html/body/div/p[1]') | Get-TextContent | Format-Text
   #>
   param (
-    [Parameter(
-      ValueFromPipeline,
-      HelpMessage = 'The nodes that containing the text'
-    )]
+    [Parameter(ValueFromPipeline, HelpMessage = 'The nodes that containing the text')]
     $Node,
 
-    [Parameter(
-      DontShow,
-      HelpMessage = 'Disable merging continuous invisible characters'
-    )]
+    [Parameter(DontShow, HelpMessage = 'Disable merging continuous invisible characters')]
     [bool]
     $Raw = $false,
 
-    [Parameter(
-      DontShow,
-      HelpMessage = 'The list info hashtable for internal use'
-    )]
+    [Parameter(DontShow, HelpMessage = 'The list info hashtable for internal use')]
     $ListInfo
   )
 

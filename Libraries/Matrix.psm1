@@ -24,26 +24,21 @@ function Invoke-MatrixApi {
   param (
     [Parameter(Mandatory, HelpMessage = 'The Matrix endpoint to be invoked')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $EndPoint,
+    [string]$EndPoint,
 
     [Parameter(Mandatory, HelpMessage = 'The HTTP method of the HTTP request')]
-    [Microsoft.PowerShell.Commands.WebRequestMethod]
-    $Method,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]$Method,
 
     [Parameter(ValueFromPipeline, HelpMessage = 'The request body')]
-    [System.Collections.IDictionary]
-    $Body,
+    [System.Collections.IDictionary]$Body,
 
     [Parameter(HelpMessage = 'Matrix server address')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
+    [string]$HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
 
     [Parameter(HelpMessage = 'Matrix client token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:MT_BOT_TOKEN
+    [string]$Token = $Env:MT_BOT_TOKEN
   )
 
   $Params = @{
@@ -81,35 +76,28 @@ function New-MatrixMessage {
   [CmdletBinding(DefaultParameterSetName = 'PlainText')]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The message content to be sent')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the message content as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the message content as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the message content as Markdown')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(HelpMessage = 'The room ID')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $RoomID = $Env:MT_ROOM_ID,
+    [string]$RoomID = $Env:MT_ROOM_ID,
 
     [Parameter(HelpMessage = 'Matrix Bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
+    [string]$HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
 
     [Parameter(HelpMessage = 'Matrix Bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:MT_BOT_TOKEN
+    [string]$Token = $Env:MT_BOT_TOKEN
   )
 
   $Params = @{
@@ -154,27 +142,22 @@ function Remove-MatrixMessage {
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The ID of the event when the message was first sent')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $EventID,
+    [string]$EventID,
 
     [Parameter(HelpMessage = 'The reason for redacting this message')]
-    [string]
-    $Reason,
+    [string]$Reason,
 
     [Parameter(HelpMessage = 'The room ID')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $RoomID = $Env:MT_ROOM_ID,
+    [string]$RoomID = $Env:MT_ROOM_ID,
 
     [Parameter(HelpMessage = 'Matrix server address')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
+    [string]$HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
 
     [Parameter(HelpMessage = 'Matrix client token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:MT_BOT_TOKEN
+    [string]$Token = $Env:MT_BOT_TOKEN
   )
 
   $Params = @{
@@ -210,40 +193,32 @@ function Update-MatrixMessage {
   [CmdletBinding(DefaultParameterSetName = 'PlainText')]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The new message content to which the previous one will be updated')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the new message as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the new message as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the new message as Markdown')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The ID of the event when the message was first sent')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $EventID,
+    [string]$EventID,
 
     [Parameter(HelpMessage = 'The room ID')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $RoomID = $Env:MT_ROOM_ID,
+    [string]$RoomID = $Env:MT_ROOM_ID,
 
     [Parameter(HelpMessage = 'Matrix server address')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
+    [string]$HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
 
     [Parameter(HelpMessage = 'Matrix client token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:MT_BOT_TOKEN
+    [string]$Token = $Env:MT_BOT_TOKEN
   )
 
   $Params = @{
@@ -304,39 +279,31 @@ function Send-MatrixMessage {
   [OutputType([string])]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The message content')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the new message as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the new message as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the new message as Markdown')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(HelpMessage = 'The ID of the event when the message was first sent')]
-    [string]
-    $EventID,
+    [string]$EventID,
 
     [Parameter(HelpMessage = 'The room ID')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $RoomID = $Env:MT_ROOM_ID,
+    [string]$RoomID = $Env:MT_ROOM_ID,
 
     [Parameter(HelpMessage = 'Matrix server address')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
+    [string]$HomeServer = $Env:MT_HOME_SERVER ?? 'https://matrix-client.matrix.org',
 
     [Parameter(HelpMessage = 'Matrix client token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:MT_BOT_TOKEN
+    [string]$Token = $Env:MT_BOT_TOKEN
   )
 
   $Params = @{

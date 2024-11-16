@@ -7,13 +7,11 @@ $ErrorActionPreference = 'Stop'
 function Read-Varint {
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory)]
-    [System.IO.Stream]
-    $Stream,
+    [System.IO.Stream]$Stream,
 
     [Parameter(Position = 1)]
     [ValidateSet('Int64', 'UInt64', 'Int32', 'UInt32', 'Raw')]
-    [string]
-    $OutputType = 'Int64'
+    [string]$OutputType = 'Int64'
   )
 
   process {
@@ -42,13 +40,11 @@ function Read-Varint {
 function Read-Fixed64 {
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory)]
-    [System.IO.Stream]
-    $Stream,
+    [System.IO.Stream]$Stream,
 
     [Parameter(Position = 1)]
     [ValidateSet('Int64', 'UInt64', 'Double', 'Raw')]
-    [string]
-    $OutputType = 'Int64'
+    [string]$OutputType = 'Int64'
   )
 
   process {
@@ -68,13 +64,11 @@ function Read-Fixed64 {
 function Read-Fixed32 {
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory)]
-    [System.IO.Stream]
-    $Stream,
+    [System.IO.Stream]$Stream,
 
     [Parameter(Position = 1)]
     [ValidateSet('Int32', 'UInt32', 'Float', 'Raw')]
-    [string]
-    $OutputType = 'Int32'
+    [string]$OutputType = 'Int32'
   )
 
   process {
@@ -111,31 +105,25 @@ function ConvertFrom-ProtoBuf {
   [OutputType([hashtable])]
   param (
     [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'Stream', Mandatory, HelpMessage = 'The raw stream of the ProtoBuf message')]
-    [System.IO.Stream]
-    $RawContentStream,
+    [System.IO.Stream]$RawContentStream,
 
     [Parameter(Position = 0, ParameterSetName = 'Array', Mandatory, HelpMessage = 'The raw byte array of the ProtoBuf message')]
-    [byte[]]
-    $Content,
+    [byte[]]$Content,
 
     [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSetName = 'File', Mandatory, HelpMessage = 'The path to the file containing the ProtoBuf message')]
-    [string]
-    $Path,
+    [string]$Path,
 
     [Parameter(Position = 1, HelpMessage = 'The expected type of the Varint objects')]
     [ValidateSet('Int64', 'UInt64', 'Int32', 'UInt32', 'Raw')]
-    [string]
-    $VarintType = 'Int64',
+    [string]$VarintType = 'Int64',
 
     [Parameter(Position = 2, HelpMessage = 'The expected type of the Fixed64 objects')]
     [ValidateSet('Int64', 'UInt64', 'Double', 'Raw')]
-    [string]
-    $Fixed64Type = 'Int64',
+    [string]$Fixed64Type = 'Int64',
 
     [Parameter(Position = 3, HelpMessage = 'The expected type of the Fixed32 objects')]
     [ValidateSet('Int32', 'UInt32', 'Float', 'Raw')]
-    [string]
-    $Fixed32Type = 'Int32'
+    [string]$Fixed32Type = 'Int32'
   )
 
   process {

@@ -17,9 +17,8 @@ function ConvertFrom-UnixTimeSeconds {
   #>
   [OutputType([datetime])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Unix time in seconds')]
-    [long]
-    $Seconds
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Unix time in seconds')]
+    [long]$Seconds
   )
 
   process {
@@ -36,9 +35,8 @@ function ConvertFrom-UnixTimeMilliseconds {
   #>
   [OutputType([datetime])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Unix time in milliseconds')]
-    [long]
-    $Milliseconds
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Unix time in milliseconds')]
+    [long]$Milliseconds
   )
 
   process {
@@ -51,21 +49,19 @@ function ConvertTo-UtcDateTime {
   .SYNOPSIS
     Adjust DateTime object from specified timezone to UTC
   .PARAMETER DateTime
-    The DateTime object to be converted
+    The DateTime object
   .PARAMETER Id
     The TimeZoneInfo ID of the source timezone of the DateTime object
   #>
   [OutputType([datetime])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The DateTime object to be converted')]
-    [datetime]
-    $DateTime,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The DateTime object')]
+    [datetime]$DateTime,
 
-    [parameter(Mandatory, HelpMessage = 'The TimeZoneInfo ID of the source timezone of the DateTime object')]
+    [Parameter(Mandatory, HelpMessage = 'The TimeZoneInfo ID of the source timezone of the DateTime object')]
     [ArgumentCompleter({ [System.TimeZoneInfo]::GetSystemTimeZones() | Select-Object -ExpandProperty Id | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
     [ValidateScript({ [System.TimeZoneInfo]::FindSystemTimeZoneById($_) })]
-    [string]
-    $Id
+    [string]$Id
   )
 
   begin {
@@ -82,25 +78,25 @@ function ConvertFrom-Xml {
   .SYNOPSIS
     Convert XML string to XMLDocument object
   .PARAMETER Content
-    The XML string to be converted
+    The string containing the XML content
   #>
   [OutputType([xml])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The XML string to be converted')]
-    [string]
-    $Content
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string containing the XML content')]
+    [AllowEmptyString()]
+    [string]$Content
   )
 
   begin {
-    $Buffer = [System.Collections.Generic.List[string]]::new()
+    $StringBuilder = [System.Text.StringBuilder]::new()
   }
 
   process {
-    $Buffer.Add($Content)
+    $null = $StringBuilder.AppendLine($Content)
   }
 
   end {
-    [xml]($Buffer -join "`n")
+    [xml]($StringBuilder.ToString() | Convert-LineEndings)
   }
 }
 
@@ -108,12 +104,11 @@ function ConvertFrom-Ini {
   <#
   .SYNOPSIS
     Convert INI string into ordered hashtable
-  .PARAMETER InputObject
-    The INI string to be converted
+  .PARAMETER Content
+    The string containing the INI content
   .PARAMETER CommentChars
     The characters that describe a comment
     Lines starting with the characters provided will be rendered as comments
-    Default: ";"
   .PARAMETER IgnoreComments
     Remove lines determined to be comments from the resulting dictionary
   .NOTES
@@ -143,24 +138,17 @@ function ConvertFrom-Ini {
   .LINK
     https://github.com/lipkau/PsIni
   #>
-  # [OutputType([ordered])]
+  [OutputType([System.Collections.Specialized.OrderedDictionary])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, HelpMessage = 'The INI string to be converted')]
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string containing the INI content')]
     [AllowEmptyString()]
-    [string]
-    $Content,
+    [string]$Content,
 
-    [Parameter(
-      HelpMessage = 'The characters that describe a comment'
-    )]
-    [char[]]
-    $CommentChars = @(';'),
+    [Parameter(HelpMessage = 'The characters that describe a comment')]
+    [char[]]$CommentChars = @(';', '#'),
 
-    [Parameter(
-      HelpMessage = 'Remove lines determined to be comments from the resulting dictionary'
-    )]
-    [switch]
-    $IgnoreComments
+    [Parameter(HelpMessage = 'Remove lines determined to be comments from the resulting dictionary')]
+    [switch]$IgnoreComments
   )
 
   begin {
@@ -171,14 +159,17 @@ function ConvertFrom-Ini {
     # Name of the section, in case the INI string had none
     $RootSection = '_'
 
-    $Object = [ordered]@{}
+    $StringBuilder = [System.Text.StringBuilder]::new()
     $CommentCount = 0
   }
 
   process {
-    $StringReader = [System.IO.StringReader]::new($Content)
+    $null = $StringBuilder.AppendLine($Content)
+  }
 
-    for ($Text = $StringReader.ReadLine(); $null -ne $Text; $Text = $StringReader.ReadLine()) {
+  end {
+    $Object = [ordered]@{}
+    foreach ($Text in $StringBuilder.ToString() | Split-LineEndings) {
       switch -Regex ($Text) {
         $SectionRegex {
           $Section = $Matches[1]
@@ -218,11 +209,6 @@ function ConvertFrom-Ini {
         }
       }
     }
-
-    $StringReader.Dispose()
-  }
-
-  end {
     return $Object
   }
 }
@@ -230,27 +216,36 @@ function ConvertFrom-Ini {
 function ConvertFrom-Base64 {
   <#
   .SYNOPSIS
-    Decode Base64 string
-  .PARAMETER InputObject
-    The Base64 string to be decoded
+    Decode a Base64 string into a UTF-8 string or a byte array
+  .PARAMETER Content
+    The Base64 string
+  .PARAMETER Encoding
+    The text encoding the Base64 string should be decoded to
+  .PARAMETER AsByteStream
+    Decode the Base64 string to a byte array
   #>
   [OutputType([string])]
+  [CmdletBinding(DefaultParameterSetName = 'String')]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The Base64 string to be decoded')]
-    [string]
-    $InputObject,
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The Base64 string')]
+    [AllowEmptyString()]
+    [string]$Content,
 
-    [Parameter(HelpMessage = 'The encoding of the content')]
+    [Parameter(ParameterSetName = 'String', HelpMessage = 'The text encoding the Base64 string should be decoded to')]
     [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
-    [string]
-    $Encoding
+    [string]$Encoding,
+
+    [Parameter(ParameterSetName = 'Bytes', HelpMessage = 'Decode the Base64 string to a byte array')]
+    [switch]$AsByteStream
   )
 
   process {
-    if ($Encoding) {
-      [System.Text.Encoding]::GetEncoding($Encoding).GetString([System.Convert]::FromBase64String($InputObject))
+    if ($AsByteStream) {
+      [System.Convert]::FromBase64String($Content)
+    } elseif ($Encoding) {
+      [System.Text.Encoding]::GetEncoding($Encoding).GetString([System.Convert]::FromBase64String($Content))
     } else {
-      [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($InputObject))
+      [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Content))
     }
   }
 }
@@ -258,19 +253,19 @@ function ConvertFrom-Base64 {
 function ConvertTo-HtmlDecodedText {
   <#
   .SYNOPSIS
-    Converts a string that has been HTML-encoded for HTTP transmission into a decoded string.
-  .PARAMETER InputObject
-    The string to be decoded
+    Decode the character entities in the given text into their corresponding characters
+  .PARAMETER Content
+    The string with character entities
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be decoded')]
-    [string]
-    $InputObject
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string with character entities')]
+    [AllowEmptyString()]
+    [string]$Content
   )
 
   process {
-    [System.Net.WebUtility]::HtmlDecode($InputObject)
+    [System.Net.WebUtility]::HtmlDecode($Content)
   }
 }
 
@@ -279,13 +274,13 @@ function ConvertTo-UnescapedUri {
   .SYNOPSIS
     Unescape the URI
   .PARAMETER Uri
-    The Uniform Resource Identifier (URI) to be converted
+    The Uniform Resource Identifier (URI)
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
-    [string]
-    $Uri
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Uniform Resource Identifier (URI)')]
+    [AllowEmptyString()]
+    [string]$Uri
   )
 
   process {
@@ -296,20 +291,19 @@ function ConvertTo-UnescapedUri {
 function ConvertTo-MarkdownEscapedText {
   <#
   .SYNOPSIS
-    Escape the text to make it not parsed as Markdown syntax
-  .PARAMETER InputObject
-    The text to be escaped
+    Escape the characters that could be interpreted as Markdown syntax
+  .PARAMETER Content
+    The string to escape the characters
   #>
   [OutputType([string])]
   param (
-    [parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The text to be escaped')]
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string to escape the characters')]
     [AllowEmptyString()]
-    [string]
-    $InputObject
+    [string]$Content
   )
 
   process {
-    $InputObject -replace '([_*\[\]()~`<>#+\-|{}.!\\])', '\$1'
+    $Content -replace '([_*\[\]()~`<>#+\-|{}.!\\])', '\$1'
   }
 }
 
@@ -332,25 +326,20 @@ function Split-Uri {
   [CmdletBinding(DefaultParameterSetName = 'ParentSet')]
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'Result', Justification = 'False positive')]
   param (
-    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The Uniform Resource Identifier (URI) to be splitted')]
-    [uri]
-    $Uri,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Uniform Resource Identifier (URI) to be splitted')]
+    [uri]$Uri,
 
-    [parameter(ParameterSetName = 'ParentSet', HelpMessage = 'The parent part of the URI')]
-    [switch]
-    $Parent,
+    [Parameter(ParameterSetName = 'ParentSet', HelpMessage = 'The parent part of the URI')]
+    [switch]$Parent,
 
-    [parameter(ParameterSetName = 'LeftPartSet', HelpMessage = 'The left part of the URI')]
-    [System.UriPartial]
-    $LeftPart = [System.UriPartial]::Path,
+    [Parameter(ParameterSetName = 'LeftPartSet', HelpMessage = 'The left part of the URI')]
+    [System.UriPartial]$LeftPart = [System.UriPartial]::Path,
 
-    [parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'The component of the URI')]
-    [System.UriComponents[]]
-    $Components,
+    [Parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'The component of the URI')]
+    [System.UriComponents[]]$Components,
 
-    [parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'Control how special characters are escaped')]
-    [System.UriFormat]
-    $Format = [System.UriFormat]::UriEscaped
+    [Parameter(ParameterSetName = 'ComponentSet', HelpMessage = 'Control how special characters are escaped')]
+    [System.UriFormat]$Format = [System.UriFormat]::UriEscaped
   )
 
   process {
@@ -385,17 +374,14 @@ function Join-Uri {
   #>
   [OutputType([string])]
   param (
-    [parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The main URI to which the child URI is appended')]
-    [uri[]]
-    $Uri,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The main URI to which the child URI is appended')]
+    [uri[]]$Uri,
 
-    [parameter(Position = 1, Mandatory, HelpMessage = 'The elements to be applied to the main URI')]
-    [string[]]
-    $ChildUri,
+    [Parameter(Position = 1, Mandatory, HelpMessage = 'The elements to be applied to the main URI')]
+    [string[]]$ChildUri,
 
-    [parameter(Position = 2, ValueFromRemainingArguments, HelpMessage = 'Additional elements to be applied to the main URI')]
-    [string[]]
-    $AdditionalChildUri
+    [Parameter(Position = 2, ValueFromRemainingArguments, HelpMessage = 'Additional elements to be applied to the main URI')]
+    [string[]]$AdditionalChildUri
   )
 
   process {
@@ -415,37 +401,43 @@ function Split-LineEndings {
   <#
   .SYNOPSIS
     Split string on all types of line endings
-  .PARAMETER InputObject
-    The string to be splitted
+  .PARAMETER Content
+    The string to split
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be splitted')]
-    [string]
-    $InputObject
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string to split')]
+    [AllowEmptyString()]
+    [string]$Content
   )
 
   process {
-    $InputObject.Split([string[]]@("`r`n", "`n"), [System.StringSplitOptions]::None)
+    $Content.Split([string[]]@("`r`n", "`n"), [System.StringSplitOptions]::None)
   }
 }
 
-function ConvertTo-LF {
+function Convert-LineEndings {
   <#
   .SYNOPSIS
-    Replace all types of line endings with LF
-  .PARAMETER InputObject
-    The string to be converted
+    Replace all types of line endings with the specified one
+  .PARAMETER Content
+    The string to convert the line endings
+  .PARAMETER LineEnding
+    The line ending to convert to
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string to be converted')]
-    [string]
-    $InputObject
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The string to be converted')]
+    [AllowEmptyString()]
+    [string]$Content,
+
+    [Parameter(HelpMessage = 'The line ending to convert to')]
+    [ArgumentCompletions("`n", "`r`n")]
+    [string]$LineEnding = "`n"
   )
 
   process {
-    $InputObject.ReplaceLineEndings("`n")
+    $Content.ReplaceLineEndings($LineEnding)
   }
 }
 
@@ -454,15 +446,13 @@ function ConvertTo-Https {
   .SYNOPSIS
     Change the scheme of the URI from HTTP to HTTPS
   .PARAMETER Uri
-    The Uniform Resource Identifier (URI) to be converted
-  .OUTPUTS
-    The URI with its scheme converted to HTTPS
+    The Uniform Resource Identifier (URI)
   #>
   [OutputType([string])]
   param (
-    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'Uniform Resource Identifier (URI)')]
-    [string]
-    $Uri
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Uniform Resource Identifier (URI)')]
+    [AllowEmptyString()]
+    [string]$Uri
   )
 
   process {
@@ -474,29 +464,28 @@ function ConvertTo-OrderedList {
   <#
   .SYNOPSIS
     Prepend ordered numbers ("1. ", "2. ", ...) to each line of the strings and then concatenate the strings into one
-  .PARAMETER InputObject
-    The strings to be prepended
-  .OUTPUTS
-    The concatenated string with each line prepended with ordered numbers
+  .PARAMETER Content
+    The strings to prepend
   #>
   [OutputType([string])]
   param (
-    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
-    [string[]]
-    $InputObject
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The strings to prepend')]
+    [string[]]$Content
   )
 
   begin {
-    $Result = @()
+    $StringList = [System.Collections.Generic.List[string]]::new()
     $i = 1
   }
 
   process {
-    $Result += $InputObject -creplace '(?m)^', { "$(($i++)). " }
+    foreach ($SubContent in $Content) {
+      $StringList.Add($Content -creplace '(?m)^', { "$(($i++)). " })
+    }
   }
 
   end {
-    return $Result -join "`n"
+    return $StringList -join "`n"
   }
 }
 
@@ -504,28 +493,27 @@ function ConvertTo-UnorderedList {
   <#
   .SYNOPSIS
     Prepend "- " to each line of the strings and then concatenate the strings into one
-  .PARAMETER InputObject
-    The strings to be prepended
-  .OUTPUTS
-    The concatenated string with each line prepended with "- "
+  .PARAMETER Content
+    The strings to prepend
   #>
   [OutputType([string])]
   param (
-    [parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The strings to be prepended')]
-    [string[]]
-    $InputObject
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The strings to prepend')]
+    [string[]]$Content
   )
 
   begin {
-    $Result = @()
+    $StringList = [System.Collections.Generic.List[string]]::new()
   }
 
   process {
-    $Result += $InputObject -creplace '(?m)^', '- '
+    foreach ($SubContent in $Content) {
+      $StringList.Add($Content -creplace '(?m)^', '- ')
+    }
   }
 
   end {
-    return $Result -join "`n"
+    return $StringList -join "`n"
   }
 }
 
@@ -585,14 +573,13 @@ function Expand-TempArchive {
   [OutputType([string])]
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the ZIP archive')]
-    [string]
-    $Path
+    [string]$Path
   )
 
   process {
-    $FolderPath = New-TempFolder
-    Expand-Archive -Path $Path -DestinationPath $FolderPath
-    return $FolderPath
+    $TempFolderPath = New-TempFolder
+    Expand-Archive -Path $Path -DestinationPath $TempFolderPath
+    return $TempFolderPath
   }
 }
 
@@ -608,23 +595,84 @@ function Expand-InstallShield {
   [OutputType([string])]
   param (
     [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path of the InstallShield executable file to be extracted')]
-    [string]
-    $Path,
+    [string]$Path,
 
     [Parameter(HelpMessage = 'The path to the InstallShield installer extractor (ISx) tool')]
-    [string]
-    $ISxPath = (Test-Path -Path Variable:\DumplingsRoot) ? (Join-Path $DumplingsRoot 'Assets' 'ISx.exe') : (Join-Path $PSScriptRoot '..' 'Assets' 'ISx.exe')
+    [string]$ISxPath
   )
 
   begin {
+    if ([string]::IsNullOrEmpty($ISxPath)) {
+      if ((Test-Path -Path Variable:\DumplingsRoot) -and (Test-Path -Path (Join-Path $DumplingsRoot 'Assets' 'ISx.exe'))) {
+        $ISxPath = Join-Path $DumplingsRoot 'Assets' 'ISx.exe' -Resolve
+      } elseif (Test-Path -Path (Join-Path $PSScriptRoot '..' 'Assets' 'ISx.exe')) {
+        $ISxPath = Join-Path $PSScriptRoot '..' 'Assets' 'ISx.exe' -Resolve
+      } elseif (Get-Command 'ISx.exe' -ErrorAction SilentlyContinue) {
+        $ISxPath = (Get-Command 'ISx.exe').Path
+      } else {
+        throw 'The ISx tool could not be found'
+      }
+    }
     if (-not (Test-Path -Path $ISxPath)) {
       throw 'The path to the ISx tool specified is invalid'
     }
   }
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     & $ISxPath $Path | Out-Host
+
     return "$(Join-Path (Split-Path -Path $Path -Parent) (Split-Path -Path $Path -LeafBase))_u"
+  }
+}
+
+function Expand-Burn {
+  <#
+  .SYNOPSIS
+    Read the ProductCode property value of the WiX bundle file
+  .PARAMETER Path
+    The path to the WiX bundle file
+  .PARAMETER DarkPath
+    The path to the Windows Installer XML Toolset Decompiler tool
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the WiX bundle file')]
+    [string]$Path,
+
+    [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
+    [string]$DarkPath
+  )
+
+  begin {
+    if ([string]::IsNullOrEmpty($DarkPath)) {
+      if (Test-Path -Path Env:\WIX) {
+        $DarkPath = Join-Path $Env:WIX 'bin' 'dark.exe' -Resolve
+      } elseif (Get-Command 'dark.exe' -ErrorAction SilentlyContinue) {
+        $DarkPath = (Get-Command 'dark.exe').Path
+      } else {
+        throw 'The Dark tool could not be found'
+      }
+    }
+    if (-not (Test-Path -Path $DarkPath)) {
+      throw 'The path to the dark tool specified is invalid'
+    }
+  }
+
+  process {
+    $Item = Get-Item -Path $Path
+    if ($Item.Extension -ne '.exe') {
+      $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
+    } else {
+      $Path = $Item.FullName
+    }
+
+    $TempFolderPath = New-TempFolder
+    & $DarkPath -nologo -x $TempFolderPath $Path | Out-Host
+
+    return $TempFolderPath
   }
 }
 
@@ -651,79 +699,13 @@ function Invoke-GitHubApi {
   }
 }
 
-function Invoke-WondershareJsonUpgradeApi {
-  <#
-  .SYNOPSIS
-    Invoke Wondershare's JSON upgrade API
-  #>
-  param (
-    [parameter(Mandatory)]
-    [int]
-    $ProductId,
-
-    [parameter(Mandatory)]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    $Version,
-
-    [switch]
-    $X86 = $false,
-
-    [int]
-    $Type = 2,
-
-    [string]
-    $Locale = 'en-US'
-  )
-
-  $Uri2 = "https://pc-api.300624.com/v${Type}/product/check-upgrade?pid=${ProductId}&client_sign={}&version=${Version}&platform=win_$($x86 ? 'x86' : 'x64')"
-  if ($Type -ge 3) {
-    $Params1 = @{
-      Uri         = 'https://pc-api.300624.com/v3/user/client/token'
-      Method      = 'Post'
-      Headers     = @{
-        'X-Client-Type' = 1
-        'X-Client-Sn'   = '{}'
-        'X-App-Key'     = '58bd26679d74e279c8421ecc.demo'
-        'X-Prod-Id'     = $ProductId
-        'X-Prod-Ver'    = $Version
-      }
-      Body        = @{
-        grant_type = 'client_credentials'
-        app_secret = 'Op00P1TrqfIKzM9qbo44mcIXFiOxKTRytx'
-      } | ConvertTo-Json -Compress
-      ContentType = 'application/json'
-    }
-    $Object1 = Invoke-RestMethod @Params1
-
-    $Params2 = @{
-      Uri            = $Uri2
-      Authentication = 'Bearer'
-      Token          = ConvertTo-SecureString -String $Object1.data.access_token -AsPlainText
-    }
-    $Object2 = Invoke-RestMethod @Params2
-  } else {
-    $Object2 = Invoke-RestMethod -Uri $Uri2
-  }
-
-  return [ordered]@{
-    Version   = $Object2.data.version
-    Installer = @()
-    Locale    = @(
-      [ordered]@{
-        Locale = $Locale
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.data.whats_new_content | Format-Text
-      }
-    )
-  }
-}
-
 function Get-RedirectedUrl {
   <#
   .SYNOPSIS
-    Get the redirected URI from the given URI
+    Get the redirected URI for the given URI
   #>
+  [OutputType([string])]
+  param ()
 
   (Invoke-WebRequest -Method Head @args).BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
@@ -731,25 +713,24 @@ function Get-RedirectedUrl {
 function Get-RedirectedUrl1st {
   <#
   .SYNOPSIS
-    Get the first redirected URL from the given URL
+    Get the first redirected URI for the given URI
   .PARAMETER Uri
-    The Uniform Resource Identifier (URI) that will be redirected
+    The Uniform Resource Identifier (URI)
   .PARAMETER UserAgent
     The user agent string for the web request
+  .PARAMETER Headers
+    The header hashtable for the web request
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The URI that will be redirected')]
-    [string]
-    $Uri,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The Uniform Resource Identifier (URI)')]
+    [string]$Uri,
 
     [Parameter(HelpMessage = 'The user agent string for the web request')]
-    [string]
-    $UserAgent,
+    [string]$UserAgent,
 
-    [Parameter(HelpMessage = 'The user agent string for the web request')]
-    [System.Collections.IDictionary]
-    $Headers
+    [Parameter(HelpMessage = 'The header hashtable for the web request')]
+    [System.Collections.IDictionary]$Headers
   )
 
   process {
@@ -782,19 +763,18 @@ function Get-EmbeddedJson {
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The string containing the JSON')]
-    [string]
-    $InputObject,
-
-    [parameter(Mandatory, HelpMessage = 'The string indicating where the JSON starts after')]
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string containing the JSON')]
     [ValidateNotNullOrEmpty()]
-    [string]
-    $StartsFrom
+    [string]$Content,
+
+    [Parameter(Mandatory, HelpMessage = 'The string indicating where the JSON starts after')]
+    [ValidateNotNullOrEmpty()]
+    [string]$StartsFrom
   )
 
   process {
     [Newtonsoft.Json.JsonConvert]::DeserializeObject(
-      $InputObject.Substring($InputObject.IndexOf($StartsFrom) + $StartsFrom.Length),
+      $Content.Substring($Content.IndexOf($StartsFrom) + $StartsFrom.Length),
       [Newtonsoft.Json.JsonSerializerSettings]@{
         TypeNameHandling         = [Newtonsoft.Json.TypeNameHandling]::None
         MetadataPropertyHandling = [Newtonsoft.Json.MetadataPropertyHandling]::Ignore
@@ -807,22 +787,20 @@ function Get-EmbeddedJson {
 function Read-ResponseContent {
   <#
   .SYNOPSIS
-    Get garble-less content from the response object
+    Obtain garble-free content from the stream
   .PARAMETER Response
-    The response object from the Invoke-WebRequest command
+    The stream to read (e.g. The raw content stream from Invoke-WebRequest)
   .PARAMETER Encoding
-    The encoding of the content
+    The content encoding
   #>
   [OutputType([string])]
   param (
-    [parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, HelpMessage = 'The response object from the Invoke-WebRequest command')]
-    [System.IO.Stream]
-    $RawContentStream,
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The stream to read (e.g. The raw content stream from Invoke-WebRequest)')]
+    [System.IO.Stream]$RawContentStream,
 
-    [Parameter(HelpMessage = 'The encoding of the content')]
+    [Parameter(HelpMessage = 'The content encoding')]
     [ArgumentCompleter({ [System.Text.Encoding]::GetEncodings() | Select-Object -ExpandProperty Name | Select-String -Pattern "^$($args[2])" -Raw | ForEach-Object -Process { $_.Contains(' ') ? "'${_}'" : $_ } })]
-    [string]
-    $Encoding
+    [string]$Encoding
   )
 
   process {
@@ -840,18 +818,20 @@ function Read-ResponseContent {
 function Read-ProductVersionFromExe {
   <#
   .SYNOPSIS
-    Read the product version property of the EXE file
+    Read the product version of the EXE file
   .PARAMETER Path
     The path to the EXE file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the EXE file')]
+    [string]$Path
   )
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersion.Trim()
   }
 }
@@ -859,18 +839,20 @@ function Read-ProductVersionFromExe {
 function Read-ProductVersionRawFromExe {
   <#
   .SYNOPSIS
-    Read the raw product version property of the EXE file
+    Read the raw product version of the EXE file
   .PARAMETER Path
     The path to the EXE file
   #>
   [OutputType([version])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the EXE file')]
+    [string]$Path
   )
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).ProductVersionRaw
   }
 }
@@ -884,12 +866,14 @@ function Read-FileVersionFromExe {
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the EXE file')]
+    [string]$Path
   )
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).FileVersion.Trim()
   }
 }
@@ -897,18 +881,20 @@ function Read-FileVersionFromExe {
 function Read-FileVersionRawFromExe {
   <#
   .SYNOPSIS
-    Read the raw file version property of the EXE file
+    Read the raw file version of the EXE file
   .PARAMETER Path
     The path to the EXE file
   #>
   [OutputType([version])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the EXE file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the EXE file')]
+    [string]$Path
   )
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path).FileVersionRaw
   }
 }
@@ -916,7 +902,7 @@ function Read-FileVersionRawFromExe {
 function Read-MsiProperty {
   <#
   .SYNOPSIS
-    Read property value from a table of the specified MSI file using SQL-like query
+    Query a value from the MSI file using SQL-like query
   .PARAMETER Path
     The path to the MSI file
   .PARAMETER Query
@@ -924,13 +910,11 @@ function Read-MsiProperty {
   #>
   [OutputType([string])]
   param (
-    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
-    [string]
-    $Path,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSI file')]
+    [string]$Path,
 
-    [Parameter(Position = 1, Mandatory, HelpMessage = 'The SQL-like query')]
-    [string]
-    $Query
+    [Parameter(Mandatory, HelpMessage = 'The SQL-like query')]
+    [string]$Query
   )
 
   begin {
@@ -938,11 +922,15 @@ function Read-MsiProperty {
   }
 
   process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     $Database = $WindowsInstaller.OpenDatabase($Path, 0)
     $View = $Database.OpenView($Query)
     $View.Execute() | Out-Null
     $Record = $View.Fetch()
     Write-Output -InputObject ($Record.GetType().InvokeMember('StringData', 'GetProperty', $null, $Record, 1))
+
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($View) | Out-Null
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
   }
@@ -957,15 +945,14 @@ function Read-MsiProperty {
 function Read-ProductVersionFromMsi {
   <#
   .SYNOPSIS
-    Read the value of the ProductVersion property from the MSI file
+    Read the ProductVersion property value from the MSI file
   .PARAMETER Path
     The path to the MSI file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSI file')]
+    [string]$Path
   )
 
   process {
@@ -976,15 +963,14 @@ function Read-ProductVersionFromMsi {
 function Read-ProductCodeFromMsi {
   <#
   .SYNOPSIS
-    Read the value of the ProductCode property from the MSI file
+    Read the ProductCode property value from the MSI file
   .PARAMETER Path
     The path to the MSI file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSI file')]
+    [string]$Path
   )
 
   process {
@@ -995,15 +981,14 @@ function Read-ProductCodeFromMsi {
 function Read-UpgradeCodeFromMsi {
   <#
   .SYNOPSIS
-    Read the value of the UpgradeCode property from the MSI file
+    Read the UpgradeCode property value from the MSI file
   .PARAMETER Path
     The path to the MSI file
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
-    [string]
-    $Path
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSI file')]
+    [string]$Path
   )
 
   process {
@@ -1014,28 +999,24 @@ function Read-UpgradeCodeFromMsi {
 function Read-MsiSummaryValue {
   <#
   .SYNOPSIS
-    Read property value from the summary of the MSI file
+    Read a specified property value from the summary table of the MSI file
   .PARAMETER Path
-    The path to the MSI file
+    The MSI file path
   .PARAMETER Name
-    The name of the property
+    The property name
   #>
+  [OutputType([string])]
   param (
-    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The path to the MSI file')]
-    [string]
-    $Path,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The MSI file path')]
+    [string]$Path,
 
-    [Parameter(Position = 1, Mandatory, HelpMessage = 'The name of the property')]
+    [Parameter(Mandatory, HelpMessage = 'The property name')]
     [ValidateSet('Codepage', 'Title', 'Subject', 'Author', 'Keywords', 'Comments', 'Template', 'LastAuthor', 'RevNumber', 'EditTime', 'LastPrinted', 'CreateDtm', 'LastSaveDtm', 'PageCount', 'WordCount', 'CharCount', 'AppName', 'Security')]
-    [string]
-    $Name
+    [string]$Name
   )
 
   begin {
     $WindowsInstaller = New-Object -ComObject 'WindowsInstaller.Installer'
-  }
-
-  process {
     $Index = switch ($Name) {
       'Codepage' { 1 }
       'Title' { 2 }
@@ -1057,9 +1038,16 @@ function Read-MsiSummaryValue {
       'Security' { 19 }
       Default { throw 'No such property or property not supported' }
     }
+  }
+
+  process {
+    # Obtain the absolute path of the file
+    $Path = (Get-Item -Path $Path).FullName
+
     $Database = $WindowsInstaller.OpenDatabase($Path, 0)
     $SummaryInfo = $Database.GetType().InvokeMember('SummaryInformation', 'GetProperty', $null , $Database, $null)
     Write-Output -InputObject ($SummaryInfo.GetType().InvokeMember('Property', 'GetProperty', $Null, $SummaryInfo, $Index))
+
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($SummaryInfo) | Out-Null
     [System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($Database) | Out-Null
   }
@@ -1082,38 +1070,15 @@ function Read-ProductCodeFromBurn {
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the WiX bundle file')]
-    [string]
-    $Path,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the WiX bundle file')]
+    [string]$Path,
 
     [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
-    [string]
-    $DarkPath
+    [string]$DarkPath
   )
 
-  begin {
-    if ([string]::IsNullOrEmpty($DarkPath)) {
-      if (Test-Path Env:\WIX) {
-        $DarkPath = Join-Path $Env:WIX 'bin' 'dark.exe' -Resolve
-      } elseif (Get-Command 'dark.exe' -ErrorAction SilentlyContinue) {
-        $DarkPath = (Get-Command 'dark.exe').Path
-      } else {
-        throw 'Dark tool not specified and not found'
-      }
-    }
-    if (-not (Test-Path -Path $DarkPath)) {
-      throw 'The path to the dark tool specified is invalid'
-    }
-  }
-
   process {
-    $FolderPath = New-TempFolder
-    $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
-
-    & $DarkPath -nologo -x $FolderPath $Path | Out-Host
-    if ($LASTEXITCODE) {
-      throw 'Failed to extract burn installer'
-    }
+    $FolderPath = Expand-Burn -Path $Path -DarkPath $DarkPath
 
     $BootstrapperApplicationDataPath = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml'
     $ManifestPath = Join-Path $FolderPath 'UX' 'manifest.xml'
@@ -1143,38 +1108,15 @@ function Read-UpgradeCodeFromBurn {
   #>
   [OutputType([string])]
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The path to the WiX bundle file')]
-    [string]
-    $Path,
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the WiX bundle file')]
+    [string]$Path,
 
     [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
-    [string]
-    $DarkPath
+    [string]$DarkPath
   )
 
-  begin {
-    if ([string]::IsNullOrEmpty($DarkPath)) {
-      if (Test-Path Env:\WIX) {
-        $DarkPath = Join-Path $Env:WIX 'bin' 'dark.exe' -Resolve
-      } elseif (Get-Command 'dark.exe' -ErrorAction SilentlyContinue) {
-        $DarkPath = (Get-Command 'dark.exe').Path
-      } else {
-        throw 'Dark tool not specified and not found'
-      }
-    }
-    if (-not (Test-Path -Path $DarkPath)) {
-      throw 'The path to the dark tool specified is invalid'
-    }
-  }
-
   process {
-    $FolderPath = New-TempFolder
-    $Path = New-Item -Path "${Path}.exe" -ItemType HardLink -Value $Path -Force
-
-    & $DarkPath -nologo -x $FolderPath $Path | Out-Host
-    if ($LASTEXITCODE) {
-      throw 'Failed to extract burn installer'
-    }
+    $FolderPath = Expand-Burn -Path $Path -DarkPath $DarkPath
 
     $BootstrapperApplicationDataPath = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml'
     $ManifestPath = Join-Path $FolderPath 'UX' 'manifest.xml'
@@ -1193,10 +1135,43 @@ function Read-UpgradeCodeFromBurn {
   }
 }
 
+function Get-MSIXPublisherHash {
+  <#
+  .SYNOPSIS
+    Calculate the hash part of the MSIX package family name
+  .PARAMETER PublisherName
+    The publisher name
+  .LINK
+    https://marcinotorowski.com/2021/12/19/calculating-hash-part-of-msix-package-family-name
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The publisher name')]
+    [ValidateNotNullOrEmpty()]
+    [string]$PublisherName
+  )
+
+  begin {
+    $EncodingTable = '0123456789abcdefghjkmnpqrstvwxyz'
+  }
+
+  process {
+    $PublisherNameSha256 = [System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::Unicode.GetBytes($PublisherName))
+    $PublisherNameSha256First8Binary = $PublisherNameSha256[0..7] | ForEach-Object { [System.Convert]::ToString($_, 2).PadLeft(8, '0') }
+    $PublisherNameSha256Fisrt8BinaryPadded = [System.String]::Concat($PublisherNameSha256First8Binary).PadRight(65, '0')
+
+    $Result = for ($i = 0; $i -lt $PublisherNameSha256Fisrt8BinaryPadded.Length; $i += 5) {
+      $EncodingTable[[System.Convert]::ToInt32($PublisherNameSha256Fisrt8BinaryPadded.Substring($i, 5), 2)]
+    }
+
+    return [System.String]::Concat($Result)
+  }
+}
+
 function Compare-Version {
   <#
   .SYNOPSIS
-    Compare two versions
+    Compare two version strings
   .PARAMETER ReferenceVersion
     The version used as a reference for comparison
   .PARAMETER DifferenceVersion
@@ -1204,13 +1179,13 @@ function Compare-Version {
   #>
   [OutputType([int])]
   param (
-    [Parameter(Mandatory, HelpMessage = 'The version used as a reference for comparison')]
-    [string]
-    $ReferenceVersion,
+    [Parameter(Position = 0, Mandatory, HelpMessage = 'The version used as a reference for comparison')]
+    [ValidateNotNullOrEmpty()]
+    [string]$ReferenceVersion,
 
-    [Parameter(Mandatory, HelpMessage = 'The version that is compared to the reference version')]
-    [string]
-    $DifferenceVersion
+    [Parameter(Position = 1, Mandatory, HelpMessage = 'The version that is compared to the reference version')]
+    [ValidateNotNullOrEmpty()]
+    [string]$DifferenceVersion
   )
 
   $ReferenceVersionPadded = $ReferenceVersion -creplace '\d+', { $_.Value.PadLeft(20) }
@@ -1229,26 +1204,24 @@ function ConvertFrom-ElectronUpdater {
   <#
   .SYNOPSIS
     Convert Electron Updater manifest into organized hashtable
-  .PARAMETER InputObject
-    The YAML object of the Electron Updater manifest to be handled
+  .PARAMETER Content
+    The YAML object of the Electron Updater manifest
   .PARAMETER Prefix
     The prefix of the installer URL
   .PARAMETER Locale
     The locale of the release notes (if present)
   #>
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The YAML object of the Electron Updater manifest to be handled')]
-    $InputObject,
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The YAML object of the Electron Updater manifest')]
+    $Content,
 
     [Parameter(HelpMessage = 'The prefix of the installer URL')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Prefix,
+    [string]$Prefix,
 
     [Parameter(HelpMessage = 'The locale of the release notes (if present)')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Locale = 'en-US'
+    [string]$Locale = 'en-US'
   )
 
   $Result = [ordered]@{
@@ -1257,32 +1230,32 @@ function ConvertFrom-ElectronUpdater {
   }
 
   # Version
-  $Result.Version = $InputObject.version
+  $Result.Version = $Content.version
 
   # InstallerUrl
   try {
     # The prefix is a valid URL
     $Result.Installer += [ordered]@{
-      InstallerUrl = Join-Uri $Prefix $InputObject.files[0].url
+      InstallerUrl = Join-Uri $Prefix $Content.files[0].url
     }
   } catch {
     # The prefix is not a valid URL
     $Result.Installer += [ordered]@{
-      InstallerUrl = $Prefix + $InputObject.files[0].url
+      InstallerUrl = $Prefix + $Content.files[0].url
     }
   }
 
   # ReleaseTime
-  if ($InputObject.releaseDate) {
-    $Result.ReleaseTime = $InputObject.releaseDate | Get-Date -AsUTC
+  if ($Content.releaseDate) {
+    $Result.ReleaseTime = $Content.releaseDate | Get-Date -AsUTC
   }
 
   # ReleaseNotes
-  if ($InputObject.releaseNotes) {
+  if ($Content.releaseNotes) {
     $Result.Locale += [ordered]@{
       Locale = $Locale
       Key    = 'ReleaseNotes'
-      Value  = $InputObject.releaseNotes | Format-Text
+      Value  = $Content.releaseNotes | Format-Text
     }
   }
 
@@ -1294,14 +1267,13 @@ function ConvertFrom-SquirrelReleases {
   .SYNOPSIS
     Convert Squirrel releases into organized hashtable
   .PARAMETER Content
-    The content of the Squirrel releases
+    The string containing Squirrel releases information
   .LINK
     https://github.com/Squirrel/Squirrel.Windows/blob/HEAD/src/Squirrel/Utility.cs
   #>
   param (
-    [Parameter(Position = 0, Mandatory, ValueFromPipeline, HelpMessage = 'The content of the Squirrel releases')]
-    [string]
-    $Content
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The string containing Squirrel releases information')]
+    [string]$Content
   )
 
   begin {
@@ -1378,12 +1350,12 @@ function ConvertFrom-SquirrelReleases {
 function Copy-Object {
   <#
   .SYNOPSIS
-    Clone an object
+    Deep clone an object
   .PARAMETER InputObject
-    The object to be cloned
+    The object to clone
   #>
   param (
-    [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The object to be cloned')]
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The object to clone')]
     $InputObject
   )
 

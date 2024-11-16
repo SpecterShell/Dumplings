@@ -28,17 +28,14 @@ function Invoke-TelegramApi {
   param (
     [Parameter(Mandatory, HelpMessage = 'The Telegram method to be invoked, e.g., sendMessage')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Method,
+    [string]$Method,
 
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The request body')]
-    [System.Collections.IDictionary]
-    $Body,
+    [System.Collections.IDictionary]$Body,
 
     [Parameter(HelpMessage = 'Telegram bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:TG_BOT_TOKEN
+    [string]$Token = $Env:TG_BOT_TOKEN
   )
 
   $Params = @{
@@ -69,30 +66,24 @@ function New-TelegramMessage {
   [CmdletBinding(DefaultParameterSetName = 'PlainText')]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The message content to be sent')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the message content as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the message content as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the message content as Markdown (Telegram format)')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(HelpMessage = 'The ID of the group chat or the user')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $ChatID = $Env:TG_CHAT_ID,
+    [string]$ChatID = $Env:TG_CHAT_ID,
 
     [Parameter(HelpMessage = 'Telegram bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:TG_BOT_TOKEN
+    [string]$Token = $Env:TG_BOT_TOKEN
   )
 
   $Params = @{
@@ -122,18 +113,15 @@ function Remove-TelegramMessage {
   #>
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The ID of the messages to be deleted')]
-    [int]
-    $MessageID,
+    [int]$MessageID,
 
     [Parameter(HelpMessage = 'The ID of the group chat or the user')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $ChatID = $Env:TG_CHAT_ID,
+    [string]$ChatID = $Env:TG_CHAT_ID,
 
     [Parameter(HelpMessage = 'Telegram bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:TG_BOT_TOKEN
+    [string]$Token = $Env:TG_BOT_TOKEN
   )
 
   $Params = @{
@@ -167,34 +155,27 @@ function Update-TelegramMessage {
   [CmdletBinding(DefaultParameterSetName = 'PlainText')]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The new message content to which the previous one will be updated')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the new message content as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the new message content as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the new message content as Markdown (Telegram format)')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The ID of the message to be updated')]
-    [int]
-    $MessageID,
+    [int]$MessageID,
 
     [Parameter(HelpMessage = 'The ID of the group chat or the user')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $ChatID = $Env:TG_CHAT_ID,
+    [string]$ChatID = $Env:TG_CHAT_ID,
 
     [Parameter(HelpMessage = 'Telegram bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:TG_BOT_TOKEN
+    [string]$Token = $Env:TG_BOT_TOKEN
   )
 
   $Params = @{
@@ -235,34 +216,27 @@ function Send-TelegramMessage {
   [OutputType([System.Collections.Generic.IEnumerable[int]])]
   param (
     [Parameter(ValueFromPipeline, Mandatory, HelpMessage = 'The message content')]
-    [string]
-    $Message,
+    [string]$Message,
 
     [Parameter(DontShow, ParameterSetName = 'PlainText', HelpMessage = 'Parse the message content as plain text')]
-    [switch]
-    $AsPlainText,
+    [switch]$AsPlainText,
 
     [Parameter(ParameterSetName = 'HTML', HelpMessage = 'Parse the message content as HTML')]
-    [switch]
-    $AsHtml,
+    [switch]$AsHtml,
 
     [Parameter(ParameterSetName = 'Markdown', HelpMessage = 'Parse the message content as Markdown (Telegram format, see https://core.telegram.org/bots/api#markdownv2-style)')]
-    [switch]
-    $AsMarkdown,
+    [switch]$AsMarkdown,
 
     [Parameter(HelpMessage = 'The ID of messages to be updated')]
-    [int[]]
-    $MessageID = [int[]]@(),
+    [int[]]$MessageID = [int[]]@(),
 
     [Parameter(HelpMessage = 'The ID of the group chat or the user')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $ChatID = $Env:TG_CHAT_ID,
+    [string]$ChatID = $Env:TG_CHAT_ID,
 
     [Parameter(HelpMessage = 'Telegram bot token')]
     [ValidateNotNullOrWhiteSpace()]
-    [string]
-    $Token = $Env:TG_BOT_TOKEN
+    [string]$Token = $Env:TG_BOT_TOKEN
   )
 
   $Params = @{ Token = $Token }

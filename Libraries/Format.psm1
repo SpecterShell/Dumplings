@@ -124,8 +124,7 @@ function Format-Text {
   param (
     [Parameter(Mandatory, ValueFromPipeline, HelpMessage = 'The text to be formatted')]
     [AllowEmptyString()]
-    [string]
-    $Text
+    [string]$Text
   )
 
   begin {
