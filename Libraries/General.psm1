@@ -591,6 +591,8 @@ function Expand-InstallShield {
     The path of the InstallShield executable file to be extracted
   .PARAMETER ISxPath
     The path to the InstallShield installer extractor (ISx) tool
+  .LINK
+    https://github.com/lifenjoiner/ISx
   #>
   [OutputType([string])]
   param (
@@ -636,6 +638,8 @@ function Expand-Burn {
     The path to the WiX bundle file
   .PARAMETER DarkPath
     The path to the Windows Installer XML Toolset Decompiler tool
+  .LINK
+    https://github.com/wixtoolset/wix3
   #>
   [OutputType([string])]
   param (
