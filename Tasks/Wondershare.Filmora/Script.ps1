@@ -1,4 +1,7 @@
-$this.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 846 -Version '10.0.0.0' -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri 'https://pc-api.300624.com/v2/product/check-upgrade?pid=846&client_sign={}&version=10.0.0.0&platform=win_x64'
+
+# Version
+$this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -8,6 +11,18 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.whats_new_content | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     # InstallerSha256

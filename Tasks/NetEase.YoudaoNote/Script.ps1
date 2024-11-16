@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = ($Object1.releaseNotes | ConvertTo-LF | Format-Text) -creplace '(?m)_+$', ''
+        Value  = ($Object1.releaseNotes | Format-Text) -creplace '(?m)_+$', ''
       }
     } catch {
       $_ | Out-Host
