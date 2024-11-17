@@ -1,19 +1,23 @@
+$Object1 = Invoke-RestMethod -Uri 'https://updates.discord.com/distributions/app/manifests/latest?channel=ptb&platform=win&arch=x64'
+
+# Version
+$this.CurrentState.Version = $Object1.full.host_version -join '.'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://discord.com/api/downloads/distributions/app/installers/latest?channel=ptb&platform=win&arch=x64'
+  InstallerUrl = Join-Uri $Object1.full.url 'DiscordPTBSetup.exe'
 }
 
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '/(\d+\.\d+\.\d+(?:\.\d+)*)/').Groups[1].Value
-
 switch -Regex ($this.Check()) {
-  'New|Updated' {
+  'New|Changed|Updated' {
     $this.Print()
     $this.Write()
   }
-  'Updated' {
+  'Changed|Updated' {
     $this.Message()
+  }
+  'Updated' {
     $this.Submit()
   }
 }
