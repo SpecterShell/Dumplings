@@ -1,12 +1,10 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://config.teams.microsoft.com/config/v1/MicrosoftTeams/27_1.0.0.0?environment=prod&agents=TeamsBuilds').TeamsBuilds.BuildSettings.Desktop
 
-$Identical = $true
 if (@(@('windows', 'windows64', 'arm64') | Sort-Object -Property { $Object1.$_.latestVersion } -Unique).Count -gt 1) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Windows x86 version: $($Object1.windows.latestVersion)")
   $this.Log("Windows x64 version: $($Object1.windows64.latestVersion)")
   $this.Log("Windows arm64 version: $($Object1.arm64.latestVersion)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -101,7 +99,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

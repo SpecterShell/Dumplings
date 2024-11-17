@@ -1,26 +1,26 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=64'
-
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=32'
+$Object1 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=32'
+
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://www.animiz.cn/webapis/appupdate/client-latest?app=smartslides&digit=64'
 
 if ($Object1.data.CurrentVersionNumber -ne $Object2.data.CurrentVersionNumber) {
-  $this.Log("x86 version: $($Object2.data.CurrentVersionNumber)")
-  $this.Log("x64 version: $($Object1.data.CurrentVersionNumber)")
+  $this.Log("x86 version: $($Object1.data.CurrentVersionNumber)")
+  $this.Log("x64 version: $($Object2.data.CurrentVersionNumber)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object1.data.CurrentVersionNumber
+$this.CurrentState.Version = $Object2.data.CurrentVersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
+  InstallerUrl = $Object1.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
+  InstallerUrl = $Object2.data.FileURL.Replace('files.animiz.cn', 'files.focusky.com.cn') | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

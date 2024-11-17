@@ -9,12 +9,10 @@ $Version2 = [regex]::Match(
   '([\d\.]+)'
 ).Groups[1].Value
 
-$Identical = $true
 if ($Version1 -ne $Version2) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: ${Version1}")
   $this.Log("China version: ${Version2}")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -37,7 +35,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

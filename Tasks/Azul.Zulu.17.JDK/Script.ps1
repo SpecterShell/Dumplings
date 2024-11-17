@@ -3,12 +3,10 @@ $Object1 = $Global:DumplingsStorage.AzulZuluBuilds | Where-Object -FilterScript 
 # x64
 $Object2 = $Global:DumplingsStorage.AzulZuluBuilds | Where-Object -FilterScript { $_.distro_version[0] -eq 17 -and $_.name.Contains('jdk') -and -not $_.name.Contains('fx') -and $_.name.Contains('x64') } | Sort-Object -Property { $_.distro_version.ForEach({ $_.ToString().PadLeft(20) }) -join '.' } -Bottom 1
 
-$Identical = $true
 if (Compare-Object -ReferenceObject $Object1.distro_version -DifferenceObject $Object2.distro_version) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: $($Object1.distro_version -join '.')")
   $this.Log("x64 version: $($Object2.distro_version -join '.')")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -35,7 +33,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

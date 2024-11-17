@@ -1,26 +1,26 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=64' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
-
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=32' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
+$Object1 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=32' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
+
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://hand.animiz.cn/update/animiz-update-info.php?digit=64' -UserAgent 'Mozilla/5.0 (Windows; U; zh-CN) AppleWebKit/533.19.4 (KHTML, like Gecko) AdobeAIR/29.0'
 
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
-  $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
-  $this.Log("x64 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x86 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x64 version: $($Object2.CurrentVersionNumber)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object1.CurrentVersionNumber
+$this.CurrentState.Version = $Object2.CurrentVersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.FileURL | ConvertTo-Https
+  InstallerUrl = $Object1.FileURL | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.FileURL | ConvertTo-Https
+  InstallerUrl = $Object2.FileURL | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

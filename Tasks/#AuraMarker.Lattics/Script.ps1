@@ -1,8 +1,8 @@
-$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
-if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:DumplingsStorage['Lattics'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+$OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
+if (Test-Path -Path $OldReleasesPath) {
+  $Global:DumplingsStorage['Lattics'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['Lattics'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['Lattics'] = $OldReleases = [ordered]@{}
 }
 
 # Global
@@ -42,13 +42,13 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+    $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $ReleaseTime
       ReleaseNotesEN = $ReleaseNotesEN
       ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
-      $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
+      $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
     }
 
     $this.Print()

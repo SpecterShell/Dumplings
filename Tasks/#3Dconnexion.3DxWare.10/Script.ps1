@@ -1,8 +1,8 @@
-$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
-if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:DumplingsStorage['3DxWare10'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+$OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
+if (Test-Path -Path $OldReleasesPath) {
+  $Global:DumplingsStorage['3DxWare10'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['3DxWare10'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['3DxWare10'] = $OldReleases = [ordered]@{}
 }
 
 $Object1 = Invoke-RestMethod -Uri 'http://updatecheck.3dconnexion.com/AvailableSoftware_xml'
@@ -28,12 +28,12 @@ $this.CurrentState.Locale += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+    $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseNotes   = $ReleaseNotes
       ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
-      $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
+      $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
     }
 
     $this.Print()

@@ -3,16 +3,14 @@ $Object1 = Invoke-RestMethod -Uri 'https://cubox-official-resource.s3.us-west-1.
 # China
 $Object2 = Invoke-RestMethod -Uri 'https://update.cubox.pro/update.json'
 
-# Version
-$this.CurrentState.Version = $Object1.version
-
-$Identical = $true
 if ($Object1.version -ne $Object2.version) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: $($Object1.version)")
   $this.Log("China version: $($Object2.version)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
+
+# Version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -49,7 +47,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

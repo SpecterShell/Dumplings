@@ -8,24 +8,20 @@ $Prefix3 = 'https://dldir1v6.qq.com/weiyun/electron-update/release/win32/'
 $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix3 -Locale 'zh-CN'
 
 if ((Compare-Version -ReferenceVersion $Object1.electron_win64.version -DifferenceVersion $Object2.Version) -gt 0) {
-  $Identical = $true
   if ($Object2.Version -ne $Object3.Version) {
-    $this.Log('Inconsistent versions detected', 'Warning')
     $this.Log("x86 version: $($Object3.version)")
     $this.Log("x64 version: $($Object2.version)")
-    $Identical = $false
+    throw 'Inconsistent versions detected'
   }
 
   $this.CurrentState = $Object2
   $this.CurrentState.Installer = $Object3.Installer + $this.CurrentState.Installer
   $this.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
 } else {
-  $Identical = $true
   if ($Object1.electron_win64.version -ne $Object1.electron_win32.version) {
-    $this.Log('Inconsistent versions detected', 'Warning')
     $this.Log("x86 version: $($Object1.electron_win32.version)")
     $this.Log("x64 version: $($Object1.electron_win64.version)")
-    $Identical = $false
+    throw 'Inconsistent versions detected'
   }
 
   # Version
@@ -53,7 +49,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

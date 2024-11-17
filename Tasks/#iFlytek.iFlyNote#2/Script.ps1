@@ -1,8 +1,8 @@
-$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
-if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:DumplingsStorage['iFlyNote2'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+$OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
+if (Test-Path -Path $OldReleasesPath) {
+  $Global:DumplingsStorage['iFlyNote2'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['iFlyNote2'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['iFlyNote2'] = $OldReleases = [ordered]@{}
 }
 
 $Prefix = 'https://bj.openstorage.cn/v1/yuji/public/release/'
@@ -11,11 +11,11 @@ $this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-R
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+    $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
-      $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
+      $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
     }
 
     $this.Print()

@@ -1,26 +1,26 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=64'
-
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=32'
+$Object1 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=32'
+
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://www.focusky.com.cn/update/focusky-update-info.php?digit=64'
 
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
-  $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
-  $this.Log("x64 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x86 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x64 version: $($Object2.CurrentVersionNumber)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object1.CurrentVersionNumber
+$this.CurrentState.Version = $Object2.CurrentVersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.FileURL | ConvertTo-Https
+  InstallerUrl = $Object1.FileURL | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.FileURL | ConvertTo-Https
+  InstallerUrl = $Object2.FileURL | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

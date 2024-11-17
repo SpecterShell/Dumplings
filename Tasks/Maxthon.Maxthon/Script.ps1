@@ -24,14 +24,12 @@ $Object5 = $Object2.win.cn.maxthon86.Where({ $_.channels -contains 'stable' }, '
 # China x64
 $Object6 = $Object2.win.cn.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
 
-$Identical = $true
 if ((@($Object3, $Object4, $Object5, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global x86 version: $($Object3.version)")
   $this.Log("Global x64 version: $($Object4.version)")
   $this.Log("China x86 version: $($Object5.version)")
   $this.Log("China x64 version: $($Object6.version)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -67,7 +65,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

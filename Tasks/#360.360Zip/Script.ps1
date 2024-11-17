@@ -1,8 +1,8 @@
-$OldReleaseNotesPath = Join-Path $PSScriptRoot 'Releases.yaml'
-if (Test-Path -Path $OldReleaseNotesPath) {
-  $Global:DumplingsStorage['360Zip'] = $OldReleaseNotes = Get-Content -Path $OldReleaseNotesPath -Raw | ConvertFrom-Yaml -Ordered
+$OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
+if (Test-Path -Path $OldReleasesPath) {
+  $Global:DumplingsStorage['360Zip'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['360Zip'] = $OldReleaseNotes = [ordered]@{}
+  $Global:DumplingsStorage['360Zip'] = $OldReleases = [ordered]@{}
 }
 
 $Path = Get-TempFile -Uri 'http://iup.360safe.com/iv3/pc/360zip/360zipupd_manual.cab'
@@ -29,12 +29,12 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $OldReleaseNotes[$this.CurrentState.Version] = [ordered]@{
+    $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime    = $ReleaseTime
       ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
-      $OldReleaseNotes | ConvertTo-Yaml -OutFile $OldReleaseNotesPath -Force
+      $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
     }
 
     $this.Print()

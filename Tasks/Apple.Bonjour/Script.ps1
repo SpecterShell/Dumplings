@@ -10,12 +10,10 @@ $Object4 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMe
 $Object5 = Invoke-RestMethod -Uri $Object4.Distributions.English
 $VersionX64 = $Object5.'installer-gui-script'.choice.'pkg-ref'.Where({ $_.id -eq 'Bonjour64' }, 'First')[0].version
 
-$Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -42,7 +40,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

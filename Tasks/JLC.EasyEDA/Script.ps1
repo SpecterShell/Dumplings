@@ -13,12 +13,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
-$Identical = $true
 if ($VersionX86 -ne $VersionX64) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -56,7 +54,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

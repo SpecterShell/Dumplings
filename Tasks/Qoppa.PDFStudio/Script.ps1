@@ -7,9 +7,9 @@ $Object2 = $Object1.updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '124
 $Object3 = $Object1.updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '13020' }, 'First')[0]
 
 if ($Object2.newVersion -ne $Object3.newVersion) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: $($Object2.newVersion)")
   $this.Log("x64 version: $($Object3.newVersion)")
+  throw 'Inconsistent versions detected'
 }
 
 # Version

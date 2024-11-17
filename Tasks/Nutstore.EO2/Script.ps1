@@ -6,17 +6,15 @@ $Object2 = $Response.Where({ $_.OS -eq 'yiyang-suite-win-x64' }, 'First')[0]
 # arm64
 $Object3 = $Response.Where({ $_.OS -eq 'yiyang-suite-win-arm64' }, 'First')[0]
 
-# Version
-$this.CurrentState.Version = $Object2.exVer
-
-$Identical = $true
 if ((@($Object1, $Object2, $Object3) | Sort-Object -Property 'exVer' -Unique).Count -gt 1) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: $($Object1.exVer)")
   $this.Log("x64 version: $($Object2.exVer)")
   $this.Log("arm64 version: $($Object3.exVer)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
+
+# Version
+$this.CurrentState.Version = $Object2.exVer
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -65,7 +63,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

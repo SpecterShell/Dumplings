@@ -1,43 +1,41 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationService/installer/getAppVersion?appId=10301011&versionCode=0.0.0.0&packageSystemSupport=2'
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationService/installer/getAppVersion?appId=10301011&versionCode=0.0.0.0&packageSystemSupport=1'
+$Object1 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationService/installer/getAppVersion?appId=10301011&versionCode=0.0.0.0&packageSystemSupport=1'
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://front-gw.aunapi.com/applicationService/installer/getAppVersion?appId=10301011&versionCode=0.0.0.0&packageSystemSupport=2'
+
+if ($Object1.data.versionCode -ne $Object2.data.versionCode) {
+  $this.Log("x86 version: $($Object1.data.versionCode)")
+  $this.Log("x64 version: $($Object2.data.versionCode)")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
-$this.CurrentState.Version = $Object1.data.versionCode
-
-$Identical = $true
-if ($Object1.data.versionCode -ne $Object2.data.versionCode) {
-  $this.Log('Inconsistent versions detected', 'Warning')
-  $this.Log("x86 version: $($Object2.data.versionCode)")
-  $this.Log("x64 version: $($Object1.data.versionCode)")
-  $Identical = $false
-}
+$this.CurrentState.Version = $Object2.data.versionCode
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.data.downloadUrl
+  InstallerUrl = $Object1.data.downloadUrl
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.downloadUrl
+  InstallerUrl = $Object2.data.downloadUrl
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+      $this.CurrentState.ReleaseTime = $Object2.data.createTime | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.billfish.cn/help/gengxinrizhi' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.billfish.cn/help/gengxinrizhi' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[starts-with(@class, 'catalog_catalogContent')]/h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[starts-with(@class, 'catalog_catalogContent')]/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
@@ -60,7 +58,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

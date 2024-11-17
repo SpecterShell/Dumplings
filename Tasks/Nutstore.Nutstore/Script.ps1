@@ -4,16 +4,14 @@ $Object1 = $Response.Where({ $_.OS -eq 'win-wpf-client' }, 'First')[0]
 # arm64
 $Object2 = $Response.Where({ $_.OS -eq 'win-wpf-client-arm64' }, 'First')[0]
 
-# Version
-$this.CurrentState.Version = $Object1.exVer
-
-$Identical = $true
 if ($Object1.exVer -ne $Object2.exVer) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 + x64 version: $($Object1.exVer)")
   $this.Log("arm64 version: $($Object2.exVer)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
+
+# Version
+$this.CurrentState.Version = $Object1.exVer
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -62,7 +60,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

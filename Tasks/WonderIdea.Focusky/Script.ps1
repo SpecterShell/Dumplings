@@ -1,33 +1,33 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.2'
-  os      = 'Windows 10'
-  digit   = '64'
-}
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
+$Object1 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
   version = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.2'
   os      = 'Windows 10'
   digit   = '32'
 }
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
+  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.2'
+  os      = 'Windows 10'
+  digit   = '64'
+}
 
 if ($Object1.CurrentVersionNumber -ne $Object2.CurrentVersionNumber) {
-  $this.Log("x86 version: $($Object2.CurrentVersionNumber)")
-  $this.Log("x64 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x86 version: $($Object1.CurrentVersionNumber)")
+  $this.Log("x64 version: $($Object2.CurrentVersionNumber)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object1.CurrentVersionNumber
+$this.CurrentState.Version = $Object2.CurrentVersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.FileURL | Split-Uri -LeftPart Path | ConvertTo-Https
+  InstallerUrl = $Object1.FileURL | Split-Uri -LeftPart Path | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.FileURL | Split-Uri -LeftPart Path | ConvertTo-Https
+  InstallerUrl = $Object2.FileURL | Split-Uri -LeftPart Path | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.DescriptionURL | ConvertTo-Https
+        Value = $ReleaseNotesUrl = $Object2.DescriptionURL | ConvertTo-Https
       }
 
       $Object3 = Invoke-RestMethod -Uri $ReleaseNotesUrl | ConvertFrom-Html

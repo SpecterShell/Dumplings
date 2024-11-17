@@ -15,12 +15,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $VersionX86 = [regex]::Match($InstallerUrlArm64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
-$Identical = $true
 if ($VersionX64 -ne $VersionX86) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -34,7 +32,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

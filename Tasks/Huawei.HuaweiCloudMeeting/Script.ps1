@@ -12,12 +12,10 @@ if ($Object2.isConsistent) {
   return
 }
 
-$Identical = $true
 if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("Global version: $($Object1.upgradeVersion)")
   $this.Log("China version: $($Object2.upgradeVersion)")
-  $Identical = $false
+  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -58,7 +56,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -1,35 +1,33 @@
-# x64
-$Object1 = Invoke-RestMethod -Uri 'https://ams.ecosia-browser.net/api/getLatest/0aac13df-2a94-4570-8229-285102897d3d/win/?channelprofilename=PROD&arch=x64'
-$Version1 = $Object1.Version
-
 # x86
-$Object2 = Invoke-RestMethod -Uri 'https://ams.ecosia-browser.net/api/getLatest/0aac13df-2a94-4570-8229-285102897d3d/win/?channelprofilename=PROD&arch=x86'
-$Version2 = $Object2.Version
+$Object1 = Invoke-RestMethod -Uri 'https://ams.ecosia-browser.net/api/getLatest/0aac13df-2a94-4570-8229-285102897d3d/win/?channelprofilename=PROD&arch=x86'
 
-if ($Version1 -ne $Version2) {
-  $this.Log("x86 version: ${Version2}")
-  $this.Log("x64 version: ${Version1}")
+# x64
+$Object2 = Invoke-RestMethod -Uri 'https://ams.ecosia-browser.net/api/getLatest/0aac13df-2a94-4570-8229-285102897d3d/win/?channelprofilename=PROD&arch=x64'
+
+if ($Object1.Version -ne $Object2.Version) {
+  $this.Log("x86 version: $($Object1.Version)")
+  $this.Log("x64 version: $($Object2.Version)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Object2.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.LocationUri
+  InstallerUrl = $Object1.LocationUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.LocationUri
+  InstallerUrl = $Object2.LocationUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.UpdateDate.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object2.UpdateDate.ToUniversalTime()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

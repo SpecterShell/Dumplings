@@ -6,7 +6,6 @@ $Object2 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?a
 $Object3 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=arm64&variant=msix'
 
 if ($Object1.version -ne $Object2.version) {
-  $this.Log('Inconsistent versions detected', 'Warning')
   $this.Log("x64 EXE version: $($Object1.version)")
   $this.Log("x64 WiX version: $($Object2.version)")
   $this.Log("arm64 MSIX version: $($Object3.version)")
