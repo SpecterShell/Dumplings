@@ -146,8 +146,8 @@ function Stop-FirefoxDriver {
 
 # Stop drivers when the module is unloading
 $ExecutionContext.SessionState.Module.OnRemove += {
-  Stop-EdgeDriver -ErrorAction Ignore
-  Stop-FirefoxDriver -ErrorAction Ignore
+  Stop-EdgeDriver -ErrorAction Continue
+  Stop-FirefoxDriver -ErrorAction Continue
 }
 
 Export-ModuleMember -Function *

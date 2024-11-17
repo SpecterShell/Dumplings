@@ -36,11 +36,13 @@
 [CmdletBinding()]
 param (
   [Parameter(Position = 0, ValueFromPipeline, HelpMessage = 'The names of the tasks to run. Leave blank to run all tasks')]
-  [ArgumentCompleter({ Join-Path ($args[4].Contains('Path') ? $args[4].Path : (Join-Path $PSScriptRoot 'Tasks')) "$($args[2])*" 'Config.yaml' | Get-ChildItem -Recurse | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name })]
+  [ArgumentCompleter({ Join-Path ($args[4].Contains('Path') ? $args[4].Path : (Join-Path $PSScriptRoot 'Tasks')) "$($args[2])*" 'Config.yaml' | Get-ChildItem -File | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name })]
+  [ValidateNotNullOrWhiteSpace()]
   [string[]]
   $Name,
 
   [Parameter(Position = 1, HelpMessage = 'The path to the folder containing the task files')]
+  [ValidateNotNullOrWhiteSpace()]
   [string]
   $Path = (Join-Path $PSScriptRoot 'Tasks'),
 
@@ -209,13 +211,14 @@ if (-not $Parallel) {
   }
 
   # Queue the tasks to load
-  if ($Name) {
-    $TaskNames = [System.Collections.Concurrent.ConcurrentQueue[string]]$Name
-  } else {
-    $TaskNames = [System.Collections.Concurrent.ConcurrentQueue[string]](Join-Path $Path '*' 'Config.yaml' | Get-ChildItem -Recurse | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name)
+  if (-not (Test-Path -Path $Path)) {
+    throw "The task directory `"${Path}`" does not exist. Please check the path or specify another one."
   }
+  [System.Collections.Concurrent.ConcurrentQueue[string]]$TaskNames = $Name ?
+  @($Name | ForEach-Object -Process { Join-Path $Path $_ 'Config.yaml' } | Get-ChildItem -File | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name) :
+  @(Join-Path $Path '*' 'Config.yaml' | Get-ChildItem -File | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name)
   $TaskNamesTotalCount = $TaskNames.Count
-  Write-Log -Object "$($TaskNamesTotalCount ?? 0) task(s) found"
+  Write-Log -Object "${TaskNamesTotalCount} task(s) found"
 
   # Set up a shared hashtable across sub-threads
   $Global:DumplingsStorage = [ordered]@{}
@@ -269,10 +272,16 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   }
 
   # Import libraries
-  Join-Path $Global:DumplingsRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+  $Private:LibraryPath = Join-Path $Global:DumplingsRoot 'Libraries'
+  if (Test-Path -Path $LibraryPath) {
+    Join-Path $Global:DumplingsRoot 'Libraries' | Get-ChildItem -Include '*.psm1' -Recurse -File | Import-Module -Force
+  }
 
   # Import models
-  Join-Path $Global:DumplingsRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
+  $Private:ModelPath = Join-Path $Global:DumplingsRoot 'Models'
+  if (Test-Path -Path $ModelPath) {
+    Join-Path $Global:DumplingsRoot 'Models' | Get-ChildItem -Include '*.ps1' -Recurse -File | ForEach-Object -Process { . $_ }
+  }
 
   # Build and run tasks
   $TaskName = [string]$null
@@ -363,6 +372,6 @@ if (-not $Parallel) {
   # Clean and restore the environment for the main thread
   [System.Console]::OutputEncoding = $Private:OldOutputEncoding
   [System.Console]::InputEncoding = $Private:OldInputEncoding
-  Remove-Item -Path $Global:DumplingsCache -Recurse -Force
+  Remove-Item -Path $Global:DumplingsCache -Recurse -Force -ErrorAction Continue
   Set-StrictMode -Off
 }
