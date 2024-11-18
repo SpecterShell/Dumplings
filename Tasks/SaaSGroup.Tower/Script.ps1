@@ -5,15 +5,10 @@ $this.CurrentState.Version = "$($Object1.version).$($Object1.build_number)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType          = 'exe'
-  InstallerUrl           = $Object1.url
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  InstallerType = 'exe'
+  InstallerUrl  = $Object1.url
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.msi_url
 }
@@ -34,17 +29,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    $InstallerWiXFile = Get-TempFile -Uri $InstallerWiX.InstallerUrl
-    $InstallerWiX['InstallerSha256'] = (Get-FileHash -Path $InstallerWiXFile -Algorithm SHA256).Hash
-    $InstallerWiX['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayName    = 'Tower Deployment Tool'
-        DisplayVersion = $InstallerWiXFile | Read-ProductVersionFromMsi
-        ProductCode    = $InstallerWiX['ProductCode'] = $InstallerWiXFile | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerWiXFile | Read-UpgradeCodeFromMsi
-      }
-    )
 
     $this.Print()
     $this.Write()
