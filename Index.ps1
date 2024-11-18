@@ -37,7 +37,6 @@
 param (
   [Parameter(Position = 0, ValueFromPipeline, HelpMessage = 'The names of the tasks to run. Leave blank to run all tasks')]
   [ArgumentCompleter({ Join-Path ($args[4].Contains('Path') ? $args[4].Path : (Join-Path $PSScriptRoot 'Tasks')) "$($args[2])*" 'Config.yaml' | Get-ChildItem -File | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name })]
-  [ValidateNotNullOrWhiteSpace()]
   [string[]]
   $Name,
 
