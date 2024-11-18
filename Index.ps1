@@ -286,7 +286,7 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
   $TaskName = [string]$null
   while ($TaskNames.TryDequeue([ref]$TaskName)) {
     # Print a progress bar with a perecentage and the name of the current task
-    Write-Progress -Activity 'Dumplings' -PercentComplete (100 - $TaskNames.Count / $TaskNamesTotalCount * 100) -Status "$($TaskNamesTotalCount - $TaskNames.Count)/$($TaskNamesTotalCount) $TaskName"
+    Write-Progress -Id 0 -Activity 'Dumplings' -PercentComplete (100 - $TaskNames.Count / $TaskNamesTotalCount * 100) -CurrentOperation $TaskName -Status "$($TaskNamesTotalCount - $TaskNames.Count)/$($TaskNamesTotalCount) $TaskName"
 
     # Build task
     try {
@@ -302,6 +302,8 @@ if ($Parallel -or $ThrottleLimit -eq 1) {
       $_ | Out-Host
       continue
     }
+
+    Write-Progress -Id ($WokID + 1) -ParentId 0 -Activity "DumplingsWok${WokID}" -CurrentOperation $TaskName -Status $TaskName
 
     # Run task
     try {
@@ -329,18 +331,32 @@ if (-not $Parallel) {
   if ($ThrottleLimit -gt 1) {
     # Read the timeout from the preference or use the default value - 50 minutes
     $NewTimeout = [int]$null
-    $Timeout = $Global:DumplingsPreference.Contains('Timeout') -and [int]::TryParse($Global:DumplingsPreference, [ref]$NewTimeout) ? $NewTimeout : 3000
+    $Timeout = $Global:DumplingsPreference.Contains('Timeout') -and [int]::TryParse($Global:DumplingsPreference.Timeout, [ref]$NewTimeout) ? $NewTimeout : 3000
 
     # Wait for all threads with the specified timeout
     $null = $Jobs | Wait-Job -Timeout $Timeout
 
+    # Check failed sub-threads
+    if ($Jobs.State -eq 'Failed') {
+      Write-Log -Object 'An error occurred in the following sub-threads:' -Level Error
+      $Jobs | Where-Object -Property 'State' -EQ -Value 'Failed' | ForEach-Object -Process {
+        Write-Log -Object "$($_.Name): $($_.JobStateInfo.Reason.Message)" -Level Error
+      }
+    }
+
     # Check running sub-threads after timeout
     if ($Jobs.State -eq 'Running') {
-      Write-Log -Object 'The following sub-threads exceeds the time limit and will be stopped forcibly:'
-      $Jobs | Where-Object -Property State -EQ -Value 'Running' | Out-Host
-      Write-Progress -Activity 'Dumplings' -Completed -Status 'Stopped'
+      Write-Log -Object "The following sub-threads exceeds the time limit of ${Timeout} second(s) and will be stopped forcibly:" -Level Warning
+      foreach ($Job in $Jobs | Where-Object -Property 'State' -EQ -Value 'Running') {
+        if ($Job.Progress -and $Job.Progress.Activity -eq $Job.Name) {
+          Write-Log -Object "$($Job.Name): $($Job.Progress.Where({ $_.Activity -eq $Job.Name }, 'Last')[-1].CurrentOperation)" -Level Warning
+        } else {
+          Write-Log -Object "$($Job.Name): The progress is not available" -Level Warning
+        }
+      }
+      Write-Progress -Id 0 -Activity 'Dumplings' -Completed -Status 'Stopped'
     } else {
-      Write-Progress -Activity 'Dumplings' -Completed -Status 'Completed'
+      Write-Progress -Id 0 -Activity 'Dumplings' -Completed -Status 'Completed'
     }
 
     # Pass the task objects to output if enabled
