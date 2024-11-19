@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://download.cntv.cn/cbox/update_config.txt' | Read-ResponseContent | ConvertFrom-Json
+$Object1 = Invoke-WebRequest -Uri 'https://download.cntv.cn/cbox/update_config.txt' -MaximumRetryCount 0 | Read-ResponseContent | ConvertFrom-Json
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
