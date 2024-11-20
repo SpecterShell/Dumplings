@@ -12,13 +12,13 @@ $Object1 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_gl
   <rule name="Region">China</rule>
 </root>
 "@
-$Prefix = $Object1.root.components.component[-1].url + 'full/'
+$Prefix = $Object1.SelectSingleNode('/root/components/component[last()]').url + 'full/'
 $Object2 = Invoke-WebRequest -Uri "${Prefix}filelist.xml" | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object1.root.components.component[-1].version,
-  '(\d+(?:\.\d+)+)'
+  $Object1.SelectSingleNode('/root/components/component[last()]').version,
+  '(\d+(?:\.\d+){3,})'
 ).Groups[1].Value
 
 # Installer
@@ -29,7 +29,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     # ReleaseTime
-    $this.CurrentState.ReleaseTime = $Object1.root.components.component[-1].createtime | Get-Date -AsUTC
+    $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode('/root/components/component[last()]').createtime | Get-Date -AsUTC
 
     $Object3 = Invoke-WebRequest -Uri "${Prefix}changelog.xml" | Read-ResponseContent | ConvertFrom-Xml
     # ReleaseNotes (en-US)
