@@ -24,22 +24,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $NestedInstallerFileRoot = New-TempFolder
-    7z.exe e -aoa -ba -bd '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host
-    $NestedInstallerFile = Join-Path $NestedInstallerFileRoot '2.msi'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFile | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
-
     $this.Print()
     $this.Write()
   }
