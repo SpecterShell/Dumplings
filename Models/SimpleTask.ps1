@@ -21,7 +21,7 @@ enum LogLevel {
   Error
 }
 
-class NormalTask {
+class SimpleTask {
   #region Properties
   [ValidateNotNullOrEmpty()][string]$Name
 
@@ -32,19 +32,19 @@ class NormalTask {
   [System.Collections.IDictionary]$Preference = [ordered]@{}
   #endregion
 
-  NormalTask([System.Collections.IDictionary]$Properties) {
+  SimpleTask([System.Collections.IDictionary]$Properties) {
     # Load name
     if (-not $Properties.Contains('Name')) {
-      throw 'NormalTask: The property Name is undefined and should be specified'
+      throw 'SimpleTask: The property Name is undefined and should be specified'
     }
     $this.Name = $Properties.Name
 
     # Load path
     if (-not $Properties.Contains('Path')) {
-      throw 'NormalTask: The property Path is undefined and should be specified'
+      throw 'SimpleTask: The property Path is undefined and should be specified'
     }
     if (-not (Test-Path -Path $Properties.Path)) {
-      throw 'NormalTask: The property Path is not reachable'
+      throw 'SimpleTask: The property Path is not reachable'
     }
     $this.Path = $Properties.Path
 
