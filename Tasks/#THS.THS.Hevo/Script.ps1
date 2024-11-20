@@ -1,19 +1,14 @@
 $OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleasesPath) {
-  $Global:DumplingsStorage['iFlyNote1'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['THSHevo'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['iFlyNote1'] = $OldReleases = [ordered]@{}
+  $Global:DumplingsStorage['THSHevo'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri "https://api.iflynote.com/user/version/info?from=IFLYNOTE_PC_WINDOWS&clientVersion=$($this.LastState.Version ?? '3.1.1254')"
-
-if ($Object1.code -eq 50002) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
-  return
-}
+$Object1 = Invoke-RestMethod -Uri 'https://ai.10jqka.com.cn/java-extended-api/voyageversion/getDefaultVersionInfo'
 
 # Version
-$this.CurrentState.Version = $Object1.data.versionName
+$this.CurrentState.Version = $Object1.data.version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
@@ -21,11 +16,17 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'zh-CN'
       Key    = 'ReleaseNotes'
-      Value  = $ReleaseNotesCN = $Object1.data.updateDetail | Format-Text
+      Value  = $ReleaseNotesCN = $Object1.data.description | Format-Text
+    }
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl = $Object1.data.introductionLink
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
-      ReleaseNotesCN = $ReleaseNotesCN
+      ReleaseNotesCN  = $ReleaseNotesCN
+      ReleaseNotesUrl = $ReleaseNotesUrl
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force

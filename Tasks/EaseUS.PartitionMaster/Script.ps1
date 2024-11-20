@@ -5,7 +5,7 @@ $Object1 = Invoke-RestMethod -Uri 'http://download.easeus.com/api2/index.php/Api
 }
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.data.curNum
+$this.CurrentState.Version = $Object1.data.curNum
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -15,19 +15,19 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('PartitionMaster') -and $Global:DumplingsStorage.PartitionMaster.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('PartitionMaster') -and $Global:DumplingsStorage.PartitionMaster.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.PartitionMaster.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.PartitionMaster[$this.CurrentState.Version].ReleaseNotes
         }
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.PartitionMaster.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.PartitionMaster[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

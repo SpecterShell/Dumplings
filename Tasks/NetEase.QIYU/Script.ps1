@@ -1,7 +1,7 @@
 $Object1 = ((Invoke-WebRequest -Uri 'https://b.163.com/home/download').Content | Get-EmbeddedJson -StartsFrom 'window._wInitData =' | ConvertFrom-Json -AsHashtable).appInfo.routeConf.schema.body.Where({ $_.Contains('detail') }, 'First')[0].detail.pcWorkstation
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.version -replace '^v'
+$this.CurrentState.Version = $Object1.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -14,12 +14,12 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.updateTime | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage['QIYU'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage.QIYU.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['QIYU'].$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.QIYU[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

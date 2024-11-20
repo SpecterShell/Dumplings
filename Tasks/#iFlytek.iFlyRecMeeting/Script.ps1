@@ -28,34 +28,15 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # # ReleaseNotes (zh-CN)
-      # $this.CurrentState.Locale += [ordered]@{
-      #   Locale = 'zh-CN'
-      #   Key    = 'ReleaseNotes'
-      #   Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo.Split('&')[0] | Format-Text
-      # }
-      # # ReleaseNotes (en-US)
-      # $this.CurrentState.Locale += [ordered]@{
-      #   Locale = 'en-US'
-      #   Key    = 'ReleaseNotes'
-      #   Value  = $ReleaseNotesEN = $Object1.biz.latestVersionInfo.Split('&')[1] | Format-Text
-      # }
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes = $Object1.biz.latestVersionInfo | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    # ReleaseNotes (zh-CN)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotes'
+      Value  = $ReleaseNotesCN = $Object1.biz.latestVersionInfo | Format-Text
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
-      # ReleaseNotesEN = $ReleaseNotesEN
-      # ReleaseNotesCN = $ReleaseNotesCN
-      ReleaseNotes = $ReleaseNotes
+      ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
@@ -64,7 +45,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

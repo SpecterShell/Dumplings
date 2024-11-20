@@ -14,19 +14,14 @@ $this.CurrentState.Version = $Object1.'360App1'.ver
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.'360App1'.date | Get-Date -Format 'yyyy-MM-dd'
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.'360App1'.date | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesCN = $Object1.'360App1'.'tip_zh-CN' | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    # ReleaseNotes (zh-CN)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotes'
+      Value  = $ReleaseNotesCN = $Object1.'360App1'.'tip_zh-CN' | Format-Text
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
@@ -40,7 +35,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.terabox.com/api/getsyscfg?clienttype=0&language_type=&cfg_category_keys=[]&version=0'
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # RealVersion
 $this.CurrentState.RealVersion = [regex]::Match($Object1.fe_web_guide_setting.cfg_list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
@@ -17,12 +17,12 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.fe_web_guide_setting.cfg_list[0].update_time | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.TeraBox.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('TeraBox') -and $Global:DumplingsStorage.TeraBox.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.TeraBox.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.TeraBox[$this.CurrentState.Version].ReleaseNotes
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

@@ -12,13 +12,8 @@ $this.CurrentState.Version = $Object1.lista.Application_Installer.version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.lista.Application_Installer.create_date, 'MM/dd/yyyy', $null)
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.lista.Application_Installer.create_date, 'MM/dd/yyyy', $null)
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
@@ -30,7 +25,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

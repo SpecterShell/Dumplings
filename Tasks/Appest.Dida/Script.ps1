@@ -18,26 +18,26 @@ if ($VersionX86 -ne $VersionX64) {
 }
 
 # Version
-$this.CurrentState.Version = $Version = $VersionX64
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('Dida') -and $Global:DumplingsStorage.Dida.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('Dida') -and $Global:DumplingsStorage.Dida.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dida.$Version.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseTime
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.Dida.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.Dida.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

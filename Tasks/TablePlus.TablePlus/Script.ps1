@@ -4,20 +4,20 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '/(\d+\.\d+\.\d+)/').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '/(\d+\.\d+\.\d+)/').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage['TablePlus'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('TablePlus') -and $Global:DumplingsStorage.TablePlus.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['TablePlus'].$Version.ReleaseTime | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.TablePlus[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['TablePlus'].$Version.ReleaseNotes
+          Value  = $Global:DumplingsStorage.TablePlus[$this.CurrentState.Version].ReleaseNotes
         }
       }
     } catch {

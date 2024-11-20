@@ -7,17 +7,17 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('LMStudio') -and $Global:DumplingsStorage['LMStudio'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('LMStudio') -and $Global:DumplingsStorage.LMStudio.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['LMStudio'].$Version.ReleaseNotes
+          Value  = $Global:DumplingsStorage.LMStudio[$this.CurrentState.Version].ReleaseNotes
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

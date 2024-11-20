@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.iqiyi.com/appstore.html' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($Object1.SelectSingleNode('//li[contains(@class, "app-item") and contains(.//h3[@class="main-title"], "爱奇艺PC客户端")]//p[@class="sub-ver"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//li[contains(@class, "app-item") and contains(.//h3[@class="main-title"], "爱奇艺PC客户端")]//p[@class="sub-ver"]').InnerText, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -11,12 +11,12 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('iQIYI') -and $Global:DumplingsStorage['iQIYI'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('iQIYI') -and $Global:DumplingsStorage.iQIYI.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['iQIYI'].$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.iQIYI[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

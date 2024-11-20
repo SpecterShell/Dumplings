@@ -24,19 +24,14 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesCN = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    # ReleaseNotes (zh-CN)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotes'
+      Value  = $ReleaseNotesCN = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
@@ -50,7 +45,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

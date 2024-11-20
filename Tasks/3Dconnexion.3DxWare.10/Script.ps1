@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://3dconnexion.com/us/drivers/' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match(
+$this.CurrentState.Version = [regex]::Match(
   $Object1.SelectSingleNode('//button[@data-driver-target="windows"]//div[@class="drivers-latest__system-version"]').InnerText.Trim(),
   'Version ([\d\.]+)'
 ).Groups[1].Value
@@ -47,18 +47,18 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      if ($Global:DumplingsStorage.Contains('3DxWare10') -and $Global:DumplingsStorage['3DxWare10'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('3DxWare10') -and $Global:DumplingsStorage['3DxWare10'].Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['3DxWare10'].$Version.ReleaseNotes
+          Value  = $Global:DumplingsStorage['3DxWare10'][$this.CurrentState.Version].ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['3DxWare10'].$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage['3DxWare10'][$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

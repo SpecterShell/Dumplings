@@ -18,26 +18,26 @@ if ($VersionX86 -ne $VersionX64) {
 }
 
 # Version
-$this.CurrentState.Version = $Version = $VersionX64
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('TickTick') -and $Global:DumplingsStorage.TickTick.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('TickTick') -and $Global:DumplingsStorage.TickTick.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.TickTick.$Version.ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.TickTick[$this.CurrentState.Version].ReleaseTime
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.TickTick.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.TickTick[$this.CurrentState.Version].ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.TickTick.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.TickTick[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')

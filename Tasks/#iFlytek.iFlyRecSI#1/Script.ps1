@@ -12,13 +12,8 @@ $this.CurrentState.Version = $Object1.packageVersion
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.releaseDate | ConvertFrom-UnixTimeMilliseconds
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = $Object1.releaseDate | ConvertFrom-UnixTimeMilliseconds
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
@@ -30,7 +25,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

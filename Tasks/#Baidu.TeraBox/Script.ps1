@@ -14,20 +14,15 @@ $this.CurrentState.Version = $Object1.AutoUpdate.Module.version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    try {
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesEN = ('"' + ($Object1.AutoUpdate.Module.FullPackage.hint_en ?? $Object1.AutoUpdate.Module.Upgrade.hint_en) + '"') | ConvertFrom-Json | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    # ReleaseNotes (en-US)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'ReleaseNotes'
+      Value  = $ReleaseNotes = ('"' + ($Object1.AutoUpdate.Module.FullPackage.hint_en ?? $Object1.AutoUpdate.Module.Upgrade.hint_en) + '"') | ConvertFrom-Json | Format-Text
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
-      ReleaseNotesEN = $ReleaseNotesEN
+      ReleaseNotes = $ReleaseNotes
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force
@@ -36,7 +31,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  { $_ -match 'Changed' -and $_ -notmatch 'Updated|Rollbacked' } {
+    $this.Message()
+  }
+  { $_ -match 'Updated|Rollbacked' -and -not $OldReleases.Contains($this.CurrentState.Version) } {
     $this.Message()
   }
 }

@@ -19,7 +19,7 @@ if ($Version1 -ne $Version2) {
 }
 
 # Version
-$this.CurrentState.Version = $Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -39,20 +39,36 @@ switch -Regex ($this.Check()) {
         '(\d{4}\.\d{1,2}\.\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('HiSuite') -and $Global:DumplingsStorage.HiSuite.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('HiSuite') -and $Global:DumplingsStorage.HiSuite.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.HiSuite.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.HiSuite[$this.CurrentState.Version].ReleaseNotes
         }
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.HiSuite.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.HiSuite[$this.CurrentState.Version].ReleaseNotesCN
         }
+      } elseif ($Global:DumplingsStorage.Contains('HiSuiteCN') -and $Global:DumplingsStorage.HiSuiteCN.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuiteCN[$this.CurrentState.Version].ReleaseNotes
+        }
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuiteCN[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

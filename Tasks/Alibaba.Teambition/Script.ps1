@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.teambition.com/site/client-config'
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($Object1.download_links.pc, 'Teambition-([\d\.]+)-win\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.download_links.pc, 'Teambition-([\d\.]+)-win\.exe').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -11,9 +11,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('Teambition') -and $Global:DumplingsStorage.Teambition.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition.$Version.ReleaseTime | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Teambition[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }

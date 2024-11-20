@@ -1,15 +1,15 @@
 $OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleasesPath) {
-  $Global:DumplingsStorage['HiSuite'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['HonorSuiteCN'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['HiSuite'] = $OldReleases = [ordered]@{}
+  $Global:DumplingsStorage['HonorSuiteCN'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @"
+$Object1 = Invoke-RestMethod -Uri 'https://update.platform.hihonorcloud.com/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @"
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <rule name="DashBoard">$($this.LastState.Contains('Version') ? $this.LastState.Version : '11.0.0.000')</rule>
-  <rule name="Region">Default</rule>
+  <rule name="DashBoard">$($this.LastState.Contains('Version') ? $this.LastState.Version : '11.0.0.702')</rule>
+  <rule name="Region">China</rule>
 </root>
 "@
 $Prefix = $Object1.root.components.component[-1].url + 'full/'

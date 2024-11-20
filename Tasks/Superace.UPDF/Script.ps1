@@ -13,7 +13,7 @@ function Get-ReleaseNotes {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Global:DumplingsStorage.UPDF.$ShortVersion.ReleaseNotesEN
+        Value  = $Global:DumplingsStorage.UPDF.$ShortVersion.ReleaseNotes
       }
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{

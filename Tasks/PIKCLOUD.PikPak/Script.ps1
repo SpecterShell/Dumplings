@@ -1,17 +1,17 @@
 function Get-ReleaseNotes {
   try {
-    if ($Global:DumplingsStorage.Contains('PikPak') -and $Global:DumplingsStorage.PikPak.Contains($Version)) {
+    if ($Global:DumplingsStorage.Contains('PikPak') -and $Global:DumplingsStorage.PikPak.Contains($this.CurrentState.Version)) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Global:DumplingsStorage.PikPak.$Version.ReleaseNotesEN
+        Value  = $Global:DumplingsStorage.PikPak[$this.CurrentState.Version].ReleaseNotes
       }
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Global:DumplingsStorage.PikPak.$Version.ReleaseNotesCN
+        Value  = $Global:DumplingsStorage.PikPak[$this.CurrentState.Version].ReleaseNotesCN
       }
     } else {
       $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
@@ -37,7 +37,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
   # RealVersion
   $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
@@ -59,7 +59,7 @@ if ($this.Status.Contains('New')) {
 
   $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
   # RealVersion
   $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
@@ -80,7 +80,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
 
 $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
 # Version
-$this.CurrentState.Version = $Version = $InstallerFile | Read-FileVersionFromExe
+$this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
 # RealVersion
 $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 # InstallerSha256

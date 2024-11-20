@@ -7,17 +7,17 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('LenovoVoice') -and $Global:DumplingsStorage['LenovoVoice'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('LenovoVoice') -and $Global:DumplingsStorage.LenovoVoice.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['LenovoVoice'].$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.LenovoVoice[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

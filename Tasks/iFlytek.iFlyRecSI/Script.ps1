@@ -4,24 +4,24 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Global:DumplingsStorage.Contains('iFlyRecSI1') -and $Global:DumplingsStorage['iFlyRecSI1'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('iFlyRecSI1') -and $Global:DumplingsStorage.iFlyRecSI1.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['iFlyRecSI1'].$Version.ReleaseTime | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.iFlyRecSI1[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      if ($Global:DumplingsStorage.Contains('iFlyRecSI2') -and $Global:DumplingsStorage['iFlyRecSI2'].Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('iFlyRecSI2') -and $Global:DumplingsStorage.iFlyRecSI2.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['iFlyRecSI2'].$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.iFlyRecSI2[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

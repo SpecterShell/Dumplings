@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

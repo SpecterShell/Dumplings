@@ -19,7 +19,7 @@ if ($Version1 -ne $Version2) {
 }
 
 # Version
-$this.CurrentState.Version = $Version = $Version2
+$this.CurrentState.Version = $Version2
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -39,19 +39,19 @@ switch -Regex ($this.Check()) {
         '(\d{4}\.\d{1,2}\.\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('HonorSuite') -and $Global:DumplingsStorage.HonorSuite.Contains($Version)) {
+      if ($Global:DumplingsStorage.Contains('HonorSuite') -and $Global:DumplingsStorage.HonorSuite.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.HonorSuite.$Version.ReleaseNotesEN
+          Value  = $Global:DumplingsStorage.HonorSuite[$this.CurrentState.Version].ReleaseNotesEN
         }
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.HonorSuite.$Version.ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.HonorSuite[$this.CurrentState.Version].ReleaseNotesCN
         }
       }
     } catch {
