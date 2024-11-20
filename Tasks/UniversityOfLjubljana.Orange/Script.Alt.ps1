@@ -1,13 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://orangedatamining.com/download/'
+$Object1 = Invoke-WebRequest -Uri 'https://orange.biolab.si/version/'
+
+# Version
+$this.CurrentState.Version = $Object1.Content.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = "https://download.biolab.si/download/files/Orange3-$($this.CurrentState.Version)-Miniconda-x86_64.exe"
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
