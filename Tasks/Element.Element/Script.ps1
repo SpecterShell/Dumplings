@@ -1,10 +1,20 @@
 $RepoOwner = 'element-hq'
 $RepoName = 'element-desktop'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+# x86
+$Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/ia32/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+
+# x64
+$Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+
+if ($Object1.Version -ne $Object2.Version) {
+  $this.Log("x86 version: $($Object1.Version)")
+  $this.Log("x64 version: $($Object2.Version)")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object2.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -19,15 +29,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+      $Object3 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object3.published_at.ToUniversalTime()
+
+      if (-not [string]::IsNullOrWhiteSpace($Object3.body)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = ($Object3.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -36,7 +48,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Value = $Object3.html_url
       }
     } catch {
       $_ | Out-Host
