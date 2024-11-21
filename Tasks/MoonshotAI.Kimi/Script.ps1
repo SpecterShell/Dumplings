@@ -2,6 +2,11 @@ $Object1 = Invoke-RestMethod -Uri 'https://appsupport.moonshot.cn/api/startup' -
   'x-msh-platform' = 'windows'
 } -Body '{}' -ContentType 'application/json'
 
+if (-not $Object1.data.hasNewVersion) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.upgrade.version
 
