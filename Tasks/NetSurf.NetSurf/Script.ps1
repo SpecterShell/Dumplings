@@ -4,9 +4,17 @@ $Object2 = $Object1.SelectSingleNode('//p[contains(@class, "downloadfirst")]/a')
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.InnerText, 'NetSurf (\d+(?:\.\d+)+) for Windows').Groups[1].Value
 
+# RealVersion
+$this.CurrentState.RealVersion = $this.CurrentState.Version + '.0'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.Attributes['href'].Value
+  InstallerUrl           = $Object2.Attributes['href'].Value
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = '"' + $this.CurrentState.RealVersion + '"'
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
