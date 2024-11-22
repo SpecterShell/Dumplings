@@ -480,7 +480,7 @@ function ConvertTo-OrderedList {
 
   process {
     foreach ($SubContent in $Content) {
-      $StringList.Add($Content -creplace '(?m)^', { "$(($i++)). " })
+      $StringList.Add(($Content -creplace '(?m)^', { "$(($i++)). " }))
     }
   }
 
@@ -508,7 +508,7 @@ function ConvertTo-UnorderedList {
 
   process {
     foreach ($SubContent in $Content) {
-      $StringList.Add($Content -creplace '(?m)^', '- ')
+      $StringList.Add(($Content -creplace '(?m)^', '- '))
     }
   }
 
