@@ -1,5 +1,5 @@
 <#
-This code is referenced from https://github.com/vinta/pangu.js under the MIT License
+The codes were referenced from https://github.com/vinta/pangu.js under the MIT License
 
 The MIT License (MIT)
 

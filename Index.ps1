@@ -37,34 +37,27 @@
 param (
   [Parameter(Position = 0, ValueFromPipeline, HelpMessage = 'The names of the tasks to run. Leave blank to run all tasks')]
   [ArgumentCompleter({ Join-Path ($args[4].Contains('Path') ? $args[4].Path : (Join-Path $PSScriptRoot 'Tasks')) "$($args[2])*" 'Config.yaml' | Get-ChildItem -File | Select-Object -ExpandProperty Directory | Select-Object -ExpandProperty Name })]
-  [string[]]
-  $Name,
+  [string[]]$Name,
 
   [Parameter(Position = 1, HelpMessage = 'The path to the folder containing the task files')]
   [ValidateNotNullOrWhiteSpace()]
-  [string]
-  $Path = (Join-Path $PSScriptRoot 'Tasks'),
+  [string]$Path = (Join-Path $PSScriptRoot 'Tasks'),
 
   [Parameter(Position = 2, HelpMessage = 'Pass the task objects to output')]
-  [switch]
-  $PassThru = $false,
+  [switch]$PassThru = $false,
 
   [Parameter(Position = 3, HelpMessage = 'The number of sub-threads used to run the tasks concurrently in multi-threads mode. Set it to 1 to run in single-thread mode')]
   [ValidateScript({ $_ -gt 0 }, ErrorMessage = 'The number should be positive.')]
-  [ushort]
-  $ThrottleLimit = 1,
+  [ushort]$ThrottleLimit = 1,
 
   [Parameter(Position = 4, DontShow, HelpMessage = 'Tell the script if it is running in a sub-thread to skip some regions')]
-  [switch]
-  $Parallel = $false,
+  [switch]$Parallel = $false,
 
   [Parameter(Position = 5, DontShow, HelpMessage = 'The ID of the thread')]
-  [ushort]
-  $WokID = 0,
+  [ushort]$WokID = 0,
 
   [Parameter(Position = 6, ValueFromRemainingArguments, HelpMessage = 'Additional parameters to be passed to the model instances')]
-  [System.Collections.IEnumerable]
-  $Params = @()
+  [System.Collections.IEnumerable]$Params = @()
 )
 
 # Enable strict mode to avoid non-existent or empty properties from the API
