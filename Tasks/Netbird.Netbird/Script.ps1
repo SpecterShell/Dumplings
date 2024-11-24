@@ -7,7 +7,7 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$this.CurrentState.Installer += $InstallerWix = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
@@ -55,18 +55,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    $InstallerFileWix = Get-TempFile -Uri $InstallerWix.InstallerUrl
-    # InstallerSha256
-    $InstallerWix['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWix -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerWix['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFileWix | Read-ProductVersionFromMsi
-        ProductCode    = $InstallerWix['ProductCode'] = $InstallerFileWix | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFileWix | Read-UpgradeCodeFromMsi
-      }
-    )
 
     $InstallerFileExe = Get-TempFile -Uri $InstallerExe.InstallerUrl
     # InstallerSha256

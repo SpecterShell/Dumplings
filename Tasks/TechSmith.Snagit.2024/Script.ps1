@@ -22,41 +22,17 @@ if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [st
 $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion
 
 # Installer
-$this.CurrentState.Installer += $InstallerBurn = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'burn'
   InstallerUrl  = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.DownloadLink
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.DownloadLink -replace '\.exe$', '.msi'
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFileBurn = Get-TempFile -Uri $InstallerBurn.InstallerUrl
-    # InstallerSha256
-    $InstallerBurn['InstallerSha256'] = (Get-FileHash -Path $InstallerFileBurn -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerBurn['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFileBurn | Read-ProductVersionFromExe
-        ProductCode    = $InstallerBurn['ProductCode'] = $InstallerFileBurn | Read-ProductCodeFromBurn
-        UpgradeCode    = $InstallerFileBurn | Read-UpgradeCodeFromBurn
-      }
-    )
-
-    $InstallerFileWiX = Get-TempFile -Uri $InstallerWiX.InstallerUrl
-    # InstallerSha256
-    $InstallerWiX['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWiX -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerWiX['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $this.CurrentState.Version
-        ProductCode    = $InstallerWiX['ProductCode'] = $InstallerFileWiX | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFileWiX | Read-UpgradeCodeFromMsi
-      }
-    )
-
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{

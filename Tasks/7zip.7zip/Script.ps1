@@ -49,12 +49,12 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += $InstallerWixX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
   InstallerUrl  = $Prefix + "7z${ShortVersion}.msi"
 }
-$this.CurrentState.Installer += $InstallerWixX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = $Prefix + "7z${ShortVersion}-x64.msi"
@@ -92,26 +92,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    $InstallerFileWixX86 = Get-TempFile -Uri $InstallerWixX86.InstallerUrl
-    $InstallerWixX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWixX86 -Algorithm SHA256).Hash
-    $InstallerWixX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFileWixX86 | Read-ProductVersionFromMsi
-        ProductCode    = $InstallerWixX86['ProductCode'] = $InstallerFileWixX86 | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFileWixX86 | Read-UpgradeCodeFromMsi
-      }
-    )
-
-    $InstallerFileWixX64 = Get-TempFile -Uri $InstallerWixX64.InstallerUrl
-    $InstallerWixX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWixX64 -Algorithm SHA256).Hash
-    $InstallerWixX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFileWixX64 | Read-ProductVersionFromMsi
-        ProductCode    = $InstallerWixX64['ProductCode'] = $InstallerFileWixX64 | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFileWixX64 | Read-UpgradeCodeFromMsi
-      }
-    )
 
     $this.Print()
     $this.Write()

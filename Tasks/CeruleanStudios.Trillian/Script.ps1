@@ -8,20 +8,6 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'v(\d+(?:\.\d+){3,})'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayName    = 'Trillian Machine-Wide Installer'
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromMsi
-        ProductCode    = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{

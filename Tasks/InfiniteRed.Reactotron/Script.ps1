@@ -7,7 +7,7 @@ $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${R
 $this.CurrentState.Version = $Object1.tag_name -creplace 'reactotron-app@'
 
 # Installer
-$this.CurrentState.Installer += $InstallerWix = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
@@ -16,9 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "Reactotron $($this.CurrentState.Version.Split('.')[0..2] -join '.')"
       DisplayVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
-      ProductCode    = 'b4f20791-aeac-535e-ab41-2e527d2fc694'
     }
   )
 }
@@ -32,15 +30,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    $InstallerWixFile = Get-TempFile -Uri $InstallerWix.InstallerUrl
-
-    # InstallerSha256
-    $InstallerWix['InstallerSha256'] = (Get-FileHash -Path $InstallerWixFile -Algorithm SHA256).Hash
-    # ProductCode
-    $InstallerWix['ProductCode'] = $InstallerWixFile | Read-ProductCodeFromMsi
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerWixFile | Read-ProductVersionFromMsi
 
     try {
       # ReleaseNotesUrl

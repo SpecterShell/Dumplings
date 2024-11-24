@@ -26,24 +26,13 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += $InstallerWix = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = "https://work-desktop-assets.8x8.com/prod-publish/ga/work-64-msi-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).msi"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # AppsAndFeaturesEntries
-    $InstallerFileWix = Get-TempFile -Uri $InstallerWix.InstallerUrl
-    $InstallerWix['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWix -Algorithm SHA256).Hash
-    $InstallerWix['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[3].Value)"
-        ProductCode    = $InstallerWix['ProductCode'] = $InstallerFileWix | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerFileWix | Read-UpgradeCodeFromMsi
-      }
-    )
-
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, h:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'

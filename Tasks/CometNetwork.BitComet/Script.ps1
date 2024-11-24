@@ -5,7 +5,14 @@ $this.CurrentState.Version = $Object1.BitComet.AutoUpdate.UpdateGroupList.Latest
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = "https://download.bitcomet.com/achive/BitComet_$($this.CurrentState.Version)_setup.exe"
+  ProductCode  = 'BitComet'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = "https://download.bitcomet.com/achive/BitComet_$($this.CurrentState.Version)_setup.exe"
+  ProductCode  = 'BitComet_x64'
 }
 
 switch -Regex ($this.Check()) {
