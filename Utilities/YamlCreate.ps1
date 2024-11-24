@@ -2,12 +2,8 @@
 .SYNOPSIS
   WinGet Manifest creation helper script
 .DESCRIPTION
-  The intent of this file is to help you generate a manifest for publishing
-  to the Windows Package Manager repository.
-
-  It'll attempt to download an installer from the user-provided URL to calculate
-  a checksum. That checksum and the rest of the input data will be compiled in a
-  .YAML file.
+  The intent of this file is to help you generate a manifest for publishing to the Windows Package Manager repository.
+  It'll attempt to download an installer from the user-provided URL to calculate a checksum. That checksum and the rest of the input data will be compiled in a .YAML file.
 .PARAMETER ManifestsFolder
   The directory to the folder where the old manifests are stored
 .PARAMETER OutFolder
@@ -76,7 +72,7 @@ param (
   $Logger
 )
 
-$ScriptHeader = '# Created with YamlCreate.ps1 v2.4.1 Dumplings Mod'
+$ScriptHeader = '# Created with YamlCreate.ps1 Dumplings Mod'
 $ManifestVersion = '1.6.0'
 $Utf8NoBomEncoding = [System.Text.UTF8Encoding]::new($false)
 $Culture = 'en-US'
