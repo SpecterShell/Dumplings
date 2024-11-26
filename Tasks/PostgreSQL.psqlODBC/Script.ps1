@@ -9,17 +9,17 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^REL-' -replace '_', '.
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'burn'
-  InstallerUrl  = Join-Uri 'https://ftp.postgresql.org/pub/odbc/releases/' "$($Object1.tag_name)/" $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') }, 'First')[0].name
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri 'https://ftp.postgresql.org/pub/odbc/releases/' "$($Object1.tag_name)/" $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') }, 'First')[0].name
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri 'https://ftp.postgresql.org/pub/odbc/releases/' "$($Object1.tag_name)/" $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].name
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
