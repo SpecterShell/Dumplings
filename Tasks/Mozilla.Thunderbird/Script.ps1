@@ -86,6 +86,9 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $LogSnapshot = $this.Logs
 
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsMozilla')
+    $Mutex.WaitOne(600000) | Out-Null
+
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
       $this.Logs = [System.Collections.Generic.List[string]]::new($LogSnapshot)
@@ -127,6 +130,9 @@ switch -Regex ($this.Check()) {
         $this.Log($_, 'Warning')
       }
     }
+
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
   }
   'Changed|Updated' {
     $this.Message()
