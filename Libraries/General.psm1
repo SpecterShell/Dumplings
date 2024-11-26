@@ -1180,7 +1180,7 @@ function Read-FamilyNameFromMSIX {
     The path to the MSIX/AppX package
   #>
   param (
-    [Parameter(Position = 0, Mandatory)]
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSIX/AppX package')]
     [string]$Path
   )
 
