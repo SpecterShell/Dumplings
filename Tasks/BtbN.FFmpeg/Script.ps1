@@ -1,9 +1,9 @@
 $RepoOwner = 'BtbN'
 $RepoName = 'FFmpeg-Builds'
 
-$TargetDate = (Get-Date -AsUTC).AddDays(1).ToString('yyyy-MM-01').ToDateTime($null).AddDays(-1).ToString('yyyy-MM-dd')
+$TargetDate = (Get-Date -AsUTC).AddDays(1).ToString('yyyy-MM-01').ToDateTime($null).AddDays(-1)
 
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.Contains($TargetDate) }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.Contains($TargetDate.ToString('yyyy-MM-dd')) }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^autobuild-'
@@ -56,26 +56,29 @@ switch -Regex ($this.Check()) {
       foreach ($Shared in @($false, $true)) {
         foreach ($Branch in @('master', '5.1', '6.1', '7.1')) {
           $this.Config.WinGetIdentifier = "BtbN.FFmpeg.${License}$($Shared ? '.Shared' : '')$($Branch -eq 'master' ? '' : ".${Branch}")"
-          $this.CurrentState.Installer = @()
 
           $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name.Contains("-$($License.ToLower())") -and ($Shared -eq $_.name.Contains('shared')) -and ($Branch -eq 'master' ? $_.name.Contains('N-') : $_.name.Contains("n${Branch}")) }, 'First')[0]
-          $this.CurrentState.Installer += [ordered]@{
-            InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-            NestedInstallerFiles = @(
-              [ordered]@{
-                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffmpeg.exe"
-                PortableCommandAlias = 'ffmpeg'
-              }
-              [ordered]@{
-                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffplay.exe"
-                PortableCommandAlias = 'ffplay'
-              }
-              [ordered]@{
-                RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffprobe.exe"
-                PortableCommandAlias = 'ffprobe'
-              }
-            )
-          }
+          $this.CurrentState.RealVersion = $Branch -eq 'master' ? "$([regex]::Match($Asset.name, '(N-\d+-[a-zA-Z0-9]+)').Groups[1].Value)-$($TargetDate.ToString('yyyyMMdd'))" : "$([regex]::Match($Asset.name, '-n(\d+(?:\.\d+)+)').Groups[1].Value)-$($TargetDate.ToString('yyyyMMdd'))"
+          $this.CurrentState.Installer = @(
+            [ordered]@{
+              InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+              NestedInstallerFiles = @(
+                [ordered]@{
+                  RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffmpeg.exe"
+                  PortableCommandAlias = 'ffmpeg'
+                }
+                [ordered]@{
+                  RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffplay.exe"
+                  PortableCommandAlias = 'ffplay'
+                }
+                [ordered]@{
+                  RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\bin\ffprobe.exe"
+                  PortableCommandAlias = 'ffprobe'
+                }
+              )
+            }
+          )
+
 
           try {
             $this.Submit()
