@@ -78,7 +78,7 @@ $Utf8NoBomEncoding = [System.Text.UTF8Encoding]::new($false)
 $Culture = 'en-US'
 $UserAgent = 'Microsoft-Delivery-Optimization/10.0'
 $BackupUserAgent = 'winget-cli WindowsPackageManager/1.7.10661 DesktopAppInstaller/Microsoft.DesktopAppInstaller v1.22.10661.0'
-$DumplingsLogIdentifier += 'YamlCreate'
+$DumplingsLogIdentifier = $DumplingsLogIdentifier + 'YamlCreate'
 
 $SchemaUrls = @{
   version       = "https://aka.ms/winget-manifest.version.${ManifestVersion}.schema.json"
