@@ -13,34 +13,19 @@ $this.CurrentState.Version = $Object1.windows64.latestVersion
 # Installer
 $Prefix = 'https://statics.teams.cdn.office.net'
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x86'
-  InstallerType          = 'exe'
-  InstallerUrl           = "${Prefix}/production-windows/$($Object1.windows.latestVersion)/Teams_windows.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x86'
+  InstallerType = 'exe'
+  InstallerUrl  = "${Prefix}/production-windows/$($Object1.windows.latestVersion)/Teams_windows.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'exe'
-  InstallerUrl           = "${Prefix}/production-windows-x64/$($Object1.windows64.latestVersion)/Teams_windows_x64.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = "${Prefix}/production-windows-x64/$($Object1.windows64.latestVersion)/Teams_windows_x64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'arm64'
-  InstallerType          = 'exe'
-  InstallerUrl           = "${Prefix}/production-windows-arm64/$($Object1.arm64.latestVersion)/Teams_windows_arm64.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'arm64'
+  InstallerType = 'exe'
+  InstallerUrl  = "${Prefix}/production-windows-arm64/$($Object1.arm64.latestVersion)/Teams_windows_arm64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
