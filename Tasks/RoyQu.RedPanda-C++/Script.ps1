@@ -78,6 +78,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'http://royqh.net/redpandacpp/blog/'
+      }
+
       $Object4 = Invoke-RestMethod -Uri 'https://gitee.com/royqh1979/redpandacpp/raw/public/blog/index.xml'
 
       $ReleaseNotesUrlCNObject = $Object4.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
@@ -92,12 +99,6 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://royqh1979.gitee.io/redpandacpp/blog/'
-      }
     }
 
     $this.Print()
