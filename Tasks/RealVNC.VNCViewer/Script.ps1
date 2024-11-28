@@ -1,6 +1,6 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.realvnc.com/en/connect/download/viewer/' | ConvertFrom-Html
 
-$InstallerUrl = $Object1.SelectSingleNode('//option[@value="3306"]').Attributes['data-file'].Value
+$InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
