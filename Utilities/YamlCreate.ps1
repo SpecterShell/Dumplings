@@ -158,6 +158,7 @@ function Update-InstallerEntry {
 
   $iteration = 0
   $Installers = @()
+  $InstallerFiles = [ordered]@{}
   foreach ($OldInstaller in $OldInstallers) {
     $iteration += 1
     $Installer = $OldInstaller | Copy-Object
@@ -220,7 +221,7 @@ function Update-InstallerEntry {
 
     # Update the installer using the matching installer
     $MatchingInstaller = $Installers | Where-Object -FilterScript { $_.InstallerUrl -eq $Installer.InstallerUrl } | Select-Object -First 1
-    if ($MatchingInstaller) {
+    if ($MatchingInstaller -and ($Installer.Contains('NestedInstallerFiles') ? ((ConvertTo-Json -InputObject $Installer.NestedInstallerFiles -Depth 5 -Compress) -eq (ConvertTo-Json -InputObject $MatchingInstaller.NestedInstallerFiles -Depth 5 -Compress)) : $true)) {
       foreach ($Key in @('InstallerSha256', 'SignatureSha256', 'PackageFamilyName', 'ProductCode', 'ReleaseDate', 'AppsAndFeaturesEntries')) {
         if ($MatchingInstaller.Contains($Key) -and -not $MatchingInstallerEntry.Contains($Key)) {
           $Installer.$Key = $MatchingInstaller.$Key
@@ -233,14 +234,19 @@ function Update-InstallerEntry {
     # Download and analyze the installer file
     # Skip if there is matching installer, or the "InstallerSha256" is explicitly specified
     if (-not $Installer.Contains('InstallerSha256')) {
-      $Logger.Invoke("Downloading $($Installer.InstallerUrl)", 'Verbose')
-      try {
-        $InstallerPath = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent $UserAgent
-      } catch {
-        $Logger.Invoke('Failed to download with the Delivery-Optimization User Agent. Try again with the WinINet User Agent...', 'Warning')
-        $InstallerPath = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent $BackupUserAgent
+      if ($InstallerFiles.Contains($Installer.InstallerUrl) -and (Test-Path -Path $InstallerFiles[$Installer.InstallerUrl])) {
+        $InstallerPath = $InstallerFiles[$Installer.InstallerUrl]
+      } else {
+        $Logger.Invoke("Downloading $($Installer.InstallerUrl)", 'Verbose')
+        try {
+          $InstallerPath = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent $UserAgent
+          $InstallerFiles[$Installer.InstallerUrl] = $InstallerPath
+        } catch {
+          $Logger.Invoke('Failed to download with the Delivery-Optimization User Agent. Try again with the WinINet User Agent...', 'Warning')
+          $InstallerPath = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent $BackupUserAgent
+        }
+        $Logger.Invoke('Installer downloaded!', 'Verbose')
       }
-      $Logger.Invoke('Installer downloaded!', 'Verbose')
 
       $Logger.Invoke('Processing installer data...', 'Verbose')
 
@@ -353,14 +359,16 @@ function Update-InstallerEntry {
         }
       }
 
-      # Remove the downloaded files
-      Remove-Item -Path $InstallerPath
-
       $Logger.Invoke('Installer updated!', 'Verbose')
     }
 
     # Add the updated installer to the new installers array
     $Installers += $Installer
+  }
+
+  # Remove the downloaded files
+  foreach ($InstallerPath in $InstallerFiles.Values) {
+    Remove-Item -Path $InstallerPath -Force -ErrorAction 'Continue'
   }
 
   $script:Installers = $Installers
