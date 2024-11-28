@@ -2,10 +2,10 @@ $ProjectName = 'crystaldiskmark'
 $RootPath = ''
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+/CrystalDiskMark[\d_]+Aoi\.exe$" })
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+[a-zA-Z]?/CrystalDiskMark[\d_]+[a-zA-Z]?Aoi\.exe$" })
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+[a-zA-Z]?)/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
