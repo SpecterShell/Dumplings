@@ -21,19 +21,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    # The WiX 3 extractor doesn't work properly with the WiX 5 installer. Obtain necessary information from the metadata file.
-    $Object2 = Invoke-RestMethod -Uri $Object1.assets.Where({ $_.name.EndsWith('.json') -and $_.name.Contains('AdditionalTools') }, 'First')[0].browser_download_url
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = $Object2.sha256
-    # AppsAndFeaturesEntries + ProductCode
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $Object2.bundleCode
-        UpgradeCode = $Object2.upgradeCode
-      }
-    )
-
     $this.Print()
     $this.Write()
   }
