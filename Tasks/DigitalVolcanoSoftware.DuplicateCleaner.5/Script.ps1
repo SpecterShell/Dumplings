@@ -1,72 +1,128 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.digitalvolcano.co.uk/download/dcp5_version.txt'
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
-# Version
-$this.CurrentState.Version = $Object1.Content.Trim()
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  # AppsAndFeaturesEntries + ProductCode
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+    [ordered]@{
+      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+    }
+  )
+}
 
-# Installer
+function Get-ReleaseNotes {
+  try {
+    $Object2 = Invoke-WebRequest -Uri 'https://www.digitalvolcano.co.uk/dcchangelog.html' | ConvertFrom-Html
+
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h4[contains(text(), 'v$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+    if ($ReleaseNotesTitleNode) {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        [regex]::Match(
+          $ReleaseNotesTitleNode.InnerText,
+          '(\d{1,2}(?:st|nd|rd|th)\s+[a-zA-Z]+\s+\d{4})'
+        ).Groups[1].Value,
+        [string[]]@(
+          "d'st' MMM yyyy", "d'st' MMMM yyyy",
+          "d'nd' MMM yyyy", "d'nd' MMMM yyyy",
+          "d'rd' MMM yyyy", "d'rd' MMMM yyyy",
+          "d'th' MMM yyyy", "d'th' MMMM yyyy"
+        ),
+        (Get-Culture -Name 'en-US'),
+        [System.Globalization.DateTimeStyles]::None
+      ).ToString('yyyy-MM-dd')
+
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h4'; $Node = $Node.NextSibling) { $Node }
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      }
+    } else {
+      $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
+
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://www.digitalvolcano.co.uk/download/DuplicateCleaner-Setup-5.msi'
 }
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Last Modified
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is newly created
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The ETag is unchanged
+if ($ETag -in $this.LastState.ETag) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+# Case 4: The ETag has changed, but the hash is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The ETag has changed, but the hash is not', 'Info')
+
+  $this.Write()
+  return
+}
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
-    try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.digitalvolcano.co.uk/dcchangelog.html' | ConvertFrom-Html
-
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h4[contains(text(), 'v$($this.CurrentState.Version -replace '\.0$')')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match(
-            $ReleaseNotesTitleNode.InnerText,
-            '(\d{1,2}(?:st|nd|rd|th)\s+[a-zA-Z]+\s+\d{4})'
-          ).Groups[1].Value,
-          [string[]]@(
-            "d'st' MMM yyyy", "d'st' MMMM yyyy",
-            "d'nd' MMM yyyy", "d'nd' MMMM yyyy",
-            "d'rd' MMM yyyy", "d'rd' MMMM yyyy",
-            "d'th' MMM yyyy", "d'th' MMMM yyyy"
-          ),
-          (Get-Culture -Name 'en-US'),
-          [System.Globalization.DateTimeStyles]::None
-        ).ToString('yyyy-MM-dd')
-
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h4'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
+  # Case 6: The ETag, hash, and version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 5: Both the Last Modified and the hash have changed, but the version is not
+  Default {
+    $this.Log('The Last Modified and the hash have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }
