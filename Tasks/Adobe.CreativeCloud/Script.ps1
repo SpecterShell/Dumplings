@@ -20,7 +20,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   return
 }
 
-# Case 1: The task is newly created
+# Case 1: The task is new
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
@@ -29,7 +29,7 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The version was updated or rollbacked
+# Case 2: The version has changed
 switch -Regex ($this.Check()) {
   'Updated|Rollbacked' {
     $this.Print()
@@ -40,14 +40,14 @@ switch -Regex ($this.Check()) {
   }
 }
 
-# Case 3: The hash was not updated
+# Case 3: The SHA256 is unchanged
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
 
-# Case 6: The hash was updated
-$this.Log('The hash was changed', 'Info')
+# Case 4: The SHA256 has changed
+$this.Log('The SHA256 has changed', 'Info')
 $this.Config.IgnorePRCheck = $true
 $this.Print()
 $this.Write()

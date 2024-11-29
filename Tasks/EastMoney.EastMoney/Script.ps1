@@ -1,8 +1,13 @@
-function Get-Version {
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'config/app_cfg.xml' | Out-Host
   $Object2 = Join-Path $InstallerFileExtracted 'app_cfg.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+
+  # Version
   $this.CurrentState.Version = [regex]::Match($Object2.root.app.name, '(\d+\.\d+\.\d+)').Groups[1].Value
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://emdesk.eastmoney.com/pc_activity/Pages/VIPTrade/pages/' | ConvertFrom-Html
@@ -13,18 +18,14 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# MD5
-$this.CurrentState.MD5 = $Object2.Headers.'Content-MD5'[0]
+# Hash
+$this.CurrentState.Hash = $Object2.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  # Version
-  Get-Version
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Read-Installer
 
   $this.Print()
   $this.Write()
@@ -33,51 +34,41 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   return
 }
 
-# Case 1: The task is newly created
+# Case 1: The task is new
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  # Version
-  Get-Version
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Read-Installer
 
   $this.Print()
   $this.Write()
   return
 }
 
-# Case 2: The MD5 was not updated
-if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
+# Case 2: The hash is unchanged
+if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
 
-$InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-# Version
-Get-Version
-# InstallerSha256
-$this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+Read-Installer
 
-# Case 3: The installer file has an invalid version
+# Case 3: The current state has an invalid version
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
 
 switch -Regex ($this.Check()) {
-  # Case 5: The MD5 and the version were updated
+  # Case 5: The hash and the version have changed
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
   }
-  # Case 4: The MD5 was updated, but the version wasn't
-  # The installer might be updated without changing the version (e.g., virus database update)
-  # Force submit the manifest even if neither the version nor the installer has changed
+  # Case 4: The hash has changed, but the version is not
   Default {
-    $this.Log('The MD5 was changed, but the version is the same', 'Info')
+    $this.Log('The hash has changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()

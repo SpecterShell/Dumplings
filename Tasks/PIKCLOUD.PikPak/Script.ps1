@@ -1,3 +1,14 @@
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+  # RealVersion
+  $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+}
+
 function Get-ReleaseNotes {
   try {
     if ($Global:DumplingsStorage.Contains('PikPak') -and $Global:DumplingsStorage.PikPak.Contains($this.CurrentState.Version)) {
@@ -28,21 +39,14 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
-# MD5
-$this.CurrentState.MD5 = $Object1.Headers.'Content-MD5'[0]
+# Hash
+$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-  # Version
-  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
-  # RealVersion
-  $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
+  Read-Installer
   Get-ReleaseNotes
 
   $this.Print()
@@ -53,18 +57,11 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   return
 }
 
-# Case 1: The task is newly created
+# Case 1: The task is new
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-  # Version
-  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
-  # RealVersion
-  $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
+  Read-Installer
   Get-ReleaseNotes
 
   $this.Print()
@@ -72,21 +69,15 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The MD5 was not updated
-if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
+# Case 2: The hash is unchanged
+if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
 
-$InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-# Version
-$this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
-# RealVersion
-$this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-# InstallerSha256
-$this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+Read-Installer
 
-# Case 3: The installer file has an invalid version
+# Case 3: The current state has an invalid version
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
@@ -97,20 +88,20 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
 Get-ReleaseNotes
 
 switch -Regex ($this.Check()) {
-  # Case 5: The installer URL was updated
+  # Case 5: The installer URL has changed
   'Changed|Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
   }
-  # Case 6: The MD5 and the version were updated
+  # Case 6: The hash and the version have changed
   'Updated|Rollbacked' {
     $this.Submit()
   }
-  # Case 4: The MD5 was updated, but the version wasn't
+  # Case 4: The hash has changed, but the version is not
   Default {
-    $this.Log('The MD5 was changed, but the version is the same', 'Info')
+    $this.Log('The hash has changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()

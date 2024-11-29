@@ -43,7 +43,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   return
 }
 
-# Case 1: The task is newly created
+# Case 1: The task is new
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
@@ -82,7 +82,7 @@ if ($this.Status.Contains('New')) {
 }
 
 if ($ETag -in $this.LastState.ETag) {
-  # The ETag hasn't changed
+  # The ETag is not changed
   if ($this.LastState.Mode -eq $true) {
     # If the alternative installer URL exists, don't fallback to the main one
     $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
@@ -103,13 +103,13 @@ if ($ETag -in $this.LastState.ETag) {
       # Mode
       $this.CurrentState.Mode = $true
 
-      # Case 2: Detected alternative installer URL
+      # Case 2: Detected an alternative installer URL
       $this.Log('An alternative installer URL is detected', 'Info')
       $this.Print()
       $this.Write()
       return
     } catch {
-      # Case 3: The ETag hasn't changed, and the alternative installer URL doesn't exist
+      # Case 3: The ETag is not changed, and the alternative installer URL doesn't exist
       return
     }
   }
@@ -122,12 +122,12 @@ if ($ETag -in $this.LastState.ETag) {
   $this.CurrentState.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
   if ($this.CurrentState.InstallerSha256 -eq $this.LastState.InstallerSha256) {
-    $this.Log('The ETag has changed, but the hash is the same', 'Info')
+    $this.Log('The ETag has changed, but the hash is not', 'Info')
     # ETag
     $this.CurrentState.ETag = $this.LastState.ETag + $ETag
 
     if ($this.LastState.Mode -eq $true) {
-      # Case 4: The ETag has changed, but the hash is the same, and the alternative installer URL already exists
+      # Case 4: The ETag has changed, but the hash is not, and the alternative installer URL already exists
       $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
 
       # Installer
@@ -141,7 +141,7 @@ if ($ETag -in $this.LastState.ETag) {
       return
     } else {
       try {
-        # Case 5: The ETag has changed, but the hash is the same, while the alternative installer URL is detected
+        # Case 5: The ETag has changed, but the hash is not, while an alternative installer URL is detected
         $Uri2 = "https://cdn.freedom.to/installers/win/FreedomSetup-$($this.CurrentState.Version).exe"
         $null = Invoke-WebRequest -Uri $Uri2 -Method Head
         # Installer
@@ -156,7 +156,7 @@ if ($ETag -in $this.LastState.ETag) {
         $this.Write()
         return
       } catch {
-        # Case 6: The ETag has changed, but the hash is the same, and the alternative installer URL doesn't exist
+        # Case 6: The ETag has changed, but the hash is not, and the alternative installer URL doesn't exist
 
         # Installer
         $this.CurrentState.Installer += [ordered]@{
@@ -210,9 +210,9 @@ if ($ETag -in $this.LastState.ETag) {
     'Updated|Rollbacked' {
       $this.Submit()
     }
-    # Case 7: The ETag and the hash have changed, but the version hasn't
+    # Case 7: The ETag and the hash have changed, but the version is not
     Default {
-      $this.Log('The hash has changed, but the version is the same', 'Info')
+      $this.Log('The ETag and the hash have changed, but the version is not', 'Info')
       $this.Config.IgnorePRCheck = $true
       $this.Print()
       $this.Write()

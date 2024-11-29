@@ -1,7 +1,7 @@
 $Uri1 = 'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe'
 $Object1 = Invoke-WebRequest -Uri $Uri1 -Method Head
-# MD5
-$this.CurrentState.MD5 = $Object1.Headers.'X-COS-META-MD5'[0]
+# Hash
+$this.CurrentState.Hash = $Object1.Headers.'X-COS-META-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -19,8 +19,8 @@ if ($Global:DumplingsPreference.Contains('Force')) {
       Architecture = 'x64'
       InstallerUrl = $Uri2
     }
-    # MD5 alternative
-    $this.CurrentState.MD5A = $Object2.Headers.'X-COS-META-MD5'[0]
+    # Hash alternative
+    $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
     # Mode
     $this.CurrentState.Mode = $true
   } catch {
@@ -58,8 +58,8 @@ if ($this.Status.Contains('New')) {
       Architecture = 'x64'
       InstallerUrl = $Uri2
     }
-    # MD5 alternative
-    $this.CurrentState.MD5A = $Object2.Headers.'X-COS-META-MD5'[0]
+    # Hash alternative
+    $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
     # Mode
     $this.CurrentState.Mode = $true
   } catch {
@@ -79,7 +79,7 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
+if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
   # Version
   $this.CurrentState.Version = $this.LastState.Version
   # If the alternative installer URL exists, don't fallback to the main one
@@ -93,10 +93,10 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
     $this.CurrentState.Mode = $true
 
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
-    # MD5 alternative
-    $this.CurrentState.MD5A = $Object2.Headers.'X-COS-META-MD5'[0]
+    # Hash alternative
+    $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
 
-    # Case 2: Both the main and the alternative MD5 was not updated
+    # Case 2: The main and the alternative hash are not updated
     if ($this.CurrentState.MD5A -eq $this.LastState.MD5A) {
       $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
       return
@@ -104,8 +104,8 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
 
     Get-ReleaseNotes
 
-    # Case 3: The main MD5 wasn't updated, but the alternative one was
-    $this.Log('The alternative MD5 was updated', 'Info')
+    # Case 3: The main hash is not updated, but the alternative one has
+    $this.Log('The alternative hash has updated', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
@@ -121,15 +121,15 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
         Architecture = 'x64'
         InstallerUrl = $Uri2
       }
-      # MD5 alternative
-      $this.CurrentState.MD5A = $Object2.Headers.'X-COS-META-MD5'[0]
+      # Hash alternative
+      $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
       # Mode
       $this.CurrentState.Mode = $true
 
       Get-ReleaseNotes
 
-      # Case 4: Detected alternative installer URL
-      $this.Log('Detected alternative installer URL', 'Info')
+      # Case 4: Detected an alternative installer URL
+      $this.Log('Detected an alternative installer URL', 'Info')
       $this.Print()
       $this.Write()
       return
@@ -144,7 +144,7 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
   try {
-    # The main MD5 was updated, and the alternative installer URL exists
+    # The main hash has updated, and the alternative installer URL exists
     $Uri2 = "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin$($this.CurrentState.Version).exe"
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
@@ -152,13 +152,13 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
       Architecture = 'x64'
       InstallerUrl = $Uri2
     }
-    # MD5 alternative
-    $this.CurrentState.MD5A = $Object2.Headers.'X-COS-META-MD5'[0]
+    # Hash alternative
+    $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
     # Mode
     $this.CurrentState.Mode = $true
   } catch {
-    # The main MD5 was updated, but the alternative installer URL doesn't exist
-    $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
+    # The main hash has updated, but the alternative installer URL does not exist
+    $this.Log("${Uri2} does not exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
       Architecture    = 'x64'
@@ -170,19 +170,19 @@ if ($this.CurrentState.MD5 -eq $this.LastState.MD5) {
   }
 
   switch -Regex ($this.Check()) {
-    # Case 7: The installer URL was updated
+    # Case 7: The installer URL has updated
     'Changed|Updated|Rollbacked' {
       $this.Print()
       $this.Write()
       $this.Message()
     }
-    # Case 8: The MD5 and the version were updated
+    # Case 8: The hash and the version have updated
     'Updated|Rollbacked' {
       $this.Submit()
     }
-    # Case 6: The MD5 was updated, but the version wasn't
+    # Case 6: The hash has updated, but the version is not
     Default {
-      $this.Log('The MD5 was updated, but the version is the same', 'Info')
+      $this.Log('The hash has updated, but the version is not', 'Info')
       $this.Config.IgnorePRCheck = $true
       $this.Print()
       $this.Write()

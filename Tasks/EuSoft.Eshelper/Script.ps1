@@ -1,6 +1,15 @@
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+}
+
 function Get-ReleaseNotes {
   try {
-    $ShortVersion = $Version.Split('.')[0..2] -join '.'
+    $ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
     if ($Global:DumplingsStorage.Contains('Eshelper') -and $Global:DumplingsStorage.Eshelper.Contains($ShortVersion)) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Eshelper.$ShortVersion.ReleaseTime
@@ -35,12 +44,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   # ETag
   $this.CurrentState.ETag = @($ETag)
 
-  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-  # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
+  Read-Installer
   Get-ReleaseNotes
 
   $this.Print()
@@ -51,19 +55,14 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   return
 }
 
-# Case 1: The task is newly created
+# Case 1: The task is new
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
   # ETag
   $this.CurrentState.ETag = @($ETag)
 
-  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-  # Version
-  $this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
+  Read-Installer
   Get-ReleaseNotes
 
   $this.Print()
@@ -71,28 +70,24 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The ETag was not updated
+# Case 2: The ETag is unchanged
 if ($ETag -in $this.LastState.ETag) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
 
-$InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
-# Version
-$this.CurrentState.Version = $Version = $InstallerFile | Read-ProductVersionFromExe
-# InstallerSha256
-$this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+Read-Installer
 
-# Case 3: The installer file has an invalid version
+# Case 3: The current state has an invalid version
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
 
 Get-ReleaseNotes
 
-# Case 4: The ETag was updated, but the hash wasn't
+# Case 4: The ETag has changed, but the SHA256 is not
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
-  $this.Log('The ETag was changed, but the hash is the same', 'Info')
+  $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
 
   # ETag
   $this.CurrentState.ETag = $this.LastState.ETag + $ETag
@@ -105,7 +100,7 @@ if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installe
 $this.CurrentState.ETag = @($ETag)
 
 switch -Regex ($this.Check()) {
-  # Case 6: The ETag, hash, and version were updated
+  # Case 6: The ETag, the SHA256 and the version have changed
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
@@ -113,9 +108,9 @@ switch -Regex ($this.Check()) {
     $this.Message()
     $this.Submit()
   }
-  # Case 5: Both the ETag and the hash were updated, but the version wasn't
+  # Case 5: The ETag and the SHA256 have changed, but the version is not
   Default {
-    $this.Log('The ETag and the hash were changed, but the version is the same', 'Info')
+    $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
