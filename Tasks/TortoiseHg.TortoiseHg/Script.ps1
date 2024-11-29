@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.mercurial-scm.org/release/tortoisehg/latest.dat' | ConvertFrom-Csv -Header @('Identifier', 'Version', 'Platform', 'InstallerUrl', 'Description') -Delimiter "`t"
 
-$InstallerObjectX86 = $Object1 | Where-Object -FilterScript { $_.InstallerUrl.Contains('x86') -and $_.InstallerUrl.EndsWith('.msi') } | Sort-Object -Property { $_.Version -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
-$InstallerObjectX64 = $Object1 | Where-Object -FilterScript { $_.InstallerUrl.Contains('x64') -and $_.InstallerUrl.EndsWith('.msi') } | Sort-Object -Property { $_.Version -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerObjectX86 = $Object1 | Where-Object -FilterScript { -not $_.Version.Contains('rc') -and $_.InstallerUrl.Contains('x86') -and $_.InstallerUrl.EndsWith('.msi') } | Sort-Object -Property { $_.Version -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerObjectX64 = $Object1 | Where-Object -FilterScript { -not $_.Version.Contains('rc') -and $_.InstallerUrl.Contains('x64') -and $_.InstallerUrl.EndsWith('.msi') } | Sort-Object -Property { $_.Version -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 if (@(@($InstallerObjectX86, $InstallerObjectX64) | Sort-Object -Property { $_.Version } -Unique).Count -gt 1) {
   $this.Log("x86 version: $($InstallerObjectX86.Version)")
