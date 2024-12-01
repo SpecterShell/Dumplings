@@ -49,7 +49,7 @@ $CJK_AN = "([${CJK}])([${A}${N}])"
 $AN_CJK = "([${A}]|[${N}][+]?)([${CJK}])"
 
 # The prefix of the ordered list
-$ORDERED_LIST_PREFIX = "(?m)(?<=^[${N}]{1,2})([\.\u3001][${INVISIBLE_EXCEPT_NEWLINE}]*)(.)"
+$ORDERED_LIST_PREFIX = "(?m)(?<=^[${N}]{1,2})([\.\u3001][${INVISIBLE_EXCEPT_NEWLINE}]*)([^\d])"
 # The prefix of the unordered list
 $UNORDERED_LIST_PREFIX = "(?m)(^[-·•][${INVISIBLE_EXCEPT_NEWLINE}]*)(.)"
 # Left bracket characters in full width, whose glyphs only take the right side
