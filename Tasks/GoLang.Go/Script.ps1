@@ -23,28 +23,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $ArchMap = [ordered]@{
-      'x86'   = '386'
-      'x64'   = 'amd64'
-      'arm'   = 'arm'
-      'arm64' = 'arm64'
-    }
-
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-
-      # InstallerSha256
-      $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          DisplayName = "Go Programming Language $($ArchMap[$Installer.Architecture]) go$($this.CurrentState.Version)"
-          ProductCode = $Installer['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-        }
-      )
-    }
-
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://go.dev/doc/devel/release' | ConvertFrom-Html
 

@@ -14,13 +14,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayName = "Azul Zulu JRE $($this.CurrentState.Version) ($($Object1.java_version[0])), 64-bit"
-      }
-    )
-
     $this.Print()
     $this.Write()
   }
