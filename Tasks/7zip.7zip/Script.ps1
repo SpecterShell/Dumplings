@@ -10,44 +10,24 @@ $ShortVersion = $this.CurrentState.Version.Replace('.', '')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x86'
-  InstallerType          = 'exe'
-  InstallerUrl           = $Prefix + "7z${ShortVersion}.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x86'
+  InstallerType = 'exe'
+  InstallerUrl  = $Prefix + "7z${ShortVersion}.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'exe'
-  InstallerUrl           = $Prefix + "7z${ShortVersion}-x64.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = $Prefix + "7z${ShortVersion}-x64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'arm'
-  InstallerType          = 'exe'
-  InstallerUrl           = $Prefix + "7z${ShortVersion}-arm.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'arm'
+  InstallerType = 'exe'
+  InstallerUrl  = $Prefix + "7z${ShortVersion}-arm.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'arm64'
-  InstallerType          = 'exe'
-  InstallerUrl           = $Prefix + "7z${ShortVersion}-arm64.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'arm64'
+  InstallerType = 'exe'
+  InstallerUrl  = $Prefix + "7z${ShortVersion}-arm64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
