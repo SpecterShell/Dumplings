@@ -261,33 +261,39 @@ function Update-InstallerEntry {
       # ProductCode
       $ProductCode = $null
       if ($EffectiveInstallerType -in @('msi', 'wix')) {
-        $ProductCode = $EffectiveInstallerPath | Read-ProductCodeFromMsi
+        $ProductCode = $EffectiveInstallerPath | Read-ProductCodeFromMsi -ErrorAction 'Continue'
       } elseif ($EffectiveInstallerType -eq 'burn') {
-        $ProductCode = $EffectiveInstallerPath | Read-ProductCodeFromBurn
+        $ProductCode = $EffectiveInstallerPath | Read-ProductCodeFromBurn -ErrorAction 'Continue'
       }
-      if ($EffectiveInstallerType -in @('msi', 'wix', 'burn') -and $Installer.Contains('ProductCode')) {
+      if (-not $MatchingInstallerEntry.Contains('ProductCode') -and $EffectiveInstallerType -in @('msi', 'wix', 'burn') -and $Installer.Contains('ProductCode')) {
         if (Test-String $ProductCode -NotNull) {
           $Installer.ProductCode = $ProductCode
         } else {
-          $Logger.Invoke('Failed to get ProductCode', 'Warning')
-          $Installer.Remove('ProductCode')
+          throw 'Failed to get ProductCode'
         }
       }
-      # UpgradeCode
-      $UpgradeCode = $null
-      if ($EffectiveInstallerType -in @('msi', 'wix')) {
-        $UpgradeCode = $EffectiveInstallerPath | Read-UpgradeCodeFromMsi
-      } elseif ($EffectiveInstallerType -eq 'burn') {
-        $UpgradeCode = $EffectiveInstallerPath | Read-UpgradeCodeFromBurn
-      }
-      # DisplayVersion
-      $DisplayVersion = $null
-      if ($EffectiveInstallerType -in @('msi', 'wix')) {
-        $DisplayVersion = $EffectiveInstallerPath | Read-ProductVersionFromMsi
-      } elseif ($EffectiveInstallerType -eq 'burn') {
-        $DisplayVersion = $EffectiveInstallerPath | Read-ProductVersionFromExe
-      }
-      if ($EffectiveInstallerType -in @('msi', 'wix', 'burn') -and $Installer['AppsAndFeaturesEntries']) {
+      if (-not $MatchingInstallerEntry.Contains('AppsAndFeaturesEntries') -and $EffectiveInstallerType -in @('msi', 'wix', 'burn') -and $Installer['AppsAndFeaturesEntries']) {
+        # UpgradeCode
+        $UpgradeCode = $null
+        if ($EffectiveInstallerType -in @('msi', 'wix')) {
+          $UpgradeCode = $EffectiveInstallerPath | Read-UpgradeCodeFromMsi -ErrorAction 'Continue'
+        } elseif ($EffectiveInstallerType -eq 'burn') {
+          $UpgradeCode = $EffectiveInstallerPath | Read-UpgradeCodeFromBurn -ErrorAction 'Continue'
+        }
+        # DisplayVersion
+        $DisplayVersion = $null
+        if ($EffectiveInstallerType -in @('msi', 'wix')) {
+          $DisplayVersion = $EffectiveInstallerPath | Read-ProductVersionFromMsi -ErrorAction 'Continue'
+        } elseif ($EffectiveInstallerType -eq 'burn') {
+          $DisplayVersion = $EffectiveInstallerPath | Read-ProductVersionFromExe -ErrorAction 'Continue'
+        }
+        # DisplayName
+        $DisplayName = $null
+        if ($EffectiveInstallerType -in @('msi', 'wix')) {
+          $DisplayName = $EffectiveInstallerPath | Read-MsiProperty -Query "SELECT Value FROM Property WHERE Property='ProductName'" -ErrorAction 'Continue'
+        } elseif ($EffectiveInstallerType -eq 'burn') {
+          $DisplayName = $EffectiveInstallerPath | Read-MsiProperty -Query "SELECT Value FROM Property WHERE Property='ProductName'" -ErrorAction 'Continue'
+        }
         # Match the AppsAndFeaturesEntries that...
         $Installer.AppsAndFeaturesEntries | Where-Object -FilterScript {
           # ...have the same UpgradeCode as the new installer, or...
@@ -297,27 +303,32 @@ function Update-InstallerEntry {
           # ...is the only entry in the installer
           ($Installer.AppsAndFeaturesEntries.Count -eq 1)
         } | ForEach-Object -Process {
-          if ($_.Contains('DisplayVersion')) {
-            if ((Test-String $DisplayVersion -IsNull) ) {
-              $Logger.Invoke('Failed to get DisplayVersion', 'Warning')
-              $_.Remove('DisplayVersion')
+          if ($_.Contains('DisplayName')) {
+            if (Test-String $DisplayName -NotNull) {
+              $_.DisplayName = $DisplayName
             } else {
+              throw 'Failed to get DisplayName'
+            }
+          }
+          if ($_.Contains('DisplayVersion')) {
+            if ((Test-String $DisplayVersion -NotNull) ) {
               $_.DisplayVersion = $DisplayVersion
+            } else {
+              throw 'Failed to get DisplayVersion'
             }
           }
           if ($_.Contains('ProductCode')) {
             if (Test-String $ProductCode -NotNull) {
               $_.ProductCode = $ProductCode
             } else {
-              $Logger.Invoke('Failed to get ProductCode', 'Warning')
-              $_.Remove('ProductCode')
+              throw 'Failed to get ProductCode'
             }
           }
           if ($_.Contains('UpgradeCode')) {
             if (Test-String $UpgradeCode -NotNull) {
               $_.UpgradeCode = $UpgradeCode
             } else {
-              $Logger.Invoke('Failed to get UpgradeCode', 'Warning')
+              throw 'Failed to get UpgradeCode'
             }
           }
         }
