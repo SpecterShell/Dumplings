@@ -73,7 +73,7 @@ param (
 )
 
 $ScriptHeader = '# Created with YamlCreate.ps1 Dumplings Mod'
-$ManifestVersion = '1.6.0'
+$ManifestVersion = '1.9.0'
 $Utf8NoBomEncoding = [System.Text.UTF8Encoding]::new($false)
 $Culture = 'en-US'
 $UserAgent = 'Microsoft-Delivery-Optimization/10.0'
