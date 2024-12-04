@@ -73,24 +73,24 @@ if ($WinGetVersion) {
 #endregion
 
 #region Download WinGet dependencies
-$AppInstallerDependencies = @()
+$DependenciesPath = @()
 $AppInstallerParsedVersion = [System.Version]($WinGetRelease.tag_name -replace '(^v)|(-preview$)')
 if ($AppInstallerParsedVersion -ge [System.Version]'1.9.25180') {
   # As of WinGet 1.9.25180, VCLibs no longer publishes to the public URL and must be downloaded from the WinGet release
-  $DependenciesUri = $WinGetRelease.assets.Where({ $_.name -eq 'DesktopAppInstaller_Dependencies.zip' }, 'First')[0].browser_download_url
-  $DependenciesPath = Join-Path ([System.IO.Path]::GetTempPath()) 'DesktopAppInstaller_Dependencies.zip'
-  Write-Host -Object "Downloading ${DependenciesUri}"
-  Invoke-WebRequest -Uri $DependenciesUri -OutFile $DependenciesPath
+  $DependenciesArchiveUri = $WinGetRelease.assets.Where({ $_.name -eq 'DesktopAppInstaller_Dependencies.zip' }, 'First')[0].browser_download_url
+  $DependenciesArchivePath = Join-Path ([System.IO.Path]::GetTempPath()) 'DesktopAppInstaller_Dependencies.zip'
+  Write-Host -Object "Downloading ${DependenciesArchiveUri}"
+  Invoke-WebRequest -Uri $DependenciesArchiveUri -OutFile $DependenciesArchivePath
 
-  $TempPath = Join-Path ([System.IO.Path]::GetTempPath()) 'DesktopAppInstaller_Dependencies'
-  Expand-Archive -Path $DependenciesPath -DestinationPath $TempPath -Force
-  $AppInstallerDependencies += Join-Path $TempPath 'x64' | Get-ChildItem -Include '*.appx' -Recurse -File | Select-Object -ExpandProperty 'FullName'
+  $DependenciesTempPath = Join-Path ([System.IO.Path]::GetTempPath()) 'DesktopAppInstaller_Dependencies'
+  Expand-Archive -Path $DependenciesArchivePath -DestinationPath $DependenciesTempPath -Force
+  $DependenciesPath += Join-Path $DependenciesTempPath 'x64' | Get-ChildItem -Include '*.appx' -Recurse -File | Select-Object -ExpandProperty 'FullName'
 } else {
   $VCLibsUri = 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
   $VCLibsPath = New-TemporaryFile
   Write-Host "Downloading ${VCLibsUri}"
   Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile $VCLibsPath
-  $AppInstallerDependencies += $VCLibsPath
+  $DependenciesPath += $VCLibsPath
 
   # As of WinGet 1.7.10514 (https://github.com/microsoft/winget-cli/pull/4218), the dependency on uiLibsUwP was bumped from version 2.7.3 to version 2.8.6
   if ($AppInstallerParsedVersion -lt [System.Version]'1.7.10514') {
@@ -101,7 +101,7 @@ if ($AppInstallerParsedVersion -ge [System.Version]'1.9.25180') {
   $UILibsPath = New-TemporaryFile
   Write-Host "Downloading ${UILibsUri}"
   Invoke-WebRequest -Uri $UILibsUri -OutFile $UILibsPath
-  $AppInstallerDependencies += $UILibsPath
+  $DependenciesPath += $UILibsPath
 }
 #endregion
 
@@ -126,5 +126,5 @@ $null = Add-AppxProvisionedPackage -Online -PackagePath $WinGetPath -DependencyP
 
 #region Clean up
 Write-Host 'Cleaning up'
-Remove-Item -Path @($WinGetPath, $WinGetLicensePath, $DependenciesPath) -Force -ErrorAction 'Continue'
+Remove-Item -Path @($WinGetPath, $WinGetLicensePath, $DependenciesArchivePath) -Force -ErrorAction 'Continue'
 #endregion
