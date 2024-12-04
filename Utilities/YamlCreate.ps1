@@ -212,9 +212,11 @@ function Update-InstallerEntry {
             } else {
               $Installer.$Key = $MatchingInstallerEntry.$Key
             }
+          } else {
+            $Logger.Invoke("The new value of the installer property `"${Key}`" is invalid and thus discarded", 'Warning')
           }
         } catch {
-          $Logger.Invoke("The new value of the installer property `"${Key}`" is invalid and thus discarded: $($MatchingInstallerEntry.$Key)", 'Warning')
+          $Logger.Invoke("The new value of the installer property `"${Key}`" is invalid and thus discarded: ${_}", 'Warning')
         }
       }
     }
@@ -683,10 +685,10 @@ function Write-LocaleManifest {
             if (Test-YamlObject -InputObject $LocaleEntry.Value -Schema $LocaleSchema.properties[$LocaleEntry.Key] -WarningAction Stop) {
               $LocaleManifest[$LocaleEntry.Key] = $LocaleEntry.Value
             } else {
-              $Logger.Invoke("The locale entry `"$($LocaleEntry.Key)`" has an invalid value `"$($LocaleManifest.Value)`" and thus discarded", 'Warning')
+              $Logger.Invoke("The locale entry `"$($LocaleEntry.Key)`" has an invalid value and thus discarded", 'Warning')
             }
           } catch {
-            $Logger.Invoke("The locale entry `"$($LocaleEntry.Key)`" has an invalid value `"$($LocaleManifest.Value)`" and thus discarded: ${_}", 'Warning')
+            $Logger.Invoke("The locale entry `"$($LocaleEntry.Key)`" has an invalid value and thus discarded: ${_}", 'Warning')
           }
         }
       }

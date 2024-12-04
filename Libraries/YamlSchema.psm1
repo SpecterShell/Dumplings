@@ -234,7 +234,7 @@ function Test-YamlObject {
         }
         if ($Schema.Contains('maxLength') -and $InputObject.Length -gt $Schema.maxLength) {
           # Check if the input object is longer than the maximum length
-          Write-Warning -Message "The string `"${InputObject}`" has a length of $($InputObject.Length), longer than the maximum length $($Schema.maxLength)"
+          Write-Warning -Message "The string has a length of $($InputObject.Length), longer than the maximum length $($Schema.maxLength)"
           return $false
         }
         # If all checks pass, return $true
