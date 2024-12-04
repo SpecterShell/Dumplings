@@ -223,7 +223,7 @@ function Update-InstallerEntry {
 
     # Update the installer using the matching installer
     $MatchingInstaller = $Installers | Where-Object -FilterScript { $_.InstallerUrl -eq $Installer.InstallerUrl } | Select-Object -First 1
-    if ($MatchingInstaller -and ($Installer.Contains('NestedInstallerFiles') ? ((ConvertTo-Json -InputObject $Installer.NestedInstallerFiles -Depth 5 -Compress) -eq (ConvertTo-Json -InputObject $MatchingInstaller.NestedInstallerFiles -Depth 5 -Compress)) : $true)) {
+    if ($MatchingInstaller -and ($Installer.Contains('NestedInstallerFiles') ? ((ConvertTo-Json -InputObject $Installer.NestedInstallerFiles -Depth 10 -Compress) -eq (ConvertTo-Json -InputObject $MatchingInstaller.NestedInstallerFiles -Depth 10 -Compress)) : $true)) {
       foreach ($Key in @('InstallerSha256', 'SignatureSha256', 'PackageFamilyName', 'ProductCode', 'ReleaseDate', 'AppsAndFeaturesEntries')) {
         if ($MatchingInstaller.Contains($Key) -and -not $MatchingInstallerEntry.Contains($Key)) {
           $Installer.$Key = $MatchingInstaller.$Key
@@ -419,26 +419,16 @@ function Move-KeysToInstallerLevel {
         foreach ($KeyToRemove in $Manifest.$Key.Keys.Where({ $_ -notin $PreservedManifestKeys })) { $Manifest.$Key.Remove($KeyToRemove) }
       }
     } elseif ($Manifest.$Key -is [System.Collections.IEnumerable] -and $Manifest.$Key -isnot [string]) {
-      $PreservedManifestValues = [System.Collections.Generic.HashSet[System.Object]]::new([System.Object[]]$Manifest.$Key)
       $ManifestEntry = $Manifest.$Key
-      $ManifestEntryHash = [System.Collections.Generic.List[string]]@($ManifestEntry | ForEach-Object -Process { Write-Output -InputObject (ConvertTo-Json -InputObject $_ -Depth 5 -Compress) -NoEnumerate })
+      $ManifestEntryHash = ConvertTo-Json -InputObject $ManifestEntry -Depth 10 -Compress
       foreach ($Installer in $Installers) {
-        $InstallerEntry = [System.Collections.Generic.List[System.Object]]($Installer.Contains($Key) -and $Installer.$Key ? $Installer.$Key : @())
-        $InstallerEntryHash = [System.Collections.Generic.List[string]]@($InstallerEntry | ForEach-Object -Process { Write-Output -InputObject (ConvertTo-Json -InputObject $_ -Depth 5 -Compress) -NoEnumerate })
-        $Values = [System.Collections.Generic.List[System.Object]]::new()
-        for ($i = 0; $i -lt $ManifestEntryHash.Count; $i++) {
-          if (-not $InstallerEntryHash.Contains($ManifestEntryHash[$i])) {
-            $InstallerEntry.Add($ManifestEntry[$i])
-            $InstallerEntryHash.Add($ManifestEntryHash[$i])
-            $Values.Add($ManifestEntry[$i])
-          }
+        if (-not $Installer.Contains($Key)) {
+          $Installer.$Key = $Manifest.$Key
+        } elseif ($Installer.Contains($Key) -and -not $Installer.$Key) {
+          $Installer.$Key = $Manifest.$Key
+        } elseif ($Installer.Contains($Key) -and (ConvertTo-Json -InputObject $Installer.$Key -Depth 10 -Compress) -ne $ManifestEntryHash) {
+          $ToRemove = $false
         }
-        $PreservedManifestValues.IntersectWith($Values)
-        if ($InstallerEntry.Count -gt 0) { $Installer.$Key = $InstallerEntry.ToArray() }
-      }
-      if ($PreservedManifestValues.Count -gt 0) {
-        $ToRemove = $false
-        $Manifest.$Key = @($ManifestEntry | Where-Object -FilterScript { $_ -notin $PreservedManifestValues })
       }
     } else {
       foreach ($Installer in $Installers) {
@@ -493,73 +483,18 @@ function Move-KeysToManifestLevel {
         }
       }
     } elseif ($Installers.Where({ $_.Contains($Key) -and $_.$Key -is [System.Collections.IEnumerable] -and $_.$Key -isnot [string] })) {
-      $InstallersEntry = @($Installers | ForEach-Object -Process { Write-Output -InputObject ([System.Collections.Generic.List[System.Object]]($_.Contains($Key) -and $_.$Key ? $_.$Key : @())) -NoEnumerate })
-      $ManifestEntry = [System.Collections.Generic.List[System.Object]]($Manifest.Contains($Key) -and $Manifest.$Key ? $Manifest.$Key : @())
-
-      # Probe the element type
-      $FirstElement = $Installers.Where({ $_.Contains($Key) }, 'First')[0].$Key[0]
-      if ($FirstElement -is [System.Collections.IDictionary] -or ($FirstElement -is [System.Collections.IEnumerable] -and $FirstElement -isnot [string])) {
-        # If the element is of object type, hash the elements using JSON and move the elements based on the hashes
-        $InstallersEntryHash = @(
-          foreach ($InstallerEntry in $InstallersEntry) {
-            $Hashes = foreach ($Element in $InstallerEntry) {
-              Write-Output -InputObject (ConvertTo-Json -InputObject $Element -Depth 5 -Compress) -NoEnumerate
-            }
-            Write-Output -InputObject ([System.Collections.Generic.List[string]]@($Hashes)) -NoEnumerate
-          }
-        )
-        $ManifestEntryHash = [System.Collections.Generic.List[string]]@($ManifestEntry | ForEach-Object -Process { Write-Output -InputObject (ConvertTo-Json -InputObject $_ -Depth 5 -Compress) -NoEnumerate })
-
-        # Remove elements with the same hashes from the installers
-        for ($i = 0; $i -lt $InstallersEntry.Count; $i++) {
-          for ($j = $InstallersEntry[$i].Count - 1; $j -ge 0 ; $j--) {
-            if ($ManifestEntryHash.Contains($InstallersEntryHash[$i][$j])) {
-              $InstallersEntry[$i].RemoveAt($j)
-              $InstallersEntryHash[$i].RemoveAt($j)
-            }
+      if ($Manifest.Contains($Key)) {
+        $ManifestEntryHash = ConvertTo-Json -InputObject $Manifest.$Key -Depth 10 -Compress
+        foreach ($Installer in $Installers) {
+          $InstallersEntryHash = ConvertTo-Json -InputObject $Installer.$Key -Depth 10 -Compress
+          if ($ManifestEntryHash -eq $InstallersEntryHash) {
+            $Installer.Remove($Key)
           }
         }
-        # Move the same elements across all arrays to the manifest level
-        $AnyHashes = [System.Collections.Generic.HashSet[string]]::new([string[]]($InstallersEntryHash[0]))
-        foreach ($InstallerEntryHash in $InstallersEntryHash) { $AnyHashes.IntersectWith([string[]]$InstallerEntryHash) }
-        for ($i = 0; $i -lt $InstallersEntry.Count; $i++) {
-          for ($j = $InstallersEntry[$i].Count - 1; $j -ge 0 ; $j--) {
-            if ($AnyHashes.Contains($InstallersEntryHash[$i][$j])) {
-              if ($i -eq 0) {
-                $ManifestEntry.Add($InstallersEntry[$i][$j])
-                $ManifestEntryHash.Add($InstallersEntryHash[$i][$j])
-              }
-              $InstallersEntry[$i].RemoveAt($j)
-              $InstallersEntryHash[$i].RemoveAt($j)
-            }
-          }
-        }
-      } else {
-        # If the array element is an atom, move the values to the manifest level directly
-        # Remove elements with the same hashes from the installers
-        foreach ($InstallerEntry in $InstallersEntry) {
-          $Values = Compare-Object -ReferenceObject $ManifestEntry -DifferenceObject $InstallerEntry -IncludeEqual -ExcludeDifferent -PassThru
-          foreach ($Value in $Values) { $null = $InstallerEntry.Remove($Value) }
-        }
-        # Move the same elements across all arrays to the manifest level
-        $AnyValues = [System.Collections.Generic.HashSet[System.Object]]::new([System.Object[]]($InstallersEntry[0]))
-        foreach ($InstallerEntry in $InstallersEntry) { $AnyValues.IntersectWith([System.Object[]]$InstallerEntry) }
-        $ManifestEntry.AddRange($AnyValues)
-        foreach ($InstallerEntry in $InstallersEntry) {
-          foreach ($Value in $AnyValues) { $null = $InstallerEntry.Remove($Value) }
-        }
-      }
-
-      # If the manifest entry is not empty, add it to the manifest
-      if ($ManifestEntry.Count -gt 0) {
-        $Manifest.$Key = $ManifestEntry.ToArray()
-      }
-      # If the installer entry is empty, remove it from the installers, otherwise, update the installer entry
-      for ($i = 0; $i -lt $InstallersEntry.Count; $i++) {
-        if ($Installers[$i].Contains($Key) -and $InstallersEntry[$i].Count -eq 0) {
-          $Installers[$i].Remove($Key)
-        } elseif ($InstallersEntry[$i].Count -gt 0) {
-          $Installers[$i].$Key = $InstallersEntry[$i].ToArray()
+      } elseif (-not $Manifest.Contains($Key) -and -not ($Installers.Where({ -not $_.Contains($Key) })) -and @($Installers.$Key | Sort-Object -Property { ConvertTo-Json -InputObject $_ -Depth 10 -Compress } -Unique).Count -eq 1) {
+        $Manifest.$Key = $Installers[0].$Key
+        foreach ($Installer in $Installers) {
+          $Installer.Remove($Key)
         }
       }
     } else {
