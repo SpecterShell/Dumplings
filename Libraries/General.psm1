@@ -1000,6 +1000,24 @@ function Read-UpgradeCodeFromMsi {
   }
 }
 
+function Read-ProductNameFromMsi {
+  <#
+  .SYNOPSIS
+    Read the ProductName property value from the MSI file
+  .PARAMETER Path
+    The path to the MSI file
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the MSI file')]
+    [string]$Path
+  )
+
+  process {
+    Read-MsiProperty -Path $Path -Query "SELECT Value FROM Property WHERE Property='ProductName'"
+  }
+}
+
 function Read-MsiSummaryValue {
   <#
   .SYNOPSIS
@@ -1131,6 +1149,44 @@ function Read-UpgradeCodeFromBurn {
       Write-Host -Object 'Fallbacking to the manifest file'
       $Manifest = Get-Content -Path $ManifestPath -Raw | ConvertFrom-Xml
       Write-Output -InputObject $Manifest.BurnManifest.RelatedBundle.Id
+    } else {
+      throw 'The BootstrapperApplicationData and manifest files do not exist'
+    }
+
+    Remove-Item -Path $FolderPath -Recurse -Force
+  }
+}
+
+function Read-ProductNameFromBurn {
+  <#
+  .SYNOPSIS
+    Read the ProductName property of the WiX bundle file
+  .PARAMETER Path
+    The path to the WiX bundle file
+  .PARAMETER DarkPath
+    The path to the Windows Installer XML Toolset Decompiler tool
+  #>
+  [OutputType([string])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, Mandatory, HelpMessage = 'The path to the WiX bundle file')]
+    [string]$Path,
+
+    [Parameter(HelpMessage = 'The path to the Windows Installer XML Toolset Decompiler (Dark) tool')]
+    [string]$DarkPath
+  )
+
+  process {
+    $FolderPath = Expand-Burn -Path $Path -DarkPath $DarkPath
+
+    $BootstrapperApplicationDataPath = Join-Path $FolderPath 'UX' 'BootstrapperApplicationData.xml'
+    $ManifestPath = Join-Path $FolderPath 'UX' 'manifest.xml'
+    if (Test-Path -Path $BootstrapperApplicationDataPath) {
+      $BootstrapperApplicationData = Get-Content -Path $BootstrapperApplicationDataPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $BootstrapperApplicationData.BootstrapperApplicationData.WixBundleProperties.DisplayName
+    } elseif (Test-Path -Path $ManifestPath) {
+      Write-Host -Object 'Fallbacking to the manifest file'
+      $Manifest = Get-Content -Path $ManifestPath -Raw | ConvertFrom-Xml
+      Write-Output -InputObject $Manifest.BurnManifest.Registration.Arp.DisplayName
     } else {
       throw 'The BootstrapperApplicationData and manifest files do not exist'
     }

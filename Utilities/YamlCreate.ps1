@@ -292,9 +292,9 @@ function Update-InstallerEntry {
         # DisplayName
         $DisplayName = $null
         if ($EffectiveInstallerType -in @('msi', 'wix')) {
-          $DisplayName = $EffectiveInstallerPath | Read-MsiProperty -Query "SELECT Value FROM Property WHERE Property='ProductName'" -ErrorAction 'Continue'
+          $DisplayName = $EffectiveInstallerPath | Read-ProductNameFromMsi -ErrorAction 'Continue'
         } elseif ($EffectiveInstallerType -eq 'burn') {
-          $DisplayName = $EffectiveInstallerPath | Read-MsiProperty -Query "SELECT Value FROM Property WHERE Property='ProductName'" -ErrorAction 'Continue'
+          $DisplayName = $EffectiveInstallerPath | Read-ProductNameFromBurn -ErrorAction 'Continue'
         }
         # Match the AppsAndFeaturesEntries that...
         $Installer.AppsAndFeaturesEntries | Where-Object -FilterScript {
