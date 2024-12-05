@@ -66,6 +66,10 @@ switch -Regex ($this.Check()) {
     $Object3 = Invoke-WebRequest -Uri $InstallerARM64.InstallerUrl -Method Head
     $this.CurrentState.ETagARM64 = $Object3.Headers.ETag[0]
 
+    if (-not $Global:DumplingsPreference.Contains('Force') -and -not $this.Status.Contains('New') -and $this.CurrentState.ETagX86 -ne $this.LastState.ETagX86 -and $this.CurrentState.ETagX64 -ne $this.LastState.ETagX64 -and $this.CurrentState.ETagARM64 -ne $this.LastState.ETagARM64) {
+      throw 'Not all installers have been updated'
+    }
+
     $this.Print()
     $this.Write()
   }
@@ -73,9 +77,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated|Rollbacked' {
-    if (-not $Global:DumplingsPreference.Contains('Force') -and -not $this.Status.Contains('New') -and $this.CurrentState.ETagX86 -ne $this.LastState.ETagX86 -and $this.CurrentState.ETagX64 -ne $this.LastState.ETagX64 -and $this.CurrentState.ETagARM64 -ne $this.LastState.ETagARM64) {
-      throw 'Not all installers have been updated'
-    }
     $this.Submit()
   }
 }
