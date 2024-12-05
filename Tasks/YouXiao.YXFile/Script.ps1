@@ -7,14 +7,15 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
+$Object1 = Invoke-RestMethod -Uri 'https://www.yxfile.com.cn/js/bottom.js'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://static.youxiao.cn/yxfile/lastest.exe'
+  InstallerUrl = [regex]::Match($Object1, 'downloadWindowsBakUrl\s*=\s*"([^"]+)"').Groups[1].Value
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # Hash
-$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
+$this.CurrentState.Hash = $Object2.Headers.'Content-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
