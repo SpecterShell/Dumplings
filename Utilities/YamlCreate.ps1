@@ -504,7 +504,7 @@ function Move-KeysToManifestLevel {
             $Installer.Remove($Key)
           }
         }
-      } elseif (-not $Manifest.Contains($Key) -and -not ($Installers.Where({ -not $_.Contains($Key) })) -and @($Installers.$Key | Sort-Object -Unique).Count -eq 1) {
+      } elseif (-not $Manifest.Contains($Key) -and -not ($Installers.Where({ -not $_.Contains($Key) })) -and @($Installers | Sort-Object -Property { $_.$Key } -Unique).Count -eq 1) {
         $Manifest.$Key = $Installers[0].$Key
         foreach ($Installer in $Installers) {
           $Installer.Remove($Key)
