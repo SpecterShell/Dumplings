@@ -2,7 +2,7 @@ $Object1 = (Invoke-RestMethod -Uri 'https://www.zwsoft.cn/index.php?g=Api&m=Comm
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = ($Object1.download[0].url.Split('/') | Sort-Object -Property { $_.Length } -Bottom 1 | ConvertFrom-Base64) -replace '^\d+' -replace 'https?://dl\.zwsoft\.cn', 'https://upgrade-online.zwsoft.cn'
+  InstallerUrl = (($Object1.download[0].url.Split('/') | Sort-Object -Property { $_.Length } -Bottom 1) -replace '(?<!=)$', '=' | ConvertFrom-Base64) -replace '^\d+' -replace 'https?://dl\.zwsoft\.cn', 'https://upgrade-online.zwsoft.cn'
 }
 
 # Version
