@@ -6,7 +6,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = $this.CurrentState.Installer[0].InstallerUrl -replace '.+/yyaudio/(\d+(?:\.\d+){2,})/\d+/(\d+)/.+', '$1.$2'
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
