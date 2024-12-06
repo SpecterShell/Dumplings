@@ -3,7 +3,7 @@ $Prefix = 'https://digi.bib.uni-mannheim.de/tesseract/'
 $Object1 = (Invoke-WebRequest -Uri "${Prefix}?C=M;O=D;F=0;P=*.exe").Content
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1, 'tesseract-ocr-w64-setup-(v[\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1, 'tesseract-ocr-w64-setup-([\d\.]+)\.exe').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
