@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://sanctum.ai/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesObject = $Object2.SelectSingleNode("/html/body/main/div[1]/div/div[3]/div[contains(./div[1]/p[2], 'v$($this.CurrentState.Version)')]")
+      $ReleaseNotesObject = $Object2.SelectSingleNode("/html/body/main/div[1]/div/div[3]/div[contains(./div[1]/p[2], 'v$($this.CurrentState.Version -replace '.0$')')]")
       if ($ReleaseNotesObject) {
         # ReleaseNotes
         $this.CurrentState.Locale += [ordered]@{
