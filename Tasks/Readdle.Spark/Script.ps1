@@ -24,12 +24,13 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri $Object1.releaseNotesLink | ConvertFrom-Html
 
-      if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains($this.CurrentState.RealVersion)) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[@class='item-title' and contains(text(), '$($this.CurrentState.RealVersion)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('/html/body/text()[2]/following-sibling::node()[count(.|/html/body/p[2]/preceding-sibling::node())=count(/html/body/p[2]/preceding-sibling::node())]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::p[@class="date"]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
