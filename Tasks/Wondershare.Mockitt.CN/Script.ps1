@@ -9,11 +9,11 @@ $this.CurrentState.Version = [regex]::Match(
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@class, "btn-download-pc") and contains(@href, ".exe") and contains(@href, "ia32")]').Attributes['href'].Value
+  InstallerUrl = Join-Uri 'https://cdn-release.modao.cc/' $Object1.SelectSingleNode('//a[contains(@class, "btn-download-pc") and contains(@data-href, ".exe") and contains(@data-href, "ia32")]').Attributes['data-href'].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@class, "btn-download-pc") and contains(@href, ".exe") and contains(@href, "x64")]').Attributes['href'].Value
+  InstallerUrl = Join-Uri 'https://cdn-release.modao.cc/' $Object1.SelectSingleNode('//a[contains(@class, "btn-download-pc") and contains(@data-href, ".exe") and contains(@data-href, "x64")]').Attributes['data-href'].Value
 }
 
 switch -Regex ($this.Check()) {
