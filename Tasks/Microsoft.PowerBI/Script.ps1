@@ -8,7 +8,7 @@ function Read-Installer {
   # AppsAndFeaturesEntries + ProductCode
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-UpgradeCodeFromBurn
+      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromBurn
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
     }
   )
