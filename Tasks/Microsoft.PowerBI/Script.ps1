@@ -37,9 +37,12 @@ for ($Date = $StartDate; $Date -gt $EndDate; $Date = $Date.AddMonths(-1)) {
 }
 
 if (-not $Found) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  $this.Log('The installer URL is unchanged', 'Info')
   # Installer
-  $this.CurrentState.Installer = $this.LastState.Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x64'
+    InstallerUrl = $this.LastState.Installer[0].InstallerUrl
+  }
   # LastDate
   $this.CurrentState.LastDate = $this.LastState.LastDate
 }
