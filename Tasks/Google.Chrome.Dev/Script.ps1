@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
     $Object2 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head
     $this.CurrentState.ETagX64 = $Object2.Headers.ETag[0]
 
-    if (-not $Global:DumplingsPreference.Contains('Force') -and -not $this.Status.Contains('New') -and $this.CurrentState.ETagX86 -ne $this.LastState.ETagX86 -and $this.CurrentState.ETagX64 -ne $this.LastState.ETagX64) {
+    if (-not $Global:DumplingsPreference.Contains('Force') -and -not $this.Status.Contains('New') -and ($this.CurrentState.ETagX86 -eq $this.LastState.ETagX86 -or $this.CurrentState.ETagX64 -eq $this.LastState.ETagX64)) {
       throw 'Not all installers have been updated'
     }
 
