@@ -1,0 +1,27 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Enter-tainer/typstyle/releases/download/v0.12.10/typstyle-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Enter-tainer/typstyle/releases/download/v0.12.10/typstyle-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fix: musl build is now statically linked. This fixes the issue that the musl build doesn't work on systems other than alpine.
+    - Typstyle now break content blocks into multiple lines if they have leading spaces and trailing spaces.
+    For example, the following code is not formattable by typstyle previously:
+    #{
+      let res = if true [ The Result is definitely true. And it is a very long sentence that needs to be broken into multiple lines. ] else [ The Result is definitely false. And it is a very long sentence that needs to be broken into multiple lines. ]
+    }
+    Now it will be formatted as:
+    #{
+      let res = if true [
+        The Result is definitely true. And it is a very long sentence that needs to be broken into multiple lines.
+      ] else [
+        The Result is definitely false. And it is a very long sentence that needs to be broken into multiple lines.
+      ]
+    }
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Enter-tainer/typstyle/releases/tag/v0.12.10
+Version: 0.12.10
+ReleaseTime: 2024-12-11T16:28:29.0000000Z
