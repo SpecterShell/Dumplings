@@ -1,0 +1,26 @@
+Installer:
+- InstallerUrl: https://github.com/TranslucentTB/TranslucentTB/releases/download/2024.3/bundle.msixbundle
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features
+    - Reintroduce the Blur feature on XAML-based taskbars (Windows 11 22H2 and up)
+      - It is possible to control the radius of this effect via the blur_radius property in the JSON configuration file. This property has no effect on non-XAML based taskbars (for example, Windows 10 and Windows 11 21H2).
+      - Users restoring the classic taskbar on Windows 11 22H2 and up (for example through ExplorerPatcher) cannot use this, because the blur composition attribute has been removed from the operating system.
+    Bug fixes
+    - Fix crashes on application close related to DispatcherQueue
+    - Fix Search opened on newer Windows 11 builds
+    - Rework how XAML diagnostics is initialized to hopefully reduce the error rate
+    Various improvements/changes
+    - Support for Korean locale.
+    - This release migrates from the Azure Code Signing private preview to the public Microsoft Trusted Signing service. Unfortunately as part of this migration, the certificate subject changed slightly (an accent was added to the e in Québec).
+      - Because of that, this releases uses a new GUID for the tray icon. Your preferences related to the tray icon will be reset.
+    - Make the hide_tray option hidden to avoid users unintentionally hiding the tray icon.
+    - Add a new hidden copy_files option that disables the copying of DLLs to a temporary folder.
+    - PDBs are now hosted using Azure DevOps Symbol Server and use SourceLink.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/TranslucentTB/TranslucentTB/releases/tag/2024.3
+Version: "2024.3"
+ReleaseTime: 2024-12-12T22:20:23.0000000Z
+RealVersion: 2024.3.0.0
