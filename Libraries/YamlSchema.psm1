@@ -347,7 +347,7 @@ function ConvertTo-SortedYamlObject {
       }
       Write-Output -InputObject @($InputObject | ForEach-Object -Process { ConvertTo-SortedYamlObject -InputObject $_ -Schema $Schema.items -Culture $Culture } | Sort-Object -Stable -Culture $Culture) -NoEnumerate
     } else {
-      Write-Output -InputObject $InputObject
+      return $InputObject
     }
   }
 }
