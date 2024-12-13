@@ -13,6 +13,11 @@ $Object1 = Invoke-WebRequest -Uri 'https://u.y.qq.com/cgi-bin/musicu.fcg' -Metho
   } | ConvertTo-Json -Compress
 ) | Read-ResponseContent | ConvertFrom-Json
 
+if ($Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.verType -eq 0) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.RawVersion = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgVersion.ToString()
 $this.CurrentState.Version = $this.CurrentState.RawVersion.Insert(2, '.')
