@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://u.y.qq.com/cgi-bin/musicu.fcg' -Metho
   @{
     comm                                              = @{
       ct       = '19'
-      cv       = '0'
+      cv       = $this.LastState.Contains('RawVersion') ? $this.LastState.RawVersion : '2022'
       tmeAppID = 'qqmusic'
     }
     'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate' = @{
@@ -14,7 +14,8 @@ $Object1 = Invoke-WebRequest -Uri 'https://u.y.qq.com/cgi-bin/musicu.fcg' -Metho
 ) | Read-ResponseContent | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgVersion.ToString().Insert(2, '.')
+$this.CurrentState.RawVersion = $Object1.'platform.uniteUpdate.UniteUpdateSvr.QueryUpdate'.data.pkgVersion.ToString()
+$this.CurrentState.Version = $this.CurrentState.RawVersion.Insert(2, '.')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
