@@ -222,8 +222,8 @@ function Update-InstallerEntry {
     }
 
     # Update the installer using the matching installer
-    $MatchingInstaller = $Installers | Where-Object -FilterScript { $_.InstallerUrl -eq $Installer.InstallerUrl } | Select-Object -First 1
-    if ($MatchingInstaller -and ($Installer.Contains('NestedInstallerFiles') ? ((ConvertTo-Json -InputObject $Installer.NestedInstallerFiles -Depth 10 -Compress) -eq (ConvertTo-Json -InputObject $MatchingInstaller.NestedInstallerFiles -Depth 10 -Compress)) : $true)) {
+    $MatchingInstaller = $Installers | Where-Object -FilterScript { $_.InstallerUrl -ceq $Installer.InstallerUrl } | Select-Object -First 1
+    if ($MatchingInstaller -and ($Installer.Contains('NestedInstallerFiles') ? ((ConvertTo-Json -InputObject $Installer.NestedInstallerFiles -Depth 10 -Compress) -ceq (ConvertTo-Json -InputObject $MatchingInstaller.NestedInstallerFiles -Depth 10 -Compress)) : $true)) {
       foreach ($Key in @('InstallerSha256', 'SignatureSha256', 'PackageFamilyName', 'ProductCode', 'ReleaseDate', 'AppsAndFeaturesEntries')) {
         if ($MatchingInstaller.Contains($Key) -and -not $MatchingInstallerEntry.Contains($Key)) {
           $Installer.$Key = $MatchingInstaller.$Key
@@ -487,7 +487,7 @@ function Move-KeysToManifestLevel {
         $ManifestEntryHash = ConvertTo-Json -InputObject $Manifest.$Key -Depth 10 -Compress
         foreach ($Installer in $Installers) {
           $InstallersEntryHash = ConvertTo-Json -InputObject $Installer.$Key -Depth 10 -Compress
-          if ($ManifestEntryHash -eq $InstallersEntryHash) {
+          if ($ManifestEntryHash -ceq $InstallersEntryHash) {
             $Installer.Remove($Key)
           }
         }
@@ -500,7 +500,7 @@ function Move-KeysToManifestLevel {
     } else {
       if ($Manifest.Contains($Key)) {
         foreach ($Installer in $Installers) {
-          if ($Installer.$Key -eq $Manifest.$Key) {
+          if ($Installer.$Key -ceq $Manifest.$Key) {
             $Installer.Remove($Key)
           }
         }
