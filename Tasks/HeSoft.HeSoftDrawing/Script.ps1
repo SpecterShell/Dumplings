@@ -37,13 +37,9 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.wodeabc.com/article/show/8002658' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'article-content')]/h1[contains(., 'v$($this.CurrentState.Version -replace '\.0$')')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[@data-macro-name='section']//text()[contains(., 'v$($this.CurrentState.Version -replace '\.0$')')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) {
-          # Remove download links
-          $Node.SelectNodes('.//li[contains(., "[下载]")]').ForEach({ $_.Remove() })
-          $Node
-        }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('./following::node()'); $Node -and $Node.InnerText -notmatch '^v\d+(\.\d+)+'; $Node = $Node.SelectSingleNode('./following::node()')) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
