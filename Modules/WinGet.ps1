@@ -146,34 +146,38 @@ function New-WinGetManifest {
   #region Validate manifests using WinGet client
   $Task.Log('Validating manifests', 'Verbose')
 
-  $WinGetOutput = ''
-  $WinGetMaximumRetryCount = 3
-  for ($i = 0; $i -lt $WinGetMaximumRetryCount; $i++) {
-    try {
-      winget validate $OutFolder | Out-String -Stream -OutVariable 'WinGetOutput'
-      break
-    } catch {
-      if ($_.FullyQualifiedErrorId -eq 'CommandNotFoundException') {
-        $Task.Log('Could not find the WinGet client for validating manifests. Is it installed and added to PATH?', 'Error')
-        throw $_
-      } elseif ($_.FullyQualifiedErrorId -eq 'ProgramExitedWithNonZeroCode') {
-        # WinGet may throw warnings for, for example, not specifying the installer switches for EXE installers
-        # Ignore these warnings by checking the exit code as it actually doesn't matter
-        if ($_.Exception.ExitCode -eq -1978335192) {
-          break
-        } else {
-          if ($i -eq $WinGetMaximumRetryCount - 1) {
-            $Task.Log("Failed to pass manifests validation: $($WinGetOutput -join "`n")", 'Error')
-            throw $_
+  if (-not $Global:DumplingsPreference['NoValidation']) {
+    $WinGetOutput = ''
+    $WinGetMaximumRetryCount = 3
+    for ($i = 0; $i -lt $WinGetMaximumRetryCount; $i++) {
+      try {
+        winget validate $OutFolder | Out-String -Stream -OutVariable 'WinGetOutput'
+        break
+      } catch {
+        if ($_.FullyQualifiedErrorId -eq 'CommandNotFoundException') {
+          $Task.Log('Could not find the WinGet client for validating manifests. Is it installed and added to PATH?', 'Error')
+          throw $_
+        } elseif ($_.FullyQualifiedErrorId -eq 'ProgramExitedWithNonZeroCode') {
+          # WinGet may throw warnings for, for example, not specifying the installer switches for EXE installers
+          # Ignore these warnings by checking the exit code as it actually doesn't matter
+          if ($_.Exception.ExitCode -eq -1978335192) {
+            break
           } else {
-            $Task.Log("WinGet exits with exitcode $($_.Exception.ExitCode)", 'Warning')
+            if ($i -eq $WinGetMaximumRetryCount - 1) {
+              $Task.Log("Failed to pass manifests validation: $($WinGetOutput -join "`n")", 'Error')
+              throw $_
+            } else {
+              $Task.Log("WinGet exits with exitcode $($_.Exception.ExitCode)", 'Warning')
+            }
           }
+        } else {
+          $Task.Log('Failed to run manifests validation', 'Error')
+          throw $_
         }
-      } else {
-        $Task.Log('Failed to run manifests validation', 'Error')
-        throw $_
       }
     }
+  } else {
+    $Task.Log('Manifests validation is skipped', 'Info')
   }
 
   $Task.Log('Manifests validation passed', 'Verbose')
