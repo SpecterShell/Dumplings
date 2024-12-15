@@ -23,17 +23,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./p[./text()="Auto Release."]')
-        if ($ReleaseNotesTitleNode) {
-          # ReleaseNotes (en-US)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
-          }
-        } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
