@@ -4,7 +4,8 @@ $RepoName = 'llvm-mingw'
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$NameMatches = [regex]::Match($Object1.name, 'llvm-mingw (?<date>\d+) with LLVM (?<version>\d+(?:\.\d+)+)')
+$this.CurrentState.Version = "$($NameMatches.Groups['version'].Value)-$($NameMatches.Groups['date'].Value)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
