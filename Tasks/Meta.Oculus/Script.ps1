@@ -4,8 +4,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://graph.oculus.com/pc_gestalt_version?a
 $this.CurrentState.Version = $Object1.version
 
 # Installer
+$InstallerUrlBuilder = [System.UriBuilder]::new($Object1.uri)
+$InstallerUrlBuilder.Host = 'securecdn.oculus.com'
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.uri
+  InstallerUrl = $InstallerUrlBuilder.ToString().Replace(':443', '')
 }
 
 switch -Regex ($this.Check()) {
