@@ -119,13 +119,13 @@ $Script:DumplingsLogIdentifier = @('Dumplings')
 
 # Set default parameter values for some functions
 $PSDefaultParameterValues = $Global:DumplingsDefaultParameterValues = @{
-  'Invoke-WebRequest:ConnectionTimeoutSeconds' = 30
-  'Invoke-WebRequest:OperationTimeoutSeconds'  = 30
+  'Invoke-WebRequest:ConnectionTimeoutSeconds' = 15
+  'Invoke-WebRequest:OperationTimeoutSeconds'  = 15
   'Invoke-WebRequest:MaximumRetryCount'        = 3
   'Invoke-WebRequest:RetryIntervalSec'         = 3
   'Invoke-WebRequest:SslProtocol'              = 'Tls12'
-  'Invoke-RestMethod:ConnectionTimeoutSeconds' = 30
-  'Invoke-RestMethod:OperationTimeoutSeconds'  = 30
+  'Invoke-RestMethod:ConnectionTimeoutSeconds' = 15
+  'Invoke-RestMethod:OperationTimeoutSeconds'  = 15
   'Invoke-RestMethod:MaximumRetryCount'        = 3
   'Invoke-RestMethod:RetryIntervalSec'         = 3
   'Invoke-RestMethod:SslProtocol'              = 'Tls12'
