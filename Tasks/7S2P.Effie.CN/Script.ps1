@@ -1,17 +1,10 @@
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://www.effie.co/downloadfile/win'
 }
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
-
-$Installer.AppsAndFeaturesEntries = @(
-  [ordered]@{
-    DisplayName = "Effie ${Version}"
-    ProductCode = 'Effie_is1'
-  }
-)
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
