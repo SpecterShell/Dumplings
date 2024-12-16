@@ -32,19 +32,34 @@ switch -Regex ($this.Check()) {
 
       if ($Object2.content.'#text' -ne 'No content.') {
         $ReleaseNotesObject = ($Object2.content.'#text' | ConvertFrom-Markdown).Html | ConvertFrom-Html
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')]")
+
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][1]")
         if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
           $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
+
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][2]")
+        if ($ReleaseNotesCNTitleNode) {
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
