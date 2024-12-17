@@ -524,9 +524,6 @@ function Write-ManifestContent {
     [string] $Schema
   )
 
-  # Mitigate the issue with ConvertTo-Yaml from powershell-yaml module v0.4.8
-  $YamlContent = $YamlContent | ConvertTo-Json -Depth 10 | ConvertFrom-Json -AsHashtable
-
   [System.IO.File]::WriteAllLines($FilePath, @(
       $ScriptHeader
       "# yaml-language-server: `$schema=$Schema"

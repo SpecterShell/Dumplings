@@ -215,7 +215,7 @@ class PackageTask {
       $LogName = "Log_$(Get-Date -AsUTC -Format "yyyyMMdd'T'HHmmss'Z'").yaml"
       $LogPath = Join-Path $this.Path $LogName
       Write-Log -Object "Writing current state to log file ${LogPath}"
-      $this.CurrentState | ConvertTo-Json -Depth 10 | ConvertFrom-Json -AsHashtable | ConvertTo-Yaml -OutFile $LogPath -Force
+      $this.CurrentState | ConvertTo-Yaml -OutFile $LogPath -Force
 
       # Writing current state to state file
       $StatePath = Join-Path $this.Path 'State.yaml'
