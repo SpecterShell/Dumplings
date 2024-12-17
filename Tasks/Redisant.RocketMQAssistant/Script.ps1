@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\ROCKETMQ-$($this.CurrentState.Version).exe"
+      RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\ROCKETMQ.exe"
     }
   )
 }
