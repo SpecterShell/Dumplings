@@ -4,14 +4,14 @@ $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32'
 }
-$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi'
 }
-$VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+$VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 if ($VersionEXE -ne $VersionWiX) {
   $this.Log("EXE version: ${VersionEXE}")
