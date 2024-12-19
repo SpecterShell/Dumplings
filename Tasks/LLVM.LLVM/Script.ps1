@@ -62,9 +62,9 @@ switch -Regex ($this.Check()) {
       if (Test-Path -Path Variable:\ReleaseNotesUrl) {
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h1[contains(text(), "Changes")]')
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
-        if ($ReleaseNotesNodes) {
+        $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h1[contains(text(), "Changes") or contains(text(), "Release Notes")]')
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
