@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://llvm.org/header.incl' | ConvertFrom-Html
 
-      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("/html/body/table/tr/td[1]/div[5]/span/text()[contains(string(), '17.0.6')]/following-sibling::a[1]")
+      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("/html/body/table/tr/td[1]/div[5]/span/text()[contains(string(), '$($this.CurrentState.Version)')]/following-sibling::a[1]")
       if ($ReleaseNotesUrlNode) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
@@ -62,7 +62,7 @@ switch -Regex ($this.Check()) {
       if (Test-Path -Path Variable:\ReleaseNotesUrl) {
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h2[contains(text(), "Changes")]')
+        $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h1[contains(text(), "Changes")]')
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
           # ReleaseNotes (en-US)
