@@ -1,0 +1,231 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_6.24.1221.1/Notepad3_6.24.1221.1_x86_Setup.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_6.24.1221.1/Notepad3_6.24.1221.1_x64_Setup.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/rizonesoft/Notepad3/releases/tag/RELEASE_6.24.1221.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    NEW:
+    - Digitally Signing the Notepad3 "INNO Setup Uninstaller" file (SUP).
+    - Add an "Opera Promotion" page in Notepad3 "INNO Setup Installer" (SUP).
+    - New settings option to enable/disable feature Multiple Selection.
+    - Option to choose between sub-line and whole-line selection on line-number margin click.
+    - Allow selected lines movement for rectangular selection also.
+    - Add detection of Windows 11 Version information.
+    - Update "grepWinNP3" from current "grepWin" dev (GRE).
+    - Python stream comment hack.
+    - "DrawAnimatedWindow": Option to disable animated max./min. window.
+    - Add Dark-Mode Contrast control for Schemes configuration.
+    - Add new Toolbar button "New Empty Window".
+    - Add new "grepWinNP3" icon for Launch and Search menu's (GRE).
+    - Add new Toolbar button "Reset Zoom".
+    - Indentation guide coloring on matching brace highlight.
+    - Option on F/R dialog: incremental search ON/OFF.
+    - Option: do not save blank new files.
+    - Option to show/hide titlebar.
+    - Localization in INNO Setup of "Open with Notepad3" (SUP).
+    - Enhanced File-Change Notification Messagebox.
+    - Menu entry to clear change/undo history.
+    - Split Verilog Lexer (Verilog and SystemVerilog).
+    - Add Lexer Verilog HDL.
+    - Cooperation of Alt+LClick on Hyperlinks vs. extend selection.
+    - Option to fill empty search text in F/R dialog.
+    - Unicode point display (status bar) of current (caret pos) character.
+    - Quotation Mark Auto-Close Functionality.
+    - Add "np3encrypt" project to solution (cmd-ln tool).
+    - Localization of the INNO Setup / Installer menus (SUP).
+
+    CHANGES:
+    - Added Support for INNO Setup 6.3.3 (SUP).
+    - Moving the "Search" menu to the Toolbar.
+    - Highlight current line: change meaning of foreground color.
+    - Move caret line outline frame translucency to alpha2.
+    - Zoom dependent caret outline frame thickness, zoom dependent visible whitespace size.
+    - CR: if selection empty on "Modify Lines..." complete document is selected.
+    - Refactor Remove/Unite Duplicate Lines.
+    - Updating Lexer Style "NewSombra" from MadDogVachon.
+    - Ctrl+S does not forced saving doc any longer - only saves file, if save needed (doc changed).
+    - No need to save current file (doc changed) for open new (empty) np3 window.
+    - Line number margin option: switched from sub-line selection to whole-line selection.
+     Change memory copy method.
+    - RegEx syntax for horizontal space matching (ONI).
+    - DrawAnimatedWindow: only toggle between system settings and suppress-animation if used in system settings.
+    - Limit width of left dead margin text area to max base font width (char width).
+    - Try to preserve caret position and visible line positions after recoding.
+    - Merging Zufuliu's non Lexilla custom Lexers for Kotlin and Dart.
+    - Reusing size: definition of "Indentation Guide" scheme settings for text area offset to margin area.
+    - Ini-Filereader: allow long suffix comments for numeric values.
+    - Config-File: allow space or comment char after integer and float values.
+    - Change indentation in case of complete line selected.
+    - Explicit update toolbar and titlebar on drag n drop file.
+    - Wrapping at long line marker.
+    - Ctrl+I wraps according to highest column long-line-edge-marker, if defined.
+    - Using selection color also for not focused selections (secondary and inactive).
+    - Some refactoring regarding string comparison.
+    - Line comment indentation for complaint prog. lng (issue 4983).
+    - Python default dark-mode colors for comment and keywords.
+    - Comment out "MSIX" attributes in applications manifest.
+    - Move Join Lines, Split Lines, Fuse Lines, Preserve Paragr. from Lines to Selection menu.
+    - Try to speed-up large file loading.
+    - Try to minimize scrolling to view.
+    - Patch Oniguruma engine to accept EOF as line-terminator.
+    - Allow not suitable toolbar dimension.
+    - Minor changes: CallTip/ToolTip (zoom).
+    - Tooltip/Calltip style using Segoe UI font.
+    - Web Source Code: enhancement for commenting in embedded scripts.
+    - Removing square brackets from being valid codepoints of URL (hyperlink) regex.
+    - Minor enhancement on log file monitoring.
+    - Add some new sentences for Logfile Monitoring.
+    - Some enhancements for Logfile Monitoring.
+    - Changed message box for file change notification.
+    - Keep Dark/Light Win Mode settings (if once set manually - else auto detect).
+    - Disable menubar in fullscreen mode too.
+    - Migrate GetTickCount() -> QueryPerformanceCounter().
+    - Option for ASAN Dbg to not throw exception.
+    - Default Print Colour Mode depending on Dark/Light Mode.
+    - Renaming for Lexer related resource string IDs (defined names).
+    - Verilog: split 'System Tasks' from 'Keywords'.
+    - Update VHDL Lexer.
+    - Dialog windows with special system menu: add 'burger' symbol.
+    ).
+    - Refactoring: use background worker helper.
+    - RegExpr enhancements (ONI).
+    - Use larger color bitmaps within color select buttons (customize schemes).
+    - SCI add SendMessage macro (SCI).
+    - Generic font names $Code/$Text prepend by number referring to priority list position.
+    - Goto next/prev markers: respect last searched markers.
+    - Delete matching brace/quote, if content in between is empty.
+    - Make Code/Text font priority list configurable.
+    - Enhance Display of Unicode Point.
+    - In Statusbar remove "Ch" because the values are almost similar with "Col".
+    - Use change-history-markers for bookmark find next/previous.
+    - Enhancement for auto-close char-pairs.
+    - All "Margins and Line Numbers" to "font:Consolas; size:-2; fore:#008080".
+    - AnalyzeConfidenceLevel at least 90%.
+    - Lexer TEXT using own Default settings (corresponding to ANSI Lexer).
+    - Installer script resets "Theme files" only on user decision (SUP).
+
+    FIXES:
+    - Language files missing in Notepad3 portable version.
+    - Some Folders/Files are blocked with Inno SETUP v.6.3.x (SUP).
+    - Confusing File modified dialog.
+    - Do not bring main window to foreground upon file change.
+    - Correct TOML Lexer identifier.
+    - Delete line (Ctrl+Shift+D) - fix last line handling.
+    - Update Toolbar in case of Undo/Redo.
+    - Regression for "Reuse Window" flag.
+    - Center dialog if window is maximized.
+    - Some missing Path_Sanitize() calls.
+    - Finding np3 instance holding same file-path (only one instance).
+    - Minor issues related to "autoload recent file" feature.
+    - Center popup dialogs and show current line on word-wrap toggle.
+    - Adjust the fields for the RGB color values for a Display Scale of 125%.
+    - Accept file args with leading dash (needs quotes in any dash case).
+    - Mouse cursor flickering in case of "hide mouse while typing".
+    - Redo failure introduced with Scintilla v5.4.2 Bug 2432 (SCI).
+    - Tinyexpr: integer values always shown in abs() format.
+    - Remove duplicate lines.
+    - Regression: RegEx: find previous line start (^) - skips empty lines (ONI).
+    - Toolbar missing if started minimized.
+    - TAB selection on empty line.
+    - Regression:Initial show NP3 window minimized.
+    - Preserve caret position after re-encoding.
+    - Need PostMessage(WM_THEMECHANGED) event after recoding document.
+    - Regex dot(.) not matching linefeed(LF)/newline character, if not enabled for line-breaks (ONI).
+    - Settings2:DrawAnimatedWindow - support system settings.
+    - Correction for settings2 DrawAnimatedWindow.
+    - Horizontal mouse wheel scrolling direction.
+    - Ctrl+Up/Down should keep selection.
+    - "grepWinNP3": Search results context menu "Fix Open with Editor" (GRE).
+    - "grepWinNP3": bug directly passed search path (GRE).
+    - Reduce window flickering, fix cut last line.
+    - Same behavior of "Ctrl+Shift+X".
+    - MS Visual Studio "Line-Cut" (Ctrl+X) behavior on empty selection.
+    - Show ColorDef Dlg always full visible.
+    - RegularExpression broken.
+    - Python Line Comment : respect indents.
+    - Show hidden menu bar on Alt or F10 key.
+    - TinyExpr Output formatter.
+    - RegEx search with begin/end line meta chars.
+    - Recoding for UTF-16.
+    - Do not generally move selection to top on view.
+    - Save also an "Empty" Replace string in history.
+    - "LaunchInstanceFullVisible" feature.
+    - Minor optimizations on initial window startup.
+    - Scroll to preserved caret position on file load.
+    - Menu View: correct positioning of active marks.
+    - Initial show window at final position w/o repositioning.
+    - Set color of horizontal ruler (folded block) to line number coloring.
+    - Zoom tooltip moved out of margin area.
+    - Don't show auto-completion list if typed word matches the one and only word in list.
+    - PHP commenting embedded Web Source Code.
+    - Minor issue in "Favorites" in INNO Setup (SUP).
+    - Minor issue related to match selection counters.
+    - "grepWinNP3" <-> Notepad3 interface regression (GRE).
+    - Single File Instance' flag handling.
+    - Minor bugs in "Open with Notepad3" in foreign languages (SUP).
+    - Enforce hidden menu bar (if option selected).
+    - Multi-replace: correct advance next insertion point in case of SCI_REPLACETARGETMINIMAL.
+    - Cut (Ctrl+X) and Delete (Ctrl+Shift+D) last line (EOF -> EOL).
+    - Minor bugs in "Reset Notepad3's settings and themes" (SUP).
+    - Switch to "Log Monitoring" id commandline option "/l" is given.
+    - Regression: save readonly file.
+    - Minor bugs in localization of "Open with Notepad3"  (SUP).
+    - Some more issues around "File Change Monitoring".
+    - Integration and Notification of DirectoryObserver and FileChanged-Polling.
+    - Issue "file changed on disk" for silent mode on closing.
+    - Some clean-up in uninstalling "Notepad3_setup" (SUP).
+    - Oniguruma line-break handling (CRLF & CR) support.
+    - Book/Change-Mmarker search: high prio on Book-Marker.
+    - Fallback on LoadIconWithScaleDown() failed.
+    - Deprecated settings key-names handling ('FileCheckInverval').
+    - Notification adjustment in case of externally deleted file.
+    - Min. FileCheckInterval 500msec, else notify immediately.
+    - Missing file path display name.
+    - "_beginthreadex_proc_type" correction for Win32(x86).
+    - Reactivate FileChangeInterval (used on dir changed notification too).
+    - Shift+Alt+Click on Hyperlink should not fire Hyperlink action.
+    - In case of no file args: open empty doc instead of file open dialog.
+    - Creating New file in current working directory.
+    - Don't reset "dirty flag" after file loading (in case of EOL or indent correction).
+    - Remove session state from default font from list retrieval.
+    - Backward compat. for .ini param 'FileCheckInverval' (typo).
+    - 'FileCheckInterval' instead of 'FileCheckInverval' (typo).
+    - Find marker next/prev.
+    - Find consecutive change marker begin.
+    - "grepWinNP3": properly search from the file beginning again ("grepWin" bugfix) (GRE).
+    - Navigate marker: consecutive change-marker handled as single mark.
+    - SplitUndoTypingSeqOnLnBreak and UndoTransactionTimeout.
+    - Minor changes for Unicode Point display.
+    - Repair jump to line (Alt+Click) and related command line search.
+    - Correction to LineSpace evaluation TEXT files.
+    - Lexer TEXT using own Default but inheriting from Common Base.
+    - WSL2 simple path and NP3 options given with slash.
+    - Representation of EOLs in case of GDI technology (use default).
+    - Find previous skips finding at begin.
+    - Use random IV for np3encrypt.
+    - Encoding as "UTF-8 Signature" for Korean INNO Setup menus (SUP).
+    - Line spacing in TEXT Lexer.
+    - Don't force top-left if window does not fit to monitor.
+
+    REMOVED:
+    - Due to problems, remove "DrawAnimatedWindow" settings feature and rely on system window animation configuration.
+    - Removal of the "es-MX" language to keep only the "es-ES" language (MUI).
+
+    CHANGES Versions in Tools or Libraries:
+    - Update Lexilla Library (LEX) version 5.4.1 (2024-10-19).
+    - Update Scintilla Library (SCI) version 5.5.3 (2024-10-19).
+    - Update grepWinNP3 (GRE) version 2.1.15.48 (2024-01-10).
+    - Update Oniguruma Regex (ONI) engine version 6.9.9 (2023-10-14).
+    - Update MiniPath (MIN) version 1.0.2.191 (2022-12-13).
+
+    TRANSLATIONS (MUI):
+    - Vietnamese (vi-VN)
+    - Finnish (fi-FI).
+    - Indonesian (id-ID).
+Version: 6.24.1221.1
+ReleaseTime: 2024-12-21T17:52:26.0000000Z
