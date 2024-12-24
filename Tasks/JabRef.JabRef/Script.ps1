@@ -6,6 +6,10 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
+if ($this.CurrentState.Version.Contains('alpha')) {
+  throw 'Alpha version'
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
