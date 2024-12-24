@@ -1,0 +1,46 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Zettlr/Zettlr/releases/download/v3.4.1/Zettlr-3.4.1-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes | Performance Improvements
+    Update 3.4.1 fixes an issue with release 3.4.0 from yesterday.
+    Hello! With this final update of the year, we say goodbye to 2024 and wish you happy holidays and a successful start into 2025. This update focuses on fixing issues and improving the performance across the app. Most notably, we have continued to correct the issues that have been caused by 3.3.0 especially on Windows and a few less noticeable things. One addition is that we have improved the word counting mechanism. It conveniently shows the project word count in a file's statusbar for project files, and counts words in the bibliography sidebar.
+    Do you enjoy Zettlr? Consider donating to help us pay for the development costs. You can donate monthly on Patreon or once via PayPal. Additionally, you can sponsor Hendrik Erz on GitHub. Thanks for your support!
+    Changelog
+    GUI and Functionality
+    - New Feature: For files that belong to a Zettlr project, the status bar now additionally displays the total word or character count for all files across the entire project, making it easy to check for a total limit (e.g., for a journal submission); clicking on the item furthermore allows quick switching between just those files that are part of the project
+    - New Feature: The references sidebar tab now provides an approximate word count, which is useful if some word count limit includes the bibliography; as references aren't included in any other word count
+    - Fix SVG image preview (#5496)
+    - Fix network share image preview (#5495)
+    - Fixed a bug where opened documents would not be closed once the last tab was closed, retaining outdated file contents and making the file unresponsive to external changes. Now files that do not have an open editor instance will be closed appropriately
+    - Fixed an issue where valid citations from within, e.g., comments, or other non-valid places would end up in the list of references
+    - Fixed a bug that would cause spellcheck suggestions to appear offset (#5494)
+    - Checking task-list checkboxes now returns the focus back to the editor immediately (#5246)
+    - The statusbar's character/word counters now respect the character count setting, meaning only the word or character count is shown, not both
+    - Update translations:
+      - uk-UA (#5524)
+      - de-DE
+    Under the Hood
+    - Update Pandoc to version 3.6
+    - Bump CodeMirror dependencies
+    - Updates to the Markdown AST parser:
+      - Headings now have regular children
+      - Fixed a bug that would prevent text nodes from tables to be extracted
+      - Better detection of content "gaps"
+    - Type system updates:
+      - Define a new shared type, IPCAPI that can be used to type the various IPC APIs the service providers use across the app.
+      - Fully type IPC APIs: AssetsProvider, DocumentAuthority, DocumentManager, WindowProvider, CiteprocProvider
+    - Refactored the file type detection system; it is now simpler and easier to use and can detect a variety of additional groups of files (previously only Markdown and code files; now also images, PDFs, MS and Open Office files as well as data files)
+    - Select controls can be disabled now
+    - Configuration updates in the renderer are now throttled to at most once every second, preventing some fast updates from inducing lag
+    - Refactored spellcheck linter
+    New Contributors
+    - @Fedik made their first contribution in https://github.com/Zettlr/Zettlr/pull/5524
+    Full Changelog: https://github.com/Zettlr/Zettlr/compare/v3.3.1...v3.4.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Zettlr/Zettlr/releases/tag/v3.4.1
+Version: 3.4.1
+ReleaseTime: 2024-12-24T09:08:22.0000000Z
