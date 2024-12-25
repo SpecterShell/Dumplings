@@ -1,10 +1,15 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.catsxp.com/api/service/Update?cup2key=:' -Method Post -Body @'
+$Object1 = Invoke-RestMethod -Uri 'https://www.catsxp.com/api/service/Update?cup2key=:' -Method Post -Body @"
 <?xml version="1.0" encoding="UTF-8"?>
 <request>
-  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="" ap="x86-release" />
-  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="" ap="x64-release" />
+  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="$($this.CurrentState.Contains('Version') ? $this.CurrentState.Version : '132.4.12.1')" ap="x86-release" />
+  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="$($this.CurrentState.Contains('Version') ? $this.CurrentState.Version : '132.4.12.1')" ap="x64-release" />
 </request>
-'@
+"@
+
+if ($Object1.response.app.updatecheck.status -contains 'noupdate') {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
