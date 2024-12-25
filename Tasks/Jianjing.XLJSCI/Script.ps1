@@ -1,35 +1,18 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.xljsci.com/whale/api/client/version' -Method Post
-
-# Version
-$this.CurrentState.Version = $Object1.data.showVersion
-
-# ReleaseNotes (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.intro | ConvertFrom-Html | Get-TextContent | Split-LineEndings | Select-Object -Skip 1 | Format-Text
-}
-
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.xljsci.com/download.html')
+$Object1 = Invoke-RestMethod -Uri 'https://api.xljsci.com/whale/api/config/getPackageInfo'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/a')).GetAttribute('href') | ConvertTo-UnescapedUri
+  InstallerUrl = $InstallerUrl = $Object1.data.windowsDownload
 }
 
-if (!$InstallerUrl.Contains($this.CurrentState.Version)) {
-  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($this.CurrentState.Version)"
-}
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match(
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[starts-with(@class, "windowbox")]/p[2]')).Text,
-        '(\d{4}\.\d{1,2}\.\d{1,2})'
-      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.data.windowsIntroduce, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -41,6 +24,22 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
+    try {
+      if ($Global:DumplingsStorage.Contains('XLJSCI') -and $Global:DumplingsStorage.XLJSCI.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.XLJSCI[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
     $this.Print()
     $this.Write()
