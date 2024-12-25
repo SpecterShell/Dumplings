@@ -17,11 +17,11 @@ $this.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.versi
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
+  InstallerUrl = "https://catsxp.oss-cn-hongkong.aliyuncs.com/win_x86/catsxp_installer_$($this.CurrentState.Version.Replace('.', '_')).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
+  InstallerUrl = "https://catsxp.oss-cn-hongkong.aliyuncs.com/win_x64/catsxp_installer_$($this.CurrentState.Version.Replace('.', '_')).exe"
 }
 
 switch -Regex ($this.Check()) {
