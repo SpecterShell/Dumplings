@@ -6,22 +6,11 @@ $this.CurrentState.Version = $Object1.Public.Build
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = 'https://freecommander.com/downloads/FreeCommanderXE-32-public_setup.zip'
+  InstallerUrl = "https://freecommander.com/downloads/FreeCommanderXE-32-public_setup$($this.CurrentState.Version).zip"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://freecommander.com/forum/viewtopic.php?p=42540'
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FreeCommanderXE-32-public_setup.exe' | Out-Host
