@@ -2,13 +2,16 @@
 $Object1 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=exe'
 # x64 MSI
 $Object2 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=msi'
+# x64 MSIX
+$Object3 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=msix'
 # arm64 MSIX
-$Object3 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=arm64&variant=msix'
+$Object4 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=arm64&variant=msix'
 
 if ($Object1.version -ne $Object2.version) {
   $this.Log("x64 EXE version: $($Object1.version)")
   $this.Log("x64 WiX version: $($Object2.version)")
-  $this.Log("arm64 MSIX version: $($Object3.version)")
+  $this.Log("x64 MSIX version: $($Object3.version)")
+  $this.Log("arm64 MSIX version: $($Object4.version)")
   throw 'Inconsistent versions detected'
 }
 
@@ -27,9 +30,14 @@ $this.CurrentState.Installer += $InstallerX64WiX = [ordered]@{
   InstallerUrl  = $Object2.download_url
 }
 $this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object3.version -eq $Object1.version ? $Object3.download_url : "https://downloads.slack-edge.com/desktop-releases/windows/x64/$($this.CurrentState.Version)/Slack.msix"
+}
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'msix'
-  InstallerUrl  = $Object3.version -eq $Object1.version ? $Object3.download_url : "https://downloads.slack-edge.com/desktop-releases/windows/arm64/$($this.CurrentState.Version)/Slack.msix"
+  InstallerUrl  = $Object4.version -eq $Object1.version ? $Object4.download_url : "https://downloads.slack-edge.com/desktop-releases/windows/arm64/$($this.CurrentState.Version)/Slack.msix"
 }
 
 switch -Regex ($this.Check()) {
