@@ -5,7 +5,12 @@ $this.CurrentState.Version = $Object1.app.tccConfig.download_info.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.app.tccConfig.download_info.apk.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
+  Architecture = 'x86'
+  InstallerUrl = $Object1.app.tccConfig.download_info.apk
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.app.tccConfig.download_info.apk.Replace('ia32', 'x64')
 }
 
 switch -Regex ($this.Check()) {

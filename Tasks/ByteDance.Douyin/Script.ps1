@@ -1,24 +1,40 @@
-$Object1 = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=7044145585217083655&branch=master&buildId=&uid='
+$Object1 = Invoke-WebRequest -Uri 'https://api.toutiaoapi.com/service/settings/v3/' -Body @{
+  aid             = '430651'
+  device_platform = 'pc'
+  from_aid        = '6383'
+  from_channel    = ''
+  from_version    = $this.LastState.Contains('Version') ? $this.LastState.Version : '5.2.1'
+} | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+
+if (-not $Object1.data.settings.Contains('douyin_pc_update')) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
 
 # Version
-$this.CurrentState.Version = $Object1.data.manifest.win32.version
+$this.CurrentState.Version = $Object1.data.settings.douyin_pc_update.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.manifest.win32.urls.Where({ $_.region -eq 'cn' }, 'First')[0].path.ia32.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
+  Architecture = 'x86'
+  InstallerUrl = $Object1.data.settings.douyin_pc_update.url.Replace('mix', 'ia32').Replace('x64', 'ia32')
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.data.settings.douyin_pc_update.url.Replace('mix', 'x64').Replace('ia32', 'x64')
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
+      $this.CurrentState.ReleaseTime = $Object1.data.settings_time | ConvertFrom-UnixTimeSeconds
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.data.releaseNote | Format-Text
+        Value  = $Object1.data.settings.douyin_pc_update.notes | Format-Text
       }
     } catch {
       $_ | Out-Host
