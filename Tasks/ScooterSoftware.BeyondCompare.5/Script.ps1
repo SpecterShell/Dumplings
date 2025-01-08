@@ -5,7 +5,8 @@ $this.CurrentState.Version = $Object1.Update.latestversion -replace '\s+build\s+
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://www.scootersoftware.com/files/BCompare-$($this.CurrentState.Version).exe"
+  InstallerLocale = 'en-US'
+  InstallerUrl    = "https://www.scootersoftware.com/files/BCompare-$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'de-DE'
