@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'BlueStacksMicroInstaller_
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Object2.recommendedVersion.playerMicroInstaller "./FullInstaller/x64/BlueStacksFullInstaller_$($this.CurrentState.Version)_amd64_native.exe"
+  InstallerUrl = Join-Uri $Object1 "./FullInstaller/x64/BlueStacksFullInstaller_$($this.CurrentState.Version)_amd64_native.exe"
 }
 
 switch -Regex ($this.Check()) {
