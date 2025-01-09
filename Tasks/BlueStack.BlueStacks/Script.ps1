@@ -1,13 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://cloud.bluestacks.com/app_player/get_bsx_cdn_url' -Method Post -Body @{
-  player_version = $this.LastState.Contains('Version') ? $this.LastState.Version : '5.21.600.1019'
-  oem            = 'nxt'
-}
-$Object2 = Invoke-RestMethod -Uri 'https://cloud.bluestacks.com/launcher/getAppPlayerVersion/v2?oem=nxt' -Method Post -Body @{
-  launcher_version = $Object1.bsx_version
-}
+$Object1 = Get-RedirectedUrl1st -Uri 'https://cloud.bluestacks.com/api/getdownloadnow'
 
 # Version
-$this.CurrentState.Version = $Object2.recommendedVersion.playerVersion
+$this.CurrentState.Version = [regex]::Match($Object1, 'BlueStacksMicroInstaller_(\d+(?:\.\d+){3,})').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -82,7 +76,7 @@ switch -Regex ($this.Check()) {
             }
           }
           $ReleaseNotesCN = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
-          $Object6 = Invoke-RestMethod -Uri 'https://api.zhconvert.org/convert' -Method Post -Body @{ text = $ReleaseNotesCN; converter = 'Simplified' }
+          $Object6 = Invoke-RestMethod -Uri 'https://api.zhconvert.org/convert' -Method Post -Body @{ text = $ReleaseNotesCN; converter = 'China' }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
