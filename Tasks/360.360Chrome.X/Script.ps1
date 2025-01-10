@@ -1,15 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/eex/' | ConvertFrom-Html
-
-# Version
-$this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div[3]/div[1]/p[2]').InnerText,
-  '(\d+\.\d+\.\d+\.\d+)'
-).Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/browser_download_link.js'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download"]').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = [regex]::Match($Object1.Content, 'EEX:\s*"([^"]+)"').Groups[1].Value
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
