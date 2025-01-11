@@ -1,11 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri "https://zhouql.vip/bdupdate/win32/latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
+$Prefix = 'https://zhouql.vip/bdupdate/win32/'
+
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.files.url
+  InstallerUrl = Join-Uri $Prefix $Object1.files.url
 }
 
 switch -Regex ($this.Check()) {
