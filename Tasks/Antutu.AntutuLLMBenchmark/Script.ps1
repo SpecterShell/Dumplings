@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://file.antutu.com/ai/aitutu_pc_v1.dat'
+$Object1 = Invoke-WebRequest -Uri 'https://file.antutu.com/ai/aitutu_pc_v1.dat' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
 # Version
 $this.CurrentState.Version = $Object1.version
@@ -16,8 +16,19 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.changelog.GetEnumerator().Where({ $_.Key.StartsWith('line') }).ForEach({ $_.Value }) | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
