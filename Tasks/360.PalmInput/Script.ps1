@@ -1,11 +1,14 @@
-$Object1 = Invoke-WebRequest -Uri 'https://cdn.soft.360.cn/static/baoku/info_7_0/softinfo_104126128.html' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.xinshuru.com/' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Object1.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[2]/span[2]').InnerText.Trim()
+$this.CurrentState.Version = [regex]::Match(
+  $Object1.SelectSingleNode("//*[@class='win']//*[@class='desc']").InnerText,
+  '版本：V(\d+\.\d+\.\d+\.\d+)'
+).Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value | ConvertTo-Https
+  InstallerUrl = 'https:' + $Object1.SelectSingleNode("//*[@class='win']//*[@class='download']").Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {
@@ -13,15 +16,30 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
-        $Object1.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText,
-        '(\d{4}-\d{1,2}-\d{1,2})'
+        $Object1.SelectSingleNode("//*[@class='win']//*[@class='desc']").InnerText,
+        '更新日期：(\d{4}/\d{1,2}/\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.SelectSingleNode('//*[@id="doc"]/div[3]/div[3]/div[2]/div') | Get-TextContent | Format-Text
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://www.xinshuru.com/win_record.html' | ConvertFrom-Html
+
+      $ReleaseNotesObject = $Object2.SelectSingleNode("//*[@class='history' and contains(.//*[@class='latest'], '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      if ($ReleaseNotesObject) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesObject.SelectSingleNode('.//*[@class="htime"]') | Get-TextContent | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject.SelectNodes('.//*[@class="latest"]/following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
