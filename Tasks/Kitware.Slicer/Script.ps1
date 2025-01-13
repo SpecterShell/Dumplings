@@ -6,6 +6,7 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Join-Uri 'https://download.slicer.org/' $Object1.download_url
+  ProductCode  = "Slicer $($this.CurrentState.Version) (Win64)"
 }
 
 switch -Regex ($this.Check()) {
