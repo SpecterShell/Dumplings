@@ -20,11 +20,38 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.buildDate
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = ($Object1.highlights -split '-+\n')[-1] | Format-Text
+      $Object2 = [System.IO.StringReader]::new($Object1.highlights)
+      while ($Object2.Peek() -ne -1) {
+        $String = $Object2.ReadLine()
+        if ($String.Contains("Release $($this.CurrentState.Version)")) {
+          try {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime ??= [regex]::Match($String, '(20\d{1,2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+          } catch {
+            $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+          }
+          $null = $Object2.ReadLine()
+          break
+        }
+      }
+      if ($Object2.Peek() -ne -1) {
+        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+        while ($Object2.Peek() -ne -1) {
+          $String = $Object2.ReadLine()
+          if ($String -notmatch '^-+$') {
+            $ReleaseNotesObjects.Add($String)
+          } else {
+            break
+          }
+        }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObjects | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
