@@ -1,19 +1,27 @@
-$Guid = (New-Guid).Guid
-$Time = [System.DateTimeOffset]::Now.ToUnixTimeMilliseconds().ToString()
-$Hash = [System.BitConverter]::ToString(
-  [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes("${Guid}${Time}")
-  )
-).Replace('-', '').ToLower().Substring(0, 8)
+$Object1 = Invoke-RestMethod -Uri 'https://drive.uc.cn/api/client_version'
 
-$this.CurrentState = Invoke-RestMethod -Uri "https://drive.uc.cn/update/win32/x64/$($this.LastState.Contains('Version') ? $this.LastState.Version : '2.5.1')/latest.yml" -Headers @{
-  'x-guid'        = $Guid
-  'x-tm'          = $Time
-  'authorization' = $Hash
-} | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
+# Version
+$this.CurrentState.Version = $Object1.data.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.winInstallerUrl
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.upgradeAlertModal.Where({ $_.system -eq 'windows' }, 'First')[0].descText | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
