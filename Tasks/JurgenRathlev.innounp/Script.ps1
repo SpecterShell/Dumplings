@@ -1,5 +1,5 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.rathlev-home.de/tools/prog-e.html'
-$Object2 = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('innounp-1') } catch {} }, 'First')[0]
+$Object2 = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('innounp') -and $_.outerHTML.Contains('executable') } catch {} }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.outerHTML, 'version(?:\s|&nbsp;)*(\d+(?:\.\d+)+)').Groups[1].Value
