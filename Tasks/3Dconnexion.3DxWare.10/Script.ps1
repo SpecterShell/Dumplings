@@ -1,14 +1,15 @@
 $Object1 = Invoke-WebRequest -Uri 'https://3dconnexion.com/us/drivers/' | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//li[@class="drivers-latest__system" and contains(./div/@class, "drivers-latest__system-icon--windows")]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('//button[@data-driver-target="windows"]//div[@class="drivers-latest__system-version"]').InnerText.Trim(),
+  $Object2.SelectSingleNode('./div[@class="drivers-latest__system-version"]').InnerText.Trim(),
   'Version ([\d\.]+)'
 ).Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//section[@data-driver-details="windows"]//div[@class="drivers-system__drivers"]//a').Attributes['href'].Value
+  InstallerUrl = $Object2.SelectSingleNode('./a').Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {
@@ -16,7 +17,7 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
-        $Object1.SelectSingleNode('//button[@data-driver-target="windows"]//div[@class="drivers-latest__system-date"]').InnerText,
+        $Object2.SelectSingleNode('./div[@class="drivers-latest__system-date"]').InnerText,
         '(\d{4}/\d{1,2}/\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
