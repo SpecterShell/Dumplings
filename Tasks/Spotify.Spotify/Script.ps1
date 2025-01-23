@@ -9,10 +9,10 @@ $this.CurrentState.Version = $Version = $Object1.Keys | Sort-Object -Property { 
 $this.CurrentState.RealVersion = $Object1[$Version].fullversion
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1[$Version].links.win.x86
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object1[$Version].links.win.x86
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1[$Version].links.win.x64
