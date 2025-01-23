@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://api.adguard.org/api/2.0/checkupdate.html?app_id=64dbc91754f34b0ebcc6eecadf83eb81&channel=Release&appname=adguard_ru&version=7.0.0.0&force=1'
+$Object1 = Invoke-RestMethod -Uri 'https://api.adguard.org/api/2.0/checkupdate.html?app_id=64dbc91754f34b0ebcc6eecadf83eb81&channel=Release&appname=adguard_ru&version=7.0.0.0&force=1&os_version=10.0.22000.0'
 
 # Version
 $this.CurrentState.Version = $Object1.response.version.'#cdata-section'
