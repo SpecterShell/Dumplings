@@ -15,10 +15,17 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.base.time | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (en-US)
+      $ReleaseNotes = foreach ($KVP in $Object1.update.GetEnumerator()) {
+        if (-not $KVP.Value.Contains('其它修复和改进') -and $KVP.Value -notmatch '^V(\d+(?:\.\d+)+) ') {
+          $KVP.Value
+        } else {
+          break
+        }
+      }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.update.Values | Format-Text
+        Value  = $ReleaseNotes | Format-Text
       }
     } catch {
       $_ | Out-Host
