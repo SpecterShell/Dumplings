@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Format-Text
+          Value  = $Object1.body -replace '(?s)<details>.+</details>' | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
