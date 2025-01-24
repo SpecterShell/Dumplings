@@ -1,0 +1,112 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/9a3bc604008a/Windows64EditorInstaller/UnitySetup64-6000.0.35f1.exe
+  ProductCode: Unity 6000.0.35f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/9a3bc604008a/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.35f1.exe
+  ProductCode: Unity 6000.0.35f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.35
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.35f1
+    - 3D Physics: "Failed to create Convex Mesh from source mesh" PhysX errors are thrown when looking around the Scene View while Collision Geometry is set to true (UUM-93081)
+    - Asset - Database: Crash on MonoBehaviour::Transfer when the XR Interaction Toolkit Sample Assets are updated (UUM-76934)
+    - Audio Authoring: Audio Reverb Zone still produces sound when the Audio Source volume is 0 (UUM-92689)
+    - Audio Authoring: Audio Source clip is not audible when exceeding a high number of active Audio Sources (UUM-91256)
+    - Build Settings Window: Application Cloud Connection Id is incorrect when using Build Profile with Player Setting Overrides. (UUM-90426)
+    - DirectX12: A memory leak occurs in Play mode when using Direct3D12 Graphics API (UUM-91900)
+    - DirectX12: Allocated graphics memory does not get released when the Editor is out of focus while using D3D12 graphics API (UUM-86354)
+    - DirectX12: The Camera does not render correctly when the Camera.Rect() is changed and HDR is enabled and DX12 graphics API is selected (UUM-86917)
+    - Graphics Optimization Systems: Vertex snapping doesn't work when the GPU Resident Drawer is enabled (UUM-66422)
+    - HDRP: Graphics Compositor breaks Unity rendering when the "Output Camera" is changed to a scene Camera and one Camera SubLayer is active.
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84610
+    - Input: Player .exe remains open as a background task after closing it when Active Input Handling is set to "Input System Package (New)" (UUM-91181)
+    - Materials: Decal Projector produces artifacts when the normal and decal are projected in negative z-direction and Normal Blend is set to 1 (UUM-92200)
+    - Packman: Unable to install ProBuilder package when project is located in an external FAT32/exFAT drive (UUM-86351)
+    - Scene Hierarchy: Undoing GameObject creation doesn't work when the GameObject is focused (UUM-92601)
+    - Scene View: Can not navigate through the Scene view when using a drawing tablet (UUM-90436)
+    - Serialization: The "UniversalRenderPipelineGlobalSettings.asset" is creating noise in the git diff when building a Player (UUM-80052)
+    - Serialization: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - SpeedTree: This release of SpeedTree includes a change to the interface of the SpeedTree8Wind shadergraph node. If you have an animated SpeedTree in the shadergraph, be sure to connect an ObjectSpacePosition node to the input of the SpeedTree8Wind. If the wind node does not have an input on the ObjectSpacePosition port, the mesh will be shrunk down to a point at origin (making it seem to vanish).
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84616
+    - Terrain: Trees do not render in 'Unity Terrain - URP Demo Scene' (UUM-84616)
+    - Texture: Sprite Atlas Override for iOS setting remains disabled when saving its change to enabled (UUM-90066)
+    - Vulkan: [Android] [Vulkan] Cubes stuck on the first few frames of rotation and application flickering when an Overlay Camera is added to the Camera Stack with MSAA enabled (UUM-92429)
+    - Windows: Player remains in Windows Background processes when the application is closed (UUM-87775)
+    6000.0.35f1 Release Notes
+    Improvements
+    - Package Manager: Optimized handling of built-in packages with type module to avoid unnecessary network calls and file operations.
+    Changes
+    - Documentation: Added Multiplayer Widgets to Multiplayer landing page.
+    - Documentation: Removed individual UGS entries from Multiplayer landing page.
+    - Package Manager: Removed Windows 7 support from UPM.
+    - Package Manager: The package installation folder names have been changed from <packageName> to <packageName>@<fingerprint>.substring(0,12) in the Library/PackageCache folder, thus preventing locking issues
+    Fixes
+    - 2D: Fixed an issue by showing Z position for both SceneView and Tile Palette. (UUM-91462)
+    - 2D: Fixed issue where the Active Palette Popup text does not automatically update itself when the selected Palette has been renamed by the user. (UUM-90757)
+    - 2D: Fixed issue where the SceneView grid is not restored when the currently selected GameObject with a Grid/Tilemap with its Grid showing is destroyed. (UUM-91461)
+    - 2D: Fixed issue with the 2D renderers getting information about the SRP and the status of the Shaders under SRP. (UUM-90437)
+    - AI: Fixed an issue by logging a warning in the editor when CalculatePath() starts or ends on multiple NavMesh surfaces. (UUM-84579)
+    - Audio: Fixed the 3D audio pan where right audio channel is completly cutoff at specific position. (UUM-82903)
+    - Editor: Add button for renderers under LODGroup inspector now has hover/highlight behavior. (UUM-82594)
+    - Editor: Fixed a crash that could occur on macOS when operations requiring a progress bar occurred in rapid succession. (UUM-89067)
+    - Editor: Fixed a memory Leak warnings message fixed when creating material + GPU Resident Drawer. (UUM-90039)
+    - Editor: Fixed an issue by preventing a call for GUI Repaint when in the middle of Building. (UUM-83683)
+    - Editor: Fixed an issue where URP renderers could be created in the build process without a render pipeline created. (UUM-91421)
+    - Editor: Fixed console being cleared after building a player. (UUM-91487)
+    - Editor: Fixed issue with missing blue outline when dropping an asset in a folder. (UUM-87749)
+    - Editor: Fixed the double restart prompts when toggling virtual texturing on Windows. (UUM-87735)
+    - Editor: Fixed Tooltips on Linux so there are no longervisual artifacts. (UUM-91319)
+    - Editor: Fixed UnityWbRequest.error returning success after querying texture even though texture creation failed. (UUM-90140)
+    - Editor: HDRP: Fixed color pyramid sampling when distortion is enabled after the distortion pass. (UUM-75319)
+    - Editor: [Android] Fixed deprecation warning message to suggest the UnityEditor.Android.UserBuildSettings.DebugSymbols.level property instead of UnityEditor.Android.DebugSymbols.level on Unity 6.0. (UUM-91350)
+    - Graphics: Addressed crash issue with DX11 Tessellation Displacement sample project from the asset store. (UUM-74198)
+    - Graphics: Fixed an Editor crash when releasing Adaptive Probe Volume data. (UUM-76437)
+    - Graphics: Fixed helpbox giving missleading message for FrameSettings configuration in volume components' Inspector. (UUM-86162)
+    - Graphics: Fixed issue with creation of zero byte files when baking APV. (UUM-85411)
+    - HDRP: Fixed an issue that caused an inability to change the Shadow Map resolution for HDAdditionalLightData with preserveCachedShadow. (UUM-90709)
+    - HDRP: Fixed HDRP sky rendering when Camera Relative Rendering is disabled. (UUM-90251)
+    - IL2CPP: Fixed fields of field types on serialized types being stripped in some cases. (UUM-90024)
+    - iOS: Fixed crash in Unity as a Library configuration after unloading Unity and rotating device. (UUM-87752)
+    - Mono: Fixed Editor freeze when taking a Snapshot with a Memory Profiler. (UUM-90945)
+    - Mono: Fixed InvalidCastExceptions occasionally being thrown by entity workers after a domain reload. (UUM-87193)
+    - Package Manager: Fixed an EPERM error that could occur on Windows during resolve when UPM tries to rename an existing package folder in the PackageCache to replace it with a new package.
+    - Physics: Secured a mass properties recomputation case for Rigidbody components. A error message would be printed in the console if a concave MeshCollider would be present under a kinematic Rigidbody during authoring. This issue would happen due to a unsecured path inside the 'Awake' logic of Rigidbody where mass recomputation would be attempted on this setup. The PhysX SDK would log a message informing that the attempted operation was invalid on the aforementioned setup. (UUM-86499)
+    - Profiler: Fixed Missing Profiler.EndSample and Non-matching Profiler.EndSample error when profiling a project which uploads large textures. (UUM-85841)
+    - PS5: Fixed an issue where double-quote characters (and other unusual characters) in a title's name would cause a build to fail. (UUM-90141)
+    - Shaders: Fixed the shader compiler crash in projects using the Vulkan renderer when importing a shader that uses the RWTexture1DArray uniform type. (UUM-69550)
+    - Terrain: Changed to use hierarchical transform for tree representation matrix. (UUM-78866)
+    - TextMeshPro: Fixed incorrect character caching when font styles and weights are used. (UUM-87529)
+    - uGUI: Fixed incorrect sorting when viewing nested canvases in prefab mode. (UUM-86544)
+    - UI Toolkit: Fixed an issue where dimension styles were applied incorrectly when switching from one selection to the next. (UUM-71286)
+    - UI Toolkit: Fixed an issue where retrieving a value from a data source would allocate memory when the binding path contained an index. (UUM-86226)
+    - UI Toolkit: Fixed an issue where stylesheets added to an element were moved to the UXML root when opening the UXML file in the UI Builder. (UUM-82201)
+    - UI Toolkit: Fixed asset attribute overrides not being resolved for nested templates. (UUM-91641)
+    - UI Toolkit: Fixed sprite UV offsets when an opaque border is applied. (UUM-71807)
+    - UI Toolkit: Fixed UI Builder does not mark the document as dirty when the "Unset" action is performed on an element of a nested document. (UUM-84418)
+    - Universal RP: Fixed an issue where SoftShadowsHigh global shader keyword is not initialized properly. (UUM-91650)
+    - Universal RP: Fixed an issue where the shadow strength setting on lights did not work with shadow masks. (UUM-83459)
+    - Universal RP: Fixed an issue with aliased shadows when using medium or high soft shadow setting. (UUM-87935)
+    - URP: Fixed issue with URP lights where the Culling Mask property was ignored for shadow casters when using the GPU Resident Drawer. (UUM-87651)
+    - Video: Fixed issue where VideoClip importer incorrectly caches failed import results on the cache server. (UUM-77249)
+    - Web: Fixed "ArgumentOutOfRangeException" error when selecting content in 'TMP_InputField' with Ctrl+A in Web. (UUM-83743)
+    - Web: Fixed an issue that caused a Unity Web build to hang when both "Multithreading" and "Decompression Fallback" are used. (UUM-86353)
+    - Web: Fixed an issue where users could not successfully set the webcam resolution on the Web platform. (UUM-87702)
+    Package changes in 6000.0.35f1
+    Packages updated
+    - com.unity.xr.oculus: 4.4.0 to 4.5.0
+Version: 6000.0.35f1
+ReleaseTime: 2025-01-22T18:20:41.5350000Z
