@@ -1,10 +1,10 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://ota.ifpserver.com/resources/maxhub-share?agent=d'
+  InstallerUrl = 'https://ota.ifpserver.com/resources/maxhub-share?agent=d'
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+\.\d+\.\d+\.\d+_\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrl -Uri $this.CurrentState.Installer[0].InstallerUrl), '(\d+\.\d+\.\d+\.\d+_\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
