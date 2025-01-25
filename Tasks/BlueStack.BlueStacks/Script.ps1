@@ -1,13 +1,13 @@
-$Object1 = Get-RedirectedUrl1st -Uri 'https://cloud.bluestacks.com/api/getdownloadnow'
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1, 'BlueStacksMicroInstaller_(\d+(?:\.\d+){3,})').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://support.bluestacks.com/hc/en-us/articles/4402611273485'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Object1 "./FullInstaller/x64/BlueStacksFullInstaller_$($this.CurrentState.Version)_amd64_native.exe"
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('amd64') } catch {} }, 'First')[0].href
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
