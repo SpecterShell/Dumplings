@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesCNObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesCNObject) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesCNObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

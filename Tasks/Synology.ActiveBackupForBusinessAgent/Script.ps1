@@ -30,12 +30,20 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.release_date | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=ActiveBackupBusinessAgent&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
       $ReleaseNotesObject = $Object3.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

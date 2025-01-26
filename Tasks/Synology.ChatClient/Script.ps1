@@ -12,12 +12,20 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.releaseDate | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=ChatClient&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
       $ReleaseNotesObject = $Object2.info.versions.''.all_versions.Where({ ($_.version -replace '-0+', '-') -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
