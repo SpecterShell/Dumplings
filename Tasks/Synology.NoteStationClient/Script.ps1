@@ -16,9 +16,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=NoteStationClient&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=NoteStationClient&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-      $ReleaseNotesObject = $Object1.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
@@ -38,9 +38,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=NoteStationClient&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      $Object3 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=NoteStationClient&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-      $ReleaseNotesCNObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesCNObject = $Object3.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesCNObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesCNObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
