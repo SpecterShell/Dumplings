@@ -19,7 +19,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/7577057' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/7577057?hl=en' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='cc']/p[contains(., 'Version $($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
