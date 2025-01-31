@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//div[@cl
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@class, "button")][1]').Attributes['href'].Value -replace '\.zip$', '.exe'
+  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@href, ".zip")]').Attributes['href'].Value -replace '\.zip$', '.exe'
 }
 
 switch -Regex ($this.Check()) {
