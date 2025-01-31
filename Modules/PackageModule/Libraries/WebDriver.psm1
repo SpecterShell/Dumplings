@@ -28,6 +28,9 @@ function Initialize-WebDriver {
 }
 #endregion
 
+# Silently initialize WebDriver when loading the module
+try { Initialize-WebDriver } catch {}
+
 #region Edge Driver
 $EdgeDriver = $null
 $EdgeDriverLoaded = $false
