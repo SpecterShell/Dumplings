@@ -21,27 +21,45 @@ jobs:
           repository: microsoft/winget-pkgs
           path: winget-pkgs
       - name: Install WinGet client
-        run: .\Utilities\InstallWinGet.ps1
+        run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
         working-directory: Dumplings
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Cache and install PowerShell modules
-        uses: potatoqualitee/psmodulecache@v6.0
-        with:
-          modules-to-cache: powershell-yaml, PowerHTML
+      # - name: Cache and install PowerShell modules
+      #   uses: potatoqualitee/psmodulecache@v6.0
+      #   with:
+      #     modules-to-cache: powershell-yaml, PowerHTML
       - name: Run tasks
-        run: .\Index.ps1 ${{ github.event.inputs.params }}
+        run: .\Core\Index.ps1 ${{ github.event.inputs.params }}
         working-directory: Dumplings
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_DUMPLINGS_TOKEN: ${{ secrets.GH_DUMPLINGS_TOKEN }}
+          DUMPLINGS_SECRET: ${{ secrets.DUMPLINGS_SECRET }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           MT_BOT_TOKEN: ${{ secrets.MT_BOT_TOKEN }}
           MT_ROOM_ID: ${{ secrets.MT_ROOM_ID }}
-          LD246_TOKEN: ${{ secrets.LD246_TOKEN }}
+      - name: Commit changes
+        run: |-
+          $Path = Join-Path $PWD 'Tasks'
+          if (-not [string]::IsNullOrWhiteSpace((git.exe ls-files --other --modified --exclude-standard $Path))) {
+            # In GitHub Actions, set the bot's name and email
+            if (Test-Path -Path Env:\GITHUB_ACTIONS) {
+              git.exe config user.name 'github-actions[bot]' | Out-Host
+              git.exe config user.email '41898282+github-actions[bot]@users.noreply.github.com' | Out-Host
+            }
+            git.exe pull | Out-Host
+            git.exe add $Path | Out-Host
+            git.exe commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]" | Out-Host
+            git.exe push | Out-Host
+          } else {
+            Write-Host -Object 'No changes to commit'
+          }
+        working-directory: Dumplings
+        shell: pwsh
       - name: Get outputs
         uses: actions/upload-artifact@v4
         with:
