@@ -234,12 +234,6 @@ if (-not $Parallel) {
   $Global:DumplingsOutput = (New-Item -Path $PWD -Name 'Outputs' -ItemType Directory -Force).FullName
   Get-ChildItem $Global:DumplingsOutput | Remove-Item -Recurse -Force
 
-  # In CI, git pull first to ensure the local repo is up-to-date
-  if (Test-Path -Path Env:\CI) {
-    Write-Log -Object 'Pulling remote changes'
-    git.exe pull | Out-Host
-  }
-
   # Switch to multi-threads mode if the number of threads is set to be greater than 1, otherwise stay in single-thread mode
   if ($ThrottleLimit -gt 1) {
     # The default number of maximum concurrent threads of ThreadJob is 5. Run Start-ThreadJob once to increase the throttle limit
