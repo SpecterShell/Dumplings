@@ -190,6 +190,18 @@ if (-not $Parallel) {
   if (-not $Global:DumplingsSecret) {
     $Global:DumplingsSecret = [ordered]@{}
   }
+  # Then load secrets from the secret file. They have higher priority so the existing ones of the same names will be overrided
+  $Private:DumplingsSecretPath = Join-Path $PWD 'Secret.yaml'
+  if (Test-Path -Path $Private:DumplingsSecretPath) {
+    try {
+      $Secret = Get-Content -Path $Private:DumplingsSecretPath -Raw | ConvertFrom-Yaml -Ordered
+      if ($Secret -and $Secret -is [System.Collections.IDictionary]) {
+        $Secret.GetEnumerator() | ForEach-Object -Process { $Global:DumplingsSecret[$_.Key] = $_.Value }
+      }
+    } catch {
+      Write-Log -Object "Failed to load secrets. Assigning an empty hashtable: ${_}" -Level Warning
+    }
+  }
 
   # Install specified PowerShell modules
   if ($Global:DumplingsPreference.Contains('PowerShellModules') -and $Global:DumplingsPreference.PowerShellModules -is [System.Collections.IEnumerable]) {
