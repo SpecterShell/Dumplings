@@ -537,7 +537,7 @@ function Update-WinGetInstallerManifest {
   # Move Manifest Level Keys to installer Level
   Move-KeysToInstallerLevel -Manifest $InstallerManifest -Installers $InstallerManifest.Installers -Property $Script:ManifestSchema.installer.definitions.Installer.properties.Keys.Where({ $_ -in $Script:ManifestSchema.installer.properties.Keys })
   # Update installer entries
-  $InstallerManifest.Installers = Update-WinGetInstallerManifestInstallers -OldInstallers $OldInstallerManifest.Installers -InstallerEntries $InstallerEntries
+  $InstallerManifest.Installers = Update-WinGetInstallerManifestInstallers -OldInstallers $InstallerManifest.Installers -InstallerEntries $InstallerEntries
   # Move Installer Level Keys to Manifest Level
   Move-KeysToManifestLevel -Installers $InstallerManifest.Installers -Manifest $InstallerManifest -Property $Script:ManifestSchema.installer.definitions.Installer.properties.Keys.Where({ $_ -in $Script:ManifestSchema.installer.properties.Keys })
 
