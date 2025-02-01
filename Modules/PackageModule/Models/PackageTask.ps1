@@ -386,7 +386,7 @@ class PackageTask {
       #region WinGet
       if ($this.Config.Contains('WinGetIdentifier')) {
         $this.Log('Submitting WinGet manifests', 'Info')
-        New-WinGetManifest -Task $this
+        Send-WinGetManifest -Task $this
       }
       #endregion
     }
