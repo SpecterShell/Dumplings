@@ -1256,38 +1256,6 @@ function Read-FamilyNameFromMSIX {
   }
 }
 
-function Compare-Version {
-  <#
-  .SYNOPSIS
-    Compare two version strings
-  .PARAMETER ReferenceVersion
-    The version used as a reference for comparison
-  .PARAMETER DifferenceVersion
-    The version that is compared to the reference version
-  #>
-  [OutputType([int])]
-  param (
-    [Parameter(Position = 0, Mandatory, HelpMessage = 'The version used as a reference for comparison')]
-    [ValidateNotNullOrEmpty()]
-    [string]$ReferenceVersion,
-
-    [Parameter(Position = 1, Mandatory, HelpMessage = 'The version that is compared to the reference version')]
-    [ValidateNotNullOrEmpty()]
-    [string]$DifferenceVersion
-  )
-
-  $ReferenceVersionPadded = $ReferenceVersion -creplace '\d+', { $_.Value.PadLeft(20) }
-  $DifferenceVersionPadded = $DifferenceVersion -creplace '\d+', { $_.Value.PadLeft(20) }
-
-  if ($ReferenceVersionPadded -lt $DifferenceVersionPadded) {
-    return 1
-  } elseif ($ReferenceVersionPadded -gt $DifferenceVersionPadded) {
-    return -1
-  } else {
-    return 0
-  }
-}
-
 function ConvertFrom-ElectronUpdater {
   <#
   .SYNOPSIS

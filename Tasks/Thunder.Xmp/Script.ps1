@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://static-xl.a.88cdn.com/json/xunlei_vid
 # Upgrade
 $Object2 = Invoke-RestMethod -Uri 'http://upgrade.xl9.xunlei.com/pc?pid=2&cid=100039&v=6.2.3.580&os=10&t=2&lng=0804'
 
-if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Object1.version -DifferenceVersion $Object2.data.v) -gt 0) {
+if ($Object2.code -eq 0 -and [Versioning.Versioning]$Object1.version -lt [Versioning.Versioning]$Object2.data.v) {
   # Version
   $this.CurrentState.Version = $Object2.data.v
 

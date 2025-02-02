@@ -5,7 +5,7 @@ $Version1 = [regex]::Match($Object1.offline, '([\d\.]+)\.exe').Groups[1].Value
 # Upgrade
 $Object2 = Invoke-RestMethod -Uri 'https://upgrade-pc-ssl.xunlei.com/pc?pid=1&cid=100072&v=11.3.14&os=10&&t=2&lng=0804'
 
-if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Object2.data.v) -gt 0) {
+if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Object2.data.v) {
   # Version
   $this.CurrentState.Version = $Object2.data.v
 

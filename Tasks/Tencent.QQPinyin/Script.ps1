@@ -17,7 +17,7 @@ $Object2 = Invoke-RestMethod -Uri 'http://config.android.qqpy.sogou.com/update?f
 )
 $Version2 = $Object2.NewVer
 
-if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -gt 0) {
+if ([Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2) {
   # Version
   $this.CurrentState.Version = $Version2
 

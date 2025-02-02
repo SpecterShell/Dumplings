@@ -174,7 +174,7 @@ class PackageTask {
         # If this is a new task (no last state exists), skip the steps below
         $this.Log('New task', 'Info')
       } else {
-        switch (Compare-Version -ReferenceVersion $this.LastState.Version -DifferenceVersion $this.CurrentState.Version) {
+        switch (([Versioning.Versioning]$this.CurrentState.Version).CompareTo([Versioning.Versioning]$this.LastState.Version)) {
           1 {
             $this.Log("Updated: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Info')
             $this.Status.Add('Updated')

@@ -1,3 +1,7 @@
+if (-not ([System.Management.Automation.PSTypeName]'VersionParser.Versionin').Type) {
+  Add-Type -Path (Join-Path $PSScriptRoot 'Assets' 'Versioning.cs')
+}
+
 # Import libraries
 $Private:LibraryPath = Join-Path $PSScriptRoot 'Libraries'
 if (Test-Path -Path $LibraryPath) {

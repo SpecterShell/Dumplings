@@ -3,7 +3,7 @@ $Version1 = @($Global:DumplingsStorage['VooVMeeting1'].Keys)[-1] ?? '0'
 # Upgrade
 $Version2 = @($Global:DumplingsStorage['VooVMeeting2'].Keys)[-1] ?? '0'
 
-if ((Compare-Version -ReferenceVersion $Version1 -DifferenceVersion $Version2) -le 0) {
+if ([Versioning.Versioning]$Version1 -ge [Versioning.Versioning]$Version2) {
   # Version
   $this.CurrentState.Version = $Version = $Version1
 
