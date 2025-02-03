@@ -9,12 +9,14 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version -replace '-', '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msi'
+  Architecture  = 'x86'
+  InstallerType = 'nullsoft'
   InstallerUrl  = 'https:' + $Object1.installer.url
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'nullsoft'
-  InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.msi$', '.exe'
+  Architecture  = 'x86'
+  InstallerType = 'msi'
+  InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.exe$', '.msi'
 }
 
 switch -Regex ($this.Check()) {
