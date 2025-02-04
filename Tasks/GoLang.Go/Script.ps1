@@ -2,6 +2,8 @@ $Object1 = (Invoke-RestMethod -Uri 'https://go.dev/dl/?mode=json').Where({ $_.st
 
 # Version
 $this.CurrentState.Version = $Object1.version -replace '^go'
+# ReleaseNotesUrl
+$this.CurrentState.ReleaseNotesUrl = Join-Uri 'https://go.dev/doc/devel/release#' $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
