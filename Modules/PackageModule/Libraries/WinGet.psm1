@@ -559,6 +559,8 @@ function Update-WinGetLocaleManifest {
     [string]$PackageVersion
   )
 
+  $LocaleManifests = @()
+
   # Copy over all locale files from previous version that aren't the same
   foreach ($OldLocaleManifest in $OldLocaleManifests) {
     $LocaleManifest = $OldLocaleManifest | Copy-Object
@@ -614,8 +616,10 @@ function Update-WinGetLocaleManifest {
     if ($LocaleManifest.Contains('ReleaseNotes') -and $LocaleManifest.ReleaseNotes.Length -gt $Script:ManifestSchema.locale.properties.ReleaseNotes.maxLength) { $LocaleManifest.Remove('ReleaseNotes') }
 
     $Schema = $LocaleManifest.ManifestType -eq 'defaultLocale' ? $Script:ManifestSchema.defaultLocale : $Script:ManifestSchema.locale
-    return ConvertTo-SortedYamlObject -InputObject $LocaleManifest -Schema $Schema -Culture $Script:Culture
+    $LocaleManifests += ConvertTo-SortedYamlObject -InputObject $LocaleManifest -Schema $Schema -Culture $Script:Culture
   }
+
+  return $LocaleManifests
 }
 
 function Read-WinGetManifests {
