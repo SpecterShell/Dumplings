@@ -24,7 +24,7 @@ namespace Versioning
         internal Chunk(uint numeric) { Numeric = numeric; Alphanum = numeric.ToString(); Type = ChunkType.Numeric; }
         internal Chunk(string value) { Alphanum = value; Numeric = null; Type = ChunkType.Alphanum; }
 
-        internal static Chunk Parse(string input)
+        public static Chunk Parse(string input)
         {
             if (uint.TryParse(input, out uint num))
                 return new Chunk(num);
@@ -32,7 +32,7 @@ namespace Versioning
                 return new Chunk(input);
         }
 
-        internal static bool TryParse(string input, out Chunk? chunk)
+        public static bool TryParse(string input, out Chunk? chunk)
         {
             try
             {
@@ -86,24 +86,6 @@ namespace Versioning
         {
             if (other is null) return 1;
             if (Numeric.HasValue && other.Numeric.HasValue) return Numeric.Value.CompareTo(other.Numeric.Value);
-            else if (!Numeric.HasValue && !other.Numeric.HasValue)
-            {
-                if (Regex.IsMatch(Alphanum, $"^[a-zA-Z]") && Alphanum[0] == other.Alphanum[0])
-                {
-                    // r8 < r23
-                    var digit = GetSuffixDigit();
-                    var otherDigit = other.GetSuffixDigit();
-                    return digit is not null && otherDigit is not null ? digit.Value.CompareTo(otherDigit.Value) : string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
-                }
-                else if (Regex.IsMatch(Alphanum, @"^\d") && Regex.IsMatch(other.Alphanum, @"^\d"))
-                {
-                    // 0rc1 < 1rc1
-                    var digit = GetPrefixDigit();
-                    var otherDigit = other.GetPrefixDigit();
-                    return digit is not null && otherDigit is not null ? digit.Value.CompareTo(otherDigit.Value) : string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
-                }
-                else return string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
-            }
             else if (Numeric.HasValue && !other.Numeric.HasValue)
             {
                 var otherDigit = other.GetPrefixDigit();
@@ -126,7 +108,24 @@ namespace Versioning
                 }
                 else return -1;
             }
-            else throw new Exception("This should never happen.");
+            else
+            {
+                if (Regex.IsMatch(Alphanum, $"^[a-zA-Z]") && Alphanum[0] == other.Alphanum[0])
+                {
+                    // r8 < r23
+                    var digit = GetSuffixDigit();
+                    var otherDigit = other.GetSuffixDigit();
+                    return digit is not null && otherDigit is not null ? digit.Value.CompareTo(otherDigit.Value) : string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
+                }
+                else if (Regex.IsMatch(Alphanum, @"^\d") && Regex.IsMatch(other.Alphanum, @"^\d"))
+                {
+                    // 0rc1 < 1rc1
+                    var digit = GetPrefixDigit();
+                    var otherDigit = other.GetPrefixDigit();
+                    return digit is not null && otherDigit is not null ? digit.Value.CompareTo(otherDigit.Value) : string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
+                }
+                else return string.Compare(Alphanum, other.Alphanum, StringComparison.Ordinal);
+            }
         }
 
         public override string ToString() => Alphanum;
@@ -148,7 +147,7 @@ namespace Versioning
             Numeric = numeric;
         }
 
-        internal static ComplexChunk Parse(string input)
+        public static ComplexChunk Parse(string input)
         {
             var match = Regex.Match(input, @"^\d+$");
             if (match.Success && uint.TryParse(input, out uint num)) return new ComplexChunk(ComplexChunkType.Digits, input, num);
@@ -157,6 +156,20 @@ namespace Versioning
             if (match.Success && uint.TryParse(match.Groups[1].Value, out uint rev)) return new ComplexChunk(ComplexChunkType.Rev, input, rev);
 
             return new ComplexChunk(ComplexChunkType.Plain, input);
+        }
+
+        public static bool TryParse(string input, out ComplexChunk? chunk)
+        {
+            try
+            {
+                chunk = Parse(input);
+                return true;
+            }
+            catch
+            {
+                chunk = null;
+                return false;
+            }
         }
 
         public uint? GetDigit()
@@ -206,7 +219,7 @@ namespace Versioning
 
     public class Chunks : List<Chunk>, IComparable<Chunks>
     {
-        internal static Chunks Parse(string input)
+        public static Chunks Parse(string input)
         {
             var chunks = new Chunks();
             foreach (var part in input.Split('.')) chunks.Add(Chunk.Parse(part));
@@ -239,7 +252,7 @@ namespace Versioning
         public ComplexChunks ToComplexChunks()
         {
             var chunkGroup = new ComplexChunks();
-            foreach (var chunk in this) chunkGroup.Add(chunk.Numeric.HasValue ? new ComplexChunk(ComplexChunkType.Digits, chunk.Numeric.Value.ToString(), chunk.Numeric) : new ComplexChunk(ComplexChunkType.Plain, chunk.Alphanum));
+            foreach (var chunk in this) chunkGroup.Add(chunk.Numeric.HasValue ? new ComplexChunk(ComplexChunkType.Digits, chunk.Numeric.Value.ToString(), chunk.Numeric) : ComplexChunk.Parse(chunk.Alphanum));
             return chunkGroup;
         }
 
@@ -248,7 +261,7 @@ namespace Versioning
 
     public class Release : List<Chunk>, IComparable<Release>
     {
-        internal static Release Parse(string input)
+        public static Release Parse(string input)
         {
             var chunks = new Release();
             foreach (var part in input.Split('.')) chunks.Add(Chunk.Parse(part));
@@ -281,7 +294,7 @@ namespace Versioning
         public ComplexChunks ToComplexChunks()
         {
             var chunkGroup = new ComplexChunks();
-            foreach (var chunk in this) chunkGroup.Add(chunk.Numeric.HasValue ? new ComplexChunk(ComplexChunkType.Digits, chunk.Numeric.Value.ToString(), chunk.Numeric) : new ComplexChunk(ComplexChunkType.Plain, chunk.Alphanum));
+            foreach (var chunk in this) chunkGroup.Add(chunk.Numeric.HasValue ? new ComplexChunk(ComplexChunkType.Digits, chunk.Numeric.Value.ToString(), chunk.Numeric) : ComplexChunk.Parse(chunk.Alphanum));
             return chunkGroup;
         }
 
@@ -290,7 +303,7 @@ namespace Versioning
 
     public class ComplexChunks : List<ComplexChunk>, IComparable<ComplexChunks>
     {
-        internal static ComplexChunks Parse(string input)
+        public static ComplexChunks Parse(string input)
         {
             var chunks = new ComplexChunks();
             foreach (var part in input.Split('.')) chunks.Add(ComplexChunk.Parse(part));
