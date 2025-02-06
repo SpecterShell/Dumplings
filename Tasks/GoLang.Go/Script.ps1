@@ -2,8 +2,6 @@ $Object1 = (Invoke-RestMethod -Uri 'https://go.dev/dl/?mode=json').Where({ $_.st
 
 # Version
 $this.CurrentState.Version = $Object1.version -replace '^go'
-# ReleaseNotesUrl
-$this.CurrentState.ReleaseNotesUrl = Join-Uri 'https://go.dev/doc/devel/release#' $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -25,6 +23,17 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://go.dev/doc/devel/release#' + $Object1.version
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://go.dev/doc/devel/release' | ConvertFrom-Html
 
