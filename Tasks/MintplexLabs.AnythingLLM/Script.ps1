@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://cdn.useanything.com/latest/version.txt'
+$Object1 = Invoke-WebRequest -Uri 'https://cdn.anythingllm.com/latest/version.txt'
 
 # Version
 $this.CurrentState.Version = $Object1.Content.Trim()
@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.Content.Trim()
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = 'https://cdn.useanything.com/latest/AnythingLLMDesktop.exe'
+  InstallerUrl = 'https://cdn.anythingllm.com/latest/AnythingLLMDesktop.exe'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = 'https://cdn.useanything.com/latest/AnythingLLMDesktop-Arm64.exe'
+  InstallerUrl = 'https://cdn.anythingllm.com/latest/AnythingLLMDesktop-Arm64.exe'
 }
 
 switch -Regex ($this.Check()) {
