@@ -892,8 +892,8 @@ function Send-WinGetManifest {
   } else {
     $Task.Log('Checking existing pull requests in the upstream repo', 'Verbose')
     $OldPullRequests = Invoke-GitHubApi -Uri "https://api.github.com/search/issues?q=repo%3A${UpstreamRepoOwner}%2F${UpstreamRepoName}%20is%3Apr%20$($PackageIdentifier.Replace('.', '%2F'))%2F${PackageVersion}%20in%3Apath"
-    if ($OldPullRequests.total_count -gt 0) {
-      throw "Found existing pull requests:`n$($OldPullRequests.items | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n")"
+    if ($OldPullRequestsItems = $OldPullRequests.items | Where-Object -FilterScript { $_.title -match "(\s|^)$([regex]::Escape($PackageIdentifier))(\s|$)" -and $_.title -match "(\s|^)$([regex]::Escape($PackageVersion))(\s|$)" }) {
+      throw "Found existing pull requests:`n$($OldPullRequestsItems | Select-Object -First 3 | ForEach-Object -Process { "$($_.title) - $($_.html_url)" } | Join-String -Separator "`n")"
     }
   }
   #endregion
