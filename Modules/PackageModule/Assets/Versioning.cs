@@ -1,6 +1,6 @@
 /*
 This is an experimental adaption of https://github.com/fosskers/rs-versions to C#. Kudos to the original author Colin Woodbury.
-The license of the original version, a MIT license, is attached:
+The license of the original version, an MIT license, is attached:
 
 MIT License
 
