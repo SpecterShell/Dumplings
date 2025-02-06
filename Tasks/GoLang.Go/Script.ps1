@@ -24,6 +24,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://go.dev/doc/devel/release#' + $Object1.version
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
       $Object2 = Invoke-WebRequest -Uri 'https://go.dev/doc/devel/release' | ConvertFrom-Html
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//p[@id='go$($this.CurrentState.Version)']")
