@@ -1,3 +1,38 @@
+/*
+This is an experimental adaption of https://github.com/fosskers/rs-versions to C#. Kudos to the original author Colin Woodbury.
+The license of the original version, a MIT license, is attached:
+
+MIT License
+
+Copyright (c) 2021 Colin Woodbury
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Compared to the original version, this adaption has the following differences:
+- The original version uses nom for parsing, while this version uses regular expressions.
+- Another version type "Raw" is introduced to represent versions that are not fitted to the other three types,
+  which splits the version into numeric and non-numeric chunks and compares them chunk by chunk.
+- GeneralVersion::ToComplexVersion() also considers the metadata value.
+
+TODO:
+- Implement the IEquatable interface for all version types.
+*/
 #nullable enable
 using System;
 using System.Collections.Generic;
