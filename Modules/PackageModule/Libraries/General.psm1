@@ -307,6 +307,42 @@ function ConvertTo-MarkdownEscapedText {
   }
 }
 
+function Convert-MarkdownToHtml {
+  <#
+  .SYNOPSIS
+    Convert Markdown content to HTML object
+  .PARAMETER Content
+    The Markdown content
+  .PARAMETER Extensions
+    The Markdig Markdown extensions to be added to the pipeline
+  #>
+  [OutputType([HtmlAgilityPack.HtmlNode])]
+  [OutputType([HtmlAgilityPack.HtmlDocument])]
+  param (
+    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The Markdown content')]
+    [AllowEmptyString()]
+    [string]$Content,
+
+    [Parameter(Position = 1, HelpMessage = 'The Markdig Markdown extensions to be added to the pipeline')]
+    [Markdig.IMarkdownExtension[]]$Extensions = @()
+  )
+
+  begin {
+    $PipelineBuilder = [Markdig.MarkdownExtensions]::UseAdvancedExtensions([Markdig.MarkdownPipelineBuilder]::new())
+    foreach ($Extension in $Extensions) {
+      $PipelineBuilder.Extensions.AddIfNotAlready($Extension)
+    }
+    $Pipeline = $PipelineBuilder.Build()
+  }
+
+  process {
+    [Markdig.Markdown]::ToHtml($Content, $Pipeline) | ConvertFrom-Html
+  }
+}
+
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'MarkdigSoftlineBreakAsHardlineExtension', Justification = 'This variable will be exported')]
+$MarkdigSoftlineBreakAsHardlineExtension = [Markdig.Extensions.Hardlines.SoftlineBreakAsHardlineExtension]::new()
+
 function Split-Uri {
   <#
   .SYNOPSIS
@@ -1432,4 +1468,4 @@ function Copy-Object {
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultUserAgent', Justification = 'This variable will be exported')]
 $DumplingsDefaultUserAgent = [Microsoft.PowerShell.Commands.PSUserAgent].GetProperty('UserAgent', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static).GetValue($null)
 
-Export-ModuleMember -Function * -Variable 'DumplingsDefaultUserAgent'
+Export-ModuleMember -Function * -Variable 'DumplingsDefaultUserAgent', 'MarkdigSoftlineBreakAsHardlineExtension'
