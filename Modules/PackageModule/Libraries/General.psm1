@@ -324,24 +324,18 @@ function Convert-MarkdownToHtml {
     [string]$Content,
 
     [Parameter(Position = 1, HelpMessage = 'The Markdig Markdown extensions to be added to the pipeline')]
-    [Markdig.IMarkdownExtension[]]$Extensions = @()
+    [ValidateSet('common', 'advanced', 'pipetables', 'gfm-pipetables', 'emphasisextras', 'listextras', 'hardlinebreak', 'footnotes', 'footers', 'citations', 'attributes', 'gridtables', 'abbreviations', 'emojis', 'definitionlists', 'customcontainers', 'figures', 'mathematics', 'bootstrap', 'medialinks', 'smartypants', 'autoidentifiers', 'tasklists', 'diagrams', 'nofollowlinks', 'noopenerlinks', 'noreferrerlinks', 'nohtml', 'yaml', 'nonascii-noescape', 'autolinks', 'globalization')]
+    [string[]]$Extensions = @('advanced')
   )
 
   begin {
-    $PipelineBuilder = [Markdig.MarkdownExtensions]::UseAdvancedExtensions([Markdig.MarkdownPipelineBuilder]::new())
-    foreach ($Extension in $Extensions) {
-      $PipelineBuilder.Extensions.AddIfNotAlready($Extension)
-    }
-    $Pipeline = $PipelineBuilder.Build()
+    $Pipeline = [Markdig.MarkdownExtensions]::Configure([Markdig.MarkdownPipelineBuilder]::new(), ($Extensions -join '+')).Build()
   }
 
   process {
     [Markdig.Markdown]::ToHtml($Content, $Pipeline) | ConvertFrom-Html
   }
 }
-
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'MarkdigSoftlineBreakAsHardlineExtension', Justification = 'This variable will be exported')]
-$MarkdigSoftlineBreakAsHardlineExtension = [Markdig.Extensions.Hardlines.SoftlineBreakAsHardlineExtension]::new()
 
 function Split-Uri {
   <#
@@ -1468,4 +1462,4 @@ function Copy-Object {
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'DumplingsDefaultUserAgent', Justification = 'This variable will be exported')]
 $DumplingsDefaultUserAgent = [Microsoft.PowerShell.Commands.PSUserAgent].GetProperty('UserAgent', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Static).GetValue($null)
 
-Export-ModuleMember -Function * -Variable 'DumplingsDefaultUserAgent', 'MarkdigSoftlineBreakAsHardlineExtension'
+Export-ModuleMember -Function * -Variable 'DumplingsDefaultUserAgent'
