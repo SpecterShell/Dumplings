@@ -5,7 +5,7 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/GeoffreyChen777/paperlib/master/CHANGELOG_EN.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object1 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/GeoffreyChen777/paperlib/master/CHANGELOG_EN.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object1.SelectSingleNode("./h2[contains(@id, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/GeoffreyChen777/paperlib/master/CHANGELOG_CN.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/GeoffreyChen777/paperlib/master/CHANGELOG_CN.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("./h2[contains(@id, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

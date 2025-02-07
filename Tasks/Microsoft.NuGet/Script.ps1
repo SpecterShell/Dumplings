@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
         Value = $null
       }
 
-      $Object3 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/NuGet/docs.microsoft.com-nuget/HEAD/docs/release-notes/NuGet-$($this.CurrentState.Version.Split('.')[0..1] -join '.').md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/NuGet/docs.microsoft.com-nuget/HEAD/docs/release-notes/NuGet-$($this.CurrentState.Version.Split('.')[0..1] -join '.').md" | Convert-MarkdownToHtml
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{

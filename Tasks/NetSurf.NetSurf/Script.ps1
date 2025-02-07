@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = (Invoke-RestMethod -Uri 'https://download.netsurf-browser.org/netsurf/releases/ChangeLog.txt' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri 'https://download.netsurf-browser.org/netsurf/releases/ChangeLog.txt' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h2[contains(text(), 'NetSurf $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

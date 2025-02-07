@@ -41,7 +41,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/brave/brave-browser/master/CHANGELOG_DESKTOP.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/brave/brave-browser/master/CHANGELOG_DESKTOP.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(.//text(), '$($this.CurrentState.Version.Split('.')[1..3] -join '.')')]")
       if ($ReleaseNotesTitleNode) {

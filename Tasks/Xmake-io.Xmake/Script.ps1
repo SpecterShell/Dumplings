@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/xmake-io/xmake/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/xmake-io/xmake/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')][1]")
       if ($ReleaseNotesTitleNode) {

@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = ($Object1.result.markdown | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = $Object1.result.markdown | Convert-MarkdownToHtml
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
 
       if ($ReleaseNotesTitleNode) {

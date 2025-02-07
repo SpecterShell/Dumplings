@@ -126,7 +126,7 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = 'https://github.com/ImageMagick/Website/blob/main/ChangeLog.md'
       }
 
-      $Object3 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ImageMagick/Website/main/ChangeLog.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ImageMagick/Website/main/ChangeLog.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(.//text(), '${Version}')]")
       if ($ReleaseNotesTitleNode) {

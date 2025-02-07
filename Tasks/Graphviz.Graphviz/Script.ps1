@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://gitlab.com/graphviz/graphviz/-/raw/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://gitlab.com/graphviz/graphviz/-/raw/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(./a, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

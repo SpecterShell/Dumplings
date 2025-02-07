@@ -16,7 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/mono/website/gh-pages/docs/about-mono/releases/$($this.CurrentState.Version).md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/mono/website/gh-pages/docs/about-mono/releases/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml
       $Object3 = $Object2.SelectSingleNode('/h2[1]').InnerText | ConvertFrom-Yaml
 
       # ReleaseTime

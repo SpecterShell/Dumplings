@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = 'https://github.com/dart-lang/sdk/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object3 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/dart-lang/sdk/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/dart-lang/sdk/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

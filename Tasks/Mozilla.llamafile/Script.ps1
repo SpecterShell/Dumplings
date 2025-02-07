@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = ($Object1.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions $MarkdigSoftlineBreakAsHardlineExtension
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), 'changes')]")
         if ($ReleaseNotesTitleNode) {
           # ReleaseNotes (en-US)

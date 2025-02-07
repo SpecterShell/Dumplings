@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = "https://github.com/${RepoOwner}/${RepoName}/blob/master/CHANGELOG.md"
       }
 
-      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/CHANGELOG.md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/CHANGELOG.md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

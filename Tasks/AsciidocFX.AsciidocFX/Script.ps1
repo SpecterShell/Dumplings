@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
-        $ReleaseNotesObject = ($Object2.body | ConvertFrom-Markdown).Html | ConvertFrom-Html
+        $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions $MarkdigSoftlineBreakAsHardlineExtension
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(.//text(), `"Version`")]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }

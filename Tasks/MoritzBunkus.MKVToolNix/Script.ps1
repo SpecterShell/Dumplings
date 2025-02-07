@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
           [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
           $ReleaseNotesList = [ordered]@{}
         } -Process {
-          $ReleaseNotesList[$_.type] = $ReleaseNotesList[$_.type] + @(($_.'#text' | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent)
+          $ReleaseNotesList[$_.type] = $ReleaseNotesList[$_.type] + @($_.'#text' | Convert-MarkdownToHtml | Get-TextContent)
         } -End {
           $ReleaseNotesList.GetEnumerator().ForEach({ "$($_.Name)`n$($_.Value | ConvertTo-UnorderedList)" }) -join "`n`n" | Format-Text
         }

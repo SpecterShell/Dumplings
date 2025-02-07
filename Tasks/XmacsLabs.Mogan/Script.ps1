@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2] -join '.').md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2] -join '.').md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -62,7 +62,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/zh/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2] -join '.').md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/zh/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2] -join '.').md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

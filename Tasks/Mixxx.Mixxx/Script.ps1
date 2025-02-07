@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
           Value = $Object3[0].link.href
         }
       } else {
-        $Object4 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/mixxxdj/mixxx/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+        $Object4 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/mixxxdj/mixxx/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
         $ReleaseNotesTitleNode = $Object4.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
         if ($ReleaseNotesTitleNode) {

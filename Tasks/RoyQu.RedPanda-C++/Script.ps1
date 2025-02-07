@@ -39,7 +39,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/royqh1979/RedPanda-CPP/master/NEWS.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/royqh1979/RedPanda-CPP/master/NEWS.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("./p[text()='Red Panda C++ Version $($this.CurrentState.Version)']")
       if ($ReleaseNotesTitleNode) {
@@ -59,7 +59,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = (Invoke-RestMethod -Uri "https://gitee.com/royqh1979/redpandacpp/raw/master/sources/main/content/blog/version.$($this.CurrentState.Version).md" | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri "https://gitee.com/royqh1979/redpandacpp/raw/master/sources/main/content/blog/version.$($this.CurrentState.Version).md" | Convert-MarkdownToHtml
 
       $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("/h4[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNTitleNode) {

@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNode[0].content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode[0].content | Convert-MarkdownToHtml | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -49,7 +49,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesCNNode[0].content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode[0].content | Convert-MarkdownToHtml | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

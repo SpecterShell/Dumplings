@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = 'https://lightningvine.zishu.life/history.html'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/cmlanche/lightningvine-docs/refs/heads/main/docs/history.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/cmlanche/lightningvine-docs/refs/heads/main/docs/history.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(.//text(), '$($this.CurrentState.Version.Split('+')[0])')]")
       if ($ReleaseNotesTitleNode) {

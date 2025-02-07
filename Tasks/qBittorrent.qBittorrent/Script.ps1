@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/qbittorrent/qBittorrent-website/master/src/news.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/qbittorrent/qBittorrent-website/master/src/news.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

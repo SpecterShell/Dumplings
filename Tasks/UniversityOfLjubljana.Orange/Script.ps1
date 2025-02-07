@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = 'https://github.com/biolab/orange3/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/biolab/orange3/HEAD/CHANGELOG.md' | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/biolab/orange3/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

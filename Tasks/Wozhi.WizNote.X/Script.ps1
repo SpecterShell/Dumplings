@@ -5,7 +5,7 @@ $this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-R
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = ((Invoke-RestMethod -Uri 'https://www.wiz.cn/as/blogs/wiznew.html').result.markdown | ConvertFrom-Markdown).Html | ConvertFrom-Html
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.wiz.cn/as/blogs/wiznew.html').result.markdown | Convert-MarkdownToHtml
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
 
       if ($ReleaseNotesTitleNode) {

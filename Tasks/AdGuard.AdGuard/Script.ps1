@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesTitleNode = (($Object1.response.'release-notes'.'#cdata-section' | ConvertFrom-Markdown).Html | ConvertFrom-Html).SelectSingleNode("./h1[text()='$($this.CurrentState.Version)']")
+      $ReleaseNotesTitleNode = ($Object1.response.'release-notes'.'#cdata-section' | Convert-MarkdownToHtml).SelectSingleNode("./h1[text()='$($this.CurrentState.Version)']")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)

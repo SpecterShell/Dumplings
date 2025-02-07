@@ -85,7 +85,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = (Invoke-RestMethod -Uri $Object2.releaseNotes.url | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = Invoke-RestMethod -Uri $Object2.releaseNotes.url | Convert-MarkdownToHtml | Get-TextContent | Format-Text
       }
 
     } catch {

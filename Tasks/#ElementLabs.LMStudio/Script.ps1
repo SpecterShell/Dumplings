@@ -12,7 +12,7 @@ $this.CurrentState.Version = $Object1.version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    $ReleaseNotesObject = ($Object1.releaseNotes | ConvertFrom-Markdown).Html | ConvertFrom-Html
+    $ReleaseNotesObject = $Object1.releaseNotes | Convert-MarkdownToHtml
     $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseNotes (en-US)

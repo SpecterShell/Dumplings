@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.data.availableProductSoftwareByPid.releaseNotes.ForEach({ "$($_.header)`n$(($_.body | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent)" }) -join "`n`n" | Format-Text
+        Value  = $Object1.data.availableProductSoftwareByPid.releaseNotes.ForEach({ "$($_.header)`n$($_.body | Convert-MarkdownToHtml | Get-TextContent)" }) -join "`n`n" | Format-Text
       }
     } catch {
       $_ | Out-Host
