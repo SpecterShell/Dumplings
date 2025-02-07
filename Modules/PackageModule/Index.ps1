@@ -1,4 +1,4 @@
-if (-not ([System.Management.Automation.PSTypeName]'VersionParser.Versionin').Type) {
+if (-not ([System.Management.Automation.PSTypeName]'Versioning.Versioning').Type) {
   Add-Type -Path (Join-Path $PSScriptRoot 'Assets' 'Versioning.cs')
 }
 
