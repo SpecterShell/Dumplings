@@ -37,6 +37,8 @@ switch -Regex ($this.Check()) {
       if ($Global:DumplingsStorage['TencentMeeting1'].Contains($Version)) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['TencentMeeting1'].$Version.ReleaseTime
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
 
       if ($Global:DumplingsStorage['TencentMeeting2'].Contains($Version)) {
@@ -46,6 +48,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Global:DumplingsStorage['TencentMeeting2'].$Version.ReleaseNotesCN
         }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

@@ -30,6 +30,8 @@ switch -Regex ($this.Check()) {
             "【${TypeName}】$($_.content)"
           } | Format-Text
         }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

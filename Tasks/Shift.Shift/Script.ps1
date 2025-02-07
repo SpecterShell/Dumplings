@@ -39,7 +39,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object3.SelectSingleNode('//*[@itemprop="articleBody"]') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotesUrl and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl, ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

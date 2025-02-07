@@ -13,13 +13,6 @@ if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Ve
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.data.url.Replace('upgrade.down.sandai.net', 'down.sandai.net').Replace('up.exe', '.exe')
   }
-
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object2.data.desc | Format-Text
-  }
 } else {
   # Version
   $this.CurrentState.Version = $Version1
@@ -32,6 +25,22 @@ if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Ve
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Object2.data.v) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.data.desc | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

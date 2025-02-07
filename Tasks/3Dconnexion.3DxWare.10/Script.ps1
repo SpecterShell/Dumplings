@@ -20,13 +20,13 @@ switch -Regex ($this.Check()) {
         $Object2.SelectSingleNode('./div[@class="drivers-latest__system-date"]').InnerText,
         '(\d{4}/\d{1,2}/\d{1,2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
 
-    try {
       # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
+      }
+
       $ReleaseNotesUrl = $Object1.SelectSingleNode('//section[@data-driver-details="windows"]//div[@class="drivers-system__specifications"]//a[contains(text(), "Release notes")]').Attributes['href'].Value
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
@@ -40,11 +40,6 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $null
-      }
     }
 
     try {
@@ -62,7 +57,7 @@ switch -Regex ($this.Check()) {
           Value  = $Global:DumplingsStorage['3DxWare10'][$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
-        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

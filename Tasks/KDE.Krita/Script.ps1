@@ -38,9 +38,9 @@ switch -Regex ($this.Check()) {
       if ($Object2) {
         $ReleaseNotesObject = $Object2[0].description | ConvertFrom-Html
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Attributes.Contains('id') -and $Node.Attributes['id'].Value -eq 'download'); $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (zh-CN)
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
@@ -50,7 +50,7 @@ switch -Regex ($this.Check()) {
           Value = $Object2[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -83,7 +83,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object3[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

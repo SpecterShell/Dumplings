@@ -69,9 +69,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Object3.SelectNodes('/html/body/table/tr[1]/td[2]/node()[contains(., "Changes from")]/following-sibling::node()') | Get-TextContent | Format-Text
         }
-
       } else {
-        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

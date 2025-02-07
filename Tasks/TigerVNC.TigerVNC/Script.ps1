@@ -63,7 +63,7 @@ switch -Regex ($this.Check()) {
           Value = $Object2.html_url
         }
       } else {
-        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

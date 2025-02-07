@@ -53,6 +53,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Global:DumplingsStorage.HonorSuite[$this.CurrentState.Version].ReleaseNotesCN
         }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

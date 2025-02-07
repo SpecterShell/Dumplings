@@ -23,6 +23,12 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
+      }
+
       $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2] -join '.').md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'v$($this.CurrentState.Version)')]")
@@ -35,30 +41,17 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl (en-US)
+        # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = "https://mogan.app/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2]).html"
+          Key   = 'ReleaseNotesUrl'
+          Value = "https://mogan.app/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2]).html"
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $Object1.html_url
-        }
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
-      }
     }
 
     try {
@@ -81,23 +74,11 @@ switch -Regex ($this.Check()) {
           Value  = "https://mogan.app/zh/guide/ChangeLog_v$($this.CurrentState.Version.Split('.')[0..2]).html"
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $Object1.html_url
-        }
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
-      }
     }
 
     $this.Print()

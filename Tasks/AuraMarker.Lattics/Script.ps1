@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
           Value  = $Global:DumplingsStorage['Lattics'].$ShortVersion.ReleaseNotesCN
         }
       } else {
-        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

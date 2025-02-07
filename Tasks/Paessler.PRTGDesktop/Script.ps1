@@ -41,6 +41,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObject[0].note | ConvertFrom-Html | Get-TextContent | Format-Text
         }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

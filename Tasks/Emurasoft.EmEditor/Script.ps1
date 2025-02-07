@@ -57,7 +57,7 @@ switch -Regex ($this.Check()) {
           Value = $Object3[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -88,7 +88,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object4[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

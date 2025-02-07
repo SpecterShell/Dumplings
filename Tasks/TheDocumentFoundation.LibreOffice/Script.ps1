@@ -55,7 +55,7 @@ switch -Regex ($this.Check()) {
       #     Value  = $Object2.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
       #   }
       # } else {
-      #   $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      #   $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       # }
     } catch {
       $_ | Out-Host
@@ -88,7 +88,7 @@ switch -Regex ($this.Check()) {
       #     Value  = $Object3.SelectNodes('//*[name()="mw:tocplace"]/following-sibling::*') | Get-TextContent | Format-Text
       #   }
       # } else {
-      #   $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      #   $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       # }
     } catch {
       $_ | Out-Host

@@ -8,21 +8,26 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.update.release3.executable.url | ConvertTo-Https
 }
 
-# ReleaseNotesUrl
-$this.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $Object1.update.release3.releasenotes.Where({ $_.lang -eq 'en-us' }, 'First')[0].url
-}
-
-# ReleaseNotesUrl (zh-CN)
-$this.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotesUrl'
-  Value  = $ReleaseNotesUrlCN = $Object1.update.release3.releasenotes.Where({ $_.lang -eq 'zh-CN' }, 'First')[0].url
-}
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object1.update.release3.releasenotes.Where({ $_.lang -eq 'en-us' }, 'First')[0].url
+      }
+
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrlCN = $Object1.update.release3.releasenotes.Where({ $_.lang -eq 'zh-CN' }, 'First')[0].url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $NestedInstallerFileRoot = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host

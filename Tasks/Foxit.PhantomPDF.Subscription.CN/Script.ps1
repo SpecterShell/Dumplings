@@ -37,14 +37,14 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='version_title' and contains(./h3, '$($this.CurrentState.Version.Split('.')[0..2] -join '.' -replace '\.0$')')]/following-sibling::div[@class='version_center']")
       if ($ReleaseNotesNode) {
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

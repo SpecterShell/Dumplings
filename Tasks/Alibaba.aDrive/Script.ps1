@@ -15,7 +15,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object2[$this.CurrentState.Version].logs | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

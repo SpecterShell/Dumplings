@@ -56,7 +56,7 @@ function Get-ReleaseNotes {
         Value  = Join-Uri 'https://weixin.qq.com' ($ReleaseNotesUrlNode.Attributes['href'].Value | ConvertTo-HtmlDecodedText).Replace('?ang', '?lang')
       }
     } else {
-      $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      $this.Log("No ReleaseNotesUrl (zh-Hans) and ReleaseNotesUrl (zh-Hans-CN) for version $($this.CurrentState.Version)", 'Warning')
     }
   } catch {
     $_ | Out-Host

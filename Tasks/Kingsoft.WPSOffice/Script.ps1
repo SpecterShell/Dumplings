@@ -11,6 +11,12 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+\.\d+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.wps.com/whatsnew/pc/'
+      }
+
       $Object2 = Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc'
 
       $ReleaseNotesListObject = $Object2.data.Where({ $_.post_excerpt.Contains($this.CurrentState.Version) }, 'First')
@@ -32,21 +38,11 @@ switch -Regex ($this.Check()) {
           Value = "https://www.wps.com/whatsnew$($ReleaseNotesListObject[0].more.slug)/"
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://www.wps.com/whatsnew/pc/'
-        }
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.wps.com/whatsnew/pc/'
-      }
     }
 
     $this.Print()

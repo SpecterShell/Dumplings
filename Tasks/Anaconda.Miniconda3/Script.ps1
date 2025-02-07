@@ -66,7 +66,7 @@ switch -Regex ($this.Check()) {
           Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesNode.SelectSingleNode('./h2/text()').InnerText.ToLower() -creplace '[^a-zA-Z0-9]+', '-').Trim('-')
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

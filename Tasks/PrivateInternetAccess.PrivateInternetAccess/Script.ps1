@@ -51,7 +51,7 @@ switch -Regex ($this.Check()) {
           Value = $ReleaseNotesUrl + '#v' + $this.CurrentState.Version.Split('+')[0]
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

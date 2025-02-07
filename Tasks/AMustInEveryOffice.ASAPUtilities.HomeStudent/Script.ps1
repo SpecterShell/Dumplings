@@ -29,7 +29,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

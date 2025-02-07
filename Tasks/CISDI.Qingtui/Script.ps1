@@ -13,9 +13,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object1.data.webVersions.Where({ $_.type -eq 'winpc' })[0].lastestVerNote | Format-Text
       }

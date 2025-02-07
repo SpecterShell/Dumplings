@@ -22,13 +22,13 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://www.yuque.com/yuque/yuque-desktop/'
-    }
-
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.yuque.com/yuque/yuque-desktop/'
+      }
+
       $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
 

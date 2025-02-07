@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
           Value  = ($ReleaseNotesNodes | Get-TextContent) -replace '^（20\d{2}-\d{1,2}-\d{1,2}）' | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

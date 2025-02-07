@@ -21,7 +21,7 @@ function Get-ReleaseNotes {
         Value  = $Global:DumplingsStorage.Dehelper.$ShortVersion.ReleaseNotesCN
       }
     } else {
-      $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     }
   } catch {
     $_ | Out-Host

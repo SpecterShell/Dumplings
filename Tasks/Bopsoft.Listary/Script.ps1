@@ -52,7 +52,7 @@ function Get-ReleaseNotes {
         Value  = $ReleaseNotesUrlCN + '#' + ($ReleaseNotesTitleNode.InnerText.ToLower() -creplace '[^a-zA-Z0-9 ]+' -creplace '\s+', '-').Trim('-')
       }
     } else {
-      $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      $this.Log("No ReleaseTime, ReleaseNotes (en-US), ReleaseNotesUrl and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     }
   } catch {
     $_ | Out-Host

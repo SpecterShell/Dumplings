@@ -27,9 +27,8 @@ switch -Regex ($this.Check()) {
   (Get-Culture -Name 'en-US')
       ) | ConvertTo-UtcDateTime -Id 'UTC'
 
-      # ReleaseNotesUrl (en-US)
+      # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
         Value  = "https://sourceforge.net/projects/${ProjectName}/files" + [regex]::Match($Assets[0].title.'#cdata-section', '^(/v?[\d\.]+/)').Groups[1].Value
       }
@@ -95,6 +94,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotesUrl'
           Value  = $ReleaseNotesUrlCNObject[0].link
         }
+      } else {
+        $this.Log("No ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

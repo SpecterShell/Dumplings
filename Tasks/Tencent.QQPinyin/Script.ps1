@@ -17,26 +17,8 @@ $Object2 = Invoke-RestMethod -Uri 'http://config.android.qqpy.sogou.com/update?f
 )
 $Version2 = $Object2.NewVer
 
-if ([Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2) {
-  # Version
-  $this.CurrentState.Version = $Version2
-
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object2.Desp.Replace("`r`r", "`r") | Split-LineEndings | Select-Object -Skip 1 | Format-Text
-  }
-} else {
-  # Version
-  $this.CurrentState.Version = $Version1
-
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = [regex]::Match(
-    $Object1.SelectSingleNode('//*[@id="banner_box_pinyin"]/div[2]/div[2]/p[2]').InnerText,
-    '(\d{4}\.\d{1,2}\.\d{1,2})'
-  ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-}
+# Version
+$this.CurrentState.Version = [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2 ? $Version2 : $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -45,8 +27,21 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    if (-not $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' }, 'First')) {
-      try {
+    try {
+      if ([Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.Desp.Replace("`r`r", "`r") | Split-LineEndings | Select-Object -Skip 1 | Format-Text
+        }
+      } else {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match(
+          $Object1.SelectSingleNode('//*[@id="banner_box_pinyin"]/div[2]/div[2]/p[2]').InnerText,
+          '(\d{4}\.\d{1,2}\.\d{1,2})'
+        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
         $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
         $ReleaseNotesObject = $Object3.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) }, 'First')
@@ -60,9 +55,9 @@ switch -Regex ($this.Check()) {
         } else {
           $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
         }
-      } catch {
-        $this.Log($_, 'Warning')
       }
+    } catch {
+      $this.Log($_, 'Warning')
     }
 
     $this.Print()

@@ -32,6 +32,12 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.scribus.net/news/'
+      }
+
       $Object2 = (Invoke-RestMethod -Uri 'https://www.scribus.net/news/feed/').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
@@ -47,7 +53,7 @@ switch -Regex ($this.Check()) {
           Value = $Object2[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

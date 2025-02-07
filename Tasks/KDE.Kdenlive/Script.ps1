@@ -38,15 +38,6 @@ switch -Regex ($this.Check()) {
           Value = $Object2[0].link
         }
       } else {
-        $this.Log("No dedicated release notes page for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      if (-not $Object2) {
         $Object3 = Invoke-WebRequest -Uri 'https://docs.kdenlive.org/en/more_information/whats_new.html' | ConvertFrom-Html
 
         $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='versionadded' and contains(./p, '$($this.CurrentState.Version -replace '(\.0)+$')')]")
@@ -58,7 +49,7 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNode.SelectNodes('./p[1]/following-sibling::node()') | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       }
     } catch {

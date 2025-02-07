@@ -17,6 +17,8 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Object2[0].items | ForEach-Object -Process { "$($_.type)`n$($_.entries.title | ConvertTo-UnorderedList)" } | Join-String -Separator "`n`n" | Format-Text
         }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

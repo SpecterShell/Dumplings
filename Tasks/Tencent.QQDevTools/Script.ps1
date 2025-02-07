@@ -17,14 +17,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (zh-CN)
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
         if (-not $Node.SelectSingleNode('.//a[contains(@href, ".exe") or contains(@href, ".dmg")]')) {
           $Node
         }
       }
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
       }

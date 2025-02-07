@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesTitleNode.SelectNodes('./h5/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesCNTitleNode.SelectNodes('./h5/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

@@ -43,7 +43,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object2[0].desc.cn | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

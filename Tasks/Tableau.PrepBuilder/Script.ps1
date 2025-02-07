@@ -24,6 +24,13 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object4.release[0].release_date | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.SelectNodes('//table[@class="table-list"]/tr/td[2]') | Get-TextContent | Format-Text
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -42,18 +49,6 @@ switch -Regex ($this.Check()) {
         UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
       }
     )
-
-    try {
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectNodes('//table[@class="table-list"]/tr/td[2]') | Get-TextContent | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
 
     try {
       $Object5 = Invoke-WebRequest -Uri 'https://www.tableau.com/zh-cn/support/releases/prep/latest' -UserAgent $UserAgent

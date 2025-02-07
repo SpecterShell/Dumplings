@@ -11,13 +11,6 @@ if ($Object2.code -eq 0 -and [Versioning.Versioning]$Object1.version -lt [Versio
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.data.url.Replace('xmpup', 'xmp')
   }
-
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object2.data.desc | Format-Text
-  }
 } else {
   # Version
   $this.CurrentState.Version = $Object1.version
@@ -26,20 +19,36 @@ if ($Object2.code -eq 0 -and [Versioning.Versioning]$Object1.version -lt [Versio
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object1.url | ConvertTo-Https
   }
-
-  # ReleaseTime
-  $this.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
-
-  # ReleaseNotes (zh-CN)
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object1.content | Format-Text
-  }
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      if ($Object2.code -eq 0 -and [Versioning.Versioning]$Object1.version -lt [Versioning.Versioning]$Object2.data.v) {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.data.desc | Format-Text
+        }
+      } else {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.content | Format-Text
+        }
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

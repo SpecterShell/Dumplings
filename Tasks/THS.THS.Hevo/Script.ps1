@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
           Value = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesUrl
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
