@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri $Object1.releaseNotesLink | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[@class='item-title' and contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[@class='item-title' and contains(text(), '$($this.CurrentState.RealVersion)')]")
       if ($ReleaseNotesTitleNode) {
         if ($ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[@class="date"]')) {
           # ReleaseNotes (en-US)
