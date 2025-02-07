@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions $MarkdigSoftlineBreakAsHardlineExtension
+      $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//h2[contains(., v$($this.CurrentState.Version))]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)

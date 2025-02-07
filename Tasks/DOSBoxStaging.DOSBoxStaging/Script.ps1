@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/website/docs/releases/release-notes/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/website/docs/releases/release-notes/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis'
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'Summary')]")
       if ($ReleaseNotesTitleNode) {

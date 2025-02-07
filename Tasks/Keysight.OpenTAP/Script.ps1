@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.ReleaseTime ??= $Object2.published_at.ToUniversalTime()
 
         if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
-          $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions $MarkdigSoftlineBreakAsHardlineExtension
+          $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Binaries are available from SourceForge'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
