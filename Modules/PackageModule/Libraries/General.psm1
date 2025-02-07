@@ -307,36 +307,6 @@ function ConvertTo-MarkdownEscapedText {
   }
 }
 
-function Convert-MarkdownToHtml {
-  <#
-  .SYNOPSIS
-    Convert Markdown content to HTML object
-  .PARAMETER Content
-    The Markdown content
-  .PARAMETER Extensions
-    The Markdig Markdown extensions to be added to the pipeline
-  #>
-  [OutputType([HtmlAgilityPack.HtmlNode])]
-  [OutputType([HtmlAgilityPack.HtmlDocument])]
-  param (
-    [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory, HelpMessage = 'The Markdown content')]
-    [AllowEmptyString()]
-    [string]$Content,
-
-    [Parameter(Position = 1, HelpMessage = 'The Markdig Markdown extensions to be added to the pipeline')]
-    [ValidateSet('common', 'advanced', 'pipetables', 'gfm-pipetables', 'emphasisextras', 'listextras', 'hardlinebreak', 'footnotes', 'footers', 'citations', 'attributes', 'gridtables', 'abbreviations', 'emojis', 'definitionlists', 'customcontainers', 'figures', 'mathematics', 'bootstrap', 'medialinks', 'smartypants', 'autoidentifiers', 'tasklists', 'diagrams', 'nofollowlinks', 'noopenerlinks', 'noreferrerlinks', 'nohtml', 'yaml', 'nonascii-noescape', 'autolinks', 'globalization')]
-    [string[]]$Extensions = @('advanced')
-  )
-
-  begin {
-    $Pipeline = [Markdig.MarkdownExtensions]::Configure([Markdig.MarkdownPipelineBuilder]::new(), ($Extensions -join '+')).Build()
-  }
-
-  process {
-    [Markdig.Markdown]::ToHtml($Content, $Pipeline) | ConvertFrom-Html
-  }
-}
-
 function Split-Uri {
   <#
   .SYNOPSIS
