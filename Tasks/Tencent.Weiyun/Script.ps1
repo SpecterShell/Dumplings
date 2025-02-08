@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml?noCache=$(Get-Random)" |
 $Prefix3 = 'https://dldir1v6.qq.com/weiyun/electron-update/release/win32/'
 $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix3 -Locale 'zh-CN'
 
-if ([Versioning.Versioning]$Object1.electron_win64.version -lt [Versioning.Versioning]$Object2.Version) {
+if ([Versioning]$Object1.electron_win64.version -lt [Versioning]$Object2.Version) {
   if ($Object2.Version -ne $Object3.Version) {
     $this.Log("x86 version: $($Object3.version)")
     $this.Log("x64 version: $($Object2.version)")

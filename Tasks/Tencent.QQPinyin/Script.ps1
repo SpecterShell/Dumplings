@@ -18,7 +18,7 @@ $Object2 = Invoke-RestMethod -Uri 'http://config.android.qqpy.sogou.com/update?f
 $Version2 = $Object2.NewVer
 
 # Version
-$this.CurrentState.Version = [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2 ? $Version2 : $Version1
+$this.CurrentState.Version = [Versioning]$Version1 -lt [Versioning]$Version2 ? $Version2 : $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -28,7 +28,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ([Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Version2) {
+      if ([Versioning]$Version1 -lt [Versioning]$Version2) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'

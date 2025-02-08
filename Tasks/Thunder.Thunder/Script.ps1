@@ -5,7 +5,7 @@ $Version1 = [regex]::Match($Object1.offline, '([\d\.]+)\.exe').Groups[1].Value
 # Upgrade
 $Object2 = Invoke-RestMethod -Uri 'https://upgrade-pc-ssl.xunlei.com/pc?pid=1&cid=100072&v=11.3.14&os=10&&t=2&lng=0804'
 
-if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Object2.data.v) {
+if ($Object2.code -eq 0 -and [Versioning]$Version1 -lt [Versioning]$Object2.data.v) {
   # Version
   $this.CurrentState.Version = $Object2.data.v
 
@@ -26,7 +26,7 @@ if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Ve
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($Object2.code -eq 0 -and [Versioning.Versioning]$Version1 -lt [Versioning.Versioning]$Object2.data.v) {
+      if ($Object2.code -eq 0 -and [Versioning]$Version1 -lt [Versioning]$Object2.data.v) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
