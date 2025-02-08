@@ -1048,7 +1048,7 @@ function Send-WinGetManifest {
   try {
     $NewPullRequest = Invoke-GitHubApi -Uri "https://api.github.com/repos/${UpstreamRepoOwner}/${UpstreamRepoName}/pulls" -Method Post -Body @{
       title = $NewCommitName
-      body  = (Test-Path -Path 'Env:\GITHUB_ACTIONS') ? "Automated by [🥟 Dumplings](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings) in workflow run [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID})." : "Created by [🥟 Dumplings](https://github.com/${OriginRepoOwner}/Dumplings)."
+      body  = (Test-Path -Path 'Env:\GITHUB_ACTIONS') ? "Automated by [🥟 ${Env:GITHUB_REPOSITORY_OWNER}/Dumplings](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings) in workflow run [#${Env:GITHUB_RUN_NUMBER}](https://github.com/${Env:GITHUB_REPOSITORY_OWNER}/Dumplings/actions/runs/${Env:GITHUB_RUN_ID})." : "Created by [🥟 Dumplings](https://github.com/${OriginRepoOwner}/Dumplings)."
       head  = "${OriginRepoOwner}:${NewBranchName}"
       base  = $UpstreamRepoBranch
     }
