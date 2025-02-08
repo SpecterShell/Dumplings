@@ -1,46 +1,31 @@
-# x86
-$Object1 = Invoke-RestMethod -Uri 'https://utyautoupdate.synology.com/getUpdate/SurveillanceStationClient?os=windows&bits=32&include_beta=false'
-$VersionX86 = "$($Object1.version.major).$($Object1.version.minor).$($Object1.version.hotfix)-$($Object1.version.build_number)"
-# x64
-$Object2 = Invoke-RestMethod -Uri 'https://utyautoupdate.synology.com/getUpdate/SurveillanceStationClient?os=windows&bits=64&include_beta=false'
-$VersionX64 = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.hotfix)-$($Object2.version.build_number)"
-
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
-}
+$Object1 = Invoke-RestMethod -Uri 'https://utyautoupdate.synology.com/getUpdate/SurveillanceStationClient?os=windows&bits=64&include_beta=false'
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = "$($Object1.version.major).$($Object1.version.minor).$($Object1.version.hotfix)-$($Object1.version.build_number)"
 
 # RealVersion
-$this.CurrentState.RealVersion = "$($Object2.version.major).$($Object2.version.minor).$($Object2.version.hotfix).$($Object2.version.build_number)"
+$this.CurrentState.RealVersion = "$($Object1.version.major).$($Object1.version.minor).$($Object1.version.hotfix).$($Object1.version.build_number)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.installer.url -replace '\.zip$', '.exe'
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.installer.url -replace '\.zip$', '.exe'
+  InstallerUrl = $Object1.installer.url -replace '\.zip$', '.exe'
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.release_date | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object1.release_date | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SurveillanceStationClient&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SurveillanceStationClient&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-      $ReleaseNotesObject = $Object3.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
@@ -60,9 +45,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object4 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SurveillanceStationClient&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      $Object3 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SurveillanceStationClient&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-      $ReleaseNotesCNObject = $Object4.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesCNObject = $Object3.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesCNObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
