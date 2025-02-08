@@ -29,6 +29,7 @@ Compared to the original version, this adaption has the following differences:
 - Another version type "Raw" is introduced to represent versions that are not fitted to the other three types,
   which splits the version into numeric and non-numeric chunks and compares them chunk by chunk.
 - GeneralVersion::ToComplexVersion() also considers the metadata value.
+- Some version downcastings are done by reparsing the string representation of the version as they may have different sets of separators.
 
 TODO:
 - Implement the IEquatable interface for all version types.
@@ -39,7 +40,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Versioning
+namespace Dumplings.Versioning
 {
     public enum VersionType { Semantic, General, Complex, Raw }
 
@@ -506,24 +507,9 @@ namespace Versioning
 
         public GeneralVersion ToGeneralVersion() => new(null, [new Chunk(Major), new Chunk(Minor), new Chunk(Patch)], PreRelease, Metadata);
 
-        public ComplexVersion ToComplexVersion()
-        {
-            var chunkGroups = new List<ComplexChunks> { new() { new ComplexChunk(ComplexChunkType.Digits, Major.ToString(), Major), new ComplexChunk(ComplexChunkType.Digits, Minor.ToString(), Minor), new ComplexChunk(ComplexChunkType.Digits, Patch.ToString(), Patch) } };
-            var separators = new List<Separator> { };
-            if (PreRelease is not null)
-            {
-                separators.Add(Separator.Hyphen);
-                chunkGroups.Add(PreRelease.ToComplexChunks());
-            }
-            if (Metadata is not null)
-            {
-                separators.Add(Separator.Plus);
-                chunkGroups.Add([new ComplexChunk(ComplexChunkType.Plain, Metadata)]);
-            }
-            return new ComplexVersion(chunkGroups, separators);
-        }
+        public ComplexVersion ToComplexVersion() => ComplexVersion.Parse(ToString());
 
-        public RawVersion ToRawVersion() => new([new Chunk(Major), new Chunk("."), new Chunk(Minor), new Chunk("."), new Chunk(Patch)]);
+        public RawVersion ToRawVersion() => RawVersion.Parse(ToString());
 
         public override string ToString() => $"{Major}.{Minor}.{Patch}{(PreRelease is not null ? $"-{PreRelease}" : "")}{(Metadata is not null ? $"+{Metadata}" : "")}";
     }
@@ -633,58 +619,9 @@ namespace Versioning
 
         public int CompareTo(RawVersion? other) => ToRawVersion().CompareTo(other);
 
-        public ComplexVersion ToComplexVersion()
-        {
-            var chunkGroups = new List<ComplexChunks> { };
-            var separators = new List<Separator> { };
-            if (Epoch.HasValue)
-            {
-                chunkGroups.Add([new ComplexChunk(ComplexChunkType.Digits, Epoch.Value.ToString(), Epoch)]);
-                separators.Add(Separator.Colon);
-            }
-            chunkGroups.Add(Chunks.ToComplexChunks());
-            if (Release is not null)
-            {
-                separators.Add(Separator.Hyphen);
-                chunkGroups.Add(Release.ToComplexChunks());
-            }
-            if (Metadata is not null)
-            {
-                separators.Add(Separator.Plus);
-                chunkGroups.Add([new ComplexChunk(ComplexChunkType.Plain, Metadata)]);
-            }
-            return new ComplexVersion(chunkGroups, separators);
-        }
+        public ComplexVersion ToComplexVersion() => ComplexVersion.Parse(ToString());
 
-        public RawVersion ToRawVersion()
-        {
-            var chunks = new List<Chunk>();
-            if (Epoch.HasValue)
-            {
-                chunks.Add(new Chunk(Epoch.Value));
-                chunks.Add(new Chunk(":"));
-            }
-            for (int i = 0; i < Chunks.Count; i++)
-            {
-                chunks.Add(Chunks[i]);
-                if (i < Chunks.Count - 1) chunks.Add(new Chunk("."));
-            }
-            if (Release is not null)
-            {
-                chunks.Add(new Chunk("-"));
-                for (int i = 0; i < Release.Count; i++)
-                {
-                    chunks.Add(Release[i]);
-                    if (i < Release.Count - 1) chunks.Add(new Chunk("."));
-                }
-            }
-            if (Metadata is not null)
-            {
-                chunks.Add(new Chunk("+"));
-                chunks.Add(new Chunk(Metadata));
-            }
-            return new RawVersion(chunks);
-        }
+        public RawVersion ToRawVersion() => RawVersion.Parse(ToString());
 
         public override string ToString() => $"{(Epoch.HasValue ? $"{Epoch}:" : "")}{Chunks}{(Release is not null ? $"-{Release}" : "")}{(Metadata is not null ? $"+{Metadata}" : "")}";
     }

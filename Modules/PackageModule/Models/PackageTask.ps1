@@ -174,8 +174,8 @@ class PackageTask {
         # If this is a new task (no last state exists), skip the steps below
         $this.Log('New task', 'Info')
       } else {
-        switch (([Versioning.Versioning]$this.CurrentState.Version).CompareTo([Versioning.Versioning]$this.LastState.Version)) {
-          1 {
+        switch (([Versioning]$this.CurrentState.Version).CompareTo([Versioning]$this.LastState.Version)) {
+          { $_ -gt 0 } {
             $this.Log("Updated: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Info')
             $this.Status.Add('Updated')
             if (-not $this.Config.Contains('CheckVersionOnly') -or -not $this.Config.CheckVersionOnly) {
@@ -194,7 +194,7 @@ class PackageTask {
             }
             continue
           }
-          -1 {
+          { $_ -lt 0 } {
             $this.Log("Rollbacked: $($this.LastState.Version) → $($this.CurrentState.Version)", 'Warning')
             $this.Status.Add('Rollbacked')
             continue
