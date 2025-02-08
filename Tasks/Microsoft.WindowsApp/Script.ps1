@@ -1,8 +1,4 @@
 $Object1 = Invoke-WebRequest -Uri 'https://learn.microsoft.com/en-us/windows-app/whats-new' | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//div[contains(@class, "content")]//h2[starts-with(text(), "Version ")][1]')
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object2.InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -18,11 +14,40 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('//a[contains(text(), "Windows Arm64")]').Attributes['href'].Value
 }
 
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('./following::text()[contains(., "Date published:")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//section[@id='tabpanel_2_windows']/h3[text()='Version $($this.CurrentState.Version)']")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::node()[contains(., "Date published:")]')
+        if ($ReleaseTimeNode) {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseTimeNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+          # ReleaseNotes (en-US)
+          $ReleaseNotesNodes = for ($Node = $ReleaseTimeNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+
+          # ReleaseNotes (en-US)
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
