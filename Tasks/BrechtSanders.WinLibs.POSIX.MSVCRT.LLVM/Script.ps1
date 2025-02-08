@@ -9,7 +9,7 @@ if (-not $VersionMatches.Groups['llvm'].Success) {
 }
 
 # Version
-$this.CurrentState.Version = "$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['llvm'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
+$this.CurrentState.Version = [ComplexVersion]"$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['llvm'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
