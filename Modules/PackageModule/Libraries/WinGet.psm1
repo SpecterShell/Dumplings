@@ -841,14 +841,14 @@ function Send-WinGetManifest {
   #region Parameters for package
   Initialize-WinGetManifestSchema
 
-  $PackageIdentifier = $Task.Config.WinGetIdentifier
+  [string]$PackageIdentifier = $Task.Config.WinGetIdentifier
   try {
     $null = Test-YamlObject -InputObject $PackageIdentifier -Schema $Script:ManifestSchema.version.properties.PackageIdentifier -WarningAction Stop
   } catch {
     throw "The PackageIdentifier `"${PackageIdentifier}`" is invalid: ${_}"
   }
 
-  $PackageVersion = $Task.CurrentState.Contains('RealVersion') ? $Task.CurrentState.RealVersion : $Task.CurrentState.Version
+  [string]$PackageVersion = $Task.CurrentState.Contains('RealVersion') ? $Task.CurrentState.RealVersion : $Task.CurrentState.Version
   try {
     $null = Test-YamlObject -InputObject $PackageVersion -Schema $Script:ManifestSchema.version.properties.PackageVersion -WarningAction Stop
   } catch {
@@ -871,9 +871,9 @@ function Send-WinGetManifest {
     $Global:DumplingsPreference.NewCommitType
   } else {
     switch (([Versioning]$PackageVersion).CompareTo([Versioning]$PackageLastVersion)) {
-      1 { 'New version'; continue }
+      { $_ -gt 0 } { 'New version'; continue }
       0 { 'Update'; continue }
-      -1 { 'Add version'; continue }
+      { $_ -lt 0 } { 'Add version'; continue }
     }
   }
   $NewCommitName = "${NewCommitType}: ${PackageIdentifier} version ${PackageVersion}"
