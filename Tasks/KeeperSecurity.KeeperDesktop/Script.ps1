@@ -8,14 +8,14 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msix'
   InstallerUrl  = $Object1.AppInstaller.MainBundle.Uri
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'wix'
-  InstallerUrl  = Join-Uri $Object1.AppInstaller.MainBundle.Uri '../Win32/KeeperSetup32.msi'
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'x86'
+#   InstallerType = 'wix'
+#   InstallerUrl  = Join-Uri $Object1.AppInstaller.MainBundle.Uri '../Win32/KeeperSetup32.msi'
+# }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  'New|Changed|Updated|Rollbacked' {
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
@@ -50,10 +50,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }
