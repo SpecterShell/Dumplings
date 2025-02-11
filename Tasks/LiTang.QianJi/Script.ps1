@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://upkit.qianji.app/qj/windows.txt'
+$Object1 = Invoke-RestMethod -Uri 'https://upkit.qianji.app/qj.json'
 
 # Version
-$this.CurrentState.Version = $Object1.version.versionName
+$this.CurrentState.Version = $Object1.windows.version.versionName
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.version.downloadUrl
+  InstallerUrl = $Object1.windows.version.downloadUrl
 }
 
 switch -Regex ($this.Check()) {
@@ -15,12 +15,18 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.version.changeLogs | Format-Text
+        Value  = $Object1.windows.version.changeLogs | Format-Text
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     # $Object2 = Invoke-WebRequest -Uri 'https://docs.qianjiapp.com/change-log/change_log_pc.html' | ConvertFrom-Html
 
