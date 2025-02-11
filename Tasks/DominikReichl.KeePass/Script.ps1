@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFileMsi = Get-TempFile -Uri $InstallerMsi.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
+    $InstallerFileMsi = Get-TempFile -Uri $InstallerMsi.InstallerUrl -UserAgent $WinGetUserAgent
 
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFileMsi | Read-ProductVersionFromMsi

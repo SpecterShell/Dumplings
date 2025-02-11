@@ -43,7 +43,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
+    $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent $WinGetUserAgent
     $InstallerX64FileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File | Out-Host
 
@@ -62,7 +62,7 @@ switch -Regex ($this.Check()) {
       }
     )
 
-    # $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent 'Microsoft-Delivery-Optimization/10.0'
+    # $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
     # $InstallerARM64FileExtracted = New-TempFolder
     # 7z.exe e -aoa -ba -bd -y -o"${InstallerARM64FileExtracted}" $InstallerARM64File | Out-Host
 
