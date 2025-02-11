@@ -54,7 +54,7 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
         while (-not $Object2.EndOfStream) {
           $String = $Object2.ReadLine()
-          if ($String -notmatch '^\d+(\.\d+)+ \(\d{4}-\d{1,2}-\d{1,2}\)') {
+          if ($String -notmatch '^\d+(\.\d+)+') {
             $ReleaseNotesObjects.Add($String)
           } else {
             break
