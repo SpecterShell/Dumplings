@@ -5,7 +5,18 @@ $this.CurrentState.Version = $Object1[0].enclosure.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1[0].enclosure.url
+  InstallerType = 'burn'
+  InstallerUrl  = $Object1[0].enclosure.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'wix'
+  InstallerUrl  = Join-Uri $Object1[0].enclosure.url 'TextExpander_x86.msi'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = Join-Uri $Object1[0].enclosure.url 'TextExpander_x64.msi'
 }
 
 switch -Regex ($this.Check()) {
