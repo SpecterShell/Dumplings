@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://support.lenovo.com/us/en/downloads/ds012808' -Headers @{
   'Accept'          = 'text/html'
   'Accept-Language' = 'en-US'
-} -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Firefox/131.0'
+} -UserAgent $DumplingsBrowserUserAgent
 $Object2 = $Object1.Content | Get-EmbeddedJson -StartsFrom 'window.customData || ' | ConvertFrom-Json
 $Object3 = $Object2.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.exe') })[0]
 

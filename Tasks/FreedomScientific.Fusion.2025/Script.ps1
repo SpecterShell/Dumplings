@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://support.freedomscientific.com/Downloads/OfflineInstallers/GetInstallers?product=Fusion&version=19&language=mul&releaseType=Offline' -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0'
+$Object1 = Invoke-RestMethod -Uri 'https://support.freedomscientific.com/Downloads/OfflineInstallers/GetInstallers?product=Fusion&version=19&language=mul&releaseType=Offline' -UserAgent $DumplingsBrowserUserAgent
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $Object2 = Invoke-RestMethod -Uri 'https://support.freedomscientific.com/Downloads/Fusion/PreviousFeatures?version=2025' -UserAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0' | ConvertFrom-Html
+    $Object2 = Invoke-RestMethod -Uri 'https://support.freedomscientific.com/Downloads/Fusion/PreviousFeatures?version=2025' -UserAgent $DumplingsBrowserUserAgent | ConvertFrom-Html
 
     try {
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
