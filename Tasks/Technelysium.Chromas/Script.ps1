@@ -1,19 +1,20 @@
 $Object1 = Invoke-WebRequest -Uri 'https://technelysium.com.au/wp/chromas/'
+$Link = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.outerHTML -match '\d+(?:\.\d+){2,}' -and $_.outerHTML.Contains('free') } catch {} }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Link.href
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d{3,})').Groups[1].Value.Insert(2, '.').Insert(1, '.')
+$this.CurrentState.Version = [regex]::Match($Link.outerHTML, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://technelysium.com.au/wp/chromas-version-history/' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='entry-content']/*[contains(., 'Version $($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='entry-content']//p[contains(., 'Version $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = @($ReleaseNotesTitleNode)
         $ReleaseNotesNodes += for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.InnerText -notmatch 'Version (\d+(?:\.\d+)+)'; $Node = $Node.NextSibling) { $Node }
