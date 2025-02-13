@@ -12,10 +12,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri 'https://go.dev/dl/' $Object1.files.Where({ $_.os -eq 'windows' -and $_.arch -eq 'amd64' -and $_.kind -eq 'installer' }, 'First')[0].filename
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm'
-  InstallerUrl = Join-Uri 'https://go.dev/dl/' $Object1.files.Where({ $_.os -eq 'windows' -and $_.arch -eq 'arm' -and $_.kind -eq 'installer' }, 'First')[0].filename
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'arm'
+#   InstallerUrl = Join-Uri 'https://go.dev/dl/' $Object1.files.Where({ $_.os -eq 'windows' -and $_.arch -eq 'arm' -and $_.kind -eq 'installer' }, 'First')[0].filename
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = Join-Uri 'https://go.dev/dl/' $Object1.files.Where({ $_.os -eq 'windows' -and $_.arch -eq 'arm64' -and $_.kind -eq 'installer' }, 'First')[0].filename
