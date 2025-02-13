@@ -1,0 +1,178 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://nodejs.org/dist/v23.8.0/node-v23.8.0-x64.msi
+- Architecture: arm64
+  InstallerUrl: https://nodejs.org/dist/v23.8.0/node-v23.8.0-arm64.msi
+Locale:
+- Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v23.8.0/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/zh-cn/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v23.8.0/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/zh-cn/about/
+- Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v23.8.0/LICENSE
+- Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v23.8.0/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Notable Changes
+    Support for using system CA certificates store on macOS and Windows
+    This version adds the --use-system-ca command-line flag, which instructs Node.js
+    to use the trusted CA certificates present in the system store along with
+    the --use-bundled-ca, --use-openssl-ca options.
+    This option is available on macOS and Windows for now.
+    Contributed by Tim Jacomb in #56599
+    and Joyee Cheung in #56833.
+    Introduction of the URL Pattern API
+    An implementation of the URL Pattern API
+    is now available.
+    The URLPattern constructor is exported from the node:url module and will be
+    available as a global in Node.js 24.
+    Contributed by Yagiz Nizipli and Daniel Lemire in #56452.
+    Support for the zstd compression algorithm
+    Node.js now includes support for the Zstandard (zstd) compression algorithm.
+    Various APIs have been added to the node:zlib module for both compression and decompression
+    of zstd streams.
+    Contributed by Jan Krems in #52100.
+    Node.js thread names
+    Threads created by the Node.js process are now named to improve the debugging experience.
+    Worker threads will use the name option that can be passed to the Worker constructor.
+    Contributed by Rafael Gonzaga in #56416.
+    Timezone data has been updated to 2025a
+    Included changes:
+    - Paraguay adopts permanent -03 starting spring 2024.
+    - Improve pre-1991 data for the Philippines.
+    Other Notable Changes
+    - [39997867cf] - (SEMVER-MINOR) sqlite: allow returning ArrayBufferViews from user-defined functions (René) #56790
+    Commits
+    - [0ee9c34d63] - benchmark: add simple parse and test benchmarks for URLPattern (James M Snell) #56882
+    - [b3f2045d14] - build: gyp exclude libm linking on macOS (deepak1556) #56901
+    - [e0dd9aefd6] - build: remove explicit linker call to libm on macOS (deepak1556) #56901
+    - [52399da780] - build: link with Security.framework in GN build (Cheng) #56895
+    - [582b9221c9] - build: do not put commands in sources variables (Cheng) #56885
+    - [ea61b956e9] - build: add double quotes around <(python) (Luigi Pinca) #56826
+    - [14236ef778] - build: add build option suppress_all_error_on_warn (Michael Dawson) #56647
+    - [dfd3f430f3] - build,win: enable ccache (Stefan Stojanovic) #56847
+    - [3e207bd9ec] - (SEMVER-MINOR) crypto: support --use-system-ca on Windows (Joyee Cheung) #56833
+    - [fe2694a992] - crypto: fix X509* leak in --use-system-ca (Joyee Cheung) #56832
+    - [60039a2c36] - crypto: add api to get openssl security level (Michael Dawson) #56601
+    - [39a474f7c0] - (SEMVER-MINOR) crypto: added support for reading certificates from macOS system store (Tim Jacomb) #56599
+    - [144bee8067] - deps: update zlib to 1.3.0.1-motley-788cb3c (Node.js GitHub Bot) #56655
+    - [7fd39e3a79] - deps: update sqlite to 3.49.0 (Node.js GitHub Bot) #56654
+    - [d698cb5434] - deps: update amaro to 0.3.2 (marco-ippolito) #56916
+    - [dbd09067c0] - deps: V8: cherry-pick 9ab40592f697 (Levi Zim) #56781
+    - [ee33ef3aa6] - deps: update cjs-module-lexer to 2.0.0 (Michael Dawson) #56855
+    - [c0542557d0] - deps: update timezone to 2025a (Node.js GitHub Bot) #56876
+    - [d67cb1f9bb] - deps: update simdjson to 3.12.0 (Node.js GitHub Bot) #56874
+    - [70b04b4314] - deps: update googletest to e235eb3 (Node.js GitHub Bot) #56873
+    - [e11cda003f] - (SEMVER-MINOR) deps: update ada to v3.0.1 (Yagiz Nizipli) #56452
+    - [8743ef525d] - deps: update simdjson to 3.11.6 (Node.js GitHub Bot) #56250
+    - [0f553e5575] - deps: update amaro to 0.3.1 (Node.js GitHub Bot) #56785
+    - [380a8d8d2f] - (SEMVER-MINOR) deps,tools: add zstd 1.5.6 (Jan Krems) #52100
+    - [66898a7c3b] - doc: update history of stream.Readable.toWeb() (Jimmy Leung) #56928
+    - [9e29416e12] - doc: make MDN links to global classes more consistent (Antoine du Hamel) #56924
+    - [6bc270728a] - doc: make MDN links to global classes more consistent in assert.md (Antoine du Hamel) #56920
+    - [00da003171] - doc: make MDN links to global classes more consistent (Antoine du Hamel) #56923
+    - [d90198793a] - doc: make MDN links to global classes more consistent in util.md (Antoine du Hamel) #56922
+    - [5f4377a759] - doc: make MDN links to global classes more consistent in buffer.md (Antoine du Hamel) #56921
+    - [7353266b50] - doc: improve type stripping documentation (Marco Ippolito) #56916
+    - [888d2acc3a] - doc: specificy support for erasable ts syntax (Marco Ippolito) #56916
+    - [3c082d43bc] - doc: update post sec release process (Rafael Gonzaga) #56907
+    - [f0bf35d3c5] - doc: update websocket link to avoid linking to self (Chengzhong Wu) #56897
+    - [373dbb0e6c] - doc: mark --env-file-if-exists flag as experimental (Juan José) #56893
+    - [d436888cc8] - doc: fix typo in cjs example of util.styleText (Deokjin Kim) #56769
+    - [91638eeb4a] - doc: clarify sqlite user-defined function behaviour (René) #56786
+    - [bab9c4d331] - events: getMaxListeners detects 0 listeners (Matthew Aitken) #56807
+    - [ccaf7fe737] - fs: make FileHandle.readableWebStream always create byte streams (Ian Kerins) #55461
+    - [974cec7a0a] - http: be more generational GC friendly (ywave620) #56767
+    - [be00058712] - inspector: add Network.Initiator in inspector protocol (Chengzhong Wu) #56805
+    - [31293a4b09] - inspector: fix GN build (Cheng) #56798
+    - [91a302356b] - inspector: fix StringUtil::CharacterCount for unicodes (Chengzhong Wu) #56788
+    - [3b305f25f2] - lib: filter node:quic from builtinModules when flag not used (James M Snell) #56870
+    - [f06ee4c54a] - meta: bump actions/upload-artifact from 4.4.3 to 4.6.0 (dependabot[bot]) #56861
+    - [d230bc3b3c] - meta: bump actions/setup-node from 4.1.0 to 4.2.0 (dependabot[bot]) #56868
+    - [d4ecfa745e] - meta: move one or more collaborators to emeritus (Node.js GitHub Bot) #56889
+    - [698c56bb94] - meta: add @nodejs/url as codeowner (Chengzhong Wu) #56783
+    - [a274b28857] - module: fix require.resolve() crash on non-string paths (Aditi) #56942
+    - [4e3052aeee] - quic: fixup errant LocalVector usage (James M Snell) #56564
+    - [dfc61f7bb7] - readline: fix unresolved promise on abortion (Daniel Venable) #54030
+    - [9e60501f5e] - sqlite: fix coverity warnings related to backup() (Colin Ihrig) #56961
+    - [1913a4aabc] - sqlite: restore changes from #55373 (Colin Ihrig) #56908
+    - [8410c955b7] - sqlite: fix use-after-free in StatementSync due to premature GC (Divy Srivastava) #56840
+    - [01d732d629] - sqlite: handle conflicting SQLite and JS errors (Colin Ihrig) #56787
+    - [39997867cf] - (SEMVER-MINOR) sqlite: allow returning ArrayBufferViews from user-defined functions (René) #56790
+    - [8dc637681a] - sqlite, test: expose sqlite online backup api (Edy Silva) #56253
+    - [cfea53eccc] - src: use args.This() in zlib (Michaël Zasso) #56988
+    - [6b398d6d0b] - src: replace SplitString with built-in (Yagiz Nizipli) #54990
+    - [fbb32e0a08] - src: add nullptr handling for NativeKeyObject (Burkov Egor) #56900
+    - [83ff7be9fd] - src: disallow copy/move fns/constructors (Yagiz Nizipli) #56811
+    - [63611d0331] - src: add a hard dependency v8_inspector_headers (Chengzhong Wu) #56805
+    - [3d957d135c] - src: improve error handling in encoding_binding.cc (James M Snell) #56915
+    - [9e9ac3ccd8] - src: avoid copy by using stdviewskeys (Yagiz Nizipli) #56080
+    - [086cdc297a] - src: remove obsolete NoArrayBufferZeroFillScope (James M Snell) #56913
+    - [915d7aeb37] - src: set signal inspector io thread name (RafaelGSS) #56416
+    - [f4b086d29d] - src: set thread name for main thread and v8 worker (RafaelGSS) #56416
+    - [3579143630] - src: set worker thread name using worker.name (RafaelGSS) #56416
+    - [736ff5de6d] - src: use a default thread name for inspector (RafaelGSS) #56416
+    - [be8e2b4d8f] - src: improve error handling in permission.cc (James M Snell) #56904
+    - [d6cf0911ee] - src: improve error handling in node_sqlite (James M Snell) #56891
+    - [521fed1bac] - src: improve error handling in node_os by removing ToLocalChecked (James M Snell) #56888
+    - [c9a99df8e7] - src: improve error handling in node_url (James M Snell) #56886
+    - [5c82ef3ace] - src: add memory retainer traits for external types (Chengzhong Wu) #56881
+    - [edb194b2d5] - src: prevent URLPattern property accessors from crashing on invalid this (James M Snell) #56877
+    - [9624049414] - src: pull in more electron boringssl adjustments (James M Snell) #56858
+    - [f8910e384d] - src: make multiple improvements to node_url_pattern (James M Snell) #56871
+    - [94a0237b18] - src: clean up some obsolete crypto methods (James M Snell) #56792
+    - [b240ca67b9] - src: add check for Bignum in GroupOrderSize (Burkov Egor) #56702
+    - [45692e9c7c] - src, deps: port electron's boringssl workarounds (James M Snell) #56812
+    - [a9d80d43cb] - (SEMVER-MINOR) src, quic: refine more of the quic implementation (James M Snell) #56328
+    - [93d0beb6c8] - src,test: expand test coverage for urlpattern and fix error (James M Snell) #56878
+    - [5a9732e1d0] - test: improve timeout duration for debugger events (Yagiz Nizipli) #56970
+    - [60c8fc07ff] - test: remove unnecessary syscall to cpuinfo (Yagiz Nizipli) #56968
+    - [40cdf756e6] - test: update webstorage wpt (Yagiz Nizipli) #56963
+    - [de77371a9e] - test: execute shell directly for refresh() (Yagiz Nizipli) #55051
+    - [f4254b8e70] - test: automatically sync wpt urlpattern tests (Jonas) #56949
+    - [a473d3f57a] - test: update snapshots for amaro v0.3.2 (Marco Ippolito) #56916
+    - [abca97f7e2] - test: change jenkins reporter (Carlos Espa) #56808
+    - [7c9fa11127] - test: fix race condition in test-child-process-bad-stdio (Colin Ihrig) #56845
+    - [b8b6e68836] - (SEMVER-MINOR) test: add WPT for URLPattern (Yagiz Nizipli) #56452
+    - [b6d3d52e20] - test: adjust check to use OpenSSL sec level (Michael Dawson) #56819
+    - [3beac87f92] - test: test-crypto-scrypt.js doesn't need internals (Meghan Denny) #56673
+    - [3af23a10f3] - test: set test-fs-cp as flaky (Stefan Stojanovic) #56799
+    - [1146f48f67] - test: search cctest files (Chengzhong Wu) #56791
+    - [86c199b25a] - test: convert test_encoding_binding.cc to a JS test (Chengzhong Wu) #56791
+    - [bd5484717c] - test: test-crypto-prime.js doesn't need internals (Meghan Denny) #56675
+    - [f5f54414e4] - test: temporary remove resource check from fs read-write (Rafael Gonzaga) #56789
+    - [c8bd2ba0ad] - test: mark test-without-async-context-frame flaky on windows (James M Snell) #56753
+    - [2c2e4a4ae0] - test: remove unnecessary code (Luigi Pinca) #56784
+    - [4606a5f79b] - test: mark test-esm-loader-hooks-inspect-wait flaky (Richard Lau) #56803
+    - [38c77e3462] - test: update WPT for url to a23788b77a (Node.js GitHub Bot) #56779
+    - [50ebd5fd31] - test: remove duplicate error reporter from ci (Carlos Espa) #56739
+    - [0c3ae25aec] - test_runner: print formatted errors on summary (Pietro Marchini) #56911
+    - [b5a8a812fb] - tools: bump eslint version (dependabot[bot]) #56869
+    - [e1f86c1b9d] - tools: remove test-asan/ubsan workflows (Michaël Zasso) #56823
+    - [405a6678b7] - tools: run macOS test workflow with Xcode 16.1 (Michaël Zasso) #56831
+    - [16529c130f] - tools: update sccache and sccache-action (Michaël Zasso) #56815
+    - [fe004111ea] - tools: fix license-builder for inspector_protocol (Michaël Zasso) #56814
+    - [bc97a90176] - (SEMVER-MINOR) url: add URLPattern implementation (Yagiz Nizipli) #56452
+    - [77294d8918] - util: enforce shouldColorize in styleText array arg (Marco Ippolito) #56722
+    - [8e6c191601] - zlib: use modern class syntax for zstd classes (Yagiz Nizipli) #56965
+    - [a3ca7f37a2] - zlib: make all zstd functions experimental (Yagiz Nizipli) #56964
+    - [4cc7907738] - (SEMVER-MINOR) zlib: add zstd support (Jan Krems) #52100
+- Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v23.8.0
+Version: 23.8.0
+ReleaseTime: 2025-02-13
