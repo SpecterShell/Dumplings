@@ -1,0 +1,45 @@
+Installer:
+- Architecture: x64
+  NestedInstallerType: exe
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.4/paint.net.5.1.4.install.x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.4.install.x64.exe
+  InstallerSha256: DBE6EFB47D215FBD974F949BFD43F3D31E177FCA3581A00E2B5404F0BAAA279C
+  ProductCode: '{E7517BC5-6968-4A56-A6E9-A1D02E81B3FB}'
+  AppsAndFeaturesEntries:
+  - ProductCode: '{E7517BC5-6968-4A56-A6E9-A1D02E81B3FB}'
+    UpgradeCode: '{04A40F40-A207-4B48-AED7-6AA532E43275}'
+    InstallerType: wix
+- Architecture: x64
+  NestedInstallerType: wix
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.4/paint.net.5.1.4.winmsi.x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.4.winmsi.x64.msi
+- Architecture: arm64
+  NestedInstallerType: exe
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.4/paint.net.5.1.4.install.arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.4.install.arm64.exe
+  InstallerSha256: EB013D523D5CD6E1A06EA189C5A65E7ED9AF1FFD5E1FA68B6B9D3E20286B5E93
+  ProductCode: '{4DF6335D-0999-4CEC-8567-B885AE6EFCCE}'
+  AppsAndFeaturesEntries:
+  - ProductCode: '{4DF6335D-0999-4CEC-8567-B885AE6EFCCE}'
+    UpgradeCode: '{04A40F40-A207-4B48-AED7-6AA532E43275}'
+    InstallerType: wix
+- Architecture: arm64
+  NestedInstallerType: wix
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.4/paint.net.5.1.4.winmsi.arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.4.winmsi.arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This update is mostly a hotfix that fixes installation on Windows Server systems.
+    - Fixed: Installation on Windows Server will no longer fail with an error about a missing srclient DLL.
+    - Improved: When saving an image fails due to Windows Defender's "Controlled Folder Access" setting, the error message will mention that instead of being a generic "I/O failure" message.
+    - New: GIF Comment metadata is now preserved. It maps to EXIF Photo.UserComment tags.
+    - Improved: Consolidated the number of threads used for Async Present from 3 per image (canvas, left ruler, top ruler) to 3 total.
+    - Improved: ColorManagementEffect now supports DxgiColorSpace color contexts (for plugin developers).
+Version: 5.1.4
+ReleaseTime: 2025-02-14T22:50:33.0000000Z
