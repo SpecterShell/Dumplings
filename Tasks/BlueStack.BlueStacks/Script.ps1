@@ -39,9 +39,9 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
-            if ($Node.InnerText.Contains('Released on:')) {
+            if ($Node.InnerText.Contains('Released on') -and $Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
               # ReleaseTime
-              $this.CurrentState.ReleaseTime = [regex]::Match($Node.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+              $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
             } elseif (-not $Node.SelectSingleNode('.//a[@class="btn-download"]')) {
               $Node
             }
@@ -68,9 +68,9 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $Object5.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesCNTitleNode) {
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
-            if ($Node.InnerText.Contains('發布日期：')) {
+            if ($Node.InnerText.Contains('發布日期：') -and $Node.InnerText -match '(20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日)') {
               # ReleaseTime
-              $this.CurrentState.ReleaseTime ??= [regex]::Match($Node.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+              $this.CurrentState['ReleaseTime'] ??= $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
             } elseif (-not $Node.SelectSingleNode('.//a[@class="btn-download"]')) {
               $Node
             }
