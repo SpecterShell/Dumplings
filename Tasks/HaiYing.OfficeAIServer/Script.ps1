@@ -14,7 +14,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.bin_url
+  InstallerUrl = $Object1.bin_url.Replace('download.office-ai.cn', 'downloadcdn.office-ai.cn')
 }
 
 switch -Regex ($this.Check()) {
