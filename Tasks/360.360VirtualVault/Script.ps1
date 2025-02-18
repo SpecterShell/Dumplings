@@ -41,7 +41,7 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The Last Modified is unchanged
-if ($this.CurrentState.LastModified -le $this.LastState.LastModified) {
+if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
