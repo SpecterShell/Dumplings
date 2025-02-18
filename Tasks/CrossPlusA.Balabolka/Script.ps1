@@ -3,7 +3,12 @@ $this.CurrentState.Version = (Invoke-WebRequest -Uri 'http://www.cross-plus-a.co
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://www.cross-plus-a.com/balabolka.zip'
+  NestedInstallerType = 'exe'
+  InstallerUrl        = 'https://www.cross-plus-a.com/balabolka.zip'
+}
+$this.CurrentState.Installer += [ordered]@{
+  NestedInstallerType = 'portable'
+  InstallerUrl        = 'https://www.cross-plus-a.com/balabolka_portable.zip'
 }
 
 switch -Regex ($this.Check()) {
