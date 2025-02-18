@@ -43,15 +43,27 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object1 = Invoke-WebRequest -Uri 'https://apifox.com/help/app/changelog/' | ConvertFrom-Html
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = 'https://docs.apifox.com/doc-5807637'
+      }
 
-      $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//*[contains(@class, 'theme-doc-markdown')]/h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@id='$($this.CurrentState.Version.Replace('.', ''))']")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ul[1]') | Get-TextContent | Format-Text
+        }
+
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrl + '#' + $this.CurrentState.Version.Replace('.', '')
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
