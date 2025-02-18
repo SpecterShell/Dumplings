@@ -20,8 +20,8 @@ switch -Regex ($this.Check()) {
     }
 
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # Version
-    $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # AppsAndFeaturesEntries + ProductCode
