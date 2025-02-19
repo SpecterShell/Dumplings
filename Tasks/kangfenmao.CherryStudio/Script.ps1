@@ -20,30 +20,32 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][1]")
-        if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][1]")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][2]")
+        if ($ReleaseNotesCNTitleNode -and $ReleaseNotesTitleNode) {
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+          }
+
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
           $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-        }
-
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')][2]")
-        if ($ReleaseNotesCNTitleNode) {
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
           }
-        } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
