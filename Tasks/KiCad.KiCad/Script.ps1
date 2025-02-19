@@ -56,33 +56,27 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.kicad.org/blog/'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://downloads.kicad.org/api/v1/update' -Method Post -Body (
-        @{
-          platform        = 'windows'
-          arch            = 'amd64'
-          current_version = $this.LastState.Contains('Version') ? $this.LastState.Version : '8.0.1'
-          lang            = ''
-          last_check      = ''
-        } | ConvertTo-Json -Compress
-      ) -ContentType 'application/json' -StatusCodeVariable 'StatusCode'
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.StartsWith("KiCad $($this.CurrentState.Version)") }, 'First')
+      if ($Object2) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime ??= $Object2[0].pubDate | Get-Date -AsUTC
 
-      if ($StatusCode -ne 204 -and $Object2.version -eq $this.CurrentState.Version) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl = $Object2.details_url
+          Value = $Object2[0].link
         }
 
-        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+        $Object3 = Invoke-WebRequest -Uri $Object2[0].link | ConvertFrom-Html
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectSingleNode('//article/section[1]') | Get-TextContent | Format-Text
+          Value  = $Object3.SelectSingleNode('//article/section') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
