@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
   <soap:Body>
     <CheckForUpdates xmlns="http://localhost/TSCUpdater">
       <product>Camtasia</product>
-      <currentVersion>$($this.LastState.Contains('Version') ? $this.LastState.Version : '24.0.0')</currentVersion>
+      <currentVersion>$($this.LastState.Contains('Version') ? $this.LastState.Version : '25.0.0')</currentVersion>
       <language>ENU</language>
       <os>10.0.22000.0</os>
       <dotNet>4.8.9037</dotNet>
