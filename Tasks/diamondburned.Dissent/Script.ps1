@@ -38,6 +38,23 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $NestedInstallerFileRoot = New-TempFolder
+    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $NestedInstallerFileRoot) -Wait
+    $NestedInstallerFile = Join-Path $NestedInstallerFileRoot 'dissent-windows-amd64.msi'
+
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
+        UpgradeCode   = $NestedInstallerFile | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
+
     $this.Print()
     $this.Write()
   }
