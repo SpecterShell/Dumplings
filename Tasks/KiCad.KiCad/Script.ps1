@@ -56,7 +56,7 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.kicad.org/blog/'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.StartsWith("KiCad $($this.CurrentState.Version)") }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.Contains("$($this.CurrentState.Version)") }, 'First')
       if ($Object2) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $Object2[0].pubDate | Get-Date -AsUTC
@@ -67,16 +67,14 @@ switch -Regex ($this.Check()) {
           Value = $Object2[0].link
         }
 
-        $Object3 = Invoke-WebRequest -Uri $Object2[0].link | ConvertFrom-Html
-
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectSingleNode('//article/section') | Get-TextContent | Format-Text
+          Value  = $Object2[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
