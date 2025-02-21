@@ -7,12 +7,22 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -replace '^fleet-v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'x64'
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and -not $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)\fleetctl.exe"
+      RelativeFilePath     = "fleetctl_v$($this.CurrentState.Version)_windows_amd64\fleetctl.exe"
+      PortableCommandAlias = 'fleetctl'
+    }
+  )
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "fleetctl_v$($this.CurrentState.Version)_windows_arm64\fleetctl.exe"
       PortableCommandAlias = 'fleetctl'
     }
   )
