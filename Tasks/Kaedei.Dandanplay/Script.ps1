@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//div[@cl
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@href, ".zip")]').Attributes['href'].Value -replace '\.zip$', '.exe'
+  InstallerUrl = "https://dandan.sakurateam.top/dandanplay-x64_$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
