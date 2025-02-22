@@ -1,74 +1,128 @@
-$Certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new([System.Convert]::FromBase64String($Global:DumplingsSecret.iMonitorPfx))
-$Object1 = Invoke-RestMethod $Global:DumplingsSecret.iMonitorUrl -Method Post -Body @(
-  @{
-    product = 'iMonitor'
-    version = $this.LastState.Contains('Version') ? $this.LastState.Version : '2.5.1.0'
-  } | ConvertTo-Json -Compress
-) -Certificate $Certificate -SkipCertificateCheck
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
-if ($Object1.data.latest) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
-  return
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-# Version
-$this.CurrentState.Version = $Object1.data.new_version
+function Get-ReleaseNotes {
+  try {
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $ReleaseNotesUrl = 'https://trustsing.com/imonitor/'
+    }
+
+    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+    if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
+        if (-not $Node.HasClass('button-group')) {
+          $Node
+        }
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+      }
+    } else {
+      $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+    }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = 'https://trustsing.com/publish/iMonitor32.exe'
-}
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = 'https://trustsing.com/publish/iMonitor64.exe'
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = 'https://trustsing.com/publish/iMonitor32.exe'
+}
+
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Last Modified
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+# Case 4: The Last Modified has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    try {
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://trustsing.com/imonitor/'
-      }
-
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
-      if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
-          if (-not $Node.HasClass('button-group')) {
-            $Node
-          }
-        }
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-        }
-
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
+  # Case 6: The Last Modified, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
+  Default {
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }
