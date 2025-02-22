@@ -9,7 +9,6 @@ $this.CurrentState.RealVersion = "$($VersionParts[0]).$($VersionParts[1])$($Vers
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  # https://download.cpuid.com/hwmonitor/hwmonitor_1.56.exe
   InstallerUrl = "https://download.cpuid.com/hwmonitor/hwmonitor_$($this.CurrentState.RealVersion).exe"
 }
 
