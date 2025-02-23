@@ -73,14 +73,8 @@ switch -Regex ($this.Check()) {
       $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
       # RealVersion
       $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer.AppsAndFeaturesEntries = @(
-        [ordered]@{
-          ProductCode   = $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
+      # ProductCode
+      $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
     }
 
     try {
