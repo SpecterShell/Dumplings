@@ -67,7 +67,7 @@ switch -Regex ($this.Check()) {
       $InstallerFile2 = Join-Path $InstallerFileExtracted '4.1_1.cab'
       $InstallerFile2Extracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 '*.msi' | Out-Host
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Resolve-Path -Force | Select-Object -First 1
+      $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Get-Item -Force | Select-Object -First 1
 
       # InstallerSha256
       $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
