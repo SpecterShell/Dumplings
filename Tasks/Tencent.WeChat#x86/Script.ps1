@@ -82,6 +82,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query        = [ordered]@{}
       Architecture = 'x86'
       InstallerUrl = $Uri2
     }
@@ -93,6 +94,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query           = [ordered]@{}
       Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -123,6 +125,7 @@ if ($this.Status.Contains('New')) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query        = [ordered]@{}
       Architecture = 'x86'
       InstallerUrl = $Uri2
     }
@@ -134,6 +137,7 @@ if ($this.Status.Contains('New')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query           = [ordered]@{}
       Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
@@ -156,6 +160,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
   if ($this.LastState.Mode -eq $true) {
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query        = [ordered]@{}
       Architecture = 'x86'
       InstallerUrl = $Uri2 = $this.LastState.Installer[0].InstallerUrl
     }
@@ -188,6 +193,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
       $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
       # Installer
       $this.CurrentState.Installer += [ordered]@{
+        Query        = [ordered]@{}
         Architecture = 'x86'
         InstallerUrl = $Uri2
       }
@@ -219,6 +225,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     $Object2 = Invoke-WebRequest -Uri $Uri2 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query        = [ordered]@{}
       Architecture = 'x86'
       InstallerUrl = $Uri2
     }
@@ -231,6 +238,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     $this.Log("${Uri2} does not exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
+      Query           = [ordered]@{}
       Architecture    = 'x86'
       InstallerUrl    = $Uri1
       InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
