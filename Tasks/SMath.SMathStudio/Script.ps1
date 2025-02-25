@@ -1,7 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://smath.com/licensing/api/extensions?extensions=SMathStudio_Desktop&params=1111&type=software&beta=False'
+$Object1 = Invoke-RestMethod -Uri 'https://smath.com/licensing/api/extensions?extensions=SMathStudio_Desktop&params=1111&editionId=a37cba83-b69c-4c71-9992-55ff666763bd&type=software&beta=False'
 
 # Version
 $this.CurrentState.Version = $Object1.extensions.items.item.version
+
+# RealVersion
+$VersionParts = $this.CurrentState.Version.Split('.')
+$this.CurrentState.RealVersion = "$($VersionParts[0..([System.Math]::Min($VersionParts.Length - 1, 2))] -join '.')$($VersionParts.Count -ge 4 ? "-$($VersionParts[3..($VersionParts.Count - 1)])" : '')"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -20,7 +24,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = 'https://smath.com/en-US/view/SMathStudio/history' + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Value  = 'https://smath.com/view/SMathStudio/history' + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
 
         # ReleaseTime
