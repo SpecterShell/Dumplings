@@ -29,7 +29,8 @@ switch -Regex ($this.Check()) {
         Value = $Object1.link
       }
     } catch {
-
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
     $this.Print()
