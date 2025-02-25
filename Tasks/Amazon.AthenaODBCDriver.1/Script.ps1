@@ -1,17 +1,26 @@
 $Object1 = Invoke-WebRequest -Uri 'https://docs.aws.amazon.com/athena/latest/ug/connect-with-odbc-driver-and-documentation-download-links.html'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('32-bit') } catch {} }, 'First')[0].href
 }
-$this.CurrentState.Installer += [ordered]@{
+$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(\.\d+){2,})').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('64-bit') } catch {} }, 'First')[0].href
 }
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(\.\d+){2,})').Groups[1].Value
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
