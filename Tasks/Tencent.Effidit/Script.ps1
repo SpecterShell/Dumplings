@@ -1,6 +1,5 @@
 $EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://effidit.qq.com/')
-Start-Sleep -Seconds 5
 
 $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[@class="down"]')).Click()
 $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "lag-k") and (text()="英文" or text()="EN")]')).Click()
