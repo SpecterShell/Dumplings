@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.hwinfo.com/version-history/' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.hwinfo.com/version-history/' -UserAgent $DumplingsBrowserUserAgent | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='tab3']//div[contains(@class, 'version-released') and contains(., 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
