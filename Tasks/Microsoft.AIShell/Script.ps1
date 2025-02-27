@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        if ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(text(), '$($this.CurrentState.Version)')]")) {
+        if ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(., '$($this.CurrentState.Version)')]")) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('SHA256 Hashes'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
