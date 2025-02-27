@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://8gadgetpack.net/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://gadgetpack.net/' | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//a[contains(@href, ".msi") and contains(text(), "Download")]')
 
 # Version
@@ -11,18 +11,32 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $Object3 = $Object1.SelectSingleNode("//h2[text()='Version history']/following-sibling::ul[@class='tmo_ul_list'][1]/li[contains(., 'Version $($this.CurrentState.Version)')]")
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+      }
+    )
 
-      if ($Object3) {
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://gadgetpack.net/changelog.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object3.SelectSingleNode("//ul[@class='tmo_ul_list'][1]/li[contains(., 'Version $($this.CurrentState.Version)')]")
+      if ($ReleaseNotesNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($Object3.InnerText, '(\d{4}-\d{2}-\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.InnerText, '(\d{4}-\d{2}-\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectNodes('./text()[1]/following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectNodes('./text()[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
