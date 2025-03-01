@@ -1,101 +1,50 @@
-function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+$RepoOwner = '1357310795'
+$RepoName = 'JboxTransfer'
 
-  # Version
-  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # AppsAndFeaturesEntries + ProductCode
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-    }
-  )
-}
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
-$Object1 = Invoke-WebRequest -Uri 'https://pan.sjtu.edu.cn/jboxtransfer/download.html'
+# Version
+$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri 'https://pan.sjtu.edu.cn' $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('online') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('Installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-
-$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object2.Headers.ETag[0]
-
-# Case 0: Force submit the manifest
-if ($Global:DumplingsPreference.Contains('Force')) {
-  $this.Log('Skip checking states', 'Info')
-
-  # ETag
-  $this.CurrentState.ETag = @($ETag)
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 1: The task is new
-if ($this.Status.Contains('New')) {
-  $this.Log('New task', 'Info')
-
-  # ETag
-  $this.CurrentState.ETag = @($ETag)
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  return
-}
-
-# Case 2: The ETag is unchanged
-if ($ETag -in $this.LastState.ETag) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
-  return
-}
-
-Read-Installer
-
-# Case 3: The current state has an invalid version
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-  throw 'The current state has an invalid version'
-}
-
-# Case 4: The ETag has changed, but the SHA256 is not
-if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
-  $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
-
-  # ETag
-  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
-
-  $this.Write()
-  return
-}
-
-# ETag
-$this.CurrentState.ETag = @($ETag)
 
 switch -Regex ($this.Check()) {
-  # Case 6: The ETag, the SHA256 and the version have changed
-  'Updated|Rollbacked' {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
-    $this.Message()
-    $this.Submit()
   }
-  # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
-    $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
-    $this.Config.IgnorePRCheck = $true
-    $this.Print()
-    $this.Write()
+  'Changed|Updated' {
     $this.Message()
+  }
+  'Updated' {
     $this.Submit()
   }
 }
