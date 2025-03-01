@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-latest
+    runs-on: windows-2025
     concurrency:
       group: ${{ github.workflow }}
     steps:
@@ -25,12 +25,12 @@ jobs:
         with:
           repository: microsoft/winget-pkgs
           path: winget-pkgs
-      - name: Install WinGet client
-        run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
-        working-directory: Dumplings
-        shell: powershell
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Install WinGet client
+      #   run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
+      #   working-directory: Dumplings
+      #   shell: powershell
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull latest changes from the remote repository
         run: git pull
         working-directory: Dumplings
