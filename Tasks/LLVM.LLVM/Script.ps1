@@ -15,10 +15,12 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'arm64'
-#   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('woa64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-# }
+if ($Asset = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('woa64') }, 'First')) {
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'arm64'
+    InstallerUrl = $Asset[0].browser_download_url | ConvertTo-UnescapedUri
+  }
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -85,10 +87,11 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
+  { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
+    $this.Config.IgnorePRCheck = $true
+  }
   'Changed|Updated' {
     $this.Message()
-  }
-  'Updated' {
     $this.Submit()
   }
 }
