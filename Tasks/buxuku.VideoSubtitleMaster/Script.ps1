@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
