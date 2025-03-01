@@ -1,14 +1,18 @@
-$Response = Invoke-RestMethod -Uri 'https://www.kdocs.cn/kd/api/configure/list?idList=kdesktopVersion,autoDownload'
-$Object1 = $Response.data.kdesktopVersion | ConvertFrom-Json
-$Object2 = $Response.data.autoDownload | ConvertFrom-Json
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.win, 'v([\d\.]+)').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://www.kdocs.cn/' | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.kdesktopWin.1001
+  InstallerUrl = [regex]::Match(
+    $Object1.SelectSingleNode('//*[@data-type="windows"]').Attributes['onclick'].Value,
+    '(https://[^"]+\.exe)'
+  ).Groups[1].Value
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match(
+  $this.CurrentState.Installer[0].InstallerUrl,
+  'v(\d+(?:\.\d+)+)'
+).Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
