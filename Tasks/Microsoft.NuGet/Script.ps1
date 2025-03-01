@@ -1,20 +1,19 @@
-$Object1 = Invoke-RestMethod -Uri 'https://dist.nuget.org/index.json'
+$Object1 = (Invoke-RestMethod -Uri 'https://dist.nuget.org/index.json').artifacts.Where({ $_.name -eq 'win-x86-commandline' }, 'First')[0].versions.Where({ $_.displayName -eq 'nuget.exe - recommended latest' }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.artifacts.Where({ $_.name -eq 'win-x86-commandline' }, 'First')[0].versions.Where({ $_.displayName -eq 'nuget.exe - recommended latest' }, 'First')[0].version
-
-$Object2 = $Object1.artifacts.Where({ $_.name -eq 'win-x86-commandline' }, 'First')[0].versions.Where({ $_.displayName -ne 'nuget.exe - recommended latest' -and $_.version -eq $this.CurrentState.Version }, 'First')[0]
+$this.CurrentState.Version = $Object1.version
 
 # Installer
+# The API may not contain the version-specific entry, so we need to construct the URL manually
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.url
+  InstallerUrl = "https://dist.nuget.org/win-x86-commandline/v$($this.CurrentState.Version)/nuget.exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.releasedate.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.releasedate.ToUniversalTime()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
