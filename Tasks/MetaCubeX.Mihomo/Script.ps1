@@ -16,10 +16,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') -and $_.name -notmatch '\W+go\d+\W+' -and -not $_.name.Contains('compatible') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('armv7') -and $_.name -notmatch '\W+go\d+\W+' -and -not $_.name.Contains('compatible') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') -and $_.name -notmatch '\W+go\d+\W+' -and -not $_.name.Contains('compatible') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
