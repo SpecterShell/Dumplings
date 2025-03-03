@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.zwsoft.cn/index.php?g=Api&m=Common&a=getDownloadCenterProduct').data.Where({ $_.title -eq '中望CAD机械版 2025' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望CAD机械版 2025' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
