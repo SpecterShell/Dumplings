@@ -103,5 +103,33 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     $this.Submit()
+
+    if (-not $this.Status.Contains('New')) {
+      $this.CurrentState = $this.LastState
+
+      $Prefix2 = 'https://downloadarchive.documentfoundation.org/libreoffice/old/'
+      $this.CurrentState.Installer = @(
+        [ordered]@{
+          Architecture = 'x86'
+          InstallerUrl = "${Prefix2}$($this.LastState.RealVersion)/win/x86/LibreOffice_$($this.LastState.RealVersion)_Win_x86.msi"
+        }
+        [ordered]@{
+          Architecture = 'x64'
+          InstallerUrl = "${Prefix2}$($this.LastState.RealVersion)/win/x86_64/LibreOffice_$($this.LastState.RealVersion)_Win_x86-64.msi"
+        }
+        [ordered]@{
+          Architecture = 'arm64'
+          InstallerUrl = "${Prefix2}$($this.LastState.RealVersion)/win/aarch64/LibreOffice_$($this.LastState.RealVersion)_Win_aarch64.msi"
+        }
+      )
+      $this.MessageID = [int[]]@()
+      $this.Config.IgnorePRCheck = $true
+      try {
+        $this.Submit()
+      } catch {
+        $_ | Out-Host
+        $this.Log($_, 'Warning')
+      }
+    }
   }
 }
