@@ -1,9 +1,9 @@
 # x86
 $Prefix1 = 'https://desktop.miro.com/platforms/win32-x86-nsis-pu/'
-$Object1 = Invoke-RestMethod -Uri "${Prefix1}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix1}latest.yml" | ConvertFrom-Yaml
 # x64
 $Prefix2 = 'https://desktop.miro.com/platforms/win32-nsis-pu/'
-$Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml" | ConvertFrom-Yaml
 
 if ($Object1.version -ne $Object2.version) {
   $this.Log("x86 version: $($Object1.version)")

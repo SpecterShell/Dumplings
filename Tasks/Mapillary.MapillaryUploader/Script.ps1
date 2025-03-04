@@ -1,6 +1,6 @@
 $Prefix = 'https://tools.mapillary.com/uploader/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-win32.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-win32.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

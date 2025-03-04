@@ -1,6 +1,6 @@
 $Prefix = 'https://dl.he3app.com/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest/latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest/latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

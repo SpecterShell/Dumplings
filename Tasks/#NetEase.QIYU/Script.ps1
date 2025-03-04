@@ -7,7 +7,7 @@ if (Test-Path -Path $OldReleasesPath) {
 
 $Prefix = 'http://res.qiyukf.net/qiyu-desktop/prod/'
 
-$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

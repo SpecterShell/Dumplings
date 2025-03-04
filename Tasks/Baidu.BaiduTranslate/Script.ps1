@@ -1,11 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/fanyi-client/update/latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
+$Prefix = 'https://fanyiapp.cdn.bcebos.com/fanyi-client/update/'
+
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {

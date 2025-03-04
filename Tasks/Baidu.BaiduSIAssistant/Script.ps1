@@ -1,11 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
+$Prefix = 'https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/'
+
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
@@ -15,7 +17,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         $Object1.releaseDate,
         "ddd MMM dd yyyy HH:mm:ss 'GMT'K '(GMT'K')'",
-  (Get-Culture -Name 'en-US')
+        (Get-Culture -Name 'en-US')
       ).ToUniversalTime()
 
       # ReleaseNotes (zh-CN)

@@ -7,10 +7,21 @@ if (Test-Path -Path $OldReleasesPath) {
 
 $Prefix = 'https://bj.openstorage.cn/v1/yuji/public/release/'
 
-$this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }

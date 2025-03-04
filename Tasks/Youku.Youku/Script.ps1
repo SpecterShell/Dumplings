@@ -1,16 +1,29 @@
 $Prefix = 'https://pcclient.download.youku.com/iku-win-release/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-# RealVersion
-$this.CurrentState.RealVersion = $RealVersion = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = Invoke-RestMethod -Uri 'https://hudong.alicdn.com/api/data/v2/698d45f854c64b95a87f2a947ed4e12b.js' | Get-EmbeddedJson -StartsFrom 'cbUpdateConfig(' | ConvertFrom-Json
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      $ReleaseNotesNode = $Object1.win.strategies.Where({ $_.method.targetVersion -eq $RealVersion }, 'First')
+    try {
+      $Object2 = Invoke-RestMethod -Uri 'https://hudong.alicdn.com/api/data/v2/698d45f854c64b95a87f2a947ed4e12b.js' | Get-EmbeddedJson -StartsFrom 'cbUpdateConfig(' | ConvertFrom-Json
+
+      $ReleaseNotesNode = $Object2.win.strategies.Where({ $_.method.targetVersion -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

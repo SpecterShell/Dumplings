@@ -1,5 +1,5 @@
 $Prefix = 'https://pan.tencent.com/api/upgrade/'
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

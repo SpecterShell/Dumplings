@@ -1,13 +1,29 @@
 $Prefix = 'https://update.staruml.io/releases-v6/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://staruml.io/download/' | ConvertFrom-Html
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[contains(./h3, '$($this.CurrentState.Version)')]")
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://staruml.io/download/' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(./h3, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./h3').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

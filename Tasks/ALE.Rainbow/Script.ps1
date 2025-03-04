@@ -1,12 +1,12 @@
 $Prefix = 'https://openrainbow.com/downloads/'
 # x86 user
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest_desktop.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest_desktop.yml" | ConvertFrom-Yaml
 # x86 machine
-$Object2 = Invoke-RestMethod -Uri "${Prefix}latest_desktop_machine.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest_desktop_machine.yml" | ConvertFrom-Yaml
 # x64 user
-$Object3 = Invoke-RestMethod -Uri "${Prefix}latest_desktop-x64.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object3 = Invoke-RestMethod -Uri "${Prefix}latest_desktop-x64.yml" | ConvertFrom-Yaml
 # x64 machine
-$Object4 = Invoke-RestMethod -Uri "${Prefix}latest_desktop_machine-x64.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object4 = Invoke-RestMethod -Uri "${Prefix}latest_desktop_machine-x64.yml" | ConvertFrom-Yaml
 
 if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
   $this.Log("x86 user version: $($Object1.version)")

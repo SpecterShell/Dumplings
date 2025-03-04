@@ -1,11 +1,25 @@
 $Prefix = 'https://cos5.cloud.tencent.com/cosbrowser/'
 
-$this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-$this.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = (Join-Uri $Prefix $Object1.files[0].url).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

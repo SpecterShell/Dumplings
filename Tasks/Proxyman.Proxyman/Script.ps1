@@ -1,7 +1,16 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://proxyman.io/v1/apps/win/check-update' -Headers @{ 'X-NSProxy-Client' = '11' }).Data.Payload | ConvertFrom-Json
 
 $Prefix = $Object1.feedURL
-$this.CurrentState = Invoke-WebRequest -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object2.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -27,6 +36,14 @@ switch -Regex ($this.Check()) {
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

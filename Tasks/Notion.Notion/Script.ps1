@@ -1,9 +1,9 @@
 $Prefix = 'https://desktop-release.notion-static.com/'
 
 # x64
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 # arm64
-$Object2 = Invoke-RestMethod -Uri "${Prefix}arm64-windows.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object2 = Invoke-RestMethod -Uri "${Prefix}arm64-windows.yml" | ConvertFrom-Yaml
 
 if ($Object1.version -ne $Object2.version) {
   $this.Log("x64 version: $($Object1.version)")

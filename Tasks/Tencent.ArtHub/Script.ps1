@@ -1,11 +1,25 @@
 $Prefix = 'https://dldir1v6.qq.com/arthub/desktop/versions/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest-win32.yml" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-win32.yml" | ConvertFrom-Yaml
 
-$this.CurrentState.Installer.ForEach({ $_.InstallerUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com') })
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = (Join-Uri $Prefix $Object1.files[0].url).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

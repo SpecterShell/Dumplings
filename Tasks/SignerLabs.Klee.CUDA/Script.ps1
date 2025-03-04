@@ -15,17 +15,6 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-
-      # ReleaseNotes
-      if ($Object1.Contains('releaseNotes')) {
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.releaseNotes | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

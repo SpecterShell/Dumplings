@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri "https://pcsuite-api.vivo.com/version/upgrade/detail/windows/latest.yml?noCache=$(Get-Random)" | Read-ResponseContent | ConvertFrom-Yaml
+$Object1 = Invoke-WebRequest -Uri 'https://pcsuite-api.vivo.com/version/upgrade/detail/windows/latest.yml' | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

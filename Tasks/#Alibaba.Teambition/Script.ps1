@@ -5,10 +5,23 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['Teambition'] = $OldReleases = [ordered]@{}
 }
 
-$this.CurrentState = Invoke-RestMethod -Uri 'https://im.dingtalk.com/manifest/dtron/Teambition/win32/ia32/latest.yml' | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
+$Prefix = 'https://im.dingtalk.com/manifest/dtron/Teambition/win32/ia32/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    # ReleaseTime
+    $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
       ReleaseTime = $this.CurrentState.ReleaseTime
     }

@@ -1,13 +1,29 @@
 $Prefix = 'https://utyautoupdate.synology.com/getUpdate/SynologyImageAssistant?os=Windows&include_beta=false&version=2'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object1 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SynologyImageAssistant&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      $ReleaseNotesObject = $Object1.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SynologyImageAssistant&lang=en-us' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+
+      $ReleaseNotesObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'
@@ -27,9 +43,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SynologyImageAssistant&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+      $Object3 = Invoke-WebRequest -Uri 'https://www.synology.com/api/releaseNote/findChangeLog?identify=SynologyImageAssistant&lang=zh-cn' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-      $ReleaseNotesCNObject = $Object2.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+      $ReleaseNotesCNObject = $Object3.info.versions.''.all_versions.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
       if ($ReleaseNotesCNObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNObject[0].publish_date | Get-Date -Format 'yyyy-MM-dd'

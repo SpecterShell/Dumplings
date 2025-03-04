@@ -1,6 +1,6 @@
 $Prefix = 'https://release.screen.cloud/player/desktop/channel/stable/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

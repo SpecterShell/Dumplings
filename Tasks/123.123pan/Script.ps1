@@ -10,7 +10,15 @@ if (-not $Object1.data.hasNewVersion) {
 
 $Prefix = $Object1.data.url + '/'
 
-$this.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$(Get-Random)" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object2.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
