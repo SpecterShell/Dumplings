@@ -21,24 +21,30 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://mango3d.io/change-log-lychee-slicer/' | ConvertFrom-Html
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = 'https://mango3d.io/changelogs'
+      }
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@class, 'et_builder_inner_content')]/div[contains(@class, 'et_pb_with_background') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'et_pb_section')][1]//div[contains(@class, 'et_pb_column')][1]")
-      if ($ReleaseNotesNode) {
-        $ReleaseNotesTimeNode = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "et_pb_text")][1]')
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("//a[contains(.//div[contains(@class, 'card_title')], '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesUrlNode) {
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesUrlNode.Attributes['href'].Value
+        }
+
+        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+        $ReleaseNotesNode = $Object3.SelectSingleNode('.//div[contains(@class, "content-renderer")]')
+        $ReleaseNotesTimeNode = $ReleaseNotesNode.SelectSingleNode('.//p[contains(text(), "Release date")]')
         try {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTimeNode.InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-          # ReleaseNotes (en-US)
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTimeNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-          }
-        } catch {
-          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+          $ReleaseNotesTimeNode.Remove()
 
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
@@ -46,9 +52,18 @@ switch -Regex ($this.Check()) {
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
           }
+        } catch {
+          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        }
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl, ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
