@@ -10,19 +10,52 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'exe'
-  InstallerUrl  = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).exe"
+  Query        = [ordered]@{
+    Architecture  = 'x64'
+    InstallerType = 'exe'
+  }
+  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'msi'
-  InstallerUrl  = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
+  Query        = [ordered]@{
+    Architecture  = 'x64'
+    InstallerType = 'msi'
+  }
+  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'arm64'
-  InstallerType = 'exe'
-  InstallerUrl  = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+# If the ARM64 installer already exists, don't check again and simply add it to the list
+if ($this.LastState['Mode']) {
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      Architecture  = 'x64'
+      InstallerType = 'exe'
+    }
+    Architecture = 'arm64'
+    InstallerUrl = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+  }
+  # Mode
+  $this.CurrentState.Mode = $true
+} else {
+  try {
+    # Check if the ARM64 installer exists
+    $InstallerUrlArm64 = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+    $null = Invoke-WebRequest -Uri $InstallerUrlArm64 -Method Head
+    # Installer
+    $this.CurrentState.Installer += [ordered]@{
+      Query        = [ordered]@{
+        Architecture  = 'x64'
+        InstallerType = 'exe'
+      }
+      Architecture = 'arm64'
+      InstallerUrl = $InstallerUrlArm64
+    }
+    # Mode
+    $this.CurrentState.Mode = $true
+  } catch {
+    $this.Log("${InstallerUrlArm64} doesn't exist, the ARM64 installer will be discarded", 'Warning')
+    # Mode
+    $this.CurrentState.Mode = $false
+  }
 }
 
 switch -Regex ($this.Check()) {
@@ -41,7 +74,11 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  'Updated' {
+  { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
+    $this.Config.IgnorePRCheck = $true
+  }
+  'Changed|Updated' {
+    $this.Message()
     $this.Submit()
   }
 }
