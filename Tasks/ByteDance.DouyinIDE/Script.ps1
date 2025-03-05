@@ -23,15 +23,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/developer-instrument/download/developer-instrument-update-and-download/')
-      Start-Sleep -Seconds 10
+      $Object2 = Invoke-RestMethod -Uri 'https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/dev-tools/developer-instrument/download/developer-instrument-update-and-download?__loader=zh-CN%2F%24&__ssrDirect=true'
+      $Object3 = [Newtonsoft.Json.Linq.JObject]::Parse($Object2.data.content)
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match(
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[contains(@class, 'zone-container')]/div[contains(@class, 'heading-h1') and contains(.//text(), '$($this.CurrentState.Version)')]")).Text,
-        '(\d{4}-\d{1,2}-\d{1,2})'
-      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object3.SelectToken("$..[?(@.insert =~ /^$($this.CurrentState.Version)/)]"), '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
