@@ -11,6 +11,16 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
+      }
+    )
+
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
