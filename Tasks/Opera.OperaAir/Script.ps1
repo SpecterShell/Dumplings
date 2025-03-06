@@ -28,7 +28,7 @@ $this.CurrentState.Version = $Object1.autoupdate.product.files.file.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://get.geo.opera.com/ftp/.private/opera_air/$($this.CurrentState.Version)/win/Opera_Air_$($this.CurrentState.Version)_Setup_x64.exe"
+  InstallerUrl = "https://get.geo.opera.com/pub/opera_air/$($this.CurrentState.Version)/win/Opera_Air_$($this.CurrentState.Version)_Setup_x64.exe"
 }
 
 switch -Regex ($this.Check()) {
