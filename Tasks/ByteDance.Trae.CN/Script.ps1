@@ -21,9 +21,9 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
 
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object1.data.releaseNote | Format-Text
       }
