@@ -16,7 +16,7 @@ switch -Regex ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
           [regex]::Match(
-            $Object1.SelectSingleNode('.//div[@class="card-header"]').InnerText,
+            $ReleaseNotesNode.SelectSingleNode('.//div[@class="card-header"]').InnerText,
             '([A-Za-z]+\W+\d{1,2}(?:st|nd|rd|th)\W+20\d{2})'
           ).Groups[1].Value,
           [string[]]@(
