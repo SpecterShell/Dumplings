@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://update.oomol.com/api/update/win32-x64-user/stable/$($this.LastState.Contains('Hash') ? $this.LastState.Hash : '507dabb43c68dc48d32ba20158801b2f94aa7c2b')" -StatusCodeVariable 'StatusCode'
+$Object1 = Invoke-RestMethod -Uri "https://update.oomol.com/api/update/win32-x64-user/stable/$($this.LastState.Contains('VersionHash') ? $this.LastState.VersionHash : '507dabb43c68dc48d32ba20158801b2f94aa7c2b')" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
@@ -8,8 +8,8 @@ if ($StatusCode -eq 204) {
 # Version
 $this.CurrentState.Version = $Object1.productVersion
 
-# Hash
-$this.CurrentState.Hash = $Object1.hash
+# VersionHash
+$this.CurrentState.VersionHash = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
