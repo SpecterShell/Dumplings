@@ -2,11 +2,25 @@ $Object1 = Invoke-RestMethod -Uri 'https://support.freedomscientific.com/Downloa
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1[0].InstallerLocationHTTP
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrlX64 = $Object1.Where({ $_.InstallerPlatform -eq '64-bit' }, 'First')[0].InstallerLocationHTTP
+}
+$VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(?:\.\d+){3,})').Groups[1].Value
+
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $InstallerUrlArm64 = $Object1.Where({ $_.InstallerPlatform -eq 'ARM64' }, 'First')[0].InstallerLocationHTTP
+}
+$VersionArm64 = [regex]::Match($InstallerUrlArm64, '(\d+(?:\.\d+){3,})').Groups[1].Value
+
+if ($VersionX64 -ne $VersionArm64) {
+  $this.Log("x64 version: ${VersionX64}")
+  $this.Log("arm64 version: ${VersionArm64}")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
