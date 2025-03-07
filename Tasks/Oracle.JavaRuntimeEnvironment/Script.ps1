@@ -1,25 +1,33 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.java.com/content/published/api/v1.1/items?q=(id eq "CORE7B1FF38771234E749E94A8C83F78F516" or id eq "COREFA37E773006D4BE183DB8D7F504C5718")&channelToken=1f7d2611846d4457b213dfc9048724dc' -Headers @{ Accept = '*/*'; Connection = 'close' }
-$Object2 = $Object1.items.Where({ $_.id -eq 'CORE7B1FF38771234E749E94A8C83F78F516' }, 'First')[0]
-$Object3 = $Object1.items.Where({ $_.id -eq 'COREFA37E773006D4BE183DB8D7F504C5718' }, 'First')[0]
+# The version only appears in the x64 installer page
+$Object1 = Invoke-WebRequest -Uri 'https://www.java.com/en/download/' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = '*/*'; Connection = 'close' }
+
+$VersionMatches = [regex]::Match($Object1.Content, 'Version (\d+) Update (\d+)')
+
+# Java 9+ has different version scheme
+if ($VersionMatches.Groups[1].Value -ne '8') {
+  throw 'Unsupported version'
+}
 
 # Version
-$this.CurrentState.Version = $Object3.fields.json.latest8Version
+$this.CurrentState.Version = "1.8.0_$($VersionMatches.Groups[2].Value)"
+
+$Object2 = Invoke-WebRequest -Uri 'https://www.java.com/en/download/manual.jsp' -Headers @{ Accept = '*/*'; Connection = 'close' }
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.fields.json.bundleUrl + $Object3.fields.json.win_offline_bundle + '_' + $Object3.fields.json.secID
+  InstallerUrl = $Object2.Links.Where({ try { $_.outerHTML.Contains('Windows Offline') -and -not $_.outerHTML.Contains('64-bit') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.fields.json.bundleUrl + $Object3.fields.json.win_x64_bundle + '_' + $Object3.fields.json.secID
+  InstallerUrl = $Object2.Links.Where({ try { $_.outerHTML.Contains('Windows Offline') -and $_.outerHTML.Contains('64-bit') } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object3.updatedDate.value.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.Content, 'Release date: ([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -39,7 +47,7 @@ switch -Regex ($this.Check()) {
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX86['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        DisplayName   = "Java 8 Update $($Object3.fields.json.l8VersNumber)"
+        DisplayName   = "Java 8 Update $($VersionMatches.Groups[2].Value)"
         ProductCode   = $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
         UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
         InstallerType = 'wix'
@@ -60,7 +68,7 @@ switch -Regex ($this.Check()) {
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        DisplayName   = "Java 8 Update $($Object3.fields.json.l8VersNumber) (64-bit)"
+        DisplayName   = "Java 8 Update $($VersionMatches.Groups[2].Value) (64-bit)"
         ProductCode   = $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
         UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
         InstallerType = 'wix'
