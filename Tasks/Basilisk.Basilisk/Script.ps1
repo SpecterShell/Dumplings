@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
         $ReleaseTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::*[@class="rn-date"]')
         if ($ReleaseTimeNode) {
           # ReleaseTime
-          $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseTimeNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value
+          $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseTimeNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
@@ -51,7 +51,7 @@ switch -Regex ($this.Check()) {
           }
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($Object2.updates.update.displayVersion)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
