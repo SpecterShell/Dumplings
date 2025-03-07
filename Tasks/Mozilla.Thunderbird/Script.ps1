@@ -10,7 +10,7 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/thunderbird/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/thunderbird_versions.json'
 
 # Version
-$OriginalVersion = $Object1.THUNDERBIRD_ESR
+$OriginalVersion = $Object1.LATEST_THUNDERBIRD_VERSION
 $this.CurrentState.Version = $ShortVersion = $OriginalVersion.Replace('esr', '')
 
 $Object2 = [ordered]@{}
