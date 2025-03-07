@@ -16,10 +16,12 @@ $this.CurrentState.Version = $Object2.updates.update.appVersion
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = "https://dl.basilisk-browser.org/basilisk-$($Object1.updates.update.buildID).win32.installer.exe"
+  ProductCode  = "Basilisk $($this.CurrentState.Version) (x86 en-US)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://dl.basilisk-browser.org/basilisk-$($Object2.updates.update.buildID).win64.installer.exe"
+  ProductCode  = "Basilisk $($this.CurrentState.Version) (x64 en-US)"
 }
 
 switch -Regex ($this.Check()) {
