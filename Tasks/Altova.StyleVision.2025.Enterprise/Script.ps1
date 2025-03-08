@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.altova.com/thankyou?ProductCode=MF&EditionCode=E&InstallerType=Product&Lang=en&OperatingSystem=win32'
+$Object1 = Invoke-WebRequest -Uri 'https://www.altova.com/thankyou?ProductCode=SV&EditionCode=E&InstallerType=Product&Lang=en&OperatingSystem=win32'
 
 # Installer
 $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
@@ -80,7 +80,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.altova.com/releasenotes/getnotes' -Method Post -Body @{
         category = 'desktop'
-        product  = 'MapForce'
+        product  = 'StyleVision'
         version  = $this.CurrentState.Version
       } | ConvertFrom-Html
 
