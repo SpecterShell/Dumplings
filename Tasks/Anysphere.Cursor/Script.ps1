@@ -1,28 +1,42 @@
-$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/230313mzl4w4u92/td-latest.json'
+# The hash part of the URL is the SHA256 hash of the machine GUID from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\MachineGuid
+# Use a random hash here
+# x64 user
+$Object1 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64-user/cursor/$($this.LastState.Contains('Version') ? $this.LastState.Version : '0.46.10')/$([System.Convert]::ToHexStringLower([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes([guid]::NewGuid().Guid))))/stable" -StatusCodeVariable 'StatusCodeX64'
+if ($StatusCodeX64 -eq 204) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
+# arm64 user
+$Object2 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64-user/cursor/$($this.LastState.Contains('Version') ? $this.LastState.Version : '0.46.10')/$([System.Convert]::ToHexStringLower([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes([guid]::NewGuid().Guid))))/stable" -StatusCodeVariable 'StatusCodeARM64'
+if ($StatusCodeARM64 -eq 204) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
+if ($Object1.productVersion -ne $Object2.productVersion) {
+  $this.Log("x64 user version: $($Object1.productVersion)")
+  $this.Log("arm64 user version: $($Object2.productVersion)")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object1.productVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
+  Scope        = 'user'
+  InstallerUrl = $Object1.url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.artifacts.nsis.arm64.url | ConvertTo-UnescapedUri
+  Scope        = 'user'
+  InstallerUrl = $Object2.url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
