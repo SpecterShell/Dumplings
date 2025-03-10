@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.list[0].detail.more | Format-Text | ConvertTo-OrderedList
+        Value  = $Object1.list[0].detail | ForEach-Object -Process { @($_.title) + $_.more } | Format-Text | ConvertTo-OrderedList
       }
     } catch {
       $_ | Out-Host
