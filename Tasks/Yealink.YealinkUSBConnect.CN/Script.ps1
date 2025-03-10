@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.yealink.com.cn/product-detail/usb-connect-management' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.yealink.com.cn/product-detail/usb-connect-management'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://www.yealink.com.cn' $Object1.SelectSingleNode('/html/body/main/div[1]/article[1]/div/div[1]/div/small/p/span/a[1]').Attributes['href'].Value
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 
 # Version
