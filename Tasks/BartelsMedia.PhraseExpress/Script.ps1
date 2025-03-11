@@ -37,7 +37,12 @@ function Get-ReleaseNotes {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://www.phraseexpress.com/PhraseExpressSetup.exe'
+  InstallerType = 'inno'
+  InstallerUrl  = 'https://www.phraseexpress.com/PhraseExpressSetup.exe'
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'msi'
+  InstallerUrl  = 'https://www.phraseexpress.com/PhraseExpressSetup.msi'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
