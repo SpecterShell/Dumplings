@@ -1,0 +1,34 @@
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.38.0/netbird_installer_0.38.0_windows_amd64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.38.0/netbird_installer_0.38.0_windows_amd64.exe
+  InstallerSha256: 14BDEA3C8B94782DE7804DCABF8726E422E0E72002A077FFDF6DD971A9038E9F
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.38.0.13777006373
+    Publisher: Netbird
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release notes
+    This release fixes a few bugs with client startup where the client could get blocked in case of settings changes in the GUI and improves the Network monitor lifecycle trigger to avoid race conditions. It also adds an initial client support for a new feature called Ingress ports that should allow users to enable port forwarding in the future and port-range access control policies.
+    New features
+    - [client, management] Add Ingress ports initial support #3275
+    Enhancements
+    - [client] Enable windows stderr logs by default #3476
+    - [docs] Fix typo #3477
+    - [client] Prevent panic in case of double close call #3475
+    - [client] Prevent to block channel writing #3474
+    - [client] Add option to autostart netbird ui in the Windows installer #3469
+    - [client] Fix engine restart race condition #3435
+    - [client] Ignore candidates that are part of the the wireguard subnet #3472
+    - [client] Increase local daemon connection timeout to 50 sec #3481
+    - [management] return empty array instead of null on networks endpoints #3480
+    Full Changelog: https://github.com/netbirdio/netbird/compare/v0.35.2...v0.36.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/netbirdio/netbird/releases/tag/v0.38.0
+Version: 0.38.0
+ReleaseTime: 2025-03-10T23:33:56.0000000Z
