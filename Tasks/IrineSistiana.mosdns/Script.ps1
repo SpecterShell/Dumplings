@@ -8,7 +8,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'amd64'
+  Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
