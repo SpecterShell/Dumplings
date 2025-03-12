@@ -15,18 +15,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFileWix = Get-TempFile -Uri $InstallerWix.InstallerUrl
+    $WinGetInstallerFiles[$InstallerWix.InstallerUrl] = $InstallerFileWix = Get-TempFile -Uri $InstallerWix.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFileWix | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $InstallerWix['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWix -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerWix['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerWix['ProductCode'] = $InstallerFileWix | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFileWix | Read-UpgradeCodeFromMsi
-      }
-    )
 
     $this.Print()
     $this.Write()

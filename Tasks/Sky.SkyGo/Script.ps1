@@ -23,7 +23,7 @@ $this.CurrentState.Version = $Object2.platforms.win.version
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.platforms.win.url
 }
-$this.CurrentState.Installer += $InstallerDE = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'de-DE'
   InstallerUrl    = $Object2.platforms.win.url
 }
@@ -38,10 +38,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $InstallerDE.InstallerUrl
-
-    # InstallerSha256
-    $InstallerDE['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

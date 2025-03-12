@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @"
+$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @'
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
     <CheckForUpdates xmlns="http://localhost/TSCUpdater">
@@ -11,7 +11,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
     </CheckForUpdates>
   </soap:Body>
 </soap:Envelope>
-"@ -ContentType 'text/xml; charset=utf-8'
+'@ -ContentType 'text/xml; charset=utf-8'
 
 if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [string]) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
@@ -22,7 +22,7 @@ if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [st
 $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion
 
 # Installer
-$this.CurrentState.Installer += $InstallerExe = [ordered]@{
+$this.CurrentState.Installer += $InstallerBurn = [ordered]@{
   InstallerType = 'burn'
   InstallerUrl  = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.DownloadLink
 }
@@ -33,18 +33,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFileExe = Get-TempFile -Uri $InstallerExe.InstallerUrl
-    # InstallerSha256
-    $InstallerExe['InstallerSha256'] = (Get-FileHash -Path $InstallerFileExe -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$InstallerBurn.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerBurn.InstallerUrl
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFileExe | Read-ProductVersionFromExe
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerExe['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerExe['ProductCode'] = $InstallerFileExe | Read-ProductCodeFromBurn
-        UpgradeCode = $InstallerFileExe | Read-UpgradeCodeFromBurn
-      }
-    )
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://support.techsmith.com/hc/en-us/articles/115006443267-Camtasia-Windows-Version-History' | ConvertFrom-Html

@@ -42,9 +42,8 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # AppsAndFeaturesEntries
-    $InstallerFileWix = Get-TempFile -Uri $InstallerX64WiX.InstallerUrl
-    $InstallerX64WiX['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWix -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$InstallerX64WiX.InstallerUrl] = $InstallerFileWix = Get-TempFile -Uri $InstallerX64WiX.InstallerUrl
+    # ProductCode
     $InstallerX64WiX['ProductCode'] = "$($InstallerFileWix | Read-ProductCodeFromMsi).msq"
 
     # ReleaseNotesUrl

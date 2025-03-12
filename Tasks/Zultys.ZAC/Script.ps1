@@ -16,11 +16,9 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})')
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     foreach ($Installer in $this.CurrentState.Installer) {
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'ZAC.msi'
-      # InstallerSha256
-      $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
       # AppsAndFeaturesEntries + ProductCode
       $Installer.AppsAndFeaturesEntries = @(
         [ordered]@{

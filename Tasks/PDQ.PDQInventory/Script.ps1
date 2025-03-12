@@ -58,18 +58,15 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $NestedInstallerFileRoot = New-TempFolder
-    7z.exe e -aoa -ba -bd '-t#' -o"${NestedInstallerFileRoot}" $InstallerFile '2.msi' | Out-Host
-    $NestedInstallerFile = Join-Path $NestedInstallerFileRoot '2.msi'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd '-t#' -o"${Installer$InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
     # AppsAndFeaturesEntries
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFile | Read-UpgradeCodeFromMsi
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
         InstallerType = 'wix'
       }
     )

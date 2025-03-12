@@ -18,31 +18,12 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # InstallerSha256
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    }
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'eurkey_i386.msi' 'eurkey_amd64.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'eurkey_i386.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'eurkey_i386.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
-      }
-    )
-    $InstallerFile3 = Join-Path $InstallerFileExtracted 'eurkey_amd64.msi'
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile3 | Read-UpgradeCodeFromMsi
-      }
-    )
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://eurkey.steffen.bruentjen.eu/changelog.html' | ConvertFrom-Html

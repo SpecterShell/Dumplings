@@ -27,36 +27,12 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $NestedInstallerFileRoot = New-TempFolder
-
-    7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile $InstallerX86.NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $NestedInstallerFileX86 = Join-Path $NestedInstallerFileRoot $InstallerX86.NestedInstallerFiles[0].RelativeFilePath
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
-    $this.CurrentState.RealVersion = $NestedInstallerFileX86 | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerX86['ProductCode'] = $NestedInstallerFileX86 | Read-ProductCodeFromMsi
-        UpgradeCode = $NestedInstallerFileX86 | Read-UpgradeCodeFromMsi
-      }
-    )
-
-    7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile $InstallerX64.NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $NestedInstallerFileX64 = Join-Path $NestedInstallerFileRoot $InstallerX64.NestedInstallerFiles[0].RelativeFilePath
-    # RealVersion
-    $this.CurrentState.RealVersion = $NestedInstallerFileX64 | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerX64['ProductCode'] = $NestedInstallerFileX64 | Read-ProductCodeFromMsi
-        UpgradeCode = $NestedInstallerFileX64 | Read-UpgradeCodeFromMsi
-      }
-    )
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
 
     $this.Print()
     $this.Write()

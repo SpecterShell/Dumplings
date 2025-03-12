@@ -33,15 +33,13 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
+    $WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.wrapper_jre_offline.exe' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.wrapper_jre_offline.exe'
     $InstallerFile2Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile2 '2.msi' | Out-Host
     $InstallerFile3 = Join-Path $InstallerFile2Extracted '2.msi'
-    # InstallerSha256
-    $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
     # AppsAndFeaturesEntries + ProductCode

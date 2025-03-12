@@ -52,30 +52,24 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Error')
     }
 
-    $InstallerFileExeX86 = Get-TempFile -Uri $InstallerExeX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $WinGetInstallerFiles[$InstallerExeX86.InstallerUrl] = $InstallerFileExeX86 = Get-TempFile -Uri $InstallerExeX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFileExeX86 -ArgumentList @('/extract') -Wait
     $InstallerFileExeX86Extracted = Split-Path -Path $InstallerFileExeX86 -Parent
     $InstallerFileExeX862 = Get-ChildItem -Path $InstallerFileExeX86Extracted -Include 'RaiDrive_win-x86_exe.msi' -Recurse -File | Select-Object -First 1
-    # InstallerSha256
-    $InstallerExeX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileExeX86 -Algorithm SHA256).Hash
     # ProductCode
     $InstallerExeX86['ProductCode'] = $InstallerFileExeX862 | Read-ProductCodeFromMsi
 
-    $InstallerFileExeX64 = Get-TempFile -Uri $InstallerExeX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $WinGetInstallerFiles[$InstallerExeX64.InstallerUrl] = $InstallerFileExeX64 = Get-TempFile -Uri $InstallerExeX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFileExeX64 -ArgumentList @('/extract') -Wait
     $InstallerFileExeX64Extracted = Split-Path -Path $InstallerFileExeX64 -Parent
     $InstallerFileExeX642 = Get-ChildItem -Path $InstallerFileExeX64Extracted -Include 'RaiDrive_win-x64_exe.msi' -Recurse -File | Select-Object -First 1
-    # InstallerSha256
-    $InstallerExeX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileExeX64 -Algorithm SHA256).Hash
     # ProductCode
     $InstallerExeX64['ProductCode'] = $InstallerFileExeX642 | Read-ProductCodeFromMsi
 
-    $InstallerFileExeArm64 = Get-TempFile -Uri $InstallerExeArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $WinGetInstallerFiles[$InstallerExeArm64.InstallerUrl] = $InstallerFileExeArm64 = Get-TempFile -Uri $InstallerExeArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFileExeArm64 -ArgumentList @('/extract') -Wait
     $InstallerFileExeArm64Extracted = Split-Path -Path $InstallerFileExeArm64 -Parent
     $InstallerFileExeArm642 = Get-ChildItem -Path $InstallerFileExeArm64Extracted -Include 'RaiDrive_win-arm64_exe.msi' -Recurse -File | Select-Object -First 1
-    # InstallerSha256
-    $InstallerExeArm64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileExeArm64 -Algorithm SHA256).Hash
     # ProductCode
     $InstallerExeArm64['ProductCode'] = $InstallerFileExeArm642 | Read-ProductCodeFromMsi
 

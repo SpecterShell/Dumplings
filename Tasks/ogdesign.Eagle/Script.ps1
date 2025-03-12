@@ -16,10 +16,7 @@ $this.CurrentState.Version = "$($VersionMatches.Groups[1].Value)-$($VersionMatch
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = $this.CurrentState.Installer[1]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

@@ -20,7 +20,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
   InstallerUrl  = 'https:' + $Object1.installer.url
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += $InstallerNsisX86 = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'nullsoft'
   InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.msi$', '.exe'
@@ -46,9 +46,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$InstallerNsisX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerNsisX86.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionFromExe) -replace '-', '.'
 

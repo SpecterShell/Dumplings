@@ -56,9 +56,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFileExe = Get-TempFile -Uri $InstallerExe.InstallerUrl
-    # InstallerSha256
-    $InstallerExe['InstallerSha256'] = (Get-FileHash -Path $InstallerFileExe -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$InstallerExe.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $InstallerExe.InstallerUrl
     # AppsAndFeaturesEntries + ProductCode
     $InstallerExe['AppsAndFeaturesEntries'] = @(
       [ordered]@{
