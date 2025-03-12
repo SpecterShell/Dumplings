@@ -1,31 +1,40 @@
 $ProjectName = 'keepass'
 $RootPath = '/KeePass 2.x'
+$PatternPath = '(\d+(?:\.\d+)+)'
+$PatternFilename = 'KeePass-.+\.(msi|exe)'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/[\d\.]+/KeePass-.+\.(msi|exe)$" })
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
 
 # Installer
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') }, 'First')[0]
 $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'msi'
-  InstallerUrl  = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl  = $Asset.link | ConvertTo-UnescapedUri
 }
+$VersionMSI = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
+
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
-  InstallerUrl  = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl  = $Asset.link | ConvertTo-UnescapedUri
 }
+$VersionInno = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
+
+if ($VersionMSI -ne $VersionInno) {
+  $this.Log("MSI version: ${VersionMSI}")
+  $this.Log("Inno version: ${VersionInno}")
+  throw 'Inconsistent versions detected'
+}
+
+# Version
+$this.CurrentState.Version = $VersionInno
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') }, 'First')[0].pubDate,
-        'ddd, dd MMM yyyy HH:mm:ss "UT"',
-        (Get-Culture -Name 'en-US')
-      ) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Asset.pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

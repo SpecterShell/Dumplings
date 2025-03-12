@@ -1,23 +1,36 @@
 $ProjectName = 'wsjt'
 $RootPath = ''
+$PatternPath = 'wsjtx-(\d+(?:\.\d+)+)'
+$PatternFilename = 'wsjtx-.+\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/wsjtx-(\d+(?:\.\d+)+)/wsjtx-.+\.exe$" })
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/wsjtx-(\d+(?:\.\d+)+)/").Groups[1].Value
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
 
 # Installer
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') }, 'First')[0]
+$VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('win32') }, 'First')[0].link | ConvertTo-UnescapedUri
-  ProductCode  = "wsjtx $($this.CurrentState.Version)"
+  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
+  ProductCode  = "wsjtx ${VersionX86}"
 }
+
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') }, 'First')[0]
+$VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('win64') }, 'First')[0].link | ConvertTo-UnescapedUri
-  ProductCode  = "wsjtx $($this.CurrentState.Version)"
+  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
+  ProductCode  = "wsjtx ${VersionX64}"
 }
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
+  throw 'Inconsistent versions detected'
+}
+
+# Version
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

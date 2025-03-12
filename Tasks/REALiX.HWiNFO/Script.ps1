@@ -1,11 +1,12 @@
 $ProjectName = 'hwinfo'
 $RootPath = '/Windows_Installer'
+$PatternFilename = 'hwi64_(\d+)\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/hwi64_\d+\.exe$" })
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternFilename}$" })
 
 # Version
-$RawVersion = [regex]::Match($Assets[0].title.'#cdata-section', 'hwi64_(\d+)\.exe').Groups[1].Value
+$RawVersion = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternFilename}").Groups[1].Value
 $this.CurrentState.Version = $RawVersion.Insert($RawVersion.Length - 2, '.')
 
 # Installer
@@ -17,11 +18,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        $Assets[0].pubDate,
-        'ddd, dd MMM yyyy HH:mm:ss "UT"',
-        (Get-Culture -Name 'en-US')
-      ) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets[0].pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

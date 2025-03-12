@@ -1,21 +1,34 @@
 $ProjectName = 'redpanda-cpp'
 $RootPath = ''
+$PatternPath = 'v?(\d+(?:\.\d+)+)'
+$PatternFilename = 'RedPanda.+Setup\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/v?[\d\.]+/RedPanda.+Setup\.exe$" })
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/v?([\d\.]+)/").Groups[1].Value
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
 
 # Installer
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains("$($this.CurrentState.Version)/") -and $_.title.'#cdata-section'.Contains('win32') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
 }
+$VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
+
+$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains("$($this.CurrentState.Version)/") -and $_.title.'#cdata-section'.Contains('win64') -and $_.title.'#cdata-section'.Contains('MinGW') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
 }
+$VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
+  throw 'Inconsistent versions detected'
+}
+
+# Version
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -29,8 +42,8 @@ switch -Regex ($this.Check()) {
 
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
-        Key    = 'ReleaseNotesUrl'
-        Value  = "https://sourceforge.net/projects/${ProjectName}/files" + [regex]::Match($Assets[0].title.'#cdata-section', '^(/v?[\d\.]+/)').Groups[1].Value
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://sourceforge.net/projects/${ProjectName}/files" + [regex]::Match($Assets[0].title.'#cdata-section', '^(/v?[\d\.]+/)').Groups[1].Value
       }
     } catch {
       $_ | Out-Host

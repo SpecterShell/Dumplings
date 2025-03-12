@@ -1,26 +1,24 @@
 $ProjectName = 'jedit'
 $RootPath = '/jedit'
+$PatternPath = '(\d+(?:\.\d+)+)'
+$PatternFilename = 'jedit\d+(?:\.\d+)+install\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/\d+(?:\.\d+)+/jedit\d+(?:\.\d+)+install\.exe$" })
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('install') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets[0].link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('install') }, 'First')[0].pubDate,
-        'ddd, dd MMM yyyy HH:mm:ss "UT"',
-        (Get-Culture -Name 'en-US')
-      ) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets[0].pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

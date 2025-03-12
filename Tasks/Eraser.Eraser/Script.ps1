@@ -9,11 +9,6 @@ $this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', '
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Assets[0].link | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
   InstallerUrl = $Assets[0].link | ConvertTo-UnescapedUri
 }
 
@@ -21,11 +16,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        $Assets[0].pubDate,
-        'ddd, dd MMM yyyy HH:mm:ss "UT"',
-        (Get-Culture -Name 'en-US')
-      ) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets[0].pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
