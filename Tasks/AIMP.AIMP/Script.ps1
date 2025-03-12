@@ -28,11 +28,11 @@ $this.CurrentState.Version = ($Object2.update.version.title -replace '^v') + '.'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.update.version.setuplink
+  InstallerUrl = $Object1.update.version.setuplink | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.update.version.setuplink
+  InstallerUrl = $Object2.update.version.setuplink | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
