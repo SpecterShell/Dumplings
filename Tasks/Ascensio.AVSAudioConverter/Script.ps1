@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://downloads.avs4you.com/distributives/AVSAudioConverter.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
@@ -26,7 +26,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $this.Print()
   $this.Write()
-  $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
   $this.Message()
   $this.Submit()
   return
@@ -78,7 +77,6 @@ switch -Regex ($this.Check()) {
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
@@ -88,7 +86,6 @@ switch -Regex ($this.Check()) {
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
