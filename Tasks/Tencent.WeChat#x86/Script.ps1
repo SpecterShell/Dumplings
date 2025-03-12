@@ -73,7 +73,7 @@ $this.CurrentState.Hash = $Object1.Headers.'X-COS-META-MD5'[0]
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $Uri1
+  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
@@ -94,10 +94,9 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Query           = [ordered]@{}
-      Architecture    = 'x86'
-      InstallerUrl    = $Uri1
-      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      Query        = [ordered]@{}
+      Architecture = 'x86'
+      InstallerUrl = $Uri1
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -116,7 +115,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
-  $InstallerFile = Get-TempFile -Uri $Uri1
+  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
@@ -137,10 +136,9 @@ if ($this.Status.Contains('New')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Query           = [ordered]@{}
-      Architecture    = 'x86'
-      InstallerUrl    = $Uri1
-      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      Query        = [ordered]@{}
+      Architecture = 'x86'
+      InstallerUrl = $Uri1
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -215,7 +213,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     }
   }
 } else {
-  $InstallerFile = Get-TempFile -Uri $Uri1
+  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = \[(\d+\.\d+\.\d+\.\d+)\]').Groups[1].Value
 
@@ -238,10 +236,9 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     $this.Log("${Uri2} does not exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Query           = [ordered]@{}
-      Architecture    = 'x86'
-      InstallerUrl    = $Uri1
-      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      Query        = [ordered]@{}
+      Architecture = 'x86'
+      InstallerUrl = $Uri1
     }
     # Mode
     $this.CurrentState.Mode = $false

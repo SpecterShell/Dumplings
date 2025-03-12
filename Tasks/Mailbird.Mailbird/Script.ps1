@@ -38,18 +38,15 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
-    $NestedInstallerFileRoot = Split-Path -Path $InstallerFile -Parent
-    $NestedInstallerFile = Get-ChildItem -Path "${NestedInstallerFileRoot}\*\MailbirdSetup.x64.msi" -File | Select-Object -First 1
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
+    $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\MailbirdSetup.x64.msi" -File | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFile | Read-UpgradeCodeFromMsi
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )

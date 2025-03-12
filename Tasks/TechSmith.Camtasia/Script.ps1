@@ -22,7 +22,7 @@ if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [st
 $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion
 
 # Installer
-$this.CurrentState.Installer += $InstallerBurn = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'burn'
   InstallerUrl  = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.DownloadLink
 }
@@ -33,7 +33,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$InstallerBurn.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerBurn.InstallerUrl
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

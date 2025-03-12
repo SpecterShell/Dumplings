@@ -7,11 +7,11 @@ $Installer = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.
 $this.CurrentState.Version = [regex]::Match($Installer.outerHTML, 'version (\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Join-Uri $Prefix $Installer.href
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri $Prefix $Installer.href
 }

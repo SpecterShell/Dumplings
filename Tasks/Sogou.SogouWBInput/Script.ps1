@@ -22,8 +22,7 @@ switch -Regex ($this.Check()) {
 
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl    = "https://ime.sogoucdn.com/sogou_wubi_$($this.CurrentState.RealVersion).exe"
-      InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      InstallerUrl = "https://ime.sogoucdn.com/sogou_wubi_$($this.CurrentState.RealVersion).exe"
     }
 
     try {

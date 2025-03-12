@@ -28,16 +28,13 @@ $VersionParts = $this.CurrentState.Version.Split('.')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     $InstallerFile2Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'xbench.exe' | Out-Host
     $InstallerFile3 = Join-Path $InstallerFile2Extracted 'xbench.exe'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0].InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile3 | Read-FileVersionFromExe
 

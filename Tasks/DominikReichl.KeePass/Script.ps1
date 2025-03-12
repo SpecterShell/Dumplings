@@ -8,7 +8,7 @@ $Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape(
 $this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/([\d\.]+)/").Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += $InstallerMsi = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'msi'
   InstallerUrl  = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') }, 'First')[0].link | ConvertTo-UnescapedUri
 }
@@ -31,19 +31,9 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFileMsi = Get-TempFile -Uri $InstallerMsi.InstallerUrl -UserAgent $WinGetUserAgent
-
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl -UserAgent $WinGetUserAgent
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFileMsi | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $InstallerMsi['InstallerSha256'] = (Get-FileHash -Path $InstallerFileMsi -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries
-    $InstallerMsi['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $InstallerMsi['ProductCode'] = $InstallerFileMsi | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFileMsi | Read-UpgradeCodeFromMsi
-      }
-    )
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     try {
       # ReleaseNotesUrl

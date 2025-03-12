@@ -9,7 +9,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://he.emedley.com/common/legacy_provider
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = 'https://he.emedley.com/gen/public/examn_v2/examn_browser/setup-x64.zip'
 }
@@ -28,14 +28,12 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-    $InstallerFileX64Extracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileX64Extracted}" $InstallerFileX64 'setup-x64.exe' | Out-Host
-    $InstallerFileX642 = Join-Path $InstallerFileX64Extracted 'setup-x64.exe'
-    # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'setup-x64.exe' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'setup-x64.exe'
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFileX642 | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
 
     $this.Print()
     $this.Write()

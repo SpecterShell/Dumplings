@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdown
 $this.CurrentState.Version = $Object1.package_info.version[0]
 
 # Installer
-$this.CurrentState.Installer += $InstallerExe = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '_Prom.exe')
 }
@@ -23,17 +23,14 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $InstallerExe.InstallerUrl
-    $InstallerFile2Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Root}" $InstallerFile '2.msi' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFile2Root '2.msi'
-
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-    # InstallerSha256
-    $InstallerExe['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # ProductCode
-    $InstallerExe['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html

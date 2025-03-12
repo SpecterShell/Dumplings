@@ -37,16 +37,13 @@ switch -Regex ($this.Check()) {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.Log("Processing $($Installer.InstallerLocale) $($Installer.Architecture) installer", 'Verbose')
 
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '*.cab' | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted '*.cab' | Get-Item -Force | Select-Object -First 1
       $InstallerFile2Extracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 '*.msi' | Out-Host
       $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Get-Item -Force | Select-Object -First 1
-
-      # InstallerSha256
-      $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
       # RealVersion
       $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
       # ProductCode

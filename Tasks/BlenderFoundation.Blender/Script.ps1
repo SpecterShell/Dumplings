@@ -22,15 +22,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
     $this.Print()
     $this.Write()
   }

@@ -6,7 +6,7 @@ $InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.z
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $InstallerUrl
   NestedInstallerFiles = @(
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $InstallerUrl
   NestedInstallerFiles = @(

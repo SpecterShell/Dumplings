@@ -6,7 +6,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.ntDownloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
@@ -16,7 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerX64.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
+$this.CurrentState.Version = [regex]::Match($Installer.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-FileVersionFromExe
 

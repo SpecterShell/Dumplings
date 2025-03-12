@@ -23,11 +23,9 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      # InstallerSha256
-      $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       # NestedInstallerFiles
-      $Installer.NestedInstallerFiles = @(7z.exe l -ba -slt $InstallerFile '*\bin\*.exe' '*\bin\*.bat' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+      $Installer['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*\bin\*.exe' '*\bin\*.bat' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
     }
 
     try {

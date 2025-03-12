@@ -8,7 +8,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = 'https://soft.polyv.net/rc/PolyvLiveSetup.exe'
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = 'https://soft.polyv.net/rc/PolyvLiveSetup64.exe'
 }
@@ -30,10 +30,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $InstallerX64.InstallerUrl
-
-    # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

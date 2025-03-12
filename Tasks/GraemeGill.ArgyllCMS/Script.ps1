@@ -6,11 +6,11 @@ $this.CurrentState.Version = [regex]::Match($Object1.Content, 'Current Version (
 $Object2 = Invoke-WebRequest -Uri 'https://www.argyllcms.com/downloadwin.html'
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains($this.CurrentState.Version) -and $_.href.Contains('win32') -and -not $_.href.Contains('llvm') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains($this.CurrentState.Version) -and $_.href.Contains('win64') -and -not $_.href.Contains('llvm') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
@@ -51,17 +51,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
-    # InstallerSha256
-    $InstallerX86.InstallerSha256 = (Get-FileHash -Path $InstallerFileX86 -Algorithm SHA256).Hash
-    # NestedInstallerFiles
-    $InstallerX86.NestedInstallerFiles = @(7z.exe l -ba -slt $InstallerFileX86 '*\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
-
-    $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-    # InstallerSha256
-    $InstallerX64.InstallerSha256 = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
-    # NestedInstallerFiles
-    $InstallerX64.NestedInstallerFiles = @(7z.exe l -ba -slt $InstallerFileX86 '*\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      # NestedInstallerFiles
+      $Installer['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+    }
 
     $this.Print()
     $this.Write()

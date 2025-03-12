@@ -37,13 +37,10 @@ switch -Regex ($this.Check()) {
     }
 
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd '-t#' -o"${InstallerFileExtracted}" $InstallerFile '6.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '6.msi'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # AppsAndFeaturesEntries
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{

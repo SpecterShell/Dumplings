@@ -10,18 +10,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Join-Uri $Prefix "Atlassian Companion-$($this.CurrentState.Version) Setup.exe"
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = Join-Uri $Prefix "Atlassian Companion-$($this.CurrentState.Version).msi"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFileWiX = Get-TempFile -Uri $InstallerWiX.InstallerUrl
-    # InstallerSha256
-    $InstallerWiX['InstallerSha256'] = (Get-FileHash -Path $InstallerFileWiX -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # ProductCode
-    $InstallerWiX['ProductCode'] = "$($InstallerFileWiX | Read-ProductCodeFromMsi).msq"
+    $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://confluence.atlassian.com/doc/atlassian-companion-app-release-notes-958455712.html' | ConvertFrom-Html

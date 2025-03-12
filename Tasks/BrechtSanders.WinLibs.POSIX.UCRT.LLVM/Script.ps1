@@ -21,17 +21,13 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('llvm') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
-$InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
-# InstallerSha256
-$InstallerX86.InstallerSha256 = (Get-FileHash -Path $InstallerFileX86 -Algorithm SHA256).Hash
+$WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
 # NestedInstallerFiles
-$InstallerX86.NestedInstallerFiles = @(7z.exe l -ba -slt $InstallerFileX86 'mingw32\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+$InstallerX86['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX86 'mingw32\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 
-$InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-# InstallerSha256
-$InstallerX64.InstallerSha256 = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
+$WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
 # NestedInstallerFiles
-$InstallerX64.NestedInstallerFiles = @(7z.exe l -ba -slt $InstallerFileX64 'mingw64\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+$InstallerX64['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX64 'mingw64\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

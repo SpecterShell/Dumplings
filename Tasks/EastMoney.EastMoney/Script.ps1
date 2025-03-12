@@ -1,13 +1,10 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'config/app_cfg.xml' | Out-Host
   $Object2 = Join-Path $InstallerFileExtracted 'app_cfg.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-
   # Version
   $this.CurrentState.Version = [regex]::Match($Object2.root.app.name, '(\d+\.\d+\.\d+)').Groups[1].Value
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://emdesk.eastmoney.com/pc_activity/Pages/VIPTrade/pages/' | ConvertFrom-Html

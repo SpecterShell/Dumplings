@@ -43,30 +43,24 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
     $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
-    $NestedInstallerFileX86 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.msi" -File | Select-Object -First 1
-    $NestedInstallerFileX64 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.x64.msi" -File | Select-Object -First 1
-
-    # InstallerSha256
-    $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.msi" -File | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX86['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $InstallerX86['ProductCode'] = $NestedInstallerFileX86 | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFileX86 | Read-UpgradeCodeFromMsi
+        ProductCode   = $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )
-
-    # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $InstallerFile3 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.x64.msi" -File | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $InstallerX64['ProductCode'] = $NestedInstallerFileX64 | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFileX64 | Read-UpgradeCodeFromMsi
+        ProductCode   = $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )

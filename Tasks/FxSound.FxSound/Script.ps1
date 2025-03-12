@@ -11,15 +11,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    $NestedInstallerFileRoot = New-TempFolder
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $NestedInstallerFileRoot) -Wait
-    $NestedInstallerFile = Join-Path $NestedInstallerFileRoot 'fxsound.x64.msi'
-
+    $InstallerFileExtracted = New-TempFolder
+    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'fxsound.x64.msi'
     # AppsAndFeaturesEntries + ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFile | Read-UpgradeCodeFromMsi
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )

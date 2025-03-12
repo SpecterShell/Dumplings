@@ -6,13 +6,13 @@ $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
   Scope         = 'user'
   InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('PerUserInstallers') } catch {} }, 'First')[0].href
 }
+$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
 $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   InstallerType = 'wix'
   Scope         = 'machine'
   InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('PerMachineInstallers') } catch {} }, 'First')[0].href
 }
-
-$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 $VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 if ($VersionEXE -ne $VersionWiX) {

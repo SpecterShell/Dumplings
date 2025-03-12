@@ -17,36 +17,33 @@ if ($this.LastState.Installer.Count -gt 0 -and $this.LastState.Installer.Where({
   return
 }
 
-# InstallerSha256 + ProductCode + AppsAndFeaturesEntries
-$InstallerX86File = Get-TempFile -Uri $InstallerX86.InstallerUrl
+$WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerX86File = Get-TempFile -Uri $InstallerX86.InstallerUrl
 $InstallerX86FileExtracted = New-TempFolder
 7z.exe e -aoa -ba -bd -y -o"${InstallerX86FileExtracted}" $InstallerX86File 'iTunes.msi' | Out-Host
-$InstallerX86MsiFile = Join-Path $InstallerX86FileExtracted 'iTunes.msi'
-$InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerX86File -Algorithm SHA256).Hash
+$InstallerX86File2 = Join-Path $InstallerX86FileExtracted 'iTunes.msi'
+# AppsAndFeaturesEntries + ProductCode
 $InstallerX86['AppsAndFeaturesEntries'] = @(
   [ordered]@{
-    ProductCode   = $InstallerX86['ProductCode'] = $InstallerX86MsiFile | Read-ProductCodeFromMsi
-    UpgradeCode   = $InstallerX86MsiFile | Read-UpgradeCodeFromMsi
+    ProductCode   = $InstallerX86['ProductCode'] = $InstallerX86File2 | Read-ProductCodeFromMsi
+    UpgradeCode   = $InstallerX86File2 | Read-UpgradeCodeFromMsi
     InstallerType = 'wix'
   }
 )
-$VersionX86 = $InstallerX86MsiFile | Read-ProductVersionFromMsi
-$this.Log("x86 version: ${VersionX86}")
+$VersionX86 = $InstallerX86File2 | Read-ProductVersionFromMsi
 
-$InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
+$WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 $InstallerX64FileExtracted = New-TempFolder
 7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File 'iTunes64.msi' | Out-Host
-$InstallerX64MsiFile = Join-Path $InstallerX64FileExtracted 'iTunes64.msi'
-$InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerX64File -Algorithm SHA256).Hash
+$InstallerX64File2 = Join-Path $InstallerX64FileExtracted 'iTunes64.msi'
+# AppsAndFeaturesEntries + ProductCode
 $InstallerX64['AppsAndFeaturesEntries'] = @(
   [ordered]@{
-    ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64MsiFile | Read-ProductCodeFromMsi
-    UpgradeCode   = $InstallerX64MsiFile | Read-UpgradeCodeFromMsi
+    ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64File2 | Read-ProductCodeFromMsi
+    UpgradeCode   = $InstallerX64File2 | Read-UpgradeCodeFromMsi
     InstallerType = 'wix'
   }
 )
-$VersionX64 = $InstallerX64MsiFile | Read-ProductVersionFromMsi
-$this.Log("x64 version: ${VersionX64}")
+$VersionX64 = $InstallerX64File2 | Read-ProductVersionFromMsi
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")

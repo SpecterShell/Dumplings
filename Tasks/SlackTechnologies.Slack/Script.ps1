@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = $Object1.download_url
 }
-$this.CurrentState.Installer += $InstallerX64WiX = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = $Object2.download_url
@@ -42,9 +42,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$InstallerX64WiX.InstallerUrl] = $InstallerFileWix = Get-TempFile -Uri $InstallerX64WiX.InstallerUrl
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # ProductCode
-    $InstallerX64WiX['ProductCode'] = "$($InstallerFileWix | Read-ProductCodeFromMsi).msq"
+    $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
 
     # ReleaseNotesUrl
     $this.CurrentState.Locale += [ordered]@{

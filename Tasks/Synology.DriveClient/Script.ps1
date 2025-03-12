@@ -20,7 +20,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
   InstallerUrl  = 'https:' + $Object1.installer.url
 }
-$this.CurrentState.Installer += $InstallerNsisX86 = [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'nullsoft'
   InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.msi$', '.exe'
@@ -46,7 +46,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$InstallerNsisX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerNsisX86.InstallerUrl
+    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionFromExe) -replace '-', '.'
 

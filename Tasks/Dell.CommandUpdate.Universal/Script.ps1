@@ -43,17 +43,14 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent $WinGetUserAgent
+    $WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent $WinGetUserAgent
     $InstallerX64FileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File | Out-Host
-
     $Object3 = Join-Path $InstallerX64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     $InstallerX64File2 = Join-Path $InstallerX64FileExtracted $Object3.MUPDefinition.executable.executablename
     $InstallerX64File2Extracted = $InstallerX64File2 | Expand-InstallShield
-
     $InstallerX64File3 = Join-Path $InstallerX64File2Extracted 'DellCommandUpdateApp.msi'
-
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerX64File -Algorithm SHA256).Hash
+    # AppsAndFeaturesEntries + ProductCode
     $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
         ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64File3 | Read-ProductCodeFromMsi
@@ -62,17 +59,14 @@ switch -Regex ($this.Check()) {
       }
     )
 
-    # $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
+    # $WinGetInstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
     # $InstallerARM64FileExtracted = New-TempFolder
     # 7z.exe e -aoa -ba -bd -y -o"${InstallerARM64FileExtracted}" $InstallerARM64File | Out-Host
-
     # $Object4 = Join-Path $InstallerARM64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     # $InstallerARM64File2 = Join-Path $InstallerARM64FileExtracted $Object4.MUPDefinition.executable.executablename
     # $InstallerARM64File2Extracted = $InstallerARM64File2 | Expand-InstallShield
-
     # $InstallerARM64File3 = Join-Path $InstallerARM64File2Extracted 'DellCommandUpdateApp.msi'
-
-    # $InstallerARM64['InstallerSha256'] = (Get-FileHash -Path $InstallerARM64File -Algorithm SHA256).Hash
+    # # AppsAndFeaturesEntries + ProductCode
     # $InstallerARM64['AppsAndFeaturesEntries'] = @(
     #   [ordered]@{
     #     ProductCode   = $InstallerARM64['ProductCode'] = $InstallerARM64File3 | Read-ProductCodeFromMsi

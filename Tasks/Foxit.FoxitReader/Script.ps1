@@ -19,13 +19,10 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFile2Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Root}" $InstallerFile '2.msi' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFile2Root '2.msi'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFile2Extracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile '2.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFile2Extracted '2.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # AppsAndFeaturesEntries + ProductCode

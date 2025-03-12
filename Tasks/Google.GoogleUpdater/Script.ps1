@@ -40,21 +40,15 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFile2Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Root}" $InstallerFile 'updater.7z' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFile2Root 'updater.7z'
-    $InstallerFile3Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFile3Root}" $InstallerFile2 'bin\updater.exe' | Out-Host
-    $InstallerFile3 = Join-Path $InstallerFile3Root 'updater.exe'
-
-    # InstallerSha256 + InstallationMetadata > Files > FileSha256
-    $this.CurrentState.Installer.ForEach(
-      {
-        $_['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-        $_.InstallationMetadata.Files[0]['FileSha256'] = (Get-FileHash -Path $InstallerFile3 -Algorithm SHA256).Hash
-      }
-    )
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'updater.7z' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'updater.7z'
+    $InstallerFile2Extracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'bin\updater.exe' | Out-Host
+    $InstallerFile3 = Join-Path $InstallerFile2Extracted 'updater.exe'
+    # InstallationMetadata > Files > FileSha256
+    $this.CurrentState.Installer.ForEach({ $_.InstallationMetadata.Files[0]['FileSha256'] = (Get-FileHash -Path $InstallerFile3 -Algorithm SHA256).Hash })
 
     $this.Print()
     $this.Write()

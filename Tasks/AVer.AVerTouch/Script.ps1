@@ -19,14 +19,12 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AVerTouchQt.exe' | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'AVerTouchQt.exe'
       $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
       $InstallerFile3 = Join-Path $InstallerFile2Extracted 'AVerTouch.msi'
-      # InstallerSha256
-      $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
       # AppsAndFeaturesEntries + ProductCode
       $Installer.AppsAndFeaturesEntries = @(
         [ordered]@{

@@ -16,22 +16,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $NestedInstallerFileRoot = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile 'Bluebeam Revu x64 21.msi' | Out-Host
-    $NestedInstallerFile = Join-Path $NestedInstallerFileRoot 'Bluebeam Revu x64 21.msi'
-
-    # InstallerSha256
-    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayName = 'Bluebeam Revu x64 21'
-        ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile | Read-ProductCodeFromMsi
-        UpgradeCode = $NestedInstallerFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
     try {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
@@ -51,6 +35,9 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
+    # Avoid downloading the installer twice when handling sub module
+    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+
     $this.Submit()
 
     try {
@@ -60,17 +47,16 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale = @()
       $this.Config.IgnorePRCheck = $true
 
-      7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileRoot}" $InstallerFile 'BluebeamOCR x64 21.msi' | Out-Host
-      $NestedInstallerFile2 = Join-Path $NestedInstallerFileRoot 'BluebeamOCR x64 21.msi'
-
+      $InstallerFileExtracted = New-TempFolder
+      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'BluebeamOCR x64 21.msi' | Out-Host
+      $InstallerFile2 = Join-Path $InstallerFileExtracted 'BluebeamOCR x64 21.msi'
       # Version
-      $this.CurrentState.Version = $NestedInstallerFile2 | Read-ProductVersionFromMsi
-
+      $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
       # AppsAndFeaturesEntries
       $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
         [ordered]@{
-          ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $NestedInstallerFile2 | Read-ProductCodeFromMsi
-          UpgradeCode = $NestedInstallerFile2 | Read-UpgradeCodeFromMsi
+          ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+          UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
         }
       )
 

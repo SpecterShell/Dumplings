@@ -40,13 +40,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-      $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
-      $NestedInstallerFile = $InstallerFile | Expand-TempArchive | Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
-      $NestedInstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd -y -o"${NestedInstallerFileExtracted}" $NestedInstallerFile 'readme.txt' | Out-Host
-      $ReleaseNotesFile = Join-Path $NestedInstallerFileExtracted 'readme.txt'
+      $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+      $InstallerFile2 = $InstallerFile | Expand-TempArchive | Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
+      $InstallerFile2Extracted = New-TempFolder
+      7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'readme.txt' | Out-Host
+      $ReleaseNotesFile = Join-Path $InstallerFile2Extracted 'readme.txt'
       $ReleaseNotesObject = [System.IO.StreamReader]::new($ReleaseNotesFile, [System.Text.Encoding]::GetEncoding('gb18030'))
 
       while (-not $ReleaseNotesObject.EndOfStream) {

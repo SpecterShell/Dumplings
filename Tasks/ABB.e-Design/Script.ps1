@@ -37,11 +37,9 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'e-Design.msi'
-      # InstallerSha256
-      $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
       # AppsAndFeaturesEntries + ProductCode
       $Installer.AppsAndFeaturesEntries = @(
         [ordered]@{

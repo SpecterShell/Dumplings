@@ -12,14 +12,6 @@ $this.CurrentState.Version = [regex]::Match($Installer.InstallerUrl, 'miktex-(\d
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # InstallerSha256
-      $Installer['InstallerSha256'] = $Object1.SelectSingleNode('//div[@id="basic"]//div[@class="row" and contains(./div[1], "SHA-256")]/div[2]').InnerText.Trim().ToUpper()
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.SelectSingleNode('//div[@id="basic"]//div[@class="row" and contains(./div[1], "Date")]/div[2]').InnerText, 'MM/dd/yyyy', $null).ToString('yyyy-MM-dd')
     } catch {

@@ -15,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = "https://download-electron.aircall.io/aircall-workspace/Aircall-Workspace-$($this.CurrentState.Version)-x64.msi"
@@ -23,18 +23,6 @@ $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerWiXFile = Get-TempFile -Uri $InstallerWiX.InstallerUrl
-    # InstallerSha256
-    $InstallerWiX['InstallerSha256'] = (Get-FileHash -Path $InstallerWiXFile -Algorithm SHA256).Hash
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerWiX['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerWiXFile | Read-ProductVersionFromMsi
-        ProductCode    = $InstallerWiX['ProductCode'] = $InstallerWiXFile | Read-ProductCodeFromMsi
-        UpgradeCode    = $InstallerWiXFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
     $this.Print()
     $this.Write()
   }

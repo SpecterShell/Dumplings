@@ -32,44 +32,31 @@ if ($Version1 -ne $Version2) {
 $this.CurrentState.Version = $Version1
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = ($Object2.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object2.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' }, 'First')[0].run
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = ($Object1.response.app.updatecheck.urls.url.codebase | Select-String -Pattern 'https://dl.google.com' -Raw -SimpleMatch) + $Object1.response.app.updatecheck.manifest.actions.action.Where({ $_.event -eq 'install' }, 'First')[0].run
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
-    $NestedInstallerFileX86Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileX86Root}" $InstallerFileX86 '2.msi' | Out-Host
-    $NestedInstallerFileX86 = Join-Path $NestedInstallerFileX86Root '2.msi'
-
-    $InstallerX86['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX86 -Algorithm SHA256).Hash
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode   = $InstallerX86['ProductCode'] = $NestedInstallerFileX86 | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFileX86 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
-
-    $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-    $NestedInstallerFileX64Root = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${NestedInstallerFileX64Root}" $InstallerFileX64 '2.msi' | Out-Host
-    $NestedInstallerFileX64 = Join-Path $NestedInstallerFileX64Root '2.msi'
-
-    $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFileX64 -Algorithm SHA256).Hash
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        ProductCode   = $InstallerX64['ProductCode'] = $NestedInstallerFileX64 | Read-ProductCodeFromMsi
-        UpgradeCode   = $NestedInstallerFileX64 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $InstallerFileExtracted = New-TempFolder
+      7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
+      $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+      # AppsAndFeaturesEntries + ProductCode
+      $Installer['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          ProductCode   = $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+          InstallerType = 'wix'
+        }
+      )
+    }
 
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://support.google.com/earth/answer/40901?hl=en' | ConvertFrom-Html
