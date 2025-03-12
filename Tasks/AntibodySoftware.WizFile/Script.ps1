@@ -3,7 +3,7 @@ $this.CurrentState.Version = [regex]::Match((Invoke-RestMethod -Uri 'https://ant
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://diskanalyzer.com/files/wizfile_$($this.CurrentState.Version.Replace('.', '_'))_setup.exe"
+  InstallerUrl = "https://antibody-software.com/files/wizfile_$($this.CurrentState.Version.Replace('.', '_'))_setup.exe"
 }
 
 switch -Regex ($this.Check()) {
@@ -39,5 +39,22 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     $this.Submit()
+
+    if (-not $this.Status.Contains('New')) {
+      $this.CurrentState = $this.LastState
+      $this.CurrentState.Installer = @(
+        [ordered]@{
+          InstallerUrl = "https://antibody-software.com/files/archive/wizfile_$($this.CurrentState.Version.Replace('.', '_'))_setup.exe"
+        }
+      )
+      $this.MessageID = [int[]]@()
+      $this.Config.IgnorePRCheck = $true
+      try {
+        $this.Submit()
+      } catch {
+        $_ | Out-Host
+        $this.Log($_, 'Warning')
+      }
+    }
   }
 }
