@@ -5,13 +5,13 @@ $Object1 = Invoke-RestMethod -Uri 'https://web.botim.me/user/signup2/checkversio
     'version'    = $this.LastState.Contains('Version') ? $this.LastState.Version : '1.7.4'
   } | ConvertTo-Json -Compress
 } -ContentType 'application/json'
+$Object2 = $Object1.data | ConvertFrom-Json
 
-if ($Object1.code -eq 0) {
+if ($Object2.upgradetype -eq 0) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
-$Object2 = $Object1.data | ConvertFrom-Json
 $Object3 = Invoke-RestMethod -Uri $Object2.desktopupgradeymlurl | ConvertFrom-Yaml
 
 # Version
