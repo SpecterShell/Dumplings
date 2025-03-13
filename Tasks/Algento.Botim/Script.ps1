@@ -2,7 +2,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://web.botim.me/user/signup2/checkversion.json' -Headers @{ 'AES-HASH' = 'xxxxx' } -Body @{
   data = @{
     'devicetype' = 4
-    'version'    = $this.LastState.Contains('Version') ? $this.LastState.Version : '1.7.4'
+    'version'    = $this.Status.Contains('New') ? $this.LastState.Version : '1.7.4'
   } | ConvertTo-Json -Compress
 } -ContentType 'application/json'
 $Object2 = $Object1.data | ConvertFrom-Json

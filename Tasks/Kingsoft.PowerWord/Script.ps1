@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'http://report2.iciba.com/report/pc/versionUpdate' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '2022.1.1.0141'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '2022.1.1.0141'
 }
 
 # Version
@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'setup.xml' | Out-Host

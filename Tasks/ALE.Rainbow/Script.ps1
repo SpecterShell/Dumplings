@@ -67,7 +67,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

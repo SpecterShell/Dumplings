@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://member.bilibili.com/x/bcut/pc/upgrade' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '3.3.9'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '3.3.9'
 }
 
 # Version
@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

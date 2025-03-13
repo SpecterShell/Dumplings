@@ -53,7 +53,7 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       # NestedInstallerFiles
       $Installer['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
     }

@@ -56,7 +56,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $Installer.InstallerUrl
+    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $Installer.InstallerUrl
     # AppsAndFeaturesEntries + ProductCode
     $Installer['AppsAndFeaturesEntries'] = @(
       [ordered]@{

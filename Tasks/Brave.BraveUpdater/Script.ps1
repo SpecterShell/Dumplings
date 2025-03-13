@@ -39,7 +39,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # InstallationMetadata > Files > FileSha256
     Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/silent', '/install "runtime=true"', '/enterprise' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
     $FileSha256 = (Get-FileHash -Path (Join-Path $Env:LOCALAPPDATA 'BraveSoftware' 'Update' $this.CurrentState.Version 'BraveUpdate.exe') -Algorithm SHA256).Hash

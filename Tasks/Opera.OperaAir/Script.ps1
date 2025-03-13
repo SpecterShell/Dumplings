@@ -12,7 +12,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://autoupdate.opera.com/' -Method Post -
   </system>
   <product>
     <name>Opera Air</name>
-    <version>$($this.LastState.Contains('Version') ? $this.LastState.Version : '115.0.5322.132')</version>
+    <version>$($this.Status.Contains('New') ? $this.LastState.Version : '115.0.5322.132')</version>
   </product>
 </autoupdate>
 "@

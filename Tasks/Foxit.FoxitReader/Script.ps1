@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFile2Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile '2.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFile2Extracted '2.msi'

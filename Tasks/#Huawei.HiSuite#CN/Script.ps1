@@ -8,7 +8,7 @@ if (Test-Path -Path $OldReleasesPath) {
 $Object1 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_global/UrlCommand/CheckNewVersion.aspx' -Method Post -Body @"
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <rule name="DashBoard">$($this.LastState.Contains('Version') ? $this.LastState.Version : '11.0.0.000')</rule>
+  <rule name="DashBoard">$($this.Status.Contains('New') ? $this.LastState.Version : '11.0.0.000')</rule>
   <rule name="Region">China</rule>
 </root>
 "@

@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtract = New-TempFolder
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtract) -Wait
     $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtract -Include '*.msi' -Recurse | Select-Object -First 1

@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://updatesservice-p-xx-ue1.bluebeam.com/api/ProductUpdates' -Method Post -Body (
   @{
-    Version = $this.LastState.Contains('Version') ? $this.LastState.Version : '21.1.0'
+    Version = $this.Status.Contains('New') ? $this.LastState.Version : '21.1.0'
     Is32Bit = $false
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json; charset=utf-8'
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     # Avoid downloading the installer twice when handling sub module
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 
     $this.Submit()
 

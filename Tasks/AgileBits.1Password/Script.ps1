@@ -60,7 +60,7 @@ if ($this.LastState['Mode']) {
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RawVersion
     $RawVersion = $InstallerFile | Read-FileVersionRawFromExe
     $this.CurrentState.RawVersion = "$($RawVersion.Major)$($RawVersion.Minor)$($RawVersion.Build)$($RawVersion.Revision.ToString('D3'))"

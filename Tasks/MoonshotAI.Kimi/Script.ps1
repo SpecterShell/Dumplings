@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://appsupport.moonshot.cn/api/startup' -Method Post -Headers @{
   'x-msh-platform' = 'windows'
-  'x-msh-version'  = $this.LastState.Contains('Version') ? $this.LastState.Version : '1.1.9'
+  'x-msh-version'  = $this.Status.Contains('New') ? $this.LastState.Version : '1.1.9'
 } -Body '{}' -ContentType 'application/json'
 
 if ($Object1.upgrade.is_latest_version) {

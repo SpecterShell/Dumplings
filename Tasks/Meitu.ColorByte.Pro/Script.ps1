@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://api.yunxiu.meitu.com/api/v2/client/latest' -Method Post -Body (
   @{
     client_system  = 1
-    client_version = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.13.3'
+    client_version = $this.Status.Contains('New') ? $this.LastState.Version : '6.13.3'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 

@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://mediaarea.net/mediainfo_check/changelog_$($this.LastState.Contains('Version') ? $this.LastState.Version : '24.04').bin"
+$Object1 = Invoke-RestMethod -Uri "https://mediaarea.net/mediainfo_check/changelog_$($this.Status.Contains('New') ? $this.LastState.Version : '24.04').bin"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1, 'NewVersion;([\d\.]+)').Groups[1].Value

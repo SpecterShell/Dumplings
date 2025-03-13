@@ -2,14 +2,14 @@
 # Use a random hash here
 $Hash = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes([guid]::NewGuid().Guid))).ToLower()
 # x64 user
-$Object1 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64-user/cursor/$($this.LastState.Contains('Version') ? $this.LastState.Version : '0.46.10')/${Hash}/stable" -StatusCodeVariable 'StatusCodeX64'
+$Object1 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64-user/cursor/$($this.Status.Contains('New') ? $this.LastState.Version : '0.46.10')/${Hash}/stable" -StatusCodeVariable 'StatusCodeX64'
 if ($StatusCodeX64 -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
 # arm64 user
-$Object2 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64-user/cursor/$($this.LastState.Contains('Version') ? $this.LastState.Version : '0.46.10')/${Hash}/stable" -StatusCodeVariable 'StatusCodeARM64'
+$Object2 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64-user/cursor/$($this.Status.Contains('New') ? $this.LastState.Version : '0.46.10')/${Hash}/stable" -StatusCodeVariable 'StatusCodeARM64'
 if ($StatusCodeARM64 -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return

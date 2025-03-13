@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
     }
 
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

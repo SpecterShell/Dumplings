@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://hio-api.jd.com/rest/v1/clientver/chec
   'X-Timestamp'     = [System.DateTimeOffset]::Now.ToUnixTimeMilliseconds()
   'X-TenantCode'    = 'CN.JD.GROUP'
   'X-ClientFlag'    = '01'
-  'X-ClientVersion' = $this.LastState.Contains('Version') ? $this.LastState.Version.Replace('.', '') : '3099'
+  'X-ClientVersion' = $this.Status.Contains('New') ? $this.LastState.Version.Replace('.', '') : '3099'
   'X-OS'            = 'windows'
 } -Body '{}' -ContentType 'application/json'
 

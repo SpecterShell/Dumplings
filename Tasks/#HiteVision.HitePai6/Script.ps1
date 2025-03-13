@@ -7,7 +7,7 @@ if (Test-Path -Path $OldReleasesPath) {
 
 $Object1 = Invoke-RestMethod -Uri 'https://update.hitecloud.cn/api/firewares/upwarenew' -Body @{
   productmodel = 'HitePai6'
-  buildversion = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.2.311.20231030'
+  buildversion = $this.Status.Contains('New') ? $this.LastState.Version : '6.2.311.20231030'
 }
 
 if ($Object1.data.hasupdate -ne 1) {

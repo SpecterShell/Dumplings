@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.high-logic.com/process.php' -Body
   plt = 'win'
   tar = 'x86'
   app = 'mt'
-  ver = $this.LastState.Contains('Version') ? $this.LastState.Version : '12.0.0.1337'
+  ver = $this.Status.Contains('New') ? $this.LastState.Version : '12.0.0.1337'
   lid = '0'
   mod = '0'
 }
@@ -18,7 +18,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://www.high-logic.com/process.php' -Body
   plt = 'win'
   tar = 'x64'
   app = 'mt'
-  ver = $this.LastState.Contains('Version') ? $this.LastState.Version : '12.0.0.1337'
+  ver = $this.Status.Contains('New') ? $this.LastState.Version : '12.0.0.1337'
   lid = '0'
   mod = '0'
 }

@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'HotDesking - Displaylink\DisplayLink_Win10RS.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'DisplayLink_Win10RS.msi'

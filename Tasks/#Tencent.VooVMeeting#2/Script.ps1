@@ -6,9 +6,9 @@ if (Test-Path -Path $OldReleasesPath) {
 }
 
 # x86
-$Object1 = Invoke-RestMethod -Uri "https://voovmeeting.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=Overseas&sdk_id=1410000197&from=2&appver=$($this.LastState.Contains('Version') ? $this.LastState.Version : '3.20.3.520')"
+$Object1 = Invoke-RestMethod -Uri "https://voovmeeting.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=Overseas&sdk_id=1410000197&from=2&appver=$($this.Status.Contains('New') ? $this.LastState.Version : '3.20.3.520')"
 # x64
-# $Object2 = Invoke-RestMethod -Uri "https://voovmeeting.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=Overseas&sdk_id=1410000197&from=2&appver=$($this.LastState.Contains('Version') ? $this.LastState.Version : '3.20.3.520')&arch=x86_64"
+# $Object2 = Invoke-RestMethod -Uri "https://voovmeeting.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=Overseas&sdk_id=1410000197&from=2&appver=$($this.Status.Contains('New') ? $this.LastState.Version : '3.20.3.520')&arch=x86_64"
 
 if ($Object1.upgrade_policy -eq 0) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')

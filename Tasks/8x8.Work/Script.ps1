@@ -38,7 +38,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pub_date, 'M/d/y, h:m tt', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
 
       # Only parse version for major updates
-      if (-not $this.LastState.Contains('Version') -or $VersionMatches.Groups[2].Value -ne ($this.LastState.Version.Split('.')[0..1] -join '.')) {
+      if (-not $this.Status.Contains('New') -or $VersionMatches.Groups[2].Value -ne ($this.LastState.Version.Split('.')[0..1] -join '.')) {
         $Object2 = Invoke-WebRequest -Uri 'https://docs.8x8.com/8x8WebHelp/8x8-work-for-desktop/Content/workd/what-is-new.htm' | ConvertFrom-Html
 
         $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='mc-main-content']/h1[contains(text(), '$($VersionMatches.Groups[2].Value)')]")

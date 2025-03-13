@@ -61,7 +61,7 @@ switch -Regex ($this.Check()) {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.Log("Processing $($Installer.InstallerLocale) $($Installer.Architecture) installer", 'Verbose')
 
-      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '*.cab' | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted '*.cab' | Get-Item -Force | Select-Object -First 1

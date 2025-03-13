@@ -17,7 +17,7 @@ if ($this.LastState.Installer.Count -gt 0 -and $this.LastState.Installer.Where({
   return
 }
 
-$WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerX86File = Get-TempFile -Uri $InstallerX86.InstallerUrl
+$this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerX86File = Get-TempFile -Uri $InstallerX86.InstallerUrl
 $InstallerX86FileExtracted = New-TempFolder
 7z.exe e -aoa -ba -bd -y -o"${InstallerX86FileExtracted}" $InstallerX86File 'iTunes.msi' | Out-Host
 $InstallerX86File2 = Join-Path $InstallerX86FileExtracted 'iTunes.msi'
@@ -31,7 +31,7 @@ $InstallerX86['AppsAndFeaturesEntries'] = @(
 )
 $VersionX86 = $InstallerX86File2 | Read-ProductVersionFromMsi
 
-$WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
+$this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 $InstallerX64FileExtracted = New-TempFolder
 7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File 'iTunes64.msi' | Out-Host
 $InstallerX64File2 = Join-Path $InstallerX64FileExtracted 'iTunes64.msi'

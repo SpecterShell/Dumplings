@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://autoupdate.geo.opera.com/api/verify' -Body @{
   product = 'Opera Developer'
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '111.0.5168.61'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '111.0.5168.61'
 }
 
 if ($Object1.status -eq 'current') {

@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://myou.cvte.com/api/v1/update' -Body @{
   appKey      = 'bf4165392bdd7ca1234e0b72faa20eabe6fbea4e'
-  versionCode = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.5.2.14'
+  versionCode = $this.Status.Contains('New') ? $this.LastState.Version : '6.5.2.14'
   platform    = 'windows_app'
 }
 
@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

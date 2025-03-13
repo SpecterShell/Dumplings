@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'

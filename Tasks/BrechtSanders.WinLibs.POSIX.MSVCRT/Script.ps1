@@ -45,11 +45,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
+    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
     # NestedInstallerFiles
     $InstallerX86['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX86 'mingw32\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 
-    $WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
+    $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
     # NestedInstallerFiles
     $InstallerX64['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX64 'mingw64\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 

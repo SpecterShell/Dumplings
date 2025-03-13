@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://close.mtlab.meitu.com/api/v1/client/latest' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '5.9.2'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '5.9.2'
   system  = '1'
 }
 

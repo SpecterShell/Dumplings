@@ -68,7 +68,7 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $this.Submit()
 
-    if ($this.LastState.Contains('Version') -and ($this.LastState.Version.Split('.')[0..1] -join '.') -ne ($this.CurrentState.Version.Split('.')[0..1] -join '.')) {
+    if ($this.Status.Contains('New') -and ($this.LastState.Version.Split('.')[0..1] -join '.') -ne ($this.CurrentState.Version.Split('.')[0..1] -join '.')) {
       $this.Log('Major or minor version number has changed, please update the old installer URLs.', 'Warning')
     }
   }

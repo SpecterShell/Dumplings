@@ -10,7 +10,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(\-\d+){1,3})').
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $UserAgent
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $UserAgent
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

@@ -43,7 +43,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent $WinGetUserAgent
+    $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl -UserAgent $WinGetUserAgent
     $InstallerX64FileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File | Out-Host
     $Object3 = Join-Path $InstallerX64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
@@ -59,7 +59,7 @@ switch -Regex ($this.Check()) {
       }
     )
 
-    # $WinGetInstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
+    # $this.InstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
     # $InstallerARM64FileExtracted = New-TempFolder
     # 7z.exe e -aoa -ba -bd -y -o"${InstallerARM64FileExtracted}" $InstallerARM64File | Out-Host
     # $Object4 = Join-Path $InstallerARM64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml

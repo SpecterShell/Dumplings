@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://nativesoft.com/api/releases.check' -Method Post -Body (
   @{
     product      = 'NativeRest'
-    version      = $this.LastState.Contains('Version') ? $this.LastState.Version : '2.1.7'
+    version      = $this.Status.Contains('New') ? $this.LastState.Version : '2.1.7'
     platform     = 'Windows'
     architecture = 'Intel'
   } | ConvertTo-Json -Compress

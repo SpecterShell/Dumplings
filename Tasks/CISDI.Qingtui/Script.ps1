@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://web.qingtui.com/api/client/web/update' -Headers @{
-  CLIENT = "QingTui/$($this.LastState.Contains('Version') ? $this.LastState.Version : '70002');Windows NT 10.0, WOW64;PC;0"
+  CLIENT = "QingTui/$($this.Status.Contains('New') ? $this.LastState.Version : '70002');Windows NT 10.0, WOW64;PC;0"
 }
 
 # Version
@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

@@ -37,7 +37,7 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'e-Design.msi'
       # AppsAndFeaturesEntries + ProductCode

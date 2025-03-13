@@ -1,12 +1,12 @@
 # x86
 $Object1 = Invoke-RestMethod -Uri 'https://animiz.com/update/animiz-update-info.php' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.2'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.2'
   os      = 'Windows 10'
   digit   = '32'
 }
 # x64
 $Object2 = Invoke-RestMethod -Uri 'https://animiz.com/update/animiz-update-info.php' -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.2'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.2'
   os      = 'Windows 10'
   digit   = '64'
 }

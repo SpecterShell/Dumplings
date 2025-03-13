@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://autolk.veeam.com/json-rpc.php' -Metho
     method = 'CheckForUpdates'
     params = @{
       ProductName = 'AgentWindows'
-      Version     = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.1.2.134'
+      Version     = $this.Status.Contains('New') ? $this.LastState.Version : '6.1.2.134'
     }
   } | ConvertTo-Json -Compress
 )
@@ -41,7 +41,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Endpoint\Endpoint\Veeam_B&R_Endpoint_x64.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'Veeam_B&R_Endpoint_x64.msi'

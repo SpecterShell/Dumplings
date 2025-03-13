@@ -10,7 +10,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info
   @{
     deploy                = 'test'
     sn_code               = 'FFFFFFFFFFFFFM051'
-    user_version_string   = $this.LastState.Contains('Version') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
+    user_version_string   = $this.Status.Contains('New') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
     version_desc_language = 'en_US'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
@@ -28,7 +28,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info
   @{
     deploy                = 'test'
     sn_code               = 'FFFFFFFFFFFFFM051'
-    user_version_string   = $this.LastState.Contains('Version') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
+    user_version_string   = $this.Status.Contains('New') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
     version_desc_language = 'zh_CN'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'

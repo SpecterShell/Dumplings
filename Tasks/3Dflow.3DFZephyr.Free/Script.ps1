@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'http://3dflow.net/zephyr-network/networkMessa
   action       = 'getInstaller'
   architecture = 'x64'
   product      = '3DF Zephyr Free'
-  ver          = $this.LastState.Contains('Version') ? $this.LastState.Version : '7.529'
+  ver          = $this.Status.Contains('New') ? $this.LastState.Version : '7.529'
 }
 
 if ($Object1.Contains('NO_UPDATE_AVAILABLE')) {
@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
         action       = 'checkUpdates'
         architecture = 'x64'
         product      = '3DF Zephyr Free'
-        ver          = $this.LastState.Contains('Version') ? $this.LastState.Version : '7.529'
+        ver          = $this.Status.Contains('New') ? $this.LastState.Version : '7.529'
       }
 
       if (-not $Object2.Contains('NO_UPDATE_AVAILABLE')) {

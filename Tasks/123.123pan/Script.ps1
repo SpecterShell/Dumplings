@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
-  'app-version' = $this.LastState.Contains('Version') ? $this.LastState.Version.Replace('.', '') : 109
+  'app-version' = $this.Status.Contains('New') ? $this.LastState.Version.Replace('.', '') : 109
 }
 
 if (-not $Object1.data.hasNewVersion) {
@@ -37,7 +37,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

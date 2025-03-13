@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
     }
 
     foreach ($Installer in $this.CurrentState.Installer) {
-      $WinGetInstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AVerTouchQt.exe' | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'AVerTouchQt.exe'

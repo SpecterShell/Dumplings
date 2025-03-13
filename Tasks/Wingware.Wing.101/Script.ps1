@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://wingware.com/update' -Method Post -Bo
   protocol     = '1'
   prod         = 'wing-101'
   osname       = 'win32'
-  from_version = $this.LastState.Contains('Version') ? $this.LastState.Version : '10.0.5.0'
+  from_version = $this.Status.Contains('New') ? $this.LastState.Version : '10.0.5.0'
   page         = 'update'
   noheader     = '1'
 }

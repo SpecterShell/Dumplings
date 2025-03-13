@@ -43,7 +43,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
     $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
     $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.msi" -File | Select-Object -First 1

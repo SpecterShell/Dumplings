@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://mockitt.wondershare.com/api/v2/client/desktop/check_update.json' -Body @{
   region   = 'US'
-  version  = $this.LastState.Contains('Version') ? $this.LastState.Version : '6.0.0'
+  version  = $this.Status.Contains('New') ? $this.LastState.Version : '6.0.0'
   platform = 'win32'
   arch     = 'x64'
 }

@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $WinGetUserAgent
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $WinGetUserAgent
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Eraser (x64).msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'Eraser (x64).msi'

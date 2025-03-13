@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.office-ai.cn/update' -Body @{
   id  = 'officeai'
-  ver = $this.LastState.Contains('Version') ? $this.LastState.Version : '316'
+  ver = $this.Status.Contains('New') ? $this.LastState.Version : '316'
 } | ConvertFrom-Ini
 
 # Version
@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 

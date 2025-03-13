@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://api.toutiaoapi.com/service/settings/v
   device_platform = 'pc'
   from_aid        = '6383'
   from_channel    = ''
-  from_version    = $this.LastState.Contains('Version') ? $this.LastState.Version : '5.2.1'
+  from_version    = $this.Status.Contains('New') ? $this.LastState.Version : '5.2.1'
 } | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
 if (-not $Object1.data.settings.Contains('douyin_pc_update')) {

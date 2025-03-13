@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://lastpass.com/lmiapi/check-win-installer-version' -Method Post -Body (
   @{
-    version  = $this.LastState.Contains('Version') ? $this.LastState.Version : '4.0.0.0'
+    version  = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.0.0'
     isManual = $true
   } | ConvertTo-Json -Compress
 )
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.url
 }
 
-$WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+$this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
 # Version
 $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
 

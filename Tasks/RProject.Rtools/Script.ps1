@@ -82,7 +82,7 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.LastState.Contains('Version') -and ($this.LastState.Version.Split('.')[0..1] -join '.') -eq $MainVersion) {
+    if ($this.Status.Contains('New') -and ($this.LastState.Version.Split('.')[0..1] -join '.') -eq $MainVersion) {
       $this.Config.RemoveLastVersion = $true
     }
     $this.Submit()

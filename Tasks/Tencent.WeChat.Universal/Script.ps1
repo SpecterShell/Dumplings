@@ -7,7 +7,7 @@ $this.CurrentState.Hash = $Object1.Headers.'X-COS-META-MD5'[0]
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
-  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
+  $this.InstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
@@ -45,7 +45,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
-  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
+  $this.InstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 
@@ -137,7 +137,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     }
   }
 } else {
-  $WinGetInstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
+  $this.InstallerFiles[$Uri1] = $InstallerFile = Get-TempFile -Uri $Uri1
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
 

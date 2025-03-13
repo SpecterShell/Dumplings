@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://update.bleachbit.org/update/$($this.LastState.Contains('Version') ? $this.LastState.Version : '4.5.0')"
+$Object1 = Invoke-RestMethod -Uri "https://update.bleachbit.org/update/$($this.Status.Contains('New') ? $this.LastState.Version : '4.5.0')"
 
 if ($Object1.SelectSingleNode('//latest-version')) {
   # Version
@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionFromExe).Split('.')[0..3] -join '.'
 

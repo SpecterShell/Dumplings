@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://mangoanimate.com/clientapi/update' -H
   'Referer'    = 'app:/VideoClipMaster.swf'
   'User-Agent' = 'AdobeAIR/29.0'
 } -Body @{
-  version = $this.LastState.Contains('Version') ? $this.LastState.Version : '1.0.000'
+  version = $this.Status.Contains('New') ? $this.LastState.Version : '1.0.000'
   os      = 'Windows 10'
   bit     = '64'
 } | Select-Object -ExpandProperty 'Content' | ConvertFrom-Json -AsHashtable

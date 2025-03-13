@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://static.flicker.cool/flicker/download/stable/$($this.LastState.Contains('Version') ? $this.LastState.Version : '5.4.3')/win32/latest.yml" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "https://static.flicker.cool/flicker/download/stable/$($this.Status.Contains('New') ? $this.LastState.Version : '5.4.3')/win32/latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version

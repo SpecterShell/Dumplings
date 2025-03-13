@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $WinGetInstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FreeCommanderXE-32-public_setup.exe' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'FreeCommanderXE-32-public_setup.exe'
