@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.displayfusion.com/ChangeLog/' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row']/div[contains(.//div[@class='TableTitleText'], 'v$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row']/div[contains(.//div[@class='TableTitleText'], 'v$($this.CurrentState.Version -replace '(\.0+)+$')')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('.//div[@class="TableTitleText"]').InnerText, '([a-zA-Z]+\W+\d+\W+\d+)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
