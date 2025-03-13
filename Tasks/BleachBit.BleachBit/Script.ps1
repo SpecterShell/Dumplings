@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://update.bleachbit.org/update/$($this.Status.Contains('New') ? $this.LastState.Version : '4.5.0')"
+$Object1 = Invoke-RestMethod -Uri "https://update.bleachbit.org/update/$($this.Status.Contains('New') ? '4.5.0' : $this.LastState.Version)"
 
 if ($Object1.SelectSingleNode('//latest-version')) {
   # Version

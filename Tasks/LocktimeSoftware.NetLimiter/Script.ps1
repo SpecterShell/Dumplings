@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://netlimiter.com/versionchecker' -Body @{
   product = 'nl'
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '5.3.17.0'
+  version = $this.Status.Contains('New') ? '5.3.17.0' : $this.LastState.Version
 } | ConvertFrom-StringData -Delimiter ':'
 
 if (-not $Object1.Contains('version')) {

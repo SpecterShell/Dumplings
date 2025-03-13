@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://hao.lenovo.com.cn/browser-service-api
   @{
     browserActive  = 0
     browserChannel = '10'
-    browserVersion = $this.Status.Contains('New') ? $this.LastState.Version : '9.0.3.1311'
+    browserVersion = $this.Status.Contains('New') ? '9.0.3.1311' : $this.LastState.Version
     osBits         = '64'
     sn             = '0'
   } | ConvertTo-Json -Compress

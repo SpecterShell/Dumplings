@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://lastpass.com/lmiapi/check-win-installer-version' -Method Post -Body (
   @{
-    version  = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.0.0'
+    version  = $this.Status.Contains('New') ? '4.0.0.0' : $this.LastState.Version
     isManual = $true
   } | ConvertTo-Json -Compress
 )

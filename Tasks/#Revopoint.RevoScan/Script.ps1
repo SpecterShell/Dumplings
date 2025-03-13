@@ -12,7 +12,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info
     sn_code               = 'FFFFFFFFFFFFFF051'
     # The version here should have 4 parts, e.g. v5.4.12.1526, but the version returned by the endpoint only has 3 parts, e.g. v5.4.12
     # Use the 3-parts version anyway
-    user_version_string   = $this.Status.Contains('New') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
+    user_version_string   = $this.Status.Contains('New') ? 'v5.4.12.1526' : "v$($this.LastState.Version)"
     version_desc_language = 'en_US'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
@@ -30,7 +30,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info
   @{
     deploy                = 'test'
     sn_code               = 'FFFFFFFFFFFFFF051'
-    user_version_string   = $this.Status.Contains('New') ? "v$($this.LastState.Version)" : 'v5.4.12.1526'
+    user_version_string   = $this.Status.Contains('New') ? 'v5.4.12.1526' : "v$($this.LastState.Version)"
     version_desc_language = 'zh_CN'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'

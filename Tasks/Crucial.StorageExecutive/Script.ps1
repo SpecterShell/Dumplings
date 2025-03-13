@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.orderingmemory.com/firmware/version.aspx' -Body @{
-  ver     = $this.Status.Contains('New') ? $this.LastState.Version : '9.09.092023.03'
+  ver     = $this.Status.Contains('New') ? '9.09.092023.03' : $this.LastState.Version
   brand   = 'crucial'
   variant = 'client'
   arch    = 'x64'

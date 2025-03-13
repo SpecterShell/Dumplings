@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://services.pdq.tools/function/update-info' -Method Post -Body (
   @{
     ReleaseType      = 'Release'
-    InstalledVersion = $this.Status.Contains('New') ? $this.LastState.Version : '19.3.538.0'
+    InstalledVersion = $this.Status.Contains('New') ? '19.3.538.0' : $this.LastState.Version
     Product          = 'Deploy'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'

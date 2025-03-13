@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://myou.cvte.com/api/v1/update' -Body @{
   appKey      = 'bf4165392bdd7ca1234e0b72faa20eabe6fbea4e'
-  versionCode = $this.Status.Contains('New') ? $this.LastState.Version : '6.5.2.14'
+  versionCode = $this.Status.Contains('New') ? '6.5.2.14' : $this.LastState.Version
   platform    = 'windows_app'
 }
 

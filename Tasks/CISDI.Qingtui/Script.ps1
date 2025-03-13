@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://web.qingtui.com/api/client/web/update' -Headers @{
-  CLIENT = "QingTui/$($this.Status.Contains('New') ? $this.LastState.Version : '70002');Windows NT 10.0, WOW64;PC;0"
+  CLIENT = "QingTui/$($this.Status.Contains('New') ? '70002' : $this.LastState.Version);Windows NT 10.0, WOW64;PC;0"
 }
 
 # Version

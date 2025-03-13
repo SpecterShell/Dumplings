@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['iQIYI'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri "https://mesh.if.iqiyi.com/player/client/version/update?version=$($this.Status.Contains('New') ? $this.LastState.Version : '12.4.5.8126')&system=x64"
+$Object1 = Invoke-RestMethod -Uri "https://mesh.if.iqiyi.com/player/client/version/update?version=$($this.Status.Contains('New') ? '12.4.5.8126' : $this.LastState.Version)&system=x64"
 
 # Version
 $this.CurrentState.Version = $Object1.data.update.version

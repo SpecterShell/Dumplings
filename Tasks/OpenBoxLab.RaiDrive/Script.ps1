@@ -2,7 +2,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.raidrive.com/update/check' -Metho
   @{
     product   = 'RaiDrive'
     plan      = ''
-    version   = $this.Status.Contains('New') ? $this.LastState.Version : '2023.9.209'
+    version   = $this.Status.Contains('New') ? '2023.9.209' : $this.LastState.Version
     createdAt = Get-Date -Format 'yyyy-MM-dd'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json; charset=utf-8'

@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
-  'app-version' = $this.Status.Contains('New') ? $this.LastState.Version.Replace('.', '') : 109
+  'app-version' = $this.Status.Contains('New') ? '109' : $this.LastState.Version.Replace('.', '')
 }
 
 if (-not $Object1.data.hasNewVersion) {

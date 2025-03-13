@@ -6,7 +6,7 @@ if (Test-Path -Path $OldReleasesPath) {
 }
 
 $Object1 = Invoke-RestMethod -Uri 'https://api.frdic.com/api/v2/appsupport/checkversion' -Headers @{
-  EudicUserAgent = "/eusoft_maindb_fr_win32/$($this.Status.Contains('New') ? $this.LastState.Version : '13.0.0')//"
+  EudicUserAgent = "/eusoft_maindb_fr_win32/$($this.Status.Contains('New') ? '13.0.0' : $this.LastState.Version)//"
 }
 
 if ($Object1 -is [string]) {

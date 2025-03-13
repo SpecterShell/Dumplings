@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.office-ai.cn/update' -Body @{
   id  = 'officeai'
-  ver = $this.Status.Contains('New') ? $this.LastState.Version : '316'
+  ver = $this.Status.Contains('New') ? '316' : $this.LastState.Version
 } | ConvertFrom-Ini
 
 # Version

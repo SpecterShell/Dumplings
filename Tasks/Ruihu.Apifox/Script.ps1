@@ -1,12 +1,12 @@
 # x86
-$Object1 = Invoke-RestMethod -Uri "https://api.apifox.cn/api/v1/configs/client-updates/$($this.Status.Contains('New') ? $this.LastState.Version : '2.6.43')/win32/latest.yml?noCache=$(Get-Random)" -Headers @{
+$Object1 = Invoke-RestMethod -Uri "https://api.apifox.cn/api/v1/configs/client-updates/$($this.Status.Contains('New') ? '2.6.43' : $this.LastState.Version)/win32/latest.yml?noCache=$(Get-Random)" -Headers @{
   'x-system-version'                  = '10.0.22000'
   'x-running-under-arm64-translation' = 'false'
   'x-platform'                        = 'win32'
   'x-arch'                            = 'x86'
 } | ConvertFrom-Yaml
 # x64
-$Object2 = Invoke-RestMethod -Uri "https://api.apifox.cn/api/v1/configs/client-updates/$($this.Status.Contains('New') ? $this.LastState.Version : '2.6.43')/win64/latest.yml?noCache=$(Get-Random)" -Headers @{
+$Object2 = Invoke-RestMethod -Uri "https://api.apifox.cn/api/v1/configs/client-updates/$($this.Status.Contains('New') ? '2.6.43' : $this.LastState.Version)/win64/latest.yml?noCache=$(Get-Random)" -Headers @{
   'x-system-version'                  = '10.0.22000'
   'x-running-under-arm64-translation' = 'false'
   'x-platform'                        = 'win64'

@@ -1,7 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://alimei-api.aliyun.com/v1/system/appver' -Method Post -Body @{
   data        = @{
     appname    = 'alimail_standard_redcoast_win'
-    appVersion = $this.Status.Contains('New') ? $this.LastState.Version : '2.6.0'
+    appVersion = $this.Status.Contains('New') ? '2.6.0' : $this.LastState.Version
   } | ConvertTo-Json -Compress
   accesstoken = ''
 }

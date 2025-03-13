@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://update.viber.com/viber/viber.php?func
 <?xml version="1.0" encoding="UTF-8"?>
 <ClientUpdateRequest>
     <ClientInfo>
-        <ViberVersion>$($this.Status.Contains('New') ? $this.LastState.Version : '22.4.1.0')</ViberVersion>
+        <ViberVersion>$($this.Status.Contains('New') ? '22.4.1.0' : $this.LastState.Version)</ViberVersion>
         <Is64>1</Is64>
     </ClientInfo>
     <SystemInfo>

@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://dl.pstmn.io/update/status' -Body @{
   channel        = 'stable'
-  currentVersion = $this.Status.Contains('New') ? $this.LastState.Version : '10.24.26'
+  currentVersion = $this.Status.Contains('New') ? '10.24.26' : $this.LastState.Version
   arch           = '64'
   platform       = 'win64'
 } -StatusCodeVariable 'StatusCode'

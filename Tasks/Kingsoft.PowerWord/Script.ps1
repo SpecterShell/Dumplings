@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'http://report2.iciba.com/report/pc/versionUpdate' -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '2022.1.1.0141'
+  version = $this.Status.Contains('New') ? '2022.1.1.0141' : $this.LastState.Version
 }
 
 # Version

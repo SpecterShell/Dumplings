@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://mangoanimate.com/clientapi/update' -H
   'Referer'    = 'app:/HandActionPlayer.swf'
   'User-Agent' = 'AdobeAIR/29.0'
 } -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '2.1.800'
+  version = $this.Status.Contains('New') ? '2.1.800' : $this.LastState.Version
   os      = 'Windows 10'
   bit     = '64'
 } | Select-Object -ExpandProperty 'Content' | ConvertFrom-Json -AsHashtable

@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.yuanfudao.com/tutor-app-version/win/app-versions/current' -Body @{
   _productId = '328'
-  version    = $this.Status.Contains('New') ? $this.LastState.Version : '6.83.0'
+  version    = $this.Status.Contains('New') ? '6.83.0' : $this.LastState.Version
 }
 
 # Version

@@ -2,7 +2,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://collect.hst.com/checkUpdate' -Method Post -Body @{
   content = @{
     appkey     = '158f3069a435b314a80bdcb024f8e422'
-    curversion = $this.Status.Contains('New') ? $this.LastState.Version : '03.42.01.103'
+    curversion = $this.Status.Contains('New') ? '03.42.01.103' : $this.LastState.Version
     lang       = 'en_us'
   } | ConvertTo-Json -Compress
 }
@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
       $Object2 = Invoke-RestMethod -Uri 'https://collect.hst.com/checkUpdate' -Method Post -Body @{
         content = @{
           appkey     = '158f3069a435b314a80bdcb024f8e422'
-          curversion = $this.Status.Contains('New') ? $this.LastState.Version : '03.42.01.103'
+          curversion = $this.Status.Contains('New') ? '03.42.01.103' : $this.LastState.Version
           lang       = 'zh_cn'
         } | ConvertTo-Json -Compress
       }

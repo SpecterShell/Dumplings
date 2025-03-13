@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://updatesservice-p-xx-ue1.bluebeam.com/api/ProductUpdates' -Method Post -Body (
   @{
-    Version = $this.Status.Contains('New') ? $this.LastState.Version : '21.1.0'
+    Version = $this.Status.Contains('New') ? '21.1.0' : $this.LastState.Version
     Is32Bit = $false
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json; charset=utf-8'

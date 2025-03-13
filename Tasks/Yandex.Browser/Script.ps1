@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://api.browser.yandex.com/update-info/browser/int/win-int.rss' -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '24.4.4.1168'
+  version = $this.Status.Contains('New') ? '24.4.4.1168' : $this.LastState.Version
   custo   = 'yes'
   manual  = 'yes'
 }

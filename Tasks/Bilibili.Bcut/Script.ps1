@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://member.bilibili.com/x/bcut/pc/upgrade' -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '3.3.9'
+  version = $this.Status.Contains('New') ? '3.3.9' : $this.LastState.Version
 }
 
 # Version

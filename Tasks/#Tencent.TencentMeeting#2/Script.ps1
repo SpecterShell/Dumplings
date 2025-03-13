@@ -6,9 +6,9 @@ if (Test-Path -Path $OldReleasesPath) {
 }
 
 # x86
-$Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.Status.Contains('New') ? $this.LastState.Version : '3.25.11.412')"
+$Object1 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.Status.Contains('New') ? '3.25.11.412' : $this.LastState.Version)"
 # x64
-$Object2 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.Status.Contains('New') ? $this.LastState.Version : '3.25.11.412')&arch=x86_64"
+$Object2 = Invoke-RestMethod -Uri "https://meeting.tencent.com/web-service/query-app-update-info/?os=Windows&app_publish_channel=TencentInside&sdk_id=0300000000&from=2&appver=$($this.Status.Contains('New') ? '3.25.11.412' : $this.LastState.Version)&arch=x86_64"
 
 if ($Object1.upgrade_policy -eq 0) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')

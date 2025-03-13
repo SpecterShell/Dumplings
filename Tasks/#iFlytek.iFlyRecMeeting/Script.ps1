@@ -7,7 +7,7 @@ if (Test-Path -Path $OldReleasesPath) {
 
 $Object1 = Invoke-RestMethod -Uri 'https://www.iflyrec.com/UpdateService/v1/updates/hardware/deltaPatch/check' -Method Post -Body (
   @{
-    clientVersion = $this.Status.Contains('New') ? $this.LastState.Version : '2.0.0495'
+    clientVersion = $this.Status.Contains('New') ? '2.0.0495' : $this.LastState.Version
     deviceType    = 'Windows'
     platform      = 6
   } | ConvertTo-Json -Compress

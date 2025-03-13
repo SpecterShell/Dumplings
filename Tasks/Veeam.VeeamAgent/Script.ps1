@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://autolk.veeam.com/json-rpc.php' -Metho
     method = 'CheckForUpdates'
     params = @{
       ProductName = 'AgentWindows'
-      Version     = $this.Status.Contains('New') ? $this.LastState.Version : '6.1.2.134'
+      Version     = $this.Status.Contains('New') ? '6.1.2.134' : $this.LastState.Version
     }
   } | ConvertTo-Json -Compress
 )

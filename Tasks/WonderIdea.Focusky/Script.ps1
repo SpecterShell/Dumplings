@@ -1,12 +1,12 @@
 # x86
 $Object1 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.2'
+  version = $this.Status.Contains('New') ? '4.0.2' : $this.LastState.Version
   os      = 'Windows 10'
   digit   = '32'
 }
 # x64
 $Object2 = Invoke-RestMethod -Uri 'https://focusky.com/update/focusky-update-info.php' -Body @{
-  version = $this.Status.Contains('New') ? $this.LastState.Version : '4.0.2'
+  version = $this.Status.Contains('New') ? '4.0.2' : $this.LastState.Version
   os      = 'Windows 10'
   digit   = '64'
 }
