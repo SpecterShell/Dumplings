@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.package_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.data.package_download_url | ConvertTo-UnescapedUri | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
