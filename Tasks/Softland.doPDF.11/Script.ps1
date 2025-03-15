@@ -1,5 +1,9 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.dopdf.com/update-check.html?key=141B-80AD-17E2-11E9-97B7-0CC4-7AC3-5A11'
 
+if ($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+  throw "The WinGet package needs to be updated for the major version $($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER)"
+}
+
 # Version
 $this.CurrentState.Version = "$($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER).$($Object1.DOPDF.BUILDS.BUILD[0].MINORVER).$($Object1.DOPDF.BUILDS.BUILD[0].BUILD)"
 
