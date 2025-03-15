@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://dl.eviware.com/version-update/soapui-updates-os.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://dl.eviware.com/version-update/soapui-updates-os.xml'
 $Object2 = $Object1.updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '1215' }, 'First')[0]
 
 # Version
