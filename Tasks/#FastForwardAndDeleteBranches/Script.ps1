@@ -13,9 +13,8 @@ $OriginRepoName = $Global:DumplingsPreference['WinGetOriginRepoName'] ?? $this.C
 $OriginRepoBranch = $Global:DumplingsPreference['WinGetOriginRepoBranch'] ?? $this.Config['WinGetOriginRepoBranch'] ?? 'master'
 
 #region Delete merged branches
-$Branches = @()
 $Cursor = $null
-for ($i = 0; $i -lt 5 -and $Cursor -and $Object1.data.repository.refs.pageInfo.hasNextPage; $i++) {
+do {
   $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{
     query = @"
 {
@@ -50,23 +49,22 @@ for ($i = 0; $i -lt 5 -and $Cursor -and $Object1.data.repository.refs.pageInfo.h
 }
 "@
   }
-  $Branches += $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
-  $Cursor = $Object1.data.repository.refs.pageInfo.endCursor
-}
-
-$this.Log("$($Branches.Count) branch(es) in the repo ${OriginRepoOwner}/${OriginRepoName} have been merged. Deleting...")
-foreach ($Branch in $Branches) {
-  try {
-    $this.Log("Deleting the branch $($Branch.name). Merged in:")
-    foreach ($PullRequest in $Branch.associatedPullRequests.nodes) {
-      $this.Log("  [$($PullRequest.state)] #$($PullRequest.number) - $($PullRequest.title) - $($PullRequest.url)")
+  $Branches = $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
+  $this.Log("$($Branches.Count) branch(es) in the repo ${OriginRepoOwner}/${OriginRepoName} have been merged. Deleting...")
+  foreach ($Branch in $Branches) {
+    try {
+      $this.Log("Deleting the branch $($Branch.name). Merged in:")
+      foreach ($PullRequest in $Branch.associatedPullRequests.nodes) {
+        $this.Log("  [$($PullRequest.state)] #$($PullRequest.number) - $($PullRequest.title) - $($PullRequest.url)")
+      }
+      $null = Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginRepoOwner}/${OriginRepoName}/git/refs/heads/$($Branch.name)" -Method Delete
+    } catch {
+      $this.Log("Failed to delete the branch $($Branch.name): ${_}", 'Warning')
+      $_ | Out-Host
     }
-    $null = Invoke-GitHubApi -Uri "https://api.github.com/repos/${OriginRepoOwner}/${OriginRepoName}/git/refs/heads/$($Branch.name)" -Method Delete
-  } catch {
-    $this.Log("Failed to delete the branch $($Branch.name): ${_}", 'Warning')
-    $_ | Out-Host
   }
-}
+  $Cursor = $Object1.data.repository.refs.pageInfo.endCursor
+} while ($Object1.data.repository.refs.pageInfo.hasNextPage)
 #endregion
 
 #region Fast-forward
