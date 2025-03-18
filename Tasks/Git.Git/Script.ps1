@@ -8,10 +8,6 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('32-bit') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('64-bit') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
