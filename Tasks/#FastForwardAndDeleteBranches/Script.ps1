@@ -15,7 +15,7 @@ $OriginRepoBranch = $Global:DumplingsPreference['WinGetOriginRepoBranch'] ?? $th
 #region Delete merged branches
 $Branches = @()
 $Cursor = $null
-do {
+for ($i = 0; $i -lt 5 -and $Cursor -and $Object1.data.repository.refs.pageInfo.hasNextPage; $i++) {
   $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/graphql' -Method Post -Body @{
     query = @"
 {
@@ -52,7 +52,7 @@ do {
   }
   $Branches += $Object1.data.repository.refs.nodes.Where({ $_.associatedPullRequests.nodes.Count -gt 0 -and $_.associatedPullRequests.nodes[0].state -eq 'MERGED' })
   $Cursor = $Object1.data.repository.refs.pageInfo.endCursor
-} while ($Object1.data.repository.refs.pageInfo.hasNextPage)
+}
 
 $this.Log("$($Branches.Count) branch(es) in the repo ${OriginRepoOwner}/${OriginRepoName} have been merged. Deleting...")
 foreach ($Branch in $Branches) {
