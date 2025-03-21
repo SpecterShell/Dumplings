@@ -1,4 +1,4 @@
-$RepoOwner = 'Bin-Huang'
+$RepoOwner = 'chatboxai'
 $RepoName = 'chatbox'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
