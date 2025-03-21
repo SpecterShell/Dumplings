@@ -20,10 +20,10 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
