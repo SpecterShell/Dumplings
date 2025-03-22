@@ -1,0 +1,30 @@
+Version: 0.3.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/av/harbor/releases/download/v0.3.4/Harbor_0.3.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/av/harbor/releases/download/v0.3.4/Harbor_0.3.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    llama-swap
+    llama-swap is a lightweight, transparent proxy server that provides automatic model swapping to llama.cpp's server.
+    # [Optional] pre-pull the image
+    harbor pull llamaswap
+    # Edit the swap config
+    open $(harbor home)/llamaswap/config.yaml
+    # Run the service
+    harbor up llamaswap
+    Misc
+    - boost
+      - docs revamp
+      - fixing plain proxy without modules
+    - tgi - HF cache normalised
+    - raglite - adding missing traefik config
+    Full Changelog: https://github.com/av/harbor/compare/v0.3.3...v0.3.4
+- Key: ReleaseNotesUrl
+  Value: https://github.com/av/harbor/releases/tag/v0.3.4
+ReleaseTime: 2025-03-22T11:09:53.0000000Z
