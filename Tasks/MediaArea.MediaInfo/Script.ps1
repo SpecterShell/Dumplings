@@ -16,7 +16,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MediaArea/MediaInfo/master/History_GUI.txt').RawContentStream)
+      $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MediaArea/MediaInfo/master/History_CLI.txt').RawContentStream)
 
       while (-not $Object2.EndOfStream) {
         $String = $Object2.ReadLine()
