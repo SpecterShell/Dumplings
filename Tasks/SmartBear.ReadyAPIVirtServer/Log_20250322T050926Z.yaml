@@ -1,0 +1,21 @@
+Version: 3.25.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://dl.eviware.com/virtserver/3.25.0/VirtServer-x64-3.25.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Enhanced Compatibility with ReadyAPI: VirtServer 3.25.0 now supports ReadyAPI 3.58.0.
+    - Additional Configuration Required for Route to Live:
+      When using Route to Live for Virtual Services deployed to VirtServer, ensure the appropriate vmoptions are configured in the following scenarios:
+      - To allow restricted headers.
+      - If the backend server uses a self-signed certificate.
+      - If a proxy is enabled.
+      For detailed instructions on adding vmoptions, refer to this page.
+    - Improved CLI Login Messaging: The CLI now provides clearer error messages when incorrect values are entered in the login command and OIDC is not enabled.
+    - Excel Data Source Issue Resolved: We fixed an issue where the Excel Data Source did not work when generating responses for virtual services in VirtServer, despite working in ReadyAPI.
+    - Route to Live Feature Fixed: We addressed an issue where the Route to Live feature did not function correctly in VirtServer. If no response is received from the live endpoint, the default response is now sent as expected.
+    - Proxy Configuration Bug Fixed: VirtServer no longer displays an error when the proxy configuration mode is set to "none" or left empty during startup. It now starts without issues.
+    - Optimized Garbage Collection: We addressed an issue that led to increased garbage collection in VirtServer, enhancing overall performance and efficiency.
+ReleaseTime: 2025-01-29
