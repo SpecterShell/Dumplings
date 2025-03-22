@@ -10,6 +10,10 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
     $this.Print()
     $this.Write()
   }
