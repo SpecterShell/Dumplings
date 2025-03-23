@@ -27,6 +27,11 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('portable') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture         = 'arm64'
   NestedInstallerType  = 'exe'
@@ -46,6 +51,11 @@ $this.CurrentState.Installer += [ordered]@{
       RelativeFilePath = "paint.net.$($this.CurrentState.Version).winmsi.arm64.msi"
     }
   )
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('portable') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
