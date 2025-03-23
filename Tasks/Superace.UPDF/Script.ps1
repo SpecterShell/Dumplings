@@ -2,13 +2,14 @@ function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'UPDF.exe' | Out-Host
-
   # Version
   $this.CurrentState.Version = Join-Path $InstallerFileExtracted 'UPDF.exe' | Read-ProductVersionFromExe
   # RealVersion
   $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {

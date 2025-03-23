@@ -37,6 +37,8 @@ switch -Regex ($this.Check()) {
     $InstallerFile3 = Join-Path $InstallerFile2Extracted 'xbench.exe'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile3 | Read-FileVersionFromExe
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.xbench.net/index.php/support/change-log' | ConvertFrom-Html

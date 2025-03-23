@@ -16,14 +16,13 @@ switch -Regex ($this.Check()) {
     }
 
     $InstallerFile = Get-TempFile -Uri $PseudoInstallerUrl
-
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-
     # Installer
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl = "https://ime.sogoucdn.com/sogou_wubi_$($this.CurrentState.RealVersion).exe"
     }
+    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://wubi.sogou.com/log.php' | ConvertFrom-Html

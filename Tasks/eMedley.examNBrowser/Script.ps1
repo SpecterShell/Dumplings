@@ -34,6 +34,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'setup-x64.exe'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

@@ -38,6 +38,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'DisplayLink_Win10RS.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object4 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)

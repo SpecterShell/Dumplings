@@ -78,6 +78,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'burn'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

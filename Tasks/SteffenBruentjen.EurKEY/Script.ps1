@@ -24,6 +24,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'eurkey_i386.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://eurkey.steffen.bruentjen.eu/changelog.html' | ConvertFrom-Html

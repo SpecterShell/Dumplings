@@ -5,6 +5,7 @@ function Read-Installer {
   $Object2 = Join-Path $InstallerFileExtracted 'app_cfg.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
   # Version
   $this.CurrentState.Version = [regex]::Match($Object2.root.app.name, '(\d+\.\d+\.\d+)').Groups[1].Value
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://emdesk.eastmoney.com/pc_activity/Pages/VIPTrade/pages/' | ConvertFrom-Html

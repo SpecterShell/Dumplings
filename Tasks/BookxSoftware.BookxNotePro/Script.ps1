@@ -89,6 +89,7 @@ switch -Regex ($this.Check()) {
         if ((Test-Path -Path Variable:\ReleaseNotesObject) -and $ReleaseNotesObject) {
           $ReleaseNotesObject.Close()
         }
+        Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
       } catch {
         $_ | Out-Host
         $this.Log($_, 'Warning')

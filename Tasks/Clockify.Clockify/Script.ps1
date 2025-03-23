@@ -12,6 +12,7 @@ function Read-Installer {
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
   )
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {

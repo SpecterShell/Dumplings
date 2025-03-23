@@ -30,6 +30,7 @@ $InstallerX86['AppsAndFeaturesEntries'] = @(
   }
 )
 $VersionX86 = $InstallerX86File2 | Read-ProductVersionFromMsi
+Remove-Item -Path $InstallerX86FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
 $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl
 $InstallerX64FileExtracted = New-TempFolder
@@ -44,6 +45,7 @@ $InstallerX64['AppsAndFeaturesEntries'] = @(
   }
 )
 $VersionX64 = $InstallerX64File2 | Read-ProductVersionFromMsi
+Remove-Item -Path $InstallerX64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")

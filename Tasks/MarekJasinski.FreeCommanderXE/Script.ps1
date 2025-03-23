@@ -17,6 +17,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'FreeCommanderXE-32-public_setup.exe'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://freecommander.com/files/WebVersionHistory.txt' | Read-ResponseContent | ConvertFrom-Ini

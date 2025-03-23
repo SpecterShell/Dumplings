@@ -81,6 +81,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileX642Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerFileARM64 = Get-TempFile -Uri $InstallerARM64.InstallerUrl
     $InstallerFileARM642 = $InstallerFileARM64 | Expand-TempArchive | Join-Path -ChildPath $InstallerARM64.NestedInstallerFiles[0].RelativeFilePath
@@ -95,6 +96,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileARM642Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = [System.IO.StringReader]::new((Invoke-WebRequest -Uri 'https://getpaint.net/roadmap.html' | ConvertFrom-Html | Get-TextContent))

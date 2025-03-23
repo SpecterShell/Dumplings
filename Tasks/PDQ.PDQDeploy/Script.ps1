@@ -70,6 +70,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

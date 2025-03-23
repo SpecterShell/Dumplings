@@ -18,14 +18,13 @@ switch -Regex ($this.Check()) {
     }
 
     $InstallerFile = Get-TempFile -Uri $Match.Groups[1].Value
-
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-
     # Installer
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl = "https://ime.gtimg.com/pc/build/_sogou_pinyin_[Release]_$($this.CurrentState.RealVersion)_0.exe"
     }
+    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/changelog.php' | ConvertFrom-Html

@@ -23,12 +23,9 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AppxManifest.xml' | Out-Host
-    $Object2 = Join-Path $InstallerFileExtracted 'AppxManifest.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $this.CurrentState.RealVersion = $Object2.Package.Identity.Version
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMSIX
 
     $this.Print()
     $this.Write()

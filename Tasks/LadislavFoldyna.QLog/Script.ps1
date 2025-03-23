@@ -45,6 +45,7 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2' | Out-Host
     # RealVersion
     $this.CurrentState.RealVersion = [regex]::Match((Join-Path $InstallerFileExtracted '2' | Get-Item | Get-Content -Raw), '<Version>(.+?)</Version>').Groups[1].Value
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

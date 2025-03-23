@@ -1,8 +1,8 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-
   # Version
   $this.CurrentState.Version = [regex]::Match((& $InstallerFile version), 'version: v([\d\.]+)').Groups[1].Value
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # Installer

@@ -22,6 +22,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = $InstallerFile | Expand-TempArchive | Join-Path -ChildPath 'esbunitconv_setup.exe'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
+    Remove-Item -Path $InstallerFile2 -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

@@ -23,10 +23,9 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $Object2 = 7z.exe e -y -so $InstallerFile 'AppxMetadata\AppxBundleManifest.xml' | ConvertFrom-Xml
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $this.CurrentState.RealVersion = $Object2.Bundle.Identity.Version
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMSIX
 
     $this.Print()
     $this.Write()

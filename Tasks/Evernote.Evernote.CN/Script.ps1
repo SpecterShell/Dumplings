@@ -40,6 +40,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html

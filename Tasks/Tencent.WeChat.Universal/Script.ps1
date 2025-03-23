@@ -5,6 +5,7 @@ function Read-Installer {
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'install.7z'
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile2), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # Installer

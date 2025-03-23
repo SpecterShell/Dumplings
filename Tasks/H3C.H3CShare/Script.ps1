@@ -2,9 +2,9 @@ function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'H3CClient.exe' | Out-Host
-
   # Version
   $this.CurrentState.Version = Join-Path $InstallerFileExtracted 'H3CClient.exe' | Read-ProductVersionFromExe
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # Installer

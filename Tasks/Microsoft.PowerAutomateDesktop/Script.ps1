@@ -1,6 +1,7 @@
 $Object1 = Get-TempFile -Uri 'https://go.microsoft.com/fwlink/?linkid=2166902'
 # $Object1 = Get-TempFile -Uri 'https://go.microsoft.com/fwlink/?linkid=2200869'
 $Object2 = 7z.exe e -y -so $Object1 'PADUpdate.json' | ConvertFrom-Json
+Remove-Item -Path $Object1 -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
 # Version
 $this.CurrentState.Version = $Object2.latestVersion.version

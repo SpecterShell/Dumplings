@@ -1,6 +1,5 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
@@ -12,6 +11,7 @@ function Read-Installer {
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
     }
   )
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $StartDate = Get-Date -Date (Get-Date -AsUTC -Format 'yyyy-MM')

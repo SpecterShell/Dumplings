@@ -7,6 +7,7 @@ $Prefix = $Object1.AppInstaller.MainBundle.Uri | Split-Uri -Parent
 
 $BundleFile = Get-TempFile -Uri $Object1.AppInstaller.MainBundle.Uri
 $Object2 = 7z.exe e -y -so $BundleFile 'AppxMetadata\AppxBundleManifest.xml' | ConvertFrom-Xml
+Remove-Item -Path $BundleFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
 # Version
 $this.CurrentState.Version = $Object2.Bundle.Identity.Version

@@ -1,6 +1,5 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $Uri
-
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   $ShortVersion = $this.CurrentState.Version -replace '(\.0)+$'
@@ -10,6 +9,7 @@ function Read-Installer {
     InstallerSha256 = $InstallerSha256
     ProductCode     = $InstallerFile | Read-ProductCodeFromMsi
   }
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Uri = 'https://download.oracle.com/java/24/latest/jdk-24_windows-x64_bin.msi'

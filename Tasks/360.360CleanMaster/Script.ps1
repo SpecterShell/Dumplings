@@ -1,6 +1,7 @@
 $Path = Get-TempFile -Uri 'https://ini.update.360safe.com/v3/360csaupd_manual.cab'
 expand.exe -R $Path | Out-Host
 $Object1 = Join-Path $Path '..' '360csaupd_manual.ini' -Resolve | Get-Item | Get-Content -Raw -Encoding 'gb18030' | ConvertFrom-Ini
+Remove-Item -Path $Path -Recurse -Force -ErrorAction 'SilentlyContinue' -WarningAction 'SilentlyContinue'
 
 # Version
 $this.CurrentState.Version = $Object1.'360App1'.ver

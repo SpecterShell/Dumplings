@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
+    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.wrapper_jre_offline.exe' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.wrapper_jre_offline.exe'
@@ -51,6 +51,8 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX64.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
@@ -70,6 +72,9 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+
 
     $this.Print()
     $this.Write()

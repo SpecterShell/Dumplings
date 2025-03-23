@@ -46,13 +46,13 @@ switch -Regex ($this.Check()) {
     # ProductCode
     $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
 
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://slack.com/release-notes/windows'
-    }
-
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://slack.com/release-notes/windows'
+      }
+
       $Object4 = (Invoke-RestMethod -Uri 'https://slack.com/release-notes/windows/rss').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object4) {

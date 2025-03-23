@@ -20,9 +20,9 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFile2Extracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile '2.msi' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFile2Extracted '2.msi'
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # AppsAndFeaturesEntries + ProductCode
@@ -33,6 +33,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html

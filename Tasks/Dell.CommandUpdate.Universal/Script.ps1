@@ -58,6 +58,8 @@ switch -Regex ($this.Check()) {
         InstallerType = 'msi'
       }
     )
+    Remove-Item -Path $InstallerX64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerX64File2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     # $this.InstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
     # $InstallerARM64FileExtracted = New-TempFolder
@@ -74,6 +76,8 @@ switch -Regex ($this.Check()) {
     #     InstallerType = 'msi'
     #   }
     # )
+    # Remove-Item -Path $InstallerARM64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    # Remove-Item -Path $InstallerARM64File2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object4 = Join-Path $InstallerX64FileExtracted 'package.xml' | Get-Item | Get-Content -Raw -Encoding unicode | ConvertFrom-Xml

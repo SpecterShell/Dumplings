@@ -11,6 +11,7 @@ function Read-Installer {
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
   )
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{

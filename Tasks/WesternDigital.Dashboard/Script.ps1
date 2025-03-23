@@ -1,6 +1,5 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.DashboardInstallerSA.exe' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted '2.DashboardInstallerSA.exe'
@@ -11,6 +10,8 @@ function Read-Installer {
   ).Groups[1].Value
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseTime {

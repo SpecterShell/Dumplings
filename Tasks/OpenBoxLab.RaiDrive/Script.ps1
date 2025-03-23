@@ -58,6 +58,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileExeX862 = Get-ChildItem -Path $InstallerFileExeX86Extracted -Include 'RaiDrive_win-x86_exe.msi' -Recurse -File | Select-Object -First 1
     # ProductCode
     $InstallerExeX86['ProductCode'] = $InstallerFileExeX862 | Read-ProductCodeFromMsi
+    Remove-Item -Path $InstallerFileExeX86Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerExeX64.InstallerUrl] = $InstallerFileExeX64 = Get-TempFile -Uri $InstallerExeX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFileExeX64 -ArgumentList @('/extract') -Wait
@@ -65,6 +66,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileExeX642 = Get-ChildItem -Path $InstallerFileExeX64Extracted -Include 'RaiDrive_win-x64_exe.msi' -Recurse -File | Select-Object -First 1
     # ProductCode
     $InstallerExeX64['ProductCode'] = $InstallerFileExeX642 | Read-ProductCodeFromMsi
+    Remove-Item -Path $InstallerFileExeX64Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerExeArm64.InstallerUrl] = $InstallerFileExeArm64 = Get-TempFile -Uri $InstallerExeArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     Start-Process -FilePath $InstallerFileExeArm64 -ArgumentList @('/extract') -Wait
@@ -72,6 +74,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileExeArm642 = Get-ChildItem -Path $InstallerFileExeArm64Extracted -Include 'RaiDrive_win-arm64_exe.msi' -Recurse -File | Select-Object -First 1
     # ProductCode
     $InstallerExeArm64['ProductCode'] = $InstallerFileExeArm642 | Read-ProductCodeFromMsi
+    Remove-Item -Path $InstallerFileExeArm64Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.raidrive.com/update/' | ConvertFrom-Html

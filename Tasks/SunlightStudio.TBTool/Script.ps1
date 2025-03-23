@@ -27,9 +27,9 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    $InstallerFileExtract = New-TempFolder
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtract) -Wait
-    $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtract -Include '*.msi' -Recurse | Select-Object -First 1
+    $InstallerFileExtracted = New-TempFolder
+    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+    $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include '*.msi' -Recurse | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
@@ -38,6 +38,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'msi'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

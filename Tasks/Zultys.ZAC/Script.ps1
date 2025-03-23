@@ -27,6 +27,7 @@ switch -Regex ($this.Check()) {
           InstallerType = 'msi'
         }
       )
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 
     $this.Print()

@@ -22,6 +22,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'msi'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/fxsound2/fxsound-app/HEAD/release/changelog.txt').RawContentStream)

@@ -24,6 +24,7 @@ switch -Regex ($this.Check()) {
         InstallerType = 'msi'
       }
     )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://benchmate.org/changelog/all' | ConvertFrom-Html

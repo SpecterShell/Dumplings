@@ -12,6 +12,7 @@ function Read-Installer {
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
   )
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # $Object1 = Invoke-RestMethod -Uri 'https://clockassist.partners/api/v1/configurations/3fe96887-783a-4c08-a5d6-2ea02cfca262/windows'
