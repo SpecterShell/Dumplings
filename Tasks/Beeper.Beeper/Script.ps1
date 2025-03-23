@@ -1,19 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/2003241lzgn20jd/td-latest.json'
+$Prefix = 'https://api.beeper.com/desktop/update-feed/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -26,9 +27,9 @@ switch -Regex ($this.Check()) {
       Start-Sleep -Seconds 5
 
       $ReleaseNotesObject = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[@class="notion-page-content"]')).GetAttribute('innerHTML') | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(@class, 'notion-header-block') and contains(., 'v$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(@class, 'notion-sub_header-block') and contains(., 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Attributes['class'].Value.Contains('notion-header-block'); $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Attributes['class'].Value.Contains('notion-sub_header-block'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
