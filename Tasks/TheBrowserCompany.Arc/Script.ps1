@@ -1,5 +1,13 @@
+# x64
 $Object1 = Invoke-RestMethod -Uri 'https://releases.arc.net/windows/prod/Arc.appinstaller'
-# $Object2 = Invoke-RestMethod -Uri 'https://releases.arc.net/windows/prod/Arc.arm64.appinstaller'
+# arm64
+$Object2 = Invoke-RestMethod -Uri 'https://releases.arc.net/windows/prod/Arc.arm64.appinstaller'
+
+if ($Object1.AppInstaller.Version -ne $Object2.AppInstaller.Version) {
+  $this.Log("x64 version: $($Object1.AppInstaller.Version)")
+  $this.Log("arm64 version: $($Object2.AppInstaller.Version)")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
 $this.CurrentState.Version = $Object1.AppInstaller.Version
@@ -11,7 +19,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.AppInstaller.MainPackage.Uri.Replace('x64', 'arm64')
+  InstallerUrl = $Object2.AppInstaller.MainPackage.Uri
 }
 
 switch -Regex ($this.Check()) {
