@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
     try {
       if ($Global:DumplingsStorage.Contains('360Zip') -and $Global:DumplingsStorage['360Zip'].Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['360Zip'][$this.CurrentState.Version].ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['360Zip'][$this.CurrentState.Version].ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

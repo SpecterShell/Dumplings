@@ -18,7 +18,7 @@ function Get-ReleaseTime {
   try {
     if ($Global:DumplingsStorage.Contains('Dashboard') -and $Global:DumplingsStorage.Dashboard.Contains($this.CurrentState.Version)) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dashboard[$this.CurrentState.Version].ReleaseTime
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dashboard[$this.CurrentState.Version].ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
     } else {
       $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
     }

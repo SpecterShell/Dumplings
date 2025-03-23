@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
     try {
       if ($Global:DumplingsStorage.Contains('Dida') -and $Global:DumplingsStorage.Dida.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

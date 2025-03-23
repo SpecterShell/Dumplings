@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     try {
       if ($Global:DumplingsStorage.Contains('YealinkUSBConnect') -and $Global:DumplingsStorage.YealinkUSBConnect.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.YealinkUSBConnect[$this.CurrentState.Version].ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.YealinkUSBConnect[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'

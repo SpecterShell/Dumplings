@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
         [regex]::Match($ReleaseNotesNode.SelectSingleNode('./td[@class="date"]').InnerText, '(\d{1,2}\.\d{1,2}\.\d{4})').Groups[1].Value,
         'dd.MM.yyyy',
         $null
-      ).ToUniversalTime()
+      ).ToString('yyyy-MM-dd')
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
