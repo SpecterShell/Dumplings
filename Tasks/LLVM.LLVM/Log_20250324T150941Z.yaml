@@ -1,0 +1,16 @@
+Version: 20.1.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/LLVM-20.1.1-win32.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/LLVM-20.1.1-win64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://discourse.llvm.org/t/llvm-20-1-1-released/85337
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed an issue about implicit device attributes of virtual destructors which causes undefined symbols for CUDA/HIP programs which use std::string as class members with C++20 and MSVC.
+    - Fix a performance regression related to computed gotos, which usually affects interpreter projects. If you are using Clang 19, adding -mllvm -tail-dup-pred-size=100000 should restore the original performance.
+    - Fixes building LLDB with ncurses support when terminfo symbols are provided in a separate tinfo library.
+ReleaseTime: 2025-03-18T23:25:28.0000000Z
