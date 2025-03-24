@@ -53,11 +53,12 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@id='$($this.CurrentState.Version.Replace('.', ''))']")
       if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ul[1]') | Get-TextContent | Format-Text
+          Value  = ($ReleaseNotesNodes | Get-TextContent) -replace '(?s)\s*20\d{2}-\d{1,2}-\d{1,2}' | Format-Text
         }
 
         # ReleaseNotesUrl
