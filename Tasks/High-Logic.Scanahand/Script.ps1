@@ -40,11 +40,11 @@ $this.CurrentState.Version = $Object2.versioninfo.installer.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.versioninfo.installer.url
+  InstallerUrl = $Object1.versioninfo.installer.url | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.versioninfo.installer.url
+  InstallerUrl = $Object2.versioninfo.installer.url | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
