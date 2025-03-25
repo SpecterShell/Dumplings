@@ -34,7 +34,14 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object4 = Invoke-WebRequest -Uri 'https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-2025' | ConvertFrom-Html
+      $ReleaseNotesUrl = "https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-$((Get-Date).Year).html"
+      $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl
+      }
 
       # Remove anchors
       $Object4.SelectNodes('.//a[@class="headerlink"]').ForEach({ $_.Remove() })
