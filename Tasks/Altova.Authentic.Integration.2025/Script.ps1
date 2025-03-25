@@ -70,8 +70,18 @@ switch -Regex ($this.Check()) {
       $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Get-Item -Force | Select-Object -First 1
       # RealVersion
       $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
+      # Dependencies
+      $Installer.Dependencies = [ordered]@{
+        PackageDependencies = @(
+          [ordered]@{
+            PackageIdentifier = 'Altova.Authentic.2025.Enterprise'
+            MinimumVersion    = $this.CurrentState.RealVersion
+          }
+        )
+      }
       # ProductCode
       $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
+
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
       Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
