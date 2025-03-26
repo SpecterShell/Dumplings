@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//h2[contains(., 'Version $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]\W+\d{1,2}\W+20\d{2})').Groups[1].Value
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
