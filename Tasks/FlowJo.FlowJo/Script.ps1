@@ -6,6 +6,12 @@ $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {}
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
+# RealVersion
+$RealVersion = [version]$this.CurrentState.Version
+if ($RealVersion.Build -eq -1) { $RealVersion = [version]::new($RealVersion.Major, $RealVersion.Minor, 0, 0) }
+if ($RealVersion.Revision -eq -1) { $RealVersion = [version]::new($RealVersion.Major, $RealVersion.Minor, $RealVersion.Build, 0) }
+$this.CurrentState.RealVersion = $RealVersion.ToString()
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
@@ -14,10 +20,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # RealVersion
-    $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionRawFromExe).ToString()
-
     try {
       $ReleaseNotesUrl = "https://docs.flowjo.com/flowjo/getting-acquainted/$($this.CurrentState.Version.Split('.')[0..1] -join '-')-release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '-')-exhaustive-release-notes/"
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
