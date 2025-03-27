@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://member.bilibili.com/x/bcut/pc/upgrade
 }
 
 # Version
-$this.CurrentState.Version = $Object1.data.version
+$this.CurrentState.Version = $Object1.data.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
