@@ -117,7 +117,7 @@ switch -Regex ($this.Check()) {
           InstallerUrl = "${Prefix2}$($this.LastState.RealVersion)/win/aarch64/LibreOffice_$($this.LastState.RealVersion)_Win_aarch64.msi"
         }
       )
-      $this.MessageID = [int[]]@()
+      $this.ResetMessage()
       $this.Config.IgnorePRCheck = $true
       try {
         $this.Submit()

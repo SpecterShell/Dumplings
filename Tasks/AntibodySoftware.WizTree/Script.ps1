@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
           InstallerUrl = "https://diskanalyzer.com/files/archive/wiztree_$($this.CurrentState.Version.Replace('.', '_'))_setup.exe"
         }
       )
-      $this.MessageID = [int[]]@()
+      $this.ResetMessage()
       $this.Config.IgnorePRCheck = $true
       try {
         $this.Submit()
