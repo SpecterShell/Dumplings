@@ -9,7 +9,7 @@ $this.CurrentState.Version = "$($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER).$($Obje
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.DOPDF.DOWNLOAD.LINK
+  InstallerUrl = "https://download.dopdf.com/download/setup/dopdf-$($this.CurrentState.Version.Split('.')[0]).exe"
 }
 
 switch -Regex ($this.Check()) {
