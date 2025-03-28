@@ -1,41 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://agents.butler.veeam.com/json-rpc.php' -Method Post -Body (
-  @{
-    id     = 1
-    method = 'CheckForUpdates'
-    params = @{
-      ProductName = 'AgentWindows'
-      Version     = $this.Status.Contains('New') ? '6.1.2.134' : $this.LastState.Version
-    }
-  } | ConvertTo-Json -Compress
-)
-
-if ($Object1.result.status -eq 'NoUpdates') {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
-  return
-}
-
-$Object2 = $Object1.result.data | ConvertFrom-Base64 | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.veeam.com/products/downloads/latest-version.html' | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//tbody[contains(./tr[@name="product-name"], "Veeam Agent for Microsoft Windows")]')
 
 # Version
-$this.CurrentState.Version = $Object2.UpdateInfo.VeeamUpdates.AgentWindows.releaseFileVersion
+$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./tr[@name="product-download"]').InnerText, 'Version\s*:\s*(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.UpdateInfo.VeeamUpdates.AgentWindows.Url
+  InstallerUrl = "https://download2.veeam.com/VAW/v6/VeeamAgentWindows_$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.UpdateInfo.issuetime | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('./tr[@name="product-download"]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.UpdateInfo.VeeamUpdates.AgentWindows.Description | Format-Text
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
