@@ -9,7 +9,7 @@ if (-not $VersionMatches.Groups['llvm'].Success) {
 }
 
 # Version
-$this.CurrentState.Version = [ComplexVersion]"$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['llvm'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
+$this.CurrentState.Version = "$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['llvm'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
@@ -20,14 +20,6 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('llvm') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-
-$this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
-# NestedInstallerFiles
-$InstallerX86['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX86 'mingw32\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
-
-$this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-# NestedInstallerFiles
-$InstallerX64['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX64 'mingw64\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -55,6 +47,14 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFileX86 = Get-TempFile -Uri $InstallerX86.InstallerUrl
+    # NestedInstallerFiles
+    $InstallerX86['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX86 'mingw32\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
+
+    $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
+    # NestedInstallerFiles
+    $InstallerX64['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFileX64 'mingw64\bin\*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } })
 
     $this.Print()
     $this.Write()

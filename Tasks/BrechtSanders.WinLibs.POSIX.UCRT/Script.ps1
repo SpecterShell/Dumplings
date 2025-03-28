@@ -6,7 +6,7 @@ $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${R
 $VersionMatches = [regex]::Match($Object1.tag_name, '(?<gcc>\d+(?:\.\d+)+)posix(?:-(?<llvm>\d+(?:\.\d+)+))?-(?<mingw>\d+(?:\.\d+)+)-ucrt-r(?<release>\d+)')
 
 # Version
-$this.CurrentState.Version = [ComplexVersion]"$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
+$this.CurrentState.Version = "$($VersionMatches.Groups['gcc'].Value)-$($VersionMatches.Groups['mingw'].Value)-r$($VersionMatches.Groups['release'].Value)"
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{

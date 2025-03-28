@@ -6,7 +6,7 @@ $TargetDate = (Get-Date -AsUTC).AddDays(1).ToString('yyyy-MM-01').ToDateTime($nu
 $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.Contains($TargetDate.ToString('yyyy-MM-dd')) }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = [ComplexVersion]($Object1.tag_name -creplace '^autobuild-')
+$this.CurrentState.Version = $Object1.tag_name -creplace '^autobuild-'
 
 # Installer
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name.Contains('-gpl') -and -not $_.name.Contains('shared') -and $_.name.Contains('N-') }, 'First')[0]
