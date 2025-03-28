@@ -1,7 +1,13 @@
 $EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://haystackeditor.com/')
 
-$EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[text()="Download"][last()]')).Click()
+$Button = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+  [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+    param([OpenQA.Selenium.IWebDriver]$WebDriver)
+    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//p[text()="Download"]')) } catch {}
+  }
+)
+[OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button).Click().Build().Perform()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

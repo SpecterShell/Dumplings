@@ -86,7 +86,7 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $LogSnapshot = $this.Logs
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsMozilla')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
     $Mutex.WaitOne(600000) | Out-Null
 
     foreach ($Locale in $Locales) {

@@ -34,10 +34,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiguaVideo')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockXiguaVideo')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("XiguaVideoSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["XiguaVideoSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("XiguaVideo-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["XiguaVideo-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

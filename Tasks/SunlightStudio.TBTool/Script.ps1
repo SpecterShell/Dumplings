@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.tbtool.cn/'
+$Object1 = Invoke-WebRequest -Uri 'https://www.tbtool.cn/' -UserAgent $DumplingsBrowserUserAgent
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.Content, '软件版本\s*:\s*(\d+(?:\.\d+)+)').Groups[1].Value

@@ -1,7 +1,7 @@
 # x86
-$Object1 = Invoke-RestMethod -Uri 'https://www.aec188.com/forceupdatenew.php?type=home&bit=0'
+$Object1 = Invoke-RestMethod -Uri 'https://aec.pcw365.com/forceupdatenew.php?type=home&bit=0'
 # x64
-$Object2 = Invoke-RestMethod -Uri 'https://www.aec188.com/forceupdatenew.php?type=home&bit=1'
+$Object2 = Invoke-RestMethod -Uri 'https://aec.pcw365.com/forceupdatenew.php?type=home&bit=1'
 
 # Version
 $this.CurrentState.Version = $Object2.root.curversionnow_name

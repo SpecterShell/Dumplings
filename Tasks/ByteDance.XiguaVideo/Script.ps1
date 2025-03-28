@@ -1,14 +1,18 @@
 $EdgeDriver = Get-EdgeDriver -Headless
 $EdgeDriver.Navigate().GoToUrl('https://www.ixigua.com/app/')
-Start-Sleep -Seconds 10
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="App"]/div/main/div/div[1]/div[1]/div[3]/a')).GetAttribute('href')
+  InstallerUrl = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+      param([OpenQA.Selenium.IWebDriver]$WebDriver)
+      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "windows")]/a[@class="download__btn"]')) } catch {}
+    }
+  ).GetAttribute('href')
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -21,10 +25,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiguaVideo')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockXiguaVideo')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("XiguaVideoSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["XiguaVideoSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("XiguaVideo-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["XiguaVideo-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

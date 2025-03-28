@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://3dconnexion.com/us/drivers/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://3dconnexion.com/us/drivers/' -UserAgent $DumplingsBrowserUserAgent | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//li[@class="drivers-latest__system" and contains(./div/@class, "drivers-latest__system-icon--windows")]')
 
 # Version

@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.HiteVisionApps['6AD336C7-7204-444D-BAE6-B1010B13888B']
+$Object1 = $Global:DumplingsStorage.HiteVisionApps['{6AD336C7-7204-444D-BAE6-B1010B13888B}_is1']
 
 # Version
 $this.CurrentState.Version = $Object1.appVersion -replace '^V'

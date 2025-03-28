@@ -37,10 +37,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsStellarPlayer')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockStellarPlayer')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("StellarPlayerSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["StellarPlayerSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("StellarPlayer-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["StellarPlayer-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

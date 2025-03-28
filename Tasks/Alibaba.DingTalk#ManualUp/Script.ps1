@@ -59,10 +59,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsDingTalk')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockDingTalk')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("DingTalkSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["DingTalkSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("DingTalk-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["DingTalk-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

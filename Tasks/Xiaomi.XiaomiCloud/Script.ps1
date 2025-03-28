@@ -20,10 +20,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsXiaomiCloud')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockXiaomiCloud')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("XiaomiCloudSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["XiaomiCloudSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("XiaomiCloud-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["XiaomiCloud-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()

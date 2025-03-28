@@ -19,10 +19,10 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $ToSubmit = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsCapCut')
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockCapCut')
     $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("CapCutSubmitting-$($this.CurrentState.Version)")) {
-      $Global:DumplingsStorage["CapCutSubmitting-$($this.CurrentState.Version)"] = $ToSubmit = $true
+    if (-not $Global:DumplingsStorage.Contains("CapCut-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["CapCut-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
     }
     $Mutex.ReleaseMutex()
     $Mutex.Dispose()
