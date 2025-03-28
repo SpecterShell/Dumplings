@@ -1,4 +1,4 @@
-$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5372']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5376']
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
