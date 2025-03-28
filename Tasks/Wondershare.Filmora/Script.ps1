@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/filmora_64bit_$($this.CurrentState.Version)_full846.exe"
+  InstallerUrl = $Object1.data.full.url.Replace('upgrade', 'cbs_down') | ConvertTo-Https
   ProductCode  = "Wondershare Filmora $($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
@@ -26,13 +26,6 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayName = "Wondershare Filmora $($this.CurrentState.Version.Split('.')[0])(Build $($this.CurrentState.RealVersion))"
-        ProductCode = "Wondershare Filmora $($this.CurrentState.Version.Split('.')[0])_is1"
-      }
-    )
 
     $this.Print()
     $this.Write()

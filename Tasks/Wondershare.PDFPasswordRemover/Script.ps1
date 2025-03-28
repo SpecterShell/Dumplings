@@ -5,13 +5,7 @@ $this.CurrentState.Version = $Object1.Respone.WhatNews.Item[0].Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $Object1.Respone.ExeUrl | ConvertTo-Https
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "Wondershare PDF Password Remover (Build $($this.CurrentState.Version))"
-      ProductCode = '{1719FAD6-2F6A-4F5E-BF2B-1F6F6F1E3806_PasswordRemover}_is1'
-    }
-  )
+  InstallerUrl = $Object1.Respone.ExeUrl | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

@@ -1,12 +1,5 @@
 $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['7771']
 
-$this.CurrentState.Installer[0].AppsAndFeaturesEntries = @(
-  [ordered]@{
-    DisplayName = "Wondershare Filmii(Build $($this.CurrentState.Version))"
-    ProductCode = 'Wondershare Filmii_is1'
-  }
-)
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
