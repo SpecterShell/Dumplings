@@ -6,9 +6,7 @@ if (Test-Path -Path $OldReleasesPath) {
 }
 
 # https://github.com/Hollow667/Site-Subdomains/blob/master/Domains/iqm2.com
-$Object1 = Invoke-RestMethod -Uri 'https://alamancecountync.iqm2.com/MinuteTraqService/Data_1_0.asmx' -Method Post -Headers @{
-  SOAPAction = 'MKDBWCF.ASDAuthService/IASDAuthService/ASDGetSoftwareList'
-} -Body @'
+$Object1 = Invoke-RestMethod -Uri 'https://alamancecountync.iqm2.com/MinuteTraqService/Data_1_0.asmx' -Method Post -Body @'
 <?xml version="1.0" encoding="utf-8"?>
 <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
   <soap12:Body>
