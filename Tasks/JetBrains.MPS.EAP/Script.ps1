@@ -5,15 +5,9 @@ $this.CurrentState.Version = "MPS-$($Object1.build)"
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture           = 'x64'
-  InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "JetBrains MPS $($Object1.version.Split('-')[0])"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "JetBrains MPS $($Object1.version.Split('-')[0])"
-      ProductCode = "JetBrains MPS $($Object1.version.Split('-')[0])"
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $Object1.downloads.windows.link
+  ProductCode  = "JetBrains MPS $($Object1.version.Split('-')[0])"
 }
 
 switch -Regex ($this.Check()) {

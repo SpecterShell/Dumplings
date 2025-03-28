@@ -7,24 +7,20 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "JetBrains Rider $($this.CurrentState.Version)"
+  ProductCode            = "JetBrains Rider $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "JetBrains Rider $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "JetBrains Rider $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "JetBrains Rider $($this.CurrentState.Version)"
+  ProductCode            = "JetBrains Rider $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "JetBrains Rider $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "JetBrains Rider $($this.CurrentState.Version)"
     }
   )
 }

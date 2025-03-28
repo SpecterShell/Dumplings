@@ -7,24 +7,20 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "DataGrip $($this.CurrentState.Version)"
+  ProductCode            = "DataGrip $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "DataGrip $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "DataGrip $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "DataGrip $($this.CurrentState.Version)"
+  ProductCode            = "DataGrip $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "DataGrip $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "DataGrip $($this.CurrentState.Version)"
     }
   )
 }

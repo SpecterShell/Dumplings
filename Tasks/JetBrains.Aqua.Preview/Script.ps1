@@ -5,26 +5,14 @@ $this.CurrentState.Version = $Object1.build
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture           = 'x64'
-  InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "Aqua $($this.CurrentState.Version)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "Aqua $($this.CurrentState.Version)"
-      ProductCode = "Aqua $($this.CurrentState.Version)"
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $Object1.downloads.windows.link
+  ProductCode  = "Aqua $($Object1.build)"
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
-  Architecture           = 'arm64'
-  InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "Aqua $($this.CurrentState.Version)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "Aqua $($this.CurrentState.Version)"
-      ProductCode = "Aqua $($this.CurrentState.Version)"
-    }
-  )
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.downloads.windowsARM64.link
+  ProductCode  = "Aqua $($Object1.build)"
 }
 
 switch -Regex ($this.Check()) {

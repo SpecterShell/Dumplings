@@ -10,7 +10,6 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayVersion = "Build $($Object1.build)"
-      ProductCode    = 'JetBrains TeamCity'
     }
   )
 }

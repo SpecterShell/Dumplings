@@ -7,24 +7,20 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "CLion $($this.CurrentState.Version)"
+  ProductCode            = "CLion $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "CLion $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "CLion $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "CLion $($this.CurrentState.Version)"
+  ProductCode            = "CLion $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "CLion $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "CLion $($this.CurrentState.Version)"
     }
   )
 }

@@ -7,24 +7,20 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "JetBrains Gateway $($this.CurrentState.Version)"
+  ProductCode            = "JetBrains Gateway $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "JetBrains Gateway $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "JetBrains Gateway $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "JetBrains Gateway $($this.CurrentState.Version)"
+  ProductCode            = "JetBrains Gateway $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "JetBrains Gateway $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "JetBrains Gateway $($this.CurrentState.Version)"
     }
   )
 }

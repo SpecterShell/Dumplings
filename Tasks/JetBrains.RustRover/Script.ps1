@@ -1,18 +1,28 @@
-$Object1 = $Global:DumplingsStorage.JetBrainsApps.WS.eap
+$Object1 = $Global:DumplingsStorage.JetBrainsApps.RR.release
 
 # Version
-$this.CurrentState.Version = $Object1.build
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.downloads.windows.link
-  ProductCode  = "WebStorm $($Object1.build)"
+  Architecture           = 'x64'
+  InstallerUrl           = $Object1.downloads.windows.link
+  ProductCode            = "RustRover $($Object1.version)"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $Object1.build
+    }
+  )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.downloads.windowsARM64.link
-  ProductCode  = "WebStorm $($Object1.build)"
+  Architecture           = 'arm64'
+  InstallerUrl           = $Object1.downloads.windowsARM64.link
+  ProductCode            = "RustRover $($Object1.version)"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $Object1.build
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
@@ -42,12 +52,12 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://www.jetbrains.com/webstorm/whatsnew/'
+          Value = 'https://www.jetbrains.com/rust/whatsnew/'
         }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
-          Value  = 'https://www.jetbrains.com/zh-cn/webstorm/whatsnew/'
+          Value  = 'https://www.jetbrains.com/zh-cn/rust/whatsnew/'
         }
       }
     } catch {

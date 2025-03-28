@@ -5,26 +5,14 @@ $this.CurrentState.Version = $Object1.build
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture           = 'x64'
-  InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "RustRover $($Object1.build)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "RustRover $($Object1.build)"
-      ProductCode = "RustRover $($Object1.build)"
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $Object1.downloads.windows.link
+  ProductCode  = "RustRover $($Object1.build)"
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
-  Architecture           = 'arm64'
-  InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "RustRover $($Object1.build)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "RustRover $($Object1.build)"
-      ProductCode = "RustRover $($Object1.build)"
-    }
-  )
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.downloads.windowsARM64.link
+  ProductCode  = "RustRover $($Object1.build)"
 }
 
 switch -Regex ($this.Check()) {

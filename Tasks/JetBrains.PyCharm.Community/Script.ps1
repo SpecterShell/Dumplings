@@ -7,24 +7,20 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture           = 'x64'
   InstallerUrl           = $Object1.downloads.windows.link
-  ProductCode            = "PyCharm Community Edition $($this.CurrentState.Version)"
+  ProductCode            = "PyCharm Community Edition $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "PyCharm Community Edition $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "PyCharm Community Edition $($this.CurrentState.Version)"
     }
   )
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture           = 'arm64'
   InstallerUrl           = $Object1.downloads.windowsARM64.link
-  ProductCode            = "PyCharm Community Edition $($this.CurrentState.Version)"
+  ProductCode            = "PyCharm Community Edition $($Object1.version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
-      DisplayName    = "PyCharm Community Edition $($this.CurrentState.Version)"
       DisplayVersion = $Object1.build
-      ProductCode    = "PyCharm Community Edition $($this.CurrentState.Version)"
     }
   )
 }
