@@ -1,12 +1,12 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.artweaver.de/en/download' | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//div[@class="mt-5" and contains(., "Artweaver Plus")]')
+$Object2 = $Object1.SelectSingleNode('//div[@class="mt-5" and contains(., "Artweaver Free")]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.InnerText, 'Version: (\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://www.artweaver.de/direct/ArtweaverPlus.exe'
+  InstallerUrl = 'https://www.artweaver.de/direct/Artweaver.exe'
 }
 
 switch -Regex ($this.Check()) {
@@ -63,6 +63,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[2]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

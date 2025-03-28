@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://api.boardmakerservices.com/api/products/studentCenter/current?locale=en' -Headers @{ 'X-API-Version' = '3.0' }).extendedDownloadLinks.Where({ $_.operatingSystem -eq 5 }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://api.boardmakerservices.com/api/products/boardmaker/current?locale=en' -Headers @{ 'X-API-Version' = '3.0' }).extendedDownloadLinks.Where({ $_.operatingSystem -eq 5 }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.version
@@ -36,6 +36,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[2]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

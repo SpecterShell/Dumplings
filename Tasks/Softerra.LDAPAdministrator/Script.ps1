@@ -2,10 +2,6 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.ldapadministrator.com/support/upd
   version = $this.Status.Contains('New') ? '4.22.27007.0' : $this.LastState.Version
 }
 
-if ($Object1.latestversion.productversion -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-  throw "The WinGet package needs to be updated for the major version $($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER)"
-}
-
 # Version
 $this.CurrentState.Version = $Object1.latestversion.buildnumber
 
@@ -54,6 +50,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($Object1.latestversion.productversion -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log("The WinGet package needs to be updated to the version $($Object1.latestversion.productversion)", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

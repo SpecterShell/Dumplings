@@ -1,27 +1,27 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://www.gimp.org/gimp_versions.json').Content | ConvertFrom-Json -AsHashtable
+$Object1 = ((Invoke-WebRequest -Uri 'https://www.gimp.org/gimp_versions.json').Content | ConvertFrom-Json -AsHashtable).STABLE.Where({ $_.version.StartsWith('3.') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.STABLE[0].version + ($Object1.STABLE[0].windows[0].Contains('revision') ? "-$($Object1.STABLE[0].windows[0].revision)" : '')
+$this.CurrentState.Version = $Object1.version + ($Object1.windows[0].Contains('revision') ? "-$($Object1.windows[0].revision)" : '')
 
 # RealVersion
-$this.CurrentState.RealVersion = $Object1.STABLE[0].version
+$this.CurrentState.RealVersion = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://download.gimp.org/gimp/v3.0/windows/' $Object1.STABLE[0].windows[0].filename
+  InstallerUrl = Join-Uri 'https://download.gimp.org/gimp/v3.0/windows/' $Object1.windows[0].filename
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.STABLE[0].windows[0].date | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object1.windows[0].date | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.STABLE[0].windows[0].comment | Format-Text
+        Value  = $Object1.windows[0].comment | Format-Text
       }
     } catch {
       $_ | Out-Host

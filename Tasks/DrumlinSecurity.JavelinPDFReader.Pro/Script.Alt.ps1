@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.drumlinsecurity.co.uk/Service.asm
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <soap:Body>
     <GetLatestVersion xmlns="http://drumlinsecurity.co.uk/">
-      <sAppID>JW3</sAppID>
+      <sAppID>JW3P</sAppID>
     </GetLatestVersion>
   </soap:Body>
 </soap:Envelope>
@@ -15,7 +15,7 @@ $this.CurrentState.Version = "$($Object2.Major).$($Object2.Minor).$($Object2.Rev
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://www.drumlinsecurity.com/kits/windows/javelin$($this.CurrentState.Version)setup.exe"
+  InstallerUrl = "https://www.drumlinsecurity.com/kits/windows/javelin$($this.CurrentState.Version)prosetup.exe"
 }
 
 switch -Regex ($this.Check()) {
@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.drumlinsecurity.com/releasenotes.php' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h4[contains(text(), 'Javelin') and contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h4[contains(text(), 'Javelin') and contains(text(), 'Pro') and contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
@@ -60,6 +60,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[2]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

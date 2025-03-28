@@ -1,9 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.fbackup.com/updatecheck/FBC9-D3E3-65CD-4139-850F-94E0-6A63-A238'
 
-if ($Object1.FBACKUP.BUILDS.BUILD[0].MAJORVER -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-  throw "The WinGet package needs to be updated for the major version $($Object1.FBACKUP.BUILDS.BUILD[0].MAJORVER)"
-}
-
 # Version
 $this.CurrentState.Version = "$($Object1.FBACKUP.BUILDS.BUILD[0].MAJORVER).$($Object1.FBACKUP.BUILDS.BUILD[0].MINORVER).$($Object1.FBACKUP.BUILDS.BUILD[0].BUILD)"
 
@@ -43,6 +39,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

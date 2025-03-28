@@ -1,29 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.drumlinsecurity.co.uk/Service.asmx' -Method Post -Body @'
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <soap:Body>
-    <GetLatestVersion xmlns="http://drumlinsecurity.co.uk/">
-      <sAppID>JW3P</sAppID>
-    </GetLatestVersion>
-  </soap:Body>
-</soap:Envelope>
-'@ -ContentType 'text/xml; charset=utf-8'
-$Object2 = $Object1.Envelope.Body.GetLatestVersionResponse.GetLatestVersionResult.diffgram.FullVersionDS.FullVersion
-
-# Version
-$this.CurrentState.Version = "$($Object2.Major).$($Object2.Minor).$($Object2.Revision).$($Object2.Extra)"
+$Prefix = 'https://www.drumlinsecurity.com/javelindownloads.php'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://www.drumlinsecurity.com/kits/windows/javelin$($this.CurrentState.Version)prosetup.exe"
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('pro') } catch {} }, 'First')[0].href
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.drumlinsecurity.com/releasenotes.php' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.drumlinsecurity.com/releasenotes.php' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h4[contains(text(), 'Javelin') and contains(text(), 'Pro') and contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h4[contains(text(), 'Javelin') and contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
@@ -60,6 +51,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[2]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

@@ -66,6 +66,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ("20$($this.CurrentState.Version.Split('.')[0])" -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }
