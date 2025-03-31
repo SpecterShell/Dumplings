@@ -1,0 +1,19 @@
+Version: 25.3.31.3
+Installer:
+- InstallerUrl: https://sk-data.special-k.info/repository/SpecialK_25.3.31.3.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    + Restructure hook initialization procedure during startup to get render APIs
+          initialized earlier and separate input API initialization that should not
+            be done from DllMain.
+     + Added nvngx_update.exe hung process termination back to injection service.
+     + Remove multiple calls to slDLSSGSetOptions (...) during one frame in
+          Assassin's Creed Shadows.
+     + Fixed AC Shadows flagging sl::PreferenceFlags::eAllowOTA without flagging
+          sl::PreferenceFlags::eLoadDownloadedPlugins, which causes DLLs to update,
+            but the updated DLLs never to load (i.e. why DLSS/Reflex doesn't work).
+
+         * This fix may require local injection if render hook initialization is
+             too slow; it cannot be fixed if delayed injection is used.
