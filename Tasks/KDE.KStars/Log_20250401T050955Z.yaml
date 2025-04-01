@@ -1,0 +1,56 @@
+Version: 3.7.6
+Installer:
+- InstallerUrl: https://www.indilib.org/jdownloads/kstars/kstars-3.7.6.exe
+  InstallerSha256: 265DB2693754F93C122A6A5193121775B63A65328E4A7FDEE627A0F2E56C78C5
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://knro.blogspot.com/2025/04/kstars-v376-is-released.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    KStars v3.7.6 is released on 2025.04.01 for Windows, MacOS & Linux. It's a bi-monthly bug-fix release with a couple of exciting features.
+
+    Scheduler Plans Visualized
+
+    Hy Murveit added a graph to the Scheduler page that displays visually the scheduler's plans--the same plans described in the log at the bottom of that page, and partially described in the scheduler's table. You can see altitude graphs for all the scheduler jobs, which are highlighted in green when that job is planned to be active. The next two nights of the plan can be accessed using buttons to the right (and left) of the graph. The graph can be enlarged or hidden by sliding the "splitter" handle above it up or down.
+
+    PHD2 & Internal Guider RMS
+
+    Many users reported differences between the RMS value reported by Ekos internal guider vs PHD2. This is not a new issue as there was a difference in RMS calculations ever since Ekos Guider module was developed over a decade ago. In this release, we updated the internal Guider RMS calculations to use the same algorithm used by PHD2. This way, there is now a more consistent metric to judge the performance of the two guider systems.
+
+    Weather Scheduler Integration
+
+    Weather station integration with the scheduler was improved. The weather enforcement is now global and not per job. If weather enforcement is enabled, you can adjust the Grace Period (default 10 minutes) in cases where the scheduler cannot be started due to a weather Alert or Warning.
+
+    When a weather warning is received, existing jobs can continue to execute but new jobs will not be executed until the weather situation improves. Upon detecting a weather hazard, the scheduler execute a Soft shutdown mode where it can park the mount and dome, but still retains connection with INDI drivers to continue monitoring the weather situation. If the weather does not improve by the Grace Period, it then commences a full shutdown of the observatory. Otherwise, it should resume the job from where it was left.
+
+    Contrast Based Focusing
+
+    John Evans added an option to allow focusing on non-star fields by using various contrast based algorithms. This is suitable for Lunar, Solar and planetary imaging.
+
+    Autofocus Optimization
+
+    John Evans added an option has been added to Focus that allows an Autofocus run to re-use a previous successful Autofocus result if the previous AF run occurred within a user-defined time period, say <10mins ago. This can speed up certain situations when using the Scheduler where multiple Autofocus requests can happen within a short period of time.
+
+    Imaging Planner Improvements
+
+    Hy Murveit pushed a new Imaging Planner catalog release along with improvements to the KStars Imaging Planner.
+    - It should now start up much more quickly on first use, or first use after a catalog upgrade.
+    - There were stability improvements.
+    - The catalog was extended to include 770 objects.
+    Upgrade to KStars 3.7.6, use Data -> Download New Data to get the latest Imaging Planner catalog, and run Load Catalog in the Imaging Planner tool to take advantage of all these improvements.
+
+    Quick Go & Rotate
+
+    Added support to Go and Rotate in Framing Assistant. This would command fast go to target and then followed by rotation to match position angle indicated. Simply adjust the Position Angle to your desired angle then command Ekos to solve and rotate in one go.
+
+    Scheduler Coordinates Flexibility
+
+    Wolfgang Reissenberger introduced enhancements for handling target coordinates in the scheduler module:
+    - Add an option to switch the target coordinates between J2000 and JNow. This is interesting for those cases where the user wants to enter the coordinates manually, but has the coordinates only in JNow - for example when taking them over from the align module.
+    - Add a "use the current target" button. Currently, there is only an option to take over the current skymap center.
+    Furthermore, during the time where the moon is visible, it should be possible to schedule only those jobs that are not disturbed by moonlight (e.g. H-alpha captures). To enable this, a new optional constraint is introduced where the maximal moon altitude could be set.
+    Use PHD2-scheme graph
+
+    Toni Schriber modified the internal guider chart to use PHD2-scheme (RA/DEC) for graph of guide mount drift. This should help comparisons between PHD2 and internal guider more consistent.
+ReleaseTime: 2025-04-01
