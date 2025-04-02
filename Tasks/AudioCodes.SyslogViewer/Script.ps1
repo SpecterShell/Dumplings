@@ -5,7 +5,22 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'VERSION (\d+(?:\.\d+)+)')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup.exe'
+  Architecture           = 'x86'
+  InstallerUrl           = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup.exe'
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = "$($this.CurrentState.Version) (32 bit)"
+    }
+  )
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture           = 'x64'
+  InstallerUrl           = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup.exe'
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $this.CurrentState.Version
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
