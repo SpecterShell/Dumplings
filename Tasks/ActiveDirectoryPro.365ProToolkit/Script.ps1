@@ -1,21 +1,23 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+  $InstallerFileExtracted = New-TempFolder
+  Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+  $InstallerFile2 = Join-Path $InstallerFileExtracted '365 Pro Toolkit.msi'
   # Version
-  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # AppsAndFeaturesEntries + ProductCode
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+      UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+      InstallerType = 'msi'
     }
   )
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://activedirectorypro.com/downloads/365ProToolkit.msi'
+  InstallerUrl = 'https://activedirectorypro.com/downloads/365ProToolkit.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
