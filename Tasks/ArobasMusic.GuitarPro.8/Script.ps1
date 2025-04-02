@@ -12,7 +12,14 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.pubDate, 'ddd MMM d HH:mm:ss RDT yyyy', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'Romance Standard Time'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Object1.pubDate,
+        [string[]]@(
+          'ddd MMM d HH:mm:ss RDT yyyy'
+          'ddd MMM d HH:mm:ss RST yyyy'
+        ),
+        (Get-Culture -Name 'en-US')
+      ) | ConvertTo-UtcDateTime -Id 'Romance Standard Time'
 
       $Object2 = $Object1.description.'#cdata-section' | ConvertFrom-Html
 
