@@ -5,6 +5,8 @@ function Read-Installer {
   $InstallerFile2 = Join-Path $InstallerFileExtracted '365 Pro Toolkit.msi'
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # AppsAndFeaturesEntries + ProductCode
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
