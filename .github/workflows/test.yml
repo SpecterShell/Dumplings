@@ -10,26 +10,29 @@ jobs:
   build:
     name: Build
     runs-on: windows-latest
+    concurrency:
+      group: ${{ github.workflow }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           path: Dumplings
+          submodules: true
       - name: Checkout upstream winget-pkgs
         uses: actions/checkout@v4
         with:
           repository: microsoft/winget-pkgs
           path: winget-pkgs
-      - name: Install WinGet client
-        run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
+      # - name: Install WinGet client
+      #   run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
+      #   working-directory: Dumplings
+      #   shell: powershell
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull latest changes from the remote repository
+        run: git pull
         working-directory: Dumplings
-        shell: powershell
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Cache and install PowerShell modules
-      #   uses: potatoqualitee/psmodulecache@v6.0
-      #   with:
-      #     modules-to-cache: powershell-yaml, PowerHTML
+        shell: pwsh
       - name: Run tasks
         run: .\Core\Index.ps1 ${{ github.event.inputs.params }}
         working-directory: Dumplings
@@ -42,19 +45,16 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           MT_BOT_TOKEN: ${{ secrets.MT_BOT_TOKEN }}
           MT_ROOM_ID: ${{ secrets.MT_ROOM_ID }}
-      - name: Commit changes
+      - name: Commit and push local changes to the remote repository
         run: |-
           $Path = Join-Path $PWD 'Tasks'
-          if (-not [string]::IsNullOrWhiteSpace((git.exe ls-files --other --modified --exclude-standard $Path))) {
-            # In GitHub Actions, set the bot's name and email
-            if (Test-Path -Path Env:\GITHUB_ACTIONS) {
-              git.exe config user.name 'github-actions[bot]' | Out-Host
-              git.exe config user.email '41898282+github-actions[bot]@users.noreply.github.com' | Out-Host
-            }
-            git.exe pull | Out-Host
-            git.exe add $Path | Out-Host
-            git.exe commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]" | Out-Host
-            git.exe push | Out-Host
+          if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git pull
+            git add $Path
+            git commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]"
+            git push
           } else {
             Write-Host -Object 'No changes to commit'
           }
