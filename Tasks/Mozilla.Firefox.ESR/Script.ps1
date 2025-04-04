@@ -84,7 +84,6 @@ switch -Regex ($this.Check()) {
     $this.MessageEnabled = $false
   }
   'Updated' {
-    $LogSnapshot = $this.Logs
     $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
@@ -92,7 +91,6 @@ switch -Regex ($this.Check()) {
 
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
-      $this.Logs = [System.Collections.Generic.List[string]]::new($LogSnapshot)
 
       if ($Locale -eq 'multi') {
         $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
