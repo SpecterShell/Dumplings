@@ -14,23 +14,6 @@ switch -Regex ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    try {
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://help.sketchup.com/release-notes'
-      }
-
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.Links.Where({ try { $_.href.Contains('release-notes') -and $_.href.Contains('2025') } catch {} }, 'First')[0].href.Replace('/en/', '/')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     # try {
     #   # ReleaseNotesUrl
     #   $this.CurrentState.Locale += [ordered]@{
