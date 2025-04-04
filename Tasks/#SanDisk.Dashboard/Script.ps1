@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['Dashboard'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri 'https://wddashboarddownloads.wdc.com/wdDashboard/config/lista_updater.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://sddashboarddownloads.sandisk.com/wdDashboard/config/lista_updater.xml'
 
 # Version
 $this.CurrentState.Version = $Object1.lista.Application_Installer.version

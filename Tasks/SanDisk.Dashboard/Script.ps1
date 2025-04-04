@@ -30,7 +30,7 @@ function Get-ReleaseTime {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://wddashboarddownloads.wdc.com/wdDashboard/DashboardSetupSA.exe'
+  InstallerUrl = 'https://sddashboarddownloads.sandisk.com/wdDashboard/DashboardSetupSA.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
