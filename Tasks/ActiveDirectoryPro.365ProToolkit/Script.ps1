@@ -7,7 +7,9 @@ function Read-Installer {
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # AppsAndFeaturesEntries + ProductCode
+  # ProductCode
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+  # AppsAndFeaturesEntries
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
       UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
