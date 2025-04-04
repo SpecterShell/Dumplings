@@ -87,6 +87,7 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     $LogSnapshot = $this.Logs
+    $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
     $Mutex.WaitOne(600000) | Out-Null
@@ -96,7 +97,7 @@ switch -Regex ($this.Check()) {
       $this.Logs = [System.Collections.Generic.List[string]]::new($LogSnapshot)
 
       if ($Locale -eq 'multi') {
-        $this.Config.WinGetIdentifier = 'Mozilla.Firefox.DeveloperEdition.MSIX'
+        $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
 
         foreach ($Arch in @('x86', 'x64')) {
           # Installer
@@ -108,9 +109,9 @@ switch -Regex ($this.Check()) {
         }
       } else {
         if ($Locale -eq 'en-US') {
-          $this.Config.WinGetIdentifier = 'Mozilla.Firefox.DeveloperEdition'
+          $this.Config.WinGetIdentifier = $WinGetIdentifierPrefix
         } else {
-          $this.Config.WinGetIdentifier = "Mozilla.Firefox.DeveloperEdition.${Locale}"
+          $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.${Locale}"
         }
 
         foreach ($Arch in @('x86', 'x64', 'arm64')) {
