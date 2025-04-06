@@ -2,22 +2,38 @@
 # Use a random hash here
 $Hash = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes([guid]::NewGuid().Guid))).ToLower()
 # x64 user
-$Object1 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64-user/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeX64'
-if ($StatusCodeX64 -eq 204) {
+$Object1 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64-user/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeX64User'
+if ($StatusCodeX64User -eq 204) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
+# x64 machine
+$Object2 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-x64/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeX64Machine'
+if ($StatusCodeX64Machine -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
 # arm64 user
-$Object2 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64-user/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeARM64'
-if ($StatusCodeARM64 -eq 204) {
+$Object3 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64-user/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeARM64User'
+if ($StatusCodeARM64User -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
-if ($Object1.productVersion -ne $Object2.productVersion) {
+# arm64 machine
+$Object4 = Invoke-RestMethod -Uri "https://api2.cursor.sh/updates/api/update/win32-arm64/cursor/$($this.Status.Contains('New') ? '0.46.10' : $this.LastState.Version)/${Hash}/stable" -StatusCodeVariable 'StatusCodeARM64Machine'
+if ($StatusCodeARM64Machine -eq 204) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
+if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
   $this.Log("x64 user version: $($Object1.productVersion)")
-  $this.Log("arm64 user version: $($Object2.productVersion)")
+  $this.Log("x64 machine version: $($Object2.productVersion)")
+  $this.Log("arm64 user version: $($Object3.productVersion)")
+  $this.Log("arm64 machine version: $($Object4.productVersion)")
   throw 'Inconsistent versions detected'
 }
 
@@ -31,9 +47,19 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.url
 }
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = $Object2.url
+}
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   Scope        = 'user'
-  InstallerUrl = $Object2.url
+  InstallerUrl = $Object3.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'machine'
+  InstallerUrl = $Object4.url
 }
 
 switch -Regex ($this.Check()) {
@@ -45,9 +71,9 @@ switch -Regex ($this.Check()) {
         Value = $ReleaseNotesUrl = 'https://changelog.cursor.com/'
       }
 
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleObject = $Object2.SelectSingleNode(".//main/article[starts-with(@id, '$($this.CurrentState.Version -replace '\.0$' -replace '\.')')]")
+      $ReleaseNotesTitleObject = $Object5.SelectSingleNode(".//main/article[starts-with(@id, '$($this.CurrentState.Version -replace '\.0$' -replace '\.')')]")
       if ($ReleaseNotesTitleObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
