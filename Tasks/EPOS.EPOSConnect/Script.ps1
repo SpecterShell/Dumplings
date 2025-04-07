@@ -23,6 +23,13 @@ if ($VersionEXE -ne $VersionWiX) {
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
 
+$InstallerWiX['NestedInstallerFiles'] = @(
+  [ordered]@{
+    # EPOSConnect_8.1.0.48660.msi
+    RelativeFilePath = "EPOSConnect_$($this.CurrentState.Version).msi"
+  }
+)
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
