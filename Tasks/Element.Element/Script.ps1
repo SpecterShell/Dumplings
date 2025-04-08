@@ -7,9 +7,13 @@ $Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/wi
 # x64
 $Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
-if ($Object1.Version -ne $Object2.Version) {
+# arm64
+$Object3 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+
+if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.Version } -Unique).Count -gt 1) {
   $this.Log("x86 version: $($Object1.Version)")
   $this.Log("x64 version: $($Object2.Version)")
+  $this.Log("arm64 version: $($Object3.Version)")
   throw 'Inconsistent versions detected'
 }
 
@@ -24,6 +28,10 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://packages.element.io/desktop/install/win32/x64/Element Setup $($this.CurrentState.Version).exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://packages.element.io/desktop/install/win32/arm64/Element Setup $($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
