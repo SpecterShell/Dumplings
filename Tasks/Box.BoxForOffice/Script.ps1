@@ -1,13 +1,14 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
+  $InstallerMSI['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
   # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+  $InstallerMSI['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+  $InstallerEXE['ProductCode'] = "Box for Office $($this.CurrentState.Version)"
   # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+  $InstallerMSI['AppsAndFeaturesEntries'] = @(
     [ordered]@{
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
@@ -15,12 +16,21 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://e3.boxcdn.net/box-installers/boxforoffice/currentrelease/BoxForOffice.msi'
+# MSI
+$this.CurrentState.Installer += $InstallerMSI = [ordered]@{
+  InstallerType = 'msi'
+  InstallerUrl  = 'https://e3.boxcdn.net/box-installers/boxforoffice/currentrelease/BoxForOffice.msi'
 }
-
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri $InstallerMSI.InstallerUrl -Method Head
 $ETag = $Object1.Headers.ETag[0]
+
+# EXE
+$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
+  InstallerType = 'exe'
+  InstallerUrl  = 'https://e3.boxcdn.net/box-installers/boxforoffice/currentrelease/BoxForOffice.exe'
+}
+$Object2 = Invoke-WebRequest -Uri $InstallerEXE.InstallerUrl -Method Head
+$ETagEXE = $Object2.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -28,6 +38,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   # ETag
   $this.CurrentState.ETag = @($ETag)
+  $this.CurrentState.ETagEXE = @($ETagEXE)
 
   Read-Installer
 
@@ -44,6 +55,7 @@ if ($this.Status.Contains('New')) {
 
   # ETag
   $this.CurrentState.ETag = @($ETag)
+  $this.CurrentState.ETagEXE = @($ETagEXE)
 
   Read-Installer
 
@@ -54,7 +66,11 @@ if ($this.Status.Contains('New')) {
 
 # Case 2: The ETag is unchanged
 if ($ETag -in $this.LastState.ETag) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest (Global)", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (MSI)", 'Info')
+  return
+}
+if ($ETagEXE -in $this.LastState.ETagEXE) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (EXE)", 'Info')
   return
 }
 
@@ -71,6 +87,7 @@ if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installe
 
   # ETag
   $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+  $this.CurrentState.ETagEXE = $this.LastState.ETagEXE + $ETagEXE
 
   $this.Write()
   return
@@ -78,6 +95,7 @@ if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installe
 
 # ETag
 $this.CurrentState.ETag = @($ETag)
+$this.CurrentState.ETagEXE = @($ETagEXE)
 
 switch -Regex ($this.Check()) {
   # Case 6: The ETag, the SHA256 and the version have changed
