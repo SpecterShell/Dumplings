@@ -1,41 +1,25 @@
-$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望CAD个人版' }, 'First')[0]
+$Object1 = Invoke-WebRequest -Uri 'https://upgrade-online.zwsoft.cn/zwcadpersonal/2025/ZwServerUpdateConfig.xml' | Read-ResponseContent | ConvertFrom-Xml
+
+# Version
+$this.CurrentState.Version = $Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = (($Object1.download[0].url.Split('/') | Sort-Object -Property { $_.Length } -Bottom 1) -replace '(?<!=)$', '=' | ConvertFrom-Base64) -replace '^\d+' -replace 'https?://dl\.zwsoft\.cn', 'https://upgrade-online.zwsoft.cn'
+  InstallerUrl = $Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.mspSourceUrl
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, 'V(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.updateDate | Get-Date -Format 'yyyy-MM-dd'
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      if ($Global:DumplingsStorage.Contains('ZWCADPersonal') -and $Global:DumplingsStorage['ZWCADPersonal'].Contains($this.CurrentState.Version)) {
-        # # ReleaseNotes (en-US)
-        # $this.CurrentState.Locale += [ordered]@{
-        #   Locale = 'en-US'
-        #   Key    = 'ReleaseNotes'
-        #   Value  = $Global:DumplingsStorage['ZWCADPersonal'][$this.CurrentState.Version].ReleaseNotesEN
-        # }
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage['ZWCADPersonal'][$this.CurrentState.Version].ReleaseNotesCN
-        }
-      } else {
-        # $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.content.Replace('^', "`n") | Format-Text
       }
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.vernum, '(20\d{2}\.\d{2}\.\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

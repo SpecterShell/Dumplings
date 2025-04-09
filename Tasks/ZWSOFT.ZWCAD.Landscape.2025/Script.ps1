@@ -1,8 +1,9 @@
 $Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望景园 2025' }, 'First')[0]
+$Object2 = Invoke-WebRequest -Uri $Object1.download[0].url
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = (($Object1.download[0].url.Split('/') | Sort-Object -Property { $_.Length } -Bottom 1) -replace '(?<!=)$', '==' | ConvertFrom-Base64) -replace '^\d+' -replace 'https?://dl\.zwsoft\.cn', 'https://upgrade-online.zwsoft.cn'
+  InstallerUrl = Join-Uri 'https://upgrade-online.zwsoft.cn' ([regex]::Match($Object2.Content, 'https://download\.zwsoft\.cn/\d+/[a-zA-Z0-9]+([^"]+)').Groups[1].Value)
 }
 
 # Version
