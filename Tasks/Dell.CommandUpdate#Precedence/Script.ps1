@@ -14,16 +14,16 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.dateTime | Get-Date -AsUTC
 
-      # PackageName
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'PackageUrl'
-        Value = "https://www.dell.com/support/home/drivers/DriversDetails?driverId=$($Object1.releaseID)"
-      }
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'PackageUrl'
-        Value  = "https://www.dell.com/support/home/zh-cn/drivers/DriversDetails?driverId=$($Object1.releaseID)"
-      }
+      # # PackageName
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'PackageUrl'
+      #   Value = "https://www.dell.com/support/home/drivers/DriversDetails?driverId=$($Object1.releaseID)"
+      # }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'zh-CN'
+      #   Key    = 'PackageUrl'
+      #   Value  = "https://www.dell.com/support/home/zh-cn/drivers/DriversDetails?driverId=$($Object1.releaseID)"
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
