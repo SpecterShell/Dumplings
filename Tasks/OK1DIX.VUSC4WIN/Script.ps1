@@ -5,7 +5,7 @@ $Object2 = $Object1 | ConvertFrom-Html
 $this.CurrentState.Version = [regex]::Match($Object2.InnerText, 'VUSC(?:\s|&nbsp;)+4(?:\s|&nbsp;)+WIN(?:\s|&nbsp;)+(\d+(?:\.\d+)+)').Groups[1].Value
 
 $Prefix = 'https://www.ok2kkw.com/vusc/vusc4win/'
-$Object3 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;F=0;P=*.exe"
+$Object3 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;F=0;P=*.zip"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -35,8 +35,12 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } } | Select-Object -First 1)
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -Resolve
     # InstallationMetadata > Files > FileSha256
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/SP-', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
+    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile2 -ArgumentList '/SP-', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
     $FileSha256 = (Get-FileHash -Path (Join-Path $Env:HOMEDRIVE 'VUSC' 'VUSC.exe') -Algorithm SHA256).Hash
     $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallationMetadata.Files[0]['FileSha256'] = $FileSha256 }
 
