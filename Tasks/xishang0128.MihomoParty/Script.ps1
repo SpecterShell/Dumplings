@@ -1,5 +1,5 @@
 $RepoOwner = 'xishang0128'
-$RepoName = 'mihomo-party'
+$RepoName = 'clash-meta-party'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
