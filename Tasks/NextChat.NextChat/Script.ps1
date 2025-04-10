@@ -1,5 +1,5 @@
 $RepoOwner = 'ChatGPTNextWeb'
-$RepoName = 'ChatGPT-Next-Web'
+$RepoName = 'NextChat'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
