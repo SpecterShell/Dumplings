@@ -1,4 +1,4 @@
-$RepoOwner = 'kangfenmao'
+$RepoOwner = 'CherryHQ'
 $RepoName = 'cherry-studio'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
