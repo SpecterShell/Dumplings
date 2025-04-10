@@ -1,5 +1,5 @@
 $EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://haystackeditor.com/')
+$EdgeDriver.Navigate().GoToUrl('https://haystackeditor.com/editor')
 
 $Button = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
   [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
