@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://inkscape.org/release/all/windows/?pre
 $Object2 = $Object1.SelectSingleNode('//div[@id="content"]/div/table/tr[not(contains(./td[2], "dev"))][last()]')
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[1]').InnerText, 'Inkscape (\d(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[1]').InnerText, 'Inkscape (\d+(?:\.\d+)+)').Groups[1].Value
 
 $Prefix = 'https://inkscape.org'
 $Object3 = $Object2.SelectNodes('.//a[@href]') | ForEach-Object -Process { $_.Attributes['href'].Value }
