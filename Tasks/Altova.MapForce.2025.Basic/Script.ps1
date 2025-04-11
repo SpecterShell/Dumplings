@@ -48,8 +48,8 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
       # ProductCode
       $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
       Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 
     try {

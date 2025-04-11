@@ -51,8 +51,8 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX64.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
@@ -72,8 +72,8 @@ switch -Regex ($this.Check()) {
         InstallerType = 'wix'
       }
     )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
 
     $this.Print()

@@ -82,8 +82,8 @@ switch -Regex ($this.Check()) {
       # ProductCode
       $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
 
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
       Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 
     try {

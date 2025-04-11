@@ -49,8 +49,8 @@ switch -Regex ($this.Check()) {
     $InstallerFile3 = Join-Path $InstallerFile2Extracted 'updater.exe'
     # InstallationMetadata > Files > FileSha256
     $this.CurrentState.Installer.ForEach({ $_.InstallationMetadata.Files[0]['FileSha256'] = (Get-FileHash -Path $InstallerFile3 -Algorithm SHA256).Hash })
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()
