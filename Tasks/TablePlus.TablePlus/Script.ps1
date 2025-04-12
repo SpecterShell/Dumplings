@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://tableplus.com/release/windows/tableplus_latest'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://tableplus.com/release/windows/tableplus_latest' -Method GET
 }
 
 # Version

@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://saas.browser.360.net/index/downPackage?os=windows'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://saas.browser.360.net/index/downPackage?os=windows' -Method GET
 }
 
 # Version

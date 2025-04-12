@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.name
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api.reqable.com/download?platform=windows&arch=x86_64' -Headers @{ 'Accept-Language' = 'en' }
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api.reqable.com/download?platform=windows&arch=x86_64' -Method GET -Headers @{ 'Accept-Language' = 'en' }
 }
 
 switch -Regex ($this.Check()) {

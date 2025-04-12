@@ -13,7 +13,7 @@ $this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture           = 'x86'
 #   InstallerType          = 'exe'
-#   InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32AppStandalone'
+#   InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32AppStandalone' -Method GET
 #   AppsAndFeaturesEntries = @(
 #     [ordered]@{
 #       DisplayVersion = "$($this.CurrentState.Version).32"
@@ -23,7 +23,7 @@ $this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'x64'
   InstallerType          = 'exe'
-  InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11AppStandalone'
+  InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11AppStandalone' -Method GET
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayVersion = "$($this.CurrentState.Version).64"
