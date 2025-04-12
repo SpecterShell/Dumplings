@@ -1,5 +1,4 @@
-$UserAgent = $DumplingsDefaultUserAgent -replace 'PowerShell/\S+'
-$Object1 = Invoke-WebRequest -Uri 'https://fineprint.com/' -UserAgent $UserAgent | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://fineprint.com/' | Join-String -Separator "`n" | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//div[@class="fp homeblock"]//a[contains(text(), "DOWNLOAD")]')
 
 # Version
@@ -13,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://fineprint.com/fp/release-notes/' -UserAgent $UserAgent | ConvertFrom-Html
+      $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://fineprint.com/fp/release-notes/' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[@id='content']/h3[contains(text(), 'Version $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
