@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/580/'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrls -Uri 'https://download.10jqka.com.cn/index/download/id/580/' -Method GET | Select-Object -Last 1
 }
 
 # Version

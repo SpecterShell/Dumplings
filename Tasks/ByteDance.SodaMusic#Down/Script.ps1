@@ -1,14 +1,14 @@
 # x86
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrl1st -Uri 'https://bff-pc.qishui.com/light/invoke/download?os=win32&arch=ia32'
+  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrls -Uri 'https://bff-pc.qishui.com/light/invoke/download?os=win32&arch=ia32' -Method GET | Select-Object -Last 1
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '/(\d+\.\d+\.\d+)/').Groups[1].Value
 
 # x64
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl1st -Uri 'https://bff-pc.qishui.com/light/invoke/download?os=win32&arch=x64'
+  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrls -Uri 'https://bff-pc.qishui.com/light/invoke/download?os=win32&arch=x64' -Method GET | Select-Object -Last 1
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '/(\d+\.\d+\.\d+)/').Groups[1].Value
 

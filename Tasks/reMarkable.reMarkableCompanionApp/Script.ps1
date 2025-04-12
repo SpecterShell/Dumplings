@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://downloads.remarkable.com/latest/windows'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrls -Uri 'https://downloads.remarkable.com/latest/windows' -Method GET | Select-Object -Last 1
 }
 
 # Version

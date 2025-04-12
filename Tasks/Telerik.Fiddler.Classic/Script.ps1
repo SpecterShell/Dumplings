@@ -5,7 +5,7 @@ $this.CurrentState.Version = (0..3 | ForEach-Object -Process { $Object1.ReadLine
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api.getfiddler.com/fc/latest?meta=false'
+  InstallerUrl = Get-RedirectedUrls -Uri 'https://api.getfiddler.com/fc/latest?meta=false' -Method GET | Select-Object -Last 1
 }
 
 switch -Regex ($this.Check()) {

@@ -13,12 +13,12 @@ $this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version -re
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture  = 'x86'
 #   InstallerType = 'msi'
-#   InstallerUrl  = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32msi'
+#   InstallerUrl  = Get-RedirectedUrls -Uri 'https://www.adobe.com/go/Connect11_32msi' -Method GET | Select-Object -Last 1
 # }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
-  InstallerUrl  = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11msi'
+  InstallerUrl  = Get-RedirectedUrls -Uri 'https://www.adobe.com/go/Connect11msi' -Method GET | Select-Object -Last 1
 }
 
 switch -Regex ($this.Check()) {
