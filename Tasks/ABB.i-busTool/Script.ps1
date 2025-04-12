@@ -2,7 +2,7 @@
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrls -Uri 'https://search.abb.com/library/Download.aspx?DocumentID=9AKK106354A1779&Action=Launch' -Method GET | Select-Object -Last 1 | Split-Uri -LeftPart Path | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://search.abb.com/library/Download.aspx?DocumentID=9AKK106354A1779&Action=Launch' | Split-Uri -LeftPart Path | ConvertTo-UnescapedUri
 }
 
 # Version

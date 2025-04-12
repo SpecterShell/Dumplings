@@ -2,7 +2,7 @@ $UserAgent = 'libcurl-client'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrls -Uri 'https://www.tableau.com/downloads/public/pc64' -Method GET -Headers @{ 'User-Agent' = $UserAgent } | Select-Object -Last 1
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.tableau.com/downloads/public/pc64' -Headers @{ 'User-Agent' = $UserAgent }
 }
 
 # Version
