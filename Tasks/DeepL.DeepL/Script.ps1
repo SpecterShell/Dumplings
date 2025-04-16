@@ -20,6 +20,10 @@ $Object1 = (Invoke-RestMethod -Uri 'https://appdownload.deepl.com/windows/0insta
 # Version
 $this.CurrentState.Version = $Object1.version
 
+# RealVersion
+# It seems that while the installer does not write DisplayVersion, the app itself will automatically do that, with the format of x.y.z.
+$this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl = 'https://appdownload.deepl.com/windows/0install/DeepLSetup.exe'
