@@ -17,6 +17,7 @@ $ETag = $Object1.Headers.ETag[0]
 
 # MSI x86
 $this.CurrentState.Installer += $InstallerMSIx86 = [ordered]@{
+  Architecture  = 'x86'
   InstallerType = 'wix'
   InstallerUrl  = 'https://cp.serverdata.net/voice/pbx/TeamsWidgetReleases/Ascend/Latest-Win/ascend-teams-desktop-plugin-ia32.msi'
 }
@@ -25,6 +26,7 @@ $ETagMSIx86 = $Object2.Headers.ETag[0]
 
 # MSI x64
 $this.CurrentState.Installer += $InstallerMSIx64 = [ordered]@{
+  Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = 'https://cp.serverdata.net/voice/pbx/TeamsWidgetReleases/Ascend/Latest-Win/ascend-teams-desktop-plugin-x64.msi'
 }

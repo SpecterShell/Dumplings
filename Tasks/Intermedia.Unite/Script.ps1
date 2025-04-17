@@ -17,6 +17,7 @@ $ETag = $Object1.Headers.ETag[0]
 
 # MSI x86
 $this.CurrentState.Installer += $InstallerMSIx86 = [ordered]@{
+  Architecture  = 'x86'
   InstallerType = 'wix'
   InstallerUrl  = 'https://cp.intermedia.net/voice/pbx/softphonereleases/default/latest-win/intermedia-unite-ia32.msi'
 }
@@ -25,6 +26,7 @@ $ETagMSIx86 = $Object2.Headers.ETag[0]
 
 # MSI x64
 $this.CurrentState.Installer += $InstallerMSIx64 = [ordered]@{
+  Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = 'https://cp.intermedia.net/voice/pbx/softphonereleases/default/latest-win/intermedia-unite-x64.msi'
 }
