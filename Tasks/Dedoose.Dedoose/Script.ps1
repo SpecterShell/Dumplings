@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.dedoose.com/resources/articledeta
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https:' + $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
 }
 
 # Version
