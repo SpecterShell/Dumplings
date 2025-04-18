@@ -1,13 +1,13 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   # InstallerSha256
-  $InstallerMSI['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # ProductCode
-  $InstallerMSI['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
   # AppsAndFeaturesEntries
-  $InstallerMSI['AppsAndFeaturesEntries'] = @(
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
       UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
