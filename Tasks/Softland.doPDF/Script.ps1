@@ -1,48 +1,114 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.dopdf.com/update-check.html?key=141B-80AD-17E2-11E9-97B7-0CC4-7AC3-5A11'
-
-# Version
-$this.CurrentState.Version = "$($Object1.DOPDF.BUILDS.BUILD[0].MAJORVER).$($Object1.DOPDF.BUILDS.BUILD[0].MINORVER).$($Object1.DOPDF.BUILDS.BUILD[0].BUILD)"
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.dopdf.com/download/setup/dopdf-$($this.CurrentState.Version.Split('.')[0]).exe"
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  # ProductCode
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromBurn
+  # AppsAndFeaturesEntries
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+    [ordered]@{
+      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
+    }
+  )
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    try {
+function Get-ReleaseNotes {
+  try {
+    if ($Global:DumplingsStorage.Contains('doPDF') -and $Global:DumplingsStorage.doPDF.Contains($this.CurrentState.Version)) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.DOPDF.BUILDS.BUILD[0].DATE, 'dd-MM-yyyy', $null) | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.doPDF[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
 
-      $ReleaseNotes = @()
-      if ($Object1.DOPDF.BUILDS.BUILD[0].SelectSingleNode('UPDATES')) {
-        $ReleaseNotes += $Object1.DOPDF.BUILDS.BUILD[0].UPDATES.UPDATE
-      }
-      if ($Object1.DOPDF.BUILDS.BUILD[0].SelectSingleNode('FIXES')) {
-        $ReleaseNotes += $Object1.DOPDF.BUILDS.BUILD[0].FIXES.FIX
-      }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotes | Format-Text
+        Value  = $Global:DumplingsStorage.doPDF[$this.CurrentState.Version].ReleaseNotes
       }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    } else {
+      $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
     }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://download.dopdf.com/download/setup/dopdf-11.exe'
+}
+
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Last Modified
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+# Case 4: The Last Modified has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
+
+switch -Regex ($this.Check()) {
+  # Case 6: The Last Modified, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
-    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
-    } else {
-      $this.Submit()
-    }
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
+  Default {
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
 }
