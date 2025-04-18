@@ -37,11 +37,11 @@ function Get-ReleaseNotes {
 }
 
 # Installer
-$this.CurrentState.Installer += $this.CurrentState.Installer[0] = [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = 'https://www.mediahuman.com/files/YouTubeDownloader.exe'
 }
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head
 # Last Modified
 $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 
