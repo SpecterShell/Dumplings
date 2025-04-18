@@ -1,9 +1,9 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $InstallerEXE.InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
-  $InstallerEXE['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
@@ -73,11 +73,11 @@ if ($ETag -in $this.LastState.ETag) {
   return
 }
 if ($ETagMSIx86 -in $this.LastState.ETagMSIx86) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest (MSI)", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (WiX x86)", 'Info')
   return
 }
 if ($ETagMSIx64 -in $this.LastState.ETagMSIx64) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest (MSI)", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (WiX x64)", 'Info')
   return
 }
 
