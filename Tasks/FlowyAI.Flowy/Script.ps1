@@ -7,7 +7,12 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  InstallerUrl         = Join-Uri "${Prefix}$($Object1.version)/" ($Object1.files[0].url -replace '\.exe$', '.zip')
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = $Object1.files[0].url | Split-Path -Leaf
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
