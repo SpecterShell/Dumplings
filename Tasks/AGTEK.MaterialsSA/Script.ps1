@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.AGTEKDownloadPage
-$Object2 = $Object1.SelectSingleNode('//tr[contains(./td[@class="td-filename"], "Gradework")]')
+$Object2 = $Object1.SelectSingleNode('//tr[contains(./td[@class="td-filename"], "MaterialsSA")]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[@class="td-version"]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
@@ -18,12 +18,6 @@ switch -Regex ($this.Check()) {
         'M/d/yyyy',
         $null
       ).ToString('yyyy-MM-dd')
-
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = Join-Uri 'https://agtek.com/services-support/product-downloads/' $Object2.SelectSingleNode('./following-sibling::tr[contains(./td[@class="td-filename"], "Version Notes")]/td[@class="td-button"]/a').Attributes['href'].Value
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

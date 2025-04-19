@@ -1,5 +1,4 @@
-$Prefix = 'https://agtek.com/services-support/product-downloads/'
-$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object1 = $Global:DumplingsStorage.AGTEKDownloadPage
 $Object2 = $Object1.SelectSingleNode('//tr[contains(./td[@class="td-filename"], "Trackwork")]')
 
 # Version
@@ -23,7 +22,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = Join-Uri $Prefix $Object2.SelectSingleNode('./following-sibling::tr[contains(./td[@class="td-filename"], "version Notes")]/td[@class="td-button"]/a').Attributes['href'].Value
+        Value = Join-Uri 'https://agtek.com/services-support/product-downloads/' $Object2.SelectSingleNode('./following-sibling::tr[contains(./td[@class="td-filename"], "version Notes")]/td[@class="td-button"]/a').Attributes['href'].Value
       }
     } catch {
       $_ | Out-Host
