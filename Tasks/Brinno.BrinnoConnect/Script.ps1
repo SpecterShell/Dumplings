@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://brinno.com/pages/brinno-bcc2000-time-lapse-camera-command-center'
+$Object1 = $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://brinno.com/pages/brinno-bcc2000-time-lapse-camera-command-center' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('Installer') } catch {} }, 'First')[0].href
+  InstallerUrl         = $InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('Installer') } catch {} }, 'First')[0].href
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"

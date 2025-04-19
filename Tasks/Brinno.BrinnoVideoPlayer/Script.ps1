@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://brinno.com/pages/support-support-center'
+$Object1 = $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://brinno.com/pages/support-support-center' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('.zip') -and $_.href.Contains('Brinno_Video_Player') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
+  InstallerUrl = $Object1.Where({ try { $_.href.Contains('.zip') -and $_.href.Contains('Brinno_Video_Player') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 # Version

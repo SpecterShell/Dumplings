@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.revopoint3d.com/pages/support-download' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.revopoint3d.com/pages/support-download' | Join-String -Separator "`n" | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//*[@id="rs5m"]//div[@class="softwareitem" and contains(., "Windows")]')
 
 # Installer
