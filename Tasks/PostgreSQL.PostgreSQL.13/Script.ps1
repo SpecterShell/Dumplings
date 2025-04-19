@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.enterprisedb.com/downloads/postgres-postgresql-downloads' | ConvertFrom-Html
+$Object1 = $Global:DumplingsStorage.PostgreSQLDownloadPage
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
