@@ -1,5 +1,5 @@
 $Prefix = 'https://download.ej-technologies.com/jprofiler/'
-$Object1 = (Invoke-RestMethod -Uri "${Prefix}updates15.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '223' }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri "${Prefix}updates$($this.Config.WinGetIdentifier.Split('.')[2]).xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '223' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.newVersion
