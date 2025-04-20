@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://kdenlive.org/en/download/'
+$Object1 = Invoke-WebRequest -Uri 'https://kdenlive.org/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
