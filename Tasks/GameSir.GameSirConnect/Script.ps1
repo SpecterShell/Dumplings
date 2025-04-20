@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.xiaoji.com/download/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.bigeyes.com/dl-list.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[contains(@data-url, "GameSir-Connect") and contains(@data-url, ".exe")]').Attributes['data-url'].Value
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('GameSir-Connect') } catch {} }, 'First')[0].href
 }
 
 # Version
