@@ -1,12 +1,18 @@
 $Prefix = 'https://download.ej-technologies.com/jprofiler/'
-$Object1 = (Invoke-RestMethod -Uri "${Prefix}updates$($this.Config.WinGetIdentifier.Split('.')[2]).xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '223' }, 'First')[0]
+$MajorVersion = [int]$this.Config.WinGetIdentifier.Split('.')[2]
+if ((Invoke-WebRequest -Uri "${Prefix}updates${MajorVersion}.xml.nextAvailable" -MaximumRetryCount 0 -SkipHttpErrorCheck).StatusCode -eq 200) {
+  $this.Config.WinGetIdentifier = $this.Config.WinGetIdentifier -replace $MajorVersion, (++$MajorVersion)
+  $this.Log("Next major version ${MajorVersion} available", 'Warning')
+}
+$Object1 = (Invoke-RestMethod -Uri "${Prefix}updates${MajorVersion}.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '223' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.newVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.fileName
+  InstallerUrl    = Join-Uri $Prefix $Object1.fileName
+  InstallerSha256 = $Object1.sha256sum.ToUpper()
 }
 
 switch -Regex ($this.Check()) {

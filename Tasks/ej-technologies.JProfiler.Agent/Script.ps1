@@ -1,5 +1,10 @@
 $Prefix = 'https://download.ej-technologies.com/jprofiler/'
-$Object1 = Invoke-RestMethod -Uri "${Prefix}updates$($this.Config.WinGetIdentifier.Split('.')[2]).xml"
+$MajorVersion = [int]$this.Config.WinGetIdentifier.Split('.')[2]
+if ((Invoke-WebRequest -Uri "${Prefix}updates${MajorVersion}.xml.nextAvailable" -MaximumRetryCount 0 -SkipHttpErrorCheck).StatusCode -eq 200) {
+  $this.Config.WinGetIdentifier = $this.Config.WinGetIdentifier -replace $MajorVersion, (++$MajorVersion)
+  $this.Log("Next major version ${MajorVersion} available", 'Warning')
+}
+$Object1 = Invoke-RestMethod -Uri "${Prefix}updates${MajorVersion}.xml"
 # x86
 $Object2 = $Object1.updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '8219' }, 'First')[0]
 # x64
@@ -12,16 +17,18 @@ if ($Object2.newVersion -ne $Object3.newVersion) {
 }
 
 # Version
-$this.CurrentState.Version = $Object3.newVersion
+$this.CurrentState.Version = $Object2.newVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object2.fileName
+  Architecture    = 'x86'
+  InstallerUrl    = Join-Uri $Prefix $Object2.fileName
+  InstallerSha256 = $Object2.sha256sum.ToUpper()
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object3.fileName
+  Architecture    = 'x64'
+  InstallerUrl    = Join-Uri $Prefix $Object3.fileName
+  InstallerSha256 = $Object3.sha256sum.ToUpper()
 }
 
 switch -Regex ($this.Check()) {
