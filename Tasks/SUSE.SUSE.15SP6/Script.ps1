@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/microsoft/WSL/master/distributions/DistributionInfo.json').distributions.Where({ $_.PackageFamilyName -eq '46932SUSE.SUSELinuxEnterprise15SP6_022rs5jcyhyac' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.WSLDistributions.distributions.Where({ $_.PackageFamilyName -eq '46932SUSE.SUSELinuxEnterprise15SP6_022rs5jcyhyac' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/microsoft/WSL/master/distributions/DistributionInfo.json').distributions.Where({ $_.StoreAppId -eq '9PNKSF5ZN4SW' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.WSLDistributions.distributions.Where({ $_.StoreAppId -eq '9PNKSF5ZN4SW' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
