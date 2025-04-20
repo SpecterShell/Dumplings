@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://public-cdn.cloud.unitychina.cn/hub/prod/releases-win32.json').official.Where({ $_.version.StartsWith('2020.') }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.UnityCNApps.official.Where({ $_.version.StartsWith('2020.') }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.version
