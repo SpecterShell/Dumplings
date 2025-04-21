@@ -8,6 +8,10 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
     try {
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://amazoncloudwatch-agent.s3.amazonaws.com/info/latest/RELEASE_NOTES').RawContentStream)
       while (-not $Object2.EndOfStream) {
