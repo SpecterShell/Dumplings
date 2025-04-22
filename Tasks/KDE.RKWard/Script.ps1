@@ -1,12 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://rkward.kde.org/RKWard_on_Windows.html' | ConvertFrom-Html
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('/html/body/main/ul[1]/li/text()[1]').InnerText, 'RKWard (.+)').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://rkward.kde.org/rkward-on-windows/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('/html/body/main/ul[1]/li/a').Attributes['href'].Value
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
