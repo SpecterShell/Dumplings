@@ -38,7 +38,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='version_$($this.CurrentState.Version)_detail']")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='Version_$($this.CurrentState.Version)_detail']")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
