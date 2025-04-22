@@ -8,10 +8,10 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.downloads.windows.link
 }
-# $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
-#   Architecture           = 'arm64'
-#   InstallerUrl           = $Object1.downloads.windowsARM64.link
-# }
+$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.downloads.windowsARM64.link
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
 
     # InstallerSha256
     $InstallerX64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windows.checksumLink).Split()[0].ToUpper()
-    # $InstallerARM64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsARM64.checksumLink).Split()[0].ToUpper()
+    $InstallerARM64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsARM64.checksumLink).Split()[0].ToUpper()
 
     $this.Print()
     $this.Write()
