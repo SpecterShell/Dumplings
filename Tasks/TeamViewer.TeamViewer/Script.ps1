@@ -31,7 +31,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json"
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
       # ReleaseNotes (en-US)
       $Task.CurrentState.Locale += [ordered]@{
@@ -54,7 +54,7 @@ $($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
     }
 
     try {
-      $Object3 = Invoke-RestMethod -Uri "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json"
+      $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
       # ReleaseNotes (de-DE)
       $Task.CurrentState.Locale += [ordered]@{
