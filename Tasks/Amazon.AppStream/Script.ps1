@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = 'https://clients.amazonappstream.com/installers/windows/latest/AmazonAppStreamClientSetup.exe'
+  InstallerUrl  = "https://clients.amazonappstream.com/installers/windows/AmazonAppStreamClientSetup_$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
