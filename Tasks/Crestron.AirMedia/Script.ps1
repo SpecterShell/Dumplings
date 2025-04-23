@@ -6,15 +6,15 @@ $this.CurrentState.Version = $Object1.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = "https://crestronairmedia.blob.core.windows.net/blob/packages/win/released/AirMedia_$($this.CurrentState.Version)_deployable.exe"
+  InstallerUrl  = "https://www.crestron.com/software_files_public/am-100/airmedia_windows_$($this.CurrentState.Version)_deployable.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://crestronairmedia.blob.core.windows.net/blob/packages/win/released/AirMedia_$($this.CurrentState.Version).msi"
+  InstallerUrl  = "https://www.crestron.com/software_files_public/am-100/airmedia_windows_$($this.CurrentState.Version).msi"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'burn'
-  InstallerUrl  = "https://crestronairmedia.blob.core.windows.net/blob/packages/win/released/AirMedia_$($this.CurrentState.Version)_unified.exe"
+  InstallerUrl  = "https://www.crestron.com/software_files_public/am-100/airmedia_windows_$($this.CurrentState.Version)_unified.exe"
 }
 
 switch -Regex ($this.Check()) {
