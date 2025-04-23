@@ -1,30 +1,22 @@
 $RepoOwner = 'element-hq'
 $RepoName = 'element-desktop'
 
-# x86
-$Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/ia32/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
-
 # x64
-$Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # arm64
-$Object3 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
-if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.Version } -Unique).Count -gt 1) {
-  $this.Log("x86 version: $($Object1.Version)")
-  $this.Log("x64 version: $($Object2.Version)")
-  $this.Log("arm64 version: $($Object3.Version)")
+if ($Object1.Version -ne $Object2.Version) {
+  $this.Log("x64 version: $($Object1.Version)")
+  $this.Log("arm64 version: $($Object2.Version)")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Object2.Version
+$this.CurrentState.Version = $Object1.Version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://packages.element.io/desktop/install/win32/ia32/Element Setup $($this.CurrentState.Version).exe"
-}
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://packages.element.io/desktop/install/win32/x64/Element Setup $($this.CurrentState.Version).exe"
@@ -37,17 +29,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object3.published_at.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
 
-      if (-not [string]::IsNullOrWhiteSpace($Object3.body)) {
+      if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.body | Convert-MarkdownToHtml | Get-TextContent | Format-Text
+          Value  = $Object2.body | Convert-MarkdownToHtml | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -56,7 +48,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $Object3.html_url
+        Value = $Object2.html_url
       }
     } catch {
       $_ | Out-Host
