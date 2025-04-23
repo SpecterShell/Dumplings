@@ -12,6 +12,10 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = "https://crestronairmedia.blob.core.windows.net/blob/packages/win/released/AirMedia_$($this.CurrentState.Version).msi"
 }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'burn'
+  InstallerUrl  = "https://crestronairmedia.blob.core.windows.net/blob/packages/win/released/AirMedia_$($this.CurrentState.Version)_unified.exe"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
