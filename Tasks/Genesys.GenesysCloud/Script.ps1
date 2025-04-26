@@ -23,6 +23,10 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://help.mypurecloud.com/release-notes-home/genesys-cloud-for-windows-desktop-app-release-notes/' | ConvertFrom-Html
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'accordion') and contains(./div[@class='accordion__header'], '$($this.CurrentState.Version)')]")
