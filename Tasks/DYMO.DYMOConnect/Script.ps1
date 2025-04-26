@@ -2,7 +2,7 @@ $Object1 = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Connect for 
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Value.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 11') }, 'First')[0].Value | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.Value.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 11') }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
 }
 
 # Version
