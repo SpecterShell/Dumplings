@@ -15,10 +15,9 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.hms-networks.com/support/general-downloads'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('.msi') -and $_.href.Contains('talk2m-connection-checker') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
+  InstallerUrl = $Global:DumplingsStorage.HMSDownloadPage.Links.Where({ try { $_.href.Contains('.msi') -and $_.href.Contains('talk2m-connection-checker') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
