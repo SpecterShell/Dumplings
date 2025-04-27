@@ -1,0 +1,27 @@
+Version: 4.67.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.67.2/fleetctl_v4.67.2_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.67.2_windows_amd64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+- Architecture: arm64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.67.2/fleetctl_v4.67.2_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.67.2_windows_arm64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed software deduplication when migrating from < 4.67.0 for cases where exactly two software entries would be merged into one, and for cases where the same bundle ID has more than one version, each with more than one that needs to be converted into a single software entry.
+    - Included host software installed paths migration in the above database migration, instead of waiting for software ingestion to repopulate/clean up affected rows.
+    Fleet's agent
+    The following version of Fleet's agent (fleetd) support the latest changes to Fleet:
+    1. orbit-v1.40.1
+    2. fleet-desktop-v1.41.0 (included with Orbit)
+    3. fleetd-chrome-v1.3.1
+    While newer versions of fleetd still function with older versions of the Fleet server (and vice versa), Fleet does not actively test these scenarios and some newer features won't be available.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fleetdm/fleet/releases/tag/fleet-v4.67.2
+ReleaseTime: 2025-04-27T18:13:58.0000000Z
