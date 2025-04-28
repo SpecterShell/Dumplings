@@ -25,8 +25,8 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
