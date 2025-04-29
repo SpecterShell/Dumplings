@@ -1,4 +1,4 @@
-$Prefix = 'https://api.pixso.net/api/upgrade/desktop/bosyun/'
+$Prefix = 'https://pixso.net/download/package/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
