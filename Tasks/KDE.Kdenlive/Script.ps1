@@ -23,34 +23,33 @@ switch -Regex ($this.Check()) {
         Value  = 'https://docs.kdenlive.org/zh_CN/more_information/whats_new.html'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://kdenlive.org/en/feed/').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://kdenlive.org/news/index.xml').Where({ $_.link.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
-        }
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
           Value = $Object2[0].link
         }
-      } else {
-        $Object3 = Invoke-WebRequest -Uri 'https://docs.kdenlive.org/en/more_information/whats_new.html' | ConvertFrom-Html
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-        $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='versionadded' and contains(./p, '$($this.CurrentState.Version -replace '(\.0)+$')')]")
-        if ($ReleaseNotesNode) {
-          # ReleaseNotes (en-US)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNode.SelectNodes('./p[1]/following-sibling::node()') | Get-TextContent | Format-Text
-          }
-        } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://docs.kdenlive.org/en/more_information/whats_new.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='versionadded' and contains(./p, '$($this.CurrentState.Version -replace '(\.0)+$')')]")
+      if ($ReleaseNotesNode) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode.SelectNodes('./p[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
