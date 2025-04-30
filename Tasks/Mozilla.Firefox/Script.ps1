@@ -104,11 +104,7 @@ switch -Regex ($this.Check()) {
           }
         }
       } else {
-        if ($Locale -eq 'en-US') {
-          $this.Config.WinGetIdentifier = $WinGetIdentifierPrefix
-        } else {
-          $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.${Locale}"
-        }
+        $this.Config.WinGetIdentifier = $Locale -eq 'en-US' ? $WinGetIdentifierPrefix : "${WinGetIdentifierPrefix}.${Locale}"
 
         foreach ($Arch in @('x86', 'x64', 'arm64')) {
           # Installer
