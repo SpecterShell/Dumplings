@@ -65,6 +65,8 @@ switch -Regex ($this.Check()) {
     $RawVersion = $InstallerFile | Read-FileVersionRawFromExe
     $this.CurrentState.RawVersion = "$($RawVersion.Major)$($RawVersion.Minor)$($RawVersion.Build)$($RawVersion.Revision.ToString('D3'))"
 
+    $this.InstallerFiles[$this.CurrentState.Installer[1].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[1].InstallerUrl
+
     $this.Print()
     $this.Write()
   }
