@@ -29,23 +29,29 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $null
+        Value = 'https://okular.kde.org/news/'
+      }
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://okular.kde.org/zh-cn/news/'
       }
 
-      $ReleaseNotesUrl = "https://okular.kde.org/news/okular_$($VersionMatches.Groups['ShortVersion'].Value)_released/"
-      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object3 = (Invoke-RestMethod -Uri 'https://okular.kde.org/index.xml').Where({ $_.title.Contains('24.12') }, 'First')
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object3.SelectNodes("//article/node()[not(contains(@class, 'jumbotron'))]") | Get-TextContent | Format-Text
-      }
-
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
+      if ($Object3) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object3[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $Object3[0].link
+        }
       }
     } catch {
       $_ | Out-Host
