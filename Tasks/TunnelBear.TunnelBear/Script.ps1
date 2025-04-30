@@ -5,10 +5,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://tunnelbear.s3.amazonaws.com/downloads
 $this.CurrentState.Version = $Object1.item.version
 
 # Installer
-# The installer file in ./public is older than the one in ./
+# The installer file in ./supportedOS is older than the one in ./
 # Use the latter one here
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.item.url.Replace('/public', '')
+  InstallerUrl = $Object1.item.url.Replace('/supportedOS', '')
 }
 
 switch -Regex ($this.Check()) {
@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.item.changelog.Replace('/public', '')
+        Value = $ReleaseNotesUrl = $Object1.item.changelog.Replace('/supportedOS', '')
       }
     } catch {
       $_ | Out-Host
