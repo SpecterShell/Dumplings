@@ -1,0 +1,80 @@
+# Version
+$this.CurrentState.Version = $Global:DumplingsStorage.pConPlannerMetadata.'pCon.planner Pro64'.GetEnumerator().Where({ $_.Value -eq 'Current' }, 'Last')[0].Name
+$ShortVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_Pro_setup.exe"
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Features_en.pdf"
+      }
+
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'Documentations'
+        Value = @(
+          [ordered]@{
+            DocumentLabel = 'Shortcuts'
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_en.pdf"
+          }
+          [ordered]@{
+            DocumentLabel = 'Editions'
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_en.pdf"
+          }
+        )
+      }
+
+      # Documentations (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = '文档'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = '快捷键'
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_en.pdf"
+          }
+          [ordered]@{
+            DocumentLabel = '版本'
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_en.pdf"
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
+      $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include '*.msi' -Recurse | Select-Object -First 1
+      # ProductCode
+      $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+      # AppsAndFeaturesEntries
+      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          DisplayName   = $InstallerFile2 | Read-ProductNameFromMsi
+          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+          InstallerType = 'msi'
+        }
+      )
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}
