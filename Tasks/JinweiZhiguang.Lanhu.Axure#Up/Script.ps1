@@ -1,18 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://lanhuapp.com/api/project/app_version?apptype=lanhu_axure_windows'
+$Prefix = 'https://alistatic.lanhuapp.com/Axure/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = $Object1.result.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.result.url | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.result.create_time | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
