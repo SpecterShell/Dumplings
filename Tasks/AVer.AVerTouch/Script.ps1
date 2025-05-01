@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.OTA.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.OTA.Path
+  InstallerUrl = $Object1.OTA.Path | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
