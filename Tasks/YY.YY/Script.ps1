@@ -12,7 +12,7 @@ if ($StatusCode -eq 204) {
   return
 }
 
-$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$(($Object1 | Split-LineEndings)[0])"
+$Object2 = Invoke-RestMethod -Uri "https://forceupdate.yy.com$(($Object1 | Split-LineEndings)[0])"
 
 # Version
 $this.CurrentState.Version = $Object2.Product.Version.Dir

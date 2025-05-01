@@ -1,4 +1,4 @@
-# $Object1 = Invoke-WebRequest -Uri 'http://www.flowjo.com/version.txt'
+# $Object1 = Invoke-WebRequest -Uri 'https://www.flowjo.com/version.txt'
 $Object1 = Invoke-WebRequest -Uri 'https://flowjo.com/flowjo/download'
 
 $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href

@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://download.easeus.com/api2/index.php/Apicp/Drwdl202004/index/' -Method Post -Body @{
+$Object1 = Invoke-RestMethod -Uri 'https://download.easeus.com/api2/index.php/Apicp/Drwdl202004/index/' -Method Post -Body @{
   exeNumber = 100000
   pid       = 5
   version   = 'free'

@@ -1,12 +1,12 @@
 # Download
-$Object1 = Invoke-WebRequest -Uri 'http://qq.pinyin.cn/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://qq.pinyin.cn/' | ConvertFrom-Html
 $Version1 = [regex]::Match(
   $Object1.SelectSingleNode('//*[@id="banner_box_pinyin"]/div[2]/div[2]/p[1]').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
 # Upgrade
-$Object2 = Invoke-RestMethod -Uri 'http://config.android.qqpy.sogou.com/update?fr=pypc' -Method Post -Body (
+$Object2 = Invoke-RestMethod -Uri 'https://config.android.qqpy.sogou.com/update?fr=pypc' -Method Post -Body (
   @{
     'CSoftID'     = 14
     'CVer'        = '6.2.5507.400'
@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
           '(\d{4}\.\d{1,2}\.\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        $Object3 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
+        $Object3 = Invoke-RestMethod -Uri 'https://qq.pinyin.cn/js/history_info_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
         $ReleaseNotesObject = $Object3.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) }, 'First')
         if ($ReleaseNotesObject) {

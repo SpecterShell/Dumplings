@@ -12,7 +12,7 @@ if ($Object1.code -eq 404) {
   return
 }
 
-$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
+$Object2 = Invoke-RestMethod -Uri "https://forceupdate.yy.com$($Object1.data.configPath)"
 
 # Version
 $this.CurrentState.Version = $Object2.Product.Version.VerNo

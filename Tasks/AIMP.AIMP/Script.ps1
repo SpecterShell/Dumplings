@@ -1,12 +1,12 @@
 # x86
-$Object1 = Invoke-RestMethod -Uri 'http://update.aimp.ru/' -Body @{
+$Object1 = Invoke-RestMethod -Uri 'https://update.aimp.ru/' -Body @{
   id = '1'
   b  = $this.LastState.Contains('Build') ? $this.LastState.Build : '2563'
   p  = 'aimp'
   u  = '1'
 }
 # x64
-$Object2 = Invoke-RestMethod -Uri 'http://update.aimp.ru/' -Body @{
+$Object2 = Invoke-RestMethod -Uri 'https://update.aimp.ru/' -Body @{
   id = '1'
   b  = $this.LastState.Contains('Build') ? $this.LastState.Build : '2563'
   p  = 'aimp64'

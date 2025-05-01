@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://3dflow.net/zephyr-network/networkMessage.php' -Method Post -Body @{
+$Object1 = Invoke-RestMethod -Uri 'https://3dflow.net/zephyr-network/networkMessage.php' -Method Post -Body @{
   action       = 'getInstaller'
   architecture = 'x64'
   product      = '3DF Zephyr Free'
@@ -22,7 +22,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-RestMethod -Uri 'http://3dflow.net/zephyr-network/networkMessage.php' -Method Post -Body @{
+      $Object2 = Invoke-RestMethod -Uri 'https://3dflow.net/zephyr-network/networkMessage.php' -Method Post -Body @{
         action       = 'checkUpdates'
         architecture = 'x64'
         product      = '3DF Zephyr Free'

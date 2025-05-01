@@ -15,7 +15,7 @@ if ($Object1.code -ne 0) {
   throw "The server returned an error: $($Object1.message)"
 }
 
-$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
+$Object2 = Invoke-RestMethod -Uri "https://forceupdate.yy.com$($Object1.data.configPath)"
 
 # Version
 $this.CurrentState.Version = $Object2.Product.Version.VerNo

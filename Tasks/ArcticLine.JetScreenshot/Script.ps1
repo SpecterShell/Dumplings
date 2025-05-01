@@ -1,6 +1,6 @@
 $Object1 = @"
 <xml>
-$((Invoke-WebRequest -Uri 'http://www.jetScreenshot.com/getnews.php' -Method Post -Body @{ UserID = '' } | Read-ResponseContent -Encoding 'windows-1252').Replace('<br>', "`n"))
+$((Invoke-WebRequest -Uri 'https://www.jetScreenshot.com/getnews.php' -Method Post -Body @{ UserID = '' } | Read-ResponseContent -Encoding 'windows-1252').Replace('<br>', "`n"))
 </xml>
 "@ | ConvertFrom-Xml
 

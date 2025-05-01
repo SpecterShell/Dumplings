@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://api.ishell.cc/versions/0'
+$Object1 = Invoke-RestMethod -Uri 'https://api.ishell.cc/versions/0'
 
 # Version
 $this.CurrentState.Version = $Object1.data.vers

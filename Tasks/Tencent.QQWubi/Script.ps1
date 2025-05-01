@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'http://qq.pinyin.cn/wubi/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://qq.pinyin.cn/wubi/' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri 'http://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
+      $Object2 = Invoke-RestMethod -Uri 'https://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
       $ReleaseNotesObject = $Object2.vHistory.Where({ $_.version.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesObject) {

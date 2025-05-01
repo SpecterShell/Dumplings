@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://download.aver.com/AVerTouchWindows/check4Update/update.cfg' | ConvertFrom-Ini
+$Object1 = Invoke-RestMethod -Uri 'https://download.aver.com/AVerTouchWindows/check4Update/update.cfg' | ConvertFrom-Ini
 
 # Version
 $this.CurrentState.Version = $Object1.OTA.Version

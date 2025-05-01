@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['360Zip'] = $OldReleases = [ordered]@{}
 }
 
-$Path = Get-TempFile -Uri 'http://iup.360safe.com/iv3/pc/360zip/360zipupd_manual.cab'
+$Path = Get-TempFile -Uri 'https://iup.360safe.com/iv3/pc/360zip/360zipupd_manual.cab'
 expand.exe -R $Path | Out-Host
 $Object1 = Join-Path $Path '..' '360zipupd_manual.ini' -Resolve | Get-Item | Get-Content -Raw -Encoding 'gb18030' | ConvertFrom-Ini
 

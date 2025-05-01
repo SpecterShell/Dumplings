@@ -1,4 +1,4 @@
-$Prefix = 'http://yueliu-mobile.oss-cn-shanghai.aliyuncs.com/prod/'
+$Prefix = 'https://yueliu-mobile.oss-cn-shanghai.aliyuncs.com/prod/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 

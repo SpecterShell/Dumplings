@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://www.c3excel.com/datalink/Version.html'
+$Object1 = Invoke-RestMethod -Uri 'https://www.c3excel.com/datalink/Version.html'
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1, '\[version\](\d+(?:\.\d+)+)\[/version\]').Groups[1].Value

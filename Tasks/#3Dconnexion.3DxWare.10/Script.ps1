@@ -10,10 +10,10 @@ $Object1 = Invoke-RestMethod -Uri 'http://updatecheck.3dconnexion.com/AvailableS
 # Version
 $this.CurrentState.Version = $Object1.AvailableSoftware.Software.Where({ $_.Id -eq '3DxWare64' }, 'First')[0].'_3DxWareVersion'
 
-$Object2 = Invoke-RestMethod -Uri ($Object1.AvailableSoftware.ProductNewsURL | Split-Uri -LeftPart Path)
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    $Object2 = Invoke-RestMethod -Uri ($Object1.AvailableSoftware.ProductNewsURL | Split-Uri -LeftPart Path)
+
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
