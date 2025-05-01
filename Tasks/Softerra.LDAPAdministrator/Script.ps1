@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $Object1.latestversion.releasenotesurl
+        Value = $Object1.latestversion.releasenotesurl | ConvertTo-Https
       }
     } catch {
       $_ | Out-Host

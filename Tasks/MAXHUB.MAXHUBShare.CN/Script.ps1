@@ -14,7 +14,7 @@ $this.CurrentState.Version = $Object1.targetVersionCode
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.downloadUrl
+  InstallerUrl = $Object1.downloadUrl | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

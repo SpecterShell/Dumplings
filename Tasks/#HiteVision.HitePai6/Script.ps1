@@ -20,7 +20,7 @@ $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.firewareurl
+  InstallerUrl = $Object1.data.firewareurl | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

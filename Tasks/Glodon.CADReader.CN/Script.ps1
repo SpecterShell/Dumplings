@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.body.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $Object1.body.url
+  InstallerUrl           = $Object1.body.url | ConvertTo-Https
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "CAD快速看图v$($this.CurrentState.Version)"
@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.body.pageUrl
+        Value = $ReleaseNotesUrl = $Object1.body.pageUrl | ConvertTo-Https
       }
     } catch {
       $_ | Out-Host

@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://sedlog.rhul.ac.uk/download.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href | ConvertTo-Https
 }
 
 # Version

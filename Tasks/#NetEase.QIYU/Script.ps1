@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['QIYU'] = $OldReleases = [ordered]@{}
 }
 
-$Prefix = 'http://res.qiyukf.net/qiyu-desktop/prod/'
+$Prefix = 'https://res.qiyukf.net/qiyu-desktop/prod/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
 

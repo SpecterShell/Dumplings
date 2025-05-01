@@ -23,7 +23,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale      = 'zh-CN'
-  InstallerUrl         = $Object2.platforms.'windows-x86_64'.url
+  InstallerUrl         = $Object2.platforms.'windows-x86_64'.url | ConvertTo-Https
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "Cubox_$($this.CurrentState.Version)_x64_zh-CN.msi"

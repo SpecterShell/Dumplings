@@ -23,7 +23,7 @@ $this.CurrentState.Version = [regex]::Match(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object2.root.files.file[1].spath
+  InstallerUrl = Join-Uri $Prefix $Object2.root.files.file[1].spath | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
