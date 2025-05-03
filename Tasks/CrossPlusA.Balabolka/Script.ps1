@@ -1,5 +1,5 @@
 # Version
-$this.CurrentState.Version = (Invoke-WebRequest -Uri 'https://www.cross-plus-a.com/balabolka.txt').Content.Trim()
+$this.CurrentState.Version = (Invoke-WebRequest -Uri 'http://www.cross-plus-a.com/balabolka.txt').Content.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
