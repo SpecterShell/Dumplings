@@ -1,5 +1,5 @@
 $RepoOwner = 'xishang0128'
-$RepoName = 'clash-meta-party'
+$RepoName = 'sparkle'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
