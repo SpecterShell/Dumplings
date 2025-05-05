@@ -7,7 +7,7 @@ $this.CurrentState.Version = $RawVersion.Insert(5, '.').Insert(2, '.')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
+  Architecture = 'x86'
   InstallerUrl = "https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/${RawVersion}/AcroRdrDC${RawVersion}_MUI.exe"
 }
 
