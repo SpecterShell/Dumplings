@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl = "https://ime.gtimg.com/pc/build/_sogou_pinyin_[Release]_$($this.CurrentState.RealVersion)_0.exe"
+      InstallerUrl = "https://ime.gtimg.com/pc/build/_sogou_pinyin_$($this.CurrentState.RealVersion)_0.exe"
     }
     Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
