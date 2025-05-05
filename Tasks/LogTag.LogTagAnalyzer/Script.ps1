@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://logtagrecorders.com/updates/logtagsw.ver' | ConvertFrom-Ini
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://logtagrecorders.com/updates/logtagsw.ver' | Join-String -Separator "`n" | ConvertFrom-Ini
 
 # Version
 $this.CurrentState.Version = $Object1.Analyzer_3.Version
