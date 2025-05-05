@@ -4,25 +4,45 @@ $Object1 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/fxsound2/fx
 $this.CurrentState.Version = $Object1.Update.ProductVersion
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Update.URL
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/refs/tags/v$($this.CurrentState.Version)/release/fxsound_setup.exe"
+}
+$this.CurrentState.Installer += $InstallerArm64 = [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/refs/tags/v$($this.CurrentState.Version)/release/arm64/fxsound_setup.arm64.exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    $InstallerFileExtracted = New-TempFolder
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'fxsound.x64.msi'
-    # AppsAndFeaturesEntries + ProductCode
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+    $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $InstallerX64FileExtracted = New-TempFolder
+    Start-Process -FilePath $InstallerX64File -ArgumentList @('/extract', $InstallerX64FileExtracted) -Wait
+    $InstallerX64File2 = Join-Path $InstallerX64FileExtracted 'fxsound.x64.msi'
+    # ProductCode
+    $InstallerX64['ProductCode'] = $InstallerX64File2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        UpgradeCode   = $InstallerX64File2 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerX64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+
+    $this.InstallerFiles[$InstallerArm64.InstallerUrl] = $InstallerArm64File = Get-TempFile -Uri $InstallerArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $InstallerArm64FileExtracted = New-TempFolder
+    Start-Process -FilePath $InstallerArm64File -ArgumentList @('/extract', $InstallerArm64FileExtracted) -Wait
+    $InstallerArm64File2 = Join-Path $InstallerArm64FileExtracted 'fxsound.arm64.msi'
+    # ProductCode
+    $InstallerArm64['ProductCode'] = $InstallerArm64File2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $InstallerArm64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerArm64File2 | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
+    Remove-Item -Path $InstallerArm64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/fxsound2/fxsound-app/HEAD/release/changelog.txt').RawContentStream)
