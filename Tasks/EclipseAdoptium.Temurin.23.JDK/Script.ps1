@@ -20,11 +20,11 @@ $this.CurrentState.Version = $VersionX64
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.binary.installer.link
+  InstallerUrl = $Object2.binary.installer.link | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object3.binary.installer.link
+  InstallerUrl = $Object3.binary.installer.link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

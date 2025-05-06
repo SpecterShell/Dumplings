@@ -8,7 +8,7 @@ $this.CurrentState.Version = "$($Object2.version.major).$($Object2.version.minor
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.binary.installer.link
+  InstallerUrl = $Object2.binary.installer.link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

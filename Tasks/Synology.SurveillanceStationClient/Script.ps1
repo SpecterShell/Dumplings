@@ -9,7 +9,7 @@ $this.CurrentState.RealVersion = "$($Object1.version.major).$($Object1.version.m
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.installer.url -replace '\.zip$', '.exe'
+  InstallerUrl = $Object1.installer.url -replace '\.zip$', '.exe' | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerLink.OuterHtml, '(\d+(?:\.
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerLink.href
+  InstallerUrl = $InstallerLink.href | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

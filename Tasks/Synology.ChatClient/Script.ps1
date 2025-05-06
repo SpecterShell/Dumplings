@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.path
+  InstallerUrl = $Object1.path | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

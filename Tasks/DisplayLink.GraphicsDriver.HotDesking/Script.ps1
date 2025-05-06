@@ -13,7 +13,7 @@ $Object3 = Invoke-WebRequest -Uri "${Prefix}$($Object2.SelectSingleNode('.//a[@c
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "${Prefix}$($Object3.SelectSingleNode('//a[@download]').Attributes['href'].Value)"
+  InstallerUrl = "${Prefix}$($Object3.SelectSingleNode('//a[@download]').Attributes['href'].Value)" | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

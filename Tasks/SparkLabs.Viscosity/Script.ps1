@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.update.app.info.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.update.app.info.updateUrl
+  InstallerUrl = $Object1.update.app.info.updateUrl | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

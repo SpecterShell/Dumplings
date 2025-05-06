@@ -15,7 +15,7 @@ $this.CurrentState.VersionHash = $Object1.version
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
   Scope           = 'user'
-  InstallerUrl    = $Object1.url
+  InstallerUrl    = $Object1.url | ConvertTo-UnescapedUri
   InstallerSha256 = $Object1.sha256hash.ToUpper()
 }
 

@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.octoparse.com/download/latest?os=win'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.octoparse.com/download/latest?os=win' | ConvertTo-UnescapedUri
 }
 
 # Version

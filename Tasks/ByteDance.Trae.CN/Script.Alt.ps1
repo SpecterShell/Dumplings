@@ -6,14 +6,14 @@ $this.CurrentState.Version = $Object1.data.manifest.win32.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'va' }, 'First')[0].x64
+  InstallerUrl = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'va' }, 'First')[0].x64 | ConvertTo-UnescapedUri
 }
 # $this.CurrentState.Installer += [ordered]@{
-#   InstallerUrl = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'sg' }, 'First')[0].x64
+#   InstallerUrl = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'sg' }, 'First')[0].x64 | ConvertTo-UnescapedUri
 # }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'cn' }, 'First')[0].x64
+  InstallerUrl    = $Object1.data.manifest.win32.download.Where({ $_.region -eq 'cn' }, 'First')[0].x64 | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

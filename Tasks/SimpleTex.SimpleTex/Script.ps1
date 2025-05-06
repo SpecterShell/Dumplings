@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

@@ -9,7 +9,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://h3c-magic.oss-cn-hangzhou.aliyuncs.com/apk/H3C%20Share%20Client%20for%20Windows.exe'
+  InstallerUrl = 'https://h3c-magic.oss-cn-hangzhou.aliyuncs.com/apk/H3C Share Client for Windows.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

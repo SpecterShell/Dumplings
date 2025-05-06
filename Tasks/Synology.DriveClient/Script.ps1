@@ -18,22 +18,22 @@ $this.CurrentState.Version = $VersionX64
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'msi'
-  InstallerUrl  = 'https:' + $Object1.installer.url
+  InstallerUrl  = 'https:' + $Object1.installer.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'nullsoft'
-  InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.msi$', '.exe'
+  InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.msi$', '.exe' | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
-  InstallerUrl  = 'https:' + $Object2.installer.url
+  InstallerUrl  = 'https:' + $Object2.installer.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = 'https:' + $Object2.installer.url -replace '\.msi$', '.exe'
+  InstallerUrl  = 'https:' + $Object2.installer.url -replace '\.msi$', '.exe' | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
