@@ -6,7 +6,15 @@ $this.CurrentState.Version = $Object1.version.number
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
+  Scope        = 'user'
   InstallerUrl = "https://downloads.dbeaver.net/enterprise/$($this.CurrentState.Version)/dbeaver-ee-$($this.CurrentState.Version)-x86_64-setup.exe"
+  ProductCode  = 'DBeaverEE (current user)'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = "https://downloads.dbeaver.net/enterprise/$($this.CurrentState.Version)/dbeaver-ee-$($this.CurrentState.Version)-x86_64-setup.exe"
+  ProductCode  = 'DBeaverEE'
 }
 
 switch -Regex ($this.Check()) {
