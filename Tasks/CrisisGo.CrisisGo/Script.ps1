@@ -94,14 +94,18 @@ if ($this.Status.Contains('New')) {
 }
 
 if ($ETag -in $this.LastState.ETag) {
-  # The ETag is not changed, so let's check if the alternative installer URL exists
+  # The ETag is unchanged, so let's check if the alternative installer URL exists
   if ($this.LastState.Mode -eq $true) {
     # If the alternative installer URL exists, don't fallback to the main one
     $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
     return
   } else {
+    # ETag
+    $this.CurrentState.ETag = $this.LastState.ETag
     # Version
     $this.CurrentState.Version = $this.LastState.Version
+    # InstallerSha256
+    $this.CurrentState.InstallerSha256 = $this.LastState.InstallerSha256
 
     try {
       $Uri2 = "https://crisisgoapp.s3.amazonaws.com/Windows/CrisisGo_$($this.CurrentState.Version.Split('.')[0..2] -join '.').msi"
@@ -110,18 +114,16 @@ if ($ETag -in $this.LastState.ETag) {
       $this.CurrentState.Installer += [ordered]@{
         InstallerUrl = $Uri2
       }
-      # InstallerSha256
-      $this.CurrentState.InstallerSha256 = $this.LastState.InstallerSha256
       # Mode
       $this.CurrentState.Mode = $true
 
-      # Case 2: Detected an alternative installer URL
+      # Case 2: The ETag is unchanged, but an alternative installer URL is detected
       $this.Log('An alternative installer URL is detected', 'Info')
       $this.Print()
       $this.Write()
       return
     } catch {
-      # Case 3: The ETag is not changed, and the alternative installer URL doesn't exist
+      # Case 3: The ETag is unchanged, and the alternative installer URL doesn't exist
       return
     }
   }
@@ -134,18 +136,16 @@ if ($ETag -in $this.LastState.ETag) {
   $this.CurrentState.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 
   if ($this.CurrentState.InstallerSha256 -eq $this.LastState.InstallerSha256) {
-    $this.Log('The ETag has changed, but the hash is not', 'Info')
+    $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
     # ETag
     $this.CurrentState.ETag = $this.LastState.ETag + $ETag
 
     if ($this.LastState.Mode -eq $true) {
-      # Case 4: The ETag has changed, but the hash is not, and the alternative installer URL already exists
+      # Case 4: The ETag has changed, but the SHA256 is not, and the alternative installer URL already exists
       $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
 
       # Installer
-      $this.CurrentState.Installer += [ordered]@{
-        InstallerUrl = $this.LastState.Installer[0].InstallerUrl
-      }
+      $this.CurrentState.Installer = $this.LastState.Installer
       # Mode
       $this.CurrentState.Mode = $true
 
@@ -153,7 +153,7 @@ if ($ETag -in $this.LastState.ETag) {
       return
     } else {
       try {
-        # Case 5: The ETag has changed, but the hash is not, while an alternative installer URL is detected
+        # Case 5: The ETag has changed, but the SHA256 is not, while an alternative installer URL is detected
         $Uri2 = "https://crisisgoapp.s3.amazonaws.com/Windows/CrisisGo_$($this.CurrentState.Version.Split('.')[0..2] -join '.').msi"
         $null = Invoke-WebRequest -Uri $Uri2 -Method Head
         # Installer
@@ -168,7 +168,7 @@ if ($ETag -in $this.LastState.ETag) {
         $this.Write()
         return
       } catch {
-        # Case 6: The ETag has changed, but the hash is not, and the alternative installer URL doesn't exist
+        # Case 6: The ETag has changed, but the SHA256 is not, and the alternative installer URL doesn't exist
 
         # Installer
         $this.CurrentState.Installer += [ordered]@{
@@ -188,14 +188,13 @@ if ($ETag -in $this.LastState.ETag) {
         return
       }
     }
-
   } else {
-    $this.Log('Both the ETag and the hash have changed', 'Info')
+    $this.Log('Both the ETag and the SHA256 have changed', 'Info')
     # ETag
     $this.CurrentState.ETag = @($ETag)
 
     try {
-      # The ETag and the hash have changed, while the alternative installer URL exists
+      # The ETag and the SHA256 have changed, while the alternative installer URL exists
       $Uri2 = "https://crisisgoapp.s3.amazonaws.com/Windows/CrisisGo_$($this.CurrentState.Version.Split('.')[0..2] -join '.').msi"
       $null = Invoke-WebRequest -Uri $Uri2 -Method Head
       # Installer
@@ -205,7 +204,7 @@ if ($ETag -in $this.LastState.ETag) {
       # Mode
       $this.CurrentState.Mode = $true
     } catch {
-      # The ETag and the hash have changed, but the alternative installer URL doesn't exist
+      # The ETag and the SHA256 have changed, but the alternative installer URL doesn't exist
       $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
       # Installer
       $this.CurrentState.Installer += [ordered]@{
@@ -230,13 +229,13 @@ if ($ETag -in $this.LastState.ETag) {
       $this.Write()
       $this.Message()
     }
-    # Case 9: The ETag, the hash and the version have changed
+    # Case 9: The ETag, the SHA256 and the version have changed
     'Updated|Rollbacked' {
       $this.Submit()
     }
-    # Case 7: The ETag and the hash have changed, but the version is not
+    # Case 7: The ETag and the SHA256 have changed, but the version is not
     Default {
-      $this.Log('The ETag and the hash have changed, but the version is not', 'Info')
+      $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
       $this.Config.IgnorePRCheck = $true
       $this.Print()
       $this.Write()
