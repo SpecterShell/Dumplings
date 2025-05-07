@@ -12,9 +12,6 @@ if ($Object1.productVersion -ne $Object2.productVersion) {
 # Version
 $this.CurrentState.Version = $Object1.windsurfVersion
 
-# RealVersion
-$this.CurrentState.RealVersion = $Object1.productVersion
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
