@@ -10,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://dl.draftable.com/desktop/DraftableDesktopSetup-$($this.CurrentState.Version).msi"
+  InstallerUrl  = "https://dl.draftable.com/desktop/DraftableDesktopSystem-$($this.CurrentState.Version).msi"
 }
 
 switch -Regex ($this.Check()) {
