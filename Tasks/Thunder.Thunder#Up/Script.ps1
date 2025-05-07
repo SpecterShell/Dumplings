@@ -1,15 +1,37 @@
-$Object1 = Invoke-RestMethod -Uri 'https://client-version.office.k8s.xunlei.cn/ci/v1/public/versionManage/versions/latest?clientId=XW-G4v1H72tgfJym'
+$Object1 = Invoke-RestMethod -Uri 'https://upgrade-pc-ssl.xunlei.com/pc' -Body @{
+  v   = $this.Status.Contains('New') ? '12.1.2' : $this.LastState.Version
+  os  = '10'
+  t   = '2'
+  lng = '0804'
+}
+
+if ($Object1.code -ne 0) {
+  $this.Log($Object1.content, 'Warning')
+  return
+}
 
 # Version
-$this.CurrentState.Version = $Object1.data.versionName
+$this.CurrentState.Version = $Object1.data.v
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.officialUrlThunderPcOffline
+  InstallerUrl = $Object1.data.url.Replace('upgrade.down.sandai.net', 'down.sandai.net').Replace('up.exe', '.exe')
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.desc | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
