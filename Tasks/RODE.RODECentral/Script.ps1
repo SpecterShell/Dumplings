@@ -10,6 +10,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile 'RODE Central*.msi' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } } | Select-Object -First 1)
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://rode.com/en/release-notes/rode-central' | ConvertFrom-Html
       $Object3 = $Object2.SelectSingleNode('//rode-release-notes').Attributes[':release-notes-data'].DeEntitizeValue | ConvertFrom-Json
