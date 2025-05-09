@@ -2,7 +2,7 @@ $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://logtagrecord
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('//a[text()="Download"]').Attributes['href'].Value
+  InstallerUrl = curl -fsSLIA $DumplingsInternetExplorerUserAgent -w '%{url_effective}' $Object1.SelectSingleNode('//a[text()="Download"]').Attributes['href'].Value | Select-Object -Last 1
 }
 
 # Version
