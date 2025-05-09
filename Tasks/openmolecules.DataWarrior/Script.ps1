@@ -1,5 +1,5 @@
-$Prefix = 'https://openmolecules.org/datawarrior/download.html'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Prefix = 'https://openmolecules.org/'
+$Object1 = Invoke-WebRequest -Uri "${Prefix}datawarrior/download.html"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.Content, 'DataWarrior V(\d+(?:\.\d+)+)').Groups[1].Value
