@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # Hash
-$this.CurrentState.Hash = $Object1.Headers.'x-goog-hash'.Where({ $_.StartsWith('md5=') }, 'First')[0] -replace 'md5='
+$this.CurrentState.Hash = $Object1.Headers.'x-goog-hash'.Where({ $_.StartsWith('md5=') }, 'First')[0] -replace '^md5='
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
