@@ -1,4 +1,4 @@
-$Object1 = $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://brinno.com/pages/brinno-bcc2000-time-lapse-camera-command-center' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://brinno.com/pages/brinno-bcc2000-time-lapse-camera-command-center' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
