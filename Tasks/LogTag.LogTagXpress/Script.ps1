@@ -10,7 +10,8 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = New-TempFile
+    curl -fsSLA $DumplingsInternetExplorerUserAgent -o $InstallerFile $this.CurrentState.Installer[0].InstallerUrl | Out-Host
     # NestedInstallerFiles
     $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } } | Select-Object -First 1)
     $InstallerFileExtracted = New-TempFolder
