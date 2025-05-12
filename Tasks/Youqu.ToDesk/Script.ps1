@@ -1,10 +1,10 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.todesk.com/download.html' | ConvertFrom-Html
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl('https://www.todesk.com/download.html')
+
+$Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].clientInfo', $null)
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('//div[contains(@class, "win")]/section/a[@class="vinfo"]').InnerText,
-  '([\d\.]+)'
-).Groups[1].Value
+$this.CurrentState.Version = $Object1.win_version
 
 try {
   $InstallerUrl = "https://dl.todesk.com/irrigation/ToDesk_$($this.CurrentState.Version).exe"
