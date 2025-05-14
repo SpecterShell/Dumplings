@@ -7,20 +7,20 @@ function Read-Installer {
 function Get-ReleaseNotes {
   try {
     # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://support.blastiq.com/hc/sections/360008555173'
-    }
+    # $this.CurrentState.Locale += [ordered]@{
+    #   Key   = 'ReleaseNotesUrl'
+    #   Value = 'https://support.blastiq.com/hc/sections/360008555173'
+    # }
 
     $Object3 = Invoke-WebRequest -Uri 'https://support.blastiq.com/hc/en-us/sections/360008555173-SHOTPlus-Underground' | ConvertFrom-Html
 
     $ReleaseNotesUrlNode = $Object3.SelectSingleNode("//ul[contains(@class, 'article-list')]//a[@class='article-list-link' and contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesUrlNode) {
       # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = Join-Uri 'https://support.blastiq.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'ReleaseNotesUrl'
+      #   Value = $ReleaseNotesUrl = Join-Uri 'https://support.blastiq.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
+      # }
 
       $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
