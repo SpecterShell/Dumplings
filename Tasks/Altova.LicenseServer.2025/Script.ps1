@@ -1,7 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.altova.com/thankyou?ProductCode=LS&EditionCode=Z&InstallerType=Product&Lang=multi&OperatingSystem=win32'
+$Object1 = Invoke-WebRequest -Uri 'https://www.altova.com/licenseserver/download' | ConvertFrom-Html
+
+# Version
+$this.CurrentState.Version = $Object1.SelectSingleNode('//form[@action="/LS-ThankYou"]//input[@name="Release"]').Attributes['value'].Value
+
+$Object2 = Invoke-WebRequest -Uri "https://www.altova.com/thankyou?ProductCode=LS&EditionCode=Z&InstallerType=Product&Lang=multi&OperatingSystem=win32&FromArchive=true&Release=$($this.CurrentState.Version)"
 
 # Installer
-$InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+$InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerUrl
@@ -10,9 +15,6 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl -replace '\.exe$', '_x64.exe'
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '/v(\d+(r\d+)?(sp\d+)?)/').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -35,7 +37,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.altova.com/releasenotes/getnotes' -Method Post -Body @{
+      $Object3 = Invoke-WebRequest -Uri 'https://www.altova.com/releasenotes/getnotes' -Method Post -Body @{
         category = 'licenseserver'
         product  = 'LicenseServer'
         version  = $this.CurrentState.RealVersion
@@ -45,7 +47,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectNodes('/table/tbody/tr').ForEach({ "[$($_.SelectSingleNode('./td[@class="component"]').InnerText)] $($_.SelectSingleNode('./td[@class="summary"]').InnerText)" }) | Format-Text
+        Value  = $Object3.SelectNodes('/table/tbody/tr').ForEach({ "[$($_.SelectSingleNode('./td[@class="component"]').InnerText)] $($_.SelectSingleNode('./td[@class="summary"]').InnerText)" }) | Format-Text
       }
     } catch {
       $_ | Out-Host
