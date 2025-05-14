@@ -1,8 +1,10 @@
-$Object1 = Invoke-WebRequest -Uri 'https://docs.cyberhive.com/connect/release-notes/'
+# The download page contains non-closed <a> tags, making link parser fail.
+# Parse the page to HTML object and use XPath to find the link.
+$Object1 = Invoke-WebRequest -Uri 'https://pkgs.cyberhive.com/stable.html' | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@href, ".exe") and not(contains(@href, "latest"))]').Attributes['href'].Value
 }
 
 # Version
@@ -11,7 +13,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = $Object1 | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://docs.cyberhive.com/connect/release-notes/' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
