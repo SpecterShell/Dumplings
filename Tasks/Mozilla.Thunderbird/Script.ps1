@@ -60,7 +60,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object4 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n" | ConvertFrom-Html
 
       # Remove headers
       $Object4.SelectNodes('//section[contains(./div/@class, "release-notes-container")]//div[@class="see-all-releases"]').ForEach({ $_.Remove() })
