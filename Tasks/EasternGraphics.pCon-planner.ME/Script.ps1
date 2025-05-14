@@ -34,7 +34,7 @@ switch -Regex ($this.Check()) {
       # Documentations (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
-        Key    = '文档'
+        Key    = 'Documentations'
         Value  = @(
           [ordered]@{
             DocumentLabel = '快捷键'
