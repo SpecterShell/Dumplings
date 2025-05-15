@@ -7,14 +7,17 @@ $this.CurrentState.Version = $Object1.Version
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Join-Uri 'https://www.prestosoft.com/download/' ([regex]::Match((ConvertTo-UnescapedUri -Uri $Object1.InstallerUrlX86), 'file=([^&]+)').Groups[1].Value)
+  ProductCode  = "ExamDiff Pro $($Object1.ShortVersion)_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri 'https://www.prestosoft.com/download/' ([regex]::Match((ConvertTo-UnescapedUri -Uri $Object1.InstallerUrlX64), 'file=([^&]+)').Groups[1].Value)
+  ProductCode  = "ExamDiff Pro $($Object1.ShortVersion)_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = Join-Uri 'https://www.prestosoft.com/download/' ([regex]::Match((ConvertTo-UnescapedUri -Uri $Object1.InstallerUrlARM64), 'file=([^&]+)').Groups[1].Value)
+  ProductCode  = "ExamDiff Pro $($Object1.ShortVersion)_is1"
 }
 
 switch -Regex ($this.Check()) {
