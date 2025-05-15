@@ -1,10 +1,8 @@
 $Prefix = 'https://static.centbrowser.com/win_stable/'
 $PrefixCN = 'https://static.centbrowser.cn/win_stable/'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 # Version
-$this.CurrentState.Version = ($Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
+$this.CurrentState.Version = (curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -29,7 +27,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.centbrowser.com/history.html' | ConvertFrom-Html
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.centbrowser.com/history.html' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
