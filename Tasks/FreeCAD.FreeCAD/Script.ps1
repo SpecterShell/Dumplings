@@ -10,7 +10,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('installer') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = $this.CurrentState.Version -replace '.'
+  ProductCode  = "FreeCAD$($this.CurrentState.Version.Replace('.', ''))"
 }
 
 switch -Regex ($this.Check()) {
