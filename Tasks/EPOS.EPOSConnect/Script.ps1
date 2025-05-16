@@ -9,8 +9,9 @@ $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
 $VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('msi.zip') } catch {} }, 'First')[0].href
+  InstallerType       = 'zip'
+  NestedInstallerType = 'wix'
+  InstallerUrl        = $Object1.Links.Where({ try { $_.href.EndsWith('msi.zip') } catch {} }, 'First')[0].href
 }
 $VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
@@ -25,7 +26,6 @@ $this.CurrentState.Version = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:
 
 $InstallerWiX['NestedInstallerFiles'] = @(
   [ordered]@{
-    # EPOSConnect_8.1.0.48660.msi
     RelativeFilePath = "EPOSConnect_$($this.CurrentState.Version).msi"
   }
 )
