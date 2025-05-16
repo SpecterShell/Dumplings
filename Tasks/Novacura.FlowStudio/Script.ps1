@@ -1,31 +1,93 @@
-$Object1 = Invoke-RestMethod -Uri 'https://pkgs.dev.azure.com/NC-FLOW/c34daccf-1296-47b5-8591-66ab5e0dc7cb/_packaging/bd2d042a-4006-4a45-99a1-7d4f37ab6a56/nuget/v3/registrations2-semver2/novacura.flow.studio/index.json'
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+}
 
-# Version
-$this.CurrentState.Version = $Object1.items.items[0].catalogEntry.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.items.items[0].packageContent
+  InstallerUrl = 'https://home.novacuraflow.com/Downloads/flow%206/latest/Novacura%20Flow%20Studio.exe'
 }
 
-switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.items.items[0].catalogEntry.published.ToUniversalTime()
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$ETag = $Object1.Headers.ETag[0]
 
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The ETag is unchanged
+if ($ETag -in $this.LastState.ETag) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+# Case 4: The ETag has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+
+  $this.Write()
+  return
+}
+
+# ETag
+$this.CurrentState.ETag = @($ETag)
+
+switch -Regex ($this.Check()) {
+  # Case 6: The ETag, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 5: The ETag and the SHA256 have changed, but the version is not
+  Default {
+    $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }
