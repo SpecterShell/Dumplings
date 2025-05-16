@@ -2,7 +2,7 @@ $Object1 = $Global:DumplingsStorage.UnityCNApps.official.Where({ $_.version.Star
 
 # Version
 $this.CurrentState.Version = $Object1.version
-$OriginalVersion = $this.CurrentState.Version -replace 'c1$'
+$OriginalVersion = $this.CurrentState.Version -replace 'c\d+$'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
