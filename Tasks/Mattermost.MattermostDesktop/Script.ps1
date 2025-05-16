@@ -12,12 +12,12 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = (Join-Uri $Prefix $Object1.files[0].url) -replace '-setup' -replace '\.exe$', '-x64.msi'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = (Join-Uri $Prefix $Object1.files[0].url) -replace '-setup' -replace '\.exe$', '-arm64.msi'
 }
 
