@@ -17,7 +17,7 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $EdgeDriver = Get-EdgeDriver
+    $EdgeDriver = Get-EdgeDriver -Headless
     $EdgeDriver.Navigate().GoToUrl('https://community.lumivero.com/s/article/citavi-7-release-notes')
 
     $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
