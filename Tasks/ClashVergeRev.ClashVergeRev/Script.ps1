@@ -3,6 +3,8 @@ $RepoName = 'clash-verge-rev'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
+if ($Object1.tag_name.Contains('alpha')) { throw 'Pre-release detected' }
+
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
