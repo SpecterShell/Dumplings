@@ -1,0 +1,39 @@
+Version: 25.0.5
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.0.5/dbeaver-ce-25.0.5-x86_64-setup.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.0.5/dbeaver-ce-25.0.5-x86_64-setup.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SQL Editor:
+        - CTE completion and navigation support was significantly improved
+        - SQL columns completion was fixed (issue with overlapping names)
+        - Added support of STRAIGHT_JOIN and LATERAL JOIN
+        - Several navigation shortcuts were fixed to avoid conflicts with European keyboard layouts
+    - Metadata: Added the ability to resize multiline fields
+    - Navigator:
+        - Added the number of elements in folders (configurable, thanks to @isai-salazar-enc)
+        - Fixed an issue that prevented schemas and databases from opening
+    - Miscellaneous:
+        - Added an extra CLI runner: dbeaverc. It respects settings in dbeaver.ini
+        - When a user selects the driver version manually, it will no longer be updated automatically
+        - Fixed the ability to use application when certain accessibility tools are enabled
+    - Databases:
+        - MySQL: Fixed 'remove definer' option of backup/restore in a special case
+        - Oracle: Set `Use UNION for table metadata reading` preference to true by default
+        - PostgreSQL:
+            - Fixed  foreign servers display when no access to `pg_user_mapping` table
+            - Execution hang on a query with a huge json in dollar-quoted strings with tag were fixed
+            - Fixed an issue causing hangs when working with large JSON files
+            - Allowed unquoted identifiers started with underscore
+    - New drivers: Added support for Kingbase database (thanks to @Kingbasewyx)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/25.0.5
+ReleaseTime: 2025-05-18T18:17:53.0000000Z
