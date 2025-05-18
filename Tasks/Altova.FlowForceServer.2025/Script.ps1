@@ -9,8 +9,8 @@ function Read-Installer {
     $InstallerFile2Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 '*.msi' | Out-Host
     $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Get-Item -Force | Select-Object -First 1
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
+    # Version
+    $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
     # ProductCode
     $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
     Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
@@ -20,7 +20,7 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.altova.com/releasenotes/getnotes' -Method Post -Body @{
+    $Object3 = Invoke-WebRequest -Uri 'https://www.altova.com/releasenotes/getnotes' -Method Post -Body @{
       category = 'desktop'
       product  = 'FlowForce'
       version  = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '/v(\d+(r\d+)?(sp\d+)?)/').Groups[1].Value
@@ -30,7 +30,7 @@ function Get-ReleaseNotes {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotes'
-      Value  = $Object2.SelectNodes('/table/tbody/tr').ForEach({ "[$($_.SelectSingleNode('./td[@class="component"]').InnerText)] $($_.SelectSingleNode('./td[@class="summary"]').InnerText)" }) | Format-Text
+      Value  = $Object3.SelectNodes('/table/tbody/tr').ForEach({ "[$($_.SelectSingleNode('./td[@class="component"]').InnerText)] $($_.SelectSingleNode('./td[@class="summary"]').InnerText)" }) | Format-Text
     }
   } catch {
     $_ | Out-Host
