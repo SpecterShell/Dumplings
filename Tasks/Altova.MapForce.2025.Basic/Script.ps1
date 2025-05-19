@@ -69,6 +69,10 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = $InstallerUrl -replace '/en/', '/jp/' -replace '\.exe$', '_JP.exe'
 }
 
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Hash
+$this.CurrentState.Hash = $Object2.Headers.'x-amz-meta-sha256'[0]
+
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
