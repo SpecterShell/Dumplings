@@ -1,7 +1,7 @@
 $Object1 = ((Invoke-WebRequest -Uri 'https://www.gimp.org/gimp_versions.json').Content | ConvertFrom-Json -AsHashtable).STABLE.Where({ $_.version.StartsWith('3.') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.version + ($Object1.windows[0].Contains('revision') ? ".$($Object1.windows[0].revision)" : '')
+$this.CurrentState.Version = "$($Object1.version).$($Object1.windows[0].Contains('revision') ? $Object1.windows[0].revision : '0')"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
