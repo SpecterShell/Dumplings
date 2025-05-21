@@ -1,10 +1,7 @@
 $Object1 = ((Invoke-WebRequest -Uri 'https://www.gimp.org/gimp_versions.json').Content | ConvertFrom-Json -AsHashtable).STABLE.Where({ $_.version.StartsWith('3.') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.version + ($Object1.windows[0].Contains('revision') ? "-$($Object1.windows[0].revision)" : '')
-
-# RealVersion
-$this.CurrentState.RealVersion = $Object1.version
+$this.CurrentState.Version = $Object1.version + ($Object1.windows[0].Contains('revision') ? ".$($Object1.windows[0].revision)" : '')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -17,11 +14,15 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.windows[0].date | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.windows[0].comment | Format-Text
+      if ($Object1.windows[0].Contains('comment')) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.windows[0].comment | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
