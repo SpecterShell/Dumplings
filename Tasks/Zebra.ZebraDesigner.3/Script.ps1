@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod 'https://www.zebra.com/content/servlet/supportdownload/downloadsearch?pagePath=/content/zebra1/us/en/support-downloads/software/printer-software/zebra-designer-3-downloads').Download.Where({ $_.productModel[0] -eq 'ZebraDesigner 3' }, 'First')[0]
+$Object1 = (Invoke-RestMethod 'https://www.zebra.com/content/servlet/supportdownload/downloadsearch?pagePath=/content/zebra1/us/en/support-downloads/software/printer-software/zebra-designer-3-downloads').Download.Where({ $_.productModel -contains 'ZebraDesigner 3' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
