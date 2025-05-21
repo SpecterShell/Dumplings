@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Features_en.pdf"
+        Value = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Features_EN.pdf"
       }
 
       # Documentations
@@ -22,11 +22,11 @@ switch -Regex ($this.Check()) {
         Value = @(
           [ordered]@{
             DocumentLabel = 'Shortcuts'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_en.pdf"
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_EN.pdf"
           }
           [ordered]@{
             DocumentLabel = 'Editions'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_en.pdf"
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_EN.pdf"
           }
         )
       }
@@ -38,11 +38,11 @@ switch -Regex ($this.Check()) {
         Value  = @(
           [ordered]@{
             DocumentLabel = '快捷键'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_en.pdf"
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Shortcuts_EN.pdf"
           }
           [ordered]@{
             DocumentLabel = '版本'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_en.pdf"
+            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_${ShortVersion}_Editions_EN.pdf"
           }
         )
       }
