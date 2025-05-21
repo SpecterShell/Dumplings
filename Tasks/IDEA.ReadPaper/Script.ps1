@@ -1,8 +1,8 @@
-$Object1 = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-app-aiKnowledge/aiKnowledge/client/v1/getDownloadUrls' -Method Post -ContentType 'application/json' -Body '{}'
+$Object1 = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-acl/dic/public/app/getListByAppIdAndParentIdNameAvailable?appId=aiKnowledge&parentIdName=ClientDownloadManage'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.urls.windowsClient
+  InstallerUrl = $Object1.data.Where({ $_.groupName -eq 'windows' -and $_.downloadChannel.Contains('官方下载') }, 'First')[0].downloadUrl
 }
 
 # Version
