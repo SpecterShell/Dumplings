@@ -11,6 +11,22 @@ $this.CurrentState.Version = $Matches[1]
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
+      $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include '*.msi' -Recurse | Select-Object -First 1
+      # ProductCode
+      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+      # AppsAndFeaturesEntries
+      $Installer['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+          InstallerType = 'msi'
+        }
+      )
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.remoteutilities.com/product/release-notes.php' | ConvertFrom-Html
 
