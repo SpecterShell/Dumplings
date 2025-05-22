@@ -12,7 +12,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.updateTime | ConvertFrom-UnixTimeSeconds
+      $this.CurrentState.ReleaseTime = $Object1.data.updateTime | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
