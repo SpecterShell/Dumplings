@@ -1,18 +1,15 @@
-# x86
-$Object1 = Invoke-WebRequest -Uri 'https://downloads.nomachine.com/download/?id=146'
-# x64
-$Object2 = Invoke-WebRequest -Uri 'https://downloads.nomachine.com/download/?id=145'
+$Object1 = Invoke-WebRequest -Uri 'https://downloads.nomachine.com/download/?id=38&platform=windows' -WebSession $Global:DumplingsStorage.NoMachineWebSession
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+_\d+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+_\d+)').Groups[1].Value
 
@@ -31,8 +28,8 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('_')[0]
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://kb.nomachine.com/software-updates'
-      $ReleaseNotesLink = $Object3.Links.Where({ try { $_.outerHTML.Contains($this.CurrentState.RealVersion) } catch {} }, 'First')
+      $Object2 = Invoke-WebRequest -Uri 'https://kb.nomachine.com/software-updates' -WebSession $Global:DumplingsStorage.NoMachineWebSession
+      $ReleaseNotesLink = $Object2.Links.Where({ try { $_.outerHTML.Contains($this.CurrentState.RealVersion) } catch {} }, 'First')
       if ($ReleaseNotesLink) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
@@ -41,8 +38,8 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesUrl = $ReleaseNotesLink[0].href
         }
 
-        $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-        $ReleaseNotesNode = $Object4.SelectSingleNode('//*[@id="kb-content"]')
+        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl -WebSession $Global:DumplingsStorage.NoMachineWebSession | ConvertFrom-Html
+        $ReleaseNotesNode = $Object3.SelectSingleNode('//*[@id="kb-content"]')
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesNode.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('Supported Platforms'); $Node = $Node.NextSibling) {
           if ($Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}[a-zA-Z]+\W+20\d{2})') {
             # ReleaseTime
