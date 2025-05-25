@@ -1,0 +1,115 @@
+Version: 24.2.1209
+Installer:
+- InstallerUrl: https://www.thunderheadeng.net/releases/Pathfinder-2024-2-1209-x64-en.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    This release adds a new Scenarios feature to Pathfinder and adds a new Results Scripting Engine.
+    This version of Pathfinder uses version 21.0.2+13 of the OpenJDK Java VM.
+    This version of Pathfinder has known issues. See Known Issues.
+    Scenarios
+    Pathfinder 2024.2 introduces a Scenario Manager for creating, editing, and switching between different Scenarios or viewing their custom properties. This enhancement allows users to manage multiple variations in a single file. Results from different Scenarios can be selected for review as well.
+    Create highly configurable variations in one file with Scenarios
+    Scenarios may include customization within objects, Behaviors, and Profiles. This feature enables users to control which properties in a Scenario will differ from the default settings, allowing for robust Scenarios within one file.
+    View all modified data values in one table
+    Helpful color coding shows which variables are customized in the currently selected Scenario. This color coding is available in menus and user dialogs for quick reference.
+    Color highlighting shows modifed values in the Occupant Profiles Dialog
+    You can read more about the Pathfinder Scenarios in the Pathfinder User Manual.
+    Better Organized Results Files
+    As part of the work to add Scenarios to Pathfinder, we have also updated the output locations of simulations data files. Simulation output is now stored in a folder at the same location as the model file.
+    You can read more about the data files created by Pathfinder in the Pathfinder User Manual.
+    Results Scripting
+    The 2024.2 update to the Results Viewer includes a Python based Results Scripting Engine. The Results Scripting Engine provides the ability for users to create specialized visualizations of simulation data. The Results Scripting Engine works in concert with the theng Python library to make it easy for users to load and manipulate data from their Pathfinder and PyroSim/FDS simulations.
+    Results stores references to scripts in the Visualization file (.smvv / .pfrv) so that scripts can be easily run when the Visualization file and scripts files are shared with another user. When a script is run, Results can also load Images and HTML files directly in to the application, allowing for highly complex visualizations of data directly in the Results UI.
+    An example visualization created using the Results Scripting Engine
+    The Results Scripting Engine is now used to process the results of the Pathfinder Verification and Validation Tests that go in to our Verification and Validation Manual. This new system has made the task of processing the data of these over 100 Pathfinder simulations much simpler and easier to troubleshoot.
+    Because of this simplification, we are now also able to make our Verification and Validation testing suite available to all of our users to run for themselves. We will be posting a link to the public repository containing these models in the coming weeks.
+    You can read more about the Results Scripting Engine in the Results User Manual.
+    Results Visualization Import
+    Results 2024.2 makes it more convenient for users to visualize the results of separate models that share the same geometry, such as when using PyroSim Scenarios or the new Pathfinder Scenarios feature. Prior versions of Results required that users configure the visualization settings for each of their scenarios manually, which was a repetitive and time consuming process.
+    Results 2024.2 provides more utility to users by allowing them to import the visualization settings from one visualization file directly in to another. Users have the option to select which settings to import with the new Import Visualization Settings dialog after using the new Import Visualization Settings action, available in the File > Import menu.
+    The new Import Visualization Settings dialog in Results 2024.2
+    You can read more about the Visualization Settings import feature in the Results User Manual.
+    Changes since Pathfinder 2024.1.0813:
+    Scenarios
+    - Added support for Scenarios, facilitating the creation of multiple variations of a model in a single PTH file. Scenarios allow almost any object or global property to be customized for flexibility in model management.
+    - Simulation output files are now placed in a new directory with the name of the .PTH file.
+    Other Improvements
+    - Added a splash screen for more responsive application startup (suppress with -J-Dnosplash)
+    - When opening models that have been moved and link to FDS output data, Pathfinder will now validate and update the SMV file location.
+    - All objects that reference non-animation Tags can now be found via the 'Select Referencing Objects' and 'Show Referencing Objects' actions.
+    - Improved the "Randomize Orientation" tool to help avoid occupant overlap when used.
+    - Improved deletion, including consistent replacement handling, new access to reference information, and the ability to remember decisions.
+    - The Copy/Move button will now stay enabled when switching between field and mouse input while using the Copy/Move tool.
+    - Added a validation message for when minimum door width is greater than or equal to maximum door width.
+    - Updated FED calculation to pause while occupants are sampling points that share a cell with an obstruction.
+    - Made changes to the simulation parameters undoable.
+    - Added a toolbar button to show/hide the background image.
+    - Improved memory management of completed simulations.
+    - Added ability to specify multiple paths on Monte Carlo include/exclude options.
+    - For montecarlo simulations, the _make_plots.bat console output has been adjusted to provide a clearer indication of successful operation.
+    Bug Fixes
+    - Fixed a bug that could cause a crash in the license activation dialog when clicking the local license folder.
+    - Fixed a bug pasting movement group templates that could cause a confusing dialog to appear asking to save changes.
+    - Fixed a bug where an Occupant Source's Component property would allow invalid objects to be selected.
+    - Fixed a bug when pasting objects where a pasted object might contain a dangling reference to another object that could not be pasted.
+    - Fixed a bug when pasting objects where unexpected copies of referenced objects might be pasted as well.
+    - Fixed a bug when pasting objects where a pasted object might reference an object already in the target model instead of that in the copy selection.
+    - Fixed a bug that was causing Monte Carlo case generation to sometimes ignore occupant overlap.
+    - Fixed a bug that could cause the Monte Carlo utility to fail during creation of model variations when the original model linked an SMV file and the user provided a relative path to the original Pathfinder model.
+    - Fixed a bug with Monte Carlo charts that were displaying incorrectly due to decimal comma values from different locales.
+    - Fixed a bug that could cause the TXT simulator input file to contain localized numeric values.
+    - Fixed a bug in Licensing and Activation where trailing spaces in the server name could cause hostname lookup errors.
+    - Fixed a bug that would cause a simulator crash if JSON Measurement Region output was enabled, but Seek Velocity output was disabled.
+    - Fixed a bug that caused a typo in a JSON key used for the Y component of Occupant velocity output.
+    - Fixed a bug that would cause a simulator crash if JSON output was enabled and an Occupant used a Vehicle shape.
+    - Fixed a bug that would cause the incorrect license source so be selected in Licensing and Activation Dialog.
+    - Fixed a bug where "Add an Occupant" coordinate inputs could not be used to create an occupant.
+    - Fixed a bug where occupants were finding paths through disabled doors.
+    - Fixed a bug that could prevent Pathfinder from locating FDS output data when using the testsim.bat launcher.
+    - Fixed a bug that could cause a crash when clicking the Copy button in the License dialog.
+    - Fixed a bug in CAD import that could cause some models to be simplified more than intended.
+    - Fixed a bug that could cause a crash when overtaking in crowded conditions.
+    - Fixed a bug where Placed Triggers and Trigger Templates groups could be deleted, which prevented the creation of these objects.
+    - Fixed a bug that caused the incorrect icon used for the Goto Occupant action in the tree view.
+    - Fixed a bug that allowed a simultaneous simulation to be started while another is already running in the same Pathfinder instance.
+    Changes to Results:
+    Results Scripting
+    - Added User Scripts to display custom visualizations created by Python scripts.
+    Import Visualization Settings
+    - Added the Import Visualization Settings menu action to share settings between multiple Results files, including viewpoints, tours, colorbar settings, etc.
+    Other Improvements
+    - The application title bar now shows the full path of the visualization file and relative paths of the attached results files.
+    - The Section Box dialog will now show the Z-plane editors in min/max order by default.
+    - Changed the precision of Time(s) in Edit Tour Dialog.
+    - Added Copy Name context menu action for selectable geometry
+    Bug Fixes
+    - Fixed a bug causing the FDS Vector Thickness and Interpolate Data options to not be saved in visualization files.
+    - Fixed a bug that caused Results to not parse SMV VENT info correctly when there are more than 999 surfaces.
+    - Fixed a bug that HVAC elements are not tracked in tree view.
+    - Fixed a bug with FDS boundary output rendering where visible back faces could cause incorrect coloring.
+    Known Issues
+    Crash editing mixed Trigger Awareness Requirements
+    To reproduce:
+    1. Select multiple triggers that have different Awareness Requirements.
+    2. Click <mixed>.
+    Workarounds:
+    - Do not edit Awareness Requirements when the value is <mixed>.
+    Phantom references in Change Profile Property action
+    There's a situation where Change Profile Property behavior action may have a reference to another object that is no longer in the model because it's been deleted. This can lead to unexpected behavior or crashes.
+    To reproduce:
+    1. Select a behavior and add a new Change Profile Property action.
+    2. For the Property, select one of the following: Shape, Trigger Restrictions, or Component Restrictions.
+    3. For the Property Value, select an existing object in the model.
+    4. Delete the referenced object(s) from the model.
+    5. Some time later, select a behavior again and add another Change Profile Property action. This time, do not change any settings for the action. Note that the editor references the deleted object(s).
+    6. Click Create to create the action. The action now references objects that are no longer in the model.
+    Workarounds:
+    - To avoid creating phantom references, when you are creating a new Change Profile Property action, make sure the editor references objects that are still in the model.
+    - If you already have a Change Profile Property with a phantom reference, change the value to an object that is in the model or delete the action.
+    Changes in Patch 2024.2.1209
+    - Fixed a bug that could cause a crash when selecting multiple triggers with different Awareness Requirements and clicking the <mixed> value for this property.
+    - Fixed a bug where some objects could reference other objects that are no longer in the model.
+    - Fixed a bug that could cause a crash opening some models made prior to Pathfinder 2024.1.
