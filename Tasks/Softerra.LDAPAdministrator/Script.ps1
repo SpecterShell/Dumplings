@@ -51,7 +51,7 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     if ($Object1.latestversion.productversion -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log("The WinGet package needs to be updated to the version $($Object1.latestversion.productversion)", 'Error')
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
     } else {
       $this.Submit()
     }

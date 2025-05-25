@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     if ($this.CurrentState.Version.Split('.')[0] -ne $this.LastState.Version.Split('.')[0]) {
-      throw 'The ProductCode needs to be updated'
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
     } else {
       $this.Submit()
     }

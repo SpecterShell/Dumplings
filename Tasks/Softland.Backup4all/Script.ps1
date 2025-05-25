@@ -65,7 +65,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Write()
   $this.Message()
   if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-    $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+    $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
   } else {
     $this.Submit()
   }
@@ -118,7 +118,7 @@ switch -Regex ($this.Check()) {
     $this.Write()
     $this.Message()
     if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
     } else {
       $this.Submit()
     }
@@ -131,7 +131,7 @@ switch -Regex ($this.Check()) {
     $this.Write()
     $this.Message()
     if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log("The WinGet package needs to be updated to the version $($this.CurrentState.Version.Split('.')[0])", 'Error')
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
     } else {
       $this.Submit()
     }

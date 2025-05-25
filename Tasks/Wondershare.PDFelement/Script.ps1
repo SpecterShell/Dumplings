@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log('The PackageIdentifier and the ProductCode need to be updated', 'Error')
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
     } else {
       $this.Submit()
     }
