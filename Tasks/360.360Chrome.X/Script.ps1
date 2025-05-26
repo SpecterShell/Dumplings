@@ -2,11 +2,11 @@ $Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/browser_download_link.
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = [regex]::Match($Object1.Content, 'EEX:\s*"([^"]+)"').Groups[1].Value
+  InstallerUrl = [regex]::Match($Object1.Content, "EEX:\s*'([^']+)'").Groups[1].Value
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+\.\d+)[_.]').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '_(\d+\.\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
