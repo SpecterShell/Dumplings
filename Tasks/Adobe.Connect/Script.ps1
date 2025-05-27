@@ -1,29 +1,13 @@
-$Object1 = Invoke-RestMethod -Uri "https://my.adobeconnect.com/common/UpdateDescr.xml?noCache=$(Get-Random)"
-
-# if ($Object1.UpdateDescr.Windows.Release[0].Version -ne $Object1.UpdateDescr.Win32.Release[0].Version) {
-#   $this.Log("x86 version: $($Object1.UpdateDescr.Win32.Release[0].Version)")
-#   $this.Log("x64 version: $($Object1.UpdateDescr.Windows.Release[0].Version)")
-#   throw 'Inconsistent versions detected'
-# }
+$InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11AppStandalone' -Method GET
 
 # Version
-$this.CurrentState.Version = $Object1.UpdateDescr.Windows.Release[0].Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(20\d+(_\d+)+)').Groups[1].Value.Replace('_', '.')
 
 # Installer
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture           = 'x86'
-#   InstallerType          = 'exe'
-#   InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11_32AppStandalone' -Method GET
-#   AppsAndFeaturesEntries = @(
-#     [ordered]@{
-#       DisplayVersion = "$($this.CurrentState.Version).32"
-#     }
-#   )
-# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'x64'
   InstallerType          = 'exe'
-  InstallerUrl           = Get-RedirectedUrl1st -Uri 'https://www.adobe.com/go/Connect11AppStandalone' -Method GET
+  InstallerUrl           = $InstallerUrl
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayVersion = "$($this.CurrentState.Version).64"
@@ -34,8 +18,12 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.UpdateDescr.Windows.Release[0].ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+      if ($Global:DumplingsStorage.Contains('AdobeConnect') -and $Global:DumplingsStorage.AdobeConnect.Contains($this.CurrentState.Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.AdobeConnect[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
