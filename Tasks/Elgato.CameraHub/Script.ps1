@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://gc-updates.elgato.com/windows/echw-update/final/app-version-check.json.php'
+$Object1 = Invoke-RestMethod -Uri 'https://gc-updates.elgato.com/windows/echw-update/final/app-version-check.json.php' -UserAgent "CameraHub/$($this.Status.Contains('New') ? '2.0.0.5721' : $this.LastState.Version) - Windows/10.0.22000 cpu/x86_64 locale/en-US"
 
 # Version
 $this.CurrentState.Version = $Object1.Manual.Version
