@@ -8,7 +8,7 @@ $this.CurrentState.Version = "$($VersionMatches.Groups[1].Value).$($VersionMatch
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://deploy.drofus.com/stable/drofus-setup-$($this.CurrentState.Version).msi"
+  InstallerUrl  = "https://deploy.drofus.com/stable/drofus-setup-$($VersionMatches.Groups[1].Value).msi"
 }
 
 switch -Regex ($this.Check()) {
