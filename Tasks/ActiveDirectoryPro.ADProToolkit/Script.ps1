@@ -1,16 +1,22 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+  $InstallerFileExtracted = New-TempFolder
+  Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'AD Pro Toolkit.msi'
   # Version
-  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # AppsAndFeaturesEntries + ProductCode
+  # ProductCode
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+  # AppsAndFeaturesEntries
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+      UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+      InstallerType = 'msi'
     }
   )
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
@@ -41,7 +47,7 @@ function Get-ReleaseNotes {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://activedirectorypro.com/downloads/ADProToolkit.msi'
+  InstallerUrl = 'https://activedirectorypro.com/downloads/ADProToolkit.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
