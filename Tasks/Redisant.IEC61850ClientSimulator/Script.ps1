@@ -3,9 +3,6 @@ $RepoName = 'iec61850-client-simulator-release'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
-# Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
-
 # Installer
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
@@ -16,6 +13,9 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Asset.name, '(\d+(\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
