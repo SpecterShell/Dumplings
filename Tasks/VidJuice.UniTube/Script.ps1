@@ -5,10 +5,6 @@ $this.CurrentState.Version = $Object1.win.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.win.x86url
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.win.x64url
 }
