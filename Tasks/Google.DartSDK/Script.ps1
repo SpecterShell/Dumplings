@@ -4,10 +4,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://storage.googleapis.com/dart-archive/c
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://storage.googleapis.com/dart-archive/channels/stable/release/$($this.CurrentState.Version)/sdk/dartsdk-windows-ia32-release.zip"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = "https://storage.googleapis.com/dart-archive/channels/stable/release/$($this.CurrentState.Version)/sdk/dartsdk-windows-ia32-release.zip"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://storage.googleapis.com/dart-archive/channels/stable/release/$($this.CurrentState.Version)/sdk/dartsdk-windows-x64-release.zip"
