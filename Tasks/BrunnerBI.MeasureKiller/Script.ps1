@@ -14,16 +14,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
   InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Setup') -and -not $_.href.Contains('Portable') } catch {} }, 'First')[0].href
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msi'
-  InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerType = 'msi'
+#   InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://en.brunner.bi/measurekiller' | ConvertFrom-Html
-      $ReleaseTimeNode = $Object2.SelectSingleNode("//p[contains(./span, 'Release Notes') and ./following-sibling::p[contains(./span, 'Version $($this.CurrentState.Version)')]]")
+      $ReleaseTimeNode = $Object2.SelectSingleNode("//p[contains(., 'Release Notes') and ./following-sibling::p[contains(., 'Version $($this.CurrentState.Version)')]]")
       if ($ReleaseTimeNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
           $null
         ).ToString('yyyy-MM-dd')
 
-        $ReleaseNotesTitleNode = $ReleaseTimeNode.SelectSingleNode("./following-sibling::p[contains(./span, 'Version $($this.CurrentState.Version)')]")
+        $ReleaseNotesTitleNode = $ReleaseTimeNode.SelectSingleNode("./following-sibling::p[contains(., 'Version $($this.CurrentState.Version)')]")
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.StartsWith('Version '); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
