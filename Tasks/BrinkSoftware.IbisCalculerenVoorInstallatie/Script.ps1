@@ -1,12 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ibis.nl/downloads-0'
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.OuterHTML.Contains('Ibis Calculeren voor Installatietechniek') } catch {} }, 'First')[0]
+$InstallerLink = $Global:DumplingsStorage.BrinkSoftwareDownloadPage.Links.Where({ try { $_.href.Contains('.exe') -and $_.OuterHTML.Contains('Ibis Calculeren voor Installatietechniek') -and $_.href.Contains('x64') } catch {} }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerLink.OuterHtml, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerLink.href | ConvertTo-UnescapedUri
+  Architecture = 'x64'
+  InstallerUrl = $InstallerLink.href | ConvertTo-UnescapedUri | Split-Uri -LeftPart Path
 }
 
 switch -Regex ($this.Check()) {
