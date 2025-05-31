@@ -60,6 +60,48 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    try {
+      # Patch manifests
+      # PublisherSupportUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PublisherSupportUrl'
+        Value  = 'https://wiki.bitcomet.com/'
+      }
+      # PrivacyUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PrivacyUrl'
+        Value  = 'https://wiki.bitcomet.com/privacy_policy'
+      }
+      # Documentations (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = 'FAQ'
+            DocumentUrl   = 'https://wiki.bitcomet.com/frequently_asked_questions'
+          }
+        )
+      }
+      # PublisherSupportUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'PublisherSupportUrl'
+        Value  = 'https://wiki-zh.bitcomet.com/'
+      }
+      # PrivacyUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'PrivacyUrl'
+        Value  = 'https://wiki-zh.bitcomet.com/软件隐私政策'
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
