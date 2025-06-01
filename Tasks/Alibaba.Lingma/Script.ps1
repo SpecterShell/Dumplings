@@ -23,22 +23,22 @@ $this.CurrentState.Version = $Object1.productVersion
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object1.url | ConvertTo-Https
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
 #   Scope        = 'machine'
-#   InstallerUrl = $Object2.url
+#   InstallerUrl = $Object2.url | ConvertTo-Https
 # }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   Scope        = 'user'
-  InstallerUrl = $Object3.url
+  InstallerUrl = $Object3.url | ConvertTo-Https
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'arm64'
 #   Scope        = 'machine'
-#   InstallerUrl = $Object4.url
+#   InstallerUrl = $Object4.url | ConvertTo-Https
 # }
 
 switch -Regex ($this.Check()) {
