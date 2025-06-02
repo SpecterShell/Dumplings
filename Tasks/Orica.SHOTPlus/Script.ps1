@@ -22,6 +22,7 @@ function Get-ReleaseNotes {
       #   Value = $ReleaseNotesUrl = Join-Uri 'https://support.blastiq.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
       # }
 
+      $ReleaseNotesUrl = Join-Uri 'https://support.blastiq.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
       $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       # Remove release notes title
