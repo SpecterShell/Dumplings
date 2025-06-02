@@ -32,12 +32,12 @@ function Get-ReleaseNotes {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows' -Method GET
+  InstallerUrl = 'https://download.mypikpak.net/desktop/official_PikPak.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
-# Hash
-$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Last Modified
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -48,7 +48,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $this.Print()
   $this.Write()
-  $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
   $this.Message()
   $this.Submit()
   return
@@ -66,8 +65,8 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The hash is unchanged
-if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
   return
 }
@@ -78,31 +77,31 @@ Read-Installer
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) {
-  throw 'The current state has an invalid real version'
-}
 
 Get-ReleaseNotes
 
+# Case 4: The Last Modified has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
+
 switch -Regex ($this.Check()) {
-  # Case 5: The installer URL has changed
-  'Changed|Updated|Rollbacked' {
+  # Case 6: The Last Modified, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
-  }
-  # Case 6: The hash and the version have changed
-  'Updated|Rollbacked' {
     $this.Submit()
   }
-  # Case 4: The hash has changed, but the version is not
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
   Default {
-    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
-    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
