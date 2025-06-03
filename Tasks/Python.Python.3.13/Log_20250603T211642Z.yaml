@@ -1,0 +1,125 @@
+Version: 3.13.4
+Installer:
+- Architecture: x86
+  InstallerUrl: https://www.python.org/ftp/python/3.13.4/python-3.13.4.exe
+- Architecture: x64
+  InstallerUrl: https://www.python.org/ftp/python/3.13.4/python-3.13.4-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://www.python.org/ftp/python/3.13.4/python-3.13.4-arm64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.python.org/release/3.13.4/whatsnew/changelog.html#python-3-13-4
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Windows
+    - gh-130727: Fix a race in internal calls into WMI that can result in an “invalid handle” exception under high load. Patch by Chris Eibl.
+    - gh-76023: Make os.path.realpath() ignore Windows error 1005 when in non-strict mode.
+    - gh-133626: Ensures packages are not accidentally bundled into the traditional installer.
+    - gh-133512: Add warnings to Python Launcher for Windows about use of subcommands belonging to the Python install manager.
+    Tests
+    - gh-133744: Fix multiprocessing interrupt test. Add an event to synchronize the parent process with the child process: wait until the child process starts sleeping. Patch by Victor Stinner.
+    - gh-133639: Fix TestPyReplAutoindent.test_auto_indent_default() doesn’t run input_code.
+    - gh-133131: The iOS testbed will now select the most recently released “SE-class” device for testing if a device isn’t explicitly specified.
+    - gh-109981: The test helper that counts the list of open file descriptors now uses the optimised /dev/fd approach on all Apple platforms, not just macOS. This avoids crashes caused by guarded file descriptors.
+    Security
+    - gh-135034: Fixes multiple issues that allowed tarfile extraction filters (filter="data" and filter="tar") to be bypassed using crafted symlinks and hard links.
+      Addresses
+
+      CVE 2024-12718,
+
+      CVE 2025-4138,
+
+      CVE 2025-4330, and
+
+      CVE 2025-4517.
+    - gh-133767: Fix use-after-free in the “unicode-escape” decoder with a non-“strict” error handler.
+    - gh-128840: Short-circuit the processing of long IPv6 addresses early in ipaddress to prevent excessive memory consumption and a minor denial-of-service.
+    Library
+    - gh-134718: ast.dump() now only omits None and [] values if they are default values.
+    - gh-128840: Fix parsing long IPv6 addresses with embedded IPv4 address.
+    - gh-134696: Built-in HACL* and OpenSSL implementations of hash function constructors now correctly accept the same documented named arguments. For instance, md5() could be previously invoked as md5(data=data) or md5(string=string) depending on the underlying implementation but these calls were not compatible. Patch by Bénédikt Tran.
+    - gh-134210: curses.window.getch() now correctly handles signals. Patch by Bénédikt Tran.
+    - gh-80334: multiprocessing.freeze_support() now checks for work on any “spawn” start method platform rather than only on Windows.
+    - gh-114177: Fix asyncio to not close subprocess pipes which would otherwise error out when the event loop is already closed.
+    - gh-134152: Fixed UnboundLocalError that could occur during email header parsing if an expected trailing delimiter is missing in some contexts.
+    - gh-62184: Remove import of C implementation of io.FileIO from Python implementation which has its own implementation
+    - gh-133982: Emit RuntimeWarning in the Python implementation of io when the file-like object is not closed explicitly in the presence of multiple I/O layers.
+    - gh-133890: The tarfile module now handles UnicodeEncodeError in the same way as OSError when cannot extract a member.
+    - gh-134097: Fix interaction of the new REPL and -X showrefcount command line option.
+    - gh-133889: The generated directory listing page in http.server.SimpleHTTPRequestHandler now only shows the decoded path component of the requested URL, and not the query and fragment.
+    - gh-134098: Fix handling paths that end with a percent-encoded slash (%2f or %2F) in http.server.SimpleHTTPRequestHandler.
+    - gh-134062: ipaddress: fix collisions in __hash__() for IPv4Network and IPv6Network objects.
+    - gh-133745: In 3.13.3 we accidentally changed the signature of the asyncio create_task() family of methods and how it calls a custom task factory in a backwards incompatible way. Since some 3rd party libraries have already made changes to work around the issue that might break if we simply reverted the changes, we’re instead changing things to be backwards compatible with 3.13.2 while still supporting those workarounds for 3.13.3. In particular, the special-casing of name and context is back (until 3.14) and consequently eager tasks may still find that their name hasn’t been set before they execute their first yielding await.
+    - gh-71253: Raise ValueError in open() if opener returns a negative file-descriptor in the Python implementation of io to match the C implementation.
+    - gh-77057: Fix handling of invalid markup declarations in html.parser.HTMLParser.
+    - gh-133489: random.getrandbits() can now generate more that 231 bits. random.randbytes() can now generate more that 256 MiB.
+    - gh-133290: Fix attribute caching issue when setting ctypes._Pointer._type_ in the undocumented and deprecated ctypes.SetPointerType() function and the undocumented set_type() method.
+    - gh-132876: ldexp() on Windows doesn’t round subnormal results before Windows 11, but should. Python’s math.ldexp() wrapper now does round them, so results may change slightly, in rare cases of very small results, on Windows versions before 11.
+    - gh-133089: Use original timeout value for subprocess.TimeoutExpired when the func subprocess.run() is called with a timeout instead of sometimes a confusing partial remaining time out value used internally on the final wait().
+    - gh-133009: xml.etree.ElementTree: Fix a crash in Element.__deepcopy__ when the element is concurrently mutated. Patch by Bénédikt Tran.
+    - gh-132995: Bump the version of pip bundled in ensurepip to version 25.1.1
+    - gh-132017: Fix error when pyrepl is suspended, then resumed and terminated.
+    - gh-132673: Fix a crash when using _align_ = 0 and _fields_ = [] in a ctypes.Structure.
+    - gh-132527: Include the valid typecode ‘w’ in the error message when an invalid typecode is passed to array.array.
+    - gh-132439: Fix PyREPL on Windows: characters entered via AltGr are swallowed. Patch by Chris Eibl.
+    - gh-132429: Fix support of Bluetooth sockets on NetBSD and DragonFly BSD.
+    - gh-132106: QueueListener.start now raises a RuntimeError if the listener is already started.
+    - gh-132417: Fix a NULL pointer dereference when a C function called using ctypes with restype py_object returns NULL.
+    - gh-132385: Fix instance error suggestions trigger potential exceptions in object.__getattr__() in traceback.
+    - gh-132308: A traceback.TracebackException now correctly renders the __context__ and __cause__ attributes from falsey Exception, and the exceptions attribute from falsey ExceptionGroup.
+    - gh-132250: Fixed the SystemError in cProfile when locating the actual C function of a method raises an exception.
+    - gh-132063: Prevent exceptions that evaluate as falsey (namely, when their __bool__ method returns False or their __len__ method returns 0) from being ignored by concurrent.futures.ProcessPoolExecutor and concurrent.futures.ThreadPoolExecutor.
+    - gh-119605: Respect follow_wrapped for __init__() and __new__() methods when getting the class signature for a class with inspect.signature(). Preserve class signature after wrapping with warnings.deprecated(). Patch by Xuehai Pan.
+    - gh-91555: Ignore log messages generated during handling of log messages, to avoid deadlock or infinite recursion.
+    - gh-131434: Improve error reporting for incorrect format in time.strptime().
+    - gh-131127: Systems using LibreSSL now successfully build.
+    - gh-130999: Avoid exiting the new REPL and offer suggestions even if there are non-string candidates when errors occur.
+    - gh-130941: Fix configparser.ConfigParser parsing empty interpolation with allow_no_value set to True.
+    - gh-129098: Fix REPL traceback reporting when using compile() with an inexisting file. Patch by Bénédikt Tran.
+    - gh-130631: http.cookiejar.join_header_words() is now more similar to the original Perl version. It now quotes the same set of characters and always quote values that end with "\n".
+    - gh-129719: Fix missing socket.CAN_RAW_ERR_FILTER constant in the socket module on Linux systems. It was missing since Python 3.11.
+    - gh-124096: Turn on virtual terminal mode and enable bracketed paste in REPL on Windows console. (If the terminal does not support bracketed paste, enabling it does nothing.)
+    - gh-122559: Remove __reduce__() and __reduce_ex__() methods that always raise TypeError in the C implementation of io.FileIO, io.BufferedReader, io.BufferedWriter and io.BufferedRandom and replace them with default __getstate__() methods that raise TypeError. This restores fine details of behavior of Python 3.11 and older versions.
+    - gh-122179: hashlib.file_digest() now raises BlockingIOError when no data is available during non-blocking I/O. Before, it added spurious null bytes to the digest.
+    - gh-86155: html.parser.HTMLParser.close() no longer loses data when the <script> tag is not closed. Patch by Waylan Limberg.
+    - gh-69426: Fix html.parser.HTMLParser to not unescape character entities in attribute values if they are followed by an ASCII alphanumeric or an equals sign.
+    - bpo-44172: Keep a reference to original curses windows in subwindows so that the original window does not get deleted before subwindows.
+    IDLE
+    - gh-112936: fix IDLE: no Shell menu item in single-process mode.
+    Documentation
+    - gh-107006: Move documentation and example code for threading.local from its docstring to the official docs.
+    Core and Builtins
+    - gh-134908: Fix crash when iterating over lines in a text file on the free threaded build.
+    - gh-127682: No longer call __iter__ twice in list comprehensions. This brings the behavior of list comprehensions in line with other forms of iteration
+    - gh-134381: Fix RuntimeError when using a not-started threading.Thread after calling os.fork()
+    - gh-128066: Fixes an edge case where PyREPL improperly threw an error when Python is invoked on a read only filesystem while trying to write history file entries.
+    - gh-134100: Fix a use-after-free bug that occurs when an imported module isn’t in sys.modules after its initial import. Patch by Nico-Posada.
+    - gh-133703: Fix hashtable in dict can be bigger than intended in some situations.
+    - gh-132869: Fix crash in the free threading build when accessing an object attribute that may be concurrently inserted or deleted.
+    - gh-132762: fromkeys() no longer loops forever when adding a small set of keys to a large base dict. Patch by Angela Liss.
+    - gh-133543: Fix a possible memory leak that could occur when directly accessing instance dictionaries (__dict__) that later become part of a reference cycle.
+    - gh-133516: Raise ValueError when constants True, False or None are used as an identifier after NFKC normalization.
+    - gh-133441: Fix crash upon setting an attribute with a dict subclass. Patch by Victor Stinner.
+    - gh-132942: Fix two races in the type lookup cache. This affected the free-threaded build and could cause crashes (apparently quite difficult to trigger).
+    - gh-132713: Fix repr(list) race condition: hold a strong reference to the item while calling repr(item). Patch by Victor Stinner.
+    - gh-132747: Fix a crash when calling __get__() of a method with a None second argument.
+    - gh-132542: Update Thread.native_id after fork(2) to ensure accuracy. Patch by Noam Cohen.
+    - gh-124476: Fix decoding from the locale encoding in the C.UTF-8 locale.
+    - gh-131927: Compiler warnings originating from the same module and line number are now only emitted once, matching the behaviour of warnings emitted from user code. This can also be configured with warnings filters.
+    - gh-127682: No longer call __iter__ twice when creating and executing a generator expression. Creating a generator expression from a non-interable will raise only when the generator expression is executed. This brings the behavior of generator expressions in line with other generators.
+    - gh-131878: Handle uncaught exceptions in the main input loop for the new REPL.
+    - gh-131878: Fix support of unicode characters with two or more codepoints on Windows in the new REPL.
+    - gh-130804: Fix support of unicode characters on Windows in the new REPL.
+    - gh-130070: Fixed an assertion error for exec() passed a string source and a non-None closure. Patch by Bartosz Sławecki.
+    - gh-129958: Fix a bug that was allowing newlines inconsitently in format specifiers for single-quoted f-strings. Patch by Pablo Galindo.
+    C API
+    - gh-132909: Fix an overflow when handling the K format in Py_BuildValue(). Patch by Bénédikt Tran.
+    Build
+    - gh-134923: Windows builds with profile-guided optimization enabled now use /GENPROFILE and /USEPROFILE instead of deprecated /LTCG: options.
+    - gh-133183: iOS compiler shims now include IPHONEOS_DEPLOYMENT_TARGET in target triples, ensuring that SDK version minimums are honored.
+    - gh-133167: Fix compilation process with --enable-optimizations and --without-docstrings.
+    - gh-132649: The PClayout script now allows passing --include-tcltk on Windows ARM64.
+    - gh-117088: AIX linker don’t support -h option, so avoid it through platform check
+    - gh-132026: Fix use of undefined identifiers in platform triplet detection on MIPS Linux platforms.
+ReleaseTime: 2025-06-03
