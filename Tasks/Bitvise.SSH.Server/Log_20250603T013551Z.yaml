@@ -1,0 +1,20 @@
+Version: "9.45"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-945.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9#945
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Installation:
+      - When using the -keypairs command-line parameter, the SSH Server installer did not support importing passphrase-protected keypairs. Also, the installer would import all keypairs if the file is in the .wkp format (as stored in the Config subdirectory of the SSH Server installation directory); but it would only import the first keypair when using the Bitvise .bkp format, even though the format supports multiple keypairs.
+        The installer now accepts a -keypairsPass parameter to import passphrase-protected keypairs, and imports all keypairs when using the .bkp format.
+    - Proxy support:
+      - When configured to make an outgoing connection via an HTTP CONNECT proxy, the SSH Server now sends an HTTP/1.1 request, including a Host header. Previous versions sent an HTTP/1.0 request (no Host header).
+    - File transfer:
+      - If a user was configured with a virtual filesystem mount point with the permission Permit Move Existing, and also Permit Read/Write/Delete New; then after moving or renaming a file, the SSH Server would treat the destination file as a new upload, and permit the user to read, write or delete it; even if the user does not have the corresponding virtual mount point permissions for existing files.
+        When moving existing files, the SSH Server no longer considers the moved-to file as new.
+        This issue could have a security impact if you have settings which permit users to move files, but the settings do not account for that previous SSH Server versions will treat moved-to files as new.
+ReleaseTime: 2025-06-02
