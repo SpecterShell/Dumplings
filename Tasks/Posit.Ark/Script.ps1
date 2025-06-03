@@ -1,7 +1,7 @@
 $RepoOwner = 'posit-dev'
 $RepoName = 'ark'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases")[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
