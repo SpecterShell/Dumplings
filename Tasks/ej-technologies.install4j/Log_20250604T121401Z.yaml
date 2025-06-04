@@ -1,0 +1,26 @@
+Version: 11.0.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.ej-technologies.com/install4j/install4j_windows-x64_11_0_4.exe
+  InstallerSha256: 5D4DE8246B7D9305CCC2C70384A6B1AE55D6525E73FCD7DDE82CC9FA1F11AEBE
+- Architecture: arm64
+  InstallerUrl: https://download.ej-technologies.com/install4j/install4j_windows-arm64_11_0_4.exe
+  InstallerSha256: A87117C3B8CF395C31C27C196DCC3B6926169294E50E7B2D8FAECD1C63B7833E
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features:
+    - Added an optional autoProvisioningCacheDir property to Gradle, Maven, and Ant integrations
+    - The install4j runtime API, the install4j Maven plugin, and the JDK provider API are now published on Maven Central
+    - macOS media files: Support bookmark files in the additional files for the DMG (media wizard → Installer options → DMG options and files)
+    - Added support for separate JMOD archives from JDK providers. This is required for creating modularized Adoptium JRE bundles starting with 24.​0.2
+    Bug fixes:
+    - "Run executable or batch file" action: If a path to an .exe file was specified without the .exe extension, it was launched like a batch file instead of being launched directly. This could lead to compatibility problems for argument resolution.
+    - Prevent the output of "WARNING: A restricted method in java.​lang.​System has been called" when running installers with Java 24+
+    - Prevent errors in console and unattended mode due to the removed security manager in Java 24+
+    - Parallel uploading to the Apple notarization server could lead to failures
+    - On macOS, file choosers and alerts did not disable top-level menu entries if they were displayed right after a modal dialog was hidden
+- Key: ReleaseNotesUrl
+  Value: https://www.ej-technologies.com/install4j/changelog#11.0.4
+ReleaseTime: 2025-06-04T07:00:29.0000000Z
