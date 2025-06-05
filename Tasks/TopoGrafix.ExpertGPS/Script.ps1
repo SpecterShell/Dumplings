@@ -15,10 +15,10 @@ function Get-ReleaseNotes {
     while ($Object3.Peek() -ne -1) {
       $String = $Object3.ReadLine()
       if ($String.StartsWith("ExpertGPS $($this.CurrentState.Version -replace '(\.0+)+$')")) {
-        try {
+        if ($String -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
           # ReleaseTime
-          $this.CurrentState.ReleaseTime ??= [regex]::Match($String, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-        } catch {
+          $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+        } else {
           $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
         }
         break
