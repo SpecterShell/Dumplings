@@ -3,7 +3,6 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
   InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('ShellExtension') } catch {} }, 'First')[0].href
 }
 
