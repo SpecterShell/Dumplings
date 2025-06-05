@@ -65,11 +65,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Print()
   $this.Write()
   $this.Message()
-  if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-    $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-  } else {
-    $this.Submit()
-  }
+  $this.Submit()
   return
 }
 
@@ -106,11 +102,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
     $this.Message()
-    if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
-    }
+    $this.Submit()
   }
   # Case 4: The hash has changed, but the version is not
   Default {
@@ -119,10 +111,6 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
     $this.Message()
-    if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
-    }
+    $this.Submit()
   }
 }
