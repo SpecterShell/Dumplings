@@ -24,6 +24,12 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://octave.org/news.html'
+      }
+
       $Object2 = (Invoke-RestMethod -Uri 'https://octave.org/feed.xml').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
@@ -32,26 +38,7 @@ switch -Regex ($this.Check()) {
           Key   = 'ReleaseNotesUrl'
           Value = $Object2[0].link
         }
-      } else {
-        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://octave.org/news.html'
-        }
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://octave.org/news.html'
-      }
-    }
 
-    try {
-      if ($Object2) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Object2[0].pubDate | Get-Date -AsUTC
 
@@ -62,7 +49,7 @@ switch -Regex ($this.Check()) {
           Value  = $Object2[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl, ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
