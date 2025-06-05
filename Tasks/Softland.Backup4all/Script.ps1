@@ -85,12 +85,18 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The Last Modified is unchanged
-if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
+if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest (WiX)", 'Info')
   return
+} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`" (WiX)", 'Warning')
+  return
 }
-if ([datetime]$this.CurrentState.LastModifiedEXE -le [datetime]$this.LastState.LastModifiedEXE) {
+if ([datetime]$this.CurrentState.LastModifiedEXE -eq [datetime]$this.LastState.LastModifiedEXE) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest (EXE)", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModifiedEXE -lt [datetime]$this.LastState.LastModifiedEXE) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModifiedEXE)`" is older than the one from the last state `"$($this.LastState.LastModifiedEXE)`" (EXE)", 'Warning')
   return
 }
 

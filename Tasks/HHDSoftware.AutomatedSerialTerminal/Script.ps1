@@ -82,12 +82,18 @@ if ($this.Status.Contains('New')) {
 }
 
 # Case 2: The Last Modified is unchanged
-if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest (WiX)", 'Info')
+if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (x64)", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.LastModified) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`" (x64)", 'Warning')
   return
 }
 if ([datetime]$this.CurrentState.LastModifiedArm64 -le [datetime]$this.LastState.LastModifiedArm64) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest (EXE)", 'Info')
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (arm64)", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModifiedArm64 -lt [datetime]$this.LastState.LastModifiedArm64) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModifiedArm64)`" is older than the one from the last state `"$($this.LastState.LastModifiedArm64)`" (arm64)", 'Warning')
   return
 }
 
