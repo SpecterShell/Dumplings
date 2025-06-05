@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')"
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
@@ -34,7 +34,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://static.frdic.com/pkg/ehsetup.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri "$($this.CurrentState.Installer[0].InstallerUrl)?t=$(Get-Date -Format 'yyyyMMdd')" -Method Head
 # Last Modified
 $this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
 
@@ -47,6 +47,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 
   $this.Print()
   $this.Write()
+  $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
   $this.Message()
   $this.Submit()
   return
@@ -95,6 +96,7 @@ switch -Regex ($this.Check()) {
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
+    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
@@ -104,6 +106,7 @@ switch -Regex ($this.Check()) {
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
+    $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallerUrl += "?t=$(Get-Date -Format 'yyyyMMdd')" }
     $this.Message()
     $this.Submit()
   }
