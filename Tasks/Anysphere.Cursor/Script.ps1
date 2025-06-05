@@ -65,27 +65,18 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://changelog.cursor.com/'
-      }
-
       $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleObject = $Object5.SelectSingleNode(".//main/article[starts-with(@id, '$($this.CurrentState.Version -replace '\.0$' -replace '\.')')]")
+      $ReleaseNotesTitleObject = $Object5.SelectSingleNode("//main//article[contains(.//div[contains(@class, 'absolute') and contains(@class, 'left')]//div[contains(@class, 'rounded')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesTitleObject) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleObject.SelectSingleNode('.//div[contains(@class, "absolute") and contains(@class, "left")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesTitleObject.SelectNodes('.//h2[1]/following-sibling::node()') | Get-TextContent | Format-Text
-        }
-
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleObject.Attributes['id'].Value
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
