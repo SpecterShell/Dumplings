@@ -26,20 +26,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $ToSubmit = $false
-
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockAcrobatReaderX86')
-    $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("AcrobatReaderX86-$($this.CurrentState.Version)-ToSubmit")) {
-      $Global:DumplingsStorage["AcrobatReaderX86-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
-    }
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
-
-    if ($ToSubmit) {
-      $this.Submit()
-    } else {
-      $this.Log('Another task is submitting manifests for this package', 'Warning')
-    }
+    $this.Submit()
   }
 }
