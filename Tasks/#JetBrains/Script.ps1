@@ -12,6 +12,10 @@ $this.Config.Products.GetEnumerator() |
       if (-not $Global:DumplingsStorage.JetBrainsApps.Contains($Code)) {
         $Global:DumplingsStorage.JetBrainsApps[$Code] = [ordered]@{}
       }
-      $Global:DumplingsStorage.JetBrainsApps.$Code[$_.Name] = $Object1.$Code[0]
+      if ($Object1.$Code.Count -gt 0) {
+        $Global:DumplingsStorage.JetBrainsApps.$Code[$_.Name] = $Object1.$Code[0]
+      } else {
+        $this.Log("No releases found for ${Code} ($($_.Name))", 'Warning')
+      }
     }
   }
