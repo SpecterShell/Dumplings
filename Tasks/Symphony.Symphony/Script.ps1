@@ -20,6 +20,12 @@ switch -Regex ($this.Check()) {
       $RepoOwner = 'finos'
       $RepoName = 'SymphonyElectron'
 
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+      }
+
       $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
