@@ -9,7 +9,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = Join-Uri $Object1.link.url $Object1.link.win.file
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'wix'
+  InstallerType = 'msi'
   InstallerUrl  = Join-Uri $Object1.link.url 'Coligo.msi'
 }
 
