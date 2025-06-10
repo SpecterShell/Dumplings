@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesUrlLink[0].href
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
