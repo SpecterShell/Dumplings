@@ -1,9 +1,13 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'exe'
-  InstallerUrl  = $InstallerUrlEXE = $Global:DumplingsStorage.BicomSystemsDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('gloCOM') } catch {} }, 'First')[0].href
+  InstallerType          = 'exe'
+  InstallerUrl           = $InstallerUrlEXE = $Global:DumplingsStorage.BicomSystemsDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('gloCOM') } catch {} }, 'First')[0].href
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $VersionEXE = [regex]::Match($InstallerUrlEXE, '(\d+(?:\.\d+)+)').Groups[1].Value
+    }
+  )
 }
-$VersionEXE = [regex]::Match($InstallerUrlEXE, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msix'
@@ -37,6 +41,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$InstallerUrlMSIX] = $InstallerFile = Get-TempFile -Uri $InstallerUrlMSIX
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMSIX
 
     $this.Print()
     $this.Write()
