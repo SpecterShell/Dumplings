@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.pexip.com/help-center/app-download'
+$Object1 = Invoke-WebRequest -Uri 'https://www.pexip.com/help-center/app-download/previous-releases'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
