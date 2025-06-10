@@ -9,6 +9,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  ProductCode  = "OutCALL$($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {
