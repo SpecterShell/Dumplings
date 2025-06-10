@@ -18,8 +18,11 @@ $this.CurrentState.VersionCode = $Object1.data.aversion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.aurl
-  ProductCode  = 'PCCast'
+  Query             = @{}
+  Architecture      = 'x86'
+  InstallerUrl      = $Object1.data.aurl
+  InstallerSwitches = @{}
+  ProductCode       = 'PCCast'
 }
 
 switch -Regex ($this.Check()) {
