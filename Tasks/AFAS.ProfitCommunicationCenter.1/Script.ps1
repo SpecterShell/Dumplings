@@ -4,7 +4,7 @@ $EdgeDriver.Navigate().GoToUrl('https://klant.afas.nl/update-center/downloads')
 $Object1 = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
   [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
     param([OpenQA.Selenium.IWebDriver]$WebDriver)
-    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe")]')) } catch {}
+    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "PccSetup1")]')) } catch {}
   }
 )
 
