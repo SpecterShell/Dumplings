@@ -7,15 +7,29 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name.Contains('windows') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'zip'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name.Contains('windows') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase).exe"
+      PortableCommandAlias = 'certimate'
+    }
+  )
 }
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('arm64') -and $_.name.Contains('windows') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'arm64'
-  InstallerType = 'zip'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('arm64') -and $_.name.Contains('windows') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'arm64'
+  InstallerType        = 'zip'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase).exe"
+      PortableCommandAlias = 'certimate'
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
