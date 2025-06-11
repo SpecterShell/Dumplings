@@ -1,3 +1,7 @@
+if ($Global:DumplingsStorage.LocklizardApps.Contains('PDCWriter6')) {
+  $this.Log('Next major version available', 'Warning')
+}
+
 # Version
 $this.CurrentState.Version = $Global:DumplingsStorage.LocklizardApps.PDCWriter5.Vers
 
