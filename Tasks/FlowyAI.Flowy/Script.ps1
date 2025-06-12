@@ -1,18 +1,13 @@
-$Prefix = 'https://download.flowygpt.cn/'
+$Prefix = 'https://download.flowygpt.cn/flowy/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+$Object1 = Invoke-RestMethod -Uri "${Prefix}beta.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = Join-Uri "${Prefix}$($Object1.version)/" ($Object1.files[0].url -replace '\.exe$', '.zip')
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = $Object1.files[0].url | Split-Path -Leaf
-    }
-  )
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
