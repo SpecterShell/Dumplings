@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://api.luxafor.com/versioning/download/luxafor_blz159is6sp00pugtpqi0fvq/$($this.CurrentState.Version)/LuxaforApp-Installer-$($this.CurrentState.Version).msi"
+  InstallerUrl = "https://api.luxafor.com/versioning/download/luxafor_blz159is6sp00pugtpqi0fvq/$($this.CurrentState.Version)/LuxaforApp-Installer-$($this.CurrentState.Version)-nonet.msi"
 }
 
 switch -Regex ($this.Check()) {
