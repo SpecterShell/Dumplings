@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.InnerText -notmatch '^\.(exe|deb|rpm|dmg)'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.InnerText -notmatch '^\.(exe|deb|rpm|dmg)' -and -not $Node.InnerText.Contains('📥'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
