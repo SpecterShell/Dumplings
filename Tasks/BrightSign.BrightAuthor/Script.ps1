@@ -19,11 +19,24 @@ switch -Regex ($this.Check()) {
         Key   = 'ReleaseNotesUrl'
         Value = $Object1.general.bac.'release-notes'
       }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://docs.brightsign.biz/api/v2/pages/1593245719?body-format=view').body.view.value | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+    try {
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://docs.brightsign.biz/releases/50')
+
+      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[@id="STRIPE_TEMPLATE_EDITOR"]')) } catch {}
+        }
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//div[contains(@class, 'slate-h1') and contains(.//h1, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('slate-h1'); $Node = $Node.NextSibling) {
           if (-not $Node.InnerText.Contains('Download:')) {
             $Node
           }
