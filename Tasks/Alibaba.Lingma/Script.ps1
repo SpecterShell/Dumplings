@@ -1,19 +1,16 @@
 # x64 user
 $Object1 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-x64-user/stable/latest'
 # x64 machine
-# $Object2 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-x64/stable/latest'
+$Object2 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-x64/stable/latest'
 # arm64 user
 $Object3 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-arm64-user/stable/latest'
 # arm64 machine
-# $Object4 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-arm64/stable/latest'
+$Object4 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-arm64/stable/latest'
 
-# if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
-if (@(@($Object1, $Object3) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
+if ($Object1.productVersion -ne $Object2.productVersion) {
   $this.Log("x64 user version: $($Object1.productVersion)")
-  # $this.Log("x64 machine version: $($Object2.productVersion)")
-  $this.Log("arm64 user version: $($Object3.productVersion)")
-  # $this.Log("arm64 machine version: $($Object4.productVersion)")
-  throw 'Inconsistent versions detected'
+  $this.Log("x64 machine version: $($Object2.productVersion)")
+  throw 'Inconsistent x64 versions detected'
 }
 
 # Version
@@ -24,22 +21,38 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
   InstallerUrl = $Object1.url | ConvertTo-Https
+  ProductCode  = '{33B7C9E1-F1A4-4505-8E86-6A45DEE8AC9A}_is1'
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x64'
-#   Scope        = 'machine'
-#   InstallerUrl = $Object2.url | ConvertTo-Https
-# }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  Scope        = 'user'
-  InstallerUrl = $Object3.url | ConvertTo-Https
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = $Object2.url | ConvertTo-Https
+  ProductCode  = '{E03E77F0-C06C-44D5-BFF1-33EDBBE21F3B}_is1'
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'arm64'
-#   Scope        = 'machine'
-#   InstallerUrl = $Object4.url | ConvertTo-Https
-# }
+if ($Object1.productVersion -eq $Object3.productVersion) {
+  if ($Object3.productVersion -eq $Object4.productVersion) {
+    $this.CurrentState.Installer += [ordered]@{
+      Architecture = 'arm64'
+      Scope        = 'user'
+      InstallerUrl = $Object3.url | ConvertTo-Https
+      ProductCode  = '{38B31348-0F09-4613-975A-530CB8749398}_is1'
+    }
+    $this.CurrentState.Installer += [ordered]@{
+      Architecture = 'arm64'
+      Scope        = 'machine'
+      InstallerUrl = $Object4.url | ConvertTo-Https
+      ProductCode  = '{157D79C6-9B5E-4D97-8982-BE405FBF92F6}_is1'
+    }
+  } else {
+    $this.Log("arm64 user version: $($Object3.productVersion)")
+    $this.Log("arm64 machine version: $($Object4.productVersion)")
+    $this.Log('Inconsistent arm64 versions detected. The arm64 installers will be ignored', 'Warning')
+  }
+} else {
+  $this.Log("x64 user version: $($Object1.productVersion)")
+  $this.Log("arm64 user version: $($Object3.productVersion)")
+  $this.Log('Inconsistent x64 and arm64 versions detected. The arm64 installers will be ignored', 'Warning')
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -85,6 +98,9 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated' {
     $this.Message()
+  }
+  { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
+    $this.Config.IgnorePRCheck = $true
   }
   'Updated' {
     $this.Submit()
