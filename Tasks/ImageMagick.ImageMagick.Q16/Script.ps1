@@ -1,8 +1,6 @@
 $Prefix = 'https://imagemagick.org/archive/binaries/'
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}digest.rdf"
-
-$InstallerObjects = $Object1.RDF.Content |
+$InstallerObjects = $Global:DumplingsStorage.ImageMagickFileList.RDF.Content |
   Where-Object -FilterScript { $_.about -match '\.(exe|zip)' -and $_.about.Contains('Q16') -and -not $_.about.Contains('HDRI') } |
   Sort-Object -Property { $_.about -replace '\d+', { $_.Value.PadLeft(20) } }
 
