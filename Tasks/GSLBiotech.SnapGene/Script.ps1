@@ -11,6 +11,13 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://www.snapgene.com/updates'
+      }
+
       $Object2 = Invoke-WebRequest -Uri 'https://www.snapgene.com/updates' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='updates-page-template__list-item-title' and contains(., '$($this.CurrentState.Version)')]")
@@ -32,7 +39,7 @@ switch -Regex ($this.Check()) {
           Value  = Join-Uri 'https://www.snapgene.com/updates' $ReleaseNotesTitleNode.SelectSingleNode('.//a').Attributes['href'].Value
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
