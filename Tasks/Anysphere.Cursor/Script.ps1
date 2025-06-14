@@ -65,7 +65,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object5 = Invoke-WebRequest -Uri 'https://www.cursor.com/changelog' | ConvertFrom-Html
 
       $ReleaseNotesTitleObject = $Object5.SelectSingleNode("//main//article[contains(.//div[contains(@class, 'absolute') and contains(@class, 'left')]//div[contains(@class, 'rounded')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesTitleObject) {
@@ -79,7 +79,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesTitleObject.SelectNodes('.//h2[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
