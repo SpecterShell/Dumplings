@@ -1,10 +1,11 @@
-$Prefix = 'https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=MC2000B'
+$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=MC2000B'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
+# Version
+$this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
+  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
@@ -12,11 +13,16 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(\.\d+)+)').Groups[1].Value
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

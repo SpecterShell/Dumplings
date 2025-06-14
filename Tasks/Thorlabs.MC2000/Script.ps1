@@ -1,18 +1,23 @@
-$Prefix = 'https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=MC2000'
-
-$Object1 = Invoke-WebRequest -Uri $Prefix
-$Object2 = $Object1 | ConvertFrom-Html
+$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=MC2000'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('//tr[contains(./td[1], "Version")]/td[2]').InnerText, '(\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
