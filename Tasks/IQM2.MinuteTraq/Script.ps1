@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.MinuteTraq[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
