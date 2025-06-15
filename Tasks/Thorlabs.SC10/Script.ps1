@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
-      # LicenseUrl
+      # LicenseUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'LicenseUrl'
