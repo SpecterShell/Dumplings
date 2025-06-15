@@ -25,6 +25,14 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'upSERIES_Installer.exe' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'upSERIES_Installer.exe'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-FileVersionFromExe
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+
     $this.Print()
     $this.Write()
   }
