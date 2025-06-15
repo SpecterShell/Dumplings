@@ -18,6 +18,13 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+
+      # LicenseUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'LicenseUrl'
+        Value  = "https://www.thorlabs.com/software/TC300B/Software/V$($this.CurrentState.Version)/License.zip"
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
