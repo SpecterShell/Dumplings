@@ -23,18 +23,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), 'v$($this.CurrentState.Version)')]")
-        if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-          # ReleaseNotes (en-US)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-          }
-        } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
