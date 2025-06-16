@@ -4,7 +4,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){3})').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+# RealVersion
+$this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

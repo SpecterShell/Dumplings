@@ -3,6 +3,9 @@ $Object1 = Invoke-RestMethod -Uri 'https://get-updates.cloud.remarkable.engineer
 # Version
 $this.CurrentState.Version = $Object1.enclosure.shortVersionString
 
+# RealVersion
+$this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.enclosure.url
