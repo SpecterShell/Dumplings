@@ -1,10 +1,17 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=ThorCam'
-# x86
-$Object2 = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x86') }, 'First')[0]
-$VersionX86 = $Object2.VersionNumber
-# x64
-$Object3 = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x64') }, 'First')[0]
-$VersionX64 = $Object3.VersionNumber
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $InstallerX86Url = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x86') }, 'First')[0].DownloadLink
+}
+$VersionX86 = [regex]::Match($InstallerX86Url, '(\d+(\.\d+)+)').Groups[1].Value
+
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerX64Url = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x64') }, 'First')[0].DownloadLink
+}
+$VersionX64 = [regex]::Match($InstallerX64Url, '(\d+(\.\d+)+)').Groups[1].Value
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")
@@ -14,16 +21,6 @@ if ($VersionX86 -ne $VersionX64) {
 
 # Version
 $this.CurrentState.Version = $VersionX64
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object2.DownloadLink
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object3.DownloadLink
-}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
