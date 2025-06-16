@@ -1,7 +1,11 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('kinesis') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('APT') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('APT') -and $_.href.Contains('WoW64') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -12,9 +16,7 @@ switch -Regex ($this.Check()) {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Thorlabs Kinesis.msi' | Get-Item -Force | Select-Object -First 1
-      # RealVersion
-      $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Thorlabs APT*.msi' | Get-Item -Force | Select-Object -First 1
       # ProductCode
       $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
       # AppsAndFeaturesEntries
@@ -35,7 +37,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = "https://www.thorlabs.com/Software/Motion Control/KINESIS/Application/v$($this.CurrentState.Version)/History.txt"
+      $ReleaseNotesUrl = "https://www.thorlabs.com/Software/Motion Control/APT/Application/V$($this.CurrentState.Version)/Release Notes.txt"
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)
@@ -47,24 +49,13 @@ switch -Regex ($this.Check()) {
 
       while (-not $Object2.EndOfStream) {
         $String = $Object2.ReadLine()
-        if ($String -match "^Version $([regex]::Escape($this.CurrentState.Version))") {
-          if ($String -match '(\d{1,2}[a-zA-Z]+\W+[a-zA-Z]+\W+20\d{2})') {
+        if ($String -match "^APT V$([regex]::Escape($this.CurrentState.Version))") {
+          if ($String -match '(\d{1,2}/[a-zA-Z]+/20\d{2})') {
             # ReleaseTime
-            $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-              $Matches[1],
-              [string[]]@(
-                "d'st' MMMM yyyy",
-                "d'nd' MMMM yyyy",
-                "d'rd' MMMM yyyy",
-                "d'th' MMMM yyyy"
-              ),
-              (Get-Culture -Name 'en-US'),
-              [System.Globalization.DateTimeStyles]::None
-            ).ToString('yyyy-MM-dd')
+            $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
           } else {
             $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
           }
-          $null = $Object2.ReadLine()
           break
         }
       }
@@ -72,7 +63,7 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
         while (-not $Object2.EndOfStream) {
           $String = $Object2.ReadLine()
-          if ($String -notmatch '^Version \d+(\.\d+)+ ') {
+          if (-not $String.Contains('Device Firmware')) {
             $ReleaseNotesObjects.Add($String)
           } else {
             break

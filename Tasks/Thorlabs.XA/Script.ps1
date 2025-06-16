@@ -1,17 +1,13 @@
-$Prefix = 'https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=Motion_Control'
-
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('Win32') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX86 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('Win32') } catch {} }, 'First')[0].href
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX64 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+)').Groups[1].Value
 
