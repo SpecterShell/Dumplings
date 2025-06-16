@@ -1,13 +1,17 @@
 $ProjectName = 'crystaldiskinfo'
 $RootPath = ''
 $PatternPath = '(\d+(?:\.\d+)+[a-zA-Z]?)'
-$PatternFilename = 'CrystalDiskInfo[\d_]+[a-zA-Z]?KureiKei\.exe'
+$PatternFilename = 'CrystalDiskInfo\d+(?:_\d+)+[a-zA-Z]?KureiKei.*\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
 $Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
+
+if ($Assets2 = $Object1.Where({ $_.title.'#cdata-section' -eq "${RootPath}/$($this.CurrentState.Version)/CrystalDiskInfo$($this.CurrentState.Version.Replace('.', '_'))KureiKei.exe" })) {
+  $Assets = $Assets2
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
