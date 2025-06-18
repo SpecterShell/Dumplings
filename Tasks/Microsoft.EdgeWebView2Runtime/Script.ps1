@@ -1,5 +1,5 @@
 function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*~' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted '*~' | Get-Item -Force | Select-Object -First 1
@@ -9,8 +9,11 @@ function Read-Installer {
   $InstallerFile3 = Join-Path $InstallerFile2Extracted $InstallerFile3Name
   # Version
   $this.CurrentState.Version = [regex]::Match((7z.exe e -y '-t#' -so $InstallerFile3 '1'), '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # x86
