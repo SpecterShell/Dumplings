@@ -1,17 +1,17 @@
 $Prefix = 'https://www.eposaudio.com/en/us/software/epos-connect'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
   InstallerType = 'burn'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl  = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 $VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   InstallerType       = 'zip'
   NestedInstallerType = 'wix'
-  InstallerUrl        = $Object1.Links.Where({ try { $_.href.EndsWith('msi.zip') } catch {} }, 'First')[0].href
+  InstallerUrl        = $Object1.Where({ try { $_.href.EndsWith('msi.zip') } catch {} }, 'First')[0].href
 }
 $VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
       }
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('release-notes') -and $_.href.Contains($VersionEXE) } catch {} }, 'First')[0].href
+        Value = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('release-notes') -and $_.href.Contains($VersionEXE) } catch {} }, 'First')[0].href
       }
       # Documentations
       $this.CurrentState.Locale += [ordered]@{
@@ -48,7 +48,7 @@ switch -Regex ($this.Check()) {
         Value = @(
           [ordered]@{
             DocumentLabel = 'Manual'
-            DocumentUrl   = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('manual') } catch {} }, 'First')[0].href
+            DocumentUrl   = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('manual') } catch {} }, 'First')[0].href
           }
         )
       }
@@ -59,7 +59,7 @@ switch -Regex ($this.Check()) {
         Value  = @(
           [ordered]@{
             DocumentLabel = '手册'
-            DocumentUrl   = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('manual') } catch {} }, 'First')[0].href
+            DocumentUrl   = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('manual') } catch {} }, 'First')[0].href
           }
         )
       }
