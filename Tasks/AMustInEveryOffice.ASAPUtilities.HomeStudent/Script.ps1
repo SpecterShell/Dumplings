@@ -1,12 +1,10 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.asap-utilities.com/download-asap-utilities-free.php?file=1'
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'ASAP Utilities (\d+(?:\.\d+){2,})').Groups[1].Value
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('server1') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.ASAPUtilitiesDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('HS') } catch {} }, 'First')[0].href
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:-\d+)+)').Groups[1].Value.Replace('-', '.')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

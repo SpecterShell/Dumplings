@@ -1,29 +1,26 @@
+# Installer
 # User
-$Object1 = Invoke-WebRequest -Uri 'https://www.asap-utilities.com/download-asap-utilities-excel.php?file=51'
-$Version1 = [regex]::Match($Object1.Content, 'ASAP Utilities (\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Installer += [ordered]@{
+  Scope        = 'user'
+  InstallerUrl = $InstallerUserUrl = $Global:DumplingsStorage.ASAPUtilitiesDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('HS') -and $_.href.Contains('NoAdmin') } catch {} }, 'First')[0].href
+}
+$VersionUser = [regex]::Match($InstallerUserUrl, '(\d+(?:-\d+)+)').Groups[1].Value.Replace('-', '.')
 
 # Machine
-$Object2 = Invoke-WebRequest -Uri 'https://www.asap-utilities.com/download-asap-utilities-excel.php?file=21'
-$Version2 = [regex]::Match($Object2.Content, 'ASAP Utilities (\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Installer += [ordered]@{
+  Scope        = 'machine'
+  InstallerUrl = $InstallerMachineUrl = $Global:DumplingsStorage.ASAPUtilitiesDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('HS') -and -not $_.href.Contains('NoAdmin') } catch {} }, 'First')[0].href
+}
+$VersionMachine = [regex]::Match($InstallerMachineUrl, '(\d+(?:-\d+)+)').Groups[1].Value.Replace('-', '.')
 
-if ($Version1 -ne $Version2) {
-  $this.Log("User version: ${Version1}")
-  $this.Log("Machine version: ${Version2}")
+if ($VersionUser -ne $VersionMachine) {
+  $this.Log("User version: ${VersionUser}")
+  $this.Log("Machine version: ${VersionMachine}")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $Version2
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  Scope        = 'user'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('server1') } catch {} }, 'First')[0].href
-}
-$this.CurrentState.Installer += [ordered]@{
-  Scope        = 'machine'
-  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('server1') } catch {} }, 'First')[0].href
-}
+$this.CurrentState.Version = $VersionMachine
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
