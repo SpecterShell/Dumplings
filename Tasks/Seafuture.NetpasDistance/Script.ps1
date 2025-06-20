@@ -10,7 +10,7 @@ function Read-Installer {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.netpas.net/pageMove/download/NM' -Method Get
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.netpas.net/pageMove/download/ND' -Method Get
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
