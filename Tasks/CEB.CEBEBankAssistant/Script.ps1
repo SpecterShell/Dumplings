@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $WinGetUserAgent
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'EBankingAssistant.CEB.exe' | Out-Host
   # Version
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://static.cebbank.com/static/cebbank/cebent/ass1/CEBAssistant.zip'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head -UserAgent $WinGetUserAgent
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
