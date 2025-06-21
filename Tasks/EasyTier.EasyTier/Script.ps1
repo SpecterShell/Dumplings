@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[text()=`"What's Changed`"]")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), `"What's Changed`") or contains(text(), 'Release Notes')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
@@ -34,9 +34,9 @@ switch -Regex ($this.Check()) {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
 
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[text()='更新内容']")
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '更新内容') or contains(text(), '更新日志')]")
         if ($ReleaseNotesCNTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
