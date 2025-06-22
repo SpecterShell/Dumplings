@@ -1,0 +1,63 @@
+Version: 25.1.1
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.1.1/dbeaver-ce-25.1.1-x86_64-setup.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.1.1/dbeaver-ce-25.1.1-x86_64-setup.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SQL Editor:
+        - Added support for column expansion for CTEs
+        - Added support for TSQL "TOP" expression
+        - Added support for CTE names in sub-queries
+        - Disabled SQL autocomplete inside DBeaver SQL commands
+        - Fixed an issue where code completion failed in long queries when using column aliases
+        - Fixed an issue where most of the output was lost after performing a search
+    - AI assistant: GitHub Copilot authorization dialog was improved
+    - Metadata Editor:
+        - Added progress visualization for loading items and a message indicating when the list is empty
+        - Fixed sorting of objects such as indexes
+        - Fixed layout issues when resizing stacked multi-line fields
+    - Data Editor: fixed cursor positioning after filter auto-completion
+    - Navigator:
+        - Fixed the "Hide" and "Show Only" filter options, added support for filtering by name with arguments
+        - Fixed an exception that occurred when deleting an open project
+    - Connectivity:
+        - Fixed an issue where SSL settings were removed after adding an SSH profile
+        - Redesigned the DBeaver connection profiles for improved structure and usability
+        - After changing an expired database password, you can now immediately test the connection with the new password
+    - General:
+        - Transaction commit/rollback buttons now have drop-down menu which can show queries within this transaction
+        - Fixed compact DDL generation for tables
+        - Set English as the default language in the Microsoft Store distribution
+        - Improved the appearance of several database logos in dark theme
+        - Fixed an exception in the Output viewer
+    - Databases:
+        - CUBRID:
+            - Added the ability to delete comments on Serial and Views (thanks to @longhaseng52)
+            - Fixed an error that occurred when deleting properties and comments on the server (thanks to @longhaseng52)
+            - Fixed an error when editing null values in the metadata editor (thanks to @longhaseng52)
+            - Fixed an issue where view DDL was truncating UNION ALL statements (thanks to @Srltas)
+        - Clickhouse:
+            - Fixed the display of nested arrays in the data grid and SQL generation
+            - Fixed an issue with folder display in the Navigator when using driver version 8.0.x or higher
+            - Fixed data type loading and array editing issues
+            - Removed Foreign Keys and References tabs from the Metadata Editor
+        - DuckDB: Improved display of structured data type keys in the Data Editor
+        - Exasol driver was updated to version to 25.2.3
+        - Firebird: Removed "AS" before table alias for legacy Firebird
+        - Neo4j was deleted from Community version
+        - Oracle: Added column-level privileges to the Privileges view
+        - PostgreSQL:
+            - Fixed syntax highlighting for the INTERVAL keyword
+            - Fixed an issue where database names containing slashes caused a connection error when accessing schemas
+        - Salesforce Data Cloud: Now uses the shaded driver version by default (thanks to @jschneidereit)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/25.1.1
+ReleaseTime: 2025-06-22T16:14:16.0000000Z
