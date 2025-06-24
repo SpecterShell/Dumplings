@@ -1,4 +1,4 @@
-$RepoOwner = 'usual2970'
+$RepoOwner = 'certimate-go'
 $RepoName = 'certimate'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
