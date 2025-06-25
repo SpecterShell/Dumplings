@@ -3,6 +3,8 @@ $Object1 = (Invoke-WebRequest -Uri 'http://hotupgrade.hpplay.cn:8999/Author/Upda
     model       = 'Windows'
     api_version = $this.Status.Contains('New') ? '50566' : $this.LastState.VersionCode
     mac         = '00:00:00:00:00:00'
+    tid         = '1'
+    uid         = '1'
   }).Content | ConvertFrom-Json -AsHashtable
 
 if ($Object1.data.Count -eq 0) {
