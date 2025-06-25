@@ -1,39 +1,38 @@
-###############################################################################
-# NOTES: Uses Tasks/PixPin.PixPin.Beta/Script.ps1 as the template.
-###############################################################################
+$RepoOwner = 'mtrojnar'
+$RepoName = 'osslsigncode'
 
-# Fetch the latest assets URL.
-# NOTES: It seems the runner provides built-in GitHub CLI. We can use it to bypass API Rate Limits.
-$LatestInfo = gh api '/repos/mtrojnar/osslsigncode/releases' --jq '.[0]' | ConvertFrom-Json
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = $LatestInfo.tag_name
+$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$LatestAsset = $LatestInfo.assets | Where-Object -Property name -Like '*windows*'
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $LatestAsset.browser_download_url
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # Release Time
-      $this.CurrentState.ReleaseTime = $LatestAsset.updated_at.toUniversalTime()
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # Release Notes (en-US)
-      $ReleaseNotesObject = $LatestInfo.body | Convert-MarkdownToHtml
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # Release Notes Url
+      # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $LatestInfo.html_url
+        Value = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
