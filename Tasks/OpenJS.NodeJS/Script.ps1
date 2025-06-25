@@ -11,12 +11,38 @@ $this.CurrentState.Version = $Object1.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x64.msi"
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x64.msi"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-arm64.msi"
+  Architecture  = 'arm64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-arm64.msi"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  InstallerUrl         = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-win-x64.zip"
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "node-v$($this.CurrentState.Version)-win-x64/node.exe"
+      PortableCommandAlias = 'node'
+    }
+  )
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  InstallerUrl         = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-win-arm64.zip"
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "node-v$($this.CurrentState.Version)-win-arm64/node.exe"
+      PortableCommandAlias = 'node'
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
