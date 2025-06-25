@@ -1,9 +1,22 @@
-$Object1 = Invoke-RestMethod -Uri 'https://yourdolphin.com/api/v1/products/8/versions/with-downloads'
+# For instance, the application of version 11.0.5.622 will read the file at http://www.dolphinuk.co.uk/updates/EasyReader/11622/file.cat
+# If file.cat contains ED11622.exe, it means that there is a new version available
+# ED11622.exe is actually the installer of new version, regardless of its file name
+$ShortLastVersion = $this.Status.Contains('New') ? '11622' : ('{0}{3}' -f $this.LastState.Version.Split('.'))
+$Prefix = "http://www.dolphinuk.co.uk/updates/EasyReader/${ShortLastVersion}/"
+$PseudoInstallerName = "ED${ShortLastVersion}.exe"
+
+$Object1 = Invoke-RestMethod -Uri (Join-Uri $Prefix 'file.cat')
+
+if (-not $Object1.Contains($PseudoInstallerName)) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
+$InstallerFile = Get-TempFile -Uri (Join-Uri $Prefix $PseudoInstallerName)
 
 # Version
-$this.CurrentState.Version = "$($Object1[0].major).0.$($Object1[0].minor).$($Object1[0].build)"
-# 1105
-$ShortVersion = '{0}{1:d2}' -f $Object1[0].major, [int]($Object1[0].minor)
+$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+$ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join ''
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -13,14 +26,13 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1[0].release_date | Get-Date -Format 'yyyy-MM-dd'
+      $Object2 = Invoke-RestMethod -Uri (Join-Uri $Prefix 'Whatsnew.txt')
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object2 | Format-Text
       }
     } catch {
       $_ | Out-Host
