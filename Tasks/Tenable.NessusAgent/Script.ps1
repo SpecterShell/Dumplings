@@ -1,9 +1,9 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://www.tenable.com/downloads/api/v2/pages/nessus').Content | ConvertFrom-Json -AsHashtable
-$Object2 = $Object1.releases[$Object1.releases.latest.Keys.Where({ $_.StartsWith('Nessus') }, 'First')[0]]
+$Object1 = (Invoke-WebRequest -Uri 'https://www.tenable.com/downloads/api/v2/pages/nessus-agents').Content | ConvertFrom-Json -AsHashtable
+$Object2 = $Object1.releases[$Object1.releases.latest.Keys.Where({ $_.StartsWith('Nessus Agents') }, 'First')[0]]
 # x86
-$Object3 = $Object2.Where({ $_.os -eq 'Windows' -and $_.arch -eq 'i386' -and -not $_.file_url.Contains('latest') }, 'First')[0]
+$Object3 = $Object2.Where({ $_.file.EndsWith('.msi') -and $_.file.Contains('Win32') }, 'First')[0]
 # x64
-$Object4 = $Object2.Where({ $_.os -eq 'Windows' -and $_.arch -eq 'x86_64' -and -not $_.file_url.Contains('latest') }, 'First')[0]
+$Object4 = $Object2.Where({ $_.file.EndsWith('.msi') -and $_.file.Contains('x64') }, 'First')[0]
 
 if ($Object3.version -ne $Object4.version) {
   $this.Log("x86 version: $($Object3.version)")
@@ -38,12 +38,12 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://docs.tenable.com/release-notes/Content/nessus/nessus.htm'
+        Value  = 'https://docs.tenable.com/release-notes/Content/agent/agent.htm'
       }
 
-      $ReleaseNotesUrl = "https://docs.tenable.com/release-notes/Content/nessus/$($this.CurrentState.ReleaseTime.Year).htm"
+      $ReleaseNotesUrl = "https://docs.tenable.com/release-notes/Content/agent/$($this.CurrentState.ReleaseTime.Year).htm"
       $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $Object5.SelectSingleNode("//h2[contains(., 'Tenable Nessus $($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object5.SelectSingleNode("//h2[contains(., 'Tenable Agent $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
