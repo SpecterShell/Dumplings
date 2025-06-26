@@ -1,28 +1,16 @@
-# x86
-$Object1 = (Invoke-WebRequest -Uri 'https://updates.emeditor.com/emed32_updates5u.txt' | Read-ResponseContent | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('update32') }, 'First')[0].Value
 # x64
-$Object2 = (Invoke-WebRequest -Uri 'https://updates.emeditor.com/emed64_updates5u.txt' | Read-ResponseContent | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('update64') }, 'First')[0].Value
-
-if ($Object1.Version -ne $Object2.Version) {
-  $this.Log("x86 version: $($Object1.Version)")
-  $this.Log("x64 version: $($Object2.Version)")
-  throw 'Inconsistent versions detected'
-}
+$Object1 = (Invoke-WebRequest -Uri 'https://updates.emeditor.com/emed64_updates5u.txt' | Read-ResponseContent | ConvertFrom-Ini).GetEnumerator().Where({ $_.Name.StartsWith('update64') }, 'First')[0].Value
 
 # Version
-$this.CurrentState.Version = $Object2.Version
+$this.CurrentState.Version = $Object1.Version
 
 # RealVersion
-$this.CurrentState.RealVersion = $Object2.ProductVersion
+$this.CurrentState.RealVersion = $Object1.ProductVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.URL
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.URL
+  InstallerUrl = $Object1.URL
 }
 
 switch -Regex ($this.Check()) {
@@ -42,19 +30,19 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.emeditor.com/blog/'
       }
 
-      $Object3 = (Invoke-RestMethod -Uri 'https://www.emeditor.com/category/emeditor-core/feed/').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.emeditor.com/category/emeditor-core/feed/').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
 
-      if ($Object3) {
+      if ($Object2) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
         }
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $Object3[0].link
+          Value = $Object2[0].link
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
