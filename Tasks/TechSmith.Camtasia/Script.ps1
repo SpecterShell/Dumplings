@@ -38,7 +38,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://support.techsmith.com/hc/en-us/articles/115006443267-Camtasia-Windows-Version-History' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://support.techsmith.com/hc/en-us/articles/35532287170189-Camtasia-2025-Version-History' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '20$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
