@@ -21,16 +21,28 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri "https://docs.omniverse.nvidia.com/launcher/latest/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html" | ConvertFrom-Html
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://docs.omniverse.nvidia.com/launcher/latest/release-notes.html'
+      }
+
+      $ReleaseNotesUrl = "https://docs.omniverse.nvidia.com/launcher/latest/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html"
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl
+      }
 
       # Remove links
       $Object2.SelectNodes('//a[@class="headerlink"]').ForEach({ $_.Remove() })
-
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectNodes('//section[@id="id1"]/following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = $Object2.SelectSingleNode('//section[@id="id1"]/section[1]').SelectNodes('.|./following-sibling::node()') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
