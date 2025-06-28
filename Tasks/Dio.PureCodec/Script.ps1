@@ -20,18 +20,35 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'http://diodiy.top/?thread-1.htm' | ConvertFrom-Html
+      $Object3 = [System.IO.StringReader]::new($Object2.SelectSingleNode('//div[@isfirst="1"]/pre[contains(., "更新日志")]').InnerText)
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@isfirst='1']/p[starts-with(string(), '$($this.CurrentState.Version)')]/text()[1]")
-      if ($ReleaseNotesTitleNode) {
+      while ($Object3.Peek() -ne -1) {
+        $String = $Object3.ReadLine()
+        if ($String.StartsWith($this.CurrentState.Version)) {
+          break
+        }
+      }
+      if ($Object3.Peek() -ne -1) {
+        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+        while ($Object3.Peek() -ne -1) {
+          $String = $Object3.ReadLine()
+          if ($String -notmatch '^\d+') {
+            $ReleaseNotesObjects.Add($String)
+          } else {
+            break
+          }
+        }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
+
+      $Object3.Close()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
