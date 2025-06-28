@@ -1,14 +1,18 @@
 $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5239']
 
+if ($this.CurrentState.Installer[0].InstallerUrl.Contains('_gray')) {
+  throw 'The endpoint returned an A/B test version'
+}
+
 # Installer
 $this.CurrentState.Installer = @(
   [ordered]@{
     Architecture = 'x86'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_$($this.CurrentState.Version)_full5239.exe"
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl.Replace('_64bit', '')
   }
   [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_64bit_$($this.CurrentState.Version)_full5239.exe"
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
   }
 )
 

@@ -4,11 +4,11 @@ $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['13142']
 $this.CurrentState.Installer = @(
   [ordered]@{
     Architecture = 'x86'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_$($this.CurrentState.Version)_full13142.exe"
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl.Replace('_64bit', '')
   }
   [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_64bit_$($this.CurrentState.Version)_full13142.exe"
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
   }
 )
 
