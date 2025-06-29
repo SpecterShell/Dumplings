@@ -1,10 +1,12 @@
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://e.seewo.com/download/file?code=EasiClassPC'
-}
+$Object1 = Invoke-RestMethod -Uri 'https://e.seewo.com/download/fromSeewoEdu?code=EasiClassPC'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.data.softVersion
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.downloadUrl
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

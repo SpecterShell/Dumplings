@@ -1,12 +1,12 @@
 $Object1 = $Global:DumplingsStorage.SeewoApps['EasiRecorder']
 
+# Version
+$this.CurrentState.Version = $Object1.softInfos[0].softVersion
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.softInfos[0].downloadUrl
+  InstallerUrl = $Object1.softInfos[0].downloadUrl
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
