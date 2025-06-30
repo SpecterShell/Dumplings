@@ -6,7 +6,8 @@ $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
   InstallerType = 'burn'
   InstallerUrl  = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
-$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
+$VersionEXEShort = $VersionEXE.Split('.')[0..2] -join '.'
 
 $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   InstallerType       = 'zip'
@@ -15,14 +16,14 @@ $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
 }
 $VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionEXE -ne $VersionWiX) {
+if ($VersionEXEShort -ne $VersionWiX) {
   $this.Log("EXE version: ${VersionEXE}")
   $this.Log("WiX version: ${VersionWiX}")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
+$this.CurrentState.Version = $VersionEXE
 
 $InstallerWiX['NestedInstallerFiles'] = @(
   [ordered]@{
@@ -40,7 +41,7 @@ switch -Regex ($this.Check()) {
       }
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('release-notes') -and $_.href.Contains($VersionEXE) } catch {} }, 'First')[0].href
+        Value = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('release-notes') -and $_.href.Contains($VersionEXEShort) } catch {} }, 'First')[0].href
       }
       # Documentations
       $this.CurrentState.Locale += [ordered]@{
