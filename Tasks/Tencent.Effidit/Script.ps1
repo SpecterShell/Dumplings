@@ -6,7 +6,8 @@ $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "lag
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".msi")]')).GetAttribute('href')
+  InstallerLocale = 'en-US'
+  InstallerUrl    = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".msi")]')).GetAttribute('href')
 }
 
 # Version

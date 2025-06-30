@@ -5,7 +5,8 @@ $this.CurrentState.Version = $Object1.result.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.cubejoy.com/app/$($this.CurrentState.Version)/CubeSetup_v$($this.CurrentState.Version).exe"
+  InstallerLocale = 'zh-CN'
+  InstallerUrl    = "https://download.cubejoy.com/app/$($this.CurrentState.Version)/CubeSetup_v$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-HK'

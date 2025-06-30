@@ -5,7 +5,8 @@ $Object2 = Invoke-WebRequest -Uri 'https://www.seafile.com/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href -match 'seafile-\d+(?:\.\d+)+-en+\.msi$' } catch {} }, 'First')[0].href
+  InstallerLocale = 'en-US'
+  InstallerUrl    = $InstallerUrl = $Object1.Links.Where({ try { $_.href -match 'seafile-\d+(?:\.\d+)+-en+\.msi$' } catch {} }, 'First')[0].href
 }
 $Version = [regex]::Match($InstallerUrl, '(\d+(\.\d+)+)').Groups[1].Value
 

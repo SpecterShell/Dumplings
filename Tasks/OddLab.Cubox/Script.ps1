@@ -14,6 +14,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  InstallerLocale      = 'en-US'
   InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
   NestedInstallerFiles = @(
     [ordered]@{
