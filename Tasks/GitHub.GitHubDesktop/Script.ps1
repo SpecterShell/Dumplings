@@ -1,26 +1,42 @@
 # Installer
-$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
+$this.CurrentState.Installer += $InstallerX64EXE = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'exe'
   InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32'
 }
-$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$VersionX64EXE = [regex]::Match($InstallerX64EXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += $InstallerX64WiX = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32?format=msi'
 }
-$VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$VersionX64WiX = [regex]::Match($InstallerX64WiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
-if ($VersionEXE -ne $VersionWiX) {
-  $this.Log("EXE version: ${VersionEXE}")
-  $this.Log("WiX version: ${VersionWiX}")
+$this.CurrentState.Installer += $InstallerARM64EXE = [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'exe'
+  InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32-arm64'
+}
+$VersionARM64EXE = [regex]::Match($InstallerARM64EXE.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerARM64WiX = [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'wix'
+  InstallerUrl  = Get-RedirectedUrl -Uri 'https://central.github.com/deployments/desktop/desktop/latest/win32-arm64?format=msi'
+}
+$VersionARM64WiX = [regex]::Match($InstallerARM64WiX.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
+if (@(@($VersionX64EXE, $VersionX64WiX, $VersionARM64EXE, $VersionARM64WiX) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("x64 EXE version: ${VersionX64EXE}")
+  $this.Log("x64 MSI version: ${VersionX64WiX}")
+  $this.Log("arm64 EXE version: ${VersionARM64EXE}")
+  $this.Log("arm64 MSI version: ${VersionARM64WiX}")
   throw 'Inconsistent versions detected'
 }
 
 # Version
-$this.CurrentState.Version = $VersionWiX
+$this.CurrentState.Version = $VersionX64WiX
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
