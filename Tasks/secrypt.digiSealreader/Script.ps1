@@ -10,7 +10,7 @@ function Read-Installer {
 function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://www.secrypt.de/downloads/1hd82znzdnfabwms/secrypt/digiSeal_office/update_info/digiSeal_reader_update_info.html' | ConvertFrom-Html
-    $Object3 = $Object2.SelectSingleNode('/html/body').InnerText | ConvertFrom-Base64 | ConvertFrom-Xml
+    $Object3 = $Object2.SelectSingleNode('/html/body').InnerHtml.Trim() | ConvertFrom-Base64 | ConvertFrom-Xml
 
     $Object4 = [System.IO.StringReader]::new($Object3.'Update-Info'.Component.Usermsg.language.Where({ $_.name -eq 'EN' }, 'First')[0].message.'#text')
 
