@@ -18,7 +18,7 @@ $this.CurrentState.Version = @(
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.settings.update_reminder.lastest_stable_url
+  InstallerUrl = $Object1.data.settings.update_reminder.lastest_stable_url.Trim()
 }
 
 switch -Regex ($this.Check()) {
