@@ -15,12 +15,12 @@ if ($VersionX86 -ne $VersionX64) {
 $this.CurrentState.Version = $VersionX64
 
 # Installer
-# x86
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $Object1.SelectSingleNode('./td[2]//a').Attributes['href'].Value
 }
-# x64
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = $Object2.SelectSingleNode('./td[2]//a').Attributes['href'].Value
 }
 
