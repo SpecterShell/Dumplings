@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.bigeyes.com/dl-list.html'
+$Object1 = Invoke-WebRequest -Uri 'https://www.xiaoji.com/page/version_list'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
