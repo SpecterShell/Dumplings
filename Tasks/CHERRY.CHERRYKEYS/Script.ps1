@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.cherry.de/en-us/products/software-services/cherry-keys'
+$Object1 = Invoke-WebRequest -Uri 'https://www.cherry.de/en-us/products/software-services/cherry-keys' -Headers @{ 'Accept-Language' = 'en-US' }
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
