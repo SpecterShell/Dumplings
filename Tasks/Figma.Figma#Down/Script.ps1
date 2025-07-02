@@ -74,7 +74,7 @@ if ($this.Status.Contains('New')) {
   Read-Installer
 
   $this.Print()
-  Send-Manifest
+  $this.Write()
   return
 }
 
