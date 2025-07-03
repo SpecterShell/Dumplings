@@ -24,6 +24,10 @@ $this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.airsquirrels.com/reflector/release-notes/windows' | ConvertFrom-Html
 
@@ -58,6 +62,10 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }
