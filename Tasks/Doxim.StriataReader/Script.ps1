@@ -17,16 +17,16 @@ function Read-Installer {
 
 # x86
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = 'https://reader.striata.com/downloads/Windows/32bit/striata-reader.msi'
+  Architecture = 'x86'
+  InstallerUrl = 'https://reader.striata.com/downloads/Windows/32bit/striata-reader.msi'
 }
 $Object1 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head
 $ETag = $Object1.Headers.ETag[0]
 
 # x64
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = 'https://reader.striata.com/downloads/Windows/64bit/striata-reader.msi'
+  Architecture = 'x64'
+  InstallerUrl = 'https://reader.striata.com/downloads/Windows/64bit/striata-reader.msi'
 }
 $Object2 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head
 $ETagX64 = $Object2.Headers.ETag[0]
@@ -105,7 +105,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
