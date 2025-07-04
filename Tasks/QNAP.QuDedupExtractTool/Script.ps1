@@ -7,6 +7,10 @@ $this.CurrentState.Version = "$($Object1.version).$($Object1.buildNumber)"
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloadURL[0]
 }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerLocale = 'zh-CN'
+  InstallerUrl    = $Object1.downloadURL[0].Replace('//download.qnap.com/', '//download.qnap.com.cn/')
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
