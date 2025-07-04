@@ -12,8 +12,9 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = $Object1.assets.Where({ $_.name.Contains('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'portable'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.Contains('.zip') -and $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.Contains('.zip') -and $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
