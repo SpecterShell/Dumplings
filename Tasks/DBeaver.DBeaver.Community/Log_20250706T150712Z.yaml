@@ -1,0 +1,62 @@
+Version: 25.1.2
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.1.2/dbeaver-ce-25.1.2-x86_64-setup.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.1.2/dbeaver-ce-25.1.2-x86_64-setup.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SQL Editor:
+        - Added variables for virtual column manipulation: row (a map of column names to their values) and table (with name, schema, and container fields)
+        - Aliases can now be used in a case-insensitive manner
+        - Fixed issue where the selected schema wasn’t recognized after reconnecting
+    - AI Assistant:
+        - Improved GitHub Copilot authorization: the auth token is now displayed during the authorization process and can be copied.
+        - GitHub Copilot now displays the up-to-date list of available models.
+        - Fixed the AI button not working when the AI extension is installed
+        - Hide script ruler when executing queries from AI chat
+    - Data Editor:
+        - Fixed incorrect code generation and saving for Virtual key updates
+        - Added an option to show column ordinal position next to the column name in the data grid (thanks @330079598)
+    - Data Transfer: Improved NVARCHAR mapping accuracy during data import
+    - Security: Fixed CVE-2023-48795
+    - Connectivity:
+        - Improved UI controls on the connection settings
+        - Fixed "--newInstance" option when starting the application via CLI
+        - "Change Connection(s) Driver" option is now working again
+        - Fixed an issue where newly created connection types couldn't be deleted
+    - General:
+        - English is now the default language. If a user has never selected a language manually, the UI will switch to English
+        - Fixed an issue where UI elements disappeared when using a display scale other than 100%
+        - Most icons in the application have been updated to SVG format
+        - Based on Eclipse 2025-06. Earlier versions are no longer supported
+    - Development:
+        - JSQL Parser library was updated to version 5.3
+        - Fixed the ability to install CE bundles in Eclipse
+    - Databases:
+        - BigQuery:
+            - Added BigQuery to the SQL category in the connection dialog
+            - Fix column aliases visibility validation - column aliases are not available in WHERE but are visible in other SELECT query parts
+        - Clickhouse:
+            - Fixed identifiers quotation
+            - Added support for complex types nested in arrays
+        - CUBRID: Fixed VARCHAR length not displaying in Navigator (thanks @longhaseng52)
+        - DB2 LUW: Added support for changing expired passwords (not available for databases running in Docker)
+        - MySQL:
+            - Fixed the ability to create a dump
+            - Fixed an exception when opening the partition Virtual tab (thanks to @sogladev)
+        - Oracle: Fixed CREATE PROCEDURE statement boundaries detection (thanks @EastLord)
+        - PostgreSQL:
+            - Fixed misplaced comment in DDL generation
+            - Fixed the ability to connect when the port is specified in the URL for PgPass authentication
+            - Fixed display issue with time zones when date formatting is enabled
+            - Added support for MAINTAIN privilege (thanks @f-m-t-t-m)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/25.1.2
+ReleaseTime: 2025-07-06T15:06:10.0000000Z
