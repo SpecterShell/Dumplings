@@ -1,11 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://pixso.cn/download/'
-$Object2 = $Object1 | ConvertFrom-Html
-
-$Prefix = [regex]::Match($Object1.Content, 'window\.location\.href\s*=\s*"([^"]+)"\s*\+\s*_href').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://pixso.cn/download/' | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object2.SelectSingleNode('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]').Attributes['data-href'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]').Attributes['data-href'].Value
 }
 
 # Version
