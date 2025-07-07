@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.Version.BuildNoCur
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.'DOWNLOAD.X64'.URL1
+  InstallerUrl = $Object1.'DOWNLOAD.X64'.URL1 | Split-Uri -LeftPart Path
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.'DOWNLOAD.A64'.URL1
+  InstallerUrl = $Object1.'DOWNLOAD.A64'.URL1 | Split-Uri -LeftPart Path
 }
 
 switch -Regex ($this.Check()) {
