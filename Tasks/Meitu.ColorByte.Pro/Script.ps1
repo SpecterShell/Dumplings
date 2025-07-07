@@ -5,6 +5,11 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.yunxiu.meitu.com/api/v2/client/la
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 
+if (-not $Object1.data.need_update) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.data.version.version
 
