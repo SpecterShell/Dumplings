@@ -22,7 +22,7 @@ $this.CurrentState.VersionCode = $Object1.data.aversion
 $this.CurrentState.Installer += [ordered]@{
   Query             = @{}
   Architecture      = 'x86'
-  InstallerUrl      = $Object1.data.aurl
+  InstallerUrl      = $Object1.data.furl
   InstallerSwitches = @{}
   ProductCode       = 'PCCast'
 }
