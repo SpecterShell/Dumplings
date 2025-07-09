@@ -11,10 +11,11 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'kdenlive-([\d\.]+(?:
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://docs.kdenlive.org/more_information/whats_new.html'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://docs.kdenlive.org/more_information/whats_new.html'
       }
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
@@ -23,24 +24,9 @@ switch -Regex ($this.Check()) {
         Value  = 'https://docs.kdenlive.org/zh_CN/more_information/whats_new.html'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://kdenlive.org/news/index.xml').Where({ $_.link.Contains($this.CurrentState.Version) }, 'First')
+      $Object2 = Invoke-WebRequest -Uri 'https://docs.kdenlive.org/en/more_information/whats_new.html' | ConvertFrom-Html
 
-      if ($Object2) {
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link
-        }
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      $Object3 = Invoke-WebRequest -Uri 'https://docs.kdenlive.org/en/more_information/whats_new.html' | ConvertFrom-Html
-
-      $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='versionadded' and contains(./p, '$($this.CurrentState.Version -replace '(\.0)+$')')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='versionadded' and contains(./p, '$($this.CurrentState.Version -replace '(\.0)+$')')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -50,6 +36,33 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Object3 = (Invoke-RestMethod -Uri 'https://kdenlive.org/news/index.xml').Where({ $_.link.Contains($this.CurrentState.Version) }, 'First')
+
+      if ($Object3) {
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl = $Object3[0].link
+        }
+
+        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+        $ReleaseNotesNodes = for ($Node = $Object3.SelectSingleNode('//article/div[@class="content-width"]').ChildNodes[0]; $Node -and -not ($Node.Attributes.Contains('id') -and $Node.Attributes['id'].Value -eq 'comments'); $Node = $Node.NextSibling) { $Node }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
