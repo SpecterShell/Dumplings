@@ -1,21 +1,31 @@
 $Object1 = Invoke-WebRequest -Uri 'https://learn.microsoft.com/en-us/windows-app/whats-new' | ConvertFrom-Html
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('//a[contains(text(), "Windows 32-bit")]').Attributes['href'].Value
 }
-$this.CurrentState.Installer += [ordered]@{
+$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('//a[contains(text(), "Windows 64-bit")]').Attributes['href'].Value
 }
-$this.CurrentState.Installer += [ordered]@{
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('//a[contains(text(), "Windows Arm64")]').Attributes['href'].Value
 }
+$VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
+if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
+  $this.Log("arm64 version: ${VersionARM64}")
+  throw 'Inconsistent versions detected'
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
