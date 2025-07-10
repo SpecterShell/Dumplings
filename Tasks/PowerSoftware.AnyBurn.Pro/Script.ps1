@@ -6,15 +6,15 @@ $this.CurrentState.Version = $Object1.Version.Number
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Version.ProUrl.Replace('www.anyburn.com', 'anyburn.com')
+  InstallerUrl = $Object1.Version.ProUrl.Replace('www.anyburn.com', 'anyburn.com') | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Version.'ProUrl.X64'.Replace('www.anyburn.com', 'anyburn.com')
+  InstallerUrl = $Object1.Version.'ProUrl.X64'.Replace('www.anyburn.com', 'anyburn.com') | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.Version.'ProUrl.X64'.Replace('www.anyburn.com', 'anyburn.com') -replace 'x64', 'arm64'
+  InstallerUrl = $Object1.Version.'ProUrl.X64'.Replace('www.anyburn.com', 'anyburn.com') -replace 'x64', 'arm64' | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
