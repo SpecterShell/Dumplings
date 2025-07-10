@@ -33,35 +33,24 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
+
       $Object2 = Invoke-WebRequest -Uri 'https://llvm.org/header.incl' | ConvertFrom-Html
 
       $ReleaseNotesUrlNode = $Object2.SelectSingleNode("/html/body/table/tr/td[1]/div[5]/span/text()[contains(string(), '$($this.CurrentState.Version)')]/following-sibling::a[1]")
       if ($ReleaseNotesUrlNode) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl = $ReleaseNotesUrlNode.Attributes['href'].Value
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl = $ReleaseNotesUrlNode.Attributes['href'].Value
         }
-      } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-        # ReleaseNotesUrl
-        $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object1.html_url
-        }
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
-      }
-    }
 
-    try {
-      if (Test-Path -Path Variable:\ReleaseNotesUrl) {
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
         $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h1[contains(text(), "Changes") or contains(text(), "Release Notes")]')
@@ -77,7 +66,7 @@ switch -Regex ($this.Check()) {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotesUrl (en-US) and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
