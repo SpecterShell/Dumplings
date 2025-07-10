@@ -5,19 +5,9 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'burn'
-  InstallerUrl  = $Object1.windows.'32bit'.base.download
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'burn'
   InstallerUrl  = $Object1.windows.'64bit'.base.download
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.paessler.com/prtg_desktop/$($this.CurrentState.Version)/32bit/PRTG_Desktop_Full_Installer.msi"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
