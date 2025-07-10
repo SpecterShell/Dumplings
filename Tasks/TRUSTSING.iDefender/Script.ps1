@@ -17,7 +17,7 @@ function Get-ReleaseNotes {
 
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
         if (-not $Node.HasClass('button-group')) {
@@ -115,7 +115,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The Last Modified and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
