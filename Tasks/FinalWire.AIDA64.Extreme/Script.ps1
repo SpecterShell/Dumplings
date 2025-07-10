@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.aida64.releasepack[-1].wnew.item | Format-Text | Set-Clipboard
+        Value  = $Object1.aida64.releasepack[-1].wnew.item | Format-Text
       }
     } catch {
       $_ | Out-Host
