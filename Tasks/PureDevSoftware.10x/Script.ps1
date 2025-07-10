@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://10xeditor.com/versions.htm' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//table[@class='release_version_table']//tr[contains(., 'Version ($($this.CurrentState.Version.Split('.')[0..2] -join '.'))')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//table[@class='version_table']//tr[contains(., 'Version ($($this.CurrentState.Version.Split('.')[0..2] -join '.'))')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
