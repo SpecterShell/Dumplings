@@ -45,19 +45,21 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://keepass.info/news/news_all.html'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://keepass.info/news/news_all.html'
       }
 
       $Object2 = (Invoke-WebRequest -Uri 'https://keepass.info/news/news_all.html').Links.Where({ try { $_.href.Contains($this.CurrentState.Version) } catch {} }, 'First')
 
       if ($Object2) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl = 'https://keepass.info/news/' + $Object2[0].href
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl = 'https://keepass.info/news/' + $Object2[0].href
         }
 
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
