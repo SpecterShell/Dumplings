@@ -1,0 +1,25 @@
+Version: 1.17.0
+Installer:
+- InstallerUrl: https://github.com/nickg/nvc/releases/download/r1.17.0/nvc-1.17.0.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release contains significant improvements to the experimental Verilog and mixed-language simulation, although it's still a very long way from being production ready. Additionally:
+    - Updated to OSVVM 2025.02 and UVVM 2025.04.18 for nvc --install.
+    - Added --merge-mode option to control behaviour when merging non-equal coverage databases (from @Blebowski).
+    - Fixed "unit is too big to compile" error with very large number of signals (#1200).
+    - Just-in-time compilation is now the default and the --jit elaboration option has no effect. Use --precompile to restore the
+      previous behaviour.
+    - Fixed a crash when set_cover_scope_name from nvc.cover_pkg was called with coverage disabled (#1218).
+    - Code coverage reports now contain the source files instead of referencing them (from @Blebowski).
+    - The --ieee-warnings option now supports off-at-0 to suppress warnings only in the first time step (from @supleed2).
+    - Top-level generics can now be set to hexadecimal values from the command line using -g name='X"12"'. The value must be escaped or quoted to avoid the double quotes being interpreted by the shell.
+    - Fixed a crash when ports with view mode indications are partially associated in a port map (#1208).
+    - Files declared in impure functions are now closed after the return expression has been evaluated rather than before (#1229).
+    - Added missing slice direction check at runtime (#1231).
+    - Several other minor bugs were resolved (#1220, #1233, #1234, #1239, #1240).
+    Special thank you to @bpadalino, @tmeissner, @Blebowski, @amb5l, @m42uko, @a-panella, @cmarqu, @albydnc, @johonkanen, and @augustofg for sponsoring me!
+- Key: ReleaseNotesUrl
+  Value: https://github.com/nickg/nvc/releases/tag/r1.17.0
+ReleaseTime: 2025-07-12T10:20:33.0000000Z
