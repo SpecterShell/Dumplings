@@ -11,12 +11,14 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
+$Object1 = (Invoke-RestMethod -Uri 'https://www.maicong.cn/mc/client/findByPage?page=second_client_driver').data.driver[1].content | ConvertFrom-Json
+
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://hub.maicong.cn:9999/MCHOSE_HUB_installer.zip'
+  InstallerUrl = $Object1.download_url
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object1.Headers.ETag[0]
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$ETag = $Object2.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -84,7 +86,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
