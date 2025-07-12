@@ -1,6 +1,6 @@
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  (Invoke-WebRequest -Uri 'https://www.blender.org/download/').Content,
+  (curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.blender.org/download/' | Join-String -Separator "`n"),
   'blender-([\w\.]+)-windows'
 ).Groups[1].Value
 
