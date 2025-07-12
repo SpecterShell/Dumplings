@@ -47,7 +47,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $Object2.SelectSingleNode('//a[contains(., "Release Notes") and contains(@href, ".pdf")]').Attributes['href'].Value
+          Value  = $Object2.SelectSingleNode('//a[contains(., "Release Notes") and contains(@href, ".pdf")]').Attributes['href'].Value | ConvertTo-Https
         }
       } else {
         $this.Log("No ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
