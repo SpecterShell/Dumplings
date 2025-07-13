@@ -12,9 +12,8 @@ $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
 $VersionArm64 = [regex]::Match($InstallerARM64.InstallerUrl, 'arm64_(\d+(?:_\d+)+)').Groups[1].Value.Replace('_', '.')
 
 if ($VersionX64 -ne $VersionArm64) {
-  $this.Log("x64 version: ${VersionX64}")
-  $this.Log("ARM64 version: ${VersionArm64}")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x64: ${VersionX64}, arm64: ${VersionArm64}", 'Error')
+  return
 }
 
 # Version

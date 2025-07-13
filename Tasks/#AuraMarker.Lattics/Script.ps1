@@ -11,9 +11,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://itunes.apple.com/lookup?id=1575605022
 $Object2 = Invoke-RestMethod -Uri 'https://itunes.apple.com/lookup?id=1575605022&country=CN&lang=zh_cn'
 
 if ($Object1.results[0].version -ne $Object2.results[0].version) {
-  $this.Log("Global version: $($Object1.results[0].version)")
-  $this.Log("China version: $($Object2.results[0].version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: Global: $($Object1.results[0].version), China: $($Object2.results[0].version)", 'Error')
+  return
 }
 
 # Version

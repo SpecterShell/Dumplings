@@ -9,11 +9,8 @@ $Object3 = Invoke-RestMethod -Uri "${Prefix}latest_desktop-x64.yml" | ConvertFro
 $Object4 = Invoke-RestMethod -Uri "${Prefix}latest_desktop_machine-x64.yml" | ConvertFrom-Yaml
 
 if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
-  $this.Log("x86 user version: $($Object1.version)")
-  $this.Log("x86 machine version: $($Object2.version)")
-  $this.Log("x64 user version: $($Object3.version)")
-  $this.Log("x64 machine version: $($Object4.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86 user: $($Object1.version), x86 machine: $($Object2.version), x64 user: $($Object3.version), x64 machine: $($Object4.version)", 'Error')
+  return
 }
 
 # Version

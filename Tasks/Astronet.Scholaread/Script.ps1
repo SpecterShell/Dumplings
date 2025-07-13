@@ -4,9 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://www.scholaread.com/api/configs/versio
 $Object2 = Invoke-RestMethod -Uri 'https://www.scholaread.cn/api/configs/version'
 
 if ($Object1.data.pc.the_latest_version -ne $Object2.data.pc_cn.the_latest_version) {
-  $this.Log("Global version: $($Object1.data.pc.the_latest_version)")
-  $this.Log("China version: $($Object2.data.pc_cn.the_latest_version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: Global: $($Object1.data.pc.the_latest_version), China: $($Object2.data.pc_cn.the_latest_version)", 'Error')
+  return
 }
 
 # Version

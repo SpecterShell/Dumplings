@@ -42,9 +42,8 @@ if ($Object2.code -ne 200) { throw $Object2.msg }
 $VersionCN = $Object2.data.target_version -replace '^v'
 
 if ($VersionEN -ne $VersionCN) {
-  $this.Log("en-US version: ${VersionEN}")
-  $this.Log("zh-CN version: ${VersionCN}")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: en-US: ${VersionEN}, zh-CN: ${VersionCN}", 'Error')
+  return
 }
 
 # Version

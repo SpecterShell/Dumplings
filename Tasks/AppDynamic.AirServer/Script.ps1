@@ -7,9 +7,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://www.airserver.com/downloads/pc/appcas
 $this.CurrentState.Version = $Object2.enclosure.version
 
 if ($Object1.enclosure.version -ne $Object2.enclosure.version) {
-  $this.Log("x86 version: $($Object1.enclosure.version)")
-  $this.Log("x64 version: $($Object2.enclosure.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86: $($Object1.enclosure.version), x64: $($Object2.enclosure.version)", 'Error')
+  return
 }
 
 # Installer

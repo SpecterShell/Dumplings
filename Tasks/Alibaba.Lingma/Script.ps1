@@ -8,9 +8,8 @@ $Object3 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api
 $Object4 = Invoke-RestMethod -Uri 'https://lingma-api.tongyi.aliyun.com/algo/api/update/win32-arm64/stable/latest'
 
 if ($Object1.productVersion -ne $Object2.productVersion) {
-  $this.Log("x64 user version: $($Object1.productVersion)")
-  $this.Log("x64 machine version: $($Object2.productVersion)")
-  throw 'Inconsistent x64 versions detected'
+  $this.Log("Inconsistent x64 versions: user: $($Object1.productVersion), machine: $($Object2.productVersion)", 'Error')
+  return
 }
 
 # Version

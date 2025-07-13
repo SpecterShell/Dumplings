@@ -30,11 +30,8 @@ if ($StatusCodeARM64Machine -eq 204) {
 }
 
 if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
-  $this.Log("x64 user version: $($Object1.productVersion)")
-  $this.Log("x64 machine version: $($Object2.productVersion)")
-  $this.Log("arm64 user version: $($Object3.productVersion)")
-  $this.Log("arm64 machine version: $($Object4.productVersion)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion), arm64 user: $($Object3.productVersion), arm64 machine: $($Object4.productVersion)", 'Error')
+  return
 }
 
 # Version

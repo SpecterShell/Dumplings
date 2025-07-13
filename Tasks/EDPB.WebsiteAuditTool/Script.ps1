@@ -4,7 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://code.europa.eu/api/v4/projects/615/re
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 if ($this.CurrentState.Version -match 'a\d*$') {
-  throw 'The endpoint returned an A/B test version'
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
 }
 
 # Installer

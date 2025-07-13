@@ -46,7 +46,7 @@ if ($this.CurrentState.Version -eq $Object3.version) {
 
 $Identical = $true
 if (-not $this.LastState.Installer.Architecture -or (Compare-Object -ReferenceObject $this.LastState.Installer.Architecture -DifferenceObject $this.CurrentState.Installer.Architecture)) {
-  $this.Log('Inconsistent architecture detected', 'Warning')
+  $this.Log('Inconsistent architectures detected', 'Warning')
   $Identical = $false
 }
 

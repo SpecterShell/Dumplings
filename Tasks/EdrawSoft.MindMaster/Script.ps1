@@ -1,7 +1,8 @@
 $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5375']
 
 if ($this.CurrentState.Installer[0].InstallerUrl.Contains('_gray')) {
-  throw 'The endpoint returned an A/B test version'
+  $this.Log("The version $($this.CurrentState.Version) is an A/B test version", 'Error')
+  return
 }
 
 switch -Regex ($this.Check()) {

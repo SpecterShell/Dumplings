@@ -8,9 +8,8 @@ if (Test-Path -Path $OldReleasesPath) {
 $Object1 = Invoke-WebRequest -Uri 'https://upgrade-online.zwsoft.cn/zwcad/cad/2026/ZwServerUpdateConfig.xml' | Read-ResponseContent | ConvertFrom-Xml
 
 if ($Object1.ServerConfigs.ZWCAD_X64.'en-US'.version -ne $Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.version) {
-  $this.Log("en-US version $($Object1.ServerConfigs.ZWCAD_X64.'en-US'.version)")
-  $this.Log("zh-CN version $($Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: en-US: $($Object1.ServerConfigs.ZWCAD_X64.'en-US'.version), zh-CN: $($Object1.ServerConfigs.ZWCAD_X64.'zh-CN'.version)", 'Error')
+  return
 }
 
 # Version

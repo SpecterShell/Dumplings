@@ -11,9 +11,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://meeting.tencent.com/web-service/query
 $Object2 = Invoke-RestMethod -Uri 'https://meeting.tencent.com/web-service/query-download-info?q=[{"package-type":"app","channel":"0300000000","platform":"windows","arch":"x86_64"}]&nonce=AAAAAAAAAAAAAAAA'
 
 if ($Object1.'info-list'[0].version -ne $Object2.'info-list'[0].version) {
-  $this.Log("x86 version: $($Object1.'info-list'[0].version)")
-  $this.Log("x64 version: $($Object2.'info-list'[0].version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86: $($Object1.'info-list'[0].version), x64: $($Object2.'info-list'[0].version)", 'Error')
+  return
 }
 
 # Version

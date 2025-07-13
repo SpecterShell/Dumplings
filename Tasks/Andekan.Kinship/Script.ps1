@@ -5,9 +5,8 @@ $Object2 = $Object1.Where({ $_.fileNameNoVer -eq 'KinshipSetup' -and $_.extensio
 $Object3 = $Object1.Where({ $_.fileNameNoVer -eq 'KinshipAllUsersSetup' -and $_.extension -eq 'msi' }, 'First')[0]
 
 if ($Object2.version -ne $Object3.version) {
-  $this.Log("EXE version: $($Object2.version)")
-  $this.Log("MSI version: $($Object3.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: EXE: $($Object2.version), MSI: $($Object3.version)", 'Error')
+  return
 }
 
 # Version

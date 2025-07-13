@@ -12,9 +12,8 @@ $VersionX86 = [regex]::Match($InstallerUrlX86, '_(\d{4})[_.]').Groups[1].Value -
 $VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d{4})[_.]').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
 
 if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Error')
+  return
 }
 
 # Version

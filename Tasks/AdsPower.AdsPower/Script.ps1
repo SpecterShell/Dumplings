@@ -4,9 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.adspower.net/client/sys-client-ve
 $Object2 = Invoke-RestMethod -Uri 'https://api.adspower.net/client/sys-client-version/get-latest-version?system=com_win64'
 
 if ($Object1.data.version -ne $Object2.data.version) {
-  $this.Log("x86 version: $($Object1.data.version)", 'Warning')
-  $this.Log("x64 version: $($Object2.data.version)", 'Warning')
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86: $($Object1.data.version), x64: $($Object2.data.version)", 'Error')
+  return
 }
 
 # Version

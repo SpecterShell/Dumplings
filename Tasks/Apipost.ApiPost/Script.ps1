@@ -20,9 +20,8 @@ if ($Object2.data.Count -eq 0) {
 }
 
 if ($Object1.data.version.latest_version -ne $Object2.data.version.latest_version) {
-  $this.Log("x86 version: $($Object1.data.version.latest_version)")
-  $this.Log("x64 version: $($Object2.data.version.latest_version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86: $($Object1.data.version.latest_version), x64: $($Object2.data.version.latest_version)", 'Error')
+  return
 }
 
 # Version

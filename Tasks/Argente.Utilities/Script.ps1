@@ -18,13 +18,8 @@ $Object8 = $Object2.data.Where({ $_.name -eq 'Argente Utilities' -and $_.install
 $Object9 = $Object3.data.Where({ $_.name -eq 'Argente Utilities' -and $_.installer -eq 'utilitiesarm64portable' }, 'First')[0]
 
 if (@(@($Object4.version, $Object5.version, $Object6.version, $Object7.version, $Object8.version, $Object9.version) | Sort-Object -Unique).Count -gt 1) {
-  $this.Log("x86 EXE version: $($Object4.version)")
-  $this.Log("x64 EXE version: $($Object5.version)")
-  $this.Log("arm64 EXE version: $($Object6.version)")
-  $this.Log("x86 Portable version: $($Object7.version)")
-  $this.Log("x64 Portable version: $($Object8.version)")
-  $this.Log("arm64 Portable version: $($Object9.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x86 EXE: $($Object4.version), x64 EXE: $($Object5.version), arm64 EXE: $($Object6.version), x86 Portable: $($Object7.version), x64 Portable: $($Object8.version), arm64 Portable: $($Object9.version)", 'Error')
+  return
 }
 
 # Version

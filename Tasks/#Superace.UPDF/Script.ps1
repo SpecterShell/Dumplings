@@ -19,9 +19,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://api.updf.com/v1/common/checkUpdate' -
 }
 
 if ($Object1.data.version -ne $Object2.data.version) {
-  $this.Log("Global version: $($Object1.data.version)")
-  $this.Log("China version: $($Object2.data.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: Global: $($Object1.data.version), China: $($Object2.data.version)", 'Error')
+  return
 }
 
 # Version

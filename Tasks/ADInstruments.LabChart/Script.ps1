@@ -27,10 +27,8 @@ $this.CurrentState.Installer += [ordered]@{
 $VersionSC = $Object3.Version
 
 if (@(@($VersionEN, $VersionJA, $VersionSC) | Sort-Object -Unique).Count -gt 1) {
-  $this.Log("English version: ${VersionEN}")
-  $this.Log("Japanese version: ${VersionJA}")
-  $this.Log("Chinese version: ${VersionSC}")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: en-US: ${VersionEN}, ja-JP: ${VersionJA}, zh-CN: ${VersionSC}", 'Error')
+  return
 }
 
 # Version

@@ -14,9 +14,8 @@ $this.CurrentState.Installer += [ordered]@{
 $VersionMachine = [regex]::Match($InstallerMachineUrl, '(\d+(?:-\d+)+)').Groups[1].Value.Replace('-', '.')
 
 if ($VersionUser -ne $VersionMachine) {
-  $this.Log("User version: ${VersionUser}")
-  $this.Log("Machine version: ${VersionMachine}")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: user: ${VersionUser}, machine: ${VersionMachine}", 'Error')
+  return
 }
 
 # Version

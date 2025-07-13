@@ -4,9 +4,8 @@ $Object1 = Invoke-RestMethod -Uri 'https://assets.alfaview.com/stable/win/versio
 $Object2 = Invoke-RestMethod -Uri 'https://assets.alfaview.com/stable/win/msi_version.info'
 
 if ($Object1.versions[0].version -ne $Object2.versions[0].version) {
-  $this.Log("Inno version: $($Object1.versions[0].version)")
-  $this.Log("WiX version: $($Object2.versions[0].version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: Inno: $($Object1.versions[0].version), WiX: $($Object2.versions[0].version)", 'Error')
+  return
 }
 
 # Version

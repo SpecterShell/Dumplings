@@ -14,9 +14,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.aimp.ru/' -Body @{
 }
 
 if ($Object1.update.version.build -ne $Object2.update.version.build) {
-  $this.Log("x86 version: $($Object1.update.version)")
-  $this.Log("x64 version: $($Object2.update.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent builds: x86: $($Object1.update.version), x64: $($Object2.update.version)", 'Error')
+  return
 }
 
 # Build
