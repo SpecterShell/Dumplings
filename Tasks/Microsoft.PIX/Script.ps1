@@ -15,16 +15,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
-          UpgradeCode    = $InstallerFile | Read-UpgradeCodeFromBurn
-        }
-      )
-    }
-
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
