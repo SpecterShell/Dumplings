@@ -5,12 +5,13 @@ $Object2 = $Object1.SelectSingleNode('//table[@id="btTable"]/tbody/tr[1]')
 $this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[2]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerUrl = $Object2.SelectSingleNode('./td[5]//a').Attributes['href'].Value
 }
 
+$InstallerCN = [ordered]@{}
 if ($Object2.SelectSingleNode('./td[1]').Attributes.Contains('rowspan') -and $Object2.SelectSingleNode('./td[1]').Attributes['rowspan'].Value -eq 2 -and $Object2.SelectSingleNode('./following-sibling::tr[1]/td[1]').InnerText.Contains('China')) {
-  $this.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += $InstallerCN = [ordered]@{
     InstallerLocale = 'zh-CN'
     InstallerUrl    = $Object2.SelectSingleNode('./following-sibling::tr[1]/td[2]//a').Attributes['href'].Value
   }
@@ -27,6 +28,24 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $InstallerFileExtracted = New-TempFolder
+    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'BarTender.msi'
+    # InstallerSha256
+    $Installer['InstallerSha256'] = $InstallerCN['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # ProductCode
+    $Installer['ProductCode'] = $InstallerCN['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $Installer['AppsAndFeaturesEntries'] = $InstallerCN['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       # ReleaseNotesUrl (en-US)
