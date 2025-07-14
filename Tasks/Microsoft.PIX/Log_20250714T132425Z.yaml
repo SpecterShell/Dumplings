@@ -1,0 +1,40 @@
+Version: "2507.11"
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.microsoft.com/download/71e1a77f-3c92-4b78-aab0-f36f9b1ecfdd/PIX-2507.11-Installer-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://download.microsoft.com/download/71e1a77f-3c92-4b78-aab0-f36f9b1ecfdd/PIX-2507.11-Installer-ARM64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: 
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://devblogs.microsoft.com/pix/pix-2507-11/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Today we released PIX version 2507.11, which can be downloaded here. This release includes everything in the previous 2505.30 release, plus the following bug fixes:
+    - GPU Captures (capture time)
+      - Fix capture-time crash caused by having opaque layout textures and buffers in the same upload heap
+      - More explicitly disable support for Mesh Nodes (note: see Downloads page for a PIX build that supports Mesh Nodes)
+    - GPU Captures timeline
+      - Fix misc PIX bugs with counter collection, particularly affecting Intel GPUs
+      - Fix crash clicking in occupancy lane when no data is present
+      - Enable Timing Data on WARP if the driver has the right bug fixes
+    - GPU Captures (other)
+      - Strip off -Qstrip_reflect during Shader Edit and Continue, so that edited shaders work as expected inside PIX
+      - Buffer formatter: add missing types retrieved from shader reflection (particularly 64-bit and 16-bit types)
+      - Gather Accessed Resources: Fix crash when a state-object uses unbound descriptor range during DispatchRays (or DispatchGraph)
+      - Mesh Viewer: remove unused/broken filter bar
+    - Settings Pane:
+      - Add public “Enable Debug Layer During Playback” option, to help debug PIX issues during playback
+        - Also log debug layer errors to the PIX output view when it’s enabled
+      - Fix alternative capture key dropdown menu
+    - Other fixes/improvements
+      - Fix potential startup crash in PIX, caused by importing duplicate metric views configurations into Timing Captures
+      - Send Feedback button: Escape the feedback email subject/body, to make it support a wider range of mail clients
+      - Process Launch: Remove quotes when copying from executable path to working directory
+      - About Dialog: remove duplicate file entries, which also speeds the view up
+    As usual, if you hit any issues or have any suggestions for us then please contact us via the “Send Feedback” button in PIX or via #pix on the DirectX Discord.
+ReleaseTime: 2025-07-11T19:56:20.0000000Z
