@@ -1,0 +1,153 @@
+Version: 2022.3.61f1c1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unitychina.cn/download_unity/327989805ccf/Windows64EditorInstaller/UnitySetup64-2022.3.61f1c1.exe
+  ProductCode: Unity 2022.3.61f1c1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/2022.3.61
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.61f1
+    - DirectX12: Crash on GfxDeviceD3D12Base::DrawBuffersCommon when opening a project after changing the Graphics API to DirectX12 (UUM-77757)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: The Player hangs when unloading a scene using the UnloadUnusedAssets() method (UUM-79718)
+    - Vulkan: Application crashes with Vulkan when restoring from background on Linux (UUM-90287)
+    - WebGL: Scene is not rendered and RenderPass errors in WebGL when MSAA is enabled on URP Asset and the Camera or Overlay Camera Stacking is used (UUM-90459)
+    2022.3.61f1 Release Notes
+    Improvements
+    - Build System: Improved logging for the "Read the full binlog without getting a BuildFinishedMessage" internal build error, so we can see if the build was cancelled from the editor process.
+    - Documentation: Added a fixed width to the body of the user manual so that the text doesn't overrun on large screens.
+    - Shadergraph: Removed duplicate LIGHTMAP_ON and DIRLIGHTMAP_COMBINED variants when generating shaders for builtin-deferred.
+    Changes
+    - Editor: Changed canRunInBackground to false for Windows Gaming Input gamepads since they cannot be used while the application is in background. (ISXB-1391)
+    - Editor: Updated TerrainTools package to version 5.0.6.
+    - Package: Updated PolySpatial/visionOS packages to version 1.3.12.
+    - Package: Updated timeline package to 1.7.7 for 2022.3.
+    - XR: The Oculus XR Plugin package has been updated to 4.5.1.
+    - XR: Updated com.unity.xr.openxr package version to 1.14.2.
+    Fixes
+    - 2D: Added layer mask in renderer 2d data for filtering options. (UUM-95754)
+    - 2D: Fixed case Sprite Atlas samples show white textures in playmode when using late binding. (UUM-100501)
+    - 2D: Fixed missing fog parameters in sprite subtargets. (UUM-85456)
+    - 2D: Fixed normal map preview in Sprite Editor Window's Secondary Texture module. (UUM-99022)
+    - 2D: Fixed post processing resolve for Renderer2D. (UUM-99455)
+    - 2D: Fixed runtime light2d not created with target sorting layers. (UUM-11350)
+    - 2D: Fixed warning 'GetControlID at event ValidateCommand returns a controlID different from the one in the Layout event' is logged when undoing the deletion of an Edited Freeform 2D Light. (UUM-90726)
+    - Android: Fixed dialog input field not getting dismissed after back gesture. (UUM-99637)
+    - Android: Fixed incorrect BGR color channel swizzle when playing VP8 videos on Android while using Vulkan as Graphics API. (UUM-90144)
+    - Android: Fixed Integer input field now allowing negative integers to be entered. (UUM-85618)
+    - Android: Fixed the problem with additional streaming assets (added using BuildPlayerContext.AddAdditionalPathToStreamingAssets) being compressed in APK/AAB. (UUM-96090)
+    - Asset Pipeline: Fixed problem with main thread potentially being blocked, while doing async asset loads. (UUM-95528)
+    - Audio: Fixed an issue that would cause audio playables to throw a warning in the console. (UUM-96563)
+    - Build Pipeline: Added a Scriptable Build Pipeline setting that optionally disables logging of asset warnings during build process. (ADDR-3706)
+    - Editor: Changed made to Static Emissives in Light Explorer do not add to Undo History. (UUM-83357)
+    - Editor: Editor no longer crashes when changing template scene to instantiate if user has a preview thumbnail set. (UUM-97241)
+    - Editor: Fixed a bug where the Occlusion Window active filter would be reset on domain reload. (UUM-99535)
+    - Editor: Fixed a performance issue with user-provided or package-provided gizmo icons. Optimized gizmo icon rendering to significantly improve their performance in large scenes. (UUM-97855)
+    - Editor: Fixed an error message when multiple objects with LODGroup components are selected. (UUM-97878)
+    - Editor: Fixed an issue where having multiple Scene views open would make the Scene views constantly repaint. (UUM-77750)
+    - Editor: Fixed an issue where the Device Simulator's scale would not persist when maximizing then minimizing another window. (UUM-78562)
+    - Editor: Fixed AssetDatabase.GetAssetBundleDependencies returned list doesn't include dependency when it's a Prefab Asset. (UUM-83829)
+    - Editor: Fixed freeze within cyclic compositions where internal depth limit was not being observed. (UUM-49767)
+    - Editor: Fixed Gradient field picker not updating correctly during Undo/Redo. (UUM-99032)
+    - Editor: Fixed GradientPicker removing all swatches when dragging them outside. (UUM-100664)
+    - Editor: Fixed offscreen rendering flags to be added only when the "Offscreen Rendering (Vulkan)" OpenXR UI setting is present and enabled. (OXRB-358)
+    - Editor: Fixed opening editor log when -logFile is a relative path. (UUM-96399)
+    - Editor: Fixed SettingsService.NotifySettingsProviderChanged() not calling OnDeactivate() for existing providers. (UUM-99153)
+    - Editor: Fixed that a Scene is built with the additive Scene's contents when loading the additive Scene on Awake. (UUM-99623)
+    - Editor: Fixed the indentation of list properties in the inspector. (UUM-99070)
+    - Editor: Fixed the EditorStyles.whiteBoldLabel style so the text is white. (UUM-84114)
+    - Editor: Graphics: This PR fixes the shadow jittering issue with TAA in deferred pass on URP scenes. (UUM-97957)
+    - Editor: Improved Add Component window so long item names are truncated with ellipsis. (UUM-91895)
+    - Editor: Late binding of SpriteAtlas objects now works when loading from content archives. (UUM-101143)
+    - Editor: Linux: Fixed crash when an exception is thrown in a docked tab when closing a window. (UUM-97461)
+    - Editor: Modified touch position calculation to match mouse position calculation on Windows (Input.mousePosition). This fixes consistency issues between mouse and touch when in certain multi-display and multi-window scenarios. (UUM-99077)
+    - Editor: Prefab Override comparison window now displays properly with many fields. (UUM-96045)
+    - Editor: Removed the scroller from the prefab override modal when the content does not overflow. (UUM-83279)
+    - Editor: Resolved issue where directories with very large numbers of items and deep directory structures could cause dragging assets into a project to become sluggish and potentially freeze the Editor. (UUM-98134)
+    - Editor: Switch to OnDidApplyAnimationProperties instead of Update for DecalProjectors. (UUM-100025)
+    - Editor: The slider will now accumulate clicks over time when the page size is very small and does not move after a single click. (UUM-86425)
+    - Editor: This PR fixes a bug where position handles still react on hover even when they are not interactive due to being positioned behind an overlay, such as the orientation gizmo. (UUM-97499)
+    - EmbeddedLinux: Fixed systeminfo::GetExecutableSizeMB reporting wrong values on Embedded and Desktop Linux. (UUM-66340)
+    - Graphics: Compression of NPOT textures with mipmaps is not supported by the GPU. Texture2D.Compress function has been updated to detect that and not compress the texture, issuing an error message, so that it is consistent with the texture import pipeline. (UUM-35314)
+    - Graphics: Fixed a crash that can happen when using procedural geometries (intersection shaders) in ray tracing effects in the Editor. (UUM-100898)
+    - Graphics: Fixed LODGroupEditor throwing exceptions when underlying LODGroup is modified through code. (UUM-90137)
+    - Graphics: Fixed separate depth/stencil clears when using Vulkan. (UUM-100002)
+    - Graphics: Fixed separate depth/stencil clears when using Vulkan. (UUM-100002)
+    - HDRP: Fixed water system memory leak on domain reload. (UUM-91837)
+    - HDRP: This PR fixes a shader compilation error of HDRP Lit Shader if UV mapping for Emissive Map is set to "Same as Base". (UUM-100070)
+    - IL2CPP: Fixed issue where some nested structs configurations could cause long build times. (UUM-98369)
+    - Installer: Fixed installer from always trying to install VC++ 2010 Redistributables. (UUM-99960)
+    - iOS: Fixed soft keyboard Done/Cancel buttons truncating (to "...") in languages like Korean due to decimal font width. (UUM-97527)
+    - Kernel: Reduced profiler overhead when executing For Each jobs. (UUM-92906)
+    - Mobile: Fixed user certificates included in the app by default. (UUM-97194)
+    - Mono: Fixed performance regression where hardware intrinsics were not being applied fully. (UUM-85288)
+    - Package Manager: Fixed the issue when a upm package on Asset Store conflicts with a package on scoped registry, both become unaccessible. (UUM-86790)
+    - Particles: Clarify unexpected behavior on ParticleSystem.Play() API documentation. (UUM-99113)
+    - Profiler: Fixed potential Editor crash on invalid_parameter_internal when starting Standalone Profiler. (UUM-98081)
+    - Shadergraph: Fixed an issue where an HDRP fullscreen shader graph imported into a URP project would fail to import under some circumstances. (UUM-55703)
+    - Terrain: Fixed the issue in which Terrain splatmaps do not ignore mipmap limit when it should be. (UUM-97145)
+    - UI Elements: Corrected the indentation for decorator drawers. (UUM-89976)
+    - UI Elements: Fixed the TreeView's item clipping when using the Fixed Height Virtualization together with the Scale with Screen Size. (UUM-84105)
+    - UI Elements: Prevent rename and create template option in the context menu when multiple elements are selected within UIBuilder hierarchy. (UUM-76831)
+    - UI Elements: Updated the pointer counter logic for collection views. (UUM-82931)
+    - UI Toolkit: Fixed an issue where non-default dimension units were omitted in the USS output by the UI Builder when the value was 0. (UUM-99023)
+    - UI Toolkit: Fixed an issue with the final item of a ListView hiding at high display scales when another item was moved. (UUM-81516)
+    - UI Toolkit: Fixed dropdown menu positions appearing in the wrong place. (UUM-74016)
+    - UI Toolkit: Fixed expressions for serialized properties in numeric fields. (UUM-82983)
+    - UI Toolkit: Fixed NullReferenceException. (UUM-100051)
+    - UI Toolkit: Fixed UI Builders incorrectly informs about a circular dependency when the reference document is removed. (UUM-85011)
+    - UI Toolkit: Fixed UI Debugger picking for editor panel. (UUM-95486)
+    - UI Toolkit: TwoPaneSplitView can now collapse its child immediately after initialization. (UUM-66400)
+    - UI Toolkit: UI Builder: the last Canvas Theme applied to a UXML Document by the user is now remembered. (UUM-17567)
+    - URP: Fixed DecalProjector's animation-clip support. (UUM-96218)
+    - Version Control: When modifying the mergespecfile.tx to use Beyond Compare, it continues to fall back to FileMerge. (UUM-91595)
+    - VFX Graph: Fixed BakedGI node showing black in VFX graph outputs using Shader Graph. (UUM-99499)
+    - VFX Graph: Fixed crash on mobile player builds when loading a Scene referencing a VisualEffect component but not a VfxRenderer component with the "Strip Engine Code" feature enabled. The VfxRenderer component engine code is no longer incorrectly stripped. (UUM-99927)
+    - VFX Graph: Fixed crash when reimporting textures used by a VFX that is active and culled. (UUM-97920)
+    - VFX Graph: Unexpected visible particle if set alive is force to true in SG Opaque Output. (UUM-96266)
+    - Video: Fixed an edge case in error handling when attempting to open a video file on Android. (UUM-88992)
+    - Video: [Windows] Allow an arbitrary amount of webcam (virtual and/or physical) devices to be used. (UUM-96061)
+    - Web: Fixed bug where calling RequestUserAuthorization(UserAuthorization.Microphone) in the Web player would prompt the user for webcam permissions instead of microphone permissions. The microphone API is not yet supported in Web, so a warning message has been added to inform developers of this limitation. (UUM-75678)
+    - Web: Fixed bug where RangeError: Array buffer allocation failed was thrown when running URP sample on Chrome with compression. (UUM-98061)
+    - Web: Fixed issue preventing AudioClip from playing in Timeline in WebGL builds. (UUM-77185)
+    - Windows: Fixed for Video Player when reading video files with long path prefix. (UUM-78606)
+    - Windows: Fixed monitor handle association with the display details, for all resolutions. (UUM-78860)
+    Package changes in 2022.3.61f1
+    Packages updated
+    - com.unity.2d.animation: 9.1.3 to 9.2.0
+    - com.unity.2d.common: 8.0.4 to 8.1.0
+    - com.unity.2d.pixel-perfect: 5.0.3 to 5.1.0
+    - com.unity.2d.psdimporter: 8.0.5 to 8.1.0
+    - com.unity.2d.spriteshape: 9.0.5 to 9.1.0
+    - com.unity.ide.rider: 3.0.34 to 3.0.35
+    - com.unity.inputsystem: 1.11.2 to 1.14.0
+    - com.unity.probuilder: 5.2.3 to 5.2.4
+    - com.unity.services.analytics: 6.0.2 to 6.0.3
+    - com.unity.splines: 2.7.2 to 2.8.0
+    - com.unity.timeline: 1.7.6 to 1.7.7
+    - com.unity.xr.arcore: 5.1.6 to 5.2.0
+    - com.unity.xr.arfoundation: 5.1.6 to 5.2.0
+    - com.unity.xr.arkit: 5.1.6 to 5.2.0
+    - com.unity.xr.core-utils: 2.5.1 to 2.5.2
+    - com.unity.xr.meta-openxr: 1.0.1 to 1.0.3
+    - com.unity.xr.oculus: 4.5.0 to 4.5.1
+    - com.unity.xr.openxr: 1.14.1 to 1.14.2
+    - com.unity.terrain-tools: 5.0.5 to 5.0.6
+    - com.unity.memoryprofiler: 1.1.5 to 1.1.6
+    - com.unity.polyspatial: 1.3.11 to 1.3.12
+    - com.unity.polyspatial.visionos: 1.3.11 to 1.3.12
+    - com.unity.polyspatial.xr: 1.3.11 to 1.3.12
+    - com.unity.xr.visionos: 1.3.11 to 1.3.12
