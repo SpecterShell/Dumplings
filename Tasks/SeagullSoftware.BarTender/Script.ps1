@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
     $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtracted = New-TempFolder
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'BarTender.msi'
+    $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include 'BarTender.msi' -Recurse | Select-Object -First 1
     # InstallerSha256
     $Installer['InstallerSha256'] = $InstallerCN['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # ProductCode
