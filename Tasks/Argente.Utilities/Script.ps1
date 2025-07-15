@@ -1,9 +1,9 @@
 # x86
-$Object1 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=X86'
+$Object1 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=X86&hardware=0000000000000000000000000000000000000000000000000000000000000000'
 # x64
-$Object2 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=X64'
+$Object2 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=X64&hardware=0000000000000000000000000000000000000000000000000000000000000000'
 # arm64
-$Object3 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=ARM64'
+$Object3 = Invoke-RestMethod -Uri 'https://argenteutilities.com/service/updates.php?hardware=1&arquitectura=ARM64&hardware=0000000000000000000000000000000000000000000000000000000000000000'
 # x86 EXE
 $Object4 = $Object1.data.Where({ $_.name -eq 'Argente Utilities' -and $_.installer -eq 'utilitiesx86' }, 'First')[0]
 # x64 EXE
