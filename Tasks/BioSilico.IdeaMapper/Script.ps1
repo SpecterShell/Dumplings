@@ -61,6 +61,9 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesUrlObject[0].webUrl.Replace('/en/', '/')
         }
 
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseNotesUrlObject[0].modifiedTime.ToUniversalTime()
+
         $Object3 = Invoke-RestMethod -Uri "https://support.biosilico.com/portal/api/kbArticles/articleByPermalink?portalId=edbsn50c65f988ca4437840400b8dcfac069b5190e5a2a1bb325e871ce212bb92e126&permalink=$($ReleaseNotesUrlObject[0].permalink)"
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
