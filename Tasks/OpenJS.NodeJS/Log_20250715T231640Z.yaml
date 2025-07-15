@@ -1,0 +1,57 @@
+Version: 24.4.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v24.4.1/node-v24.4.1-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v24.4.1/node-v24.4.1-arm64.msi
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v24.4.1/node-v24.4.1-win-x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v24.4.1-win-x64/node.exe
+    PortableCommandAlias: node
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v24.4.1/node-v24.4.1-win-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v24.4.1-win-arm64/node.exe
+    PortableCommandAlias: node
+Locale:
+- Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v24.4.1/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/zh-cn/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v24.4.1/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/zh-cn/about/
+- Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v24.4.1/LICENSE
+- Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v24.4.1/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This is a security release.
+    Notable Changes
+    - (CVE-2025-27209) HashDoS in V8 with new RapidHash algorithm
+    - (CVE-2025-27210) Windows Device Names (CON, PRN, AUX) Bypass Path Traversal Protection in path.normalize()
+    Commits
+    - [c33223f1a5] - (CVE-2025-27209) deps: V8: revert rapidhash commits (Michaël Zasso) nodejs-private/node-private#713
+    - [56f9db2aaa] - (CVE-2025-27210) lib: handle all windows reserved driver name (RafaelGSS) nodejs-private/node-private#721
+- Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v24.4.1
+ReleaseTime: 2025-07-15
