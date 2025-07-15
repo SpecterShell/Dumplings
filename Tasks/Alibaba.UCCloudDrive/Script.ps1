@@ -1,7 +1,8 @@
 $Object1 = Invoke-RestMethod -Uri 'https://drive.uc.cn/api/client_version'
 
 if (-not $Object1.data.winInstallerUrl.Contains('UCCloudDrive')) {
-  throw 'The installer is not a UCCloudDrive installer.'
+  $this.Log('The installer is not a UCCloudDrive installer', 'Warning')
+  return
 }
 
 # Version
