@@ -14,6 +14,17 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.props.pageProps.initialDownloads[0].versions[0].notesMd | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
     $this.Print()
     $this.Write()
   }
