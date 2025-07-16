@@ -5,7 +5,7 @@ $Object2 = $Object1.SelectSingleNode('//script[@id="__NEXT_DATA__"]').InnerHtml 
 $this.CurrentState.Version = $Object2.props.pageProps.initialDownloads[0].versions[0].version
 
 # Installer
-$Asset = $Object2.props.pageProps.initialDownloads[0].versions[0].assets.Where({ $_.os -eq 'windows' -and $_.arch -eq 'amd64' }, 'First')[0]
+$Asset = $Object2.props.pageProps.initialDownloads[0].versions[0].assets.Where({ $_.os -eq 'windows' -and $_.arch -eq 'amd64' -and $_.description -eq 'Teleport Connect' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
   InstallerUrl    = $Asset.publicUrl | ConvertTo-UnescapedUri
