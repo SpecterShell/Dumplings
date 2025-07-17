@@ -1,33 +1,62 @@
-# Installer
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.perplexity.ai/rest/browser/download?platform=win_x64&channel=stable' -Method GET -Headers @{ 'x-perplexity-comet-download-token' = 'miniinstaller' }
+# x64
+$Object1 = Invoke-RestMethod -Uri 'https://www.perplexity.ai/rest/browser/update' -Body @{
+  browser  = $this.Status.Contains('New') ? '137.1.7151.8097' : $this.LastState.Version
+  channel  = 'stable'
+  platform = 'win_x64'
+  machine  = '0'
+} -SkipHttpErrorCheck -StatusCodeVariable 'StatusCode' -MaximumRetryCount 0
+
+if ($StatusCode -eq 404) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+} elseif ($StatusCode -ne 200) {
+  $this.Log($Object1.status, 'Error')
+  return
 }
-$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'arm64'
-#   InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.perplexity.ai/rest/browser/download?platform=win_arm64&channel=stable' -Method GET -Headers @{ 'x-perplexity-comet-download-token' = 'miniinstaller' }
+# # arm64
+# $Object2 = Invoke-RestMethod -Uri 'https://www.perplexity.ai/rest/browser/update' -Body @{
+#   browser  = $this.Status.Contains('New') ? '137.1.7151.8097' : $this.LastState.Version
+#   channel  = 'stable'
+#   platform = 'win_arm64'
+#   machine  = '0'
+# } -SkipHttpErrorCheck -StatusCodeVariable 'StatusCode' -MaximumRetryCount 0
+
+# if ($StatusCode -eq 404) {
+#   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+#   return
+# } elseif ($StatusCode -ne 200) {
+#   $this.Log($Object1.status, 'Error')
+#   return
 # }
-# $VersionARM64 = [regex]::Match($this.CurrentState.Installer[1].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-# if ($VersionX64 -ne $VersionARM64) {
-#   $this.Log("Inconsistent versions: x64: $VersionX64, arm64: $VersionARM64", 'Error')
+# if ($Object1.body.browser_version -ne $Object2.body.browser_version) {
+#   $this.Log("Inconsistent versions: x64: $($Object1.body.browser_version), arm64: $($Object2.body.browser_version)", 'Error')
 #   return
 # }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.body.browser_version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.body.url
+}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'arm64'
+#   InstallerUrl = $Object2.body.url
+# }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
+  'New|Changed|Updated' {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  'Changed|Updated' {
     $this.Message()
   }
-  'Updated|Rollbacked' {
+  'Updated' {
     $this.Submit()
   }
 }
