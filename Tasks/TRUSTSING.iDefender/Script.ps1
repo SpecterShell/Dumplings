@@ -9,10 +9,11 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    # ReleaseNotesUrl
+    # ReleaseNotesUrl (zh-CN)
     $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl = 'https://trustsing.com/idefender/'
+      Locale = 'zh-CN'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $ReleaseNotesUrl = 'https://trustsing.com/idefender/'
     }
 
     $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -31,13 +32,14 @@ function Get-ReleaseNotes {
         Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
       }
     } else {
-      $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     }
   } catch {
     $_ | Out-Host
