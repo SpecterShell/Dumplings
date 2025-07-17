@@ -13,6 +13,23 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -jo
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+      $InstallerFileExtracted = New-TempFolder
+      Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+      $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include 'setup.msi' -Recurse | Select-Object -First 1
+      # ProductCode
+      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+      # AppsAndFeaturesEntries
+      $Installer['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+          InstallerType = 'msi'
+        }
+      )
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.silhouetteamerica.com/software/release-notes/id/3' -UserAgent $DumplingsBrowserUserAgent | ConvertFrom-Html
 
