@@ -1,6 +1,6 @@
 $Object1 = Invoke-RestMethod -Uri 'https://autoupdate.opera.com/' -Method Post -Body @"
 <?xml version="1.0"?>
-<autoupdate schema-version="2.1">
+<autoupdate schema-version="2.2" type="manual">
   <system>
     <platform>
       <opsys>Windows</opsys>
