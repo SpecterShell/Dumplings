@@ -1,12 +1,12 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsFreeSetup.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'GetLocalAdminsGUISetup.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'GetLocalAdminsGUISetup.exe'
   $InstallerFile2Extracted = New-TempFolder
   Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.x64.msi'
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'GetLocalAdminsGUISetup.msi'
+  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'GetLocalAdminsGUISetup.x64.msi'
   # Version
   # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
   $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
@@ -35,7 +35,7 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/NtfsReports/LatestVersionFreeV2.xml'
+    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/GetLocalAdminsGUI/LatestVersionV2.xml'
 
     if (($Object3.UpdateInformation.VersionString -replace '(\.0+)+$') -eq ($this.CurrentState.Version -replace '(\.0+)+$')) {
       # ReleaseNotes (en-US)
@@ -53,7 +53,7 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://cjwdev.com/Software/NtfsReports/Download.html'
+$Prefix = 'https://cjwdev.com/Software/GetLocalAdminsGUI/Download.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{

@@ -1,30 +1,21 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsFreeSetup.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'MSAGUISetup.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'MSAGUISetup.exe'
   $InstallerFile2Extracted = New-TempFolder
   Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.x64.msi'
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'MSAGUISetup.msi'
   # Version
-  # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
-  $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
   # InstallerSha256
-  $InstallerX86['InstallerSha256'] = $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # ProductCode
-  $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-  $InstallerX64['ProductCode'] = $InstallerFile4 | Read-ProductCodeFromMsi
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
   # AppsAndFeaturesEntries
-  $InstallerX86['AppsAndFeaturesEntries'] = @(
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
       UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  $InstallerX64['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile4 | Read-UpgradeCodeFromMsi
       InstallerType = 'msi'
     }
   )
@@ -35,7 +26,7 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/NtfsReports/LatestVersionFreeV2.xml'
+    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/MSAGUI/LatestVersionV2.xml'
 
     if (($Object3.UpdateInformation.VersionString -replace '(\.0+)+$') -eq ($this.CurrentState.Version -replace '(\.0+)+$')) {
       # ReleaseNotes (en-US)
@@ -53,16 +44,11 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://cjwdev.com/Software/NtfsReports/Download.html'
+$Prefix = 'https://cjwdev.com/Software/MSAGUI/Download.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
-}
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href | ConvertTo-Https
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

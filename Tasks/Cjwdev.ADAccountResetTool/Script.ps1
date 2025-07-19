@@ -1,12 +1,12 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsFreeSetup.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AccountResetInstaller.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'AccountResetInstaller.exe'
   $InstallerFile2Extracted = New-TempFolder
   Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.x64.msi'
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'AccountResetInstaller.msi'
+  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'AccountResetInstaller.x64.msi'
   # Version
   # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
   $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
@@ -35,14 +35,29 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/NtfsReports/LatestVersionFreeV2.xml'
+    $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://cjwdev.com/Software/AccountReset/VersionHistory.txt').RawContentStream)
 
-    if (($Object3.UpdateInformation.VersionString -replace '(\.0+)+$') -eq ($this.CurrentState.Version -replace '(\.0+)+$')) {
+    while (-not $Object2.EndOfStream) {
+      $String = $Object2.ReadLine()
+      if ($String -match "^Version $([regex]::Escape($this.CurrentState.Version))$") {
+        break
+      }
+    }
+    if (-not $Object2.EndOfStream) {
+      $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+      while (-not $Object2.EndOfStream) {
+        $String = $Object2.ReadLine()
+        if ($String -notmatch '^Version \d+(\.\d+)+$') {
+          $ReleaseNotesObjects.Add($String -replace '^\t')
+        } else {
+          break
+        }
+      }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.UpdateInformation.NewFeatures.NewFeature.Where({ $_.Version -eq $Object3.UpdateInformation.VersionString }).Details | Format-Text
+        Value  = $ReleaseNotesObjects | Format-Text
       }
     } else {
       $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -53,7 +68,7 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://cjwdev.com/Software/NtfsReports/Download.html'
+$Prefix = 'https://cjwdev.com/Software/AccountReset/Download.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{

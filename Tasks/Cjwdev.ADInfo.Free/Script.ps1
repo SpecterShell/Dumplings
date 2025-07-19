@@ -1,48 +1,49 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsFreeSetup.exe'
-  $InstallerFile2Extracted = New-TempFolder
-  Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.x64.msi'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AdInfoInstaller.msi' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'AdInfoInstaller.msi'
   # Version
-  # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
-  $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # InstallerSha256
-  $InstallerX86['InstallerSha256'] = $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # ProductCode
-  $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-  $InstallerX64['ProductCode'] = $InstallerFile4 | Read-ProductCodeFromMsi
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
   # AppsAndFeaturesEntries
-  $InstallerX86['AppsAndFeaturesEntries'] = @(
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
+      UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
     }
   )
-  $InstallerX64['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile4 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {
   try {
-    $Object3 = Invoke-RestMethod -Uri 'https://cjwdev.com/Software/NtfsReports/LatestVersionFreeV2.xml'
+    $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://cjwdev.com/Software/ADReportingTool/VersionHistory.txt').RawContentStream)
 
-    if (($Object3.UpdateInformation.VersionString -replace '(\.0+)+$') -eq ($this.CurrentState.Version -replace '(\.0+)+$')) {
+    while (-not $Object2.EndOfStream) {
+      $String = $Object2.ReadLine()
+      if ($String -match "^Version $([regex]::Escape($this.CurrentState.Version))$") {
+        break
+      }
+    }
+    if (-not $Object2.EndOfStream) {
+      $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+      while (-not $Object2.EndOfStream) {
+        $String = $Object2.ReadLine()
+        if ($String -notmatch '^Version \d+(\.\d+)+$') {
+          $ReleaseNotesObjects.Add($String -replace '^\t')
+        } else {
+          break
+        }
+      }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.UpdateInformation.NewFeatures.NewFeature.Where({ $_.Version -eq $Object3.UpdateInformation.VersionString }).Details | Format-Text
+        Value  = $ReleaseNotesObjects | Format-Text
       }
     } else {
       $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -53,15 +54,10 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://cjwdev.com/Software/NtfsReports/Download.html'
+$Prefix = 'https://cjwdev.com/Software/ADReportingTool/Download.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
-}
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
 }
 
