@@ -12,9 +12,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
-# RealVersion
-$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){3})').Groups[1].Value
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
@@ -42,6 +39,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     $this.Print()
     $this.Write()
