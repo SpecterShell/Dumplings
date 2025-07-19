@@ -1,0 +1,23 @@
+Version: 13.1.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.1/windows_10_cmake_Release_graphviz-install-13.1.1-win32.exe
+- Architecture: x64
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.1/windows_10_cmake_Release_graphviz-install-13.1.1-win64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - When built with PangoCairo, the Kitty plugin is now available in Graphviz static builds. Previously it was only available in shared library (on-demand plugin loading) builds.
+    - The distributed Fedora and Rocky Linux packages now include the Kitty plugin. #2704
+    - On Windows, the GDI+ plugin is now available in Graphviz static builds. Previously it was only available in shared library (on-demand plugin loading) builds.
+    - Processing a graph with GVPR no longer makes explicit the default "\N" label for nodes. This undoes a change from Graphviz 13.0.1. #2705
+    - nop no longer preserves empty string labels. This undoes a change from Graphviz 13.0.1. #2436, #2705
+    - The order of programmatic calls to gvContext/gvContextPlugin and agmemread once again affects default node labels. This undoes a change from Graphviz 13.0.1. #2434, #2705
+    Fixed
+    - Spline routing can now deal with horizontal and vertical lines. This removes some instances of the “Something is probably seriously wrong” warning. #241
+    - Using layerselect beyond layer 1 no longer causes crashes. #1648
+    - Correct parsing of a PDF file’s /MediaBox section no longer depends on the internal BUFSIZ constant.
+    - Round tripping a graph through a file no longer causes it to acquire a default node label \N. #2705
+ReleaseTime: 2025-07-19T23:09:13.2770000Z
