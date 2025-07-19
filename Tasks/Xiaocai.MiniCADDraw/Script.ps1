@@ -36,23 +36,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.olcad.com/mini_draw.html' | ConvertFrom-Html
-
-      if ($Object3.SelectSingleNode('//*[@id="detail01"]/ul/li[5]').InnerText.Contains($this.CurrentState.Version)) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match(
-          $Object3.SelectSingleNode('//*[@id="detail01"]/ul/li[3]').InnerText.Trim(),
-          '(\d{4}年\d{1,2}月\d{1,2}日)'
-        ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-      } else {
-        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
