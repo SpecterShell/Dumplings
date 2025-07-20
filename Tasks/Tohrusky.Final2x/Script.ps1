@@ -1,4 +1,4 @@
-$RepoOwner = 'Tohrusky'
+$RepoOwner = 'TensoRaws'
 $RepoName = 'Final2x'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
