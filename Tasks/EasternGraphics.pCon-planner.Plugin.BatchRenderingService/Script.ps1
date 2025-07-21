@@ -54,9 +54,9 @@ switch -Regex ($this.Check()) {
       # RealVersion
       $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
       # ProductCode
-      $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+      $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
       # AppsAndFeaturesEntries
-      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      $Installer['AppsAndFeaturesEntries'] = @(
         [ordered]@{
           UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
           InstallerType = 'msi'

@@ -56,9 +56,9 @@ switch -Regex ($this.Check()) {
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
       $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Include '*.msi' -Recurse | Select-Object -First 1
       # ProductCode
-      $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
       # AppsAndFeaturesEntries
-      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      $Installer['AppsAndFeaturesEntries'] = @(
         [ordered]@{
           DisplayName   = $InstallerFile2 | Read-ProductNameFromMsi
           UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi

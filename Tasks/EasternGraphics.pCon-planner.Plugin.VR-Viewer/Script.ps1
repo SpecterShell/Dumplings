@@ -27,9 +27,9 @@ switch -Regex ($this.Check()) {
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'pCon.planner Plugin - VR-Viewer.msi'
       # ProductCode
-      $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
       # AppsAndFeaturesEntries
-      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      $Installer['AppsAndFeaturesEntries'] = @(
         [ordered]@{
           UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
           InstallerType = 'msi'
