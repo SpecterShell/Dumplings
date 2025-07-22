@@ -1,11 +1,27 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.larksuite.com/api/downloads'
+# x86
+$Object2 = $Object1.versions.Windows
+$VersionX86 = [regex]::Match($Object2.version_number, 'V([\d\.]+)').Groups[1].Value
+# x64
+$Object3 = $Object1.versions.Windows_x64
+$VersionX64 = [regex]::Match($Object3.version_number, 'V([\d\.]+)').Groups[1].Value
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Warning')
+  return
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.versions.Windows.version_number, 'V([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.versions.Windows.download_link
+  Architecture = 'x86'
+  InstallerUrl = $Object2.download_link
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object3.download_link
 }
 
 switch -Regex ($this.Check()) {
