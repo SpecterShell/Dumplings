@@ -5,7 +5,7 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['LMStudio'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri "https://versions-prod.lmstudio.ai/win32/x86/$($this.Status.Contains('New') ? '0.3.2' : $this.LastState.Version)"
+$Object1 = Invoke-RestMethod -Uri "https://versions-prod.lmstudio.ai/update/win32/x86/$($this.Status.Contains('New') ? '0.3.19' : $this.LastState.Version)"
 
 # Version
 $this.CurrentState.Version = $Object1.version
