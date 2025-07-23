@@ -1,5 +1,5 @@
 # x86
-$Object1 = Invoke-WebRequest -Uri 'https://desktop-downloads.asana.com/win32_is32/prod/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [RawVersion]$_.Version } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://desktop-downloads.asana.com/win32_ia32/prod/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [RawVersion]$_.Version } -Bottom 1
 # x64
 $Object2 = Invoke-WebRequest -Uri 'https://desktop-downloads.asana.com/win32_x64/prod/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [RawVersion]$_.Version } -Bottom 1
 
