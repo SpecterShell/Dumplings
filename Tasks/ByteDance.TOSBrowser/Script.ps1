@@ -34,15 +34,21 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.volcengine.com/docs/6349/148777' | ConvertFrom-Html
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://www.volcengine.com/docs/6349/148777')
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]")) } catch {}
+        }
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./td[4]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('./td[4]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
