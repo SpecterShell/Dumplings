@@ -36,6 +36,28 @@ foreach ($Locale in $LocaleMap.Keys) {
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://www.ultraviewer.net/changelogs.html' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact([regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}/\d{1,2}/20\d{2})').Groups[1].Value, 'M/d/yyyy', $null).ToString('yyyy-MM-dd')
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
