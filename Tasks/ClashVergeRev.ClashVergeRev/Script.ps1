@@ -26,7 +26,9 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body) -and -not $Object1.body.Contains('More new features are now supported.')) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -match '^h' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
+        # Remove the table showing the UI in light/dark mode
+        $ReleaseNotesObject.SelectNodes('//table[contains(., "Light") and contains(., "Dark")]').ForEach({ $_.Remove() })
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.SelectSingleNode("//h2[contains(., 'v$($this.CurrentState.Version)')]").NextSibling ?? $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -match '^h' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
