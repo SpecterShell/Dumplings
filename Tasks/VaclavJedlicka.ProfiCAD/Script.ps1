@@ -20,7 +20,7 @@ function Get-ReleaseNotes {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}/\d{1,2}/20\d{2})').Groups[1].Value,
-        'd/M/yyyy',
+        'M/d/yyyy',
         $null
       ).ToString('yyyy-MM-dd')
 
