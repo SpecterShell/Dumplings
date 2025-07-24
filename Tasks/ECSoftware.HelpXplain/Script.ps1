@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/download/hmsetup.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/download/helpxplain-setup.xml'
 
 # Version
 $this.CurrentState.Version = $Object1.XML_DIZ_INFO.Program_Info.Program_Version
@@ -6,11 +6,7 @@ $this.CurrentState.Version = $Object1.XML_DIZ_INFO.Program_Info.Program_Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
-  InstallerUrl  = "https://www.helpandmanual.com/download/help-and-manual-setup-v$($this.CurrentState.Version.Replace('.', '')).exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msi'
-  InstallerUrl  = "https://www.helpandmanual.com/download/help-and-manual-setup-v$($this.CurrentState.Version.Replace('.', '')).msi"
+  InstallerUrl  = "https://www.helpandmanual.com/download/helpxplain-setup-v$($this.CurrentState.Version.Replace('.', '')).exe"
 }
 
 switch -Regex ($this.Check()) {
@@ -36,7 +32,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/news/feed/'
 
-      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains("Help+Manual $($this.CurrentState.Version)") }, 'First')
+      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains("HelpXplain $($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

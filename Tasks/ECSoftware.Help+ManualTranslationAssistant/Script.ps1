@@ -11,10 +11,20 @@ $this.CurrentState.Version = $Matches[1]
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://www.helpandmanual.com/news/'
+      }
+
       $Object2 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/news/feed/'
 
       $ReleaseNotesObject = $Object2.Where({ $_.title.Contains("Translation Assistant $($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesObject) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].pubDate | Get-Date -AsUTC
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
