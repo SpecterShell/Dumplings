@@ -1,9 +1,6 @@
-$Prefix = 'https://www.victronenergy.com/support-and-downloads/software'
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('VictronEnergyDataControl') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.VictronEnergyPrefix $Global:DumplingsStorage.VictronEnergyDownloadPage.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('VictronEnergyDataControl') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
 }
 
 # Version
