@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/news/feed/'
 
-      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains("Help+Manual $($this.CurrentState.Version)") }, 'First')
+      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains('Help+Manual') -and $_.title.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

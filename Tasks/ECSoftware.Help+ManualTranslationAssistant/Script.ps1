@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/news/feed/'
 
-      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains("Translation Assistant $($this.CurrentState.Version)") }, 'First')
+      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains('Translation Assistant') -and $_.title.Contains($this.CurrentState.Version) }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].pubDate | Get-Date -AsUTC
@@ -53,10 +53,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
-    }
+    $this.Submit()
   }
 }
