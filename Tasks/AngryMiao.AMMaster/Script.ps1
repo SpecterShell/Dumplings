@@ -5,8 +5,13 @@ $this.CurrentState.Version = $Object1.data[0].version -replace '^V'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.data[0].url
+  Architecture         = 'x64'
+  InstallerUrl         = $Object1.data[0].url
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = "AM_MasterSetup_V$($this.CurrentState.Version).exe"
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
