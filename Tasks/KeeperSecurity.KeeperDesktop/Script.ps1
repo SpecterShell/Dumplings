@@ -17,13 +17,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app'
       }
 
-      $Object2 = Invoke-WebRequest -Uri "https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app/vault-release-$($this.CurrentState.Version.Split('.')[0..2] -join '.')" | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri "https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app/vault-release-$($this.CurrentState.Version -replace '(\.0+)+$')" | ConvertFrom-Html
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('//main/header/p').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -37,10 +38,11 @@ switch -Regex ($this.Check()) {
         Value  = $Object2.SelectSingleNode('//main/div[1]') | Get-TextContent | Format-Text
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = "https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app/vault-release-$($this.CurrentState.Version.Split('.')[0..2] -join '.')"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app/vault-release-$($this.CurrentState.Version.Split('.')[0..2] -join '.')"
       }
     } catch {
       $_ | Out-Host
