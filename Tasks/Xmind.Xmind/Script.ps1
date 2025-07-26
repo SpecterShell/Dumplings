@@ -1,6 +1,11 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://www.xmind.app/xmind/downloads/' (Get-RedirectedUrl -Uri 'https://xmind.cn/zen/download/win64/' | Split-Path -Leaf)
+  Architecture = 'x64'
+  InstallerUrl = Join-Uri 'https://www.xmind.app/xmind/downloads/' (Get-RedirectedUrl -Uri 'https://xmind.app/zen/download/win64/' | Split-Path -Leaf)
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = Join-Uri 'https://www.xmind.app/xmind/downloads/' (Get-RedirectedUrl -Uri 'https://xmind.app/zen/download/win_arm64/' | Split-Path -Leaf)
 }
 
 # Version
