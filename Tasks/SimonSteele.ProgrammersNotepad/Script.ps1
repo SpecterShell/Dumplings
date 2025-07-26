@@ -9,12 +9,12 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.Contains('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType       = 'zip'
   NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.Contains('.zip') -and $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

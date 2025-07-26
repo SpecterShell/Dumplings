@@ -8,7 +8,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.tag_name, '^v(\d+(?:\.\d+)+
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('installer') }, 'Last')[-1].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('installer') }, 'Last')[-1].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

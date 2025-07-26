@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^RubyInstaller-'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'x86'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "Ruby $($this.CurrentState.Version)-x86"
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'x64'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "Ruby $($this.CurrentState.Version)-x64"
@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture           = 'arm64'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.Contains('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('arm') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('devkit') -and $_.name.Contains('arm') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "Ruby $($this.CurrentState.Version)-arm"
