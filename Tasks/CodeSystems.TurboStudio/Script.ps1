@@ -6,8 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./followi
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'exe'
-  InstallerUrl  = $Object2.SelectSingleNode('./following-sibling::div[contains(@class, "download-link")]//a').Attributes['href'].Value
+  InstallerUrl = $Object2.SelectSingleNode('./following-sibling::div[contains(@class, "download-link")]//a').Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {

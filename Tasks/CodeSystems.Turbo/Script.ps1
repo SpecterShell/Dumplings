@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://turbo.net/download' | ConvertFrom-Html
 
 # EXE
-$Object2 = $Object1.SelectSingleNode('//div[@class="download-product" and contains(., "Turbo for Windows")]')
+$Object2 = $Object1.SelectSingleNode('//div[@class="download-product" and contains(., "Turbo for Windows") and not(contains(., "MSI"))]')
 $VersionEXE = [regex]::Match($Object2.SelectSingleNode('./following-sibling::div[@class="download-version"]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # MSI
