@@ -1,3 +1,5 @@
+# $Object1 = Invoke-RestMethod -Uri 'https://www.inputdirector.com/inputdirectorlatestversion.xml'
+
 $Prefix = 'https://inputdirector.com/downloads.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
