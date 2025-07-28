@@ -43,10 +43,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://docs.apifox.com/doc-5807637'
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://docs.apifox.com/doc-5807637'
       }
 
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -61,13 +62,14 @@ switch -Regex ($this.Check()) {
           Value  = ($ReleaseNotesNodes | Get-TextContent) -replace '(?s)\s*20\d{2}-\d{1,2}-\d{1,2}' | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + $this.CurrentState.Version.Replace('.', '')
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + '#' + $this.CurrentState.Version.Replace('.', '')
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
