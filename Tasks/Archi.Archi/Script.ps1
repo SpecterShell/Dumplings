@@ -37,6 +37,9 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
+  { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
+    $this.Config.IgnorePRCheck = $true
+  }
   'Changed|Updated' {
     $this.Message()
     $this.Submit()
