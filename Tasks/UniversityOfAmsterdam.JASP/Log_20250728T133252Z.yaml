@@ -1,0 +1,108 @@
+Version: 0.95.0
+Installer:
+- InstallerUrl: https://github.com/jasp-stats/jasp-desktop/releases/download/v0.95.0/JASP-0.95.0.0-Windows.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release Note 0.95.0
+    New modules and Analyses
+    - ESCI: Estimation Statistics with Confidence Intervals. See https://thenewstatistics.com/itns/
+    - Meta-Analytic SEM and SEM-Based Meta-Analysis
+      (https://github.com/jasp-stats/jaspMetaAnalysis/pull/281)
+    - The PlotBuilder (beta)
+      https://github.com/jasp-stats/jaspDescriptives/pull/345
+    - Parametric Survival Analysis
+      (https://github.com/jasp-stats/jaspSurvival/pull/6)
+    - Two new analyses in the Audit module to determine the fairness of algorithms (https://github.com/jasp-stats/jaspAudit/pull/525)
+    - Bayesian Meta-Regression and 3lvl Meta-Analyses in Bayesian Meta-Analyses
+      (https://github.com/jasp-stats/jaspMetaAnalysis/pull/310)
+    - Mantel-Haenszel / Peto Meta-Analysis (beta)
+      (https://github.com/jasp-stats/jaspMetaAnalysis/pull/340)
+    Main new features and improvements
+    - New language: Serbian language.
+    - Now support to import R data files (.RData/.RDS) (https://github.com/jasp-stats/jasp-desktop/pull/5841)
+    - Manually add/remove levels e.g. to Likert scale if levels are missing (https://github.com/jasp-stats/jasp-issues/issues/2669, https://github.com/jasp-stats/jasp-issues/issues/2920) (PR: https://github.com/jasp-stats/jasp-desktop/pull/5789)
+    - Indicate with gradient where there is more GUI to scroll through (https://github.com/jasp-stats/jasp-desktop/pull/5851)
+    - Barplots of single categorical var with many ratio vars with different colors but same color per category (https://github.com/jasp-stats/jasp-issues/issues/1734)
+    - Filter & Compute Column: Bigger capture zones + easier point&click behaviour (https://github.com/jasp-stats/jasp-issues/issues/2721)
+    - [Feature Request]: Valen Johnson's Bayes Factor Functions (https://github.com/jasp-stats/jasp-issues/issues/2053)
+    - [Feature-Request]: Show variable info when hovering variables of variable lists (https://github.com/jasp-stats/jasp-issues/issues/1190)
+    - Safer loading of JASP file and "security" mode, thanks to Sand Boxing on Windows (PR: https://github.com/jasp-stats/jasp-desktop/pull/5821)
+    - Make sure to clean up broken datasets after failed load (PR: https://github.com/jasp-stats/jasp-desktop/pull/5802)
+    - Monetary columns, thousands separators and locale sensitive number display (PR: https://github.com/jasp-stats/jasp-desktop/pull/5794)
+    - Compute column as mean (and more) of other columns via drag & drop (https://github.com/jasp-stats/jasp-issues/issues/516) (PR: https://github.com/jasp-stats/jasp-desktop/pull/5826)
+    - Add crash report (PR: https://github.com/jasp-stats/jasp-desktop/pull/5805)
+    - Add export option to Regression and ANOVA analyses, to save model residuals and predictions to the data sheet (https://github.com/jasp-stats/jaspAnova/pull/428 and https://github.com/jasp-stats/jaspRegression/pull/381)
+    - Speedup the loading process of JASP, both initially and in Engine/R by leveraging multithreaded processing. https://github.com/jasp-stats/jasp-desktop/pull/5836
+    - Descriptive Statistics now follows the variable types as specified by the user, and provides output based on these types (scale: all output, ordinal: min/max/quartiles/valid/missing, nominal: valid/missing; https://github.com/jasp-stats/jaspDescriptives/pull/363)
+    - Meta-Analysis: Subgroup analysis and analysis of dependent effect sizes
+      (https://github.com/jasp-stats/jaspMetaAnalysis/pull/298 and https://github.com/jasp-stats/jaspMetaAnalysis/pull/306)
+    - Quality Control: Response optimizer (https://github.com/jasp-stats/jaspQualityControl/pull/361) and increased flexibility in out-of-control signals (https://github.com/jasp-stats/jaspQualityControl/pull/345)
+    Fixes
+    - Adding computed column makes syncing with external ODS file crash JASP (https://github.com/jasp-stats/jasp-issues/issues/2817)
+    - [Bug]: Case sensitive help files missing on flatpak (https://github.com/jasp-stats/jasp-issues/issues/3131)
+    - [Bug]: Could not access large file on Windows ((https://github.com/jasp-stats/jasp-issues/issues/3191)
+    - [Bug]: JASP shows empty Page when loading specific file (https://github.com/jasp-stats/jasp-issues/issues/3219)
+    - Fix table notes width in LaTeX (PR: https://github.com/jasp-stats/jasp-desktop/pull/5788)
+    - add thousands separators only on display (PR: https://github.com/jasp-stats/jasp-desktop/pull/5808)
+    - bugfix: tweaks for math expressions in jaspNotes (PR: https://github.com/jasp-stats/jasp-desktop/pull/5782)
+    - [Bug]Series fixes of errors when importing Excel files (https://github.com/jasp-stats/jasp-issues/issues/3074)
+    - bugfix: fix to add notes for figures (PR: https://github.com/jasp-stats/jasp-desktop/pull/5790)
+    - [Bug]: Over translation in Japanese Environment (https://github.com/jasp-stats/jasp-issues/issues/3077) (PR: https://github.com/jasp-stats/jaspRegression/pull/353)
+    - [Bug]: Adding computed column makes syncing with external ODS file crash JASP (https://github.com/jasp-stats/jasp-issues/issues/2817) (PR: https://github.com/jasp-stats/jasp-desktop/pull/5814)
+    - make R Commander Window great again (PR: https://github.com/jasp-stats/jasp-desktop/pull/5857)
+    Descriptives:
+    - [Bug]: a bug at Separate frequencies (https://github.com/jasp-stats/jasp-issues/issues/3294)
+    TTest
+    - Better check on posterior samples wilcoxon tests (https://github.com/jasp-stats/jaspTTests/pull/314)
+    - Make dv names consistent with other t-tests (PR: https://github.com/jasp-stats/jaspEquivalenceTTests/pull/143)
+    ANOVA
+    - [Bug]: Custom Contrast in ANOVA sorted alphanumerically (https://github.com/jasp-stats/jasp-issues/issues/3112)
+    - [Bug]: Custom Contrast shows old labels (https://github.com/jasp-stats/jasp-issues/issues/3128)
+    - [Bug]: Raincloud plots run out of colors for factors with > 8 levels (https://github.com/jasp-stats/jasp-issues/issues/3238)
+    - [Bug]: BF_M was incorrectly computed for non-uniform model priors. (https://github.com/jasp-stats/jaspAnova/pull/438)
+    Factors
+    - [Bug]: EFA and PCA issues with ordinal and binary data (https://github.com/jasp-stats/jasp-issues/issues/3163)
+    Regression
+    - [Bug]: Regression line gone after axis shortening (https://github.com/jasp-stats/jasp-issues/issues/2807) (PR: https://github.com/jasp-stats/jaspRegression/pull/384)
+    - [Bug]: Multinomial Logistic Regression - fix footnote footnote outlining factor levels (https://github.com/jasp-stats/jasp-issues/issues/2975) (PR: https://github.com/jasp-stats/jaspRegression/pull/383)
+    - [Bug]: Over translation in Japanese Environment (https://github.com/jasp-stats/jasp-issues/issues/3077)
+    Audit
+    - Tables in the output that show monetary values now have valuta signs and the number of decimals is fixed to two (PR: https://github.com/jasp-stats/jaspAudit/pull/510)
+    - Users can now request the expected count in the Benford’s law analysis (https://github.com/jasp-stats/jaspAudit/pull/575)
+    - Sequential analysis plot in Bayesian evaluation analysis (https://github.com/jasp-stats/jaspAudit/pull/529)
+    Distributions
+    - [Bug]: inconsistent p-value in normality test (https://github.com/jasp-stats/jasp-issues/issues/3148)
+    - [Distributions] - ML Estimates of Normal Distribution (https://github.com/jasp-stats/INTERNAL-jasp/issues/2753)
+    - [Distributions] - Unclicking Maximum likehood does not remove the Estimated Parameters table when Estimates selected (https://github.com/jasp-stats/INTERNAL-jasp/issues/2754)
+    JAGS
+    - JAGS Compute posterior modes in customizable inference (PR: https://github.com/jasp-stats/jaspJags/pull/154)
+    Machine Learning
+    - Scale the new prediction data with the same mean and standard deviation as the training data and deduce this automatically from the trained model (https://github.com/jasp-stats/jaspMachineLearning/pull/444)
+    - [ML] Explain predictions does not work with new dataset in prediction (https://github.com/jasp-stats/INTERNAL-jasp/issues/2682)
+    - [Bug]: Fix prediction with one IV (https://github.com/jasp-stats/jasp-issues/issues/3183)
+    - [Bug]: Machine Learning Clustering Neighborhood based - Cluster Means plot mixes up values (https://github.com/jasp-stats/jasp-issues/issues/3297)
+    - Bug in decision boundary matrix extracted by decision tree and Neural Network classification in the Machine Learning Module (https://github.com/jasp-stats/jasp-issues/issues/3335)
+    - [Feature Request]: Add probabilities to the predictions of the ML algorithms (https://github.com/jasp-stats/jasp-issues/issues/3340)
+    Meta-Analysis
+    - [Feature Request]: Meta-analysis: Add Orwin’s Fail-Safe N (https://github.com/jasp-stats/jasp-issues/issues/141)
+    - [Bug]: Missing Model Type (Fixed/Random) and I² in Forest Plot – Meta-Analysis (https://github.com/jasp-stats/jasp-issues/issues/3216)
+    - Split can cause odd behavior (https://github.com/jasp-stats/jaspMetaAnalysis/pull/287)
+    - [Bug]: interactions in meta-analysis not working (https://github.com/jasp-stats/jasp-issues/issues/3205)
+    - [Bug]: Two meta-analysis bugs: removing intercept and publication bias missing (https://github.com/jasp-stats/jasp-issues/issues/3325)
+    - [Bug]: Transforming effect sizes (Log odds to proportions) (https://github.com/jasp-stats/jasp-issues/issues/3302)
+    - [Feature Request]: Orchard Plot (https://github.com/jasp-stats/jasp-issues/issues/3368)
+    - [Feature Request]: Request for Subgroup Analysis in Meta-Analysis Module (https://github.com/jasp-stats/jasp-issues/issues/3215)
+    Quality Control
+    - Time Weighted charts error (PR: https://github.com/jasp-stats/jaspQualityControl/pull/347)
+    - Bug in number of distinct categories (https://github.com/jasp-stats/jasp-issues/issues/3130, https://github.com/jasp-stats/jasp-issues/issues/3306)
+    Reliability
+    - [Bug]: Unidimensional reliability function is not working and comes up with an error (https://github.com/jasp-stats/jasp-issues/issues/3303) (https://github.com/jasp-stats/jasp-issues/issues/3237) (https://github.com/jasp-stats/jasp-issues/issues/3411)
+    SEM
+    - [Feature Request]: add warning that parameters are estimated as equal across groups (https://github.com/jasp-stats/jasp-issues/issues/1279)
+    Summary Statistics
+    - Automatic update Sample Size/Successes in Bayesian A/B Test (https://github.com/jasp-stats/jaspSummaryStatistics/pull/186)
+    Process
+    - [Feature Request]: Add moderated moderation index (https://github.com/jasp-stats/jasp-issues/issues/3331)
+ReleaseTime: 2025-07-23T11:50:00.0000000Z
