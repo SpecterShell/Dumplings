@@ -6,6 +6,7 @@ $this.CurrentState.Version = $Object1.enclosure.version
 # Installer
 $InstallerUrlBuilder = [System.UriBuilder]::new($Object1.enclosure.url)
 $InstallerUrlBuilder.Host = 'securecdn.oculus.com'
+$InstallerUrlBuilder.Query = $InstallerUrlBuilder.Query -replace '&?fcl=[^&]+'
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrlBuilder.ToString().Replace(':443', '')
 }
