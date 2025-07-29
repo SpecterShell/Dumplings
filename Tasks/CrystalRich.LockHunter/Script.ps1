@@ -24,10 +24,11 @@ switch -Regex ($this.Check()) {
       $Object2 = (Invoke-RestMethod -Uri 'https://blog.crystalrich.com/category/lockhunter/feed/').Where({ $_.title.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') -and -not $_.title.Contains('beta') }, 'First')
 
       if ($Object2) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].link
         }
 
         # ReleaseTime

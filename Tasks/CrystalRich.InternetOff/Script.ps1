@@ -18,10 +18,11 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://blog.crystalrich.com/'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://blog.crystalrich.com/'
       }
 
       $Object2 = (Invoke-RestMethod -Uri 'https://blog.crystalrich.com/category/internetoff/feed/').Where({ $_.title.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') -and -not $_.title.Contains('beta') }, 'First')
