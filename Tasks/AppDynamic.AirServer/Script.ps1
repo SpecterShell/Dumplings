@@ -14,7 +14,7 @@ if ($Object1.enclosure.version -ne $Object2.enclosure.version) {
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
-  InstallerUrl         = Join-Uri $Object1.enclosure.url "AirServer-$($this.CurrentState.Version)-x86.msi"
+  InstallerUrl         = $Object1.enclosure.url
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = $Object1.enclosure.primaryInstallationFile
@@ -23,7 +23,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = Join-Uri $Object2.enclosure.url "AirServer-$($this.CurrentState.Version)-x64.msi"
+  InstallerUrl         = $Object2.enclosure.url
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = $Object2.enclosure.primaryInstallationFile
