@@ -24,24 +24,35 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName2}/releases").Where({ $_.name -eq $this.CurrentState.Version.Split('-')[0] }, 'First')[0]
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://github.com/mamba-org/mamba/releases'
+      }
 
-      if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
-        # ReleaseNotes (en-US)
+      $Object2 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName2}/releases").Where({ $_.name -eq $this.CurrentState.Version.Split('-')[0] }, 'First')
+
+      if ($Object2) {
+        if (-not [string]::IsNullOrWhiteSpace($Object2[0].body)) {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $Object2[0].body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+          }
+        }
+
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].html_url
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object2.html_url
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
