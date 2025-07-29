@@ -1,4 +1,4 @@
-$RepoOwner = 'Maximus5'
+$RepoOwner = 'ConEmu'
 $RepoName = 'ConEmu'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
@@ -30,6 +30,8 @@ switch -Regex ($this.Check()) {
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     # ProductCode
     $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries
