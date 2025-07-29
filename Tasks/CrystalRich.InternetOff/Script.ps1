@@ -1,8 +1,11 @@
-# $Object1 = Invoke-RestMethod -Uri 'https://lockhunter.com/version.txt'
+# $Object1 = Invoke-RestMethod -Uri 'https://crystalrich.com/internetoff/version.txt'
+
+$Prefix = 'https://crystalrich.com/internetoff/download.htm'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://lockhunter.com/startdownload.htm?imm'
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -21,7 +24,7 @@ switch -Regex ($this.Check()) {
         Value = 'https://blog.crystalrich.com/'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://blog.crystalrich.com/category/lockhunter/feed/').Where({ $_.title.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') -and -not $_.title.Contains('beta') }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://blog.crystalrich.com/category/internetoff/feed/').Where({ $_.title.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') -and -not $_.title.Contains('beta') }, 'First')
 
       if ($Object2) {
         # ReleaseNotesUrl
