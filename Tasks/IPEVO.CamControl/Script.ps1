@@ -1,16 +1,17 @@
 $Object1 = Invoke-WebRequest -Uri 'https://us.ipevo.com/pages/camcontrol-download' | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode("//text()[.='Windows 7 / 8 / 10 / 11']/following::a[contains(., 'Download')]").Attributes['href'].Value | ConvertTo-HtmlDecodedText
+$RedirectedInstallerUrl = Get-RedirectedUrl -Uri $InstallerUrl
 
 # Version
-$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrl -Uri $InstallerUrl), '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($RedirectedInstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $InstallerUrl
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "Annotator_v$($this.CurrentState.Version).msi"
+      RelativeFilePath = $RedirectedInstallerUrl | Split-Path -LeafBase
     }
   )
 }
