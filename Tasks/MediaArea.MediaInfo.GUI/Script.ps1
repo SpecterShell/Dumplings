@@ -5,7 +5,16 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'NewVersion;([\d\.]+)').Gr
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://mediaarea.net/download/binary/mediainfo-gui/$($this.CurrentState.Version)/MediaInfo_GUI_$($this.CurrentState.Version)_Windows.exe"
+  Architecture = 'x86'
+  InstallerUrl = "https://mediaarea.net/download/binary/mediainfo-gui/$($this.CurrentState.Version)/MediaInfo_GUI_$($this.CurrentState.Version)_Windows_i386.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = "https://mediaarea.net/download/binary/mediainfo-gui/$($this.CurrentState.Version)/MediaInfo_GUI_$($this.CurrentState.Version)_Windows_x64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://mediaarea.net/download/binary/mediainfo-gui/$($this.CurrentState.Version)/MediaInfo_GUI_$($this.CurrentState.Version)_Windows_ARM64.exe"
 }
 
 switch -Regex ($this.Check()) {

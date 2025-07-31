@@ -12,6 +12,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://mediaarea.net/download/binary/mediainfo/$($this.CurrentState.Version)/MediaInfo_CLI_$($this.CurrentState.Version)_Windows_x64.zip"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://mediaarea.net/download/binary/mediainfo/$($this.CurrentState.Version)/MediaInfo_CLI_$($this.CurrentState.Version)_Windows_ARM64.zip"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
