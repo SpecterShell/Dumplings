@@ -17,6 +17,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('nsis') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'exe'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('nsis') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('nsis') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
