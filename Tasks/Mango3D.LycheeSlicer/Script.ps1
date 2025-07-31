@@ -40,22 +40,8 @@ switch -Regex ($this.Check()) {
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
         $ReleaseNotesNode = $Object3.SelectSingleNode('.//div[contains(@class, "content-renderer")]')
-        $ReleaseNotesTimeNode = $ReleaseNotesNode.SelectSingleNode('.//p[contains(text(), "Release date")]')
-        try {
-          # ReleaseTime
-          $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTimeNode.InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-          $ReleaseNotesTimeNode.Remove()
-
-          # ReleaseNotes (en-US)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
-          }
-        } catch {
-          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-        }
-
+        # Remove release time
+        $ReleaseNotesNode.SelectNodes('.//p[contains(text(), "Release date")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
