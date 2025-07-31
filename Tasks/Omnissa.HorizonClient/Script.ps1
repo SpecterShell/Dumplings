@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://customerconnect.omnissa.com/channel/public/api/v1.0/products/getRelatedDLGList?category=desktop_end_user_computing&product=omnissa_horizon_clients&version=8&dlgType=PRODUCT_BINARY').dlgEditionsLists.Where({ $_.name -eq 'Omnissa Horizon Client for Windows' }, 'First')[0].dlgList
+$Object1 = (Invoke-RestMethod -Uri 'https://customerconnect.omnissa.com/channel/public/api/v1.0/products/getRelatedDLGList?category=virtual_desktop_and_apps&product=omnissa_horizon_clients&version=8&dlgType=PRODUCT_BINARY').dlgEditionsLists.Where({ $_.name -eq 'Omnissa Horizon Client for Windows' }, 'First')[0].dlgList
 $Object2 = Invoke-RestMethod -Uri "https://customerconnect.omnissa.com/channel/public/api/v1.0/dlg/details?downloadGroup=$($Object1.code)&productId=$($Object1.productId)&rPId=$($Object1.releasePackageId)"
 
 # Version
