@@ -1,0 +1,122 @@
+Version: 2022.3.62f1c1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unitychina.cn/download_unity/b0109b07edb8/Windows64EditorInstaller/UnitySetup64-2022.3.62f1c1.exe
+  ProductCode: Unity 2022.3.62f1c1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/2022.3.62
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.62f1
+    - DirectX12: Crash on GfxDeviceD3D12Base::DrawBuffersCommon when opening a project after changing the Graphics API to DirectX12 (UUM-77757)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: The Player hangs when unloading a scene using the UnloadUnusedAssets() method (UUM-79718)
+    - Graphics Device Features: Graphics.RenderMeshIndirect does not issue multi-draw rendering commands when using a graphics API capable of multi-draw commands (UUM-91617)
+    - Graphics Tools: Editor freezes when initializing converters with Post-Processing Stack V2 Converter enabled (UUM-102790)
+    - Scene Management: Editor hangs when cutting and pasting a Script to another folder during Play Mode (UUM-104031)
+    - SRP XR: Light is culled incorrectly when Deferred+ and Forward+ Rendering Paths are used (UUM-103384)
+    2022.3.62f1 Release Notes
+    Improvements
+    - Core: Don't sync job chains early.
+    - Input: Added support of F13-F24 (F20 on mac) for the new input system package.
+    Changes
+    - Android: Added Android SDK 36 support.
+    - Android: Predictive Back Support is now enabled by default on new projects.
+    - XR: The Unity XR SDK is no longer available as we have focused our investments towards OpenXR.
+    - XR: Updated com.unity.xr.openxr pacakge version to 1.15.0 pre.1.
+    - XR: Updated com.unity.xr.openxr package version to 1.14.3.
+    Fixes
+    - 2D: Fixed case where Textures swap when SpriteRenderers with shared materials and animators are toggled on and off. (UUM-98517)
+    - 2D: Fixed Editor crash on PrepareSpriteTilingData when exiting Play mode. (UUM-101315)
+    - 2D: Fixed manual reference link for GridSelection. (UUM-101641)
+    - 2D: Fixed NullReferenceException when saving in Editor. (UUM-102798)
+    - 2D: Fixed outdated page opens when accessing Sprite Atlas v2 reference page. (UUM-102245)
+    - 2D: Fixed Sprite Editor Window settings text alignment in Preference Window. (UUM-100716)
+    - Android: Fixed an issue where StartActivityIndicator is displayed outside of safe area. (UUM-82238)
+    - Android: Fixed an issue where the AndroidActivityIndicatorStyle enum did not change. (UUM-79911)
+    - Android: Fixed an issue where the Player lost focus when UnityEngine.Handheld.StartActivityIndicator() was used with the Facebook SDK. (UUM-87564)
+    - Android: Fixed gradle-wrapper.properties not getting updated when modifying Gradle path in "Preferences -> External Tools". (UUM-103233)
+    - Android: The warning "Internal: JobTempAlloc has allocations that are more than the maximum lifespan of 4 frames old - this is not allowed and likely a leak" is not displayed when ShaderVariantCollection.WarmUp is called. (UUM-69949)
+    - Asset Pipeline: Fixed crash loading Content Archive from different version which also contains Managed type references. (UUM-103186)
+    - Audio: Audio Clips with loadInBackground set would always play back with default values for spatialBlend and stereoPan on the first frame of playback. (UUM-84289)
+    - Audio: Fixed an issue that would cause the pitch shifter audio effect to sometimes distort the audio. (UUM-95664)
+    - Build Pipeline: Improved BeeLocalCacheTool error reporting when copying files.
+    - Documentation: Fixed help icon in Physics2D Settings page not linking to the manual correctly. (UUM-102131)
+    - Editor: About box says license is 'Unity Indie' after returning all licenses. (UUM-84063)
+    - Editor: Fixed a bug causing compilation issues in BiRP shader graphs when targeting android. (UUM-71322)
+    - Editor: Fixed a crash when 0 vertex skinmesh. (UUM-93061)
+    - Editor: Fixed a performance regression for Volumes in Dev builds and in Editor. (UUM-101874)
+    - Editor: Fixed a runtime crash when changing MSAA levels on OpenGL.
+    - Editor: Fixed crash on "SerializedObject::ApplyModifiedPropertiesWithoutUndo()" when changing the Color Space setting. (UUM-101482)
+    - Editor: Fixed crash when class id in scene file does not match expected type e.g. Component as GameObject. (UUM-91352)
+    - Editor: Fixed errors related to incompatible keyword spaces when loading a project using ray tracing shaders. The errors can be generated when using closest hit shaders and keywords in a fallback shader. (UUM-98620)
+    - Editor: Fixed issue causing some detail popups to appear in the wrong place on macOS. Examples include Shader Graph and VFX detail popup views. (UUM-102046)
+    - Editor: Fixed leading zero in millisecond field of Asset Loading Profiler Module timestamp. (UUM-103477)
+    - Editor: Fixed the editor crashing when a vector with a sufficiently large magnitude is passed to a navigation agent's SetDestination method. (UUM-99274)
+    - Editor: Fixed the Prefab overrides comparison popup placement on multi monitor setups with varying display scaling. (UUM-88949)
+    - Editor: Improved External Script Editor handling of macOS application bundles. You will no longer get a warning in the console about the application not existing even though it does. (UUM-99484)
+    - Editor: Improved some API documentation for Terrain and TerrainData. Also corrects the TerrainData GetAlphamaps and SetAlphamaps pages.
+    - Editor: OSX: Fixes that values changed on a Prefab Asset are not retained when entering Play Mode. (UUM-100594)
+    - Editor: TransformAccessArray.Add APIs act consistently when passed null Transforms or invalid InstanceIds. They will add the null entry and print a warning to the console. (UUM-70574)
+    - Editor: [Shader Graph] Fixed texture asset conflicts when multiple Shader Graph sample content sets were imported at the same time. (UUM-103183)
+    - Graphics: Fixed a rare BRG related crash that happened when Meshes were being unregistered before they were used.
+    - Graphics: Fixed potential race condition when calling GraphicsBuffer.SetData and GraphicsBuffer.LockBufferForWrite/GraphicsBuffer.UnlockBufferAfterWrite. (UUM-83339)
+    - Graphics: Fixed the CustomRenderTexture Shader Properties array size warning. (UUM-96096)
+    - Graphics: Replace costly WMI videocontroller query. (UUM-102971)
+    - IL2CPP: Fixed missing time zone adjustments for British Summer Time. (UUM-102210)
+    - Input: Fixed F13/F14/F15 buttons are not being recognized when used with the Input function in Scripts. (UUM-44328)
+    - Input System: Fixed an issue where the macOS HID input backend would send HID output reports (rumble haptics) synchronously resulting in reduced FPS when HID output reports are not matching the expected format. (UUM-101166)
+    - iOS: Changed Device.advertisingTrackingEnabled to report status from AppTrackingTransparency on iOS 14+. (UUM-101288)
+    - iOS: Fixed "hang" after calling UnityBatchPlayerLoop. (UUM-97542)
+    - Kernel: Fixed leak detection for ThreadSafeLinearAllocator. (UUM-100968)
+    - Kernel: Reduced thread waking costs when kicking job batches. This improves job system scalability and performance, especially when job parallelism is low. (UUM-100187)
+    - Linux: Fixed Player creates a maximized window when launched with batchmode argument. (UUM-100366)
+    - Mono: Fixed Process.Start hangs on intel mac editors running on apple silicon. (UUM-101541)
+    - Particles: Fixed potential crash with sub-emitter with multiple parents. (UUM-86973)
+    - Particles: Prevent NaN in Rotation3D if Shape Scale is Zero. (UUM-97828)
+    - Physics 2D: Ensure that all 2D Physics OnCollision/OnTrigger produce Enter/Exit callbacks in the correct order under all circumstances. (UUM-101320)
+    - Scripting: Fixed losing Script dependencies in player builds when theres DefineConstrains on an Asmdef using ExtraDefines. (UUM-99127)
+    - Shaders: Fixed an editor crash in shader fallback resolving when importing a specific bundle of assets. (UUM-99172)
+    - Shaders: In lightmapped objects some mesh channels weren't detected as used. (UUM-103200)
+    - Terrain: Terrain Trees with custom Tree Height and any materials without a "_TreeInstanceScale" property return to their correct height when zoomed in. Prior to this fix, trees materials without _TreeInstanceScale would always render at scale 1, even if the tree instance had height data. (UUM-40370)
+    - Text: Updated Freetype to version 2.13.3. (UUM-102460)
+    - UI Toolkit: Fixed a bug in ListView dynamic height virtualization where content could disappear after scrolling. (UUM-102835)
+    - UI Toolkit: Fixed corner case of inset tessellation. (UUM-100217)
+    - UI Toolkit: Fixed dynamic color playtint issue. (UUM-48533)
+    - UI Toolkit: UI Toolkit now warns you that UI elements might not render correctly if you disable depth and stencil. (UUM-98899)
+    - Universal Windows Platform: Fixed audio playback when minimized, when Application.runInBackground is set to true. (UUM-79675)
+    - Universal Windows Platform: Fixed keyboard modifiers state at application suspension. (UUM-71730)
+    - URP: Fixed issue where inverse matrices were not set in XR. (UUM-75383)
+    - Version Control: UnityYAMLMerge tool wasn't waiting for opendiff tool to finish on macOS. (UUM-102589)
+    - VisionOS: Fixed flickering issue for VFX graphs on Apple Vision Pro using Metal rendering. (XRVOSB-74)
+    - Web: Corrected the name of the background image file in the output directory when using "Name Files as Hashes". (UUM-96178)
+    - Web: Fixed bug where backslash keys (IntlYen, IntlRo) were not detected on Japanese 106/109 keyboard. (UUM-97892)
+    - Web: Fixed the audio context suspend/resume mechanic. (UUM-74921)
+    - Web: Work around a browser bug, where, on some platforms, Time.realtimeSinceStartup/Time.realtimeSinceStartupAsDouble did not include elapsed time in system sleep when accessing these properties. Note that this may limit the precision of these properties to millisecond-level. For precise frame timing use Time.time instead. (UUM-96465)
+    - WebGL: Fixed an issue with build and run when using Gzip in release mode on MacOS. (UUM-99397)
+    - Windows: On Windows, fixed a few related bugs where if the Unity project/player settings were set to the Quad speaker mode, we would still output sound to the front center channel on a 5.1 or 7.1 system. Similarly, if Unity is set to use the surround (5.0) speaker mode, we would still output sound to the LFE channel on a 5.1 or 7.1 system. This has now been fixed. (UUM-52906)
+    Package changes in 2022.3.62f1
+    Packages updated
+    - com.unity.2d.aseprite: 1.1.8 to 1.1.9
+    - com.unity.burst: 1.8.19 to 1.8.21
+    - com.unity.ide.rider: 3.0.35 to 3.0.36
+    - com.unity.mobile.android-logcat: 1.4.4 to 1.4.5
+    - com.unity.services.vivox: 16.5.0 to 16.6.0
+    - com.unity.settings-manager: 2.0.1 to 2.1.0
+    - com.unity.xr.meta-openxr: 1.0.3 to 1.0.4
+    - com.unity.xr.openxr: 1.14.2 to 1.14.3
+    - com.unity.ai.navigation: 1.1.5 to 1.1.6
+    Pre-release packages added
+    - com.unity.xr.openxr@1.15.0-pre.1
