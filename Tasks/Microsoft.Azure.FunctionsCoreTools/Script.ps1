@@ -43,6 +43,10 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
     $this.Print()
     $this.Write()
   }
