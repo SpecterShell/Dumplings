@@ -18,7 +18,7 @@ $this.CurrentState.Version = $VersionX64
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'msi'
-  InstallerUrl  = 'https:' + $Object1.installer.url | ConvertTo-UnescapedUri
+  InstallerUrl  = 'https:' + $Object1.installer.url -replace '\.exe$', '.msi' | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture  = 'x86'
@@ -28,7 +28,7 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
-  InstallerUrl  = 'https:' + $Object2.installer.url | ConvertTo-UnescapedUri
+  InstallerUrl  = 'https:' + $Object2.installer.url -replace '\.exe$', '.msi' | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
