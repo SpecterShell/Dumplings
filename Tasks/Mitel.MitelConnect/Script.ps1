@@ -101,12 +101,3 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
 }
-
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DYMOApps.'DYMO Softwares'.'DYMO PrinterServer Control Center'.Windows.'DYMO PrinterServer Control Center'.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 8.1') }, 'First')[0].Value | ConvertTo-UnescapedUri
-}
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
