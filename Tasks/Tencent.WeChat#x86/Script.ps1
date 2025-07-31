@@ -170,7 +170,7 @@ if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
     $this.CurrentState.HashA = $Object2.Headers.'X-COS-META-MD5'[0]
 
     # Case 2: The main and the alternative hash are not updated
-    if ($this.CurrentState.MD5A -eq $this.LastState.MD5A) {
+    if ($this.CurrentState.HashA -eq $this.LastState.HashA) {
       $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
       return
     }
