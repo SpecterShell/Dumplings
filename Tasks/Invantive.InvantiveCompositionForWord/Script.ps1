@@ -17,7 +17,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.InvantiveDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('Invantive%20Composition%20for%20Word') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = $Global:DumplingsStorage.InvantiveDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('Invantive Composition for Word') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
