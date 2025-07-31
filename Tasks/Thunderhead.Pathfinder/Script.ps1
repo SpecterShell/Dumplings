@@ -1,4 +1,5 @@
-$Object1 = Invoke-WebRequest -Uri 'https://support.thunderheadeng.com/release-notes/pathfinder/latest' | ConvertFrom-Html
+$ReleaseNotesUrl = Get-RedirectedUrl -Uri 'https://support.thunderheadeng.com/release-notes/pathfinder/latest'
+$Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode("//*[contains(@x-data, 'availableDownloads')]").Attributes['x-data'].Value | ConvertTo-HtmlDecodedText | ConvertFrom-Json
 
 # Installer
@@ -17,6 +18,13 @@ switch -Regex ($this.Check()) {
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object1.SelectSingleNode("//h3[contains(text(), `"What's New`")]/ancestor::*[1]") | Get-TextContent | Format-Text
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
       }
     } catch {
       $_ | Out-Host
