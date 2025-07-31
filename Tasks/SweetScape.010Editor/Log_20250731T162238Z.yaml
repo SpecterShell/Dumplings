@@ -1,0 +1,148 @@
+Version: "16.0"
+Installer:
+- Architecture: x86
+  InstallerUrl: https://download.sweetscape.com/010EditorWin32Installer16.0.exe
+- Architecture: x64
+  InstallerUrl: https://download.sweetscape.com/010EditorWin64Installer16.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The following is an overview of the new functionality in version 16.0 of 010 Editor:
+    - Tabs can now be placed in the Title Bar of the application.
+    - Updated styles to be more consistent with Windows 11, included rounded UI elements and scroll bars.
+    - macOS ARM support has been added.
+    - Highlighting can be applied to a file using any regular expression or find expression.
+    - Added <pos=...> and <localpos=...> attributes to place a variable at an address. localpos is relative from the parent struct.
+    - Added <edit=check|color|flags> to display a checkbox, color box, or flag selector box in the Template Results.
+    - Incremental Find now searches for values as you type in the Find Bar.
+    - Find and Find in Files are now threaded.
+    - Calculate Entropy and use an Entropy graph to determine which areas of a file contain random data.
+    The following is a list of all new features in version 16.0 of 010 Editor:
+    - Tabs
+      - Tabs can now be placed in the Title Bar of the application.
+      - Can change the color of the Title Bar using the Theme/Colors Options dialog.
+      - Can change the tab location using the Opening Files/Tabs Options dialog.
+      - When the mouse is hovered over a tab, the full file name is shown in the status bar.
+      - Scroll buttons work better for scrolling through large number of tabs.
+      - The Welcome page askes whether to move tabs to the title bar.
+      - The current project name is now displayed in the Title Bar surrounded by square brackets '[' ']'.
+    - Styles
+      - Updated styles to more consistent with Windows 11, included rounded UI elements and scroll bars.
+      - Access the Startup page by clicking the icon at the top left of the application.
+      - The Startup page has a new style.
+      - Font sizes have been updated for some parts of the application.
+      - New styles can be turned off using the Theme/Colors Options dialog.
+    - Templates and Scripts
+      - Added <pos=number|function|expression> attribute as an easy to place a variable at an address in a file.
+      - Added <localpos=number|function|expression> attribute to place a variable at an offset from its parent.
+      - Added <format=decimalhex> to display numbers as both decimal and hex (for example, 16 [10h]).
+      - Added <edit=check> to display a checkbox in the Template Results table. Clicking the checkbox assigns either 1 or 0 to the variable.
+      - Added <edit=color> to display a color picker rectangle in the Template Results. Variables should also have a read/write function that returns a color in the HTML format "#RRGGBB" or "#RRGGBBAA".
+      - Added <edit=flags> to interpret an enum as a set of flags.
+      - When using flags, the variable value shows each flag separated by '|' (for example 'ONE | TWO | THREE'), and clicking the down arrow shows a list of checkboxes for each possible flag.
+      - Variables may now be defined inside 'for' statements; for example 'for( int i = 0; i < 5; i++ )'. These variables are always created as local variables.
+      - Added <warn=false> to turn off warnings for a particular variable.
+      - The <hidden> attribute may now be any expression or function.
+      - Single-bit bitfields are now automatically assigned a check box (use BitfieldSetAutoCheckBox(false) to turn this off).
+      - for(;;) statements are now allowed.
+      - The Run Template, Run Script, and Run on File drop-down lists are now alphabetical.
+      - The _010_SCRIPT constant is now defined when running a script.
+      - Show a warning when opening a large array in the Template Results (more than 10 million entries).
+      - Improved error message when a variable could not be located in a structure using the '.' operator in some cases.
+      - The Template Results and some other Tables can have a Column Display Format of Decimal/Hex.
+      - Added EnumFlagsToString and EnumStringToFlags functions for working with enum flags.
+      - Added DisplayFormatDecimalHex function, and SetDisplayFormat supports the constant DISPLAY_FORMAT_DECIMAL_HEX.
+      - Added BitfieldGetAutoCheckBox and BitfieldSetAutoCheckBox functions to set if single-bit bitfields automatically have check boxes.
+      - The ExportFile function has options for includeSpaces and includeLinefeeds, and supports a new constant EXPORT_HEX_EDITOR_AREAS.
+      - 'Jump to Template Variable' now works better with disjoint structs.
+      - On-demand structs apply colors more consistently when they are opened.
+    - Find
+      - Incremental Find now automatically searches for values as you type in the Find Bar.
+      - Find and Find in Files are now threaded (stop long searches by clicking the Stop button in the Find Bar).
+      - Quick Find Next/Previous is supported. Make a selection in the editor and press F3 or Ctrl+F3 to find the next occurrence of the selection.
+      - Incremental Search and Quick Find Next/Previous can be turned off in the Advanced Options of the Find Bar.
+      - Support \U, \L, \u, and \E in replacement strings for regular expressions to change the case of capture groups.
+      - \x?? is now supported in replacement strings when not using regular expressions.
+      - Renamed the 'Search' tool bar to 'Find' to be consistent.
+    - Highlighting
+      - Highlighting can be applied to a file using any regular expression or find expression.
+      - Use the Highlights Options dialog to add regular expression highlights.
+      - In the Find Bar, can also click the up arrow next to the 'All' button and select 'Add Highlighter'.
+      - Turn Highlights on or off using 'View > Highlighting' and the highlights are persistent.
+      - Highlights have options for match case, match whole word, and colors.
+      - Highlights can either be applied to individual files or can be applied to all files that share an Edit As (see Scope in the Highlights Options dialog).
+      - Other Find expressions can be used by placing a comma and a type specifier after the expression to highlight. For example, use "67 4F,h" to highlight the hex bytes 67 and 4F.
+      - If a Highlight has been applied to the current file, right-click on the file and select 'Clear File Highlights' to turn off the highlights.
+      - Highlights now have a separate default color for text and hex.
+      - Added 'Zeros' highlighting rule for highlighting all 00 bytes.
+      - Added 'View > Highlighting > Auto-Highlight Options' menu with 'Match Case' and 'Match Whole Word'.
+    - Entropy
+      - Entropy can be calculated for a file using 'Tools > Histogram/Entropy'.
+      - Entropy shows how random a file is, ranging from 0.0 (all one value) to 8.0 (completely random).
+      - A graph of the entropy for a file is shown by splitting the file into 512-byte blocks and calculating the entropy for each block.
+      - Adjust the block size in the Histogram/Entropy dialog.
+      - Place the mouse over the graph to view a popup containing the entropy in the highlighted range, the start address, and the number of blocks selected.
+      - Click on the graph to select bytes in the editor which correspond to the highlighted blocks.
+    - macOS
+      - macOS ARM support has been added.
+      - Minimum supported platform is now macOS 10.14.
+    - Linux
+      - Minimum supported platform is now Ubuntu 18.04.
+      - New style for scroll bars and the title bar.
+      - Fixed problems starting Wayland on some Linux systems.
+    - General
+      - Upgraded Qt library to 6.4.3.
+      - Upgraded Oniguruma regular expression library to 6.9.10.
+      - Can drag and drop from Windows Explorer to a Floating Tab Group window to open a file in that window.
+      - Can drag and drop from Windows Explorer to one of the file fields in the Compare dialog to compare that file.
+      - When loading a LNK file, try to read older LNK files that do not contain Unicode paths.
+      - Added 'View > Font > Reset Font Size' and 'View > Font > Reset Font' actions.
+      - In the Goto Bar, added Options for 'Hide Goto Bar after Goto' and 'Focus Editor after Goto'.
+      - Renamed 'Copy as Text Areas' to 'Copy as Hex Editor Areas'.
+      - Renamed 'Export Text Areas' to 'Export Hex Editor Areas'.
+      - In the Page Setup dialog, added 'Show Line' toggles.
+    - Text Editor
+      - On the Format menu, added an option to delete to the end of a line.
+      - When using Auto-Indent and Insert Tabs is enabled, tabs are now inserted into the file instead of spaces.
+    - Hex Editor
+      - Copy as Hex Text now has options whether to include spaces or linefeeds in the copy (see the Import/Export Options dialog).
+      - Added an option to always Copy as Hex Text when copying from the hex bytes area of the hex editor (see the General Options dialog).
+    - Options
+      - Renamed 'Opening Files' page to 'Opening Files/Tabs'.
+      - Renamed 'Importing' to 'Import/Export'.
+      - Renamed 'Inspector' to 'Inspector/Tables'.
+      - On the General page, added an option to always Copy as Hex Text when copying from the hex bytes area of the hex editor.
+      - On the Text Editor page, can now set the minimum number of digits for line numbers.
+      - On the Opening Files/Tabs page, can choose whether tabs are shown in the title bar or above the editor.
+      - On the Opening Files/Tabs page, added a toggle to force all files to read only when opened.
+      - On the Opening Files/Tabs page, can toggle whether the full file name is shown in the status bar when a tab is hovered.
+      - On the Theme/Colors page, added colors for the Title Bar, icons on the File Tabs, and the tear line for File Tabs.
+      - On the Theme/Colors page, the Highlighting color has different default colors for Text and Hex.
+      - On the Theme/Colors page, added native on/off for menus and group boxes.
+      - On the Theme/Colors page, added Use Taller Tabs option.
+      - On the Theme/Colors page, added options to turn off rounded menus, buttons, and scroll bars.
+      - On the Highlights page, highlights can now be a Regular Expression or Find Expression.
+      - On the Highlights page, can set the scope of a highlight to per file, or per edit as.
+      - On the Compiling page, added a new warning option if attempting to open a node that has a large number of children.
+      - On the Import/Export page, added Include Spaces and Include Linefeeds options for Export Hex Text/Copy as Hex Text.
+      - On the Inspector/Tables page, added a Hex Display Format option for displaying hex numbers as 'FFh', '0xFF', or 'FF'.
+    - Bugs
+      - Fixed when overwriting in text mode, sometimes a long UTF-8 character would not be overwritten correctly.
+      - Fixed using Capitalize on words containing apostrophes did not work properly.
+      - Fixed disassembly was sometimes not calculating addresses for 'jmp' statements correctly.
+      - Fixed an issue with line numbers being off by one when debugging certain files.
+      - Fixed Lua was not loading properly on Linux systems.
+      - Fixed when searching a process, sometimes FindAll would not search through the whole process if the process structure had changed.
+      - Fixed a possible crash when accessing a variable after calling FileClose.
+      - Fixed EnumToString would not properly identify some enums in a local array.
+      - Fixed a crash with certain regular expressions in the origuruma library.
+      - Fixed calling FileSelect after RunTemplate could cause some types to be forgotten in certain cases.
+      - Fixed the FPrintf printing position would reset on certain files after calling RunTemplate.
+      - Fixed a possible crash using an array of unions with <optimize=false>.
+      - Fixed zooming in and out sometimes did not reset the horizontal scroll bar properly.
+      - Fixed the AddressLocalToFile and AddressFileToLocal functions were not taking into account a custom offset.
+      - Fixed a hidden floating tab group could be shown sometimes when doing a Compare.
+      - Fixed sometimes HTML tags were not being shown properly in the status bar.
+      - Fixed a possible crash using #include with files containing '..'.
+ReleaseTime: 2025-07-31
