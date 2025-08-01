@@ -1,17 +1,23 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.sweetscape.com/cgibin/010editor_check_news_5k.php').Replace('010EditorNews', 'news') | ConvertFrom-Xml
-
-# Version
-$this.CurrentState.Version = $Object1.news.newversion
-
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sweetscape.com/download/010EditorWin32Installer.exe'
 }
-$this.CurrentState.Installer += [ordered]@{
+$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sweetscape.com/download/010EditorWin64Installer.exe'
 }
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: $VersionX64", 'Error')
+  return
+}
+
+# Version
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
