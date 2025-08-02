@@ -1,10 +1,12 @@
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://api.meetsidekick.com/downloads/win'
-}
+$Object1 = Invoke-RestMethod -Uri 'https://api.meetsidekick.com/installer/browser/win'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+\.\d+)[-.]').Groups[1].Value
+$this.CurrentState.Version = $Object1.browser_version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.browser_url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
