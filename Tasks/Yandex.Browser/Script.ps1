@@ -9,7 +9,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.cdn.yandex.net/browser/int/$([regex]::Match($Object1.guid64, '/(\d+_\d+_\d+_\d+_\d+)').Groups[1].Value)/en/Yandex.exe"
+  InstallerUrl = "https://download.cdn.yandex.net/browser/int/$([regex]::Match($Object1.guid, '/(\d+_\d+_\d+_\d+_\d+)').Groups[1].Value)/en/Yandex.exe"
 }
 
 switch -Regex ($this.Check()) {
