@@ -44,7 +44,7 @@ function Get-ReleaseNotes {
 $Object1 = Invoke-RestMethod -Uri 'https://www.log4view.com/fileadmin/redaktion/log4view/Log4ViewV2.pad.xml'
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.XML_DIZ_INFO.Web_Info.Download_URLs.Primary_Download_URL
+  InstallerUrl = $Object1.XML_DIZ_INFO.Web_Info.Download_URLs.Primary_Download_URL | ConvertTo-Https
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

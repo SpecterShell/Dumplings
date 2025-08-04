@@ -12,7 +12,7 @@ function Read-Installer {
 $Object1 = Invoke-WebRequest -Uri 'https://www.danfoss.com/en-us/service-and-support/downloads/dcs/coolconfig/'
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href | ConvertTo-Https
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
