@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://update.loxone.com/updatecheck.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://update.loxone.com/updatecheck.xml'
 
 # Version
 $this.CurrentState.Version = $Object1.Miniserversoftware.Release.Version

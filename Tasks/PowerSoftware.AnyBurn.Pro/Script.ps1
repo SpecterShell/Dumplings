@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://anyburn.com/version.ini' | ConvertFrom-Ini
+$Object1 = Invoke-RestMethod -Uri 'https://anyburn.com/version.ini' | ConvertFrom-Ini
 
 # Version
 $this.CurrentState.Version = $Object1.Version.Number

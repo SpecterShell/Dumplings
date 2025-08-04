@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://updates.bbconsult.co.uk/Updates.asmx' -Method Post -Headers @{
+$Object1 = Invoke-RestMethod -Uri 'https://updates.bbconsult.co.uk/Updates.asmx' -Method Post -Headers @{
   SOAPAction = 'http://tempuri.org/GetProductBuilds'
 } -Body @'
 <?xml version="1.0"?>

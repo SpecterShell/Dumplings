@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.Version.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.everedit.net/latest.php?cpu=x86'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.everedit.net/latest.php?cpu=x64'
 }
 
 switch -Regex ($this.Check()) {

@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'http://www.pspad.com/version.php'
+$Object1 = Invoke-RestMethod -Uri 'https://www.pspad.com/version.php'
 
 # Version
 $VersionMatches = [regex]::Match($Object1, '^(\d+(?:\.\d+)+) \((\d+)\)')

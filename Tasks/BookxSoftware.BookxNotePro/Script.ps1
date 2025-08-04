@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'http://www.bookxnote.com/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.bookxnote.com/' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
