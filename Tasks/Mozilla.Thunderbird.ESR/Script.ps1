@@ -118,11 +118,16 @@ switch -Regex ($this.Check()) {
         foreach ($Arch in @('x86', 'x64')) {
           # Installer
           $this.CurrentState.Installer += [ordered]@{
-            Architecture    = $Arch
-            InstallerType   = 'nullsoft'
-            InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"
-            InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Mozilla Thunderbird ${ShortVersion} (${Arch} ${Locale})"
+            Architecture           = $Arch
+            InstallerType          = 'nullsoft'
+            InstallerUrl           = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"
+            InstallerSha256        = $Object2["$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"]
+            ProductCode            = "Mozilla Thunderbird ${ShortVersion} (${Arch} ${Locale})"
+            AppsAndFeaturesEntries = @(
+              [ordered]@{
+                DisplayName = "Mozilla Thunderbird (${Arch} ${Locale})"
+              }
+            )
           }
         }
       }
