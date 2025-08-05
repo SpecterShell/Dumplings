@@ -10,7 +10,7 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/thunderbird/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/thunderbird_versions.json'
 
 # Version
-$OriginalVersion = $Object1.THUNDERBIRD_ESR
+$OriginalVersion = [string]::IsNullOrWhiteSpace($Object1.THUNDERBIRD_ESR_NEXT) ? $Object1.THUNDERBIRD_ESR : $Object1.THUNDERBIRD_ESR_NEXT
 $this.CurrentState.Version = $ShortVersion = $OriginalVersion.Replace('esr', '')
 
 $Object2 = [ordered]@{}
@@ -26,11 +26,16 @@ foreach ($Locale in @('en-US')) {
   foreach ($Arch in @('x86', 'x64')) {
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture    = $Arch
-      InstallerType   = 'nullsoft'
-      InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"
-      InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"]
-      ProductCode     = "Mozilla Thunderbird ${ShortVersion} (${Arch} ${Locale})"
+      Architecture           = $Arch
+      InstallerType          = 'nullsoft'
+      InstallerUrl           = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"
+      InstallerSha256        = $Object2["$($ArchMap[$Arch])/${Locale}/Thunderbird Setup ${OriginalVersion}.exe"]
+      ProductCode            = "Mozilla Thunderbird ${ShortVersion} (${Arch} ${Locale})"
+      AppsAndFeaturesEntries = @(
+        [ordered]@{
+          DisplayName = "Mozilla Thunderbird (${Arch} ${Locale})"
+        }
+      )
     }
   }
 }
