@@ -14,31 +14,31 @@ if ($VersionX86 -ne $VersionX64) {
 
 # Version
 $this.CurrentState.Version = $VersionX64
-$ShortVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
 $MediumVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
-  InstallerUrl         = $Object2.path
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "Simba Spark ${ShortVersion} 32-bit.msi"
-    }
-  )
+  Architecture = 'x86'
+  InstallerUrl = $Object2.path
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Object3.path
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "Simba Spark ${ShortVersion} 64-bit.msi"
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $Object3.path
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
+    }
+
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
