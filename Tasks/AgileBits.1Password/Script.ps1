@@ -23,6 +23,12 @@ $this.CurrentState.Installer += [ordered]@{
   }
   InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Query        = [ordered]@{
+    InstallerType = 'msix'
+  }
+  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msixbundle"
+}
 # If the ARM64 installer already exists, don't check again and simply add it to the list
 if ($this.LastState['Mode']) {
   $this.CurrentState.Installer += [ordered]@{
@@ -69,9 +75,6 @@ switch -Regex ($this.Check()) {
 
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
-    $this.Message()
   }
   { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
     $this.Config.IgnorePRCheck = $true
