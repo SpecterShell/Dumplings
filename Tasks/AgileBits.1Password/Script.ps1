@@ -9,21 +9,31 @@ if ($Object1.available -eq '0') {
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Query        = [ordered]@{
+$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
+  Query                  = [ordered]@{
     Architecture  = 'x64'
     InstallerType = 'exe'
   }
-  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).exe"
+  InstallerUrl           = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).exe"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $this.CurrentState.Version
+    }
+  )
 }
-$this.CurrentState.Installer += [ordered]@{
-  Query        = [ordered]@{
+$this.CurrentState.Installer += $InstallerMSI = [ordered]@{
+  Query                  = [ordered]@{
     Architecture  = 'x64'
     InstallerType = 'msi'
   }
-  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
+  InstallerUrl           = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $this.CurrentState.Version
+    }
+  )
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMSIX = [ordered]@{
   Query        = [ordered]@{
     InstallerType = 'msix'
   }
@@ -32,12 +42,17 @@ $this.CurrentState.Installer += [ordered]@{
 # If the ARM64 installer already exists, don't check again and simply add it to the list
 if ($this.LastState['Mode']) {
   $this.CurrentState.Installer += [ordered]@{
-    Query        = [ordered]@{
+    Query                  = [ordered]@{
       Architecture  = 'x64'
       InstallerType = 'exe'
     }
-    Architecture = 'arm64'
-    InstallerUrl = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+    Architecture           = 'arm64'
+    InstallerUrl           = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+    AppsAndFeaturesEntries = @(
+      [ordered]@{
+        DisplayVersion = $this.CurrentState.Version
+      }
+    )
   }
   # Mode
   $this.CurrentState.Mode = $true
@@ -48,12 +63,17 @@ if ($this.LastState['Mode']) {
     $null = Invoke-WebRequest -Uri $InstallerUrlArm64 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Query        = [ordered]@{
+      Query                  = [ordered]@{
         Architecture  = 'x64'
         InstallerType = 'exe'
       }
-      Architecture = 'arm64'
-      InstallerUrl = $InstallerUrlArm64
+      Architecture           = 'arm64'
+      InstallerUrl           = $InstallerUrlArm64
+      AppsAndFeaturesEntries = @(
+        [ordered]@{
+          DisplayVersion = $this.CurrentState.Version
+        }
+      )
     }
     # Mode
     $this.CurrentState.Mode = $true
@@ -66,12 +86,16 @@ if ($this.LastState['Mode']) {
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$InstallerEXE.InstallerUrl] = $InstallerEXEFile = Get-TempFile -Uri $InstallerEXE.InstallerUrl
     # RawVersion
-    $RawVersion = $InstallerFile | Read-FileVersionRawFromExe
+    $RawVersion = $InstallerEXEFile | Read-FileVersionRawFromExe
     $this.CurrentState.RawVersion = "$($RawVersion.Major)$($RawVersion.Minor)$($RawVersion.Build)$($RawVersion.Revision.ToString('D3'))"
 
-    $this.InstallerFiles[$this.CurrentState.Installer[1].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[1].InstallerUrl
+    $this.InstallerFiles[$InstallerMSI.InstallerUrl] = Get-TempFile -Uri $InstallerMSI.InstallerUrl
+
+    $this.InstallerFiles[$InstallerMSIX.InstallerUrl] = $InstallerMSIXFile = Get-TempFile -Uri $InstallerMSIX.InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = ($InstallerMSIXFile | Get-MSIXManifest | ConvertFrom-Xml).GetElementsByTagName('Package')[0].Version
 
     $this.Print()
     $this.Write()
