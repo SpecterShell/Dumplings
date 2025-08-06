@@ -1,6 +1,11 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://topazlabs.com/d/photo/latest/win/full'
+  Architecture = 'x64'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://topazlabs.com/d/gigapixel/latest/win/full'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl -replace 'TopazGigapixelAI-', 'TopazGigapixelAI-arm64-'
 }
 
 # Version
@@ -13,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://community.topazlabs.com/c/photo-ai/photo-ai-releases/85'
+        Value  = $ReleaseNotesUrl = 'https://community.topazlabs.com/c/gigapixel-ai/gigapixel-ai/66'
       }
 
       $Object1 = Invoke-RestMethod -Uri "${ReleaseNotesUrl}.json"
