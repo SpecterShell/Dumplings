@@ -9,7 +9,7 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://support.maxcutsoftware.com/hc/en-us/articles/360016474633-MaxCut-Release-History' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'https://knowledge.maxcutsoftware.com/help/maxcut-release-history' | ConvertFrom-Html
 
     $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'Version $($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
@@ -31,7 +31,7 @@ function Get-ReleaseNotes {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text | Set-Clipboard
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -119,7 +119,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
