@@ -11,7 +11,7 @@ if ($VersionMatches.Groups[1].Value -ne '8') {
 # Version
 $this.CurrentState.Version = "1.8.0_$($VersionMatches.Groups[2].Value)"
 
-$Object2 = Invoke-WebRequest -Uri 'https://www.java.com/en/download/manual.jsp' -Headers @{ Accept = '*/*'; Connection = 'close' }
+$Object2 = Invoke-WebRequest -Uri 'https://www.java.com/en/download/manual.jsp' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = '*/*'; Connection = 'close' }
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
