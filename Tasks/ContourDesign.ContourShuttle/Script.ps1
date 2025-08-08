@@ -7,10 +7,10 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://contourdesign.com/pages/drivers'
+$Object1 = Invoke-WebRequest -Uri 'https://contourdesign.com/pages/drivers' | ConvertFrom-Html
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('.msi') -and $_.href.Contains('Shuttle') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
+  InstallerUrl = $Object1.SelectSingleNode('//h2[contains(text(), "Contour Shuttle")]/following::p[contains(text(), "Windows")]/a').Attributes['href'].Value
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
@@ -74,7 +74,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The Last Modified and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
