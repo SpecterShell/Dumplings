@@ -6,9 +6,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://update.aida64.com/update/' -Body @{
   ov = '0'
   cp = '0'
 }
+$Object2 = $Object1.SelectSingleNode('aida64/releasepack[last()]')
 
 # Version
-$this.CurrentState.Version = $Object1.aida64.releasepack[-1].version
+$this.CurrentState.Version = $Object2.version
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
@@ -22,13 +23,13 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.aida64.releasepack[-1].rdate | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object2.rdate | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.aida64.releasepack[-1].wnew.item | Format-Text
+        Value  = $Object2.wnew.item | Format-Text
       }
     } catch {
       $_ | Out-Host
