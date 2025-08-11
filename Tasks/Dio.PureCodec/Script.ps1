@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.SelectSingleNode('//*[@id="app"]/div[3]/di
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download_group"]/li[9]/dl/dd/a').Attributes['href'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download_group"]/li[9]/dl/dd/a').Attributes['href'].Value -replace '^https://', 'http://'
 }
 
 switch -Regex ($this.Check()) {
