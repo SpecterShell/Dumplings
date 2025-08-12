@@ -20,10 +20,11 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesUrl = "https://studio3t.com/whats-new/release-$($this.CurrentState.Version.Split('.')[0..1] -join '-')/"
       Invoke-WebRequest -Uri $ReleaseNotesUrl -Method Head | Out-Null
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
       }
     } catch {
       $_ | Out-Host
