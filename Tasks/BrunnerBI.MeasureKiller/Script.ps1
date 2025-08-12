@@ -22,8 +22,51 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      $Object2 = [System.IO.StringReader]::new(((Invoke-WebRequest -Uri 'https://en.brunner.bi/measurekiller' | ConvertFrom-Html).SelectSingleNode('//main') | Get-TextContent))
+
+      while ($Object2.Peek() -ne -1) {
+        $String = $Object2.ReadLine()
+        if ($String -match 'Release notes') {
+          if ($String -match '(\d{1,2}\W+\d{1,2}\W+20\d{2})') {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Matches[1], 'MM/dd/yyyy', $null).ToString('yyyy-MM-dd')
+          } else {
+            $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+          }
+          break
+        }
+      }
+      while ($Object2.Peek() -ne -1) {
+        $String = $Object2.ReadLine()
+        if ($String -match "Version $([regex]::Escape($this.CurrentState.Version))") {
+          break
+        }
+      }
+      if ($Object2.Peek() -ne -1) {
+        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+        while ($Object2.Peek() -ne -1) {
+          $String = $Object2.ReadLine()
+          $ReleaseNotesObjects.Add($String)
+        }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObjects | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      $Object2.Close()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
       $Object2 = Invoke-WebRequest -Uri 'https://en.brunner.bi/measurekiller' | ConvertFrom-Html
-      $ReleaseTimeNode = $Object2.SelectSingleNode("//p[contains(., 'Release Notes') and ./following-sibling::p[contains(., 'Version $($this.CurrentState.Version)')]]")
+      $ReleaseTimeNode = $Object2.SelectSingleNode("//p[contains(., 'Release notes') and ./following-sibling::p[contains(., 'Version $($this.CurrentState.Version)')]]")
       if ($ReleaseTimeNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
