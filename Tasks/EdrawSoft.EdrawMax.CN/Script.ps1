@@ -12,12 +12,11 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=51').data[0].content | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=51'
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h1[contains(text(), '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      if ($Object2.data[0].content.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]/span').InnerText | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($Object2.data[0].content, '(20\d{2}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
