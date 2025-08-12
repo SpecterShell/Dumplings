@@ -23,7 +23,7 @@ function Get-ReleaseNotes {
     $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
       [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
         param([OpenQA.Selenium.IWebDriver]$WebDriver)
-        try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//dt[contains(./span/text(), 'Answer')]/following-sibling::dd")) } catch {}
+        try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/span/text(), 'Answer')]/div[2]")) } catch {}
       }
     ).GetAttribute('innerHTML') | ConvertFrom-Html
     $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode(".//h2[contains(., 'Citavi $($this.CurrentState.Version)')]")
@@ -124,7 +124,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
