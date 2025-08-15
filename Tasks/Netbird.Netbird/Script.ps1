@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
@@ -22,7 +22,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
@@ -66,14 +66,18 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $Installer.InstallerUrl
-    # AppsAndFeaturesEntries + ProductCode
-    $Installer['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFileExe | Read-FileVersionFromExe
-        Publisher      = 'Netbird'
+    foreach ($Installer in $this.CurrentState.Installer) {
+      if ($Installer.InstallerType -eq 'nullsoft') {
+        $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $Installer.InstallerUrl
+        # AppsAndFeaturesEntries + ProductCode
+        $Installer['AppsAndFeaturesEntries'] = @(
+          [ordered]@{
+            DisplayVersion = $InstallerFileExe | Read-FileVersionFromExe
+            Publisher      = 'Netbird'
+          }
+        )
       }
-    )
+    }
 
     $this.Print()
     $this.Write()
