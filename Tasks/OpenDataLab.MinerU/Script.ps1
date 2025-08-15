@@ -1,4 +1,4 @@
-$Prefix = 'https://webpub.shlab.tech/MinerU/latest/'
+$Prefix = 'https://webpub.shlab.tech/MinerU/latest/win/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
