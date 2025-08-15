@@ -1,5 +1,4 @@
 $Prefix = 'https://static.centbrowser.com/win_stable/'
-$PrefixCN = 'https://static.centbrowser.cn/win_stable/'
 
 # Version
 $this.CurrentState.Version = (curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
@@ -12,16 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "${Prefix}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version)_x64.exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x86'
-  InstallerUrl    = "${PrefixCN}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version).exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x64'
-  InstallerUrl    = "${PrefixCN}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version)_x64.exe"
 }
 
 switch -Regex ($this.Check()) {
