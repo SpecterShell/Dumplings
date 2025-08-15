@@ -1,22 +1,30 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.yubico.com/support/download/smart-card-drivers-tools/'
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$Link = $Object1.Links.Where({ try { $_.href.Contains('Minidriver') -and $_.href.EndsWith('.msi') -and $_.href.Contains('x86') } catch {} }, 'First')
+$VersionX86 = [regex]::Match($Link.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('Minidriver') -and $_.href.EndsWith('.msi') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = "https://downloads.yubico.com/support/YubiKey-Minidriver-${VersionX86}-x86.msi"
 }
-$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$Link = $Object1.Links.Where({ try { $_.href.Contains('Minidriver') -and $_.href.EndsWith('.msi') -and $_.href.Contains('x64') } catch {} }, 'First')
+$VersionX64 = [regex]::Match($Link.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('Minidriver') -and $_.href.EndsWith('.msi') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = "https://downloads.yubico.com/support/YubiKey-Minidriver-${VersionX64}-x64.msi"
 }
-$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
+$Link = $Object1.Links.Where({ try { $_.href.Contains('Minidriver') -and $_.href.EndsWith('.msi') -and $_.href.Contains('arm64') } catch {} }, 'First')
+$VersionARM64 = [regex]::Match($Link.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://downloads.yubico.com/support/YubiKey-Minidriver-${VersionARM64}-arm64.msi"
+}
+
+if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}, arm64: ${VersionARM64}", 'Error')
+  return
 }
 
 # Version
