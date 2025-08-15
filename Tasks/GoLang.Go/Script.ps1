@@ -37,20 +37,28 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://go.dev/doc/devel/release' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//p[@id='go$($this.CurrentState.Version)']")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='go$($this.CurrentState.Version)']")
       if ($ReleaseNotesNode) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
+        if ($ReleaseNotesNode.Name -eq 'h2') {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNode.SelectSingleNode('./following-sibling::p[1]') | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNode | Get-TextContent | Format-Text
+          }
         }
 
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $_ | Out-Host
-        $this.Log($_, 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
