@@ -24,10 +24,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.release_notes_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = [string]::IsNullOrWhiteSpace($Object1.release_notes_url) ? "https://docs.python.org/release/$($this.CurrentState.Version)/whatsnew/changelog.html" : $Object1.release_notes_url
       }
     } catch {
       $_ | Out-Host
