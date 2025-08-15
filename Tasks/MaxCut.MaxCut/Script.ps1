@@ -31,7 +31,7 @@ function Get-ReleaseNotes {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text | Set-Clipboard
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
