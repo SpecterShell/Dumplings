@@ -1,8 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://pixso.cn/download/' | ConvertFrom-Html
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl('https://pixso.cn/download/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]').Attributes['data-href'].Value
+  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]')).GetAttribute('data-href')
 }
 
 # Version
