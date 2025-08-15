@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&product=Foxit-Enterprise-Reader&formId=pdf-reader-enterprise-register'
+$Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-reader'
 
 # Version
 $this.CurrentState.Version = $Object1.package_info.version[0]
@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.package_info.version[0]
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('.exe', '_Prom.exe')
+  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down
 }
 
 switch -Regex ($this.Check()) {

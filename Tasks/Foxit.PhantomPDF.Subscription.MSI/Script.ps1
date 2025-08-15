@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.package_info.version[0]
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '_Prom.exe')
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website_x64.exe', '.exe').Replace('.exe', '_Prom.exe')
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website.exe', '.exe').Replace('.exe', '.msi')
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website_x64.exe', '.exe').Replace('.exe', '.msi')
 }
 
 switch -Regex ($this.Check()) {
@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectNodes('./div/*[self::p[.//a[@class="download"]] or self::p[1]][last()]/following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = ($ReleaseNotesNode.SelectSingleNode('./p[.//a[@class="download"]]') ?? $ReleaseNotesNode.SelectSingleNode('./p[1]')).SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
