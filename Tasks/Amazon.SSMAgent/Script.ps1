@@ -1,10 +1,7 @@
-$RepoOwner = 'aws'
-$RepoName = 'amazon-ssm-agent'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-RestMethod -Uri 'https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/VERSION'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -14,15 +11,20 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+      $RepoOwner = 'aws'
+      $RepoName = 'amazon-ssm-agent'
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/$($this.CurrentState.Version)"
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
+
+      if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+          Value  = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -31,7 +33,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Value = $Object2.html_url
       }
     } catch {
       $_ | Out-Host
