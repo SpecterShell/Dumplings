@@ -1,4 +1,4 @@
-$Locales = @('en-US', 'de', 'es-AR', 'fr', 'it', 'ja', 'nl', 'pt-BR')
+$Locales = @('en-US', 'de', 'es-ES', 'fr', 'it', 'ja', 'nl', 'pt-BR', 'ru')
 $ArchMap = [ordered]@{
   x86   = 'win32'
   x64   = 'win64'
