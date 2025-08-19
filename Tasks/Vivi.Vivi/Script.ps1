@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
         Value  = $ReleaseNotesUrl = 'https://vivi.atlassian.net/wiki/spaces/VRB/overview'
       }
 
-      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl
+      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl -UserAgent $DumplingsBrowserUserAgent
       if ($ReleaseNotesUrlLink = $Object1.Links.Where({ try { $_.href.Contains("App+Release+$($this.CurrentState.Version)") } catch {} }, 'First')) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
