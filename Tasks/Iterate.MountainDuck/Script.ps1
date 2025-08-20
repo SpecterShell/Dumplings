@@ -1,16 +1,12 @@
-$Object1 = Invoke-RestMethod -Uri 'https://version-cdn.mountainduck.io/4/windows/changelog.rss'
+$Object1 = Invoke-RestMethod -Uri 'https://version-cdn.mountainduck.io/5/windows/release/changelog.appinstaller'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.enclosure.url, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.AppInstaller.MainPackage.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'burn'
-  InstallerUrl  = $Object1.enclosure.url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = $Object1.enclosure.url -replace '\.exe$', '.msi' | ConvertTo-UnescapedUri
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.AppInstaller.MainPackage.Uri
 }
 
 switch -Regex ($this.Check()) {
