@@ -8,7 +8,12 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('Portable') }, 'First')[0].name)"
+  Architecture = 'x64'
+  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('Portable') -and $_.name.Contains('x64') }, 'First')[0].name)"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('Portable') -and $_.name.Contains('arm64') }, 'First')[0].name)"
 }
 
 switch -Regex ($this.Check()) {
