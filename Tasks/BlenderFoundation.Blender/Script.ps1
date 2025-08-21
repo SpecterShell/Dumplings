@@ -19,16 +19,16 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = "https://www.blender.org/download/releases/$($this.CurrentState.Version.Split('.')[0..1] -join '-')/"
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+    # try {
+    #   # ReleaseNotesUrl
+    #   $this.CurrentState.Locale += [ordered]@{
+    #     Key   = 'ReleaseNotesUrl'
+    #     Value = "https://www.blender.org/download/releases/$($this.CurrentState.Version.Split('.')[0..1] -join '-')/"
+    #   }
+    # } catch {
+    #   $_ | Out-Host
+    #   $this.Log($_, 'Warning')
+    # }
 
     $this.Print()
     $this.Write()
