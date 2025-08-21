@@ -11,11 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'portable'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('amd64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
