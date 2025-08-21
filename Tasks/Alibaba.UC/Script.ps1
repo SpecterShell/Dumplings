@@ -7,7 +7,7 @@ if (-not $Object1.data.winInstallerUrl.Contains('UCWin')) {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.winInstallerUrl
+  InstallerUrl = $Object1.data.winInstallerUrl | ConvertTo-Https
 }
 
 # Version
