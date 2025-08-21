@@ -1,7 +1,7 @@
 $Object1 = $Global:DumplingsStorage.SeewoApps['AirTeach']
 
 # Version
-$this.CurrentState.Version = $Object1.softInfos.Where({ $_.useSystem -eq 1 }, 'First')[0].softVersion
+$this.CurrentState.Version = [regex]::Match($Object1.softInfos.Where({ $_.useSystem -eq 1 }, 'First')[0].softVersion, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
