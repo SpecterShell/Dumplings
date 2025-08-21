@@ -39,10 +39,11 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
         }
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].link
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
