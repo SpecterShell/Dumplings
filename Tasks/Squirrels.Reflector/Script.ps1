@@ -1,15 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.airsquirrels.com/reflector/download'
-
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('-32') } catch {} }, 'First')[0].href
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.airsquirrels.com/reflector/download/app/windows/32'
 }
 $VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('-64') } catch {} }, 'First')[0].href
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.airsquirrels.com/reflector/download/app/windows/64'
 }
 $VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
