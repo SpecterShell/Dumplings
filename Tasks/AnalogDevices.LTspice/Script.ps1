@@ -17,13 +17,13 @@ switch -Regex ($this.Check()) {
       # ReleaseNotes (en-US)
       $ReleaseNotesList = [ordered]@{}
       if ($Object1.Update.Contains('Feature')) {
-        $ReleaseNotesList['New Features'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^Feature\d+$' }).ForEach({ $_.Value })
+        $ReleaseNotesList['New Features'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^Feature\d*$' }).ForEach({ $_.Value })
       }
       if ($Object1.Update.Contains('Enhancement')) {
-        $ReleaseNotesList['Enhancements'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^Enhancement\d+$' }).ForEach({ $_.Value })
+        $ReleaseNotesList['Enhancements'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^Enhancement\d*$' }).ForEach({ $_.Value })
       }
       if ($Object1.Update.Contains('BugFix')) {
-        $ReleaseNotesList['Fixed Bugs'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^BugFix\d+$' }).ForEach({ $_.Value })
+        $ReleaseNotesList['Fixed Bugs'] = $Object1.Update.GetEnumerator().Where({ $_.Name -match '^BugFix\d*$' }).ForEach({ $_.Value })
       }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
