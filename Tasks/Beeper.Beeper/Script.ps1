@@ -33,6 +33,9 @@ switch -Regex ($this.Check()) {
       ).GetAttribute('innerHTML') | ConvertFrom-Html
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(@class, 'notion-sub_header-block') and contains(., 'v$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
+        # Remove empty div elements and pseudo-selection elements
+        $ReleaseNotesObject.SelectNodes('.//div[not(node())]|.//*[contains(@class, "pseudo")]').ForEach({ $_.Remove() })
+
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.Attributes['class'].Value.Contains('notion-sub_header-block'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
