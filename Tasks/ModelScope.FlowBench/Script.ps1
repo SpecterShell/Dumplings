@@ -5,8 +5,7 @@ $this.CurrentState.Version = $Object1.Data.Preview.LatestVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msix'
-  InstallerUrl  = $Object1.Data.Preview.Versions.($this.CurrentState.Version).Win
+  InstallerUrl = $Object1.Data.Preview.Versions.($this.CurrentState.Version).Win
 }
 
 switch -Regex ($this.Check()) {
