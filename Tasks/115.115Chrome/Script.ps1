@@ -1,11 +1,21 @@
 $Object1 = Invoke-RestMethod -Uri 'https://appversion.115.com/1/web/1.0/api/chrome'
 
+if ($Object1.data.win.version_code -ne $Object1.data.win64.version_code) {
+  $this.Log("Inconsistent versions: x86: $($Object1.data.win.version_code), x64: $($Object1.data.win64.version_code)", 'Error')
+  return
+}
+
 # Version
-$this.CurrentState.Version = $Object1.data.win.version_code
+$this.CurrentState.Version = $Object1.data.win64.version_code
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $Object1.data.win.version_url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.data.win64.version_url
 }
 
 switch -Regex ($this.Check()) {
