@@ -24,6 +24,29 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://arc.net/windows/release-notes' | Join-String -Separator "`n" | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//p[contains(text(), 'V$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./preceding-sibling::h2[1]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (en-US)
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
