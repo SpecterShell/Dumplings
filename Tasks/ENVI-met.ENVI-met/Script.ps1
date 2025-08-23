@@ -9,9 +9,9 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.envi-met.info/doku.php?id=apps:updates' | ConvertFrom-Html
+    $Object3 = Invoke-WebRequest -Uri 'https://www.envi-met.info/doku.php?id=apps:updates' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'wrap_box')]/p[contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'wrap_box')]/p[contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
