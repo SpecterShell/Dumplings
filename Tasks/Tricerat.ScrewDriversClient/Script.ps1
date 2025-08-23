@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.tricerat.com/client-downloads'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('.msi') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 # Version
