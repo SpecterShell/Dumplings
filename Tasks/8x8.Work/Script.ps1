@@ -41,9 +41,9 @@ switch -Regex ($this.Check()) {
       if (-not $this.Status.Contains('New') -or $VersionMatches.Groups[2].Value -ne ($this.LastState.Version.Split('.')[0..1] -join '.')) {
         $Object2 = Invoke-WebRequest -Uri 'https://docs.8x8.com/8x8WebHelp/8x8-work-for-desktop/Content/workd/what-is-new.htm' | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='mc-main-content']/h1[contains(text(), '$($VersionMatches.Groups[2].Value)')]")
+        $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='mc-main-content']/h1[contains(., '$($VersionMatches.Groups[2].Value)')]")
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
