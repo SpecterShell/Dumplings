@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望CAD 2026' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title.StartsWith('中望CAD 2026') }, 'First')[0]
 $Object2 = Invoke-WebRequest -Uri $Object1.download[0].url
 
 # Installer
@@ -7,7 +7,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, 'release(\d+(?:\.\d+)*)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(?i)release(\d+(?:\.\d+)*)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
