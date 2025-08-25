@@ -53,7 +53,13 @@ if (-not $this.LastState.Installer.Architecture -or (Compare-Object -ReferenceOb
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesUrl = 'https://typora.io/releases/stable'
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://typora.io/releases/stable'
+      }
+
       $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//*[@id='write']/h2[contains(text(), '$($this.CurrentState.Version)')]")
@@ -62,11 +68,17 @@ switch -Regex ($this.Check()) {
         switch ($ReleaseNotesTitleNode.SelectNodes('./following-sibling::*')) {
           ({ $_.Name -eq 'h2' }) { break }
           ({ $_.InnerText.Contains('See detail') }) {
-            $ReleaseNotesUrl = $_.SelectSingleNode('./a').Attributes['href'].Value
+            # ReleaseNotesUrl (en-US)
+            $this.CurrentState.Locale += [ordered]@{
+              Locale = 'en-US'
+              Key    = 'ReleaseNotesUrl'
+              Value  = $_.SelectSingleNode('./a').Attributes['href'].Value
+            }
+
             continue
           }
           ({ $_.Name -eq 'a' }) { continue }
-          Default {
+          default {
             $ReleaseNotesNodes += $_
             continue
           }
@@ -83,12 +95,6 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-    }
-
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl
     }
 
     $this.Print()
