@@ -49,7 +49,7 @@ switch -Regex ($this.Check()) {
         # Remove link marks
         $ReleaseNotesTitleNode.SelectNodes('.//a[starts-with(@href, "#")]').ForEach({ $_.Remove() })
         # Remove "Packages"
-        $ReleaseNotesTitleNode.SelectNodes('.//div[contains(@class, "accordion")]').ForEach({ $_.Remove() })
+        $ReleaseNotesTitleNode.SelectNodes('.//details[contains(@class, "accordion")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
