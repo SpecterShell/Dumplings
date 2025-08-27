@@ -1,22 +1,19 @@
-$Object1 = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq/index.shtml'
-$Object2 = Invoke-RestMethod -Uri ('https:' + [regex]::Match($Object1.Content, 'rainbowConfigUrl\s*=\s*"(.+?)"').Groups[1].Value) | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
-
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.ntDownloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object2.ntDownloadARMUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadARMUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
 
@@ -34,7 +31,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.updateDate | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.QQApps.updateDate | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -50,7 +47,7 @@ switch -Regex ($this.Check()) {
         $Object3 = Invoke-WebRequest -Uri 'https://im.qq.com/pcqq/support.html'
         $Object4 = Invoke-RestMethod -Uri ('https:' + [regex]::Match($Object3.Content, 'rainbowConfigUrl\s*=\s*"(.+?)"').Groups[1].Value) | Get-EmbeddedJson -StartsFrom 'var params= ' | ConvertFrom-Json
 
-        $ReleaseNotesObject = $Object4.log.Where({ $_.version.EndsWith($Object2.version) }, 'First')
+        $ReleaseNotesObject = $Object4.log.Where({ $_.version.EndsWith($Global:DumplingsStorage.QQApps.version) }, 'First')
         if ($ReleaseNotesObject) {
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
