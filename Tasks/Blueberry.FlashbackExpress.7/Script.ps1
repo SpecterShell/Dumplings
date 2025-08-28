@@ -26,21 +26,35 @@ function Get-ReleaseNotes {
 
     $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//p[contains(./strong/text(), 'v$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        [regex]::Match(
-          $ReleaseNotesTitleNode.InnerText,
-          '([a-zA-Z]+\W+\d{1,2}(?:st|nd|rd|th)\W+20\d{2})'
-        ).Groups[1].Value,
-        [string[]]@(
-          "MMM d'st' yyyy"
-          "MMM d'nd' yyyy"
-          "MMM d'rd' yyyy"
-          "MMM d'th' yyyy"
-        ),
-        (Get-Culture -Name 'en-US'),
-        [System.Globalization.DateTimeStyles]::None
-      ).ToString('yyyy-MM-dd')
+      if ($ReleaseNotesTitleNode.InnerText -match '([a-zA-Z]+\W+\d{1,2}(?:st|nd|rd|th)?\W+20\d{2})') {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+          $Matches[1],
+          [string[]]@(
+            "MMM d'st' yyyy", "MMMM d'st' yyyy"
+            "MMM d'nd' yyyy", "MMMM d'nd' yyyy"
+            "MMM d'rd' yyyy", "MMMM d'rd' yyyy"
+            "MMM d'th' yyyy", "MMMM d'th' yyyy"
+          ),
+          (Get-Culture -Name 'en-US'),
+          [System.Globalization.DateTimeStyles]::None
+        ).ToString('yyyy-MM-dd')
+      } elseif ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}(?:st|nd|rd|th)?\W+[a-zA-Z]+\W+20\d{2})') {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+          $Matches[1],
+          [string[]]@(
+            "d'st' MMM yyyy", "d'st' MMMM yyyy"
+            "d'nd' MMM yyyy", "d'nd' MMMM yyyy"
+            "d'rd' MMM yyyy", "d'rd' MMMM yyyy"
+            "d'th' MMM yyyy", "d'th' MMMM yyyy"
+          ),
+          (Get-Culture -Name 'en-US'),
+          [System.Globalization.DateTimeStyles]::None
+        ).ToString('yyyy-MM-dd')
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
 
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'p'; $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
@@ -135,7 +149,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
