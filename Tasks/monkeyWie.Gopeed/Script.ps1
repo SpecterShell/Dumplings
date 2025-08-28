@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='Changes' or text()='Release notes']")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[contains(text(), 'Changes') or contains(text(), 'Release notes')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
 
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[text()='更新日志']")
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[contains(text(), '更新日志')]")
         if ($ReleaseNotesCNTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
