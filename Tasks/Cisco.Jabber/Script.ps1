@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/downloads/jabber.html'
+$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/downloads/jabber.html' -UserAgent $DumplingsBrowserUserAgent
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
