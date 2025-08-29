@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
+  Architecture = 'x64'
   InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'kinesis' -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 
