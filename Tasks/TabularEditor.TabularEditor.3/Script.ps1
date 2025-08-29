@@ -2,20 +2,20 @@ $Object1 = Invoke-WebRequest -Uri 'https://docs.tabulareditor.com/te3/other/down
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
-}
-$VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+)').Groups[1].Value
-
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $InstallerUrlARM64 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('ARM64') } catch {} }, 'First')[0].href
+}
+$VersionARM64 = [regex]::Match($InstallerUrlARM64, '(\d+(\.\d+)+)').Groups[1].Value
+
+if ($VersionX64 -ne $VersionARM64) {
   $this.Log("x64 version: ${VersionX64}")
+  $this.Log("ARM64 version: ${VersionARM64}")
   throw 'Inconsistent versions detected'
 }
 
