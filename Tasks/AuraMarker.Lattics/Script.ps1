@@ -1,19 +1,21 @@
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = Get-RedirectedUrl -Uri 'https://mid.zineapi.com/to/get-lattics/win-installer-x64'
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = (Split-Path -Path $InstallerUrl -Leaf) -creplace '\.zip$', ''
-    }
-  )
-}
+$Prefix = 'https://releases.zine.la/lattics/win/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+
       $ShortVersion = $this.CurrentState.Version -creplace '\.0$', ''
       if ($Global:DumplingsStorage.Contains('Lattics') -and $Global:DumplingsStorage['Lattics'].Contains($ShortVersion)) {
         # ReleaseTime
