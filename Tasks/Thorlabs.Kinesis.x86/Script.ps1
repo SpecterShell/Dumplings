@@ -1,13 +1,13 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('kinesis') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX86 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'kinesis' -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('kinesis') -and $_.href.Contains('WoW64') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlX64 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'kinesis' -and $_.href.Contains('WoW64') } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+)').Groups[1].Value
 
