@@ -20,10 +20,10 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
           [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}[a-zA-Z]+\W+20\d{2})').Groups[1].Value,
           [string[]]@(
-            "MMMM d'st', yyyy",
-            "MMMM d'nd', yyyy",
-            "MMMM d'rd', yyyy",
-            "MMMM d'th', yyyy"
+            "MMMM d'st', yyyy", "MMM d'st', yyyy",
+            "MMMM d'nd', yyyy", "MMM d'nd', yyyy",
+            "MMMM d'rd', yyyy", "MMM d'rd', yyyy",
+            "MMMM d'th', yyyy", "MMM d'th', yyyy"
           ),
           (Get-Culture -Name 'en-US'),
           [System.Globalization.DateTimeStyles]::None
