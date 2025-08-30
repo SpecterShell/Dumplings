@@ -15,10 +15,9 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/video-recording.html'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('atrecply') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.CiscoDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('atrecply') } catch {} }, 'First')[0].href
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

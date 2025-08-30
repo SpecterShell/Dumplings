@@ -1,8 +1,6 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/video-recording.html'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('nbr2player') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.CiscoDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('nbr2player') } catch {} }, 'First')[0].href
 }
 
 # Version
