@@ -5,6 +5,8 @@ function Read-Installer {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'LC-Advanced-VPN-Client-Win-x86-64.msi'
     # Version
     $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # ProductCode
     $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries
