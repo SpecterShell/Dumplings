@@ -1,0 +1,36 @@
+Version: "2.25"
+Installer:
+- Architecture: x86
+  InstallerUrl: https://www.foobar2000.org/files/foobar2000_v2.25.exe
+- Architecture: x64
+  InstallerUrl: https://www.foobar2000.org/files/foobar2000-x64_v2.25.exe
+- Architecture: arm64
+  InstallerUrl: https://www.foobar2000.org/files/foobar2000-arm64ec_v2.25.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Built-in UPnP media renderer, both client (play to another device) and server (be controlled by another device).
+      - Other foobar2000 instances on your local network, with UPnP remote control feature active, will be listed as output devices.
+      - foobar2000-to-foobar2000 playback shows tags with album covers on the other end, using Ogg FLAC as stream container.
+    - Media Library improvements, most notably:
+      - Can natively index FTP/WebDAV/SMB network shares.
+      - Improved response to enabling/disabling/installing/uninstalling decoders - only reloads info from affected music files.
+    - Codecs, most notably:
+      - FFmpeg updated to 8.0, added native support for xHE-AAC decoding.
+      - Rewritten Ogg FLAC tag handling, properly implemented embedded album art.
+      - Fixed ReplayGain tags not being saved in multichapter Ogg/Opus files.
+    - Portable install improvements
+      - Changed the way relative paths are handled, so cached tags are no longer forgotten after relaunching from a different path.
+      - Made possible so specify no-cover pics as relative path to install location.
+    - Converter:
+      - Enabled RF64 writing.
+      - Fixed Converter failing to function until foobar2000 restart after removal of %TEMP%\foo_converter.
+    - Other
+      - Added preferences page for network share credentials so you don't have to place them in URLs anymore.
+      - Made editing DSP settings momentarily lower output latency to make DSPs appear more responsive.
+      - Fixed Properties 'rewrite tags' not working if nothing has been edited.
+      - Installer is now hi-DPI friendly.
+      - Made system file dialogs invoked out-of-process, to avoid stability issues.
+    - See release notes for full list of changes.
+ReleaseTime: 2025-09-01
