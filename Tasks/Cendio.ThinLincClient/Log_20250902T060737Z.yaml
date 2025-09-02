@@ -1,0 +1,99 @@
+Version: 4.19.0
+Installer:
+- InstallerUrl: https://www.cendio.com/downloads/clients/tl-4.19.0-client-windows.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.cendio.com/thinlinc/docs/relnotes/
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.cendio.com/thinlinc/docs/relnotes/4.19.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Introduction
+    Cendio are proud to present ThinLinc 4.19.0, with more than 110 enhancements and fixes. The most prominent changes are:
+    - The load balancer has been replaced and is now based on the principle of keeping the same number of users on each agent. This will provide a more robust and consistent behavior, and should be more predictable. The system can also be configured to intentionally spread users unevenly, if some agents have more resources than others.
+    - ThinLinc now supports the back and forward buttons commonly found on modern computer mice. Note that both the client and server must be upgraded for this new feature to work.
+    - The system requirements for ThinLinc have been increased, and distributions that are out of general support will not be able to use ThinLinc. Affected systems are Red Hat Enterprise Linux 7, Ubuntu 18.04, Debian 9, and SUSE Linux Enterprise 12. Users are encouraged to upgrade to more current versions of their distributions.
+    - Free usage of ThinLinc for up to 10 concurrent users will now require downloading a separate license file. Without the license file installed, only 3 concurrent users are allowed. As before, the full product functionality is provided for these users.
+    ThinLinc works on most modern Linux distributions and is supported on any platform that fulfills our documented requirements.
+    Changes in this release
+    In the list below, the bug number is given in parentheses. For more information, visit https://bugzilla.cendio.com.
+    General
+    - The End User License Agreement (EULA) has been updated to specify which terms apply for SE-based (Cendio AB) and US-based (ThinLinc USA Inc.) licensors of ThinLinc. (8616)
+    - Serial port redirection support has been removed from the client and server. (6048)
+    Server
+    - The load balancer has been reworked to distribute users evenly across all agents in the cluster. A weight can be configured for each agent if an uneven distribution is desired. It can be useful in scenarios where some agents have more resources than others.(2868, 4429, 6131, 8552, 8566)
+    - Agents can now be put into a "draining" mode where the agent is avoided for new sessions, but existing sessions are unaffected. This can be used to gracefully drain an agent ahead of a scheduled maintenance window. Note that this was previously possible through removing agents from the cluster configuration. (1015, 8545)
+    - ThinLinc setup will now inform the user if there are no available ThinLinc profiles. This could for example happen if no desktop environments have been installed on the system. (8587)
+    - The error message in the profile chooser is now more helpful when no ThinLinc profiles are available for the user. (5499, 8590, 8596)
+    - The system requirements have been raised to require GLIBC 2.28 or newer, and Python 3.6 or newer. (8368, 8564)
+    - The ThinLinc setup no longer supports automatic installation of packages using YUM. (8393)
+    - The ThinLinc server now only permits 3 concurrent users if no license file is installed. A separate license file is available for download that allows free usage of up to 10 concurrent users. (8599)
+    - The ThinLinc server can now handle large differences between the configured keyboard layout on the client and the server. For example, when the client has a Cyrillic keyboard layout, but the server is configured with a US keyboard layout. (5269)
+    - Fixed multiple vulnerabilities where a malicious application could cause the X server to crash or execute arbitrary code. [CVE-2025-26594, CVE-2025-26595, CVE-2025-26596, CVE-2025-26597, CVE-2025-26598, CVE-2025-26599, CVE-2025-26600, CVE-2025-26601] (8504)
+    - Fixed an issue where the running session would crash when disabling the mouse pointer. (8488)
+    - Fixed a compatibility issue where some applications would fail to start with a "BadMatch" error in the log. (5322)
+    - The ThinLinc server will now release input control from a shadowing client if that client becomes unresponsive, returning control to the shadowed user. Previously, the session would remain unresponsive until the shadowing client timed out and was disconnected. (8296)
+    - Tab completion for tl-config will now work for all configuration folders and parameters. (8384)
+    - The ThinLinc server no longer includes its own copy of the rsync command. tl-rsync-all will now use the standard rsync command installed on the system. (4990)
+    Native client
+    - It is now possible to use the forward and back mouse buttons in the ThinLinc client. (7459)
+    - The system requirements for GLIBC for the Linux client have been raised to version 2.28. (8368)
+    - It is now possible to toggle the visibility of the password in the login dialog. (8510)
+    - It is now possible to disable clipboard synchronization from the ThinLinc client. (8508)
+    - The ThinLinc client is now more responsive in adjusting the size of the remote session to match the client window. (8509)
+    - The shortcut on Windows for looping the ThinLinc client has been removed. Note that looping the client is still available as a command line option. (7246)
+    - Fixed an issue in the ThinLinc client on macOS where it was not possible to use some keyboard layouts, e.g. Cyrillic and Greek layouts. (5272)
+    - Fixed an issue where running the ThinLinc client would create a .vnc or vnc directory in the user's home directory. (7799)
+    - The ThinLinc client can now work around an issue in modern versions of GNOME that prevented the client from starting in full-screen mode. (8199)
+    - Fixed an issue in the ThinLinc client on macOS where some keyboard keys could get "stuck" and behave as they were pressed when they were not. (4971)
+    - Fixed an issue in the ThinLinc client where clipboard synchronization would work unreliably when some desktop environments were used on the server, primarily KDE. (8505)
+    - Fixed an issue where copying an image to the clipboard on the client could cause some applications in a ThinLinc session to hang. (8427)
+    - Fixed an issue on macOS where the ThinLinc client would be displayed on top of other applications even when the ThinLinc client was not the active application. (7818)
+    - Fixed an issue where Caps Lock and Num Lock synchronization would not always work correctly. (7985)
+    ThinLinc Web Access
+    - Web Access is now more responsive in adjusting the size of the remote session to match the client window. (8509)
+    - It is now possible to use the forward and back mouse buttons in Web Access. (7459, 8465, 8466)
+    - Synchronization of Caps Lock and Num Lock in Web Access has been improved, and there should now be fewer cases where there is a mismatch between the client and server. (8498)
+    - Fixed an issue where the panning hand in the toolbar was sometimes incorrectly displayed. (7992, 7993)
+    - Fixed several issues where some keyboard keys could get "stuck" and behave as they were pressed when they were not. (8493, 8494)
+    - Fixed an issue where Web Access would crash on Firefox if the clipboard field was resized. (8054)
+    - Caching of ThinLinc Web Access has been slightly reduced to avoid crashes or bugs for users when the ThinLinc server has been upgraded. Unfortunately, it does not work retroactively. Users may still be required to clear their browser caches as part of the upgrade to ThinLinc 4.19.0. For future ThinLinc upgrades, this will no longer be necessary. (5711)
+    Smart card support
+    - The ThinLinc client can now auto-connect using the last smart card certificate used, even if there are multiple certificates available. (8511)
+    - Fixed an issue where smart card authentication would not work if the server has an SSH banner enabled. (7372)
+    Printing support
+    - The ThinLinc client will now use the PDF format when submitting jobs received via printer redirection, fixing some errors in the printed documents and improving compatibility. (2705)
+    Administration
+    - Added new subcommand "tlctl license" that displays license information. (7850, 8418, 8578, 8579)
+    - The command "tl-show-licenses" has been removed and is replaced by "tlctl license". (7850)
+    - More detailed license information has been added to the web administration interface. It can be found under Status/Licenses. (8418, 8578, 8579)
+    - A new module called "Cluster" has been added to the web administration interface. It contains the subcluster configuration, as well as the new agent configuration for the load balancer, and the list of agents set to draining mode. (280, 1015)
+    - The VSM module in the web administration interface was renamed to Services, and no longer contains the subcluster configuration. (4717)
+    - A toast will appear after saving changes in the web administration interface. It will facilitate restarting services when needed. (5008)
+    - A refresh button was added to the web administration interface's load page to allow immediate refresh of load information. (8569)
+    Configuration changes
+    New
+    - New configuration folder: /agents. Holds settings relating to agents in a cluster. It can be found in cluster.hconf. (8545)
+    - New parameter: /agents/draining. Controls whether agents should be put into a draining mode, where new sessions are not allowed. (8545)
+    - New parameter: /agents/weights/<hostname>. Controls the weight of an agent, as seen by the load balancing mechanism. This can be used to adjust the distribution of users across agents. (8566)
+    Modified
+    - The configuration folder /vsmserver/subclusters in vsmserver.hconf has been renamed to /subclusters and moved to cluster.hconf. (8553)
+    - The configuration folder /vsmserver/HA in vsmserver.hconf has been renamed to /HA and moved to cluster.hconf. (8553)
+    Removed
+    - The load balancer tweaking parameters /vsmserver/load_update_cycle, /vsmserver/bogomips_per_user, /vsmserver/existing_users_weight, and /vsmserver/ram_per_user have been removed. (4429)
+    A complete configuration reference can be found in the ThinLinc Administrators Guide.
+    Corrected issues
+    ThinLinc has also been enhanced in many other ways. The complete list of corrected issues is:
+    280, 1015, 1174, 2705, 2868, 4429, 4431, 4717, 4771, 4805, 4971, 4990, 5008, 5269, 5272, 5322, 5396, 5499, 5711, 5784, 5833, 6048, 6104, 6131, 7039, 7246, 7372, 7459, 7799, 7818, 7838, 7850, 7985, 7992, 7993, 8054, 8089, 8198, 8199, 8264, 8296, 8326, 8337, 8361, 8368, 8371, 8384, 8393, 8413, 8415, 8418, 8427, 8455, 8465, 8466, 8476, 8484, 8485, 8488, 8491, 8493, 8494, 8495, 8498, 8502, 8503, 8504, 8505, 8506, 8508, 8509, 8510, 8511, 8525, 8526, 8528, 8531, 8533, 8540, 8542, 8543, 8544, 8545, 8546, 8547, 8548, 8550, 8551, 8552, 8553, 8557, 8558, 8560, 8561, 8562, 8563, 8564, 8566, 8568, 8569, 8570, 8573, 8576, 8577, 8578, 8579, 8584, 8587, 8588, 8589, 8590, 8591, 8594, 8595, 8597, 8598, 8599, 8603
+    Debian is a registered trademark of Software in the Public Interest, Inc.
+    Firefox is a registered trademark of The Mozilla Foundation.
+    Linux is a registered trademark of Linus Torvalds.
+    macOS and OS X are registered trademarks of Apple Computer, Inc.
+    Red Hat is a registered trademark of Red Hat, Inc.
+    SUSE is a registered trademark of SUSE LLC.
+    ThinLinc is a registered trademark of Cendio AB.
+    Ubuntu is a registered trademark of Canonical Ltd.
+    Windows is a registered trademark of Microsoft, Inc.
