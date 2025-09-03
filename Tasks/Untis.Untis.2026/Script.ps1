@@ -19,10 +19,11 @@ function Get-ReleaseNotes {
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact([regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}\.\d{1,2}\.20\d{2})').Groups[1].Value, [string[]]@('dd.MM.yyyy', 'd.M.yyyy'), $null).ToString('yyyy-MM-dd')
 
       # ReleaseNotes (de-AT)
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'de-AT'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
       }
     } else {
       $this.Log("No ReleaseNotes (de-AT) for version $($this.CurrentState.Version)", 'Warning')
