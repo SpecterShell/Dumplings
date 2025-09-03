@@ -15,7 +15,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = $Object1.installerInformation.release[0].delivery.changelog
+        Value  = $ReleaseNotesUrl = $Object1.installerInformation.release[0].delivery.changelog | ConvertTo-Https
       }
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
