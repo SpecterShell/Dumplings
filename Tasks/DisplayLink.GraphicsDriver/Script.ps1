@@ -4,10 +4,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.synaptics.com/products/displaylin
 $Object2 = $Object1.SelectSingleNode('//div[@class="latest-official-drivers" and not(contains(., "Hot Desking"))][1]')
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  $Object2.SelectSingleNode('./div[@class="left-driver"]//text()[contains(., "Release:")]').InnerText,
-  'Release: ([\d\.]+ M\d+)'
-).Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./div[@class="left-driver"]').InnerText, 'Release: ([\d\.]+(?: M\d+)?)').Groups[1].Value
 
 $Object3 = Invoke-WebRequest -Uri "${Prefix}$($Object2.SelectSingleNode('.//a[@class="download-link" and contains(text(), "Download MSI")]').Attributes['href'].Value)" | ConvertFrom-Html
 
