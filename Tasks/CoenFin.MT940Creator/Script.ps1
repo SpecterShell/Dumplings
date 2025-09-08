@@ -31,7 +31,7 @@ function Get-ReleaseNotes {
       'order[0][dir]'    = 'desc'
       start              = '0'
       length             = '5'
-      wdtNonce           = 'df470d4548'
+      wdtNonce           = ($Object1 | ConvertFrom-Html).SelectSingleNode("//input[@name='wdtNonceFrontendServerSide_2']").Attributes['value'].Value
     }
 
     $ReleaseNotesObject = $Object3.data.Where({ $_[5] -eq $this.CurrentState.Version }, 'First')
@@ -39,14 +39,14 @@ function Get-ReleaseNotes {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0][6] | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (nl-NL)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'nl-NL'
         Key    = 'ReleaseNotes'
         Value  = $ReleaseNotesObject[0][7] | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } else {
-      $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      $this.Log("No ReleaseTime and ReleaseNotes (nl-NL) for version $($this.CurrentState.Version)", 'Warning')
     }
   } catch {
     $_ | Out-Host
