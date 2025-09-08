@@ -22,10 +22,17 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://product-downloads.atlassian.com/software/sourcetree/windows/ga/ReleaseNotes_3.4.24.html'
+        Value  = $null
       }
 
+      $ReleaseNotesUrl = "https://product-downloads.atlassian.com/software/sourcetree/windows/ga/ReleaseNotes_$($this.CurrentState.Version).html"
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
+      }
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
