@@ -1,49 +1,34 @@
-$Object1 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://update.microsip.org/softphone-update.txt').RawContentStream)
-
-# Version
-$null = $Object1.ReadLine()
-$this.CurrentState.Version = $Object1.ReadLine()
+$Prefix = 'https://www.microsip.org/downloads'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://www.microsip.org/download/MicroSIP-$($this.CurrentState.Version).exe"
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('Lite') } catch {} }, 'First')[0].href
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      while (-not $Object1.EndOfStream) {
-        $String = $Object1.ReadLine()
-        if ($String.StartsWith($this.CurrentState.Version)) {
-          break
-        }
-      }
-      if (-not $Object1.EndOfStream) {
-        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
-        while (-not $Object1.EndOfStream) {
-          $String = $Object1.ReadLine()
-          if ($String -notmatch '^\d+(?:\.\d+){2,}') {
-            $ReleaseNotesObjects.Add($String)
-          } else {
-            break
-          }
-        }
+      $Object2 = $Object1 | ConvertFrom-Html
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode("//tr[contains(./th, 'Date')]/td[1]").InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[contains(./th, 'Changelog')]/td/text()[contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'b' -and $Node.InnerText -notmatch '^\s*\d+(?:\.\d+)+'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObjects | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      $Object1.Close()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
