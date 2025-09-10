@@ -11,13 +11,13 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://history.mobirisesite.com/' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(./h3/text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(./h3/text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text | Set-Clipboard
       }
     } else {
       $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
