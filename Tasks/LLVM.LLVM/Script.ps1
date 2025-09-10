@@ -40,20 +40,19 @@ switch -Regex ($this.Check()) {
         Value  = $Object1.html_url
       }
 
-      $Object2 = Invoke-WebRequest -Uri 'https://llvm.org/header.incl' | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://discourse.llvm.org/c/announce/46.json'
 
-      $ReleaseNotesUrlNode = $Object2.SelectSingleNode("/html/body/table/tr/td[1]/div[5]/span/text()[contains(string(), '$($this.CurrentState.Version)')]/following-sibling::a[1]")
-      if ($ReleaseNotesUrlNode) {
+      if ($ReleaseNotesUrlObject = $Object2.topic_list.topics.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl = $ReleaseNotesUrlNode.Attributes['href'].Value
+          Value  = "https://discourse.llvm.org/t/$($ReleaseNotesUrlObject[0].slug)/$($ReleaseNotesUrlObject[0].id)"
         }
 
-        $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
-        $ReleaseNotesTitleNode = $Object3.SelectSingleNode('//div[@id="post_1"]/div[@class="post"]/h1[contains(text(), "Changes") or contains(text(), "Release Notes")]')
+        $Object3 = Invoke-RestMethod -Uri "https://discourse.llvm.org/t/$($ReleaseNotesUrlObject[0].slug)/$($ReleaseNotesUrlObject[0].id).json"
+        $ReleaseNotesObject = $Object3.post_stream.posts[0].cooked | ConvertFrom-Html
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('/h1[contains(text(), "Changes") or contains(text(), "Release Notes")]')
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
@@ -66,7 +65,7 @@ switch -Regex ($this.Check()) {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Log("No ReleaseNotesUrl (en-US) and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
