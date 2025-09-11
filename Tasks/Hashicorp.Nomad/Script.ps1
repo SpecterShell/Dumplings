@@ -22,10 +22,11 @@ switch -Regex ($this.Check()) {
       $RepoOwner = 'hashicorp'
       $RepoName = 'nomad'
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
       }
 
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
