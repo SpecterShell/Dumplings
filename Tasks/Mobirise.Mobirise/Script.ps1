@@ -17,7 +17,7 @@ function Get-ReleaseNotes {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text | Set-Clipboard
+        Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
       }
     } else {
       $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

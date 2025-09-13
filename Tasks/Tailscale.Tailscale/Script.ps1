@@ -47,10 +47,11 @@ switch -Regex ($this.Check()) {
           Value  = $Object2[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].link
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
