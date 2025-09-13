@@ -20,21 +20,21 @@ jobs:
         with:
           path: Dumplings
           submodules: true
-      - name: Checkout upstream winget-pkgs
-        uses: actions/checkout@v4
-        with:
-          repository: microsoft/winget-pkgs
-          path: winget-pkgs
+      # - name: Checkout upstream winget-pkgs
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: microsoft/winget-pkgs
+      #     path: winget-pkgs
       # - name: Install WinGet client
       #   run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
       #   working-directory: Dumplings
       #   shell: powershell
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Pull latest changes from the remote repository
-        run: git pull
-        working-directory: Dumplings
-        shell: pwsh
+      # - name: Pull latest changes from the remote repository
+      #   run: git pull
+      #   working-directory: Dumplings
+      #   shell: pwsh
       - name: Run tasks
         run: .\Core\Index.ps1 -ThrottleLimit 2 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
         working-directory: Dumplings
