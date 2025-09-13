@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
         if ($String -match "^New features in v$([regex]::Escape($this.CurrentState.Version))") {
           if ($String -match '(\d{1,2}-[a-zA-Z]+-20\d{2})') {
             # ReleaseTime
-            $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+            $this.CurrentState.ReleaseTime = $Matches[1].Replace('Sept', 'Sep') | Get-Date -Format 'yyyy-MM-dd'
           } else {
             $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
           }
