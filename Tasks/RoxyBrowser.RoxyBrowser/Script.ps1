@@ -1,5 +1,5 @@
 # x86 en-US
-$Object1 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'en-US' } -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://us.gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'en-US' } -Body (
   $Body = @{
     os        = 'win32'
     osVersion = '10'
@@ -8,9 +8,9 @@ $Object1 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 # x86 zh-CN
-$Object2 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'zh-CN' } -Body $Body -ContentType 'application/json'
+$Object2 = Invoke-RestMethod -Uri 'https://us.gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'zh-CN' } -Body $Body -ContentType 'application/json'
 # x64 en-US
-$Object3 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'en-US' } -Body (
+$Object3 = Invoke-RestMethod -Uri 'https://us.gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'en-US' } -Body (
   $Body = @{
     os        = 'win32'
     osVersion = '10'
@@ -19,7 +19,7 @@ $Object3 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 # x64 zh-CN
-$Object4 = Invoke-RestMethod -Uri 'https://gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'zh-CN' } -Body $Body -ContentType 'application/json'
+$Object4 = Invoke-RestMethod -Uri 'https://us.gate.roxybrowser.net/get_app_upgrade' -Method Post -Headers @{ language = 'zh-CN' } -Body $Body -ContentType 'application/json'
 
 if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.data.version } -Unique).Count -gt 1) {
   $this.Log("x86 en-US version: $($Object1.data.version)")
