@@ -12,7 +12,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' ([uri]::EscapeDataString($Global:DumplingsStorage.PohlConApps.results.Where({ $_.cbid -eq 10762 }, 'First')[0].items.Where({ $_.sys_language_uid -eq 1 }, 'First')[0].file_metadata.fileName))
+  InstallerUrl = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' $Global:DumplingsStorage.PohlConDownloadPage.SelectSingleNode('//li[@data-cbid="10762"]//option[contains(text(), "EN")]').Attributes['value'].Value
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
