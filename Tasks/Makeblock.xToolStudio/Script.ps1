@@ -1,11 +1,11 @@
 $Object1 = (
   Invoke-WebRequest -Uri 'https://api.xtool.com/efficacy/v1/package/version/latest' -Method Post -Body (
     @{
-      domain         = 'xcs'
+      domain         = 'atomm'
       region         = 'en'
-      contentId      = 'xcs_win'
-      contentVersion = $this.Status.Contains('New') ? '2.7.21' : $this.LastState.Version
-      extraFilter    = @()
+      contentId      = 'xTool_win'
+      contentVersion = $this.Status.Contains('New') ? '1.0.14' : $this.LastState.Version
+      deviceId       = ''
     } | ConvertTo-Json -Compress
   ) -ContentType 'application/json'
 ).Content | ConvertFrom-Json -AsHashtable
