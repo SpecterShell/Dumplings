@@ -1,13 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://fathom.video/download' | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//*[@id="app"]').Attributes['data-page'].DeEntitizeValue | ConvertFrom-Json
+$Object1 = Invoke-WebRequest -Uri 'https://electron-update.fathom.video/update/win32/x64/latest/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+
+# Version
+$this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.props.appDownloadUrls.exe
+  InstallerUrl = "https://storage.googleapis.com/electron_releases/v$($this.CurrentState.Version)/Fathom-$($this.CurrentState.Version) Setup.exe"
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
