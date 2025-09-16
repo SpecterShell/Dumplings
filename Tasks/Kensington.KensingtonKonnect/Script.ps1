@@ -1,9 +1,9 @@
 $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('kkbsetup') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('kkbsetup') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
         Value  = $Prefix
       }
 
-      $ReleaseNotesUrlLink = $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('kensington-konnect') -and $_.href.Contains('release-notes') } catch {} }, 'First')
+      $ReleaseNotesUrlLink = $Object1.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('kensington-konnect') -and $_.href.Contains('release-notes') } catch {} }, 'First')
       if ($ReleaseNotesUrlLink) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
