@@ -4,6 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://update.aida64.com/update/' -Body @{
   pi = 'exe'
   pl = 'en'
   ov = '0'
+  ob = '26000'
   cp = '0'
 }
 $Object2 = $Object1.SelectSingleNode('aida64/releasepack[last()]')
