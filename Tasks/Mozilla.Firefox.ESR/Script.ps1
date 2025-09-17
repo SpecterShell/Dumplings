@@ -95,7 +95,7 @@ switch -Regex ($this.Check()) {
       if ($Locale -eq 'multi') {
         $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
 
-        foreach ($Arch in @('x86', 'x64')) {
+        foreach ($Arch in @('x86', 'x64', 'arm64')) {
           # Installer
           $this.CurrentState.Installer += [ordered]@{
             Architecture  = $Arch

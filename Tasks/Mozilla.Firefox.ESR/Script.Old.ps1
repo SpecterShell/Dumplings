@@ -34,12 +34,10 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
     # 'en-US' { continue }
     # MSIX installers (ARM64 not available)
     'multi' {
-      if ($Arch.Key -ne 'arm64') {
-        $this.CurrentState.Installer += [ordered]@{
-          Architecture  = $Arch.Key
-          InstallerType = 'msix'
-          InstallerUrl  = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Firefox Setup ${Version}esr.msix"
-        }
+      $this.CurrentState.Installer += [ordered]@{
+        Architecture  = $Arch.Key
+        InstallerType = 'msix'
+        InstallerUrl  = "${Prefix}${Version}esr/$($Arch.Value)/${_}/Firefox Setup ${Version}esr.msix"
       }
       continue
     }
