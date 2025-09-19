@@ -8,7 +8,7 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('windows-installer.zip') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -28,10 +28,11 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
