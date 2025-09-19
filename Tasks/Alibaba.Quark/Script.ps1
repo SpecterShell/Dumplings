@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://coral2.uc.cn/aggregation/quarkPcDownl
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.Where({ $_.key -eq 'quark-pc-download-package' }, 'First')[0].data.homePageDefaultLink
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.data.Where({ $_.key -eq 'quark-pc-download-package' }, 'First')[0].data.homePageDefaultLink
 }
 
 # Version
