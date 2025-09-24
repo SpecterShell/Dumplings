@@ -33,10 +33,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.binary.updated_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object2.release_link | ConvertTo-UnescapedUri
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object2.release_link | ConvertTo-UnescapedUri
       }
     } catch {
       $_ | Out-Host
