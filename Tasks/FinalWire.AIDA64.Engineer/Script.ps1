@@ -23,15 +23,15 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.rdate | Get-Date -Format 'yyyy-MM-dd'
-
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object2.wnew.item | Format-Text
       }
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.timestamp | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
