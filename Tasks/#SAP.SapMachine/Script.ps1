@@ -1,1 +1,1 @@
-$Global:DumplingsStorage.SapMachineBuilds = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SAP/SapMachine-infrastructure/gh-pages/assets/data/sapmachine_releases.json').Content | ConvertFrom-Json -AsHashtable
+$Global:DumplingsStorage.SapMachineBuilds = (Invoke-WebRequest -Uri 'https://sapmachine.io/assets/data/sapmachine-releases-website.json').Content | ConvertFrom-Json -AsHashtable
