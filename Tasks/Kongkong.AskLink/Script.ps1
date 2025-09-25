@@ -5,7 +5,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.name, '(\d+(?:\.\d+)+)').Gr
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object1.url | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
