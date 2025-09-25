@@ -1,4 +1,4 @@
-$InstallerLink = $Global:DumplingsStorage.BrinkSoftwareDownloadPage.Links.Where({ try { $_.href.Contains('.exe') -and $_.OuterHTML.Contains('Ibis Calculeren voor Installatietechniek') -and $_.href.Contains('x64') } catch {} }, 'First')[0]
+$InstallerLink = $Global:DumplingsStorage.BrinkSoftwareDownloadPage.Links.Where({ try { $_.href.Contains('.exe') -and $_.href.Contains('IbisCalculerenVoorInstallatie') -and $_.href.Contains('x64') } catch {} }, 'Last')[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerLink.OuterHtml, '(\d+(?:\.\d+){2,})').Groups[1].Value
