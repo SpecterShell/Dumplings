@@ -10,7 +10,7 @@ if ($this.CurrentState.Version -match 'a\d*$') {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.links.Where({ $_.name.EndsWith('.exe') }, 'First')[0].url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.links.Where({ $_.url.EndsWith('.exe') }, 'First')[0].url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
