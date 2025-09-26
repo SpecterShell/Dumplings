@@ -1,12 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri "https://app-updates.agilebits.com/check/2/10.0.22000/x86_64/OPW8/en/$($this.LastState.Contains('RawVersion') ? $this.LastState.RawVersion: '81026039')/A1/N"
 
-if ($Object1.available -eq '0') {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
-  return
-}
-
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object1.available -eq '0' ? $this.LastState.Version: $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
@@ -14,40 +9,24 @@ $this.CurrentState.Installer += $InstallerEXE = [ordered]@{
     Architecture  = 'x64'
     InstallerType = 'exe'
   }
-  InstallerUrl           = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).exe"
+  InstallerUrl           = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).exe"
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayVersion = $this.CurrentState.Version
     }
   )
 }
-$this.CurrentState.Installer += $InstallerMSI = [ordered]@{
-  Query                  = [ordered]@{
-    Architecture  = 'x64'
-    InstallerType = 'msi'
-  }
-  InstallerUrl           = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msi"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
-}
-$this.CurrentState.Installer += $InstallerMSIX = [ordered]@{
-  Query        = [ordered]@{
-    InstallerType = 'msix'
-  }
-  InstallerUrl = "https://downloads.1password.com/win/1PasswordSetup-$($this.CurrentState.Version).msixbundle"
-}
-# If the ARM64 installer already exists, don't check again and simply add it to the list
+
+$InstallerUrlArm64 = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
 if ($this.LastState['Mode']) {
+  # If the ARM64 installer already exists, don't check again and simply add it to the list
   $this.CurrentState.Installer += [ordered]@{
     Query                  = [ordered]@{
       Architecture  = 'x64'
       InstallerType = 'exe'
     }
     Architecture           = 'arm64'
-    InstallerUrl           = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
+    InstallerUrl           = $InstallerUrlArm64
     AppsAndFeaturesEntries = @(
       [ordered]@{
         DisplayVersion = $this.CurrentState.Version
@@ -59,7 +38,6 @@ if ($this.LastState['Mode']) {
 } else {
   try {
     # Check if the ARM64 installer exists
-    $InstallerUrlArm64 = "https://downloads.1password.com/win/arm64/1PasswordSetup-$($this.CurrentState.Version)-arm64.exe"
     $null = Invoke-WebRequest -Uri $InstallerUrlArm64 -Method Head
     # Installer
     $this.CurrentState.Installer += [ordered]@{
@@ -82,6 +60,34 @@ if ($this.LastState['Mode']) {
     # Mode
     $this.CurrentState.Mode = $false
   }
+}
+
+$this.CurrentState.Installer += $InstallerMSI = [ordered]@{
+  Query                  = [ordered]@{
+    Architecture  = 'x64'
+    InstallerType = 'msi'
+  }
+  InstallerUrl           = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).msi"
+  AppsAndFeaturesEntries = @(
+    [ordered]@{
+      DisplayVersion = $this.CurrentState.Version
+    }
+  )
+}
+
+$this.CurrentState.Installer += $InstallerMSIX = [ordered]@{
+  Query        = [ordered]@{
+    InstallerType = 'msix'
+  }
+  Architecture = 'x64'
+  InstallerUrl = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).msixbundle"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Query        = [ordered]@{
+    InstallerType = 'msix'
+  }
+  Architecture = 'arm64'
+  InstallerUrl = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).msixbundle"
 }
 
 switch -Regex ($this.Check()) {
