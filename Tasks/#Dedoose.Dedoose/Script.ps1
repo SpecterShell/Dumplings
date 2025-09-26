@@ -16,7 +16,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotes'
-      Value  = $ReleaseNotes = $Object1.DedooseClientVersions.ReleaseNotes.ReleaseNote.Where({ $_.Version -eq '10.0.23' }, 'First').'#text' | ConvertFrom-Html | Get-TextContent | Format-Text
+      Value  = $ReleaseNotes = $Object1.DedooseClientVersions.ReleaseNotes.ReleaseNote.Where({ $_.Version -eq $this.CurrentState.Version }, 'First').'#text' | ConvertFrom-Html | Get-TextContent | Format-Text
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
