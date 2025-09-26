@@ -1,12 +1,12 @@
 $Object1 = $Global:DumplingsStorage.AppleProducts
 
 # x86
-$Object2 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMetadataURL') -and $_.Value.ServerMetadataURL.Contains('WINDOWS_iTunes.smd') })[-1].Value
+$Object2 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMetadataURL') -and $_.Value.ServerMetadataURL.Contains('WINDOWS_iTunes.smd') -and $_.Value.Packages.GetEnumerator().Where({ $_.URL.Contains('Bonjour.msi') }, 'First') }, 'Last')[-1].Value
 $Object3 = Invoke-RestMethod -Uri $Object2.Distributions.English
 $VersionX86 = $Object3.'installer-gui-script'.choice.'pkg-ref'.Where({ $_.id -eq 'Bonjour' }, 'First')[0].version
 
 # x64
-$Object4 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMetadataURL') -and $_.Value.ServerMetadataURL.Contains('WINDOWS64_iTunes.smd') })[-1].Value
+$Object4 = $Object1.Products.GetEnumerator().Where({ $_.Value.Contains('ServerMetadataURL') -and $_.Value.ServerMetadataURL.Contains('WINDOWS64_iTunes.smd') -and $_.Value.Packages.GetEnumerator().Where({ $_.URL.Contains('Bonjour64.msi') }, 'First') }, 'Last')[-1].Value
 $Object5 = Invoke-RestMethod -Uri $Object4.Distributions.English
 $VersionX64 = $Object5.'installer-gui-script'.choice.'pkg-ref'.Where({ $_.id -eq 'Bonjour64' }, 'First')[0].version
 
