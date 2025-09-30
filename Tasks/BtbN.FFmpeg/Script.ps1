@@ -34,10 +34,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
@@ -54,7 +55,7 @@ switch -Regex ($this.Check()) {
   'Updated' {
     foreach ($License in @('GPL', 'LGPL')) {
       foreach ($Shared in @($false, $true)) {
-        foreach ($Branch in @('master', '6.1', '7.1')) {
+        foreach ($Branch in @('master', '7.1', '8.0')) {
           $this.Config.WinGetIdentifier = "BtbN.FFmpeg.${License}$($Shared ? '.Shared' : '')$($Branch -eq 'master' ? '' : ".${Branch}")"
 
           $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name.Contains("-$($License.ToLower())") -and ($Shared -eq $_.name.Contains('shared')) -and ($Branch -eq 'master' ? $_.name.Contains('N-') : $_.name.Contains("n${Branch}")) }, 'First')[0]
