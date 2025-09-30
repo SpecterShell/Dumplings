@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.tekla.com/download-trimble-connect'
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.trimble.com/download-trimble-connect'
 }
 
 # Version
