@@ -5,15 +5,16 @@ $Object2 = $Object1.SelectSingleNode('//table[@id="btTable"]/tbody/tr[1]')
 $this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[2]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
+# The download link currently used is a temporary link that expires after a short time. Use the old bucket instead.
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object2.SelectSingleNode('./td[5]//a').Attributes['href'].Value
+  InstallerUrl = Join-Uri 'https://d94r2itylgwnp.cloudfront.net/' ([regex]::Match(($Object2.SelectSingleNode('./td[5]//a').Attributes['href'].Value | ConvertTo-HtmlDecodedText), '&s3path=([^&]+)').Groups[1].Value | ConvertTo-UnescapedUri)
 }
 
 $InstallerCN = [ordered]@{}
 if ($Object2.SelectSingleNode('./td[1]').Attributes.Contains('rowspan') -and $Object2.SelectSingleNode('./td[1]').Attributes['rowspan'].Value -eq 2 -and $Object2.SelectSingleNode('./following-sibling::tr[1]/td[1]').InnerText.Contains('China')) {
   $this.CurrentState.Installer += $InstallerCN = [ordered]@{
     InstallerLocale = 'zh-CN'
-    InstallerUrl    = $Object2.SelectSingleNode('./following-sibling::tr[1]/td[2]//a').Attributes['href'].Value
+    InstallerUrl    = [regex]::Match(($Object2.SelectSingleNode('./following-sibling::tr[1]/td[2]//a').Attributes['href'].Value | ConvertTo-HtmlDecodedText), '&fileName=([^&]+)').Groups[1].Value | ConvertTo-UnescapedUri
   }
 } else {
   $this.Log('Could not locate the zh-CN installer', 'Warning')
