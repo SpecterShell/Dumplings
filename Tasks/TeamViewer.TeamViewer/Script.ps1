@@ -1,42 +1,31 @@
-# $Object1 = Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVMSIVersion15.txt'
-
-# Version
-$this.CurrentState.Version = (Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVVersion15.txt').Content | Split-LineEndings | ForEach-Object -Process { $_.Trim() } | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/TeamViewer_Setup_$($this.CurrentState.Version).exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/TeamViewer_Setup_x64_$($this.CurrentState.Version).exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x86'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'wix'
-  InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version).zip"
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'wix'
-  InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version)_x64.zip"
+function Read-Installer {
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = ($InstallerFile | Read-FileVersionRawFromExe).ToString(3)
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture        = 'x86'
+    InstallerType       = 'zip'
+    NestedInstallerType = 'wix'
+    InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version).zip"
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture        = 'x64'
+    InstallerType       = 'zip'
+    NestedInstallerType = 'wix'
+    InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version)_x64.zip"
+  }
 }
 
-switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    try {
-      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
+function Get-ReleaseNotes {
+  try {
+    $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
-      # ReleaseNotes (en-US)
-      $Task.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = @"
+    # ReleaseNotes (en-US)
+    $Task.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'ReleaseNotes'
+      Value  = @"
 New Features
 $($Object2.changelog.features.html | ConvertFrom-Html | Get-TextContent)
 
@@ -46,20 +35,20 @@ $($Object2.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
 Bugfixes
 $($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
 "@ | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
     }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
 
-    try {
-      $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
+  try {
+    $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
-      # ReleaseNotes (de-DE)
-      $Task.CurrentState.Locale += [ordered]@{
-        Locale = 'de-DE'
-        Key    = 'ReleaseNotes'
-        Value  = @"
+    # ReleaseNotes (de-DE)
+    $Task.CurrentState.Locale += [ordered]@{
+      Locale = 'de-DE'
+      Key    = 'ReleaseNotes'
+      Value  = @"
 New Features
 $($Object3.changelog.features.html | ConvertFrom-Html | Get-TextContent)
 
@@ -69,19 +58,85 @@ $($Object3.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
 Bugfixes
 $($Object3.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
 "@ | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
     }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = 'https://download.teamviewer.com/download/version_15x/TeamViewer_Setup.exe'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = 'https://download.teamviewer.com/download/version_15x/TeamViewer_Setup_x64.exe'
+}
+
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Hash
+$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The hash is unchanged
+if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+switch -Regex ($this.Check()) {
+  # Case 5: The hash and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 4: The hash has changed, but the version is not
+  default {
+    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }
