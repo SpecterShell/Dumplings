@@ -1,28 +1,18 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://download.cpuid.com/cpuid.ver') -replace ';(\r\n|\n)', '$1' | ConvertFrom-Ini
-
 # Version
-$this.CurrentState.Version = $Object1.CPUID_VER.cpuz
-
-# RealVersion
-$VersionParts = $this.CurrentState.Version.Split('.')
-$this.CurrentState.RealVersion = "$($VersionParts[0]).$($VersionParts[1])$($VersionParts[2])"
+$this.CurrentState.Version = [regex]::Match($Global:DumplingsStorage.CPUZDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('-rog') } catch {} }, 'First')[0].href, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'en-US'
-  InstallerUrl    = "https://download.cpuid.com/cpu-z/cpu-z_$($this.CurrentState.RealVersion)-en.exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = "https://download.cpuid.com/cpu-z/cpu-z_$($this.CurrentState.RealVersion)-cn.exe"
+  InstallerUrl    = "https://download.cpuid.com/cpu-z/cpu-z_$($this.CurrentState.Version)-rog-en.exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = $Global:DumplingsStorage.CPUZDownloadPage | ConvertFrom-Html
+      $Object1 = $Global:DumplingsStorage.CPUZDownloadPage | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='version-history']/div[contains(.//div[@class='version'], '$($this.CurrentState.RealVersion)')]")
+      $ReleaseNotesTitleNode = $Object1.SelectSingleNode("//div[@id='version-history']/div[contains(.//div[@class='version'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
