@@ -1,9 +1,18 @@
 $Prefix = 'https://www.bullzip.com/products/pdf/download.php'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl($Prefix)
+Start-Sleep -Seconds 5
+$Object1 = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+  [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+    param([OpenQA.Selenium.IWebDriver]$WebDriver)
+    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "BullzipPDFPrinter")]')) } catch {}
+  }
+)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('BullzipPDFPrinter') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.GetAttribute('href') | Split-Uri -LeftPart 'Path'
 }
 
 # Version
@@ -19,24 +28,25 @@ switch -Regex ($this.Check()) {
         Value  = 'https://www.bullzip.com/products/pdf/info.php'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.bullzip.com/products/pdf/rss.php').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
+      $Object2 = $EdgeDriver.ExecuteScript('return await fetch("https://www.bullzip.com/products/pdf/rss.php").then(r => r.text())') | ConvertFrom-Xml
+      $Object3 = $Object2.rss.channel.item.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
-      if ($Object2) {
+      if ($Object3) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Object2[0].pubDate | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime = $Object3[0].pubDate | Get-Date -AsUTC
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $Object3[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $Object2[0].link
+          Value  = $Object3[0].link
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
