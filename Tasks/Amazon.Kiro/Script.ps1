@@ -23,9 +23,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://kiro.dev/changelog/index' | ConvertFrom-Html
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://kiro.dev/changelog/'
+      }
 
-      $ReleaseNotesObject = $Object3.SelectSingleNode("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version)')]")
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
+      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version)')]")) } catch {}
+        }
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
+
       if ($ReleaseNotesObject) {
         # Remove "Learn more" links
         $ReleaseNotesObject.SelectNodes('.//a[contains(text(), "Learn more")]').ForEach({ $_.Remove() })
@@ -34,6 +47,12 @@ switch -Regex ($this.Check()) {
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObject.SelectNodes('./div[1]/following-sibling::node()') | Get-TextContent | Format-Text
+        }
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = Join-Uri $ReleaseNotesUrl $ReleaseNotesObject.SelectSingleNode('.//a[./h2]').Attributes['href'].Value
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
