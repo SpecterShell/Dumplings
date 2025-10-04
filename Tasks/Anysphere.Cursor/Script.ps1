@@ -64,10 +64,10 @@ switch -Regex ($this.Check()) {
     try {
       $Object5 = Invoke-WebRequest -Uri 'https://www.cursor.com/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesTitleObject = $Object5.SelectSingleNode("//main//article[contains(.//div[contains(@class, 'absolute') and contains(@class, 'left')]//div[contains(@class, 'rounded')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
-      if ($ReleaseNotesTitleObject) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleObject.SelectSingleNode('.//div[contains(@class, "absolute") and contains(@class, "left")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $ReleaseNotesObject = $Object5.SelectSingleNode("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+      if ($ReleaseNotesObject) {
+        # # ReleaseTime
+        # $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
 
         # Remove video players
         $Object5.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
@@ -75,7 +75,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleObject.SelectNodes('.//h2[1]/following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObject.SelectNodes('.//div[@class="prose"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
