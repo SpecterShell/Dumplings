@@ -1,9 +1,11 @@
-$Prefix = 'https://www.archimatetool.com/download/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$RepoOwner = 'archimatetool'
+$RepoName = 'archi.io'
+
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # Version
@@ -37,11 +39,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  { $_.Contains('Changed') -and -not $_.Contains('Updated') } {
-    $this.Config.IgnorePRCheck = $true
-  }
   'Changed|Updated' {
     $this.Message()
+  }
+  'Updated' {
     $this.Submit()
   }
 }
