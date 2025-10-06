@@ -1,0 +1,52 @@
+Version: "12.12"
+Installer:
+- Architecture: x64
+  InstallerUrl: https://www.heidisql.com/installers/HeidiSQL_12.12.0.7122_Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The v12.12 release now abandons the 32 bit portable releases and nightly builds. Only 64 bit releases from now on.
+    Back in Jan 2019, for v10.0, I created the first 64 bit release with the support of the Delphi 10.3 at that time. Since that release I provided both 32 and 64 bit releases for more than 6 years now. Due to the decreasing availability of 32 bit drivers and libraries, and with a user base of ~0.5% it makes sense to safe the effort for these. Note the previous releases with 32 bit variants are still available on the download page.
+    Also notable: heidisql.com has been moved to Manitu, an excellent hosting provider in Germany. Update checks, SQL formatting and statistic calls should benefit from the enhanced speed.
+    New stuff:
+    - Issue #2254: Support for trigger editing on SQLite
+    3rd party updates:
+    - Upgrade compiler to Delphi 12.3.
+    - Update MariaDB Connector/C to v3.4.7
+    - Add MySQL Connector libmysql v9.0.4
+    - Update SQLite libraries to v3.50.4
+    - Update SQLite multiple cipher libraries to v2.2.4.
+    - Update PostgreSQL libpq/17 to v17.0.6
+    - Update PostgreSQL libpq/15 to v15.0.14
+    - Remove PostgreSQL libpq/10 and 12, depending on the outdated and insecure libssl v1.1.1w
+    - Update Virtual-TreeView component to v8.2 from Sep 5 2025
+    Bugfixes and enhancements:
+    - Issue #2161: fix reading and writing user limitations in newer MySQL versions
+    - Issue #2126: rephrase SQL query for retrieving the oid of citext data type, to prevent errors in the server logs
+    - Issue #2257: fix height of grid column header
+    - Issue #2122: support table comment syntax when creating new PostgreSQL tables
+    - Issue #41: use N(ational) prefix on MS SQL strings on all quoted strings, regardless of their exact data type, to support Unicode in meta queries as well
+    - Issue #2167: remove fallback to insecure http calls when https failed
+    - Issue #2250: use N(ational) prefix in MS SQL for any text value going through the second version of EscapeString(), supporting Unicode now when importing a file into a table.
+    - Fix unsaved highlighter selection of default "General"
+    - Fix memory leak
+    - Issue #2249: call FixVT() in FormCreate consequently, so the trees do not change their row height after the second use. Also increase TextMargin and reduce Margin.
+    - Issue #2243: keep UserKnownHostsFile enabled in ssh.exe mode, so the message saying "permanently added xyz to the list of known hosts" is telling the truth now
+    - Do not require a "Content-Length" response header in THttpDownload. Responses mostly come compressed with "Transfer-Encoding: chunked" and then need hacks to get a Content-Length header. See https://www.heidisql.com/forum.php?t=44407
+    - Issue #1313: support MariaDB's COMPRESSED attribute for columns in table editor
+    - Issue #2243: suppress prompt to save a yet unknown host key in ssh.exe mode, by disabling StrictHostKeyChecking and UserKnownHostsFile . I have no clue to where ssh.exe sends that message, it's neither in stdOut nor in stdErr.
+    - Issue #2243: fix input being ignored by plink by adding a linefeed after y/n
+    - Issue #2243: add -legacy-stdio-prompts argument only to plink v0.82 or newer, not on older versions
+    - Issue #2233: fix detection of column length in SQLite, when the column type contains a space before parenthesis
+    - Issue #2212: add type prefix to export file name, when exporting one file per object, to fix overwriting same filename for different object types
+    - Issue #2218: don't disable completion proposal when cursor is right besides a string or comment
+    - Issue #2205: Remove subpart from column indexes when user changed its data type to non-text
+    - Issue #2193: expect some more characters to indicate a boundary for an identifier: ! < >
+    - Table data generator: use only space, new line and letters in text columns, and limit to 1024 characters
+    - Issue #176: move foreign key column value behind the text value, in the grid foreign key drop-down, so a user may select an item by typing letters
+    - Leave space for column id in grid column headers. See https://www.heidisql.com/forum.php?t=44161
+    - Issue #2266: Invisible virtual column syntax is generated wrong
+- Key: ReleaseNotesUrl
+  Value: https://www.heidisql.com/forum.php?t=44439
+ReleaseTime: 2025-10-06
