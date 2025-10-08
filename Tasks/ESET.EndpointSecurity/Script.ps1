@@ -1,10 +1,10 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://gwc.eset.com/v1/product/22').Content | ConvertFrom-Json -AsHashtable
+$Object1 = (Invoke-WebRequest -Uri 'https://gwc.eset.com/v1/product/11').Content | ConvertFrom-Json -AsHashtable
 # x86
-$Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626876' }, 'First')[0]
+$Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626898' }, 'First')[0]
 # x64
-$Object3 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626888' }, 'First')[0]
+$Object3 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626911' }, 'First')[0]
 # arm64
-$Object4 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626895' }, 'First')[0]
+$Object4 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2626885' }, 'First')[0]
 
 if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.full_version } -Unique).Count -gt 1) {
   $this.Log("Inconsistent versions: x86: $($Object2.full_version), x64: $($Object3.full_version), arm64: $($Object4.full_version)", 'Error')
@@ -95,7 +95,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesObject = $Object1.changelogs.Where({ $_.product_id -eq 22 }, 'First')[0].changelogs.'en_US' | ConvertFrom-Html
+      $ReleaseNotesObject = $Object1.changelogs.Where({ $_.product_id -eq 11 }, 'First')[0].changelogs.'en_US' | ConvertFrom-Html
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
