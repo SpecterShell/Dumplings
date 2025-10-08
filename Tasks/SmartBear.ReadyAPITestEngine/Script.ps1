@@ -12,17 +12,16 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://support.smartbear.com/testengine/docs/version-history.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[@class='titlepage' and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Value | Get-Date -Format 'yyyy-MM-dd'
 
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
