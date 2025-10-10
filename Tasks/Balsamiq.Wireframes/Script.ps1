@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes('/hr[1]/following-sibling::node()') | Get-TextContent | Format-Text | Set-Clipboard
+          Value  = $ReleaseNotesObject.SelectNodes('/hr[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl (en-US)
