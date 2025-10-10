@@ -27,10 +27,11 @@ switch -Regex ($this.Check()) {
       $Object3 = Invoke-RestMethod -Uri "https://customerconnect.omnissa.com/channel/public/api/v1.0/products/getDLGHeader?downloadGroup=$($Object1.code)&productId=$($Object1.productId)"
       $Object4 = $Object3.dlg.documentation | ConvertTo-HtmlDecodedText | ConvertFrom-Html
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object4.SelectSingleNode('//a').Attributes['href'].DeEntitizeValue
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object4.SelectSingleNode('//a').Attributes['href'].DeEntitizeValue
       }
 
       $Object5 = Invoke-RestMethod -Uri $ReleaseNotesUrl.Replace('docs.omnissa.com', 'docs-be.omnissa.com/api')
