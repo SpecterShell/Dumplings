@@ -1,0 +1,25 @@
+Version: 18.8.46.1
+Installer:
+- InstallerUrl: https://packages.chef.io/files/stable/chef/18.8.46/windows/10/chef-client-18.8.46-1-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Improvements
+    - Chef Infra Client has improved performance when building large arrays of cookbooks. Thanks @dafyddcrosby! #15274
+    - We updated knife-ec-backup to include cookbooks with a frozen status. Before, this led to Chef Infra Server upgrades that didn't include frozen cookbooks. #15217
+    Resource updates
+    - We fixed the ohai resource where a nil value could be assigned to the plug-in path in the reload action. #15229
+    - We fixed a bug in the chocolatey_installer resource that always downloaded the installer from Choco and ignored the custom URL option. #15306
+    - We updated the apt_repository resource with the following changes:
+      - apt_repository now correctly handles an array of key URLs in the key property when signed_by is true (the default).
+      - If you invoke apt_repository more than once with the same key URL, later instances of apt_repository now correctly import their keys. Before, only the first instance would have its key imported.
+      - apt_repository can now handle GPG key imports on Debian version 13/Trixie.
+      #15235
+    Packaging
+    - We aren't releasing an AIX package for this release.
+    - We added a software bill of materials (SBOM) to all builds. #15317 #15319
+    - We removed old .NET version 5 DLL files from the build. We now use .NET 8 and these files now come directly from the chef-powershell gem. #15190
+    - We added Black Duck workflows to scan for security vulnerabilities. #15093
+    Security
+    - We updated the activesupport gem to address CVE-2023-22796. #15298
