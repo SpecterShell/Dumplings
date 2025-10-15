@@ -10,7 +10,7 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/devedition/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/firefox_versions.json'
 
 # Version
-$this.CurrentState.Version = $OriginalVersion = $Object1.LATEST_FIREFOX_RELEASED_DEVEL_VERSION
+$this.CurrentState.Version = $OriginalVersion = $Object1.FIREFOX_DEVEDITION
 
 # RealVersion
 $this.CurrentState.RealVersion = $ShortVersion = $this.CurrentState.Version -replace 'b.+'
