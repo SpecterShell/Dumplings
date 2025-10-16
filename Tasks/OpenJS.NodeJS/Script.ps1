@@ -51,10 +51,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
 
-      # Documentations
+      # Documentations (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'Documentations'
-        Value = @(
+        Locale = 'en-US'
+        Key    = 'Documentations'
+        Value  = @(
           [ordered]@{
             DocumentLabel = 'Learn'
             DocumentUrl   = 'https://nodejs.org/learn/'
@@ -90,16 +91,18 @@ switch -Regex ($this.Check()) {
         )
       }
 
-      # LicenseUrl
+      # LicenseUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'LicenseUrl'
-        Value = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/LICENSE"
+        Locale = 'en-US'
+        Key    = 'LicenseUrl'
+        Value  = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/LICENSE"
       }
 
-      # PublisherSupportUrl
+      # PublisherSupportUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'PublisherSupportUrl'
-        Value = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/.github/SUPPORT.md"
+        Locale = 'en-US'
+        Key    = 'PublisherSupportUrl'
+        Value  = "https://github.com/nodejs/node/blob/v$($this.CurrentState.Version)/.github/SUPPORT.md"
       }
     } catch {
       $_ | Out-Host
@@ -107,6 +110,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+      }
+
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
@@ -120,19 +130,15 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $null
-      }
     }
 
     $this.Print()
