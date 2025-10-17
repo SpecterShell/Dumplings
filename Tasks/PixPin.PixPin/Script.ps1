@@ -11,7 +11,7 @@ $this.CurrentState.Version = $Object1.ver_info.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.ver_info.direct_url[0]
+  InstallerUrl = $Object1.ver_info.direct_url[0] -replace 'true|false'
 }
 
 switch -Regex ($this.Check()) {
