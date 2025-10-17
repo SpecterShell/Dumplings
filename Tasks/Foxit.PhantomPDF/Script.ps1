@@ -1,8 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-phantom-bussiness'
 
-# Version
-$this.CurrentState.Version = $Object1.package_info.version[0]
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'burn'
@@ -13,6 +10,9 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
 }
 
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
@@ -22,6 +22,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html

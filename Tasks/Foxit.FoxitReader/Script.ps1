@@ -1,13 +1,13 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-reader'
 
-# Version
-$this.CurrentState.Version = $Object1.package_info.version[0]
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Prom', '')
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -21,15 +21,18 @@ switch -Regex ($this.Check()) {
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msp' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+    $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
+    $Params = @{}
+    if (Test-Path -Path $InstallerFile3) { $Params['PatchPath'] = $InstallerFile3 }
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
     # AppsAndFeaturesEntries + ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi @Params
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi @Params
         InstallerType = 'wix'
       }
     )
