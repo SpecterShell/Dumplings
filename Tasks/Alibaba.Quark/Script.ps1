@@ -1,10 +1,7 @@
-$Object1 = Invoke-RestMethod -Uri 'https://coral2.uc.cn/aggregation/quarkPcDownloadPackage' -Body @{
-  req_services = '[{"module":"diamond","key":"quark-pc-download-package"}]'
-}
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.data.Where({ $_.key -eq 'quark-pc-download-package' }, 'First')[0].data.homePageDefaultLink
+  # InstallerUrl = Get-RedirectedUrl -Uri 'https://download.quark.cn/download/quarkpc?platform=pc&ch=pcquark@app_downloader_fail'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://download.quark.cn/download/quarkpc?platform=pc&ch=pcquark@homepage_oficial'
 }
 
 # Version
