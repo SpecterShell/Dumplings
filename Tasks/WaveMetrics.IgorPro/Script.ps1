@@ -1,16 +1,8 @@
 # en
-$Object1 = Invoke-RestMethod -Uri 'https://updates.wavemetrics.com/Updaters/PHP/igor9updatecheck.php?language=en&wantBeta=0' | ConvertFrom-Ini
-# ja
-$Object2 = Invoke-RestMethod -Uri 'https://updates.wavemetrics.com/Updaters/PHP/igor9updatecheck.php?language=ja&wantBeta=0' | ConvertFrom-Ini
+$Object1 = Invoke-RestMethod -Uri 'https://updates.wavemetrics.com/Updaters/PHP/igor10updatecheck.php?language=en&wantBeta=0' | ConvertFrom-Ini
 
 if ($Object1.Contains('IgorExtraInfo') -and -not $Object1.IgorExtraInfo.InfoKeys.Contains('Beta')) {
   $this.Log('Next major version available', 'Warning')
-}
-
-if ($Object1.main.Version -ne $Object2.main.Version) {
-  $this.Log("en version: $($Object1.main.Version)")
-  $this.Log("ja version: $($Object2.main.Version)")
-  throw 'Inconsistent versions detected'
 }
 
 # Version
@@ -18,19 +10,8 @@ $this.CurrentState.Version = $Object1.main.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'en'
-  InstallerUrl    = $Object1.main.InstallerPath
-  ProductCode     = $Object1.main.ProductCode
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale        = 'ja'
-  InstallerUrl           = $Object2.main.InstallerPath
-  ProductCode            = $Object2.main.ProductCode
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "$($Object2.main.DisplayName) $($this.CurrentState.Version)"
-    }
-  )
+  InstallerUrl = $Object1.main.InstallerPath
+  ProductCode  = $Object1.main.ProductCode
 }
 
 switch -Regex ($this.Check()) {
