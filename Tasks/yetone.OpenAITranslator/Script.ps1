@@ -1,5 +1,5 @@
-$RepoOwner = 'openai-translator'
-$RepoName = 'openai-translator'
+$RepoOwner = 'nextai-translator'
+$RepoName = 'nextai-translator'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
