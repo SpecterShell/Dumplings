@@ -26,32 +26,18 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://balsamiq.com/wireframes/desktop/release-notes/#win'
-      }
+      $Object2 = Invoke-WebRequest -Uri 'https://balsamiq.com/wireframes/desktop/release-notes/#win' | ConvertFrom-Html
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='whats-new-entry' and contains(., 'Windows: $($this.CurrentState.Version)')]")
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://balsamiq.com/product/desktop/release-notes.rss').Where({ $_.encoded.'#cdata-section' -match "Windows: $([regex]::Escape($this.CurrentState.Version))" }, 'First')
-
-      if ($Object2) {
+      if ($ReleaseNotesNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime ??= $Object2[0].lastBuildDate | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime ??= [regex]::Match($ReleaseNotesNode.InnerText, '(\d{1,2}\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
-        $ReleaseNotesObject = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes('/hr[1]/following-sibling::node()') | Get-TextContent | Format-Text
-        }
-
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $Object2[0].link
+          Value  = $ReleaseNotesNode.SelectNodes('.//hr[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
