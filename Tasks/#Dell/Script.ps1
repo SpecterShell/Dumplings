@@ -11,12 +11,12 @@ expand.exe -R $CatalogCabPath | Out-Null
 $Global:DumplingsStorage.DellCatalog = Join-Path $CatalogCabPath '..' $CatalogName | Get-Item | Get-Content -Raw | ConvertFrom-Xml
 
 # Catalog #2
-# $Model2 = $Global:DumplingsSecret.DellModel2
-# $Catalog2CabUri = 'https://downloads.dell.com/' + $Index.ManifestIndex.GroupManifest.Where({ $_.SupportedSystems.Brand.Model.systemID -eq $Model2 }, 'First')[0].ManifestInformation.path
-# $Catalog2Name = (Split-Path -Path $Catalog2CabUri -Leaf) -replace '\.cab$', '.xml'
-# $Catalog2CabPath = Get-TempFile -Uri $Catalog2CabUri
-# expand.exe -R $Catalog2CabPath | Out-Null
-# $Global:DumplingsStorage.DellCatalog2 = Join-Path $Catalog2CabPath '..' $Catalog2Name | Get-Item | Get-Content -Raw | ConvertFrom-Xml
+$Model2 = $Global:DumplingsSecret.DellModel2
+$Catalog2CabUri = 'https://downloads.dell.com/' + $Index.ManifestIndex.GroupManifest.Where({ $_.SupportedSystems.Brand.Model.systemID -eq $Model2 }, 'First')[0].ManifestInformation.path
+$Catalog2Name = (Split-Path -Path $Catalog2CabUri -Leaf) -replace '\.cab$', '.xml'
+$Catalog2CabPath = Get-TempFile -Uri $Catalog2CabUri
+expand.exe -R $Catalog2CabPath | Out-Null
+$Global:DumplingsStorage.DellCatalog2 = Join-Path $Catalog2CabPath '..' $Catalog2Name | Get-Item | Get-Content -Raw | ConvertFrom-Xml
 
 # Precedence Catalog
 $PrecedenceCatalogCabPath = Get-TempFile -Uri 'https://dellupdater.dell.com/non_du/ClientService/Catalog/Platform/PrecedenceCatalog.cab'
