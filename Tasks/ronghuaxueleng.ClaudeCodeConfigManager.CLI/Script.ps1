@@ -8,14 +8,10 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'wix'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('cli') -and $_.name.Contains('Windows') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
