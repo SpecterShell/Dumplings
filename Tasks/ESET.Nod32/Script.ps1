@@ -1,31 +1,25 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://gwc.eset.com/v1/product/4').Content | ConvertFrom-Json -AsHashtable
-# x86
-$Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 11 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2625868' }, 'First')[0]
 # x64
-$Object3 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 11 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2625861' }, 'First')[0]
+$Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 11 -and $_.av_remover -eq 'No' -and $_.url.Contains('nt64') }, 'First')[0]
 # arm64
-$Object4 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 11 -and $_.av_remover -eq 'No' -and $_.os_group -eq '2625864' }, 'First')[0]
+$Object3 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 11 -and $_.av_remover -eq 'No' -and $_.url.Contains('arm64') }, 'First')[0]
 
-if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.full_version } -Unique).Count -gt 1) {
-  $this.Log("Inconsistent versions: x86: $($Object2.full_version), x64: $($Object3.full_version), arm64: $($Object4.full_version)", 'Error')
+if ($Object2.full_version -ne $Object3.full_version) {
+  $this.Log("Inconsistent versions: x64: $($Object2.full_version), arm64: $($Object3.full_version)", 'Error')
   return
 }
 
 # Version
-$this.CurrentState.Version = $Object3.full_version
+$this.CurrentState.Version = $Object2.full_version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
+  Architecture = 'x64'
   InstallerUrl = $Object2.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object3.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object4.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
+  InstallerUrl = $Object3.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
 }
 
 switch -Regex ($this.Check()) {
