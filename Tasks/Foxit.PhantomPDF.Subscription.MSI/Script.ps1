@@ -5,7 +5,7 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '_Prom')
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
 }
@@ -29,7 +29,12 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
     $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
     $Params = @{}
-    if (Test-Path -Path $InstallerFile3) { $Params['PatchPath'] = $InstallerFile3 }
+    if (Test-Path -Path $InstallerFile3) {
+      $Params['PatchPath'] = $InstallerFile3
+      $InstallerWiX['InstallerSwitches'] = @{ Custom = "PATCH=`"$($InstallerWiX.InstallerUrl.Replace('.msi', '.msp'))`"" }
+    } else {
+      $InstallerWiX['InstallerSwitches'] = @{}
+    }
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
     # ProductCode
