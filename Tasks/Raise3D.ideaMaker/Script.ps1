@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.ideamaker.info/admin/ideamaker.php?hash=0&64bit=1'
+$Object1 = Invoke-RestMethod -Uri 'https://www.ideamaker.info/admin/ideamaker.php?hash=0&64bit=1' -UserAgent $DumplingsBrowserUserAgent
 
 # Version
 $this.CurrentState.Version = "$($Object1.ideamaker.application.major).$($Object1.ideamaker.application.minor).$($Object1.ideamaker.application.revision).$($Object1.ideamaker.application.build)"
