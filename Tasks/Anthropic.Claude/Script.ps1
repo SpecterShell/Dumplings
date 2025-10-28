@@ -1,26 +1,23 @@
-# x64
-$Object1 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+# Installer
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = curl -fsSA $DumplingsInternetExplorerUserAgent -w '%{redirect_url}' 'https://claude.ai/api/desktop/win32/x64/exe/latest/redirect' | Select-Object -Last 1
+}
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-# arm64
-$Object2 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$this.CurrentState.Installer += $InstallerArm64 = [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = curl -fsSA $DumplingsInternetExplorerUserAgent -w '%{redirect_url}' 'https://claude.ai/api/desktop/win32/arm64/exe/latest/redirect' | Select-Object -Last 1
+}
+$VersionArm64 = [regex]::Match($InstallerArm64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($Object1.Version -ne $Object2.Version) {
-  $this.Log("Inconsistent versions: x64: $($Object1.Version), arm64: $($Object2.Version)", 'Error')
+if ($VersionX64 -ne $VersionArm64) {
+  $this.Log("Inconsistent versions: x64: $VersionX64, arm64: $VersionArm64", 'Error')
   return
 }
 
 # Version
-$this.CurrentState.Version = $Object1.Version
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe'
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = 'https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe'
-}
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
