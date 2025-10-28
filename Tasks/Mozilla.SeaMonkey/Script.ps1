@@ -1,7 +1,6 @@
 # The following locales can't be matched by WinGet properly and thus are omitted: ach (Acholi/Acoli), cak (Kaqchikel), ia (Interlingua), lij (Ligurian), sc (Sardinian), sco (Scots), son (Songhai), szl (Silesian), trs (Triqui)
 $Locales = @('en-US', 'cs', 'de', 'el', 'en-GB', 'es-AR', 'es-ES', 'fi', 'fr', 'hu', 'it', 'ja', 'ka', 'nb-NO', 'nl', 'pl', 'pt-BR', 'pt-PT', 'ru', 'sk', 'sv-SE', 'zh-CN', 'zh-TW')
 $ArchMap = [ordered]@{
-  x86 = 'win32'
   x64 = 'win64'
 }
 $Prefix = 'https://archive.seamonkey-project.org/releases/'
