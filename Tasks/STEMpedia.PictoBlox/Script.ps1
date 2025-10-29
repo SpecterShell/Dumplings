@@ -1,11 +1,10 @@
-
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = Get-RedirectedUrl -Uri 'https://thestempedia.com/product/pictoblox/download-pictoblox/windows-32bit/primary/'
-}
-$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+# $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+#   Architecture  = 'x86'
+#   InstallerType = 'nullsoft'
+#   InstallerUrl  = Get-RedirectedUrl -Uri 'https://thestempedia.com/product/pictoblox/download-pictoblox/windows-32bit/primary/'
+# }
+# $VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture  = 'x64'
@@ -14,17 +13,17 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 }
 $VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-$this.CurrentState.Installer += $InstallerMSI = [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'wix'
-  InstallerUrl  = Get-RedirectedUrl -Uri 'https://thestempedia.com/product/pictoblox/download-pictoblox/msi/primary'
-}
-$VersionMSI = [regex]::Match($InstallerMSI.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+# $this.CurrentState.Installer += $InstallerMSI = [ordered]@{
+#   Architecture  = 'x64'
+#   InstallerType = 'wix'
+#   InstallerUrl  = Get-RedirectedUrl -Uri 'https://thestempedia.com/product/pictoblox/download-pictoblox/msi/primary'
+# }
+# $VersionMSI = [regex]::Match($InstallerMSI.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if (@(@($VersionX86, $VersionX64, $VersionMSI) | Sort-Object -Unique).Count -gt 1) {
-  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}, msi: ${VersionMSI}", 'Error')
-  return
-}
+# if (@(@($VersionX86, $VersionX64, $VersionMSI) | Sort-Object -Unique).Count -gt 1) {
+#   $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}, msi: ${VersionMSI}", 'Error')
+#   return
+# }
 
 # Version
 $this.CurrentState.Version = $VersionX64
