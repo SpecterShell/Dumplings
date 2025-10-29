@@ -1,15 +1,15 @@
 $Object1 = Invoke-WebRequest -Uri 'https://norconsultdigital.no/produkter/isy-linker/'
 
 $VersionX86 = [regex]::Match($Object1.Content, 'ISY Linker 32bit.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
-$VersionX64 = [regex]::Match($Object1.Content, 'ISY Linker 64bit.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
+# $VersionX64 = [regex]::Match($Object1.Content, 'ISY Linker 64bit.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Error')
-  return
-}
+# if ($VersionX86 -ne $VersionX64) {
+#   $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Error')
+#   return
+# }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $VersionX86
 
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
