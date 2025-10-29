@@ -18,11 +18,23 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h3[contains(., '更新内容')]")
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+          }
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
