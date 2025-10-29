@@ -77,9 +77,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = 'https://download.teamviewer.com/download/version_15x/TeamViewer_Setup_x64.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# Hash
-$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
+# Last Modified
+$this.CurrentState.LastModified = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -107,9 +106,12 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The hash is unchanged
-if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`"", 'Warning')
   return
 }
 
@@ -122,17 +124,25 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
 
 Get-ReleaseNotes
 
+# Case 4: The Last Modified has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
+
 switch -Regex ($this.Check()) {
-  # Case 5: The hash and the version have changed
+  # Case 6: The Last Modified, the SHA256 and the version have changed
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
   }
-  # Case 4: The hash has changed, but the version is not
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
   default {
-    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
