@@ -1,8 +1,9 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.bloomberg.com/professional/support/customer-support/software-updates/' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default' | Join-String -Separator "`n" | ConvertFrom-Json -AsHashtable
+$Object2 = $Object1.data.GetEnumerator().Where({ $_.Value.post_title -eq 'Bloomberg Terminal – New/Upgrade Installation' }, 'First')[0].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object2.upload_file
 }
 
 # Version
@@ -10,6 +11,14 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.post_date | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
