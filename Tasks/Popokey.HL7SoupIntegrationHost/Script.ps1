@@ -4,11 +4,12 @@ function Read-Installer {
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.hl7soup.com/download.html'
+$Prefix = 'https://www.integrationsoup.com/download.html'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('HL7 Soup Integration Host.msi') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'HL7 Soup Integration Host\.msi$' } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
