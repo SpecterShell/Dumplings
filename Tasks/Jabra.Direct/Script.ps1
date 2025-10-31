@@ -28,13 +28,15 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object3.SelectSingleNode("//div[@class='support-release-notes-spot']//div[contains(@class, 'support-release-notes-spot__item') and contains(.//div[@class='support-release-notes-spot__item-heading'], '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
+      if ($Object3.SelectSingleNode('//*[@data-testid="release-version"]').InnerText -eq $this.CurrentState.Version) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($Object3.SelectSingleNode('//*[@data-testid="formatted-date"]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[@class="support-release-notes-spot__item-content"]') | Get-TextContent | Format-Text
+          Value  = $Object3.SelectSingleNode('//*[@data-testid="release-content"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
