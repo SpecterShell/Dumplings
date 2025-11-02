@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://dl.movavi.com/content/wi/resources/release/movavi/sr/sr_win_x64/resources/config.json'
+$Object1 = Invoke-RestMethod -Uri 'https://dl.movavi.com/content/wi/resources/release/movavi/vc/vc_win_x64/resources/config.json'
 
 # Version
 $this.CurrentState.Version = $Object1.data.Product.version.DefaultValue
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.Installers.Where({ $_.id.DefaultValue -eq 'screenrecorder' })[0].url.DefaultValue
+  InstallerUrl = $Object1.data.Installers.Where({ $_.id.DefaultValue -eq 'converter' })[0].url.DefaultValue
 }
 
 switch -Regex ($this.Check()) {
