@@ -1,13 +1,13 @@
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://lmstudio.ai/download/latest/win32/x64'
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://lmstudio.ai/download/latest/win32/x64' -Method 'GET'
 }
 $VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
 
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://lmstudio.ai/download/latest/win32/arm64'
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://lmstudio.ai/download/latest/win32/arm64' -Method 'GET'
 }
 $VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
 
@@ -17,7 +17,7 @@ if ($VersionX64 -ne $VersionARM64) {
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
