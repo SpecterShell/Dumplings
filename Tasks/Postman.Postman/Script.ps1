@@ -4,18 +4,40 @@ $Object1 = Invoke-RestMethod -Uri 'https://dl.pstmn.io/update/status' -Body @{
   arch           = '64'
   platform       = 'win64'
 } -StatusCodeVariable 'StatusCode'
-
 if ($StatusCode -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
+$VersionX64 = $Object1.version
+
+$Object2 = Invoke-RestMethod -Uri 'https://dl.pstmn.io/update/status' -Body @{
+  channel        = 'stable'
+  currentVersion = $this.Status.Contains('New') ? '10.24.26' : $this.LastState.Version
+  arch           = 'arm64'
+  platform       = 'win64'
+} -StatusCodeVariable 'StatusCode'
+if ($StatusCode -eq 204) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+$VersionArm64 = $Object2.version
+
+if ($VersionX64 -ne $VersionArm64) {
+  $this.Log("Inconsistent versions: x64: ${VersionX64}, arm64: ${VersionArm64}", 'Error')
+  return
+}
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = $Object1.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object2.url
 }
 
 switch -Regex ($this.Check()) {
