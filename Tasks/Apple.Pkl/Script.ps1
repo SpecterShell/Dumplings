@@ -22,13 +22,14 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = $ReleaseNotesUrl = 'https://pkl-lang.org/main/current/release-notes/changelog.html'
-    }
-
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://pkl-lang.org/main/current/release-notes/changelog.html'
+      }
+
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//article[@class='doc']/div[@class='sect1']/h2[contains(@id, '$($this.CurrentState.Version)')]")
@@ -40,14 +41,40 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
+
+      $ReleaseNotesUrl = "https://pkl-lang.org/main/current/release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '.').html"
+      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl -SkipHttpErrorCheck
+      if ($Object3.StatusCode -eq 200) {
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl
+        }
+
+        $Object3 = $Object3 | ConvertFrom-Html
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object3.SelectNodes('//div[@id="preamble"]') | Get-TextContent | Format-Text
+        }
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
