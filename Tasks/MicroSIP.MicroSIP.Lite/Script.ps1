@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Lite') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('.exe') -and $_.href.Contains('Lite') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 # Version
