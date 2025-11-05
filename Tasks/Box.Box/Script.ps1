@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://cdn07.boxcdn.net/Autoupdate5.json'
+$Object1 = Invoke-RestMethod -Uri 'https://cdn07.boxcdn.net/Autoupdate6.json'
 
 # Version
 $this.CurrentState.Version = $Object1.win.enterprise.version
