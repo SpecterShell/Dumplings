@@ -16,14 +16,15 @@ function Read-Installer {
 }
 
 $Prefix = 'https://support.logmein.com/pro/help/logmein-client-desktop-app-for-windows'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object2 = Invoke-RestMethod -Uri "https://support.logmein.com/api2/article/$($Object1.SelectSingleNode('//meta[@name="article-immutable-id"]').Attributes['content'].Value)/en"
+$Object3 = $Object2.contentText | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('.msi') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
+  InstallerUrl = Join-Uri $Prefix $Object3.Where({ try { $_.href.Contains('.msi') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
-$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object2.Headers.ETag[0]
+$ETag = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
