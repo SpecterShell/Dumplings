@@ -1,9 +1,9 @@
 # x86
 $Object1 = (Invoke-RestMethod -Uri 'https://www.megasoftware.net/current_release/').Where({ $_.app_name -eq 'MEGA X' -and $_.interface -eq 'Command Line (CC)' -and $_.operating_system -eq 'windows' -and $_.cpu_arch -eq '32' -and $_.release_type -eq 'stable' }, 'First')[0]
-$VersionX86 = "$($Object1.major).$($Object1.minor).$($Object1.release)"
+$VersionX86 = "$($Object1.major).$($Object1.minor).$($Object1.release_number)"
 # x64
 $Object2 = (Invoke-RestMethod -Uri 'https://www.megasoftware.net/current_release/').Where({ $_.app_name -eq 'MEGA X' -and $_.interface -eq 'Command Line (CC)' -and $_.operating_system -eq 'windows' -and $_.cpu_arch -eq '64' -and $_.release_type -eq 'stable' }, 'First')[0]
-$VersionX64 = "$($Object2.major).$($Object2.minor).$($Object2.release)"
+$VersionX64 = "$($Object2.major).$($Object2.minor).$($Object2.release_number)"
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")
