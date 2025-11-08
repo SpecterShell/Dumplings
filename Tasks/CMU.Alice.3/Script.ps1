@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # RealVersion
-$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:_\d+)+\+build_\d+)').Groups[1].Value.Replace('_', '.')
+$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:_\d+)+\+build_?\d+)').Groups[1].Value.Replace('_', '.')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
