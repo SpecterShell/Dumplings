@@ -1,0 +1,54 @@
+Version: 5.1.10
+Installer:
+- Architecture: x64
+  NestedInstallerType: exe
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.install.x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.10.install.x64.exe
+  ProductCode: '{9A68C7B2-8522-4C0F-88ED-E0A29B0EF232}'
+  AppsAndFeaturesEntries:
+  - ProductCode: '{9A68C7B2-8522-4C0F-88ED-E0A29B0EF232}'
+    UpgradeCode: '{04A40F40-A207-4B48-AED7-6AA532E43275}'
+    InstallerType: wix
+- Architecture: x64
+  NestedInstallerType: wix
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.winmsi.x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.10.winmsi.x64.msi
+- Architecture: x64
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.portable.x64.zip
+- Architecture: arm64
+  NestedInstallerType: exe
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.install.arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.10.install.arm64.exe
+  ProductCode: '{62C362EA-AF91-4DA1-8F19-A88CAC0ACD15}'
+  AppsAndFeaturesEntries:
+  - ProductCode: '{62C362EA-AF91-4DA1-8F19-A88CAC0ACD15}'
+    UpgradeCode: '{04A40F40-A207-4B48-AED7-6AA532E43275}'
+    InstallerType: wix
+- Architecture: arm64
+  NestedInstallerType: wix
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.winmsi.arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: paint.net.5.1.10.winmsi.arm64.msi
+- Architecture: arm64
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/paintdotnet/release/releases/download/v5.1.10/paint.net.5.1.10.portable.arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This is a maintenance release that adds a Bulgarian translation and fixes some important bugs.
+    - New: Added a Romanian (RO) translation
+    - Fixed a crash (BadNumberException) when moving selected pixels off-canvas, then modifying the selection, then moving the selected pixels back on-canvas
+    - Changed Effects->Noise->Add Noise's Coverage property to be a float instead of an integer
+    - Fixed a rare crash when the system wakes from sleep
+    - Fixed a small GCHandle leak
+    - Fixed HlslTernaryFunctionEffect when using 3 value parameters
+    - Added IDxgiAdapterService2 for plugin use
+    - Updated the bundled AvifFileType plugin to v3.13.1 (thanks @null54!)
+    - Updated the bundled JPEG XL FileType plugin to v1.2.0, which improves support for HBD/HDR image loading (thanks @null54!)
+    - Updated the bundled WebP FileType plugin to v1.6.0 (thanks @null54!)
+ReleaseTime: 2025-11-09T23:15:10.0000000Z
