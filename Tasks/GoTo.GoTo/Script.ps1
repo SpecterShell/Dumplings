@@ -18,22 +18,24 @@ $this.CurrentState.Installer += [ordered]@{
   Scope         = 'user'
   InstallerUrl  = Join-Uri $Prefix $Object1.files[0].url
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'nullsoft'
-  Scope         = 'machine'
-  InstallerUrl  = Join-Uri $PrefixMachine $Object2.files[0].url
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerType = 'nullsoft'
+#   Scope         = 'machine'
+#   InstallerUrl  = Join-Uri $PrefixMachine $Object2.files[0].url
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
   Scope         = 'machine'
   InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupMachine-$($this.CurrentState.Version)-ia32.msi"
+  ProductCode   = 'b5746384-3503-4fbf-824a-0a42d1bd0639'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   Scope         = 'machine'
   InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupMachine-$($this.CurrentState.Version)-x64.msi"
+  ProductCode   = 'b5746384-3503-4fbf-824a-0a42d1bd0639'
 }
 
 switch -Regex ($this.Check()) {
