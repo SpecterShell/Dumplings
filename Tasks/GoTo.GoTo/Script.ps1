@@ -27,13 +27,13 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
   Scope         = 'machine'
-  InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupUserLogin-$($this.CurrentState.Version)-ia32.msi"
+  InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupMachine-$($this.CurrentState.Version)-ia32.msi"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   Scope         = 'machine'
-  InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupUserLogin-$($this.CurrentState.Version)-x64.msi"
+  InstallerUrl  = "https://goto-desktop.goto.com/GoToSetupMachine-$($this.CurrentState.Version)-x64.msi"
 }
 
 switch -Regex ($this.Check()) {
