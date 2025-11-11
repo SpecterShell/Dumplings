@@ -46,7 +46,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $Object3[0].link
+          Value  = $Object3[0].link | ConvertTo-Https
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
