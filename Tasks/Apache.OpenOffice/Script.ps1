@@ -1,5 +1,5 @@
 $EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/index.html')
+$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
 
 # $Prefix1 = $EdgeDriver.ExecuteScript('return DL.SF', $null)
 $Prefix2 = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
