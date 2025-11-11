@@ -30,6 +30,25 @@ switch -Regex ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://www.trae.cn/changelog' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)')]")
+      if ($ReleaseNotesNode) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
