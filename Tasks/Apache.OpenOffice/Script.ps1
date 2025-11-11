@@ -1,5 +1,5 @@
 $EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
+$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/index.html')
 
 # $Prefix1 = $EdgeDriver.ExecuteScript('return DL.SF', $null)
 $Prefix2 = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
@@ -12,7 +12,7 @@ $this.CurrentState.Version = [regex]::Replace($Version, '(\d+)\.(\d+)\.(\d+)', '
 
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
-#   InstallerUrl       = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe/download"
+#   InstallerUrl       = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe"
 #   InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
 # }
 switch ($Lang) {
@@ -22,7 +22,7 @@ switch ($Lang) {
   'ast' {
     $this.CurrentState.Installer += [ordered]@{
       InstallerLocale    = 'ast-ES'
-      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
       InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
     }
     continue
@@ -30,7 +30,7 @@ switch ($Lang) {
   'gd' {
     $this.CurrentState.Installer += [ordered]@{
       InstallerLocale    = 'gd-GB'
-      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
       InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
     }
     continue
@@ -38,12 +38,12 @@ switch ($Lang) {
   'sr' {
     $this.CurrentState.Installer += [ordered]@{
       InstallerLocale    = 'sr-Cyrl'
-      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
       InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
     }
     $this.CurrentState.Installer += [ordered]@{
       InstallerLocale    = 'sr-Latn'
-      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
       InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
     }
     continue
@@ -51,7 +51,7 @@ switch ($Lang) {
   Default {
     $this.CurrentState.Installer += [ordered]@{
       InstallerLocale    = $_
-      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
       InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
     }
     continue
