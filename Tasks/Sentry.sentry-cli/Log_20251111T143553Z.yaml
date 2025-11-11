@@ -1,0 +1,20 @@
+Version: 2.58.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/getsentry/sentry-cli/releases/download/2.58.1/sentry-cli-Windows-i686.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/getsentry/sentry-cli/releases/download/2.58.1/sentry-cli-Windows-x86_64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Deprecations
+    - Deprecated API key authentication (#2934, #2937). Users who are still using API keys to authenticate Sentry CLI should generate and use an Auth Token instead.
+    Improvements
+    - The sentry-cli debug-files bundle-jvm no longer makes any HTTP requests to Sentry, meaning auth tokens are no longer needed, and the command can be run offline (#2926).
+    Fixes
+    - Skip setting base_sha and base_ref when they equal head_sha during auto-inference, since comparing a commit to itself provides no meaningful baseline (#2924).
+    - Improved error message when supplying a non-existent organization to sentry-cli sourcemaps upload. The error now correctly indicates the organization doesn't exist, rather than incorrectly suggesting the Sentry server lacks artifact bundle support (#2931).
+- Key: ReleaseNotesUrl
+  Value: https://github.com/getsentry/sentry-cli/releases/tag/2.58.1
+ReleaseTime: 2025-11-11T14:08:09.0000000Z
