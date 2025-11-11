@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/glp-client'
+$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/glp-client' -UserAgent $DumplingsBrowserUserAgent
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.Content, 'GLP Client (\d+(\.\d+)+)').Groups[1].Value

@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/configsoft'
+$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/configsoft' -UserAgent $DumplingsBrowserUserAgent
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
