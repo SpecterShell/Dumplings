@@ -1,7 +1,7 @@
 $RepoOwner = 'nodejs'
 $RepoName = 'node'
 
-$Object1 = (Invoke-RestMethod -Uri 'https://nodejs.org/dist/index.json') |
+$Object1 = $Global:DumplingsStorage.NodeJSReleases |
   Where-Object -FilterScript { -not $_.lts } |
   # Sort-Object -Property { $_.version -replace '\d+', { $_.Value.PadLeft(20) } } |
   Select-Object -First 1

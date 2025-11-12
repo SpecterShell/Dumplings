@@ -2,7 +2,7 @@ $RepoOwner = 'nodejs'
 $RepoName = 'node'
 
 $Object1 = $Global:DumplingsStorage.NodeJSReleases |
-  Where-Object -FilterScript { $_.lts } |
+  Where-Object -FilterScript { $_.version.StartsWith('v20.') } |
   # Sort-Object -Property { $_.version -replace '\d+', { $_.Value.PadLeft(20) } } |
   Select-Object -First 1
 
