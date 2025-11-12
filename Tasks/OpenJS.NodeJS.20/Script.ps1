@@ -11,6 +11,11 @@ $this.CurrentState.Version = $Object1.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x86.msi"
+}
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-x64.msi"
@@ -19,6 +24,18 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
   InstallerUrl  = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-arm64.msi"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x86'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  InstallerUrl         = "https://nodejs.org/dist/v$($this.CurrentState.Version)/node-v$($this.CurrentState.Version)-win-x86.zip"
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "node-v$($this.CurrentState.Version)-win-x86/node.exe"
+      PortableCommandAlias = 'node'
+    }
+  )
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
