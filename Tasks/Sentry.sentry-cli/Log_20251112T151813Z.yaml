@@ -1,0 +1,17 @@
+Version: 2.58.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/getsentry/sentry-cli/releases/download/2.58.2/sentry-cli-Windows-i686.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/getsentry/sentry-cli/releases/download/2.58.2/sentry-cli-Windows-x86_64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Improvements
+    - Added validation for the sentry-cli build upload command's --head-sha and --base-sha arguments (#2945). The CLI now validates that these are valid SHA1 sums. Passing an empty string is also allowed; this prevents the default values from being used, causing the values to instead be unset.
+    Fixes
+    - Fixed a bug where providing empty-string values for the sentry-cli build upload command's --vcs-provider, --head-repo-name, --head-ref, --base-ref, and --base-repo-name arguments resulted in 400 errors (#2946). Now, setting these to empty strings instead explicitly clears the default value we would set otherwise, as expected.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/getsentry/sentry-cli/releases/tag/2.58.2
+ReleaseTime: 2025-11-12T14:48:22.0000000Z
