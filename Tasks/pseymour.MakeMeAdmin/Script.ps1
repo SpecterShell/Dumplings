@@ -19,6 +19,11 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
+  InstallerLocale = 'de'
+  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'de' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'x64'
   InstallerLocale = 'fr'
   InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'fr' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
