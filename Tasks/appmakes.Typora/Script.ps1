@@ -12,42 +12,105 @@ $this.CurrentState.Version = @($Object1, $Object2, $Object3) | Select-Object -Ex
 # Installer
 if ($this.CurrentState.Version -eq $Object1.version) {
   $this.CurrentState.Installer += [ordered]@{
-    Architecture = 'x86'
+    Query        = [ordered]@{
+      Architecture = 'x86'
+      Scope        = 'user'
+    }
     InstallerUrl = $Object1.download.Replace('update', 'setup')
   }
   $this.CurrentState.Installer += [ordered]@{
-    InstallerLocale = 'zh-CN'
-    Architecture    = 'x86'
-    InstallerUrl    = $Object1.downloadCN.Replace('update', 'setup')
+    Query        = [ordered]@{
+      Architecture = 'x86'
+      Scope        = 'machine'
+    }
+    InstallerUrl = $Object1.download.Replace('update', 'setup')
   }
 }
 if ($this.CurrentState.Version -eq $Object2.version) {
   $this.CurrentState.Installer += [ordered]@{
-    Architecture = 'x64'
+    Query        = [ordered]@{
+      Architecture = 'x64'
+      Scope        = 'user'
+    }
     InstallerUrl = $Object2.download.Replace('update', 'setup')
   }
   $this.CurrentState.Installer += [ordered]@{
-    InstallerLocale = 'zh-CN'
-    Architecture    = 'x64'
-    InstallerUrl    = $Object2.downloadCN.Replace('update', 'setup')
+    Query        = [ordered]@{
+      Architecture = 'x64'
+      Scope        = 'machine'
+    }
+    InstallerUrl = $Object2.download.Replace('update', 'setup')
   }
 }
 if ($this.CurrentState.Version -eq $Object3.version) {
   $this.CurrentState.Installer += [ordered]@{
-    Architecture = 'arm64'
+    Query        = [ordered]@{
+      Architecture = 'arm64'
+      Scope        = 'user'
+    }
     InstallerUrl = $Object3.download.Replace('update', 'setup')
   }
   $this.CurrentState.Installer += [ordered]@{
-    InstallerLocale = 'zh-CN'
-    Architecture    = 'arm64'
-    InstallerUrl    = $Object3.downloadCN.Replace('update', 'setup')
+    Query        = [ordered]@{
+      Architecture = 'arm64'
+      Scope        = 'machine'
+    }
+    InstallerUrl = $Object3.download.Replace('update', 'setup')
   }
 }
-
-$Identical = $true
-if (-not $this.LastState.Installer.Architecture -or (Compare-Object -ReferenceObject $this.LastState.Installer.Architecture -DifferenceObject $this.CurrentState.Installer.Architecture)) {
-  $this.Log('Inconsistent architectures detected', 'Warning')
-  $Identical = $false
+if ($this.CurrentState.Version -eq $Object1.version) {
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'x86'
+      Scope           = 'user'
+    }
+    InstallerUrl = $Object1.downloadCN.Replace('update', 'setup')
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'x86'
+      Scope           = 'machine'
+    }
+    InstallerUrl = $Object1.downloadCN.Replace('update', 'setup')
+  }
+}
+if ($this.CurrentState.Version -eq $Object2.version) {
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'x64'
+      Scope           = 'user'
+    }
+    InstallerUrl = $Object2.downloadCN.Replace('update', 'setup')
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'x64'
+      Scope           = 'machine'
+    }
+    InstallerUrl = $Object2.downloadCN.Replace('update', 'setup')
+  }
+}
+if ($this.CurrentState.Version -eq $Object3.version) {
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'arm64'
+      Scope           = 'user'
+    }
+    InstallerUrl = $Object3.downloadCN.Replace('update', 'setup')
+  }
+  $this.CurrentState.Installer += [ordered]@{
+    Query        = [ordered]@{
+      InstallerLocale = 'zh-CN'
+      Architecture    = 'arm64'
+      Scope           = 'machine'
+    }
+    InstallerUrl = $Object3.downloadCN.Replace('update', 'setup')
+  }
 }
 
 switch -Regex ($this.Check()) {
@@ -103,7 +166,7 @@ switch -Regex ($this.Check()) {
   'Changed|Updated' {
     $this.Message()
   }
-  ({ $_ -match 'Updated' -and $Identical }) {
+  'Updated' {
     $this.Submit()
   }
 }
