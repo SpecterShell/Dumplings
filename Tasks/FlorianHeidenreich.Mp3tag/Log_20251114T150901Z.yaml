@@ -1,0 +1,52 @@
+Version: "3.32"
+Installer:
+- Architecture: x86
+  InstallerUrl: https://download.mp3tag.de/mp3tagv332setup.exe
+- Architecture: x64
+  InstallerUrl: https://download.mp3tag.de/mp3tagv332-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    NEW: added functions `SayVar`, `Use`, and `UseFormat` to Web Sources Framework. (#70122, #70129, #61854, #63206)
+    FIX: labels in the Tag Sources search dialog were partially clipped at the bottom for some characters.
+    FIX: MP4 `mean` atoms with uncommon namespaces were no longer displayed (since v3.31b).
+    CHG: Discogs Tag Sources: automatically remove disambiguation numbers from artist names.
+    FIX: Discogs Tag Sources: DISCNUMBER was not imported correctly for track listings which used the - character only for some of the tracks.
+    FIX: debug output of Web Sources Framework created current output set via `outputto` even when no data has been emitted.
+    NEW: added function `SayFormat` to Web Sources Framework.
+    NEW: Discogs Tag Sources: added support for importing `COMPOSER` from extra artist roles of index tracks and use them for subtracks.
+    CHG: MusicBrainz Tag Source: complete rewrite to use JSON input instead of XML.
+    CHG: MusicBrainz Tag Source: media title is now imported to `SETSUBTITLE` (instead of `Disc Title`).
+    NEW: MusicBrainz Tag Source: added support for importing fields `COMPILATION`, `MUSICBRAINZ_ALBUMTYPE`, and `ORIGYEAR`.
+    NEW: Discogs Tag Sources: added support for importing `COMPOSER` from extra artist roles `Composed-By`, `Music-By`, `Songwriter`, and `Written-By` (and variants thereof).
+    NEW: Discogs Tag Sources: added support for importing `MIXARTIST` from extra artist role `Remix`.
+    FIX: drag and drop of files into File List did not work using latest Wine.
+    CHG: added `TITLE` to track list at Tag Sources result dialog for releases with identical titles for all tracks. (#68393)
+    NEW: added option to disable auto-sizing of columns in Find window results list to preserve manually adjusted column widths. (#69494)
+    FIX: tooltips for toolbar buttons were not displayed when the Filter window was focused. (#70053)
+    CHG: added confirmation question when sorting the File List if the Tag Panel contains unsaved changes and auto-saving is not enabled. (#70046)
+    FIX: occasional runtime error when performing drag and drop from the File List. (#69942)
+    NEW: added `mp4_creation_time`, `mp4_creation_time_raw`, `mp4_modification_time`, and `mp4_modification_time_raw` to display MP4 `mvhd` creation and modification dates. (#68880)
+    FIX: pressing Del key removed file from File List when editing in File List (since v3.31e). (#70030)
+    NEW: added ability to select similar files via 'Edit > Select similar files' or Ctrl+G. (#5485, #8853, #17247, #54274, #56177, #62080)
+    NEW: added ability to select next similar files that differ from current file via 'Edit > Select next similar files' or Ctrl+Shift+G. (#14309, #14905, #58926)
+    NEW: added support for auto-completion of custom values when editing in Extended Tags. (#69448)
+    NEW: added support for auto-completion of custom values when editing in File List. (#69448)
+    FIX: auto-numbering wizard couldn't be confirmed when the list of fields was empty, even if "Next disc on field change" was disabled.
+    CHG: added tooltip for cover text at Tag Panel if text is clipped.
+    FIX: confirmation message loop when changing file selection to already selected files after Tag Panel edits if asking for writing unsaved changes was enabled.
+    NEW: added support for Matroska stereoscopic video *.mk3d files.
+    NEW: added support for Matroska stereoscopic video *.mk3d for Explorer context menu shell extension (requires restart to be updated if already installed).
+    FIX: action Split field by separator did not trim spaces from resulting values. (#69981)
+    FIX: MP3 length could be slightly inaccurate for large constant-bitrate files if some frames used padding and others don't. (#69894)
+    FIX: MP4 gnre atom for GENRE used type identifier that was incompatible with Apple Music so that "Unknown Genre" was displayed instead of the actual genre (since v3.31b).
+    FIX: MP4 fields TOTALTRACKS and TOTALDISCS were not written, if accompanied TRACK and DISC were not changed (since v3.31b).
+    FIX: runtime error when rewriting FLAC files via temporary file (since v3.31b).
+    CHG: improved formatting for preview at 'Convert > Tag - Tag'. (#69508)
+    FIX: runtime error that occurred when opening 'Manage covers...' and one of the selected files had an invalid cover which could not be displayed.
+    FIX: added special handling for situations where writing to FLAC files was prevented by Windows Controlled Folder Access and resulted in a crash.
+    CHG: in case a Nero tag needs to be written, it's now using a minimal version without duplicating other metadata. (#67243, #69322)
+    NEW: added `$dedup(x,y,c)` scripting function, which removes duplicated strings from `x`, separated by `y`, optionally using case-insensitive comparison if `c` is set to `1`. (#69515)
+    LNG: updated Brazilian Portuguese, Catalan, Corsican, Italian, Simplified Chinese, Slovak, Spanish, and Ukrainian translation.
+ReleaseTime: 2025-11-14T14:30:00.0000000Z
