@@ -5,12 +5,7 @@ $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
-    }
-  )
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
 }
 
 switch -Regex ($this.Check()) {
