@@ -10,7 +10,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-$($this.CurrentState.Version)-windows-x86_64.msi"
+  InstallerUrl  = "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-$($this.CurrentState.Version)-windows-x86_64.msi"
 }
 
 switch -Regex ($this.Check()) {
