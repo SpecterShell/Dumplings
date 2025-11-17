@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://client-version.office.k8s.xunlei.cn/ci/v1/public/versionManage/versions/latest?clientId=XW-G4v1H72tgfJym'
+$Object1 = Invoke-WebRequest -Uri 'https://dl.xunlei.com/'
 
 # Version
-$this.CurrentState.Version = $Object1.data.versionName
+$this.CurrentState.Version = [regex]::Match($Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XunLei') } catch {} }, 'First')[0].href, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.officialUrlThunderPcOffline
+  InstallerUrl = "https://down.sandai.net/thunder11/XunLeiSetup$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
