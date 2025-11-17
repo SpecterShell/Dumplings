@@ -12,14 +12,6 @@ $this.CurrentState.RealVersion = $VersionMatches.Groups[1].Value
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($VersionMatches.Groups[2].Value, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
