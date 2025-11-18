@@ -32,16 +32,29 @@ switch -Regex ($this.Check()) {
 
       $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version)')]")) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version -replace '(\.0+)+$')')]")) } catch {}
         }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      )
+      try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
+      $ReleaseNotesObject = $ReleaseNotesNode.GetAttribute('innerHTML') | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {
         # Remove "Learn more" links
         $ReleaseNotesObject.SelectNodes('.//a[contains(text(), "Learn more")]').ForEach({ $_.Remove() })
+        # Remove anchor links
+        $ReleaseNotesObject.SelectNodes('.//a[@class="anchor-link"]').ForEach({ $_.Remove() })
+        # Remove "Video unavailable"
+        $ReleaseNotesObject.SelectNodes('./*/div[contains(., "Video unavailable")]').ForEach({ $_.Remove() })
+        # Remove figures
+        $ReleaseNotesObject.SelectNodes('./*/div[figure]').ForEach({ $_.Remove() })
+        # Remove buttons
+        $ReleaseNotesObject.SelectNodes('.//button[@data-state="open" and count(*)>1]/div[last()]').ForEach({ $_.Remove() })
+        $ReleaseNotesObject.SelectNodes('.//div[count(*)=1 and contains(./button/@aria-label, "Copy command")]').ForEach({ $_.Remove() })
+        # Remove empty p
+        $ReleaseNotesObject.SelectNodes('.//p[not(*) and not(normalize-space())]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
