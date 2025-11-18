@@ -2,12 +2,14 @@
 
 function Read-Installer {
   foreach ($Installer in $this.CurrentState.Installer) {
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Setup.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'Setup.msi'
     # Version
     $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $Installer.InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     # ProductCode
     $Installer.ProductCode = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries
