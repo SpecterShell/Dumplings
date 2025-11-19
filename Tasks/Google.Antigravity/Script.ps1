@@ -1,15 +1,17 @@
 # x64
 $Object1 = Invoke-RestMethod -Uri 'https://antigravity-auto-updater-974169037036.us-central1.run.app/api/update/win32-x64-user/stable/latest'
+$VersionX64 = [regex]::Match($Object1.url, '(\d+(?:\.\d+)+)').Groups[1].Value
 # arm64
 $Object2 = Invoke-RestMethod -Uri 'https://antigravity-auto-updater-974169037036.us-central1.run.app/api/update/win32-arm64-user/stable/latest'
+$VersionArm64 = [regex]::Match($Object2.url, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($Object1.productVersion -ne $Object2.productVersion) {
-  $this.Log("Inconsistent versions: x64: $($Object1.productVersion), arm64: $($Object2.productVersion)", 'Error')
+if ($VersionX64 -ne $VersionArm64) {
+  $this.Log("Inconsistent versions: x64: ${VersionX64}, arm64: ${VersionArm64}", 'Error')
   return
 }
 
 # Version
-$this.CurrentState.Version = $Object1.productVersion
+$this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -19,8 +21,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerSha256 = $Object1.sha256hash.ToUpper()
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture    = 'x64'
-  Scope           = 'machine'
+  Architecture    = 'arm64'
+  Scope           = 'user'
   InstallerUrl    = $Object2.url
   InstallerSha256 = $Object2.sha256hash.ToUpper()
 }
