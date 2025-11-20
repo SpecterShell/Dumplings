@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.realvnc.com/en/connect/download/viewer/' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.realvnc.com/en/connect/download/viewer/' | Join-String -Separator "`n" | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
 
