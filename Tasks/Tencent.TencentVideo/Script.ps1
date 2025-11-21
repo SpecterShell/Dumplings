@@ -9,7 +9,7 @@ $this.CurrentState.Version = $Object3.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object3.downloadLink
+  InstallerUrl = $Object3.downloadLink.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 switch -Regex ($this.Check()) {
