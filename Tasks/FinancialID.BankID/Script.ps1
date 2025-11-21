@@ -1,8 +1,19 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.bankid.com/en/foretag/enterprise'
+# For some reasons, the installer URL can only be obtained when the web driver is not headless.
+$EdgeDriver = New-EdgeDriver
+try {
+  $EdgeDriver.Navigate().GoToUrl('https://www.bankid.com/en/business/enterprise')
 
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerUrl = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+      [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+        param([OpenQA.Selenium.IWebDriver]$WebDriver)
+        try { $WebDriver.FindElement([OpenQA.Selenium.By]::CssSelector('a[href$=".zip"]')) } catch {}
+      }
+    ).GetAttribute('href').Trim()
+  }
+} finally {
+  $EdgeDriver.Dispose()
 }
 
 # Version
