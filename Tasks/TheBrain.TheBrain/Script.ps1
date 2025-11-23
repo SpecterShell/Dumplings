@@ -1,8 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thebrain.com/download'
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl('https://www.thebrain.com/download')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.Links.Where({ $_.outerHTML -match 'Download for Windows' }, 'First')[0].href -TimeoutSec 30 | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl -Uri $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(., "Download for Windows")]')).GetAttribute('href') -TimeoutSec 30 | ConvertTo-UnescapedUri
 }
 
 # Version
