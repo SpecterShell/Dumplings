@@ -4,13 +4,30 @@ $Object1 = Invoke-RestMethod -Uri 'https://cdn.desktop.baimiaoapp.com/updater/up
 $this.CurrentState.Version = [regex]::Match($Object1.name, 'v(.+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_zh-CN.msi"
-    }
-  )
+if ($Object1.platforms.'windows-x86_64'.url.Contains('.msi')) {
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerType        = 'zip'
+    NestedInstallerType  = 'wix'
+    InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
+    NestedInstallerFiles = @(
+      [ordered]@{
+        RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_zh-CN.msi"
+      }
+    )
+  }
+} elseif ($Object1.platforms.'windows-x86_64'.url.Contains('.nsis')) {
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerType        = 'zip'
+    NestedInstallerType  = 'nullsoft'
+    InstallerUrl         = Join-Uri $Object1.platforms.'windows-x86_64'.url 'baimiao_windows.zip'
+    NestedInstallerFiles = @(
+      [ordered]@{
+        RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_setup.exe"
+      }
+    )
+  }
+} else {
+  $this.Log("Unknown installer type for version $($this.CurrentState.Version)", 'Error')
 }
 
 switch -Regex ($this.Check()) {
