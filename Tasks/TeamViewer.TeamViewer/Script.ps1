@@ -1,5 +1,6 @@
 function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.CurrentState.Installer[0].InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # Version
   $this.CurrentState.Version = ($InstallerFile | Read-FileVersionRawFromExe).ToString(3)
   # Installer
