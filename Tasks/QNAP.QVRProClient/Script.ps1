@@ -45,7 +45,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = (Invoke-RestMethod -Uri 'https://www.qnap.com.cn/api/v1/release-notes/utility/QVR%20Pro%20Client?locale=en').result.notes.Windows.Where({ $_.version -eq $Object2.version }, 'First')
+      $Object3 = (Invoke-RestMethod -Uri 'https://www.qnap.com/api/v1/release-notes/utility/QVR%20Pro%20Client?locale=en').result.notes.Windows.Where({ $_.version -eq $Object2.version }, 'First')
 
       if ($Object3) {
         # ReleaseNotes (en-US)
@@ -63,7 +63,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object4 = (Invoke-RestMethod -Uri 'https://www.qnap.com.cn/api/v1/release-notes/utility/QVR%20Pro%20Client?locale=zh-cn').result.notes.Windows.Where({ $_.version -eq $Object2.version }, 'First')
+      $Object4 = (Invoke-RestMethod -Uri 'https://www.qnap.com/api/v1/release-notes/utility/QVR%20Pro%20Client?locale=zh-cn').result.notes.Windows.Where({ $_.version -eq $Object2.version }, 'First')
 
       if ($Object4 -and $Object4[0].note -ne $Object3[0].note) {
         # ReleaseNotes (zh-CN)
