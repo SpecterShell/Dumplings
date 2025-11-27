@@ -16,7 +16,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+(?:\.
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://pro.lceda.cn/page/update-record' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://pro.lceda.cn/page/update-record-v2' | ConvertFrom-Html
       $Object3 = [System.IO.StringReader]::new(($Object2.SelectSingleNode('//*[contains(@class, "doc-body-left")]') | Get-TextContent))
 
       while ($Object3.Peek() -ne -1) {
