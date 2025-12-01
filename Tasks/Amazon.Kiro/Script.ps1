@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version -replace '(\.0+)+$')')]")) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(./div[1]/div[1]/span, '$($this.CurrentState.Version -replace '(\.0+)+$')') or contains(./div[1]/div[1]/span, '$('{0}.{1}.x' -f $this.CurrentState.Version.Split('.'))')]")) } catch {}
         }
       )
       try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
