@@ -6,6 +6,11 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
+if ($this.CurrentState.Version -match '^workflow-') {
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
