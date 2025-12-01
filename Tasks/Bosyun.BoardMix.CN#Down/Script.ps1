@@ -1,25 +1,18 @@
-$Prefix = 'https://api.boardmix.cn/api/upgrade/desktop/bosyun/'
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl('https://boardmix.cn/download/')
 
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
-
-# Version
-$this.CurrentState.Version = $Object1.version
+$Object1 = $EdgeDriver.ExecuteScript('return ossMap', $null)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  InstallerUrl = $Object1.win10 | ConvertFrom-Base64
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
