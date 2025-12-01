@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.item.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://ddawebsite-prod.azurewebsites.net/releases/DEWALT_DESIGN_ASSIST_$($this.CurrentState.Version).msi"
+  InstallerUrl = "https://ddawebsite-prod.azurewebsites.net/releases/DEWALT_DESIGN_ASSIST.msi"
 }
 
 switch -Regex ($this.Check()) {
