@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.ver_info.created_at.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.ver_info.created_at | Get-Date | ConvertTo-UtcDateTime -Id 'UTC'
 
       # ReleaseNotes (en-US)
       $ReleaseNotesObject = $Object1.ver_info.desc | Convert-MarkdownToHtml
