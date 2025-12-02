@@ -1,0 +1,236 @@
+Version: 3.14.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://www.python.org/ftp/python/3.14.1/python-3.14.1.exe
+- Architecture: x64
+  InstallerUrl: https://www.python.org/ftp/python/3.14.1/python-3.14.1-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://www.python.org/ftp/python/3.14.1/python-3.14.1-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.python.org/release/3.14.1/whatsnew/changelog.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Windows
+    - gh-139810: Installing with py install 3[.x]-dev will now select final versions as well as prereleases.
+    Tools/Demos
+    - gh-141692: Each slice of an iOS XCframework now contains a lib folder that contains a symlink to the libpython dylib. This allows binary modules to be compiled for iOS using dynamic libreary linking, rather than Framework linking.
+    - gh-141442: The iOS testbed now correctly handles test arguments that contain spaces.
+    - gh-140702: The iOS testbed app will now expose the GITHUB_ACTIONS environment variable to iOS apps being tested.
+    - gh-137484: Have Tools/wasm/wasi put the build Python into a directory named after the build triple instead of “build”.
+    - gh-137248: Add a --logdir option to Tools/wasm/wasi for specifying where to write log files.
+    - gh-137243: Have Tools/wasm/wasi detect a WASI SDK install in /opt when it was directly extracted from a release tarball.
+    Tests
+    - gh-140482: Preserve and restore the state of stty echo as part of the test environment.
+    - gh-140082: Update python -m test to set FORCE_COLOR=1 when being run with color enabled so that unittest which is run by it with redirected output will output in color.
+    - gh-139208: Fix regrtest --fast-ci --verbose: don’t ignore the --verbose option anymore. Patch by Victor Stinner.
+    - gh-136442: Use exitcode 1 instead of 5 if unittest.TestCase.setUpClass() raises an exception
+    Security
+    - gh-139700: Check consistency of the zip64 end of central directory record. Support records with “zip64 extensible data” if there are no bytes prepended to the ZIP file.
+    - gh-139283: sqlite3: correctly handle maximum number of rows to fetch in Cursor.fetchmany and reject negative values for Cursor.arraysize. Patch by Bénédikt Tran.
+    - gh-137836: Add support of the “plaintext” element, RAWTEXT elements “xmp”, “iframe”, “noembed” and “noframes”, and optionally RAWTEXT element “noscript” in html.parser.HTMLParser.
+    - gh-136063: email.message: ensure linear complexity for legacy HTTP parameters parsing. Patch by Bénédikt Tran.
+    - gh-136065: Fix quadratic complexity in os.path.expandvars().
+    - gh-119451: Fix a potential memory denial of service in the http.client module. When connecting to a malicious server, it could cause an arbitrary amount of memory to be allocated. This could have led to symptoms including a MemoryError, swapping, out of memory (OOM) killed processes or containers, or even system crashes.
+    - gh-119342: Fix a potential memory denial of service in the plistlib module. When reading a Plist file received from untrusted source, it could cause an arbitrary amount of memory to be allocated. This could have led to symptoms including a MemoryError, swapping, out of memory (OOM) killed processes or containers, or even system crashes.
+    Library
+    - gh-74389: When the stdin being used by a subprocess.Popen instance is closed, this is now ignored in subprocess.Popen.communicate() instead of leaving the class in an inconsistent state.
+    - gh-87512: Fix subprocess.Popen.communicate() timeout handling on Windows when writing large input. Previously, the timeout was ignored during stdin writing, causing the method to block indefinitely if the child process did not consume input quickly. The stdin write is now performed in a background thread, allowing the timeout to be properly enforced.
+    - gh-141473: When subprocess.Popen.communicate() was called with input and a timeout and is called for a second time after a TimeoutExpired exception before the process has died, it should no longer hang.
+    - gh-59000: Fix pdb breakpoint resolution for class methods when the module defining the class is not imported.
+    - gh-141570: Support file-like object raising OSError from fileno() in color detection (_colorize.can_colorize()). This can occur when sys.stdout is redirected.
+    - gh-141659: Fix bad file descriptor errors from _posixsubprocess on AIX.
+    - gh-141600: Fix musl version detection on Void Linux.
+    - gh-141497: ipaddress: ensure that the methods IPv4Network.hosts() and IPv6Network.hosts() always return an iterator.
+    - gh-140938: The statistics.stdev() and statistics.pstdev() functions now raise a ValueError when the input contains an infinity or a NaN.
+    - gh-124111: Updated Tcl threading configuration in _tkinter to assume that threads are always available in Tcl 9 and later.
+    - gh-137109: The os.fork and related forking APIs will no longer warn in the common case where Linux or macOS platform APIs return the number of threads in a process and find the answer to be 1 even when a os.register_at_fork() after_in_parent= callback (re)starts a thread.
+    - gh-141314: Fix assertion failure in io.TextIOWrapper.tell() when reading files with standalone carriage return (\r) line endings.
+    - gh-141311: Fix assertion failure in io.BytesIO.readinto() and undefined behavior arising when read position is above capcity in io.BytesIO.
+    - gh-141141: Fix a thread safety issue with base64.b85decode(). Contributed by Benel Tayar.
+    - gh-137969: Fix annotationlib.ForwardRef.evaluate() returning ForwardRef objects which don’t update with new globals.
+    - gh-140911: collections: Ensure that the methods UserString.rindex() and UserString.index() accept collections.UserString instances as the sub argument.
+    - gh-140797: The undocumented re.Scanner class now forbids regular expressions containing capturing groups in its lexicon patterns. Patterns using capturing groups could previously lead to crashes with segmentation fault. Use non-capturing groups (?:…) instead.
+    - gh-125115: Refactor the pdb parsing issue so positional arguments can pass through intuitively.
+    - gh-140815: faulthandler now detects if a frame or a code object is invalid or freed. Patch by Victor Stinner.
+    - gh-100218: Correctly set errno when socket.if_nametoindex() or socket.if_indextoname() raise an OSError. Patch by Bénédikt Tran.
+    - gh-140875: Fix handling of unclosed character references (named and numerical) followed by the end of file in html.parser.HTMLParser with convert_charrefs=False.
+    - gh-140734: multiprocessing: fix off-by-one error when checking the length of a temporary socket file path. Patch by Bénédikt Tran.
+    - gh-140874: Bump the version of pip bundled in ensurepip to version 25.3
+    - gh-140691: In urllib.request, when opening a FTP URL fails because a data connection cannot be made, the control connection’s socket is now closed to avoid a ResourceWarning.
+    - gh-103847: Fix hang when cancelling process created by asyncio.create_subprocess_exec() or asyncio.create_subprocess_shell(). Patch by Kumar Aditya.
+    - gh-120057: Add os.reload_environ() to os.__all__.
+    - gh-140228: Avoid making unnecessary filesystem calls for frozen modules in linecache when the global module cache is not present.
+    - gh-140590: Fix arguments checking for the functools.partial.__setstate__() that may lead to internal state corruption and crash. Patch by Sergey Miryanov.
+    - gh-125434: Display thread name in faulthandler on Windows. Patch by Victor Stinner.
+    - gh-140634: Fix a reference counting bug in os.sched_param.__reduce__().
+    - gh-140633: Ignore AttributeError when setting a module’s __file__ attribute when loading an extension module packaged as Apple Framework.
+    - gh-140593: xml.parsers.expat: Fix a memory leak that could affect users with ElementDeclHandler() set to a custom element declaration handler. Patch by Sebastian Pipping.
+    - gh-140607: Inside io.RawIOBase.read(), validate that the count of bytes returned by io.RawIOBase.readinto() is valid (inside the provided buffer).
+    - gh-138162: Fix logging.LoggerAdapter with merge_extra=True and without the extra argument.
+    - gh-138774: ast.unparse() now generates full source code when handling ast.Interpolation nodes that do not have a specified source.
+    - gh-140474: Fix memory leak in array.array when creating arrays from an empty str and the u type code.
+    - gh-137530: dataclasses Fix annotations for generated __init__ methods by replacing the annotations that were in-line in the generated source code with __annotate__ functions attached to the methods.
+    - gh-140348: Fix regression in Python 3.14.0 where using the | operator on a typing.Union object combined with an object that is not a type would raise an error.
+    - gh-140272: Fix memory leak in the clear() method of the dbm.gnu database.
+    - gh-140041: Fix import of ctypes on Android and Cygwin when ABI flags are present.
+    - gh-140120: Fixed a memory leak in hmac when it was using the hacl-star backend. Discovered by @ashm-dev using AddressSanitizer.
+    - gh-139905: Add suggestion to error message for typing.Generic subclasses when cls.__parameters__ is missing due to a parent class failing to call super().__init_subclass__() in its __init_subclass__.
+    - gh-139894: Fix incorrect sharing of current task with the child process while forking in asyncio. Patch by Kumar Aditya.
+    - gh-139845: Fix to not print KeyboardInterrupt twice in default asyncio REPL.
+    - gh-139783: Fix inspect.getsourcelines() for the case when a decorator is followed by a comment or an empty line.
+    - gh-139809: Prevent premature colorization of subparser prog in argparse.ArgumentParser.add_subparsers() to respect color environment variable changes after parser creation.
+    - gh-139736: Fix excessive indentation in the default argparse HelpFormatter. Patch by Alexander Edland.
+    - gh-70765: http.server: fix default handling of HTTP/0.9 requests in BaseHTTPRequestHandler. Previously, BaseHTTPRequestHandler.parse_request() incorrectly waited for headers in the request although those are not supported in HTTP/0.9. Patch by Bénédikt Tran.
+    - gh-63161: Fix tokenize.detect_encoding(). Support non-UTF-8 shebang and comments if non-UTF-8 encoding is specified. Detect decoding error for non-UTF-8 encoding. Detect null bytes in source code.
+    - gh-139391: Fix an issue when, on non-Windows platforms, it was not possible to gracefully exit a python -m asyncio process suspended by Ctrl+Z and later resumed by fg other than with kill.
+    - gh-101828: Fix 'shift_jisx0213', 'shift_jis_2004', 'euc_jisx0213' and 'euc_jis_2004' codecs truncating null chars as they were treated as part of multi-character sequences.
+    - gh-139289: Do a real lazy-import on rlcompleter in pdb and restore the existing completer after importing rlcompleter.
+    - gh-139246: fix: paste zero-width in default repl width is wrong.
+    - gh-90949: Add SetAllocTrackerActivationThreshold() and SetAllocTrackerMaximumAmplification() to xmlparser objects to prevent use of disproportional amounts of dynamic memory from within an Expat parser. Patch by Bénédikt Tran.
+    - gh-139210: Fix use-after-free when reporting unknown event in xml.etree.ElementTree.iterparse(). Patch by Ken Jin.
+    - gh-138860: Lazy import rlcompleter in pdb to avoid deadlock in subprocess.
+    - gh-112729: Fix crash when calling concurrent.interpreters.create() when the process is out of memory.
+    - gh-135729: Fix unraisable exception during finalization when using concurrent.interpreters in the REPL.
+    - gh-139076: Fix a bug in the pydoc module that was hiding functions in a Python module if they were implemented in an extension module and the module did not have __all__.
+    - gh-139065: Fix trailing space before a wrapped long word if the line length is exactly width in textwrap.
+    - gh-139001: Fix race condition in pathlib.Path on the internal _raw_paths field.
+    - gh-138813: multiprocessing.BaseProcess defaults kwargs to None instead of a shared dictionary.
+    - gh-138993: Dedent credits text.
+    - gh-138891: Fix SyntaxError when inspect.get_annotations(f, eval_str=True) is called on a function annotated with a
+
+      PEP 646 star_expression
+    - gh-130567: Fix possible crash in locale.strxfrm() due to a platform bug on macOS.
+    - gh-138859: Fix generic type parameterization raising a TypeError when omitting a ParamSpec that has a default which is not a list of types.
+    - gh-138764: Prevent annotationlib.call_annotate_function() from calling __annotate__ functions that don’t support VALUE_WITH_FAKE_GLOBALS in a fake globals namespace with empty globals.
+      Make FORWARDREF and STRING annotations fall back to using VALUE annotations in the case that neither their own format, nor VALUE_WITH_FAKE_GLOBALS are supported.
+    - gh-138775: Use of python -m with base64 has been fixed to detect input from a terminal so that it properly notices EOF.
+    - gh-138779: Support device numbers larger than 2**63-1 for the st_rdev field of the os.stat_result structure.
+    - gh-137706: Fix the partial evaluation of annotations that use typing.Annotated[T, x] where T is a forward reference.
+    - gh-88375: Fix normalization of the robots.txt rules and URLs in the urllib.robotparser module. No longer ignore trailing ?. Distinguish raw special characters ?, = and & from the percent-encoded ones.
+    - gh-111788: Fix parsing errors in the urllib.robotparser module. Don’t fail trying to parse weird paths. Don’t fail trying to decode non-UTF-8 robots.txt files.
+    - gh-98896: Fix a failure in multiprocessing resource_tracker when SharedMemory names contain colons. Patch by Rani Pinchuk.
+    - gh-138425: Fix partial evaluation of annotationlib.ForwardRef objects which rely on names defined as globals.
+    - gh-138432: zoneinfo.reset_tzpath() will now convert any os.PathLike objects it receives into strings before adding them to TZPATH. It will raise TypeError if anything other than a string is found after this conversion. If given an os.PathLike object that represents a relative path, it will now raise ValueError instead of TypeError, and present a more informative error message.
+    - gh-138008: Fix segmentation faults in the ctypes module due to invalid argtypes. Patch by Dung Nguyen.
+    - gh-60462: Fix locale.strxfrm() on Solaris (and possibly other platforms).
+    - gh-138239: The REPL now highlights type as a soft keyword in type statements.
+    - gh-138204: Forbid expansion of shared anonymous memory maps on Linux, which caused a bus error.
+    - gh-138010: Fix an issue where defining a class with an @warnings.deprecated-decorated base class may not invoke the correct __init_subclass__() method in cases involving multiple inheritance. Patch by Brian Schubert.
+    - gh-138151: In annotationlib, improve evaluation of forward references to nonlocal variables that are not yet defined when the annotations are initially evaluated.
+    - gh-137317: inspect.signature() now correctly handles classes that use a descriptor on a wrapped __init__() or __new__() method. Contributed by Yongyu Yan.
+    - gh-137754: Fix import of the zoneinfo module if the C implementation of the datetime module is not available.
+    - gh-137490: Handle ECANCELED in the same way as EINTR in signal.sigwaitinfo() on NetBSD.
+    - gh-137477: Fix inspect.getblock(), inspect.getsourcelines() and inspect.getsource() for generator expressions.
+    - gh-137044: Return large limit values as positive integers instead of negative integers in resource.getrlimit(). Accept large values and reject negative values (except RLIM_INFINITY) for limits in resource.setrlimit().
+    - gh-75989: tarfile.TarFile.extractall() and tarfile.TarFile.extract() now overwrite symlinks when extracting hardlinks. (Contributed by Alexander Enrique Urieles Nieto in gh-75989.)
+    - gh-137017: Fix threading.Thread.is_alive to remain True until the underlying OS thread is fully cleaned up. This avoids false negatives in edge cases involving thread monitoring or premature threading.Thread.is_alive calls.
+    - gh-137273: Fix debug assertion failure in locale.setlocale() on Windows.
+    - gh-137239: heapq: Update heapq.__all__ with *_max functions.
+    - gh-81325: tarfile.TarFile now accepts a path-like when working on a tar archive. (Contributed by Alexander Enrique Urieles Nieto in gh-81325.)
+    - gh-137185: Fix a potential async-signal-safety issue in faulthandler when printing C stack traces.
+    - gh-136914: Fix retrieval of doctest.DocTest.lineno for objects decorated with functools.cache() or functools.cached_property.
+    - gh-136912: hmac.digest() now properly handles large keys and messages by falling back to the pure Python implementation when necessary. Patch by Bénédikt Tran.
+    - gh-83424: Allows creating a ctypes.CDLL without name when passing a handle as an argument.
+    - gh-136234: Fix asyncio.WriteTransport.writelines() to be robust to connection failure, by using the same behavior as write().
+    - gh-136507: Fix mimetypes CLI to handle multiple file parameters.
+    - gh-136057: Fixed the bug in pdb and bdb where next and step can’t go over the line if a loop exists in the line.
+    - gh-135386: Fix opening a dbm.sqlite3 database for reading from read-only file or directory.
+    - gh-135444: Fix asyncio.DatagramTransport.sendto() to account for datagram header size when data cannot be sent.
+    - gh-126631: Fix multiprocessing forkserver bug which prevented __main__ from being preloaded.
+    - gh-135307: email: Fix exception in set_content() when encoding text and max_line_length is set to 0 or None (unlimited).
+    - gh-134453: Fixed subprocess.Popen.communicate() input= handling of memoryview instances that were non-byte shaped on POSIX platforms. Those are now properly cast to a byte shaped view instead of truncating the input. Windows platforms did not have this bug.
+    - gh-134698: Fix a crash when calling methods of ssl.SSLContext or ssl.SSLSocket across multiple threads.
+    - gh-125996: Fix thread safety of collections.OrderedDict. Patch by Kumar Aditya.
+    - gh-133789: Fix unpickling of pathlib objects that were pickled in Python 3.13.
+    - gh-127081: Fix libc thread safety issues with dbm by performing stateful operations in critical sections.
+    - gh-132551: Make io.BytesIO safe in free-threaded build.
+    - gh-131788: Make ResourceTracker.send from multiprocessing re-entrant safe
+    - gh-118981: Fix potential hang in multiprocessing.popen_spawn_posix that can happen when the child proc dies early by closing the child fds right away.
+    - gh-102431: Clarify constraints for “logical” arguments in methods of decimal.Context.
+    - gh-78319: UTF8 support for the IMAP APPEND command has been made RFC compliant.
+    - bpo-38735: Fix failure when importing a module from the root directory on unix-like platforms with sys.pycache_prefix set.
+    - bpo-41839: Allow negative priority values from os.sched_get_priority_min() and os.sched_get_priority_max() functions.
+    IDLE
+    - gh-96491: Deduplicate version number in IDLE shell title bar after saving to a file.
+    - gh-139742: Colorize t-string prefixes for template strings in IDLE, as done for f-string prefixes.
+    Documentation
+    - gh-141994: xml.sax.handler: Make Documentation of xml.sax.handler.feature_external_ges warn of opening up to external entity attacks. Patch by Sebastian Pipping.
+    - gh-140578: Remove outdated sencence in the documentation for multiprocessing, that implied that concurrent.futures.ThreadPoolExecutor did not exist.
+    Core and Builtins
+    - gh-142048: Fix quadratically increasing garbage collection delays in free-threaded build.
+    - gh-116738: Fix thread safety issue with re scanner objects in free-threaded builds.
+    - gh-141930: When importing a module, use Python’s regular file object to ensure that writes to .pyc files are complete or an appropriate error is raised.
+    - gh-120158: Fix inconsistent state when enabling or disabling monitoring events too many times.
+    - gh-139653: Only raise a RecursionError or trigger a fatal error if the stack pointer is both below the limit pointer and above the stack base. If outside of these bounds assume that it is OK. This prevents false positives when user-space threads swap stacks.
+    - gh-139103: Improve multithreaded scaling of dataclasses on the free-threaded build.
+    - gh-141579: Fix sys.activate_stack_trampoline() to properly support the perf_jit backend. Patch by Pablo Galindo.
+    - gh-114203: Skip locking if object is already locked by two-mutex critical section.
+    - gh-141528: Suggest using concurrent.interpreters.Interpreter.close() instead of the private _interpreters.destroy function when warning about remaining subinterpreters. Patch by Sergey Miryanov.
+    - gh-141312: Fix the assertion failure in the __setstate__ method of the range iterator when a non-integer argument is passed. Patch by Sergey Miryanov.
+    - gh-116738: Make csv module thread-safe on the free threaded build.
+    - gh-140939: Fix memory leak when bytearray or bytes is formated with the %*b format with a large width that results in a MemoryError.
+    - gh-140260: Fix struct data race in endian table initialization with subinterpreters. Patch by Shamil Abdulaev.
+    - gh-140530: Fix a reference leak when raise exc from cause fails. Patch by Bénédikt Tran.
+    - gh-140373: Correctly emit PY_UNWIND event when generator object is closed. Patch by Mikhail Efimov.
+    - gh-140576: Fixed crash in tokenize.generate_tokens() in case of specific incorrect input. Patch by Mikhail Efimov.
+    - gh-140551: Fixed crash in dict if dict.clear() is called at the lookup stage. Patch by Mikhail Efimov and Inada Naoki.
+    - gh-140517: Fixed a reference leak when iterating over the result of map() with strict=True when the input iterables have different lengths. Patch by Mikhail Efimov.
+    - gh-140471: Fix potential buffer overflow in ast.AST node initialization when encountering malformed _fields containing non-str.
+    - gh-140431: Fix a crash in Python’s garbage collector due to partially initialized coroutine objects when coroutine origin tracking depth is enabled (sys.set_coroutine_origin_tracking_depth()).
+    - gh-140398: Fix memory leaks in readline functions read_init_file(), read_history_file(), write_history_file(), and append_history_file() when PySys_Audit() fails.
+    - gh-140406: Fix memory leak when an object’s __hash__() method returns an object that isn’t an int.
+    - gh-140358: Restore elapsed time and unreachable object count in GC debug output. These were inadvertently removed during a refactor of gc.c. The debug log now again reports elapsed collection time and the number of unreachable objects. Contributed by Pål Grønås Drange.
+    - gh-140306: Fix memory leaks in cross-interpreter channel operations and shared namespace handling.
+    - gh-140301: Fix memory leak of PyConfig in subinterpreters.
+    - gh-140257: Fix data race between interpreter_clear() and take_gil() on eval_breaker during finalization with daemon threads.
+    - gh-139951: Fixes a regression in GC performance for a growing heap composed mostly of small tuples.
+      - Counts number of actually tracked objects, instead of trackable objects. This ensures that untracking tuples has the desired effect of reducing GC overhead.
+      - Does not track most untrackable tuples during creation. This prevents large numbers of small tuples causing excessive GCs.
+    - gh-140104: Fix a bug with exception handling in the JIT. Patch by Ken Jin. Bug reported by Daniel Diniz.
+    - gh-140061: Fixing the checking of whether an object is uniquely referenced to ensure free-threaded compatibility. Patch by Sergey Miryanov.
+    - gh-140067: Fix memory leak in sub-interpreter creation.
+    - gh-140000: Fix potential memory leak when a reference cycle exists between an instance of typing.TypeAliasType, typing.TypeVar, typing.ParamSpec, or typing.TypeVarTuple and its __name__ attribute. Patch by Mikhail Efimov.
+    - gh-139914: Restore support for HP PA-RISC, which has an upwards-growing stack.
+    - gh-139988: Fix a memory leak when failing to create a Union type. Patch by Bénédikt Tran.
+    - gh-139748: Fix reference leaks in error branches of functions accepting path strings or bytes such as compile() and os.system(). Patch by Bénédikt Tran.
+    - gh-139516: Fix lambda colon erroneously start format spec in f-string in tokenizer.
+    - gh-139640: ast.parse() no longer emits syntax warnings for return/break/continue in finally (see
+
+      PEP 765) – they are only emitted during compilation.
+    - gh-139640: Fix swallowing some syntax warnings in different modules if they accidentally have the same message and are emitted from the same line. Fix duplicated warnings in the finally block.
+    - gh-63161: Support non-UTF-8 shebang and comments in Python source files if non-UTF-8 encoding is specified. Detect decoding error in comments for default (UTF-8) encoding. Show the line and position of decoding error for default encoding in a traceback. Show the line containing the coding cookie when it conflicts with the BOM in a traceback.
+    - gh-116738: Make mmap thread-safe on the free threaded build.
+    - gh-138558: Fix handling of unusual t-string annotations in annotationlib. Patch by Dave Peck.
+    - gh-134466: Don’t run PyREPL in a degraded environment where setting termios attributes is not allowed.
+    - gh-138944: Fix SyntaxError message when invalid syntax appears on the same line as a valid import ... as ... or from ... import ... as ... statement. Patch by Brian Schubert.
+    - gh-105487: Remove non-existent __copy__(), __deepcopy__(), and __bases__ from the __dir__() entries of types.GenericAlias.
+    - gh-69605: Fix some standard library submodules missing from the REPL auto-completion of imports.
+    - gh-116738: Make cProfile thread-safe on the free threaded build.
+    - gh-138004: On Solaris/Illumos platforms, thread names are now encoded as ASCII to avoid errors on systems (e.g. OpenIndiana) that don’t support non-ASCII names.
+    - gh-137433: Fix a potential deadlock in the free threading build when daemon threads enable or disable profiling or tracing while the main thread is shutting down the interpreter.
+    - gh-137400: Fix a crash in the free threading build when disabling profiling or tracing across all threads with PyEval_SetProfileAllThreads() or PyEval_SetTraceAllThreads() or their Python equivalents threading.settrace_all_threads() and threading.setprofile_all_threads().
+    - gh-58124: Fix name of the Python encoding in Unicode errors of the code page codec: use “cp65000” and “cp65001” instead of “CP_UTF7” and “CP_UTF8” which are not valid Python code names. Patch by Victor Stinner.
+    - gh-132657: Improve performance of frozenset by removing locks in the free-threading build.
+    - gh-133400: Fixed Ctrl+D (^D) behavior in _pyrepl module to match old pre-3.13 REPL behavior.
+    - gh-128640: Fix a crash when using threads inside of a subinterpreter.
+    C API
+    - gh-137422: Fix free threading race condition in PyImport_AddModuleRef(). It was previously possible for two calls to the function return two different objects, only one of which was stored in sys.modules.
+    - gh-140042: Removed the sqlite3_shutdown call that could cause closing connections for sqlite when used with multiple sub interpreters.
+    - gh-141042: Make qNaN in PyFloat_Pack2() and PyFloat_Pack4(), if while conversion to a narrower precision floating-point format — the remaining after truncation payload will be zero. Patch by Sergey B Kirpichev.
+    - gh-140487: Fix Py_RETURN_NOTIMPLEMENTED in limited C API 3.11 and older: don’t treat Py_NotImplemented as immortal. Patch by Victor Stinner.
+    - gh-140153: Fix Py_REFCNT() definition on limited C API 3.11-3.13. Patch by Victor Stinner.
+    - gh-139653: Add PyUnstable_ThreadState_SetStackProtection() and PyUnstable_ThreadState_ResetStackProtection() functions to set the stack protection base address and stack protection size of a Python thread state. Patch by Victor Stinner.
+    Build
+    - gh-141808: Do not generate the jit stencils twice in case of PGO builds on Windows.
+    - gh-141784: Fix _remote_debugging_module.c compilation on 32-bit Linux. Include Python.h before system headers to make sure that _remote_debugging_module.c uses the same types (ABI) than Python. Patch by Victor Stinner.
+    - gh-140768: Warn when the WASI SDK version doesn’t match what’s supported.
+    - gh-140513: Generate a clear compilation error when _Py_TAIL_CALL_INTERP is enabled but either preserve_none or musttail is not supported.
+    - gh-140189: iOS builds were added to CI.
+    - gh-138489: When cross-compiling for WASI by build_wasm or build_emscripten, the build-details.json step is now included in the build process, just like with native builds.
+      This fixes the libinstall task which requires the build-details.json file during the process.
+    - gh-137618: PYTHON_FOR_REGEN now requires Python 3.10 to Python 3.15. Patch by Adam Turner.
+    - gh-123681: Check the strftime() behavior at runtime instead of at the compile time to support cross-compiling. Remove the internal macro _Py_NORMALIZE_CENTURY.
+ReleaseTime: 2025-12-02
