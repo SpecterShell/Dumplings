@@ -1,6 +1,7 @@
 $Object1 = Invoke-RestMethod -Uri 'https://xstudio-singer.xiaoice.com/version/update' -Headers @{
   'architecture-abi'      = 'x86_64'
   'platform-with-version' = 'Windows'
+  'authorization'         = 'Bearer '
 }
 
 # Version
