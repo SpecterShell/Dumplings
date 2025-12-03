@@ -33,12 +33,11 @@ switch -Regex ($this.Check()) {
           Key   = 'ReleaseNotesUrl'
           Value = $ReleaseNotesUrl = Join-Uri 'https://support.bluestacks.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
         }
-
         $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-        $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+        $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//div[@itemprop='articleBody']//*[(self::h3 or self::h4) and contains(., 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h3', 'h4'); $Node = $Node.NextSibling) {
             if ($Node.InnerText.Contains('Released on') -and $Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
               # ReleaseTime
               $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
@@ -65,9 +64,9 @@ switch -Regex ($this.Check()) {
 
         $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
 
-        $ReleaseNotesCNTitleNode = $Object5.SelectSingleNode("//div[@itemprop='articleBody']//h3[contains(text(), 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+        $ReleaseNotesCNTitleNode = $Object5.SelectSingleNode("//div[@itemprop='articleBody']//*[(self::h3 or self::h4) and contains(., 'BlueStacks $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
         if ($ReleaseNotesCNTitleNode) {
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -notin @('h3', 'h4'); $Node = $Node.NextSibling) {
             if ($Node.InnerText.Contains('發布日期：') -and $Node.InnerText -match '(20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日)') {
               # ReleaseTime
               $this.CurrentState['ReleaseTime'] ??= $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
