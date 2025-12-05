@@ -1,0 +1,29 @@
+Version: 3.14.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://www.python.org/ftp/python/3.14.2/python-3.14.2.exe
+- Architecture: x64
+  InstallerUrl: https://www.python.org/ftp/python/3.14.2/python-3.14.2-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://www.python.org/ftp/python/3.14.2/python-3.14.2-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.python.org/release/3.14.2/whatsnew/changelog.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security
+    - gh-142145: Remove quadratic behavior in xml.minidom node ID cache clearing.
+    - gh-119452: Fix a potential memory denial of service in the http.server module. When a malicious user is connected to the CGI server on Windows, it could cause an arbitrary amount of memory to be allocated. This could have led to symptoms including a MemoryError, swapping, out of memory (OOM) killed processes or containers, or even system crashes.
+    Library
+    - gh-140797: Revert changes to the undocumented re.Scanner class. Capturing groups are still allowed for backward compatibility, although using them can lead to incorrect result. They will be forbidden in future Python versions.
+    - gh-142206: The resource tracker in the multiprocessing module now uses the original communication protocol, as in Python 3.14.0 and below, by default. This avoids issues with upgrading Python while it is running. (Note that such ‘in-place’ upgrades are not tested.) The tracker remains compatible with subprocesses that use new protocol (that is, subprocesses using Python 3.13.10, 3.14.1 and 3.15).
+    - gh-142214: Fix two regressions in dataclasses in Python 3.14.1 related to annotations.
+      - An exception is no longer raised if slots=True is used and the __init__ method does not have an __annotate__ attribute (likely because init=False was used).
+      - An exception is no longer raised if annotations are requested on the __init__ method and one of the fields is not present in the class annotations. This can occur in certain dynamic scenarios.
+      Patch by Jelle Zijlstra.
+    Core and Builtins
+    - gh-142218: Fix crash when inserting into a split table dictionary with a non str key that matches an existing key.
+    - gh-116738: Fix cmath data race when initializing trigonometric tables with subinterpreters.
+ReleaseTime: 2025-12-05
