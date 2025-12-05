@@ -1,0 +1,246 @@
+Version: 6.1.0.42176
+Installer:
+- Architecture: x64
+  InstallerUrl: https://updates.networkoptix.com/default/42176/windows/nxwitness-server-6.1.0.42176-windows_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://nxvms.com/downloads/6.1.0.42176
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SUMMARY:
+    - Release Notes show changes relative to the latest official Beta (6.0.6.41837).
+    BREAKING CHANGES:
+    - Support for Ubuntu 18.04 is discontinued.
+    - Support for MacOS 11 is discontinued.
+    - Support for Raspberry OS 10 is discontinued.
+    - Support for MacOS 12 will be discontinued in the next major release (6.2).
+    TERM CHANGES
+    - The term "System" is renamed to "Site". This change will be applied across all products (VMS, Cloud, Mobile, Connect).
+    NEW DEVICES / OPERATING SYSTEMS SUPPORT:
+    - Raspberry Pi 5 with Raspberry Pi OS 12 (64-bit) is supported. Raspberry Pi Native camera is not fully supported yet.
+    - Windows Server 2025 is now supported.
+    NEW FEATURES:
+    - Enterprise (SaaS) - Organization users can be managed in the Desktop Client.
+    - Enterprise (SaaS) users can share the links to archive fragments: select the video fragment on Timeline and get the link to share, Links may have expiration date.
+    - Enterprise (SaaS) - Re-streaming traffic between Sites. This feature allows adding streams from Sites that belong to different Organizations to be able to view and process them (i.e. grab a stream for analytic purposes, provide links for other organizations, etc).
+    - New Event Rules Engine with a cleaner, more user-friendly interface:
+      - Event parameters can be passed to actions when events occur (i.e. parameters of analytic objects, date/time of the event occurred, information about the devices triggered etc). Such parameters can be dynamic. This will allow displaying additional information when triggering actions such as: notifications, HTTP requests etc.
+      - Lists are introduced (action can be triggered if certain parameter values are listed or missing).
+      - In the Event Rules dialog it is possible to perform a search by a trigger name to find a corresponding rule.
+      - Event Rule emails are localized.
+      - Bearer and Digest Authentication are added to the "Do HTTP request" action in the rules engine.
+      - Custom headers can now be configured for the "Do http request".
+      - The generic HTTP action now has the option to send the request back to a Server within the Site.
+    - The "Shock Alarm" event is now instant instead of prolonged.
+    - The Desktop Client is rendered with Direct3D on Windows OS. This will resolve different issues related to OpenGL rendering (i.e. missing / outdated / buggy OpenGL drivers, GPU switching etc).
+    - The new Live View Subscription Service is introduced:
+      - It allows viewing of Live streams in Enterprise / SaaS sites without interruptions.
+      - Every 10 minutes, the live stream from the camera is interrupted for 30 seconds if there is not enough Live View or Recording licences or services purchased.
+    - Remote Access is implemented. It will allow providing support engineers with remote access to the site servers via remote access software (SSH, RDP etc) without additional port-forwarding.
+    - The separate Audio Playback permission is introduced.
+    - The Desktop Client can open up web pages in a separate widget which can interact with the other parts of the Desktop Client UI: open video streams, get analytics data etc. This will improve user experience when using Maps.
+    - WebRTC streams (mostly used by Android-powered cameras) can be added to Server.
+    - Servers can use Intel or NVidia GPU to perform hardware decoding (for motion detection, for instance). This can be configured independently on each Server in the Server Settings dialog.
+    IMPROVEMENTS:
+    - Enterprise Improvements:
+      - Maps are added as a default integration for all Enterprise users.
+      - Added a warning about license conversion when a Site is being merged into an Organization.
+      - User Management improved to support adding custom site level permissions to Enterprise users (Channel Partners and Organizations).
+      - For Enterprise Sites, if no custom SMTP server is set up, the Emails from VMS are routed via Cloud Email server by default.
+      - Channel Partner users are shown in the Event Rules dialog.
+      - If a Site is a part of an Organization, this organization is listed as an owner in the Welcome Screen.
+      - The "All Systems" filter in the Notifications panel is replaced by"".
+    - I/O Port status is being monitored.
+    - Cloud Connectivity is being monitored by Servers. The new “Cloud Connect Issue” event is introduced for this purpose.
+    - Onvif Profile G has been introduced for the following cameras:
+      - Hanwha XND-C9083RV
+      - Vivotek FD/IB9391-EHTV-v2 or FD/IB9365-EHTV-v2 series
+      - Uniview IPC2325SB-DZK-I0
+      - Hikvision and Axis devices are still NOT supported yet.
+    - New Server recording modes have been introduced for storage. This will allow using same NAS by multiple Servers and will simplify transferring the archive by swapping hard drives:
+      - Exclusive – Server reads, writes and erases data from all folders (default for local storage).
+      - Shared – reads all folders, but writes and erases data from its own folder.
+      - Isolated – reads, writes and erases data from its own folder (default for non-local storage).
+    - Cross-Site Layout improvements:
+      - Objects Search (only a “Single device” mode) can be performed on the right panel for the Cross-Site Layouts.
+      - Cross-Site Layout intro window is removed.
+      - On Cross-Site Layouts, objects on the right panel can be filtered by devices “Selected camera - ” and “Selected camera - none”.
+      - Web pages and local files are supported on Cross-Site layouts.
+      - 2-Way Audio items are supported on Cross-Site layouts.
+    - Similar to devices, layouts can now be grouped in folders in the Resource Tree.
+    - Layout improvements:
+      - Layout items with sound only (i.e. Speakers) now display a histogram illustrating the sound played.
+      - Layout items have individual toggle Mute buttons in addition to the global Mute button on the Timeline.
+      - Shared layouts can be used as targets for camera hotspots.
+      - The notification filter is moved from the Desktop Client local settings directly to the notifications tab in the right panel.
+      - If a default Desktop Client background was set for an OEM, users could not restore it after disabling. Now, the option to use default background is introduced.
+      - SVG images can now be set as layout backgrounds.
+    - Cloud user session time can be limited.
+    - The desktop camera is initialized only when Push My Screen is used for the first time. This optimizes the Client-Server communication.
+    - The ability to follow objects of interest with Camera Hotspots and Camera Linking is improved: layouts or multiple items can be opened.
+    - The "Connect to server" dialog is redesigned: intro video was removed.
+    - Rule author is now shown as the requester of the HTTP action in the Audit Trail.
+    - The bookmark tooltips are redesigned to show more information (tags and descriptions).
+    - The "Disconnect from Cloud" dialog was improved - it gives much more information about what will happen with the existing services.
+    - In multi-Server environments, if a Server acts as a gateway for Client connections, the live stream data is cached, which improves the playback performance.
+    - The "Send Mobile Notification" action is improved and shows more info in push notifications.
+    - Push notification details now include Site name and Server information.
+    - The log settings dialog was improved.
+    - Before, the Resource tree showed the current recording status while camera items showed current recording mode according to the schedule. Now, to avoid confusion, both resource tree and camera items display current recording and archive status.
+    - Server name or IP is now displayed on the Audit Trail window, so users can find out the server the event happened on.
+    - A local Desktop Client setting is introduced (Look and Feel), that will display the current time on live videos.
+    - The information about the user triggered a Soft Trigger event, is stored in the Event Log.
+    - New resources metrics are added to Health monitoring: device MAC address and Server ID.
+    - The playback speed is now saved when clicking play-pause.
+    - Added new advanced setting to auto-refresh a Web page opened within the Desktop Client.
+    - Bookmark search now correctly handles bookmarks with spaces.
+    - Tooltips are implemented for groups in the Resource Tree.
+    - Timeline tooltips with Live Preview are available on Linux.
+    - Improved time synchronization between live streams if viewing multiple of them on a layout.
+    - Log rotation starts automatically if there is less than the certain amount of free on the system disk (1GB by default).
+    ANALYTICS IMPROVEMENTS/FIXES:
+    - Uniview ROI is introduced.
+    - Onvif Profile M has been introduced. Tested devices:
+      - DWC-XPZA03Mi/A08Mi
+      - Axis P1375-E, Axis Q1615 Mk III with FW 10.8.1
+      - Bosch FLEXIDOME IP Starlight 8000i with FW 7.82.0025 (25500782)
+      - Hanwha cameras with FW 2.11.07
+    - Uniview ROI is introduced.
+    - Milesight ROI is introduced.
+    - Advanced Object Search is improved. It may display additional attributes and tables.
+    - Vivotek analytics and ROI have been improved:
+      - Tampering, audio & shock detection, PIR alarm.
+      - Shapes of analytic regions were deformed after being applied on Vivotek cameras. Fixed.
+    - Axis analytics improvements / fixes:
+      - The accuracy for the timestamp of analytic objects on Axis cameras was improved.
+      - Axis LPR analytics is enabled on CAMMRA AI.
+      - The Vehicle Direction data is added to the Axis LPR.
+      - Axis LPR did not contain any license recognition result in notification. Fixed.
+      - On Axis multi-sensor cameras, overlays could be applied to the first sensor only. Fixed.
+    - Regions of Interest on the layout items can be disabled by default.
+    - Analytic Engine has been improved - many new components are supported: Label, SpinBox, PolygonFigure, BoxFigure, LineFigure. Added a property to hide the 'display on camera' checkbox.
+    - In the analytic settings, it is possible to show or hide the “show password” button.
+    - Analytic object search settings are saved for each user on Server.
+    - Supported useLabelField in BoxFigure in Analytics Settings.
+    - Event Field placeholders were currently supported only for Analytic Events and Generic objects. Now they are supported for Analytic Objects as well.
+    - Each analytics attribute value can have a specific color.
+    - Colors can be assigned in the Object Search dialog.
+    - Web links (that will open in the user's browser) can be added into banners in the interactive plugin settings.
+    - It is possible to customize Active Settings parameters dialog in the analytics settings.
+    - Uniview ipc2328sb-dzk-i0 and ipc3238sb-adzk-i0 now support analytics.
+    - Analytic object preview duration was limited to 8 seconds. Now the preview is playing the full object duration.
+    - Analytic object preview did not have a scroll bar if there were many attributes and some attributes were not accessible. Fixed.
+    - The "Analytic storage is offline" event was mistakenly displayed in the Desktop Client for normally working storage. Fixed.
+    NEW DEVICE SUPPORT/IMPROVEMENTS/FIXES:
+    - Devices Specific Fixes:
+      - On Axis multi-sensor cameras, advanced settings were applied to the first channel only. Fixed.
+      - Fixed a duplicated stream URI issue on IntelBras VIP-3240-IA / VIP-5230-SD.
+      - Input events are now supported on Hikvision DS-2CD3743G2-IZSUHK
+      - Geovision MFD1501 and EVD2100 could not be initialized. Fixed.
+      - Improved Hikvision DVR initialization (especially DS-7216HUHI-K2)
+      - Arecont Vision AV02CLB-100, AV05CLD-100 are switched to RTSP from TFTP.
+      - Added the possibility to setup RTSP port for Axis IO modules ("Meda Streaming").
+      - RTSP streams from Infodraw MRS devices could not be initialized. Fixed.
+      - The Axis Zipstream setting can now be configured in the advanced settings dialog.
+      - Some Dahua cameras (i.e. N22AL12), could not be added manually on the default port (80). Fixed.
+      - Virtual cameras were added with a non-active "Enable audio" checkbox. Fixed.
+    - Newly Supported Devices:
+      - Dahua DH-VCS-SHx
+      - Hikmicro HM-TD2628x
+      - ADAM-6266
+      - Axis FA54
+    - Encoders added to the analog list:
+      - Dahua N42C3P
+    - Multisensor Cameras:
+      - Cook Security Group P-10MP-DSx, PE-10MP-DSx, P-20MP-QSVx, PE-20MP-QSVFx
+      - Axis Q6020E
+      - Elmo NEXIMM01
+    VULNERABILITY FIXES:
+    - The linked library (libcurl) which had a vulnerability (CVE-2024-7264), was updated to a newer version with the fix.
+    - The following dependencies were updated to fix vulnerabilities: ffmpeg, libtiff, pcrew, gsoap, sqlite3.
+    BUG FIXES:
+    - GENERAL FIXES
+      - Server and Client could not run on Windows Server 2016. Fixed.
+      - The Desktop Client could not connect to the Site when using the URL Scheme without authentication. Fixed.
+      - If a Server database was corrupted by any reason, Server failed to start. Now, it starts with a fresh database.
+      - In-client updates did not work on 64-bit Raspberry Pi OS. Fixed.
+      - Could not connect to Server if a user certificate was installed (ECDSA or rsa:16384). Now, in this case, Server falls back to the default (auto-generated) certificate.
+      - The Desktop Client sent the incorrect password of newly added FTP storage while communicating with Servers if the password contained special symbols.
+    - DESKTOP CLIENT FIXES
+      - Export in multi-video NOV did not work if a stream codec was changed. Fixed.
+      - On touch screens, double-tap to maximize layout items did not always work in the Desktop Client on Linux. Fixed.
+      - Devices could not be searched by IP within the User/Group permissions resource tab. Fixed.
+      - If a backup storage was set up to backup the bookmarks only, only the partial portion of the archive was backed up. Fixed.
+      - LDAP users were removed from custom groups after system merge. Fixed.
+      - When exporting a high-resolution video segment from .nov files via the Desktop Client, the resolution of the resulting .mp4 file dropped to 720 × 576 if transcoding was required. Fixed.
+      - Camera streams became pixelated when motion occurred. Fixed.
+      - Users could not be searched by first or last name in the user selection dialogs (Event Rules or User Management while assigning users to roles). Fixed.
+      - If a file was overwritten during the video export, the Desktop Client had to be restarted in order to open it, Fixed.
+      - Tray tool on Windows did not change language. Fixed.
+      - A brief error message could pop up when connecting to Cloud from the welcome screen. Fixed.
+      - Tiles on Welcome Screen did not work on PCs with touchscreens. Fixed.
+      - 5.1 users with custom permission groups from other Sites did not have access for opening cameras in Cross-Site Layouts. Fixed.
+      - On Jetson Nano, the Desktop Client could crash when clicking on the PTZ button on the item. Fixed.
+      - Image Enhancement did not work if a hardware video decoding was enabled. Fixed.
+      - Live video FPS did not revert to the max value after the recording with lower fps was disabled. Fixed.
+      - When the RTSP stream credentials were changed to incorrect ones, the RTSP streaming continued. Fixed.
+      - Event Rules did not send Emails on Plugin Diagnostic Events. Fixed.
+      - System Health Viewers could not access the server list if the “Display servers in tree for non-power users” option was disabled. Fixed,
+      - Video Wall could not be started from a desktop shortcut if a newer Desktop Client version was installed during 1-Click Upgrade. Fixed.
+      - The 'Save user' confirmation window appeared when applying changes to Local settings (specifically Notification Settings). Fixed.
+      - If a multichannel camera went offline, the grouping entity could still be displayed as online. Fixed.
+      - Sometimes, existing bookmarks could not be found if search within the range selected on the Timeline. Fixed,
+      - Manually discovered cameras could be duplicated after enabling auto discovery. Fixed.
+      - It was not possible to perform search in the user selection dialog when "All users" was selected. Fixed.
+      - Event Log > Description search worked only for original English descriptions, not for translated messages. Fixed.
+      - The bookmarks in the Playback panel were not filtered when searching for Chinese/Japanese/Korean characters. Fixed.
+      - Desktop client did not switch the audio automatically when a new audio device (i.e. Bluetooth) was connected and made default in the OS. Fixed.
+      - Item hotkeys with Alt did not work on active but not selected items on layout. Fixed.
+      - The "Minimum Grid Size" parameter was not disabled after locking the layout. Fixed.
+      - Camera page refreshed and redirected to the General page, if a user had the only "Edit Settings" permission. Fixed.
+    - WEB ADMIN FIXES:
+      - On videos exported from Web Admin, empty parts of the archive were not skipped. Fixed.
+      - In multi-Server environments, if the archive was spread between Servers, only the part from the current Server was exported if the export was done from Web Admin. Fixed.
+    API / SDK CHANGES / FIXES:
+    - Integrations in the Desktop Client (through JS API) can remember token permissions to open up further URLs without additional permission requests. This is especially beneficial if working with Maps, as each new map was considered as a new integration.
+    - New REST API for Event Rules Engine.
+    - All API/DSK References to Systems are renamed to Sites.
+    - WebRTC Streaming has been improved:
+    - Analytics API has been introduced.
+    - The Desktop Client JS API is fully documented and available through the context menu of a web page item on the layout.
+    - Advanced Object Search SDK has been updated to reflect the engine improvements.
+    - Analytics, Taxonomy: syntax is improved.
+    - Servers can store the serial number of a device and pass it via an API request.
+    - Refer to the Meta Release Notes regarding the full API/SDK changelog (What’s New on https://meta.nxvms.com/download/releases).
+    HANWHA DEVICE SUPPORT / IMPROVEMENT / FIXES:
+    - Hanwha WiseAI introduced.
+    - Hanwha Intercom integration is improved:
+      - New analytic events are supported: Incoming call, Missed call, Rejected call, Door open.
+      - When an intercom call notification is displayed, the corresponding sound is played in the Desktop Client.
+      - The "Open Door" button is added onto the call informer.
+      - When an incoming call occurs, the video is shown.
+      - Trigger mode is changed to push-to-talk mode for intercom, similar to 2-way audio devices.
+    - Thermal cameras integration: the Desktop Client can show the exact temperature of the spot once it is clicked on the thermal camera video feed.
+      - Thermal analytics plugin returned errors on Hanwha thermal cameras. Fixed.
+    - Hanwha Analytics Plugin could crash Server. Fixed.
+    - On Hanwha intercom, multiple missed calls were displayed as one. Now they are displayed as multiple notifications.
+    - Analytic objects from Hanwha XND-6080RV were not displayed in the Desktop Client. Fixed.
+    - Hanwha IVA rules configuration made in the Desktop Client did not apply to Hanwha PNM-C19183. Fixed.
+    - Fixed errors when drawing IVA Lines and IVA Areas on Hanwha AI.
+    - Hanwha IVA line / area color changed to the default value if the camera was reopened on the layout. Fixed.
+    - Hanwha TNF-9010 displayed only one fish-eye sensor instead of 5. Fixed.
+    - The Lens Control menu item was incorrectly displayed on the Advanced tab for Hanwha cameras with fixed lens. Fixed.
+    - Added support for non-standard Include and Exclude area count events in Hanwha analytics.
+    - The following settings were removed from Hanwha analytics as they are not fully supported: tampering detection and defocus detection.
+    FEATURES THAT REQUIRE CLOUD SUPPORT
+    - The following features are disabled until the Cloud part is deployed. Then they will be enabled and the corresponding announcement will be sent:
+      - Different product and service tiers are introduced. Tiers may have different sets of services / features and different amounts of resources available.
+      - QR Codes can be used to connect a Server to a Cloud account.
+      - JWT Token support is improved In previous versions, it was used as a fallback option; now this is the primary method.
+      - The notification language is moved from the Site settings to the user level. It applies to:
+        - Push Notification settings,
+        - Cloud Portal
+        - Emails sent from Sites
+ReleaseTime: 2025-12-01
