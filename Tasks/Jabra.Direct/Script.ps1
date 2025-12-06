@@ -11,10 +11,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.WindowsReleaseNotes
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.WindowsReleaseNotes
       }
     } catch {
       $_ | Out-Host
@@ -32,6 +33,8 @@ switch -Regex ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($Object3.SelectSingleNode('//*[@data-testid="formatted-date"]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
+        # Remove "share" button
+        $Object3.SelectNodes('//button[contains(., "Share")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
