@@ -77,6 +77,8 @@ switch -Regex ($this.Check()) {
 
         # Remove download links table
         $Object3.SelectNodes("//main//table[contains(., '下载安装包')]").ForEach({ $_.Remove() })
+        # Remove help letter space
+        $Object3.SelectNodes('//span[@class="help-letter-space"]').ForEach({ $_.Remove() })
         # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h2', 'h3'); $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
