@@ -1,22 +1,23 @@
 $Object1 = Invoke-RestMethod -Uri 'https://multicommander.com/updates/version.xml'
+$Object2 = $Object1.SelectSingleNode('/updates/multicommander[1]/stable')
 
 # Version
-$this.CurrentState.Version = $Object1.updates.multicommander.stable.version
+$this.CurrentState.Version = $Object2.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.updates.multicommander.stable.full.Where({ $_.platform -eq '32bit' }, 'First')[0].url | ConvertTo-Https
+  InstallerUrl = $Object2.full.Where({ $_.platform -eq '32bit' }, 'First')[0].url | ConvertTo-Https
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.updates.multicommander.stable.full.Where({ $_.platform -eq '64bit' }, 'First')[0].url | ConvertTo-Https
+  InstallerUrl = $Object2.full.Where({ $_.platform -eq '64bit' }, 'First')[0].url | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri "https://multicommander.com/ReleaseInfo/$($this.CurrentState.Version.Split('.')[-1])" | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri "https://multicommander.com/ReleaseInfo/$($this.CurrentState.Version.Split('.')[-1])" | ConvertFrom-Html
 
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
@@ -25,13 +26,13 @@ switch -Regex ($this.Check()) {
       }
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.SelectSingleNode('//*[@class="release-date"]').InnerText | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object3.SelectSingleNode('//*[@class="release-date"]').InnerText | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectSingleNode('//*[contains(@class, "release-info")]/div[1]') | Get-TextContent | Format-Text
+        Value  = $Object3.SelectSingleNode('//*[contains(@class, "release-info")]/div[1]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
