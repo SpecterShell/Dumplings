@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.RevopointDownloadPage
-$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 5") and not(contains(., "MetroX"))]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
+$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Metro")]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -8,7 +8,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 # Version
 $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
-$ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -24,18 +23,18 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('RevoScan') -and $Global:DumplingsStorage.RevoScan.Contains($ShortVersion)) {
+      if ($Global:DumplingsStorage.Contains('RevoMetro') -and $Global:DumplingsStorage.RevoMetro.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.RevoScan[$ShortVersion].ReleaseNotes
+          Value  = $Global:DumplingsStorage.RevoMetro[$this.CurrentState.Version].ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.RevoScan[$ShortVersion].ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.RevoMetro[$this.CurrentState.Version].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')

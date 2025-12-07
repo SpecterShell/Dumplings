@@ -1,4 +1,4 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.revopoint3d.com/pages/support-download' | Join-String -Separator "`n" | ConvertFrom-Html
+$Object1 = $Global:DumplingsStorage.RevopointDownloadPage
 $Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 5 MetroX")]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
 
 # Installer
