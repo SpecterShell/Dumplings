@@ -1,0 +1,18 @@
+Version: 0.7.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/flyhunterl/flymd/releases/download/v0.7.0/flymd_0.7.0_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 新增：Word/Excel 导入扩展在解析 HTML 时会将文档中的 data:URL 图片提取为二进制，保存到当前文档所在目录的 images/ 子目录中，并在 Markdown 中插入相对路径引用；同时插件运行时新增 saveBinaryToCurrentFolder 接口，方便其他扩展复用这套“按当前文档落盘二进制并返回相对路径”的能力。
+    - 改进：所见模式下在未保存的临时文档中粘贴图片时，不再把图片直接转换为 base64 内嵌到 Markdown，而是回退保存到系统图片目录（与源码模式保持一致），显著降低文档体积并避免编辑过程中的内存占用飙升。
+    - 新增：双向链接（Backlinks）插件现在会在阅读预览中自动识别 [[名称]] 文本，包裹为可点击的链接并支持一键跳转到目标文档，对 [[标题]]、[[标题|别名]] 等常见写法以及所见模式转义后的 \\[\\[...\\]\\] 都能正确解析。
+    - 改进：双向链接面板的默认行为调整为“默认收起”，并在编辑区/阅读/所见模式右键菜单中提供统一的“显示/隐藏双向链接面板”入口，同时修复了部分情况下预览根节点变化导致链接点击偶发失效的问题。
+    - 修复：在多显示器或异常窗口配置下可能出现窗口宽度无限放大或恢复到屏幕之外的情况，现在会根据 Rust 侧计算的虚拟桌面尺寸强制将窗口限制在合理范围内，同时继续保证最小窗口尺寸为 960×640。
+    - 修复：macOS 自动更新时，资产匹配逻辑会优先识别 .dmg / .pkg / .app.zip 以及 universal 包，避免误把 Windows 便携版 ZIP 当成 macOS 安装包，从而导致更新失败或下载错误文件。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/flyhunterl/flymd/releases/tag/v0.7.0
+ReleaseTime: 2025-12-09T07:25:09.0000000Z
