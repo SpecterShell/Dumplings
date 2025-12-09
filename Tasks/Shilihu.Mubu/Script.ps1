@@ -5,7 +5,12 @@ $this.CurrentState.Version = $Object1.data.windows
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://assets.mubu.com/client/Mubu-$($this.CurrentState.Version).exe"
+  Architecture = 'x86'
+  InstallerUrl = "https://assets.mubu.com/client/$($this.CurrentState.Version)/win/Mubu-$($this.CurrentState.Version)-ia32.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = "https://assets.mubu.com/client/$($this.CurrentState.Version)/win/Mubu-$($this.CurrentState.Version)-x64.exe"
 }
 
 switch -Regex ($this.Check()) {
