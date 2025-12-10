@@ -1,0 +1,44 @@
+Version: 0.4.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.4.1/drip-v0.4.1-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.4.1/drip-v0.4.1-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Flow Control & Reliability Improvements 🎯
+    Features
+    - Flow Control Protocol: New FlowControl frame type for backpressure
+      control between client and server
+    - SafeFrame: Automatic frame resource management ensures data is correctly
+      returned to memory pool after use
+    - Queue Pressure Monitoring: Client monitors dataFrameQueue length and
+      automatically sends flow control commands when threshold exceeded
+    - Server Backpressure: Added handleFlowControl and sendWithBackpressure
+      methods for server-side flow control
+    - Panic Recovery: New recovery package with Recoverer and PanicMetrics for
+      goroutine panic capture and stack trace logging
+    Performance
+    - Faster Heartbeat: Reduced heartbeat interval from 5s to 2s, timeout from
+      15s to 6s
+    - Quicker Shutdown: Reduced forced shutdown wait time from 5s/3s to 2s for
+      faster resource reclamation
+    - Homepage Response: Converted HTML to byte slices with Content-Length
+      header for improved response performance
+    Stability
+    - SafeFrame Lifecycle: Unified frame lifecycle management with defer
+      sf.Close(), preventing memory leaks on abnormal paths
+    - Delay Precision: Fixed delay formatting to correctly handle
+      microsecond-level delays
+    What's Changed
+    - perf: Add flow control, panic recovery and performance tuning by @Gouryella in https://github.com/Gouryella/drip/pull/7
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.4.0...v0.4.1
+    What's Changed
+    - perf: Add flow control, panic recovery and performance tuning by @Gouryella in https://github.com/Gouryella/drip/pull/7
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.4.0...v0.4.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Gouryella/drip/releases/tag/v0.4.1
+ReleaseTime: 2025-12-10T12:46:58.0000000Z
