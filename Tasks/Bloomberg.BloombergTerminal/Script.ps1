@@ -1,5 +1,5 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default' | Join-String -Separator "`n" | ConvertFrom-Json -AsHashtable
-$Object2 = $Object1.data.GetEnumerator().Where({ $_.Value.post_title -eq 'Bloomberg Terminal – New/Upgrade Installation' }, 'First')[0].Value
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default' | Join-String -Separator "`n" | ConvertFrom-Json
+$Object2 = $Object1.data.Where({ $_.post_title -eq 'Bloomberg Terminal – New/Upgrade Installation' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
