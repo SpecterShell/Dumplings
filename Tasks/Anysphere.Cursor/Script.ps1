@@ -62,20 +62,30 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object5 = Invoke-WebRequest -Uri 'https://www.cursor.com/changelog' | ConvertFrom-Html
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://www.cursor.com/changelog')
+      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")) } catch {}
+        }
+      )
+      try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
+      $ReleaseNotesObject = $ReleaseNotesNode.GetAttribute('innerHTML') | ConvertFrom-Html
 
-      $ReleaseNotesObject = $Object5.SelectSingleNode("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesObject) {
         # # ReleaseTime
-        # $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
+        $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
 
         # Remove video players
-        $Object5.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
+        $ReleaseNotesObject.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
+        # Remove accordion buttons
+        $ReleaseNotesObject.SelectNodes('.//span[contains(@class, "group-data-[state=open]:")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes('.//div[@class="prose"]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObject.SelectNodes('.//div[contains(@class, "prose")]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
