@@ -10,9 +10,9 @@
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/download.php' | ConvertFrom-Html
 # x86
-$Object2 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(.//h2/text(), "32 bit") or contains(.//h2/text(), "32bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
+$Object2 = $Object1.SelectSingleNode('//div[@class="container"]/div[(contains(.//h2/text(), "32 bit") or contains(.//h2/text(), "32bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 # x64
-$Object3 = $Object1.SelectSingleNode('//*[@id="page_content"]/div[(contains(.//h2/text(), "64 bit") or contains(.//h2/text(), "64bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
+$Object3 = $Object1.SelectSingleNode('//div[@class="container"]/div[(contains(.//h2/text(), "64 bit") or contains(.//h2/text(), "64bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 
 $VersionX86 = $Object2.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
 $VersionX64 = $Object3.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
@@ -39,9 +39,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/version.php' | ConvertFrom-Html
+      $Object4 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/version.php' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='page_content']/div[contains(./h2, '$($this.CurrentState.Version)')]/h2")
+      $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//*[@id='page_content']/div[contains(./h2, '$($this.CurrentState.Version)')]/h2")
       if ($ReleaseNotesTitleNode) {
         $ReleaseTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]')
         try {
