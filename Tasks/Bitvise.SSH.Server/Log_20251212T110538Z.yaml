@@ -1,0 +1,104 @@
+Version: "9.51"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-951.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#951
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Version information:
+      - This is a new feature release. Feature releases introduce new behaviors, but try to maintain compatibility for upgrading users.
+      - New feature releases contain new settings which are not understood by previous versions. Settings created or saved using versions 9.5x cannot be used with previous versions.
+      - If you are using scripts to manage SSH Server settings, version 9.51 contains minor changes to scripting interfaces. Most scripts that use dynamic languages, such as PowerShell, may continue to work without change. Programs that use static languages and link to the SSH Server's COM interfaces need to be updated to use new interface versions.
+    - Password-less authentication:
+      - On Windows 10, Windows Server 2016 and newer, the SSH Server no longer installs the BvLsa authentication package. The BvLsa package cannot be loaded on recent versions of Windows where LSA protection is enabled by default, or where this setting was enabled by the administrator.
+        Password-less logon sessions are now created using Windows S4U (Service for User). This permits compatibility with Windows LSA protection and allows the SSH Server to provide full functionality after installation, without requiring a Windows restart.
+        Windows S4U does not support the Interactive logon type. Logon sessions created using S4U will use the Network logon type, even if a different logon type is configured in SSH Server settings. The Network logon type has been the default for newly created settings since SSH Server versions 7.xx.
+        The BvLsa authentication package is still installed on older Windows versions, where S4U might not be available, or might not work for local Windows accounts.
+    - Automatic updates:
+      - Separate proxy settings can now be configured for automatic updates. This allows checks for updates, and downloads of new version installers, to use a different proxy than the one configured in Windows.
+      - Improved error reporting when the automatic update feature encounters an error.
+    - SSH:
+      - Bitvise SSH Server, SSH Client and FlowSsh now support hybrid post-quantum and classical key exchange using the key exchange methods mlkem1024nistp384-sha384 and mlkem768x25519-sha256. These key exchange methods use algorithms outside of Windows cryptography. They are only available when FIPS 140 cryptography mode is not enabled in Windows. The new algorithms require Windows Vista or newer.
+      - In Advanced settings > Key exchange, the SSH Server can now be configured to Require strict key exchange. Strict key exchange is a recent SSH protocol feature supported since Bitvise software versions 9.32. It mitigates the Terrapin vulnerability in SSH implementations prior to December 2023 (CVE-2023-48795). If the SSH connection does not use strict key exchange, the encryption algorithm chacha20-poly1305 is particularly vulnerable.
+      - The SSH Server now supports public key management using authorized_keys for all account types. Clients which were previously permitted to manage their public keys using the SSH Public Key Subsystem (SPKS) can now also do so using authorized_keys.
+        The SSH Server now supports this by providing a virtualized authorized_keys file in the user's virtual filesystem. If clients have file transfer access, they can edit this file using SFTP, SCP, FTPS, or BvShell. The location of the authorized_keys file in the virtual filesystem is configurable, and the feature can be disabled. The authorized_keys file is provided on demand, and is not backed by any file in the Windows filesystem.
+        The previous version of this feature, Synchronize with authorized_keys, is removed. The previous implementation worked only with Windows accounts, was useful only if the user had access to their Windows profile directory, and could unexpectedly reset or remove configured public keys when a user logged off, if the user or administrator was not aware of an authorized_keys file in the user's profile directory.
+      - The SSH Server now supports configurable limits for the number of channels which a client may concurrently open. This is similar to the OpenSSH setting MaxSessions. Separate limits can be configured for channels which create child processes, and channels of any type.
+        In previous versions, the SSH Server did not support such limits. An authenticated user with file transfer access could use a single connection to open a large number of SFTP channels, potentially exhausting server resources. This was not reported to occur, and would be evident in SSH Server log files.
+    - FTPS:
+      - The Manage certificates interface now supports ECDSA. ECDSA private keys can be generated and ECDSA TLS certificates can be imported and employed for FTPS connections. This requires Windows Vista or newer.
+    - Control Panel:
+      - The SSH Server Control Panel now supports dark mode. This can be enabled using SSH Server Control Panel > App settings. It can also be enabled using the BssCfg command-line configuration utility: BssCfg colorTheme -dark
+      - The Activity tab now supports more interactive options, including copy to clipboard and right-click IP blocking.
+      - Improved menu for the SSH Server Control Panel icon in the system notification area. It is now possible to start and stop the SSH Server using the tray icon menu.
+      - Improved compatibility with Hyper-V Server 2019, where there is no system notification area. In this environment, the SSH Server Control Panel now avoids hiding when minimized.
+      - Improved reporting of outcomes when importing settings.
+    - Settings:
+      - SSH Server settings now support filtering lists, including lists of account and group settings. Press Ctrl+F and type a string to show only matching entries.
+      - The Easy settings and Advanced settings interfaces now support viewing other entries besides the entry that's currently being edited or added. You can view an existing account or group entry while adding another.
+      - In Advanced settings > Access control, it is now possible to configure a Default virtual group in Advanced settings, and a Default virtual group in Easy settings. Virtual accounts created in Easy settings can now use the specified virtual group, instead of the first group.
+      - The Maximum forward time-step and Maximum backward time-step settings for TOTP now have server-wide defaults which are configured in Advanced settings > Access control > Time-based one-time password.
+      - The Easy settings interface now supports configuring Windows file shares for Windows and virtual accounts. It is no longer necessary to switch to Advanced settings to set up access to Windows file shares.
+      - The log event selection interface now supports right-click or Ctrl+C to copy event names to clipboard.
+      - In Advanced settings > Connections, the setting Penalty login attempt delay can now be configured with millisecond resolution. This allows configuring a non-zero delay which is shorter than 1 second. In environments that need to relax this setting, a 100-millisecond delay is much better than zero against brute-force password guessing.
+      - A server-wide default for virtual account password expiration can now be configured in Advanced settings > Access control > Virtual account password policy.
+      - A default per-user connection limit is now more easily configurable in Advanced settings and Easy settings. The server-wide setting can still be overridden with account- or group-specific values in Advanced settings.
+    - Scriptable settings:
+      - All objects in scriptable settings now support the .Help() method. This replaces the previous .help property, making commands such as $cfg.settings more useful.
+        In previous versions, the SSH Server's scriptable settings implemented the .help property: for example, $cfg.settings.help. This was easy to type, but cluttered PowerShell output. For example, $cfg.settings would also dump the help text, making it less usable.
+      - The BssCfgManip COM object now records important errors, such as those involving COM registration, in the Application section of the Windows Event Log. Previously, an exit code was returned, but error details were not recorded.
+      - The BssCfg command-line configuration utility now detects if its output is redirected and does not prompt to display more help.
+    - Tasks and notifications:
+      - The SSH Server now supports summary notifications. Instead of sending an email each time an event occurs, the SSH Server can be configured to collect events and send a periodic summary.
+      - The SSH Server now supports configurable header text to be included in email notifications.
+      - The SSH Server now supports configuring tasks with triggers that repeat every several minutes. Previously, to configure a task that runs every 15 minutes, it was necessary to set up many triggers.
+      - The SSH Server now supports tasks for outgoing SFTP transfers. The sftpc command-line client, which is part of Bitvise SSH Client, is now included with the SSH Server. Configurable file transfer commands use existing sftpc syntax.
+    - Logging:
+      - It is now possible to configure log filtering where Info or Trace events can be excluded from logging based on scriptable criteria. For example, it is possible to configure a filter where events related to a specific account that generates many connections can be excluded. Log filtering can be configured in Advanced settings > Logging. The scripting syntax is the same as that already used for task triggers.
+      - The SSH Server now performs periodic, summary logging of blocked connections using the Info-level event I_SERVICE_CONNECTIONS_REJECTED_BLOCKED. This provides more visibility in case any wanted connections are being blocked.
+        In previous recent versions, the SSH Server did not record any Info-level events for connections blocked due to temporary IP blocking, or due to permanent Client IP address rules. This is necessary to avoid blocked IP addresses from causing unlimited growth of SSH Server log files. However, to troubleshoot wanted but blocked connections, it was necessary to look at the Activity tab in the SSH Server Control Panel, or enable the Trace event T_CONNECT_REJECTED_BLOCKED.
+      - It is now possible to configure log files to be written without the UTF-8 BOM, for use with tools which do not support the Byte Order Mark.
+      - Reduced clutter in logged settings dumps from settings which configure lists of log events.
+      - When logging changes in settings, the generation of textual settings is now more efficient.
+      - If logging to the Windows Event Log fails, the SSH Server now attempts to log such failures in its textual log files.
+      - If logging to the Windows Event Log or to textual log files fails, this is now displayed using a banner in the SSH Server Control Panel.
+      - If textual log file rollover failed, events would be missing from log files without this being apparent in the event sequence number. Sequence numbers are now incremented for the missing events.
+      - The SSH Server previously logged some events using a log queue, and other events directly. This could cause related events to appear out of order. The SSH Server now logs all events through a log queue. This should improve event ordering. Logging out of order is still possible when related events are logged by different threads.
+      - Textual log file names now include a dash between the program name and the timestamp.
+    - Statistics:
+      - Generation of content for statistics files is now more efficient.
+    - Long operation monitoring:
+      - The SSH Server now monitors individual steps in connections and logon sessions, and periodically reports operations which are taking a long time. Technical information about such delays is now logged in the SSH Server's textual log files, and displayed in the Notes column in the Connections tab in the SSH Server Control Panel. It may take up to 30 seconds for a stuck operation to be detected and reported.
+        This provides transparency when unexpected delays occur. For example: Windows account lookup is expected to succeed or fail promptly; but in some cases, it has been observed to delay a connection indefinitely. The information provided by this feature allows for troubleshooting.
+    - Authentication:
+      - Multi-factor authentication (MFA) using a time-based one-time password (TOTP) now supports a configurable grace period. This is enabled in new settings by default, but disabled when upgrading from previous versions to preserve behaviors. A server-wide default can be configured in Advanced settings > Access control > Time-based one-time password.
+        A TOTP grace period is essential for clients which repeatedly connect and disconnect, and clients which initiate several concurrent connections. With a grace period enabled, the client must pass TOTP for an initial connection, but can make subsequent connections without a TOTP challenge, as long as these connections are from the same IP address, use the same username, and authenticate using another permitted method (for example: password or public key).
+      - When public key authentication is disabled for a user in Advanced settings, but the user has public keys configured, previous SSH Server versions would respond positively to the client testing which public keys it can use, but then deny authentication using the key. The SSH Server now appropriately denies the public key when queried.
+      - When logging events related to failed or partially successful authentication, the SSH Server now also logs remaining authentication methods offered to the client.
+    - General:
+      - When the SSH Server truncates strings, it now avoids creating dangling surrogates and partial newlines.
+    - Windows accounts:
+      - The SSH Server now supports Group Managed Service Accounts. It is possible to log into gMSA accounts as Windows accounts, or to use them as a virtual account security context.
+      - The SSH Server now supports public key authentication for Windows accounts using public keys configured in the altSecurityIdentities attribute in Active Directory. If enabled, the SSH Server will check this attribute for any public keys (for example, in OpenSSH format) and will accept them for the user to authenticate.
+        Public keys configured in Active Directory cannot be altered by the client using SSH Server functionality (the SSH Public Key Subsystem or the authorized_keys interface).
+      - The SSH Server now supports password-less public key authentication for cross-domain accounts. Windows sessions for such logins are created using Windows S4U (Service for User).
+      - In domain environments, the SSH Server can encounter long delays attempting to contact the domain controller for the account that's logging in. The SSH Server now supports a configurable timeout for Active Directory queries. By setting this timeout to 0, Active Directory queries can be completely disabled, and the SSH Server can be configured to provide full functionality if Active Directory account information is not available.
+        This is of particular value for cross-domain logons, where the domain controller for the account domain may be unreachable.
+    - Virtual accounts:
+      - The SSH Server now supports Windows session sharing between virtual accounts which are members of the same virtual group. This is the default configuration in newly created settings. When upgrading from previous versions, this feature is disabled to preserve behavior. It can be enabled for each virtual account in Advanced settings, in the account settings entry.
+        Windows session sharing is a feature introduced in versions 9.1x which can dramatically improve duration and reliability of connections to network shares. It is particularly effective for accounts which connect and disconnect frequently. For connections which load a Windows profile, it can reduce issues from frequent Windows profile loading.
+        The extension of session sharing to virtual groups improves scenarios where there are many connections from different virtual accounts, and each account may connect relatively infrequently. If the accounts are all accessing the same network shares, allowing them to share a Windows logon session further reduces the number of network share connections that must be made. This improves reliability by reducing the number of network share connections.
+    - Auto-execute commands:
+      - The SSH Server now monitors the memory used by custom commands and throttles their execution. Settings for this can be configured in Advanced settings > Server > Auto-execute commands.
+        The SSH Server supports custom commands which can be configured to run when a user authenticates or disconnects, when a Windows logon session is created or destroyed, or after a user uploads a file. The On-upload command is asynchronous and can start many concurrent instances if a client disconnects after uploading many small files.
+        Administrators commonly use PowerShell, which has a large memory footprint. When using a PowerShell script, processing 1,000 On-upload commands for 1,000 small files may require 60 GB of RAM. The Windows Command Prompt is more frugal, and could handle the same load using 3 GB.
+      - The SSH Server now tracks custom commands to their completion and logs their exit codes.
+      - The SSH Server now records the output of custom commands and logs it by default. This reduces or eliminates the need for commands to use their own logging to diagnose issues or audit execution.
+    - File transfer:
+      - Since version 9.34, the SSH Server has opened files which are being uploaded to non-local storage (e.g. uploads to file shares) using unbuffered I/O. This can noticeably improve upload performance, but there are situations where the network share server does not set the file size correctly.
+        This version adds mount point settings, and a server-wide default setting, to control the use of unbuffered I/O.
+      - The SSH Server now supports the vendor-id extension which is sent by some SFTP clients. If received, the content is now logged in the event I_SFTP_SERVER_CLIENT_VENDOR_ID.
+ReleaseTime: 2025-12-12
