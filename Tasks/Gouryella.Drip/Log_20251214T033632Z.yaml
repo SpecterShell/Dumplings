@@ -1,0 +1,57 @@
+Version: 0.5.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.5.0/drip-v0.5.0-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.5.0/drip-v0.5.0-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🎉 Major Release - Protocol Architecture Overhaul
+    Highlights
+    This release introduces a complete protocol redesign, switching from a custom frame-based implementation to yamux stream multiplexing with connection pooling, delivering significant improvements in performance, stability, and maintainability.
+    ✨ New Features
+    Yamux Stream Multiplexing
+    - Replaced custom protocol with industry-standard yamux multiplexing
+    - Better handling of concurrent streams over a single TCP connection
+    - Improved reliability for long-lived tunnel connections
+    Connection Pooling
+    - New connection pool architecture for efficient resource management
+    - Reduced connection establishment overhead
+    - Better performance under high concurrency
+    Enhanced CLI Experience
+    - New --address/-a and --server/-s flags for flexible configuration
+    - Auto-load server address from config file
+    - Improved terminal UI with centered tunnel URL display
+    - Better daemon startup information feedback
+    🔧 Improvements
+    - Refactored server-side connection group management
+    - Simplified proxy handler logic
+    - Reorganized shared utilities (stats, ui, netutil)
+    - Added CountingConn for traffic statistics
+    - New pipe utilities for bidirectional data transfer
+    🗑️ Removed
+    - Deprecated HPACK compression module
+    - Legacy binary header protocol
+    - Custom flow control frame handling
+    - Old frame handler implementation (~4800 lines of legacy code removed)
+    📊 Stats
+    - 55 files changed
+    - +3,443 lines / -4,814 lines
+    - Net reduction of ~1,400 lines while adding new features
+    ⚠️ Breaking Changes
+    - Protocol is not backward compatible with v0.4.x
+    - Clients and servers must both upgrade to v0.5.0
+    🙏 Contributors
+    Thanks to all contributors who made this release possible!
+    What's Changed
+    - refactor(protocol): switch to yamux multiplexing with connection pooling by @Gouryella in https://github.com/Gouryella/drip/pull/8
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.4.1...v0.5.0
+    What's Changed
+    - refactor(protocol): switch to yamux multiplexing with connection pooling by @Gouryella in https://github.com/Gouryella/drip/pull/8
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.4.1...v0.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Gouryella/drip/releases/tag/v0.5.0
+ReleaseTime: 2025-12-14T03:16:25.0000000Z
