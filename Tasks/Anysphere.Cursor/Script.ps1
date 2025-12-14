@@ -64,14 +64,13 @@ switch -Regex ($this.Check()) {
     try {
       $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://www.cursor.com/changelog')
-      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElements([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]//button[@data-state='closed']")).ForEach({ $_.Click() }) } catch {}
           try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")) } catch {}
         }
-      )
-      try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
-      $ReleaseNotesObject = $ReleaseNotesNode.GetAttribute('innerHTML') | ConvertFrom-Html
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {
         # # ReleaseTime
