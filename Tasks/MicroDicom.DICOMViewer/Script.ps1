@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.microdicom.com/dicom-viewer/history.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@itemprop='articleBody']/*[text()='$($this.CurrentState.Version)']")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='com-content-article__body']/*[text()='$($this.CurrentState.Version)']")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2' -and $Node.InnerText -notmatch '^\d+(?:\.\d+)+$'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
