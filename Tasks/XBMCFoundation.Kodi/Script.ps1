@@ -16,11 +16,16 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://kodi.tv/blog/'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://kodi.tv/blog/'
       }
 
       $Object3 = (Invoke-RestMethod -Uri 'https://kodi.tv/rss.xml').Where({ $_.title.'#cdata-section'.Contains("Kodi $($this.CurrentState.Version)") }, 'First')
@@ -35,10 +40,11 @@ switch -Regex ($this.Check()) {
           Value  = $Object3[0].encoded | ConvertFrom-Html | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object3[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object3[0].link
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
