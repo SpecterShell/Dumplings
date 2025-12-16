@@ -15,11 +15,11 @@ $VersionParts = $Object2.'Real-version'.Split('.')
 $this.CurrentState.RealVersion = "$($VersionParts[0]).$($VersionParts[1]).$($VersionParts[3])"
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'msi'
-  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.msi"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'x86'
+#   InstallerType = 'msi'
+#   InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.msi"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
