@@ -29,7 +29,7 @@ switch -Regex ($this.Check()) {
 
       $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/eclipse-theia/theia/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version -replace '\.200$')')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
