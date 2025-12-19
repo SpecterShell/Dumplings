@@ -16,7 +16,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '-(\d+\.\d+\.\d+(?:\.
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://pro.lceda.cn/page/update-record-v2' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://pro.lceda.cn/page/update-record' | ConvertFrom-Html
       $Object3 = [System.IO.StringReader]::new(($Object2.SelectSingleNode('//*[contains(@class, "doc-body-left")]') | Get-TextContent))
 
       while ($Object3.Peek() -ne -1) {
@@ -38,14 +38,14 @@ switch -Regex ($this.Check()) {
             break
           }
         }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       $Object3.Close()
