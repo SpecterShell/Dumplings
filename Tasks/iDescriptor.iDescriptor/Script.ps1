@@ -9,7 +9,7 @@ $this.CurrentState.Version = $Object1.tag_name
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.Contains('Windows') -and $_.name.Contains('x86_64') -and $_.name.Contains('msi') -and -not $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'Windows' -and $_.name.Contains('x86_64') -and -not $_.name.Contains('portable') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
