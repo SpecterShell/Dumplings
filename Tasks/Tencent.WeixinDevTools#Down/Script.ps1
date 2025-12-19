@@ -33,24 +33,31 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = $Object1 | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(@id, '$($this.CurrentState.Version.Replace('.', '-'))更新说明')]")
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Prefix + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+      }
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(@id, '$($this.CurrentState.Version.Replace('.', '-'))') and contains(@id, '更新说明')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl (en-US)
+        # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
           Value  = $Prefix + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
