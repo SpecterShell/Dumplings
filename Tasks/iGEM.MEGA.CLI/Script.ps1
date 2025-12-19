@@ -32,9 +32,6 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='qi-question' and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact("20$([regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{6})').Groups[1].Value)", 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
-
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
