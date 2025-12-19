@@ -28,14 +28,14 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://github.com/legeling/PromptHub/blob/HEAD/README.md'
+        Value  = $ReleaseNotesUrl = 'https://github.com/legeling/PromptHub/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/legeling/PromptHub/HEAD/README.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/legeling/PromptHub/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '更新日志')]/following::h3[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
