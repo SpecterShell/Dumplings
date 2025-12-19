@@ -47,14 +47,14 @@ switch -Regex ($this.Check()) {
             break
           }
         }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       $Object3.Close()
