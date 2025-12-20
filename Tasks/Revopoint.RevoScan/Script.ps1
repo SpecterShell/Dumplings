@@ -12,14 +12,6 @@ $ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
-      }
-    )
-
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
