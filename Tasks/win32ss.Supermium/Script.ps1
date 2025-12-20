@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('_64') -and $_.name.Contains('setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('_64') -and $_.name.Contains('setup') -and $_.name.Contains('win10_11') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
