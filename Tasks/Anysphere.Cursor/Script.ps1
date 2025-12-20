@@ -65,12 +65,12 @@ switch -Regex ($this.Check()) {
       $EdgeDriver = Get-EdgeDriver -Headless
       $EdgeDriver.Navigate().GoToUrl('https://www.cursor.com/changelog')
       $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+        [System.Func[OpenQA.Selenium.IWebDriver, string]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
           try { $WebDriver.FindElements([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]//button[@data-state='closed']")).ForEach({ $_.Click() }) } catch {}
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")).GetAttribute('innerHTML') } catch {}
         }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      ) | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {
         # # ReleaseTime
@@ -80,6 +80,8 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObject.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
         # Remove accordion buttons
         $ReleaseNotesObject.SelectNodes('.//span[contains(@class, "group-data-[state=open]:")]').ForEach({ $_.Remove() })
+        # Remove anchor icons
+        $ReleaseNotesObject.SelectNodes('.//*[contains(@class, "anchor-icon")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
