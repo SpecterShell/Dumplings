@@ -26,16 +26,16 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://wiki.documentfoundation.org/ReleaseNotes'
-    }
+    # $this.CurrentState.Locale += [ordered]@{
+    #   Key   = 'ReleaseNotesUrl'
+    #   Value = 'https://wiki.documentfoundation.org/ReleaseNotes'
+    # }
 
     try {
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=en-US"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'ReleaseNotesUrl'
+      #   Value = $ReleaseNotesUrl = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=en-US"
+      # }
 
       # The release notes part has been disabled, as it always has a length over 10000 characters
       # if ($ReleaseNotesUrl.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
@@ -58,18 +58,18 @@ switch -Regex ($this.Check()) {
     }
 
     # ReleaseNotesUrl
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'zh-CN'
-      Key    = 'ReleaseNotesUrl'
-      Value  = 'https://wiki.documentfoundation.org/ReleaseNotes'
-    }
+    # $this.CurrentState.Locale += [ordered]@{
+    #   Locale = 'zh-CN'
+    #   Key    = 'ReleaseNotesUrl'
+    #   Value  = 'https://wiki.documentfoundation.org/ReleaseNotes'
+    # }
 
     try {
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrlCN = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=zh-CN"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'zh-CN'
+      #   Key    = 'ReleaseNotesUrl'
+      #   Value  = $ReleaseNotesUrlCN = Get-RedirectedUrl -Uri "https://hub.libreoffice.org/ReleaseNotes/?LOvers=$($this.CurrentState.Version.Split('.')[0..1] -join '.')&LOlocale=zh-CN"
+      # }
 
       # if ($ReleaseNotesUrlCN.Contains(($this.CurrentState.Version.Split('.')[0..1] -join '.'))) {
       #   $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
