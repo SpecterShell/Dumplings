@@ -25,25 +25,26 @@ SOFTWARE.
 #>
 
 $Object1 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/amd64fox/LoaderSpot/main/versions.json' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
+$Object2 = $Object1.GetEnumerator() | Where-Object -FilterScript { $_.Value.buildType -eq 'Release' } | Sort-Object -Property { $_.Name -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.Keys | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } | Select-Object -Last 1
+$this.CurrentState.Version = $Object2.Name
 
 # RealVersion
-$this.CurrentState.RealVersion = $Object1[$Version].fullversion
+$this.CurrentState.RealVersion = $Object2.Value.fullversion
 
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x86'
-#   InstallerUrl = $Object1[$Version].links.win.x86
+#   InstallerUrl = $Object2.Value.links.win.x86
 # }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1[$Version].links.win.x64
+  InstallerUrl = $Object2.Value.links.win.x64
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1[$Version].links.win.arm64
+  InstallerUrl = $Object2.Value.links.win.arm64
 }
 
 switch -Regex ($this.Check()) {
