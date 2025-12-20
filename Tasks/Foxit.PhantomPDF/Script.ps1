@@ -1,13 +1,9 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-phantom-bussiness'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'burn'
+$this.CurrentState.Installer += $Installer = [ordered]@{
+  InstallerType = 'exe'
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website', '')
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
 }
 
 # Version
@@ -23,9 +19,18 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msp' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+    $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
+    $Params = @{}
+    if (Test-Path -Path $InstallerFile3) { $Params['PatchPath'] = $InstallerFile3 }
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
+    # ProductCode
+    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi @Params
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html
