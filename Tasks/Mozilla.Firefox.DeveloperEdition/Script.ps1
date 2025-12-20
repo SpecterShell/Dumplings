@@ -32,7 +32,7 @@ foreach ($Locale in @('en-US')) {
       InstallerType   = 'nullsoft'
       InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
       InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-      ProductCode     = "Firefox Developer Edition ${ShortVersion} (${Arch} ${Locale})"
+      ProductCode     = 'Firefox Developer Edition'
     }
   }
 }

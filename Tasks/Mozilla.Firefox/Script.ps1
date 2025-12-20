@@ -113,7 +113,7 @@ switch -Regex ($this.Check()) {
             InstallerType   = 'nullsoft'
             InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
             InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Mozilla Firefox ${ShortVersion} (${Arch} ${Locale})"
+            ProductCode     = 'Mozilla Firefox'
           }
         }
       }
