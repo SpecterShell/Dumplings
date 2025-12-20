@@ -26,7 +26,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='tab-editor-suite-windows']//div[@id='Version_$($this.CurrentState.Version)_detail']")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='tab-editor-suite-windows']//div[@id='Version_$($this.CurrentState.RealVersion)_detail']")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

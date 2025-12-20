@@ -5,10 +5,10 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '_Prom')
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
-  InstallerType = 'wix'
-  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
-}
+# $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+#   InstallerType = 'wix'
+#   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
+# }
 
 # Version
 $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
@@ -31,9 +31,9 @@ switch -Regex ($this.Check()) {
     $Params = @{}
     if (Test-Path -Path $InstallerFile3) {
       $Params['PatchPath'] = $InstallerFile3
-      $InstallerWiX['InstallerSwitches'] = @{ Custom = "PATCH=`"$($InstallerWiX.InstallerUrl.Replace('.msi', '.msp'))`"" }
+      # $InstallerWiX['InstallerSwitches'] = @{ Custom = "PATCH=`"$($InstallerWiX.InstallerUrl.Replace('.msi', '.msp'))`"" }
     } else {
-      $InstallerWiX['InstallerSwitches'] = @{}
+      # $InstallerWiX['InstallerSwitches'] = @{}
     }
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-editor/version-history.html' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='tab-editor-suite-windows']//div[@id='Version_$($this.CurrentState.Version)_detail']")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='tab-editor-suite-windows']//div[@id='Version_$($this.CurrentState.RealVersion)_detail']")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
