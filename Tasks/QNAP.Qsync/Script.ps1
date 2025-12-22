@@ -1,7 +1,7 @@
 $Object1 = $Global:DumplingsStorage.QNAPApps.docRoot.utility.application.Where({ $_.applicationName -eq 'com.qnap.qsync' }, 'First')[0].platform.Where({ $_.platformName -eq 'Windows' }, 'First')[0].software
 
 # Version
-$this.CurrentState.Version = "$($Object1.version).$($Object1.buildNumber)"
+$this.CurrentState.Version = "$($Object1.version).$($Object1.buildNumber -match '^(\d+)' ? $Matches[1] : (throw 'Cannot parse build number'))}"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
