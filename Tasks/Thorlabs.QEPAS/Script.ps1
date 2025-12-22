@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=QEPAS' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=QEPAS' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber

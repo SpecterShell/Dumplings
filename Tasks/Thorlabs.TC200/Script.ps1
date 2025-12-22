@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=TC200' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=TC200' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
@@ -12,11 +12,11 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # LicenseUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = "https://www.thorlabs.com/software/TC200/Software/License_$($this.CurrentState.Version).zip"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = "https://www.thorlabs.com/software/TC200/Software/License_$($this.CurrentState.Version).zip"
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

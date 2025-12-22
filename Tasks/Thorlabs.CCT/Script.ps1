@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=CCT' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=CCT' | Read-ResponseContent | ConvertFrom-Xml
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=ThorCam' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=ThorCam' | Read-ResponseContent | ConvertFrom-Xml
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -29,11 +29,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object2.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # LicenseUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = "https://www.thorlabs.com/software/THO/ThorCam/ThorCam_V$($this.CurrentState.Version)/EULA.rtf"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = "https://www.thorlabs.com/software/THO/ThorCam/ThorCam_V$($this.CurrentState.Version)/EULA.rtf"
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

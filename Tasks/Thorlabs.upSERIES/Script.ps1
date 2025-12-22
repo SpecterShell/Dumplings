@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=upSERIES' | Read-ResponseContent | ConvertFrom-Xml
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=upSERIES' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
@@ -15,11 +15,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # LicenseUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = "https://www.thorlabs.com/software/MUC/upSERIES/upSERIES_V$($this.CurrentState.Version)/License.rtf"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = "https://www.thorlabs.com/software/MUC/upSERIES/upSERIES_V$($this.CurrentState.Version)/License.rtf"
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
