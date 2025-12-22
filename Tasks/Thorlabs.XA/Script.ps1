@@ -23,14 +23,6 @@ $this.CurrentState.Version = $VersionX64
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].releaseDate | Get-Date -AsUTC
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       # LicenseUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'

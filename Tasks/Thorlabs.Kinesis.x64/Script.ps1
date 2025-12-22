@@ -43,7 +43,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = "https://www.thorlabs.com/Software/Motion Control/KINESIS/Application/v$($this.CurrentState.Version)/History.txt"
+      $ReleaseNotesUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Kinesis Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'Kinesis 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].changeLog.url
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)
