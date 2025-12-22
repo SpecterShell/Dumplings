@@ -1,19 +1,45 @@
-$Prefix = 'https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=ELL'
+$Query = @'
+query {
+  slugInfo(
+    slug: "software-pages/ELL"
+    cultureName: "en-US"
+    storeId: "Thorlabs-Website"
+  ) {
+    entityInfo {
+      id
+    }
+  }
+}
+'@
+$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Query = @"
+query {
+  page(
+    storeId: "Thorlabs-Website"
+    id: "$($Object1.data.slugInfo.entityInfo.id)"
+    cultureName: "en-US"
+  ) {
+    content
+    permalink
+  }
+}
+"@
+$Object2 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json'
+$Object3 = $Object2.data.page.content | ConvertFrom-Json
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Application' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'Elliptec 32-Bit Software for 32-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
-$VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+)').Groups[1].Value
+$VersionX86 = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Application' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'Elliptec 32-Bit Software for 32-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Application' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'Elliptec 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
-$VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+)').Groups[1].Value
+$VersionX64 = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Application' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'Elliptec 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")

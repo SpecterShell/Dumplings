@@ -1,18 +1,26 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('APT') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 32-Bit Software for 32-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('APT') -and $_.href.Contains('WoW64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 32-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 32-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 32-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield

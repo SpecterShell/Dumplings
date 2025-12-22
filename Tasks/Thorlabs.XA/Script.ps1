@@ -1,15 +1,15 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('Win32') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 32-Bit Software for 32-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
-$VersionX86 = [regex]::Match($InstallerUrlX86, '(\d+(\.\d+)+)').Groups[1].Value
+$VersionX86 = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 32-Bit Software for 32-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('XA') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url
 }
-$VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+)').Groups[1].Value
+$VersionX64 = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")
@@ -22,6 +22,14 @@ $this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'XA Software' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -eq 'XA 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     try {
       # LicenseUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{

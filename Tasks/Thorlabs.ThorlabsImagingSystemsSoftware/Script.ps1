@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=ThorCam'
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=ThorCam' | Read-ResponseContent | ConvertFrom-Xml
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
