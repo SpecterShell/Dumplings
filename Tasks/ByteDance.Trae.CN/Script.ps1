@@ -31,18 +31,21 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.trae.cn/changelog' | ConvertFrom-Html
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://www.trae.cn/changelog')
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)')]")
-      if ($ReleaseNotesNode) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
+      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)')]")) } catch {}
         }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
