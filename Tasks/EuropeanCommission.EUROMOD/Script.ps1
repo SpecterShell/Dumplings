@@ -3,14 +3,9 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerType        = 'zip'
-  InstallerUrl         = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('EUROMOD') -and $_.href.EndsWith('.zip') -and $_.href.Contains('installer') -and $_.href.Contains('64bit') -and -not $_.href.Contains('latest') } catch {} }, 'First')[0].href
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'zip'
+  InstallerUrl  = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('EUROMOD') -and $_.href.EndsWith('.zip') -and $_.href.Contains('installer') -and $_.href.Contains('64bit') -and -not $_.href.Contains('latest') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -38,6 +33,13 @@ switch -Regex ($this.Check()) {
 
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
       $InstallerFileExtracted = New-TempFolder
       7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $Installer.NestedInstallerFiles[0].RelativeFilePath | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted $Installer.NestedInstallerFiles[0].RelativeFilePath
