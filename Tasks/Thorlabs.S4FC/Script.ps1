@@ -5,12 +5,7 @@ $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/')
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
-    }
-  )
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/')
 }
 
 switch -Regex ($this.Check()) {
@@ -28,6 +23,17 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
     }
 
     $this.Print()
