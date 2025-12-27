@@ -4,15 +4,9 @@ $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/mistralai/mistral
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('x86_64') -and $_.name -match 'windows' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\vibe-acp.exe"
-    }
-  )
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('x86_64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -23,6 +17,17 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
     }
 
     try {
