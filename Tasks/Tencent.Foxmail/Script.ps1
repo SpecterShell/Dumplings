@@ -13,7 +13,7 @@ $this.CurrentState.Version = $Object1.UpdateNotify.NewVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com').Replace('//dl.foxmail.com/', '//dldir1v6.qq.com/')
+  InstallerUrl = $Object1.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com').Replace('//dl.foxmail.com/', '//dldir1v6.qq.com/') | Split-Uri -LeftPart 'Path'
 }
 
 switch -Regex ($this.Check()) {
