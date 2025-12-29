@@ -6,15 +6,15 @@ $this.CurrentState.Version = $Object1.Public.Build
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://freecommander.com/downloads/FreeCommanderXE-32-public_setup$($this.CurrentState.Version).zip"
+  InstallerUrl = "https://freecommander.com/downloads/FreeCommanderXE-32_setup$($this.CurrentState.Version).zip"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FreeCommanderXE-32-public_setup.exe' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'FreeCommanderXE-32-public_setup.exe'
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FreeCommanderXE-32_setup.exe' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'FreeCommanderXE-32_setup.exe'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
