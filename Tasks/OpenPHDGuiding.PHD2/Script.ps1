@@ -5,8 +5,7 @@ $this.CurrentState.Version = $Object1[0].Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl    = $Object1[1].Trim()
-  InstallerSha256 = $Object1[2].Trim().ToUpper()
+  InstallerUrl = $Object1[1].Trim()
 }
 
 switch -Regex ($this.Check()) {
