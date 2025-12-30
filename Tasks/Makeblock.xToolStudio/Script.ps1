@@ -20,7 +20,7 @@ $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.contents[0].url
+  InstallerUrl = $Object1.data.contents.Where({ $_.url.EndsWith('.exe') }, 'First')[0].url
 }
 
 switch -Regex ($this.Check()) {
