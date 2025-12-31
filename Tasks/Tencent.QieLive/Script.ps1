@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.data.pc_obs.version_name
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.pc_obs.down_url
+  InstallerUrl = $Object1.data.pc_obs.down_url | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
