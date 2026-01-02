@@ -1,0 +1,17 @@
+Version: "9.55"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-955.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#955
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Graphical SFTP:
+      - In previous 9.5x versions, when using dark mode, the SFTP window would hang if file icons were not yet available in the Windows Explorer icon cache.
+        For the technically inclined: this is an interesting interaction between the Windows function SHGetFileInfoW, which is used to retrieve file icons; and the Windows List View control, in particular when it's set to a transparent background style: LVS_EX_TRANSPARENTBKGND.
+        If a file icon is not yet cached by Windows, SHGetFileInfoW starts a nested message loop. This is so that the application can remain responsive during a potential extended adventure in search of the icon. In the case of the SSH Client, this nested message loop occurred in the middle of a List View paint cycle, because the List View requested an icon, and this is what caused the SSH Client to call SHGetFileInfoW. During the nested message loop, a new paint cycle is started, which is its purpose - maintaining UI responsiveness. Although List View is already in a paint cycle, the reentrant paint usually works, as long as the application has not set a transparent background. If it has, then the List View does not support reentrant paint with transparency, aborts the paint, and schedules a new paint. The new paint is scheduled in the nested message loop, which continues indefinitely until it's drained. This causes an infinite cycle of attempted and aborted paints between List View and SHGetFileInfoW.
+        Microsoft appears to be aware of such issues: current documentation warns that calling SHGetFileInfoW on the UI thread may cause the UI to stop responding. The SSH Client got away with this for 20 years. With version 9.55, we are replacing this with a cache component which calls SHGetFileInfoW on a background thread. As a tradeoff, this causes uncached icons to appear slightly later, when they are loaded.
+        Suggestion to Microsoft: Since you're already recommending applications to call SHGetFileInfoW on a background thread, just remove the nested message loop functionality from SHGetFileInfoW. It seems to be a misfeature which can cause a variety of problems. For example, stack overflow seems possible if SHGetFileInfoW keeps being called from the nested message loop again.
+ReleaseTime: 2026-01-01
