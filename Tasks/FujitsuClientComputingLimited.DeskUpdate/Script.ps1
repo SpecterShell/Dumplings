@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://support.ts.fujitsu.com/Download/StreamFileToBrowser.asp?SoftwareGUID=$($Object1.updateSetupPackage.softwareID.ToUpper())"
+  InstallerUrl = "https://webdownloads4.ts.fujitsu.com/download/FileDownload/fileDownload.aspx?SoftwareGUID=$($Object1.updateSetupPackage.softwareID.ToUpper())&FileFolder=Downloadfiles&FileTypeExtension=EXE"
 }
 
 switch -Regex ($this.Check()) {
