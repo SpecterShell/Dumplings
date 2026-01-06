@@ -44,6 +44,16 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      # AppsAndFeaturesEntries > DisplayVersion
+      $Installer['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
+        }
+      )
+    }
+
     $this.Print()
     $this.Write()
   }
