@@ -1,24 +1,19 @@
-$Prefix = 'https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/'
-
-$Object1 = Invoke-WebRequest -Uri "${Prefix}stable"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/anthropics/claude-code/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.Content.Trim()
-
-$Object2 = Invoke-RestMethod -Uri "${Prefix}$($this.CurrentState.Version)/manifest.json"
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture    = 'x64'
-  InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/win32-x64/claude.exe"
-  InstallerSha256 = $Object2.platforms.'win32-x64'.checksum.ToUpper()
+  Architecture = 'x64'
+  InstallerUrl = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/$($this.CurrentState.Version)/win32-x64/claude.exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.buildDate.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -28,7 +23,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md'
+        Value = $Object1.html_url
       }
 
       $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/anthropics/claude-code/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
@@ -47,7 +42,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value  = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
