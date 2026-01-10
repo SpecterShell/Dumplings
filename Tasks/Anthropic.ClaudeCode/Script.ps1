@@ -25,10 +25,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md'
       }
 
       $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/anthropics/claude-code/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
