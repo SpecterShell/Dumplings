@@ -1,7 +1,7 @@
 # User
-$Object1 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/prereleases/win/x86_64/user-releases.json'
+$Object1 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/x86_64/user-releases.json'
 # Machine
-$Object2 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/prereleases/win/x86_64/system-releases.json'
+$Object2 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/x86_64/system-releases.json'
 
 if ($Object1.version -ne $Object2.version) {
   $this.Log("User version: $($Object1.version)")
