@@ -27,26 +27,26 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.emeditor.com/blog/'
+        Value = $ReleaseNotesUrl = 'https://www.emeditor.com/blog/'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.emeditor.com/category/emeditor-core/feed/').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      if ($Object2) {
+      if ($ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]")) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "entry-content")]') | Get-TextContent | Format-Text
         }
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $Object2[0].link
+          Value  = Join-Uri $ReleaseNotesUrl $ReleaseNotesNode.SelectSingleNode('.//header[contains(@class, "entry-content-header")]//a').Attributes['href'].Value
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -58,23 +58,23 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://zh-cn.emeditor.com/blog/'
+        Value  = $ReleaseNotesUrlCN = 'https://zh-cn.emeditor.com/blog/'
       }
 
-      $Object4 = (Invoke-RestMethod -Uri 'https://zh-cn.emeditor.com/category/emeditor-core/feed/').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
+      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
 
-      if ($Object4) {
+      if ($ReleaseNotesCNNode = $Object3.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]")) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object4[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]//div[contains(@class, 'entry-content')]") | Get-TextContent | Format-Text
         }
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
-          Value  = $Object4[0].link
+          Value  = Join-Uri $ReleaseNotesUrlCN $ReleaseNotesCNNode.SelectSingleNode('.//header[contains(@class, "entry-content-header")]//a').Attributes['href'].Value
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
