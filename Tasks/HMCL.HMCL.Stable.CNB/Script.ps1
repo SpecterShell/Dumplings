@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://docs.hmcl.net/changelog/stable.html'
+        Value  = "https://docs.hmcl.net/changelog/stable.html#HMCL-$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host
@@ -52,3 +52,4 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
 }
+
