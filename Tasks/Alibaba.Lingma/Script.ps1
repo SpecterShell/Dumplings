@@ -70,7 +70,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://help.aliyun.com/zh/lingma/product-overview/changelogs-of-lingma-ide' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//main//*[(self::h2 or self::h3) and contains(., 'v$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[(self::h2 or self::h3) and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
