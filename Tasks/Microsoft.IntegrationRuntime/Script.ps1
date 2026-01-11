@@ -3,7 +3,6 @@ $Object2 = $Object1.dlcDetailsView.downloadFile | Where-Object -FilterScript { $
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
   InstallerUrl = $Object2.url
 }
 
