@@ -1,32 +1,46 @@
-$RepoOwner = 'HMCL-dev'
-$RepoName = 'HMCL'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/HMCL-dev/HMCL/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'neutral'
-  InstallerType = 'portable'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # ReleaseTime
     try {
+      # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
-    # ReleaseNotesUrl
     try {
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HMCL-dev/HMCL-docs/HEAD/_changelogs/stable/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml
+
+      # Remove the "详细版本介绍" link
+      $Object2.SelectNodes('//a[contains(text(), "详细版本介绍")]').ForEach({ $_.Remove() })
+
+      # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2 | Get-TextContent | Format-Text
+      }
+
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
         Value  = "https://docs.hmcl.net/changelog/stable.html#HMCL-$($this.CurrentState.Version)"
       }
