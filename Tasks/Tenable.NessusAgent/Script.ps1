@@ -1,24 +1,24 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://www.tenable.com/downloads/api/v2/pages/nessus-agents').Content | ConvertFrom-Json -AsHashtable
 $Object2 = $Object1.releases[$Object1.releases.latest.Keys.Where({ $_.StartsWith('Nessus Agents') }, 'First')[0]]
 # x86
-$Object3 = $Object2.Where({ $_.file.EndsWith('.msi') -and $_.file.Contains('Win32') }, 'First')[0]
+# $Object3 = $Object2.Where({ $_.file.EndsWith('.msi') -and $_.file.Contains('Win32') }, 'First')[0]
 # x64
 $Object4 = $Object2.Where({ $_.file.EndsWith('.msi') -and $_.file.Contains('x64') }, 'First')[0]
 
-if ($Object3.version -ne $Object4.version) {
-  $this.Log("x86 version: $($Object3.version)")
-  $this.Log("x64 version: $($Object4.version)")
-  throw 'Inconsistent versions detected'
-}
+# if ($Object3.version -ne $Object4.version) {
+#   $this.Log("x86 version: $($Object3.version)")
+#   $this.Log("x64 version: $($Object4.version)")
+#   throw 'Inconsistent versions detected'
+# }
 
 # Version
-$this.CurrentState.Version = $Object3.version
+$this.CurrentState.Version = $Object4.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object3.file_url
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object3.file_url
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object4.file_url
