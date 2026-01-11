@@ -37,6 +37,9 @@ switch -Regex ($this.Check()) {
           [System.Globalization.DateTimeStyles]::None
         ).ToString('yyyy-MM-dd')
 
+        # Workarounds to remove download links and their following nodes in release notes
+        $ReleaseNotesTitleNode.SelectSingleNode('.//div[@class="release-content"]//div[contains(@class, "links")]').SelectNodes('.|following-sibling::*').ForEach({ $_.Remove() })
+
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.SelectSingleNode('.//div[@class="release-content"]').ChildNodes[0]; $Node -and -not $Node.HasClass('links'); $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
