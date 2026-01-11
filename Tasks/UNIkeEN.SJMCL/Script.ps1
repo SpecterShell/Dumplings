@@ -9,15 +9,15 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('i686') }, 'First')[0].name
+  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('i686') -and $_.name -notmatch 'portable' }, 'First')[0].name
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86_64') }, 'First')[0].name
+  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') -and $_.name -notmatch 'portable' }, 'First')[0].name
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('aarch64') }, 'First')[0].name
+  InstallerUrl = Join-Uri 'https://mc.sjtu.cn/sjmcl/releases/' $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('aarch64') -and $_.name -notmatch 'portable' }, 'First')[0].name
 }
 
 switch -Regex ($this.Check()) {
@@ -27,11 +27,31 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+
+        if ($ReleaseNotesObject.SelectSingleNode('/hr')) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject.SelectNodes('/hr[1]/following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+          }
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
