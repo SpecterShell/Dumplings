@@ -1,5 +1,7 @@
 $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl($Prefix)
+$Object1 = $EdgeDriver.PageSource | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
