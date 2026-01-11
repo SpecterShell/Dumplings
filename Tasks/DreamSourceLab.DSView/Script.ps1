@@ -8,28 +8,28 @@ $Object2 = Invoke-WebRequest -Uri $PrefixCN
 # x86 en-US
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') -and $_.href -match 'DSView' } catch {} }, 'First')[0].href
 }
 $VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # x64 en-US
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') -and $_.href -match 'DSView' } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # x86 zh-CN
 $this.CurrentState.Installer += $InstallerX86CN = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $PrefixCN $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $PrefixCN $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') -and $_.href -match 'DSView' } catch {} }, 'First')[0].href
 }
 $VersionX86CN = [regex]::Match($InstallerX86CN.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # x64 zh-CN
 $this.CurrentState.Installer += $InstallerX64CN = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $PrefixCN $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $PrefixCN $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') -and $_.href -match 'DSView' } catch {} }, 'First')[0].href
 }
 $VersionX64CN = [regex]::Match($InstallerX64CN.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
