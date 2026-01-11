@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://ab.coldlake1.com/v1/abt/matcher?arch=x64&atype=show&channel=official'
+$Object1 = Invoke-RestMethod -Uri 'http://ab.coldlake1.com/v1/abt/matcher?arch=x64&atype=show&channel=official'
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.data, '(\d{14})').Groups[1].Value
