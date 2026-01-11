@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
+        Value  = "https://docs.hmcl.net/changelog/stable.html#HMCL-$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host
@@ -37,13 +37,6 @@ switch -Regex ($this.Check()) {
         Key    = 'ReleaseNotes'
         Value  = $Object2 | Get-TextContent | Format-Text
       }
-
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = "https://docs.hmcl.net/changelog/stable.html#HMCL-$($this.CurrentState.Version)"
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
@@ -59,3 +52,4 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
 }
+
