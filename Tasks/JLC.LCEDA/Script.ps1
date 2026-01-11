@@ -3,13 +3,13 @@ $Object1 = Invoke-WebRequest -Uri 'https://lceda.cn/page/download' | ConvertFrom
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[2]/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX86 = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[2]/a').Attributes['href'].Value
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX64 = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 

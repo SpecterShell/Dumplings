@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://lceda.cn/page/download' | ConvertFrom
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[2]/div/span/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[2]/div/span/a').Attributes['href'].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
