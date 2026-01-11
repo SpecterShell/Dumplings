@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://docs.tabulareditor.com/te3/other/downloads.html'
+$Object1 = Invoke-WebRequest -Uri 'https://docs.tabulareditor.com/references/downloads.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
