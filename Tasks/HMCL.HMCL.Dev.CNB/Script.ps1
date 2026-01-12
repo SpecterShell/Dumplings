@@ -1,17 +1,11 @@
-$Releases = (Invoke-RestMethod -Uri 'https://api.cnb.cool/HMCL-dev/HMCL/-/releases' -Headers @{ Accept = 'application/vnd.cnb.api+json'; Authorization = $Global:DumplingsSecret.CNBToken }).Where({ $_.prerelease -eq $true -and $_.name -match '^v\d+\.\d+\.0\.\d+$' })
+$Object1 = (Invoke-RestMethod -Uri 'https://api.cnb.cool/HMCL-dev/HMCL/-/releases' -Headers @{ Accept = 'application/vnd.cnb.api+json'; Authorization = $Global:DumplingsSecret.CNBToken }).Where({ $_.prerelease -eq $true }, 'First')[0]
 
-foreach ($Object1 in $Releases) {
-  try {
-    # Version
-    $this.CurrentState.Version = $Object1.tag_name -replace '^v'
+# Version
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
-    # Installer
-    $this.CurrentState.Installer += [ordered]@{
-      InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].brower_download_url
-    }
-
-    break
-  } catch {}
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].brower_download_url
 }
 
 switch -Regex ($this.Check()) {
@@ -58,3 +52,4 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
 }
+
