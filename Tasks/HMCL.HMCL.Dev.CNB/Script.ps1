@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://api.cnb.cool/HMCL-dev/HMCL/-/releases' -Headers @{ Accept = 'application/vnd.cnb.api+json'; Authorization = $Global:DumplingsSecret.CNBToken }).Where({ $_.prerelease -eq $true }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://api.cnb.cool/HMCL-dev/HMCL/-/releases' -Headers @{ Accept = 'application/vnd.cnb.api+json'; Authorization = $Global:DumplingsSecret.CNBToken }).Where({ $_.prerelease -eq $true -and $_.tag_name -match '^v?\d+\.\d+\.0\.\d+$' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
