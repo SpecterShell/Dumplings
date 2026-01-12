@@ -1,17 +1,18 @@
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/freenginx/nginx/tags").Where({ $_.name.StartsWith("release-") }, 'First')[0]
-
-# Version
-$this.CurrentState.Version = $Object1.name -replace '^release-'
+$Prefix = 'https://freenginx.org/en/download.html'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://freenginx.org/download/freenginx-$($this.CurrentState.Version).zip"
+  InstallerUrl         = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.outerHTML -match 'windows' } catch {} }, 'First')[0].href
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "freenginx-$($this.CurrentState.Version)/nginx.exe"
+      RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase)\nginx.exe"
     }
   )
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
