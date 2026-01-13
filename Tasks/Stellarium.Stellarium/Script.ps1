@@ -11,10 +11,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') -and $_.name.Contains('qt6') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'arm64'
-#   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') -and $_.name.Contains('qt6') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-# }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') -and $_.name.Contains('qt6') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
