@@ -3,14 +3,17 @@ $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//div[@data-prop-page-title="Legal products software downloads"]')
 $Object3 = $Object2.Attributes['data-prop-table-data-props'].DeEntitizeValue | ConvertFrom-Json
 $Object4 = $Object3.Where({ $_.tableData[0].value -eq 'E-Transcript Bundle Viewer' }, 'First')[0]
-$Object5 = Invoke-RestMethod -Uri "$($Object2.Attributes['data-prop-file-download-url'].DeEntitizeValue)/files/download/$([uri]::EscapeDataString($Object4.tableData[3].link))" -Headers @{
-  Referer       = 'https://www.thomsonreuters.com/'
-  Authorization = 'Bearer thomson-reuters-help-center-external-user'
-}
+# $Object5 = Invoke-RestMethod -Uri "$($Object2.Attributes['data-prop-file-download-url'].DeEntitizeValue)/files/download/$([uri]::EscapeDataString($Object4.tableData[3].link))" -Headers @{
+#   Referer       = 'https://www.thomsonreuters.com/'
+#   Authorization = 'Bearer thomson-reuters-help-center-external-user'
+# }
 
-# Installer
+# # Installer
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl = $Object5.url
+# }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object5.url
+  InstallerUrl = Join-Uri $Prefix $Object4.tableData[3].link
 }
 
 # Version
