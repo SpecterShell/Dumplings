@@ -37,11 +37,21 @@ $this.CurrentState.Version = $Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.result.list[0].fileUrl
+  InstallerUrl         = $Object1.result.list[0].fileUrl
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = $Object1.result.list[0].name
+    }
+  )
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object2.result.list[0].fileUrl
+  InstallerLocale      = 'zh-CN'
+  InstallerUrl         = $Object2.result.list[0].fileUrl
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = $Object2.result.list[0].name
+    }
+  )
 }
 
 switch -Regex ($this.Check()) {
@@ -62,8 +72,12 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       # Global zh-CN
