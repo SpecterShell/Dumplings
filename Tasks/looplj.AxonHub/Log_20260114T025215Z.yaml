@@ -1,0 +1,30 @@
+Version: 0.8.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/looplj/axonhub/releases/download/v0.8.2/axonhub_0.8.2_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/looplj/axonhub/releases/download/v0.8.2/axonhub_0.8.2_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    BREAKING CHANGES
+    1. 删除了 user_roles 和 user_projects 的软删，需要手动将当前已删除的 user_roles 和 user_projects 记录删除
+    DELETE FROM user_projects WHERE deleted_at <> 0;
+    DELETE FROM user_roles WHERE deleted_at <> 0;
+    因为这个功能应该没什么人用，变动也不大，所以不发大版本了。
+    What's Changed
+    - opt: improve OpenAI API schema compatibility by @looplj in https://github.com/looplj/axonhub/pull/571
+    - opt: anthropic parallel tool call request compatibility, close #572 by @looplj in https://github.com/looplj/axonhub/pull/573
+    - Revert "fix: correct Gemini token count conversion to prevent negativ… by @looplj in https://github.com/looplj/axonhub/pull/575
+    - fix: remove soft delete to fix remove user from project not work by @looplj in https://github.com/looplj/axonhub/pull/579
+    - opt: response base url & transaction management by @looplj in https://github.com/looplj/axonhub/pull/580
+    Full Changelog: https://github.com/looplj/axonhub/compare/v0.8.1...v0.8.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/looplj/axonhub/releases/tag/v0.8.2
+ReleaseTime: 2026-01-14T02:19:25.0000000Z
