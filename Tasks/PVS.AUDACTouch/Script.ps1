@@ -28,10 +28,10 @@ function Get-ReleaseNotes {
   }
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://audac.eu/eu/software/audac-touch'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://audac.eu/eu/software/audac-touch' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
