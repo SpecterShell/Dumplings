@@ -6,11 +6,11 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '32' }, 'First')[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = (Get-RedirectedUrl -Uri $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '32' }, 'First')[0].url).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '64' }, 'First')[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = (Get-RedirectedUrl -Uri $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '64' }, 'First')[0].url).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
 switch -Regex ($this.Check()) {
