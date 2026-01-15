@@ -1,8 +1,8 @@
-$Object1 = curl -fsSL --resolve "www.xiaoji.com:443:$(Resolve-DnsName -Name 'www.xiaoji.com.w.kunlunle.com' -Type 'A' -DnsOnly | Where-Object -FilterScript { $_ -is [Microsoft.DnsClient.Commands.DnsRecord_A] } | Select-Object -ExpandProperty 'IP4Address' -First 1)" 'https://www.xiaoji.com/page/version_list' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = Invoke-WebRequest -Uri 'https://www.xiaoji.com/page/version_list'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('GameSir-Connect') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('GameSir-Connect') } catch {} }, 'First')[0].href
 }
 
 # Version
