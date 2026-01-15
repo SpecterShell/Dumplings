@@ -1,63 +1,43 @@
-$Prefix = 'https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html'
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
-# Installer
-$InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.Contains('win32_ia32') } catch {} }, 'First')[0].href
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = (Get-RedirectedUrl -Uri $InstallerUrlX86).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
-}
-$VersionX86 = [regex]::Match($InstallerUrlX86, 'download_version=(\d+)').Groups[1].Value
-$VersionX86Length = $VersionX86.Length
-$VersionX86 = $VersionX86.Insert($VersionX86Length - 7, '.').Insert($VersionX86Length - 9, '.')
-
-$InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.Contains('win32_x64') } catch {} }, 'First')[0].href
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = (Get-RedirectedUrl -Uri $InstallerUrlX64).Replace('dldir1.qq.com', 'dldir1v6.qq.com')
-}
-$VersionX64 = [regex]::Match($InstallerUrlX64, 'download_version=(\d+)').Groups[1].Value
-$VersionX64Length = $VersionX64.Length
-$VersionX64 = $VersionX64.Insert($VersionX64Length - 7, '.').Insert($VersionX64Length - 9, '.')
-
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Error')
-  return
-}
+$Object1 = (Invoke-RestMethod -Uri 'https://devtools.wxqcloud.qq.com.cn/WechatWebDev/nightly/versions/config.json').channels.Where({ $_.id -eq 'stable' }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '32' }, 'First')[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.downloads.Where({ $_.os -eq 'Windows' -and $_.arch -eq '64' }, 'First')[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = $Object1 | ConvertFrom-Html
-
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $Prefix + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+        Value  = 'https://developers.weixin.qq.com/miniprogram/dev/devtools/log.html'
       }
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(@id, '$($this.CurrentState.Version.Replace('.', '-'))') and contains(@id, '更新说明')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseNotes (zh-CN)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-        }
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.date | Get-Date -Format 'yyyy-MM-dd'
 
-        # ReleaseNotesUrl (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $Prefix + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.description_en | Format-Text
+      }
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.description | Format-Text
       }
     } catch {
       $_ | Out-Host
