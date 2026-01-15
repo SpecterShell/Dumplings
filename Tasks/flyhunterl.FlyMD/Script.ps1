@@ -1,10 +1,10 @@
 $RepoOwner = 'flyhunterl'
 $RepoName = 'flymd'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name -match '^v(\d+(?:\.\d+)+)$' -and -not $_.prerelease }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
