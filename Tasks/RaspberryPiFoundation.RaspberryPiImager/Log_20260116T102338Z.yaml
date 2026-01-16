@@ -1,0 +1,53 @@
+Version: 2.0.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/raspberrypi/rpi-imager/releases/download/v2.0.4/imager-v2.0.4.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new
+    - Write Robustness:
+      - Introduce WriteProgressWatchdog to monitor write progress and detect stalls
+      - Implement recovery strategies for async I/O including queue depth reduction
+        and sync fallback mechanisms
+      - Standardize timeout handling for pending writes across all platforms
+      - Add 5-minute emergency timeout as fallback for stalled operations
+    - Performance:
+      - Enhance recovery event handling and monitoring diagnostics
+      - Capture SHA256 hash values in performance profiles for verification diagnostics
+    - Image Handling:
+      - Add support for parsing .gz files to extract uncompressed size information
+      - Improve handling for files larger than 4GB
+    - Disk Formatting:
+      - Fix FAT32 formatting for large drives (>8GB)
+      - Improve root directory handling based on sectors per cluster
+    - Bug Fixes:
+      - Fix external tools (runuser, xdg-open) failing in AppImage due to
+        LD_LIBRARY_PATH conflicts causing PAM module loading errors
+      - Improve thread safety for download cancellation
+      - Enhance error handling for timeout conditions
+      - Use Pathlib to generate file:// URIs in local JSON helper script
+      - Use XDG-compliant canberra-gtk-play and PipeWire for audio notifications
+        on Linux, fixing beep on Raspberry Pi OS which no longer ships PulseAudio control by default
+    - Accessibility:
+      - Bypass confirmation dialog timer when screen reader is active
+    - Build:
+      - Refactor Qt build scripts for improved POSIX compliance and consistency
+      - Add macOS-specific optimizations for universal builds
+    PRs
+    - Use Pathlib to generate file:// URIs, instead of creating them manually by @lurch in https://github.com/raspberrypi/rpi-imager/pull/1423
+    - fix(DiskFormatter): Large drive handling (>8GB) by @tdewey-rpi in https://github.com/raspberrypi/rpi-imager/pull/1451
+    - feat(ImageWriter): Add support for parsing .gz files for size informa… by @tdewey-rpi in https://github.com/raspberrypi/rpi-imager/pull/1452
+    - fix(asyncio): Fix behaviour with misbehaving storage devices by @tdewey-rpi in https://github.com/raspberrypi/rpi-imager/pull/1453
+    - chore(release): v2.0.4 by @tdewey-rpi in https://github.com/raspberrypi/rpi-imager/pull/1454
+    - Update rpi-imager_ca.ts by @xeanhort in https://github.com/raspberrypi/rpi-imager/pull/1424
+    - v2.0.4: Capture Sha256 verification hashes in performance profiles by @tdewey-rpi in https://github.com/raspberrypi/rpi-imager/pull/1456
+    - update korean translate by @RuffaloLavoisier in https://github.com/raspberrypi/rpi-imager/pull/1430
+    New Contributors
+    - @xeanhort made their first contribution in https://github.com/raspberrypi/rpi-imager/pull/1424
+    Full Changelog: https://github.com/raspberrypi/rpi-imager/compare/v2.0.3...v2.0.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/raspberrypi/rpi-imager/releases/tag/v2.0.4
+ReleaseTime: 2026-01-16T10:14:46.0000000Z
