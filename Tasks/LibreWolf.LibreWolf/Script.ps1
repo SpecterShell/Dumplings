@@ -12,13 +12,6 @@ Invoke-RestMethod -Uri $Object1.assets.links.Where({ $_.name -eq 'sha256sums.txt
   }
 
 # Installer
-$Asset = $Object1.assets.links.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('i686') }, 'First')[0]
-$this.CurrentState.Installer += [ordered]@{
-  Architecture    = 'x86'
-  InstallerType   = 'nullsoft'
-  InstallerUrl    = $Asset.url | ConvertTo-UnescapedUri
-  InstallerSha256 = $Object2[$Asset.name]
-}
 $Asset = $Object1.assets.links.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
