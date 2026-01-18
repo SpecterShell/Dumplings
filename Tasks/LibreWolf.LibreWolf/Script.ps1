@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://codeberg.org/api/v1/repos/librewolf/source/releases/latest'
+$Object1 = Invoke-RestMethod -Uri 'https://codeberg.org/api/v1/repos/librewolf/bsys6/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
