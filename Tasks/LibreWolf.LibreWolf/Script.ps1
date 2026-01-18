@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://gitlab.com/api/v4/projects/44042130/releases/permalink/latest'
+$Object1 = Invoke-RestMethod -Uri 'https://codeberg.org/api/v1/repos/librewolf/source/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
