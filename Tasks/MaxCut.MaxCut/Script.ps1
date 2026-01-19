@@ -15,19 +15,19 @@ function Get-ReleaseNotes {
     if ($ReleaseNotesTitleNode) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d+[a-zA-Z]+\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value,
+        [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d+[a-zA-Z]*\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value,
         [string[]]@(
-          "d'st' MMMM yyyy",
-          "d'nd' MMMM yyyy",
-          "d'rd' MMMM yyyy",
-          "d'th' MMMM yyyy"
+          "d'st' MMMM yyyy", 'd MMMM yyyy',
+          "d'nd' MMMM yyyy", 'd MMMM yyyy',
+          "d'rd' MMMM yyyy", 'd MMMM yyyy',
+          "d'th' MMMM yyyy", 'd MMMM yyyy'
         ),
         (Get-Culture -Name 'en-US'),
         [System.Globalization.DateTimeStyles]::None
       ).ToString('yyyy-MM-dd')
 
       # ReleaseNotes (en-US)
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText -match 'version'); $Node = $Node.NextSibling) { $Node }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
