@@ -13,18 +13,18 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = $Object1.remark | ConvertFrom-Json
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.en | Format-Text
-      }
-
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object2.zh_CN | Format-Text
+      }
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.en | Format-Text
       }
     } catch {
       $_ | Out-Host
