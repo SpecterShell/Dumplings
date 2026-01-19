@@ -10,27 +10,27 @@
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/download.php' | ConvertFrom-Html
 # x86
-$Object2 = $Object1.SelectSingleNode('//div[@class="container"]/div[(contains(.//h2/text(), "32 bit") or contains(.//h2/text(), "32bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
+# $Object2 = $Object1.SelectSingleNode('//div[@class="container"]/div[(contains(.//h2/text(), "32 bit") or contains(.//h2/text(), "32bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 # x64
 $Object3 = $Object1.SelectSingleNode('//div[@class="container"]/div[(contains(.//h2/text(), "64 bit") or contains(.//h2/text(), "64bit")) and contains(.//h2/text(), "Installer")][1]//table[@class="download_table"]/tbody')
 
-$VersionX86 = $Object2.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
+# $VersionX86 = $Object2.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
 $VersionX64 = $Object3.SelectSingleNode('./tr[1]/td[2]/text()').InnerText.Trim()
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
-}
+# if ($VersionX86 -ne $VersionX64) {
+#   $this.Log("x86 version: ${VersionX86}")
+#   $this.Log("x64 version: ${VersionX64}")
+#   throw 'Inconsistent versions detected'
+# }
 
 # Version
 $this.CurrentState.Version = $VersionX64
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object2.SelectSingleNode('.//a[@class="download_link"]').Attributes['href'].Value
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object2.SelectSingleNode('.//a[@class="download_link"]').Attributes['href'].Value
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object3.SelectSingleNode('.//a[@class="download_link"]').Attributes['href'].Value
