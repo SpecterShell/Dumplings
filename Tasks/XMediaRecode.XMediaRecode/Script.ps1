@@ -41,7 +41,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object4 = Invoke-WebRequest -Uri 'https://www.xmedia-recode.de/en/version.php' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//*[@id='page_content']/div[contains(./h2, '$($this.CurrentState.Version)')]/h2")
+      $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]')
         try {
