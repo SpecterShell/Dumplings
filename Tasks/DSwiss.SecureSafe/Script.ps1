@@ -1,6 +1,6 @@
 # $Object1 = Invoke-RestMethod -Uri 'https://sync.securesafe.com/api/sync/1/public/version/win'
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.securesafe.com/en/product/passwords-files'
+$Object1 = Invoke-WebRequest -Uri 'https://www.securesafe.com/product/passwords-files'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
