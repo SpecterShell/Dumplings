@@ -29,16 +29,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://docs.tabulareditor.com/te3/other/release-notes'
+        Value  = 'https://docs.tabulareditor.com/references/release-notes'
       }
 
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = "https://docs.tabulareditor.com/te3/other/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html"
-      }
-
+      $ReleaseNotesUrl = "https://docs.tabulareditor.com/references/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html"
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode('//*[@id="conceptual-content"]/h2[1]')
@@ -52,6 +46,13 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
       }
     } catch {
       $_ | Out-Host
