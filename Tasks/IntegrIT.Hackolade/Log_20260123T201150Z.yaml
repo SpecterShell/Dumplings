@@ -1,0 +1,23 @@
+Version: 8.9.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://s3-eu-west-1.amazonaws.com/hackolade/previous/v8.9.0/Hackolade-win64-setup-signed.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Polyglot: introduced flexible modeling for relationships, allowing gradual refinement from conceptual to logical phases.  More info at https://hackolade.com/help/ConceptualtoLogicalwithPolyglotr.html
+    - Relationships: changed Foreign Master relationship lines from dashed to dotted, so as to leave dashed lines for non-identifying relationships
+    - Documentation generation: refactored to dynamically reflect the configuration in the Properties Pane
+    - Excel: enabled reverse-engineering in unsaved models when the Excel file does not contain references to other models
+    - Collibra: stopped running parallel GET requests to the Collibra API to ease load on customer server
+    - Collibra: added retry logic if the fetch request runs into error net::ERR_INCOMPLETE_CHUNKED_ENCODING
+    - Avro: ensured appropriate name validation after derivation from Polyglot
+    - BigQuery: added support for choice of file granularity when generating DDLs: per model, per schema, or per table
+    - BigQuery: added support for defining Unique and Alternate Keys (Natural Keys) as modeling metadata documentation
+    - Cosmos DB: improved reverse-engineering to ensure correct conversion of unsupported types within union definitions
+    - CosmosDB with SQL API: removed extraneous Binary data type to ensure compliance with native JSON data types
+    - CosmosDB with Gremlin API, JanusGraph, Neo4j, Neptune, Tinkerpop: updated for compatibility with new Polyglot references when derive from and convert to Polyglot
+    - Snowflake: updated SDK and lodash libraries, plus replaced Axios with proxy fetch library, plus reordered log file
+    - Synapse: added resolution of model definition references in DDL forward-engineering through hydration of objects
+ReleaseTime: 2026-01-23
