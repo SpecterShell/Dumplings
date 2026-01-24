@@ -91,36 +91,13 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object5 = $Object2 | ConvertFrom-Html
-      $Object6 = [System.IO.StringReader]::new(($Object5.SelectSingleNode("//h4[contains(text(), 'DSView软件更新日志')]/following::text()[contains(., 'v$($this.CurrentState.Version)')][1]/ancestor::div[@class='wpb_wrapper']") | Get-TextContent))
-
-      while ($Object6.Peek() -ne -1) {
-        $String = $Object6.ReadLine()
-        if ($String.Contains("v$($this.CurrentState.Version)")) {
-          if ($String -match '(20\d{2}-\d{1,2}-\d{1,2})') {
-            # ReleaseTime
-            $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
-          } else {
-            $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-          }
-          $null = $Object6.ReadLine()
-          break
-        }
-      }
-      if ($Object6.Peek() -ne -1) {
-        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
-        while ($Object6.Peek() -ne -1) {
-          $String = $Object6.ReadLine()
-          if ($String -notmatch '^v\d+(\.\d+)+') {
-            $ReleaseNotesObjects.Add($String)
-          } else {
-            break
-          }
-        }
+      $ReleaseNotesTitleNode = $Object5.SelectSingleNode("//h2[contains(., 'DSView') and contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObjects | Format-Text
+          Value  = ($ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[contains(@class, "vc_separator")][1]') ?? $ReleaseNotesTitleNode).SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
