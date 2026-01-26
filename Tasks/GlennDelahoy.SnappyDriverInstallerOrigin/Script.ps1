@@ -2,15 +2,25 @@ $Prefix = 'https://www.glenn.delahoy.com/snappy-driver-installer-origin/'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SDIO_\d+(?:\.\d+)+\.zip$' } catch {} }, 'First')[0].href
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+  InstallerUrl = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SDIO_\d+(?:\.\d+)+\.zip$' } catch {} }, 'First')[0].href
+}
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  InstallerUrl = $InstallerUrl
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    # NestedInstallerFiles
+    $InstallerX86['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_R*.exe' }, 'First')[0].FullName.Replace('/', '\') })
+    $InstallerX64['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_x64_R*.exe' }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
+
     try {
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri 'https://www.glenn.delahoy.com/downloads/sdio/changelog.txt').RawContentStream)
 
