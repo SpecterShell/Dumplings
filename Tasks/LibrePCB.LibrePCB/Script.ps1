@@ -1,14 +1,13 @@
-$Prefix = 'https://librepcb.org/download/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/LibrePCB/LibrePCB/releases/latest'
+
+# Version
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86_64') } catch {} }, 'First')[0].href
+  InstallerUrl = "https://download.librepcb.org/releases/$($this.CurrentState.Version)/librepcb-installer-$($this.CurrentState.Version)-windows-x86_64.exe"
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
