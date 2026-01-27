@@ -5,12 +5,7 @@ $this.CurrentState.Version = $Object1.result.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = "https://download.cubejoy.com/app/$($this.CurrentState.Version)/CubeSetup_v$($this.CurrentState.Version).exe"
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-HK'
-  InstallerUrl    = "https://download.cubejoy.com/app/$($this.CurrentState.Version)/CubeSetup_HK_TC_v$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://download.cubejoy.com/app/$($this.CurrentState.Version)/CubeSetup_v$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
