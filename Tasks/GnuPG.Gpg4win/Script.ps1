@@ -19,9 +19,6 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='main']/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2' -and -not $Node.InnerText.Contains('Explicit download of this version'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
