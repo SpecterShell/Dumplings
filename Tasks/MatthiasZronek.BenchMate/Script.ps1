@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtracted = New-TempFolder
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'bm.msi'
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '*' 'bm.msi' | Get-Item -Force | Select-Object -First 1
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     # AppsAndFeaturesEntries + ProductCode
