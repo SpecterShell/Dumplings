@@ -125,7 +125,7 @@ switch -Regex ($this.Check()) {
         $this.Log($_, 'Warning')
       }
 
-      Start-Sleep -Seconds 20
+      Start-Sleep -Seconds 30
     }
 
     $Mutex.ReleaseMutex()
