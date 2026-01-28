@@ -510,3 +510,183 @@
     - Support for image_url input in OpenAI-compatible v1/chat/completions REST endpoint
     - Support for top_logprobs in OpenAI-compatible v1/responses REST endpoint
     - Output cached_tokens statistics in OpenAI-compatible v1/responses REST endpoint
+0.4.0:
+  ReleaseNotes: |-
+    LM Studio 0.4.0 - Release Notes
+    Welcome to LM Studio 0.4.0 👾!
+    - We're excited to introduce the next generation of LM Studio.
+    - New features include:
+      - llmster: the LM Studio Daemon for headless deployments w/o GUI on servers or cloud instances
+      - Parallel inference requests (instead of queued) for high throughput use cases
+      - New stateful REST API with local MCP server support - POST /v1/chat
+      - A completely revamped UI experience ✨
+    Build 17
+    - MCPs will now only be loaded when needed, instead of at app startup
+    - Fixed a bug where some fields in app settings could get reset after update
+    Build 16
+    - New icons and placements for Discover, My Models buttons
+    - Fixed a bug where generators wouldn't show in the top bar model picker when selected
+    - Fixed a bug which prevented additional quantizations from being downloaded for staff pick models that were already downloaded
+    - Fixed a bug where lms import will sometimes not work properly if it llmster (daemon) is also installed
+    - Fixed a bug in /api/v1/chat that caused server errors when inputs were empty or top_k exceeded 500
+    - Fixed a bug where lms ls and lms load sometimes would fail after waking up the LM Studio service
+    - Fixed a bug where sometimes token counting would not work properly for gpt-oss models
+    Build 15
+    - Introduce Parallel Requests with Continuous Batching 🚀
+      - When loading a model, you can now select n_parallel to allow multiple requests to be processed in parallel.
+      - When enabled, instead of queuing requests one by one, the model will process up to N requests simultaneously.
+      - By default, parallel slots are set to 4 (with unified KV set to true, which should result in no additional memory overhead).
+      - This is supported for LM Studio's llama.cpp engine, with MLX coming later.
+    - Introducing Split View in Chat: view two chats side by side.
+      - Drag and drop chat tabs to either half of the window to split the view.
+      - Close one side of the split view with the 'x' button in the top right of each pane.
+    - Introducing 🔧 Developer Mode: a simplification of the previous Developer/Power User/User 3 mode switch.
+      - Developer Mode combines the previous Developer and Power User modes into a single mode with all advanced features enabled.
+      - You can turn on Developer Mode in Settings > Developer.
+    - New setting: enforce allowing only one new empty chat at a time (default: enabled)
+      - Change in Settings > Chat
+    - New 🔭 Model Search experience
+      - Access via the 🔍 button on the top right or by pressing Cmd/Ctrl + Shift + M
+      - Model format filter preferences persist between app restarts
+      - Modal is resizable and remembers its size between app restarts
+    - Limit number of open tabs to 1 per pane. Support showing 2 side-by-side chat tabs.
+      - Selecting a new chat replaces the current tab in that pane.
+    - Add button to create a new chat in the sidebar
+    - Pressing Cmd/Ctrl + L while the model picker is open will dismiss it
+    - On narrow window size show right hand sidebar as an ephemeral overlay
+    - Support for the LFM2 tool call format
+    - CLI now uses commit hash for versioning instead of semantic version numbers
+    - Updates to UI details in hardware settings
+    - Fixed a bug where moving large number of conversations would sometimes only move part of them
+    - Fixed a bug where lms ls sometimes would show incomplete list of models on startup
+    - Fixed a bug in deleting tool confirmation preferences in settings
+    - Fixed a UI bug in app onboarding
+    - Fixed a visual bug in Models Table selected row affecting the Architecture and Format columns
+    - Fixed a bug where undoing pasted content in chat input would not work as expected
+    - Fixed a bug where a leading decimal in a numeric input would parse as a 0
+    - Fixed a bug rendering multiple images in a conversation message
+    - Fixed a bug where a documentation sidebar section would sometimes get stuck in expanded state
+    - Fixed a bug where chat names would sometime be empty
+    - Fixed a visual bug in rendering keyboard shortcuts on Windows and Linux
+    - Fixed a bug where model loader would sometimes close due to mouse move shortly after opening
+    - Fixed a bug rendering titles in preset conflict resolver dialog
+    - Fixed a bug where reloading with new load parameters would not apply next time the same model is used for a chat
+    - Fixed a bug where the model loading will get stuck if the cpu moe slider is maxed out
+    - Fixed a bug where exporting chats with very large images to PDF would fail
+    - Fixed a responsive UI overlap bug in the app header
+    - [Windows] Fixed a bug where the default embedding model will not be available after in-app update
+    - Adds download, copy, and reveal in working directory buttons to generated images in chat
+    Build 14
+    - (Build 14 was skipped)
+    Build 13
+    - App setting to control primary navigation position: 'top' or 'left'
+    - [Mac] New tray menu icon 👾 (experimental, might change)
+    - /api/v1 endpoints and /v1/responses API now return better formatted errors
+    - Significantly reduce the size of the app update asset
+    Build 12
+    - Bugfix: New chats to be created with the same model as the previously focused chat
+    - Bring back gear button to change load parameters for currently loaded model
+    - Bring back context fullness indicator and current input token counter
+    - New in My Models: right-click on tab header to choose which columns to show/hide
+    - New in My Models: Capabilities and Format columns
+    - Fixed a flicker in model picker floating panel upon first open
+      - P.S. you can open the model picker from anywhere in the app with Cmd/Ctrl + L
+    - Fixed focus + Enter on Eject button not working inside model picker
+    - Updated chat terminal and messages colors and style
+    - Fixed dragging and dropping chats/folders in the sidebar
+    Build 11
+    - ✨👾 Completely revamped UI - this is a work in progress, give us feedback!
+    - [CLI] New lms chat experience!
+      - Support slash commands, thinking highlighting and pasting larger content
+      - Slash commands available: /model, /download, /system-prompt, /help and /exit
+    - [CLI] New: lms runtime survey to print info about available GPUs!
+    - FunctionGemma support
+    - Added a slider to control n_cpu_moe
+    - New REST API endpoint: api/v1/models/unload to unload models
+    - Breaking change: in api/v1/models/load endpoint response, introduced in this beta, model_instance_id has been renamed to instance_id.
+    - Display live processing status for each loaded LLM on the Developer page
+      - Prompt processing progress percentage -> token generation count
+    - Improved PDF rendering quality for tool requests and responses
+    - Significantly increased the reliability and speed of deleting multiple chats at once
+    - Updated style of chat message generation info
+    - Updated layout of Hardware settings page and other settings rows
+    - Fixed a bug where sometimes models are indexed before all files are downloaded
+    - Fixed a bug where exporting larger PDFs would sometimes fail
+    - Fixed a bug where pressing the chat clear hotkey multiple times would open multiple confirmation dialogs
+    - Fixed a bug where pressing the chat clear hotkey would sometimes duplicate the chat
+    - Fixed a bug where pressing the duplicate hotkey on the release notes would create a glitched chat tab
+    - Fixed a bug where lms help would not work
+    - Fixed a bug where deletion models or canceling downloads would leave behind empty folders
+    - Fixed a styling bug in the GPU section on the Hardware page
+    - [MLX] Fixed a bug where the bf16 model format was not recognized as a valid quantization
+    Build 10
+    - (Build 10 was skipped)
+    Build 9
+    - (Build 9 was skipped)
+    Build 8
+    - Fixed a bug where the default system prompt was still sent to the model even after the system prompt field was cleared.
+    - Fixed a bug where exported chats did not include the correct system prompt.
+    - Fixed a bug where the token count was incorrect when a default system prompt existed but the system prompt field was cleared.
+    - Fix a bug where sometimes the tool call results are not being added to the context correctly
+    - Fix chat clearing with hotkey (Cmd/Ctrl + Shift + Option/Alt + D) would clear wrong chat
+    - Fix a bug where Ctrl/Cmd + N would sometimes create two new chats
+    - Updated style for Integrations panel and select
+    - Fixed cURL copy button for embedding models displaying additional incorrect requests
+    - Fix "ghost chats" caused by moving conversations/deleting conversations
+    Build 7
+    - Fix jinja prompt formatting bug for some models where EOS tokens were not being included properly
+    - Bring back release notes viewer for Runtime available update
+    - Prevent tooltip from staying open when hovering tooltip content
+    - Fix a bug in deleting multiple chats at once
+    - Minor fix to overlapping labels in model loader
+    - Support for EssentialAI's rnj-1 model
+    Build 6
+    - Fixed a bug where Qwen3-Next user messages would not appear in formatted prompts properly
+    Build 5
+    - Fixed a bug where quickly deleting multiples conversations will sometimes soft-lock the app
+    - Fixed another bug that prevented the last remaining open tab from being closed
+    Build 4
+    - Fixed a bug where the last remaining open tab sometimes could not be closed
+    - Fixed a bug where lms log stream would exit immediately
+    - Fixed a bug where the server port would get printed as [object Object]
+    - Image validation checks in v1/chat and v1/responses REST API now run without model loading
+    - Fixed a bug where images without extensions were not classified correctly
+    - Fix bug in move-to-trash onboarding dialog radio selection where some parts of the label were not clickable
+    - Fix several clickable areas bugs in Settings windows buttons
+    - Fixed a bug where certain settings may get adjusted unexpectedly when using llmster (for example, the JIT model loading may become disabled)
+    - New and improved Runtime page style and structure
+    - Fixes a bug where guardrail settings were not showing up in User UI mode
+    - Fixed a bug where lms log stream would exit immediately
+    Build 3
+    - Introducing 'llmster': the LM Studio Daemon!
+      - True headless, no GUI version of the process that powers LM Studio
+      - Run it on servers, cloud instances, or any machine without a graphical interface
+      - Load models on CPU/GPU and serve them, use via lms CLI or our APIs
+      - To install:
+        - Linux/Mac: curl -fsSL https://lmstudio.ai/install.sh | bash
+        - Windows: irm https://lmstudio.ai/install.ps1 | iex
+    - Support for MistralAI Ministral models (3B, 8B, 13B)
+    - Improved lms output and help messages style. Run lms --help to explore!
+    - Get llama.cpp level logs with lms log stream -s runtime in the terminal
+    - lms get interactive mode now shows the latest model catalog options
+    - New and improved style for Downloads panel
+    - New and improved style for App Settings
+    - We're trying something out: Model search now in its own tab
+      - still iterating on the UI for this page, please give us feedback!
+    Build 2
+    - Show release notes in a dedicated tab after app updates
+    - Add support to display images in exported PDFs and exported markdown files
+    - Quick Docs is now Developer Docs, with refreshed documentation and direct access from the welcome page.
+    - Allow creating permission tokens without allowed MCP permissions
+    - Fixed a bug where sometimes images created by MCPs are not showing up
+    - Fixed a bug where sometimes the plugin chips not working
+    - Fixed a bug where the "thinking" blocks will sometimes expand erroneously
+    - Fixed a bug where certain tabs would not open correctly
+    - Fixed a bug where sometimes the model list would not load
+    - Fixed a bug where in-app docs article titles would sometimes wiggle on scroll
+    - Fixed a visual bug in Preset 'resolve conflicts' modal
+    - Fixed a bug where sometimes Download button would continue showing for an already downloaded model
+    - Fixed a bug where chat sidebar buttons wouldn't be visible on narrow screens
+    - Display model indexing errors as buttons rather than hints
+    Build 1
+    - Welcome to the 0.4.0 Beta!
