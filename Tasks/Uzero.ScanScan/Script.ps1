@@ -47,6 +47,17 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -match '\.(zip|exe)$' }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
+    }
+
     $this.Print()
     $this.Write()
   }
