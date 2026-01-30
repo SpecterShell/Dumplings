@@ -11,9 +11,10 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://support.logmein.com/resolve/help/whats-new-in-the-logmein-resolve-desktop-technician-console' | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri 'https://support.logmein.com/api2/article/id_7631261c-344b-4b7a-9eff-fb40fd5f9b8b_goto_resolve/en'
+      $Object3 = $Object2.contentText | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
