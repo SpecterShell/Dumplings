@@ -1,19 +1,15 @@
-$Prefix = 'https://ccl.northwestern.edu/netlogo/oldversions.shtml'
+$Prefix = 'https://www.netlogo.org/downloads/windows/'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
-$Prefix = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.outerHTML -match 'NetLogo (\d+(?:\.\d+)+)' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1)
-
-$Object2 = Invoke-WebRequest -Uri $Prefix
+$Object1 = (Invoke-WebRequest -Uri $Prefix).Content | ConvertTo-HtmlDecodedText
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('-32.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object1, "(https://[^'`"]+?-32\.msi)").Groups[1].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('-64.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object1, "(https://[^'`"]+?-64\.msi)").Groups[1].Value
 }
 
 # Version
@@ -26,7 +22,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://ccl.northwestern.edu/netlogo/docs/versions.html'
+        Value  = $ReleaseNotesUrl = 'https://docs.netlogo.org/versions'
       }
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
