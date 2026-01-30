@@ -2,11 +2,16 @@ $Object1 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 <?xml version="1.0" encoding="UTF-8"?>
 <request protocol="3.0">
   <os platform="win" version="10.0.22000" arch="x64" />
-  <app appid="{B210701E-FFC4-49E3-932B-370728C72662}" cohort="1:138x:">
+  <app appid="{B210701E-FFC4-49E3-932B-370728C72662}">
     <updatecheck />
   </app>
 </request>
 '@
+
+if ($Object1.response.app.cohortname -ne 'Stable') {
+  $this.Log("The server returned a non-stable cohort name: $($Object1.response.app.cohortname)", 'Error')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
