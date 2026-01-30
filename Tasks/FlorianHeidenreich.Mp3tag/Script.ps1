@@ -2,16 +2,15 @@ $Object1 = (Invoke-RestMethod -Uri 'https://download.mp3tag.de/versions.xml').Wh
 
 # Version
 $this.CurrentState.Version = $Object1.enclosure.version
-$VersionShort = $this.CurrentState.Version.Replace('.', '')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://download.mp3tag.de/mp3tagv${VersionShort}setup.exe"
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrl = $Object1.enclosure.url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "https://download.mp3tag.de/mp3tagv${VersionShort}-x64-setup.exe"
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrl.Replace('-x64', '')
 }
 
 switch -Regex ($this.Check()) {
