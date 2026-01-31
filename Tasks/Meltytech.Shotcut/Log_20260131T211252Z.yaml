@@ -1,0 +1,58 @@
+Version: 26.1.30
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/mltframework/shotcut/releases/download/v26.1.30/shotcut-win64-26.1.30.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/mltframework/shotcut/releases/download/v26.1.30/shotcut-win_ARM-26.1.30.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Hardware Video Decoding!
+    "What took so long?" you might ask. A good way to manage it across all operating systems and GPU vendor APIs. We have a FAQ topic about this. Management comes in the forms of operating system abstraction APIs, hardware scaling, and a threshold limiter.
+    Settings > Preview Scaling > Use Hardware Decoder
+    - Enabled by default, except with NVIDIA on Linux.
+    - Uses VA-API on Linux, Media Foundation on Windows, and Video Toolbox on macOS.
+    - Only supports codecs your hardware can decode; automatically falls back to software decoding if needed.
+    - May not provide a dramatic speed boost unless you use Linear 10-bit CPU processing mode or have a low-powered CPU.
+    - Has limited impact on seeking and scrubbing—using proxies is still recommended for smooth editing.
+    - Reduces CPU usage, which can help lower battery drain and keep your system cooler.
+    - Not integrated with GPU processing mode via 0-copy.
+    - Transferring uncompressed video between CPU and GPU RAM can be a bottleneck, so this feature is limited to preview scaling or 1080p-60fps (or lower) sources.
+    Export > Codec > Use hardware decoder
+    - Disabled by default, as it can sometimes increase export times.
+    - No resolution or frame rate limits.
+    - Can reduce CPU usage during export, which may be beneficial for some workflows.
+      (Tip: Avoid exporting videos on your lap for long periods!)
+    - The setting is persistent and will be remembered between sessions and projects.
+    - Feel free to test it on your system to see if it offers benefits for your specific hardware and workflow.
+    What's This?
+    This is contextual help! It lets you get assistance for a specific item in the user interface—just click the "What's This?" icon, then click on the UI element you want to learn about. Usually, this opens a web browser to the relevant documentation, but for some items like toolbar buttons, it may show a tooltip instead if more detailed documentation isn't available.
+    Comprehensive documentation is essential for this feature to be useful. Many users aren't aware that documentation exists, but it's now much more complete and accessible. The documentation is available on the website, and a PDF is generated automatically from the forum-wiki-based content. Additionally, the forum offers a Claude AI bot that can help answer questions using the documentation and release notes.
+    Other New Features
+    - Added converting a project between GPU & CPU processing modes.
+    - Added the Blend Mode filter and track option for the Linear 10-bit GPU/CPU processing mode.
+    - Increased the maximum resolution in Video Mode and Export to 8640 for 8K VR180 video.
+    - Added Settings > Language > Chinese (Simplified).
+    Changes
+    - Improved the appearance of outline in the text filters: Text: Simple, Typewriter, GPS Text, Subtitle Burn In and Timer.
+    - Changed bulk proxy generation (when you switch Settings > Proxy > Use Proxy ON) to update clips.
+      (Previously, you had to turn proxy mode off and back on again to start using the proxies. That requires reloading the project each time, which was a real drag.)
+    - Changed Timeline > Add Generator and New Generator > Add To Timeline to not seek.
+      This leaves the playhead over the clip it just added to facilitate preview and reduce steps.
+    - Changed simple keyframe defaults in Mask: From File filter to be more convenient for multi-track transitions.
+    Fixes
+    - Fixed Brightness filter with a reduced level is different when there was clip with transparency above it (broke in v25.12).
+    - Fixed Timeline > Record Audio would always reset the selected audio device and require re-selection (broke in v25.12).
+    - Fixed the Mask: Apply video filter in 10-bit processing modes (incomplete in v25.12).
+    - Fixed a crash in the scrub-bar on a very long playlist.
+    - Improved the reliability of opening URLs (Help menu), Show In Folder, Open With in the Linux AppImage/portable/Snap.
+    - Fixed app not responding while enqueuing very many proxy jobs.
+    - Fixed Previous/Next in Subtitles may be unreadable on some themes and OS.
+    - Fixed reading the alpha channel in 12-bit ProRes with alpha.
+    - Fixed the Halftone video filter was not copying input alpha channel.
+    - Fixed it was possible to use Split on a locked track in Timeline.
+    - Fixed glitchy export job progress and estimated remaining time.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mltframework/shotcut/releases/tag/v26.1.30
+ReleaseTime: 2026-01-31T20:57:41.0000000Z
