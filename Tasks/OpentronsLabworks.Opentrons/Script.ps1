@@ -20,10 +20,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
@@ -34,7 +30,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Opentrons/opentrons/HEAD/app-shell/build/release-notes.md' | Convert-MarkdownToHtml
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.RealVersion)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
