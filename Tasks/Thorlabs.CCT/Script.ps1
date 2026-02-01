@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/c
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 
 # Version
@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog
+      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)

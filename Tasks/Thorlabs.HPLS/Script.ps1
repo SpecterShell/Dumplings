@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/')
+  InstallerUrl         = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/').Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "HPLS_V$($this.CurrentState.Version)_Setup.exe"

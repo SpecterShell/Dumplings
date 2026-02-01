@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.ItemID.SoftwarePkg.DownloadLink
+  InstallerUrl         = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "Kurios_V$($this.CurrentState.Version)_Setup.exe"
@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog
+      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)

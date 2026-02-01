@@ -3,13 +3,13 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/c
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x86') }, 'First')[0].DownloadLink
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x86') }, 'First')[0].DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 $VersionX86 = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x86') }, 'First')[0].VersionNumber
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x64') }, 'First')[0].DownloadLink
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x64') }, 'First')[0].DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 $VersionX64 = $Object1.ItemID.SoftwarePkg.Where({ $_.DownloadLink.Contains('x64') }, 'First')[0].VersionNumber
 
