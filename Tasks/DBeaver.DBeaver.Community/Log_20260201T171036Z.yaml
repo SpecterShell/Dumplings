@@ -1,0 +1,47 @@
+Version: 25.3.4
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.3.4/dbeaver-ce-25.3.4-x86_64-setup.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/25.3.4/dbeaver-ce-25.3.4-x86_64-setup.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SQL Editor:
+        - When no text is selected, pressing "Ctrl+C" and "Ctrl+X" will copy or cut the entire line at the caret position (thanks to @jihoon0413, @jihoon0413)
+        - Fixed status bar visibility in the result set for single and multiple query execution
+        - Added result set display for pause commands in scripts
+        - Non-result presentations include filters and actions after executing a script
+    - AI assistant: fixed the SQL generation for the OpenAI engine
+    - Grouping Panel:
+        - Added Percent of Total function
+        - Columns and functions can now be reordered
+        - Pressing the Add button opens a submenu with available items and columns
+        - Choosing Custom adds an empty, editable column or function
+    - Data Transfer:
+        - Added the ability to export fetched rows without querying the database (in the extraction settings step)
+        - Fixed data migration from database to database when the "Selected rows only" option was enabled
+    - Connectivity:
+        - Fixed an SSH connection error on Windows related to permissions for temporary files created by the application
+        - The "Database Native" authentication type was renamed to "Username/password"
+        - Fixed "Transaction settings" opening in the connection editor
+    - Miscellaneous: added the ability to open DuckDB and MS Access files via File - Open in the main menu
+    - Databases:
+        - Athena: Fixed an issue when the connection stopped working after an application upgrade
+        - Azure Synapse Dedicated SQL Pool: Fixed the display of stored procedure definitions
+        - ClickHouse:
+           - Fixed an issue with displaying arrays of UUID, IPv4/IPv6, and Map types. They are now shown as strings in the Data Editor
+           - Fixed issues with timestamp insert and update operations with enabled date formatting
+        - CUBRID: Fixed an error occurring when executing a script generated after changing the view schema owner (thanks to @longhaseng52)
+        - PostgreSQL: Fixed Complete backup behavior and table selection visibility during dump(thanks to @mikiubo)
+        - Redshift: Fixed an issue when changing the schema failed if no schema matched the user's name
+        - Salesforce Data Cloud: Fixed default schema detection, which resolved issues with autocomplete
+        - TimescaleDB: Fixed incorrect table size display (thanks to @mkanetsuna)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/25.3.4
+ReleaseTime: 2026-02-01T16:24:42.0000000Z
