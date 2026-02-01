@@ -1,0 +1,19 @@
+Version: "9.57"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-957.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#957
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Updates:
+      - If the administrator first installed the SSH Client with the option Create desktop icon selected, each update would re-create the desktop icon, even if it was removed. The SSH Client installer now detects that the desktop icon has been removed and will not re-create it during an update.
+      - In some environments, downloading a new version installer fails with Windows error code 12057 (ERROR_INTERNET_SEC_CERT_REV_FAILED). The Windows error description for this error code is misleading. The update interface now provides an error description which is hopefully more useful.
+    - General:
+      - In previous versions 9.5x, the authentication dialog did not set input focus correctly for client authentication keypairs protected by a passphrase. Fixed.
+      - SSH Client versions 9.5x detect and warn if there is an existing connection, by another SSH Client process, to the same server, using the same credentials. This is generally helpful, but there are usage cases which require such concurrent connections. It is now possible to disable this warning using App settings.
+    - SFTP Drive:
+      - In previous SSH Client versions, when a Windows application attempted to set file size on the SFTP drive using SetEndOfFile or a similar API, the operation would succeed, but commonly return an unsuccessful error code which incorrectly indicated an internal error. This would work with applications that don't check this error code, but would cause problems with applications that do check it. Fixed.
+ReleaseTime: 2026-02-01
