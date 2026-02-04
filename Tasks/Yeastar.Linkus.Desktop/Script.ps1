@@ -20,6 +20,26 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://help.yeastar.com/zh-cn/p-series-linkus-appliance-edition/release-notes/release-notes-for-linkus-windows-desktop.html' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseNotes (zh-CN)
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

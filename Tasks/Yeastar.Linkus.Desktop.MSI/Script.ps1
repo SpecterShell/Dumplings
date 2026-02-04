@@ -15,6 +15,28 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
+function Get-ReleaseNotes {
+  try {
+    $Object2 = Invoke-WebRequest -Uri 'https://help.yeastar.com/zh-cn/p-series-linkus-appliance-edition/release-notes/release-notes-for-linkus-windows-desktop.html' | ConvertFrom-Html
+
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+    if ($ReleaseNotesTitleNode) {
+      # ReleaseNotes (zh-CN)
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      }
+    } else {
+      $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+    }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
+
 $Object1 = Invoke-WebRequest -Uri 'https://www.yeastar.com/linkus-download/' | ConvertFrom-Html
 
 $this.CurrentState.Installer += [ordered]@{
@@ -32,6 +54,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $this.CurrentState.ETag = @($ETag)
 
   Read-Installer
+  Get-ReleaseNotes
 
   $this.Print()
   $this.Write()
@@ -48,6 +71,7 @@ if ($this.Status.Contains('New')) {
   $this.CurrentState.ETag = @($ETag)
 
   Read-Installer
+  Get-ReleaseNotes
 
   $this.Print()
   $this.Write()
@@ -66,6 +90,8 @@ Read-Installer
 if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
+
+Get-ReleaseNotes
 
 # Case 4: The ETag has changed, but the SHA256 is not
 if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
