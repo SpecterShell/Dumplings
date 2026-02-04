@@ -1,5 +1,5 @@
 $Params = @{
-  Uri         = 'https://update.yealink.com.cn/yiot-manager/api/v1/external/software/checkVersion'
+  Uri         = 'https://update.ylcloud.com/yiot-manager/api/v1/external/software/checkVersion'
   Method      = 'Post'
   ContentType = 'application/json;charset=UTF-8'
   Body        = @{
@@ -12,6 +12,13 @@ $Params = @{
 }
 # en
 $Object1 = Invoke-RestMethod @Params
+# zh_CN
+$Object2 = Invoke-RestMethod @Params -Headers @{ language = 'zh_CN' }
+
+if ($Object1.data.version -ne $Object2.data.version) {
+  $this.Log("Inconsistent versions: en: $($Object1.data.version), zh_CN: $($Object2.data.version)", 'Error')
+  return
+}
 
 # The endpoint returns 4.x version occasionally. Check the major version before proceeding.
 if ($Object1.data.version.Split('.')[0] -ne '1') {
@@ -39,24 +46,12 @@ switch -Regex ($this.Check()) {
         Key    = 'ReleaseNotes'
         Value  = $Object1.data.releaseNote | Format-Text
       }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
 
-    try {
-      # zh_CN
-      $Object2 = Invoke-RestMethod @Params -Headers @{ language = 'zh_CN' }
-
-      if ($this.CurrentState.Version -eq $Object2.data.version) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.data.releaseNote | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.data.releaseNote | Format-Text
       }
     } catch {
       $_ | Out-Host
