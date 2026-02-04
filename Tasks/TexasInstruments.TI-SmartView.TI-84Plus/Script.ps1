@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
         Value  = @(
           @{
             DocumentLabel = 'Guidebook'
-            DocumentUrl   = $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('EN') } catch {} }, 'First')[0].href
+            DocumentUrl   = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('EN') } catch {} }, 'First')[0].href
           }
         )
       }
@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
         Value  = @(
           [ordered]@{
             DocumentLabel = '指导手册'
-            DocumentUrl   = $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('ZH') } catch {} }, 'First')[0].href
+            DocumentUrl   = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('ZH') } catch {} }, 'First')[0].href
           }
         )
       }
