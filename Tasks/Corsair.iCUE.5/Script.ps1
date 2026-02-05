@@ -10,15 +10,9 @@ $Object1 = Invoke-RestMethod -Uri 'https://www3.corsair.com/software/CUE_V5/publ
 # Version
 $this.CurrentState.Version = $Object1.packages.Where({ $_.name -eq 'icue-installer' }, 'First')[0].version
 
-$Object2 = Invoke-WebRequest -Uri 'https://www.corsair.com/ww/en/s/downloads' -UserAgent $DumplingsBrowserUserAgent -Headers @{
-  'Accept'         = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-  'Sec-Fetch-Dest' = 'document'
-} | ConvertFrom-Html
-$Object3 = $Object2.SelectSingleNode('//script[@id="__NEXT_DATA__"]').InnerText | ConvertFrom-Json -AsHashtable
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object3.props.pageProps.pageContent.contentJson.Where({ $_.identifier -eq 'downloads' }, 'First')[0].parsedEntries.pageContentEntries.Where({ $_.identifier -eq 'downloads-page' }, 'First')[0].drivers.Where({ $_.description -eq 'WINDOWS' }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = 'https://www3.corsair.com/software/CUE_V5/public/modules/windows/installer/Install%20iCUE.exe'
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
