@@ -16,11 +16,11 @@ $this.CurrentState.Version = $Object2.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.LocationUri
+  InstallerUrl = $Object1.LocationUri.Replace('//browser.ecosia.org/', '//app-cms-repo.ecosia-browser.net/')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.LocationUri
+  InstallerUrl = $Object2.LocationUri.Replace('//browser.ecosia.org/', '//app-cms-repo.ecosia-browser.net/')
 }
 
 switch -Regex ($this.Check()) {
