@@ -1,7 +1,7 @@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/inspoaibox/Mshell/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^MShell\.Setup\.'
+$this.CurrentState.Version = $Object1.tag_name -replace '^MShell\.Setup\.' -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
