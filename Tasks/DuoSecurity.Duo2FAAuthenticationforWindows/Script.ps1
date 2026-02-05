@@ -25,6 +25,8 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msi' '4.msi' | Out-Host
     # x86
     $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     # ProductCode
     $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries
