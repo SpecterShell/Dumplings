@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.full.host_version -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
+  Architecture = 'arm64'
   InstallerUrl = Join-Uri $Object1.full.url 'DiscordCanarySetup.exe'
 }
 
