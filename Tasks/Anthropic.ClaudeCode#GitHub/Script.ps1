@@ -8,6 +8,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/$($this.CurrentState.Version)/win32-x64/claude.exe"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/$($this.CurrentState.Version)/win32-arm64/claude.exe"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -77,3 +81,4 @@ switch -Regex ($this.Check()) {
     }
   }
 }
+
