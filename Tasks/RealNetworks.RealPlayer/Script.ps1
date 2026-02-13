@@ -8,7 +8,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -jo
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Object1.config.distcodes.baseUri $Object1.config.distcodes.defaultDistcode.defaultOS.defaultLocale.installerpkg.uri
+  InstallerUrl = Join-Uri $Object1.config.distcodes.baseUri $Object1.config.distcodes.defaultDistcode.defaultOS.defaultLocale.installerpkg.uri | ConvertTo-Https
   ProductCode  = "RealPlayer $($this.CurrentState.Version.Split('.')[0..1] -join '.')"
 }
 
