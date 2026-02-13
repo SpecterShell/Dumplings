@@ -13,6 +13,11 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/win32-x64/claude.exe"
   InstallerSha256 = $Object2.platforms.'win32-x64'.checksum.ToUpper()
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/win32-arm64/claude.exe"
+  InstallerSha256 = $Object2.platforms.'win32-arm64'.checksum.ToUpper()
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
