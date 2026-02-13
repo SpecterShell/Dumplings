@@ -1,8 +1,8 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.python.org/api/v2/downloads/release/?version=3&pre_release=false') |
+$Object1 = (Invoke-RestMethod -Uri 'https://www.python.org/api/v2/downloads/release/?version=3&pre_release=false' -MaximumRetryCount 0) |
   Where-Object -FilterScript { $_.name.Contains('3.13.') } |
   Sort-Object -Property { $_.name -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
-$Object2 = (Invoke-RestMethod -Uri "https://www.python.org/api/v2/downloads/release_file/?os=1&release=$([regex]::Match($Object1.resource_uri, 'release/(\d+)/').Groups[1].Value)")
+$Object2 = (Invoke-RestMethod -Uri "https://www.python.org/api/v2/downloads/release_file/?os=1&release=$([regex]::Match($Object1.resource_uri, 'release/(\d+)/').Groups[1].Value)" -MaximumRetryCount 0)
 
 # Version
 $this.CurrentState.Version = $Version = [regex]::Match($Object1.name, 'Python ([\d\.]+)').Groups[1].Value
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl -MaximumRetryCount 0 | ConvertFrom-Html
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='python-$($Version.Replace('.', '-'))-final']")
 
