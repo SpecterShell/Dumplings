@@ -1,0 +1,20 @@
+Version: 1.2.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.2.1/opencode-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v1.2.0 and beyond includes a data migration that will execute on first run. It will migrate all flat files in data directory to a single sqlite database. Depending on how much data you have and speed of computer this can take some time.
+    if anything goes wrong you can retrigger the migration by deleting ~/.local/share/opencode/opencode.db* files (%APPDATA% on windows)
+    If you have any issues with the migration the original data is not yet deleted and downgrading should work. But please open an issue so we can investigate and include sqlite in the issue title.
+    SDK Users
+    We now have a PartDelta event which sends only incremental changes to parts. This avoids sending the full content of text parts over and over when it is updated
+    Core
+    - Show all project sessions from any working directory
+    - Tweak websearch tool description date info to avoid cache busts
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.2.1
+ReleaseTime: 2026-02-14T06:40:00.0000000Z
