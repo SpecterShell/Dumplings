@@ -71,13 +71,18 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
+      $ZipFile.Dispose()
+      $InstallerFileExtracted = New-TempFolder
+      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $Installer.NestedInstallerFiles[0].RelativeFilePath | Out-Host
+      $InstallerFile2 = Join-Path $InstallerFileExtracted $Installer.NestedInstallerFiles[0].RelativeFilePath
+      # RealVersion
+      $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
 
     try {
       # Global zh-CN
