@@ -19,8 +19,8 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
     $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
     # NestedInstallerFiles
-    $InstallerX86['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_R*.exe' }, 'First')[0].FullName.Replace('/', '\') })
-    $InstallerX64['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_x64_R*.exe' }, 'First')[0].FullName.Replace('/', '\') })
+    $InstallerX86['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_R*.exe' }, 'First')[0].FullName.Replace('/', '\'); PortableCommandAlias = 'sdio' })
+    $InstallerX64['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -like 'SDIO_x64_R*.exe' }, 'First')[0].FullName.Replace('/', '\'); PortableCommandAlias = 'sdio' })
     $ZipFile.Dispose()
 
     try {
