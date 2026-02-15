@@ -1,24 +1,30 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.python.org/api/v2/downloads/release/?version=3&pre_release=false' -MaximumRetryCount 0) |
-  Where-Object -FilterScript { $_.name.Contains('3.13.') } |
-  Sort-Object -Property { $_.name -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+# x86
+$Object1 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-32') }, 'First')[0]
+# x64
+$Object2 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-64') }, 'First')[0]
+# arm64
+$Object3 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-arm64') }, 'First')[0]
 
-$Object2 = (Invoke-RestMethod -Uri "https://www.python.org/api/v2/downloads/release_file/?os=1&release=$([regex]::Match($Object1.resource_uri, 'release/(\d+)/').Groups[1].Value)" -MaximumRetryCount 0)
+if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.'sort-version' } -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x86: $($Object1.'sort-version'), x64: $($Object2.'sort-version'), arm64: $($Object3.'sort-version')", 'Error')
+  return
+}
 
 # Version
-$this.CurrentState.Version = $Version = [regex]::Match($Object1.name, 'Python ([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Object2.'sort-version'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match '32\s*-bit' }, 'First')[0].url
+  InstallerUrl = Join-Uri $Object1.url "python-$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match '64\s*-bit' }, 'First')[0].url
+  InstallerUrl = Join-Uri $Object2.url "python-$($this.CurrentState.Version)-amd64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object2.Where({ $_.name.Contains('installer') -and $_.name -match 'ARM64' }, 'First')[0].url
+  InstallerUrl = Join-Uri $Object3.url "python-$($this.CurrentState.Version)-arm64.exe"
 }
 
 switch -Regex ($this.Check()) {
@@ -28,7 +34,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = [string]::IsNullOrWhiteSpace($Object1.release_notes_url) ? "https://docs.python.org/release/$($this.CurrentState.Version)/whatsnew/changelog.html" : $Object1.release_notes_url
+        Value  = $ReleaseNotesUrl = "https://docs.python.org/release/$($this.CurrentState.Version)/whatsnew/changelog.html"
       }
     } catch {
       $_ | Out-Host
@@ -36,9 +42,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl -MaximumRetryCount 0 | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='python-$($Version.Replace('.', '-'))-final']")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='python-$($this.CurrentState.Version.Replace('.', '-'))-final']")
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
