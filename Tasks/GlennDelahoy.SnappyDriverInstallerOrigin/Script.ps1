@@ -3,9 +3,11 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SDIO_\d+(?:\.\d+)+\.zip$' } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = $InstallerUrl
 }
 
