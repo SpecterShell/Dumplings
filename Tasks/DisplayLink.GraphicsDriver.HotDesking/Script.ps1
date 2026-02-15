@@ -10,7 +10,7 @@ $Object3 = Invoke-WebRequest -Uri "${Prefix}$($Object2.SelectSingleNode('.//a[@c
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "${Prefix}$($Object3.SelectSingleNode('//a[@download]').Attributes['href'].Value)" | ConvertTo-UnescapedUri
+  InstallerUrl = ("${Prefix}$($Object3.SelectSingleNode('//a[@download]').Attributes['href'].Value)" | ConvertTo-UnescapedUri).Replace('exe', 'msi').Replace('EXE', 'MSI')
 }
 
 switch -Regex ($this.Check()) {
