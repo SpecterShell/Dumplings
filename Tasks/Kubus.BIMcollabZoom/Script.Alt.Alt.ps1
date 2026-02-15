@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object2.registryVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object2.url
+  InstallerUrl = Get-RedirectedUrl -Uri ($Object2.url -replace '(?!=/)$', '/')
 }
 
 switch -Regex ($this.Check()) {

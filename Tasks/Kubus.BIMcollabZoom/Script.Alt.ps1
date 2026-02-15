@@ -4,6 +4,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://zoom.bimcollab.com/downloads/BIMcolla
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1[0].Trim()
 }
+
 # Version
 $VersionMatches = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+) build (\d+)')
 $this.CurrentState.Version = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[2].Value)"
