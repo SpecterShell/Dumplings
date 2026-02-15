@@ -15,34 +15,34 @@ $this.CurrentState.Version = [regex]::Match($Object1.innerText, 'Version: (\d+(?
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'kuandoHUBSetup.msi' 'kuandoHUBSetup_64bit.msi' | Out-Host
-    # x86
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup.msi'
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
-    # x64
-    $InstallerFile3 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup_64bit.msi'
-    # ProductCode
-    $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    # $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # $InstallerFileExtracted = New-TempFolder
+    # 7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'kuandoHUBSetup.msi' 'kuandoHUBSetup_64bit.msi' | Out-Host
+    # # x86
+    # $InstallerFile2 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup.msi'
+    # # RealVersion
+    # $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+    # # ProductCode
+    # $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # # AppsAndFeaturesEntries
+    # $InstallerX86['AppsAndFeaturesEntries'] = @(
+    #   [ordered]@{
+    #     UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+    #     InstallerType = 'wix'
+    #   }
+    # )
+    # # x64
+    # $InstallerFile3 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup_64bit.msi'
+    # # ProductCode
+    # $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+    # # AppsAndFeaturesEntries
+    # $InstallerX64['AppsAndFeaturesEntries'] = @(
+    #   [ordered]@{
+    #     UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
+    #     InstallerType = 'wix'
+    #   }
+    # )
+    # Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       # ReleaseTime

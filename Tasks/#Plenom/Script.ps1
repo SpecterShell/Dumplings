@@ -1,1 +1,1 @@
-$Global:DumplingsStorage.PlenomDownloadPage = Invoke-WebRequest -Uri 'https://www.plenom.com/downloads/download-software/' | ConvertFrom-Html
+$Global:DumplingsStorage.PlenomDownloadPage = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.plenom.com/downloads/download-software/' | Join-String -Separator "`n" | ConvertFrom-Html

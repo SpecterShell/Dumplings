@@ -11,26 +11,26 @@ $this.CurrentState.Version = [regex]::Match($Object1.innerText, 'Version: (\d+(?
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
-    $InstallerFileExtracted = New-TempFolder
-    # x86
-    $InstallerX86['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') -and $_.FullName -notmatch '64bit' }, 'First')[0].FullName.Replace('/', '\') })
-    7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $InstallerX86.NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $InstallerX86.NestedInstallerFiles[0].RelativeFilePath
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
-    $ZipFile.Dispose()
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    # $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    # $InstallerFileExtracted = New-TempFolder
+    # # x86
+    # $InstallerX86['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') -and $_.FullName -notmatch '64bit' }, 'First')[0].FullName.Replace('/', '\') })
+    # 7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $InstallerX86.NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    # $InstallerFile2 = Join-Path $InstallerFileExtracted $InstallerX86.NestedInstallerFiles[0].RelativeFilePath
+    # # RealVersion
+    # $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+    # # ProductCode
+    # $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # # AppsAndFeaturesEntries
+    # $InstallerX86['AppsAndFeaturesEntries'] = @(
+    #   [ordered]@{
+    #     UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+    #     InstallerType = 'wix'
+    #   }
+    # )
+    # $ZipFile.Dispose()
+    # Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       # ReleaseTime
