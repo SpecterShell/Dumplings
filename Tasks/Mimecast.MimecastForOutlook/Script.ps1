@@ -34,16 +34,11 @@ $this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      foreach ($Installer in $this.CurrentState.Installer) {
-        $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-        $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
-        $Installer['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\') })
-        $ZipFile.Dispose()
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\') })
+      $ZipFile.Dispose()
     }
 
     $this.Print()
