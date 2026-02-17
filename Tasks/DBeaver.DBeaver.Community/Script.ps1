@@ -10,13 +10,13 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   ProductCode  = 'DBeaver (current user)'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'machine'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   ProductCode  = 'DBeaver'
 }
 
