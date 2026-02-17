@@ -3,6 +3,11 @@ $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/DayuanJiang/next-
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
+if ($this.CurrentState.Version -match 'alpha|beta|rc') {
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
