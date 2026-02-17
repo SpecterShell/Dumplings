@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.enclosure.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.enclosure.url
+  InstallerUrl = $Object1.enclosure.url -replace '\.exe$', '.msi'
 }
 
 switch -Regex ($this.Check()) {
