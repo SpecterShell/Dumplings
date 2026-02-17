@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://benchmate.org/'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'BenchMate\W+(\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'BenchMate\W+(\d+(\.\d+)+)').Groups[1].Value -replace '^(\d+\.\d+)$', '$1.0' # Pad the version with only two digits to three digits
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
