@@ -1,1 +1,1 @@
-$Global:DumplingsStorage.CiscoDownloadPage = Invoke-WebRequest -Uri 'https://www.webex.com/video-recording.html' -UserAgent $DumplingsBrowserUserAgent
+$Global:DumplingsStorage.CiscoDownloadPage = Invoke-WebRequest -Uri 'https://www.webex.com/video-recording.html' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = 'text/html'; 'Accept-Language' = 'en-US' }
