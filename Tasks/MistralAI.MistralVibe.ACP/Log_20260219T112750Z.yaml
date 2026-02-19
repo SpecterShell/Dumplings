@@ -1,0 +1,30 @@
+Version: 2.2.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/mistralai/mistral-vibe/releases/download/v2.2.1/vibe-acp-windows-x86_64-2.2.1.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: vibe-acp.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mistralai/mistral-vibe/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Multiple clipboard copy strategies: OSC52 first, then pyperclip fallback when system clipboard is available (e.g. local GUI, SSH without OSC52)
+    - Ctrl+Z to put Vibe in background
+    Changed
+    - Improve performance around streaming and scrolling
+    - File watcher is now opt-out by default; opt-in via config
+    - Bump Textual version in dependencies
+    - Inline code styling: yellow bold with transparent background for better readability
+    Fixed
+    - Banner: sync skills count after initial app mount (fixes wrong count in some cases)
+    - Collapsed tool results: strip newlines in truncation to remove extra blank line
+    - Context token widget: preserve stats listeners across /clear so token percentage updates correctly
+    - Vertex AI: cache credentials to avoid blocking the event loop on every LLM request
+    - Bash tool: remove NO_COLOR from subprocess env to fix snapshot tests and colored output
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mistralai/mistral-vibe/blob/HEAD/CHANGELOG.md#221---2026-02-18
+ReleaseTime: 2026-02-19T11:06:34.0000000Z
