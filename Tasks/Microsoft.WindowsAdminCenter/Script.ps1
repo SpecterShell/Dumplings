@@ -11,7 +11,7 @@ function Get-ReleaseNotes {
   try {
     $Object3 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windowsserverdocs/HEAD/WindowsServerDocs/manage/windows-admin-center/support/release-history.md' | Convert-MarkdownToHtml
 
-    $ReleaseNotesNode = $Object3.SelectSingleNode("//li[contains(., '$($this.CurrentState.Version.Replace('.', ''))')]")
+    $ReleaseNotesNode = $Object3.SelectSingleNode("//li[contains(., '$([regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+)\.exe$').Groups[1].Value)')]")
     if ($ReleaseNotesNode) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
