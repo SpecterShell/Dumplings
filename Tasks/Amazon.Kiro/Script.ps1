@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://kiro.dev/changelog/'
+        Value  = $ReleaseNotesUrl = 'https://kiro.dev/changelog/ide/'
       }
 
       $EdgeDriver = Get-EdgeDriver -Headless
@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/div/span[2], 'IDE') and (contains(./div[1]/div/div/span[1], '$($this.CurrentState.Version -replace '(\.0+)+$')') or contains(./div[1]/div/div/span[1], '$('{0}.{1}.x' -f $this.CurrentState.Version.Split('.'))'))]")) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/div/span[2], 'IDE') and (contains(./div[1]/div/div/span[1], '$($this.CurrentState.Version -replace '(\.0+)+$')') or contains(./div[1]/div/div/span[1], '$('{0}.{1}' -f $this.CurrentState.Version.Split('.'))'))]")) } catch {}
         }
       )
       try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
@@ -65,7 +65,22 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = Join-Uri $ReleaseNotesUrl $ReleaseNotesObject.SelectSingleNode('.//a[./h2]').Attributes['href'].Value
+          Value  = $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesObject.SelectSingleNode('.//a[./h2]').Attributes['href'].Value
+        }
+
+        $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
+        $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//article//*[@id="patches"]//button[@data-state="closed"]')) } catch {}
+          }
+        )
+        $ReleaseNotesObject.Click()
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject.FindElement([OpenQA.Selenium.By]::XPath("//*[contains(@id, 'patch-$($this.CurrentState.Version.Replace('.', '-'))')]/p/following-sibling::node()")).GetAttribute('innerHTML') | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
