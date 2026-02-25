@@ -1,12 +1,15 @@
-# User
+# x64 User
 $Object1 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/x86_64/user-releases.json'
-# Machine
+# x64 Machine
 $Object2 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/x86_64/system-releases.json'
+# arm64 User
+$Object3 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/arm64/user-releases.json'
+# arm64 Machine
+$Object4 = Invoke-RestMethod -Uri 'https://cdn.posit.co/positron/releases/win/arm64/system-releases.json'
 
-if ($Object1.version -ne $Object2.version) {
-  $this.Log("User version: $($Object1.version)")
-  $this.Log("Machine version: $($Object2.version)")
-  throw 'Inconsistent versions detected'
+if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x64 user: $($Object1.version), x64 machine: $($Object2.version), arm64 user: $($Object3.version), arm64 machine: $($Object4.version)", 'Error')
+  return
 }
 
 # Version
@@ -24,6 +27,18 @@ $this.CurrentState.Installer += [ordered]@{
   Scope           = 'machine'
   InstallerUrl    = $Object2.url
   InstallerSha256 = $Object2.sha256hash.ToUpper()
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  Scope           = 'user'
+  InstallerUrl    = $Object3.url
+  InstallerSha256 = $Object3.sha256hash.ToUpper()
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  Scope           = 'machine'
+  InstallerUrl    = $Object4.url
+  InstallerSha256 = $Object4.sha256hash.ToUpper()
 }
 
 switch -Regex ($this.Check()) {
