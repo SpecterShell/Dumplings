@@ -75,7 +75,8 @@ switch -Regex ($this.Check()) {
             try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//article//*[@id="patches"]//button[@data-state="closed"]')) } catch {}
           }
         )
-        $ReleaseNotesObject.Click()
+        # Trigger the click event through JavaScript to avoid the "Element is not clickable" exception
+        $EdgeDriver.ExecuteScript('arguments[0].click();', $ReleaseNotesObject)
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
