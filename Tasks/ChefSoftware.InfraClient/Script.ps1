@@ -24,6 +24,16 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesRaw -replace 'Release date: ([a-zA-Z]+\W+\d{1,2}\W+20\d{2})' | Format-Text
         }
+      } elseif ($ReleaseNotesRaw -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesRaw | Format-Text
+        }
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
 
