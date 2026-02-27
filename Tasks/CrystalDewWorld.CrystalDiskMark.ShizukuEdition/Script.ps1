@@ -48,6 +48,26 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://crystalmark.info/ja/software/crystaldiskmark/crystaldiskmark-history/' | ConvertFrom-Html
+
+      $ReleaseNotesJATitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'entry')]/h3[contains(text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesJATitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesJATitleNode.NextSibling; $Node -and $Node.Name -notin @('h2', 'h3'); $Node = $Node.NextSibling) { $Node }
+        # ReleaseNotes (ja-JP)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'ja-JP'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (ja-JP) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
