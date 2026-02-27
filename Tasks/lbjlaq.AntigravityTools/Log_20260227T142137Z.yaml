@@ -1,0 +1,21 @@
+Version: 4.1.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.1.26/Antigravity.Tools_4.1.26_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.1.26/Antigravity.Tools_4.1.26_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [功能增强] 优化配额刷新逻辑，支持同步禁用账号：
+      - 逻辑放宽：“刷新所有”和“批量刷新”现在不再跳过标记为 disabled 或 proxy_disabled 的账号。
+      - 自动恢复：允许通过刷新操作尝试重新激活因 Token 过期或临时错误而被禁用的账号，提升了多账号管理的灵活性。
+    - [核心修复] 修复 Windows 系统下后台任务导致 cmd 黑框闪烁的问题：
+      - 静默执行：通过为 std::process::Command 封装注入 CREATE_NO_WINDOW 标志，解决了在 Windows 端应用底层组件（如版本探测、重启更新等）调用系统命令时引发的命令行窗口一闪而过的视觉干扰，确保全过程无边框静默执行。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.1.26
+ReleaseTime: 2026-02-27T14:05:42.0000000Z
