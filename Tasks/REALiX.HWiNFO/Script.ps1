@@ -1,33 +1,22 @@
-$ProjectName = 'hwinfo'
-$RootPath = '/Windows_Installer'
-$PatternFilename = 'hwi64_(\d+)\.exe'
-
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternFilename}$" })
+$Object1 = Invoke-RestMethod -Uri 'https://www.hwinfo.com/ver.txt' | Split-LineEndings
 
 # Version
-$RawVersion = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternFilename}").Groups[1].Value
-$this.CurrentState.Version = $RawVersion.Insert($RawVersion.Length - 2, '.')
+$this.CurrentState.Version = $Object1[0]
+
+# RealVersion
+$this.CurrentState.RealVersion = $this.CurrentState.Version.Split('-')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Assets[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = "https://www.hwinfo.com/files/hwi64_$($this.CurrentState.RealVersion.Replace('.', '')).exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets[0].pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.hwinfo.com/version-history/' | Join-String -Separator "`n" | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='tab3']//div[contains(@class, 'version-released') and contains(., 'v$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='tab3']//div[contains(@class, 'version-released') and contains(., 'v$($this.CurrentState.RealVersion)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -35,8 +24,11 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
         }
+
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) and ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
