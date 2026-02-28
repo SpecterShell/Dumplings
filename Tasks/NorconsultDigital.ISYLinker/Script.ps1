@@ -1,6 +1,6 @@
 $Object1 = Invoke-WebRequest -Uri 'https://norconsultdigital.no/produkter/isy-linker/'
 
-$VersionX86 = [regex]::Match($Object1.Content, 'ISY Linker 32bit.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
+$VersionX86 = [regex]::Match($Object1.Content, 'ISY Linker.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
 # $VersionX64 = [regex]::Match($Object1.Content, 'ISY Linker 64bit.+?v\. (\d+(?:\.\d+)+)').Groups[1].Value
 
 # if ($VersionX86 -ne $VersionX64) {
