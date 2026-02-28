@@ -7,8 +7,9 @@ $this.CurrentState.Version = $Object1[0]
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('-')[0]
 
 # Installer
+# Sourceforge no longer updates, dAppCDN forbids automated downloading, and the official website is behind Cloudflare
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://www.hwinfo.com/files/hwi64_$($this.CurrentState.RealVersion.Replace('.', '')).exe"
+  InstallerUrl = "https://www.sac.sk/download/utildiag/hwi_$($this.CurrentState.RealVersion.Replace('.', ''))x.exe"
 }
 
 switch -Regex ($this.Check()) {
