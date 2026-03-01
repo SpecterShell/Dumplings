@@ -31,10 +31,11 @@ switch -Regex ($this.Check()) {
       $Object2 = (Invoke-RestMethod -Uri 'https://obsidian.md/changelog.xml').Where({ $_.title.Contains($this.CurrentState.Version) -and $_.title.Contains('Desktop') }, 'First')
 
       if ($Object2) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link.href
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].link.href
         }
       } else {
         $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
