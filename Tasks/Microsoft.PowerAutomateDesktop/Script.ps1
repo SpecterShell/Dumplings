@@ -17,9 +17,9 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    if ($Global:DumplingsStorage.Contains('PowerAutomateDesktop') -and $Global:DumplingsStorage.PowerAutomateDesktop.Contains($this.CurrentState.Version)) {
+    if ($Global:DumplingsStorage.Contains('PowerAutomateDesktop') -and $Global:DumplingsStorage.PowerAutomateDesktop.Contains($this.CurrentState.Version -replace '(?<=^|\.)0+')) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.PowerAutomateDesktop[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.PowerAutomateDesktop[$this.CurrentState.Version -replace '(?<=^|\.)0+'].ReleaseTime | Get-Date -AsUTC
     } else {
       $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
     }
