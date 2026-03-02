@@ -1,0 +1,30 @@
+Version: 0.2.6
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.6/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.6/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fix #153: Model switch now clears canonical session to prevent memory poisoning across providers
+    Fix #154: SOUL.md code blocks stripped before system prompt injection to prevent LLM copying raw code
+    Fix #157: Workspace paths use agent name only instead of name-UUID format
+    Fix #112 #146: ClawHub TUI parser handles {"items": [...]} API response wrapper
+    Fix #72: Per-agent tool allowlist and blocklist with GET/PUT /api/agents//tools endpoints
+    Fix #108: Model prefix normalization strips provider from model ID (openrouter/deepseek/chat becomes provider=openrouter model=deepseek/chat)
+    Fix #159: DELETE /api/agents//history endpoint clears all conversation history
+    Fix #150: PUT /api/budget/agents/ endpoint for runtime budget updates
+    Fix #151: default_model from config.toml now applied to agents on restart
+    Fix #160: Rate-limited LLM drivers fall through to next fallback instead of failing immediately
+    Fix #86: CLI agent set subcommand for changing model via command line
+    WebUI: Model switch button, Clear History button, and Tool Filters panel added to agent detail modal
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.2.6
+ReleaseTime: 2026-03-02T00:37:09.0000000Z
