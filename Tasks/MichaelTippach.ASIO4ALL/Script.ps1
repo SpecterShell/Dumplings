@@ -1,20 +1,21 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://asio4all.org/feed/atom/').Where({ $_.content.'#cdata-section' -match 'ASIO4ALL_\d+(?:_\d+)+\.exe' })[0]
-$Object2 = $Object1.content.'#cdata-section' | ConvertFrom-Html
-$InstallerName = $Object2.SelectNodes('//a[@href]') | ForEach-Object -Process { $_.Attributes['href'].Value } | Select-String -Pattern 'ASIO4ALL_\d+(?:_\d+)+\.exe' -Raw | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
-
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerName, 'ASIO4ALL_(\d+(?:_\d+)+)\.exe').Groups[1].Value.Replace('_', '.')
-
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = [uri]::new([uri]'https://asio4all.org', $InstallerName).AbsoluteUri
-}
-
+$Object1 = (Invoke-RestMethod -Uri 'https://asio4all.org/category/version-history/feed/atom/').Where({ $_.title.'#cdata-section' -match 'Version \d+(?:\.\d+)+' -and $_.title.'#cdata-section' -notmatch 'alpha|beta|rc' })[0]
 # PackageUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'PackageUrl'
-  Value = $Object1.content.base
+  Value = $Prefix = $Object1.link.Where({ $_.rel -eq 'alternate' }, 'First')[0].href
 }
+
+$Object2 = $Object1.content.'#cdata-section' | ConvertFrom-Html
+$Prefix = Join-Uri $Prefix $Object2.SelectSingleNode('//a[contains(@class, "wp-block-button__link")]').Attributes['href'].Value
+$Object3 = Invoke-WebRequest -Uri $Prefix
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri 'https://asio4all.org/' $Object3.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:_\d+)+)').Groups[1].Value.Replace('_', '.')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
