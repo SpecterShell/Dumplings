@@ -43,7 +43,14 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${ShortVersion}beta/releasenotes/"
+        Value = $null
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://www.firefox.com/en-US/firefox/${ShortVersion}beta/releasenotes/"
       }
     } catch {
       $_ | Out-Host
@@ -71,7 +78,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object4.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = @($Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-summary-details")]'), $Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-notes-content")]')) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -119,7 +126,7 @@ switch -Regex ($this.Check()) {
             InstallerType   = 'nullsoft'
             InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
             InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Firefox Developer Edition ${ShortVersion} (${Arch} ${Locale})"
+            ProductCode     = 'Firefox Developer Edition'
           }
         }
       }
