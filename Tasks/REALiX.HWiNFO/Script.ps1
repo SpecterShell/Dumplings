@@ -14,6 +14,9 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    # Verify the installer exists. Sometimes the version file is updated before the installer is uploaded.
+    $null = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+
     try {
       $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.hwinfo.com/version-history/' | Join-String -Separator "`n" | ConvertFrom-Html
 
