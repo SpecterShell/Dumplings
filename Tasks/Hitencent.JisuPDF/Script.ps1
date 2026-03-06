@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
           $Object1.SelectSingleNode('//*[@id="reader-jisupdf"]/div[1]/p[3]').InnerText,
-          '(\d{4}-\d{1,2}-\d{1,2})'
+          '(\d{4}\W+\d{1,2}\W+\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } catch {
         $_ | Out-Host
