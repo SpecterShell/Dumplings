@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
       $Object5 = $Object4.Content | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
       $Object6 = $Object5.caasData.response | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object6.SelectSingleNode("//p[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object6.SelectSingleNode("//p[contains((text()|span), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
