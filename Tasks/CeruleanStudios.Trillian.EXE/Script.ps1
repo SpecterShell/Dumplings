@@ -1,12 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://trillian.im/get/windows/'
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'v(\d+(?:\.\d+){3,})').Groups[1].Value
+$Prefix = 'https://trillian.im/get/windows/thanks/'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri "https://www.trillian.im/get/windows/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/"
+  InstallerUrl = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object1.Links.Where({ try { $_.OuterHTML.Contains('Try downloading again.') } catch {} }, 'First')[0].href)
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, 'v(\d+(?:\.\d+){3,})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
