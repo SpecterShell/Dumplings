@@ -3,6 +3,11 @@ $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/sipeed/picoclaw/r
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
+if ($this.CurrentState.Version -match 'alpha|beta|rc|nightly') {
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'x64'
