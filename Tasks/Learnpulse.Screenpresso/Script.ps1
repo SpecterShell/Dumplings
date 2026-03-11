@@ -24,10 +24,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    # ReleaseNotesUrl
+    # ReleaseNotesUrl (en-US)
     $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://www.screenpresso.com/releases/'
+      Locale = 'en-US'
+      Key    = 'ReleaseNotesUrl'
+      Value  = 'https://www.screenpresso.com/releases/'
     }
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'de-DE'
@@ -50,10 +51,11 @@ switch -Regex ($this.Check()) {
         Value  = $Object2.SelectSingleNode('//div[contains(@class, "container")]') | Get-TextContent | Format-Text
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.checkforupdate.latestversion.releaseurl
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.checkforupdate.latestversion.releaseurl
       }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'de-DE'
