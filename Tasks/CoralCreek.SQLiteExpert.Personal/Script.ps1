@@ -50,7 +50,7 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 # x86
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('Pers') -and $_.href.Contains('32') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Pers') -and $_.href.Contains('32') } catch {} }, 'First')[0].href
 }
 $Object2 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head
 # Last Modified
@@ -59,7 +59,7 @@ $this.CurrentState.LastModified = $Object2.Headers.'Last-Modified'[0]
 # x64
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('Pers') -and $_.href.Contains('64') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Pers') -and $_.href.Contains('64') } catch {} }, 'First')[0].href
 }
 $Object3 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head
 # Last Modified
