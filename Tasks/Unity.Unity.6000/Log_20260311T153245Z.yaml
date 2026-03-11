@@ -1,0 +1,184 @@
+Version: 6000.3.11f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/3000ef702840/Windows64EditorInstaller/UnitySetup64-6000.3.11f1.exe
+  ProductCode: Unity 6000.3.11f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/3000ef702840/WindowsArm64EditorInstaller/UnitySetupArm64-6000.3.11f1.exe
+  ProductCode: Unity 6000.3.11f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.3.11
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.3/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.3.11f1
+    - 6000.2.0a10: Crash on TexturesD3D12::CreateTextureInternal() when opening a project for the first time (UUM-135024)
+    - 6000.3.5f1: Increased CPU usage when moving NavMesh Obstacles with carving enabled (UUM-133911)
+    - 6000.5.0a3,6000.4.0b8,6000.3.8f1,6000.0.68f1: [iOS] Application.deepLinkActivated does not get invoked while app is running when UIApplicationSceneManifest is added in Info.plist (UUM-135497)
+    - Core Runtime: Entities ContentManagement GUIDs are unstable and become different each time a Player is built to a different directory (UUM-129944)
+    - Metal: Game freezes after command buffer Timeout error (UUM-125778)
+    - Metal: macOS stutters in a minimal project in the Editor in Play Mode (UUM-85256)
+    - : Player crash when switching focus in Exclusive Fullscreen mode with DirectX 12 (UUM-134743)
+    - : [Silicon] Crash on os_unfair_recursive_lock_lock_with_options when opening a project while the Razer Synapse app is open (UUM-135043)
+    6000.3.11f1 Release Notes
+    Features
+    - License: Kerberos proxy authentication support.
+    - macOS: Added support for CAMetalDisplayLink on the Mac Player.
+      It is disabled by default and it can be enabled in the Player Settings by toggling "Use MetalDisplayLink (Mac Player only)". In alternative, you can also use the environment variable UNITY_USE_METAL_DISPLAY_LINK=1.
+      Using CAMetalDisplayLink decreases stuttering and improves frame pacing. It also makes Time.deltaTime more stable.
+    Improvements
+    - Android: Added profiling markers to AndroidPlayer initialization process. (UUM-135048)
+    - Build System: Updated the 7-Zip that is bundled with the editor to 26.00.
+    - Installer: Removed the activation of .NET 3.5 on Windows systems. Greatly reducing the installation time when using the installers directly. (UUM-133360)
+    - Physics 2D: PhysicsComposer now implements the IDisposable interface where the public IDisposable.Dispose method simply calls "PhysicsComposer.Destroy()". (UUM-134952)
+    - Plugins: Upgraded DLSS SDK from v310.4.0 to v310.5.0, including adding Preset L and M to DLSS Super Resolution.
+    - SRP Core: Improved the way VolumeManager collects VolumeComponent types to avoid slow reflection overhead on Player startup. (UUM-134911)
+    API Changes
+    - Physics 2D: Added: Added "PhysicsUserData.objectValueId" property to expose the EntityID used for the "objectValue" property. The property now also shows the EntityId, Object Name and Type as a tooltip or "None" if no Entity or "Invalid Object Id" if the EntityID does not represent a valid object. (UUM-134952)
+    - Physics 2D: Added: Added "PhysicsUserData.objectValueId" property to expose the EntityID used for the "objectValue" property. The property now also shows the EntityId, Object Name and Type as a tooltip or "None" if no Entity or "Invalid Object Id" if the EntityID does not represent a valid object. (UUM-134952)
+    - Physics 2D: Added: PhysicsComposer can now both get or destroy all composers using "PhysicsComposer.GetComposers()" and "PhysicsComposer.DestroyAll()" methods. (UUM-134952)
+    - Physics 2D: Added: PhysicsComposer can now both get or destroy all composers using "PhysicsComposer.GetComposers()" and "PhysicsComposer.DestroyAll()" methods. (UUM-134952)
+    - Physics 2D: Added: PhysicsComposer can now convert both "CircleGeometry" and"CapsuleGeometry" to "PolygonGeometry" using a static method of "PhysicsComposer.ToPolygons()". (UUM-134952)
+    - Physics 2D: Added: PhysicsComposer can now convert both "CircleGeometry" and"CapsuleGeometry" to "PolygonGeometry" using a static method of "PhysicsComposer.ToPolygons()". (UUM-134952)
+    - Physics 2D: Added: PhysicsWorld, PhysicsBody, PhysicsShape and PhysicsJoint can set owner-only PhysicsUserData with "SetOwnerUserData()" and retrieve it with ".ownerUserData". (UUM-134952)
+    - Physics 2D: Added: PhysicsWorld, PhysicsBody, PhysicsShape and PhysicsJoint can set owner-only PhysicsUserData with "SetOwnerUserData()" and retrieve it with ".ownerUserData". (UUM-134952)
+    - SRP Core: Added: Added new operator == and != for the struct TextureHandle.
+    Changes
+    - Shadergraph: Disabled profiling during code generation; in some circumstances it would cause errors. (UUM-117133)
+    - uGUI: Updated profiler icons for UI Canvas modules. (UUM-135623)
+    Fixes
+    - 2D: Fixed names from overflowing in Light Batching Debugger. (UUM-132565)
+    - 2D: Fixed names not getting refreshed in Light Batching Debugger. (UUM-132573)
+    - Adaptive Performance: Fixed adaptive performance profiler data not showing up. (UUM-134873)
+    - Android: Batch mode: removed auto-scanning for Android devices on Editor start if Android support is installed. (UUM-133593)
+    - Android: Fixed an issue where the caret position in UI Toolkit input fields was not updating when the TouchScreenKeyboard changed the text selection on Android (Activity), this behavior is currently still broken on GameActivity. (UUM-128088)
+    - Android: Fixed an issue where OnApplicationQuit was not consistently called when using Android GameActivity. (UUM-131090)
+    - Android: Fixed Android mouse scroll wheel not working when scrolling in the negative direction without moving the mouse when using old input system. (UUM-134074)
+    - Android: Updated Device Simulator device definitions to use generic, characteristic-based names instead of specific model names for older devices. (UUM-134051)
+    - Audio: Fixed a crash related to scriptable generators when quitting the standalone Player. (UUM-133608)
+    - Build Pipeline: Fixed an issue where attempting to build a scene stored in a package would fail the build. (UUM-133786)
+    - Build Pipeline: Fixed broken build time calculation in build report. (UUM-126318)
+    - DX12: Added Direct3D Graphics Infrastructure (DXGI) errors to the user logs that were not covered by validation errors. Fixed false-reporting of non-error return codes (i.e., 087a0001) in CheckDeviceStatus(). (UUM-135201)
+    - DX12: Fixed a player hang after switching window focus. (UUM-130495)
+    - DX12: Fixed clustered lighting issue when using DXC shader compiler. (UUM-134785)
+    - DX12: Fixed the texture loading slowdown issue. (UUM-133332)
+    - DX12: Match proxy buffer srv format with the format of swapchain rtv during final upscale pass. (UUM-134064)
+    - Editor: Added hideSoftkeyboard option to UITK and option to have both physical and touch screen keyboard active at the same time. (UUM-122340)
+    - Editor: Added support for customizing synthetic bold and italic angles in Advanced Text Generator. (UUM-114774)
+    - Editor: Changed Mesh LOD generator to no longer output LODs when selection curves are negative, which happens for some meshes with double-sided geometry. (UUM-121461)
+    - Editor: Fixed a bug where trying to open the Render Pipeline Converter window in playmode would cause an unrelated window to be opened. (UUM-132083)
+    - Editor: Fixed a missing help documentation link for the D3D12 Device Filter Lists asset. (UUM-123217)
+    - Editor: Fixed an issue causing 'IsRunningXRMobile' does not exist in the current context. (UUM-135971)
+    - Editor: Fixed an issue where Mac Editor dialog boxes did not respond to certain keyboard operations. (UUM-134031)
+    - Editor: Fixed an issue where script compilation produced different results on Windows and Linux, causing unnecessary asset file changes for teams working across multiple platforms. (UUM-133554)
+    - Editor: Fixed AutoSize warning logging when using ATG. (UUM-134814)
+    - Editor: Fixed bugs where merging too many artifacts could make LMDB crash if cancelling in the middle of the preprocessing of artifacts. (UUM-133590)
+    - Editor: Fixed issue with language toggling on a physical keyboard would not work correctly. (UUM-130105)
+    - Editor: Fixed scaler UI change is not updating the local asset properly. (UUM-135019)
+    - Editor: Fixed sprite assets not showing properly in ATG. (UUM-134941)
+    - Editor: Fixed the IMGUI Debugger's Style Picker UI to highlight Views while dragging the mouse. (UUM-133941)
+    - Editor: Fixed the Repaint Dots size so it now scales correctly with the scaling factor. (UUM-135511)
+    - Editor: Repair links to the Hub documentation.
+    - GI: Fixed APV Sky Occlusion being slightly too bright when baking with Vulkan. (UUM-101700)
+    - Graphics: Camera Preview - When changing the pipeline the Render Target texture was not recreated making and invalid Render Texture options. (UUM-133293)
+    - Graphics: Fixed an issue where the stencil attachment was unset incorrectly when using Metal, which caused a Metal validation error. (UUM-133783)
+    - Graphics: Fixed data race in Vulkan backend's buffer pool. (UUM-134547)
+    - Graphics: Fixed issues with clearing multiple render targets in WebGPU. (UUM-133743)
+    - Graphics: Fixed: Shader compilation error "call to 'tex3D' is ambiguous". (UUM-133088)
+    - Graphics: [URP] Fixed an issue causing materials to be black when building for mobile platforms in batchmode with Decals enabled. (UUM-134298)
+    - HDRP: Decal Projector and Local Volumetric Fog are missing their icon gizmos. Water Decals components where missing the dark icon in the Light Theme. (UUM-132819)
+    - IL2CPP: Fixed invalid MethodsToPreserve entries for lambda expressions. (UUM-124814)
+    - Input: Fixed an issue where the resize cursor wasn't showing when resizing the Standalone Player window, for projects with splash screen disabled and that only used Input Manager. (UUM-134058)
+    - Input System: Fixed an incorrect use of a synchronisation primitive that could lead to Unity crashing or undefined behaviour on platforms where input devices are discovered on thread other than main thread. (UUM-134537)
+    - Installer: MacOS Platform Support installers no longer remove support for the same platform from other Unity Editor installations of different versions. (UUM-133396)
+    - License: Writing to symbolically linked ULF is prohibited. (UUM-121827)
+    - macOS: Fixed stuttering issues with the Mac Player when using the new CAMetalDisplayLink which can be enabled in the Player Settings by toggling "Use MetalDisplayLink (Mac Player only)". (UUM-112011)
+    - Package Manager: Changed location of all errors under each fields instead of under the 'Apply' button. (UUM-112552)
+    - Package Manager: Fixed validation to prevent dependencies versions to have null values. (UUM-113308)
+    - Package Manager: Fixed validation to prevent technical name to be matching an existing name in the project. (UUM-113396)
+    - Package Manager: Importing a .unitypackage extracts twice the content. (PAK-8613)
+    - Package Manager: Package Manager: Fix Package.json modification UI issues in the inspector window. (UUM-133647)
+    - Package Manager: Package Manager: Url deep link using a upm package show the package selected if discoverable. Also show Add popup if a version is specified or if the package is not discoverable. (PAK-8687)
+    - Physics: Fixed an issue where Rigidbody components on prefabs would still get their internal physics objects created. This was not intended and surfaced by recent safety changes, which incidentally are the same changes that caused this crash to reproduce. (UUM-135381)
+    - Physics 2D: Fixed "PolygonGeometry.ClosestPoint()" not returning perimeter point when overlapped. (UUM-134804)
+    - Physics 2D: Fixed an issue where the physics debug renderer was incorrectly using depth-testing. (UUM-135992)
+    - Physics 2D: Fixed an issue with "PhysicsComposer.GetGeometryIslands()" where it was not read-locked leading to potential concurrency issues. (UUM-135939)
+    - Physics 2D: Fixed and issue with the HingeJoint2D tool handle drawing when deleting the component being edited. (UUM-134276)
+    - Physics 2D: Fixed default "PolygonGeometry" constructor generating invalid edge normal. (UUM-134804)
+    - Player: Fixed a URL-parsing problem that occurred when Video Player opened a file where the path contained a space in it. (UUM-125789)
+    - Profiler: Fixed an issue where incomplete frames affected the highlights view summary data. (UUM-125642)
+    - Profiler: Fixed issue with creating profiler capture metadata on save if the max. capture frames setting was reduced after recording profiling data. (UUM-134348)
+    - Profiler: Prevent incorrect shared ProfilerRecorder reuse when kDontCaptureEditor or kRecordTimestamp differ. (UUM-133664)
+    - Scene/Game View: Fixed an issue where focusing on an active selection could edit overlays content in the Scene view. (UUM-134399)
+    - Scripting: Fixed memory leak in UnityEvent in player builds. (UUM-131348)
+    - Shadergraph: Fixed initialization of uv1 channel for Canvas shaders when not using masking. (UUM-133826)
+    - Shadergraph: Fixed Material Overrides debug from ShaderGraph CustomLighting samples not working. (UUM-134440)
+    - Shadergraph: Fixed texture sampling operations for texture properties marked HDR. (UUM-122106)
+    - Shadergraph: Fixed the Fancy Loading subgraph in UGUI Shaders sample. (UUM-134638)
+    - Shadergraph: Renaming keyword enum fields and other modifications to keyword enums now propagate correctly. (UUM-134292)
+    - Shadergraph: Swizzle node now updates after undo/redo correctly. (UUM-134112)
+    - Shaders: Fixed writes to RWTexture2D in compute. (UUM-127198)
+    - Text: Added icons for PanelTextSettings and FontAsset. (UUM-134700)
+    - Text: Fixed a memory leak by ensuring OSFallbacks are properly preserved after domain reload. (UUM-132677)
+    - Text: Fixed RichTextTagParser incomplete tag parsing. (UUM-134299)
+    - TextMeshPro: Improved handling of improperly formatted <a> tag where the "href" part is missing. A properly formatted tag should be <a href="link ID">text to be highlighted</a>. (UUM-130554)
+    - uGUI: Deactivate InputFields once Keyboard has closed. (UUM-133712)
+    - uGUI: Fixed crash caused by having very large rect transform bounds. (UUM-132182)
+    - uGUI: Fixed root cause of crash caused by having very large rect transform bounds. Added warning which links to the affected scene GameObject(s). (UUM-134019)
+    - UI Toolkit: Added missing getter APIs to Painter2D. (UUM-128715)
+    - UI Toolkit: Fixed a typo in the UI Builder. (UUM-131438)
+    - UI Toolkit: Fixed an exception that could occur when drawing stroked paths with 2D vector graphics with certain sharp corners or near-degenerate segments. (UUM-135440)
+    - UI Toolkit: Fixed code gen bug that prevented from using the SampleTextureElement node multiple times. (UUM-115301)
+    - UI Toolkit: Fixed the collection view controls scroll on drag not working on mobile devices. (UUM-135398)
+    - UI Toolkit: Fixed UIE_NOINTERPOLATION redefinition causing a warning. (UUM-134991)
+    - UI Toolkit: Fixed VectorImage as background image that was not properly being used as a stencil mask when overflow was modified in a earlier frame. (UUM-110567)
+    - UI Toolkit: Fixed VectorImages showing in a uniform color when a dynamic color hint is used. (UUM-126859)
+    - UI Toolkit: Fixed wrong material used when importing SVGs as Sprites. (UUM-134795)
+    - UI Toolkit: PanelSettings.renderMode is now a public API. (UUM-119486)
+    - URP: Decal Projector light theme appear now black. (UUM-132819)
+    - URP: Fixed Reflection Probe Rotation being disabled in the Player. (UUM-134244)
+    - Version Control: Fixed deprecated instanceID API usages for Unity 6.4 and later.
+    - Video: Fixed failure to play Video on specific mobile devices with Vulkan Graphics API. (UUM-133914)
+    - Video: Made test stable. (UUM-71794)
+    - Web: Fixed a bug that occurred when handling touchcancel events. (UUM-132183)
+    - XR: Fixed occasional editor crash when audio configuration changed. (UUM-126803)
+    Package changes in 6000.3.11f1
+    Packages updated
+    - com.unity.addressables: 2.9.0 to 2.9.1
+    - com.unity.cinemachine: 2.10.5 to 2.10.6
+    - com.unity.collab-proxy: 2.11.3 to 2.11.4
+    - com.unity.inputsystem: 1.18.0 to 1.19.0
+    - com.unity.performance.profile-analyzer: 1.3.1 to 1.3.2
+    - com.unity.remote-config: 4.2.4 to 4.2.5
+    - com.unity.scriptablebuildpipeline: 2.6.0 to 2.6.1
+    - com.unity.services.analytics: 6.2.0 to 6.2.2
+    - com.unity.services.wire: 1.4.1 to 1.4.2
+    - com.unity.timeline: 1.8.10 to 1.8.11
+    - com.unity.visualscripting: 1.9.9 to 1.9.10
+    - com.unity.learn.iet-framework: 5.0.2 to 5.0.3
+    - com.unity.learn.iet-framework.authoring: 1.5.2 to 1.5.3
+    - com.unity.terrain-tools: 5.3.1 to 5.3.2
+    - com.unity.ai.navigation: 2.0.10 to 2.0.11
+    - com.unity.services.deployment: 1.6.2 to 1.7.1
+    - com.unity.services.tooling: 1.4.0 to 1.4.1
+    - com.unity.addressables.android: 1.0.9 to 1.0.10
+    - com.unity.polyspatial: 3.0.5 to 3.1.0
+    - com.unity.polyspatial.visionos: 3.0.5 to 3.1.0
+    - com.unity.polyspatial.xr: 3.0.5 to 3.1.0
+    - com.unity.polyspatial.extensions: 3.0.5 to 3.1.0
+    - com.unity.xr.visionos: 3.0.5 to 3.1.0
+    - com.unity.services.multiplayer: 2.1.2 to 2.1.3
+    - com.unity.asset-manager-for-unity: 1.9.1 to 1.9.2
+    - com.unity.web.stripping-tool: 1.2.0 to 1.2.1
+ReleaseTime: 2026-03-11T14:52:35.7710000Z
