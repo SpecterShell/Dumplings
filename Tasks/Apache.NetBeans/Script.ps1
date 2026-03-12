@@ -4,7 +4,7 @@ $RepoName = 'netbeans-installers'
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.tag_name, '^v?(\d+(?:\.\d+)*)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.tag_name, '^(?:v|nb)?(\d+(?:\.\d+)*)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
