@@ -1,0 +1,30 @@
+Version: 0.4.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.4.2/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.4.2/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    - LoopGuard poll detection (#603): Removed fragile cmd.len() < 50 heuristic. Poll detection is now purely keyword-based — long kubectl/docker commands are correctly identified.
+    - Custom model provider display (#581): Model switcher dropdown now shows provider:model format instead of just the display name.
+    - Telegram typing indicator (#571): Typing indicator now refreshes every 4 seconds continuously during LLM processing, instead of expiring after 5 seconds.
+    - "No agent selected" error (#569): Agents created via API are now immediately registered in the channel router's name cache.
+    - Tool calls denied by approval (#537): Denial message now includes guidance to use auto_approve = true in config.toml or --yolo flag.
+    - WhatsApp sender metadata (#597): MessageRequest and PromptContext now have sender_id/sender_name fields for identity-aware agents.
+    - LLM auth boot failure (#572): Already fixed in v0.4.0 (auto-detect fallback). Commented for users on older versions.
+    Enhancements
+    - NVIDIA NIM provider (#579): Added as OpenAI-compatible provider with 5 models (nemotron-70b, llama-3.1-405b/70b, mistral-large, nemotron-4-340b). Set NVIDIA_API_KEY to use.
+    - YOLO mode (#573): openfang start --yolo auto-approves all tool calls. Also configurable via auto_approve = true in [approval] section.
+    - Skill output persistence (#596): Tool/skill output cards in dashboard now default to expanded instead of collapsed, keeping results visible.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.4.2
+ReleaseTime: 2026-03-14T21:19:08.0000000Z
