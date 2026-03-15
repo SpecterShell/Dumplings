@@ -5,7 +5,7 @@ $this.CurrentState.Version = "$($Object1.version).$($Object1.windows[0].Contains
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://download.gimp.org/gimp/v3.0/windows/' $Object1.windows[0].filename
+  InstallerUrl = Join-Uri "https://download.gimp.org/gimp/v$($this.CurrentState.Version.Split('.')[0..1] -join '.')/windows/" $Object1.windows[0].filename
 }
 
 switch -Regex ($this.Check()) {
