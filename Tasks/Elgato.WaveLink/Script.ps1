@@ -1,20 +1,26 @@
-$Object1 = Invoke-RestMethod -Uri 'https://gc-updates.elgato.com/windows/wl-update/final/app-version-check.json.php'
+$Object1 = Invoke-RestMethod -Uri 'https://gc-updates.elgato.com/windows/ewlw-update/final/app-version-check.json.php'
 
 # Version
 $this.CurrentState.Version = $Object1.Manual.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Manual.fileURL
+  Architecture = 'x64'
+  InstallerUrl = $Object1.Manual.fileURLs.x86_64
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.Manual.fileURLs.arm64
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.Manual.ReleaseNotes.en
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.Manual.ReleaseNotes.en
       }
     } catch {
       $_ | Out-Host

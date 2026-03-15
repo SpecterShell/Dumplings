@@ -1,8 +1,13 @@
-$Object1 = $Global:DumplingsStorage.ElgatoApps.downloadData.'wave-link-win'
+$Object1 = $Global:DumplingsStorage.ElgatoApps.downloadData.'wave-link-3-win'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.downloadURL
+  Architecture = 'x64'
+  InstallerUrl = $Object1.fileURLs.x86_64
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.fileURLs.arm64
 }
 
 # Version
