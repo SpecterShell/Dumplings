@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16169101-1-1.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//td[@id='postmessage_119526099']/text()[contains(., '$(Get-Date -Format 'yyyy.M.d' -AsUTC)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//td[@id='postmessage_119526099']/text()[contains(., '$(Get-Date -Format 'yyyy.M.d' -AsUTC)') or contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
