@@ -19,7 +19,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     # Installer
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl = $Uri2
-      ProductCode  = "Freedom $($this.CurrentState.Version)"
     }
     # Mode
     $this.CurrentState.Mode = $true
@@ -29,7 +28,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl    = $Uri1
       InstallerSha256 = $this.CurrentState.InstallerSha256
-      ProductCode     = "Freedom $($this.CurrentState.Version)"
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -58,7 +56,6 @@ if ($this.Status.Contains('New')) {
     # Installer
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl = $Uri2
-      ProductCode  = "Freedom $($this.CurrentState.Version)"
     }
     # Mode
     $this.CurrentState.Mode = $true
@@ -68,7 +65,6 @@ if ($this.Status.Contains('New')) {
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl    = $Uri1
       InstallerSha256 = $this.CurrentState.InstallerSha256
-      ProductCode     = "Freedom $($this.CurrentState.Version)"
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -97,7 +93,6 @@ if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.Last
       # Installer
       $this.CurrentState.Installer += [ordered]@{
         InstallerUrl = $Uri2
-        ProductCode  = "Freedom $($this.CurrentState.Version)"
       }
       # Mode
       $this.CurrentState.Mode = $true
@@ -142,7 +137,6 @@ if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.Last
         # Installer
         $this.CurrentState.Installer += [ordered]@{
           InstallerUrl = $Uri2
-          ProductCode  = "Freedom $($this.CurrentState.Version)"
         }
         # Mode
         $this.CurrentState.Mode = $true
@@ -157,7 +151,6 @@ if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.Last
         $this.CurrentState.Installer += [ordered]@{
           InstallerUrl    = $Uri1
           InstallerSha256 = $this.CurrentState.InstallerSha256
-          ProductCode     = "Freedom $($this.CurrentState.Version)"
         }
         # Mode
         $this.CurrentState.Mode = $false
@@ -176,7 +169,6 @@ if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.Last
       # Installer
       $this.CurrentState.Installer += [ordered]@{
         InstallerUrl = $Uri2
-        ProductCode  = "Freedom $($this.CurrentState.Version)"
       }
       # Mode
       $this.CurrentState.Mode = $true
@@ -187,7 +179,6 @@ if ([datetime]$this.CurrentState.LastModified -le [datetime]$this.LastState.Last
       $this.CurrentState.Installer += [ordered]@{
         InstallerUrl    = $Uri1
         InstallerSha256 = $this.CurrentState.InstallerSha256
-        ProductCode     = "Freedom $($this.CurrentState.Version)"
       }
       # Mode
       $this.CurrentState.Mode = $false
