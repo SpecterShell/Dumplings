@@ -7,13 +7,13 @@ $this.CurrentState.Version = $Object1.version.number
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
-  InstallerUrl = "https://downloads.dbeaver.net/ultimate/$($this.CurrentState.Version)/dbeaver-ue-$($this.CurrentState.Version)-x86_64-setup.exe"
+  InstallerUrl = "https://downloads.dbeaver.net/ultimate/$($this.CurrentState.Version)/dbeaver-ue-$($this.CurrentState.Version)-windows-x86_64.exe"
   ProductCode  = 'DBeaverUltimate (current user)'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'machine'
-  InstallerUrl = "https://downloads.dbeaver.net/ultimate/$($this.CurrentState.Version)/dbeaver-ue-$($this.CurrentState.Version)-x86_64-setup.exe"
+  InstallerUrl = "https://downloads.dbeaver.net/ultimate/$($this.CurrentState.Version)/dbeaver-ue-$($this.CurrentState.Version)-windows-x86_64.exe"
   ProductCode  = 'DBeaverUltimate'
 }
 
