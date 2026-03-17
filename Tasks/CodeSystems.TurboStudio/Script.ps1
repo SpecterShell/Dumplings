@@ -24,23 +24,14 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://turbo.net/studio/releases')
-
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[@id="release-notes" and ./div]')) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//div[contains(./h3, '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      $Object4 = Invoke-WebRequest -Uri 'https://turbo.net/docs/releases/studio/' | ConvertFrom-Html
+      $ReleaseNotesObject = $Object4.SelectSingleNode("//div[@class='release-section' and contains(.//h2, '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.SelectSingleNode('./h3'); $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObject.SelectSingleNode('.//div[@class="vp-doc"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
