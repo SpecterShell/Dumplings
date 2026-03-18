@@ -1,0 +1,33 @@
+Version: 3.4.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.4.5/MotrixNext_3.4.5_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This is a major stability and quality release that consolidates 5 beta iterations into a polished stable build. Every change has been rigorously verified across platforms. Users will notice significantly improved download performance, better Linux desktop integration, and a more reliable engine lifecycle.
+    ✨ New Features
+    - Global option synchronization — User-configured settings (split, max-connection-per-server, user-agent, etc.) are now automatically synced to the aria2 engine via changeGlobalOption RPC after every startup and restart. External RPC clients (e.g., browser extensions pushing downloads) now correctly inherit your configured connection limits instead of falling back to aria2 defaults
+    - Increased max connections — Maximum connections per server raised to 128, with a default of 64
+    - Bare info hash recognition — Pasting a raw SHA-1 hex or Base32 BitTorrent info hash is now automatically converted to a magnet URI
+    - Log file clearing — New option in Advanced Preferences to clear the application log file with localized success/failure feedback
+    - DMABuf renderer detection — Linux systems now intelligently detect whether WebKitGTK's DMABuf workaround is active, enabling proper full-screen maximize behavior for non-NVIDIA users
+    🛠 Improvements
+    - aria2 argument generation refactored — Security and metadata options are now delegated to aria2.conf, reducing command-line argument complexity
+    - BitTorrent metadata always saved — bt-save-metadata is now always enabled and removed from user configuration to prevent accidental data loss
+    - Magnet metadata polling — Polling now pauses during file selection dialogs to prevent UI overlap, with automatic restart when pending GIDs exist
+    - Wayland force-close recovery — Implemented recovery for Wayland's implicit close behavior where CloseRequested events may not fire
+    - Advanced preferences reorganized — Engine, session, log, and history management options are now logically grouped for clarity
+    - RPC secret handling — Improved differentiation between unset and empty RPC secrets
+    🐛 Bug Fixes
+    - Fixed RPC download connection limit — Downloads pushed via RPC (e.g., from browser extensions) previously used only 5 connections regardless of user settings. Now correctly uses the configured value (e.g., 64)
+    - Fixed Linux maximize border-radius — Non-NVIDIA Linux users no longer waste screen space with rounded corners when maximized (NVIDIA users with WEBKIT_DISABLE_DMABUF_RENDERER=1 retain the workaround)
+    - Fixed close event migration — Tauri CloseRequested handling migrated to on_window_event for reliable close prevention across all platforms
+    - Fixed update check timestamp — lastCheckUpdateTime is now always recorded after an update check
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.4.5
+ReleaseTime: 2026-03-18T12:22:57.0000000Z
