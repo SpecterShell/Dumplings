@@ -1,0 +1,36 @@
+Version: 2.1.80
+Installer:
+- Architecture: x64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.80/win32-x64/claude.exe
+  InstallerSha256: 397FD9116EF369411E40E4439B709C41D737C4BF45F7445A9D0687B03F81C6BA
+- Architecture: arm64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.80/win32-arm64/claude.exe
+  InstallerSha256: D09D3695186BF7F151E060AD11EB53F57699999B3D1A674E5B9247166974CBE5
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added rate_limits field to statusline scripts for displaying Claude.ai rate limit usage (5-hour and 7-day windows with used_percentage and resets_at)
+    - Added source: 'settings' plugin marketplace source — declare plugin entries inline in settings.json
+    - Added CLI tool usage detection to plugin tips, in addition to file pattern matching
+    - Added effort frontmatter support for skills and slash commands to override the model effort level when invoked
+    - Added --channels (research preview) — allow MCP servers to push messages into your session
+    - Fixed --resume dropping parallel tool results — sessions with parallel tool calls now restore all tool_use/tool_result pairs instead of showing [Tool result missing] placeholders
+    - Fixed voice mode WebSocket failures caused by Cloudflare bot detection on non-browser TLS fingerprints
+    - Fixed 400 errors when using fine-grained tool streaming through API proxies, Bedrock, or Vertex
+    - Fixed /remote-control appearing for gateway and third-party provider deployments where it cannot function
+    - Fixed /sandbox tab switching not responding to Tab or arrow keys
+    - Improved responsiveness of @ file autocomplete in large git repositories
+    - Improved /effort to show what auto currently resolves to, matching the status bar indicator
+    - Improved /permissions — Tab and arrow keys now switch tabs from within a list
+    - Improved background tasks panel — left arrow now closes from the list view
+    - Simplified plugin install tips to use a single /plugin install command instead of a two-step flow
+    - Reduced memory usage on startup in large repositories (~80 MB saved on 250k-file repos)
+    - Fixed managed settings (enabledPlugins, permissions.defaultMode, policy-set env vars) not being applied at startup when remote-settings.json was cached from a prior session
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#2180
+ReleaseTime: 2026-03-19T21:05:44.0000000Z
