@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.dell.com/support/driver/en-us/ips/api/driverlist/packdriversbyproduct?productcode=dell-display-peripheral-manager&oscode=WT64A&lob=Software' -Headers @{
+$Object1 = Invoke-WebRequest -Uri 'https://www.dell.com/support/driver/en-us/dep/api/driverlist/packdriversbyproduct?productcode=dell-display-peripheral-manager&oscode=WT64A&lob=Software' -Headers @{
   'Accept'           = '*/*'
   'X-Requested-With' = 'XMLHttpRequest'
 }
