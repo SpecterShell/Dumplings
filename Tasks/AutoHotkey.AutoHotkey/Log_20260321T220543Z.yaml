@@ -1,0 +1,28 @@
+Version: 2.0.22
+Installer:
+- InstallerUrl: https://github.com/AutoHotkey/AutoHotkey/releases/download/v2.0.22/AutoHotkey_2.0.22_setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Removed the undocumented effect that a hotkey with the </> prefix had on the corresponding modifier key; e.g. <^a:: causing LCtrl:: to fire on release, inconsistent with the documentation. Always firing on press provides greater consistency and flexibility. The modifier key itself was suppressed since v2.0.20. Neutral modifiers such as Ctrl:: always fire on release, and similar behaviour can be implemented with A_PriorKey and ~LCtrl up::.
+    Changed error dialogs to use msftedit.dll instead of riched20.dll to fix the following issues:
+    - Hanging when inspected by UI Automation.
+    - Broken characters and inconsistent fonts when the error message includes certain character sets (e.g. emoji, Chinese or Arabic).
+    Fixed errors within __Delete being suppressed if a Try/Catch is active.
+    Fixed CallbackCreate to validate ParamCount.
+    Fixed detection of DllCall(... "str",&var:={} ...) as an error.
+    Fixed CapsLock:: to suppress even if CapsLock is used as a prefix key.
+    Fixed neutral Ctrl/Alt/Shift hotkeys to not suppress the key [broken by v2.0.20].
+    Fixed fire-on-release behaviour of neutral Ctrl/Alt/Shift hotkeys when a key-up variant is turned on but disabled by #HotIf.
+    Fixed CapsLock & 1:: to revert CapsLock state even if another prefix key is pressed before CapsLock is released.
+    Fixed L/R modifier key-up not being suppressed in some cases where key-down was suppressed.
+    Fixed L/R modifier key-up to be passed through if ~ is used even if key-down was suppressed.
+    Fixed L/R modifier hotkeys to fire on press even if the corresponding neutral modifier is present; e.g. LCtrl:: with Ctrl::.
+    Fixed corruption of unquoted continuation sections with trailing spaces.
+    Fixed file stream I/O to flush cached writes if the file hasn't been closed when the process exits.
+    Fixed `; in contination sections with the ` (literal escape) and C (comment) options.
+    Cleaned up some code within the keyboard/mouse hook.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AutoHotkey/AutoHotkey/releases/tag/v2.0.22
+ReleaseTime: 2026-03-21T21:34:03.0000000Z
