@@ -1,61 +1,108 @@
-<#
-The links are fetched from https://github.com/amd64fox/LoaderSpot
+function Read-Installer {
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+}
 
-MIT License
-
-Copyright (c) 2021 amd64fox
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-#>
-
-$Object1 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/amd64fox/LoaderSpot/main/versions.json' | Read-ResponseContent | ConvertFrom-Json -AsHashtable
-$Object2 = $Object1.GetEnumerator() | Where-Object -FilterScript { $_.Value.buildType -eq 'Release' } | Sort-Object -Property { $_.Name -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
-
-# Version
-$this.CurrentState.Version = $Object2.Name
-
-# RealVersion
-$this.CurrentState.RealVersion = $Object2.Value.fullversion
-
-# Installer
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x86'
-#   InstallerUrl = $Object2.Value.links.win.x86
-# }
-$this.CurrentState.Installer += [ordered]@{
+# x64
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.Value.links.win.x64
+  InstallerUrl = 'https://download.scdn.co/SpotifyFullSetupX64.exe'
 }
-$this.CurrentState.Installer += [ordered]@{
+$Object2 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head
+$ETag = $Object2.Headers.ETag[0]
+
+# arm64
+$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object2.Value.links.win.arm64
+  InstallerUrl = 'https://download.scdn.co/SpotifyFullSetupARM64.exe'
 }
+$Object3 = Invoke-WebRequest -Uri $InstallerARM64.InstallerUrl -Method Head
+$ETagARM64 = $Object3.Headers.ETag[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+  $this.CurrentState.ETagARM64 = @($ETagARM64)
+
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+  $this.CurrentState.ETagARM64 = @($ETagARM64)
+
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The ETag is unchanged
+if ($ETag -in $this.LastState.ETag) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (x64)", 'Info')
+  return
+}
+if ($ETagARM64 -in $this.LastState.ETagARM64) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (ARM64)", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+# Case 4: The ETag has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+  $this.CurrentState.ETagARM64 = $this.LastState.ETagARM64 + $ETagARM64
+
+  $this.Write()
+  return
+}
+
+# ETag
+$this.CurrentState.ETag = @($ETag)
+$this.CurrentState.ETagARM64 = @($ETagARM64)
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  # Case 6: The ETag, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
+    $this.Submit()
   }
-  'Updated' {
+  # Case 5: The ETag and the SHA256 have changed, but the version is not
+  default {
+    $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
     $this.Submit()
   }
 }
