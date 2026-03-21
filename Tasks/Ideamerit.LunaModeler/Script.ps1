@@ -1,9 +1,7 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.datensen.com/download.html'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Luna%20Modeler') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = $Global:DumplingsStorage.IdeameritDownloadPage.SelectSingleNode('//a[contains(@href, "Luna%20Modeler") and contains(@href, "x64") and contains(@href, ".exe")]').Attributes['href'].Value | ConvertTo-UnescapedUri
 }
 
 # Version
