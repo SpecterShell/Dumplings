@@ -1,0 +1,170 @@
+Version: 0.62.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.62.0/beads_0.62.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.62.0/beads_0.62.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - 67249651676e758f72346e340f65f25c2914ac1c Merge PR #2638: feat: add --format json alias for --json flag
+    - 39ab50d447ac5a35df44b834624d6e87ba29b09c feat(ado): add Azure DevOps work item tracker package
+    - 9f5741f47287cc24bdcee62a492a7cbebf160f63 feat(ado): add bd ado CLI commands (sync, status, projects)
+    - 9a8aa558845fedd47355d63625a733bf72ddb81e feat(embeddeddolt): add embedded Dolt support for dep, duplicate, epic, graph, supersede, swarm (fix-merge PR #2734)
+    - a44ecef7432293c5fd6d5acb6633179b1fa4d252 feat(init): default AGENTS.md to minimal profile, add --agents-profile flag
+    - 5f2d4334e7a71a8f4b616541b51f66f68ee89cd4 feat: add 'bd note' command as shorthand for appending notes
+    - affb31496a24d19bac788699ddbea68e746d7144 feat: add --exclude-type flag to bd ready and bd list
+    - d6e5a5f7af0665529783e7c9387fdf699b6d3c2c feat: add --format json alias for --json flag
+    - faa69f922be2c931886458da7bec351507241f26 feat: audit log captures close reason; add v0.62.0 changelog and version notes
+    - a44e01e971be987654d9497ec93cca59c6d19f70 feat: audit log status changes to interactions.jsonl (bd-42f)
+    - 9b2c012e7eaf266ba7823d4047654fe466b115ea feat: custom status categories (active/wip/done/frozen)
+    - fab29b00c2ff89e9f0c79cde8d702f10e303fe25 feat: expose issue_type filter on MCP ready tool (PR #2660)
+    - a22af2db566293a8eed28d573797cc34fb30f36d feat: include memories in export/import round-trip
+    - 0fe9c032331ec6c0616e080b2e71cd3418486ee5 feat: surface quality/lifecycle commands in prime, template, and doctor (fix-merge PR #2664)
+    Bug Fixes
+    - 679d7bf2796dd1a9e697c8ea69b26dcac8a623b7 Merge PR #2651: fix: use go run for golangci-lint in pre-commit hook
+    - ae28719ef82992665eb4dfc491d3b56a64534c6e fix(ci): add write permissions to update-flake-lock workflow (PR #2642)
+    - c84735356ecf0e47ec748a1d251ddba4dc5b89a4 fix(cli): keep repo .beads config when dolt_data_dir escapes
+    - e566d3a91897df2aecb28f5c9535b4893b010712 fix(config): route config unset to correct store (GH#2727)
+    - 4a5cb16f1916898000fdfb195f96f5f6f394cecc fix(deps): update dolthub/driver v0.2.1 to v1.83.8 (fix-merge PR #2720)
+    - e6ee4f97bf8cc1230b13977c3356f266460a517c fix(deps): update github.com/anthropics/anthropic-sdk-go to v1.27.1 (PR #2705)
+    - 51d41e2d3501671021e32d0c60dd4b5cfab7b427 fix(deps): update github.com/dolthub/driver digest to 1f97424 (PR #2650)
+    - 164cea7c84293940ad5e163da35e03f027962fbd fix(doctor): add dolt-server.activity to gitignore, prioritize gitignore fixes (GH#2723)
+    - c3ee79eb466b4cf573f8e44dab354f04451251c7 fix(doctor): fail closed for server-mode integrity recovery
+    - e2f9f512feaa3f8c45d8c4507579852bea321225 fix(dolt): bump schema version to 8 and commit version update (PR #2635)
+    - 87c89854b9a67220eb7e25e7dfd65b0df4ece9e6 fix(dolt): keep repo-local auto-started servers alive across commands
+    - 60dd444a2efabe16edf5cf6172406d5440c11deb fix(dolt): verify dolt_status is clean after schema upgrade (GH#2634)
+    - 71a0360cd2480f41c3daaad961f73a0162dca746 fix(hooks): increase shim timeout from 30s to 300s for chained hooks (GH#2732)
+    - ec18969ea372f6ab495cb0ef3c9c031e49aad612 fix(init): add .beads-credential-key to project-root .gitignore (GH#2695)
+    - 8225a144af01a63cfb2f8e9e36b43b6270cfcfa8 fix(init): add TTL to circuit breaker state and clean stale files during init
+    - 0423e258b00eb041a45ee20f7422c7dcb57d45b7 fix(mol): add cycle detection to bond traversal to prevent OOM (GH#2719)
+    - f8152a132072e0e058983ead57783c9b4c18695f fix(update): require explicit opt-in for empty stdin/file DESCRIPTION rewrites
+    - 63432acf647dd905e97ef52feab973c2cd5dd06d fix: --validate checks --acceptance field, add validation.on-close config (PR #2654)
+    - 468c8630be5b6c6edcfa09bbb786283b6a880637 fix: Windows Dolt server lifecycle — stale state files and false auto-stop warning (GH#2670)
+    - ecf15d92ea31ebcdf6ac842bef9a7f6c772d1806 fix: add .beads-credential-key to .gitignore template (PR #2681)
+    - f535a184872997b9a7634590f2315a148f91cbf6 fix: add no_history column to embedded Dolt base schemas (PR #2632)
+    - 5b9e65de8593e899b845d393d16602f7ca77e000 fix: add retry loop for Windows binary existence check after zip extraction (fix-merge PR #2753)
+    - e650b1fa421544020891257e572df88181bca273 fix: add warnings for silent database name fallback in main command path
+    - e67a57495fb5412bdab724aa5f15ef671f41fd7b fix: bootstrap imports from git-tracked .beads/issues.jsonl
+    - fabda03bb728e8a2588b7bc55ee5fd94d77d0a3e fix: check BEADS_DOLT_SERVER_DATABASE env var in applyConfigDefaults
+    - 2846af39d7b3f8eef3e33febf048f639cdcd87b9 fix: correct bd human help text for adding comments (fix-merge PR #2752)
+    - 0e13cb52399c60f76d53170689eb1195ad2bf190 fix: correct version ordering in versionChanges (PR #2633)
+    - 2aff244538e8916ba825a15203b6a6105a75744b fix: don't kill externally-managed dolt servers (GH#2641)
+    - d56d290533c9ae2f7cab5a247302396dcb934a7b fix: drop id from ORDER BY in GetAllEventsSince UNION ALL query (PR #2691)
+    - f20b3d024e59bda37670d9730c077f7f93b0c7b4 fix: load .beads/.env before noDbCommands early return
+    - 93bfd457c69fc98cd1c303bc7e3eb320a022e527 fix: load .beads/.env before noDbCommands early return (GH#2677)
+    - fe1c9d56245fb573be3319daf5f170a66a1257a6 fix: make KillStaleServers respect server ownership
+    - b70f7406a394f66d15d5af3181d4c61cc6ef6bf3 fix: mark unused cfg param in checkProjectIdentityNoStore
+    - 2db73f8ee38b3da50e890cb4e43a1ce84cde6b07 fix: merge duplicate v0.60.0 changelog entries into single block
+    - b272e0b73bef1162542fb4568f7cd416de5af2b6 fix: pass repo path through fingerprint check to fix merge with main
+    - 76bfcd3c0ea49e9d354859c9c3c90d7644858c09 fix: preserve all hooks when overriding core.hooksPath, not just managed ones
+    - a153b13a0798c6449fceffbfb99a7ea2caa21fe2 fix: preserve pre-existing hooks when bd init sets core.hooksPath
+    - c75c2b541c2b9ec7b4f4954013a86503d804ebc1 fix: prevent doctor infinite Dolt server restart loop (GH#2636)
+    - a683dbc75f2712766718bbffe0dbc8ed250939c1 fix: prevent silent fallback to default "beads" database in openDoltDB
+    - 332f6418bfd62e3295e13b28ef138a8c9de2b4b6 fix: remove duplicate TestCompactTier1_DryRun (PR #2631)
+    - 6468766523339b7a7a30c5f812860a716bbce4b5 fix: remove hardcoded ~/gt/ paths from beads codebase (bd-h615)
+    - 059ee441eccf0f11e1c934a9586799f752e42576 fix: remove unnecessary type conversions in find_duplicates.go
+    - cb982591817dd6320312fd095199ac546505324c fix: remove unnecessary type conversions in find_duplicates.go
+    - f442c08cae2d78d365ecee8ea1966726882147a1 fix: remove unnecessary type conversions in find_duplicates.go
+    - b89f1b3c51a1ee1f43ff427e4d6444424725503b fix: remove unnecessary type conversions in find_duplicates.go
+    - e88379f85131b9d658f0c4ee248a33936282bd9a fix: remove unnecessary type conversions in haiku.go
+    - 114246000ec9432e177b8239828878fc2d3212d0 fix: remove unnecessary type conversions in haiku.go
+    - 32d4178ae63176b69dc9e5779478a4b094940558 fix: remove unnecessary type conversions in haiku.go
+    - 95dfaf0b4347d64318c58e0f250312b13fd63bf7 fix: remove unnecessary type conversions in haiku.go
+    - 43df89b2fff6e0baf49194334d9b432f3afbe5bc fix: repair nightly integration test compilation failures
+    - dc180dd3daa5869d5c9f73771d597d878466543b fix: replace broken SQL CAST in GetNextChildIDTx with Go-side parsing (GH#2721)
+    - bcfa8a73898ce4dc884fee6c72973e636ecc159d fix: resolve --format json collision between rootCmd persistent flag and list/dep-tree local flags
+    - f73a9ca3409b63ce2dbf9de6b7091abbe096de75 fix: serialize concurrent initSchemaOnDB with GET_LOCK to prevent journal corruption (#2672)
+    - 21fe42e3a8e9a0953467dbfd991f9e50acff3826 fix: suppress gosec G304 for filepath.Glob-sourced path in circuit breaker cleanup
+    - c9d77302b326708ddcaa250b32d3b791893f4b3d fix: update test_stats fixture to match nested Stats model (PR #2659)
+    - 811d7360fcd9c17292af0555922a78d6f2c670df fix: use SHOW COLUMNS in uuid_primary_keys migration to avoid server-mode crash (fix-merge PR #2751)
+    - c4fbe1ea0e9713baa3a2b2b637ffe9ca44b183b5 fix: use SQL stored procedures for bd flatten/compact in server mode (bd-uty)
+    - 6d1777a193d2a2a2f12985286769da69de732f5a fix: use go run for golangci-lint in pre-commit hook
+    Others
+    - 02c59bc5fc0bdfd5076d35e742b53353117a190b /.github/workflows/ci.yml: skip build step
+    - 4523b770ddc25676a35cedf771fabb2e71d817f1 /cmd/bd/count_embedded_test.go: count tests
+    - 778975c29028f99053059e54ca1cab16d24ed75c /cmd/bd/diff_embedded_test.go: diff tests
+    - 44a95b3526e6cc95a56a286f45fb45e63f6b553f /cmd/bd/find_duplicates_embedded_test.go: test
+    - 70e7d9ed046d7403490e34c1ab1902ab9e32a1ff /cmd/bd/gate_embedded_test.go: gate test
+    - 18136bc79277e169595c50172e4e431be68243e5 /cmd/bd/init_embedded_test.go: fix test
+    - 4b26c760b43d5644fc392fdcca435a98b8da2d1d /cmd/bd/label_embedded_test.go: add label tests
+    - 5b9546c6ec4c0767bc687d796f7a2daa8727e159 /cmd/bd/list_embedded_test.go: formatting
+    - 555f4b514dbc5619c43d30c567cd7a670d96adbe /cmd/bd/merge_slot_embedded_test.go: merge slot
+    - e7a492294cc3d1fcf6aa74e23ec4abb8a7ac16d8 /cmd/bd/move_embedded_test.go: move slot
+    - 9273ddf4f5247bcf4d960fac9cabc8e3a677ef82 /cmd/bd/promote_embedded_test.go: promote test
+    - 01c193eb2a28417d53f6c31b6a8e892e7439f3b7 /cmd/bd/query_embedded_test.go: add query test
+    - 216368995dbfd27f0b72682491c3a9c32c68fc54 /cmd/bd/quick_embedded_test.go: quick test
+    - ed6551d393f4844692640858a4b870999ae78368 /cmd/bd/search_embedded_test.go: search test
+    - 06be1de893583294e3504b14f7a58f1f8ed8cb0c /cmd/bd/show_embedded_test.go: add show test
+    - bbf520a12c809c3d7238e31282343ad8642781e6 /cmd/bd/update_close_embedded_test.go: concurrency tests
+    - b55bba88add07e88349b4e2fd6f374b6ebd9cf93 /cmd/bd/update_close_embedded_test.go: more tests
+    - 784d803cd51b14b3a62b1a289006b0529fadd2a3 /cmd/bd/update_close_embedded_test.go: tests
+    - c875268d698fe816d93d858cf094370c7e54cb9d /cmd/bd/{diff,history}: fix comment
+    - 3f1273853df1963e60ec99120f3be8e1685fd1ff /cmd/bd/{init,main}: some fixes
+    - 792298f1e0b96f25359e86e08287cbcb3ae9c625 /cmd/bd: add other tests
+    - fda1e49cfe5f6674f430a8d0b388ba3c0287988c /cmd/bd: add tests for the remaining
+    - 188ba0ed0c3e07f83832c491a719371d384b9b81 /cmd/bd: commit on write commands
+    - f0b2b70093d1013b9fc4226a0c7be4643e3d6064 /cmd/bd: do type check
+    - a0da53cfbe9084f83068531b074d96f870e8c7d4 /cmd/bd: pr feedback
+    - d1eb23a85fe7162728b24d320d6f39899539979c /cmd/bd: split test files
+    - bdca3dccf5cb63f930fd576b062dfcb05bf92314 /go.{mod,sum}: bump driver
+    - 180771dd596976b2229a51848148bc12e10f985c /internal/storage/dolt: pr feedback
+    - fb123fc0cc4e6180a6809d38c6a1aa7ce82691c9 /internal/storage/dolt: remove comment
+    - e0197559dee2add49a1ef775d64e6f6fa1d3b396 /internal/storage/dolt: use issuops
+    - 5c7e76413d459ae3c5ae650c7c7efc0031d567f1 /internal/storage/embeddeddolt/schema: remove no_history migration changes
+    - 7eca4d42ef31e95c7dbe6d0742a20b7111799265 /internal/storage/embeddeddolt: add new migration
+    - b9f32e2368f0a879cbf3624b7264e0309e523612 /internal/storage/issueops: fix queries
+    - 4eeb5f6b3b1be48beb3ba453d124a36042590398 /internal/storage/issueops: pr feedback
+    - 7c63af96179a38d7540d535fa170b2eb858bd690 /internal/storage/{dolt, embeddeddolt}: prep for update close
+    - e3667358c5253901f83f313d9342eba68ada3098 /internal/storage/{dolt,embeddeddolt,issueops}: implement methods
+    - 9f34d4b13afb494b541dabcb198f08be8d67e884 /internal/storage/{dolt,embeddeddolt,issueops}: implement methods needed for list
+    - 2119ce9287a59283fc8a4ae9b50496722e2173f7 /internal/storage/{dolt,embeddeddolt,issueops}: prep update close
+    - 31c0f2ddee3444a67080447e831f2750532d59db /internal/storage/{dolt,issueops}: update doltstore to use library code
+    - 3d7f9d3f75e939253f88fe3c1fdb1d86ee1f9776 /internal/storage/{embeddeddolt,issuops}: refactor
+    - ceae18d96e77fc03dc07ee1ff5e7f934dc8ee3f7 /internal/storage: pr feedback
+    - de6ce739680d612da3ede4895cb55564b767c5e2 /internal/storage:{dolt,embeddeddolt,issueops}: migrate metadata commands
+    - afb6e44283517919563cf14f22489e3adcc78591 /{cmd,internal}: add test and commit pending
+    - e916151e2d4efa182807664c7ed9e7f839b6c4b7 /{cmd,internal}: embeddeddolt list
+    - 0350e8bbfa06589a30f3b5394de7082157109d64 /{cmd,internal}: fix commands
+    - e04beea2549d53eeec5d051f91230e41a78ec5ea /{cmd,internal}: fix panic
+    - 5f022d57295a6acbe16151675e4c631f459cf8a2 /{cmd,internal}: implement as of
+    - 15b6190b7a8d0e93d99693973856ed1fbb19b1d3 /{cmd,internal}: implement more methods
+    - c36c5fcacae38e9a858b483206532492a69da9ac /{cmd,internal}: maybe create
+    - e7a77a2fa3affe568fb593f843dfc7a97cbf7809 /{cmd,internal}: pr feedback
+    - 92e25d1490c1728f1de74228a7a576a5a32a4733 /{cmd,internal}: pr feedback
+    - a693ac4559c6baa3dd226665ca9fecb6fafe0e7f /{cmd,internal}: pr feedback
+    - d6c54cb629868eea9c20ced3af3a65ccea0d8253 /{cmd,internal}: refactor again
+    - 9096e6e89b9b5a882ea7786dfd6ec58602ee3da2 /{cmd,internal}: remove unneeded stuff
+    - bc286d8fc26d3992bff3a3496280f128369beb0e /{cmd,internal}: update and close issue methods
+    - 58915b13e736e1bc02a7b9abf300384b4f816154 /{cmd,internal}: update global store to be interface
+    - 35d847ab7a6351e34dd4cf4aacf314cba72a4be0 Update untrue comment
+    - bc4ca1e1729d0ac839cfa6016c725cc97463dd85 chore(deps): bump github.com/anthropics/anthropic-sdk-go to v1.27.0 (PR #2649)
+    - e67a054ae6fec9df7c75ce1f2971b84962e9b84c cmd/bd/list_embedded_test.go: fix test
+    - 840e42112adcd9b551f307837bf6de4bf9e51967 cmd/bd/list_embedded_test.go: fix text
+    - 0857ce8ccff315c2ae67a4d1eba004ea34a70e57 cmd/bd: fix list tests
+    - 3af3ea1505847747b1140cfdef81aab3e521eaa1 fix(cmd/bd): preserve repo config when reopening stores by path (PR #2628)
+    - 389f97951e5553cf79a0a1e421ea532d1cfcf8a9 perf: cache doctor beads dir resolution (PR #2643)
+    - 9e17dbfaa0dfb352da252d68207c205ce8eec3d4 refactor(doltserver): introduce ServerMode enum to consolidate server ownership inference
+    - cf8513a2f80586778e87b81dd304f304242efc50 refactor: clean up residual sync.mode references (PR #2661)
+    - 13a83b080ce2084af47cee86b1b7bb04366721f2 refactor: make BEADS_ACTOR primary env var, BD_ACTOR deprecated fallback (bd-hm9r)
+    - 5d87e3a785308dd375dc49d73130d51949cb6aa6 refactor: remove GUPP references from beads codebase (bd-5zkx)
+    - 54dc3997b4937439ae7bdce163e954d9f483c9b1 refactor: remove HOP fields from beads schema (bd-vcps)
+    - 15973799132a4ffc263ce5abc0872739a79630fe refactor: remove agent role config categories from beads (bd-lvdl)
+    - 0bd598ce539834274ae407a51aebf1d56c35d144 refactor: remove agent-as-bead subsystem from beads (bd-4vw2)
+    - 3dae6bb3dfaea3a5a2618b054b98c79170779cf4 refactor: remove gastown/Gas Town string references from beads code and docs (bd-1ue8)
+    - 655dc3e1081c31b1015054f7eb07ac8620652937 refactor: remove patrol molecule references from beads commands (bd-74p3)
+    - 8f18302cb5bd3d1fd99d25e3debf918a57bf6e2c refactor: remove polecat/crew/gastown GT terminology from beads types (bd-77g2)
+    - d6d11c87e403a0a169ecf6ed01a2d2096395dbf8 refactor: remove polecat/crew/overseer GT terminology from beads types (bd-77g2)
+    - d8af81edae9eab78be8208df666ac097c69cb74c refactor: replace GT_ROLE parsing with BD_ACTOR in hooks (bd-b4q6)
+    - e66ee1d98da2f7f735c1dabee79d013ccfa00f01 style: fix gofmt formatting in doltserver.go
+    - 0838b0935cc911238aa5ff7f3c8b059efb6a03bb {cmd,internal}: implement method
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/steveyegge/beads/releases/tag/v0.62.0
+ReleaseTime: 2026-03-22T02:57:44.0000000Z
