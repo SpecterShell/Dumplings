@@ -1,0 +1,38 @@
+Version: 0.26.2
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.26.2/MuteMe-Client-0.26.2 Setup.exe
+- InstallerType: wix
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.26.2/MuteMe-Client.msi
+  ProductCode: '{7D391610-FDAD-4F72-A9A0-002B798DD2C4}.msq'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We’re excited to announce MuteMe version 0.26.2 — a significant update that introduces major platform unification, expanded application support, and critical stability improvements across macOS, Windows, and Linux. This release represents a major milestone in our journey toward a truly unified, cross-platform communication experience. With this version, Linux users gain parity with macOS and Windows for the first time, while Zoom, Google Meet, and WebEx users benefit from deep controller enhancements. Several long-standing reliability issues have also been addressed to ensure a smoother, more dependable experience.
+    ⚠️ Note: Some new features related to upcoming MuteMe hardware devices are currently disabled by default pending official device shipment. These capabilities will be activated automatically once your MuteMe hardware is registered and ready.
+    #393 – Enhanced Support for WebEx
+    We’ve significantly refined our WebEx integration for both macOS and Windows to support newer UI layouts, improved presence state detection, and real-time mute/unmute synchronization. Background optimizations in the controller engine now allow MuteMe to respond faster to WebEx’s dynamic interface changes especially during screen sharing, active speaker detection, and when switching between meetings. This update resolves intermittent disconnects and inconsistent button visibility reported by enterprise users.
+    #392 – Zoom Controller: Compatibility with Zoom Client v6.7.5 (Windows)
+    Zoom released version 6.7.5 with a major UI refactor, including restructured button layouts and dynamic toolbar positioning on Windows. This update updates MuteMe’s UI automation engine to detect new element IDs and layout paths, ensuring the mute button remains functional and positioned correctly even during screen sharing or when multiple monitors are in use. The fix also addresses inconsistent behavior where the mute indicator LED would lag behind UI state changes.
+    #391 – Unified Linux Client
+    This release marks the debut of our fully unified codebase across macOS, Windows, and Linux. The Linux client now shares the same core engine as our desktop platforms delivering previously unavailable features like system wide hotkey support, hardware mute button integration (including New MuteMe Click coming soon), and full control over call state indicators via the status bar/tray. Linux users can now enjoy the same polish, stability, and customization options long available on macOS and Windows including dark/light theme synchronization with device settings. All Linux builds do not yet support automatic software updates.
+    #389 – Fixed: Rating Window Blocking User Interaction
+    Resolved a regression where the MuteMe rating prompt window would appear in behind active meetings and block the MuteMe app from doing other things. The rating dialog now uses a window presentation and does not block the application, allowing users to rate or dismiss without interrupting their meeting flow.
+    #388 – MuteMe Plus: Trial Expiry Handling
+    Fixed a critical bug where MuteMe Plus would remain active and continue even after the 30-day period without offering users a way to disable it. Now, once the period ends, MuteMe Plus automatically deactivates and reverts to basic behavior. Users receive a clear in-app notification so users know they can reconnect the device to restore those features.
+    #387 – EdgeLighting: Mixed-Resolution Monitor Support
+    EdgeLighting previously failed to work properly on multi-monitor setups where the primary display had lower resolution than a secondary (e.g., laptop + 4K external). This update adds per-display DPI-aware scaling logic and recalibrates the LED boundary calculation engine to handle varying resolutions, refresh rates, and monitor orientations. Users with hybrid setups (e.g., 1080p primary + 1440p secondary) will now see correct lighting effects, even when the primary display is rotated.
+    #386 – Zoom Breakout Rooms Support
+    Resolved a longstanding issue where the Zoom controller would fail to detect or control mute state in break-out rooms if the room deviated from the normal breakout room naming conventions. This fix applies to both Windows and macOS clients.
+    #385 – Windows Zoom Crash Mitigations
+    Addressed multiple instability issues causing Zoom to crash on Windows. This crash of the zoom controller would result in customers losing the ability to control their mute status.
+    #384 – macOS Tahoe ~26.2 Microphone Detection
+    macOS Tahoe (Version ~26.2) introduced changes that broke mic in use detection, This update adds a new method that is more robust. Users will now see the mic in use once again when even other non-officially supported apps are using the microphone.
+    #333 – MuteMe Click Device Support
+    This release includes foundational updates to support the upcoming MuteMe Click hardware device including USB handshake, lighting effects protocols, and other UI/UX changes to support this upcoming hardware. All new device code is currently disabled by default for users until hardware shipping begins in Q3 2026. This work was required since it touched multiple parts of the app. Otherwise complex and risky rework would be required at a later date.
+    #309 – Updates to Zoom Call Controller
+    The Zoom call controller got multiple updates with this release, in addition to the above zoom changes this change is making it easier to support video control with zoom in the future.
+    #085 – Google Meet Support for Linux
+    Google Meet integration is now available on Linux for the first time! This is the first time a platform is supported on linux other than just the default OS mute/unmute. This will require our chrome extension just like on Windows and macOS.
+ReleaseTime: 2026-03-18
