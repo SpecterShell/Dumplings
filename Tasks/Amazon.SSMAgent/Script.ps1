@@ -14,7 +14,14 @@ switch -Regex ($this.Check()) {
       $RepoOwner = 'aws'
       $RepoName = 'amazon-ssm-agent'
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+      }
+
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
