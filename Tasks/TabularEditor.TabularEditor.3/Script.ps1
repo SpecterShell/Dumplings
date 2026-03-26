@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
         Value  = 'https://docs.tabulareditor.com/references/release-notes'
       }
 
-      $ReleaseNotesUrl = "https://docs.tabulareditor.com/references/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html"
+      $ReleaseNotesUrl = "https://docs.tabulareditor.com/en/references/release-notes/$($this.CurrentState.Version.Replace('.', '_')).html"
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode('//*[@id="conceptual-content"]/h2[1]')
