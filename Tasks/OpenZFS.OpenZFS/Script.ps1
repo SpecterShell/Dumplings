@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace 'zfswin-' -replace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'nullsoft'
+  InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name -eq "OpenZFSOnWindows-debug-$($this.CurrentState.Version).exe" }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
