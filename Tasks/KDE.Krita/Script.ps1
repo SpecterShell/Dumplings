@@ -1,13 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://krita.org/en/download/'
-
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'Download Krita ([\d\.]+)').Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://krita.org/en/download/' | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.id -eq 'windows-download' } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.SelectSingleNode('//div[@id="windows-download"]//a').Attributes['href'].Value
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
