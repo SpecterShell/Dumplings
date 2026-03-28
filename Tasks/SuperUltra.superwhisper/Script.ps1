@@ -5,7 +5,12 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = $Object1.platforms.'windows-x86_64-nsis'.url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.platforms.'windows-aarch64-nsis'.url
 }
 
 switch -Regex ($this.Check()) {
