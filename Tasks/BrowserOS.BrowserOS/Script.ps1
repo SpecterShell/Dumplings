@@ -1,7 +1,7 @@
 $RepoOwner = 'browseros-ai'
 $RepoName = 'BrowserOS'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.prerelease -and $_.tag_name -like "v*" }, 'First')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
