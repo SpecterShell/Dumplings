@@ -7,17 +7,17 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86') -and -not $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86') -and $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and -not $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') -and -not $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') -and $_.name.Contains('-fd') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
