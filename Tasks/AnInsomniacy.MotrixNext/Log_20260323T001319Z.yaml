@@ -1,0 +1,30 @@
+Version: 3.4.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.4.8/MotrixNext_3.4.8_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves critical issues with download persistence across restarts and brings native macOS integration improvements. BitTorrent downloads no longer reappear after deletion, the exit animation now fades the entire native window including traffic lights, and the macOS title bar uses native traffic light controls.
+    ✨ New Features
+    - Native macOS traffic lights — replaced the custom macStyleControls preference with native Overlay title bar, providing authentic macOS window controls out of the box
+    - Window fade-out animation — exit animation now fades the entire native window (including traffic lights on macOS) via NSWindow.setAlphaValue instead of CSS-only opacity
+    - Filename resolution from aria2 — task names are now resolved by aria2 itself, with a smooth transition animation during resolution
+    - Instant seeding on restore — enabled bt-seed-unverified for immediate seeding when restoring sessions
+    - Expanded localization — updated and expanded locale files across 26 languages
+    🛠 Improvements
+    - Decomposed Rust backend — split monolithic app.rs into dedicated command modules (config, engine, fs, ui, tracker) for better maintainability
+    - Async session save — saveSession is now asynchronous and properly awaited across all stores
+    - Consistent toast notifications — removed custom durations from task error messages for uniform display timing
+    🐛 Bug Fixes
+    - Fixed deleted downloads reappearing — purge removed tasks from aria2's stopped-result list and save session to prevent persistence after restart
+    - Fixed completed tasks re-downloading — centralized aria2 session cleanup on app exit; force-save now applies only to BT/magnet/metalink tasks, not HTTP downloads
+    - Fixed stopped BT tasks re-seeding — purge stopped BT task records from aria2 on restart
+    - Fixed session save panic — explicitly handle SocketAddr parsing errors before TCP connection in save_session_rpc
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.4.8
+ReleaseTime: 2026-03-23T00:00:11.0000000Z

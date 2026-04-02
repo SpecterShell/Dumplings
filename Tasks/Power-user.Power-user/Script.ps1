@@ -19,7 +19,7 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://www.powerusersoftwares.com/version-history' | ConvertFrom-Html
 
-    $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@role='listitem' and contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@role='listitem' and contains(., '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
     if ($ReleaseNotesNode) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

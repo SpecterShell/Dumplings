@@ -21,19 +21,21 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://host.terminal.icu/category/1'
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://host.terminal.icu/category/1'
       }
 
       $Object2 = (Invoke-RestMethod -Uri 'https://host.terminal.icu/api/category/1').topics.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = "https://host.terminal.icu/topic/$($Object2[0].tid)"
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = "https://host.terminal.icu/topic/$($Object2[0].tid)"
         }
 
         $Object3 = Invoke-RestMethod -Uri "https://host.terminal.icu/api/topic/$($Object2[0].tid)"

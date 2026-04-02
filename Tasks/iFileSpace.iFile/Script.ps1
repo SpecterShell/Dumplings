@@ -20,8 +20,15 @@ switch -Regex ($this.Check()) {
       $Object3 = $Object2.data.list.Where({ $_.title -eq $this.CurrentState.Version }, 'First')
 
       if ($Object3) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object3[0].addtime.ToString(), 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+        if ($Object3[0].addtime -match '^(\d{8})$') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object3[0].addtime.ToString(), 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+        } elseif ($Object3[0].addtime -match '^\d+$') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = $Object3[0].addtime | ConvertFrom-UnixTimeSeconds
+        } else {
+          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+        }
 
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
@@ -32,7 +39,7 @@ switch -Regex ($this.Check()) {
               'youhua' { '优化' }
               'xiufu' { '修复' }
               'xinzeng' { '新增' }
-              Default { $_ }
+              default { $_ }
             }
             "【${TypeName}】$($_.content)"
           } | Format-Text

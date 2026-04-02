@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://zoom.us/product/version' -UserAgent '
   platform    = 'Universal'
   os          = 'Win32'
   pluginOS    = 'win'
-  cv          = $this.Status.Contains('New') ? '6.3.10' : ($this.LastState.Version.Split('.')[0..2] -join '.')
+  cv          = $this.Status.Contains('New') ? '6.6.10' : ($this.LastState.Version.Split('.')[0..2] -join '.')
 } | ConvertFrom-ProtoBuf
 $Object2 = $Object1['12'] | ConvertFrom-Json
 

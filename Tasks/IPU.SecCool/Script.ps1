@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.ipu.dk/products/seccool/'
 
 # x86
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0]
+$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('x64') } catch {} }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerLink.href

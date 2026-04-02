@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=S7FC'
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=S7FC' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
+  InstallerUrl = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 
 switch -Regex ($this.Check()) {
@@ -15,11 +15,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # LicenseUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = Join-Uri $InstallerUrl 'LICENSE.zip'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = Join-Uri $InstallerUrl 'LICENSE.zip'
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

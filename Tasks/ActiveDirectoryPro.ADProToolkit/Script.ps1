@@ -24,13 +24,13 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://activedirectorypro.com/release-notes/' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'level-h3') and contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       if ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}\W+\d{1,2}\W+20\d{2})') {
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(($Matches[1] -replace '/', '-'), 'M-d-yyyy', $null) | Get-Date -Format 'yyyy-MM-dd'
       }
 
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('level-h3'); $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'

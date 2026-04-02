@@ -8,13 +8,20 @@ if (Test-Path -Path $OldReleasesPath) {
 $Object1 = Invoke-RestMethod -Uri "https://versions-prod.lmstudio.ai/update/win32/x86/$($this.Status.Contains('New') ? '0.3.19' : $this.LastState.Version)"
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = "$($Object1.version)$($Object1.build -gt 0 ? "+$($Object1.build)" : '')"
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     $ReleaseNotesObject = $Object1.releaseNotes | Convert-MarkdownToHtml
-    $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '$($this.CurrentState.Version)')]")
-    if ($ReleaseNotesTitleNode) {
+    if ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//p[contains(./strong, 'Build $($Object1.build)')]")) {
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.SelectSingleNode('./self::p/strong') -and $Node.InnerText -match 'Build \d+'); $Node = $Node.NextSibling) { $Node }
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotes = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      }
+    } elseif ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '$($this.CurrentState.Version)')]")) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'

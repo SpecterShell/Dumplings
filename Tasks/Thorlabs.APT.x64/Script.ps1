@@ -1,11 +1,11 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.KinesisPrefix $Global:DumplingsStorage.KinesisDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('APT') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].download.url.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = "https://www.thorlabs.com/Software/Motion Control/APT/Application/V$($this.CurrentState.Version)/Release Notes.txt"
+      $ReleaseNotesUrl = $Global:DumplingsStorage.KinesisDownloadPage.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -like 'APT * 64-Bit Software for 64-Bit Windows' }, 'First')[0].contentLink.expanded[0].changeLog.url.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)

@@ -1,0 +1,25 @@
+Version: 0.2.7
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.7/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.7/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - #174 Fix Unicode byte offset panic in HTML→Markdown conversion — replaced to_lowercase() pattern with ASCII case-insensitive find to prevent panics on multi-byte Unicode (İ, ẞ)
+    - #173 Fix dashboard hands status badge — all 4 status variants (Active/Paused/Error/Inactive) now show correct badge colors with action hints
+    - #172 Add X-API-Key header support — auth middleware now accepts X-API-Key as fallback alongside Authorization: Bearer
+    - #171 Fix hand deactivation orphan agent cleanup — orphaned agents (from failed activations) are now found by hand: tag and killed on deactivate
+    - #155 Improve shell_exec error messages — blocked commands now show the current exec_policy mode and how to fix it; shell_exec removed from tool list when mode=Deny
+    - #128, #64 Duplicate ClawHub parse errors — already fixed in v0.2.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.2.7
+ReleaseTime: 2026-03-02T02:09:12.0000000Z

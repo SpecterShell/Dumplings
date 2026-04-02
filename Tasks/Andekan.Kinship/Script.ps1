@@ -1,8 +1,8 @@
 $Object1 = Invoke-RestMethod -Uri 'https://app.kinship.io/index.php?action=download_addin&func=get_assets&version=release'
 # EXE
-$Object2 = $Object1.Where({ $_.fileNameNoVer -eq 'KinshipSetup' -and $_.extension -eq 'exe' }, 'First')[0]
+$Object2 = $Object1.Where({ $_.fileName -match 'KinshipSetup' -and $_.extension -eq 'exe' }, 'First')[0]
 # MSI
-$Object3 = $Object1.Where({ $_.fileNameNoVer -eq 'KinshipAllUsersSetup' -and $_.extension -eq 'msi' }, 'First')[0]
+$Object3 = $Object1.Where({ $_.fileName -match 'KinshipInstaller' -and $_.extension -eq 'msi' }, 'First')[0]
 
 if ($Object2.version -ne $Object3.version) {
   $this.Log("Inconsistent versions: EXE: $($Object2.version), MSI: $($Object3.version)", 'Error')
@@ -15,12 +15,12 @@ $this.CurrentState.Version = $Object2.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType   = 'inno'
-  InstallerUrl    = "https://app.kinship.io/download/$($Object2.fileNameNoVer)-$($Object2.version).exe"
+  InstallerUrl    = "https://app.kinship.io/download/$($Object2.name)"
   InstallerSha256 = $Object2.SHA256
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
-  InstallerUrl  = "https://app.kinship.io/download/$($Object3.fileNameNoVer)-$($Object3.version).msi"
+  InstallerUrl  = "https://app.kinship.io/download/$($Object3.name)"
   # InstallerSha256 = $Object3.SHA256
 }
 

@@ -1,0 +1,119 @@
+Version: 17.1.0.16
+Installer:
+- Architecture: x64
+  InstallerUrl: https://up.autodesk.com/2017/CDX/AB4AADCC-F890-4B4F-A7A6-B0FBD2386796/DesktopConnector-x64-17.1.0.16.exe
+  ProductCode: '{D662A2E1-5B33-3526-8778-D90DEC962769}'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important:
+    Fusion Connector users (versions 15.x or 16.x): You must uninstall your current version of Desktop Connector before installing v17.x. Docs connector users can upgrade directly and should not uninstall first. For complete instructions, see Update Desktop Connector.
+
+    What's new
+    16. x to 17.x migration improvements
+    - Smoother upgrade experience: When upgrading from version 16.x to 17.x, Desktop Connector automatically checks your workspace and backs up any files that don't match what's stored in the cloud. If many files need attention, Desktop Connector will archive your files and resubscribe to your projects automatically, giving you a fresh start.
+    Learn more about Preparing Projects for Version 17.x.
+    Performance improvements
+    - Reduced memory usage with many projects: Desktop Connector now uses significantly less memory when subscribed to many projects. This improvement makes Desktop Connector more efficient on systems with many project subscriptions.
+    - Faster project scanning: Desktop Connector now spends less time scanning for changes in projects you haven't recently interacted with, resulting in faster overall performance.
+    Enhanced user experience
+    - Windows 11 context menu improvements: Desktop Connector menu items now appear directly in the Windows 11 context menu without requiring users to click "Show more options." This improvement makes it faster and easier to access Desktop Connector features when right-clicking on files and folders.
+    - Renamed "Create viewable" to "Process for viewing": The right-click menu option has been updated to align with Autodesk Docs terminology.
+    - Administrator controls for delete notifications: Admins can now disable delete notifications or configure the deleted file threshold that triggers a delete notification for a specific machine or user through the registry. By default, users are notified when 1 or more files are deleted, but administrators can adjust this threshold to any number or turn off notifications entirely.
+    - Free Up Space now works on folders: The "Free Up Space" option is now properly enabled for folders that contain downloaded files, making it easier to free up disk space at the folder level.
+    - Duplicate filename detection: Desktop Connector now notifies you in the Troubleshooter when it detects duplicate file name entries from long and short 8.3 filename variants in your workspace, helping you understand why certain sync operations may be failing.
+    - Reset Utility no longer requires exiting Desktop Connector first: The Reset Utility can now safely shut down Desktop Connector when it runs, eliminating the need to manually exit Desktop Connector before running the utility. Learn more about the Reset Utility.
+    Upload with References improvements
+    - Improved upload settings clarity: The "Always upload with references" setting has been renamed to "Always ask to include references" with a helpful tooltip that explains when files are uploaded with or without the upload with references dialog, making it easier to understand this option.
+    - Show only files with issues: A new toggle on the Select page allows you to filter the file list to show only files with missing references or other issues. This makes it easier to focus on resolving problems before uploading. The toggle can be turned on or off as needed, and is disabled when no issues are found.
+    - Circular and self-reference detection: When resolving missing referenced files, Desktop Connector now detects if the file you choose would create a self-reference (a file referencing itself) or a circular reference (files referencing each other in a loop). If detected, you'll see a warning icon with a clear message explaining the issue so you can choose a different file.
+    - See parent files of missing references: When a file is missing, the tooltip now displays both its parent files and the missing file's path, making it easier to understand file dependencies and resolve missing reference issues.
+    - Change resolved file references: After resolving a missing referenced file, you can choose a different file if needed, giving you more flexibility to correct file references.
+    - Warning when unchecking files: If you uncheck files in the Select page and click Next, a warning dialog will appear explaining that unselected files will not be uploaded and may create missing references that could prevent others from opening or viewing the complete assembly.
+    - See all files in folders: When dragging folders into the Upload with References dialog, all original files contained in those folders are now displayed even if you cancel the Inventor Project File selection, making it easier to see what will be uploaded.
+    - Better error messages for long paths: When the Upload Dialog cannot retrieve referenced files because a file path exceeds the Windows OS path length limit, you'll now receive a clear, appropriate error message explaining the issue.
+    Learn more about Upload with references.
+    Bug fixes and stability
+    Stability improvements
+    - Responsive project additions: Desktop Connector now remains responsive when errors occur during the initial sync while adding a project, instead of freezing.
+    - Safer file and folder operations: Desktop Connector now handles the combination of creating files and renaming parent folders without crashing.
+    - Clean application exit: Exiting Desktop Connector while the Reference Explorer or Upload wizard dialogs are open now closes both the dialog and application properly.
+    - Long path handling in upload dialog: Dragging files with paths that exceed the Windows path length limit into the Upload wizard no longer causes a crash.
+    - Locked file scanning: Desktop Connector no longer crashes when scanning files that are locked by another application (such as temporary files created by Office applications).
+    - Temporary file handling: Desktop Connector no longer crashes when a temporary file (such as an AutoCAD .tmp file) is deleted by the authoring application during scanning.
+    - Remote sync stability: Desktop Connector no longer crashes during remote sync after creating placeholder files but before completing the database update.
+    Sync reliability
+    - Workspace scanning loops: Workspace scanning no longer gets stuck in a loop when a remote sync fails but modifies the workspace in some way.
+    - Lock icon display: Desktop Connector no longer gets stuck applying a lock icon to read-only files, which previously prevented sync from completing.
+    - Remote move operations: Unexpected failed jobs no longer appear on the Home Screen when a remote sync bulk move is interrupted.
+    - Move sync errors: Users no longer see unexpected failed move jobs for files they didn't touch, with errors indicating duplicate files.
+    - Remote delete for long paths: Remote sync of file or folder deletions now works correctly for long paths. Desktop Connector also detects and remediates duplicate placeholders caused by this issue.
+    Upload reliability
+    - File integrity during upload: Editing and saving a file while its upload is in progress now correctly captures all changes, preventing discrepancies between local and cloud versions.
+    - Re-uploading assemblies: Uploading the same assembly with references multiple times no longer fails due to existing read-only files in the destination.
+    - Clearer read-only error messages: When uploading files that would replace existing read-only files, the error message now clearly explains the issue.
+    - Solibri file uploads: Solibri files no longer fail with "failed to copy file to temporary folder" errors during upload operations. Desktop Connector now correctly handles Solibri temporary files (~$...smc).
+    File and folder operations
+    - Folder replace operations: Moving a folder and replacing it with a new folder of the same name now completes as expected without unexpectedly deleting the original folder.
+    User interface
+    - Delete notifications after reinstall: Desktop Connector no longer shows delete notifications for files after uninstalling and reinstalling the application.
+    - Troubleshoot button visibility: The Troubleshoot button no longer disappears from the Home Screen toolbar. Disabled toolbar buttons also no longer show a blue hover effect.
+    - Troubleshoot download action: The "Fix All" action in the Troubleshooting tool now correctly triggers download operations for files that need to be downloaded.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    重要信息：
+    Fusion 连接器用户：您必须先卸载当前版本的 Desktop Connector，然后再安装 17.x 版本。Docs 连接器用户可直接升级，无需先执行卸载操作。有关完整的说明，请参见更新 Desktop Connector。
+
+    新特性
+    16. x 到 17.x 移植改进
+    - 更流畅的升级体验：从 16.x 升级到 17.x 版本时，Desktop Connector 会自动检查您的工作空间并备份所有与云中存储的内容不匹配的文件。如果许多文件需要注意，Desktop Connector 将存档您的文件并自动重新订阅您的项目，从而让您有个全新的开始。
+    详细了解如何为版本 17 准备项目。
+    性能改进
+    - 订阅多个项目时内存使用量减少：现在，订阅多个项目时，Desktop Connector 使用的内存大幅减少。这一改进使得 Desktop Connector 在订阅许多项目的系统上更加高效。
+    - 更快的项目扫描：现在，扫描您最近未与之交互的项目中是否发生了更改时，Desktop Connector 花费的时间有所减少，这使得整体性能得到提升。
+    增强的用户体验
+    - Windows 11 上下文菜单改进：现在，Desktop Connector 菜单项直接出现在 Windows 11 上下文菜单中，用户无需单击“显示更多选项”。这一改进使得在文件和文件夹上单击鼠标右键时能更加方便快捷地访问 Desktop Connector 功能。
+    - 将“创建可查看文件”重命名成了“查看处理”：为了与 Autodesk Docs 术语保持一致，右键菜单选项进行了更新。
+    - 管理员对删除通知进行控制：现在，管理员可以通过注册表为特定计算机或用户禁用通知或配置触发删除通知的删除文件阈值。默认情况下，当删除一个或多个文件时，用户会收到通知，但管理员可以将此阈值调整为任意数字，也可以完全关闭通知。
+    - “释放空间”现在作用于文件夹：现在，为包含下载文件的文件夹正确启用了“释放空间”选项，这使得在文件夹级别释放磁盘空间变得更容易。
+    - 重复文件名检测：现在，当 Desktop Connector 在您的工作空间中检测到由长文件名和短文件名（8.3 格式）变体引起的重复文件名条目时，会在故障排查工具中通知您，这有助于您了解某些同步操作可能失败的原因。
+    - 重置实用程序不再要求先退出 Desktop Connector：现在，当 Desktop Connector 运行时，重置实用程序可以安全地将其关闭，让用户不再需要在运行该实用程序之前手动退出 Desktop Connector。详细了解重置实用程序。
+    “带参考上传”改进
+    - 提高了上传设置的清晰度：“始终带参考上传”设置已重命名为“始终要求包含参考”，并带有一个有用的工具提示，解释了何时使用“带参考上传”对话框上传文件以及何时不使用该对话框上传文件，让您更容易理解此选项。
+    - 仅显示有问题的文件：“选择”页面上新增了一个切换开关，可让您过滤文件列表，使其仅显示有参考缺失或其他问题的文件。这样让您更容易在上传之前专注于解决问题。可以根据需要打开或关闭该切换开关，如果未发现问题，它处于禁用状态。
+    - 循环参考与自参考检测：解析缺少的参考文件时，Desktop Connector 现在会检测您选择的文件是否会形成自参考（即文件参考自身）或循环参考（即文件相互参考形成循环）。如果检测到，您会看到一个警告图标，还有一条清晰的消息，它对问题进行了解释说明，以便您可以选择其他文件。
+    - 查看缺失参考的父文件：当某个文件缺失时，工具提示现在会同时显示其父文件和缺失文件的路径，这让您更容易理解文件依赖关系和解决缺失参考问题。
+    - 更改解析的文件参考：解析缺失的参考文件后，您可以根据需要选择其他文件，从而更灵活地更正文件参考。
+    - 取消选中文件时发出警告：如果您在“选择”页面中取消选中文件，然后单击“下一步”，系统会显示一个警告对话框，指出未选择的文件将不会上传并且可能会导致参考缺失，这会使其他人无法打开或查看完整的部件。
+    - 查看文件夹中的所有文件：将文件夹拖动到“带参考上传”对话框中时，即使取消 Inventor 项目文件选择，现在也会显示这些文件夹中包含的所有原始文件，让您更容易查看将要上传的内容。
+    - 针对长路径的错误消息更完善：当由于文件路径超出 Windows 操作系统路径长度限制而导致“上传”对话框无法检索参考文件时，您现在会收到一条清晰恰当的错误消息，它对问题进行了解释说明。
+    详细了解带参考上传。
+    错误修复和稳定性
+    改进了稳定性
+    - 添加项目时保持响应：如果在添加项目时初始同步期间发生错误，Desktop Connector 现在会保持响应，而不会冻结。
+    - 更安全的文件和文件夹操作：Desktop Connector 现在可以让创建文件与重命名父文件夹这两项操作同时进行，而不会发生崩溃。
+    - 应用程序干净退出：如果在参考资源管理器或上传向导对话框处于打开状态时退出 Desktop Connector，现在会正确地同时关闭对话框和应用程序。
+    - 上传对话框中的长路径处理：将路径超过 Windows 路径长度限制的文件拖动到上传向导中不再导致发生崩溃。
+    - 锁定的文件扫描：扫描由其他应用程序锁定的文件（例如，由 Office 应用程序创建的临时文件）时，Desktop Connector 不再发生崩溃。
+    - 临时文件处理：当临时文件（如 AutoCAD .tmp 文件）在扫描期间由编写应用程序删除时，Desktop Connector 不再发生崩溃。
+    - 远程同步稳定性：在远程同步期间，在创建占位符文件之后但在完成数据库更新之前，Desktop Connector 不再发生崩溃。
+    同步可靠性
+    - 工作空间扫描循环：当远程同步失败但以某种方式修改了工作空间时，工作空间扫描不再陷入循环卡死状态。
+    - 锁定图标显示：Desktop Connector 在对只读文件应用锁定图标时不再卡住，该问题此前曾导致同步无法完成。
+    - 远程移动操作：远程同步批量移动中断时，意外失败的作业不再出现在主屏幕上。
+    - 移动同步错误：用户不再看到他们未曾操作过的文件的意外失败移动作业，而会收到指出重复文件的错误消息。
+    - 长路径的远程删除：文件或文件夹删除操作的远程同步现在正确地支持长路径。Desktop Connector 还会检测并修复由此问题导致的重复占位符。
+    上传可靠性
+    - 上传期间的文件完整性：如果在文件上传正在进行时编辑和保存文件，现在会正确地捕捉所有更改，从而防止本地版本与云版本之间存在差异。
+    - 重新上传部件：多次上传同一个带参考的部件时，不再因目标位置存在只读文件而导致失败。
+    - 更清晰的只读错误消息：当上传的文件会替换现有只读文件时，错误消息现在会清晰地说明问题所在。
+    - Solibri 文件上传：上传操作期间，Solibri 文件不再因“无法将文件复制到临时文件夹”错误而失败。Desktop Connector 现在可以正确处理 Solibri 临时文件 (~$...smc)。
+    文件和文件夹操作
+    - 文件夹替换操作：移动文件夹并将其替换为同名的新文件夹时，现在会按预期完成，而不会意外删除原始文件夹。
+    用户界面
+    - 重新安装后的删除通知：卸载并重新安装应用程序后，Desktop Connector 不再显示文件的删除通知。
+    - 故障排除按钮可见性：故障排除按钮不再从主屏幕工具栏中消失。禁用的工具栏按钮也不再显示蓝色悬停效果。
+    - 下载操作故障排除：故障排除工具中的“全部修复”操作现在会为需要下载的文件正确触发下载操作。
+ReleaseTime: 2026-02-02

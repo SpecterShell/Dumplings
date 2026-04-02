@@ -1,16 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=MCM301'
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=MCM301' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/')
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "70-0157-$($this.CurrentState.Version)_MCM301_Customer_UI.zip"
-    }
-  )
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/').Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 
 switch -Regex ($this.Check()) {
@@ -20,14 +15,25 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # LicenseUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = "https://www.thorlabs.com/Software/THO/MCM301/software/v$($this.CurrentState.Version)/License.zip"
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = "https://www.thorlabs.com/Software/THO/MCM301/software/v$($this.CurrentState.Version)/License.zip"
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
     }
 
     try {
@@ -38,7 +44,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog.Replace('\', '/')
+      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog.Replace('\', '/').Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)

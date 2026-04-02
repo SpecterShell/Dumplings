@@ -1,0 +1,33 @@
+Version: 1.16.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.16.0/hatch-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.16.0/hatch-x64.msi
+- InstallerType: burn
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.16.0/hatch-universal.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed:
+    - Drop support for 3.9
+    - Environment type plugins are now no longer expected to support a pseudo-build environment as any environment now may be used for building. The following methods have been removed: build_environment, build_environment_exists, run_builder, construct_build_command
+    Added:
+    - Support for workspaces inspired by Cargo Workspaces
+    - Dependency group support.
+    - The version and project metadata commands now support projects that do not use Hatchling as the build backend
+    - The version command accepts a --force option, allowing for downgrades when an explicit version number is given.
+    - Build environments can now be configured, the default build environment is hatch-build
+    - The environment interface now has the following methods and properties in order to better support builds on remote machines: project_root, sep, pathsep, fs_context
+    - Bump the minimum supported version of packaging to 24.2
+    - Upgrade Ruff to 0.13.2
+    Fixed:
+    - All HTTP requests now set an identifiable User-Agent header.
+    - Fix issue where terminal output would be out of sync during build.
+    - Fix for Click Sentinel value when using run command
+- Key: ReleaseNotesUrl
+  Value: https://github.com/pypa/hatch/releases/tag/hatch-v1.16.0
+ReleaseTime: 2025-11-27T00:31:51.0000000Z

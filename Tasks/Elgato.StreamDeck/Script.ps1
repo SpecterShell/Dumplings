@@ -11,10 +11,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.Manual.ReleaseNotes.en
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.Manual.ReleaseNotes.en
       }
     } catch {
       $_ | Out-Host
@@ -42,6 +43,20 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    $ToSubmit = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockStreamDeck')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $Global:DumplingsStorage.Contains("StreamDeck-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["StreamDeck-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToSubmit) {
+      $this.Submit()
+    } else {
+      $this.Log('Another task is submitting manifests for this package', 'Warning')
+    }
   }
 }

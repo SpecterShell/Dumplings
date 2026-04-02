@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://lceda.cn/page/download' | ConvertFrom
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[2]/div/span/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//a[contains(@data-url, ".exe") and contains(@data-url, "x64") and contains(@data-url, "pro")]').Attributes['data-url'].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
@@ -38,14 +38,14 @@ switch -Regex ($this.Check()) {
             break
           }
         }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       $Object3.Close()

@@ -8,6 +8,11 @@ $Object1 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 </request>
 '@
 
+if ($Object1.response.app.cohortname -ne 'Stable') {
+  $this.Log("The server returned a non-stable cohort name: $($Object1.response.app.cohortname)", 'Error')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.response.app.updatecheck.manifest.version
 

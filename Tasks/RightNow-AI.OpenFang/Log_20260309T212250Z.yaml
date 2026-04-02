@@ -1,0 +1,33 @@
+Version: 0.3.36
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.36/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.36/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Empty LLM response after ~4 rounds (#460): Re-validate message pairs after history trim to prevent orphaned ToolUse/ToolResult blocks. Retry on silent 0-token failures.
+    - MCP tools "Permission denied" (#352): Extension tools (MCP/skills) now bypass ToolInvoke capability filter since they have their own security allowlists.
+    - Telegram photos silently dropped (#362): Incoming photos, docs, and voice messages are now downloaded, base64 encoded, and passed as ContentBlock::Image for LLM vision processing.
+    - Workflow visual builder (#357): Manual double-click detection for node editing (SVG re-renders destroy DOM). Editor panel inputs live-update the canvas.
+    - Claude Code provider card (#376): Detects actual CLI installation and auth status. Shows "Configured" or "Not Installed" dynamically.
+    - Python 3 detection (#405): Runs actual python3 --version command instead of PATH lookup. Handles Windows Store shims and Python 2.
+    - Hand state lost on restart (#402): agent_id now persisted in hand_state.json so cron jobs are properly reassigned on reboot.
+    - CLI auth on all commands (#478): daemon_client() now sends Authorization header globally, not just for stop.
+    Also closed (already fixed)
+    - #368 — Dashboard version (already returns CARGO_PKG_VERSION)
+    - #370 — Logo light theme (CSS filter: invert(1) already in place)
+    - #397, #351 — Custom providers (fixed in v0.3.35)
+    Stats
+    20 files changed, 832 insertions, 111 deletions, 1921 tests pass, 0 clippy warnings
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.36
+ReleaseTime: 2026-03-09T20:08:15.0000000Z

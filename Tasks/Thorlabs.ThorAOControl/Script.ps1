@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=AOKit'
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=AOKit' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
+  InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
 }
 
 switch -Regex ($this.Check()) {
@@ -46,7 +46,7 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog
+      $ReleaseNotesUrl = $Object1.ItemID.SoftwarePkg.ChangeLog.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
 
       # ReleaseNotesUrl (en-US)

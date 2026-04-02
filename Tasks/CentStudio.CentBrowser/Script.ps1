@@ -1,17 +1,18 @@
-$Prefix = 'https://static.centbrowser.com/win_stable/'
-
-# Version
-$this.CurrentState.Version = (curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } })[-2].TrimEnd('/')
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.centbrowser.com/' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
+$InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "${Prefix}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version).exe"
+  InstallerUrl = $InstallerUrl -replace '_x64'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "${Prefix}$($this.CurrentState.Version)/centbrowser_$($this.CurrentState.Version)_x64.exe"
+  InstallerUrl = $InstallerUrl
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

@@ -1,17 +1,23 @@
-$Object1 = Invoke-WebRequest -Uri 'https://lmstudio.ai/'
-
 # Installer
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://lmstudio.ai/download/latest/win32/x64' -Method 'GET'
 }
-$this.CurrentState.Installer += [ordered]@{
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrl.Replace('x64', 'arm64')
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://lmstudio.ai/download/latest/win32/arm64' -Method 'GET'
+}
+$VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
+
+if ($VersionX64 -ne $VersionARM64) {
+  $this.Log("Inconsistent versions: x64 version: ${VersionX64}, arm64 version: ${VersionARM64}", 'Error')
+  return
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

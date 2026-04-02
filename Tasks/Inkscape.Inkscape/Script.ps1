@@ -8,25 +8,15 @@ $Prefix = 'https://inkscape.org'
 $Object3 = $Object2.SelectNodes('.//a[@href]') | ForEach-Object -Process { $_.Attributes['href'].Value }
 
 # Installer
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture  = 'x86'
-#   InstallerType = 'wix'
-#   InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.msi') -and $_.Contains('x86') }, 'First')[0])
-# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.msi') -and $_.Contains('x64') }, 'First')[0])
+  InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.msi') }, 'First')[0])
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture  = 'x86'
-#   InstallerType = 'nullsoft'
-#   InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.exe') -and $_.Contains('x86') }, 'First')[0])
-# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.exe') -and $_.Contains('x64') }, 'First')[0])
+  InstallerUrl  = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object3.Where({ $_.EndsWith('.exe') }, 'First')[0])
 }
 
 switch -Regex ($this.Check()) {

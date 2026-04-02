@@ -1,0 +1,34 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.5/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.5/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Rate limit fallback — rate-limited/overloaded providers now fall through to next model in the fallback chain instead of retrying the same provider 3 times (#160)
+    - Clear agent history — DELETE /api/agents/{id}/history clears all sessions + canonical memory (#159)
+    - Model prefix normalization — openrouter/deepseek/deepseek-chat stored as model=deepseek/deepseek-chat, provider=openrouter (#108)
+    - Budget config override — global [budget] in config.toml now overrides default per-agent limits on spawn/restore (#150)
+    - Per-agent budget API — PUT /api/budget/agents/{id} for runtime budget limit updates
+    - default_model on restart — changing [default_model] in config.toml now applies to existing agents on daemon restart (#151)
+    - CLI agent set — openfang agent set <id> model <value> command (#86)
+    Features
+    - Agent Comms UI — topology tree, live event feed (SSE), send message + post task modals in dashboard and TUI
+    - Peer awareness — agents see sibling agents in system prompt and can use agent_send/agent_list
+    - Uninstall command — openfang uninstall with --keep-config, Windows PATH cleanup, deferred self-delete
+    Stats
+    - 1,828 tests passing
+    - 0 clippy warnings
+    - 12 files changed, 807 insertions
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.2.5
+ReleaseTime: 2026-03-01T19:29:45.0000000Z

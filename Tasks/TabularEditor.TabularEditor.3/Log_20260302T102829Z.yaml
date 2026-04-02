@@ -1,0 +1,94 @@
+Version: 3.25.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.tabulareditor.com/files/TabularEditor.3.25.5.x64.Net8.msi
+- Architecture: arm64
+  InstallerUrl: https://cdn.tabulareditor.com/files/TabularEditor.3.25.5.ARM64.Net8.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.tabulareditor.com/references/release-notes
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Improvements in 3.25.5
+    - Enhanced diagram view with bidirectional table and column selection between the TOM Explorer and diagram view.
+    - Added support for Sort By columns as implicit Associated columns in the Calendar Editor. When a Primary time unit column has a Sort By column defined, the Sort By column is now automatically treated as associated, preventing duplicate mapping errors and aligning behavior with Analysis Services.
+    - Updated 3rd party dependencies:
+      - Microsoft.AnalysisServices (AMO/TOM) to 19.112.0, adding support for the Calculated Column ExpressionContext property (CL 1705).
+      - Microsoft.PowerBI.Api to 5.0.0 and Microsoft.Fabric.Api to 2.1.0
+      - Microsoft.CodeAnalysis (Roslyn) to 5.0.0.
+      - ...and minor version updates for other packages.
+    Bugfixes in 3.25.5
+    - Fixed a bug that would prevent Calculation Items from being serialized as individual files using Tabular Editor's JSON based save-to-folder.
+    - Fixed a bug with the Replace IFERROR with DIVIDE code action, which would sometimes trigger on unrelated functions.
+    - Fixed an issue where the model name in Power BI Desktop files was wrongly tuncated when using hypens. See this issue
+    - Fixed a minor bug with the grab handle on the C# auto-complete popup being obscured by the toggle buttons on some DPI scaling settings.
+    - Fixed an issue in SQL Legacy partitions where the comment shortcut and toolbar button inserted DAX-style comments (//) instead of SQL comments (--)
+    - Find & Replace dialog error exception fixed. The replace tab will now only be shown when there are open documents to replace something in. See this issue
+    - Fixed the apperance of the right-click context menu on the C#, M, and SQL code editors.
+    - Fixed a race condition in the Model Processing Service that could cause intermittent crashes during data refresh operations, particularly when refreshing large models or models that generate warnings.
+    - Fixed an error when switching cultures/translations in models containing user-defined functions.
+    - Fixed an issue where hidden objects were not available in the Calendar Editor. Hidden columns and tables now correctly appear in the table and column dropdowns and in the Associated Columns and Time-Related Columns panels.
+    - Fix NullReferenceException when updating schema on ODBC/OleDb data sources
+    - Fixed an issue where "Replace All" with scope set to "Selection" would incorrectly replace text throughout the entire document instead of only within the selected text range. This affected DAX queries, DAX scripts, and C# script editors.
+    - Fixed an issue where the TOM Explorer would become unstable after using the "Revert" option from the File menu.
+    - Fixed a transent issue with the TOM Explorer not showing error/warning indicators.
+    - Fixed an issue with measure names displaying incorrectly in the Messages view.
+    - Fixed an issue where the Calendar Editor would remain disabled after pasting a Date table with calendars into a newly created model. The view now correctly updates and enables itself when calendars are added via paste operations.
+    - Fixed a bug in the Calendar Editor where checking a column in the Associated Columns panel while a search filter was active would record the wrong column.
+    - Fixed a bug in the Calendar Editor where deleting a calendar would clear the Time-Related Columns captions for all remaining calendars until changes were accepted.
+    - Fixed an issue where a calendar created via TOM Explorer would not appear in the Calendar Editor until the calendar was subsequently renamed.
+    - Fixed an unhandled NullReferenceException crash when undoing the removal of a Time-Related Column Group in the Calendar Editor's Collection Editor.
+    - Fixed an issue in our M Analyzer, ensuring that M functions such as Table.ColumnNames, Table.ExpandTableColumn, Table.ReplaceValues, and many of the Text.* functions, are now supported for offline schema detection (i.e. when performing an Update Table Schema while Use Analysis Services for change detection is disabled).
+    Bugfixes in 3.25.4
+    - Fixed a bug that prevented some users from authenticating against SQL endpoints using Microsoft Entra ID authentication, see #1534.
+    Bugfixes in 3.25.3
+    - Fixed an error where empty EVALUATE statements in a DAX Query would result in an unhandled exception.
+    - Fixed an error where unhandled exceptions would appear when hovering over various object references in the DAX expression editor.
+    Bugfixes in 3.25.2
+    - Removed PowerShell dependency from .exe installer (which prevented installation of Tabular Editor 3 in some cases)
+    Bugfixes in 3.25.1
+    - Fixed some strings that incorrectly indicated that built-in BPA rules were only available for Enterprise Edition.
+    New in 3.25.0
+    Check out our release blog to get a brief overview of the most important updates in this release.
+    - Tabular Editor is now available in Chinese and Spanish (Preview). All translations have initially been done with AI, with human proofreading. Japanese, German and French are also available as experimental languages with no proofreading.
+    - Tabular Editor now includes a set of built-in Best Practice Analyzer (BPA) rules covering key best practices across formatting, metadata, model layout, DAX expressions, and translations.
+    - Tabular Editor now includes the Semantic Bridge feature, which lets you easily create semantic models from Databricks Metric Views.*
+    - Added an option to save semantic models with supporting files for Fabric. When enabled, Tabular Editor can create and update the .platform and definition.pbism files alongside the model metadata to match Fabric repository structure.**
+    - This release also adds a new Calendar Editor (available in Business and Enterprise Edition), that makes it easy to manage the calendar objects used for Calendar-based time intelligence.
+    - Last but not least, we've added an Advanced Refresh dialog, through which you can configure advanced refresh options like parallelism and effective date for incremental refresh. You can also specify refresh override profiles.**
+    *These features are only available in Tabular Editor Enterprise Edition
+    **These features are only available in Tabular Editor Business Edition and Enterprise Edition
+    Improvements in 3.25.0
+    - Added support for setting the CustomData property of the connection string directly from the Impersonation dialog.
+    - DAX Package Manager View now downloads and shows DaxLib package icons.
+    - DAX Package Manager now caches package metadata which allows it to show package info without needing internet connection.
+    - We've updated the AS client library to the latest version 19.108.5. This update lets you control the new UnicodeCharacterBehavior property on the Database object.
+    - Added Power BI specific Column Data Categories Longitude, Latitude and Place.
+    - We now show an error message if you attempt to set the Compatibility Level of a model to a value that is not supported by the server. This is to prevent unexpected errors later on when saving changes to the model. If you need to set an unsupported Compatibility Level for migration purposes, save your model metadata to disk (in .bim or TMDL format), then open the metadata with no workspace database attached.
+    - User Options (.tmuo) files, are now also saved when you open a model directly from a server / XMLA-endpoint. The files are stored in your %LocalAppData%\TabularEditor3\UserOptions folder.
+    - Added a "Refresh full (ignore policy)" option to the data refresh context menu, so that you can easily refresh data into existing partitions, without triggering partition add/delete/merge operations on the server, when a table is governed by incremental refresh policy.
+    - Reorganized the options in the data refresh context menu, to bring the most commonly used options to the top.
+    - Added Start time to refresh pane making it possible to sort the refresh after when they started e.g. seeing the latest refresh first.
+    - Added a search pane to the Preferences dialog to quickly search for individual preferences.
+    - Added "User Defined Functions" and "Calendars" to Best Practice Rule editor list.
+    - Added a UsedInCalendars property to columns, making it easy to check inside a C# script, if a column is used in any calendar objects.
+    - "File > Close" menu action is renamed to "Close Document" and is now capable of closing any panel or document in the main document area. Ctrl + W is assigned as the default shortcut.
+    - Added Semantic Analyzer support for the new ENDALIGNED keyword of the DATEADD parameter. More information.
+    - When saving to a model.bim or TMDL folder structure with the Ignore incremental refresh partitions serialization option enabled, we now add a dummy partition to replace the PolicyRange partitions. This ensures that the model can still be loaded in Power BI Desktop, as no tables are saved without partitions.
+    Bugfixes in 3.25.0
+    - Fixed a critical issue preventing some customers from connecting to the Power BI REST API or Databricks using Azure AD authentication.
+    - Fixed an unhandled exception that would occur when deleting a column that was also used in a calendar object.
+    - Fixed relationship editor column dropdown so it automatically shows the whole column names.
+    - When a table containing one or more calendars is duplicated, calendars are now automatically renamed to ensure unique names across the model.
+    - Multiple errors/warnings encountered during a data refresh operation should no longer trigger an unhandled exception.
+    - Fixed DAX package list showing stale info after performing "Update All".
+    - Fixed a bug with the SchemaName property of Entity Partitions not being undoable.
+    - Code Action DI005 - Rewrite table filter as scalar predicate is no longer suggested when table expansion takes place, as rewriting such a filter into a column filter would not necessarily produce the same result.
+    - Clicking the ellipsis button next to the Connection String property should no longer cause an unhandled exception when the connection string specifies an OLE DB provider that is not installed on the current system.
+    - TMDL exports now correctly exclude incremental refresh partitions when the relevant preference is enabled, matching JSON behavior.
+    - Fixed an issue where clicking the "Sign in..." button when attempting to update or import from Dataflows, would show the following error message: This page is not normally shown and could be a sign of a phishing attempt.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.tabulareditor.com/references/release-notes/3_25_5.html

@@ -40,26 +40,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/guide/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/en/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      # Remove anchors
+      $Object2.SelectNodes('//a[@class="header-anchor"]').ForEach({ $_.Remove() })
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'v$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-        }
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.SelectSingleNode('//main') | Get-TextContent | Format-Text
+      }
 
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = "https://mogan.app/guide/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html"
-        }
-      } else {
-        $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://mogan.app/en/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html"
       }
     } catch {
       $_ | Out-Host
@@ -67,26 +63,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/zh/guide/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/zh/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      # Remove anchors
+      $Object3.SelectNodes('//a[@class="header-anchor"]').ForEach({ $_.Remove() })
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'v$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-        }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object3.SelectSingleNode('//main') | Get-TextContent | Format-Text
+      }
 
-        # ReleaseNotesUrl (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotesUrl'
-          Value  = "https://mogan.app/zh/guide/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html"
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://mogan.app/zh/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html"
       }
     } catch {
       $_ | Out-Host

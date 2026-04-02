@@ -1,0 +1,23 @@
+Version: "9.53"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-953.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#953
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Control Panel:
+      - Tab and pane titles are now more colorful in dark mode, similar to light mode.
+    - Settings:
+      - Versions 9.51 and 9.52 would incorrectly upgrade configured email notifications to the new Summary notification type, instead of the previous Single notification type. The converted Summary notifications would be configured without a time trigger, so they would be sent only rarely, when something causes them to flush.
+        Installations that newly update from 9.1x to 9.53+ will now have email notifications upgraded to Single, preserving previous behavior. Installations that previously updated to 9.51 or 9.52, and now have non-working Summary notifications, will assign a default time trigger (1 minute) for Summary notifications that lack time triggers.
+      - When upgrading to previous 9.xx versions, from significantly older versions, Shell access type settings Git access only and Telnet server would be upgraded incorrectly to non-functional Custom shell settings. Fixed for future upgrades, as long as they are performed directly to 9.53 or higher.
+      - Monitor CPU usage is now disabled in new settings by default. It produces frequent warnings when the system is simply used normally, particularly on systems with limited resources.
+      - In settings that were newly created by previous 9.xx versions, it was not sufficient to enable Permit S2C forwarding in order to use server-to-client port forwarding (reverse tunneling). The default Listening rule configured for group settings entries in Advanced settings was initialized with Allow listening disabled. This needed to be enabled, or overridden in account settings, for server-to-client port forwarding to work. This is now fixed for newly created settings, newly created groups, or if the administrator resets group settings to defaults.
+      - In Easy settings, the labels for Next and Back buttons were incorrectly reversed. Fixed.
+    - Logging:
+      - Information logged about the currently employed FTPS certificate is now more detailed.
+      - When an exec request or SCP request is rejected, the sanitized command which the client attempted to execute is now logged.
+ReleaseTime: 2025-12-18

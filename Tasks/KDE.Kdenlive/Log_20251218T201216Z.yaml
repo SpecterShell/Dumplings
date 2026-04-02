@@ -1,0 +1,409 @@
+Version: 25.12.0
+Installer:
+- InstallerUrl: https://download.kde.org/stable/kdenlive/25.12/windows/kdenlive-25.12.0-B.exe
+  InstallerSha256: 2617F8025B3ADD844B62D9534C58AC1851142ED07B4EB88BE8CF56587DD2DDE7
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/more_information/whats_new.html
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/zh_CN/more_information/whats_new.html
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kdenlive.org/news/releases/25.12.0/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The Kdenlive team is happy to announce the release of version 25.12.0, just in time for the holiday season. For this release, we concentrated on improving the user experience. Many of these changes were discussed during our very productive Berlin sprint last September, where the team met for three days of brainstorming.
+    Interface and Usability
+    Docking System
+    We introduced a new, more flexible docking system, allowing you to group the widgets you want together or easily show/hide them on demand. Each layout is now saved in its own file, opening the possibility for sharing. It is also now saved inside the project file, so when reopening a project the layout used when saving it is loaded and you are immediately ready to continue where you left off editing! The downside is that existing layouts are not compatible, so that you will need to recreate your custom layouts.
+
+    Welcome Screen
+    We introduced a Welcome Screen to improve the experience for new users, and add some handy shortcuts for everyone. With your feedback this will evolve in the future.
+
+    Along with the Welcome Screen, we introduced a vertical layout and optional safe areas to improve editing of 9:16 videos.
+    Menu Restructuring
+    Part of a long running discussion in the team, the menus were re-organized to make them more intuitive. Our long-time users may be confused initially (hopefully not for long, though), but we tried to follow some of the conventions in the professional editing world. For example, we regrouped all file related actions like Render and the Project Settings in the File menu. There might be a few adjustments in the upcoming releases, but the most important changes are in.
+
+    Thanks to users and translators feedback, we were able to fix several parts of the user interface that were not picked up properly for translation, making Kdenlive easier to use in your native language.
+    Monitor
+    We revamped the monitor view of audio, with a minimap on top allowing to intuitively zoom parts of the audio. (audio monitor)
+
+    Markers
+    For consistency and to avoid confusion, we renamed timeline guides to markers, since the term guide was used interchangeably and therefore confusing, and they were in fact markers for a sequence clip. Markers can now have a duration that is shown in the timeline, and can be dragged in the timeline from the Markers list.
+    Other Highlights
+    Major Bug Fixes
+    - We fixed more than 15 crash reports
+    - Windows: Fix render failure when user name contains special characters
+    - Fix project corruption when copy-pasting a sequence or project file between projects
+    Packaging
+    - We fixed the VAAPI support in AppImage, allowing for faster decoding and render time
+    - Several updates made it into our binaries, like Qt 6.10.1 and FFmpeg 8.0
+    Last Minute Fixes
+    Several fixes that will be in the next release have already been included in the 25.12.0 binaries available on kdenlive.org. If you installed Kdenlive from your Linux distro, you will get those fixes with version 25.12.1 (release scheduled for January 2026).
+    Click to see the list of last minute changes.
+    - Fix xmlgui related crash starting an older Kdenlive version (< 25.08.3). Commit.
+    - Keep duration info when moving ranged markers. Commit.
+    - Don't load Kdenlive in the background if welcome screen is displayed to avoid busy cursor / greyed out screen on Wayland. Commit.
+    - Fix window does not appear after crash and no welcome screen. Commit.
+    - Ensure we cannot call a Welcome Screen action before it is connected. Commit.
+    - FIx possible crash in Welcome Screen trying to open profile or file when mainwindow was not ready yet. Commit.
+    - Fix changing keyframe type for multiple keyframes not working. Commit. Fixes issue #2104.
+    - Add AMF encoding profile for Windows. Commit.
+    - Don't allow saving a custom effect with the name of an existing effect. Commit.
+    - Fix horizontal editing layout not loaded. Commit.
+    - Hsvhold similarity must be > 0. Commit.
+    - Fix copy paste resets keyframe type. Commit. Fixes bug #513053.
+    - Fix editing transform on monitor discards opacity. Commit. Fixes issue #2108.
+    - Don't check for readOnly in QStorageInfo on Mac. Commit.
+    - Fix app not opening after crash and opening project from command line. Commit.
+    - Don't incorrectly show warning about hidden monitor. Commit.
+    - Fix project layout not correctly restored if opened from Welcome Screen. Commit.
+
+    The full changelog for 25.12.0 is available below.
+
+    Give back to Kdenlive
+    Releases are possible thanks to donations by the community.
+
+    Donate
+    Need help ?
+    As usual, you will find very useful tips in our documentation website. You can also get help and exchange your ideas in our Kdenlive users Matrix chat room.
+    Get involved
+    Kdenlive relies on its community, your help is always welcome. You can contribute by :
+    - Helping to identify and triage bugs
+    - Contribute to translating Kdenlive in your language
+    - Promote Kdenlive in your local community
+    Full Changelog
+    Click to see the full changelog (English)
+    - Fix FTBFS on some Qt config. Commit. Fixes issue #2106
+    - Fix subtitles not archived in some cases. Commit. Fixes bug #513044
+    - Adjust splash screen border color to match content. Commit.
+    - Fix startup crash with Welcome Screen. Commit.
+    - Fix clip inserted twice in timeline on fast drop. Commit.
+    - Fix cannot play clip if position is less than 6 frames to the end. Commit.
+    - Fix monitor drag buttons disappearing when trying to click them, and qml binding warning. Commit.
+    - Allow transparency in Shear effect (avfilter.shear). Commit.
+    - Fix clip zone not set on import new clip. Commit.
+    - Fix invalid clips and project corruption on pasting sequence or project files with speed change. Commit. See bug #512910
+    - Update splash. Commit.
+    - Fix LADSPA TAP effect distortion. Commit.
+    - Add url for release to appdata. Commit.
+    - Fix render test suite crashing. Commit.
+    - Fix various issue with monitor overlays. Commit. Fixes bug #512856
+    - Remove useless loop. Commit.
+    - Fix crash opening Kdenlive settings with project having fps >= 100. Commit. Fixes bug #499689
+    - Extract JSON strings for 25.12 too. Commit.
+    - Minor optimization in audio waveform. Commit.
+    - Fix timeline incorrectly scrolled on document opening. Commit.
+    - Fix monitor playing when clicking in audio thumbnail of AV clip. Commit.
+    - Fix monitor audio still playing when pausing 1 sec before end. Commit.
+    - Move OTIO Import above Export. Commit. Fixes bug #504996
+    - Don't create keyframes with empty parameter name. Commit.
+    - Don't incorrectly warn about track compositing issue. Commit.
+    - Fix crash on document open with welcome screen. Commit.
+    - Hide mask generation button on audio clips. Commit.
+    - Fix TAP effects. Commit.
+    - Enable CDATA stripping. Commit.
+    - Fix issue pressing ESC in first welcome screen. Commit.
+    - Fix Show clip in project bin not selecting correct zone. Commit.
+    - Fix crash on double click on file in welcome screen. Commit.
+    - Fix monitor gamma to use the project profile. Commit.
+    - Add missing 1080p resolution in monitor menu. Commit.
+    - Remove duplicate RuntimeDependencies section from kde-ci.yml. Commit.
+    - Fix welcome screen disappears on click, preventing app start on X11. Commit.
+    - [Snapcraft] Add kddockwidgets-qt6. Commit.
+    - Fix render crash on Windows (reported as libxml2). Commit.
+    - Add matomo tags to splash screen links. Commit.
+    - Fix first start crash when clicking on Start Editing too fast and UI is not yet ready. Commit.
+    - Fix monitor drag button position not adjusted when audio waveform appears. Commit.
+    - FIx monitor overlays not correctly initialized. Commit.
+    - Fix crash recovery text flowing out of splash screen. Commit.
+    - Don't unecessarily show warning about hidden monitor when opening file on startup. Commit.
+    - Cleanup effect stack layout, fixing cut labels. Commit.
+    - Add euclid_eraser xml fixing transition without string changes. Commit. See issue #2054
+    - Don't touch string translation in stable branch for now until we ensure the strip-cdata option works correctly in master. Commit.
+    - Fix crash double clicking on custom render profile. Commit.
+    - Correctly extract strings with CDATA, now that extractrc supports it. Commit. See bug #512355
+    - Fix layout not correctly restored when opening new project. Commit.
+    - Correctly update render duration when using marker zone rendering to the end of the project. Commit. Fixes bug #511128
+    - Fix crash closing app when monitoring audio. Commit.
+    - Allow Extract Zone action to have a shortcut. Commit. Fixes bug #511796
+    - Don't show param slider if there is no range. Commit. See issue #2098
+    - Fix crash opening project with audio record enabled. Commit. Fixes bug #512319
+    - Fix docking of undocked widgets on Windows. Commit.
+    - Fix recent files sorting on welcome screen. Commit.
+    - Fix custom effects incorrectly classified, fix export xml. Commit.
+    - Small splash UI adjustments. Commit.
+    - Fix splash screen remains visible and blocks main window. Commit.
+    - Revert i18n change in comments/description, real fix will be in kde-dev script. Commit.
+    - Fix noise generator does not support keyframes. Commit. See bug #509393
+    - Fixed order for clip properties, add separator between categories. Commit. See bug #512171
+    - Fix effect compare button incorrectly disabled. Commit. Fixes bug #512275
+    - KConfig: enable default getters. Commit.
+    - Fix TAP Reverb for I18n. Commit.
+    - Fix storing of audio stream index can lead to stream confusion in timeline. Commit. Fixes bug #511402
+    - Fix various event loop issues with splash/welcome screen. Commit.
+    - Ensure splash screen appears asap. Commit.
+    - Apply tab orientation change without restarting app. Commit.
+    - Fix proxying changing timeline duration of clips with speed change. Commit. Fixes bug #511851
+    - Reading XML's CDATA inserts a space before and after string, breaking translations. Commit.
+    - Fix inserting audio clips with multiple streams. Commit.
+    - Ensure audio thumbs are always visible in clip monitor for audio clips. Commit.
+    - Fix clips disappear when moving in Insert or Overwrite mode. Commit. Fixes bug #511964
+    - Fix monitor click event swallowed by incorrect logic. Commit.
+    - Bump KDDockWidgets requirement to 2.3.0 as 2.4.0 is still not widely available. Commit.
+    - Require at least MLT version 7.32.0. Commit.
+    - Update shift parameter to range -180.0 to 180.0. Commit.
+    - Hide minuscule ticks in track head audio rec levels. Commit.
+    - Fix window config not saved (toolbars,...) and rename Master. Commit.
+    - Opening a file dialog in a non existing drive goes to Windows/System32 on Windows, so work around it. Commit.
+    - Cleanup safe area qml. Commit.
+    - On first run, look for project files under the Videos folder. Commit.
+    - Audio level widget: only show clipping indicator if enough space, only draw ticks at visible label position. Commit.
+    - Auto switch layout on profile change if a matching one is found. Commit.
+    - Adding XML files for LADSPA TAP effects. Commit.
+    - Add Welcome Screen. Commit.
+    - Switch Kdenlive layouts to separate JSON files for each layout. Commit.
+    - Disable Qt-next CI until all deps are ready. Commit.
+    - Cleanup temporary usage data check. Commit.
+    - Rename Safe Zones to Safe Areas. Commit.
+    - Fix tests. Commit.
+    - Add Safe Zone button in monitor toolbar, vertical safe zone layout and zoom reset. Commit.
+    - Add vertical editing profile. Commit.
+    - Cleanup Timeline mixes. Commit.
+    - Fix switch layout exiting fullscreen. Commit.
+    - CI: Flatpak: Fix kddockwidgets change. Commit.
+    - Update Flatpak KDDockWidgets version. Commit.
+    - Display error message when creating sequence fails. Commit.
+    - Switch to KDDockWidgets library for improved docking. Commit.
+    - Fix typo. Commit.
+    - Incorrect regexp use. Commit.
+    - Fix image with percent in name incorrectly detected as slideshow. Commit.
+    - Fix label not ending with semicolon. Commit.
+    - Fix image sequence by Mime broken. Commit. Fixes bug #500542
+    - Don't consider unused clips when checking if we use VFR clips. Commit. Fixes issue #2079
+    - Fix some images not rendered in timeline preview. Commit. Fixes bug #511249
+    - Only add resize effect to video / image clips. Commit. Fixes issue #2080
+    - Add SVG as supported file type. Commit. Fixes bug #511250
+    - Allow multiple lines in dynamic text effect. Commit. Fixes issue #2078. Fixes bug #505449
+    - Restore timeline marker features. Commit. Fixes issue #2077
+    - Fix Alt+Wheel on audio minimap in monitor. Commit.
+    - Small adjustments to audio monitor view. Commit.
+    - Disable OTIO metadata for FreeBSD. Commit.
+    - Restore OTIO metadata functionality on macOS. Commit.
+    - Fix crash on normalize track. Commit. See issue #2076
+    - [CI] Require cppcheck to be clean. Commit.
+    - Set default values for members of TimeWarpInfo. Commit.
+    - Simplify type declaration with std::transform. Commit.
+    - Don't mess with pointers to check if a marker exists already. Commit.
+    - Extend range marker tests to test undo/redo too. Commit.
+    - Fix typo. Commit.
+    - FIx space check in archive widget. Commit.
+    - Add drive space check in render widget. Commit. Fixes bug #400699
+    - [Snap] Add opentimelineio dep. Commit.
+    - Disable native font dialog in subtitle styles on Linux. Commit. See bug #509564
+    - Fix incorrect font size passed in font selector of subtitle style. Commit.
+    - Improved view of audio in Clip Monitor. Commit. Fixes issue #2052
+    - Allow appending video clips directly to a project in command line. Commit. See bug #508920
+    - Media Browser: make video preview larger, move autoplay option in top hamburger menu. Commit.
+    - Fix moving markers in timeline. Commit.
+    - Add snapping when resizing a range marker. Commit.
+    - Fix Clip Properties action in Media. Commit.
+    - Remove duplicate markers/guides actions. Commit.
+    - Get rid of remaining "Guides" labels. Commit.
+    - Reorder menu structure to make it clearer. Commit.
+    - Media browser: don't create thumbnails if media browser is not visible. Commit.
+    - [CI] Add cppcheck job. Commit.
+    - Add Appium tests. Commit.
+    - Add a checkbox to hide effects / transitions not compatible with 10 bit depth. Commit.
+    - Add option to activate zone when selecting a marker with a range. Commit. See issue #614
+    - Ensure range markers are not drawn outside of a timeline clip. Commit. See issue #614
+    - Fix renaming range marker from monitor discards duration. Commit. See issue #614
+    - Allow creating a range marker from frame 0. Commit. See issue #614
+    - Ensure clip load and proxy tasks stay alive until the clip is fully loaded. Commit.
+    - Don't fetch OTIO by default (exeception for macOS and FreeBSD). Commit.
+    - Add pre-commit hook for codespell. Commit.
+    - Fix fade to black preset incorrectly applied. Commit. Fixes bug #509108
+    - Fix crash dragging effect from another window. Commit. Fixes bug #510253
+    - Don't stop MLT::Consumer when switching monitors. Commit. See issue #2064
+    - Add git revision in about components and debug info. Commit.
+    - Add selenium dep for appium tests. Commit.
+    - Fix Film Grain effect XML and add Gate Weave effect XML. Commit.
+    - Added new pass-through alpha parameter to Pixeliz0r effect (frei0r_pixeliz0r.xml). Commit.
+    - Added new VSync parameter to Nosync0r effect (frei0r_nosync0r.xml). Commit.
+    - Updated Sigmoidal Transfer effect (frei0r_sigmoidaltransfer.xml). Commit.
+    - Fix freeze seeking in media player. Commit. See issue #2062
+    - Fix crash using filter job (tracker, loudness) on sequence clip. Commit. See bug #509769
+    - Fix monitor audio waveform using incorrect normalize factor when switching between clips. Commit.
+    - Improve selection and resize of small clips. Commit. Fixes bug #509911
+    - Media browser preview: fix layout issue and possible freeze/crash. Commit. See issue #2062
+    - Scene split job: allow creating range markers from scenes. Commit.
+    - Fix job QProcess created in incorrect thread. Commit.
+    - Range markers can be dragged to timeline. Commit.
+    - Cleanup keyframe-monitor communication, disable monitor scene when not over the clip. Commit.
+    - Fix leftover typos. Commit.
+    - Fix sequence subclips disappear after reopening project. Commit. Fixes bug #509773
+    - Media browser: fix media can only be played once. Commit.
+    - Make audio capture name translatable. Commit. Fixes bug #509546
+    - Media browser preview fixes, allow play/pause by clicking in preview. Commit.
+    - Remove debug. Commit.
+    - Fix media player not stopping when window hidden. Commit.
+    - Fix additional typos. Commit.
+    - Doc: remove the space after a 'url' tag. Commit.
+    - Fix media player preview not starting autoplay and sometimes not correctly updating the preview. Commit.
+    - Add QtMultimedia preview to media browser. Commit.
+    - Fix leftover typos. Commit.
+    - Don't create clips in the sequences folder. Commit.
+    - Chore: updating build docs. Commit.
+    - Fix syntax for several asset xml files. Commit.
+    - Add xmlns attribute to asset xmls. Commit.
+    - [CI] Add a customized validate-xml-files.py. Commit.
+    - Add xsd for effects. Commit.
+    - Add neon archive for up to date mlt. Commit.
+    - Drop v4l in ffmpeg too. Commit.
+    - Unconditionally enable thumbnails in media browser on Linux. Commit.
+    - Fix GIF preset not finding the correct file. Commit. Fixes issue #2044
+    - Rename external proxy to camcorder proxy, cleanup UI. Commit. Fixes issue #1956
+    - Replace "Guide" with "Marker" in the UI, using Clip Markers and Timeline... Commit. See issue #2011
+    - Fix marker move regression. Commit.
+    - Remove duplicate qml value. Commit.
+    - Fix: remove the bool value. Commit.
+    - Feat(timecode): add formatMarkerDuration function and update guide display. Commit.
+    - Fix: improve guide marker handling and display. Commit.
+    - Refactor: update marker creation action names and add guide end options handling. Commit.
+    - Revert. Commit.
+    - Chore: remove redundant comments. Commit.
+    - Feat: add functionality to create range markers from defined zones. Commit.
+    - Feat(timelinecontroller): add resizeGuide and suggestSnapPoint methods. Commit.
+    - Fix(markerlistmodel): undo/redo functionality. Commit.
+    - Feat(monitor-ruler): enable right-click capture for resizing markers. Commit.
+    - Refactor(monitorproxy): marker resizing logic in resizeMarker function. Commit.
+    - Feat(markers): drag-to-resize range markers in monitor and timeline. Commit.
+    - Feat(markerlistmodel): append duration to comment for markers with range. Commit.
+    - Feat(monitor-ruler): add vertical line to mark end start, increase z index of playhead. Commit.
+    - Feat(monitor-ruler): Display the range marker color span in the Clip Monitor. Commit.
+    - Fix: ensure all the values are of same unit, switch from PosRole(seconds) to FrameRole(frames). Commit.
+    - Feat(range-marker): implement range marker functionality in MarkerDialog. Commit.
+    - Enhance: support duration parsing in MarkerListModel import. Commit.
+    - Export: support duration template vars and improve FFmpeg chapter handling. Commit.
+    - Test: add duration-based marker tests in MarkerListModel. Commit.
+    - Enhance: add duration support in MarkerListModel import/export. Commit.
+    - Refactor: simplify CommentedTime constructor. Commit.
+    - Implement range marker support in MarkerListModel. Commit.
+    - Add duration handling to CommentedTime class. Commit.
+    - CI - Flatpak - Use our mirror as ladspa URL is unreliable. Commit.
+    - Remove dead "Auto Transition" action. Commit.
+    - Drop unused v4l dependency. Commit. See bug #467391
+    - Add two new frei0r filters. Commit.
+    - Dev-docs: Add documentation how to debug/test translations locally. Commit.
+    - Fix Bin empty state placeholder when translated. Commit.
+    - Fix playlist clips (or kdenlive projects) not reloading when modified. Commit.
+    - Fix render path reset when creating a new sequence in the project. Commit.
+    - Show placeholder in the bin explaining how to import media. Commit.
+    - Fix Transform effect when current clip is not below play head / timeline cursor. Commit. Fixes bug #508818
+    - Fix various typos. Commit.
+    - Fix crash trying to apply an effect on a subclip. Commit. See bug #509005
+    - [nightly flatpak] Add mirror url for ladspa. Commit.
+    - [build system] Update FindFFmpeg to use targets. Commit.
+    - Use Text Box icon for show/hide clip names feature. Commit.
+    - Also hide composition names when resizing or hiding clip names. Commit.
+    - Add button in status bar to hide clip names and other overlays. Commit.
+    - Audio waveform: Click on zoom level to reset and close button menu. Commit.
+    - Change notification text when finishing rendering of first pass. Commit.
+    - On render crash or when keep log files is enabled, add link to quickly open the .mlt playlist file used for rendering. Commit.
+    - Audio waveform: Add action for reset/cycle, use flat button style in zoom control menu. Commit.
+    - Audio waveform: Move zoom control from A1 track header to status bar. Commit.
+    - Add tooltips for audio/video clip drag areas in bin (icon view). Commit.
+    - Add tooltips for audio/video clip drag areas in monitor & bin. Commit.
+    - Add tooltip to 2-pass render checkbox. Commit. See bug #486056
+    - Fix extra space in 'Open Title' action in title widget. Commit.
+    - Add a clipping indicator next to the audio levels. Commit.
+    - Fix peak indicators immediately resetting when no audio is coming in. Commit.
+    - Allow using null rectangle to completely hide image in Transform and other geometry effects. Commit. Fixes bug #508570
+    - Color scopes: Remove Auto Refresh option. Commit.
+    - Color scopes: Move controls and settings to hamburger menus. Commit.
+    - Restyle track header record controls. Commit.
+    - Improve alignment of clip speed change label. Commit.
+    - Show speed in clip on resize. Commit. Fixes issue #2034
+    - Make glaxnimate amd64 only til we publish new version with arm64 snap. Commit.
+    - CI: add snap pipelines. Commit.
+    - Show info message if user clicks on bin filter button when no filter is selected. Commit.
+    - Fix ugly icons in Clip Properties panel. Commit.
+    - Don't attempt to update geometry scene when it is not actually loaded. Commit.
+    - Fix corrupted/missing font in effect stack and stabilize dialog. Commit.
+    - Fix crash starting bin clip task in multiple bin project. Commit.
+    - Fix monitor playing when clicking in the zoombar area. Commit.
+    - Monitor transform: Fix changing into moving state when doing keyframe selection. Commit.
+    - Monitor transform: Fix keyframe selection via center points when rotated. Commit.
+    - Fix crash clicking on effects timeline on an empty project. Commit.
+    - Fix subs from lower layers always being shown in layer 0. Commit.
+    - Fix crash deleting a custom effect used in the project. Commit. See issue #2036
+    - Remove incorrect duplicate Bin TreeView. Commit.
+    - Monitor snapping: Get rid of redundant coordinate transformations. Commit.
+    - Monitor snapping: Bring back snapping when resizing for non-rotated frames. Commit.
+    - Monitor snapping: Support snapping when moving a rotated frame. Commit.
+    - Monitor snapping: Add snapping support for all edges when moving instead of only top-left. Commit.
+    - Use find_package for libav to fix. Commit.
+    - Adjust style of Autosave Indicator in top-right corner. Commit.
+    - Fix timecode offset not visible in raw params widget. Commit.
+    - Add SVT-AV1 to codecs which use crf option. Commit. Fixes bug #492708
+    - Fix rotation normalization of RotationHandle. Commit.
+    - Fix Transform Monitor Tool resizing when rotated. Commit.
+    - Add quality and speed control to svtav1 preset. Commit. See bug #507521
+    - Fix blurry Bin icons on HiDPI displays with scaling factor. Commit.
+    - Fix contrast issue of Audio/Video bin icon hover rectangle drawn on selected item. Commit.
+    - Fix bin icons color scheme consistency. Commit.
+    - Use the same audio icon in bin as used in Timeline Headers. Commit.
+    - Fix incorrect icon for disabling bin/timeline effects. Commit.
+    - Added qt6-declarative-private-dev to Qt6 dependencies. Commit.
+    - Guard #pragma GCC as it fails on MSVC. Commit.
+    - Use qputenv instead of setenv. Commit.
+    - Add i18n context for clip status. Commit.
+    - Fix Audio Mixer neutral value styling. Commit.
+    - Add search fields to render and project profiles. Commit.
+    - Fix transcoding of files with missing duration. Commit. Fixes bug #507396
+    - Switch av1 encoder to faster dav1d. Commit.
+    - Update catch version. Commit.
+    - Fix Layout Switcher in LayoutManagement not properly redrawing itself on Palette Change. Commit.
+    - Fix RGBParade and StatusBarMessageLabel not properly redrawing themselves on Palette Change. Commit.
+    - Fix Whisper TTS using Python 3.13. Commit.
+    - Convert Keyboard schemes from .rc to xml after download since this is what is expected. Commit. Fixes bug #503526
+    - Correct syntax of funding-manifest-urls for floss.fund. Commit.
+    - Add funding file. Commit.
+    - Reduce minimum height of Speech Editor Widget. Commit. Fixes bug #465766
+    - Fix Vosk Speech-To-Text producing garbage subtitles. Commit. Fixes bug #503985
+    - Make Audio Spectrum style consistent with color scopes. Commit.
+    - Audio thumbnails for files with an audio delay are not correctly geenrated with the libav generator. Commit. See bug #507119
+    - Fix crash trying to mute a track. Commit.
+    - Remove Timeline widget focus/hover highlighting effect. Commit.
+    - Tweak Timeline visuals. Commit.
+    - Fix compile from previous commit. Commit.
+    - Add 1080p monitor scaling. Commit. Fixes bug #505776
+    - Defang dragging subtitle clips down to create a new layer. Commit. Fixes bug #506414
+    - Change timecode color of active monitor from green/positive to highlight color. Commit.
+    - Fix: make sure monitor playhead is on top of orange "this clip section is used in timeline" indicators. Commit.
+    - Fix Vectorscope contrast issue on light themes and fix cut-off circle border. Commit.
+    - Fix minor typos. Commit.
+    - Fix waveform contrast issues. Commit.
+    - Fix minor typos. Commit.
+    - Add new and update effect XML files. Commit.
+    - Fix RGB Parade contrast and HiDPI issues. Commit.
+    - Fixed erratic behavior of ellipse resizing in titler with border > 0 (bug 497008). Commit.
+    - Fill transparent levels border background via QPixmap instead of QPainter. Commit.
+    - Fix setting alternating mixer widget background color if track id != mixer id. Commit.
+    - Refactor: color thresholds. Commit.
+    - Refactor: variable renaming. Commit.
+    - Refactor: level painting DTO construction. Commit.
+    - Optimize drawing of audio levels. Commit.
+    - User border instead of channel background color for border lines. Commit.
+    - Tweak channel fill colors. Commit.
+    - Adjust dB scale color thresholds. Commit.
+    - Revamp audio mixer and levels. Commit.
+    - Fix Mac compilation. Commit.
+    - Add powermanagement to disable sleep while rendering and playing. Commit. Fixes bug #500615
+    - Ensure built in effects and especially flip always stay on top of the effectstreemodel. Commit. See issue #2022
+    - Fix build-in effects. Commit.
+    - Fix save frame dialog size. Commit.
+    - Fix clip creation dialog being too small. Commit.

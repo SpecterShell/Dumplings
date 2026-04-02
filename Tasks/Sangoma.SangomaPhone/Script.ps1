@@ -29,7 +29,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://sangomakb.atlassian.net/wiki/spaces/Switchvox/pages/429260946/Switchvox+-+Desktop+Softphone+Release+Notes' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://sangomakb.atlassian.net/wiki/spaces/SS1/pages/850362371/Sangoma+Phone+-+Release+Notes' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

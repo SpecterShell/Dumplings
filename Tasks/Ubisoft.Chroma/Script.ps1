@@ -1,66 +1,55 @@
-function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  # Version
-  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
-}
-
 $RepoOwner = 'ubisoft'
 $RepoName = 'Chroma'
-$Path = 'Releases/Chroma_setup.exe'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/commits?path=${Path}"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+
+# Version
+$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/$($Object1[0].sha)/${Path}"
-}
-
-# Case 0: Force submitting the manifest
-if ($Global:DumplingsPreference.Contains('Force')) {
-  $this.Log('Skip checking states', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 1: This is a new task
-if ($this.Status.Contains('New')) {
-  $this.Log('New task', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  return
-}
-
-# Case 2: The InstallerUrl is unchanged
-if ($this.CurrentState.Installer[0].InstallerUrl -eq $this.LastState.Installer[0].InstallerUrl) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
-  return
-}
-
-Read-Installer
-
-# Case 3: The current state has an invalid version
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-  throw 'The current state has an invalid version'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  'Changed|Updated' {
     $this.Message()
   }
-  'Updated|Rollbacked' {
+  'Updated' {
     $this.Submit()
   }
 }

@@ -31,7 +31,7 @@ function Get-ReleaseNotes {
       'order[0][dir]'    = 'desc'
       start              = '0'
       length             = '5'
-      wdtNonce           = '7c7810e2a4'
+      wdtNonce           = ($Object1 | ConvertFrom-Html).SelectSingleNode("//input[@name='wdtNonceFrontendServerSide_6']").Attributes['value'].Value
     }
 
     $ReleaseNotesObject = $Object3.data.Where({ $_[5] -replace '(?<=\.)0+(?=\d)' -eq $this.CurrentState.Version }, 'First')

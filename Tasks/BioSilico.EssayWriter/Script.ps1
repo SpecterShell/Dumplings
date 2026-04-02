@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
         Value  = 'https://support.biosilico.com/portal/kb/ideamapper/release-notes'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://support.biosilico.com/portal/api/kbArticles?portalId=edbsn50c65f988ca4437840400b8dcfac069b5190e5a2a1bb325e871ce212bb92e126&categoryId=125023000000209223&includeChildCategoryArticles=false&locale=en'
+      $Object2 = Invoke-RestMethod -Uri 'https://support.biosilico.com/portal/api/kbArticles?portalId=edbsn50c65f988ca4437840400b8dcfac069b5190e5a2a1bb325e871ce212bb92e126&categoryId=125023000000188440&includeChildCategoryArticles=false&locale=en'
       if ($ReleaseNotesUrlObject = $Object2.data.Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{

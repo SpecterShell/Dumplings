@@ -1,0 +1,177 @@
+Version: "7.0"
+Installer:
+- InstallerUrl: https://www.dynare.org/release/windows/dynare-7.0-win.exe
+  ProductCode: Dynare 7.0
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/news
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We are pleased to announce the release of Dynare 7.0.
+    This major release adds new features and fixes various bugs.
+    The Windows, macOS, MATLAB Online and source packages are already available for download at the Dynare website.
+    This release is compatible with MATLAB versions ranging from 9.8 (R2020a) to 25.2 (R2025b), and with GNU Octave versions ranging from 8.4.0 to 11.1.0 (NB: the Windows package requires version 11.1.0 specifically).
+    Major user-visible changes
+    - New framework for solving and simulating models featuring rich heterogeneity (which includes HANK models)
+      - The solution technique for the dynamics combines elements from Bhandari, Bourany, Evans, and Golosov (2023) and Auclert, Bardóczy, Rognlie, and Straub (2021).
+      - The steady state can be computed through a time iteration method within Dynare, or computed outside of Dynare and then loaded therein.
+      - New statements heterogeneity_dimension, var(heterogeneity=NAME), varexo(heterogeneity=NAME), model(heterogeneity=NAME), shocks(heterogeneity=NAME), and the SUM() aggregation operator for declaring heterogenous features.
+      - New heterogeneity_compute_steady_state command to compute the steady state numerically.
+      - New heterogeneity_load_steady_state command to load a pre-computed steady state (policy functions, discretized shocks, stationary distribution) from a MAT file.
+      - New heterogeneity_solve command to compute a first-order linearized solution.
+      - New heterogeneity_simulate command to compute impulse response functions and stochastic simulations, with support for both unanticipated shocks and anticipated news shock sequences.
+      - Example .mod files include: Krusell-Smith (krusell_smith.mod), a one-asset HANK (hank_one_asset.mod), a two-asset HANK (hank_two_assets.mod), with steady state computation variants. The models are the same as in the Sequence-Space-Jacobian package (shade-econ/sequence-jacobian on GitHub).
+    - Skew normal shocks and closed skew normal (CSN) distribution support
+      - New skew keyword in shocks and estimated_params blocks to declare skewness.
+      - Added support for skew normal shocks in stoch_simul command.
+      - Added support for skew normal shocks in estimation command by means of the Pruned Skewed Kalman Filter and Smoother of Guljanov, Mutschler, and Trede (forthcoming).
+    - Posterior samplers
+      - New posterior samplers (available via the posterior_sampling_method option of the estimation command):
+        - The Dynamic Striated Metropolis Hastings sampler proposed by Waggoner, Wu, and Zha (2016) is now available under the value 'dsmh';
+        - The Differential-Independence Mixture Ensemble (“DIME”) MCMC sampler of Boehl (2022) is now available under the value 'dime_mcmc'.
+      - New posterior_sampler_option options for posterior_sampling_method='slice':
+        - save_iter_info_file to shut off saving of iteration information to a file;
+        - fast_likelihood_evaluation_for_rejection to reject poor draws in OccBin more efficiently;
+        - use_prior_draws to use the prior as the proposal within slice (Gibbs) sampling for up to 10 draws.
+      - Sequential Monte Carlo (SMC) sampler:
+        - Trace plots now allow plotting the particles;
+        - Now supports the bayesian_irf, moments_varendo, and smoother options.
+    - New functionality for leveraging MATLAB’s Parallel Computing Toolbox (PCT) for accelerating computations
+      - Computations that can be thus parallelized:
+        - running multiple Metropolis-Hasting chains in parallel (as set by the mh_nblocks option);
+        - SMC sampler initialization;
+        - parallel likelihood evaluations in SMC samplers.
+      - Controlled by a new use_pct option of the estimation command.
+      - If Dynare detects MATLAB R2024b or later with the PCT and a valid license, these supported tasks are parallelized by default (unless the user sets use_pct to false); random seeds are precomputed so results are reproducible between serial and parallel execution (thanks to Eduard Benet Cerda from MathWorks).
+    - New options to the estimation command:
+      - estimate_initial_states_endogenous_prior, that estimates initial states along with model parameters, for stationary models;
+      - frequentist_smoother that allows shutting off the smoother in cases the Bayesian smoother is not applicable;
+      - use_univariate_smoother_if_singularity_is_detected to use the univariate Kalman smoother in case stochastic singularity is detected.
+    - OccBin
+      - New piecewise linear particle filter (PPF).
+      - New posterior importance sampling feature: allows to bootstrap posterior draws obtained from e.g. linear KF estimation, using PKF or PPF and check effective sample size and estimator bias.
+    - Improvements to the the method_of_moments command:
+      - It now supports estimation with discretionary optimal policy;
+      - With mom_method=SMM it now supports the bandpass_filter, one_sided_hp_filter, and hp_filter options to match filtered moments;
+      - It now allows matching first moments even when the prefilter option is used to obtain centered higher order moments.
+    - Perfect foresight
+      - Improvements to perfect foresight solver with iterative linear solvers, i.e., GMRES (stack_solve_algo=2) and BiCGStab (stack_solve_algo=3):
+        - New preconditioner option to the perfect_foresight_solver and perfect_foresight_with_expectation_errors_solver commands, which controls the preconditioner used with GMRES or BiCGStab;
+        - The new default, preconditioner=first_iter_lu, does a LU decomposition with complete pivoting at the first Newton iteration, and uses it as a preconditioner in further iterations;
+        - The value preconditioner=block_diagonal_lu computes a block diagonal preconditioner based on a LU decomposition for only a few periods of the stacked system;
+        - The old default, using an incomplete LU decomposition, remains available under precondition=incomplete_lu;
+        - The first_iter_lu and block_diagonal_lu preconditioners deliver a significant performance improvement over the old default (incomplete_lu) and make this algorithm competitive and in some cases faster than other perfect foresight solvers;
+        - Other new options that control the behaviour of the iterative solvers: iter_tol, iter_maxit, gmres_restart, block_diagonal_lu_maxlu, block_diagonal_lu_nperiods, block_diagonal_lu_nlu, block_diagonal_lu_relu.
+      - New perfect foresight solvers:
+        - ParU from SuiteSparse, a direct sparse LU solver, available under the stack_solve_algo=8 option;
+        - Panua PARDISO direct sparse LU solver, available under the stack_solve_algo=9 option (license file has to be provided by the user);
+        - Panua PARDISO direct-iterative solver using CGS, available under the stack_solve_algo=10 option (license file has to be provided by the user).
+      - New perfect_foresight_controlled_paths block that gives the possibility of controlling the value of some endogenous variables for some simulation periods (in which case some exogenous variables must be left free and are thus solved for by Dynare, to avoid over-determination of the problem). Can be used either in a pure perfect foresight context, or in perfect foresight with expectation errors.
+      - Perfect foresight integration with dates/dseries:
+        - New options first_simulation_period and last_simulation_period to perfect_foresight_setup and perfect_foresight_with_expectation_errors_setup commands, to specify the real dates for the simulation (e.g. 2024Q1);
+        - The periods keyword of the shocks and mshocks blocks now accept real dates;
+        - The learnt_in option of the shocks, mshocks and endval blocks now accept real dates;
+        - When real dates are used, the perfect_foresight_solver and perfect_foresight_with_expectation_errors_solver commands return the simulation as a dseries object in the workspace variable Simulated_time_series (which contains both endogenous and exogenous variables).
+      - The perfect_foresight_with_expectation_errors_setup command can now be combined with a histval block or a histval_file command.
+      - New endval_steady_nocheck option to the perfect_foresight_solver and perfect_foresight_with_expectation_errors_solver commands, to skip checking the terminal steady state values when they are provided explicitly either by a steady state file or a steady_state_model block (in combination with the endval_steady option for the perfect_foresight_solver case). This is useful for models with unit roots as, in this case, the steady state is not unique or doesn’t exist.
+      - Using several endval blocks in the same file is now supported, in which case they are concatenated.
+      - Option values stack_solve_algo={2,3} are now available without block nor bytecode.
+      - New shock_paths block for describing a perfect foresight scenario in a more compact and flexible way, which supersedes the shocks, mshocks and endval blocks. Additionally, a new database command has been added to refer to external databases that can be used from within shock_paths.
+    - Steady state
+      - The steady command now accepts the noprint option.
+      - The steady command now accepts the non_zero option (with the same meaning as in the resid command).
+      - Option values solve_algo={6,7,8} are now available without block nor bytecode.
+    - Decision rules (reduced form solution)
+      - New dr=aim option to the stoch_simul, estimation and method_of_moments commands (equivalent to the former aim_solver option, which is now deprecated).
+      - New dr_cycle_reduction_maxiter option to the stoch_simul, estimation and method_of_moments commands, to control the maximum number of iterations when the cycle reduction algorithm is used.
+    - Extended path
+      - New option use_first_order_solution to the the extended_path command.
+      - It is now possible to have zero-variance shocks.
+    - Forecasting
+      - The forecast command now also works at higher order and supports the pruning option.
+      - Option forecast_type to shock_decomposition to allow shock decomposing conditional and unconditional forecasts.
+    - Syntax
+      - More flexible syntax for specifying complementarity conditions:
+        - The complementarity condition is now specified between the associated equation and its closing semicolon, using the perpendicular symbol as a separator (the latter can be input either in UTF-8, as ⟂, corresponding to Unicode codepoint U+27C2; or alternatively as pure ASCII, as _|_, i.e. a vertical bar enclosed within two underscores);
+        - Both the lower and the upper bounds can be specified at the same time in a given complementarity condition;
+        - Arbitrary functions of parameters can appear in the bounds;
+        - The old syntax using the mcp equation tag is still supported but deprecated;
+        - Here is an example of an equation with an associated complementarity condition, using the new syntax:
+          mu = 0 ⟂ 0 < i < 1+2*alpha;
+      - Model-local variables (i.e. defined with a # sign) can now appear with a lead or a lag in the model block (the expression by which they will be replaced will be shifted accordingly).
+      - The heteroskedastic_shocks block now supports dates syntax.
+    - The osr command now supports using a planner_objective function to conduct welfare analysis at higher order.
+    - Significant performance improvements for:
+      - Higher-order perturbation solution under Windows;
+      - Estimation with the analytic_derivation option.
+    - New debugging information
+      - The multivariate Kalman filter smoother now allows using the debug option to display information on linear combinations causing stochastic singularity.
+      - dynare_minimize_objective now returns runtime, iterations, function evaluations, exitflag, and messages from all optimizers.
+      - The model_diagnostics command now:
+        - checks for redundant equations based on the dynamic Jacobian;
+        - displays equation tags of affected equations;
+        - displays its information in a more readable way.
+      - New debugging options to the perfect_foresight_solver command:
+        - check_jacobian_singularity to check the singularity of the dynamic Jacobian for stack_solve_algo option equal to 0, 2 or 3;
+        - allow_nonfinite_values to prevent the automatic removal of nonfinite values during Newton iterations, which may be useful for debugging purposes.
+    - dseries
+      - New routines for converting annual data into quarterly data, and quarterly data into monthly data.
+      - New --print-table option to the dplot command, for displaying the results as a table instead of a plot.
+      - The dseries constructor based on a table is now available under Octave (requires the datatypes package).
+      - The dates and dseries classes now accept the string syntax (double quotes) in their constructor and methods.
+    - The calib_smoother command now plots the smoother results.
+    - New preprocessor option output=first that instructs the preprocessor to only compute first-order dynamic derivatives if no other command in the .mod file requires higher-order ones.
+    - New irfs(distribution) option to the prior command from the command-line interface, for computing the prior distribution of the impulse response functions of the endogenous variables.
+    - New structure M_.state_var storing information on the state variables in both declaration and decision-rule order.
+    - References:
+      - Auclert, A., B. Bardóczy, M. Rognlie, and L. Straub (2021): “Using the Sequence‐Space Jacobian to solve and estimate heterogeneous‐agent models,” Econometrica, 89(5), 2375–2408.
+      - Bhandari, A., T. Bourany, D. Evans, and M. Golosov (2023): “A perturbational approach for approximating heterogeneous agent models,” NBER Working Papers, 31744.
+      - Boehl, G. (2022): “DIME MCMC: A Swiss Army Knife for Bayesian Inference”, SSRN Electronic Journal, https://dx.doi.org/10.2139/ssrn.4250395
+      - Guljanov, G., W. Mutschler and M. Trede (forthcoming): “Pruned skewed Kalman filter and smoother with application to DSGE models,” Journal of Economic Dynamics and Control
+      - Waggoner, D. F., H. Wu and T. Zha (2016): “Striated Metropolis–Hastings sampler for high-dimensional models,” Journal of Econometrics, 192(2), 406–420.
+    Incompatible changes
+    - With the osr command, the legacy linear-quadratic approach with an optim_weights block now requires explicitly setting order=1.
+    - The default filename produced by the savemacro option of the dynare command has changed. It now contains an underscore (instead of a dash), for better compatibility with MATLAB/Octave syntax.
+    - Prior truncation is now shut off by default via setting prior_trunc=0.
+    - The infile option of the smoother2histval command has been removed. An equivalent functionality can be obtained with the outfile option of the smoother2histval command and the histval_file command.
+    - The det_cond_forecast, init_plan, basic_plan and flip_plan commands have been removed. A similar functionality is provided by the new perfect_foresight_controlled_paths block (or alternatively by the shock_paths block with and endogenize stanza).
+    - The unit_root_vars command has been removed. It has been superseded by the diffuse_filter of the estimation command, and the nocheck option of the steady command.
+    - Estimated standard errors internally now get a prefix stderr instead of just the name of the exogenous variable.
+    - The deprecated dynare_sensitivity command has been removed, use the sensitivity command instead.
+    - The hp_ngrid option was removed, use filtered_theoretical_moments_grid instead.
+    - Declaring dsge_prior_weight as a parameter has been removed. It will be automatically added when using the dsge_var option of the estimation command.
+    Bugs that were present in 6.5 and that have been fixed in 7.0
+    - The smoother2histval(outfile = …) command would store incorrect values for variables appearing with a lag of 2 or more.
+    - Using several endval blocks in the same file could lead to incorrect results (this setup was not supported, but there was unfortunately no error message preveting users from doing this). Proper support for multiple endval blocks has been added (they are now concatenated).
+    - The prior moments and prior optimize commands would crash.
+    - The matched_irfs block would not accept a single entry following the weights keyword when there were multiple entries following the periods keyword, contrary to what the manual says.
+    - The mode_compute=5 option of the estimation command would crash in case of an invalid initial parameter draw.
+    - Uniform priors did not correctly check for invalid hyperparameter specifications.
+    - The method_of_moments command would crash upon trying to randomize the starting value for steady state finding.
+    - Filtered theoretical autocorrelation matrices at lag>0 in oo_.autocorr and oo_.gamma_y were erroneously transposed.
+    - The mh_recover and load_mh_file options of the estimation command would not correctly work if the value of the mh_nblocks option was different from what was originally run.
+    - The extended_path command would:
+      - not return the initial condition in oo_.exo_simul;
+      - crash if NaN was encountered in the solution;
+      - crash for purely forward or purely backward models.
+    - The ramsey_model command would crash in the presence of external functions.
+    - The model_info command would:
+      - not display the dynamic block structure if the block_static option was specified;
+      - sometimes crash when displaying the incidence matrix when passed the incidence option.
+    - When running the estimation command with measurement errors:
+      - the logic for computing calibrated measurement error entries was broken;
+      - the analytic_derivation option would crash.
+    - Using Weibull priors in estimation could trigger infinite loops.
+    - The generalized Weibull prior distribution did not correctly take the third hyperparameter shifting the lower bound into account.
+    - The display of problematic variables in debug mode for the perfect_foresight_solver command was broken.
+    - OccBin posterior moments would crash when the smoother encountered an unsuccessful draw.
+    - OccBin: when multiple solutions were found, the relaxation algorithm would crash.
+    - The diffuse Kalman smoother would return incorrect smoothed state uncertainty.
+    - The block decomposition in a perfect foresight context would occasionally crash Octave.
+    - Using the forecast command with a model solved at order=2 with varexo_det, Dynare would return uncertainty bands based on a first-order approximation.
+    - OccBin would not correctly sum the likelihood of detected multiple solution paths.
+    - The identification command would ignore the kalman_algo option.
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/new-dynare-release/dynare-7.0-released/
+ReleaseTime: 2026-03-18T23:00:00.0000000Z

@@ -1,0 +1,27 @@
+Version: 5.16.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anyme123/Any-code/releases/download/v5.16.1/any-code_5.16.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/anyme123/Any-code/releases/download/v5.16.1/Any.Code_5.16.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    - Fix orphan node process after Claude session ends: Create Job Object immediately after spawn() to ensure all child processes (including MCP node servers) are properly terminated when the session ends.
+    Changes
+    - Add register_claude_session_with_job() function for proper child process cleanup
+    - Job Object is now created before Claude starts MCP servers, ensuring all child processes inherit it
+
+    问题修复
+    - 修复 Claude 会话结束后的孤儿 node 进程问题：在进程启动后立即创建 Job Object，确保所有子进程（包括 MCP node 服务器）在会话结束时被正确终止。
+    变更
+    - 新增 register_claude_session_with_job() 函数，支持正确的子进程清理
+    - Job Object 现在在 Claude 启动 MCP 服务器之前创建，确保所有子进程都会继承它
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anyme123/Any-code/releases/tag/v5.16.1
+ReleaseTime: 2025-12-21T11:37:30.0000000Z

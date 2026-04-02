@@ -16,13 +16,13 @@ $Aes.Dispose()
 $AesDecryptor.Dispose()
 
 # Global x86
-$Object3 = $Object2.win.en.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object3 = $Object2.win10.en.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
 # Global x64
-$Object4 = $Object2.win.en.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object4 = $Object2.win10.en.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
 # China x86
-$Object5 = $Object2.win.cn.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object5 = $Object2.win10.cn.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
 # China x64
-$Object6 = $Object2.win.cn.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
+$Object6 = $Object2.win10.cn.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
 
 if ((@($Object3, $Object4, $Object5, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
   $this.Log("Global x86 version: $($Object3.version)")

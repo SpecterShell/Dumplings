@@ -1,0 +1,21 @@
+Version: 14.0.4
+Installer:
+- Architecture: x86
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.0.4/windows_10_cmake_Release_graphviz-install-14.0.4-win32.exe
+- Architecture: x64
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.0.4/windows_10_cmake_Release_graphviz-install-14.0.4-win64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Internal timing operations now use clock() on all platforms (previously this was only used on Windows). This should result in more accurate timing in verbose informational messages.
+    - Building Graphviz with expat < 2.2.8 is no longer supported on MinGW.
+    Fixed
+    - diffimg now notices failures when calling Ghostscript to convert PS images to PNG and exits instead of continuing.
+    - dtstat no longer reads/writes out of bounds memory on platforms where sizeof(int) < sizeof(size_t). This was a regression in Graphviz 7.0.1.
+    - Some incorrect variable types in the libcdt man page have been corrected.
+    - gvgen no longer triggers Undefined Behavior when asked to generate a binary tree with depth ≥ 32 (e.g. gvgen -t32).
+    - gvgen no longer triggers Undefined Behavior when asked to generate a hypercube with depth ≥ 32 (e.g. gvgen -h32).
+    - A null pointer dereference in edge pair analysis within the circo algorithm has been fixed.
+ReleaseTime: 2025-11-15T18:38:46.6880000Z

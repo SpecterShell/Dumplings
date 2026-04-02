@@ -1,11 +1,11 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=LCC25'
+$Object1 = Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=LCC25' | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/')
+  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('\', '/').Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
@@ -20,11 +20,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.ItemID.SoftwarePkg.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # LicenseUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = Join-Uri $InstallerUrl 'Thorlabs_Thorlabs End-user License.rtf'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'LicenseUrl'
+      #   Value  = Join-Uri $InstallerUrl 'Thorlabs_Thorlabs End-user License.rtf'
+      # }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

@@ -30,7 +30,7 @@ foreach ($Locale in @('en-US')) {
       InstallerType   = 'nullsoft'
       InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
       InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-      ProductCode     = "Mozilla Firefox ${ShortVersion} (${Arch} ${Locale})"
+      ProductCode     = 'Mozilla Firefox'
     }
   }
 }
@@ -41,7 +41,14 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${ShortVersion}/releasenotes/"
+        Value = $null
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://www.firefox.com/en-US/firefox/${ShortVersion}/releasenotes/"
       }
     } catch {
       $_ | Out-Host
@@ -69,7 +76,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object4.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = @($Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-summary-details")]'), $Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-notes-content")]')) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -87,7 +94,7 @@ switch -Regex ($this.Check()) {
     $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
-    $Mutex.WaitOne(600000) | Out-Null
+    $Mutex.WaitOne(3600000) | Out-Null
 
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
@@ -95,7 +102,7 @@ switch -Regex ($this.Check()) {
       if ($Locale -eq 'multi') {
         $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
 
-        foreach ($Arch in @('x86', 'x64')) {
+        foreach ($Arch in @('x86', 'x64', 'arm64')) {
           # Installer
           $this.CurrentState.Installer += [ordered]@{
             Architecture  = $Arch
@@ -113,7 +120,7 @@ switch -Regex ($this.Check()) {
             InstallerType   = 'nullsoft'
             InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
             InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Mozilla Firefox ${ShortVersion} (${Arch} ${Locale})"
+            ProductCode     = 'Mozilla Firefox'
           }
         }
       }
@@ -124,6 +131,8 @@ switch -Regex ($this.Check()) {
         $_ | Out-Host
         $this.Log($_, 'Warning')
       }
+
+      Start-Sleep -Seconds 30
     }
 
     $Mutex.ReleaseMutex()

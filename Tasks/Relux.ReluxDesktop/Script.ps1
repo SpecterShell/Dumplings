@@ -11,7 +11,7 @@ if ([string]::IsNullOrEmpty($Object1.program.versionString)) {
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.program.versionString, '(\d+(?:\.\d+)+)').Groups[1].Value
-$ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
+$ShortVersion = $this.CurrentState.Version -replace '(\.0+)+$'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,0 +1,109 @@
+Version: 3.98.0
+Installer:
+- InstallerUrl: https://logtalk.org/files/logtalk-3.98.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Logtalk compiler and runtime
+    - CHANGED: The create_object/4 and create_category/4 built-in predicates no longer silently accept (and generalize) a compound entity identifier with parameters that are not variables. Attempts to create a parametric entity with a non-variable parameter now throw a type error, consistent with the compiler behavior for source files defined parametric entities.
+    - FIXED: Compiler bug where a file initialization/1 directive calling the create_object/4 built-in predicate with valid object relation arguments would result in a compiler error. Thanks to Paul Brown for the bug report.
+    - FIXED: Compiler bug where compiling an include/1 directive where the included file contains uses/2 or use_module/2 directives that define operators would result in syntax errors.
+    - FIXED: Runtime error in the predicate_property/2 built-in method when the predicate argument is defined via a uses/2 or use_module/2 directive where the object or module argument is a parameter variable only bound at runtime.
+    Prolog adapter and integration files
+    - UPDATED: The gplgt.sh script to export the LINEDIT environment variable (set to gui=no) to allow running it on Windows using a Bash shell.
+    - FIXED: The SICStus Prolog adapter file to import the forall/2 predicate from the aggregate library instead of defining it locally, thus avoiding a predicate redefinition warning when this library is imported.
+    - FIXED: The logtalk_setup_env.sh integration helper script to write error messages to stderr instead of stdout.
+    Documentation
+    - IMPROVED: Documentation of the type::set_seed/1 library predicate.
+    - IMPROVED: Man page for the logtalk_doclet and logtalk_tester scripts.
+    - IMPROVED: The Handbook documentation on parametric categories and objects.
+    - IMPROVED: The lgtunit documentation on debugging broken and crashed test sets.
+    - UPDATED: The Handbook documentation of the create_category/4 and create_object/4 built-in predicate exceptions.
+    Library
+    - ADDED: New mcp_server library for deploying Logtalk applications as MCP servers.
+    - ADDED: New c45 library implementing the C4.5 algorithm for learning decision trees.
+    - ADDED: New random_forest library implementing the Random Forest algorithm for learning decision trees.
+    - ADDED: New ada_boost library implementing Adaptive Boosting using the SAMME (Stagewise Additive Modeling using a Multi-class Exponential loss function) variant.
+    - ADDED: New knn library implementing k-Nearest Neighbors (kNN) Classifier.
+    - ADDED: New naive_bayes library implementing a Naive Bayes classifier.
+    - ADDED: New nearest_centroid library implementing a Nearest Centroid classifier.
+    - ADDED: New isolation_forest library implementing the Isolation forest algorithm for anomaly detection.
+    - ADDED: New datalog library intended for educational purposes and non-demanding applications.
+    - ADDED: New deques library implementing double-ended queues represented using difference lists.
+    - ADDED: New graphs library implementing directed/undirected weighted/unweighted graph predicates represented using dictionaries.
+    - ADDED: New subsequences, combinations, and permutations libraries implementing predicates over sequences represented as lists.
+    - ADDED: New avro library implementing for parsing and generating files in the Apache Avro binary format.
+    - ADDED: New protobuf library implementing for parsing and generating files in the Google Protocol Buffers binary format.
+    - ADDED: New base32, base58, and base85 libraries.
+    - ADDED: New json_ld library for parsing and generating JSON-LD data.
+    - ADDED: New json_rpc library implementing the JSON-RPC 2.0 spec.
+    - ADDED: New json_schema library for parsing JSON Schema files and validating JSON files after a schema.
+    - ADDED: New yaml library for parsing and generating files in the YAML format.
+    - ADDED: New url library with predicates for validating, parsing, generating, and normalizing URLs.
+    - ADDED: New process compatibility library. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New sockets high-level compatibility library. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New memcached library implementing a Memcached client. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New amqp library implementing the Advanced Message Queuing Protocol (AMQP) 0-9-1 spec. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New stomp library implementing a STOMP (Simple Text Orientated Messaging Protocol) client. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New linda library implementing the classic Linda coordination model for process communication. Supports SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New command_line_options library for parsing and generating help for command-line options. Adapted from the SWI-Prolog optparse library by Marcus Uneson.
+    - ADDED: New stemming library implementing Porter and Lovins algorithms for computing stems for English words.
+    - ADDED: New string_distance library implementing common algorithms for computing the distance between two strings.
+    - ADDED: New strings compatibility library. Based on ECLiPSe and SWI-Prolog work and libraries.
+    - ADDED: New validations library supporting accumulation of errors as a complement to the expecteds library fast-fail semantics.
+    - ADDED: New simulated_annealing library.
+    - ADDED: New geospatial library providing common geographic computations over coordinates.
+    - ADDED: New time_scales library providing predicates for converting between UTC, TAI, TT, UT1, TDB, GPS, GST, TCG, and TCB instants.
+    - ADDED: New cuid2, ksuid, nanoid, and snowflakeid libraries implementing, respectively, the Cuid2, KSUID, NanoID, and Snowflake ID specs.
+    - ADDED: Types text and text(CharSet) to the arbitrary and types libraries. These types support representing text using atoms, character lists, or character code lists.
+    - ADDED: New dates library date_time_to_unix/2, unix_to_date_time/2, add_duration/3, subtract_duration/3, duration_between/3, utc_to_local/3, local_to_utc/3, day_of_year/2, week_of_year_iso/2, weekday/2, normalize_date_time/2, and valid_date_time/1 predicates.
+    - ADDED: New natural library object factorial/2 and binomial/3 predicates.
+    - ADDED: New numberlist library object linear_regression/4 predicate.
+    - ADDED: New take/4 predicate to the listp library protocol and to the list and difflist library objects.
+    - ADDED: Support for the SplitMix64, Xoshiro128++, Xoshiro128**, Xoshiro256++, Xoshiro256**, and WELL512a algorithms to the random library.
+    - ADDED: Support for version 7 UUIDs to the uuid library. Also added uuid_nil/1 and uuid_max/1 predicates per RFC 9562.
+    - ADDED: New statistics library predicates percentile/3, quartiles/4, interquartile_range/2, covariance/3, correlation/3, rank_correlation/3, trimmed_mean/3, sum_of_squares/2, central_moment/3, standard_error/2, min_max_normalization/2, frequency_distribution/2, mean_squared_error/3, and root_mean_squared_error/3.
+    - ADDED: New expecteds library predicates from_optional/3, to_optional/1, filter/3, map_unexpected/2, map_catching/2, map_both/3, swap/1, map_or_else/3, or/2, or_else_throw/2, zip/3, flatten/1, sequence/2, and traverse/3.
+    - ADDED: New optionals library predicates from_goal_or_throw/2-3, map_or_else/3, zip/3, flatten/1, to_expected/2, sequence/2, and traverse/3.
+    - ADDED: Support for QuickCheck shrinking to the expecteds and optionals libraries.
+    - ADDED: Wrapper predicates for commonly used Redis operations across multiple data types to the redis library.
+    - UPDATED: The redis library to use the new sockets library. Supports ECLiPSe, GNU Prolog, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - UPDATED: The csv and tsv to support optionally files with comments.
+    - UPDATED: The dictionaries library with a splay tree implementation. A new lookup/4 predicate allows returning the splayed tree.
+    - UPDATED: The sets library with a treap (tree heap) implementation.
+    - UPDATED: The heaps library with pairing heap implementation.
+    - FIXED: The heaps library definition of the valid/1 predicate for binary heaps.
+    - FIXED: The arbitrary and types libraries for XSB which also defines the epsilon/0 de facto standard arithmetic constant.
+    - FIXED: The arbitrary and types libraries to avoid a portability warning when using the XVM backend.
+    - FIXED: Unused dependencies in the json and json_lines libraries.
+    - FIXED: Avoid portability warnings when loading the arbitrary, os, random, and types libraries due to the necessary use of backend specific features.
+    Tools
+    - ADDED: Predicate help::man/1 tool for browsing scripts documentation.
+    - UPDATED: The help tool to allow selecting between browsing the HTML files generated by Sphinx for web browsing or the XHTML files generated by Sphinx for the ePub version of the documentation.
+    - UPDATED: The logtalk_tester.sh, logtalk_tester.ps1, logtalk_doclet.sh, and logtalk_doclet.ps1 scripts to also print the runtime.
+    - UPDATED: The logtalk_tester.ps1 PowerShell script to export the LINEDIT environment variable (set to gui=no) when run using the GNU Prolog backend.
+    - IMPROVED: The logtalk_doclet.sh and logtalk_tester.sh scripts to print only three decimal places for test set runtime and clause coverage percentage.
+    - FIXED: The logtalk_doclet.sh and logtalk_tester.sh scripts to print the correct number of seconds runtime for each test object.
+    - FIXED: The help tool use of the links terminal-based browser on Linux.
+    - FIXED: The help tool search for the terminal-based browser executables for the prefix used by Homebrew on Apple Silicon.
+    - FIXED: Avoid portability warnings when loading the debugger and lgtunit tools due to the necessary use of backend specific features.
+    - FIXED: The lgtdoc tool logtalk_setup_env.sh integration helper script to write error messages to stderr instead of stdout.
+    Examples
+    ADDED: New birds_mcp example illustrating how to publish an application as a MCP server using the bird identification expert system defined in the birds example.
+    Contributions
+    - ADDED: New iso8601 library duration_string/2 and interval_string/2 predicates.
+    Tests
+    - ADDED: Additional tests for the ISO Prolog standard atom_chars/2 and atom_codes/2 built-in predicates.
+    - FIXED: Workaround a crash using the SICStus Prolog backend when running the tests for the ISO Prolog standard is/2 built-in predicate.
+    - FIXED: The compatibility of the de facto standard format/2-3 predicate tests with 32 bits systems with bounded integers. Thanks to Daniel Diaz for the bug report.
+    - FIXED: The compatibility of the standard (^)/2 function tests with 32 bits systems with bounded integers. Thanks to Daniel Diaz for the bug report.
+    IDEs, text editors, and syntax highlighters support
+    - UPDATED: The VSCode support to include per entity and per entity predicate code coverage data when creating test results files.
+    - UPDATED: The Logtalk.gitignore, Logtalk.hgignore, and Logtalk.p4ignore template files to also ignore the temporary files created by the Logtalk for VSCode extension.
+    - FIXED: The EditorConfig files to use space-based indentation for Markdown files.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#3980---february-27-2026
+ReleaseTime: 2026-02-27

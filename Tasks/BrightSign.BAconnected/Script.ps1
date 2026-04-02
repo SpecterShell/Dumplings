@@ -27,12 +27,12 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[@id="STRIPE_TEMPLATE_EDITOR"]')) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "slate-editor")]')) } catch {}
         }
       ).GetAttribute('innerHTML') | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("//div[contains(@class, 'slate-h1') and contains(.//h1, '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(.//div/@class, 'slate-h1') and contains(.//h1, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('slate-h1'); $Node = $Node.NextSibling) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.SelectSingleNode(".//div[contains(@class, 'slate-h1')]"); $Node = $Node.NextSibling) {
           if (-not $Node.InnerText.Contains('Download:')) {
             $Node
           }

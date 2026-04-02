@@ -1,0 +1,48 @@
+Version: 0.6.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.6.3/drip-v0.6.3-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.6.3/drip-v0.6.3-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    Drip v0.6.3 introduces HTTP Proxy Authentication and enhanced IP Access Control, providing more granular security controls for your tunnels.
+    What's New
+    Proxy Authentication
+    Secure your HTTP tunnels with password protection. When enabled, visitors must authenticate before accessing your tunneled service.
+    - Password-protected tunnels - Add --auth <password> flag to require authentication
+    - Cookie-based sessions - Authenticated users stay logged in via secure cookies
+    - Clean login page - Built-in login UI for seamless user experience
+    - XSS protection - HTML escaping implemented to prevent cross-site scripting attacks
+    Usage:
+    drip http 8080 --auth mysecretpassword
+    Enhanced IP Access Control
+    Extended IP filtering capabilities with CIDR range support.
+    - CIDR range blocking - Block entire IP ranges instead of individual IPs
+    - Flexible blacklisting - Support for both single IPs and CIDR notation (e.g., 192.168.1.0/24)
+    Usage:
+    drip http 8080 --blacklist 10.0.0.0/8,192.168.0.0/16
+    Server Improvements
+    - Configuration validation - Server now validates configuration on startup
+    - Optimized connection handling - Improved connection lifecycle management
+    Changelog
+    - feat(proxy): Implement HTML escaping in login pages to prevent XSS attacks
+    - feat(cli): Add proxy authentication support with --auth flag
+    - feat(netutil): Extend IP access checker blacklist from single IP to CIDR ranges
+    - feat(server): Add server configuration validation and optimize connection handling
+    Upgrade Guide
+    This release is backward compatible. Simply update to the latest version:
+    go install github.com/Gouryella/drip@latest
+    What's Changed
+    - feat(cli): add proxy authentication support by @Gouryella in https://github.com/Gouryella/drip/pull/15
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.6.2...v0.6.3
+    What's Changed
+    - feat(cli): add proxy authentication support by @Gouryella in https://github.com/Gouryella/drip/pull/15
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.6.2...v0.6.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Gouryella/drip/releases/tag/v0.6.3
+ReleaseTime: 2026-01-13T04:05:21.0000000Z

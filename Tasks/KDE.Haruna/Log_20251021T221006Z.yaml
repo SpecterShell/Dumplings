@@ -1,0 +1,49 @@
+Version: "1456"
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-1456-windows-gcc-x86_64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    Settings
+    - General: added single instance setting to play new file when appending to the playlist
+    - General: removed the
+    - Playlist: added settings to control playback behavior
+    - Mouse: refactored to allow modifier keys
+    - Mouse: added support for Mouse Forward and Back buttons
+    - Subtitles: if a relative folder name in the
+    - the settings window now has a minimum width and height
+    PlayList
+    - added support for multiple playlists
+    - items can be reordered manually through drag and dropdown
+    - items can be selected, ctrl+click to select multiple items, shift+click to select a range
+    - items can be filtered
+    - added settings to control playback behavior when a file ends
+    - when saving the playlist the file extension is set to m3u
+    - can add files and folders through drag and drop
+    - multiple files can be added through the option in the header
+    - hide playlist when mouse leaves window while maximized, prevents opening the playlist when moving mouse to another monitor
+    Playback
+    - if a file can't be played now an error is shown and playback stops instead of trying to play the next file (prevents a potential infinite loop when no file in the playlist can be played)
+    - can play files starting with a dot (hidden files)
+    - an error is shown when failing to get youtube playlist
+    Other
+    - mpris: add support for Shuffle and LoopStatus
+    - changed the action selection popup to use Kirigami.SearchDialog
+    - replaced the spinning icon with a progress bar and label
+    - the drop area of the video is split in 2 parts now
+    - top part always appends to the default playlist
+    - bottom part clears the default playlist and adds the dropped files and folders, when only one file is dropped it behaves as the open file action (clears the playlist and loads sibling files if enabled in settings)
+    - recent files are now stored in a sqlite database
+    - time positions used to restore videos are also stored in the database
+    - sleep is blocked on Windows too
+    - all strings should be translatable now
+    Bugfixes:
+    - fixed the loop action, osd was not showing and progress bar was not highlighting the loop range
+    - before loading check that the file exists
+    - fixed loading wrong subtitles when using recursive subs
+    - fixed the progress bar getting taller when the chapters menu becomes visible
+    - fixed a bug where the video would pause after clicking the progress/seek bar
+RealVersion: 1.5.0

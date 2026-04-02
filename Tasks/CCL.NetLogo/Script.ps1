@@ -1,19 +1,15 @@
-$Prefix = 'https://ccl.northwestern.edu/netlogo/oldversions.shtml'
+$Prefix = 'https://www.netlogo.org/downloads/windows/'
 
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
-$Prefix = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.outerHTML -match 'NetLogo (\d+(?:\.\d+)+)' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1)
-
-$Object2 = Invoke-WebRequest -Uri $Prefix
+$Object1 = (Invoke-WebRequest -Uri $Prefix).Content | ConvertTo-HtmlDecodedText
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('-32.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object1, "(https://[^'`"]+?-32\.msi)").Groups[1].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('-64.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object1, "(https://[^'`"]+?-64\.msi)").Groups[1].Value
 }
 
 # Version
@@ -22,7 +18,13 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesUrl = 'https://ccl.northwestern.edu/netlogo/docs/versions.html'
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://docs.netlogo.org/versions'
+      }
+
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(./a/text(), 'Version $($this.CurrentState.Version)')]")
@@ -35,10 +37,11 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + $ReleaseNotesTitleNode.SelectSingleNode('./a').Attributes['href'].Value
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + $ReleaseNotesTitleNode.SelectSingleNode('./a').Attributes['href'].Value
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

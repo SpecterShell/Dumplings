@@ -1,12 +1,12 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsFreeSetup.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'NtfsPermissionsReporterInstaller.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'NtfsPermissionsReporterInstaller.exe'
   $InstallerFile2Extracted = New-TempFolder
   Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsFreeSetup.x64.msi'
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'NtfsStandardSetup.msi'
+  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'NtfsStandardSetup.x64.msi'
   # Version
   # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
   $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi

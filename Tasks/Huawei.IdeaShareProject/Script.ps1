@@ -1,17 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.huaweicloud.com/product/ideahub/ideashare.html' | ConvertFrom-Html
+$EdgeDriver = Get-EdgeDriver -Headless
+$EdgeDriver.Navigate().GoToUrl('https://www.huaweicloud.com/product/ideahub/ideashare.html')
+Start-Sleep -Seconds 3
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('//div[@class="header_ops"]//div[@class="header_txt4"]').InnerText,
-  'V([\d\.]+)'
-).Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($EdgeDriver.ExecuteScript('return versionDict.opsVersion'), '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = [regex]::Match(
-    $Object1.SelectSingleNode('//div[@class="header_ops"]').Attributes['onclick'].Value,
-    "window\.open\('(.+?)'\)"
-  ).Groups[1].Value
+  InstallerUrl = $EdgeDriver.ExecuteScript('return opsUrl')
 }
 
 switch -Regex ($this.Check()) {

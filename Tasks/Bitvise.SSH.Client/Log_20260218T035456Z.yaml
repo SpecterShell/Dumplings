@@ -1,0 +1,18 @@
+Version: "9.59"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-959.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#959
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Installation:
+      - The SSH Client installer still requires administrative rights for installation, but can now be run without administrative rights for help with command-line parameters. Users who are preparing the SSH Client for portable use no longer need administrative rights to extract files in the installer.
+    - Authentication:
+      - If the user runs the PuTTY authentication agent using pageant --unix, and configures the SSH_AUTH_SOCK environment variable with the path to the Unix socket file, the SSH Client now detects this as an unsupported mechanism, and still tries connecting to the Windows OpenSSH agent. The SSH Client already connects to the PuTTY agent using the PuTTY mechanism, so it doesn't need a second connection to the same agent.
+        In previous versions, this configuration would cause the SSH Client to display an error message, and it would not further try to connect to the Windows OpenSSH agent. The connection to the PuTTY agent would still work using the PuTTY mechanism.
+    - SFTP GUI:
+      - Switching between light mode and dark mode no longer requires the SFTP window to be closed and reopened in order to use the appropriate icons.
+ReleaseTime: 2026-02-18

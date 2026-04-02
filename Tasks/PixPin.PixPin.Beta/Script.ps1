@@ -12,38 +12,39 @@ $this.CurrentState.Version = $Object1.ver_info.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.ver_info.direct_url[0]
+  InstallerUrl = $Object1.ver_info.direct_url[0].Replace('true', '_cn').Replace('false', '')
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.ver_info.created_at.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.ver_info.created_at | Get-Date | ConvertTo-UtcDateTime -Id 'UTC'
 
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (zh-CN)
       $ReleaseNotesObject = $Object1.ver_info.desc | Convert-MarkdownToHtml
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[text()='$($this.CurrentState.Version.Split('.')[0..2] -join '.')']")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
         }
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.ver_info.desc_url
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.ver_info.desc_url
       }
     } catch {
       $_ | Out-Host

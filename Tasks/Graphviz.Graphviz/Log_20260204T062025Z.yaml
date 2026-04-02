@@ -1,0 +1,21 @@
+Version: 14.1.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.2/windows_10_cmake_Release_graphviz-install-14.1.2-win32.exe
+- Architecture: x64
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.2/windows_10_cmake_Release_graphviz-install-14.1.2-win64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Support for HP-UX has been removed.
+    Fixed
+    - On MinGW, Smyrna consistently uses / as a path separator.
+    - In the CMake build system, building a statically linked dot with the Quartz plugin enabled has been repaired.
+    - The configuration files exported by the CMake build system have an additional install interface of include, adding to the existing include/graphviz. The effect of this is that code using these files to access Graphviz headers can now prefix their include paths, e.g. #include <graphviz/gvc.h> instead of #include <gvc.h>. #2798
+    - The colorscheme attribute when applied to edge labels works once again. This was a regression in Graphviz 11.0.0. #2801
+    - The dpi and resolution graph attributes are now constrained to a minimum value of 0.0. This was already stated in the documentation but not enforced by the code.
+    - Compilation from source no longer fails on Solaris with symbol conflicts due to lock_t usage. #2802
+    - When compiling Graphviz from source, _FILE_OFFSET_BITS is set consistently in all compilation jobs. #2803
+ReleaseTime: 2026-01-24T06:11:09.7810000Z

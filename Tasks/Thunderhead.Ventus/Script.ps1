@@ -1,10 +1,11 @@
-$ReleaseNotesUrl = Get-RedirectedUrl -Uri 'https://support.thunderheadeng.com/release-notes/ventus/latest'
-$Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode("//*[contains(@x-data, 'availableDownloads')]").Attributes['x-data'].Value | ConvertTo-HtmlDecodedText | ConvertFrom-Json
+$ReleaseNotesUrl = 'https://www.thunderheadeng.com/docs/latest/ventus/'
+$Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl
+$ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl ([regex]::Match($Object1.Content, 'location.href="([^"]+)"').Groups[1].Value)
+$Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://www.thunderheadeng.net/releases/' $Object2.availableDownloads.msi
+  InstallerUrl = [regex]::Match($Object2.Content, '"(https://www.thunderheadeng.net/releases/Ventus-[^"]+?\.msi)"').Groups[1].Value
 }
 
 # Version
@@ -13,18 +14,19 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.SelectSingleNode("//h3[contains(text(), `"What's New`")]/ancestor::*[1]") | Get-TextContent | Format-Text
-      }
-
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
         Value  = $ReleaseNotesUrl
+      }
+
+      $Object3 = $Object2 | ConvertFrom-Html
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object3.SelectSingleNode('//main') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -39,9 +41,13 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     if ("20$($this.CurrentState.Version.Split('.')[0])" -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
+      $this.Config.WinGetNewPackageIdentifier = $this.Config.WinGetIdentifier -replace '20\d{2}', "20$($this.CurrentState.Version.Split('.')[0])"
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PackageName'
+        Value  = { $_ -replace '20\d{2}', "20$($this.CurrentState.Version.Split('.')[0])" }
+      }
     }
+    $this.Submit()
   }
 }

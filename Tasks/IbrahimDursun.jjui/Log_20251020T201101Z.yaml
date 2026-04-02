@@ -1,0 +1,30 @@
+Version: 0.9.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/idursun/jjui/releases/download/v0.9.5/jjui-0.9.5-windows-amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: jjui-0.9.5-windows-amd64.exe
+    PortableCommandAlias: jjui
+- Architecture: arm64
+  InstallerUrl: https://github.com/idursun/jjui/releases/download/v0.9.5/jjui-0.9.5-windows-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: jjui-0.9.5-windows-arm64.exe
+    PortableCommandAlias: jjui
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release contains some minor improvements and bug fixes.
+    - Help window is now searchable. #334
+    - changed preview to run in the background while getting the diff contents to improve UI responsiveness. #336
+    - fix: async command executor used to append --color always to the end of the command to get colourful output but this broke some commands that expect arguments. This change moves the --color always to the beginning of the command. #339
+    - Added pgup and pgdown bindings to the revisions view so that you can jump down/up without having to press j/k multiple times. #347
+    - improved handling of bookmarks that contain -- characters in their name. jj returns these bookmarks with quotes which jjui didn't handle well. #346
+    - JJUI_CONFIG_DIR is changed to match the documentation where it will load the configuration from $JJUI_CONFIG_DIR/config.toml rather than $JJUI_CONFIG_DIR/jjui/config.toml #343
+    - ace jump didn't highlight change ids in some template configuration. It should highlight change ids and commit ids correctly now.
+    What's Changed
+    - feat: add search functionality to help menu by @baggiiiie in https://github.com/idursun/jjui/pull/334
+    Full Changelog: https://github.com/idursun/jjui/compare/v0.9.4...v0.9.5
+- Key: ReleaseNotesUrl
+  Value: https://github.com/idursun/jjui/releases/tag/v0.9.5
+ReleaseTime: 2025-10-20T19:49:08.0000000Z

@@ -10,7 +10,7 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/devedition/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/firefox_versions.json'
 
 # Version
-$this.CurrentState.Version = $OriginalVersion = $Object1.LATEST_FIREFOX_RELEASED_DEVEL_VERSION
+$this.CurrentState.Version = $OriginalVersion = $Object1.FIREFOX_DEVEDITION
 
 # RealVersion
 $this.CurrentState.RealVersion = $ShortVersion = $this.CurrentState.Version -replace 'b.+'
@@ -32,7 +32,7 @@ foreach ($Locale in @('en-US')) {
       InstallerType   = 'nullsoft'
       InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
       InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-      ProductCode     = "Firefox Developer Edition ${ShortVersion} (${Arch} ${Locale})"
+      ProductCode     = 'Firefox Developer Edition'
     }
   }
 }
@@ -43,7 +43,14 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${ShortVersion}beta/releasenotes/"
+        Value = $null
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://www.firefox.com/en-US/firefox/${ShortVersion}beta/releasenotes/"
       }
     } catch {
       $_ | Out-Host
@@ -71,7 +78,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object4.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = @($Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-summary-details")]'), $Object4.SelectSingleNode('//*[contains(@class, "fl-c-release-notes-content")]')) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -89,7 +96,7 @@ switch -Regex ($this.Check()) {
     $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
-    $Mutex.WaitOne(600000) | Out-Null
+    $Mutex.WaitOne(3600000) | Out-Null
 
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
@@ -119,7 +126,7 @@ switch -Regex ($this.Check()) {
             InstallerType   = 'nullsoft'
             InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
             InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Firefox Developer Edition ${ShortVersion} (${Arch} ${Locale})"
+            ProductCode     = 'Firefox Developer Edition'
           }
         }
       }
@@ -130,6 +137,8 @@ switch -Regex ($this.Check()) {
         $_ | Out-Host
         $this.Log($_, 'Warning')
       }
+
+      Start-Sleep -Seconds 30
     }
 
     $Mutex.ReleaseMutex()

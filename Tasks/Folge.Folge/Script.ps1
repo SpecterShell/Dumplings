@@ -11,11 +11,11 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://folge.me/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='$($this.CurrentState.Version)' and contains(@class, 'changelogItem')]")
-      if ($ReleaseNotesNode) {
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'changelogItemHeader') and contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match($ReleaseNotesNode.SelectSingleNode('./div[contains(@class, "changelogItemHeader")]').InnerText, '([a-zA-Z]+\W+\d{1,2}[a-zA-Z]+\W+20\d{2})').Groups[1].Value,
+          [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}[a-zA-Z]+\W+20\d{2})').Groups[1].Value,
           [string[]]@(
             "MMMM d'st', yyyy",
             "MMMM d'nd', yyyy",
@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('./div[@class="changelogItemBody"]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[@class="changelogItemBody"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

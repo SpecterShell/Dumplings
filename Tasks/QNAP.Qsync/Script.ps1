@@ -1,7 +1,7 @@
 $Object1 = $Global:DumplingsStorage.QNAPApps.docRoot.utility.application.Where({ $_.applicationName -eq 'com.qnap.qsync' }, 'First')[0].platform.Where({ $_.platformName -eq 'Windows' }, 'First')[0].software
 
 # Version
-$this.CurrentState.Version = "$($Object1.version).$($Object1.buildNumber)"
+$this.CurrentState.Version = "$($Object1.version).$($Object1.buildNumber -match '^(\d+)' ? $Matches[1] : (throw 'Cannot parse build number'))"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.qnap.com.cn/api/v1/release-notes/utility/Qsync?locale=en').result.notes.Windows.Where({ $_.version -eq $Object1.version }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.qnap.com/api/v1/release-notes/utility/Qsync?locale=en').result.notes.Windows.Where({ $_.version -eq $Object1.version }, 'First')
 
       if ($Object2) {
         # ReleaseNotes (en-US)
@@ -41,7 +41,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = (Invoke-RestMethod -Uri 'https://www.qnap.com.cn/api/v1/release-notes/utility/Qsync?locale=zh-cn').result.notes.Windows.Where({ $_.version -eq $Object1.version }, 'First')
+      $Object3 = (Invoke-RestMethod -Uri 'https://www.qnap.com/api/v1/release-notes/utility/Qsync?locale=zh-cn').result.notes.Windows.Where({ $_.version -eq $Object1.version }, 'First')
 
       if ($Object3 -and $Object3[0].note -ne $Object2[0].note) {
         # ReleaseNotes (zh-CN)

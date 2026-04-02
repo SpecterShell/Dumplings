@@ -16,29 +16,26 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@data-widget_type='theme-post-content.default']/div/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        try {
-          $ReleaseTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::h3[1]')
-
-          # ReleaseTime
-          $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-            [regex]::Match($ReleaseTimeNode.InnerText, '([a-zA-Z]+\s+\d{1,2}(st|nd|rd|th),\s+\d{4})').Groups[1].Value,
-            # "[string[]]" is needed here to convert "array" object to string array
-            [string[]]@(
-              "MMMM d'st', yyyy",
-              "MMMM d'nd', yyyy",
-              "MMMM d'rd', yyyy",
-              "MMMM d'th', yyyy"
-            ),
-            (Get-Culture -Name 'en-US'),
-            [System.Globalization.DateTimeStyles]::None
-          ).ToString('yyyy-MM-dd')
-
-          $ReleaseNotesNodes = for ($Node = $ReleaseTimeNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-        } catch {
-          $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+          if ($Node.InnerText -match '([a-zA-Z]+\s+\d{1,2}(st|nd|rd|th),\s+\d{4})') {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+              $Matches[1],
+              # "[string[]]" is needed here to convert "array" object to string array
+              [string[]]@(
+                "MMMM d'st', yyyy",
+                "MMMM d'nd', yyyy",
+                "MMMM d'rd', yyyy",
+                "MMMM d'th', yyyy"
+              ),
+              (Get-Culture -Name 'en-US'),
+              [System.Globalization.DateTimeStyles]::None
+            ).ToString('yyyy-MM-dd')
+          } else {
+            $Node
+          }
         }
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'

@@ -1,5 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://desktop-config.juno.ea.com/globalConfig.json'
-$Object2 = Invoke-RestMethod -Uri "$($Object1.updater.url)/autopatch/upgrade/buckets/38"
+$Object2 = Invoke-RestMethod -Uri "$($Object1.updater.url)/autopatch/upgrade/buckets/92"
 $Object3 = Invoke-RestMethod -Uri "$($Object1.updater.url)/autopatch/versions/$($Object2.recommended.version)?locale=en-US"
 
 # Version

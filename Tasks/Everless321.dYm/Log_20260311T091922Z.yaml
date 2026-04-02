@@ -1,0 +1,27 @@
+Version: 1.5.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/Everless321/dYm/releases/download/v1.5.0/dym-1.5.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 修复下载 0KB 和不完整文件问题 (#3)
+      - dy-downloader 上游修复：采用临时文件策略，下载完成后 rename，失败自动清理
+      - 文件大小校验：0KB 文件视为失败，已存在的 0KB 文件重新下载
+      - 下载后校验层：验证文件夹完整性，校验失败自动重试 1 次，不通过不入库
+    新功能
+    - 重新下载 — 右键作品可标记重新下载，下次同步时自动修复
+    - 扫描损坏文件 — 文件管理页新增「扫描损坏文件」按钮，一键检测所有损坏/0KB 文件
+    - 批量修复 — 扫描结果弹窗中可一键标记所有损坏文件重新下载
+    改动文件
+    - 新增 download-validator.ts 校验工具
+    - 更新 downloader.ts / syncer.ts 增加校验层
+    - 更新 database/index.ts 新增 deletePostByAwemeId
+    - 更新 HomePage / FilesPage 右键菜单
+    - 更新 IPC 层和类型定义
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Everless321/dYm/releases/tag/v1.5.0
+ReleaseTime: 2026-03-11T08:45:17.0000000Z

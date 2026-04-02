@@ -35,11 +35,15 @@ $this.CurrentState.Version = [regex]::Match($Object1.result.list[0].versionNumbe
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.result.list[0].fileUrl
+  InstallerType        = 'zip'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Object1.result.list[0].name).exe" })
+  InstallerUrl         = $Object1.result.list[0].fileUrl
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object2.result.list[0].fileUrl
+  InstallerLocale      = 'zh-CN'
+  InstallerType        = 'zip'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Object2.result.list[0].name).exe" })
+  InstallerUrl         = $Object2.result.list[0].fileUrl
 }
 
 switch -Regex ($this.Check()) {

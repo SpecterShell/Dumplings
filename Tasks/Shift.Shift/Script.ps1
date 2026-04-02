@@ -11,20 +11,22 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://supportv9.shift.com/hc/sections/25073721770516'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://supportv9.shift.com/hc/sections/25073721770516'
       }
 
       $Object2 = Invoke-WebRequest -Uri 'https://supportv9.shift.com/hc/en-us/sections/25073721770516' | ConvertFrom-Html
 
       $ReleaseNotesUrlNode = $Object2.SelectSingleNode("//a[contains(@class, 'card') and contains(./h2/text(), 'Shift $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesUrlNode) {
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl = Join-Uri 'https://supportv9.shift.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl = Join-Uri 'https://supportv9.shift.com/' ($ReleaseNotesUrlNode.Attributes['href'].Value -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+')
         }
 
         # ReleaseTime

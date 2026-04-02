@@ -1,12 +1,15 @@
-# User
+# x64 User
 $Object1 = Invoke-RestMethod -Uri 'https://windsurf-stable.codeium.com/api/update/win32-x64-user/stable'
-# Machine
+# x64 Machine
 $Object2 = Invoke-RestMethod -Uri 'https://windsurf-stable.codeium.com/api/update/win32-x64/stable'
+# arm64 User
+$Object3 = Invoke-RestMethod -Uri 'https://windsurf-stable.codeium.com/api/update/win32-arm64-user/stable'
+# arm64 Machine
+$Object4 = Invoke-RestMethod -Uri 'https://windsurf-stable.codeium.com/api/update/win32-arm64/stable'
 
-if ($Object1.productVersion -ne $Object2.productVersion) {
-  $this.Log("User version: $($Object1.productVersion)")
-  $this.Log("Machine version: $($Object2.productVersion)")
-  throw 'Inconsistent versions detected'
+if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion), arm64 user: $($Object3.productVersion), arm64 machine: $($Object4.productVersion)", 'Error')
+  return
 }
 
 # Version
@@ -25,6 +28,18 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = $Object2.url
   InstallerSha256 = $Object2.sha256hash.ToUpper()
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  Scope           = 'user'
+  InstallerUrl    = $Object3.url
+  InstallerSha256 = $Object3.sha256hash.ToUpper()
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  Scope           = 'machine'
+  InstallerUrl    = $Object4.url
+  InstallerSha256 = $Object4.sha256hash.ToUpper()
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -37,9 +52,9 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://codeium.com/changelog' | ConvertFrom-Html
+      $Object5 = Invoke-WebRequest -Uri 'https://codeium.com/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//main//header[contains(., '$($Object1.windsurfVersion)')]")
+      $ReleaseNotesTitleNode = $Object5.SelectSingleNode("//main//header[contains(., '$($Object1.windsurfVersion)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{

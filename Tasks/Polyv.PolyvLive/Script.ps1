@@ -4,10 +4,6 @@ $Object1 = Invoke-RestMethod -Uri 'https://odm.polyv.net/pkg/app/version/all_app
 $this.CurrentState.Version = $Object1.data.liveClient.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = 'https://soft.polyv.net/rc/PolyvLiveSetup.exe'
-}
 $this.CurrentState.Installer += $Installer = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = 'https://soft.polyv.net/rc/PolyvLiveSetup64.exe'

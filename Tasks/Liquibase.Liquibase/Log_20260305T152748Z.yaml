@@ -1,0 +1,109 @@
+Version: 5.0.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/liquibase/liquibase/releases/download/v5.0.2/liquibase-windows-x64-installer-5.0.2.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    5.0.2 Liquibase Community Release Notes
+    Liquibase Community v5.0.2 is here, with contributions from developers around the globe. This release includes a range of bug fixes across multiple database platforms along with several quality-of-life enhancements, with 19 contributors coming together to continue improving Liquibase for the entire community.
+    At Liquibase, we believe great database change management starts with a community that can rely on a predictable and transparent release process. To support this commitment, and starting with version 5.0.2, we are providing two clear ways for the community to access updates and improvements:
+    - Main Branch Builds on GitHub
+      – Main branch builds are continuously published on GitHub, offering early access to the latest improvements and fixes as they are developed. These builds enable the community to test upcoming capabilities and provide feedback ahead of the next official release. Learn more on our GitHub README
+    - Quarterly Community Releases
+      – Liquibase Community updates are released on a quarterly cadence (every second month of each calendar quarter) providing stable, production-ready versions that allow teams to plan upgrades and maintenance with confidence. These releases are available through all standard distribution channels, including GitHub, Maven Central, package managers, container registries, and other official Liquibase Community distribution locations.
+    Together, these options ensure that teams can choose the path that best fits their needs - whether prioritizing stability through scheduled releases or engaging early with the latest innovations in Liquibase.
+    A huge thank you to every contributor who filed an issue, submitted a pull request, or helped review code. You are the engine that drives Liquibase forward.
+
+    What’s in this release
+    Notable improvements
+    (#7451) by @MalloD12 New: Added the ALLOW_INHERIT_LOGICAL_FILE_PATH global configuration property, which controls whether included changelogs inherit the logicalFilePath of their parent changelog when no explicit logicalFilePath is set.
+    (#6627 and #7390) by @mkarg Improved: Custom change classes that cannot be found on the classpath no longer automatically fail the entire changelog. Liquibase now honors failOnError: false at the changeset level when the failure is caused by a missing custom change class. Additionally, a failing precondition with onFail="MARK_RAN" is now respected when the custom change class is not on the classpath.
+    (#7479) Improved Cassandra compatibility: Refactoring to enable third-party extensions like liquibase-cassandra to provide database-specific implementations and laying the groundwork for a future fix for CQL incompatibility errors.
+    Liquibase Community 5.0.2 moves more community repositories to the Functional Source License (FSL). See our FSL blog for details.
+    Performance improvements
+    (#7439) Performance fix for analytics: @tati-qalified identified and resolved a performance degradation introduced with the analytics implementation. If you noticed Liquibase running slower since analytics was added, this is the fix you've been waiting for.
+    (#7539) Build improvements: Groovy source compilation has been moved to the module level in liquibase-extension-testing, removing redundant build steps from the root configuration.
+    Drivers and Dependencies
+    (7528) Updated bundled JDBC driver versions: MSSQL to v13.2.1.jre11 and Firebird to v6.0.3
+    (#7469) Dependency cleanup: Explicit exclusions added to liquibase-core pom.xml to fix duplicated commons-text dependency.
+    Fixes
+    (#7489) by @MalloD12 Resolved an issue where the maven-update command logged duplicate messages when using the Java API. Summary output now defaults to LOG instead of ALL, which previously caused messages to be written to both the console and the log simultaneously. This behavior can still be overridden by explicitly setting the showSummaryOutput argument.
+    (#7395) by @Parthiee Invalid or empty changelog file paths are now caught and rejected during serialization
+    Liquibase now validates that changelog file paths are properly defined and non-empty when serializing changelog configurations. Previously, incomplete or missing paths could pass through silently, resulting in invalid configurations.
+    (#7378) Defensive null check: Improved stability Fixed 16 null pointer exceptions across analytics, database connections, commands, changelog processing, and schema operations, reducing the risk of unexpected crashes in edge cases. All changes were validated against 5,805 passing tests. (#7378)
+    (#7501) by @HorbatenkoYehor Resolved a SQL syntax error that caused setColumnRemarks to fail on Snowflake during validation.
+    The error occurred when columnParentType was not explicitly set, preventing Liquibase from correctly determining whether the target object was a table or view.
+    (#7452) by @peteraisher Comments on a column or table, e.g. using Hibernate's @Comment annotation, were successfully detected by the database implementation, but no diff was generated when a comment was changed.
+    This change adds a check for changed comments on a column or table, allowing the existing functionality for creating diff commands to work as expected by @peteraisher
+    (#7483) by @Folgerjun Snapshots were truncated if the generated snapshot size exceeded the buffer size.
+    This resulted in a truncated and invalid YAML/JSON file with missing closing braces or incomplete strings.
+    (#7464) by @filipelautert renameColumn now respects columnDataType on MariaDB/MySQL
+    Previously, if columnDataType was specified on a renameColumn change targeting MariaDB or MySQL, the type change was silently discarded when the database supported RENAME COLUMN syntax. The column was renamed correctly, but the data type was not updated. The fix ensures that when columnDataType is provided, Liquibase uses CHANGE syntax regardless of database version, so both the rename and the type change are applied as expected.
+    (#7456) by @MalloD12 "Rows affected" count restored for custom SQL DML statements
+    A regression introduced in 4.32.0 caused Liquibase to stop reporting the number of rows affected after each DML statement in the custom SQL changeset output, as was present in 4.31.1 and earlier. This has been resolved, and per-statement row counts are once again displayed during custom SQL execution.
+    (#7417) by @MalloD12 Restored compatibility with Quarkus and dependent projects
+    Upgrading from Liquibase 4.29.2 to 4.33.0 broke compatibility with Quarkus, which uses Liquibase for database schema migrations. This affected downstream projects such as Keycloak. This has been resolved, and Quarkus integrations should now function correctly across versions without requiring workaround code.
+    (#7426) by @mkarg Reserved words used as tablespace names are now quoted correctly on MSSQL and SQL Anywhere
+    When a tablespace name matched a reserved word, such as Index, Liquibase failed to quote it in the generated SQL for createIndex operations on MSSQL and SQL Anywhere, producing a syntax error and halting the migration. The fix ensures tablespace names are quoted correctly on both databases, allowing changesets that use reserved words as tablespace names to execute as expected.
+    (#7448) by @mkarg Tablespace names containing spaces are now quoted correctly on MSSQL
+    Following the fix for reserved-word tablespace names, a related gap was identified where tablespace names containing spaces were not reliably escaped on MSSQL. This has been resolved, ensuring consistent quoting behavior for tablespace names regardless of whether they contain spaces or match reserved Words.
+    (#7425) by @mkarg addPrimaryKey now applies the specified constraint name on SQL Anywhere
+    When using addPrimaryKey on SQL Anywhere, the constraintName attribute was being ignored in the generated SQL, causing the database to assign a random name to the primary key constraint instead of the one provided. The generated statement now includes the constraint name as expected. This release also adds support for the CLUSTERED and NONCLUSTERED keywords for primary keys on SQL Anywhere.
+    (#7430) by @chadlwilson Liquibase no longer crashes on JDK 25 when SnakeYAML or OpenCSV are absent from the classpath
+    A change in how JDK 24 and 25 handle missing optional dependencies caused Liquibase to throw a fatal error at startup if SnakeYAML or OpenCSV were not present, even when no YAML or JSON functionality was being used. Optional libraries are now loaded only when actually needed, so missing dependencies no longer cause a startup failure. If SnakeYAML or OpenCSV are absent and you do use functionality that requires them, the error will occur at the point of use rather than at startup. Note that SnakeYAML is still required if OSS analytics are enabled.
+    (#7394) by @filipelautert The classpath property in liquibase.properties is now recognized again
+    Since version 4.19.0, specifying classpath in liquibase.properties was silently ignored, causing
+    "Cannot find database driver" errors when loading external JDBC drivers. Both the short form (classpath) and the official form (liquibase.classpath) are now recognized correctly. Existing
+    configurations are unaffected.
+    (#6639) by @Xstoudi referencedTableSchemaName is now respected in addColumn foreign key constraints
+    When defining a foreign key constraint inside an addColumn change, the referencedTableSchemaName attribute was silently ignored, causing the generated SQL to omit the schema prefix on the referenced table. This could cause the constraint to point to the wrong table when the referenced table exists in a different schema. The schema is now correctly included in the generated SQL. The existing workaround of prefixing the schema directly on referencedTableName continues to work as a fallback.
+    (#6929) by @MalloD12 Timestamp timezone column types now map correctly to TIMESTAMP WITH TIME ZONE on Oracle
+    Several column type aliases intended to produce timezone-aware timestamp columns were not handled correctly on Oracle, either causing an error during table creation or silently creating a plain TIMESTAMP column without timezone support. These aliases now resolve to TIMESTAMP WITH TIME ZONE as expected.
+    DevOps
+    (#7537) by @jnewton03 Liquibase no longer throws a fatal error when the log service cannot be loaded in restricted environments
+    In environments where classpath service discovery is unavailable or restricted, Liquibase would fail to initialize entirely, throwing an error about being unable to find a log service. Liquibase now falls back to its built-in logger in these cases and continues running normally, making it usable in a wider range of deployment environments.
+
+    Community Spotlight
+    This release features contributions from community members spanning four continents. Here are some of the standout contributors:
+    Markus KARG (@mkarg) — Pforzheim, Germany
+    Head Crashing Informatics · OpenJDK Author · JSR 339/370 Committer · Eclipse Member
+    Markus is a seasoned open source veteran whose fingerprints are on some of Java's most foundational projects — Jersey, Jakarta REST, JCommander, and OpenJDK itself. In this release, he tackled database-specific edge cases that only deep expertise can uncover: fixing constraint name handling for SQL Anywhere PRIMARY KEYs (#7425), simplifying MSSQL escaping logic (#7448), and fixing unquoted tablespace names on MSSQL and SQL Anywhere (#7426). Three PRs, three different database platforms — that's range.
+    Chad Wilson (@chadlwilson) — GoCD Maintainer
+    ThoughtWorks · Primary Maintainer of GoCD
+    Chad is the primary maintainer of GoCD, the open source CI/CD server, and a contributor to the JRuby ecosystem. His contribution this release is a forward-looking one: reinstating the ability to run Liquibase without SnakeYaml or OpenCSV on Java 25 by delaying class loading (#7430). This kind of proactive compatibility work ensures Liquibase stays ahead of the JDK curve.
+    All Contributors
+    Thank you to everyone who made v5.0.2 possible:
+    Contributor Contributions
+    @MalloD12 12 PRs — checksum fixes, Oracle timezone, Quarkus compat, and more
+    @jandroav 9 PRs — release pipeline hardening and CI/CD improvements
+    @filipelautert 4 PRs — null safety, MySQL/MariaDB fixes, classpath support, build config
+    @mkarg 3 PRs — SQL Anywhere, MSSQL escaping, and tablespace quoting
+    @sayaliM0412 3 PRs — CI workflow updates and test matrix improvements
+    @tati-qalified 2 PRs — performance fix and test coverage
+    @jnewton03 2 PRs — sonar workflow fix and logger service improvement
+    @Folgerjun 1 PR — YAML snapshot truncation fix
+    @peteraisher 1 PR — column/table comment change detection
+    @maximevw 1 PR — checksum compatibility refactoring
+    @chadlwilson 1 PR — Java 25 compatibility
+    @marwin1991 1 PR — dependency exclusion fix
+    @RohanMittal-01 1 PR — PostgreSQL rollback fix
+    @Vampire 1 PR — grammar fix in error reporting
+    @Xstoudi 1 PR — schema-qualified constraint fix
+    @Parthiee 1 PR — empty filePath exception fix
+    @HorbatenkoYehor 1 PR — Snowflake quote fix
+    @petepickerill 1 PR — branding updates
+    @rberezen 1 PR — 5.0 release coordination
+
+    Get Involved
+    Every contribution matters — from fixing a typo to refactoring core systems. If Liquibase is part of your workflow and you've ever thought "this could be better," we'd love your help.
+    - Report issues: github.com/liquibase/liquibase/issues
+    - Contribute code: liquibase.org/community-contributors/contribute/code
+    - Join the discussion: github.com/liquibase/liquibase/discussions
+    - Become a Liquibase Legend: liquibase.org/community
+
+    Liquibase v5.0.2 — made possible by 19 contributors across 4 continents. Thank you.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/liquibase/liquibase/releases/tag/v5.0.2
+ReleaseTime: 2026-03-05T14:56:48.0000000Z

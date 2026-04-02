@@ -4,13 +4,30 @@ $Object1 = Invoke-RestMethod -Uri 'https://cdn.desktop.baimiaoapp.com/updater/up
 $this.CurrentState.Version = [regex]::Match($Object1.name, 'v(.+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_zh-CN.msi"
-    }
-  )
+if ($Object1.platforms.'windows-x86_64'.url.Contains('.msi')) {
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerType        = 'zip'
+    NestedInstallerType  = 'wix'
+    InstallerUrl         = $Object1.platforms.'windows-x86_64'.url
+    NestedInstallerFiles = @(
+      [ordered]@{
+        RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_zh-CN.msi"
+      }
+    )
+  }
+} elseif ($Object1.platforms.'windows-x86_64'.url.Contains('.nsis')) {
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerType        = 'zip'
+    NestedInstallerType  = 'nullsoft'
+    InstallerUrl         = Join-Uri $Object1.platforms.'windows-x86_64'.url 'baimiao_windows.zip'
+    NestedInstallerFiles = @(
+      [ordered]@{
+        RelativeFilePath = "白描桌面版_$($this.CurrentState.Version)_x64_setup.exe"
+      }
+    )
+  }
+} else {
+  $this.Log("Unknown installer type for version $($this.CurrentState.Version)", 'Error')
 }
 
 switch -Regex ($this.Check()) {
@@ -28,6 +45,17 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+      $Installer['NestedInstallerFiles'] = @(
+        [ordered]@{
+          RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -match '\.(zip|exe)$' }, 'First')[0].FullName.Replace('/', '\')
+        }
+      )
+      $ZipFile.Dispose()
     }
 
     $this.Print()

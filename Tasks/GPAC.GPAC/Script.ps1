@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://gpac.io/downloads/gpac-nightly-builds/'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'GPAC current stable release is (\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'current GPAC release is <b>(\d+(?:\.\d+)+)</b>').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.Content, 'released (20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.Content, 'released on (20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

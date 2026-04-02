@@ -6,17 +6,22 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${Re
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
+if ($this.CurrentState.Version -match '^workflow-') {
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'arm64'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'arm64'
+#   InstallerType = 'nullsoft'
+#   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

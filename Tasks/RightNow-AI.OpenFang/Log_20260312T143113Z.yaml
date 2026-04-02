@@ -1,0 +1,31 @@
+Version: 0.3.48
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.48/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.48/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.3.48 — Community Issue Fixes
+    Bug Fixes
+    - Fix Chromium detection for Browser hand — now checks env vars, PATH, well-known install paths, and Playwright cache (#549)
+    - Fix Gemini 2.5 Flash empty responses — handle thinking model thought: true parts correctly (#550)
+    - Fix Twitter hand textbox not editable — API key inputs are now proper password fields (#551)
+    - Fix Slack threading — extract thread_ts, implement send_in_thread(), add was_mentioned metadata (#552)
+    - Fix EOF parse error classified as non-retryable — empty response bodies now retry as Overloaded (#535)
+    - Fix tool calls still showing as text — add 4 new recovery patterns: plugin blocks, Action/Action Input, bare name+JSON, tool_use tags (#537)
+    - Fix WhatsApp gateway silent disconnects — all disconnect reasons except loggedOut now auto-reconnect with backoff, auto-connect on startup if credentials exist (#555)
+    - Fix OPENFANG_API_KEY env var not picked up — works in both kernel and CLI as fallback (#557)
+    Features
+    - Add Qwen Code CLI as LLM provider with 3 models, auth detection, and full streaming support (#558)
+    Stats: 2,103 tests, 0 clippy warnings, 17 files changed
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.48
+ReleaseTime: 2026-03-12T13:52:16.0000000Z

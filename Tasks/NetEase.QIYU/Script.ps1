@@ -1,18 +1,19 @@
-$Object1 = ((Invoke-WebRequest -Uri 'https://b.163.com/home/download').Content | Get-EmbeddedJson -StartsFrom 'window._wInitData =' | ConvertFrom-Json -AsHashtable).appInfo.routeConf.schema.body.Where({ $_.Contains('detail') }, 'First')[0].detail.pcWorkstation
+$Object1 = Invoke-RestMethod -Uri 'https://qiyukf.com/download/getDownloadInfoV2?type=pcWorkstation'
 
 # Version
-$this.CurrentState.Version = $Object1.version -replace '^v'
+$this.CurrentState.Version = $Object1.result.pcWorkstation.version -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.app
+  # InstallerUrl = $Object1.result.pcWorkstation.app
+  InstallerUrl = "https://ysf.qiyukf.net/QIYU_PC_Setup_$($Object1.result.pcWorkstation.version).exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.updateTime | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object1.result.pcWorkstation.updateTime | Get-Date -Format 'yyyy-MM-dd'
 
       if ($Global:DumplingsStorage.Contains('QIYU') -and $Global:DumplingsStorage.QIYU.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (zh-CN)

@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://labplot.org/download/'
+$Object1 = Invoke-WebRequest -Uri 'https://labplot.org/pages/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

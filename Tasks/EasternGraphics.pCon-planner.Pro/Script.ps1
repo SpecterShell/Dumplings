@@ -4,7 +4,7 @@ $ShortVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_Pro_setup.exe"
+  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/planner/${ShortVersion}/pCon.planner_Pro_Installer.exe"
 }
 
 switch -Regex ($this.Check()) {

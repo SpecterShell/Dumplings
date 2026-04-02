@@ -30,22 +30,31 @@ switch -Regex ($this.Check()) {
         Value  = $ReleaseNotesUrl = 'https://vivi.atlassian.net/wiki/spaces/VRB/overview'
       }
 
-      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl -UserAgent $DumplingsBrowserUserAgent
-      if ($ReleaseNotesUrlLink = $Object1.Links.Where({ try { $_.href.Contains("App+Release+$($this.CurrentState.Version)") } catch {} }, 'First')) {
+      $Query = @'
+{
+  macroBodyRenderer(
+    adf: "{\"attrs\":{\"bodyType\":\"none\",\"extensionKey\":\"blog-posts\",\"extensionType\":\"com.atlassian.confluence.macro.core\",\"parameters\":{}},\"type\":\"extension\"}"
+    contentId: "2949181"
+  ) {
+    value
+  }
+}
+'@
+      $Object1 = Invoke-RestMethod -Uri 'https://vivi.atlassian.net/cgraphql' -Method 'Post' -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json' -UserAgent $DumplingsBrowserUserAgent
+      $ReleaseNotesObject = $Object1.data.macroBodyRenderer.value | ConvertFrom-Html
+      if ($ReleaseNotesNode = $ReleaseNotesObject.SelectSingleNode("//div[@class='blog-post-listing' and contains(.//a[@class='blogHeading'], '$($this.CurrentState.Version)')]")) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesUrlLink[0].href
+          Value  = $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesNode.SelectSingleNode('.//a[@class="blogHeading"]').Attributes['href'].Value
         }
-
-        $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectSingleNode('//div[@class="ak-renderer-document"]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObject.SelectSingleNode('//div[@class="wiki-content"]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotesUrl (en-US) and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

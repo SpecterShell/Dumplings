@@ -1,0 +1,34 @@
+Version: "95.0"
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/95.0/mkvtoolnix-32-bit-95.0-setup.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/95.0/mkvtoolnix-64-bit-95.0-setup.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/95.0/mkvtoolnix-32-bit-95.0.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/95.0/mkvtoolnix-64-bit-95.0.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features and enhancements
+    - mkvmerge, MKVToolNix GUI: new chapter generation feature: a new placeholder has been introduced when generating chapters for appended files, <TITLE>, which will be replaced by the appended file's title metadata. Implements #6151. Implementation by Jason Donenfeld.
+    - mkvmerge: the display matrix from MP4 files are now translated into appropriate roll and yaw values for output MKV files. Implements #6150. Implementation by Jason Donenfeld.
+    - mkvmerge: add --date argument to set the date metadata. Implements #6155. Implementation by Jason Donenfeld.
+
+    Bug fixes
+    - build system: fixed building with the upcoming Boost v1.89.0 by only requiring the header part of the Boost.System library as it's been header-only since v1.69.0. Fixes #6143.
+    - mkvmerge: PCM packetizer: mkvmerge will now always write frames with 40ms of samples, no matter how long or short the frames in the source files were. Part of the fix of #6149.
+    - mkvmerge: MP4/QuickTime reader: fix exorbitant memory usage when reading PCM audio tracks. Part of the fix of #6149.
+
+    Build system changes
+    - Boost v1.74.0 or newer is now required.
+ReleaseTime: 2025-09-14
+RealVersion: 95.0.0

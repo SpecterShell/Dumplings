@@ -16,7 +16,7 @@ $InstallerFile = Get-TempFile -Uri (Join-Uri $Prefix $PseudoInstallerName)
 
 # Version
 $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
-$ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join ''
+$ShortVersion = '{0}_{1}{2}' -f $this.CurrentState.Version.Split('.')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

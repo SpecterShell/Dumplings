@@ -14,7 +14,13 @@ function Get-ReleaseNotes {
     $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='tabs-2']//h2[contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact([regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}\.\d{1,2}\.20\d{2})').Groups[1].Value, 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
+      if ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}\.\d{1,2}\.20\d{2})') {
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
+      } elseif ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}\W+[a-zA-Z]+\W+20\d{2})') {
+        $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
 
       # ReleaseNotes (en-US)
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }

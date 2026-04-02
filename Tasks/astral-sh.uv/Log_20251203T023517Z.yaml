@@ -1,0 +1,36 @@
+Version: 0.9.15
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.9.15/uv-i686-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.9.15/uv-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.9.15/uv-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Released on 2025-12-02.
+    Continuing the unfortunate chain of disrupted releases, this release failed due to an error publishing new PEP 740 attestations to PyPI. The release workflow was re-run after removing the PEP 740 attestations (see #16944) and our GitHub and PyPI artifacts were published as normal, but the crates.io publish completed in the first run and does not match the 0.9.15 tag — instead, the crates were published at commit https://github.com/astral-sh/uv/commit/e7af5838bbd3fe00d45b0ae6f399975846dbf41b. The only difference is the inclusion of https://github.com/astral-sh/uv/pull/16885.
+    Python
+    - Add CPython 3.14.1
+    - Add CPython 3.13.10
+    Enhancements
+    - Add ROCm 6.4 to --torch-backend=auto (#16919)
+    - Add a Windows manifest to uv binaries (#16894)
+    - Add LFS toggle to Git sources (#16143)
+    - Cache source reads during resolution (#16888)
+    - Allow reading requirements from scripts without an extension (#16923)
+    - Allow reading requirements from scripts with HTTP(S) paths (#16891)
+    Configuration
+    - Add UV_HIDE_BUILD_OUTPUT to omit build logs (#16885)
+    Bug fixes
+    - Fix uv-trampoline-builder builds from crates.io by moving bundled executables (#16922)
+    - Respect NO_COLOR and always show the command as a header when paging uv help output (#16908)
+    - Use 0o666 permissions for flock files instead of 0o777 (#16845)
+    - Revert "Bump astral-tl to v0.7.10 (#16887)" to narrow down a regression causing hangs in metadata retrieval (#16938)
+    Documentation
+    - Link to the uv version in crates.io member READMEs (#16939)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/astral-sh/uv/releases/tag/0.9.15
+ReleaseTime: 2025-12-03T01:34:07.0000000Z

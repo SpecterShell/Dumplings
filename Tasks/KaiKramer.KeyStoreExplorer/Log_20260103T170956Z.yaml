@@ -1,0 +1,171 @@
+Version: 5.6.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/kaikramer/keystore-explorer/releases/download/v5.6.1/kse-561-setup.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/kaikramer/keystore-explorer/releases/tag/v5.6.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release includes the following improvements, new algorithms, translations and bugfixes:
+    Verification of JAR Files
+    Signing JAR files has been part of KSE's functionality for a long time. Now it is also possible to verify the signatures of signed JAR files.
+    This can be done via the "Verify JAR File Signature" menu item in the Tools menu.
+    After selecting a signed JAR file, KSE will display the details of the signatures found in the JAR file and indicate whether the signatures are valid or not.
+    The verification details are very similar to the output of the "jarsigner -verify" command (see for example jarsigner - example of verifying a signed jar file).
+    The details include:
+    - the overall signature status
+    - for each file in the JAR the name, size, date and verification flags
+    - a button to show further details about the signatures (a jar can have multiple signatures)
+    - a button to show the certificates
+    The meaning of the verification flags are probably already known from jarsigner but here is a short explanation (the same explanation is displayed in the tooltip when you hover over the flags column header):
+    s = signature was verified
+    m = entry is listed in manifest
+    k = at least one certificate was found in keystore
+    This feature was contributed by jonwltn.
+
+    Post Quantum Cryptography (PQC) Algorithms: ML-DSA, ML-KEM and SLH-DSA
+    KSE now supports the ML-DSA and SLH-DSA signature and key algorithms. These algorithms are part of the NIST standardization process for post-quantum cryptography (PQC).
+    Supported are the following operations with these algorithms:
+    - key pair generation
+    - signing certificates, CSRs, CRLs, JARs and arbitrary files
+    - import and export of private and public keys
+    - viewing key details
+    In addition to that KSE also supports generating ML-KEM keypairs, but only in certificates that are signed with another key pair (as ML-KEM is a key encapsulation mechanism and not a signature algorithm). This is achieved by using the "Sign New Key Pair" feature in the context menu of a signature key and selecting ML-KEM as the key algorithm for the new key pair. The result is basically the same as using the keytool commands described in JEP 496.
+    This feature was contributed by AnassBousseaden (ML-DSA) and jonwltn (SLH-DSA and ML-KEM).
+
+    SM2 and ECGOST
+    KSE now supports the SM2 and ECGOST signature and key algorithms. These algorithms are widely used in China (SM2) and Russia (ECGOST). They are elliptic curve algorithms and can therefore be used by selecting the EC key type with the respective curve set in the key generation dialog.
+    SM2 is currently only supported for keystore files of type BKS, BCFKS and UBER.
+    Supported are the following operations with these algorithms:
+    - key pair generation
+    - signing certificates, CSRs, CRLs, JARs and arbitrary files
+    - import and export of private and public keys
+    - viewing key details
+    Contributed by jonwltn.
+
+    Improved Key Pair Import
+    In previous releases the user had to select the format of the key in the key pair import dialog, e.g. PKCS#8, PKCS#12, OpenSSL etc. Sometimes it was not clear which format to select. Or in some cases the files had a wrong file extension that did not match the actual format. This lead to confusion and import errors.
+    Now the key pair import dialog automatically detects the format of the key to import.
+    In addition to that it is now possible to import key pairs without a matching certificate. In Java keystores key pairs are always associated with a certificate chain. But if the key pair has no certificate yet, KSE now creates a self-signed certificate automatically during the import process.
+    If you leave the certificate fields empty and click the "Import" button, KSE will ask whether a self-signed certificate should be created.
+    Offering the generation of a self-signed certificate if none was provided was a contribution by Jairo Graterón.
+    The rework of the import dialog to use automatic format detection was contributed by jonwltn.
+
+    Store a Password in a KeyStore
+    With keytool you can store arbitrary passwords/passphrases in a keystore using the "-importpass" command. KSE now supports this feature as well.
+    The passphase entries can be created via the "Store Passphrase" menu item in the "Tools" menu. They are stored as secret key entries in the keystore using a "PBE*" algorithm.
+    The stored passphrase can be viewed and modified like normal secret key entries.
+    This feature was contributed by jonwltn.
+
+    Certificate Validity Information
+    The certificate details view now includes two additional fields:
+    - a graphical representation of the certificate validity period in the form of a progress bar
+    - the total, elapsed and remaining days of the validity period
+    This feature was contributed by Jairo Graterón.
+
+    Support for Additional Extensions in Certificate Viewer
+    The values of the following certificate extensions are now displayed in the certificate details view:
+    - SignedCertificateTimestampList/SCTs (OID 1.3.6.1.4.1.11129.2.4.2)
+    - MS Application Policies (OID 1.3.6.1.4.1.311.21.10)
+    - MS NTDS CA Security (OID 1.3.6.1.4.1.311.25.2)
+    - MasaURL (OID 1.3.6.1.5.5.7.1.32) defined in RFC 8995
+    Parsing of the SCTs extension was contributed by Jairo Graterón and the other three extensions by The-Lum.
+
+    Quick Selection of Columns in Main Table
+    In previous releases the columns displayed in the main table could be selected in the preferences dialog. Now there is a second, quicker way to select the columns via a context menu in the table header
+    Right-clicking on the table header opens the context menu. It shows a list of all available columns to select or deselect them.
+
+    Export Main Table as CSV
+    The visible content of the KSE main table can now be exported as a CSV (comma-separated values) file.
+    This can be done via the "Export as CSV" menu item in the "Tools" menu. The exported CSV file includes all visible columns - to add or remove columns, use the column selection feature.
+    The separator character (either comma or semicolon) is automatically selected based on the system locale.
+    This feature was contributed by jonwltn.
+
+    UI/UX Enhancements
+    The context menu for multi-selections in the main table has received the following improvements:
+    - The certificate details view can now be opened for multiple selected certificates at once (contributed by Jairo Graterón).
+    - The Unlock option is now also available for multiple selected entries (contributed by jonwltn).
+    - Separators have been added to improve menu organization (contributed by jonwltn).
+
+    Additional keyboard shortcuts have been added to the menus (both new and existing):
+    - View public key details: +
+    - View private key details: -
+    - View certificate details: Enter
+    - Delete selected entries: Del
+    - Rename selected entry: F2
+    Contributed by The-Lum.
+
+    Action Buttons ("Import", "Export", "PEM", "ASN.1") in Dialogs:
+    - The order of the buttons has been standardized across all dialogs for better consistency.
+    - Missing buttons have been added where appropriate, e.g. "Export" in Public Key Details dialog or "PEM" in CRL Details dialog (contributed by jonwltn).
+    - Separators have been added to create a grouping of the buttons, because some dialogs have up to six action buttons and quickly finding the right one becomes challenging.
+    - The certificate extensions viewer now has a "Copy" button for putting the extension value into the system clipboard (contributed by Jairo Graterón).
+
+    The following user choices are now remembered over restarts of KSE:
+    - Certificate validity for generating a new key pair
+    - Certificate validity for signing a CSR
+    - CRL validity (only for new CRLs as the validity is otherwise determined from the last CRL)
+    - Signature algorithm
+    Contributed by jonwltn.
+    Other Enhancements
+
+    - Show certificate fingerprint in overview table (contributed by idvolkov)
+    - SHA-3 with RSA PKCS#1 v1.5, RSA PSS and ECDSA signature algorithms (contributed by jonwltn)
+    - Support Brainpool curves in P12/JKS/JCEKS keystores (contributed by beth-soptim)
+    - Additional generation methods for Authority (AKI) and Subject Key Identifiers (SKI) (contributed by jonwltn)
+    - Export Ed25519 private key as JWT (contributed by jonwltn)
+    - JWS verification with Ed25519 public keys (contributed by jonwltn)
+    - Only show secret key algorithms based on keystore support (contributed by jonwltn)
+    - Implemented case-sensitive alias by key store type (contributed by jonwltn)
+    - Improved display of ':' in Extension viewe (contributed by The-Lum)
+    - Improved display of '=' and fixed 'IMPLICIT:' in ASN.1 viewer (contributed by The-Lum)
+    - Added CertificatePolicies OIDs of CA/Browser Forum (contributed by The-Lum)
+    - Added CertificatePolicy OIDs of Google (contributed by The-Lum)
+    - Added CertificateTransparency OID (contributed by The-Lum)
+    - Allow use of the verify actions without opening a key store (contributed by jonwltn)
+    - Added ML-DSA OID for ASN.1 view, fix minor issue on UI labels for ML-DSA PublicKey (contributed by The-Lum)
+    - Removed sorting of General Names (SAN, AKI, IAN, CDP) (contributed by idvolkov)
+    - Improved OID list for ASN.1 view (`ValidityModel`, `PkixQCSyntax-v2`, ...) (contributed by The-Lum)
+    - Keep leading zeros for secret keys in hex string (contributed by jonwltn)
+    - Added password manager KDF iteration settings in preferences
+    - Added progress dialogs for de-/encrypting keystore passwords
+    - Allow leading spaces in PEM data for "Examine Clipboard" (contributed by tenpertur)
+    - In CRL view the serial numbers of the revoked certificates are now displayed in a monospace font (contributed by Jairo Graterón)
+    - Use of "strong" secure random implementations: in the java.security file the parameter "securerandom.strongAlgorithms" can be set to define a list of known strong implementations, KSE uses this setting now and allows to select the previous behaviour in the "User Interface" section of the preferences dialog (contributed by beth-soptim).
+    - Added "Description" and "Role" attributes in DN chooser (contributed by Jairo Graterón)
+    - Improved CRL revocation reason text format in CRL view (contributed by The-Lum)
+
+    Bugfixes
+
+    - Fixed signing JWT with Ed25519 (contributed by jonwltn)
+    - Fixed signature algorithm selection providing invalid options for EC keys (contributed by idvolkov)
+    - Fixed "Assistive Technology not found" error by adding accessibility module
+    - Fixed "internal inconsistencies" warning displayed by jarsigner (contributed by jonwltn)
+    - Fixed AccessDenied error when signing JAR file using output file prefix or suffix (contributed by jonwltn)
+    - Fixed certificate chain validation (contributed by Jairo Graterón)
+    - Fixed CRL verification when using BC provider (contributed by jonwltn)
+    - Fixed duplicate shortcut Ctrl-Alt-S (contributed by The-Lum)
+    - Fixed KeyStore table translations (contributed by jonwltn)
+    - Fixed lost focus on Secret Key entry after viewing details (contributed by jonwltn)
+    - Fixed key stores not being updated after expiry warning days change (contributed by jonwltn)
+    - Fixed private key fields button greyed out for Ed keys in JDK keystores
+    - Fixed wrong language being used in PubKey details fingerprint algorithm
+    - Keep leading zeros for secret keys in hex string (contributed by jonwltn)
+    - Don't ask for entry password for PKCS#12 key stores (contributed by jonwltn)
+
+    Translations
+
+    - A translation to Finnish has been started by Ricky Tigg and the current state is included in this release.
+    - Several other translations were started on Weblate as well but are still in a very early stage. That's why they are not included in this release yet.
+    - Many additions and improvements of the French translation were contributed by The-Lum
+    - Many additions and improvements of the Spanish translation were contributed by Jairo Graterón
+
+    Packaging
+
+    - macOS/Windows: Upgraded included Java runtime to version 25
+    - Java 17 is the new minimum runtime version
+    - macOS: The Vaqua theme is now included again.
+    - Third-party libraries have been updated to their latest versions; BC is now at version 1.83
+ReleaseTime: 2026-01-03T16:29:18.0000000Z

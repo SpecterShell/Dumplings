@@ -1,15 +1,14 @@
 # The following locales can't be matched by WinGet properly and thus are omitted: ach (Acholi/Acoli), cak (Kaqchikel), ia (Interlingua), lij (Ligurian), sc (Sardinian), sco (Scots), son (Songhai), szl (Silesian), trs (Triqui)
 $Locales = @('en-US', 'cs', 'de', 'el', 'en-GB', 'es-AR', 'es-ES', 'fi', 'fr', 'hu', 'it', 'ja', 'ka', 'nb-NO', 'nl', 'pl', 'pt-BR', 'pt-PT', 'ru', 'sk', 'sv-SE', 'zh-CN', 'zh-TW')
 $ArchMap = [ordered]@{
-  x86 = 'win32'
   x64 = 'win64'
 }
-$Prefix = 'https://archive.seamonkey-project.org/releases/'
+$Prefix = 'https://s3.osuosl.org/seamonkey-archive/releases/'
 
-$Object1 = Invoke-WebRequest -Uri 'https://archive.seamonkey-project.org/releases/' | Read-ResponseContent | Get-EmbeddedLinks
+$Object1 = Invoke-RestMethod -Uri 'https://s3.osuosl.org/seamonkey-archive/?delimiter=/&prefix=releases/'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.alt -match '^(\d+(?:\.\d+)+)$' | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$this.CurrentState.Version = $Version = $Object1.ListBucketResult.CommonPrefixes.Prefix -replace '^releases/' -replace '/$' -match '^(\d+(?:\.\d+)+)$' | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 # Installer
 foreach ($Locale in $Locales) {

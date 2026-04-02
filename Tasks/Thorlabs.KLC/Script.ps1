@@ -1,11 +1,11 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://www.thorlabs.com/software_pages/check_updates.cfm?ItemID=KLC101').Content -replace '&reg;', '®' | ConvertFrom-Xml
+$Object1 = (Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=KLC101' | Read-ResponseContent) -replace '&reg;', '®' | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.ItemID.SoftwarePkg.VersionNumber
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink
+  InstallerUrl         = $InstallerUrl = $Object1.ItemID.SoftwarePkg.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"

@@ -10,12 +10,13 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.SyncROSoftApps.checkVersion.builds.build[0].pubDate | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.SyncROSoftApps.GetElementsByTagName('build')[0].pubDate | Get-Date -AsUTC
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.oxygenxml.com/pdf_chemistry/whatisnew$($this.CurrentState.Version).html"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://www.oxygenxml.com/pdf_chemistry/whatisnew$($this.CurrentState.Version).html"
       }
 
       $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html

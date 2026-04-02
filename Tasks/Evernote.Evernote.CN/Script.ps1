@@ -49,7 +49,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectNodes('/html/body/node()[contains(., "Welcome to")][1]/following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = ($Object2.SelectNodes('/html/body/h1[1]/following-sibling::node()') ?? $Object2) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -63,7 +63,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.SelectNodes('/html/body/node()[contains(., "欢迎体验")][1]/following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = ($Object3.SelectNodes('/html/body/h1[1]/following-sibling::node()') ?? $Object3) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host

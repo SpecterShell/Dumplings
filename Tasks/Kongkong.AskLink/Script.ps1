@@ -5,17 +5,26 @@ $this.CurrentState.Version = [regex]::Match($Object1.name, '(\d+(?:\.\d+)+)').Gr
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url
+  InstallerUrl = $Object1.url | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      $Object2 = $Object1.remark | ConvertFrom-Json
+
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.remark | Format-Text
+        Value  = $Object2.zh_CN | Format-Text
+      }
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.en | Format-Text
       }
     } catch {
       $_ | Out-Host

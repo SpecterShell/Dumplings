@@ -1,12 +1,12 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'ADTidyFreeInstaller.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'ADTidyFreeInstaller.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'ADTidyClient.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'ADTidyClient.exe'
   $InstallerFile2Extracted = New-TempFolder
   Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'ADTidyFreeInstaller.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'ADTidyFreeInstaller.x64.msi'
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'ADTidyClient.msi'
+  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'ADTidyClient.x64.msi'
   # Version
   # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
   $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi

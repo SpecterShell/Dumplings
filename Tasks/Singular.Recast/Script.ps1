@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://support.singular.live/hc/en-us/articles/360023214171'
+$Object1 = Invoke-WebRequest -Uri 'https://www.singular.live/recast'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

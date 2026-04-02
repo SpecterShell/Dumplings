@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望CAD 2025 2.0' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.ZWSOFTApps.data.Where({ $_.title -eq '中望CAD 2025' }, 'First')[0]
 $Object2 = Invoke-WebRequest -Uri $Object1.download[0].url
 
 # Installer

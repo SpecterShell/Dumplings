@@ -24,6 +24,18 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
   InstallerUrl  = "https://www.voidtools.com/Everything-$($this.CurrentState.Version).x64-Setup.exe"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://www.voidtools.com/Everything-$($this.CurrentState.Version).ARM.zip"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://www.voidtools.com/Everything-$($this.CurrentState.Version).ARM64.zip"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

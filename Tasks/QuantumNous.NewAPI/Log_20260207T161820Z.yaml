@@ -1,0 +1,124 @@
+Version: 0.10.8
+Installer:
+- InstallerUrl: https://github.com/QuantumNous/new-api/releases/download/v0.10.8/New-API-App.0.10.8.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Paid Subscription Support (Beta): Added support for a paid subscription model.
+    - System Performance Monitoring: Introduced system performance monitoring. When enabled, the system will reject new Relay requests (e.g., /v1, /v1beta) if resource usage exceeds configured thresholds, ensuring system stability.
+    - Cache Optimization: Further optimized caching functionality to reduce memory usage during large request bodies.
+    - Bug Fix: Fixed an issue where Chat2Responses could not retrieve the chain of thought.
+    - Header Pass-through Support: Added support for full request header pass-through based on Go Regex rules. Please refer to the PR description for usage details: https://github.com/QuantumNous/new-api/pull/2840
+    - Multi-language Backend Support: Added backend support for multiple languages, respecting user-level language preferences and the Accept-Language request header.
+    - Task Logs Update: Task logs now display the username.
+    - Gemini Billing Update: Implemented billing for empty completions caused by Gemini content safety filters.
+    - Codex Channel Support: Improved support for Codex channels.
+    - Model Removal: Removed support for claude-2 and claude-1 series models.
+    - 支持订阅付费模式（测试版）
+    - 新增系统性能监控，启用性能监控后，当系统资源使用率超过设定阈值时，将拒绝新的 Relay 请求 (/v1, /v1beta 等)，以保护系统稳定性。
+    - 进一步优化缓存功能，减少大请求体下内存占用
+    - 修复 Chat2Responses 无法获取思维链的问题
+    - 支持基于 Go Regex 规则和全量的请求头透传，使用方式请参考 PR 描述 https://github.com/QuantumNous/new-api/pull/2840
+    - 支持后端多语言，支持用户级别语言偏好和 Accept-Language 请求头偏好
+    - 任务日志显示用户名
+    - 对 Gemini 因审核导致的空补全进行扣费处理
+    - 完善 Codex 渠道支持
+    - 移除对 claude-2 和 claude-1 系列模型支持
+    What's Changed
+    - feat: add regex pattern to mask API keys in sensitive information by @xiangsx in https://github.com/QuantumNous/new-api/pull/2587
+    - fix(task): 修复使用 auto 分组时 Task Relay 不记录日志和不扣费的问题 by @147API in https://github.com/QuantumNous/new-api/pull/2588
+    - fix: 设置默认 max req body 为 128MB by @xyfacai in https://github.com/QuantumNous/new-api/pull/2590
+    - fix: remove Minimax from FETCHABLE channels by @RedwindA in https://github.com/QuantumNous/new-api/pull/2619
+    - fix(gemini): fetch model list via native v1beta/models endpoint by @RedwindA in https://github.com/QuantumNous/new-api/pull/2615
+    - feat: /v1/chat/completion → /v1/response by @seefs001 in https://github.com/QuantumNous/new-api/pull/2629
+    - fix: support snake_case fields in GeminiChatGenerationConfig by @deanxv in https://github.com/QuantumNous/new-api/pull/2646
+    - feat: status code auto-disable configuration by @seefs001 in https://github.com/QuantumNous/new-api/pull/2647
+    - fix: chat2response setting ui by @seefs001 in https://github.com/QuantumNous/new-api/pull/2643
+    - fix: clean propertyNames for gemini function by @seefs001 in https://github.com/QuantumNous/new-api/pull/2642
+    - feat: channel testing supports parameter overriding by @seefs001 in https://github.com/QuantumNous/new-api/pull/2627
+    - 新增：豆包视频 1.5pro by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2632
+    - feat: codex channel by @seefs001 in https://github.com/QuantumNous/new-api/pull/2652
+    - fix: log info input_token (chat → claude model ) by @seefs001 in https://github.com/QuantumNous/new-api/pull/2670
+    - fix: update warning threshold label from '5$' to '2$' by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2690
+    - fix: fix email send when special character(./+) included in email string by @Bliod-Cook in https://github.com/QuantumNous/new-api/pull/2696
+    - fix: video content api Priority use url field by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2691
+    - fix: jimeng i2v support multi image by metadata by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2688
+    - Revert "fix: video content api Priority use url field" by @seefs001 in https://github.com/QuantumNous/new-api/pull/2710
+    - fix: openAI function to gemini function field adjusted to whitelist mode by @seefs001 in https://github.com/QuantumNous/new-api/pull/2667
+    - feat: TLS_INSECURE_SKIP_VERIFY env by @seefs001 in https://github.com/QuantumNous/new-api/pull/2668
+    - fix: the login method cannot be displayed under the aff link. by @seefs001 in https://github.com/QuantumNous/new-api/pull/2676
+    - fix: codex Unsupported parameter: max_output_tokens by @seefs001 in https://github.com/QuantumNous/new-api/pull/2684
+    - feat: customizable automatic retry status codes by @seefs001 in https://github.com/QuantumNous/new-api/pull/2663
+    - fix: calls to multiple tools in gemini all return index=0 by @seefs001 in https://github.com/QuantumNous/new-api/pull/2701
+    - fix: replace Alibaba's Claude-compatible url with new url by @seefs001 in https://github.com/QuantumNous/new-api/pull/2702
+    - feat: log shows request conversion by @seefs001 in https://github.com/QuantumNous/new-api/pull/2703
+    - feat(qwen): support qwen image sync image model config by @xyfacai in https://github.com/QuantumNous/new-api/pull/2717
+    - feat: requestId time string use UTC by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2713
+    - fix request pass-through aws channels can't test by @daggeryu in https://github.com/QuantumNous/new-api/pull/2693
+    - feat: enhance Authorization header handling with Header Override support by @Li-Xingyu in https://github.com/QuantumNous/new-api/pull/2738
+    - feat(gemini): 支持 tool_choice 参数转换，优化多个渠道错误处理 by @seefs001 in https://github.com/QuantumNous/new-api/pull/2742
+    - 支持 tool_choice 参数转换，优化错误处理 by @laozuzhen in https://github.com/QuantumNous/new-api/pull/2540
+    - 修复钱包页面刷新时显示错误余额数据的问题 by @wans10 in https://github.com/QuantumNous/new-api/pull/2749
+    - feat: 可视化模型重定向设置中，允许用户从拉取的模型列表里直接选择模型 by @Bliod-Cook in https://github.com/QuantumNous/new-api/pull/2610
+    - feat: header passthrough by @seefs001 in https://github.com/QuantumNous/new-api/pull/2735
+    - fix: test using the correct path for rerank by @seefs001 in https://github.com/QuantumNous/new-api/pull/2736
+    - feat: channel affinity by @seefs001 in https://github.com/QuantumNous/new-api/pull/2669
+    - feat: openai response /v1/response/compact by @seefs001 in https://github.com/QuantumNous/new-api/pull/2644
+    - feat: grok Usage Guidelines Violation Fee by @seefs001 in https://github.com/QuantumNous/new-api/pull/2753
+    - feat(gemini): map OpenAI stop to Gemini stopSequences by @RedwindA in https://github.com/QuantumNous/new-api/pull/2779
+    - fix: remove disable_parallel_tool_use if tool_choice=none by @seefs001 in https://github.com/QuantumNous/new-api/pull/2765
+    - fix: /v1/responses/compact default billing by @seefs001 in https://github.com/QuantumNous/new-api/pull/2766
+    - feat: disk request body cache by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/2780
+    - feat: Support customizing the success and cancel url of Stripe. by @mehunk in https://github.com/QuantumNous/new-api/pull/2745
+    - feat: doubao add first and last image to video by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2756
+    - feat: task pre consume modelPrice default use setting value by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2733
+    - feat: CodeViewer click link and auto wrap by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2783
+    - feat(gemini): support cached token billing by @RedwindA in https://github.com/QuantumNous/new-api/pull/2798
+    - fix(ui): use distinct color palette for group tags by @KiGamji in https://github.com/QuantumNous/new-api/pull/2759
+    - fix: channel affinity by @seefs001 in https://github.com/QuantumNous/new-api/pull/2799
+    - fix: make channel Host override take effect by @lanfunoe in https://github.com/QuantumNous/new-api/pull/2805
+    - fix: claude panic by @seefs001 in https://github.com/QuantumNous/new-api/pull/2804
+    - feat: /v1/responses qwen3 max && perplexity by @seefs001 in https://github.com/QuantumNous/new-api/pull/2803
+    - feat: auto-adapt video modal by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2764
+    - fix: openrouter claude cache usage by @seefs001 in https://github.com/QuantumNous/new-api/pull/2811
+    - feat：default enable channel affinity by @seefs001 in https://github.com/QuantumNous/new-api/pull/2809
+    - fix: vertex maas api addr by @seefs001 in https://github.com/QuantumNous/new-api/pull/2810
+    - ✨ feat: add subscription billing system by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2808
+    - fix: 移除不必要的 unescapeMapOrSlice 调用，修复 Windows 路径转义问题 by @thirking in https://github.com/QuantumNous/new-api/pull/2814
+    - feat: add useTimeSeconds in error log by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2819
+    - feat: log search field request_id && conversion_path display by @seefs001 in https://github.com/QuantumNous/new-api/pull/2825
+    - Revert "fix(ui): use distinct color palette for group tags" by @seefs001 in https://github.com/QuantumNous/new-api/pull/2832
+    - feat(performance): implement system performance monitoring by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/2835
+    - feat: task log show username by @feitianbubu in https://github.com/QuantumNous/new-api/pull/2635
+    - ✨ fix: Improve subscription payment handling and card layout consistency by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2838
+    - 🐛 fix: sidebar scroll on mobile dynamic viewport by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2839
+    - fix: map Responses reasoning stream to chat completion deltas by @seefs001 in https://github.com/QuantumNous/new-api/pull/2837
+    - feat: 支持基于 Go Regex 规则和全量的请求体透传 by @seefs001 in https://github.com/QuantumNous/new-api/pull/2840
+    - feat: backend i18n by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/2842
+    - fix: optimize Codex relay by @dahetaoa in https://github.com/QuantumNous/new-api/pull/2826
+    - fix: charge local input tokens when Gemini returns empty response by @seefs001 in https://github.com/QuantumNous/new-api/pull/2848
+    - remove: drop support for claude-2 and claude-1 series models by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/2853
+    - feat: add claude-opus-4-6 by @prnake in https://github.com/QuantumNous/new-api/pull/2863
+    - fix: /v1/chat/completions → /v1/responses json_schema by @seefs001 in https://github.com/QuantumNous/new-api/pull/2876
+    - ✨ refactor(wallet): Top-up layout to embed subscription plans into the recharge card tabs by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2878
+    - refactor: 抽象统一计费会话 BillingSession by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/2877
+    - 🔔 feat: Add subscription-aware quota notifications and update UI copy by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2880
+    - ✨ chore: Improve subscription billing fallback and UI states by @t0ng7u in https://github.com/QuantumNous/new-api/pull/2879
+    - feat: add Codex channel disclaimer (i18n, OpenAI terms) by @seefs001 in https://github.com/QuantumNous/new-api/pull/2852
+    New Contributors
+    - @xiangsx made their first contribution in https://github.com/QuantumNous/new-api/pull/2587
+    - @147API made their first contribution in https://github.com/QuantumNous/new-api/pull/2588
+    - @deanxv made their first contribution in https://github.com/QuantumNous/new-api/pull/2646
+    - @Li-Xingyu made their first contribution in https://github.com/QuantumNous/new-api/pull/2738
+    - @laozuzhen made their first contribution in https://github.com/QuantumNous/new-api/pull/2540
+    - @mehunk made their first contribution in https://github.com/QuantumNous/new-api/pull/2745
+    - @KiGamji made their first contribution in https://github.com/QuantumNous/new-api/pull/2759
+    - @lanfunoe made their first contribution in https://github.com/QuantumNous/new-api/pull/2805
+    - @thirking made their first contribution in https://github.com/QuantumNous/new-api/pull/2814
+    - @dahetaoa made their first contribution in https://github.com/QuantumNous/new-api/pull/2826
+    Full Changelog: https://github.com/QuantumNous/new-api/compare/v0.10.5...v0.10.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QuantumNous/new-api/releases/tag/v0.10.8
+ReleaseTime: 2026-02-07T16:08:19.0000000Z

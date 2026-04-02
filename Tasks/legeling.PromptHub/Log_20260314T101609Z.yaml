@@ -1,0 +1,35 @@
+Version: 0.4.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/legeling/PromptHub/releases/download/v0.4.5/PromptHub-Setup-0.4.5-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/legeling/PromptHub/releases/download/v0.4.5/PromptHub-Setup-0.4.5-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/legeling/PromptHub/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复 / Fixed
+    - 🌐 提示词复制语言修复 (closes #67)：修复图片/画廊视图在英文模式下复制内容仍落回中文的问题；复制弹窗与直接复制现在都会跟随当前显示语言
+      - Prompt Copy Language Fix (closes #67): Fixed image/gallery copy using the Chinese prompt while the UI was showing English; both direct copy and variable modal now follow the visible language
+    - 🧩 Skill 白屏修复 (closes #66)：修复部分旧 Skill 因标签/兼容性等元数据格式异常，点击后详情页直接白屏的问题；新增旧数据规范化与详情渲染容错
+      - Skill White Screen Fix (closes #66): Fixed blank detail pages for legacy skills with malformed metadata such as tags/compatibility fields; added normalization for legacy data and safer detail rendering
+    - 🔄 分发状态刷新修复：修复 Skill 分发或卸载后，左侧菜单和过滤状态未及时同步，仍显示“未分发”的问题
+      - Deployment Status Refresh Fix: Fixed sidebar/filter deployment state staying stale after install or uninstall operations and still showing skills as pending
+    - 📁 本地托管目录扫描修复：默认本地扫描现在会包含 PromptHub 自己托管的 userData/skills 目录，手动放入的 Skill 可被识别
+      - Managed Skill Folder Scan Fix: Default local scan now includes PromptHub's managed userData/skills directory so manually added skills can be discovered
+    - 📸 版本快照交互修复：修复创建快照按钮依赖原生 window.prompt() 导致 Electron 环境下“点击没反应”的问题，改为应用内弹窗
+      - Snapshot Interaction Fix: Replaced unstable native window.prompt() snapshot creation with an in-app modal after the button appeared unresponsive in Electron
+    优化 / Improvements
+    - 🚀 Skill 批量工作流增强：补齐批量分发与批量标签操作，选择态工具栏与分发弹窗交互更清晰
+      - Bulk Skill Workflow Improvements: Expanded bulk distribution and bulk tagging flows with clearer selection toolbar and deploy dialog interactions
+    - 🔍 导入体验优化：本地导入预览支持搜索，标签改为可选操作，减少导入阻力
+      - Import UX Improvements: Added search to local import preview and made tagging optional to reduce friction during import
+    - 🕓 Skill 版本管理补齐：支持版本历史预览、Diff 对比和恢复，文件编辑与 SKILL.md 变更会自动留快照
+      - Skill Versioning Enhancements: Added version history preview, diff comparison, and restore flow; file edits and SKILL.md updates now create snapshots automatically
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/legeling/PromptHub/blob/HEAD/CHANGELOG.md#045---2026-03-14
+ReleaseTime: 2026-03-14T09:42:59.0000000Z

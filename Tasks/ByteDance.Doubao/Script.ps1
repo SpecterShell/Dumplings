@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.doubao.com/service/settings/v3/?device_platform=web&brand=doubao&aid=582465'
+$Object1 = Invoke-RestMethod -Uri 'https://www.doubao.com/service/settings/v3/?device_platform=web&brand=doubao&aid=582478'
 
 # Version
 $this.CurrentState.Version = $Object1.data.settings.saman_update_address.version
@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.data.settings.saman_update_address.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.settings.saman_update_address.win_x64_url
+  InstallerUrl = Join-Uri $Object1.data.settings.saman_update_address.win_x64_url "../$($this.CurrentState.Version)/Doubao_installer_$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {

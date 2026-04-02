@@ -1,0 +1,26 @@
+Version: 0.2.8
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.8/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.2.8/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fix context_budget panic on out-of-bounds message/block indices with char boundary validation.
+    Fix SSE streaming parsing to handle both "data: " and "data:" prefixes across all 3 LLM drivers.
+    Fix FallbackDriver to switch model names when falling back across providers.
+    Fix TOML spawn overrides so explicit model/provider in manifest is not replaced by config.toml defaults.
+    Inject current date into agent system prompt so LLMs know today's date.
+    Remove phantom gemini-3-flash model and point flash/gemini-flash aliases to gemini-2.5-flash.
+    Add serde aliases for exec_policy mode: "allow"/"all"/"unrestricted" for Full, "restricted" for Allowlist, "none"/"disabled" for Deny.
+    Change Discord allowed_guilds from Vec to Vec to handle large guild IDs without overflow.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.2.8
+ReleaseTime: 2026-03-02T12:15:53.0000000Z

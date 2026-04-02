@@ -29,13 +29,13 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://help.mypurecloud.com/release-notes-home/genesys-cloud-for-windows-desktop-app-release-notes/' | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'accordion') and contains(./div[@class='accordion__header'], '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'accordion_releaseNotes') and contains(./div[contains(@class, 'accordion_header')], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./div[@class="accordion__content"]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./div[contains(@class, "accordion_content")]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

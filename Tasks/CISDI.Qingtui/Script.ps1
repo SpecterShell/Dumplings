@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://web.qingtui.com/team/update?ab=qt&client=win'
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://web.qingtui.com/team/update?ab=qt&client=win' | Split-Uri -LeftPart 'Path'
 }
 
 # Version

@@ -19,9 +19,9 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://lunacy.docs.icons8.com/release-notes/' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='content']/h2[text()='$($this.CurrentState.Version.Split('.')[0..1] -join '.')']")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@id='content']/*[(self::h1 or self::h2) and contains(., '$($this.CurrentState.Version -replace '(\.0+)+$')')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) {
           if ($Node.InnerText.Contains('Release date')) {
             # ReleaseTime
             $this.CurrentState.ReleaseTime = [regex]::Match($Node.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+\d{1,4})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

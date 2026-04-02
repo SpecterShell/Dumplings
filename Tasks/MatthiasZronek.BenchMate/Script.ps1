@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://benchmate.org/'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'BenchMate\W+(\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'BenchMate\W+(\d+(\.\d+)+)').Groups[1].Value -replace '^(\d+\.\d+)$', '$1.0' # Pad the version with only two digits to three digits
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtracted = New-TempFolder
     Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'bm.msi'
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '*' 'bm.msi' | Get-Item -Force | Select-Object -First 1
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     # AppsAndFeaturesEntries + ProductCode

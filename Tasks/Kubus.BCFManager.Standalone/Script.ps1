@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.bimcollab.com/download/BCFM/WIN/SA' | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.bimcollab.com/download/BCFM/WIN/SA/' | ConvertTo-UnescapedUri
 }
 
 # Version

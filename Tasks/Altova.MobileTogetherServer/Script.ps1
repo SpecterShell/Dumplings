@@ -105,7 +105,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 4: The hash has changed, but the version is not
-  Default {
+  default {
     $this.Log('The hash has changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

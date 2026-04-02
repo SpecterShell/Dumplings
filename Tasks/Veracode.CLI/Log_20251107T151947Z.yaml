@@ -1,0 +1,36 @@
+Version: 2.43.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://tools.veracode.com/veracode-cli/veracode_v2.43.0_windows_386.msi
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: veracode-cli_2.43.0_windows_386\veracode.exe
+  InstallerUrl: https://tools.veracode.com/veracode-cli/veracode-cli_2.43.0_windows_386.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: veracode-cli_2.43.0_windows_x86\veracode.exe
+  InstallerUrl: https://tools.veracode.com/veracode-cli/veracode-cli_2.43.0_windows_x86.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.veracode.com/updates/r/Veracode_CLI_Updates
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.veracode.com/updates/r/Veracode_CLI_Updates#veracode-cli-v2430
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This update includes the following improvements:
+    - The veracode scan command has security related updates.
+    - The veracode package command:
+      - Supports generic packager for Apex.
+      - Includes fixes to stop the creation of a Golang zip artifact when only the go.mod file is present.
+      - Adds the new VERACODE_PACKAGE_GOLANG_GENERATE environment variable, which enables client-side CGO code generation when packaging Go applications.
+    - The veracode static command includes fixes for the usability of --filtered-json-output-file to work like --results-file.
+    - The veracode fix CLI includes minor updates.
+ReleaseTime: 2025-10-30

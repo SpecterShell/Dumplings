@@ -23,10 +23,11 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesUrl = "https://docs.snowflake.com/en/release-notes/clients-drivers/snowflake-cli-$((Get-Date).Year)"
       $Object4 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
       }
 
       # Remove anchors

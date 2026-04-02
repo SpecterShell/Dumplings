@@ -8,15 +8,13 @@
 # </request>
 # "@
 
-$Object1 = Invoke-WebRequest -Uri 'https://formlabs.com/download-preform-windows/'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = (Invoke-RestMethod -Uri 'https://downloads.formlabs.com/PreForm/Release/LATEST.win.txt').Trim()
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, 'PreForm_win_([\d\.]+)_.+?_(\d+)[_\.]').Groups[@(1, 2)].Value | Join-String -Separator '.'
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, 'PreForm_win_([\d\.]+)_.+?_(\d+)[_\.]').Groups[@(1, 2)].Value | Join-String -Separator '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

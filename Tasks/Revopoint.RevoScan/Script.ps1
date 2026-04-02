@@ -1,5 +1,5 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.revopoint3d.com/pages/support-download' | Join-String -Separator "`n" | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//*[@id="rs5"]//div[@class="softwareitem" and contains(., "Windows")]')
+$Object1 = $Global:DumplingsStorage.RevopointDownloadPage
+$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 5") and not(contains(., "MetroX"))]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -12,14 +12,6 @@ $ShortVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
-      }
-    )
-
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

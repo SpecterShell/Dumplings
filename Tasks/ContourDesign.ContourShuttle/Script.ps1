@@ -10,7 +10,7 @@ function Read-Installer {
 $Object1 = Invoke-WebRequest -Uri 'https://contourdesign.com/pages/drivers' | ConvertFrom-Html
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//h2[contains(text(), "Contour Shuttle")]/following::p[contains(text(), "Windows")]/a').Attributes['href'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//h2[contains(text(), "Shuttle Controller")]/following::p[contains(text(), "Windows")]/a').Attributes['href'].Value | ConvertTo-HtmlDecodedText
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

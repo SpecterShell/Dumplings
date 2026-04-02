@@ -51,9 +51,14 @@ switch -Regex ($this.Check()) {
   }
   'Updated' {
     if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
+      $this.Config.WinGetNewPackageIdentifier = $this.Config.WinGetIdentifier -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0]
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PackageName'
+        Value  = { $_ -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0] }
+      }
+      $this.CurrentState.Installer[0].ProductCode = "GeoT*SOL $($this.CurrentState.Version.Split('.')[0])_is1"
     }
+    $this.Submit()
   }
 }

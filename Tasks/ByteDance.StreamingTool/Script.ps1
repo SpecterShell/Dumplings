@@ -4,10 +4,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_up
 $this.CurrentState.Version = $Object1.data.manifest.win32.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.data.manifest.win32.extra.x86.installerUrl
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object1.data.manifest.win32.extra.x86.installerUrl
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.data.manifest.win32.extra.x64.installerUrl

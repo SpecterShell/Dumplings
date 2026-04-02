@@ -1,26 +1,41 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.zoho.com/cliq/desktop/windows.html'
+$Object1 = Invoke-RestMethod -Uri 'https://downloads.zohocdn.com/chat-desktop/artifacts.json'
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x32') } catch {} }, 'First')[0].href
+$this.CurrentState.Installer += $InstallerX86EXE = [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'exe'
+  InstallerUrl  = $Object1.windows.'32bit'
 }
-$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$VersionX86EXE = [regex]::Match($InstallerX86EXE.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+$this.CurrentState.Installer += $InstallerX64EXE = [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = $Object1.windows.'64bit'
 }
-$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$VersionX64EXE = [regex]::Match($InstallerX64EXE.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
+$this.CurrentState.Installer += $InstallerX86MSI = [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.win_msi.'32bit'
+}
+$VersionX86MSI = [regex]::Match($InstallerX86MSI.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerX64MSI = [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.win_msi.'64bit'
+}
+$VersionX64MSI = [regex]::Match($InstallerX64MSI.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+if (@(@($VersionX86EXE, $VersionX64EXE, $VersionX86MSI, $VersionX64MSI) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions detected: x86 EXE: ${VersionX86EXE}, x64 EXE: ${VersionX64EXE}, x86 MSI: ${VersionX86MSI}, x64 MSI: ${VersionX64MSI}", 'Error')
+  return
 }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $VersionX64EXE
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

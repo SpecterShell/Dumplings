@@ -8,14 +8,15 @@ function Read-Installer {
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
+$Object1 = Invoke-WebRequest -Uri 'https://pc.weixin.qq.com/' | ConvertFrom-Html
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe'
+  InstallerUrl = $Object1.SelectSingleNode('//a[@id="downloadButton"]').Attributes['href'].Value
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # Hash
-$this.CurrentState.Hash = $Object1.Headers.'X-COS-META-MD5'[0]
+$this.CurrentState.Hash = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'X-COS-META-MD5'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -63,7 +64,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 4: The hash has changed, but the version is not
-  Default {
+  default {
     $this.Log('The hash has changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

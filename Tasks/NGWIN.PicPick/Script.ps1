@@ -5,7 +5,13 @@ $this.CurrentState.Version = $Object1[0][0..2] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1[1] | ConvertTo-Https
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl = $Object1[1] | ConvertTo-Https
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $InstallerUrl -replace '_inst\.exe$', '_portable.zip'
 }
 
 switch -Regex ($this.Check()) {

@@ -1,19 +1,19 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  # ProductCode
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
+  # AppsAndFeaturesEntries
+  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+    [ordered]@{
+      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
+    }
+  )
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
-
-# EXE
-$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
-  InstallerType = 'exe'
-  InstallerUrl  = 'https://www.digiexam.com/hubfs/client/Digiexam_Win_x86_64.exe'
-}
-$Object1 = Invoke-WebRequest -Uri $InstallerEXE.InstallerUrl -Method Head
-$ETag = $Object1.Headers.ETag[0]
 
 # MSI
 $this.CurrentState.Installer += $InstallerMSI = [ordered]@{
@@ -22,6 +22,14 @@ $this.CurrentState.Installer += $InstallerMSI = [ordered]@{
 }
 $Object2 = Invoke-WebRequest -Uri $InstallerMSI.InstallerUrl -Method Head
 $ETagMSI = $Object2.Headers.ETag[0]
+
+# EXE
+$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
+  InstallerType = 'exe'
+  InstallerUrl  = 'https://www.digiexam.com/hubfs/client/Digiexam_Win_x86_64.exe'
+}
+$Object1 = Invoke-WebRequest -Uri $InstallerEXE.InstallerUrl -Method Head
+$ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -97,7 +105,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

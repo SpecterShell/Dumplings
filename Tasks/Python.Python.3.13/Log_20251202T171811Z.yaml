@@ -1,0 +1,108 @@
+Version: 3.13.10
+Installer:
+- Architecture: x86
+  InstallerUrl: https://www.python.org/ftp/python/3.13.10/python-3.13.10.exe
+- Architecture: x64
+  InstallerUrl: https://www.python.org/ftp/python/3.13.10/python-3.13.10-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://www.python.org/ftp/python/3.13.10/python-3.13.10-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.python.org/release/3.13.10/whatsnew/changelog.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Tools/Demos
+    - gh-141442: The iOS testbed now correctly handles test arguments that contain spaces.
+    Tests
+    - gh-140482: Preserve and restore the state of stty echo as part of the test environment.
+    - gh-140082: Update python -m test to set FORCE_COLOR=1 when being run with color enabled so that unittest which is run by it with redirected output will output in color.
+    - gh-136442: Use exitcode 1 instead of 5 if unittest.TestCase.setUpClass() raises an exception
+    Security
+    - gh-139700: Check consistency of the zip64 end of central directory record. Support records with “zip64 extensible data” if there are no bytes prepended to the ZIP file.
+    - gh-137836: Add support of the “plaintext” element, RAWTEXT elements “xmp”, “iframe”, “noembed” and “noframes”, and optionally RAWTEXT element “noscript” in html.parser.HTMLParser.
+    - gh-136063: email.message: ensure linear complexity for legacy HTTP parameters parsing. Patch by Bénédikt Tran.
+    - gh-136065: Fix quadratic complexity in os.path.expandvars().
+    - gh-119342: Fix a potential memory denial of service in the plistlib module. When reading a Plist file received from untrusted source, it could cause an arbitrary amount of memory to be allocated. This could have led to symptoms including a MemoryError, swapping, out of memory (OOM) killed processes or containers, or even system crashes.
+    Library
+    - gh-74389: When the stdin being used by a subprocess.Popen instance is closed, this is now ignored in subprocess.Popen.communicate() instead of leaving the class in an inconsistent state.
+    - gh-87512: Fix subprocess.Popen.communicate() timeout handling on Windows when writing large input. Previously, the timeout was ignored during stdin writing, causing the method to block indefinitely if the child process did not consume input quickly. The stdin write is now performed in a background thread, allowing the timeout to be properly enforced.
+    - gh-141473: When subprocess.Popen.communicate() was called with input and a timeout and is called for a second time after a TimeoutExpired exception before the process has died, it should no longer hang.
+    - gh-59000: Fix pdb breakpoint resolution for class methods when the module defining the class is not imported.
+    - gh-141570: Support file-like object raising OSError from fileno() in color detection (_colorize.can_colorize()). This can occur when sys.stdout is redirected.
+    - gh-141659: Fix bad file descriptor errors from _posixsubprocess on AIX.
+    - gh-141497: ipaddress: ensure that the methods IPv4Network.hosts() and IPv6Network.hosts() always return an iterator.
+    - gh-140938: The statistics.stdev() and statistics.pstdev() functions now raise a ValueError when the input contains an infinity or a NaN.
+    - gh-124111: Updated Tcl threading configuration in _tkinter to assume that threads are always available in Tcl 9 and later.
+    - gh-137109: The os.fork and related forking APIs will no longer warn in the common case where Linux or macOS platform APIs return the number of threads in a process and find the answer to be 1 even when a os.register_at_fork() after_in_parent= callback (re)starts a thread.
+    - gh-141314: Fix assertion failure in io.TextIOWrapper.tell() when reading files with standalone carriage return (\r) line endings.
+    - gh-141311: Fix assertion failure in io.BytesIO.readinto() and undefined behavior arising when read position is above capcity in io.BytesIO.
+    - gh-141141: Fix a thread safety issue with base64.b85decode(). Contributed by Benel Tayar.
+    - gh-140911: collections: Ensure that the methods UserString.rindex() and UserString.index() accept collections.UserString instances as the sub argument.
+    - gh-140797: The undocumented re.Scanner class now forbids regular expressions containing capturing groups in its lexicon patterns. Patterns using capturing groups could previously lead to crashes with segmentation fault. Use non-capturing groups (?:…) instead.
+    - gh-140815: faulthandler now detects if a frame or a code object is invalid or freed. Patch by Victor Stinner.
+    - gh-100218: Correctly set errno when socket.if_nametoindex() or socket.if_indextoname() raise an OSError. Patch by Bénédikt Tran.
+    - gh-140875: Fix handling of unclosed character references (named and numerical) followed by the end of file in html.parser.HTMLParser with convert_charrefs=False.
+    - gh-140734: multiprocessing: fix off-by-one error when checking the length of a temporary socket file path. Patch by Bénédikt Tran.
+    - gh-140874: Bump the version of pip bundled in ensurepip to version 25.3
+    - gh-140691: In urllib.request, when opening a FTP URL fails because a data connection cannot be made, the control connection’s socket is now closed to avoid a ResourceWarning.
+    - gh-103847: Fix hang when cancelling process created by asyncio.create_subprocess_exec() or asyncio.create_subprocess_shell(). Patch by Kumar Aditya.
+    - gh-140590: Fix arguments checking for the functools.partial.__setstate__() that may lead to internal state corruption and crash. Patch by Sergey Miryanov.
+    - gh-140634: Fix a reference counting bug in os.sched_param.__reduce__().
+    - gh-140633: Ignore AttributeError when setting a module’s __file__ attribute when loading an extension module packaged as Apple Framework.
+    - gh-140593: xml.parsers.expat: Fix a memory leak that could affect users with ElementDeclHandler() set to a custom element declaration handler. Patch by Sebastian Pipping.
+    - gh-140607: Inside io.RawIOBase.read(), validate that the count of bytes returned by io.RawIOBase.readinto() is valid (inside the provided buffer).
+    - gh-138162: Fix logging.LoggerAdapter with merge_extra=True and without the extra argument.
+    - gh-140474: Fix memory leak in array.array when creating arrays from an empty str and the u type code.
+    - gh-140272: Fix memory leak in the clear() method of the dbm.gnu database.
+    - gh-140041: Fix import of ctypes on Android and Cygwin when ABI flags are present.
+    - gh-139905: Add suggestion to error message for typing.Generic subclasses when cls.__parameters__ is missing due to a parent class failing to call super().__init_subclass__() in its __init_subclass__.
+    - gh-139845: Fix to not print KeyboardInterrupt twice in default asyncio REPL.
+    - gh-139783: Fix inspect.getsourcelines() for the case when a decorator is followed by a comment or an empty line.
+    - gh-70765: http.server: fix default handling of HTTP/0.9 requests in BaseHTTPRequestHandler. Previously, BaseHTTPRequestHandler.parse_request() incorrectly waited for headers in the request although those are not supported in HTTP/0.9. Patch by Bénédikt Tran.
+    - gh-139391: Fix an issue when, on non-Windows platforms, it was not possible to gracefully exit a python -m asyncio process suspended by Ctrl+Z and later resumed by fg other than with kill.
+    - gh-101828: Fix 'shift_jisx0213', 'shift_jis_2004', 'euc_jisx0213' and 'euc_jis_2004' codecs truncating null chars as they were treated as part of multi-character sequences.
+    - gh-139246: fix: paste zero-width in default repl width is wrong.
+    - gh-90949: Add SetAllocTrackerActivationThreshold() and SetAllocTrackerMaximumAmplification() to xmlparser objects to prevent use of disproportional amounts of dynamic memory from within an Expat parser. Patch by Bénédikt Tran.
+    - gh-139065: Fix trailing space before a wrapped long word if the line length is exactly width in textwrap.
+    - gh-138993: Dedent credits text.
+    - gh-138859: Fix generic type parameterization raising a TypeError when omitting a ParamSpec that has a default which is not a list of types.
+    - gh-138775: Use of python -m with base64 has been fixed to detect input from a terminal so that it properly notices EOF.
+    - gh-98896: Fix a failure in multiprocessing resource_tracker when SharedMemory names contain colons. Patch by Rani Pinchuk.
+    - gh-75989: tarfile.TarFile.extractall() and tarfile.TarFile.extract() now overwrite symlinks when extracting hardlinks. (Contributed by Alexander Enrique Urieles Nieto in gh-75989.)
+    - gh-83424: Allows creating a ctypes.CDLL without name when passing a handle as an argument.
+    - gh-136234: Fix asyncio.WriteTransport.writelines() to be robust to connection failure, by using the same behavior as write().
+    - gh-136057: Fixed the bug in pdb and bdb where next and step can’t go over the line if a loop exists in the line.
+    - gh-135307: email: Fix exception in set_content() when encoding text and max_line_length is set to 0 or None (unlimited).
+    - gh-134453: Fixed subprocess.Popen.communicate() input= handling of memoryview instances that were non-byte shaped on POSIX platforms. Those are now properly cast to a byte shaped view instead of truncating the input. Windows platforms did not have this bug.
+    - gh-102431: Clarify constraints for “logical” arguments in methods of decimal.Context.
+    IDLE
+    - gh-96491: Deduplicate version number in IDLE shell title bar after saving to a file.
+    Documentation
+    - gh-141994: xml.sax.handler: Make Documentation of xml.sax.handler.feature_external_ges warn of opening up to external entity attacks. Patch by Sebastian Pipping.
+    - gh-140578: Remove outdated sencence in the documentation for multiprocessing, that implied that concurrent.futures.ThreadPoolExecutor did not exist.
+    Core and Builtins
+    - gh-142048: Fix quadratically increasing garbage collection delays in free-threaded build.
+    - gh-141930: When importing a module, use Python’s regular file object to ensure that writes to .pyc files are complete or an appropriate error is raised.
+    - gh-120158: Fix inconsistent state when enabling or disabling monitoring events too many times.
+    - gh-141579: Fix sys.activate_stack_trampoline() to properly support the perf_jit backend. Patch by Pablo Galindo.
+    - gh-141312: Fix the assertion failure in the __setstate__ method of the range iterator when a non-integer argument is passed. Patch by Sergey Miryanov.
+    - gh-140939: Fix memory leak when bytearray or bytes is formated with the %*b format with a large width that results in a MemoryError.
+    - gh-140530: Fix a reference leak when raise exc from cause fails. Patch by Bénédikt Tran.
+    - gh-140576: Fixed crash in tokenize.generate_tokens() in case of specific incorrect input. Patch by Mikhail Efimov.
+    - gh-140551: Fixed crash in dict if dict.clear() is called at the lookup stage. Patch by Mikhail Efimov and Inada Naoki.
+    - gh-140471: Fix potential buffer overflow in ast.AST node initialization when encountering malformed _fields containing non-str.
+    - gh-140406: Fix memory leak when an object’s __hash__() method returns an object that isn’t an int.
+    - gh-140306: Fix memory leaks in cross-interpreter channel operations and shared namespace handling.
+    - gh-140301: Fix memory leak of PyConfig in subinterpreters.
+    - gh-140000: Fix potential memory leak when a reference cycle exists between an instance of typing.TypeAliasType, typing.TypeVar, typing.ParamSpec, or typing.TypeVarTuple and its __name__ attribute. Patch by Mikhail Efimov.
+    - gh-139748: Fix reference leaks in error branches of functions accepting path strings or bytes such as compile() and os.system(). Patch by Bénédikt Tran.
+    - gh-139516: Fix lambda colon erroneously start format spec in f-string in tokenizer.
+    - gh-139640: Fix swallowing some syntax warnings in different modules if they accidentally have the same message and are emitted from the same line. Fix duplicated warnings in the finally block.
+    - gh-137400: Fix a crash in the free threading build when disabling profiling or tracing across all threads with PyEval_SetProfileAllThreads() or PyEval_SetTraceAllThreads() or their Python equivalents threading.settrace_all_threads() and threading.setprofile_all_threads().
+    - gh-133400: Fixed Ctrl+D (^D) behavior in _pyrepl module to match old pre-3.13 REPL behavior.
+    C API
+    - gh-140042: Removed the sqlite3_shutdown call that could cause closing connections for sqlite when used with multiple sub interpreters.
+    - gh-140487: Fix Py_RETURN_NOTIMPLEMENTED in limited C API 3.11 and older: don’t treat Py_NotImplemented as immortal. Patch by Victor Stinner.
+ReleaseTime: 2025-12-02

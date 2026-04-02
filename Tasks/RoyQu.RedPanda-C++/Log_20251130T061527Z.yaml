@@ -1,0 +1,108 @@
+Version: "3.4"
+Installer:
+- Architecture: x86
+  InstallerUrl: https://sourceforge.net/projects/redpanda-cpp/files/v3.4/RedPanda.C++.3.4.win32.MinGW32_11.5.0.Setup.exe/download
+- Architecture: x64
+  InstallerUrl: https://sourceforge.net/projects/redpanda-cpp/files/v3.4/RedPanda.C++.3.4.win64.MinGW64_11.5.0.Setup.exe/download
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://sourceforge.net/projects/redpanda-cpp/files/v3.4/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - enhancement: Auto hide option "Auto clear parsed symbols when editor hidden" if "editors share one parser" is unchecked.
+    - fix: Syntax color doesn't work in the code snippet option page.
+    - fix: GAS template page dosen't has syntax color. (by xccfcpd@github.com)
+    - fix: Autoindent not correct for else clause.
+    - enhancement: "Paste indentation" in edit menu.
+    - fix: In project panel's Custom View mode, file may be wrongly displayed as folder after add new unit.
+    - fix: crash when parsing deferenced vector iterators. (#622 by KEDIT2007@github.com)
+    - fix: Can't correctly parse function-like macro defines not sperated with spaces.
+    - fix: Can't correctly parse some operator overloading such as ++ and --.
+    - enhancement: Support NASM.
+    - enhancement: Option Page for GNU Assembler(gas).
+    - enhancement: Save problem set to last file.
+    - enhancement: Show filename in problem set's title.
+    - enhancement: Show modified sign in problem set's title.
+    - fix: When hovering on #include header names, tips doesn't show.
+    - fix: Class name is wrongly syntaxed colored in its definition when it has a constructor.
+    - fix: Mouse tip of class displays its constructor info in its definition.
+    - fix: Goto defintion/declaration will jump to constructor instead of the class in the class definition.
+    - fix: Delete a customed bundled color scheme and save, will get wrong save error message.
+    - fix: Wrong error message when delete a customed bundled syntax color scheme.
+    - fix: Infinite loop when generating new problem set name.
+    - enhancement: Completion suggestion for goto labels;
+    - fix: Wrong suggestion for complex words.
+    - fix: Close an editor which is parsing may crash.
+    - enhancement: Support parsing consteval if.
+    - enhancement: Support decltype in typedef.
+    - change: Show symbols defined in current file no matter it starts with underscore or not.
+    - fix: Cpp Syntaxer is wrongly used to parse todo infos for everyfile.
+    - fix: Wrongly indent when press tab in the middle of the line.
+    - Change: warn user when reload file with unsaved modifications.
+    - fix: Status of Toggle Block Comment not correctly updated.
+    - fix: Leading spaces is wrongly removed when paste contents in the middle of lines.
+    - change: Press Home/End to jump to Line begin/end when completion popup is shown.
+    - fix: Double click a file in windows explore won't bring the app to front.
+    - enhancement: rename undefined local symbols.
+    - enhancement: Add new compile option (-fno-ms-extentions) and enabled by default.
+    - fix: Background color not correct handled in CPU dialog. (by CyanoHao)
+    - fix: check color validity before apply it to suggestion list popup.
+    - fix: crashing when parsing statements like "[] ".
+    - fix: spaces prevent '' at the end of cpp style comments to ignore newline.
+    - fix: '' at the end of cpp style comments are not handled by the parser.
+    - enhancement: add winsock.h to auto link default settings.
+    - enhancement: beautify description of function pointers.
+    - enhancement: New compiler errors options.
+    - enhancement: Add "Reload" button for environment->appearance->theme.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 改进：增加保存试题集功能。（原保存试题集功能改名为“另存试题集为”）
+    - 改进：在有改动的试题集/试题/测试案例标题后显示*号。
+    - 改进：在试题集面板的标题栏中同时显示对应的文件名。
+    - 改进：在编译选项中增加"-fno-ms-extentions"选项（默认勾选），以保证 gcc 的编译行为和 Linux/OJ 服务器一致。
+    - 改进：在编辑菜单中增加“粘贴原缩进”选项。
+    - 改进：goto 标签的补全提示。
+    - 改进：NASM 支持，包括编辑/运行/调试功能。
+    - 改进：支持分析使用了 decltype 的语法提示(能正确补全提示 std::nullptr_t 了)
+    - 改进：支持分析 consteval if 语句（能正确补全提示 std::chrono 了）
+    - 改进：在 windows 下的自动链接设置中增加 winsock.h 头文件。
+    - 改进：美化函数指针的相关信息显示。
+    - 改进：选项对话框->环境->性能页中，如果未勾选“编辑器共享同一个分析器”选项，自动隐藏“编辑器隐藏时自动清理符号表”选项。
+    - 改进：重新加载存在未保存修改的文件内容前会提示用户。
+    - 改进：可以重命名未定义的局部变量。
+    - 变化：在结构面板中不再隐藏当前文件中定义的以下划线开头的符号。
+    - 变化：当补全提示列表处于显示状态时，按下 Home/End 键会关闭提示并跳转到行首/行尾。
+    - 修正：在选项对话框->编辑器->代码模板页中的内容未以语法高亮显示。
+    - 修正：在选项对话框->编辑器->代码模板页中，GNU 汇编文件模板的内容未以语法高亮显示。（作者 xccfcpd@github.com）
+    - 修正：else 语句的自动缩进计算不正确。
+    - 修正：在项目面板的自定义视图中，新建的项目文件可能被错误的显示成文件夹。
+    - 修正：在分析处理解 std::vector 的迭代器引用时崩溃。(#622 作者 KEDIT2007@github.com)
+    - 修正：无法正确分析名称和定义之间未以空格隔开的宏定义。
+    - 修正：无法正确分析重载的++和--等运算符。
+    - 修正：当鼠标悬停在#include 语句的文件名上时，相关的信息提示未能出现。
+    - 修正：当类定义了构造函数时，类名会被错误的以函数的语法高亮色显示。
+    - 修正：当类定义了构造函数，鼠标悬停在类定义里的类名上时，会显示构造函数的信息提示。
+    - 修正：当类定义了构造函数，ctrl+鼠标单击类定义里的类名时，会错误的跳转倒构造函数处。
+    - 修正：在选项对话框->编辑器->配色页中，删除对内置配色方案的自定义修改时，会显示错误的提示信息。
+    - 修正：在创建新试题时可能会死循环。
+    - 修正：符合关键字的补全提示可能不正确。
+    - 修正：在刚开始进行语义分析时关闭编辑器可能导致程序崩溃。
+    - 修正：在使用 cpp 分析器来解析非 c/cpp 文件中的 TODO 信息。
+    - 修正：在一行的中间按下 tab 键时缩进处理不正确。
+    - 修正：“切换块注释”的启用/禁用状态不能及时更新。
+    - 修正：在一行的中间粘贴内容时，前导空格被错误的删除。
+    - 修正：在 windows 的文件管理器中双击 c/c 文件时，处于最小化状态的小熊猫 C 不能自动切换到前台。
+    - 修正：CPU 对话框中的背景色处理不正确。(作者 CyanoHao)
+    - 修正：在设置提示弹窗的颜色前未检查其是否有效。
+    - 修正：在分析形如"[] "的语句时崩溃。
+    - 修正：代码分析器不能正确处理以''结尾的//注释
+    - 修正：以''结尾的//注释后面如果有空格，则下一行不会被作为注释进行高亮。（和 gcc 行为一致）
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: http://royqh.net/redpandacpp/blog/
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: http://royqh.net/redpandacpp/blog/2025/11/30/version.3.4/
+ReleaseTime: 2025-11-30T06:00:47.0000000Z

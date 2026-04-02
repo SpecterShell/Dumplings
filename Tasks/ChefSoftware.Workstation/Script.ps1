@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       $ReleaseNotesRaw = Invoke-RestMethod -Uri "https://packages.chef.io/release-notes/chef-workstation/$($Object1.version).md" | Convert-MarkdownToHtml | Get-TextContent
-      if ($ReleaseNotesRaw -match 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2})\.') {
+      if ($ReleaseNotesRaw -match 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2}|[a-zA-Z]+\W+\d{1,2}\W+20\d{2})\.') {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
 
@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesRaw -replace 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2})\.' | Format-Text
+          Value  = $ReleaseNotesRaw -replace 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2}|[a-zA-Z]+\W+\d{1,2}\W+20\d{2})\.' | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')

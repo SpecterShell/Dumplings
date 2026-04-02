@@ -69,10 +69,14 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Write()
   $this.Message()
   if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-    $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-  } else {
-    $this.Submit()
+    $this.Config.WinGetNewPackageIdentifier = $this.Config.WinGetIdentifier -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0]
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'PackageName'
+      Value  = { $_ -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0] }
+    }
   }
+  $this.Submit()
   return
 }
 
@@ -110,22 +114,30 @@ switch -Regex ($this.Check()) {
     $this.Write()
     $this.Message()
     if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
+      $this.Config.WinGetNewPackageIdentifier = $this.Config.WinGetIdentifier -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0]
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PackageName'
+        Value  = { $_ -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0] }
+      }
     }
+    $this.Submit()
   }
   # Case 4: The hash has changed, but the version is not
-  Default {
+  default {
     $this.Log('The hash has changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
     $this.Message()
     if ($this.CurrentState.Version.Split('.')[0] -ne ($this.Config.WinGetIdentifier.Split('.') -match '20\d{2}')) {
-      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
-    } else {
-      $this.Submit()
+      $this.Config.WinGetNewPackageIdentifier = $this.Config.WinGetIdentifier -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0]
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PackageName'
+        Value  = { $_ -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0] }
+      }
     }
+    $this.Submit()
   }
 }

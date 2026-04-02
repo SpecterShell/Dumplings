@@ -1,20 +1,34 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'GroupManagerFreeInstaller.msi' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'GroupManagerFreeInstaller.msi'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'GroupManagerFreeSetup.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'GroupManagerFreeSetup.exe'
+  $InstallerFile2Extracted = New-TempFolder
+  Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'GroupManagerFreeSetup.msi'
+  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'GroupManagerFreeSetup.x64.msi'
   # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+  # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
   # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  $InstallerX86['InstallerSha256'] = $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+  $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+  $InstallerX64['ProductCode'] = $InstallerFile4 | Read-ProductCodeFromMsi
   # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+  $InstallerX86['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
+      UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
+      InstallerType = 'msi'
     }
   )
+  $InstallerX64['AppsAndFeaturesEntries'] = @(
+    [ordered]@{
+      UpgradeCode   = $InstallerFile4 | Read-UpgradeCodeFromMsi
+      InstallerType = 'msi'
+    }
+  )
+  Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
@@ -57,7 +71,12 @@ function Get-ReleaseNotes {
 $Prefix = 'https://cjwdev.com/Software/GroupMan/Download.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+}
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
 }
 

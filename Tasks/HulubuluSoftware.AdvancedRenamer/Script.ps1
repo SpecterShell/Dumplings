@@ -1,13 +1,13 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.advancedrenamer.com/download' | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//div[@class="siteblock" and contains(., "Advanced Renamer 4")]')
 
-# Version
-$this.CurrentState.Version = [regex]::Match($Object1.InnerText, 'Advanced Renamer (4(?:\.\d+)+)').Groups[1].Value
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Join-Uri 'https://www.advancedrenamer.com/' $Object2.SelectSingleNode('.//a[@class="btn_download" and contains(@href, ".exe")]').Attributes['href'].Value
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:_\d+)+)').Groups[1].Value.Replace('_', '.')
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

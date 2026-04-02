@@ -9,7 +9,7 @@ $this.CurrentState.Version = $Object1.data.verName -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.pkgUrl
+  InstallerUrl = $Object1.data.pkgUrl -replace '//dl-ugos.ugnas.com/', '//oss-ugos.ugreengroup.com/'
 }
 
 switch -Regex ($this.Check()) {

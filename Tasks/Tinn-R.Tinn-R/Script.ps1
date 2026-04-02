@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://tinn-r.org/update/new_version.txt'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://tinn-r.org/update/new_version.txt' | Join-String -Separator "`n"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1, '(\d{1}\.\d{2}\.\d{2}\.\d{2})(?=_(setup.exe|portable.zip))').Groups[1].Value
@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://tinn-r.org/en/download' | ConvertFrom-Html
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://tinn-r.org/en/download' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//blockquote[contains(./h5/text(), '$($this.CurrentState.RealVersion)')]")
       if ($ReleaseNotesTitleNode) {

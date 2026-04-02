@@ -1,0 +1,52 @@
+Version: 2.4.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/JS8Call-improved/JS8Call-improved/releases/download/release/2.4.0/JS8Call-improved_2.4.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    First release from the JS8Call-improved project
+    JS8Call-improved is an improved version of JS8Call, paralleling the WSJT-X-improved version of WSJT-X. It is based on the excellent JS8Call by Jordan Sherer, KN4CRD, the source code located at https://github.com/js8call/js8call
+    The same developers work on both projects. With JS8Call-improved we can implement bug fixes and features faster than JS8Call official. Our bug fixes, features and improvements are designed to be integrated with JS8Call official in the future.
+    JS8Call-improved v2.4.0
+    - contains a rollup of all outstanding PR's that have never been merged (at date of release) on JS8Call official
+    - modernized CMake configurations to take advantage of deployqt tools that properly package a Qt-based application
+    - standardization on the Qt version 6.9.3 cross-platform library
+    - bug fixes for audio, auto HB handling
+    - new features for group messaging
+    - new debug logging capabilities that are runtime-configurable
+    - fixed mode set speed API
+    - provide code signing with hardened runtime for MacOS
+    - updated build documentation for all three platforms
+    - developer guide
+    - general code cleanup and remove deprecated Fortran files
+    - updated license to be in compliance with Qt licensing requirements for redistributed dynamically linked libraries
+    Carefully read the release notes below for your operating system, and review the Known Issues, before installing JS8Call-improved.
+    Installer Notes
+    MacOS
+    MacOS builds are universal (both Intel and Apple silicon) and arm64 (Apple silicon only). The app is signed and notarized. The Mac builds were done on MacOS 26 Tahoe with Xcode 26. MacOS 12 Monterey and later are supported.
+    Linux
+    Linux distributions do not package a new enough version of Qt for JS8Call-improved to run correctly. We developed automated install scripts for Debian (Debian 12/13, Mint 22, Ubuntu 24/25 and other Debian derivatives) and Fedora 39 and newer. While it may compile on older versions of Qt, there is likely to be audio, PTT or UI bugs injected. The install script will fetch all needed libraries and install them, fetch the JS8Call-improved source code, build it and install it for the local user only. On an average system, this should take about 15-20 minutes.
+    If you have another version of JS8Call installed, say from your linux distribution or JS8Call v2.3.1 from the JS8Call official project, it will not remove it or uninstall any of its components. You can run either version of the program, but not both at the same time. See the Known Issues below for information on settings compatibility.
+    The script supports building on both x86_64 and arm64. It has been reported to build fine on a Raspberry Pi5 with Debian trixie. If you get a build failure on Raspberry Pi please provide feedback to the developer issues on GitHub so we can take a look at it.
+    If, after trying JS8Call-improved, you wish to uninstall it, simply run the script again. It will offer to remove your JS8Call-improved installation.
+    Windows 11
+    Windows 11 build is provided for x86_64 only. It will run on arm64 Windows 11 with the prism emulator. This has been tested on arm64 Windows 11 and there was no issues noted. OmniRig is no longer supported by JS8Call-improved. It is a deprecated 32-bit program and Windows 11 is 64-bit only. The Windows build is not code-signed. If your Windows anti-virus software complains about it, make an exception in the rules for JS8Call-improved.
+    JS8Call-improved will also run on Windows 10.
+    Known Issues
+    - There is incompatibility in settings between JS8Call v2.2.x, JS8Call-2.3.x and JS8Call-improved 2.4.0. Settings between JS8Call 2.3.x and JS8Call-improved are compatible. Either can read the settings from JS8Call 2.2.x
+    - Settings are NOT backwards compatible with JS8Call version 2.2.x after a newer version of JS8Call modifies the configuration file.
+    - Enumeration of audio interfaces is different in JS8Call-improved and it will only return a list of valid auto interfaces, not a list of possibilities that you can try until one works. There is also some issues with text encoding that you may notice in the message window if you try to revert to JS8Call 2.2. Although JS8Call v2.2.0 is no longer supported, if you are still using this version and wish to save your settings from it, make a copy of your JS8Call.ini configuration file before installing and running JS8Call-improved.
+    - The JS8Call.ini file is found at:
+      . Linux: ~/.config/JS8Call.ini
+      . Windows, in C:\Users<your_user_ID>\AppData\Local\JS8Call directory
+      . Mac, ~/Library/Preferences/JS8Call.ini
+    - JS8Call-improved uses the Qt 6.9.3 FFmpeg audio back end. On linux this requires either PulseAudio or PipeWire. ALSA audio has been deprecated by Qt. Some distributions like Debian install an ALSA-PipeWire plugin, which in testing has worked fine with JS8Call-improved.
+    - arm 64 Debian 12 ships with glibc 2.36. JS8Call-improved built with Qt 6.9.3 requires minimum glibc 2.38. Therefore, on arm64 only Debian 13 trixie is officially supported. However, glibc on Debian 12 can be updated, consult the Debian documentation on how to do this without breaking your system.
+    - Ubuntu 22 is not officially supported because it does not package a new enough version of the boost C++ development library. JS8Call-improved should build and run on it if you can install boost 1.81 or later on your Ubuntu 22 system.
+    - If you find a bug or issue with JS8Call-improved, please post complete information on the issue to the GitHub repo at https://github.com/JS8Call-improved/JS8Call-improved/issues
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JS8Call-improved/JS8Call-improved/releases/tag/release/2.4.0
+ReleaseTime: 2025-11-04T01:19:53.0000000Z

@@ -1,0 +1,1 @@
+$Global:DumplingsStorage.MimecastDownloadPage = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://mimecastsupport.zendesk.com/hc/en-us/articles/36587212390291-Mimecast-Application-Downloads' | Join-String -Separator "`n" | ConvertFrom-Html

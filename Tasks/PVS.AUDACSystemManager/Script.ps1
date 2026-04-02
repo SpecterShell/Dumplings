@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://audac.eu/eu/software/audac-system-manager'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://audac.eu/eu/software/audac-system-manager' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 
 # Version

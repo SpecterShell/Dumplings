@@ -1,0 +1,147 @@
+Version: 6000.3.4f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/fdd3b8998ec4/Windows64EditorInstaller/UnitySetup64-6000.3.4f1.exe
+  ProductCode: Unity 6000.3.4f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/fdd3b8998ec4/WindowsArm64EditorInstaller/UnitySetupArm64-6000.3.4f1.exe
+  ProductCode: Unity 6000.3.4f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.3.4
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.3.4f1
+    - 6000.0.64f1: [DX12] [Win11 ARM64] Machine crashes and restarts while trying to create a new project (UUM-131104)
+    - 6000.3.0a1: Last selected asset before docking Animation window gets selected when a domain reload occurs (UUM-131198)
+    - 6000.3.0b1,6000.0.65f1: Editor freezes when QualitySettings.maxQueuedFrames is set to 1 and DX12 is used (UUM-131962)
+    - 6000.4.0a3,6000.3.0b7: Crash on CheckDeviceStatus when executing specific InferenceEngine actions (UUM-131538)
+    - 6000.5.0a1,6000.3.2f1: Crash with multiple stack traces when using DX12 and selecting all spline knots (UUM-131707)
+    - Metal: Game freezes after command buffer Timeout error (UUM-125778)
+    - Metal: [iOS] Screen flashing after the iOS splash screen (UUM-121453)
+    - Platform Audio: [Windows] Crash on AudioManager::InitFMOD when performing various actions in the Editor (UUM-126803)
+    - Shader System: Crash on keywords::PrintKeywordSpaceInfo when uninstalling Universal Render Pipeline in a specific project (UUM-130674)
+    - SRP Templates: Removed VR Module dependency prevents URP Sample from compiling (UUM-130083)
+    - uGUI Controls: [iOS][Android] OnSubmit event is triggered indefinitely on UGUI Input Field after dismissing keyboard on mobile (UUM-130350)
+    6000.3.4f1 Release Notes
+    Features
+    - Version Control: Added a cset by cset diff panel in the branches view.
+    - Version Control: Added a properties panel for the selected changeset/shelveset.
+    - Version Control: Added branch name(s) to the branch deletion dialog.
+    - Version Control: Added empty state in the history view.
+    - Version Control: Added specific empty states for Pending/Incoming Changes with filters.
+    - VisionOS: Exposed "Target minimum visionOS Version" to visionOS Player settings.
+    Improvements
+    - Documentation: Improved scripting documentation related to GraphicsStateCollection APIs.
+    - Graphics: Handle case where vulkan pipeline cache file could be corrupted and cause vkCreatePipelineCache to fail.
+    Changes
+    - Editor: Changed previous fix to only happen in Editor outside of Play Mode.
+    - Version Control: Displayed progress indicator overlaying the view.
+    - Version Control: Implemented a "clever" truncation of paths.
+    - Version Control: Moved incoming and shelves notifications to the top bar.
+    - Version Control: Redesigned all the views and dialogs.
+    - Version Control: Redesigned the main panel to include a top breadcrumb.
+    - Version Control: Renamed toolbar dropdown to comply with a 120px max width limit in 6.5.
+    - Version Control: Show real indeterminate progress bar.
+    - Version Control: Updated deleted and moved overlay icons.
+    Fixes
+    - 2D: Fixed missing Sort At Root option for Sorting Group component. (UUM-130317)
+    - Android: On Android XR devices, fixed a hang in FMOD shutdown when calling Application.Quit(). (UUM-111037)
+    - Documentation: Fixed documentation on GetPixelBilinear describing the behavior in detail. (UUM-78472)
+    - DX12: Make sure that custom scaled HDR backbuffer proxy RTV has the same format as the underlying resource. Now rendering to custom scaled HDR swapchain should not result in a crash. (UUM-129239)
+    - Editor: Added image to Documentation about Accelerator and change word in projectSettings. (UUM-128105)
+    - Editor: Added Style tag support to ATG. (UUM-129181)
+    - Editor: Ensure no indexing on startup for Secondary processes (backport 6.3). (UUM-130721)
+    - Editor: Ensure supports for exclude is correctly propagated for search window vs hierarchy. (UUM-129037)
+    - Editor: Fixed asset database is read only error by marking VFXManager as dirty so clone editors will not have to reimport it. (UUM-130734)
+    - Editor: Fixed box collider warning in Particle System HDRP Samples. (UUM-130696)
+    - Editor: Fixed choppy animations in Player Settings embedded in the Build Profiles window. (UUM-104229)
+    - Editor: Fixed color of selected item count in Query Tree. (UUM-111885)
+    - Editor: Fixed HDRP Transparent Samples Samples Showcase Inspector buttons text fit. (UUM-130678)
+    - Editor: Fixed icon size for searchpropositions dialog. (UUM-130246)
+    - Editor: Fixed ID capitalization issue. (UUM-113340)
+    - Editor: Fixed issue where Editor Terms Dialog did not have its "I accept" checkbox legible in any high contrast theme on Microsoft Windows. (UUM-130441)
+    - Editor: Fixed issue where the Windows Editor Log did not say whether we are using the arm64 Windows Editor or if we are running the x64 Editor on an arm64 device. (UUM-128981)
+    - Editor: Fixed issue where using a proxy on Windows could crash the Editor on launch. (UUM-130943)
+    - Editor: Fixed issue where using a proxy on Windows could leak memory when resolving URLs. (UUM-131268)
+    - Editor: Fixed main toolbar slider when min value is above 0. (UUM-130075)
+    - Editor: Fixed multi-material in PostProcess. (UUM-131195)
+    - Editor: Fixed overlay menu toggle state on layout changed. (UUM-129518)
+    - Editor: Fixed potential confusion between uGUI and UI Toolkit in the Create and Add Component menus. (UUM-129195)
+    - Editor: Fixed potentiel heap-buffer-overflow when applying prefabs modifications. (UUM-131207)
+    - Editor: Fixed raycasting against a capsule collider for the situation where a ray enters the capsule from the top hemisphere and exits from the boundary between the cylinder side and bottom hemisphere. The distance returned from this hit is now the closest hit (with the top hemisphere) instead of the exiting hit. (UUM-88080)
+    - Editor: Fixed Scene Asset is not attached to a Lighting Data Asset for a URP Package Sample Scene. (UUM-130512)
+    - Editor: Fixed styling of querybuilderview to not overflow. (UUM-130242)
+    - Editor: Fixed the Build Profile Build Button Dropdown to use PointerDownEvent instead of ClickEvent. (UUM-107782)
+    - Editor: Fixed water smoothness fade with SSR. (UUM-130498)
+    - Editor: Make SettingsWindow more robust. (UUM-122728)
+    - Editor: Make sure that vsync value specified in game view matches the real value with which the viewport is presented. (UUM-102574)
+    - Editor: Missing [Serializable] attribute warning is thrown when entering Play mode using Play mode Scenario. (MTTB-1777)
+    - Editor: Resolved an issue where the helpurl function was unable to locate and display help files stored within sub-folders. The system now fully supports hierarchical directory structures for documentation links.
+    - Editor: SearchPropositions are generated with equal instead of contains. (UUM-130446)
+    - Editor: Terrain trees : Fixed an issue where textures would be created for every non legacy trees, impacting memory. (UUM-12996)
+    - Editor: The "VRS - Runtime Resources" settings label in the editor Graphics settings has been slightly modified to remove an unnecessary prefix. (UUM-130167)
+    - Editor: The developer console for XR projects has been disabled due to its very small and unreadable rendering. (UUM-119794)
+    - Game Core: Fixed scroll values to be processed based on raw or normalized setting. (UUM-128305)
+    - Graphics: Fixed an issue with URP deferred screen-space decals where depth would be loaded with insufficient precision. (UUM-101887)
+    - HDRP: Fixed ClearDispatchIndirect not clearing all indirect arguments when thread count was not 64. (UUM-126235)
+    - HDRP: Fixed DLSS & FSR2 black screen after adding a custom render pass. (UUM-113720)
+    - HDRP: Fixed Screen Space Lens Flare error when using mip bias 0 setting. (UUM-129573)
+    - iOS: Fixed a case where UI buttons could register a click after returning from the app switcher if a touch was still in progress. (UUM-127293)
+    - Package Manager: Fixed issue where placeholder package entries weren't being shown for packages added by technical name. (UUM-122572)
+    - Package Manager: Improved unityRelease field validation in the UI so invalid values are rejected, preventing obscure resolve errors and package loading failures. (UUM-122599)
+    - Particles: Fixed job syncing issue where particle system update could conflict with PhysX jobs. (UUM-120720)
+    - Particles: Fixed potential crash with complex nested sub-emitter hierarchies. (UUM-117687)
+    - Particles: Prevent crash when using nested sub-emitters with the Birth spawn condition. (UUM-115382)
+    - Physics: Fixed a long standing issue with CharacterController authoring where an validation check was incorrect, in previous versions it was more complicated to hit this issue due to specific values needing to be input rather than just 0 for 'Step Offset'. (UUM-129924)
+    - Physics 2D: Added missing "contactId" getter property for "ContactHitEvent". (UUM-131384)
+    - Physics 2D: Fixed an issue where "PhysicsShape.ManifoldPoint.totalNormalImpulse" was incorrect. (UUM-131384)
+    - Physics 2D: Fixed an issue where the "PhysicsDistanceJoint" motor limit was processed before the motor itself resulting in a temporary out-of-limit condition. The motor is now processed before the motor limit constraint. (UUM-131384)
+    - Scene/Game View: Fixed issue where the rotation tool would sometimes cause excessive rotation when used after editing a script. (UUM-130229)
+    - Scene/Game View: Fixed the Camera Overlay that would break when camera name is too long. (UUM-130353)
+    - Shadergraph: Fixed a bug in UGUI Shaders Sample where Custom Toggles would not update properly when in a Toggle Group. (UUM-114439)
+    - Shadergraph: Fixed Toolbar Icons for Light Mode. (UUM-103082)
+    - Shadergraph: Fixed Toolbar Icons for Retina Display. (UUM-107865)
+    - Shaders: Fixed Prevent no keywords shader variant errors during DOTS material initialization. (UUM-107314)
+    - Shaders: Fixed shader keyword declaration override UI in shader build settings getting confused by multiple whitespaces. (UUM-129553)
+    - Shaders: Fixed the non deterministic build issue when building shader AssetBundle. (UUM-114616)
+    - Shaders: Shaders with dynamic_branch keywords and a corresponding material property are now reported as SRP Batcher compatible. (UUM-126193)
+    - SRP Core: Fixed a Frame Debugger issue where the wrong texture was displayed after selecting certain passes (e.g DrawSkybox). (UUM-122955)
+    - UI Toolkit: Fixed binding affordance is not updated when adding binding to spacing or border fields. (UUM-129460)
+    - UI Toolkit: Fixed the UI Builder context mode going into isolation if a save is triggered before hand. (UUM-128920)
+    - UI Toolkit: UI Toolkit: UI Toolkit Test Framework: Added recommendation to the docs for using the TypingText API on devices that rely on a TouchScreenKeyboard. (UUM-130790)
+    - URP: Fixed fog interfering with an active debug mode. (UUM-130032)
+    - URP: Removed unused DebugLevel field from URP asset. (UUM-129416)
+    - Version Control: Added instructions on how to disable the deep scan of local packages when a timeout occurs and the setting is enabled. (UUM-128080)
+    - Version Control: Fixed Editor freezes/hangs on "Reloading Domain" when entering Play Mode. (UUM-126026)
+    - Version Control: Fixed Project Settings window moving to background when enabling or disabling Unity VCS in the Unity Version Control Settings.
+    - Version Control: Fixed the delete shortcut not working on macOS.
+    - Version Control: Fixed the menu references to Explorer instead of Finder when running on macOS.
+    - Version Control: Fixed Version control icon disappearing when opening a scene or switching Play Mode.
+    - WebGL: WebGPU: Fix compressed texture mip levels having invalid texture data. (UUM-129015)
+    - Windows: Fixed the copy pdb's option for WindowsStandalone to copy them next to the plugin. (UUM-128204)
+    Package changes in 6000.3.4f1
+    Packages updated
+    - com.unity.collab-proxy: 2.10.2 to 2.11.2
+    - com.unity.ide.visualstudio: 2.0.25 to 2.0.26
+    - com.unity.purchasing: 4.14.0 to 4.14.2
+    - com.unity.services.vivox: 16.8.0 to 16.9.0
+    - com.unity.xr.arcore: 6.3.1 to 6.3.2
+    - com.unity.xr.arfoundation: 6.3.1 to 6.3.2
+    - com.unity.xr.arkit: 6.3.1 to 6.3.2
+    - com.unity.xr.compositionlayers: 2.2.0 to 2.3.0
+    - com.unity.xr.interaction.toolkit: 3.3.0 to 3.3.1
+    Packages added
+    - com.unity.cloud.gltfast@6.14.1
+ReleaseTime: 2026-01-14T12:54:12.1540000Z

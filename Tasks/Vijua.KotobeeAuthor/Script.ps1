@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1[-1].date.Split(',')[-1] | Get-Date -AsUTC # Strip off day of week from the date string as it may be incorrect
+      $this.CurrentState.ReleaseTime = $Object1[-1].date.Split(',')[-1] -replace '\bSept\b', 'Sep' | Get-Date -AsUTC # Strip off day of week from the date string as it may be incorrect
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')

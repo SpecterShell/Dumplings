@@ -1,0 +1,33 @@
+Version: 0.3.46
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.46/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.46/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Community Contributions
+    11 PRs reviewed, labeled, commented, and implemented from scratch following our architecture. All PR authors credited.
+    Bug Fixes
+    - #438 — IME composition guard prevents Enter from sending during CJK input (@pandego)
+    - #433 — Default User-Agent: openfang/0.3.46 on all LLM drivers — fixes 403s from Moonshot/Qwen (@ozekimasaki)
+    - #417 / #392 — Default token quota changed to unlimited (was 1M/hour, caused immediate quota errors on fresh installs) (@f-liva, @cryptonahue)
+    - #410 — Safe string slicing in channel bridge (9 instances) + desktop server shutdown race condition (@hobostay)
+    - #413 / #275 — Embedding driver respects provider_urls config + auto-selects correct model per provider (@castorinop, @woodcoal)
+    - #464 — Wizard generates proper multi-line TOML strings for system_prompt with escaping (@citadelgrad)
+    New Models & Providers
+    - #419 / #480 / #439 — Added Z.AI Coding models (glm-5-coding, glm-4.7-coding), Kimi for Code (Anthropic-compatible), fixed Moonshot base URL, added kimi-k2.5-0711 alias (@shipdocs, @skeltavik, @modship)
+    Internal
+    - XML-attribute tool call recovery (Pattern 9) for Groq/Llama models that emit <function name="..." parameters="..." />
+    - 187 models, 40+ providers, 2040+ tests, 0 clippy warnings
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.3.45...v0.3.46
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.46
+ReleaseTime: 2026-03-11T00:27:07.0000000Z

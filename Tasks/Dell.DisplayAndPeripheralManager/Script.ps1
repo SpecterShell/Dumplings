@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.dell.com/support/driver/en-us/ips/api/driverlist/packdriversbyproduct?productcode=dell-display-peripheral-manager&oscode=WT64A&lob=Software' -Headers @{
+$Object1 = Invoke-WebRequest -Uri 'https://www.dell.com/support/driver/en-us/dep/api/driverlist/packdriversbyproduct?productcode=dell-display-peripheral-manager&oscode=WT64A&lob=Software' -Headers @{
   'Accept'           = '*/*'
   'X-Requested-With' = 'XMLHttpRequest'
 }
@@ -13,13 +13,13 @@ $Object2 = $Object1.Content.ToCharArray() | ForEach-Object -Process {
   }
 } | Join-String -Separator '' | ConvertFrom-Json
 
-# Version
-$this.CurrentState.Version = [regex]::Match($Object2.DriverListData[0].DellVer, '(\d+(\.\d+)+)').Groups[1].Value
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object2.DriverListData[0].FileFrmtInfo.HttpFileLocation
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

@@ -1,0 +1,196 @@
+Version: 24.12.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v24.12.0/node-v24.12.0-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v24.12.0/node-v24.12.0-arm64.msi
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v24.12.0-win-x64/node.exe
+    PortableCommandAlias: node
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v24.12.0-win-arm64/node.exe
+    PortableCommandAlias: node
+Locale:
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v24.12.0/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/zh-cn/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v24.12.0/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/zh-cn/about/
+- Locale: en-US
+  Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v24.12.0/LICENSE
+- Locale: en-US
+  Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v24.12.0/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Notable Changes
+    - [1a00b5f68a] - (SEMVER-MINOR) http: add optimizeEmptyRequests server option (Rafael Gonzaga) #59778
+    - [ff5754077d] - (SEMVER-MINOR) lib: add options to util.deprecate (Rafael Gonzaga) #59982
+    - [8987159234] - (SEMVER-MINOR) module: mark type stripping as stable (Marco Ippolito) #60600
+    - [92c484ebf4] - (SEMVER-MINOR) node-api: add napi_create_object_with_properties (Miguel Marcondes Filho) #59953
+    - [b11bc5984e] - (SEMVER-MINOR) sqlite: allow setting defensive flag (Bart Louwers) #60217
+    - [e7da5b4b7d] - (SEMVER-MINOR) src: add watch config namespace (Marco Ippolito) #60178
+    - [a7f7d10c06] - (SEMVER-MINOR) src: add an option to make compile cache portable (Aditi) #58797
+    - [92ea669240] - (SEMVER-MINOR) src,permission: add --allow-inspector ability (Rafael Gonzaga) #59711
+    - [05d7509bd2] - (SEMVER-MINOR) v8: add cpu profile (theanarkh) #59807
+    Commits
+    - [e4a23a35ac] - benchmark: focus on import.meta intialization in import-meta benchmark (Joyee Cheung) #60603
+    - [b6114ae5c9] - benchmark: add per-suite setup option (Joyee Cheung) #60574
+    - [ac8e90af7c] - buffer: speed up concat via TypedArray#set (Gürgün Dayıoğlu) #60399
+    - [acbc8ca13e] - build: upgrade Python linter ruff, add rules ASYNC,PERF (Christian Clauss) #59984
+    - [f97a609a07] - console: optimize single-string logging (Gürgün Dayıoğlu) #60422
+    - [6cd9bdc580] - crypto: ensure documented RSA-PSS saltLength default is used (Filip Skokan) #60662
+    - [0fafe24d9b] - crypto: fix argument validation in crypto.timingSafeEqual fast path (Joyee Cheung) #60538
+    - [54421e0419] - debugger: fix event listener leak in the run command (Joyee Cheung) #60464
+    - [c361a628b4] - deps: V8: cherry-pick 72b0e27bd936 (pthier) #60732
+    - [c70f4588dd] - deps: V8: cherry-pick 6bb32bd2c194 (Erik Corry) #60732
+    - [881fe784c5] - deps: V8: cherry-pick 0dd2318b5237 (Erik Corry) #60732
+    - [457c33efcc] - deps: V8: cherry-pick df20105ccf36 (Erik Corry) #60732
+    - [0bf45a829c] - deps: V8: backport e5dbbbadcbff (Darshan Sen) #60524
+    - [4993bdc476] - deps: V8: cherry-pick 5ba9200cd046 (Juan José Arboleda) #60620
+    - [1e9abe0078] - deps: update corepack to 0.34.5 (Node.js GitHub Bot) #60842
+    - [3f704ed08f] - deps: update corepack to 0.34.4 (Node.js GitHub Bot) #60643
+    - [04e360fdb1] - deps: V8: cherry-pick 06bf293610ef, 146962dda8d2 and e0fb10b5148c (Michaël Zasso) #60713
+    - [fcbd8dbbde] - deps: patch V8 to 13.6.233.17 (Michaël Zasso) #60712
+    - [28e9433f39] - deps: V8: cherry-pick 87356585659b (Joyee Cheung) #60069
+    - [3cac85b243] - deps: V8: backport 2e4c5cf9b112 (Michaël Zasso) #60654
+    - [1daece1970] - deps: call OPENSSL_free after ANS1_STRING_to_UTF8 (Rafael Gonzaga) #60609
+    - [5f55a9c9ea] - deps: nghttp2: revert 7784fa979d0b (Antoine du Hamel) #59790
+    - [1d9e7c1f4d] - deps: update nghttp2 to 1.67.1 (nodejs-github-bot) #59790
+    - [3140415068] - deps: update simdjson to 4.1.0 (Node.js GitHub Bot) #60542
+    - [d911f9f1b8] - deps: update amaro to 1.1.5 (Node.js GitHub Bot) #60541
+    - [daaaf04a32] - deps: V8: cherry-pick 2abc61361dd4 (Richard Lau) #60177
+    - [b4f63ee5f8] - doc: update Collaborators list to reflect hybrist handle change (Antoine du Hamel) #60650
+    - [effcf7a8ab] - doc: fix link in --env-file=file section (N. Bighetti) #60563
+    - [7011736703] - doc: fix linter issues (Antoine du Hamel) #60636
+    - [5cc79d8945] - doc: add missing history entry for sqlite.md (Antoine du Hamel) #60607
+    - [bbc649057c] - doc: correct values/references for buffer.kMaxLength (René) #60305
+    - [ea7ecb517b] - doc: recommend events.once to manage 'close' event (Dan Fabulich) #60017
+    - [58bff04cc2] - doc: highlight module loading difference between import and require (Ajay A) #59815
+    - [bbcbff9b4d] - doc: add CJS code snippets in sqlite.md (Allon Murienik) #60395
+    - [f8af33d5a7] - doc: fix typo in process.unref documentation (우혁) #59698
+    - [df105dc351] - doc: add some entries to glossary.md (Mohataseem Khan) #59277
+    - [4955cb2b5b] - doc: improve agent.createConnection docs for http and https agents (JaeHo Jang) #58205
+    - [6283bb5cc9] - doc: fix pseudo code in modules.md (chirsz) #57677
+    - [d5059ea537] - doc: add missing variable in code snippet (Koushil Mankali) #55478
+    - [900de373ae] - doc: add missing word in single-executable-applications.md (Konstantin Tsabolov) #53864
+    - [5735044c8b] - doc: fix typo in http.md (Michael Solomon) #59354
+    - [2dee6df831] - doc: update devcontainer.json and add documentation (Joyee Cheung) #60472
+    - [8f2d98d7d2] - doc: add haramj as triager (Haram Jeong) #60348
+    - [bbd7fdfff4] - doc: clarify require(esm) description (dynst) #60520
+    - [33ad11a764] - doc: instantiate resolver object (Donghoon Nam) #60476
+    - [81a61274f3] - doc: correct module loading descriptions (Joyee Cheung) #60346
+    - [77911185fe] - doc: clarify --use-system-ca support status (Joyee Cheung) #60340
+    - [185f6e95d9] - doc,crypto: link keygen to supported types (Filip Skokan) #60585
+    - [772d6c6608] - doc,src,lib: clarify experimental status of Web Storage support (Antoine du Hamel) #60708
+    - [ad98e11ac2] - esm: use sync loading/resolving on non-loader-hook thread (Joyee Cheung) #60380
+    - [1a00b5f68a] - (SEMVER-MINOR) http: add optimizeEmptyRequests server option (Rafael Gonzaga) #59778
+    - [5703ce68bc] - http: replace startsWith with strict equality (btea) #59394
+    - [2b696ffad8] - http2: add diagnostics channels for client stream request body (Darshan Sen) #60480
+    - [dbdf4cb5a5] - inspector: inspect HTTP response body (Chengzhong Wu) #60572
+    - [9dc9a7d33d] - inspector: support inspecting HTTP/2 request and response bodies (Darshan Sen) #60483
+    - [89fa2befe4] - inspector: fix crash when receiving non json message (Shima Ryuhei) #60388
+    - [ff5754077d] - (SEMVER-MINOR) lib: add options to util.deprecate (Rafael Gonzaga) #59982
+    - [33baaf42c8] - lib: replace global SharedArrayBuffer constructor with bound method (Renegade334) #60497
+    - [b047586a08] - meta: bump actions/download-artifact from 5.0.0 to 6.0.0 (dependabot[bot]) #60532
+    - [64192176d7] - meta: bump actions/upload-artifact from 4.6.2 to 5.0.0 (dependabot[bot]) #60531
+    - [af6d4a6b9b] - meta: bump github/codeql-action from 3.30.5 to 4.31.2 (dependabot[bot]) #60533
+    - [c17276fd24] - meta: bump actions/setup-node from 5.0.0 to 6.0.0 (dependabot[bot]) #60529
+    - [6e8b52a7dc] - meta: bump actions/stale from 10.0.0 to 10.1.0 (dependabot[bot]) #60528
+    - [a12658595b] - meta: call create-release-post.yml post release (Aviv Keller) #60366
+    - [8987159234] - (SEMVER-MINOR) module: mark type stripping as stable (Marco Ippolito) #60600
+    - [36da413663] - module: fix directory option in the enableCompileCache() API (Joyee Cheung) #59931
+    - [92c484ebf4] - (SEMVER-MINOR) node-api: add napi_create_object_with_properties (Miguel Marcondes Filho) #59953
+    - [545162b0d4] - node-api: use local files for instanceof test (Vladimir Morozov) #60190
+    - [526c011d89] - perf_hooks: fix stack overflow error (Antoine du Hamel) #60084
+    - [1de0476939] - perf_hooks: move non-standard performance properties to perf_hooks (Chengzhong Wu) #60370
+    - [07ec1239ef] - repl: fix pasting after moving the cursor to the left (Ruben Bridgewater) #60470
+    - [b11bc5984e] - (SEMVER-MINOR) sqlite: allow setting defensive flag (Bart Louwers) #60217
+    - [273c9661fd] - sqlite,doc: fix StatementSync section (Edy Silva) #60474
+    - [d92ec21a4c] - src: use CP_UTF8 for wide file names on win32 (Fedor Indutny) #60575
+    - [baef0468ed] - src: move Node-API version detection to where it is used (Anna Henningsen) #60512
+    - [e7da5b4b7d] - (SEMVER-MINOR) src: add watch config namespace (Marco Ippolito) #60178
+    - [a7f7d10c06] - (SEMVER-MINOR) src: add an option to make compile cache portable (Aditi) #58797
+    - [566add0b19] - src: avoid C strings in more C++ exception throws (Anna Henningsen) #60592
+    - [9b796347c1] - src: add internal binding for constructing SharedArrayBuffers (Renegade334) #60497
+    - [3b01cbb411] - src: move napi_addon_register_func to node_api_types.h (Anna Henningsen) #60512
+    - [02fb7f4ecb] - src: remove unconditional NAPI_EXPERIMENTAL in node.h (Chengzhong Wu) #60345
+    - [bd09ae24e4] - src: clean up generic counter implementation (Anna Henningsen) #60447
+    - [cd6bf51dbd] - src: add enum handle for ToStringHelper + formatting (Burkov Egor) #56829
+    - [92ea669240] - (SEMVER-MINOR) src,permission: add --allow-inspector ability (Rafael Gonzaga) #59711
+    - [ac3dbe48f7] - stream: don't try to read more if reading (Robert Nagy) #60454
+    - [790288a93b] - test: ensure assertions are reachable in test/internet (Antoine du Hamel) #60513
+    - [0a85132989] - test: fix status when compiled without inspector (Antoine du Hamel) #60289
+    - [2f57673172] - test: deflake test-perf-hooks-timerify-histogram-sync (Joyee Cheung) #60639
+    - [09726269de] - test: apply a delay to watch-mode-kill-signal tests (Joyee Cheung) #60610
+    - [45537b9562] - test: async iife in repl (Tony Gorez) #44878
+    - [4ca81f101d] - test: parallelize sea tests when there's enough disk space (Joyee Cheung) #60604
+    - [ea71e96191] - test: only show overridden env in child process failures (Joyee Cheung) #60556
+    - [06b2e348c7] - test: ensure assertions are reached on more tests (Antoine du Hamel) #60498
+    - [de9c8cb670] - test: ensure assertions are reachable in test/es-module (Antoine du Hamel) #60501
+    - [75bc40fced] - test: ensure assertions are reached on more tests (Antoine du Hamel) #60485
+    - [1a6084cfd3] - test: ensure assertions are reached on more tests (Antoine du Hamel) #60500
+    - [2c651c90cf] - test: split test-perf-hooks-timerify (Joyee Cheung) #60568
+    - [6e8b5f7345] - test: add more logs to test-esm-loader-hooks-inspect-wait (Joyee Cheung) #60466
+    - [9dea7ffa30] - test: mark stringbytes-external-exceed-max tests as flaky on AIX (Joyee Cheung) #60565
+    - [0b3c3b710a] - test: split test-esm-wasm.js (Joyee Cheung) #60491
+    - [a15b795b34] - test: correct conditional secure heap flags test (Shelley Vohr) #60385
+    - [38b77b3a44] - test: fix flaky test-watch-mode-kill-signal-* (Joyee Cheung) #60443
+    - [e8d7598057] - test: capture stack trace in debugger timeout errors (Joyee Cheung) #60457
+    - [674befeb81] - test: ensure assertions are reachable in test/sequential (Antoine du Hamel) #60412
+    - [952c08a735] - test: ensure assertions are reachable in more folders (Antoine du Hamel) #60411
+    - [bbca57584b] - test: split test-runner-watch-mode (Joyee Cheung) #60391
+    - [e78e0cf6e7] - test: move test-runner-watch-mode helper into common (Joyee Cheung) #60391
+    - [84576ef021] - test: ensure assertions are reachable in test/addons (Antoine du Hamel) #60142
+    - [1659078c11] - test: ignore EPIPE errors in https proxy invalid URL test (Joyee Cheung) #60269
+    - [79ffee80ec] - test: ensure assertions are reachable in test/client-proxy (Antoine du Hamel) #60175
+    - [e5a812243a] - test: ensure assertions are reachable in test/async-hooks (Antoine du Hamel) #60150
+    - [e924fd72e3] - test,crypto: handle a few more BoringSSL tests (Shelley Vohr) #59030
+    - [a55ac11611] - test,crypto: update x448 and ed448 expectation when on boringssl (Shelley Vohr) #60387
+    - [55d5e9ec73] - tls: fix leak on invalid protocol method (Shelley Vohr) #60427
+    - [5763c96e7c] - tools: replace invalid expression in dependabot config (Riddhi) #60649
+    - [b6e21b47d7] - tools: skip unaffected GHA jobs for changes in test/internet (Antoine du Hamel) #60517
+    - [999664c76d] - tools: do not use short hashes for deps versioning to avoid collision (Antoine du Hamel) #60407
+    - [ada856d0fb] - tools: only add test reporter args when node:test is used (Joyee Cheung) #60551
+    - [1812c56bb3] - tools: fix update-icu script (Michaël Zasso) #60521
+    - [747040438a] - tools: fix linter for semver-major release proposals (Antoine du Hamel) #60481
+    - [f170551e40] - tools: fix failing release-proposal linter for LTS transitions (Antoine du Hamel) #60465
+    - [2db4ea0ce4] - tools: remove undici from daily wpt.fyi job (Filip Skokan) #60444
+    - [2a85aa4e7b] - tools: add lint rule to ensure assertions are reached (Antoine du Hamel) #60125
+    - [48299ef5fb] - tools,doc: update JavaScript primitive types to match MDN Web Docs (JustApple) #60581
+    - [7ec04cf936] - util: fix stylize of special properties in inspect (Ge Gao) #60479
+    - [05d7509bd2] - (SEMVER-MINOR) v8: add cpu profile (theanarkh) #59807
+    - [884fe884a1] - vm: hint module identifier in instantiate errors (Chengzhong Wu) #60199
+    - [a2caf19f70] - watch: fix interaction with multiple env files (Marco Ippolito) #60605
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v24.12.0
+ReleaseTime: 2025-12-10

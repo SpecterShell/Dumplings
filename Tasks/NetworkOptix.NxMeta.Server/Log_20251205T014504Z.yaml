@@ -1,0 +1,500 @@
+Version: 6.1.0.42176
+Installer:
+- Architecture: x64
+  InstallerUrl: https://updates.networkoptix.com/default/42176/windows/nxwitness-server-6.1.0.42176-windows_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://nxvms.com/downloads/6.1.0.42176
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Nx Meta VMS 6.0.6 to 6.1 Release Notes
+    Nx Meta VMS 6.1.0.42078 R7
+    R7 release of Nx Meta VMS for the VMS 6.1.0.
+    For Server Plugin SDK usage instructions, see the readme.md file included within the metavms-server_plugin_sdk-6.1.0.42078-universal-beta.zip archive.
+    ATTENTION: These Release Notes show changes relative to Nx Meta VMS 6.0.6.41818 R1.
+    NEW FEATURES
+    Server HTTP API
+    - Introduced the new version of the CRUD API - v4 (/rest/v4), which in most cases duplicates and extends /rest/v3. It is recommended to use /rest/v4 only, unless you need to support 6.0 Systems, because /rest/v3 may be removed in some future version. Please note that some /rest/v3 functions are incompatible with their /rest/v4 counterparts. Below is a list of new or newly stabilized sections in the API, comparing /rest/v4 against /rest/v3 of MetaVMS 6.1 R1. See the respective chapters in the API documentation for more information.
+      - Analytics API: /rest/v4/analytics
+      - Cloud API (moved from /rest/v3/system/cloud): /rest/v4/cloud
+      - Bookmarks new functionality:
+        - /rest/v4/devices/*/bookmarks/media
+        - /rest/v4/devices/*/bookmarks/io
+      - Events API (moved from /rest/v3/servers/{serverId}/events and extended): /rest/v4/events.
+        New functions:
+        - /rest/v4/events/acknowledges
+        - /rest/v4/events/generic (replaces /rest/v4/events/create)
+        - /rest/v4/events/triggers (replaces /rest/v4/events/create)
+        - /rest/v4/events/log
+        - /rest/v4/events/manifest
+        - /rest/v4/events/rules
+      - Metrics API (moved from /rest/v3/system/metrics): /rest/v4/metrics
+      - Update API (newly stabilized): /rest/v4/update
+      - Integrations API: /rest/v4/integrations and /rest/v4/integrations/{id}
+    Analytics API
+    - Introduced a new mechanism which allows third-party software to connect to a VMS Server and provide the capability equivalent to that of an Analytics Plugin. For information on Analytics Plugins, see the newly introduced combined Server Plugin SDK (the successor of the phased out Metadata SDK). See description of the new Analytics API in the respective chapter of the API documentation.
+    - This mechanism consists of two main parts:
+      - A set of dedicated HTTP REST (CRUD) API functions described in the API documentation among other functions.
+      - A set of WebSocket requests which go from the Server to the Integration. They use the JSON-RPC mechanism described in the JSON-RPC chapter of the API documentation, and are documented in the ANALYTICS API CALLBACKS section in the function tree.
+      - NOTE: When an Integration becomes approved a new parameter integrationId is added to the parameters field in the structure returned from /rest/v4/users/{userId}.
+    Analytics Taxonomy Descriptors
+    - Enhanced analytics capabilities with new taxonomy descriptor endpoints:
+      - Added /rest/v{3-4}/servers/*/analyticsTaxonomyDescriptors for retrieving analytics taxonomy information across all servers.
+      - Added /rest/v{3-4}/servers/{id}/analyticsTaxonomyDescriptors for server-specific analytics taxonomy data.
+      - Improved analytics metadata structure and classification support.
+    Analytics Engine
+    - Added manifest retrieval endpoints for analytics device agents:
+      - GET /rest/v4/analytics/engines/{engineId}/deviceAgents/{deviceId}/manifest
+      - GET /rest/v4/analytics/engines/*/deviceAgents/{deviceId}/manifest
+      - POST /rest/v4/analytics/engines/{engineId}/deviceAgents/{deviceId}/manifest for manifest submission.
+      - Added support for stateful events in analytics API via /rest/v4/analytics/engines.
+      - Added 'Profile Changed' event type to /rest/v3/analytics/engines and /rest/v4/analytics/engines endpoints.
+    Analytics Integration Improvements
+    - Enhanced analytics integration endpoints with better request management:
+      - Improved /rest/v4/analytics/integrations/*/requests with enhanced request lifecycle management.
+      - Added better error handling and validation for analytics integration requests.
+      - Enhanced request tracking with improved status monitoring in /rest/v4/analytics/integrations/*/requests/{requestId} endpoints.
+    Analytics Improvements
+    - Enhanced the /rest/v4/analytics/engines/{engineId}/deviceAgents/{deviceId}/settings endpoint for more granular configuration of analytics engine device agents:
+      - Improved parameter structure for fine-tuned analytics configuration.
+      - Added support for device-specific analytics settings customization.
+    - Added improved metadata processing capabilities via dedicated endpoints:
+      - /rest/v4/analytics/engines/{id}/deviceAgents/{deviceId}/metadata/bestShot for best shot image management.
+      - /rest/v4/analytics/engines/{id}/deviceAgents/{deviceId}/metadata/event for analytics event processing.
+      - /rest/v4/analytics/engines/{id}/deviceAgents/{deviceId}/metadata/object for detected object metadata.
+      - /rest/v4/analytics/engines/{id}/deviceAgents/{deviceId}/metadata/title for title text management.
+    - Optimized the /rest/v4/analytics/objectTracks endpoint with standardized bounding box format:
+      - Updated the boundingBox parameter format to use string representation: "0.23905,0.283333,0.15625x0.277777".
+    - Enhanced /rest/v4/analytics/objectTracks endpoint with improved metadata:
+      - Enhanced bounding box handling for more accurate object tracking.
+      - Added missing isImageAvailable field - see REST API BREAKING CHANGES.
+      - Removed _orderBy parameter for better query optimization.
+      - Fixed .limit parameter implementation for proper result limiting.
+      - Fixed .title field handling for more accurate search results.
+      - Reorganized parameter order in /rest/v4/analytics/objectTracks/{id}/bestShotImage.{format} for consistency.
+    PTZ Controls
+    - Enhanced /rest/v{3-4}/devices/*/virtual functions with detailed PTZ capabilities including:
+      - Improved pan-tilt sensitivity controls with separate parameters for pan and tilt.
+      - Enhanced PTZ preset type management.
+      - Additional PTZ capabilities flags for continuous pan/tilt operations.
+      - User-modifiable and user-added PTZ capabilities management.
+      - Enhanced PTZ control in /rest/v{3-4}/devices/{id}/virtual with progress tracking in status responses.
+      - Improved /rest/v{3-4}/devices/{id}/virtual/status endpoint with more detailed state information.
+      - Added extensive bitrate control parameters in /rest/v{3-4}/devices/{id}/virtual/patch with encoder-specific settings for primary/secondary streams.
+      - Added comprehensive I/O port configuration in /rest/v{3-4}/devices/{id}/virtual/prepare with circuit state management (open_circuit/grounded_circuit).
+      - Added motion stream selection capabilities with primary/secondary stream options in /rest/v{3-4}/devices/*/virtual/post.
+      - Enhanced resource management with improved locking via /rest/v{3-4}/devices/{id}/virtual/lock endpoint.
+    - Enhanced /rest/v{3-4}/devices/{deviceId}/ptz* endpoints with improved functionality:
+      - Removed redundant api enum field from PTZ limits endpoint.
+      - Fixed PtzPositionFilter API with proper field handling in REST endpoints.
+      - Enhanced position querying with more consistent validation in public API.
+      - Added PTZ capabilities flags for continuous operations in device endpoints.
+    Enhanced Authentication
+    - Strengthened /rest/v{3-4}/login/sessions/{token} endpoint with improved security:
+      - Added consistent sessionTruncated error ID in all unauthorized responses.
+      - Enhanced JWT validation for cloud connectivity.
+      - Limited token acceptance to exact system scope (cloudSystemId=<SYS_ID>) - see REST API BREAKING CHANGES.
+      - Added audit logging for all Cloud Session authentication attempts.
+    User and Group Management
+    - Refined /rest/v{3-4}/users and /rest/v{3-4}/userGroups endpoints with better permission handling:
+      - Ensured consistent access and data loading for users with custom group memberships in cross-system scenarios.
+      - Enhanced the representation of organization user roles by introducing orgRoleIds to distinguish cloud-defined roles from local system roles, providing a clearer permission model, particularly for system sharing scenarios.
+    I/O Port Management
+    - Enhanced I/O port control endpoints with better functionality:
+      - Added improved circuit state handling in /rest/v{3-4}/devices/{id}/ioPort with validated state options.
+      - Enhanced input/output port state monitoring through /rest/v{3-4}/devices/{id}/ioPort/{portId} endpoints.
+      - Fixed device-specific port state issues for Arecont and Adam devices in /rest/v{3-4}/devices/{id}/ioPort/status.
+      - Added validation for port state changes in /rest/v{3-4}/devices/{id}/ioPort/{portId}/command.
+    Event Management Enhancements
+    - Added new /rest/v4/events/create endpoint for event creation:
+      - Supports instant, started, and stopped event states.
+      - Removes complexity of soft trigger-specific fields from the previous /rest/v4/events/generic
+        approach.
+      - Enhanced error handling with proper validation for event parameters.
+    Secure Cookie Storage
+    - Introduced new secure cookie storage endpoints for enhanced client-side data management:
+      - Added /rest/v4/secureCookieStorage for listing all stored secure cookies.
+      - Added /rest/v4/secureCookieStorage/{name} for retrieving and updating specific secure cookie
+        values.
+      - Provides secure storage mechanism for client applications with proper access controls.
+    Database Backup Management
+    - Added comprehensive database backup download functionality:
+      - New /rest/v{3-4}/servers/{id}/dbBackups/{filename}/download endpoint for secure backup file retrieval.
+      - Enhanced backup management with proper access controls and validation.
+      - Improved backup file handling with streaming download support.
+    Object Tracking Enhancements
+    - Refined object tracking capabilities in analytics endpoints:
+      - Enhanced /rest/v4/analytics/objectTracks with improved metadata handling and better performance.
+      - Fixed object track cache timeout configuration reading from server config.
+      - Improved object tracking data consistency and reliability.
+    Site Management and Setup
+    - Enhanced /rest/v4/site/settings endpoint with expanded configuration options:
+      - Added support for detailed site-wide settings including security, network, and storage parameters.
+      - Improved structure for email settings, backup configuration, and client update management.
+    - Refined /rest/v4/site/setup endpoint with comprehensive configuration capabilities:
+      - Added settingsPreset parameter with options for "compatibility" and "recommended" configurations.
+      - Structured setup options into distinct cloud and local sections for different deployment types.
+      - Enhanced security parameter handling with granular encryption and authentication controls.
+    - GET /rest/v4/site/settings and GET /rest/v4/site/setup introduced new query parameter remoteSessionUpdateKeysS.
+    - Added DELETE /rest/v{3-4}/site/merge to cancel an in-progress site merge.
+    Recording Statistics and Storage Forecast
+    - Improved /rest/v{2-}/servers/*/recordingStatistics and /rest/v{2-}/servers/*/storageForecast endpoints with enhanced data modeling:
+      - Restructured forecasting with new fields: forecastB (forecast size in bytes) replacing previous size calculations and forecastS (forecast duration in seconds) replacing archiveDurationForecastS.
+      - Renamed averageBitrate → averageBps for consistency and added new averageDensityBps field for more precise stream density analysis.
+      - Updated _orderBy parameter options to match the new field names.
+    WebRTC Streaming Enhancements
+    - Improved /rest/v{3-4}/devices/{id}/webrtc endpoint for better streaming performance:
+      - Added support for analytics metadata delivery over WebRTC data channel.
+      - Implemented detection of low bitrate channels with adaptive queue management.
+      - Added parameter to configure datachannel reliability for reduced latency.
+      - Added support for MPEGTS format in MSE delivery method.
+      - Improved data transmission to prevent network traffic pauses.
+      - Fixed SDP Transport announcement when SRTP is used.
+      - Fixed position seeking in proxied WebRTC streams.
+    Reliability Improvements
+    - Enhanced API endpoint stability under concurrent load:
+      - Added timeout mechanism in command processing to prevent blocking in high-load scenarios.
+      - Improved error reporting consistency in system settings endpoints.
+      - Enhanced cloud connection token refresh operations for better reliability.
+      - Fixed connection state handling in device management endpoints.
+    API Communication
+    - Improved HTTP API communication reliability:
+      - Implemented transport header support for Server JSON message bus.
+      - Added LZ77 sliding window compression for Websocket text messages for better performance.
+      - Enhanced error reporting in REST API responses.
+    Device Management Enhancements
+    - Expanded device virtual interfaces in /rest/v{3-}/devices/{id}/virtual endpoints with additional capabilities:
+      - Enhanced PTZ control with separate pan and tilt sensitivity parameters.
+      - Added detailed device status reporting with expanded status enum values.
+      - Improved capabilities flags for continuous pan/tilt operations.
+    - Refined bookmark tagging functionality in /rest/v{1-}/devices/*/bookmarks/*/tags endpoints:
+      - Restructured response format for better tag organization and retrieval.
+      - Improved parameter handling for more precise tag management.
+    Server Administration
+    - Added granular control for server log verbosity levels via /rest/v{2-}/servers/*/logSettings endpoint:
+      - Added component-specific logging options for targeted debugging.
+      - Enhanced parameter structure for more precise log level management.
+    - Restructured server scripts management in the /rest/v{3-}/servers/{id}/scripts endpoint:
+      - Added script type classification for better organization.
+      - Improved execution status tracking with detailed state reporting.
+    - Expanded storage purge functionality in /rest/v{1-}/servers/{id}/storages/*/purge endpoints:
+      - Added new purge options for selective data removal.
+      - Enhanced status monitoring with detailed progress reporting.
+    Device Media Streaming
+    - In the media function (/rest/v{3-4}/devices/{id}/media), the stream parameter's enum values have been refined to include only "primary" and "secondary" options, removing the "undefined" value.
+    HTTP Audio Support
+    - Updated /api/http_audio endpoint with improved functionality for audio streaming and processing.
+    - Enhanced /api/http_audio endpoint with upgraded functionality:
+      - Refined protocol handling for more reliable two-way audio communication.
+      - Optimized audio packet transmission with better error recovery.
+      - Added delayed socket removal after audio transmission to improve connection stability.
+      - Fixed two-way audio for Windows platforms with direct API implementation.
+    - Added new function /rest/v{3-}/devices/{id}/resourceData.
+    - Added new function /rest/v4/servers/{serverId}/storages/*/check.
+    - Added new functions /rest/v4/site/resources and /rest/v4/site/resources/{id}.
+    - Functions /rest/v{1-}/webPages and /rest/v{1-}/webPages/{id} now accept the optional parentId parameter, which denotes the id of the Server through which the page should be proxied.
+    - The function /rest/v{2-}/devices/{id}/image now accepts _auto for the format parameter.
+    - The functions /rest/v{2-3}/system/databaseData and /rest/v4/site/databaseData accept a new optional parameter orgGroupIds.
+    - The response of the function /rest/v{3-}/ldap/authenticate contains new field messageFilter in its settings structure.
+    - The response of function /rest/v{3-}/ldap/settings contains new optional field defaultUserLocale.
+    - The function /rest/v{3-}/ldap/test now accepts new optional parameter defaultUserLocale in its request body.
+    - Functions /rest/v3/system/cloud/saas and /rest/v4/site/cloud/saas return new tierUsages and tiersOveruse structures in their responses.
+    - Functions /rest/v{1-3}/system/info, and /rest/v4/site/info accept new optional parameter pendingServerCount.
+    - Functions /rest/v{1-3}/system/info and /rest/v4/site/info accept new optional parameter fetchPendingServersInfo. pendingServerCount may be returned in the response. /rest/v{1-3}/system/other and /rest/v4/site/other may return a matching field in their responses.
+    - In the functions /rest/v{1-}/servers and /rest/v{1-}/servers/{id}, the response may contain a new field portForwardingConfigurations.
+    - The functions /rest/v{1-}/users and /rest/v{1-}/users/{id} return a new field locale in their responses.
+    - In the function /rest/v3/devices/*/bookmarks, added a new optional query parameter shareFilter. The response may contain a new share field when this new parameter is specified.
+    - In the response of the function POST /rest/v3/ldap/authenticate, new fields locale and settings were added. The permissions enumeration may take a new viewUnredactedVideo value.
+    - The response of the functions /rest/v{2-}/servers/*/runtimeInfo and /rest/v{2-}/servers/{id}/runtimeInfo now has a new UUID field parentServerId.
+    - Added a new function /rest/v{3-}/devices/{deviceId}/ptz/limits to retrieve the Device PTZ limitations.
+    Server Plugin SDK
+    - ATTENTION: The SDKs were re-organized: the four separate SDKs were merged into one: Server Plugin SDK. For more information see readme.md from metavms-server_plugin_sdk-6.1.0.39707-universal-beta.zip.
+    - ATTENTION: Renamed the term Plugin to Integration in contexts where it refers to a C++ object implementing the SDK interface IPlugin. Usages with this meaning are now referred to as Integrations (e.g. IPlugin becomes IIntegration; i_plugin.h becomes i_integration.h, etc.). In contexts where the term Plugin refers to a dynamic library loaded by the server at runtime, we will keep using the word Plugin.
+    - The SDK now supports mixing Integration types in a single dynamic library, including the old SDK Integrations (Video Source and Storage). See the doxygen documentation for struct MultiEntryPoint in nx/sdk/i_integration.h for more information.
+    Utility Provider API
+    - Introduced cloud token subscription and reorganized utility provider interfaces:
+      - New nx::sdk::ICloudTokenSubscriber and IUtilityProvider::subscribeForCloudTokenUpdate().
+      - IUtilityProvider::cloudToken() available at the primary interface level.
+      - IUtilityProvider3 provides cloudSystemId() and cloudAuthKey().
+    - Enhanced cloud storage capabilities for plugin developers:
+      - Improved cloud connection handling with better error recovery mechanisms.
+      - Added clearer error diagnostic messages for storage-related issues.
+      - Enhanced token authentication mechanism for more reliable cloud operations.
+      - Optimized resource cleanup during plugin shutdown.
+    Analytics Plugin Framework Enhancements
+    - Enhanced the analytics plugin framework with improved state management:
+      - Added support for stateful events in ONVIF analytics integrations.
+      - Updated event lifecycle management with automatic stop event generation.
+      - Expanded device agent metadata processing capabilities.
+      - Added support for 640x640 resolution streams for analytics processing.
+    - Enhanced analytics plugin capabilities with improved event handling:
+      - Added support for stateful analytics events with automatic lifecycle management.
+      - Improved device agent manifest processing with better metadata support.
+      - Enhanced analytics engine integration with more flexible configuration options.
+    Test Event Functionality
+    - Added ability to send test events for plugin development and debugging:
+      - Provides developers with testing capabilities for event-based plugins.
+      - Enhanced debugging support for analytics and event-driven plugin development.
+      - Improved plugin validation and testing workflows.
+    Settings Model Enhancements
+    - Added a new "Label" settings type, allowing plugins to display static text, including support for hyperlinks within the label.
+    - Enhanced figure-based settings types (PolygonFigure, BoxFigure, LineFigure) with a new optional useDisplayOnCamera boolean field (defaults to true). This field controls the visibility of the "Display on camera" checkbox in the UI for these figures.
+    - SDK, common part:
+      - nx::kit::IniConfig and nx::kit::OutputRedirector now work on iOS and Android platforms. The .ini files and files for redirected stdout/stderr now reside in the application directory.
+      - A new Setting type MultiSelectionComboBox was added.
+      - A flag useLabelField was added to the ROI Settings of types BoxFigure, PolygonFigure, and LineFigure.
+    - SDK, Analytics:
+      - New Object Track properties - Title and Title Image - were added. A new interface nx::sdk::analytics::IObjectTrackTitlePacket was added to provide information about Title; nx::sdk::analytics::IObjectTrackInfo interface was extended to support Title.
+        - A helper class nx::sdk::analytics::ObjectTrackBestShotPacket and Stub Analytics Plugin were updated to support the new Object Track properties.
+        - A new helper class ObjectTrackTitlePacket was introduced.
+      - A new flag isLicenseRequired was added to a Plugin manifest. If its value is true, the plugin will work only if the corresponding license is activated in the Server. This feature is demonstrated in the Stub Analytics Plugin, Engine "Object Detection" via a new dedicated option in stub_analytics_plugin_object_detection_ini.h.
+    Client JS API
+    - The Client JS API was officially released. This API allows Integrations to communicate with the Client using JavaScript. The current version has a stable status and is production-ready. The documentation is available through the context menu of the Integration Layout Item.
+    - Added vms.tabs object, which allows to work with multiple tabs and opening Layout Resources.
+    - Supported working with cross-site resources - other cloud systems available to the current user.
+    - Added setMaximizedItem() method to tab objects, which allows to maximize an item in layout.
+    - Added vms.openUrlExternally() method, which opens a provided URL in an external browser.
+    - Fixed access permissions for vms.resources.setParameter() method.
+    - Enhanced user management capabilities with improved search functionality:
+      - Added ability to find users by name for better user discovery.
+      - Improved user search performance and accuracy.
+    IMPROVEMENTS
+    Server Deployment
+    - Added deployment code and QR code generation capabilities for easier server setup and identification.
+    - Introduced a complete site setup workflow via a single API call with options for both cloud and local server configurations.
+    - Expanded server database data management in /rest/v{2-}/site/databaseData endpoints with additional export formats and selective data retrieval options.
+    - Redesigned backup position management in /rest/v{1-}/servers/{serverId}/backupPositions/{deviceId} endpoints with more precise timestamp control and multi-device synchronization capabilities.
+    Cloud Integration
+    - Enhanced cloud connectivity via the cloud-related endpoints:
+      - Added better error handling in /rest/v{3-4}/cloudConnection for connection issues.
+      - Improved token management in /rest/v{3-4}/login/sessions for more reliable authentication.
+      - Fixed system behavior when suspended or shut down in /rest/v{3-4}/backupSettings endpoints.
+    - Enhanced cloud connectivity and management:
+      - Improved cloud storage data handling with better cleanup mechanisms.
+      - Enhanced cloud storage metrics and monitoring capabilities.
+      - Better error handling and logging for cloud-related operations in /rest/v{3-4}/cloudConnection and related endpoints.
+    Performance Optimization
+    - Improved server performance through API enhancements:
+      - Optimized /rest/v{3-4}/devices connection handling with reduced memory usage.
+      - Improved websocket communication with LZ77 compression for better performance.
+      - Enhanced /rest/v{3-4}/audit record handling for export operations.
+    - Enhanced server performance under high load conditions:
+      - Optimized syscall usage for VMS server under load scenarios.
+      - Improved connection handling and resource management.
+      - Enhanced memory usage optimization for better scalability.
+    Security Enhancements
+    - Strengthened security measures in access-related endpoints:
+      - Restricted /rest/v{3-4}/emailSettings visibility to users with power rights only.
+      - Limited /rest/v{3-4}/storedFiles modification to power users.
+      - Protected /rest/v{3-4}/portForwardingConfigurations from non-power users.
+      - Restricted server connection controls to power users in the API.
+      - Enhanced session validation in /rest/v{3-4}/login/sessions with stricter token scope requirements.
+      - Improved permissions checking in /rest/v{3-4}/permissions for administrative functions.
+      - Updated secure storage handling in /rest/v{3-4}/secureSettings for sensitive configuration values.
+    Device Management
+    - Enhanced device compatibility and support:
+      - Added support for new camera models including Axis P3747PLVE, Sunell SN-TPC2553DRT-F*, and HIKVISION DS-2TD4228* as multisensor devices.
+      - Fixed PTZ camera keyboard shortcuts for video rewind functionality - resolved issue where PTZ mode remained active after being disabled, preventing proper archive navigation.
+      - Improved Hanwha PTZ controller stability by removing mutable keyword from preset manager.
+      - Added Dahua PTZ3E10X* camera series to multisensor device classification.
+      - Enhanced I/O port compatibility with third-party devices.
+    Authentication
+    - POST /rest/v{1-4}/login/sessions: added optional setSession request property (alongside setCookie).
+    Device Media and WebRTC
+    - GET /rest/v{3-4}/devices/{id}/webrtc: added optional query parameter videoCodec.
+    - GET /rest/v{3-4}/devices/{id}/media: added optional query parameter videoCodec.
+    - GET /rest/v4/devices/*/bookmarks/{bookmarkId}/media and GET /rest/v{4}/devices/*/bookmarks/{bookmarkId}/media.{format}: added optional query parameter videoCodec.
+    - GET /rest/v{3-4}/devices/{id}/media.{format}: added optional query parameter videoCodec.
+    Server Logs
+    - GET /rest/v{3-4}/servers/{id}/logArchive:
+      - Added lastN query parameter.
+      - rotated deprecated in v3 and removed in v4.
+    Cloud and Site SaaS Model
+    - GET /rest/v3/site/cloud/saas and GET /rest/v4/cloud/saas: response models updated and streamlined (see REST API BREAKING CHANGES).
+    Analytics Integrations
+    - /rest/v4/analytics/integrations/*/requests family (GET/POST/GET-by-id/PATCH/PUT): extended schemas for engine and device agent manifests, types, and capabilities.
+    Backup Positions
+    - /rest/v4/servers/{serverId}/backupPositions (GET/PUT) and /rest/v4/servers/{serverId}/backupPositions/{deviceId} (GET/PUT): expanded ordering fields and response structure; see REST API BREAKING CHANGES.
+    WebRTC and Streaming
+    - Improved streaming reliability and performance:
+      - Fixed WebRTC streaming crashes with interleaved audio.
+      - Enhanced HLS playback functionality.
+      - Better handling of audio timestamps during media export.
+    Server API documentation
+    - Functions returning Footage:
+      - In the function GET /rest/v{1-}/devices/*/footage, added new optional parameters id, quality, motion, analytics.
+      - In the function GET /rest/v{1-}/devices/{id}/footage, added new optional parameters quality, motion, analytics.
+      - The function /rest/v{1-}/devices/{id}/footage now takes quality and includeCloudData as optional query parameters.
+    - In the function /rest/v{1-}/login/sessions, added a new optional query parameter durationS.
+    - In the responses of the functions /rest/v{1-}/servers, /rest/v{1-}/servers/{id}, and /rest/v{2-}/system/databaseData, the value SF_NewSystem as a possible Server Flag was removed, and SF_Docker was added.
+    - In response of the function /rest/v{2-}/system/databaseData, the permissions enumeration of the User Information Object may include a new value viewUnredactedVideo. The same object includes a new field locale.
+    - In response of the functions /rest/v3/userGroups/{id}/permissions and /rest/v3/users/{id}, the permissions enumeration of the User Information Object may include a new value viewUnredactedVideo.
+    - The functions /rest/v{1-}/system/info and /rest/v{1-}/system/other return a new field edgeServerCount in their responses.
+    - The settings field in the request body of POST /rest/v{1-}/system/setup is no longer required.
+    - In the response of the function /rest/v{2-}/devices/*/searches/{id}, the target field may take url as a value.
+    - In the functions /rest/v3/devices/{id}/media, /rest/v3/devices/{id}/media.{format}, and /rest/v3/devices/{id}/webrtc, added a new optional query parameter aspectRatio.
+    SDK
+    - SDK helpers:
+      - Improved performance of nx::sdk::StringMap lookup by index.
+      - Added functions nx::kit::utils::getPathToExecutable() and nx::kit::utils::wideCharToStdString().
+      - Introduced new function nx::kit::utils::stringContains().
+    - SDK, Cloud Storage:
+      - SDK Time serialization format was updated. The following changes were introduced:
+        - Class nx::sdk::cloud_storage::TimePeriodList now is not an alias to std::vector<TimePeriod> but rather a custom class.
+        - The default value of nx::sdk::cloud_storage::MotionFilter::order is now nx::sdk::cloud_storage::SortOrder::ascending instead of nx::sdk::cloud_storage::SortOrder::descending.
+    - Updated sample implementations in cloud storage plugins to demonstrate the new functionality.
+    - Modified the IDeviceAgent::createStreamReader method to accept a bucket URL parameter.
+    - Added cloudSystemId() function to IUtilityProvider.
+    - Stub analytics Plugin, Engine "Settings":
+      - Added an example of producing a modified Engine Settings Model on applying the Settings; activated via a new option showExtraCheckBox in stub_analytics_plugin_settings_ini.h.
+    - Stub analytics Plugin, Engine "Object Streamer":
+      - Fixed an occasional crash when applying Settings.
+    Development Tools
+    - Enhanced plugin development experience:
+      - Added test event dialog improvements with new delegates for seconds, double, and resource list types.
+      - Enhanced debugging support for plugin developers with improved event testing capabilities.
+    Client JS API
+    - Supported dedicated window mode for Integrations, i.e. opening Integration in the separate windows instead of Layout.
+    - Added prameter() and setParameter() methods to vms.resources for working with custom Resource parameters.
+    - Added window.isVmsApiEnabled flag which can be used to check whether the JS API is enabled.
+    - Added setMaximizedItem() method to tab objects, which allows to maximize an item in layout.
+    - Added vms.openUrlExternally() method, which opens a provided URL in an external browser.
+    BUG FIXES
+    Server HTTP API
+    Analytics and Object Tracking
+    - Fixed object tracking and analytics-related issues:
+      - Resolved live analytics reception issues in Advanced Search Dialog.
+      - Fixed object reindexing problems with Object Detection data.
+      - Corrected age values in Object Streamer for more accurate analytics.
+    Event Management
+    - Resolved event handling and processing issues:
+      - Fixed event rule type checking by ID in /rest/v4/events/rules/{id} endpoint.
+      - Improved API documentation for /rest/v4/events/rules endpoints.
+      - Fixed event log dialog limit and sort functionality.
+      - Implemented aggregated info storing in the event log for better performance.
+    Device and I/O Management
+    - Fixed device-specific issues and I/O handling:
+      - Resolved asset crashes when cameras have no import periods.
+      - Fixed I/O module widget visibility for non-audio devices.
+      - Improved device time settings handling for NVRs.
+    WebRTC and Media
+    - Resolved streaming and media-related issues:
+      - Fixed WebRTC position seeking in proxied streams.
+      - Corrected audio desync issues during media export.
+      - Improved media write operations for cloud storage.
+    Server Plugin SDK
+    - Fixed analytics plugin access violations and stability issues.
+    - Resolved plugin framework crashes and resource management problems.
+    - Improved plugin lifecycle management and error handling.
+    Client Applications
+    - Fixed various client stability and functionality issues:
+      - Fixed client crash on Advanced search dialog fast opening.
+      - Resolved crashes when tiles are hovered in Advanced Search Dialog.
+      - Fixed user settings dialog assertion errors.
+      - Resolved client crashes during cross-site connections when disabled.
+      - Fixed missing tooltips in table view of Advanced Search Dialog.
+      - Improved cross-system resource access and permission handling.
+    SDK CHANGES BREAKING PLUGIN COMPILATION
+    - ATTENTION: Renamed the term Plugin to Integration in contexts where it refers to a C++ object implementing the SDK interface IPlugin. Usages with this meaning are now referred to as Integrations (e.g. IPlugin becomes IIntegration; i_plugin.h becomes i_integration.h, etc.). In contexts where the term Plugin refers to a dynamic library loaded by the server at runtime, we will keep using the word Plugin.
+    - Removed the specialized ITimePeriods interface and its implementation files.
+    - Modified the IDeviceAgent::doCreateStreamReader method signature to accept a bucket URL parameter.
+    - Namespace changes require updates to plugin code:
+      - nx::utils::(Url|UrlQuery) → nx::(Url|UrlQuery)
+      - nx::utils::MoveOnlyFunc → nx::MoveOnlyFunc
+    - Cloud authentication in IUtilityProvider has been updated:
+      - The IUtilityProvider3 interface introduces cloudToken() and subscribeForCloudTokenUpdate() methods.
+      - These replace the previous cloudSystemId() and cloudAuthKey() methods. Plugins using these older methods for cloud authentication must be updated to use the new cloudToken() mechanism.
+    - Reorganization of nx::sdk::IUtilityProvider interfaces requires updates:
+      - cloudToken() and subscribeForCloudTokenUpdate() are provided by IUtilityProvider (alias IUtilityProvider5) with ICloudTokenSubscriber.
+      - cloudSystemId() and cloudAuthKey() are provided by IUtilityProvider3.
+    - SDK, Cloud Storage plugins:
+      - Added the requirement to support a new stored entity - Track Image. This entity was introduced for saving/fetching other types of images in addition to previously supported Best Shots. Currently, Title Image and Best Shot types are supported. The following changes were introduced to the source code:
+        - Class nx::sdk::cloud_storage::BestShotImage was renamed to nx::sdk::cloud_storage::Image, introduced new classes nx::sdk::cloud_storage::BestShotMetadata, nx::sdk::cloud_storage::TitleMetadata, and nx::sdk::cloud_storage::TrackImage.
+        - In the class nx::sdk::cloud_storage::ObjectTrack, a new member std::optional<TitleMetadata> title was introduced.
+        - In the nx::sdk::cloud_storage::IEngine interface, methods saveBestShotImage() and fetchBestShotImage() were substituted with saveTrackImage() and fetchTrackImage() respectively.
+      - The corresponding changes were added to Sample Cloud Storage Plugin and Stub Cloud Storage Plugin.
+    - Cloud Storage Integrations:
+      - The IEngine interface in cloud_storage/i_engine.h has breaking changes in its virtual method table (function signature changes). Plugins using this interface must be recompiled.
+    REST API BREAKING CHANGES
+    - Some requests that modify or create entities with fields name or url have additional checks.
+    - A number of legacy API functions have been deprecated in favor of the corresponding new CRUD API functions.
+    - See the details in the API Changelog chapter in the API documentation.
+    - In the functions /rest/v{1-}/servers/*, /rest/v{1-}/servers/{id}, portForwardingConfigurations may be omitted from the response. When this field is not present, it means that the service is not forwarded by the server and has its own connection.
+    - In the function /rest/v4/events/create, the cameraId parameter was replaced by the new deviceId parameter. Integrations that use this function must be updated to use the new parameter name.
+    - In the function /rest/v4/analytics/objectTracks/{id}, unused parameters freeText, deviceId, objectTypeId, startTimeMs, endTimeMs, boundingBox, limit were removed.
+    Event Management
+    - The /rest/v4/events/create function has been removed and replaced with the following:
+      - /rest/v4/events/generic for general event creation.
+      - /rest/v4/events/triggers for software trigger management.
+    - The new /rest/v4/events/generic function has a simplified interface compared to the previous /rest/v4/events/create:
+      - Added instant state option alongside started and stopped.
+      - Removed fields specific to soft triggers (triggerId, triggerName, triggerIcon).
+      - Removed testing-specific fields (serverId, reason).
+    Analytics
+    - Analytics functions have been updated:
+      - Removed unused parameters from /rest/v4/analytics/objectTracks/{id}.
+      - Updated /rest/v4/analytics/objectTracks with a new parameter format for bounding boxes, for example: "boundingBox": "0.23905,0.283333,0.15625x0.277777".
+    Recording Statistics and Storage Forecast
+    - Field names have been changed in recording statistics responses:
+      - recordedBytes renamed to recordedB for clarity.
+      - archiveDurationForecastS restructured into separate forecastB and forecastS fields.
+      - averageBitrate renamed to averageBps with additional averageDensityBps metric added.
+      - Removed recordedBytesPerStorage field.
+    Deployment Code
+    - Renamed shortCode field to code in server deployment code responses.
+    Authentication and Session Management
+    - Authentication and session management (/rest/v{3-4}/login/sessions/{token}):
+      - Cloud tokens now must have an exact scope (cloudSystemId=<SYS_ID>) to be accepted.
+      - Tokens with broader scopes are rejected for improved security.
+      - All unauthorized responses now return consistent sessionTruncated error ID.
+    Analytics Object Tracking
+    - Analytics object tracking:
+      - The limit parameter for GET /rest/v4/analytics/objectTracks now correctly restricts the number of results.
+      - Added mandatory isImageAvailable field in replies to GET /rest/v4/analytics/objectTracks/{trackID}.
+      - Removed _orderBy parameter from GET /rest/v4/analytics/objectTracks.
+    Server Deployment
+    - Server deployment:
+      - Removed codeLength parameter from GET /rest/v{3-4}/servers/{serverId}/deploymentCode.
+      - Removed hardwareCode field from server deployment code responses.
+    PTZ Controls
+    - PTZ Controls:
+      - Removed api enum field from /rest/v{3-4}/devices/{deviceId}/ptz/limits endpoint.
+      - Updated PtzPositionFilter to enforce proper field validation in relevant endpoints.
+    Permission Restrictions
+    - Permission restrictions:
+      - /rest/v{3-4}/emailSettings endpoint is now restricted to users with power rights only.
+      - /rest/v{3-4}/storedFiles modification is now restricted to power users.
+      - /rest/v{3-4}/portForwardingConfigurations is now protected from non-power users.
+    Cloud/Site SaaS Models
+    - Cloud/Site SaaS models:
+      - GET /rest/v3/site/cloud/saas and GET /rest/v4/cloud/saas:
+        - v4: tierLimits.* block replaced by tier.* with renamed fields:
+          - tierLimits.maxServers → tier.maxServersPerSite
+          - tierLimits.maxDevicesPerServer → tier.maxDevicesPerServer
+          - tierLimits.maxDevicesPerLayout → tier.maxItemsInLayout
+          - tierLimits.maxArchiveDays → tier.maxDaysArchiveLocal
+          - tierLimits.ldapEnabled → tier.ldapAllowed
+          - tierLimits.videowallEnabled → tier.videoWallAllowed
+          - tierLimits.crossSiteFeaturesEnabled → tier.crossSiteAllowed
+        - Corresponding usage/overuse sections adjusted (e.g., tierUsages.servers, ldapUsed, videoWallUsed).
+    Backup Positions
+    - Backup Positions (/rest/v4/servers/{serverId}/backupPositions*):
+      - media.bookmarkStartPositionMs split into media.bookmarkHighStartPositionMs and media.bookmarkLowStartPositionMs (request/response and _orderBy).
+    Servers Log Archive
+    - Servers Log Archive:
+      - GET /rest/v3/servers/{id}/logArchive: rotated deprecated; use lastN.
+      - GET /rest/v4/servers/{id}/logArchive: rotated removed; use lastN.
+    KNOWN ISSUES
+    General
+    API documentation
+    - The description of /rest/v1/devices/*/footage says it is used to get footage from all devices, but the addition of the id parameter contradicts that, since it allows selecting one specific device instead of all devices.
+    REST API
+    Desktop Client
+    - No warning is shown if Object Action with Requirements is used when the action data is missing.
+    Analytics API
+    - It is necessary to wait for ~1 second after enabling the Device Agent for Analytics API integration before starting to configure (change settings, disable, etc.) this new Device Agent. Otherwise, the Mediaserver might hang.
+    Stub, Analytics API integration
+    - Stub, Analytics API integration currently generates objects from only one Device Agent per Mediaserver. For example, if you have two cameras running on one Mediaserver and Stub, Analytics API integration is enabled for both, analytics metadata is generated for only one of them.
+ReleaseTime: 2025-12-01

@@ -1,0 +1,37 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/AriesOxO/piz/releases/download/v0.3.2/piz-x86_64-pc-windows-msvc.msi
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/AriesOxO/piz/releases/download/v0.3.2/piz-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Improved / 优化
+    - Introduced ExecContext and ChatConfig structs to eliminate #[allow(clippy::too_many_arguments)] in handle_command_with_autofix and run_chat
+    - 引入 ExecContext 和 ChatConfig 结构体，消除 handle_command_with_autofix 和 run_chat 的过多参数警告
+    - Extracted truncate_history() as a standalone testable function with 7 unit tests for history truncation logic
+    - 将 truncate_history() 提取为独立可测试函数，新增 7 个历史截断逻辑单元测试
+    - Added 9 shell script syntax validation tests for shell_init.rs (brace balance, path slashes, eval file cleanup, subcommand passthrough)
+    - 为 shell_init.rs 新增 9 个脚本语法验证测试（括号平衡、路径斜杠方向、eval 文件清理、子命令透传）
+    - Replaced silent unwrap_or_default() with logged error for explanation fetch failures
+    - 将解释获取的静默 unwrap_or_default() 替换为带日志的错误处理
+    - Added SAFETY comments to both unsafe blocks (Windows VT100 console setup, GBK decoding)
+    - 为两处 unsafe 块添加 SAFETY 注释（Windows VT100 控制台设置、GBK 解码）
+    - Replaced panic! with unreachable! in CLI test assertions for better semantics
+    - 测试中的 panic! 替换为语义更精确的 unreachable!
+    - Added pre-push checklist to CLAUDE.md enforcing cargo fmt, cargo clippy, cargo test before push
+    - 在 CLAUDE.md 中添加推送前必须执行的检查规范
+    - Updated documentation: test counts (190→437), added /detail to chat commands, added missing test files to architecture diagram
+    - 更新文档：测试数量（190→437）、聊天模式补充 /detail 命令、架构图补充测试文件
+    - Total tests: 437 (344 unit + 45 integration + 48 windows shell)
+    - 测试总数：437（344 单元 + 45 集成 + 48 环境）
+    Full Changelog: https://github.com/AriesOxO/piz/compare/v0.3.1...v0.3.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AriesOxO/piz/releases/tag/v0.3.2
+ReleaseTime: 2026-03-19T09:14:27.0000000Z

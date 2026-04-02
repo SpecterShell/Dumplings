@@ -16,6 +16,33 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'Documentations'
+        Value = @(
+          [ordered]@{
+            DocumentLabel = 'Handbook'
+            DocumentUrl   = 'https://docs.kde.org/?application=kalarm'
+          }
+        )
+      }
+      # Documentations (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = '用户指南'
+            DocumentUrl   = 'https://docs.kde.org/?application=kalarm'
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # RealVersion
     Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host

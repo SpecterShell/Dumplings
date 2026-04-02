@@ -22,8 +22,8 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match(
-        $Object1.SelectSingleNode('//div[@class="fz1"]/span[2]').InnerText,
-        'Updated:\s*(.+)&emsp;'
+        $Object1.SelectSingleNode('//div[@class="fz1"]').InnerText,
+        '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})'
       ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
       if ($Object1.SelectSingleNode('//div[@class="ver"]').InnerText.Contains($this.CurrentState.Version)) {

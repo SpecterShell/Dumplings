@@ -1,4 +1,4 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://downloads.nordcdn.com/apps/windows/meta/NordLocker/latest/update.xml' | Read-ResponseContent | ConvertFrom-Xml).channels.channel.Where({ $_.name -eq 'default' }, 'First')[0]
+$Object1 = (Invoke-WebRequest -Uri 'https://downloads.nordcdn.com/apps/windows/meta/NordLockerEvolution/latest/update_x64.xml' | Read-ResponseContent | ConvertFrom-Xml).channels.channel.Where({ $_.name -eq 'default' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.releases.release.version

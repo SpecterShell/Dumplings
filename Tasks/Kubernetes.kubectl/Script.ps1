@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://cdn.dl.k8s.io/release/stable.txt'
+$Object1 = Invoke-WebRequest -Uri 'https://dl.k8s.io/release/stable.txt'
 
 # Version
 $this.CurrentState.Version = $Object1.Content.Trim() -replace '^v'

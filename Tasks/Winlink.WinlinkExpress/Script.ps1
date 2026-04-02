@@ -1,8 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.winlink.org/WinlinkExpress' -Headers @{ Accept = 'text/html' }
+$Prefix = 'https://downloads.winlink.org/User%20Programs/'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('Winlink_Express') -and $_.href.Contains('install') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 # Version

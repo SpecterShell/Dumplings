@@ -5,7 +5,6 @@ $this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
   InstallerUrl = 'https://installatie.snelstart.nl/release/SnelStart_Setup.exe'
 }
 

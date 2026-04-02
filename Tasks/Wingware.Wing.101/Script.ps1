@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
 
       while (-not $Object3.EndOfStream) {
         $String = $Object3.ReadLine()
-        if ($String -match "Release $([regex]::Escape($this.CurrentState.Version.Split('.')[0..2] -join '.'))") {
+        if ($String -match "Release $([regex]::Escape($this.CurrentState.Version -replace '(\.0+)+$'))") {
           break
         }
       }

@@ -20,7 +20,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version -replace '(?<=^|\.)0
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.updateUrl
+  InstallerUrl = $Object1.updateUrl | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

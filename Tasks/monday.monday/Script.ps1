@@ -17,7 +17,7 @@ $ETag = $Object1.Headers.ETag[0]
 
 # MSI
 $this.CurrentState.Installer += $InstallerMSI = [ordered]@{
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = 'https://monday.com/monday-msi-latest.msi'
 }
 $Object2 = Invoke-WebRequest -Uri $InstallerMSI.InstallerUrl -Method Head

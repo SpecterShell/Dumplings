@@ -34,12 +34,10 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
     # 'en-US' { continue }
     # MSIX installers (ARM64 not available)
     'multi' {
-      if ($Arch.Key -ne 'arm64') {
-        $this.CurrentState.Installer += [ordered]@{
-          Architecture  = $Arch.Key
-          InstallerType = 'msix'
-          InstallerUrl  = "${Prefix}${Version}/$($Arch.Value)/${_}/Firefox Setup ${Version}.msix"
-        }
+      $this.CurrentState.Installer += [ordered]@{
+        Architecture  = $Arch.Key
+        InstallerType = 'msix'
+        InstallerUrl  = "${Prefix}${Version}/$($Arch.Value)/${_}/Firefox Setup ${Version}.msix"
       }
       continue
     }
@@ -232,7 +230,7 @@ foreach ($Arch in $ArchMap.GetEnumerator()) {
       }
       continue
     }
-    Default {
+    default {
       $this.CurrentState.Installer += [ordered]@{
         InstallerLocale = $_
         Architecture    = $Arch.Key
@@ -255,7 +253,14 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.mozilla.org/firefox/${Version}/releasenotes/"
+        Value = $null
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://www.firefox.com/en-US/firefox/${ShortVersion}/releasenotes/"
       }
     } catch {
       $_ | Out-Host
@@ -272,7 +277,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.SelectSingleNode('//*[@class="c-release-notes"]') | Get-TextContent | Format-Text
+        Value  = @($Object3.SelectSingleNode('//*[contains(@class, "fl-c-release-summary-details")]'), $Object3.SelectSingleNode('//*[contains(@class, "fl-c-release-notes-content")]')) | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host

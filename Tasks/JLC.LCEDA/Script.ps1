@@ -3,13 +3,13 @@ $Object1 = Invoke-WebRequest -Uri 'https://lceda.cn/page/download' | ConvertFrom
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[2]/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX86 = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//a[contains(@data-url, ".exe") and contains(@data-url, "ia32") and not(contains(@data-url, "pro"))]').Attributes['data-url'].Value
 }
 $VersionX86 = [regex]::Match($InstallerUrlX86, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
+  InstallerUrl = $InstallerUrlX64 = Join-Uri 'https://image.lceda.cn/' $Object1.SelectSingleNode('//a[contains(@data-url, ".exe") and contains(@data-url, "x64") and not(contains(@data-url, "pro"))]').Attributes['data-url'].Value
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
@@ -47,14 +47,14 @@ switch -Regex ($this.Check()) {
             break
           }
         }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       $Object3.Close()

@@ -13,7 +13,7 @@ $this.CurrentState.Version = $Object1.UpdateNotify.NewVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  InstallerUrl = $Object1.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com').Replace('//dl.foxmail.com/', '//dldir1v6.qq.com/') | Split-Uri -LeftPart 'Path'
 }
 
 switch -Regex ($this.Check()) {
@@ -37,6 +37,20 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    $ToSubmit = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockFoxmail')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $Global:DumplingsStorage.Contains("Foxmail-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["Foxmail-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToSubmit) {
+      $this.Submit()
+    } else {
+      $this.Log('Another task is submitting manifests for this package', 'Warning')
+    }
   }
 }

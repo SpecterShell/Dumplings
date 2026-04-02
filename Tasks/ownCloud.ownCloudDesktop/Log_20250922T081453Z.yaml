@@ -1,0 +1,198 @@
+Version: 6.0.0.17092
+Installer:
+- InstallerUrl: https://download.owncloud.com/desktop/ownCloud/stable/6.0.0.17092/win/ownCloud-6.0.0.17092.x64.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://owncloud.com/changelog/desktop/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Summary
+    - Bugfix - Fix location loading on Mac: #6761
+    - Bugfix - Schedule syncs after an abort: #11396
+    - Bugfix - Fix description of manage public links action: #11450
+    - Bugfix - Fix early-use crash in the folder watcher on Linux: #11460
+    - Bugfix - Properly encode scope and prompt items in OAuth URL: #11472
+    - Bugfix - Client stuck in reconnecting state after application start: #11478
+    - Bugfix - Strip user information from new-connection URL: #11497
+    - Bugfix - Support logging redirect: #11581
+    - Bugfix - Don't store null certificates in the account: #11621
+    - Bugfix - Fix crash for folders that could not be initialized: #11664
+    - Bugfix - Make open account in browser accessible for keyboard navigation: #11772
+    - Bugfix - Don't log misleading error if dynamic registration failed: #11839
+    - Bugfix - Fix crash after resource job fails: #12045
+    - Bugfix - Remove any existing ResourceCache directories for accounts: #12214
+    - Bugfix - Delete account-specific caches when an account is removed: #12224
+    - Change - Revert local folder name back to pre 3.0 behavior: #6390
+    - Change - Make messages translatable that occur early in start-up: #11142
+    - Change - Remove unused command line option --language: #11245
+    - Change - Windows: always use fusion style: #11275
+    - Change - Deprecate suffix VFS: #11325
+    - Change - Removal of selective sync tree from account status page: #11357
+    - Change - Fix three badly styled warning messages: #11412
+    - Change - Removed support for limiting sync of big new folder & external storage: #11517
+    - Change - Set the 'No' button as default action in the Unknown Certificate dialog: #11531
+    - Change - Remove Remove all files dialog: #11569
+    - Change - Rewrite of the spaces browser: #11595
+    - Change - New update channel for ownCloud infinite scale: #11742
+    - Change - Remove support for branded shell extensions on Linux: #11743
+    - Change - Only allow to add un-synced spaces: #11752
+    - Change - Rewrite of the login widget in QML: #11856
+    - Change - Only support APFS on macOS: #12044
+    - Change - Bump minimum macOS version to 13.0: #12245
+    - Change - Update the sync exclude list for Infinite Scale: #12262
+    - Enhancement - Add option to pause synchronization on metered connections: #4808
+    - Enhancement - Add option to move files to trash instead of deleting: #9001
+    - Enhancement - Prevent same default sync folder for multiple accounts with Spaces: #11204
+    - Enhancement - Use less modal dialogs: #11304
+    - Enhancement - Include recent changes in scheduled syncs: #11347
+    - Enhancement - Improve handling of a server blocking an unsupported client: #11424
+    - Enhancement - Ask user to restart application when update is available on Windows: #11442
+    - Enhancement - New Folder status: #11491
+    - Enhancement - Pause sync when behind a captive portal: #11533
+    - Enhancement - Support for prompt_values_supported in openid-configuration: #11729
+    - Enhancement - New branding option: automatically sync new spaces: #11751
+    - Enhancement - Display how many spaces are un-synced: #11760
+    Details
+    - Bugfix - Fix location loading on Mac: #6761
+      https://github.com/owncloud/enterprise/issues/6761
+    - Bugfix - Schedule syncs after an abort: #11396
+      We fixed a bug where the client stopped scheduling syncs after a sync was aborted.
+      https://github.com/owncloud/client/pull/11396
+    - Bugfix - Fix description of manage public links action: #11450
+      https://github.com/owncloud/client/issues/11450
+    - Bugfix - Fix early-use crash in the folder watcher on Linux: #11460
+      In a few error scenarios, the folder watcher on Linux shows a dialog with an error message. A crash has been fixed where this occurred before the GUI was fully initialised.
+      https://github.com/owncloud/client/issues/11460 https://github.com/owncloud/client/pull/11475
+    - Bugfix - Properly encode scope and prompt items in OAuth URL: #11472
+      Fixed a bug where the scope and prompt items of an OAuth query would not be encoded, resulting in an invalid request.
+      https://github.com/owncloud/client/issues/11472 https://github.com/owncloud/client/pull/11479
+    - Bugfix - Client stuck in reconnecting state after application start: #11478
+      We fixed a bug where the client was starting OAuth authentication but did not prompt the user properly to renew authentication. This resulted in the client apparently getting stuck in the "reconnecting" state.
+      https://github.com/owncloud/client/pull/11478
+    - Bugfix - Strip user information from new-connection URL: #11497
+      Credentials in the URL are not supported for some time. This fix strips them from the URL before storage and using it to authenticate the client to the server.
+      https://github.com/owncloud/client/issues/11497 https://github.com/owncloud/client/pull/11509
+    - Bugfix - Support logging redirect: #11581
+      We now log when all urls when a request was redirected.
+      https://github.com/owncloud/client/pull/11581
+    - Bugfix - Don't store null certificates in the account: #11621
+      https://github.com/owncloud/client/issues/11621
+    - Bugfix - Fix crash for folders that could not be initialized: #11664
+      We fixed a bug where interacting with a folder in the file browser could lead to a crash if the folder was not properly initialized.
+      https://github.com/owncloud/client/pull/11664
+    - Bugfix - Make open account in browser accessible for keyboard navigation: #11772
+      On the account settings page, the status label contained the URL of the server. This URL was not accessible with keyboard navigation or when a screen-reader was used. Now there is an "Open in Web Browser" action in the pop-up menu of the "Manage Account" button (which is next to the status label), and the URL has been removed from the status label.
+      https://github.com/owncloud/client/issues/11772 https://github.com/owncloud/client/issues/11800 https://github.com/owncloud/client/pull/11810
+    - Bugfix - Don't log misleading error if dynamic registration failed: #11839
+      https://github.com/owncloud/client/pull/11839
+    - Bugfix - Fix crash after resource job fails: #12045
+      When a network error occurs while fetching a resource (e.g. a space image), no icon is available, and a crash would occur. This is fixed by returning an empty icon.
+      https://github.com/owncloud/client/pull/12045
+    - Bugfix - Remove any existing ResourceCache directories for accounts: #12214
+      Some versions of the client failed to remove the temporary cache directory on exit. This can result in multiple GB of cached space images. These cache directories are now cleaned up before creating a new cache.
+      https://github.com/owncloud/client/pull/12214
+    - Bugfix - Delete account-specific caches when an account is removed: #12224
+      This includes the cache for space images, as well as certain cached network jobs.
+      https://github.com/owncloud/client/pull/12224
+    - Change - Revert local folder name back to pre 3.0 behavior: #6390
+      Due to user requests, we reverted the folder name from
+      ownCloud -
+
+      *protected email* ownCloud -
+
+      *protected email* ownCloud -
+
+      *protected email*
+      Back to
+      ownCloud
+       ownCloud (1)
+       ownCloud (2)
+      https://github.com/owncloud/enterprise/issues/6390
+    - Change - Make messages translatable that occur early in start-up: #11142
+      These messages include the command-line messages (both errors and the help text). To do this, the deprecated --confdir option has been removed. This option was only used on windows before roaming profiles were supported.
+      https://github.com/owncloud/client/issues/11142 https://github.com/owncloud/client/issues/11246 https://github.com/owncloud/client/pull/11300
+    - Change - Remove unused command line option --language: #11245
+      This option was used before the UI language could be chosen in the settings. The option --list-languages is also removed, as it no longer serves a purpose.
+      https://github.com/owncloud/client/issues/11245 https://github.com/owncloud/client/pull/11270
+    - Change - Windows: always use fusion style: #11275
+      We already used the fusion style on Windows for years if the system used dpi scaling. Since Qt6.5 the fusion style also support the dark theme on Windows. Those two reasons convinced us that always using the fusion style on Windows will result in the best experience for the users.
+      https://github.com/owncloud/client/issues/11275
+    - Change - Deprecate suffix VFS: #11325
+      We decided to deprecate the suffix VFS implementations and thus prepare its removal in 7.0.
+      https://github.com/owncloud/client/issues/11325
+    - Change - Removal of selective sync tree from account status page: #11357
+      We removed the selective sync support from the main widget and moved it to its own dialog, available through the context menu of the sync folder.
+      Having both the sync status and the selective sync settings in the same widget caused a lot of problems and overhead over the years. Additionally, it required us to maintain a lot of special and basically duplicated code, as we already had a dedicated widget to handle selective sync.
+      https://github.com/owncloud/client/issues/11357 https://github.com/owncloud/client/issues/11357 https://github.com/owncloud/client/issues/8102 https://github.com/owncloud/client/issues/5423 https://github.com/owncloud/client/issues/4080 https://github.com/owncloud/client/pull/11524
+    - Change - Fix three badly styled warning messages: #11412
+      There were 3 labels for warning messages that were nearly unreadable in dark mode due to bad styling. These have been changed to only use a bold font, but are now displayed with a big warning icon on their left. The places are: the account settings page, the folder wizard remote path page, and the log browser.
+      https://github.com/owncloud/client/issues/11412 https://github.com/owncloud/client/pull/11470
+    - Change - Removed support for limiting sync of big new folder & external storage: #11517
+      We removed an option which allowed to block new folders bigger than a set limit, from being synchronized automatically, when selective synchronization is used. Additionally, we removed the option that allowed to block automatic synchronization of external storage.
+      https://github.com/owncloud/client/pull/11517
+    - Change - Set the 'No' button as default action in the Unknown Certificate dialog: #11531
+      When an unknown certificate is used by the server, the safe action is to reject this certificate. So the default action for this dialog should be not to accept this unknown certificate.
+      https://github.com/owncloud/client/issues/11531
+    - Change - Remove Remove all files dialog: #11569
+      We no longer ask the user whether all files should be removed but just sync.
+      https://github.com/owncloud/client/issues/11569 https://github.com/owncloud/client/issues/7304
+    - Change - Rewrite of the spaces browser: #11595
+      https://github.com/owncloud/client/pull/11595
+    - Change - New update channel for ownCloud infinite scale: #11742
+      The release series 6 is a long term release. As version 7 will drop the support for ownCloud 10, users will either have to select the ownCloud infinite scale update channel in the about-dialog or manually install a newer release. This change only affects the unbranded version.
+      https://github.com/owncloud/client/issues/11742
+    - Change - Remove support for branded shell extensions on Linux: #11743
+      From now on user will have to install dolphin-owncloud nautilus-owncloud instead of a branded version.
+      https://github.com/owncloud/client/issues/11743
+    - Change - Only allow to add un-synced spaces: #11752
+      We now prevent users from syncing the same space multiple times.
+      https://github.com/owncloud/client/issues/11752 https://github.com/owncloud/client/pull/11759
+    - Change - Rewrite of the login widget in QML: #11856
+      https://github.com/owncloud/client/pull/11856
+    - Change - Only support APFS on macOS: #12044
+      Apple File System in contrary to HFS+ is Unicode normalization preserving. To support this properly the upcoming version 6 of desktop client will support NFC and NFD encoding on all client platforms based on the individual characteristics.
+      https://github.com/owncloud/client/pull/12044
+    - Change - Bump minimum macOS version to 13.0: #12245
+      https://github.com/owncloud/client/pull/12245 https://github.com/owncloud/client/pull/12246
+    - Change - Update the sync exclude list for Infinite Scale: #12262
+      Files with the extension .space and .psec are now excluded from sync by default.
+      https://github.com/owncloud/client/pull/12262 https://github.com/owncloud/client/pull/12093
+    - Enhancement - Add option to pause synchronization on metered connections: #4808
+      On platforms that support metered-connection detection, an option is now available to pause folder synchronization when the network connection switches to metered-connection. When synchronization is paused, force-syncing can still be done.
+      https://github.com/owncloud/client/issues/4808 https://github.com/owncloud/client/pull/11305
+    - Enhancement - Add option to move files to trash instead of deleting: #9001
+      An option has been added that when files on the server are deleted, the client will move them to the system trash bin instead of deleting those files.
+      https://github.com/owncloud/client/issues/9001 https://github.com/owncloud/client/pull/11320
+    - Enhancement - Prevent same default sync folder for multiple accounts with Spaces: #11204
+      This is done by tagging the sync folder by an extended attribute (Linux/macOS) or an alternative data stream (Windows).
+      https://github.com/owncloud/client/issues/11204 https://github.com/owncloud/client/pull/11364
+    - Enhancement - Use less modal dialogs: #11304
+      As the rather high number of modal dialogs we used caused different issues on different platforms, we decided to use them less often and try other concepts.
+      https://github.com/owncloud/client/issues/11304 https://github.com/owncloud/client/issues/11032 https://github.com/owncloud/client/issues/11208
+    - Enhancement - Include recent changes in scheduled syncs: #11347
+      When starting a new sync we now also include the recent change events in the discovery.
+      https://github.com/owncloud/client/pull/11347
+    - Enhancement - Improve handling of a server blocking an unsupported client: #11424
+      We improved the handling of HTTP 403 status codes.
+      https://github.com/owncloud/client/issues/11424
+    - Enhancement - Ask user to restart application when update is available on Windows: #11442
+      Instead of a tray message, we now display a modal dialog on Windows to inform the user about a downloaded update. Also, we now can prompt the user to restart the application and apply the update immediately, adding a bit of user comfort.
+      https://github.com/owncloud/client/pull/11442
+    - Enhancement - New Folder status: #11491
+      We rewrote the Folder status page.
+      https://github.com/owncloud/client/issues/11527 https://github.com/owncloud/client/pull/11491
+    - Enhancement - Pause sync when behind a captive portal: #11533
+      When the operating system detects a captive portal, stop all outgoing network requests. These requests will fail with an SSL certificate mismatch error. When the captive portal is "gone", synchronisation will be restarted.
+      https://github.com/owncloud/client/issues/11533 https://github.com/owncloud/client/pull/11567
+    - Enhancement - Support for prompt_values_supported in openid-configuration: #11729
+      We implemented support for idP's to specify the supported prompt values.
+      https://github.com/owncloud/client/pull/11729 https://github.com/owncloud/client/pull/12163
+    - Enhancement - New branding option: automatically sync new spaces: #11751
+      A branding option was added to add new sync connections for newly discovered spaces.
+      https://github.com/owncloud/client/issues/11751 https://github.com/owncloud/client/pull/11774
+    - Enhancement - Display how many spaces are un-synced: #11760
+      https://github.com/owncloud/client/pull/11760
+- Key: ReleaseNotesUrl
+  Value: https://owncloud.com/changelog/desktop/#changelog-for-owncloud-desktop-client-600-2025-09-08
+ReleaseTime: 2025-09-08

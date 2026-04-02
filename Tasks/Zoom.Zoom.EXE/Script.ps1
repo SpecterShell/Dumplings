@@ -12,11 +12,11 @@ $this.CurrentState.Version = $Object2.'Real-version'
 $this.CurrentState.RealVersion = $Object2.'Display-version'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'exe'
-  InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'x86'
+#   InstallerType = 'exe'
+#   InstallerUrl  = "https://zoom.us/client/$($Object2.'Real-version')/ZoomInstallerFull.exe"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'exe'

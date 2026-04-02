@@ -13,6 +13,11 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/win32-x64/claude.exe"
   InstallerSha256 = $Object2.platforms.'win32-x64'.checksum.ToUpper()
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture    = 'arm64'
+  InstallerUrl    = "${Prefix}$($this.CurrentState.Version)/win32-arm64/claude.exe"
+  InstallerSha256 = $Object2.platforms.'win32-arm64'.checksum.ToUpper()
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -25,10 +30,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md'
       }
 
       $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/anthropics/claude-code/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
@@ -64,6 +70,20 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Submit()
+    $ToSubmit = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockAnthropicClaudeCode')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $Global:DumplingsStorage.Contains("AnthropicClaudeCode-$($this.CurrentState.Version)-ToSubmit")) {
+      $Global:DumplingsStorage["AnthropicClaudeCode-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToSubmit) {
+      $this.Submit()
+    } else {
+      $this.Log('Another task is submitting manifests for this package', 'Warning')
+    }
   }
 }

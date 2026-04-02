@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.enclosure.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.gonitro.com/professional_$($this.CurrentState.Version)/en/nls/nitro_pro14_x64.msi"
+  InstallerUrl  = "https://downloads.gonitro.com/professional_$($this.CurrentState.Version)/en/nls/nitro_pro14_nls_x64.msi"
 }
 
 switch -Regex ($this.Check()) {

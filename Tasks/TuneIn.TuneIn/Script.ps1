@@ -1,4 +1,4 @@
-$Prefix = 'https://gemini-desktop-prod.s3.amazonaws.com/release/'
+$Prefix = 'https://cdn-desktop.tunein.com/release/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 

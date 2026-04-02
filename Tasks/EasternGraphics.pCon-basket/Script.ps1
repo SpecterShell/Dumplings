@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.title, '(\d+(?:\.\d+)+)').G
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/p-bk_$($this.CurrentState.Version)_32Bit_setup.zip"
+  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/p-bk_$($this.CurrentState.Version)_32Bit_installer.zip"
 }
 
 switch -Regex ($this.Check()) {
@@ -56,8 +56,8 @@ switch -Regex ($this.Check()) {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'pCon.basket_setup.exe' | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'pCon.basket_setup.exe'
+      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'pCon.basket_installer.exe' | Out-Host
+      $InstallerFile2 = Join-Path $InstallerFileExtracted 'pCon.basket_installer.exe'
       $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
       $InstallerFile3 = Join-Path $InstallerFile2Extracted 'pCon.basket.msi'
       # RealVersion

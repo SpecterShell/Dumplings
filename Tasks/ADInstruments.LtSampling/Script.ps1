@@ -9,7 +9,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = $Object1.AppInstaller.MainPackage.Uri
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = $Object1.AppInstaller.MainPackage.Uri -replace '\.msix$', '.msi'
 }
 

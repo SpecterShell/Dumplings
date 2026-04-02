@@ -19,12 +19,32 @@ $this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = 'https://' + $Object1.update.site.root.Replace('%1', $Object2.name.Replace('%1', $VersionX86))
+  Architecture  = 'x86'
+  InstallerType = 'burn'
+  InstallerUrl  = $InstallerX86Url = 'https://' + $Object1.update.site.root.Replace('%1', $Object2.name.Replace('%1', $VersionX86))
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = 'https://' + $Object1.update.site.root.Replace('%1', $Object3.name.Replace('%1', $VersionX64))
+  Architecture  = 'x64'
+  InstallerType = 'burn'
+  InstallerUrl  = $InstallerX64Url = 'https://' + $Object1.update.site.root.Replace('%1', $Object3.name.Replace('%1', $VersionX64))
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x86'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'wix'
+  InstallerUrl         = $InstallerX86Url -replace '\.exe$', '_msi.zip'
+  NestedInstallerFiles = @(
+    [ordered]@{ RelativeFilePath = "$($InstallerX86Url | Split-Path -LeafBase).msi" }
+  )
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'wix'
+  InstallerUrl         = $InstallerX64Url -replace '\.exe$', '_msi.zip'
+  NestedInstallerFiles = @(
+    [ordered]@{ RelativeFilePath = "$($InstallerX64Url | Split-Path -LeafBase).msi" }
+  )
 }
 
 switch -Regex ($this.Check()) {

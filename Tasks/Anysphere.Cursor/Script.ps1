@@ -62,20 +62,31 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object5 = Invoke-WebRequest -Uri 'https://www.cursor.com/changelog' | ConvertFrom-Html
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://www.cursor.com/changelog')
+      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, string]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElements([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]//button[@data-state='closed']")).ForEach({ $_.Click() }) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")).GetAttribute('innerHTML') } catch {}
+        }
+      ) | ConvertFrom-Html
 
-      $ReleaseNotesTitleObject = $Object5.SelectSingleNode("//main//article[contains(.//div[contains(@class, 'absolute') and contains(@class, 'left')]//div[contains(@class, 'rounded')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
-      if ($ReleaseNotesTitleObject) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleObject.SelectSingleNode('.//div[contains(@class, "absolute") and contains(@class, "left")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      if ($ReleaseNotesObject) {
+        # # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
 
         # Remove video players
-        $Object5.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
+        $ReleaseNotesObject.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
+        # Remove accordion buttons
+        $ReleaseNotesObject.SelectNodes('.//span[contains(@class, "group-data-[state=open]:")]').ForEach({ $_.Remove() })
+        # Remove anchor icons
+        $ReleaseNotesObject.SelectNodes('.//*[contains(@class, "anchor-icon")]').ForEach({ $_.Remove() })
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleObject.SelectNodes('.//h2[1]/following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObject.SelectNodes('.//div[contains(@class, "prose")]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

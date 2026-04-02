@@ -1,0 +1,47 @@
+Version: 2.7.0-I017
+Installer:
+- Architecture: x86
+  InstallerUrl: https://swupdate.openvpn.org/community/releases/OpenVPN-2.7.0-I017-x86.msi
+- Architecture: x64
+  InstallerUrl: https://swupdate.openvpn.org/community/releases/OpenVPN-2.7.0-I017-amd64.msi
+- Architecture: arm64
+  InstallerUrl: https://swupdate.openvpn.org/community/releases/OpenVPN-2.7.0-I017-arm64.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/OpenVPN/openvpn/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights of 2.7
+    - Multi-socket support for servers -- Handle multiple addresses/ports/protocols within one server
+    - Improved Client support for DNS options
+      - Client implementations for Linux/BSD/macOS, included with the default install
+      - New client implementation for Windows, adding support for features like split DNS and DNSSEC
+    - Architectural improvements on Windows
+      - The block-local flag is now enforced with WFP filters
+      - Windows network adapters are now generated on demand
+      - Windows automatic service now runs as an unpriviledged user
+      - Support for server mode in win-dco driver
+      - Note: Support for the wintun driver has been removed. win-dco is now the default, tap-windows6 is the fallback solution for use-cases not covered by win-dco.
+    - Improved data channel
+      - Enforcement of AES-GCM usage limit
+      - Epoch data keys and packet format
+    - Support for new upstream DCO Linux kernel module
+      - This release supports the new ovpn DCO Linux kernel module which will be available in future upstream Linux kernel releases. Backports of the new module to current kernels are available via the ovpn-backports project.
+    - Client-side support for new PUSH_UPDATE control-channel message
+      - This allows servers to send updates to options like routing and DNS config without triggering a reconnect.
+    - PUSH_UPDATE server support (minimal)
+      - New management interface commands push-update-broad and push-update-cid to send PUSH_UPDATE option updates.
+    - TLS 1.3 support with bleeding-edge mbedTLS versions
+    - Support for mbedTLS version 4
+    - Two new environment variables have been introduced to communicate desired default gateway redirection to plugins like Network Manager.
+    - Support for Epoch data channel on Windows, using the win-dco driver (2.8.0+)
+    - "Recursive Routing" check is now more granular, and will only drop packets-in-tunnel if destination IP, protocol and port matches with those needed to reach the VPN server.
+    - COPYING: license details only relevant to our Windows installers have been updated and moved to the openvpn-build repo
+    For details see Changes.rst
+    Windows Client: Community MSI installer for Windows client can be found at Community Downloads.
+    Linux Packages: Instructions for installing community-maintained Linux packages can be found in the Community Wiki.
+    Changes since last release candidate: https://github.com/OpenVPN/openvpn/compare/v2.7_rc6...v2.7.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/OpenVPN/openvpn/releases/tag/v2.7.0
+RealVersion: 2.7.017

@@ -1,0 +1,28 @@
+Version: 0.5.6
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.5.6/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.5.6/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Critical Fix
+    - Version sync: Desktop app and workspace version now correctly report v0.5.5+. Users stuck on v0.5.1 should be able to update. Tauri config was hardcoded at 0.1.0 since initial commit.
+    New Features
+    - SSRF allowlist: Self-hosted/K8s users can now configure ssrf_allowed_hosts in config.toml to allow agents to reach internal services. Metadata endpoints (169.254.169.254, etc.) remain unconditionally blocked.
+      [tools.web_fetch]
+      ssrf_allowed_hosts = ["*.olares.com", "10.0.0.0/8"]
+    - Expanded embedding auto-detection: Now probes 6 API key providers (OpenAI, Groq, Mistral, Together, Fireworks, Cohere) before falling back to local providers (Ollama, vLLM, LM Studio). Clear warning when no embedding provider is available.
+    Bug Fixes
+    - Ollama context window: Discovered models now default to 128K context / 16K output (was 32K/4K). Better reflects modern models like Qwen 3.5.
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.5.5...v0.5.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.5.6
+ReleaseTime: 2026-03-30T18:32:00.0000000Z

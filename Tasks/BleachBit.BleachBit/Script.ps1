@@ -33,15 +33,15 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode('//div[contains(@class, "field-item")]/h3[contains(., "Changes") or contains(., "Known issues")]')
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode('//div[contains(@class, "field-item")]/h2[contains(., "Changes") or contains(., "Known issues")]')
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not ($Node.Name -eq 'h3' -and $Node.InnerText.Contains('Download')); $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = @($ReleaseNotesTitleNode, $ReleaseNotesNodes) | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

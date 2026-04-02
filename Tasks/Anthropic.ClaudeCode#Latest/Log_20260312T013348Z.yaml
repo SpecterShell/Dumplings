@@ -1,0 +1,36 @@
+Version: 2.1.74
+Installer:
+- Architecture: x64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.74/win32-x64/claude.exe
+  InstallerSha256: F84F832C0661157B38262595F3228353079D8D44C3F24CEFE2D67B6D56FD9042
+- Architecture: arm64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.74/win32-arm64/claude.exe
+  InstallerSha256: EE6523A7A53256C0000853F032E185CBE3F9E611C2E9FA0C4285C6C6A9869DA4
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added actionable suggestions to /context command — identifies context-heavy tools, memory bloat, and capacity warnings with specific optimization tips
+    - Added autoMemoryDirectory setting to configure a custom directory for auto-memory storage
+    - Fixed memory leak where streaming API response buffers were not released when the generator was terminated early, causing unbounded RSS growth on the Node.js/npm code path
+    - Fixed managed policy ask rules being bypassed by user allow rules or skill allowed-tools
+    - Fixed full model IDs (e.g., claude-opus-4-5) being silently ignored in agent frontmatter model: field and --agents JSON config — agents now accept the same model values as --model
+    - Fixed MCP OAuth authentication hanging when the callback port is already in use
+    - Fixed MCP OAuth refresh never prompting for re-auth after the refresh token expires, for OAuth servers that return errors with HTTP 200 (e.g. Slack)
+    - Fixed voice mode silently failing on the macOS native binary for users whose terminal had never been granted microphone permission — the binary now includes the audio-input entitlement so macOS prompts correctly
+    - Fixed SessionEnd hooks being killed after 1.5 s on exit regardless of hook.timeout — now configurable via CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
+    - Fixed /plugin install failing inside the REPL for marketplace plugins with local sources
+    - Fixed marketplace update not syncing git submodules — plugin sources in submodules no longer break after update
+    - Fixed unknown slash commands with arguments silently dropping input — now shows your input as a warning
+    - Fixed Hebrew, Arabic, and other RTL text not rendering correctly in Windows Terminal, conhost, and VS Code integrated terminal
+    - Fixed LSP servers not working on Windows due to malformed file URIs
+    - Changed --plugin-dir so local dev copies now override installed marketplace plugins with the same name (unless that plugin is force-enabled by managed settings)
+    - [VSCode] Fixed delete button not working for Untitled sessions
+    - [VSCode] Improved scroll wheel responsiveness in the integrated terminal with terminal-aware acceleration
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#2174
+ReleaseTime: 2026-03-11T23:35:46.0000000Z
