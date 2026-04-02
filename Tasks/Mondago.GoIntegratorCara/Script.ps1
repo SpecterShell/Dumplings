@@ -5,10 +5,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
-$Object2 = [System.Net.Http.Headers.ContentDispositionHeaderValue](Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'Content-Disposition'[0]
-
 # Version
-$this.CurrentState.Version = [regex]::Match($Object2.FileName, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Matches($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)')[-1].Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
