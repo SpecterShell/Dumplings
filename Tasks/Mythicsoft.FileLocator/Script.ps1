@@ -1,12 +1,26 @@
-$Object1 = Invoke-RestMethod -Uri 'https://account.mythicsoft.com/getversion.aspx?productid=1&afterversion=0&infotype=1&features=0'
+$Prefix = 'https://www.mythicsoft.com/filelocator/download/'
+$Object1 = curl -fSsLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
+
+# x86
+$InstallerUrlX86 = $Object1.Where({ $_.href -match 'filelocator_x86_msi_(\d+)\.zip$' }, 'First')[0].href
+$VersionX86 = $Matches[1]
+
+# x64
+$InstallerUrlX64 = $Object1.Where({ $_.href -match 'filelocator_x64_msi_(\d+)\.zip$' }, 'First')[0].href
+$VersionX64 = $Matches[1]
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("Inconsistent versions: x86: $VersionX86, x64: $VersionX64", 'Error')
+  return
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.versions.version[0].ds, 'Build (\d+)').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
-  InstallerUrl         = "https://download.mythicsoft.com/flp/$($this.CurrentState.Version)/filelocator_x86_msi_$($this.CurrentState.Version).zip"
+  InstallerUrl         = Join-Uri $Prefix $InstallerUrlX86
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "filelocator_x86_$($this.CurrentState.Version).msi"
@@ -15,7 +29,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = "https://download.mythicsoft.com/flp/$($this.CurrentState.Version)/filelocator_x64_msi_$($this.CurrentState.Version).zip"
+  InstallerUrl         = Join-Uri $Prefix $InstallerUrlX64
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "filelocator_x64_$($this.CurrentState.Version).msi"
@@ -35,13 +49,17 @@ switch -Regex ($this.Check()) {
 
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::new(1601, 1, 1).AddTicks([long]$Object1.versions.version[0].date).ToString('yyyy-MM-dd')
+      $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.AgentRansack[$this.CurrentState.Version].ReleaseTime | Get-Date -AsUTC
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.versions.version[0].'#text'.Replace('!br!', "`n") | Format-Text
+      if ($Global:DumplingsStorage.Contains('AgentRansack') -and $Global:DumplingsStorage.AgentRansack.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.AgentRansack[$this.CurrentState.Version].ReleaseNotes
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
