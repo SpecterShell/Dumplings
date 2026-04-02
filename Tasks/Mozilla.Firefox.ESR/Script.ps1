@@ -11,6 +11,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/firef
 
 # Version
 $OriginalVersion = $Object1.FIREFOX_ESR
+$MajorVersion = [int]$OriginalVersion.Split('.')[0]
 $this.CurrentState.Version = $ShortVersion = $OriginalVersion.Replace('esr', '')
 
 $Object2 = [ordered]@{}
@@ -30,7 +31,7 @@ foreach ($Locale in @('en-US')) {
       InstallerType   = 'nullsoft'
       InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
       InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-      ProductCode     = "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
+      ProductCode     = $MajorVersion -ge 148 ? 'Mozilla Firefox ESR' : "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
     }
   }
 }
@@ -124,7 +125,7 @@ switch -Regex ($this.Check()) {
             InstallerType   = 'nullsoft'
             InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
             InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
+            ProductCode     = $MajorVersion -ge 148 ? 'Mozilla Firefox ESR' : "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
           }
         }
       }
