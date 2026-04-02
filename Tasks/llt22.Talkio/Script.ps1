@@ -23,8 +23,11 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(., '$($this.CurrentState.Version)')]").NextSibling ?? $ReleaseNotesObject.ChildNodes[0]
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not ($Node.Name -eq 'h3' -and $Node.InnerText -match '下载'); $Node = $Node.NextSibling) { $Node }
+        if ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(., '$($this.CurrentState.Version)')]")) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'h3' -and $Node.InnerText -match '下载|Downloads'); $Node = $Node.NextSibling) { $Node }
+        } else {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h3' -and $Node.InnerText -match '下载|Downloads'); $Node = $Node.NextSibling) { $Node }
+        }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'

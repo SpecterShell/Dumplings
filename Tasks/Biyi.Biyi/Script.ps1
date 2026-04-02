@@ -22,17 +22,16 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(text(), "变更日志")]').NextSibling ?? $ReleaseNotesObject.ChildNodes[0]
-        if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
-          # ReleaseNotes (zh-CN)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-          }
+        if ($ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(text(), "变更日志")]')) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
         } else {
-          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not $Node.InnerText.Contains('下载'); $Node = $Node.NextSibling) { $Node }
+        }
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
