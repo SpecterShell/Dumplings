@@ -3,9 +3,6 @@ $RepoName = 'kicad-source-mirror'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
-# Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
@@ -15,6 +12,9 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].name, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -56,7 +56,7 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.kicad.org/blog/'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.Contains("$($this.CurrentState.Version)") }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.Contains("$($this.CurrentState.Version.Split('-')[0])") }, 'First')
       if ($Object2) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= $Object2[0].pubDate | Get-Date -AsUTC
