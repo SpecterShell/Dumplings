@@ -1,18 +1,17 @@
 # x64 EXE
 $Object1 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=exe'
 # x64 MSI
-$Object2 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=msi'
+# $Object2 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=msi'
 # x64 MSIX
 $Object3 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=x64&variant=msix'
 # arm64 MSIX
 $Object4 = Invoke-RestMethod -Uri 'https://slack.com/api/desktop.latestRelease?arch=arm64&variant=msix'
 
-if ($Object1.version -ne $Object2.version) {
-  $this.Log("x64 EXE version: $($Object1.version)")
-  $this.Log("x64 WiX version: $($Object2.version)")
-  $this.Log("x64 MSIX version: $($Object3.version)")
-  $this.Log("arm64 MSIX version: $($Object4.version)")
-  throw 'Inconsistent versions detected'
+# if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
+if (@(@($Object1, $Object3, $Object4) | Sort-Object -Property { $_.version } -Unique).Count -gt 1) {
+  # $this.Log("Inconsistent versions: x64 EXE: $($Object1.version), x64 MSI: $($Object2.version), x64 MSIX: $($Object3.version), arm64 MSIX: $($Object4.version)", 'Error')
+  $this.Log("Inconsistent versions: x64 EXE: $($Object1.version), x64 MSIX: $($Object3.version), arm64 MSIX: $($Object4.version)", 'Error')
+  return
 }
 
 # Version
@@ -24,11 +23,11 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = $Object1.download_url
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'wix'
-  InstallerUrl  = $Object2.download_url
-}
+# $this.CurrentState.Installer += $Installer = [ordered]@{
+#   Architecture  = 'x64'
+#   InstallerType = 'wix'
+#   InstallerUrl  = $Object2.download_url
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msix'
@@ -42,15 +41,16 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # ProductCode
-    $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
+    # $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    # # ProductCode
+    # $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://slack.com/release-notes/windows'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://slack.com/release-notes/windows'
       }
 
       $Object4 = (Invoke-RestMethod -Uri 'https://slack.com/release-notes/windows/rss').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
@@ -72,10 +72,11 @@ switch -Regex ($this.Check()) {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object4[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object4[0].link
         }
       } else {
         $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
