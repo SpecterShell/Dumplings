@@ -1,0 +1,30 @@
+Version: 3.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.0/MotrixNext_3.6.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release adds full cross-platform protocol handler registration, improves aria2 RPC reliability, and introduces dynamic table column sizing. All changes from the v3.5.2-beta and v3.6.0-beta series are consolidated into this stable release.
+    ✨ New Features
+    - Protocol handler registration — Register Motrix Next as the default handler for magnet://, thunder://, and motrixnext:// directly from Settings with per-protocol toggle switches and multi-language support across all 26 locales
+    - Protocol hijack detection — On startup, detects when another application has taken over a registered protocol and prompts the user with a notification and in-app dialog
+    - motrixnext:// deep-link protocol — New custom protocol for browser extensions and third-party integrations to wake the app and create download tasks
+    - Dynamic table column widths — NDataTable columns now auto-size using canvas text measurement for optimal layout
+    🛠 Improvements
+    - macOS bundle identifier resolution — Uses app.config().identifier from tauri.conf.json instead of NSBundle.mainBundle(), which incorrectly returned the parent process's bundle ID in dev mode
+    - Post-registration verification — After LSSetDefaultHandlerForURLScheme, verifies the handler actually changed to catch silent no-ops when no .app bundle is registered
+    - Failed registration rollback — When protocol registration fails, the toggle automatically reverts to its previous state and the reverted value is persisted to config
+    - IPC error display — Fixed Tauri error objects displaying as [object Object] in toast messages
+    🐛 Bug Fixes
+    - Fixed HTTP error handling in aria2 RPC and stopSeeding UI refresh (#147)
+    - Eliminated dangling unhandled rejections in call() and batch() RPC methods
+    - Fixed protocol switches staying ON after failed registration attempts
+    - Fixed race condition between syncProtocolHandlers and onMounted causing inconsistent switch states
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.6.0
+ReleaseTime: 2026-04-04T09:13:58.0000000Z
