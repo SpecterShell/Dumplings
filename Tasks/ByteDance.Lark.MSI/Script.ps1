@@ -1,4 +1,4 @@
-$Object1 = (((Invoke-WebRequest -Uri 'https://www.feishu.cn/hc/zh-CN/articles/360049067543').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).Values | ForEach-Object -Process { if ($_ -is [array]) { $_ } } | Where-Object -FilterScript { $_ -is [System.Collections.IDictionary] -and $_.Contains('html') } | Select-Object -First 1).html.html | Get-EmbeddedLinks
+$Object1 = (((Invoke-WebRequest -Uri 'https://www.larksuite.com/hc/en-US/articles/360048487868').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).Values | ForEach-Object -Process { if ($_ -is [array]) { $_ } } | Where-Object -FilterScript { $_ -is [System.Collections.IDictionary] -and $_.Contains('html') } | Select-Object -First 1).html.html | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
@@ -31,10 +31,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://www.feishu.cn/hc/en-US/articles/360043073734'
+        Value  = 'https://www.larksuite.com/hc/en-US/articles/360046836333'
       }
 
-      $Object2 = ((Invoke-WebRequest -Uri 'https://www.feishu.cn/hc/en-US/articles/360043073734').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
+      $Object2 = ((Invoke-WebRequest -Uri 'https://www.larksuite.com/hc/en-US/articles/360046836333').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
 
       $ReleaseNotesNode = $Object2[0].Value.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
       if ($ReleaseNotesNode) {
@@ -66,10 +66,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://www.feishu.cn/hc/zh-CN/articles/360043073734'
+        Value  = 'https://www.larksuite.com/hc/zh-CN/articles/360046836333'
       }
 
-      $Object3 = ((Invoke-WebRequest -Uri 'https://www.feishu.cn/hc/zh-CN/articles/360043073734').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
+      $Object3 = ((Invoke-WebRequest -Uri 'https://www.larksuite.com/hc/zh-CN/articles/360046836333').Content | Get-EmbeddedJson -StartsFrom 'window._templateValue = ' | ConvertFrom-Json -AsHashtable).GetEnumerator().Where({ $_.Value -is [array] -and $_.Value.Where({ $_ -is [hashtable] -and $_.Contains('tabName') }) }, 'First')
 
       $ReleaseNotesCNNode = $Object3[0].Value.Where({ $_.html.html.Contains("V$($this.CurrentState.Version.Split('.')[0..1] -join '.')") }, 'First')
       if ($ReleaseNotesCNNode) {
