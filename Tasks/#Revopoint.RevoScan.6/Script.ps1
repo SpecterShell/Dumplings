@@ -1,18 +1,18 @@
 $OldReleasesPath = Join-Path $PSScriptRoot 'Releases.yaml'
 if (Test-Path -Path $OldReleasesPath) {
-  $Global:DumplingsStorage['RevoScan'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
+  $Global:DumplingsStorage['RevoScan6'] = $OldReleases = Get-Content -Path $OldReleasesPath -Raw | ConvertFrom-Yaml -Ordered
 } else {
-  $Global:DumplingsStorage['RevoScan'] = $OldReleases = [ordered]@{}
+  $Global:DumplingsStorage['RevoScan6'] = $OldReleases = [ordered]@{}
 }
 
 # en-US
 $Object1 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info' -Method Post -Body (
   @{
     deploy                = 'test'
-    sn_code               = 'FFFFFFFFFFFFFF051'
-    # The version here should have 4 parts, e.g. v5.4.12.1526, but the version returned by the endpoint only has 3 parts, e.g. v5.4.12
+    sn_code               = 'FFFFFFFFFFFFFF061'
+    # The version here should have 4 parts, e.g. v6.0.0.616, but the version returned by the endpoint only has 3 parts, e.g. v5.4.12
     # Use the 3-parts version anyway
-    user_version_string   = $this.Status.Contains('New') ? 'v5.4.12.1526' : "v$($this.LastState.Version)"
+    user_version_string   = $this.Status.Contains('New') ? 'v6.0.0.616' : "v$($this.LastState.Version)"
     version_desc_language = 'en_US'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
@@ -29,8 +29,8 @@ $VersionEN = $Object1.data.target_version -replace '^v'
 $Object2 = Invoke-RestMethod -Uri 'https://api.infly3d.com/software/version/info' -Method Post -Body (
   @{
     deploy                = 'test'
-    sn_code               = 'FFFFFFFFFFFFFF051'
-    user_version_string   = $this.Status.Contains('New') ? 'v5.4.12.1526' : "v$($this.LastState.Version)"
+    sn_code               = 'FFFFFFFFFFFFFF061'
+    user_version_string   = $this.Status.Contains('New') ? 'v6.0.0.616' : "v$($this.LastState.Version)"
     version_desc_language = 'zh_CN'
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'

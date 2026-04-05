@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.RevopointDownloadPage
-$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 5") and not(contains(., "MetroX"))]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
+$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 6") and not(contains(., "MetroX"))]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -16,18 +16,18 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      if ($Global:DumplingsStorage.Contains('RevoScan') -and $Global:DumplingsStorage.RevoScan.Contains($ShortVersion)) {
+      if ($Global:DumplingsStorage.Contains('RevoScan6') -and $Global:DumplingsStorage.RevoScan6.Contains($ShortVersion)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.RevoScan[$ShortVersion].ReleaseNotes
+          Value  = $Global:DumplingsStorage.RevoScan6[$ShortVersion].ReleaseNotes
         }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Global:DumplingsStorage.RevoScan[$ShortVersion].ReleaseNotesCN
+          Value  = $Global:DumplingsStorage.RevoScan6[$ShortVersion].ReleaseNotesCN
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
