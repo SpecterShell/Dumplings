@@ -1,0 +1,28 @@
+Version: 3.13.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_windows_386.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_windows_amd64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mvdan/sh/releases/tag/v3.13.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - cmd/shfmt
+      - Add support for [[zsh]] in EditorConfig files
+      - Detect the shell variant from filenames like .zshrc and .bash_profile
+      - Fix --apply-ignore when used with explicit args - #1310
+    - syntax
+      - Revert an accidental change to how array subscripts are formatted - #1314
+      - Never join ;; with the previous line when formatting - #1289
+      - Fix a bug where $1[foo] was parsed as a subscript in Zsh - #1288
+      - Correctly parse $! in double quotes in Zsh - #1298
+      - Allow indexing into special parameters in Zsh - #1299
+      - Allow parameter expansions with empty names in Zsh - #1280
+    - interp
+      - Test against Bash 5.3 and fix three new discrepancies
+      - Fix a few bugs related to nameref variables
+      - Avoid panics when user input encounters unimplemented features
+ReleaseTime: 2026-04-06T21:43:54.0000000Z
