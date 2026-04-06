@@ -1,0 +1,248 @@
+Version: 6000.4.1f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/8535861f39e1/Windows64EditorInstaller/UnitySetup64-6000.4.1f1.exe
+  ProductCode: Unity 6000.4.1f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/8535861f39e1/WindowsArm64EditorInstaller/UnitySetupArm64-6000.4.1f1.exe
+  ProductCode: Unity 6000.4.1f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.4.1
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.4/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.4/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.4.1f1
+    - 6000.2.0a10: Crash on TexturesD3D12::CreateTextureInternal() when opening a project for the first time (UUM-135024)
+    - 6000.2.0b1: Crash on "CachedReader::OutOfBoundsError" when loading VFX object from an Asset Bundle with DisableTypeTree (UUM-137538)
+    - 6000.3.0a3: Crash on UmbraQueryExtqueryStaticShadowCasters when baking a custom Reflection Probe with the minimum Near Clipping Planes value (UUM-137250)
+    - 6000.5.0a4,6000.0.66f1,6000.3.4f1,6000.4.0b4: ShaderVariantCollection.variantCount and ShaderVariantCollection.shaderCount returns 0 in Builds (UUM-137398)
+    - 6000.5.0a8,6000.6.0a1,6000.4.0b12,6000.3.12f1: Crash with multiple StackTraces when building lighting in a Specific Scene (UUM-138494)
+    - 6000.6.0a1,6000.3.11f1: Color parameter is ignored when creating dynamic text in a UI Document with DrawText() (UUM-137907)
+    - 6000.6.0a1,6000.3.11f1,6000.4.0b12,6000.5.0a9: Crash on PhysicsCommandsPhysXBodyGetFlags when changing RigidBody Interpolation value through API for prefab objects (UUM-137716)
+    - Metal: macOS stutters in a minimal project in the Editor in Play Mode (UUM-85256)
+    - : Crash in vkOnscreenSwapChainAcquireNextImage (UUM-138508)
+    - : Crash on ConstraintProjectionTree::projectionTreeBuildStep when ConfigurableJoint uses JointProjectionMode.PositionAndRotation and connected Rigidbody switches from kinematic to non-kinematic (UUM-135394)
+    - : Editor memory leak in VisualElement when recompiling in a blank URP project (UUM-138000)
+    - : New Releases are shipped without the newest URP and HDRP Template Versions (UUM-137426)
+    - : Player crash when switching focus in Exclusive Fullscreen mode with DirectX 12 (UUM-134743)
+    6000.4.1f1 Release Notes
+    Features
+    - UI Toolkit: Added support for simulate.Click on world-space content in UIToolkit Test Framework.
+    - Version Control: Added "Add to Source Control" and "Undo Changes" actions for folders from the Project browser and Inspector.
+    - Version Control: Added a new Branch Explorer to visualize and navigate branches.
+    - Version Control: Added persistence for all splitter positions across window reloads and sessions.
+    - Version Control: Added support in the merge view to partially apply a shelve.
+    - Version Control: Added the F2 keyboard shortcut to rename branches and labels.
+    Improvements
+    - 2D: Added more detail to the Tilemap.GetTiles API when the withinBounds parameter is set to true. (UUM-136524)
+    - Android: Added profiling markers to the AndroidPlayer initialization process. (UUM-135048)
+    - Documentation: Added direct links to the Memory Profiler package.
+    - Documentation: Added information about clean and dirty page management to memory management documentation.
+    - Entities: Write link.xml when building Entities Content
+    - Installer: Installers on Windows can now take up to 60% less time due to an optimization in the compression strategy. (UUM-136633)
+    - Search: Improved performance when merging Search Index artifacts of large projects with "Deep Indexing" enabled. (UUM-133013)
+    API Changes
+    - Audio: Added: Added API to ScriptableAudioPipeline ControlContext to ease discovery of when the system is configuring. (UUM-133107)
+    - Entities Graphics: Deprecated: Deprecated support for OpenGL ES for Entities Graphics. While the graphics API itself remains a valid choice, the Entities Graphics package will no longer support it in a future version of Unity.
+    - Game Core: Changed: Changed SystemInfo.deviceName to equal SystemInfo.unsupportedIdentifier on Game Core Xbox, instead of using the incompatible Windows systeminfo::GetDeviceName implementation (UUM-132562)
+    - iOS: Added: Added iPhone 17e device generation enum and screen cutouts.
+    Changes
+    - Editor: Remove null transform warnings when adding null Transforms or invalid TransformHandles to TransformAccessArrays. (UUM-133913)
+    - Version Control: Added changeset and label icons to the status bar.
+    - Version Control: Delayed workspace creation when opening projects from the Unity Hub.
+    - Version Control: Improved text field focus behavior across dialogs for more consistent keyboard workflows.
+    - Version Control: Improved the empty state in the Pending Changes view.
+    - Version Control: Prevented connecting a project to a different organization by mistake.
+    - Version Control: Updated new project initialization to perform a full initial checkin.
+    - Version Control: Updated the macOS hide shortcut to Cmd+Shift+H.
+    Fixes
+    - 2D: Fixed an issue where a SpriteSkin with no bones (for example, before running Create Bones) was not selectable in Scene view and displaying incorrectly. (UUM-132963)
+    - 2D: Fixed an issue where Brush Picks List items are initialized with a lower height than the minimum size when the Tile Palette Brush Pick Overlay is expanded. (UUM-132593)
+    - 2D: Fixed an issue where Brush Picks List items become malformed, causing the list to become cut off when decreasing the Pick size with the slider. (UUM-132606)
+    - 2D: Fixed an issue where Brush Picks Names disappear after adjusting the Size of the picks and switching view mode to Grid. (UUM-132598)
+    - 2D: Fixed an issue where Destroying assets is not permitted to avoid data loss error thrown when creating a second Tile Palette Brush Pick Asset. (UUM-132608)
+    - 2D: Fixed an issue where scrolling in Brush Picks List when a lot of Brush Picks are saved. (UUM-134369)
+    - 2D: Fixed an issue where the Cell Size property accepted negative values when creating a Tile Palette. The Editor now sets negative values to 0. (UUM-130884)
+    - 2D: Fixed an issue with sprite flicker and draw call fluctuation when Sprite Skins are culled. (UUM-132924)
+    - 2D: Fixed issue where GetSprite fails for RuntimeAtlas. (UUM-132422)
+    - 2D: Fixed issue where the Tile Palette window is extremely zoomed in after collapsing the Tile Palette view using the separator and expanding the window by using the Brush view button. (UUM-132739)
+    - 2D: Fixed shadow caster 2d culling. (UUM-135640)
+    - 2D: Updated the text used in the UI by Tilemap from SceneView to Scene View. (UUM-130251)
+    - Adaptive Performance: Added a limit (256 chars) to the scaler profile name length to avoid long name freeze the Editor. (UUM-136422)
+    - Adaptive Performance: Fixed Adaptive Performance's Logging Frequency setting so it no longer accepts negative values. (UUM-133890)
+    - AI: On Linux, the "Open Agent Settings..." option in the Agent Type property of a NavMeshAgent inspector would issue an error and not open the Navigation window. (UUM-131690)
+    - Android: Batch mode: removed auto-scanning for Android devices on Editor start if Android support is installed. (UUM-133593)
+    - Animation: Fixed crash when avatar had invalid hand bones. (UUM-136330)
+    - Animation: Removed add button from human template asset, and instead ensure that all bones are added by default when creating a new template. (UUM-133725)
+    - Documentation: Removed the mention of a 4GB limit to the UnityEngine.Cache class. The maximum size of the cache when downloading AssetBundles is either limited by the Cache.maximumAvailableStorageSpace value or physical disk space, whichever is lower. If not set, the value will be available disk space. (UUM-129965)
+    - DX12: Added Direct3D Graphics Infrastructure (DXGI) errors to the user logs that were not covered by validation errors. Fixed false-reporting of non-error return codes (i.e., 087a0001) in CheckDeviceStatus() (UUM-135201)
+    - DX12: Fixed a crash during render target binding when CommandBuffer.SetRenderTarget used an invalid depth slice. (UUM-130121)
+    - DX12: Fixed missing resource barrier after resuming drawing to the render target previously bound as a compute shader SRV. (UUM-127520)
+    - Editor: Adjusted the Quality Levels list display to match other Reorderable Lists. (UUM-136310)
+    - Editor: AspectRatio editor now checks if any targets are in Prefab Mode before showing parent related warning. (UUM-132081)
+    - Editor: Changed Mesh LOD generator to no longer output LODs when selection curves are negative, which happens for some meshes with double-sided geometry. (UUM-121461)
+    - Editor: Differentiated duplicated BuildProfile with parentheses, e.g. Windows (1). (UUM-130365)
+    - Editor: Do not offer to recover Scene Backups if the Editor has been launched in Batchmode (UUM-136292)
+    - Editor: Fixed a bug where multiple UITK previews were not supported in the inspector.
+      Added a dropdown to be able to select a preview when there are multiple UITK object previews present, added logic to switch between previews. (UUM-134013)
+    - Editor: Fixed a memory leak where RenderTexture objects used for profiler screenshot capture were not properly destroyed. (UUM-137789)
+    - Editor: Fixed a performance issue with QualitySettingsEditor reading all build profiles in a project on every Update call. (UUM-136760)
+    - Editor: Fixed an error with IMGUI elements in the customizable toolbar. (UUM-135117)
+    - Editor: Fixed an issue in USS style validation that did not recognize that tabs were whitespace. (UUM-135915)
+    - Editor: Fixed an issue on Linux which could cause the cursor icon state to be incorrect. (UUM-112638)
+    - Editor: Fixed an issue where dragging assets with no file extension was not possible in the Project Browser. (UUM-113750)
+    - Editor: Fixed an issue where Editor window dimensions were not preserved when resetting layouts on Linux. (UUM-131233)
+    - Editor: Fixed an issue where Player Settings icon sizes and retention were not preserved after toggling Override for Windows, Mac, Linux. (UUM-131965)
+    - Editor: Fixed an issue where the content from a window could go over the overlay toolbars. (UUM-134357)
+    - Editor: Fixed an issue where the kebab menu for the URP Default Profile in Player Settings > Pipeline Specific Settings cannot be opened under very specific circumstances. (UUM-135066)
+    - Editor: Fixed an issue where the wrap mode option for Legacy Animation clips would not be shown correctly. (UUM-135008)
+    - Editor: Fixed an issue with the Linux editor where you would not be prompted to overwrite files with the same name. (UUM-134937)
+    - Editor: Fixed applying prefab property modification when FormerlySerializedAs collides with a field in the type. (UUM-135039)
+    - Editor: Fixed issues with preview mode being synchronized between multiple Animation Windows at the same time. (UUM-136817)
+    - Editor: Fixed label truncation in Player Settings. (UUM-136316)
+    - Editor: Fixed misaligned labels in Graphics Settings section. (UUM-135081)
+    - Editor: Fixed misleading icon in Quality dropdown. (UUM-130571)
+    - Editor: Fixed names from overflowing in Light Batching Debugger. (UUM-132565)
+    - Editor: Fixed names not getting refreshed in Light Batching Debugger. (UUM-132573)
+    - Editor: Fixed ObjectField displaying "Properties" without an object inside. (UUM-136445)
+    - Editor: Fixed Player Splash Screen settings "Preview" button to display currently selected build profile's Splash Screen. (UUM-134398)
+    - Editor: Fixed Quality dropdown becoming not in sync with QualityLevel selected when a quality level was removed. (UUM-133648)
+    - Editor: Fixed SceneView Maximize shortcut not restoring the view in MacEditor while continuously dragging the mouse. (UUM-134463)
+    - Editor: Fixes a false-positive TLS error in LinuxEditor thrown when using MemoryProfiler (UUM-136317)
+    - Editor: Fixes rare WindowsEditor crash during window activation due to a compiler optimization bug (UUM-137226)
+    - Editor: Resolved an issue with libxml2 being renamed on Ubuntu 25.10 and later. Ubuntu 24.04 remains the highest version supported by the Editor. (UUM-137582)
+    - Editor: Scripting Defines no longer require a manual Apply through the UI when modified via code. (UUM-129228)
+    - Editor: Scripting Defines' "Copy Defines" button now properly copies the defines from the selected list. (UUM-133917)
+    - Editor: The Adaptive Performance settings file is no longer accessible via the Inspector UI. (UUM-133313)
+    - Editor: The Adaptive Performance settings file is no longer accessible via the Inspector UI. (UUM-133314)
+    - Editor: UI Toolkit test framework: Fixed EditorWindowUITestFixture to support domain reloads during tests. (UUM-136644)
+    - Editor: Using WorldSystemFilterFlags.EntitySceneOptimizations with unmanaged systems no longer causes an exception to be thrown. (UUM-135890)
+    - Editor: When unassigning the TargetGraphic of a Toggle, the Graphic color will be reset. (UUM-133863)
+    - Engine Diagnostics: Fixed incorrect timestamp on Diagnostics native crash reports (UUM-135436)
+    - Engine Diagnostics: Fixed issue where usymtool was missing some log output (UUM-136272)
+    - Entities: Fixed an issue where a SubScene component could reference a Scene that the component's GameObject is already part of. (UUM-133963)
+    - Entities: Fixed an issue where a SubScene component could reference a Scene that the component's GameObject is already part of. (UUM-134043)
+    - Entities: Using EntityQueryOptions.IncludeMetaChunks for an IJobEntity no longer causes a source generation error. (UUM-131987)
+    - GI: Fix upgrade error related to URPReflectionProbeSettings (UUM-126607)
+    - Graph Toolkit: Added a package shim for Graph Toolkit to prevent namespace conflicts when opening a project from older versions of Unity that have the Graph Toolkit package, which is now a module. (UUM-134379)
+    - Graph Toolkit: Block nodes were calling OnDefinePorts and OnDefineOptions before their ContextNode was assigned, leading to invalid initialization. They are now called after the ContextNode is set, ensuring correct setup. (UUM-133642)
+    - Graph Toolkit: Fixed a bug where right clicking on a Blackboard variable did not select it. (UUM-135996)
+    - Graph Toolkit: Fixed text that appears at bottom of window when errors or warnings are present. It now collectively labels these as "Alerts". (UUM-136004)
+    - Graph Toolkit: The Blackboard title for a local subgraph now doesn't change to be the name of the main graph when saving. It properly keeps the local subgraph's name. (UUM-129144)
+    - Graph Toolkit: Updated the default value fields in the blackboard to be delayed. (UUM-133613)
+    - Graphics: A warning is now displayed when the GetVariants API is called on a GraphicsStateCollection containing shader variants that were serialized with any invalid keywords. (UUM-136009)
+    - Graphics: Fixed an issue where Pipeline State Object (PSO) warmup using the GraphicsStateCollection API had incorrect cache misses on Metal when the traced PSO was recorded outside of a render pass. (UUM-135455)
+    - Graphics: Fixed SystemInfo.supportsInlineRayTracing becoming false after NVIDIA driver update. (UUM-137132)
+    - Graphics: Fixed terrain seams when using instancing on some Android devices. (UUM-131277)
+    - Graphics: Increase the internal limit for maximum number of subpasses to 16 (UUM-128596)
+    - Graphics: Some GraphicsStateCollection APIs that queried specific ShaderVariants would not be able to find the correct variant if the loaded collection asset was previously serialized in certain older versions of Unity 6000.3 and 6000.4. (UUM-136008)
+    - Graphics: Used glClear instead of clear quad when possible to avoid artifacts on some older Android devices. (UUM-135708)
+    - Graphics: [Vulkan] [Android] Fixed visual artifacts on Mali GPUs (non-Midgard) when rendering with depth-read and stencil-write operations in the same render pass subpass. Workaround applies to drivers before version 41.0.0 where the issue exists. (UUM-31270)
+    - HDRP: Fixed Frame Debugger flickering by disabling water updates and CPU-readbacks while the Frame Debugger is active. (UUM-113756)
+    - HDRP: Fixed shader error when bent normals are used (UUM-137985)
+    - Input: Fixed an issue where the resize cursor wasn't showing when resizing the Standalone Player window, for projects with splash screen disabled and that only used Input Manager. (UUM-134058)
+    - Input System: Fixed multiple critical thread-safety issues in the periodic timer that caused lost and spurious cancellations, incorrect timer behavior, and infinite CPU loops when Cancel() was called concurrently with Schedule() or Poll(). (UUM-136189)
+    - Input System: Fixed non-deterministic test failures in PeriodicTimerTests due to timing precision differences and scheduling effects by making tests less dependent on timing. (UUM-137047)
+    - Networking: Expose the httpForcedVersion property on UnityWebRequest, so that the network communication can be forced to use a specific http protocol version, if needed. (UUM-131759)
+    - Package Manager: Fixed unrooted memory for label kMemUpm. (UUM-127460)
+    - Physics: Fix NaN values that could be introduced in some cases where a Rigidbody would have acceleration applied via ForceMode.Acceleration, while having it's rotation constrained. The issue would most often occur in conjunction with manually calling Physics.Simulate. (UUM-103515)
+    - Physics 2D: Add access to "collisionThreshold" to "PhysicsBody" and "PhysicsBodyDefinition" allowed the configuration of when CCD is used. (UUM-137696)
+    - Physics 2D: Add missing setters for PhysicsBody of "mass", "rotationalInertia" and "localCenterOfMass" to supplement the existing getters. (UUM-137414)
+    - Physics 2D: All physics object and argument validation now happens in final player builds to ensure consistent behaviour and no crashes can occur if warnings were not detected (or ignored) using the Editor/Development player. (UUM-137011)
+    - Physics 2D: Fixed an issue where the physics debug renderer was incorrectly using depth-testing. (UUM-135992)
+    - Physics 2D: Fixed an issue with PhysicsComposer.GetGeometryIslands() where it was not read-locked, leading to potential concurrency issues. (UUM-135939)
+    - Physics 2D: PhysicsWorld.TestOverlapShape, PhysicsWorld.OverlapShape, PhysicsWorld.CastShape and PhysicsShape.CastShape now correctly return results in world-space and ignore the originating shape as expected. (UUM-136473)
+    - Physics 2D: Rearrange ChainSegmentGeometry serialized fields so they appear in a more intuitive order in the inspector. (UUM-137011)
+    - Physics 2D: Rearrange ChainSegmentGeometry serialized fields so they appear in a more intuitive order in the inspector. (UUM-137344)
+    - Physics 2D: When adding PhysicsShape with a disabled "PhysicsShapeDefinition.startMassUpdate", ensure that calling either "PhysicsBody.ApplyMassFromShapes" or "PhysicsBody.massConfiguration" correctly configures the PhysicsBody collision detection. (UUM-137414)
+    - QNX: Fix touch/mouse input coordinates on QNX windowed window (UUM-135196)
+    - Scene/Game View: Fixed an issue where increasing the grid size could create a grid over the maximum grid size limit of 1024. (UUM-134461)
+    - Scene/Game View: Fixed an issue where it would be possible to enter infinite values for the grid custom position and rotation. (UUM-134403)
+    - Scene/Game View: Fixed an issue where setting the grid position to handle position could go to infinity when handle position was invalid. (UUM-134393)
+    - Scene/Game View: Fixed EditorToolContext behavior that could prevent regular GameObject selection in the scene. (UUM-135908)
+    - Scene/Game View: Fixed Grid opacity slider behavior when dragging on the field Label. (UUM-134316)
+    - Scene/Game View: Fixed issue where global tools that target specific contexts would not exit when the target context exited. (UUM-136746)
+    - Shadergraph: Fix wrong additional lights indexation in custom lighting samples. (UUM-137007)
+    - Shadergraph: Fixed an issue that copy-pasting or duplicating nodes would result in all nodes' previews to be either collapsed or expanded based on preferences, instead of respecting original states. (UUM-136522)
+    - Shadergraph: Fixed an issue that Preview Nodes would be created with their preview collapsed when Preference was set to not expand previews by default. (UUM-136521)
+    - Shadergraph: Fixed NullReferenceException being thrown after deleting a shader input category. (UUM-134265)
+    - Shadergraph: Fixed texture sampling operations for texture properties marked HDR. (UUM-122106)
+    - Shadergraph: Fixed the Fancy Loading subgraph in UGUI Shaders sample. (UUM-134638)
+    - Shaders: Fixed poorly visible error messages in the Keyword Declaration Overrides section of Shader Build Settings. (UUM-132639)
+    - SRP Core: Reduced VolumeProfile inspector performance overhead (UUM-136456)
+    - Text: Fix RichTextTagParser incomplete tag parsing (UUM-134299)
+    - uGUI: Fixed an exception when a text component was added during the scope of a font rebuild. (UUM-128580)
+    - uGUI: Fixed errors when zooming out in the Scene view with a RectTransform object selected. (UUM-132309)
+    - UI Elements: Fixed the Inspector copy/paste for UnityEvent so it now works between components with a CustomEditor (such as Button) and components without one. Previously, pasting a copied UnityEvent between these two types of components silently failed due to incompatible clipboard formats. (UUM-134401)
+    - UI Toolkit: Added missing getter APIs to Painter2D. (UUM-128715)
+    - UI Toolkit: Exposed EditorUtility.activePlayModeTint to enable custom meshes and Painter2D colors to look consistent with the editor. (UUM-114424)
+    - UI Toolkit: Fix WebGL shader precision issue. (UUM-132006)
+    - UI Toolkit: Fixed a bug that could cause incorrect clipping after changing overflow or corner radii. (UUM-135869)
+    - UI Toolkit: Fixed a layout cache memory leak that occurred during extended periods of heavy load. (UUM-137552)
+    - UI Toolkit: Fixed a No Theme Style Sheet set to PanelSettings warning that appeared when inspecting an SVG asset in Play mode. (UUM-123228)
+    - UI Toolkit: Fixed an issue where enum names could become duplicate when generating the UXML schema. (UUM-136741)
+    - UI Toolkit: Fixed an issue where stencil masks in filters were rendered as normal geometry. (UUM-135894)
+    - UI Toolkit: Fixed an issue with editing FilterStyleField inline value when current value is inherited from a stylesheet. (UUM-135010)
+    - UI Toolkit: Fixed coverage (arcAA) issue with SVG Gradient. (UUM-115304)
+    - UI Toolkit: Fixed filter foldout collapsing after entering playmode. (UUM-137614)
+    - UI Toolkit: Fixed gamma issue of Sample Element Texture node for Editor Window when using custom shaders. (UUM-135360)
+    - UI Toolkit: Fixed inconsistency in the preservation of Z in flat UI (overlay or editor). (UUM-115032)
+    - UI Toolkit: Fixed issues in MultiColumnTreeView returning the wrong data from GetIdFromIndex and GetItemDataForIndex when sorted. (UUM-111055)
+    - UI Toolkit: Fixed preview code generation of UI Toolkit shaders. (UUM-130869)
+    - UI Toolkit: Fixed rendering gaps caused by a precision issue. (UUM-124868)
+    - UI Toolkit: Fixed RenderTexture leak in EditorMonitor (UUM-104256)
+    - UI Toolkit: Fixed ScrollView dragging reacting to two XR controllers at the same time when starting the drag action with only one of them. (UUM-135860)
+    - UI Toolkit: Fixed SVG Tessellation Mode, which would not persist after toggling the generated asset type. (UUM-136307)
+    - UI Toolkit: Fixed SVGImporter not honoring serialized FileIDs from some imported files. (UUM-136228)
+    - UI Toolkit: Fixed tight-mesh sprite with DynamicColor hint not updating its background tint color. (UUM-136987)
+    - UI Toolkit: Forcing invertCulling to false when rendering overlay UI for added safety against leaked state. (UUM-136734)
+    - URP: Fixed an issue where Screen Space Ambient Occlusion incorrectly appeared rotated or offset on mobile devices that used Vulkan with pre-transform enabled. (UUM-72886)
+    - URP: Fixed an issue where the Nearest-Neighbor Upscaling Filter was ignored when no final post-processing pass was present. (UUM-136528)
+    - URP: Fixed map size value not working for STP and Reflection Probe Atlas overlays in the Rendering Debugger. (UUM-126982)
+    - Version Control: Fixed a layout exception when right-clicking Pending Changes in the side bar.
+    - Version Control: Fixed a NullReferenceException when opening history from a branch diff.
+    - Version Control: Fixed a potential NullReferenceException in the changeset-by-changeset diff panel.
+    - Version Control: Fixed and localized the Checkin dialog progress label.
+    - Version Control: Fixed blurry icons in the Explore Repositories window.
+    - Version Control: Fixed button capitalization in the Unity Version Control window to match Unity standards.
+    - Version Control: Fixed issues in the changeset-by-changeset diff from the branches view.
+    - Version Control: Fixed the branches context menu not opening when the table is empty.
+    - Version Control: Fixed the Checkin dialog not auto-focusing the comment field.
+    - Version Control: Fixed the labels context menu not opening when the table is empty.
+    - Version Control: Fixed the New Branch button failing when the current selection is a changeset or label.
+    - Version Control: Fixed the status bar turning gray after exiting Play Mode.
+    - Version Control: Fixed the Unity Version Control window during Create Workspace to refresh without requiring mouse movement.
+    - Version Control: Fixed validation messages alignment in the Unity Version Control window.
+    - VFX Graph: Fixed VFX subgraph dependencies that sometimes didn't trigger reimport of the whole dependency chain. (UUM-133319)
+    - Video: Fixed a warning from ChannelGroupI::getPitch in the fakemod module in WebGLSupport. (UUM-134014)
+    - WebGL: Fixed a rendering error that occurred when using Terrain detail meshes with WebGPU and WebGL. (UUM-91734)
+    - WebGL: [WebGPU] GPU Resident Drawer Instancing can fail with invalid binding dynamic offsets. (UUM-135867)
+    - WebGL: [WebGPU] Some texture formats, like RG8UNorm, fail when used as a writable texture for a compute shader, even when the texture_formats_tier1 extension is available. (UUM-136007)
+    - Windows: Moved the Enable DirectStorage setting to Project Settings so it can be tracked by version control and accessible via C# scripting. All upgraded projects using the previous setting are set to disabled. (UUM-133978)
+    Package changes in 6000.4.1f1
+    Packages updated
+    - com.unity.performance.profile-analyzer: 1.3.2 to 1.3.3
+    - com.unity.postprocessing: 3.5.1 to 3.5.4
+    - com.unity.splines: 2.8.3 to 2.8.4
+    - com.unity.visualscripting: 1.9.10 to 1.9.11
+    - com.unity.multiplayer.playmode: 2.0.1 to 2.0.2
+    - com.unity.transport: 2.6.0 to 2.7.1
+    - com.unity.dedicated-server: 2.0.1 to 2.0.2
+    - com.unity.memoryprofiler: 1.1.11 to 1.1.12
+    - com.unity.polyspatial: 3.1.0 to 3.1.1
+    - com.unity.polyspatial.visionos: 3.1.0 to 3.1.1
+    - com.unity.polyspatial.xr: 3.1.0 to 3.1.1
+    - com.unity.polyspatial.extensions: 3.1.0 to 3.1.1
+    - com.unity.xr.visionos: 3.1.0 to 3.1.1
+ReleaseTime: 2026-03-18T18:39:00.8960000Z

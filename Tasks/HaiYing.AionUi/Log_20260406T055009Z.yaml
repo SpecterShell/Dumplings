@@ -1,0 +1,128 @@
+Version: 1.9.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v1.9.7/AionUi-1.9.7-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v1.9.7/AionUi-1.9.7-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    Scheduled Tasks (Cron)
+    - New Scheduled Tasks UI with 1:N conversation model
+    - Sidebar refactoring to accommodate cron entries
+    Chat Enhancements
+    - Message reply/quote with floating selection button
+    - Gemini inline thinking display in conversation flow
+    - Mermaid diagram preview with panel view
+    - Fixed auto-scroll disruption during AI streaming
+    MCP
+    - Import MCP servers from opencode configuration
+    ACP Improvements
+    - AcpConfigSelector on the Guide page with pending config option support
+    - Shell environment passthrough to ACP backends (restores .zshrc variables)
+    - Idle ACP/Codex agent auto-termination after 30 minutes to reclaim memory
+    Assistant Management
+    - Improved assistant management UI with full i18n coverage
+    - Fixed avatar persistence on save
+    Workspace
+    - Quick-open and file upload now skip save prompt on workspace switch
+    - Stale snapshot directory cleanup on startup
+    Bug Fixes
+    - Auth: Await auth refresh token and status checks to prevent race conditions
+    - Settings: Fix health check false positive from request_trace fall-through; support array-based MCP JSON import
+    - ACP: Fix process group detachment for Claude bridge and generic backends; correct thinking message ordering in streaming; preserve streaming message grouping; move file operations into view steps
+    - Markdown: Preserve streamed whitespace after think filtering; restore paragraph spacing in shadow view
+    - Platform: Derive app root from module location instead of process.cwd(); ensure dev userData isolation before first getPath call
+    - Extensions: Gate aion.storage behind manifest storage permission; resolve symlink path confinement escapes
+    - PWA: Use network-first strategy for script and style assets
+    - Startup: Prevent premature window creation from blocking initStorage
+    - Boot: Improve start-on-boot launch behavior on Windows
+    - Cron: Polish scheduled tasks UI
+    - ACP Streaming: Validate and extract ACP streaming chunks; add turn-level thought/content observability
+    - Workspace: Localize temporary workspace display names
+    - Theme: Align light theme bg-1 to #F9FAFB
+    - Lifecycle: Move hook execution to child process for isolation
+    Performance
+    - Storage: Replace FileBuilder serial queue with in-memory cached store — significantly reduces file I/O contention
+    Security
+    - Pin axios version and enforce frozen lockfile in CI
+    - Supply chain security improvements in PR automation (trusted contributor merge gate)
+    Skills & Tooling
+    - Sync built-in OfficeCLI skill to v1.0.34 (R9)
+    - Sync officecli-pptx / docx / xlsx skills to R9
+    What's Changed
+    - fix(webserver): await auth refresh token by @amanharshx in https://github.com/iOfficeAI/AionUi/pull/2000
+    - refactor(lifecycle): move hook execution to child process for isolation by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2004
+    - chore(skills): add i18n/prek checks and inline PR logic for fix-sentry and fix-issues by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2005
+    - fix(settings): prevent health check false positive from request_trace fall-through by @gobylor in https://github.com/iOfficeAI/AionUi/pull/2007
+    - feat(snapshot): cleanup stale snapshot directories on startup by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2009
+    - fix(pwa): use network-first strategy for script and style assets by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2011
+    - feat(gemini): inline thinking display in conversation flow by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2013
+    - fix(app): improve start-on-boot launch behavior by @cdxiaodong in https://github.com/iOfficeAI/AionUi/pull/2014
+    - fix(auth): await auth status user checks by @amanharshx in https://github.com/iOfficeAI/AionUi/pull/2016
+    - fix(chat): prevent auto-scroll from breaking during AI streaming by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2018
+    - feat(agents): add custom local agent entry with dropdown, modal form, and emoji avatar by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2019
+    - feat:workspace quick open and upload file will skip save in workspace switch by @mingxuanzi in https://github.com/iOfficeAI/AionUi/pull/2021
+    - docs(webui): fix invalid npm resetpass command examples by @yejiming in https://github.com/iOfficeAI/AionUi/pull/1969
+    - chore(ci): skip PR checks for draft pull requests by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2040
+    - Show "market coming soon" message and add i18n entriesJimmy/2026 04 01 15 04 45 by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2027
+    - feat(task): kill idle acp/codex agents after 30 min to reclaim memory by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2030
+    - fix(webserver): use valid dummy bcrypt hash for missing-user login checks by @amanharshx in https://github.com/iOfficeAI/AionUi/pull/2032
+    - fix(conversationBridge): guard against undefined files in sendMessage by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2033
+    - fix(acp): detach Claude bridge process group by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2035
+    - feat(multi-instance): support running two dev instances simultaneously by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2037
+    - fix(markdown): preserve streamed whitespace after think filtering by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2053
+    - feat(team): multi-agent team mode with parallel chat by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/1997
+    - fix(agent-settings): persist updated avatar on save by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2042
+    - feat(aionrs): integrate Aion CLI (aionrs) as native agent by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2045
+    - chore(skills): enhance pr-review dimensions and pr-fix worktree setup by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2064
+    - fix(acp): detach generic backend process groups by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2043
+    - fix: localize temporary workspace display names by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2051
+    - fix(settings): support array-based MCP JSON import by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2056
+    - fix(extensions): gate aion.storage behind manifest storage permission by @amanharshx in https://github.com/iOfficeAI/AionUi/pull/1803
+    - fix(acp): move file operations into view steps by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2059
+    - fix(acp): preserve streaming message grouping by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2060
+    - fix(platform): derive app root from module location instead of process.cwd() by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2062
+    - fix(WorkspaceOpenButton): move early return after all hooks to fix React #310 by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2063
+    - feat(markdown): add mermaid preview and panel view by @cdxiaodong in https://github.com/iOfficeAI/AionUi/pull/2068
+    - feat(cron): scheduled tasks UI, 1:N conversation model, and sider refactoring by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2008
+    - fix(test): skip SQLite tests when native module is Electron-compiled by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2071
+    - fix(acp): correct thinking message ordering in streaming display by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2075
+    - feat(pr-automation): add trusted contributor merge gate and supply chain security by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2082
+    - feat(skills): sync officecli skills to R9 by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2052
+    - fix: restore paragraph spacing in shadow view by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2070
+    - fix: Validate and extract ACP streaming chunks; add turn-level thought/content observability by @yejiming in https://github.com/iOfficeAI/AionUi/pull/2073
+    - fix(acp): remove disconnect status and error messages from UI by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2085
+    - feat(chat): add message reply/quote with floating selection button by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2088
+    - fix(skills): fetch base branch before three-dot diff to prevent stale ref by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2097
+    - feat(assistants): improve assistant management UI and i18n by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2089
+    - fix(theme): align light theme bg-1 to #F9FAFB by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2096
+    - fix(platform): ensure dev userData isolation before first getPath call by @JerryLiu369 in https://github.com/iOfficeAI/AionUi/pull/2098
+    - fix(env): pass full shell env to ACP backends (restore .zshrc vars) by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2093
+    - fix(extensions): resolve symlink escapes in path confinement by @amanharshx in https://github.com/iOfficeAI/AionUi/pull/2087
+    - fix(logo): make aion cli icon circular by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2099
+    - feat(acp): add AcpConfigSelector to Guid page and apply pending config options by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2100
+    - feat(team): 团队模式 MVP — 多 Agent 协作、UI 及 MCP 注入 by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2065
+    - feat(mcp): import opencode servers by @cdxiaodong in https://github.com/iOfficeAI/AionUi/pull/2061
+    - fix(cron): polish scheduled tasks ui by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2102
+    - fix(startup): prevent premature window creation blocking initStorage by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2105
+    - feat(hub): implement Agent Hub for extension discovery, installation, and lifecycle management by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2066
+    - chore(hub): update hub tag to dist-594aa7e by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2108
+    - feat(agent): add fixed-width pill buttons with marquee scroll on hover by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2090
+    - chore: bump version to 1.9.6 by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2109
+    - perf(storage): replace FileBuilder serial queue with in-memory cached store by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2112
+    - fix(security): pin axios version and enforce frozen lockfile in CI by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2118
+    - docs(readme): update wechat group qr code by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2132
+    - chore: merge v1.9.6 and hide team/hub entries in production by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2134
+    - chore(skills): bump version to 1.9.6 and sync officecli skills by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2135
+    - chore: bump version to 1.9.7 by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2136
+    New Contributors
+    - @zhuqingyv made their first contribution in https://github.com/iOfficeAI/AionUi/pull/2009
+    - @mingxuanzi made their first contribution in https://github.com/iOfficeAI/AionUi/pull/2021
+    Full Changelog: https://github.com/iOfficeAI/AionUi/compare/v1.9.6...v1.9.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iOfficeAI/AionUi/releases/tag/v1.9.7
+ReleaseTime: 2026-04-06T05:11:14.0000000Z
