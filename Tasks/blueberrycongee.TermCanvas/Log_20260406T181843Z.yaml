@@ -1,0 +1,22 @@
+Version: 0.25.13
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/blueberrycongee/termcanvas/releases/download/v0.25.13/TermCanvas-Setup-0.25.13.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Inject Codex CLI lifecycle hooks (PreToolUse, PostToolUse, SessionStart, Stop, UserPromptSubmit) for real-time telemetry via Unix socket
+    - Auto-enable codex_hooks feature flag in ~/.codex/config.toml on skill install
+    - Parse additional Codex JSONL events (exec_command, patch_apply, web_search, mcp_tool_call, turn_started, turn_complete, error) as telemetry fallback layer
+    - Surface task_status and active_tool_calls in telemetry UI
+    Fixed
+    - deriveTelemetryStatus no longer falsely reports stall_candidate when Codex is doing long inference or has active tool calls
+    - Hook-driven session attachment now preserves the registered terminal provider instead of hardcoding to "claude"
+    Changed
+    - Simplified main-brain telemetry polling instructions to trust derived_status and task_status as primary decision signals
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/blueberrycongee/termcanvas/releases/tag/v0.25.13
+ReleaseTime: 2026-04-06T17:26:20.0000000Z
