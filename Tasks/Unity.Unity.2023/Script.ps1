@@ -1,7 +1,7 @@
 $Query = @'
 query {
   getUnityReleases(
-    stream: [TECH, LTS]
+    stream: [SUPPORTED, TECH, LTS]
     platform: WINDOWS
     architecture: X86_64
     version: "2023"
@@ -24,7 +24,7 @@ query {
 }
 '@
 
-$Object1 = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges[0].node
+$Object1 = (Invoke-RestMethod -Uri 'https://live-platform-api.prd.ld.unity3d.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json').data.getUnityReleases.edges | Sort-Object -Property { [RawVersion]$_.node.version } -Bottom 1 | Select-Object -ExpandProperty node
 
 # Version
 $this.CurrentState.Version = $Version = $Object1.version
