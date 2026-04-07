@@ -101,14 +101,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://wsjt.sourceforge.io/wsjtx-doc/Release_Notes_$($this.CurrentState.Version).txt"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $null
       }
 
       try {
+        $ReleaseNotesUrl = "https://wsjt.sourceforge.io/wsjtx-doc/Release_Notes_$($this.CurrentState.Version).txt"
         $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl
+        }
 
         while (-not $Object2.EndOfStream) {
           if ($Object2.ReadLine() -match "Release: WSJT-X $([regex]::Escape($this.CurrentState.Version))") {
