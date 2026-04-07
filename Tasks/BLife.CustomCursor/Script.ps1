@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://custom-cursor.com/products/custom-cursor-for-windows'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://custom-cursor.com/products/custom-cursor-for-windows' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
