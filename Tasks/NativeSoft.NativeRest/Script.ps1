@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectSingleNode("//div[@id='release$($this.CurrentState.Version.Replace('.', ''))features']") | Get-TextContent | Format-Text
+        Value  = $Object2.SelectSingleNode("//*[@id='release$($this.CurrentState.Version.Replace('.', ''))features']") | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
