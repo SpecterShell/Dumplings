@@ -1,0 +1,49 @@
+Version: 1.4.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.4.0/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.4.0/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Breaking Changes in SDK
+    Due to some performance issues we had to make a few breaking changes in our data model.
+    Diff metadata
+    The diffs contained in the metadata for the edit and patch tool will no longer contain a to and from field with full file contents. they will only contain a patch field with the unified diff
+    Additionally all snapshot diffs contained in user message and session diff will follow this format
+    UserMessage.variant
+    Before the user message had a variant field - it is now nested under model so userMessage.model.variant
+    Core
+    - Added OTLP observability export support.
+    - Fixed failed web fetches leaving stale timeouts behind.
+    - Improved opencode login transport error messages.
+    - Retried Alibaba provider rate-limit errors instead of failing immediately.
+    - Kept model variants scoped to the selected model.
+    - Added full HTTP proxy support.
+    - Fixed OpenRouter provider issues.
+    - Aligned GitHub Copilot Anthropic reasoning levels and removed incorrect Qwen variants.
+    - Reduced TypeScript LSP memory use by using the native project config. (@derekbar90)
+    TUI
+    - Added a keybinding option for "Switch model variant". (@ariane-emory)
+    - Added PDF drag and drop for attachments. (@gitpush-gitpaid)
+    - Added opencode run --dangerously-skip-permissions to auto-approve non-denied permission prompts.
+    Desktop
+    - Improved subagent sessions with clearer titles, navigation, and progress states.
+    - Moved auto-accept permissions into Settings.
+    - Showed full file names on attachment chips.
+    Thank you to 4 community contributors:
+    - @derekbar90:
+      - fix(lsp): MEMORY LEAK: ensure typescript server uses native project config (#19953)
+    - @mchenco:
+      - docs: update Cloudflare provider setup to reflect /connect prompt flow (#20589)
+    - @gitpush-gitpaid:
+      - feat(opencode): Add PDF attachment Drag and Drop (#16926)
+    - @ariane-emory:
+      - fix(tui): use sentence case for theme mode command palette items (#21192)
+      - feat(tui): allow variant_list keybind for the "Switch model variant" command (#21185)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.4.0
+ReleaseTime: 2026-04-08T00:32:55.0000000Z
