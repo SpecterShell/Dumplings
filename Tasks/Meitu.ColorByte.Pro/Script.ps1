@@ -24,9 +24,9 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.data.version.updated_at.ToUniversalTime()
 
-      # ReleaseNotes (zh-CN)
+      # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
+        Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object1.data.version.desc | Format-Text
       }
