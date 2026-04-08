@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object5 = Invoke-WebRequest -Uri 'https://codeium.com/changelog' | ConvertFrom-Html
+      $Object5 = Invoke-WebRequest -Uri 'https://windsurf.com/changelog' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object5.SelectSingleNode("//main//header[contains(., '$($Object1.windsurfVersion)')]")
       if ($ReleaseNotesTitleNode) {
