@@ -1,5 +1,5 @@
 $RepoOwner = 'element-hq'
-$RepoName = 'element-desktop'
+$RepoName = 'element-web'
 
 # x64
 $Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
@@ -29,6 +29,13 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+      }
+
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
