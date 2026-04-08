@@ -1,0 +1,49 @@
+Version: 3.8.2
+Installer:
+- InstallerUrl: https://www.indilib.org/jdownloads/kstars/kstars-3.8.2.exe
+  InstallerSha256: 71FF836241405193EB745B63664874E6FFAC6072FD65B256DDDAD8565AF9388B
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://knro.blogspot.com/2026/04/kstars-382-released.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    KStars v3.8.2 is released on 2026.04.08 for Windows, Linux, and MacOS.
+
+    For Linux users, it's highly recommended to use the official KStars Flatpak hosted at Flathub.
+    This release brings reliability improvements across the scheduler, live stacking, polar alignment, along with new features like passive camera warming, a startup queue failure popup, and preliminary automatic polar alignment correction. Here are some highlights:
+
+     Scheduler & Observatory Automation
+    - Fixed Ekos not shutting down after preemptive shutdown; task executor no longer stalls when a park command is issued
+    - New startup queue failure popup with state reset for clean retries
+    - Scheduler restart from error state now always resets startup to IDLE
+    - Fixed crashes caused by improper use of QSharedPointer; simulator-based regression tests expanded
+    - Added ability to wait indefinitely for weather to improve
+    - Profiles now synced from INDI Web Manager on startup; deleting a profile in KStars removes it from the manager
+    - Fixed checkINDIState returning incorrect value when transitioning to STARTUP_POST_DEVICES
+    - Added Optical Trains DBus interface for scripted access to train configuration
+    Polar Alignment
+    - Preliminary support for Automatic Polar Alignment Correction via the INDI Polar Alignment Corrector interface. INDI Polar Alignment Drivers include Avalon UPAS (not tested) and MLAstro Robotic Polar Alignment (not released yet)
+    - Fixed overwrap calculation error producing erroneous correction vectors
+    - Multisetup PA sync workaround contributed by Philip Mair
+    Live Stacking
+    - Added mutex locking on LiveStack image buffer updates to prevent SEGVs under concurrent load (John Evans)
+    - Livestacker settings are now retained between sessions; parameters synced programmatically to UI
+    - Fixed saved .xisf stacks to store pixel values in the correct 0→1.0 range
+    - Stacker now restarts automatically when the filter or imaging target changes
+
+    Capture & Focus
+    - Added passive camera warming for graceful end-of-session cooldown
+    - Fixed critical bug where autofocus triggered by a filter change could leave sequences stuck indefinitely
+    - Fixed sequence filter not being restored after a meridian flip when autofocus is not required (Pavan Kumar S G)
+    - Fixed dithering getting stuck in streaming mode
+    - Fixed crashes when closing compressed FITS files and failure to open compressed FITS images (Umangjeet Singh Pahwa)
+    Guiding
+    - Initial work to support streaming mode in the guide module, enabling video-capable cameras for guiding. This is especially useful for harmonic mounts where you can guide at higher frequency (2-4 Hz)
+    Other Fixes
+    - Added dome slit overlay to the sky map view (Ed Lee)
+    - Various dust cap and light box device handling improvements
+    - Fixed INDI Web Manager port detection on macOS and Windows
+    - Suppressed spurious empty disconnect messages on clean disconnects
+    - Mount unpark no longer passes a hardcoded "Mount" string; INDI resolves the device by interface type
+ReleaseTime: 2026-04-08
