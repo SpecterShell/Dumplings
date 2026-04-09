@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Global:DumplingsStorage.YenkaDownloadPage.Links.Where({ try { $_.outerHTML.Contains('et_pb_button') -and $_.href -match 'yenka_(\d+(?:_\d+){3})_(?!de|es)' } catch {} }, 'First')[0].href
+  InstallerUrl = Get-RedirectedUrl -Uri $Global:DumplingsStorage.YenkaDownloadPage.Links.Where({ try { $_.href -match 'yenka_(\d+(?:_\d+){3})(?!_de|_es)' } catch {} }, 'First')[0].href
 }
 
 # Version
