@@ -15,7 +15,7 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.texthelp.com/en-gb/solutions/dsa/autocorrect-downloads/'
+$Object1 = Invoke-WebRequest -Uri 'https://academy.everway.com/autocorrect-dsa/installation/'
 
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Installer') } catch {} }, 'First')[0].href
