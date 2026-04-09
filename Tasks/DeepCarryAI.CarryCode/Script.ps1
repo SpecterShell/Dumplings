@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://carrycode.ai/welcome.json'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://carrycode.ai/welcome.json' | Join-String -Separator "`n" | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.latest_version
