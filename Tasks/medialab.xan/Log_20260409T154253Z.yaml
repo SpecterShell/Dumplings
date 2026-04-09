@@ -1,0 +1,61 @@
+Version: 0.57.0
+Installer:
+- InstallerUrl: https://github.com/medialab/xan/releases/download/0.57.0/xan-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The temporal update.
+    Breaking
+    - xan select -n will not error anymore on empty inputs and, generally, empty files should not trigger selection errors when using commands with -n/--no-headers.
+    - xan heatmap -C/--cram becomes a flag accepting either auto, always or never.
+    - Dropping -C short flag for xan sort --cells (it could be confused with --columns or --check).
+    - Completely overhauled how datetimes work in moonblade.
+    - xan separate will not trim splitted values with some modes by default anymore.
+    - Dropping xan network --stats in favor of -f stats.
+    -  -D becomes short flag for xan network --degrees instead of --disjoint-keys.
+    - xan separate --capture-groups is dropped in favor of -c/--captures & -C/--all-captures.
+    - Renaming xan search --breakdown shortflag to -b to allow for future -B/--before-context.
+    Features
+    - Adding xan matrix count & xan matrix adj.
+    - Adding front_coding window function.
+    - Timestamp support with xan plot -LT.
+    - Adding xan rename -n/--no-headers support for -p/--prefix & -x/--suffix.
+    - Adding xan from -f parquet (requires the parquet feature).
+    - Adding xan to latex.
+    - Adding xan top -L/--lexicographic.
+    - Adding xan heatmap flags: -w/--width, -F/--fill, -a/--align, -U/--unit, -Z/--show-normalized, -A/--ascii, -l/--label & -v/--values.
+    - Adding new gradients to xan heatmap.
+    - Adding range & repeat moonblade functions.
+    - Adding xan sort --columns.
+    - Adding xan view -T/--tee.
+    - Adding now, fractional_days, to_timezone, to_local_timezone, with_timezone, with_local_timezone, without_timezone, to_timestamp, to_timestamp_ms, from_timestamp, from_timestamp_ms, span, date & time moonblade functions.
+    - Better type inference with xan stats, and the type & types aggregation functions, now including more types for temporal values (zoned_datetime, datetime, date & time).
+    - Adding xan input -T/--tolerant.
+    - Adding xan separate --trim.
+    - Adding xan grep -B/--before-context & -A/--after-context.
+    - Adding xan network -f=components, -S/--simple, --union-find, --minify & --sample-size <n>.
+    - Adding xan plot --timezone.
+    - Adding xan hist --log shorthand flag for --scale=log.
+    - Adding log_dist sparkline column to xan stats -q output.
+    - Adding dist & log_dist aggregation functions.
+    - Adding xan search -L/--levenshtein <k> & -D/--damerau-levenshtein <k>.
+    Fixes
+    - Fixing xan separate automatic column prefix extraction.
+    - Fixing xan heatmap -n.
+    - Fixing xan heatmap --repeat-headers --cram always not repeating x-axis legend.
+    - Fixing correctness of xan plot -T and increase resolution to microseconds.
+    - Fixing moonblade column-related functions returning incorrect results wrt -n/--no-headers.
+    - xan search should now properly error when handling invalid utf-8 in relevant modes.
+    - Fixing xan search -iR & xan search -i --replacement-column.
+    Performance
+    - Improving performance of xan complete, xan top, xan plot -T & xan hist.
+    - Improving overall performance of xan network.
+    - Slightly optimizing xan vocab by allowing needless heap allocation & indirection.
+    - Improving performance and memory usage of xan separate.
+    Quality of Life
+    - Adding proper help to xan heatmap.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/medialab/xan/releases/tag/0.57.0
+ReleaseTime: 2026-04-09T15:34:49.0000000Z
