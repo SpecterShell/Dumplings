@@ -1,36 +1,31 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-  $InstallerFileExtracted = New-TempFolder
-  Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'AD Pro Toolkit.msi'
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
   # AppsAndFeaturesEntries
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
     [ordered]@{
-      UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
+      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
     }
   )
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://activedirectorypro.com/release-notes/' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'https://docs.activedirectorypro.com/getting-started/release-notes/' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'level-h3') and contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'level-h2') and contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
-      if ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}\W+\d{1,2}\W+20\d{2})') {
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(($Matches[1] -replace '/', '-'), 'M-d-yyyy', $null) | Get-Date -Format 'yyyy-MM-dd'
+      if ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}/\d{1,2}/\d{2})') {
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(($Matches[1] -replace '/', '-'), 'M-d-yy', $null) | Get-Date -Format 'yyyy-MM-dd'
       }
 
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('level-h3'); $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('level-h2'); $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -47,7 +42,7 @@ function Get-ReleaseNotes {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://activedirectorypro.com/downloads/ADProToolkit.exe'
+  InstallerUrl = 'https://activedirectorypro.com/downloads/ADProToolkit.msi'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
