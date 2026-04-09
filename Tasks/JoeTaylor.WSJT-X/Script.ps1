@@ -1,46 +1,32 @@
-$ProjectName = 'wsjt'
-$RootPath = ''
-$PatternPath = 'wsjtx-(\d+(?:\.\d+)+)'
-$PatternFilename = 'wsjtx-.+\.exe'
-
-$Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternPath}/${PatternFilename}$" })
-
-# Installer
-$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win32') }, 'First')[0]
-$VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
-  ProductCode  = "wsjtx ${VersionX86}"
-}
-
-$Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('win64') }, 'First')[0]
-$VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
-  ProductCode  = "wsjtx ${VersionX64}"
-}
-
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
-}
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/WSJTX/wsjtx/releases/latest'
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x86'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.exe') -and $_.title.'#cdata-section'.Contains('win64') }, 'First')[0].pubDate,
-        'ddd, dd MMM yyyy HH:mm:ss "UT"',
-        (Get-Culture -Name 'en-US')
-      ) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
 
       # Documentations
       $this.CurrentState.Locale += [ordered]@{
@@ -68,9 +54,9 @@ switch -Regex ($this.Check()) {
           }
         )
       }
-      # Documentations (zh-CN)
+      # Documentations (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
+        Locale = 'en-US'
         Key    = 'Documentations'
         Value  = @(
           [ordered]@{
@@ -101,51 +87,39 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      $ReleaseNotesUrl = $Object1.assets.Where({ $_.name -eq 'Release_Notes.txt' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $null
+        Value  = $ReleaseNotesUrl
       }
 
-      try {
-        $ReleaseNotesUrl = "https://wsjt.sourceforge.io/wsjtx-doc/Release_Notes_$($this.CurrentState.Version).txt"
-        $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl
+      while (-not $Object2.EndOfStream) {
+        if ($Object2.ReadLine() -match "Release: WSJT-X $([regex]::Escape($this.CurrentState.Version))") {
+          1..3 | ForEach-Object { $null = $Object2.ReadLine() }
+          break
         }
-
+      }
+      if (-not $Object2.EndOfStream) {
+        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
         while (-not $Object2.EndOfStream) {
-          if ($Object2.ReadLine() -match "Release: WSJT-X $([regex]::Escape($this.CurrentState.Version))") {
-            1..3 | ForEach-Object { $null = $Object2.ReadLine() }
+          $String = $Object2.ReadLine()
+          if ($String -notmatch 'Release: WSJT-X \d+(?:\.\d+)+') {
+            $ReleaseNotesObjects.Add($String)
+          } else {
             break
           }
         }
-        if (-not $Object2.EndOfStream) {
-          $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
-          while (-not $Object2.EndOfStream) {
-            $String = $Object2.ReadLine()
-            if ($String -notmatch 'Release: WSJT-X \d+(?:\.\d+)+') {
-              $ReleaseNotesObjects.Add($String)
-            } else {
-              break
-            }
-          }
-          # ReleaseNotes (en-US)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesObjects | Format-Text
-          }
-        } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObjects | Format-Text
         }
-      } catch {
-        $_ | Out-Host
-        $this.Log($_, 'Warning')
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
