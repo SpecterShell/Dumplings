@@ -34,8 +34,8 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         $Object2.SelectSingleNode('//*[@id="PostAdditionalInfo"]').InnerText.Trim(),
-        "dd MMMM yyyy 'at' HH:mm 'UTC'",
-          (Get-Culture -Name 'en-US')
+        "dddd, d MMMM yyyy 'at' HH:mm 'UTC'",
+        (Get-Culture -Name 'en-US')
       ) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
