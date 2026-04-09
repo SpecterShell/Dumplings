@@ -1,0 +1,25 @@
+Version: 2.7.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.7.3/talkio_2.7.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.7.3/talkio_2.7.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🐛 Bug Fixes
+    - 修复 API 中途断连后不显示错误状态的问题 — 当 API 连接在流式传输过程中断开时，消息会以部分内容显示为"成功"状态，没有红色错误提示框、重试按钮和三点菜单。现在三种 SSE 协议（OpenAI Chat Completions / Anthropic Messages / OpenAI Responses）均能检测流中断，自动重试一次，若仍失败则正确显示错误状态并提供重试选项。
+    🔧 Technical Details
+    - SSE 消费函数新增流完成信号检测：
+      - OpenAI Chat: [DONE] / finish_reason / usage（兼容 Ollama 等第三方 provider）
+      - Anthropic: message_stop
+      - OpenAI Responses: response.completed
+    - 流中断错误纳入自动重试范围（仅重试一次）
+    - 优化 catch 块中 streaming 状态快照时序
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/llt22/talkio/releases/tag/v2.7.3
+ReleaseTime: 2026-04-09T14:06:04.0000000Z
