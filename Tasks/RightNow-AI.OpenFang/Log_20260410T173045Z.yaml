@@ -1,0 +1,44 @@
+Version: 0.5.8
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.5.8/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.5.8/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Dozens of community contributions merged in this release. Every PR was audited for correctness, security, and code quality before landing.
+    What's new
+    GitHub Copilot OAuth rewrite by @dmbutko. Full device flow authentication with token persistence, refresh rotation, and HTTPS validation. Replaces the old PAT-based auth that stopped working.
+    Russian localization by @AlexZander85. Complete i18n framework with language detection, localStorage persistence, and textContent-only rendering (no innerHTML, no XSS surface). English and Russian ship out of the box.
+    AWS Bedrock provider by @smitb. Native Converse API driver with bearer token auth, streaming support, and proper error mapping.
+    WeCom Stream mode by @felix307253927. WebSocket long-connection channel adapter with protobuf framing, heartbeat, and dedup.
+    Session interaction endpoints by @miguelangarano. Target specific agent sessions for messaging, enabling per-user conversation isolation in multi-tenant setups.
+    Gemini embedding driver by @chethanuk. Native batch embedding with automatic fallback to single-document mode.
+    SearXNG improvements by @norci. Simplified config, new list_searxng_categories tool, better error handling.
+    armv7 target by @Myshkouski. Raspberry Pi and embedded ARM board support in CI releases.
+    Bug fixes
+    WebSocket auth (#962). API keys with +/=/ characters now work for streaming. The server URL-decodes the token query parameter before comparison.
+    Moonshot Kimi K2.5 (#970). Kimi models now route to api.moonshot.cn/v1 instead of the legacy .ai domain.
+    Nextcloud chat polling (#987). Corrected from api/v4/room/{token}/chat to api/v1/chat/{token}/.
+    Docker build (#983). Added perl and make to the builder stage for openssl-sys compilation.
+    Clippy lint (#939). Fixed bool comparison in web_fetch tests.
+    Gemini compatibility. History now starts with a user turn after context trimming (#1011). Array parameters get default items schema (#1010). Alpine SVG rendering errors in cost charts fixed (#1004).
+    Cron job preservation (#1019). Jobs no longer silently disappear when a Hand is reactivated.
+    Signal output (#1020). Defaults to plain text since Signal doesn't render Markdown.
+    New agent defaults (#968). Agents created from the dashboard now use your configured provider instead of hardcoded Groq.
+    Intermediate tool text (#989). Text from tool_use iterations is no longer silently dropped.
+    Copilot OAuth (#1017). Device flow replaces broken PAT auth.
+    UI fixes. Modal centering (#1027), bar chart styles (#1022), baseUrl undefined (#1006), duplicate message keys (#1002), UTF-8 char boundary safety (#1029), Nix perl build input (#966).
+    PRs closed
+    13 duplicate or stale PRs closed. 10 approved PRs waiting on contributor rebases. 2 dependabot bumps (wasmtime, hmac) flagged for testing before merge.
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.5.7...v0.5.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.5.8
+ReleaseTime: 2026-04-10T16:58:30.0000000Z
