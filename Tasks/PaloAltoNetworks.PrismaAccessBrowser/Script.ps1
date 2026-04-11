@@ -1,5 +1,5 @@
 # x64
-$Object1 = (Invoke-RestMethod -Uri 'https://releases.talon-sec.com/api/v1/appcast.xml?appid={dfef2477-4f0e-454b-bc0d-03ce61074e4c}&platform=win&architecture=arm64&channel=packaged')[-1]
+$Object1 = (Invoke-RestMethod -Uri 'https://releases.talon-sec.com/api/v1/appcast.xml?appid={dfef2477-4f0e-454b-bc0d-03ce61074e4c}&platform=win&architecture=x64&channel=packaged')[-1]
 # arm64
 $Object2 = (Invoke-RestMethod -Uri 'https://releases.talon-sec.com/api/v1/appcast.xml?appid={dfef2477-4f0e-454b-bc0d-03ce61074e4c}&platform=win&architecture=arm64&channel=packaged')[-1]
 
