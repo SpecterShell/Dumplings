@@ -17,10 +17,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
@@ -29,15 +30,16 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object2 = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/klembot/twinejs/HEAD/docs/en/src/release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '-').md" | Convert-MarkdownToHtml
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotes'
-        Value = $ReleaseNotesUrl = "https://github.com/klembot/twinejs/blob/HEAD/docs/en/src/release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '-').md"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesUrl = "https://github.com/klembot/twinejs/blob/HEAD/docs/en/src/release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '-').md"
       }
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[(self::h1 or self::h2) and contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText -match '^\d+(?:\.\d+)+$'); $Node = $Node.NextSibling) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match '^\d+(?:\.\d+)+$'); $Node = $Node.NextSibling) {
           if (-not $Node.InnerText.Contains('Release Date')) {
             $Node
           }
@@ -49,10 +51,11 @@ switch -Regex ($this.Check()) {
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotes'
-          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
