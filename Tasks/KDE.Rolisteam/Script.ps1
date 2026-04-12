@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
     # AppsAndFeaturesEntries > DisplayVersion
     Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @{
-      DisplayVersion = Get-ItemPropertyValue -Path 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rolisteam' -Name 'DisplayVersion'
+      DisplayVersion = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rolisteam' -Name 'DisplayVersion'
     }
     # RealVersion
     $this.CurrentState.RealVersion = $this.CurrentState.Installer[0].AppsAndFeaturesEntries.DisplayVersion.Split('/')[-1].Trim()
