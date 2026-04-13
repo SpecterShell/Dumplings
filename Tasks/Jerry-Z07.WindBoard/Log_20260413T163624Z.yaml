@@ -1,0 +1,49 @@
+Version: 2.7.0
+Installer:
+- Architecture: x86
+  InstallerType: inno
+  InstallerUrl: https://github.com/Jerry-Z07/WindBoard/releases/download/v2.7.0/WindBoardSetup-2.7.0-win-x86-fd.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Jerry-Z07/WindBoard/releases/download/v2.7.0/WindBoardSetup-2.7.0-win-x64-fd.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Jerry-Z07/WindBoard/releases/download/v2.7.0/WindBoardSetup-2.7.0-win-arm64-fd.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - ✨ feat: Added launcher project with shared layout support — main app resides in the shared subdirectory, launcher at the root
+    - ✨ feat: Added app data cleanup — automatically cleans up expired installer packages and old icon caches on startup
+    - 🐛 fix: Fixed selected state not being cleared when switching tools
+    - 🐛 fix: Fixed selection hit-test — changed from AABB-only to stroke geometry with pressure width, preventing false selection of diagonal strokes and pressure-sensitive strokes
+    - 🐛 fix: Fixed language preference not syncing when importing or restoring settings
+    - 🐛 fix: Fixed update reminder recording the notified version even when not actually shown — now allows retries on channel failure or full-screen toast failure
+    - 🐛 fix: Fixed async operations not using ConfigureAwait(false), causing unnecessary context capture
+    - 🐛 fix: Added Windows platform support for CrashReporter to resolve CA1416 warnings
+    - ⚡ perf: Made startup cleanup asynchronous to avoid blocking the main thread
+    - ♻️ refactor: Refactored slide-to-clear canvas interaction — main window and screen annotation toolbar now share a unified slide controller
+    - ♻️ refactor: Cleaned up BoardInputController interaction logic — reduced duplicate gesture teardown and centralized shared interaction-state checks
+    - ♻️ refactor: Optimized test code — extracted common code into RepoRootLocator class
+    Known Issues
+    - Users upgrading directly from v1.x by overwriting the installation may encounter unknown compatibility issues. It is recommended to completely uninstall the old version and reinstall the new one.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - ✨ feat: 添加启动器项目并实现共享布局支持，主程序置于 shared 子目录，启动器位于根目录
+    - ✨ feat: 添加应用数据清理功能，启动时自动清理过期的下载安装包与旧版本图标缓存
+    - 🐛 fix: 修复切换工具时未清除选中状态的问题
+    - 🐛 fix: 修复框选命中判断，从仅 AABB 判断改为基于笔迹几何与压感宽度计算，避免误选斜线和压感笔迹
+    - 🐛 fix: 修复导入或恢复设置时未同步应用语言偏好的问题
+    - 🐛 fix: 修复更新提醒未实际展示仍记录已提醒版本的问题，通道失败或全屏弹条失败时允许后续重试
+    - 🐛 fix: 修复异步操作 ConfigureAwait 未设为 false 导致回传到捕获的同步上下文的问题
+    - 🐛 fix: 为 CrashReporter 添加 Windows 平台支持，消除 CA1416 警告
+    - ⚡ perf: 异步执行启动清理，避免阻塞主线程
+    - ♻️ refactor: 重构清空画布滑动交互，主窗口与屏幕批注工具栏共享滑动清空控制器
+    - ♻️ refactor: 优化 BoardInputController 交互逻辑，减少重复手势拆解，集中共享交互状态检查
+    - ♻️ refactor: 优化测试代码，提取公共代码到 RepoRootLocator 类
+    已知问题
+    - 位于 v1.x 版本的用户直接覆盖安装可能会有未知兼容性问题，建议完全卸载旧版并重装。
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Jerry-Z07/WindBoard/releases/tag/v2.7.0
+ReleaseTime: 2026-04-13T15:51:55.0000000Z
