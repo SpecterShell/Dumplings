@@ -1,4 +1,4 @@
-$RepoOwner = 'nbonamy'
+$RepoOwner = 'Kochava-Studios'
 $RepoName = 'witsy'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
