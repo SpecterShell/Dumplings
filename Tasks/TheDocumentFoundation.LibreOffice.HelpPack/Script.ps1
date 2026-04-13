@@ -7,8 +7,8 @@ $ArchMap = [ordered]@{
 }
 
 # Version
-$Object1 = Invoke-WebRequest -Uri 'https://www.libreoffice.org/download/download-libreoffice/' | ConvertFrom-Html
-$ShortVersion = $Object1.SelectNodes('//span[@class="dl_version_number"]').InnerText | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://www.libreoffice.org/download/' | ConvertFrom-Html
+$ShortVersion = $Object1.SelectNodes('//*[@class="version_heading"]').InnerText | ForEach-Object -Process { $_.Trim() } | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
 
 $Object2 = Invoke-WebRequest -Uri 'https://downloadarchive.documentfoundation.org/libreoffice/old/?C=N;O=D;V=1;F=0'
 $this.CurrentState.Version = ($Object2.Links.href -match "^$([regex]::Escape($ShortVersion))[\d\.]+/$")[0].TrimEnd('/')
