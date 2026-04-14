@@ -8,18 +8,20 @@ $Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape(
 
 # Installer
 $Asset = $Assets.Where({ -not $_.title.'#cdata-section'.Contains('x64') }, 'First')[0]
+$VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
+  ProductCode  = "Scribus ${VersionX86}"
 }
-$VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 
 $Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('x64') }, 'First')[0]
+$VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
+  ProductCode  = "Scribus ${VersionX64}"
 }
-$VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternPath}/").Groups[1].Value
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")
@@ -45,10 +47,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.scribus.net/news/'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://www.scribus.net/news/'
       }
 
       $Object2 = (Invoke-RestMethod -Uri 'https://www.scribus.net/news/feed/').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
@@ -60,10 +63,11 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $Object2[0].encoded.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
         }
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Object2[0].link
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Object2[0].link
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
