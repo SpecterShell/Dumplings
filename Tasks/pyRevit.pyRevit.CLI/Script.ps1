@@ -10,12 +10,16 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('+')[0]
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
   Scope         = 'user'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -notmatch 'CLI' -and $_.name -notmatch 'admin' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'CLI' -and $_.name -notmatch 'admin' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
   Scope         = 'machine'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -notmatch 'CLI' -and $_.name -match 'admin' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'CLI' -and $_.name -match 'admin' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'CLI' -and $_.name -match 'admin' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
