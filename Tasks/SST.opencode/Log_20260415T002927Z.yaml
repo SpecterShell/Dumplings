@@ -1,0 +1,59 @@
+Version: 1.4.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.4.4/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.4.4/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    - Restored instance and logger context during prompt runs so prompt-time tools and logging behave correctly.
+    - Kept GitHub Copilot compaction requests valid.
+    - Restored the flat reply shape for question API responses.
+    - Persisted MCP OAuth connections that finish immediately, so authenticated servers stay connected.
+    - Prevented duplicate user messages in ACP clients.
+    - Stopped emitting user_message_chunk events during session and prompt turns in ACP clients. (@RAIT-09)
+    - Fixed reasoning summary injection for @ai-sdk/openai-compatible providers. (@nazarhnatyshen)
+    - Added the experimental compaction.autocontinue hook to stop auto-continuing after compaction.
+    - Added Alibaba provider support with cache support.
+    - Snapshots now fully respect .gitignore, including previously tracked files.
+    - Reading images no longer counts against quota.
+    - Sessions can now update project permissions mid-run. (@remorses)
+    - Enabled thinking for zhipuai-coding-plan and fixed Korean IME truncation. (@claudianus)
+    TUI
+    - Added opencode export --sanitize to redact PII and confidential transcript data.
+    - Fixed diff line number contrast in built-in themes.
+    - Plugin auth login now asks for an API key when a plugin needs authorization. (@goniz)
+    - Plugin auth no longer asks for an API key when the plugin has no authorize method. (@goniz)
+    Desktop
+    - Fixed the Windows desktop backend hanging before shutdown.
+    SDK
+    - The JavaScript SDK now throws a clear error when an older server responds with HTML instead of the API.
+    Extensions
+    - Plugins can now register custom workspace adaptors that appear in workspace creation.
+    Thank you to 9 community contributors:
+    - @claudianus:
+      - fix: enable thinking for zhipuai-coding-plan & prevent Korean IME truncation (#22041)
+    - @remorses:
+      - feat: allow session permission updates (#22070)
+    - @simonklee:
+      - chore(github): vouch simonklee (#22127)
+    - @shafdev:
+      - fix(opencode): remove spurious scripts and randomField from package.json (#22160)
+    - @goniz:
+      - fix(cli): auth login now asks for api key in handlePluginAuth (#21641)
+      - fix(cli): handlePluginAuth asks for api key only if authorize method exists (#22475)
+    - @github-actions[bot]:
+      - Update VOUCHED list
+    - @nazarhnatyshen:
+      - fix(provider): guard reasoningSummary injection for @ai-sdk/openai-compatible providers (#22352)
+    - @RAIT-09:
+      - fix(acp): stop emitting user_message_chunk during session/prompt turn (#21851)
+    - @gigamonster256:
+      - chore(nix): remove external ripgrep (#22482)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.4.4
+ReleaseTime: 2026-04-15T00:04:10.0000000Z
