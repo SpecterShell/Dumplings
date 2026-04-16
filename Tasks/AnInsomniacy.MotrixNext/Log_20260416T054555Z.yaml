@@ -1,0 +1,32 @@
+Version: 3.7.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.0/MotrixNext_3.7.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    A major architectural release that migrates core download logic from TypeScript to a native Rust backend, introduces Lightweight Mode for dramatically reduced memory usage, adds GeoIP peer geolocation, and fixes multiple native UI issues across platforms.
+    ✨ New Features
+    - Lightweight Mode — Destroys the WebView when minimized to tray, reducing memory usage by ~150 MB. All tray actions, Dock badge, and progress bar continue working natively in Rust. Auto-links with tray settings for seamless UX
+    - GeoIP Peer Resolution — Displays country flags and locale-aware country/continent names next to BitTorrent peers using the bundled DB-IP database
+    - Task Detail Dates — Shows "Added At" and "Completed At" timestamps in the task detail panel with locale-aware formatting across all 26 languages (#198)
+    - Structured BT History Metadata — BT/magnet tasks now persist full file lists and announce lists as JSON in history records, enabling correct multi-file deletion and folder-opening from the history view
+    🛠 Improvements
+    - Native Rust aria2 client — Migrated aria2 JSON-RPC communication from TypeScript to a native Rust WebSocket client, improving reliability and enabling backend-only operation in lightweight mode
+    - Modular service architecture — Task store and runtime services refactored into a clean service-based architecture with dedicated modules for stat polling, speed scheduling, and task monitoring
+    - Native tray event handling — All tray menu actions (pause-all, resume-all, new-task, quit) handled directly in Rust, ensuring functionality when the WebView is destroyed
+    - macOS Dock progress bar — Implemented a custom MotrixProgressIndicator class (subclass of NSProgressIndicator) with drawRect: override for correct Dock tile rendering
+    - Platform-gated configuration — macOS/Windows-only config fields (dock_badge_speed, show_progress_bar) are now #[cfg]-gated, eliminating dead code warnings on Linux
+    - Structured logging — Replaced scattered console.* calls with a unified structured logger and persistent pre-flight logging in GPU guard
+    - Simplified MTooltip — Removed global state and cooldown logic for cleaner tooltip behavior
+    🐛 Bug Fixes
+    - Fixed macOS Dock progress bar not rendering at all (standard NSProgressIndicator does not draw in NSDockTile)
+    - Fixed BT task deletion failing due to raw infoHash strings in history metadata instead of structured JSON
+    - Suppressed noisy maxminddb log output and simplified peer tracker column layout
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.7.0
+ReleaseTime: 2026-04-16T05:32:01.0000000Z
