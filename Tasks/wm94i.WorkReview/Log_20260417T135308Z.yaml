@@ -1,0 +1,27 @@
+Version: 1.0.40
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work_Review/releases/download/v1.0.40/Work_Review_1.0.40_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 为 GNOME Wayland 提供仓库内桌宠输入扩展，桌宠现在可以通过 D-Bus 获取最近一次按键与鼠标状态。
+    - 设置页支持自动安装 GNOME 桌宠扩展，并显示安装、启用以及“需要重新登录 GNOME Shell”状态。
+    修复
+    - 修复 macOS 在部分前台窗口场景下更容易选错时间线截图目标屏幕的问题：前台窗口位置与尺寸现直接参与截图目标判定。
+    - 修复同一时间线活动在后续合并时详情截图被新截图覆盖的问题：合并记录时保留首张归档截图路径，避免历史截图漂移。
+    - 修复时间线合并路径中仅用于 OCR 的新截图在任务完成后仍残留的问题：OCR 完成后会清理临时截图，减少无效归档。
+    - 修复时间线详情页“高清图”实际返回缩略图的问题：现直接返回归档原始 JPG，截图内容判断更准确。
+    - 修复 Linux X11 下桌宠缺少全局键鼠监听的问题，恢复完整键盘与鼠标联动。
+    - 修复 KDE / Hyprland Wayland 下桌宠输入能力不透明的问题，当前会按实际能力标记为“仅鼠标移动”。
+    - 修复 GNOME Wayland 下桌宠长期缺少可用输入链的问题，当前已支持鼠标联动与最近一次键盘按下联动。
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work_Review/releases/tag/v1.0.40
+ReleaseTime: 2026-04-17T12:36:53.0000000Z
