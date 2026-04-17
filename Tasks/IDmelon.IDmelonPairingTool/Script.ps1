@@ -35,15 +35,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Object3 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# Hash
-$this.CurrentState.Hash = $Object3.Headers.'x-goog-hash'.Where({ $_.StartsWith('md5=') }, 'First')[0] -replace '^md5='
+$ETag = $Object3.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Log('Skip checking states', 'Info')
 
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
   Read-Installer
-  Get-ReleaseNotes
 
   $this.Print()
   $this.Write()
@@ -56,17 +57,19 @@ if ($Global:DumplingsPreference.Contains('Force')) {
 if ($this.Status.Contains('New')) {
   $this.Log('New task', 'Info')
 
+  # ETag
+  $this.CurrentState.ETag = @($ETag)
+
   Read-Installer
-  Get-ReleaseNotes
 
   $this.Print()
   $this.Write()
   return
 }
 
-# Case 2: The hash is unchanged
-if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+# Case 2: The ETag is unchanged
+if ($ETag -in $this.LastState.ETag) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest (Global)", 'Info')
   return
 }
 
@@ -77,19 +80,31 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
 
-Get-ReleaseNotes
+# Case 4: The ETag has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The ETag has changed, but the SHA256 is not', 'Info')
+
+  # ETag
+  $this.CurrentState.ETag = $this.LastState.ETag + $ETag
+
+  $this.Write()
+  return
+}
+
+# ETag
+$this.CurrentState.ETag = @($ETag)
 
 switch -Regex ($this.Check()) {
-  # Case 5: The hash and the version have changed
+  # Case 6: The ETag, the SHA256 and the version have changed
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
   }
-  # Case 4: The hash has changed, but the version is not
+  # Case 5: The ETag and the SHA256 have changed, but the version is not
   default {
-    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
