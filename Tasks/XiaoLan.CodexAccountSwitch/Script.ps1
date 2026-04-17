@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
+  Architecture  = 'x86'
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
