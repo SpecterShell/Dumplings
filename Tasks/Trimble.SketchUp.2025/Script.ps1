@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.sketchup.com/en/download/all'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('2025') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('2025') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 # Version
