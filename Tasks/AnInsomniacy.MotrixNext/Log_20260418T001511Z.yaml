@@ -1,0 +1,21 @@
+Version: 3.7.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.1/MotrixNext_3.7.1_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves critical issues with lightweight mode and autostart behavior, ensuring the WebView lifecycle is correctly managed across all platforms.
+    ✨ New Features
+    - Browser extension auto-submit — Downloads initiated from the browser extension can now be automatically submitted without manual confirmation.
+    🐛 Bug Fixes
+    - Lightweight mode now works on autostart — When autostart + lightweight mode were both enabled, the WebView process (~300MB RAM) remained alive in the background until the user manually opened and closed the window. The WebView is now correctly destroyed after engine initialization completes. Fixes #209.
+    - Autostart no longer re-hides recreated windows — Fixed a bug where windows recreated in lightweight mode (e.g. via tray click) were incorrectly hidden again because the autostart flag persisted across the process lifetime. Introduced an irreversible cold-start lifecycle state to resolve the race condition. Fixes #206.
+    - Improved resource detection — URL and magnet link detection is now case-insensitive and correctly rejects bare protocol prefixes without a host.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.7.1
+ReleaseTime: 2026-04-17T23:36:33.0000000Z
