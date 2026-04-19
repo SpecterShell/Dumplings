@@ -1,0 +1,24 @@
+Version: 2.2.12
+Installer:
+- InstallerUrl: https://github.com/executordk/executor-community/releases/download/v2.2.12/ExecutorSetup_v2.2.12.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: Release v2.2.12 of Executor, check https://executor.dk/updates for release notes.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/executordk/executor-community/releases/tag/v2.2.12
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new
+    - Added that you can run a RegEx on the current clipboard content. This can be done by using the keyword command $TEXTREGEX$ and the keyword parameter should contain the RegEx. The parameter supports a slash convention s/pattern/replacement/ to transform clipboard text, or enter a pattern alone to automatically delete all matches. Here's an example keyword that uses a RegEx to remove the fixed text width (often 80 characters) copied from a terminal window: Keyword name=cleanterminaltext command=$TEXTREGEX$ parameter=s/\r?\n\s+(?=[a-z])/ / comment=Cleanup terminal text
+    - Added $TEXTREGEXPASTE$ does the same as $TEXTREGEX$ but also pastes the processed text (mostly useful for assigning to a hotkey).
+    - Added that when viewing clipboard by typing clipboard, and right clicking a clipboard item, all keywords that has a command that starts-with $TEXTREGEX (if any) will be listed in order to use it on that item.
+    - Added in the Expanded Edit View and right clicking, the menu will list all keywords that has a command that starts-with $TEXTREGEX (if any). If clicking one, that RegEx will be applied to all the current text in the Expanded Edit View.
+    Improvements
+    - The "Synthetic input support" setting now support more virtual input methods. The setting can be enabled in Settings > Input, typing & autocomplete.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://executor.dk/updates#v2212
+ReleaseTime: 2026-04-19T19:27:30.0000000Z
