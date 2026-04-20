@@ -1,0 +1,28 @@
+Version: 1.14.19
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.14.19/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.14.19/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    - Prevented compiled binaries from failing on startup because of a circular session schema dependency.
+    - Renamed the compaction setting to preserve_recent_tokens for the budget that keeps recent turns verbatim.
+    - Preserved concurrent edits to the same file instead of letting parallel edits overwrite each other.
+    - Fixed managed installs on Windows and added bundled ripgrep support for Windows ARM64.
+    - Added NVIDIA as a built-in provider option, including connection docs and required attribution headers. (@anniesurla)
+    - Kept recent conversation turns verbatim during session compaction so follow-up work keeps more local context.
+    - Fell back to summarizing the full conversation when preserved recent turns include too much media to fit safely.
+    Desktop
+    - Reduced loading flicker when opening projects and bringing prompt controls online.
+    - Added a separate terminal font setting and bundled JetBrainsMono Nerd Font Mono.
+    Thank you to 1 community contributor:
+    - @anniesurla:
+      - feat(provider): add NVIDIA to popular providers, docs, and attribution headers (#22927)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.14.19
+ReleaseTime: 2026-04-20T07:21:48.0000000Z

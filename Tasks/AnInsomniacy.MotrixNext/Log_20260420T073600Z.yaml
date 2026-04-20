@@ -1,0 +1,24 @@
+Version: 3.7.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.3/MotrixNext_3.7.3_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves duplicate download tasks caused by deep-link event duplication across all three platforms, adds browser cookie forwarding for authenticated downloads, and simplifies the extension auto-submit settings.
+    ✨ New Features
+    - Browser cookie forwarding — The browser extension now extracts cookies from the download context and passes them to aria2 via deep-link parameters. This enables authenticated downloads from sites like Quark Drive, Baidu Pan, and other cookie-gated CDNs.
+    🛠 Improvements
+    - Simplified auto-submit settings — Replaced the 5-toggle "Browser Extension" section with a single toggle merged into "Notification & Confirm". Config schema automatically migrates from v2 to v3.
+    - Refined task completion tracking — Replaced debug traces with explicit completion tracking in the monitor service for more reliable shutdown-on-complete behavior.
+    - Improved error handling — Downgraded noisy fetchList errors to debug level to reduce log clutter during normal operation.
+    🐛 Bug Fixes
+    - Fixed duplicate download tasks from deep-links — A triple-redundant event registration caused the same URL to be processed 2–3 times on all platforms. Unified by scoping macOS on_open_url to #[cfg(target_os = "macos")] and removing the redundant frontend onOpenUrl() listener.
+    - Fixed .torrent URL auto-submit — Auto-submitting a .torrent URL passed it to addUri(), which downloaded the .torrent file itself instead of parsing its content. Torrent and metalink URLs now always route through the AddTask dialog's fetch→parse→file-select pipeline.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.7.3
+ReleaseTime: 2026-04-20T07:15:00.0000000Z
