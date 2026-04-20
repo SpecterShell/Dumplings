@@ -17,7 +17,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.InvantiveDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('Invantive%20Support%20Assistant') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://go.invantive.com/download/invantive-support-assistant' | ConvertTo-UnescapedUri
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
