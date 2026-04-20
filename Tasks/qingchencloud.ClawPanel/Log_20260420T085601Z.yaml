@@ -1,0 +1,35 @@
+Version: 0.13.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/qingchencloud/clawpanel/releases/download/v0.13.4/ClawPanel_0.13.4_x64-setup-full.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/qingchencloud/clawpanel/releases/download/v0.13.4/ClawPanel_0.13.4_x64-full_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ✨ 新功能
+    - http): reqwest 客户端启用 brotli / deflate 解码
+    - assistant): 识别本地 LLM 服务端常见错误并给出修复指引
+    - assistant): 备用模型组 failover + 测试按钮走 Rust 后端（修 status 0）
+    🐛 修复
+    - cargo fmt formatting for list_remote_models
+    - deploy): 修复 Linux 全新系统部署 npm 缓存权限问题 (#236)
+    - models): 获取模型列表 404 改为友好提示 + 助手侧走后端绕 CORS
+    - assistant): 模型测试按钮改用流式累积 + 增强诊断信息
+    - assistant): 修复测试 Response Body 为 (empty) + 优化结果展示
+    - assistant): 补齐备用模型重设计缺失的变量声明
+    - lifecycle): 卸载/升级 OpenClaw 后同步刷新 Rust 缓存与前端缓存
+    - setup): 修复 Node.js/Git/OpenClaw 装完不识别（需重启客户端）
+    - assistant): 连续错误自动熔断，避免无限重试循环 (#226)
+    - assistant): 拦截本地文件路径粘贴/拖拽，清洗消息中的本地路径引用 (#226)
+    - sidebar): 增强引擎切换器视觉发现性 (#228, #235)
+    📦 其他
+    - refactor(assistant): 备用模型 UI 重设计 - 厂商预设快捷添加 + 极简列表
+    - refactor(chat): 聊天界面字体大小统一使用 CSS 变量 (#194)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/qingchencloud/clawpanel/releases/tag/v0.13.4
+ReleaseTime: 2026-04-20T08:17:52.0000000Z
