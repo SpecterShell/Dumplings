@@ -1,5 +1,10 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.texteditor.pro/newversioncheck.php'
 
+if ($Object1.Content.Trim() -notmatch '^\d+(?:\.\d+)+$') {
+  $this.Log("Failed to get version from https://www.texteditor.pro/newversioncheck.php", 'Error')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.Content.Trim()
 
