@@ -16,6 +16,18 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-x86_64.exe"
   ProductCode  = 'DBeaverUltimate'
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'user'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-aarch64.exe"
+  ProductCode  = 'DBeaverUltimate (current user)'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'machine'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-aarch64.exe"
+  ProductCode  = 'DBeaverUltimate'
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
