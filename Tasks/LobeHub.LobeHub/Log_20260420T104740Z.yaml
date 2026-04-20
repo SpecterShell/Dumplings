@@ -1,0 +1,31 @@
+Version: 2.1.52
+Installer:
+- InstallerUrl: https://github.com/lobehub/lobehub/releases/download/v2.1.52/LobeHub-2.1.52-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release was automatically published from PR #13994.
+    Changes
+    See PR description: https://github.com/lobehub/lobehub/pull/13994
+    Commit Message
+    This release ships a database schema migration that makes two pieces of lifecycle state explicit: how a topic finishes, and how a task is automated. Both already existed implicitly, which made some downstream behaviors ambiguous. This change turns them into first-class columns so the UI, scheduler, and reporting layers can rely on them directly.
+    Migration overview
+    Previously, a topic's completion was inferred from surrounding context — there was no dedicated status or timestamp marking when a topic moved out of the active pool. Tasks had a similar ambiguity around automation: heartbeat supervision and cron-style scheduling lived in overlapping fields, so a configured-but-paused schedule looked identical to one that was never set.
+    This migration makes both states explicit.
+    topics
+    - status (active | completed | archived)
+    - completed_at timestamp
+    - Indexes on status and (user_id, completed_at) so completion views and archival queries stay cheap
+    tasks
+    - automation_mode (heartbeat | schedule | null) — a single discriminator that makes the two automation kinds mutually exclusive by design and removes the "configured but disabled" ambiguity
+    - Index on automation_mode
+    In practice, the topic list can now distinguish completed and archived records without reinterpreting other fields, and the task scheduler gets a clean switch to route records between heartbeat supervision and cron execution.
+    Notes for self-hosted users
+    - The migration runs automatically during app startup; no manual SQL action is required in standard deployments.
+    - All new columns are nullable, so existing rows stay untouched — nothing is backfilled at migration time.
+    - As with any schema release, we still recommend a database backup and rollout during a low-traffic window.
+    The migration owner: @arvinxx — responsible for this database schema change, reach out for any migration-related issues.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/lobehub/lobehub/releases/tag/v2.1.52
+ReleaseTime: 2026-04-20T09:37:37.0000000Z
