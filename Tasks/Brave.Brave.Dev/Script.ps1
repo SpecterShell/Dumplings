@@ -27,15 +27,15 @@ $this.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.versi
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase + $Object1.response.app[0].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[0].updatecheck.manifest.packages.package.name
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
 }
 
 switch -Regex ($this.Check()) {
