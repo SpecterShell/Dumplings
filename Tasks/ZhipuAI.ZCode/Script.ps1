@@ -19,6 +19,20 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    try {
+      $Object2 = Invoke-RestMethod -Uri $Object1.changelog_url | ConvertFrom-Yaml
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.releaseNotes | Convert-MarkdownToHtml | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
