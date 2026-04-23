@@ -1,0 +1,42 @@
+Version: 0.1.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/QingJ01/Clyde/releases/download/v0.1.6/Clyde.on.Desk_0.1.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/QingJ01/Clyde/releases/download/v0.1.6/Clyde.on.Desk_0.1.6_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    See CHANGELOG.md for details.
+    macOS users: If you see "App is damaged", run:
+    xattr -cr "/Applications/Clyde on Desk.app"
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QingJ01/Clyde/releases/tag/v0.1.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QingJ01/Clyde/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - GitHub release update check — Automatic check every 4 hours with bubble notification when a new version is available. "Download" opens the release page; "Skip" dismisses that version. Tray menu "Check for Updates" triggers an immediate manual check with feedback ("Already Up to Date" or error)
+    - Update bubble UI — Green-themed glassmorphism bubble with version badge and release notes preview
+    Bug Fixes
+    - Mini mode pet couldn't reach screen edge — Peek detection fired during entry animation, cancelling it via AnimationGeneration. Fixed with PeekSuppressDeadline that waits until mouse exits vicinity
+    - Mini mode pet bounced back out — reconcile_pet_geometry fired on WindowEvent::Moved during animation, clamping pet to 120px visible (more than mini's 97px). Now skips reconcile when mini_mode=true
+    - Mini mode peek oscillation — Replaced simple cooldown with 3-phase state machine (Hidden → Peeking → Retracting) to prevent rapid peek/retract cycles
+    - Tauri state collision — Both AnimationGeneration and PeekSuppressDeadline were Arc<AtomicU64>, causing Tauri panic. Fixed with newtype wrapper
+    - Fast-flick drag drops — Added Pointer Capture (setPointerCapture) on hit window for reliable drag events
+    Internal
+    - update_check.rs — new module: reqwest + rustls-tls for GitHub API, semver comparison, auto/manual check with bubble feedback
+    - PeekSuppressDeadline — newtype wrapper with u64::MAX sentinel for "wait until mouse exits"
+    - PeekPhase enum — Hidden/Peeking/Retracting state machine replacing simple boolean
+    - Near detection uses visible bounds (clamped to monitor) instead of full window bounds
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QingJ01/Clyde/blob/HEAD/CHANGELOG.md#v016-update-check-amp-mini-mode-fix
+ReleaseTime: 2026-04-04T01:06:58.0000000Z
