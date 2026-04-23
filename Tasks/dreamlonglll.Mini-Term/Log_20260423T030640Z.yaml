@@ -1,0 +1,20 @@
+Version: 0.2.24
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.24/Mini-Term_0.2.24_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.24/Mini-Term_0.2.24_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - chore: 发布 v0.2.24 - package.json / src-tauri/Cargo.toml / src-tauri/tauri.conf.json 版本号同步到 0.2.24,Cargo.lock 跟随更新 - README 顶部 version badge 同步到 0.2.24
+    - feat: 长文本粘贴转临时文件功能新增可配置开关与阈值 - AppConfig 新增 longPasteToFile / longPasteLineThreshold / longPasteCharThreshold 三个字段，带 default 兜底，老 config.json 自动补齐，默认开启并沿用原 10 行 / 2000 字符阈值 - pasteToTerminal 改为运行时从 store 读取配置，总开关关闭时直接粘贴原文，任一阈值设为 0 表示不按该维度判断 - 设置弹窗「终端设置」页底部新增「长文本粘贴」区块，提供开关和两个数字输入，blur/Enter 提交，关闭时阈值输入半透明禁用
+    - fix: 终端长文本复制不全改走 Webview 原生 Clipboard API - copyTerminalSelection 优先调用 navigator.clipboard.writeText,失败时回退到 Tauri 插件 writeText,规避长字符串经 Tauri IPC+JSON 序列化出现截断(复制结果只剩开头+结尾片段)的问题 - 右键菜单"复制"和 Ctrl+Shift+C 快捷键共用该函数，两种触发路径一并修复
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.2.24
+ReleaseTime: 2026-04-21T12:58:03.0000000Z
