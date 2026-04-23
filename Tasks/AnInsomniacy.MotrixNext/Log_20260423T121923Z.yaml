@@ -1,0 +1,28 @@
+Version: 3.8.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.2/MotrixNext_3.8.2_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves four user-reported bugs and delivers several quality-of-life improvements across all platforms.
+    ✨ New Features
+    - Keep-awake preference — Prevent system sleep during active downloads (feat: add keep-awake preference to prevent system sleep during downloads)
+    - File timestamp selection — Choose between original server timestamp or download date for completed files (feat: replace remote time switch with file timestamp selection and update default to download date)
+    - Browser extension auto-submit toggle — Disable auto-submit by default so the Add Task dialog always opens for user review (feat: disable default auto-submit and ensure main window is unminimized when brought to focus)
+    🛠 Improvements
+    - Three-column layout alignment — Standardize header spacing across sidebar, subnav, and content columns using a unified --header-top-offset CSS variable (refactor: standardize header spacing using CSS variables and reduce tray icon update delay)
+    - Sidebar–subnav vertical rhythm — Align sidebar icons with adjacent subnav menu items (style: reduce subnav title bottom margin and align task view header to start)
+    - Preferences ordering — Move file-timestamp setting below download path for logical grouping (refactor: move file-timestamp setting below download path in preferences)
+    🐛 Bug Fixes
+    - Linux tray icon conflict — Fixed tray icon colliding with other Tauri apps (e.g. Clash Verge Rev) on Linux due to shared default tray ID "main", causing icon duplication. Changed to unique ID "motrix-next" to isolate temp PNG paths under $XDG_RUNTIME_DIR/tray-icon/
+    - Linux tray icon on autostart — Fixed tray icon rendering as a black square on KDE Plasma at boot due to SNI D-Bus race condition (#242) (fix: add deferred tray icon refresh on Linux to resolve startup display issues in KDE Plasma)
+    - File category archive path — Fixed completed files appearing as "missing" after lightweight-mode window recreation (#243) (fix: patch stale file paths for completed tasks using history database records)
+    - Window surfacing on Windows — Fixed window failing to surface from minimized taskbar state (#244)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.2
+ReleaseTime: 2026-04-23T11:51:57.0000000Z
