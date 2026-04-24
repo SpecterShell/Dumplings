@@ -1,0 +1,27 @@
+Version: 0.70.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/badlogic/pi-mono/releases/download/v0.70.1/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - DeepSeek provider support with V4 Flash/Pro models and DEEPSEEK_API_KEY authentication. See README.md#providers--models and docs/providers.md#api-keys.
+    - Provider request timeout/retry controls via retry.provider.{timeoutMs,maxRetries,maxRetryDelayMs}, useful for long-running local inference and provider SDK retry behavior. See docs/settings.md#retry. (#3627)
+    Added
+    - Added DeepSeek to built-in provider setup, default model resolution, and provider documentation.
+    Fixed
+    - Fixed /copy to avoid unbounded OSC 52 writes and clipboard races that could break terminal rendering or panic the native clipboard addon (#3639)
+    - Fixed extension flag docs to show pi.getFlag() using registered flag names without the CLI -- prefix (#3614)
+    - Fixed provider retry/timeout settings wiring by adding retry.provider.{timeoutMs,maxRetries,maxRetryDelayMs}, migrating legacy retry.maxDelayMs, and forwarding provider controls into streamSimple request options (#3627)
+    - Fixed Windows git package installs to bypass cmd.exe for native git commands, so install paths containing spaces no longer break pi install git:... with fatal: Too many arguments (#3642)
+    - Fixed DeepSeek V4 session replay 400 errors by sending DeepSeek-compatible thinking controls and replayed assistant reasoning_content fields (#3636)
+    - Fixed GPT-5.5 generated context window metadata to use the observed 272k limit.
+    - Fixed CSI-u Ctrl+letter decoding inside bracketed paste, so pasted modified-key escape sequences no longer become literal editor text (#3623 by @Exrun94)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/badlogic/pi-mono/releases/tag/v0.70.1
+ReleaseTime: 2026-04-24T12:10:53.0000000Z
