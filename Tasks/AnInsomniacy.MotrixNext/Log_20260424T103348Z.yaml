@@ -1,0 +1,26 @@
+Version: 3.8.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.3/MotrixNext_3.8.3_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This patch fixes proxy-aware file resolution for extensionless URL downloads and restores auto-update support for Linux RPM users.
+    ✨ New Features
+    - Directory quick-pick popover — favorite and recent folder management for task save locations
+    - Remote file extension resolution — resolve_filename infers file extensions from remote URLs via HEAD requests
+    🛠 Improvements
+    - RPM updater support — Added linux-x86_64-rpm and linux-aarch64-rpm platform entries to the updater JSON, enabling in-app auto-update for RPM-based distributions (Fedora, openSUSE, etc.)
+    - Added diagnostic logging to proxy application for easier remote debugging
+    - Persist directory preferences and auto-animate transitions for directory popover lists
+    🐛 Bug Fixes
+    - Proxy not applied for extensionless URL resolution — The AddTask dialog was missing the proxy parameter when resolving remote filenames, causing HEAD requests to bypass the configured system proxy (#248)
+    - Linux RPM auto-update fails with "invalid updater binary format" — RPM users were falling back to AppImage during auto-update because the updater manifest lacked RPM platform entries (#250)
+    - Fixed basename extraction logic to correctly handle path segments
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.3
+ReleaseTime: 2026-04-24T09:33:59.0000000Z
