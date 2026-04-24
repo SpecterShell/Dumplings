@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://www.helpandmanual.com/news/feed/'
 
-      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains('Translation Assistant') -and $_.title.Contains($this.CurrentState.Version) }, 'First')
+      $ReleaseNotesObject = $Object2.Where({ $_.title.Contains('Translation Assistant') -and $_.title.Contains($this.CurrentState.Version -replace '(\.0+)+$') }, 'First')
       if ($ReleaseNotesObject) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].pubDate | Get-Date -AsUTC
