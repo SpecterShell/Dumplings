@@ -1,4 +1,4 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/').Content
+$Object1 = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent).Content
 
 $Match = [regex]::Match($Object1, 'window\.location\.href\s*=\s*"(.+?/pc/dl/gzindex/.+?/sogou_pinyin_(.+?)\.exe.+?)"')
 
