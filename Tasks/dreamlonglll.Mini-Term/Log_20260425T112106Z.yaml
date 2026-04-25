@@ -1,0 +1,20 @@
+Version: 0.2.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.27/Mini-Term_0.2.27_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.27/Mini-Term_0.2.27_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.2.27,启动终端懒加载 + 项目切换保留终端内容 - package.json / src-tauri/Cargo.toml / src-tauri/tauri.conf.json 同步到 0.2.27,Cargo.lock 跟随；README 顶部 version badge 同步，「测试覆盖」从 63 改为 64 个 Rust 单元测试 - 随版发布启动卡顿根治：终端布局只恢复元数据，可见 pane 首次显示时再创建 PTY,且仅渲染当前项目/当前 tab/当前 pane,避免历史项目越多启动越卡；ai_sessions 查询新增最近文件限量扫描与短缓存，降低历史记录增长后的启动压力，补 layoutRestore 测试纳入测试编译配置 - 随版发布项目切换保活：为访问过的项目保留 TerminalArea 挂载状态，切换回来时复用已有终端 DOM,新增 keep-alive 项目集合工具与 projectKeepAlive 测试覆盖切换保活逻辑 - README「终端缓存」条目改写为「切换项目 / 标签 / 分屏不重建 xterm 实例」+「启动按需懒加载，仅当前可见 pane 创建 PTY」,与本次代码行为对齐
+    - fix: 保留项目切换后的终端内容
+    - fix: 根治启动终端批量恢复卡顿
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.2.27
+ReleaseTime: 2026-04-25T10:18:45.0000000Z
