@@ -1,0 +1,119 @@
+Version: 1.0.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.3/beads_1.0.3_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.3/beads_1.0.3_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - 72b6cf0bd0a392b7552f46e7d1e9d7a3ab7327e1 feat(gate): add 'bd gate create' for ad-hoc blocking gates (#3257)
+    - 8b691beaea4c2d57ac291078bad14dd27c297a4d feat(prune): add bd prune for deleting closed non-ephemeral beads (#3353)
+    - 8518e71d662825c394bdf86e0d77eb3acfc0816a feat: BD_JSON_ENVELOPE=1 opt-in for uniform JSON wrapping (#3393)
+    - 0d4b979354e8050558cc7030c8dd72e3af89d22f feat: JSON schema contract, bd ping, structured errors, import enhancements (#3368)
+    - 34a580c1e90534dc49ece61725166211a6b9b118 feat: add --exclude-label flag to bd ready and bd list
+    - 73d72ec0fa31cf587d9f8bcbd2ac29b8046337f9 feat: add --remote flag to bd dolt push/pull commands (#3211)
+    - a54ab6f55d66f7ccb316f72a8a3a065806d88003 feat: add starter formula examples (#3248)
+    - 5715f54ce49e6425e0a847b8e64107131d55ed4e feat: make CGO_ENABLED=0 the blessed go install path (GH#3303)
+    - a78e58388f5ec82a568de94eedb8a449a7f486e7 feat: support Unix domain sockets for Dolt server connections (#3300)
+    Bug Fixes
+    - 397eb4d721f54427c186470a653da75632ed3a86 fix(ado): use date-only format for WIQL ChangedDate queries (#3345)
+    - 7bd9e18500a9390a8d6e4343e036b6ac4f0ae24f fix(audit): use atomic write to prevent torn lines under concurrent O_APPEND (#3301)
+    - 0dce51a64db816f1b557fa314cbe6c945ef6b28c fix(autopush): bound auto-push, throttle failed attempts (#3370) (#3381)
+    - 80255b69ce082a8533152f2ea71156ec57789d20 fix(bootstrap): clone via SQL server in external server mode (#3346)
+    - 813fdfabf84b2f3c8b4619a032662c19f2f6e87c fix(ci): unblock main — gosec G122 + credentials_test signatures (#3389)
+    - 165bd6e8e161ad828ccbca2e3f3273d7fab35f2d fix(config): default Dolt database name when metadata.json is missing (#3380)
+    - 66da4806df13e6648edd56659f493859ae23b4b6 fix(config): reject issue-prefix config set
+    - 5affdbec4acaaaad51ab999f6f25d06a5d70df9e fix(doctor): resolve Dolt password/TLS for externally-hosted servers (#3361)
+    - d57dc7128a8657bcd462a4aa3a66da92d227a15a fix(dolt): auto-recover from corrupt manifest on startup (GH#3290) (#3327)
+    - be8edaac3d0aed31c7ca1112add854a3513e9977 fix(dolt): bd dolt status recognizes externally-hosted Dolt servers (#3362)
+    - 456a660717e265394c039d87547e136ba13f28eb fix(dolt): disable auto-push by default; require explicit opt-in (#3446)
+    - 395935bed5b30023b8684d4d0731226e4f148ed1 fix(dolt): exit 0 when push/pull finds no remote configured (GH#3031) (#3194)
+    - add175942775daf6604e4e53e223167287ac64ff fix(dolt): pre-push integrity check via dolt fsck (#3447)
+    - f990135081440fe9f42bfd705542f2911ce7deb4 fix(export): add _type discriminator to JSONL issue lines (#3272)
+    - d0f0ad6f22ae2855fac6d9d7a8ec00fc6cfd483f fix(export): scrub git hook env and skip cross-worktree git-add (GH#3311) (#3347)
+    - bc74f7e897ead363ba18ac082e98186c9b6672be fix(fetch): run GC after failed DOLT_FETCH to prevent tmp_pack_* accumulation (#3326)
+    - 5b4b8a5f16549a83df5b2ccffd07fe0a6d69cef6 fix(formula): auto-register custom types used by formula gate steps (#3214)
+    - 6681fdc974cc958b5123c3bac9149838a83abe49 fix(formula): carry step metadata through cook and pour (GH#3341) (#3359)
+    - fef73917ccba644c818e74bf22cedd9c9c0213ae fix(gate): keep dry-run checks write-free
+    - 5c4362df99221bc1ea59b9f4f72242db5168ae1e fix(hooks): preserve husky v8/v9 hook layout when copying to .beads/hooks/ (#3197)
+    - c6d0cc2fd9fc4b78f8ab41253e5cfa8931fd6faf fix(init): refuse --force when remote has Dolt history (#3455)
+    - 3c6c9db36bff196b96ea49e9f78001a6ad2255ee fix(init): skip hooks during from-jsonl bootstrap commit (#3342)
+    - c446a2ef0925fc0b63ac779b4821ac60dc03c899 fix(linear): harden push against data clobbering (#3328)
+    - 4e3dbb6db0c7e6b5d66ca824988cdfe5cae9e496 fix(nix): update vendorHash after dependabot go.sum bumps (GH#3221) (#3297)
+    - 9db6b56f2952d992991f1ba985db4a97db128a5c fix(schema): repair v0.63→v1.0 upgrades where issues.started_at is missing (GH#3363) (#3365)
+    - 39ee50d64c08cc14c8387d9d493de98b841b67d0 fix(setup): add alwaysApply frontmatter to Cursor rules template (GH#3191) (#3193)
+    - e312332568ad2854db813c9d55d88561b8bcefcc fix(setup): skip duplicate hooks when beads plugin is installed (GH#3192) (#3196)
+    - baf73a6fa16f8b3fe1ea41f07445a3539ce050f0 fix(worktree): don't prefer inherited .beads/ over shared fallback (#3425)
+    - dbf793fdb6b9af9542c27f5f0bbf9290949a782d fix: auto-sanitize hyphenated dolt_database on embedded-mode upgrade (#3231) (#3232)
+    - e585a61875911b1122d8bca99e3ffe5d8f4e2553 fix: avoid false shared-server bootstrap no-op for synthesized worktrees
+    - 43c1dcaab32c15a9106f69a9e67c2586b594f9b8 fix: bd config set --db now resolves BEADS_DIR for yaml-only keys (#3348) (#3379)
+    - dfde51f9a856b9c991ac34d9d58ccb66d1a4772b fix: bd dolt pull fails when remote added without branch tracking (#3443)
+    - 98173b08f1b69951c0ee5ee996931c27e833d9c7 fix: bd list --parent no longer echoes parent when it has no children (#3349) (#3374)
+    - 2c0fa6e6a4f5bf3a70fadc383f76af6490db786c fix: bd update --type honors custom types (fixes #3030) (#3093)
+    - 0e09598c52bb3db774bdaab1f64c52e80a1fd0e0 fix: cross-rig prefix routing for issue resolution via routes.jsonl (#2954)
+    - 1e76efcfb6aff2b8e6349e8d44b98f77845e470f fix: don't normalize user-provided sync.remote URLs (GH#3339) (#3432)
+    - 0271720965ba1978b46c84ce7e1f8c7b04eb1cf1 fix: linear tracker reads yaml-only config keys from config.yaml (#3315)
+    - a0c00d95eb7eeee35d818d91dee6bfd07bc8c1de fix: make beads-mcp shared-worktree aware
+    - 27e9a85e48d9a4d974f287ad6b6b34dd12d896e3 fix: no-git-ops=true now implies export.git-add=false (#3314) (#3376)
+    - a42eded798cd0faf4d299ef3a762943a723583f9 fix: pass CLI filters through tree mode recursive walk (#3384)
+    - ffe69aaa4b2e5c0f7f1fede3215038bb8ae9236c fix: promote gate to built-in type so formula pour works (#3382)
+    - 3c67e86400a5c62a26917097ede2152ad4493c39 fix: rebind selected workspace before db command startup (#3230)
+    - 0d7f87cc5f7a72b0a7ba6bdad2178fa5ac97b94d fix: remove duplicate database name helper (bd-rrt)
+    - 7516a3925dadfa055525508bd039b45030cb73b2 fix: remove orphan detection from compat migration hot path (#3344) (#3378)
+    - 6bda86f23e6c73aa4f0dbd2372c41772f37fe540 fix: show (none) placeholder when description is empty in bd show (#3336) (#3375)
+    - 8abad918048bf2d08165c7898caae9a22bcda52b fix: skip DOLT_COMMIT when compat migrations produce no changes (#3366) (#3373)
+    - 20b9ed729094256535a2f982621541531e9077e1 fix: support Jira Cloud token pagination (#3456)
+    - 5aa4eb76123a87d1bf354d8e8d92af23e751f8b7 fix: use routed ID resolution in bd comments (#3385)
+    - 5f0be23de16b9ecde34006ff4004d19d505cb5a1 fix: warn on unrecognized config keys in bd config set (#3293) (#3377)
+    - f368f98830ce224762e385e014e91693f53aac6e fix: wire embedded backend compat migrations by relocating runner (#3413)
+    Others
+    - b76947f46b72e2648b2617b63c72868ff2afe96d /.github/workflows/ci.yml: update comment
+    - c486c7d67596aaf6db28ab3766a8cf979955a4cd /default.nix: update vendor hash
+    - c1297259a25224674c6d542667532a089da13f7d /{examples,go.mod}: bump go
+    - 74ad12479dcb48a24399280564aae760810fd9f2 Add ADO round-trip integration tests and config documentation (#3305)
+    - 390658159bc80384ad4117b798932d59350dd410 Add Linear round-trip fidelity integration test (upstream #3187) (#3255)
+    - 6e506b6dddceefe49786ca5bff9f8b3eacc108c4 Add PR preflight and contributor intake guidance (#3470)
+    - cfdb75e228f08019abd73521ca68df4516c3723f Fix git-remote-cache tmp_pack file leak in embedded mode (#3355)
+    - 55625dbef2d6ea7c96b858e576d69385b8c12b19 Fix worktree-aware config.yaml resolution (#3265)
+    - abf03e1d4c57525b291af6c26e3f85953a0554c0 Keep regular epics open after the last child closes (#3276)
+    - 1b2dd2cb56b31a7fb947845731c67292c34dd29b Release 1.0.3
+    - df25aa92299d82880bd48954fafa3a5fc697c6e0 Rename ICU-only test path to explicit opt-in workflow (bd-b18) (#3291)
+    - ac085df8c58b2d408928e90d55e9cf43f5286e79 Skip Dolt remote registration for plain git source repos during init (#3357)
+    - 04ec3f52b94dd848fc6190c78ad5464746f73369 Tier embedded Dolt CI for PRs (bd-0gz) (#3459)
+    - 578524c0e99b3abef4609b6e8105a05ae0df4c3b [codex] Diagnose Dolt journal corruption and init lock hangs (#3457)
+    - 63a24bc21d216fe97718690fb975a24a7d4d894e [codex] Share epic DB setup in one suite (#3296)
+    - 3f866c01c5154543a72f0f3b93cbcd5930341650 add Thread to community tools - analytics and observability (#3329)
+    - 2ade22e84c55ae6f6bff33eafa31e849b76c14bd chore(build): codify the gms_pure_go build-tag policy (GH#3303)
+    - a6152f71e9accf790ff955d0a825780d3958446f chore(deps): bump actions/checkout from 4 to 6 (#3320)
+    - 5a51e330f328b53f2bfc98bc5963c982642b4050 chore(deps): bump actions/upload-pages-artifact from 4 to 5 (#3318)
+    - 37d30f2e7c5a128ba9def5a8d621558a44eab41a chore(deps): bump charm.land/lipgloss/v2 from 2.0.2 to 2.0.3 (#3325)
+    - 632839ccb8a489b360f9cdfa7988b6edefc015c4 chore(deps): bump fastmcp from 3.2.3 to 3.2.4 in /integrations/beads-mcp (#3319)
+    - 8b5d5465048d951185b557a1f72804933b6ff65d chore(deps): bump github.com/anthropics/anthropic-sdk-go (#3322)
+    - e4f07387a3bf5de9ab18c21371c3f6a2fc6d5792 chore(deps): bump go.opentelemetry.io/otel/exporters/stdout/stdoutmetric (#3323)
+    - e3c26c6884c780a249b219b8aef12a99d8f0dd92 chore(deps): bump golang.org/x/term from 0.41.0 to 0.42.0 (#3324)
+    - cf42092633fe79e12dd54a0b409926d2bab6956b chore(deps): bump pydantic in /integrations/beads-mcp (#3321)
+    - 4c240fc168b2e54290e8072f1914a038ba625227 chore(gitignore): ignore .codex marker and .claude/*.lock
+    - b90ee4cf4cdb88fd6785f2200cec63e7b0bfab47 ci: add nix build check to catch vendorHash drift (GH#3298) (#3364)
+    - 15f31dc0736cc9926e66e9db35d612a97d371e4c ci: don't fail workflows when codecov upload has no token (#3386)
+    - f0057c7828b7b022ffb3c5cb6aa4513e8b60be2f ci: install dolt binary on Linux and macOS test runners (#3440)
+    - 26829ee66df226bf583e78622a9824c7702730a1 ci: install dolt in regression workflow
+    - 8b30849e37282b7f7317283f197bacd804370fec cleanup(agents): Delete spurious cmd/bd/@AGENTS.md file (#3198)
+    - 27c3338f5e7ebebd6be6da8a8d007b124d51fa1a docs(test): reference GH#3260 investigation near memory race workaround (#3287)
+    - ecd2f7268c8f91fab5b85b43c2cefd4c7b84b991 fix packaging and windows install regressions
+    - aed707a103d9d828f7a1fff72d2f3f1d91912fd8 fix remote sync follow-ups
+    - 86d5511b33d2238f6f3977dcde2de0a19aee4e57 fix(admin,dolt): allow admin + dolt show/status in embedded mode (#3330)
+    - 0b9d5a95a702af2f6958edf48beec7cd1d74d538 fix(go.mod): remove broken replace directive that blocks go install (GH#3303)
+    - 331bc3aed20ac13a132df57ac00f0fc32c309150 perf(storage): amortize per-ID wisp routing via WispIDSetInTx (#3453)
+    - d8d298dc1ecbaf86a16a015763580d94b9134d84 refactor: extract create issue build and dry-run render helpers (bd-itp.4) (#3295)
+    - e3586dbb36d5f1de99c06df6df00e3a3927bd283 refactor: route duplicate commands through CommandContext accessors (bd-itp.2) (#3294)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gastownhall/beads/releases/tag/v1.0.3
+ReleaseTime: 2026-04-24T23:26:29.0000000Z
