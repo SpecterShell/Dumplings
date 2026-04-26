@@ -14,7 +14,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated|Rollbacked' {
+  'New|Changed|Updated' {
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
@@ -54,10 +54,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated|Rollbacked' {
+  'Changed|Updated' {
     $this.Message()
   }
-  'Updated|Rollbacked' {
+  'Updated' {
     $this.Submit()
   }
 }
