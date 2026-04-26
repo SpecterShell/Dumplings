@@ -27,13 +27,13 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.data.pc.version_info | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object1.data.pc.version_info_lang.en | ConvertFrom-Html | Get-TextContent | Format-Text
       }
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.data.pc_cn.version_info | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object2.data.pc_cn.version_info_lang.zh | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
