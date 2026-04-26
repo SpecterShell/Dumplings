@@ -4,7 +4,7 @@ function Read-Installer {
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'GetLocalAdminsGUISetup.exe' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'GetLocalAdminsGUISetup.exe'
   $InstallerFile2Extracted = New-TempFolder
-  Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
+  Expand-AdvancedInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted | Out-Null
   $InstallerFile3 = Join-Path $InstallerFile2Extracted 'GetLocalAdminsGUISetup.msi'
   $InstallerFile4 = Join-Path $InstallerFile2Extracted 'GetLocalAdminsGUISetup.x64.msi'
   # Version

@@ -1,9 +1,10 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-  Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList @('/VERYSILENT', '/NORESTART') -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
+  $InnoInfo = Get-InnoInfo -Path $InstallerFile
+  $this.Log("Read static $($InnoInfo.InstallerType) metadata for $($InnoInfo.ProductCode)", 'Info')
   # Version
   $this.CurrentState.Version = [regex]::Match(
-    (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ProfiCAD_is1' -Name 'DisplayName'),
+    $InnoInfo.DisplayName,
     '(\d+(?:\.\d+)+)'
   ).Groups[1].Value
   # InstallerSha256

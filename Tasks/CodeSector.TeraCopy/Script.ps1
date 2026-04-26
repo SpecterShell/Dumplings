@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
+    Expand-AdvancedInstaller -Path $InstallerFile | Out-Null
     $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
     $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.msi" -File | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode

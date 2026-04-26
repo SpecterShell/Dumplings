@@ -1,8 +1,9 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   # Version
-  Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-  $this.CurrentState.Version = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Kobo' -Name 'DisplayVersion'
+  $NSISInfo = Get-NSISInfo -Path $InstallerFile
+  $this.Log("Read static $($NSISInfo.InstallerType) metadata for $($NSISInfo.ProductCode)", 'Info')
+  $this.CurrentState.Version = $NSISInfo.DisplayVersion
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'

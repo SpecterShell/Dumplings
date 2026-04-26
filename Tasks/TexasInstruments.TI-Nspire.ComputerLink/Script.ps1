@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
       $InstallerFileExtracted = New-TempFolder
-      Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+      Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted | Out-Null
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'ComputerLink.msi'
       # ProductCode
       $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi

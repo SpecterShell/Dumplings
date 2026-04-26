@@ -26,17 +26,17 @@ $this.CurrentState.Installer += $InstallerExeArm64 = [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = "https://app.raidrive.com/download/raidrive/release/RaiDrive_$($this.CurrentState.Version)_arm64.exe"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiX86 = [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'msi'
   InstallerUrl  = "https://app.raidrive.com/download/raidrive/release/RaiDrive_$($this.CurrentState.Version)_x86.msi"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiX64 = [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msi'
   InstallerUrl  = "https://app.raidrive.com/download/raidrive/release/RaiDrive_$($this.CurrentState.Version)_x64.msi"
 }
-$this.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerMsiArm64 = [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'msi'
   InstallerUrl  = "https://app.raidrive.com/download/raidrive/release/RaiDrive_$($this.CurrentState.Version)_arm64.msi"
@@ -52,29 +52,16 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Error')
     }
 
-    $this.InstallerFiles[$InstallerExeX86.InstallerUrl] = $InstallerFileExeX86 = Get-TempFile -Uri $InstallerExeX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Start-Process -FilePath $InstallerFileExeX86 -ArgumentList @('/extract') -Wait
-    $InstallerFileExeX86Extracted = Split-Path -Path $InstallerFileExeX86 -Parent
-    $InstallerFileExeX862 = Get-ChildItem -Path $InstallerFileExeX86Extracted -Include 'RaiDrive_win-x86_exe.msi' -Recurse -File | Select-Object -First 1
-    # ProductCode
-    $InstallerExeX86['ProductCode'] = $InstallerFileExeX862 | Read-ProductCodeFromMsi
-    Remove-Item -Path $InstallerFileExeX86Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $this.InstallerFiles[$InstallerMsiX86.InstallerUrl] = $InstallerFileMsiX86 = Get-TempFile -Uri $InstallerMsiX86.InstallerUrl | Rename-Item -NewName { "${_}.msi" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$InstallerMsiX64.InstallerUrl] = $InstallerFileMsiX64 = Get-TempFile -Uri $InstallerMsiX64.InstallerUrl | Rename-Item -NewName { "${_}.msi" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$InstallerMsiArm64.InstallerUrl] = $InstallerFileMsiArm64 = Get-TempFile -Uri $InstallerMsiArm64.InstallerUrl | Rename-Item -NewName { "${_}.msi" } -PassThru | Select-Object -ExpandProperty 'FullName'
 
-    $this.InstallerFiles[$InstallerExeX64.InstallerUrl] = $InstallerFileExeX64 = Get-TempFile -Uri $InstallerExeX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Start-Process -FilePath $InstallerFileExeX64 -ArgumentList @('/extract') -Wait
-    $InstallerFileExeX64Extracted = Split-Path -Path $InstallerFileExeX64 -Parent
-    $InstallerFileExeX642 = Get-ChildItem -Path $InstallerFileExeX64Extracted -Include 'RaiDrive_win-x64_exe.msi' -Recurse -File | Select-Object -First 1
     # ProductCode
-    $InstallerExeX64['ProductCode'] = $InstallerFileExeX642 | Read-ProductCodeFromMsi
-    Remove-Item -Path $InstallerFileExeX64Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $InstallerExeX86['ProductCode'] = $InstallerMsiX86['ProductCode'] = $InstallerFileMsiX86 | Read-ProductCodeFromMsi
+    $InstallerExeX64['ProductCode'] = $InstallerMsiX64['ProductCode'] = $InstallerFileMsiX64 | Read-ProductCodeFromMsi
+    $InstallerExeArm64['ProductCode'] = $InstallerMsiArm64['ProductCode'] = $InstallerFileMsiArm64 | Read-ProductCodeFromMsi
 
-    $this.InstallerFiles[$InstallerExeArm64.InstallerUrl] = $InstallerFileExeArm64 = Get-TempFile -Uri $InstallerExeArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Start-Process -FilePath $InstallerFileExeArm64 -ArgumentList @('/extract') -Wait
-    $InstallerFileExeArm64Extracted = Split-Path -Path $InstallerFileExeArm64 -Parent
-    $InstallerFileExeArm642 = Get-ChildItem -Path $InstallerFileExeArm64Extracted -Include 'RaiDrive_win-arm64_exe.msi' -Recurse -File | Select-Object -First 1
-    # ProductCode
-    $InstallerExeArm64['ProductCode'] = $InstallerFileExeArm642 | Read-ProductCodeFromMsi
-    Remove-Item -Path $InstallerFileExeArm64Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFileMsiX86, $InstallerFileMsiX64, $InstallerFileMsiArm64 -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.raidrive.com/update/' | ConvertFrom-Html
