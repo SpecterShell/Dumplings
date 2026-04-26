@@ -33,16 +33,33 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./p[contains(text(), "See the assets to download this version and install.")]')
-        if ($ReleaseNotesTitleNode) {
+
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match 'Download Recommendations'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match '下载建议'); $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+          }
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
