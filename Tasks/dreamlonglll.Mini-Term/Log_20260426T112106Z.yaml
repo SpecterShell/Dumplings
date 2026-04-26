@@ -1,0 +1,21 @@
+Version: 0.2.28
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.28/Mini-Term_0.2.28_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.28/Mini-Term_0.2.28_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.2.28,修复终端方向键 / 多行粘贴 / 右键菜单越界三处体验 - package.json / src-tauri/Cargo.toml / src-tauri/tauri.conf.json 同步到 0.2.28,Cargo.lock 跟随；README 顶部 version badge 同步 - 修复终端方向键长按松手后延迟移动：重写 PTY 输入队列为单 flight 合并写入，减少高频方向键 repeat 造成的 IPC 积压；保持同一 PTY 写入顺序避免并发乱序；补充队列合并回归测试并修正测试编译产物引用路径 - 修复多行粘贴误触发 AI 输入：自定义文本粘贴改走 xterm paste 让 Ctrl+Shift+V 和右键粘贴支持 bracketed paste;后端输入追踪识别 bracketed paste 范围，粘贴中的换行不再当作 Enter 提交；补充多行粘贴不触发提交与粘贴后回车只提交一次的回归测试 - 修复右键菜单贴近屏幕右/下边界时溢出窗口：contextMenu.ts 挂载后测量菜单尺寸，右侧溢出则向左弹，底部溢出则向上弹，留 4px 边距并兜底防贴出左/上边界；挂载前 visibility: hidden,等坐标修正后再显示避免用户看到错位的初始位置
+    - fix: 修复右键菜单贴近屏幕边界时溢出窗口 - contextMenu.ts 挂载后测量菜单尺寸，右侧溢出则向左弹，底部溢出则向上弹，留 4px 边距并兜底防贴出左/上边界 - 挂载前先 visibility: hidden,等坐标修正后再显示，避免用户看到错位的初始位置
+    - fix: 修复多行粘贴误触发 AI 输入
+    - fix: 修复终端方向键长按松手后延迟移动
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.2.28
+ReleaseTime: 2026-04-26T10:18:35.0000000Z
