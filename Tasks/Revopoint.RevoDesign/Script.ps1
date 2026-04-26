@@ -1,4 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'http://www.quicksurface.com/updatecheck/revodesign8.txt' | Read-ResponseContent
+$Object1 = Invoke-WebRequest -Uri 'https://www.quicksurface.com/updatecheck/revodesign8.txt' | Read-ResponseContent
+
+if ($Object1 -notmatch '^\d+(?:\|\d+)+$') {
+  $this.Log('The version from the response content is invalid', 'Error')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.Replace('|', '.').Trim()
