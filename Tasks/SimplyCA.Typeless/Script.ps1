@@ -21,22 +21,24 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://developers.hp.com/hp-client-management/doc/changelog' | ConvertFrom-Html
+      $EdgeDriver = Get-EdgeDriver -Headless
+      $EdgeDriver.Navigate().GoToUrl('https://www.typeless.com/help/release-notes/windows')
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(text(), '[$($this.CurrentState.Version)]')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-        # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/span, '$($this.CurrentState.Version)')]")) } catch {}
         }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      ).GetAttribute('innerHTML') | ConvertFrom-Html
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./div[1]/h2').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNode.SelectSingleNode('./div[2]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
