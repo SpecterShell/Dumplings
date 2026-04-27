@@ -1,0 +1,25 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.0/Mini-Term_0.3.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.0/Mini-Term_0.3.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - feat: 发布 v0.3.0，新增全局文件搜索与会话查看功能 - 新增全局文件搜索（Ctrl+Shift+F），支持文件名和内容搜索、正则匹配、流式推送结果 - 会话历史右键「查看」展示完整对话，支持搜索高亮和 User 消息快速导航 - 文件预览支持 Markdown 渲染、二进制/超大文件提供默认工具打开按钮 - 三个版本文件同步升级至 0.3.0，README 同步更新功能列表
+    - fix: 修复补全命令启动 AI 状态识别
+    - feat: 全局文件搜索功能，支持文件名和内容搜索 - 后端新增 search.rs 模块，使用 ignore crate 遍历文件树，支持子串和正则匹配，流式批量推送结果（每 50 条或 100ms），Arc 取消机制 - 新建 SearchModal 弹窗组件，文件名/内容模式切换，正则开关，结果关键词高亮，内容模式按文件分组显示行号 - FileViewerModal 新增 highlightLine 属性，搜索结果单击预览自动滚动到匹配行并高亮 - 双入口：Ctrl+Shift+F 全局快捷键 + FileTree 工具栏搜索按钮，切换模式自动清空旧结果
+    - docs: 文件搜索功能设计文档
+    - feat: 会话查看弹窗新增搜索和用户消息快速导航 - 搜索栏常驻弹窗顶部，支持 Ctrl+F 聚焦、Enter/Shift+Enter 切换匹配项，不匹配消息降低透明度 - 标题栏右侧 ▲▼ 按钮在 User 消息间快速跳转，显示当前位置 "User N/M" - User 消息内对搜索关键词做文本级高亮标记
+    - feat: Sessions 右键菜单新增「查看」，弹窗展示会话内容 - 后端新增 get_ai_session_content 命令，解析 Claude/Codex JSONL 文件提取 user/assistant 消息 - 新建 SessionViewerModal 弹窗组件，User 消息纯文本渲染，Assistant 消息 Markdown 渲染 - SessionList 右键菜单增加「查看」入口，点击后加载并展示完整对话内容
+    - feat: 文件预览弹窗为二进制和超大文件提供「使用默认工具打开」按钮 - 二进制文件和超大文件（>1MB）提示下方新增按钮，调用 open_path_with_default_app 命令与 FileTree 右键菜单行为一致
+    - feat: 文件预览支持 Markdown 渲染 - FileViewerModal 检测 .md/.markdown/.mkd/.mdx 文件，默认以渲染模式展示，工具栏提供「预览/源码」切换按钮 - 新增 react-markdown + remark-gfm 依赖，支持 GFM 表格、任务列表、删除线等扩展语法 - styles.css 新增 .md-preview 样式集，覆盖标题、代码块、引用、表格、列表等元素，适配深色/浅色主题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.0
+ReleaseTime: 2026-04-27T12:30:39.0000000Z
