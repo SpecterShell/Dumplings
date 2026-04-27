@@ -22,9 +22,10 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # AppsAndFeaturesEntries > DisplayVersion
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
+    $NSISInfo = Get-NSISInfo -Path $InstallerFile
+    $this.Log("Read static $($NSISInfo.InstallerType) metadata for $($NSISInfo.ProductCode)", 'Info')
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @{
-      DisplayVersion = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rolisteam' -Name 'DisplayVersion'
+      DisplayVersion = $NSISInfo.DisplayVersion
     }
     # RealVersion
     $this.CurrentState.RealVersion = $this.CurrentState.Installer[0].AppsAndFeaturesEntries.DisplayVersion.Split('/')[-1].Trim()

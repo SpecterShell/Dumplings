@@ -1,10 +1,12 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-  Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/SILENT', '/NORESTART' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
+  $InstallerFileExtracted = New-TempFolder
+  $InstallerFile2 = Expand-InnoInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BK5WIN.EXE' | Select-Object -First 1 -ExpandProperty 'FullName'
   # Version
-  $this.CurrentState.Version = Read-FileVersionFromExe -Path 'C:\BK5\BK5WIN.EXE'
+  $this.CurrentState.Version = Read-FileVersionFromExe -Path $InstallerFile2
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 

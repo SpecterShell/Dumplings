@@ -20,11 +20,8 @@ switch -Regex ($this.Check()) {
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # RealVersion
-    Start-ThreadJob -ScriptBlock {
-      winget install --id 'Microsoft.DotNet.DesktopRuntime.6' --source 'winget' --architecture 'x86' --exact --accept-package-agreements --accept-source-agreements --force | Out-Host
-      Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait
-    } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-    $this.CurrentState.RealVersion = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Joystick' -Name 'DisplayVersion'
+    $NSISInfo = Get-NSISInfo -Path $InstallerFile
+    $this.CurrentState.RealVersion = $NSISInfo.DisplayVersion
 
     $this.Print()
     $this.Write()

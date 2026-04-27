@@ -34,15 +34,22 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } } | Select-Object -First 1)
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.zip" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -Resolve
+    Expand-Archive -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Force
+    $InstallerFile2 = Get-ChildItem -Path $InstallerFileExtracted -Filter '*.exe' -Recurse | Select-Object -First 1 -ExpandProperty 'FullName'
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(
+      [ordered]@{
+        RelativeFilePath = [System.IO.Path]::GetRelativePath($InstallerFileExtracted, $InstallerFile2)
+      }
+    )
+    $InstallerFile2Extracted = New-TempFolder
     # InstallationMetadata > Files > FileSha256
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile2 -ArgumentList '/SP-', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-    $FileSha256 = (Get-FileHash -Path (Join-Path $Env:HOMEDRIVE 'VUSC' 'VUSC.exe') -Algorithm SHA256).Hash
+    $InstallerFile3 = Expand-InnoInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted -Name 'VUSC.exe' -Language 'en' | Select-Object -First 1 -ExpandProperty 'FullName'
+    $FileSha256 = (Get-FileHash -Path $InstallerFile3 -Algorithm SHA256).Hash
     $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallationMetadata.Files[0]['FileSha256'] = $FileSha256 }
+    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()
