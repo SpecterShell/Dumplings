@@ -1,0 +1,33 @@
+Version: "26.01"
+Installer:
+- Architecture: x86
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2601.exe
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2601-x64.exe
+- Architecture: arm
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2601-arm.exe
+- Architecture: arm64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2601-arm64.exe
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2601.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2601-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - linux version of 7-Zip can use huge pages (2 MB pages). It can increase compression speed for 10% for 7z/xz/LZMA/LZMA2 compression.
+    - new -spo[d|c|r] switch specifies the path generation mode for the output directory for archive extraction. The output directory path is generated from the path specified in the -o{dir_path} switch and the name of the archive being unpacked.
+      -spod : for Linux/Posix/macOS: -o{dir_path} specifies the direct path to the output directory. The asterisk (*) character in will not be replaced by the archive name.
+      -spoc : 7-Zip will concatenate the path specified in -o{dir_path} with the archive name to form the final path to the output directory.
+      -spor : 7-Zip will replace asterisk (*) character in the path specified in the -o{dir_path} with the archive name. This is the default option.
+    - some bugs were fixed.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/ip7z/7zip/releases/tag/26.01
+ReleaseTime: 2026-04-27T16:39:51.0000000Z
