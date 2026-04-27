@@ -1,0 +1,28 @@
+Version: 2.8.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.8.2/hysteria-windows-386.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.8.2/hysteria-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.8.2/hysteria-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release contains important security fixes and we strongly encourage everyone to upgrade.
+    - Fixed a security issue where, when sniff was enabled, an attacker could craft malicious QUIC packets to cause a server OOM crash
+    - Fixed a compatibility issue with some older versions of nftables when server port hopping was enabled
+    - Fixed a potential thread safety issue in salamander obfs
+    - Important: Due to changes in how some QUIC handshake parameters are handled, UDP forwarding will not work when v2.8.2 clients connect to older servers (TCP is unaffected). New servers are fully compatible with both new and old clients. We strongly recommend upgrading both servers and clients.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    此版本包含重要安全修复，强烈建议更新
+    - 修复了启用 sniff 时，攻击者可通过构造恶意 QUIC 包导致服务端 OOM 崩溃的安全问题
+    - 修复了服务端启用端口跳跃时，与部分旧版本 nftables 的兼容性问题
+    - 修复了 salamander obfs 中潜在的线程安全问题
+    - 重要提示：本版本由于调整了 QUIC 握手中部分参数的处理方式，v2.8.2 客户端在连接旧版本服务端时 UDP 转发将无法正常工作 (TCP 不受影响)。新版服务端则完全兼容新旧客户端。强烈建议同步升级服务端与客户端。
+- Key: ReleaseNotesUrl
+  Value: https://github.com/apernet/hysteria/releases/tag/app/v2.8.2
+ReleaseTime: 2026-04-26T21:38:59.0000000Z
