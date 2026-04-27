@@ -1,0 +1,38 @@
+Version: 0.11.30
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.11.30/NSCP-0.11.30-Win32-legacy-xp.msi
+- Architecture: x64
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.11.30/NSCP-0.11.30-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    CheckEventLog
+    - New opcode filter keyword. You can now filter Windows event log
+      entries on the event opcode, in addition to the existing fields
+      (e.g. filter=opcode = 'Info').
+    - Filter expressions: regex and in operators now work with numbers.
+      Numeric fields such as id, level, task, etc. can now be matched
+      using regular expressions and the in (...) operator, not just string
+      fields.
+    - Fixed scan-range. The scan-range option in
+      check_eventlog now correctly limits the scanned time window again.
+    - Fixed event ID matching issue. Event IDs are now interpreted and
+      compared correctly in filter expressions; previous releases could
+      mismatch certain IDs.
+    - Eventlog integration tests are run again as part of the acceptance test suite.
+    Linux / ARM packages
+    - New ARM64 (aarch64) builds and release artifacts are now produced
+      for Linux:
+      - Ubuntu 24.04: NSCP-<ver>-ubuntu-24.04-arm64.deb and
+        check_nsclient-<ver>-ubuntu-24.04-arm64
+      - Rocky Linux 9 and 10: NSCP-<ver>-rocky-9-aarch64.rpm,
+        NSCP-<ver>-rocky-10-aarch64.rpm and matching check_nsclient
+        binaries.
+    Full Changelog: https://github.com/mickem/nscp/compare/0.11.29...0.11.30
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mickem/nscp/releases/tag/0.11.30
+RealVersion: 0.11.30.0
+ReleaseTime: 2026-04-27T08:17:23.0000000Z
