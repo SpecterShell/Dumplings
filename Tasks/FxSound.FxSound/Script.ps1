@@ -16,7 +16,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerX64File = Get-TempFile -Uri $InstallerX64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerX64FileExtracted = New-TempFolder
-    Start-Process -FilePath $InstallerX64File -ArgumentList @('/extract', $InstallerX64FileExtracted) -Wait
+    Expand-AdvancedInstaller -Path $InstallerX64File -DestinationPath $InstallerX64FileExtracted | Out-Null
     $InstallerX64File2 = Join-Path $InstallerX64FileExtracted 'fxsound.x64.msi'
     # ProductCode
     $InstallerX64['ProductCode'] = $InstallerX64File2 | Read-ProductCodeFromMsi
@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
 
     $this.InstallerFiles[$InstallerArm64.InstallerUrl] = $InstallerArm64File = Get-TempFile -Uri $InstallerArm64.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerArm64FileExtracted = New-TempFolder
-    Start-Process -FilePath $InstallerArm64File -ArgumentList @('/extract', $InstallerArm64FileExtracted) -Wait
+    Expand-AdvancedInstaller -Path $InstallerArm64File -DestinationPath $InstallerArm64FileExtracted | Out-Null
     $InstallerArm64File2 = Join-Path $InstallerArm64FileExtracted 'fxsound.arm64.msi'
     # ProductCode
     $InstallerArm64['ProductCode'] = $InstallerArm64File2 | Read-ProductCodeFromMsi

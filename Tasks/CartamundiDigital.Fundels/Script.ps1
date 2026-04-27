@@ -12,7 +12,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerFileExtracted = New-TempFolder
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+    Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted | Out-Null
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'fundels.msi'
     # InstallerSha256
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash

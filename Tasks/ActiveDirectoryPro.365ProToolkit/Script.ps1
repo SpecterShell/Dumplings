@@ -1,7 +1,7 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   $InstallerFileExtracted = New-TempFolder
-  Start-Process -FilePath $InstallerFile -ArgumentList @('/extract', $InstallerFileExtracted) -Wait
+  Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted | Out-Null
   $InstallerFile2 = Join-Path $InstallerFileExtracted '365 Pro Toolkit.msi'
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi

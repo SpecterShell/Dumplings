@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -Resolve
     $InstallerFile2Extracted = New-TempFolder
-    Start-Process -FilePath $InstallerFile2 -ArgumentList @('/extract', $InstallerFile2Extracted) -Wait
+    Expand-AdvancedInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted | Out-Null
     $InstallerFile3 = Get-ChildItem -Path $InstallerFile2Extracted -Include 'msi.x64.msi' -Recurse | Select-Object -First 1
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi

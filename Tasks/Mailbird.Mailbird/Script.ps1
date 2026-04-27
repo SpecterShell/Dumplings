@@ -39,8 +39,8 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/extract') -Wait
-    $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
+    $InstallerFileExtracted = New-TempFolder
+    Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted | Out-Null
     $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\MailbirdSetup.x64.msi" -File | Select-Object -First 1
     # AppsAndFeaturesEntries + ProductCode
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
