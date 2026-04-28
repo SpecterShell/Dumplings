@@ -1,0 +1,22 @@
+Version: 34.2.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://rm-eu.palemoon.org/release/palemoon-34.2.1.win32.installer.exe
+- Architecture: x64
+  InstallerUrl: https://rm-eu.palemoon.org/release/palemoon-34.2.1.win64.installer.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This is a bugfix and security release.
+    Note for FreeBSD users: our binaries from this version forward require FreeBSD v14 or later.
+
+    Changes/fixes:
+    - Fixed a regression leading to cursive languages (where multiple characters combine) not being rendered correctly (e.g. Arabic).
+    - Updated our cookie magic prefix handling, adding __Http- and __Host-Http- magic prefixes and aligning our implementation with RFC 6265bis.
+    - Updated our Brotli library to 1.2.0+ (1.2.0 with additional fixes).
+    - Updated NSS to 3.90.10.0 (UXP). For clarity, the version now carries the (UXP) label to distinguish this fork (which has additional mitigations) from the 3.90 branch of NSS maintained by Mozilla.
+    - A large audit of security issues was performed. Many security issues were addressed, including potential crash scenarios and code correctness issues.
+      As a summary: 50 potential vulnerabilities were found applicable and fixed, 20 issues had DiD code changes applied, and 4 were already mitigated by us before being reported.
+      Of the reported vulnerabilities, 270 were not applicable to our code (with the vast majority pertaining to e10s/multi-process browser architecture) and 6 low-impact ones were marked for further investigation at a later time.
+ReleaseTime: 2026-04-28
