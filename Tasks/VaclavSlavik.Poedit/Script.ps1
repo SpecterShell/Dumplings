@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://poedit.net/updates_v2/win/appcast.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://poedit.com/updates_v2/win/appcast.xml'
 
 # Version
 $this.CurrentState.Version = $Object1[0].enclosure.shortVersionString
