@@ -1,0 +1,22 @@
+Version: 0.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.1/Mini-Term_0.3.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.1/Mini-Term_0.3.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - feat: 发布 v0.3.1，新增 AI 提示音与会话列表修复 - 新增 AI 任务完成提示音（Web Audio API 合成默认音 + 自定义音频文件） - 文件搜索弹窗新增右键「复制文件地址」功能 - 修复会话列表因 UUID 排序导致新记录被截断丢失的问题 - AI 完成通知设置独立为单独页面，三个版本文件同步升级至 0.3.1
+    - refactor: AI 完成通知设置独立为单独页面 - 从「系统设置」中拆分 AI 通知相关配置，新增「AI 完成通知」独立设置页 - 统一用 saveConfigPatch 替代多个独立 handler，减少重复代码
+    - fix: 修复会话列表丢失最新记录的问题 - 会话文件排序从 UUID 字符串排序改为按文件修改时间降序，确保最新会话优先被扫描 - 当文件总数超过 MAX_SESSIONS_PER_SOURCE 时，旧排序会随机丢弃新会话
+    - feat: AI 任务完成提示音功能 - 新增 Web Audio API 合成默认提示音（880Hz→660Hz 双音），支持自定义音频文件播放 - 后端 AppConfig 新增 aiCompletionSound 开关和 aiCompletionSoundPath 自定义路径字段 - 设置面板新增「AI 完成通知」统一板块，整合弹框提醒、任务栏闪烁、提示音开关及文件选择/试听 - CSP 补充 media-src 指令，确保自定义音频文件可正常加载
+    - feat: 文件搜索弹窗新增右键「复制文件地址」功能
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.1
+ReleaseTime: 2026-04-28T02:17:17.0000000Z
