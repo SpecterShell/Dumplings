@@ -1,0 +1,27 @@
+Version: 0.3.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.3/Mini-Term_0.3.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.3/Mini-Term_0.3.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.3.3，修复 Markdown 预览渲染问题 - 修复 Markdown 预览中 HTML 标签和外部图片无法显示的问题 - 文件树点击变更文件改为打开预览，查看变更通过右键菜单进入 - README 补充文件预览 Markdown 渲染能力说明，三个版本文件同步升级至 0.3.3
+    - fix: 修复 Markdown 预览 HTML 标签和外部图片无法显示的问题
+    - revert: 回滚 Markdown 预览相关的三次修改 - 还原 FileViewerModal、SessionViewerModal 到修改前状态 - 移除 rehype-raw、base64 依赖和 read_image_base64 命令 - 还原 CSP 配置和 .md-preview img 样式
+    - fix: 修复 Markdown 预览本地图片无法加载及 badge 竖排问题 - 新增 read_image_base64 Rust 命令，读取本地图片返回 base64 data URI - Markdown 渲染前预处理内容，将本地图片路径替换为 data URI，不再依赖 asset protocol - 修复 badge 图片竖排：img 默认 inline 显示，仅段落中唯一图片时为 block 布局
+    - fix: 文件树中点击变更文件改为打开预览而非 diff - 点击变更文件统一执行文件预览，查看变更仍可通过右键菜单进入
+    - fix: 修复 Markdown 预览中 HTML 标签显示为源码的问题 - 新增 rehype-raw 插件，支持渲染 Markdown 中的原始 HTML 标签（如 、
+      等） - FileViewerModal 和 SessionViewerModal 同步启用 rehypeRaw
+    - fix: 修复 Markdown 预览中图片无法正确显示的问题 - 自定义 ReactMarkdown img 组件，将相对路径通过 convertFileSrc 转为 asset URL 加载本地图片 - CSP img-src 补充 https: 指令，允许加载外部 HTTPS 图片
+    - feat: 发布 v0.3.2，修复 git diff 并排显示问题 - 并排视图改用 Allotment 组件，支持拖拽分隔线调节左右比例 - diff 代码字号跟随终端字体大小设置，行号列宽度改用固定像素值 - 三个版本文件同步升级至 0.3.2
+    - fix: 修复 git diff 并排显示布局问题并增强交互体验 - 并排视图改用 Allotment 组件，支持拖拽分隔线调节左右比例 - diff 代码字号跟随终端字体大小设置，不再固定为过小的 text-sm - 行号列宽度改用固定像素值，避免 UI 字号变化导致布局错乱
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.3
+ReleaseTime: 2026-04-28T05:39:39.0000000Z
