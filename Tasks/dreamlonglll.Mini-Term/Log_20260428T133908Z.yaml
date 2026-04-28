@@ -1,0 +1,22 @@
+Version: 0.3.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.5/Mini-Term_0.3.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.5/Mini-Term_0.3.5_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.3.5，性能优化专项 - 修复多开 Claude Code 时界面卡顿，pty-output 改为单一监听器 + AI PTY 标记跳过高频输出 - 项目切换不再卡顿，FileTree/GitHistory 接入内存缓存 + 串行加载 - 修复 History 面板分支下拉框被其他仓库标题遮挡的问题 - README、package.json、tauri.conf.json、Cargo.toml 版本号同步升级至 0.3.5
+    - perf: 项目切换不再卡顿，FileTree/GitHistory 接入内存缓存 - 新增 projectDataCache 模块，按 projectPath 缓存文件树和 Git 仓库数据，切回已访问项目时零延迟渲染 - FileTree 初始化改为串行加载：先渲染目录结构，完成后再加载 Git 状态，避免两者竞争 Tauri 线程池 - 首次访问无缓存项目时显示"加载中……"指示器，UI 保持响应不白屏 - 项目删除时同步清理缓存，防止内存泄漏
+    - fix: 修复多开 Claude Code 时界面卡顿的性能问题 - pty-output 事件改为全局单一监听器 + Map 查表分发，消除 N 个终端各自监听的 O(N) 广播开销 - 新增 AI PTY 标记机制（markAiPty/isAiPty），FileTree、GitChanges、GitHistoryContent 跳过 AI 会话的高频输出，避免无意义的正则匹配 - 终端销毁时自动清理 AI 标记，防止状态泄漏
+    - fix: 修复 History 面板切换分支下拉框被其他仓库标题遮挡的问题 - 分支下拉框打开时将所在 sticky 标题的 z-index 提升至 50，避免被后续同级仓库标题遮挡
+    - style: 文件树面板滚动时标题栏固定不动 - 将 overflow-y-auto 从外层容器移至文件列表区域，滚动不再影响标题栏 - 标题栏添加 flex-shrink-0 防止被压缩
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.5
+ReleaseTime: 2026-04-28T12:52:03.0000000Z
