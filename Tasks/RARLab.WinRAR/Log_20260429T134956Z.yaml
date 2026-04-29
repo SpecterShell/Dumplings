@@ -1,0 +1,66 @@
+Version: "7.21"
+Installer:
+- InstallerLocale: en
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721.exe
+- InstallerLocale: az-Latn
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721az.exe
+- InstallerLocale: hu
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721hu.exe
+- InstallerLocale: pt
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721pt.exe
+- InstallerLocale: pt-BR
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721br.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    1. WinRAR properly recognizes archives with a wrong file extension,
+         containing an archive in another format stored without compression.
+
+         For example, if host.rar, storing nested.zip inside, was renamed to
+         host.zip, WinRAR 7.20 could display nested.zip contents when opening
+         such host.zip. This version displays host.zip contents.
+
+      2. Similarly to Windows Explorer, the first click on size and time columns
+         in WinRAR file list sets the reverse sort mode with largest and latest
+         files at the top.
+
+      3. Switch -s=e performs the case insensitive file extension comparison
+         in Windows. Unlike previous versions, solid statistics isn't reset
+         anymore for file extensions differing only by case.
+
+      4. If self-extracting archive attempts to extract files to a folder
+         requring administrator rights and elevation prompt is cancelled by user,
+         the archive quits silently instead of issuing the folder access error.
+
+      5. Bugs fixed:
+
+         a) WinRAR 7.20 could produce a broken archive when deleting files from
+            solid archives in old RAR4 format. As a result of this fix, deleting
+            files in solid RAR4 archives now involves the full archive repacking,
+            similar to WinRAR versions preceding 7.20. It doesn't affect archives
+            in the modern RAR5 format;
+
+         b) with a rare combination of source data type and compression
+            parameters, WinRAR 7.x could crash when compressing source data.
+            Such crash was more likely when processing large amount of poorly
+            compressible data;
+
+         c) WinRAR 7.20 couldn't unpack ZIP archives containing file comment
+            fields;
+
+         d) switch -tl didn't set the latest time when used with RAR 7.20
+            "ch" command;
+
+         e) extraction command didn't automatically replace device names
+            like "aux", when unpacking archives containing such reserved names;
+
+         f) if folder shortcut was double clicked in "Save WinRAR settings as"
+            dialog when exporting WinRAR settings, folder shortcut itself was
+            overwritten with settings data instead of opening a target folder.
+RealVersion: 7.21.0

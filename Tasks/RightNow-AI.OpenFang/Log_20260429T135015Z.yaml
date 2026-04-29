@@ -1,0 +1,41 @@
+Version: 0.6.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.1/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.1/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release resolves 12 community-reported issues across kernel, channels, runtime, and the dashboard. All fixes verified with cargo clippy clean and 2497 tests passing.
+    Kernel & Heartbeat
+    - #1102 Heartbeat now exempts idle reactive agents. No more false Crashed transitions for agents waiting on input.
+    - #1089 Streaming agent loop stamps last_active before the LLM call. Prevents heartbeat false-positives on slow local models.
+    - #1087 Agent config syncs the full set of fields from agent.toml on restart. Kernel-assigned workspace and inherited exec_policy are preserved when the TOML omits them.
+    Channels
+    - #1120 Router default-agent map keyed on user_id instead of channel_id. Fixes Discord and Slack multi-tenancy collision.
+    - #1081 Lark websocket respects the region setting. International users no longer hit the wrong server.
+    - #1088, #1064 Cron job results now broadcast to chat WebSocket clients in real time.
+    Runtime
+    - #1128 claude-code driver subprocess timeout is configurable via DriverConfig.subprocess_timeout_secs and the OPENFANG_SUBPROCESS_TIMEOUT_SECS env var.
+    - #1051 Audio transcription base URL is configurable via media.audio_base_url. Works with local OpenAI-compatible Whisper backends. TTS and image-gen URL overrides are still pending.
+    Init & Build
+    - #1079 MiniMax now appears in openfang init provider list.
+    - #1092 NixOS flake build fixed. Adds nativeBuildInputs, wrapGAppsHook3, and libayatana-appindicator runtime closure.
+    Code Quality
+    - #1121 Workspace passes cargo fmt --all --check. CI gate strengthened to enforce it across all crates.
+    Stats
+    - 2497 tests passing
+    - Zero clippy warnings (--workspace --all-targets)
+    - All fixes live-tested with a running daemon and real Groq calls where applicable
+    - Tauri desktop config bumped so .dmg and .msi filenames track the release version
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.6.0...v0.6.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.6.1
+ReleaseTime: 2026-04-29T12:31:50.0000000Z
