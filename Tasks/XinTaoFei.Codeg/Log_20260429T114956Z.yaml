@@ -1,0 +1,35 @@
+Version: 0.11.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.2/codeg_0.11.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.2/codeg_0.11.2_x64_en-US.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.2/codeg_0.11.2_arm64-setup.exe
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.2/codeg_0.11.2_arm64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(chat): consolidate the per-session selectors (model, mode, agent settings) into a single cog dropdown with hover submenus on the message input action row, with the agent icon shown on the trigger and the dropdown labelled as "agent settings"; submenu widths are capped so long option lists no longer push the row off-screen. Localized across all 10 languages.
+    - feat(chat): move the folder and branch pickers out of the conversation context bar and into the message input action row, so workspace controls stay grouped with the input area where they're actually used.
+    - style(chat): widen the minimum tile width for tiled conversation tabs to 28rem so multi-tab layouts have more breathing room before content wraps.
+    - fix(acp): move conversation cancel-on-disconnect from the frontend to the backend lifecycle subscriber via a CAS update (in_progress → cancelled), so a concurrent user-driven completed or a prior pending_review from TurnComplete can no longer be silently overwritten. Eliminates the related frontend races (flash-disconnect during reconnect, dbConvIdRef dependency gap, post-unmount in-flight writes).
+    - fix(acp): raise the default CODEG_ACP_IDLE_TIMEOUT_SECS from 60s to 180s, giving the frontend keepalive (30s cadence) a 6× safety margin against network jitter and brief stalls before the backend reaps a connection.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 新增(聊天)：将每个会话的选择器（模型、模式、代理设置）合并到消息输入操作栏上的单一齿轮下拉菜单中，悬停展开二级菜单，触发器上显示代理图标，下拉菜单更名为"代理设置"；二级菜单宽度上限已限制，长选项列表不会再把整行挤出可视区域；新增字符串已覆盖全部 10 种语言。
+    - 新增(聊天)：将文件夹和分支选择器从会话上下文栏移到消息输入操作栏，工作区控件与实际使用它们的输入区保持在同一区域。
+    - 样式(聊天)：平铺会话标签的最小宽度提升到 28rem，多标签布局在内容换行前拥有更宽松的呼吸空间。
+    - 修复(ACP)：会话断开时的取消逻辑从前端迁移到后端 lifecycle subscriber，通过 CAS 更新（in_progress → cancelled）执行，避免被并发的用户侧 completed 或 TurnComplete 写入的 pending_review 静默覆盖；同时消除相关的前端竞态（重连期间闪现 disconnect、dbConvIdRef 依赖缺口、组件卸载后仍在写入）。
+    - 修复(ACP)：默认 CODEG_ACP_IDLE_TIMEOUT_SECS 从 60 秒上调到 180 秒，给前端 30 秒一次的 keepalive 留出 6× 安全余量，避免后端在网络抖动或短暂卡顿时过早回收连接。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.11.2
+ReleaseTime: 2026-04-29T11:43:00.0000000Z
