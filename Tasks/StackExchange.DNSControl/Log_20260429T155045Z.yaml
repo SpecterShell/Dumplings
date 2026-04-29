@@ -1,0 +1,33 @@
+Version: 4.36.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/itstoragesvc/dnscontrol/releases/download/v4.36.1/dnscontrol_4.36.1_windows_amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/itstoragesvc/dnscontrol/releases/download/v4.36.1/dnscontrol_4.36.1_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Greetings DNS fans!
+    This is a bugfix release:
+    - macOS binaries are now properly signed! No more Gatekeeper warnings! Thanks @cafferata!
+    - CLOUDFLAREAPI now runs 25% faster if you use pagerules and workers.
+    - Binaries are now built using the most recent stable Go compiler (previously we were locked into Go 1.25)
+    Sincerely,
+    --Tom Limoncelli
+    Monthly video call!
+    Everyone is invited to the Monthly DNSControl Community Video Conference Call on the 2nd Tuesday of each month. Join whether you are a new user with questions or an experienced developer that wants to discuss DNSControl internals... or anything in between! Meeting details on
+    GitHub Discussions.
+    Changelog
+    Provider-specific changes:
+    - dac7be8c5a5f8cfa9e07e7cb31b4ff8d478546da: CLOUDFLAREAPI: Performance improvements for "preview" when workers/redirects are managed (#4134) (@tlimoncelli)
+    CI/CD:
+    - ea6694dc8947a1822a4d4ae6de7342dd76489018: BUILD: Fix bug preventing macOS binaries from being signed and notarized with an Apple Developer ID (#4135) (@cafferata)
+    - 97b7b43d105fe80e5ceb8b24c05bf37e51bdc7f0: CICD: Use latest stable golang (#4137) (@tlimoncelli)
+    Deprecation warnings
+    [!WARNING]
+    - REV() will switch from RFC2317 to RFC4183 in v5.0. This is a breaking change. Warnings are output if your configuration is affected. No date has been announced for v5.0. See https://docs.dnscontrol.org/language-reference/top-level-functions/revcompat
+    - NAMEDOTCOM, OPENSRS and SOFTLAYER need maintainers! These providers have no maintainer. Maintainers respond to PRs and fix bugs in a timely manner, and try to stay on top of protocol changes.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/itstoragesvc/dnscontrol/releases/tag/v4.36.1
+ReleaseTime: 2026-03-08T13:45:24.0000000Z
