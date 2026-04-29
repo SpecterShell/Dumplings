@@ -1,12 +1,12 @@
-# The R version, rather than the Rtools version, is used to determine the main version, in case the Rtools channel information is not up to date.
-$Object1 = Invoke-WebRequest -Uri 'https://cloud.r-project.org/bin/windows/base/release.html' | ConvertFrom-Html
+$Prefix = 'https://cloud.r-project.org/bin/windows/Rtools/'
+
+$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+
 $MainVersion = [regex]::Match(
-  $Object1.SelectSingleNode('/html/head/meta[@http-equiv="Refresh"]').Attributes['CONTENT'].Value,
-  '(\d+\.\d+)(?:\.\d+)*'
+  $Object1.SelectSingleNode('/html/body/table/tr[contains(./td[2]/text(), "R-release") or contains(./td[2]/text(), "from 4.5.0")]/td[1]/a').InnerText,
+  'RTools ([\d\.]+)'
 ).Groups[1].Value
 $MainVersionShort = $MainVersion.Replace('.', '')
-
-$Prefix = 'https://cloud.r-project.org/bin/windows/Rtools/'
 
 $Object2 = Invoke-WebRequest -Uri "${Prefix}rtools${MainVersionShort}/files/"
 
