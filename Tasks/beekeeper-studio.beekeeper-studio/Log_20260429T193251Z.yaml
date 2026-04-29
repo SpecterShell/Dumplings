@@ -1,0 +1,183 @@
+Version: 5.7.1
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v5.7.1/Beekeeper-Studio-Setup-5.7.1.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Beekeeper Studio 5.7
+    Wow, this release got a little out of hand. Two major features and a looooot of bug fixes and tweaks in this release.
+    Headline Features
+    - Folders for saved connections and saved queries. You can create folders and subfolders, drag-and-drop to reorder, pin and unpin, right-click for the common actions, and the expand/collapse state sticks across restarts. Fixes #799, #2981, #65.
+    - Editable query results. Tweak data directly from the results of a SQL query - no more jumping over to the table view just to fix a typo. We analyze the SQL and map the result columns back to their source tables. Works alongside manual commit mode, and the Apply/Discard controls behave consistently with table edits. Fixes #3191, #2429.
+    New Database Support
+    - BedrockDB from Expensify, which is a sharded SQLite behind a MySQL proxy.
+    - ScyllaDB connection support with docs and integration tests.
+    - Greengage (Postgres fork) integration.
+    - DuckDB is out of beta.
+    Smaller Improvements
+    - CockroachDB JWT auth. Lightweight JWT authentication with a re-prompt on new connections. Picked from the auth method dropdown. Thanks @hector833!
+    - Windows Pageant agent forwarding works again. This was broken for folks using PuTTY's agent for SSH tunnel keys. Thanks @jeffcaiz!
+    - SSH auth mode switching no longer leaks stale credentials when you flip between modes.
+    - URL-encoded credentials are now decoded correctly when pasting connection URLs. Fixes #3840.
+    - Redis connection URLs now accept redis:// and rediss:// schemes.
+    - Folders for workspaces can now be deleted from inside the app (Cloud), so you don't have to hop over to the web dashboard for housekeeping. Fixes #1317.
+    - Plugin system controls for admins. New [pluginSystem] config section lets you disable the plugin system entirely, disable community plugins only, or pin an allowlist of permitted plugin ids. Bundled first-party plugins keep working when the system is off. Fixes #3859.
+    - Onboarding notification for new users to make it easier to find the getting-started guide. Fixes #3583.
+    Bug Fixes
+    - SQL Server: dotted table names (e.g. dbo.my.table) are now bracket-wrapped on export so they don't get mis-split. Fixes #3722.
+    - MySQL: CHARACTER SET and COLLATE clauses are stripped from non-string ALTER statements.
+    - MySQL: friendlier error text when you hit "access denied for user".
+    - Oracle: fixed a crash in the utility process when the thick client hit a connection retry, and fixed connecting through an SSH tunnel.
+    - Cassandra: the driver client now shuts down cleanly on disconnect.
+    - Mac: delete row keyboard shortcut works again. Fixes #3629.
+    - Delete multiple selected rows is fixed. Fixes #3550.
+    - Add relations shortcut no longer also adds a column. Fixes #3521.
+    - Copy column name from the sidebar was copying the table name. Fixed.
+    - Structural table cells now have right-click copy.
+    - JSON viewer search is now case-insensitive. Fixes #3547.
+    - SQL export converts bit column values to integers. Fixes #3673.
+    - Drag handle cursor now shows grab on hover. Fixes #3165.
+    - Drag-and-drop to root in the connection list works correctly, with visual feedback when a move completes.
+    - Imported connections land in the personal folder rather than at an ambiguous root.
+    - Auto-disconnect now notifies you when it happens, so you're not left wondering why a query failed.
+    - Mac menu icons render correctly (fixed by assigning proper roles), and the app menu order on non-Mac platforms is also tidied up.
+    - Bastion/jump host config is tucked into an expandable section so the connection form is less noisy, with a missing config added back.
+    - Flatpak users get a platform warning system explaining file permission behavior, plus SQLite-specific docs.
+    - Pin/unpin and duplicate are now available as right-click actions on connections and queries.
+    Under the Hood
+    - CI: ARM64 builds moved from self-hosted to GitHub-hosted runners. node_modules is now cached across test, build, and Windows jobs, which should speed up pipelines noticeably.
+    - Windows integration tests now cover Pageant agent forwarding end-to-end.
+    - Bedrock integration tests are wired up via testcontainers.
+    - Security: doc updates plus a pile of dependency bumps (handlebars, dompurify, node-forge, brace-expansion, protobufjs, basic-ftp, axios, rollup, lodash, electron, happy-dom, ajv, qs, yaml, path-to-regexp, @xmldom/xmldom, picomatch, tar-fs).
+    - AWS SDK packages upgraded to drop the fast-xml-parser advisory.
+    - trino-client updated to clear the axios advisory.
+    - Electron bumped to 39.8.5.
+    Thank You to Our Contributors!
+    Big thanks to the community folks who sent PRs for this release, including @hector833 (CockroachDB JWT), @jeffcaiz (Pageant fix), @andrii-kysylevskyi (ScyllaDB), @v-astakhov (Greengage), @ManelRibeiro, @boergeson, @austinwilcox, @PedroBarataIST, @antoniogmello, @yogasw, @scrlkx, and everyone else who filed issues and helped us track things down.
+    What's Changed
+    - Update workflow permissions by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3911
+    - Rc 56 by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3912
+    - chore(deps): bump rollup from 3.29.5 to 3.30.0 in /apps/ui-kit/examples/html by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3909
+    - Bump rollup from 4.40.0 to 4.59.0 in /apps/ui-kit/examples/react by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3914
+    - chore(deps): bump basic-ftp from 5.0.5 to 5.2.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3908
+    - chore(deps): bump qs from 6.14.1 to 6.14.2 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3878
+    - add permissions to all workflows by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3913
+    - chore(deps): bump ajv from 6.12.6 to 6.14.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3896
+    - Rc 56 by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3925
+    - docs: remove anchor/span wrapping from code blocks for clipboard compatibility by @scrlkx in https://github.com/beekeeper-studio/beekeeper-studio/pull/3862
+    - Rc 56 by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3942
+    - feat: folder support for saved connections and queries by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/3903
+    - Feature/1317 delete workspace by @wmontgomery in https://github.com/beekeeper-studio/beekeeper-studio/pull/3820
+    - Rc 56 by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/3955
+    - feat: support redis:// and rediss:// protocol schemes by @yogasw in https://github.com/beekeeper-studio/beekeeper-studio/pull/3948
+    - remove component resolver by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3915
+    - Bump immutable from 4.3.7 to 4.3.8 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3944
+    - chore(deps): bump dompurify from 3.2.4 to 3.3.2 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3950
+    - ci: cache node_modules across test jobs to speed up CI by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/3952
+    - Rc 56 by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3963
+    - Fix SSH auth mode switch leaking stale credentials by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3974
+    - Update RDS Docs by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3966
+    - Fix #3550: fix deleting multiple selected rows by @PedroBarataIST in https://github.com/beekeeper-studio/beekeeper-studio/pull/3967
+    - chore(deps): bump rollup from 2.79.2 to 2.80.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3977
+    - update tarfs to patched version by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3978
+    - upgrade brace-expansion by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3979
+    - Update supported databases in README files by @github-actions[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/3969
+    - feat: implement greengage integration by @v-astakhov in https://github.com/beekeeper-studio/beekeeper-studio/pull/3945
+    - fix: URL-encoded passwords, bit(1) SQL export NaN, case-sensitive JSON search by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/3990
+    - chore(deps): bump picomatch from 2.3.1 to 2.3.2 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4000
+    - chore(deps): bump picomatch from 2.3.1 to 2.3.2 in /apps/ui-kit/examples/react by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4001
+    - chore(deps): bump yaml from 2.7.0 to 2.8.3 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4004
+    - chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4005
+    - reorder app menu by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3996
+    - chore(deps-dev): bump happy-dom from 20.0.10 to 20.8.8 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4007
+    - chore(deps): bump path-to-regexp from 8.3.0 to 8.4.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4021
+    - chore(deps): bump node-forge from 1.3.3 to 1.4.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4017
+    - chore(deps): bump brace-expansion from 1.1.12 to 1.1.13 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4016
+    - chore(deps-dev): bump happy-dom from 20.8.8 to 20.8.9 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4022
+    - fix oracle connection using ssh tunnel by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4026
+    - Add troubleshooting docs for cloud IP allowlist idle timeout by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4029
+    - fix menu for platforms other than mac by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4036
+    - Add Flatpak detection and config-driven platform warnings by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4034
+    - Add Flatpak file permission docs for SQLite users by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4030
+    - add missing bastion config by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3988
+    - Add menu icons for macOS by assigning the role to some menu items by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3998
+    - fix #3629: fix delete row command on Mac by @antoniogmello in https://github.com/beekeeper-studio/beekeeper-studio/pull/4025
+    - chore(deps): bump @xmldom/xmldom from 0.8.10 to 0.8.12 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4037
+    - chore(deps): bump lodash from 4.17.23 to 4.18.1 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4047
+    - chore(deps-dev): bump electron from 39.5.2 to 39.8.4 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4048
+    - fix: change cursor to grab on drag handle hover by @boergeson in https://github.com/beekeeper-studio/beekeeper-studio/pull/4045
+    - update vim docs by @austinwilcox in https://github.com/beekeeper-studio/beekeeper-studio/pull/4050
+    - Add right-click copy to structural table cells by @boergeson in https://github.com/beekeeper-studio/beekeeper-studio/pull/4049
+    - chore(deps-dev): bump electron from 39.8.4 to 39.8.5 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4058
+    - Fix Copy Name on sidebar columns copying table name by @boergeson in https://github.com/beekeeper-studio/beekeeper-studio/pull/4057
+    - Rc 56 by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4063
+    - chore(deps): bump basic-ftp from 5.2.0 to 5.2.1 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4076
+    - onboarding notification by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3587
+    - Fix password getter by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3916
+    - Aws dependabot fixes by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4080
+    - [CHORE] Add cross-platform E2E smoke tests by @JeanPaiva42 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3919
+    - chore(deps): bump basic-ftp from 5.2.1 to 5.2.2 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4084
+    - Fix Oracle thick client crashing utility process on connection retry by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4028
+    - Fix surreal by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3999
+    - ci: migrate ARM64 CI to GitHub-hosted runners by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/3956
+    - Fix #3521 : Add relations shortcut is also adding a column by @ManelRibeiro in https://github.com/beekeeper-studio/beekeeper-studio/pull/3959
+    - fix: Windows Pageant SSH agent forwarding silently fails since v3.9.0 by @jeffcaiz in https://github.com/beekeeper-studio/beekeeper-studio/pull/4093
+    - feat: Add CockroachDB JWT connection support by @hector833 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4039
+    - Update supported databases in README files by @github-actions[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4098
+    - Fix fuzzy search by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4104
+    - troubleshoot mysql access denied for user by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4106
+    - Feat/editable results by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/3964
+    - chore(deps): bump dompurify from 3.3.3 to 3.4.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4105
+    - Pr bedrock support by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4101
+    - [3661] Added ScyllaDB docs and runner by @andrii-kysylevskyi in https://github.com/beekeeper-studio/beekeeper-studio/pull/3662
+    - Add Windows integration test for Pageant agent forwarding by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4099
+    - Support disabling community plugins and plugin system entirely by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3894
+    - Plugin System 1.0 Docs by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/3541
+    - Notify user when auto-disconnected for idle/lock/suspend by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4112
+    - chore(deps): bump basic-ftp from 5.1.0 to 5.3.0 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4113
+    - chore(deps): bump protobufjs from 7.5.4 to 7.5.5 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4114
+    - chore(deps): bump handlebars from 4.7.8 to 4.7.9 by @dependabot[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4110
+    - Update supported databases in README files by @github-actions[bot] in https://github.com/beekeeper-studio/beekeeper-studio/pull/4111
+    - Code Style Guide: Input by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4066
+    - fix(mysql): strip CHARACTER SET and COLLATE from non-string ALTER by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4121
+    - fix(mssql): bracket-wrap qualified names so dotted table names aren't mis-split by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4122
+    - Fix flaky e2e tests by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4081
+    - Fix idle-disconnect notifications firing on every interval tick by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4133
+    - Fix license check loop creating duplicate rows by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4132
+    - Fix read-only editor context menu by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4137
+    - Some editing fixes by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4136
+    - Fix unit tests by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4165
+    - make it clear that "editing result mode" is activated by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4138
+    - Prevent duplicate folder names within the same parent by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4163
+    - Feature/4065 privacy mode by @wmontgomery in https://github.com/beekeeper-studio/beekeeper-studio/pull/4090
+    - fix: include PKs in demo query so Edit Data works (#4141) by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4166
+    - Fix logo import in NotificationManager component by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4167
+    - Validate SavedConnection name field is not empty by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4168
+    - Remove MongoDB alpha warning and update documentation by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4173
+    - Add a shortcut for json viewer and search field in the shortcuts modal by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4159
+    - letter-spacing makes titles look off by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4169
+    - Docs for editable query results by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4175
+    - Add safeOpenExternal to prevent RCE via file:// URLs by @rathboma in https://github.com/beekeeper-studio/beekeeper-studio/pull/4181
+    - only allow official plugins for now by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4183
+    - bump @beekeeperstudio/bks-ai-shell to 3.0.9 by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4179
+    - remove popup by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4184
+    - disable entire plugin system, and whitelist bundled plugins by @azmy60 in https://github.com/beekeeper-studio/beekeeper-studio/pull/4187
+    - disable in read only mode, don't kick out of edit mode on apply by @not-night-but in https://github.com/beekeeper-studio/beekeeper-studio/pull/4186
+    - Feature/1679 run all to run current by @wmontgomery in https://github.com/beekeeper-studio/beekeeper-studio/pull/3985
+    New Contributors
+    - @scrlkx made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/3862
+    - @yogasw made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/3948
+    - @PedroBarataIST made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/3967
+    - @antoniogmello made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/4025
+    - @boergeson made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/4045
+    - @ManelRibeiro made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/3959
+    - @jeffcaiz made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/4093
+    - @hector833 made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/4039
+    - @andrii-kysylevskyi made their first contribution in https://github.com/beekeeper-studio/beekeeper-studio/pull/3662
+    Full Changelog: https://github.com/beekeeper-studio/beekeeper-studio/compare/v5.6.5...v5.7.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/beekeeper-studio/beekeeper-studio/releases/tag/v5.7.1
+ReleaseTime: 2026-04-29T19:11:24.0000000Z
