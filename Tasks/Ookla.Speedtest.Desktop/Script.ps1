@@ -4,10 +4,10 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.speedtest.net/apps/windows' | Con
 $this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//span[@class="u-note"]').InnerText, 'v(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://install.speedtest.net/app/windows/$($this.CurrentState.Version)/speedtestbyookla_x86.msi"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = "https://install.speedtest.net/app/windows/$($this.CurrentState.Version)/speedtestbyookla_x86.msi"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://install.speedtest.net/app/windows/$($this.CurrentState.Version)/speedtestbyookla_x64.msi"
