@@ -1,0 +1,169 @@
+Version: 17.6.0.0
+Installer:
+- InstallerType: msix
+  InstallerUrl: https://download.keepersecurity.com/desktop_electron/packages/KeeperPasswordManager.msixbundle
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+
+    Workflow for KeeperPAM Resources
+    Workflow helps administrators manage how privileged access is requested, approved, and used, providing flexible just-in-time ("JIT") approval workflows with the security and oversight needed to control access safely and consistently.
+
+    Announcing KeeperDB for Databases
+    KeeperDB is now available as part of the connection flow for PAM Database resources. KeeperDB combining usability, security, and flexibility in a single solution, helping organizations modernize database access while maintaining strict control over privileged credentials and sessions. KeeperDB requires the use of the Keeper Gateway version 1.8 or newer.
+    Initial support for: MySQL, MariaDB, PostgreSQL, Microsoft SQL Server and Oracle. Additional protocols will be added in the coming releases.
+
+    KeeperDB Proxy for Tunnels
+    When launching a KeeperPAM tunnel from the desktop app, KeeperDB Proxy can be now be optionally enabled. KeeperDB Proxy provides customers with the ability to use native database management tools such as MySQL Workbench, DBeaver and Microsoft SQL Studio with transparent authentication and session recording of database query activity to any managed KeeperPAM database resource. Combining Workflow with KeeperDB Proxy provides just-in-time native access to any managed database without having to share credentials.
+
+    Discovery Rules Engine
+    The Discovery Rules Engine lets administrators create ordered rules for a PAM Configuration to control how discovered resources are handled during Discovery jobs. This helps automate processing at scale by allowing results to be automatically added, ignored, or flagged for review based on the first matching rule.
+
+    SaaS Rotation Method
+    SaaS Configuration enables users to automate password rotations for cloud-based services such as Okta, Snowflake and others. The new SaaS Rotation method provides a scalable way to manage any number of PAM User records in the vault that require automated rotation. Customers can use a pre-defined catalog of available rotations, or create their own rotations using a Python development kit.
+    By rotating passwords and secrets on a defined schedule or on demand, organizations can strengthen security, reduce the risk of credential exposure, and support compliance requirements.
+
+    Web Vault Biometric and Passkey Login
+    Keeper now supports biometric login with passkeys, allowing users to sign in with a device-bound passkey instead of traditional login methods such as a Master Password, SSO, or 2FA. Visit the Settings > Security screen to activate a passkey login for your vault. The use of passkeys can be managed by the Keeper Administrator in role enforcement policies.
+
+    Dark Mode for Web Vault
+    Dark Mode is now available in Web Vault, giving users a more comfortable viewing experience in low-light environments. Keeper will default to the user's sytem setting, and it can be controlled through the Settings screen.
+
+    New Record Type: Wi-Fi Login
+    The WiFi Login record type helps users securely store and easily access the details needed to connect to a wireless network. This is now available across all platforms including iOS, Android, Browser Extension, Web Vault and Desktop Apps.
+
+    KeeperPAM Connection Auto-Reconnect
+    If a KeeperPAM connection is interrupted, the vault will attempt to re-connect to the resource after a timed countdown. No configuration is required.
+
+    RDP File Transfer Support
+    Users can now transfer files during RDP sessions, making it easier to move files between their local machine and the remote environment without leaving the active connection.
+
+    Remote Browser Isolation (RBI) Improvements
+    We’ve added several improvements to KeeperPAM RBI sessions:
+    - Support for multi-tab browsing
+    - File uploads and downloads
+    - Session persistence per-user or per-resource
+    - Native JavaScript alerts
+    - Right-click menu for copy/paste within the remote session
+    - Right-click to open links in a new tab
+    - Support for HTTP Basic Auth with autofill
+    - Launch-as autofill options for users to select their own credentials
+
+    Improvements
+    - VAUL-8399: KeeperDB session parameter "persistence" support.
+    - VAUL-8033: Expand KeeperAI support to all connection protocols.
+    - VAUL-5146: Record history screens now include a history scroller.
+    - VAUL-4770: Revert to user email entry screen for SSO re-login.
+    - VAUL-8560: Add right-click context menu for RBI sessions.
+    - VAUL-8166: Add "Launch-AS" option for RBI connections to allow shared users to select their own credentials.
+    - VAUL-8192: Add tabbed browsing support to RBI connections.
+    - VAUL-8193: Add file upload support within RBI sessions.
+    - VAUL-8345: Add file download support within RBI sessions.
+    - VAUL-8369: Support for native JavaScript alerts in RBI sessions.
+    - VAUL-7943: RBI session parameter "persistence" support.
+    - VAUL-8074: PAM support for critical SSH parameters (Private Key Passphrase, Public Key Certificate).
+    - VAUL-8048: PAM User "Private PEM Key" support mirroring Service Account Keys for Google Cloud PAM Configurations.
+    - VAUL-8332: Notification Center preserves original position and title date when an action is taken.
+    - VAUL-8350: Refactor of radio component to accept typed values.
+    - VAUL-8386: Persist "Unread Only" toggle state when entering/exiting Notification Center.
+    - VAUL-8416: Add "Manage / Cancel Subscription" button in Vault linking to the Support request page.
+    - VAUL-8501: Workflow-driven notification behavior updates for a more consistent experience.
+    - VAUL-8515: Reduce unnecessary biometric prompts during onboarding.
+    - KDE-1883: Added a new record type for WiFi logins.
+    - KDE-2024: Updated Electron dependency for the Keeper Desktop app.
+    - KDE-2026: Updated the lodash dependency used by the Desktop app.
+    - KDE-2028: Updated the axios dependency used by the Desktop app.
+    - KDE-2020: Updated the file-type dependency used by the Desktop app.
+    - KDE-2019: Updated the tar dependency used by the Desktop app.
+    - KDE-2018: Updated the brace-expansion dependency used by the Desktop app.
+    - KDE-2017: Updated the picomatch dependency used by the Desktop app.
+    - KDE-2016: Updated the @xmldom/xmldom dependency used by the Desktop app.
+    - VAUL-7489: PAM Remote Browser Records — allow users to select their own browser autofill records.
+    - VAUL-6771: Allow consumers to download a purchase receipt from the vault.
+    - VAUL-8023: Add User Match Field on Domain Controller PAM Configuration.
+    - VAUL-8156: Update secrets-manager-core version to 17.4.0.
+    - VAUL-8293: Update the Import Deep Link page to point to the Import settings section of the Vault.
+    - VAUL-8267: Add GCP IAM accounts to Rotation settings for PAM configurations.
+    - VAUL-8304: Support for SSH cert-based authentication.
+    - VAUL-8306: Remove hard-coded SSH keys in demo records.
+    - VAUL-7763: Support new user_logout push notification.
+    - VAUL-7544: Deprecated the creation of "General" record types.
+    - VAUL-8432: Account switching support for Vault/BE sync.
+    - VAUL-8439: Add an action button in remote connections to send specific key events.
+    - VAUL-8484: Set up Storybook for UI component development and documentation.
+    - VAUL-8519: Prevent approval system notifications from being marked as read when clicked.
+    - VAUL-8525: Make CheckboxLabel component a block element.
+    - VAUL-7791: RDP Drive Redirection fields to PAM RDP Settings (File Transfer).
+    - KDE-1997: Updated the Forcefield security component to a newer version.
+    - KDE-1994: Updated the Importer version reference in the Desktop app.
+    - KDE-1953: Improved handling of device and session management push notifications (logout, lock, remove).
+    - KDE-1704: Refreshed dark mode styling in the Desktop app.
+
+    Bug Fixes
+    - VAUL-7904: Vault spins when Chrome fails to start Browser Extension Service Worker.
+    - VAUL-8271: Clicking Cancel in the New Discovery Job modal still switches to the Discovery tab.
+    - VAUL-8296: Create New Rotation/Connection/Tunnel shows the create modal even if sharing is restricted.
+    - VAUL-8292: Creating PAM records from the folder context menu is now disallowed in offline mode.
+    - VAUL-8336: User stuck in device approval loop causing login lock.
+    - VAUL-8338: Advanced Search missing "Account Type" and "Account Number" fields for Bank Account records.
+    - VAUL-8376: OTS "custom date and time" UI not working in Arabic, Greek, and Korean.
+    - VAUL-8394: PAM sessions render blurry on HiDPI displays — removed stale gateway workaround.
+    - VAUL-8409: Positioning issues with two FilterableDropdown components in a popup.
+    - VAUL-8410: Scrolling on the CSV import screen preview hides column headers.
+    - VAUL-8411: RBI upload speed and compatibility improvements.
+    - VAUL-8415: Web Vault fails login when push servers are down.
+    - VAUL-8418: PAM record layout breaks after changing PAM record type.
+    - VAUL-8427: Incorrect font size for Checkbox/Switch labels in PAM/RBI Settings.
+    - VAUL-8428: Non-clickable areas in the "metadata settings" pop-up show an incorrect pointer cursor.
+    - VAUL-8430: Session recordings not showing after AI is enabled.
+    - VAUL-8431: OTS right-click record menu not navigating user to OTS.
+    - VAUL-8436: Remove missing notifications during full sync.
+    - VAUL-8440: "Create New" action button obscured in full-screen view.
+    - VAUL-8453: Enterprise user unable to create a DL record with an attachment.
+    - VAUL-8455: Notification timestamps incorrectly showing as 1970.
+    - VAUL-8465: AI termination overlay fails to render during active session interruptions.
+    - VAUL-8478: JIT Settings checkboxes incorrectly displayed on the same line.
+    - VAUL-8490: KSM Application sharing not working as intended.
+    - VAUL-8499: Error encountered when switching Wi-Fi networks.
+    - VAUL-8507: Firefox/Safari requires a button to request push notification permission.
+    - VAUL-8509: Biometric login prompts persist after selecting "Don't Show Again."
+    - VAUL-8517: Editing the imported General record doesn't update the record type.
+    - VAUL-8531: Advanced Search for Wi-Fi Login missing Encryption and Network Visibility filters.
+    - VAUL-8534: "Contact Support" link not visible in the CA region.
+    - VAUL-8533: Manage Subscription support link visible for trial users without an active subscription.
+    - VAUL-8582: "View Team" link unreadable (blue on blue) in Dark Mode team selection dropdown.
+    - VAUL-8214: Keeper AI "Risk Level" not translated into several languages.
+    - VAUL-8400: Shared folder down-sync bug when nested inside a private folder.
+    - VAUL-8366: "Mark All As Read" not working in Notification Center.
+    - VAUL-8313: Fixed an issue where the Login “Next” button didn’t work when the browser extension was installed.
+    - KDE-2023: Fixed invalid header downloads on 32‑bit Windows.
+    - KDE-2013: Fixed “Continue running” preference not being remembered.
+    - KDE-2006: Fixed the About page not displaying correctly.
+    - KDE-2005: Fixed “Start Tunnel” not working for templates.
+    - KDE-2003: Fixed loss of Touch ID after logout on macOS for SSO accounts.
+    - KDE-1999: Fixed WebAuthn/YubiKey login failures after auto‑logout on macOS (SSO accounts).
+    - KDE-1991: Fixed security key 2FA errors after auto‑logout and switching accounts.
+    - KDE-1982: Fixed Windows Hello plus security key (YubiKey) login failures after logout.
+    - KDE-1980: Fixed an untranslated “Attachments” label in the UI.
+    - KDE-1977: Fixed Cloud SSO login issues when using YubiKey 2FA.
+    - KDE-1976: Fixed a macOS freeze when entering a security key PIN.
+    - KDE-1975: Fixed special character autofill issues with Norwegian (NOB) keyboard layouts.
+    - KDE-1970: Fixed Windows PIN prompts appearing even when “Require PIN” was unchecked.
+    - KDE-1942: Fixed Region dropdown failures after a desktop session timeout.
+    - KDE-1756: Fixed exit behavior not updating correctly after toggling “Continue Running.”
+
+    Web Vault Update Instructions
+    - To ensure you're using the latest Web Vault, simply reload the vault login page (or Shift+Ctrl/Cmd+R to force refresh)
+
+    Desktop Update Instructions
+    - If you installed Keeper Desktop directly from the Keeper website, download the latest version from: https://www.keepersecurity.com/download.html?t=d
+    - If you installed Keeper Desktop from the Mac App Store or Microsoft Store, visit the store to perform the update.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.keeper.io/en/release-notes/desktop/web-vault-+-desktop-app/vault-release-17.6.0
+ReleaseTime: 2026-04-30
