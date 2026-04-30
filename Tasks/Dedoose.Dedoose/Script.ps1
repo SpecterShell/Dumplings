@@ -1,12 +1,14 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.dedoose.com/resources/articledetail/dedoose-desktop-app'
+$Object1 = Invoke-WebRequest -Uri 'https://www.dedoose.com/download-the-app'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Installer') } catch {} }, 'First')[0].href
 }
 
+$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object2.Headers.'Content-Disposition'[0], '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
