@@ -27,12 +27,11 @@ if ($VersionEXE -ne $VersionZIP) {
 # Version
 $this.CurrentState.Version = $VersionEXE
 
+# RealVersion
+$this.CurrentState.RealVersion = "$($this.CurrentState.Version).0"
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$InstallerEXE.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerEXE.InstallerUrl
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
-
     $this.Print()
     $this.Write()
   }
