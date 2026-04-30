@@ -1,0 +1,31 @@
+Version: 3.17.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win32/3.17.0/snowflake32_odbc-3.17.0.msi
+- Architecture: x64
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win64/3.17.0/snowflake64_odbc-3.17.0.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-2026.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features
+    - Added support for the CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY session parameter to control how often the driver refreshes the session token when CLIENT_SESSION_KEEP_ALIVE is enabled.
+    - Added platform detection during the login flow, along with the disablePlatformDetection and platformDetectionTimeoutMs connection parameters to control the behavior.
+    - Added the LOG_QUERY_TEXT and LOG_QUERY_PARAMETERS connection parameters to opt in to logging of query text and bind parameter values for diagnostic purposes.
+    - Added support for configuring the maximum CRL download size when CRL checking is enabled.
+    - Added debug logging of HTTP request and response headers to help diagnose connectivity issues.
+    Customer-facing bug fixes
+    - Fixed the OCSP mode not being propagated to the HTTP calls used by the OAuth authentication flows.
+    - Fixed a crash when an empty MULTI_STMT DML response left the result set without a usable execute-stage result.
+    - Fixed a segmentation fault during the OCSP check when the certificate or its issuer was NULL.
+    - Fixed the query context not being updated when a query failed.
+    Other updates and internal changes
+    - Upgraded libsnowflakeclient to version 2.8.0.
+    - Upgraded curl to version 8.19.0.
+    - Upgraded OpenSSL to version 3.0.20.
+    - Updated the client_environment telemetry signals to include the certificate revocation check mode and the libc family and version (glibc or musl) on Linux.
+    - Updated SPCS service identifier token (SPCS_TOKEN) injection to be enabled only when the SNOWFLAKE_RUNNING_INSIDE_SPCS environment variable is set, to trim whitespace from the token, and to read the token only from the default location. The token_file_path parameter is no longer used to override the SPCS token path.
+    - Removed unnecessary log messages emitted during version validity checks.
+ReleaseTime: 2026-04-28T14:46:34.0000000Z
