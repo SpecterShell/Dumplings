@@ -1,9 +1,14 @@
-$Object1 = (Invoke-GitHubApi -Uri 'https://api.github.com/repos/different-ai/openwork/releases').Where({ -not $_.prerelease }, 'First')[0]
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/different-ai/openwork/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
