@@ -70,12 +70,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState = $this.LastState
       $this.CurrentState.Installer = @(
         [ordered]@{
-          InstallerLocale = 'en'
-          InstallerUrl    = "https://www.wavemetrics.net/Downloads/Win/setupIgor$('{0}.{1}{2}' -f $this.CurrentState.Version.Split('.')).exe"
-        }
-        [ordered]@{
-          InstallerLocale = 'ja'
-          InstallerUrl    = "https://www.wavemetrics.net/Downloads/Win/setupIgor$('{0}.{1}{2}' -f $this.CurrentState.Version.Split('.'))J.exe"
+          InstallerUrl = "https://www.wavemetrics.net/Downloads/Win/setupIgor$('{0}.{1:d2}' -f @([int[]]$this.CurrentState.Version.Split('.'))).exe"
         }
       )
       $this.ResetMessage()
