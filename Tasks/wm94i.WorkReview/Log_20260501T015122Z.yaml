@@ -1,0 +1,21 @@
+Version: 1.0.44
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work_Review/releases/download/v1.0.44/Work_Review_1.0.44_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    优化
+    - 移除未使用的前端依赖 chart.js 和 @tauri-apps/plugin-fs，减小安装包体积。
+    - 移除未使用的 Rust 依赖 toml，收窄 tokio features 从 full 到按需启用（rt-multi-thread、macros、sync、time、net、fs、io-util）。
+    - 排除 Live2D SDK 构建产物进入 dist，通过 Vite closeBundle 插件自动清理。
+    - 修复 i18n 区域文件拆分后多个测试文件的路径引用错误。
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work_Review/releases/tag/v1.0.44
+ReleaseTime: 2026-05-01T01:45:03.0000000Z
