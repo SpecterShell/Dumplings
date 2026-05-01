@@ -1,0 +1,33 @@
+Version: 0.6.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.3/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.3/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release resolves 4 bugs across LLM drivers, channels, and kernel hot-reload, plus a CI tooling bump. 2540 tests passing, zero clippy warnings, zero regressions.
+    LLM Drivers
+    - #1098 Reasoning models retain state across turns. Thinking blocks are now parsed, persisted, and replayed across all three drivers (Anthropic with thinking_signature, Gemini reasoning, OpenAI o1/o3). Round-trip tests added. Models like Claude Sonnet extended thinking, Gemini 2.5 Flash, DeepSeek R1, Qwen, GPT o1 no longer lose reasoning state between turns.
+    Channels
+    - #1103 Slack envelope_id deduplication. Socket Mode events now dedup against a 60s TTL cache (10000-entry soft cap). Connection rotation no longer causes double-processing of the same event.
+    - #1133 Telegram REACTION_TOO_MANY removed from terminal-error list. The transient rate-limit reaction error is no longer cached as permanent rejection. Future reactions land once the cap clears.
+    Kernel
+    - #1129 Subprocess timeout hot-reload. Edits to subprocess_timeout_secs in default_model and fallback_providers now propagate without restart. Follow-up to #1128 in v0.6.1.
+    CI
+    - #1061 softprops/action-gh-release bumped from v2 to v3 (Node 24 runtime).
+    Stats
+    - 2540 tests passing (+23 from v0.6.2)
+    - Zero clippy warnings (--workspace --all-targets)
+    - Zero regressions
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.6.2...v0.6.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.6.3
+ReleaseTime: 2026-05-01T10:13:02.0000000Z
