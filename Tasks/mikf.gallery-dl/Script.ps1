@@ -1,7 +1,4 @@
-$RepoOwner = 'mikf'
-$RepoName = 'gallery-dl'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-RestMethod -Uri 'https://codeberg.org/api/v1/repos/mikf/gallery-dl/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
