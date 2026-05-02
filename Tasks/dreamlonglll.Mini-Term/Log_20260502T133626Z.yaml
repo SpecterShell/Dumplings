@@ -1,0 +1,20 @@
+Version: 0.3.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.9/Mini-Term_0.3.9_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.9/Mini-Term_0.3.9_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.3.9 - 同步更新 package.json、tauri.conf.json、Cargo.toml 版本号 - 更新 README 版本徽章及功能描述
+    - feat: Session 列表分页加载，首屏仅渲染 20 条 - 首次加载和刷新时只显示前 20 条 session，减少初始渲染开销 - 滚动到底部时自动加载下一页（每页 20 条），直到全部显示 - 切换项目时重置分页计数，避免残留旧项目的滚动状态
+    - refactor: 优化项目切换性能，减少卡顿 - 合并切换时的 flush 调用为一次 setConfig，避免重复触发全量 re-render - FileTree/GitHistory 移除 key 强制重建，改为缓存恢复 + 增量刷新 - list_directory 与 get_git_status 改为并行加载，缩短切换等待时间 - Rust 端 find_repos 结果缓存 30 秒，避免来回切换时重复扫描磁盘 - Repository::discover 限制向上遍历最多 5 层，防止遍历到磁盘根目录 - setActiveProject 不再修改 config 对象，消除不必要的 config 订阅者重渲染
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.9
+ReleaseTime: 2026-05-02T12:29:25.0000000Z
