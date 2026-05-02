@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
         Value  = 'https://keepass.info/news/news_all.html'
       }
 
-      $Object2 = (Invoke-WebRequest -Uri 'https://keepass.info/news/news_all.html').Links.Where({ try { $_.href.Contains($this.CurrentState.Version) } catch {} }, 'First')
+      $Object2 = (Invoke-WebRequest -Uri 'https://keepass.info/news/news_all.html').Links.Where({ try { $_.outerHTML.Contains($this.CurrentState.Version) } catch {} }, 'First')
 
       if ($Object2) {
         # ReleaseNotesUrl (en-US)
@@ -68,7 +68,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectNodes('/html/body/table/tr[1]/td[2]/node()[contains(., "Changes from")]/following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $Object3.SelectNodes("//h2[contains(., '$($this.CurrentState.Version)')]/following-sibling::node()") | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
