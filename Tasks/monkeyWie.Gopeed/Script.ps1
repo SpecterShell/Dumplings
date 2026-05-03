@@ -17,6 +17,16 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') -and -not $_.name.Contains('web') -and -not $_.name.Contains('portable') }, 'First')[0]
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = $Asset.name -replace '\.zip$', '.exe'
+    }
+  )
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
