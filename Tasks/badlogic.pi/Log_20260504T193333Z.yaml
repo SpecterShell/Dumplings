@@ -1,0 +1,33 @@
+Version: 0.73.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/badlogic/pi-mono/releases/download/v0.73.0/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Xiaomi MiMo API billing and regional Token Plan providers - xiaomi now uses API billing, with separate xiaomi-token-plan-{cn,ams,sgp} providers. See docs/providers.md#api-keys and README.md#providers--models. (#4112 by @Phoen1xCode)
+    - Incremental bash output streaming - Bash tool output now appears while commands run instead of only after completion. (#4145)
+    - Compact read rendering - Interactive read output for Pi docs, context files, and skills is collapsed by default and shows selected line ranges.
+    Breaking Changes
+    - Switched the built-in xiaomi provider from Token Plan AMS to Xiaomi's API billing endpoint, and renamed its /login display from "Xiaomi MiMo Token Plan" to "Xiaomi MiMo". XIAOMI_API_KEY now refers to the API billing key from platform.xiaomimimo.com. Users on Token Plan should switch to the appropriate xiaomi-token-plan-* provider and set the corresponding env var (#4112 by @Phoen1xCode).
+    Added
+    - Added three Xiaomi MiMo Token Plan regional providers visible in /login: xiaomi-token-plan-cn (XIAOMI_TOKEN_PLAN_CN_API_KEY), xiaomi-token-plan-ams (XIAOMI_TOKEN_PLAN_AMS_API_KEY), xiaomi-token-plan-sgp (XIAOMI_TOKEN_PLAN_SGP_API_KEY). Each defaults to mimo-v2.5-pro (#4112 by @Phoen1xCode).
+    Changed
+    - Changed read tool rendering to collapse Pi documentation, AGENTS/CLAUDE context files, and SKILL.md contents by default in interactive output.
+    Fixed
+    - Fixed generated OpenAI-compatible model metadata for Qwen 3.5/3.6 and MiniMax M2.7, so those models work through the built-in provider catalog (#4110 by @jsynowiec).
+    - Fixed Bedrock Claude Opus 4.7 xhigh thinking requests by preserving the provider's native effort value.
+    - Fixed OpenAI Codex WebSocket transport to fall back to SSE when setup fails before streaming starts, and surface transport diagnostics in the assistant message (#4133).
+    - Fixed OpenAI Codex WebSocket transport keeping --print and JSON mode processes alive after the response by closing cached WebSocket sessions during session shutdown (#4103).
+    - Fixed compact read tool calls to render directly and include selected line ranges in interactive output.
+    - Fixed interactive sessions to exit when terminal input is lost instead of continuing in a broken state.
+    - Fixed bash tool output to stream incrementally while commands run instead of waiting for command completion (#4145).
+    - Fixed selector and autocomplete fuzzy ranking to prioritize exact matches.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/badlogic/pi-mono/releases/tag/v0.73.0
+ReleaseTime: 2026-05-04T18:34:45.0000000Z
