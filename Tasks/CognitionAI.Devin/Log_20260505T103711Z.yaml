@@ -1,0 +1,28 @@
+Version: 2026.5.5-0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://static.devin.ai/cli/2026.5.5-0/devin-2026.5.5-0-x86_64-pc-windows.zip
+  InstallerSha256: 2B9DABE93D38970F9111720B77D302D7E7695267518CAB75127A72B753BB8B25
+- Architecture: arm64
+  InstallerUrl: https://static.devin.ai/cli/2026.5.5-0/devin-2026.5.5-0-aarch64-pc-windows.zip
+  InstallerSha256: 225ED6EC56082453490382790BC376A79ADC8FAE44F5669B87D07C693339014D
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ​
+
+    Added
+    - skill search can find model-invocable skills recursively under a project path and filter them by keywords.
+    ​
+
+    Changed
+    - Default model is now SWE 1.6 Fast instead of Adaptive.
+    ​
+
+    Fixed
+    - apply_patch diffs now appear incrementally as the patch is being written, not just after it completes. Both new-file and modify-existing-file patches show diffs progressively.
+    - Command hints now show the binary name used to launch Devin CLI when run through a renamed binary, symlink, or alias.
+    - Fixed process hang when MCP OAuth dynamic client registration fails. The local callback server was not properly shut down on error, causing the process to block indefinitely waiting for a browser redirect that would never arrive.
+    - /steps, /revert, and /fork now show and work with steps from before compaction. Previously, compacting a session made all earlier steps invisible and unrevertible.
+    - Text now correctly appears before tool calls in scrollback when both are produced in the same streaming turn.
