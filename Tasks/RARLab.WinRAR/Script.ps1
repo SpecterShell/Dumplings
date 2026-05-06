@@ -55,6 +55,10 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated' {
     $this.Message()
-    $this.Submit()
+    if ($this.CurrentState.Installer.Count -ge 15) {
+      $this.Submit()
+    } else {
+      $this.Log("Only $($this.CurrentState.Installer.Count) installer(s) found, waiting for more before submitting.", 'Warning')
+    }
   }
 }
