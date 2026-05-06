@@ -1,0 +1,53 @@
+Version: 0.7.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/rullerzhou-afk/clawd-on-desk/releases/download/v0.7.0/Clawd-on-Desk-Setup-0.7.0-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.7.0
+    New Features
+    - Gemini CLI hook-only integration (#224, #225, #226) - Gemini now uses the current hook path instead of the legacy session-file polling path, with agent Settings controls, installer updates, event mapping, PID detection, diagnostics, and targeted tests.
+    - Codex Pet compatibility MVP (#235) - Clawd can import Codex Pet packages, adapt their sprite atlas/state metadata into Clawd themes, sync imported pets into the theme list, refresh/remove imported pets, and switch to a newly imported pet from Settings.
+    - Fade theme switching (#237) - theme changes now fade the pet window between themes instead of snapping directly to the new asset set.
+    - Theme and animation Settings polish (#234, #236) - Settings tab switches are smoother, animation override timing sliders are easier to use, loading states are clearer, and imported Codex Pets are grouped separately from built-in and user themes.
+    - Session controls (#227, #229) - Session HUD and Dashboard now show renamed Codex session titles, expose stronger HUD display toggles, support hiding sessions, and avoid letting session cleanup push the pet into sleep.
+    - Windows Terminal focus hardening (#242) - terminal focusing now avoids ambiguous title matches, requires unique Windows Terminal tab matches, preserves direct terminal focus when it is already available, records richer diagnostics, and documents Windows Terminal's matching limits.
+    Bug Fixes
+    - General Settings switch stability (#238) - General tab switches now stay mounted during settings updates, preventing transient unmount/remount behavior while Settings patches are applied.
+    - Gemini diagnostics and event behavior - Gemini hook events now map consistently into Clawd states, installer tests isolate their home directories, and hook diagnostics are easier to interpret when setup fails.
+    - Codex runtime stability - Codex PID reachability checks are more reliable, renamed session titles are reflected in the UI, exit probe logging improves debugging, and same-named Codex Pet assets reload correctly after import or refresh.
+    - Renderer crash logging (#220) - renderer-side crash logging now guards against EIO write failures instead of letting logging errors cascade.
+    - Agent submenu toggle flash (#233) - toggling an agent from Settings no longer briefly flashes the submenu into an inconsistent state.
+    - Auto-start launch config (#240) - auto-start now shares the same Electron launch configuration path as normal startup, reducing drift between manual and automatic launches.
+    - DND permission fallbacks - Do Not Disturb now preserves agent-native permission fallback behavior instead of accidentally swallowing or auto-answering permission requests.
+    Refactoring & Tests
+    - Codex Pet importer coverage - adds importer, adapter, protocol, theme sync, and fixture coverage for atlas-based Codex Pet packages.
+    - Gemini hook coverage - adds hook and installer tests around hook-only behavior, event mapping, and isolated home directories.
+    - Windows focus coverage (#242) - adds focused regression tests for Windows Terminal title matching, direct terminal focus, ambiguous-match handling, session focus helpers, and Doctor log metadata.
+    - Settings browser coverage (#238) - expands Settings renderer tests around General tab patch paths and switch persistence during store updates.
+    - State, HUD, and Settings coverage - expands tests for session hiding, detached cleanup, notification gating, server ring buffers, animation override UI behavior, theme transitions, and Settings browser-environment behavior.
+    - Doctor and integration checks - refreshes Doctor integration descriptors and tests so the new hook/plugin paths are represented in diagnostics.
+    Docs & Contributors
+    - Release positioning - v0.7.0 is a feature release because it adds Gemini hook-only support, Codex Pet compatibility, theme transition behavior, and deeper Windows Terminal focus behavior on top of normal fixes.
+    - Windows Terminal limitations (#242) - docs now explain why Clawd only switches tabs when the target terminal title is uniquely identifiable.
+    - Contributor tables - README variants and Settings About now show all 43 listed GitHub contributors, including the new v0.7.0 contributors @YuChenYunn and @jhseo-b.
+    - Setup, state mapping, and architecture docs - docs were refreshed for Gemini hook behavior, Codex Pet/theme capabilities, imported theme handling, and current runtime boundaries.
+    Contributors
+    Huge thanks to everyone who shipped code, tests, docs, diagnostics, or release polish for v0.7.0:
+    - @rullerzhou-afk - Codex Pet compatibility MVP, Codex runtime diagnostics, session hide/cleanup behavior, Windows Terminal focus hardening (#242), auto-start follow-up (#240), docs, tests, and release preparation
+    - @YOIMIYA66 - Gemini hook-only integration and Settings controls (#224, #225, #226), agent submenu toggle polish (#233), Settings transition/animation override polish (#234, #236), General Settings switch stability (#238), and fade theme switching (#237)
+    - @jhseo-b - Codex renamed session title display (#227) and Session HUD toggle hardening (#229)
+    - @YuChenYunn - renderer crash logging guard for EIO failures (#220)
+    - Elior - co-authored the renderer crash logging fallback follow-up in #220
+    - @jinqKing - identified the Windows source-mode auto-start console-window issue and proposed the direct Electron spawning direction that led to #240
+    Known Limitations
+    - Codex hook coverage is still not complete - official hooks remain the primary path, but JSONL polling is still kept as fallback for hook-disabled sessions and events that official hooks do not fully cover yet.
+    - Gemini is hook-only in the current runtime path - the legacy Gemini session JSON monitor is retained for compatibility tests/history, but normal Gemini integration expects the hook installer path.
+    - Windows Terminal tab focus is intentionally conservative - Clawd will not switch tabs when the title match is ambiguous, so users may need to rename terminals or use direct focus paths for repeated/similar session titles.
+    - Codex Pet compatibility is an MVP - atlas import and theme adaptation are supported, but unusual pet package layouts may still fail validation or need manual theme authoring.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/rullerzhou-afk/clawd-on-desk/releases/tag/v0.7.0
+ReleaseTime: 2026-05-06T10:42:49.0000000Z
