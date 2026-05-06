@@ -1,9 +1,9 @@
 # x86
-$Object1 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-32') }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-32') -and $_.'sort-version' -match '^\d+(?:\.\d+)+$' }, 'First')[0]
 # x64
-$Object2 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-64') }, 'First')[0]
+$Object2 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-64') -and $_.'sort-version' -match '^\d+(?:\.\d+)+$' }, 'First')[0]
 # arm64
-$Object3 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-arm64') }, 'First')[0]
+$Object3 = $Global:DumplingsStorage.PythonVersions.versions.Where({ $_.'install-for'.Contains('3.13-arm64') -and $_.'sort-version' -match '^\d+(?:\.\d+)+$' }, 'First')[0]
 
 if (@(@($Object1, $Object2, $Object3) | Sort-Object -Property { $_.'sort-version' } -Unique).Count -gt 1) {
   $this.Log("Inconsistent versions: x86: $($Object1.'sort-version'), x64: $($Object2.'sort-version'), arm64: $($Object3.'sort-version')", 'Error')
