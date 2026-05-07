@@ -1,0 +1,24 @@
+Version: 0.3.10
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.10/Mini-Term_0.3.10_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.3.10/Mini-Term_0.3.10_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - fix: 升级 @tauri-apps NPM 包至 2.11，修复 CI 版本不匹配错误 - @tauri-apps/api 从 2.10.1 升级至 2.11.0，与 Rust 端 tauri 2.11.1 对齐
+    - fix: 修复 Sessions 面板遗漏部分 Claude 会话的问题 - 扫描 ~/.claude/projects/ 下所有匹配目录（含尾部斜杠产生的变体），不再只读单一编码路径 - encode_project_path 先去除尾部路径分隔符，避免不同 shell 的 cwd 差异导致编码不一致 - session 内容加载同样跨多目录查找，确保变体目录中的会话也能正常打开
+    - release: 升级版本号至 v0.3.10 - 同步更新 package.json、tauri.conf.json、Cargo.toml 版本号 - 更新 README 版本徽章及终端滚动缓冲功能描述
+    - chore: 添加 AI 工具配置文件 - 添加 .agents、.claude、.codex、.trellis 配置目录及 AGENTS.md
+    - chore: 同步 Cargo.lock 版本号至 v0.3.9 - Cargo.lock 中 tauri-app 版本从 0.3.8 更新为 0.3.9，与 Cargo.toml 保持一致
+    - feat: 拦截 alternate screen 切换，TUI 程序保留滚动条和 scrollback - 拦截 DECSET/DECRST 47、1047、1049，阻止终端进入备用缓冲区 - codex 等 TUI 输出留在主缓冲区，用户始终可通过滚动条查看历史内容
+    - fix: 修复 git log 等命令中文显示为十六进制转义的乱码问题 - PTY 环境补充 LANG=C.UTF-8，让 Git for Windows 识别终端为 UTF-8 编码，不再回退到系统代码页 GBK - 添加 LESSCHARSET=utf-8，使 git 默认 pager（less）直接输出 UTF-8 字节而非 转义 - 修正 LC_CTYPE 的值从无效的 "UTF-8" 改为标准的 "C.UTF-8"
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.3.10
+ReleaseTime: 2026-05-07T08:34:56.0000000Z
