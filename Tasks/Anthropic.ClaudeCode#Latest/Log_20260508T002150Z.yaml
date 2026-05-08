@@ -1,0 +1,36 @@
+Version: 2.1.133
+Installer:
+- Architecture: x64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.133/win32-x64/claude.exe
+  InstallerSha256: BA4C41963ED7D6567DFEC0E7B252CDBC02F17A4F7C0A9E69CA2D7CCB9E94016E
+- Architecture: arm64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.133/win32-arm64/claude.exe
+  InstallerSha256: 389D5E7BC9D4BF3F1909C60BE63FCCC93CC824D7C691638418A5904CE675AFBD
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added worktree.baseRef setting (fresh | head) to choose whether --worktree, EnterWorktree, and agent-isolation worktrees branch from origin/<default> or local HEAD. Note: the default fresh changes EnterWorktree's base back to origin/<default> (it has been local HEAD since 2.1.128) — set worktree.baseRef: "head" to keep unpushed commits in new worktrees
+    - Added sandbox.bwrapPath and sandbox.socatPath managed settings (Linux/WSL) to specify custom bubblewrap and socat binary locations
+    - Added parentSettingsBehavior admin-tier key ('first-wins' | 'merge') to let admins opt SDK managedSettings (parent tier) into the policy merge
+    - Hooks now receive the active effort level via the effort.level JSON input field and the $CLAUDE_EFFORT environment variable, and Bash tool commands can read $CLAUDE_EFFORT
+    - Improved focus mode behavior
+    - Improved memory usage by releasing warm-spare background workers under memory pressure
+    - Fixed parallel sessions all dead-ending at 401 after a refresh-token race wiped shared credentials
+    - Fixed Edit/Write allow rules scoped to a drive root (C:\) or POSIX / matching incorrectly and always prompting
+    - Fixed an unhandled rejection (ECOMPROMISED) when a history or session-log file lock is compromised by clock skew or slow disk
+    - Fixed pressing Esc during conversation compaction showing a spurious "Error compacting conversation" notification
+    - Fixed HTTP(S)_PROXY / NO_PROXY / mTLS not being respected for the full MCP OAuth flow including discovery, dynamic client registration, token exchange, and token refresh
+    - Fixed Read/Write/Edit being denied on mapped network drives passed via --add-dir / SDK additionalDirectories
+    - Fixed Remote Control stop/interrupt from claude.ai not fully canceling the CLI session the same way local Esc does, causing queued messages to never advance after interrupting a stuck tool or prompt
+    - Fixed /effort in one session unexpectedly changing the effort level of other concurrent sessions, and a related issue where an IDE effort change could be silently dropped
+    - Fixed subagents not discovering project, user, or plugin skills via the Skill tool
+    - claude --help now lists --remote-control alongside --remote-control-session-name-prefix
+    - [VSCode] Fixed claudeCode.claudeProcessWrapper failing with "Unsupported platform" when the extension build doesn't bundle a Claude binary
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#21133
+ReleaseTime: 2026-05-07T18:34:30.0000000Z
