@@ -1,0 +1,31 @@
+Version: 1.0.45
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work_Review/releases/download/v1.0.45/Work_Review_1.0.45_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 提示词预设模板：支持保存、切换、删除多套日报提示词，下拉菜单显示当前选中预设名称，删除前需确认。
+    - 实时统计卡片：日报页面上方展示当日工作时长、活跃应用等实时数据，替代嵌入模板的过时统计。
+    - 本地 API 新增 9 个端点：今日统计、总览、按日统计、最近应用、分类概览、分类列表、语义分类、小时摘要、存储信息。
+    - 本地 API 新增按小时应用分布、周回顾、时间线端点；报告生成接口由 POST 改为 GET 保持一致性。
+    - 可配置空闲判定阈值（默认 5 分钟，范围 1-60），新增工作时段开关（适合居家办公场景）。
+    - 隐私规则支持批量多选操作（#81）。
+    - 截图保留新增"永久保留"选项（#79）。
+    - CI 新增 Linux ARM64 (aarch64) deb 构建。
+    优化
+    - 提示词预设下拉菜单重新设计为卡片式布局：选中项显示勾选标记，删除按钮 hover 时才显示。
+    - API 文档示例页面重设计为卡片式布局：GET 绿色 / POST 琥珀色方法标签，深色终端风格 curl 代码块。
+    - 日报统计修复：使用 report_blocks 实时替换机制解决统计数据过时问题（#80）。
+    - 应用名称识别从约 60 个扩展到 130+，覆盖更多系统工具和常见桌面应用（#79）。
+    - 设置页按视觉分区重新组织：工作时段、报告配置、系统行为。
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work_Review/releases/tag/v1.0.45
+ReleaseTime: 2026-05-08T11:26:32.0000000Z
