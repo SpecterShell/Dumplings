@@ -5,11 +5,6 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
@@ -87,7 +82,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesUrl = $Object1.assets.Where({ $_.name -eq 'Release_Notes.txt' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      $ReleaseNotesUrl = 'https://raw.githubusercontent.com/WSJTX/wsjtx/HEAD/Release_Notes.txt'
       $Object2 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
