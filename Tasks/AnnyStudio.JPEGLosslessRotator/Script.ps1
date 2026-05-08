@@ -11,7 +11,7 @@ function Get-ReleaseNotes {
   try {
     $Object3 = $Object1 | ConvertFrom-Html
 
-    $ReleaseNotesNode = $Object3.SelectSingleNode("//h2[@id='versionhistory']/following-sibling::table[1]//tr[contains(./td[1], '$($this.CurrentState.Version)')]")
+    $ReleaseNotesNode = $Object3.SelectSingleNode("//h2[@id='changelog']/following-sibling::table[1]//tr[contains(./td[1], '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesNode) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./td[2]').InnerText, '(\d{1,2}\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
