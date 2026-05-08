@@ -1,12 +1,16 @@
-$Object1 = Invoke-RestMethod -Uri 'https://portswigger.net/Burp/Releases/CheckForUpdates?product=community&channel=Stable&version=0'
+$Object1 = Invoke-RestMethod -Uri 'https://portswigger.net/Burp/Releases/CheckForUpdates?product=desktop&channel=Stable&version=0'
 
 # Version
 $this.CurrentState.Version = $Object1.updates[0].version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://portswigger-cdn.net/burp/releases/download?product=community&version=$($this.CurrentState.Version)&type=WindowsX64"
-  # InstallerUrl = "https://portswigger-cdn.net/burp/releases/intooldownload?product=community&channel=Stable&version=$($this.CurrentState.Version)&number=$($Object1.updates[0].number)&installationType=win64"
+  Architecture = 'x64'
+  InstallerUrl = "https://portswigger.net/burp/releases/download?product=desktop&version=$($this.CurrentState.Version)&type=WindowsX64"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://portswigger.net/burp/releases/download?product=desktop&version=$($this.CurrentState.Version)&type=WindowsArm64"
 }
 
 switch -Regex ($this.Check()) {
@@ -19,10 +23,11 @@ switch -Regex ($this.Check()) {
         Value  = $Object1.updates[0].description | Format-Text
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.updates[0].releaseNotesUrl
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.updates[0].releaseNotesUrl
       }
     } catch {
       $_ | Out-Host
