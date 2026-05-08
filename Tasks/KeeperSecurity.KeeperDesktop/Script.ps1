@@ -28,8 +28,12 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $Object2.Links.Where({ try { $_.href.Contains($this.CurrentState.Version -replace '(\.0+)+$') } catch {} }, 'First')[0].href
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object3.SelectSingleNode('//main/header/p').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
+      }
 
       # Remove psuedo bullet points
       $Object3.SelectNodes('//main/div[1]//li/div[contains(./div/@style, "•")]').ForEach({ $_.Remove() })
@@ -40,12 +44,8 @@ switch -Regex ($this.Check()) {
         Value  = $Object3.SelectSingleNode('//main/div[1]') | Get-TextContent | Format-Text
       }
 
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl
-      }
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object3.SelectSingleNode('//main/header/p').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
