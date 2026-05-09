@@ -22,60 +22,6 @@ switch -Regex ($this.Check()) {
         Key    = 'ReleaseNotesUrl'
         Value  = $Object1.html_url
       }
-
-      # Documentations
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'Documentations'
-        Value = @(
-          [ordered]@{
-            DocumentLabel = 'User Guide'
-            DocumentUrl   = "https://wsjt.sourceforge.io/wsjtx-doc/wsjtx-main-$($this.CurrentState.Version).html"
-          }
-          [ordered]@{
-            DocumentLabel = 'Q65 Mode Quick-Start Guide'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/Q65_Quick_Start.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'SuperFox Mode User Guide'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/SuperFox_User_Guide.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'WSJT-X and MAP65 Quick-Start Guide'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/WSJTX_2.5.0_MAP65_3.0_Quick_Start.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'FT8 DXpedition Mode User Guide'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/FT8_DXpedition_Mode.pdf'
-          }
-        )
-      }
-      # Documentations (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'Documentations'
-        Value  = @(
-          [ordered]@{
-            DocumentLabel = '用户指南'
-            DocumentUrl   = "https://wsjt.sourceforge.io/wsjtx-doc/wsjtx-main-$($this.CurrentState.Version).html"
-          }
-          [ordered]@{
-            DocumentLabel = 'Q65 模式 快速入门'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/Q65_Quick_Start.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'SuperFox 模式 使用指南'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/SuperFox_User_Guide.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'WSJT-X 和 MAP65 快速入门'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/WSJTX_2.5.0_MAP65_3.0_Quick_Start.pdf'
-          }
-          [ordered]@{
-            DocumentLabel = 'FT8 远征模式 使用指南'
-            DocumentUrl   = 'https://wsjt.sourceforge.io/FT8_DXpedition_Mode_Chinese.pdf'
-          }
-        )
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
