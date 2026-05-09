@@ -6,7 +6,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.title, '(\d+(?:\.\d+)+)').G
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/p-bk_$($this.CurrentState.Version)_32Bit_installer.zip"
+  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/p-bk_$($this.CurrentState.Version)_Installer.zip"
 }
 
 switch -Regex ($this.Check()) {
