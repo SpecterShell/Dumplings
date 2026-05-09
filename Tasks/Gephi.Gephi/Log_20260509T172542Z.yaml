@@ -1,0 +1,43 @@
+Version: 0.11.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/gephi/gephi/releases/download/v0.11.2/gephi-0.11.2-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Follow-up release from 0.11.1 with bugfixes.
+    What's Changed
+    Bugfixes
+    - Replicable "Accept exceeded fixed size" error with active filter #3185
+    - Fix cryptic ZipException when opening empty .gephi project file in https://github.com/gephi/gephi/pull/3188
+    - Fix project load crash when .gephi file has missing or empty name attribute in https://github.com/gephi/gephi/pull/3189
+    - Fix ArrayIndexOutOfBoundsException crashing project load when restoring filters in https://github.com/gephi/gephi/pull/3190
+    - Fix IllegalArgumentException when opening a project with no associated file in https://github.com/gephi/gephi/pull/3191
+    - Fix cryptic WstxEOFException when importing an empty GEXF file in https://github.com/gephi/gephi/pull/3192
+    - Fix MissingResourceException on Turkish locale (dotless-i in bundle key lookup) in https://github.com/gephi/gephi/pull/3193
+    - Fix IllegalArgumentException when saving project with null statistics chart image in https://github.com/gephi/gephi/pull/3194
+    - Fix NPE in StatisticsControllerUIImpl.getUI when statistics is null in https://github.com/gephi/gephi/pull/3195
+    - Fix project save failing on Windows when filename contains illegal characters in https://github.com/gephi/gephi/pull/3196
+    - Fix NPE when FileUtil.toFileObject returns null in openFile in https://github.com/gephi/gephi/pull/3198
+    - Fix NPE when tab action command is null in WorkspacePanel in https://github.com/gephi/gephi/pull/3199
+    - Fix NPE in setEditMode when Attributes model is null in https://github.com/gephi/gephi/pull/3200
+    - Fix ConcurrentModificationException in layout listener iteration in https://github.com/gephi/gephi/pull/3201
+    - Coerce numeric types when loading saved layout properties in https://github.com/gephi/gephi/pull/3202
+    - Fix EDT deadlock during PreviewUIController init in https://github.com/gephi/gephi/pull/3204
+    - Fix IllegalArgumentException in Search/Replace when columns have been deleted in https://github.com/gephi/gephi/pull/3206
+    New or Improved Features
+    - macOS DMG: customize installer window with background image and Applications shortcut #3187
+    - Show error dialog when OpenGL is unsupported (GDI Generic / OpenGL < 2.0) in https://github.com/gephi/gephi/pull/3205
+    - Add ImportException hierarchy for known import failures in https://github.com/gephi/gephi/pull/3197
+    Code Improvements
+    - Bump org.postgresql:postgresql from 42.7.7 to 42.7.11 in /modules/DBDrivers in the maven group across 1 directory by @dependabot[bot] in https://github.com/gephi/gephi/pull/3186
+    API Changes
+    Import API
+    - Added a new ImportException base class for known, user-facing import failures, along with an EmptyFileException subclass. Empty files are now detected centrally in ImportController and raised as EmptyFileException with a localized message, so UIs can present a clean error instead of the default unexpected-exception treatment.
+    Core contributors
+    @mbastian
+    If you're looking for digital signatures for the release binaries, you can directly find them on Maven Central
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gephi/gephi/releases/tag/v0.11.2
+ReleaseTime: 2026-05-09T17:02:58.0000000Z
