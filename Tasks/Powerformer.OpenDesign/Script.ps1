@@ -1,7 +1,7 @@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/nexu-io/open-design/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^open-design-' -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
