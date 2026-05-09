@@ -1,0 +1,235 @@
+Version: 1.0.4
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.4/beads_1.0.4_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.4/beads_1.0.4_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - ecb9542245d4e99afe4b3b8c06c26c74a7cb8bd2 feat(close): add --reason-file flag mirroring --body-file pattern
+    - 336728882a9d73fcc74b29a425a626f3ad607a43 feat(config): add central server config library (#3258)
+    - 097ed1cf168b2f28f2a7cd715363a823813de8a0 feat(linear): add OAuth client-credentials support
+    - 6584ff8f8f9ffd77a019fab60e74f7180aa7251b feat(linear): add ambient staleness signal for auto-fresh data
+    - 0ec4a99ea08aba9de7ad0e7efa6d74c0b3af9103 feat(linear): add idempotency markers to prevent duplicate issue creation
+    - 989d0f94960dfa8e9b3abf75273adeaf7e9a5a84 feat(linear): add per-workspace concurrency lock on sync
+    - 06d385edf9edc5e1008a84f69243a48646d8cf34 feat(linear): add type mappings for decision, spike, story, milestone (#3651)
+    - ac15e099e33de515406f6ddb851c202cdedaf607 feat(linear): adopt issueBatchCreate/issueBatchUpdate for 50x efficiency (#3654)
+    - a845bc4ebacb6f3784410285b8dde6dec968ee61 feat(linear): parse Retry-After headers and add rate-limit circuit breaker
+    - e90f980adabdfb9be4bd913b9cd52dd79a642298 feat(setup): omit bd dolt push from template when no remote configured
+    - 7358de6934c634ce36d3c9b5246e7360a8ba9cd4 feat: add -C flag to change directory before running (#3442)
+    - 0bc4c7256a7a6a4a2c3113e652089b1456090e2e feat: add JSONL bulk dep add (#3530)
+    Bug Fixes
+    - 60cbf83a5fcdacf318eda005319e344595a3ac80 fix(cli): swap CommandStyle LightDark arguments for light terminals (GH#3611) (#3643)
+    - 1ebee7fd48dfa53c24b5cb1f8c26830b14c732eb fix(cli): swap CommandStyle colors for correct light/dark contrast (GH#3611)
+    - 03385349b3e383956f012dcc09b04b01014d7e79 fix(close): adapt routed close to current main
+    - 564bd1ea777e2561cfa37dd2ee27406fd63a4433 fix(close): route ID resolution like show/update (beads-0km)
+    - 0c51997203e76061d5d81198745e6e535e5851d0 fix(comments): helpful error for misplaced bd comments list (GH#3542) (#3641)
+    - 74b107aec6f3ef818f1821aa8fed1f6b9952f3f7 fix(config): check ~/.config/bd/config.yaml on macOS
+    - 4fbfd97f070b240bc72be7789d5a7c6d7f838499 fix(config): consult config.yaml for dolt.host (#3471)
+    - 10bf490252bf84c8e2cd114d370ca3d487a10254 fix(config): format OAuth config changes
+    - 860ddb20651e0eb75832fa2128b92fd9329feb54 fix(config): format wisp privacy changes
+    - 918eb8e4c549e8fb5142548537b2f4dee8ad9c92 fix(config): refuse to write secret keys to git-tracked config.yaml (#3652)
+    - a6f2d8d2d3f0f99f8b5ae991f769fcc7c93179bd fix(config): remove dead dolt.idle-timeout key (GH#2452-followup)
+    - 21c55f489fe96008e3d6872389b7e7da81d598a3 fix(create): handle dependency aliases in --deps
+    - 218349937ca9398656beb637ddc5dbe5051b7837 fix(dep): only show [BLOCKED] for genuine blocking deps in dep tree (GH#3565) (#3675)
+    - f0b6d4973f3be45a28a33b33b2bb2d486839c021 fix(dep): show dependency type in bd dep tree output (GH#3565) (#3647)
+    - ccfb97f425c2feb58ea4e675487831946a249c49 fix(dep): tolerate unresolved IDs in batch dep list (#3620)
+    - be65f59cd0b840a2eb40b84d87284b9284d99648 fix(dolt): batch wisp-ID partition in bulk hydrators (GH#3414)
+    - 4affe45560dc582622a0a631aae54f84c459aec8 fix(dolt): distinguish fsck open-failures from integrity failures (#3465)
+    - fbcdb908b4694fc23fd7718be9843c943e0fb4bd fix(dolt): preserve label hydration wisp-set callers
+    - 607919f6f8c57a91b93f3f8e9527ab50e9e7b4a8 fix(dolt): skip git hooks on internal push of refs/dolt/data (GH#3724) (#3740)
+    - 75963699e09fdbde2674cddcf8ac7cf99c8f6a72 fix(embeddeddolt): pass DOLT_REMOTE_USER to push/pull/fetch
+    - 7978fae1adf333e0f246274210edd81686ac5961 fix(export): exclude ephemeral wisps from bd export by default (GH#3649)
+    - 61e85bc31979f1bc1c3a1394aa8068c305d10d0e fix(export): exclude memories from bd export by default (GH#3650)
+    - 226e7f2554b886da6fc9354d6743a47bc95b1625 fix(export): include NoHistory beads when Ephemeral=&false filter is active
+    - 651a52afed941c0b4d91a347df795a03096e2e59 fix(export): sort memory keys for deterministic JSONL output (GH#3474) (#3482)
+    - c67e41e355d15d373deb558c0e652b89d5c8f44a fix(federation): respect ephemeral/wisp type filters during sync
+    - 7fb4c31918256bd28774e041a2fac9c56f41582a fix(formula): carry step labels through cook and pour
+    - 7e8766db665d90fd844d8ae68e7e8bb2c3435144 fix(gate): drop removed 'merged' field from gh pr view call (GH#3411) (#3488)
+    - b3241665f373dd9fb6e868361a41b26322c038a4 fix(github): map decision, spike, story, milestone GitHub type labels (GH#3604) (#3639)
+    - dccfa2082938739445a99b006d4ff61e66f01d6a fix(graph): emit [] not null for empty links in HTML output (GH#3592)
+    - a028506ec64802badaee8a5180a3b30cb58d02e6 fix(graph): merge components for bd graph --all --html (GH#3592) (#3648)
+    - b5d8c46dc04ab5bce592e97767c046ef6df7f953 fix(history): respect --json flag when issue has no history (#3503)
+    - 3be9f0001d159b1460d14f2907c6bcef4c282c46 fix(hooks): auto-import .beads/issues.jsonl after pull/checkout (GH#3729) (#3730)
+    - ad8d6de417e4f99f62fe2aaea58310b438edb8b2 fix(hooks): inject BEADS INTEGRATION above trailing exec block (GH#3537) (#3556)
+    - 0db2a66b5b6d2a3629043e22f2b36d74fea33f2d fix(hooks): preserve user content when migrating v0.62.x → v1.0.x (GH#3536) (#3557)
+    - 2efac71aae80f363999f27049ac7a85b2588f243 fix(hooks): use BeadsDirPerm (0700) for .beads/hooks directory (#3616)
+    - bcd57630a27a633cc6ea708a8f96c1065680c86f fix(init): add FixBeadsDirPermissions stub for Windows build
+    - a0cf5e6838155cc463577690c4404230a6451d7f fix(init): chmod existing .beads/ to 0700 instead of only warning (GH#3391)
+    - 7d3dc1a5f7837db01d772fc058b5125564f5efa0 fix(init): only strip world-accessible bits, preserve group perms
+    - f34ab803b95cf601eee41db2a7e310f553d41265 fix(init): repair existing .beads permissions to 0700
+    - c9eb8ec384945db0fb663b7b709b8bff4661ba66 fix(init): sanitize dotted prefixes consistently (beads-oko)
+    - e643e94f17d2ba2498e32a048ad89f849c2a98ab fix(linear): add done/deferred/pinned/hooked aliases to ParseBeadsStatus (#3718)
+    - b8e7562f0f30576e60dae3ce4edba42866743b42 fix(linear): address maintainer blockers on idempotency PR
+    - 46584d8222e6e029c298a84754c2984c05aaec14 fix(linear): address maintainer feedback on OAuth client-credentials PR
+    - 3e804cd39f276a3fd7d0128e0d5ddb3df921c7b8 fix(linear): address maintainer feedback on PR #3655
+    - dc4cd8b6490065246dd1fbb65997685587eca45d fix(linear): clean rate-limit lint
+    - d33687481e54c65583a3da6e87d31ce74b8cb93e fix(linear): clean staleness lint
+    - cb1a0700b0caa41b3e13b67fb4d4c169eaa1d61a fix(linear): clean sync lock lint
+    - f172b97ada5b4f8a3af15ee4d221cf5e6812f6ff fix(linear): correct issueBatchCreate GraphQL variable type (#3703)
+    - 175bc23d1feced20ef156136971a4a2cd0d54de0 fix(linear): keep lock file stable across Release cycles
+    - 3d9a01220ccff21c82e89847a7b0f4fc641934ac fix(list): --deferred returns complete deferred set (GH#3571)
+    - 7e3c7fbbea058f581e53c4caf16ceeed2b166b89 fix(list): deduplicate issues with multiple blocks dependencies (GH#3567) (#3673)
+    - d648b6a2644b898dc859e72f016469d57d85430b fix(list): emphasize truncation warning with WarnStyle (GH#3580) (#3739)
+    - 22e9ca37dd301a69fd7fabb6c943a957d5b26d54 fix(list): format deferred filter tests
+    - 7d4bf5a0f01c103c4cb2413ed09aa8e9903c3006 fix(makefile): use /dev/null instead of nul to silence stderr on windows
+    - 229f214fbb16dedf5bc19f9a788782fe30d97406 fix(mol): clear root Ephemeral on bd mol squash (#3696)
+    - bbd4e4d3c1257eed5c56454e8bcaee81c6fc0d67 fix(mol): recognize TypeMolecule roots in findParentMolecules (#3719) (#3721)
+    - ae0fc1dd630af447eeaec295bfbe2ea514a92390 fix(nix): use proxy vendor for pure-go package
+    - 1cfb6e5d976ecd16c0a8a11300188dccea8af938 fix(plugin): move claude agent out of shared codex dir to fix plugin install
+    - 02bdb4ce4b6de1274d5511d0d9e642297a443b97 fix(prime): surface memories before hook truncation (#3692)
+    - 7a1f7e4cdecf4043f03ea19c640784df36beba7c fix(release): harden shipped release formula adoption (#3668)
+    - f3d57da63ac0698287ec84c11ce6d78a98b0bea6 fix(release): ship beads-release formula (#3631)
+    - c9ae42b3d8e556b2d4433d1ea099e894afe944da fix(setup): align Claude PreCompact hook docs
+    - 059d729b1aeaeca2ed6fafde6022aab242d18935 fix(setup): drop bd sync from Mux fallback; warn on stale Claude hooks (GH#3546) (#3642)
+    - 261fdbb996d24b30aaa1d0799b490a8b686287a5 fix(setup): format conditional push template
+    - 3fa0e2303273ef787394f8184269f48e1058e5b7 fix(setup): prevent doubled BEGIN/END markers from CRLF embedded template (#3553)
+    - 2cfbe4ef327883d18a0bc4b6e2ba67b464659a0f fix(setup): removeHookCommand drops sibling commands on first match
+    - c5961c4f6fcb6c678517c7df2c04a9fac5ee08eb fix(sort): natural numeric sort for issue IDs with dotted suffixes (GH#3477) (#3486)
+    - 8475f8bc4a28a3d40651ff00b9524b72679307af fix(test): thread -tags gms_pure_go to subprocess build in embeddeddolt concurrency test
+    - 5a180edd6805e20b2e06000659ac97749199de90 fix(where): avoid live reopen for server-mode selection (beads-gekl.3)
+    - 4fbb33270919b42ffbbb887caf2344645a2ccb11 fix(where): keep bd where on the no-db path (beads-bgu)
+    - 555173e8a02bfd66f32a0d7b1476b57f0bf8101d fix(where): restore prefix without the old slowdown (beads-ayf)
+    - cb3ef71ddadb8cdf7f9b79e45651407634072f5e fix: ApplyCLIAutoStart respects ServerModeExternal (#3473)
+    - 57ddb0bbfef3de52b7aa233c5437e220a779369f fix: bd admin commands fail with 'embedded mode' error in server mode (#3438)
+    - eef21dec2da6db58cf7debf2f5f24eb178900be3 fix: remove duplicate wisp query in bd export (#3352) (#3372)
+    - 5a2fc61f7a0d49994d97aebfdf6729c9e19ae3ad fix: repair shared-server bootstrap and doctor metadata drift (#3242)
+    - 4a25937df254ef657e6d7b55d713a7538222eff6 fix: replace deprecated --force flag with --reinit-local in init error messages (#3695)
+    Others
+    - adb0cc1a4070fcb34446f619ef0b76c411478fd2 /cmd/bd/db_proxy_child.go: cleanup
+    - 5e66b2a6756266056b0e80dc71bd8437f69aa635 /cmd/bd/db_proxy_child.go: rebase main
+    - e5bebbd7a51a5a7ab8eb6c123571993fe1007897 /cmd/bd/dolt.go: revert message flag requirement
+    - 1ad70098747b688f6d18a02af2d5e098e9b5b426 /cmd/bd/main.go: default auto-commit on
+    - a58228d7d23a04f0214ee67a17256e122723708c /cmd/bd/main.go: remove promote gate
+    - 2f1cd4f81863109877996a57fe55742eefbecade /cmd/{cmd, internal}: make exports atomic writes
+    - f4c46d917c27397d438242f49a2025b9205431a4 /go.{mod,sum}: bump dolt driver (#3435)
+    - 916c1631fdc252b2d231c22dbb2b7d7545b76090 /internal/atomicfile/atomicfile.go: use io.Copy
+    - 2529780f76f18924ffdca99e17adbc6457b59f46 /internal/beads: maybe fix worktree server bug
+    - 6e0b6b8334b0726dfbf9e2964c3f73b1dacb2e95 /internal/storage/db/doltserver.go: wip
+    - a9cbf9625ad6b06fa3d0dca8dc31134141ebe5a2 /internal/storage/db/proxy/server.go: more cleanup
+    - e7749265afc209e44793b9810f27db40fb8ad069 /internal/storage/db/proxy/server.go: pr feedback fix
+    - 42b38d2efbafee231fb5726dd375ffe9334298d6 /internal/storage/db/proxy/server_test.go: fix test bug
+    - d7d1b316ab93002ba3b0628632d5a7fbd4859211 /internal/storage/db/server/doltserver.go: ready for tests
+    - 04de2f7d40ebb3eb237961849292bda4b8c17754 /internal/storage/db/server/doltserver.go: some fixes
+    - 312b5bc01c73274db3bbb9818aa6799df10274ec /internal/storage/db/server/doltserver.go: wip, dial
+    - 54b25a479e89d124841bf6d2af1927bb4e9a074d /internal/storage/db/server/doltserver.go: wip, implement start
+    - 5a205fb0d3bf449cb12a6c0bdf1959ad96fd01d0 /internal/storage/db/server/doltserver.go: wip, ping
+    - aa76c4e9344814db83431ddf4e49881e4a91155a /internal/storage/db/server/doltserver.go: wip, running
+    - 18ff81c8c656990d32d642c000cea0824f263f32 /internal/storage/db/server/doltserver.go: wip, stop
+    - e83e98cda482617e23256e99067006d22fdd739b /internal/storage/db/server/doltserver_test.go: add socket test
+    - 9e49d1336ec67ae56e385c6ba3f39ca17f750bdc /internal/storage/db/server/doltserver_test.go: keep config in tests
+    - 106e106cf2b833353317d87312b4b857e6e90585 /internal/storage/db/server/testserver_test.go: add test server test
+    - 83813b24508ca266780cff556c1e403f5d9cd56c /internal/storage/db/server: add wait to server start
+    - d3e83774456bcb2a1fc3353c570f662bf717bc2d /internal/storage/db/server: concurrency test
+    - a4dc3f2cf04fe300b42fcb1941303f645c065e26 /internal/storage/db/server: remote status check
+    - 65a8f42f5c16147b83ae84e2bca98f6dbb6822e4 /internal/storage/db/server: remove restart
+    - efb415170c0daaffb5c4d038c8b2bf9c205d18b6 /internal/storage/db/server: use abs root dir
+    - 5a39aae4ad7d54e159b4725876db36a27648f242 /internal/storage/db/server: wip, need to test tests
+    - cd4a226d7aa364d31bb58d8013f3cefd8ce70790 /internal/storage/db: change to endpoint
+    - 8f16bab9e163227b4b3711c2430fdcb52119bde9 /internal/storage/db: fix tests
+    - 227c74ae01a4d973b0cc4b750b36828622936293 /internal/storage/db: some additional fixes
+    - 40bb251c1242b55be7215cabf2fe5b43c6d47c4e /internal/storage/db: update to kill and remove dolt sql-server
+    - 3667dde40689eb055275f1bb7188bd96f8fddd95 /internal/storage/db: wip implement dsn
+    - e3dd6652a647674592659dad6d47d303a76903c9 /internal/storage/db: wip, making DoltServer
+    - 6e0f3c20dcc98ac8eb09a5fd4783c9b63f949d98 /internal/storage/db: write pid of dolt sql-server
+    - dd2cd0293d1d84d1221b2d8bd07e24c96249e1bc /internal/storage/doltserver/store.go: dolt server store
+    - 4151d853a6dd31e7fd0f3c2b5e82cbb71c48b2cd /internal/storage/doltserver/store.go: get test passing
+    - 79c6899bff2f8286536463f28126c1acce2358f7 /internal/storage/doltserver/store.go: wip
+    - 273ff65360533848afddc5c9eba643d14a5e707e /internal/storage/doltserver/store.go: wip, need proxy
+    - c7f1456303bd6c63641a4caa9f8a6aa1b67c2521 /internal/storage/doltserver/store.go: wip, need schema stuff
+    - ac0f6e62a5e48418ca08741e9d54266ff6250644 /internal/storage/doltserver/store.go: wip, new store
+    - 57d3c8b600d1191910860ec54cee96d440154258 /internal/storage/doltserver: get test how i want it
+    - ed3a43a9b8f34a0225b2a8fb3b242cb76c59fb0c /internal/storage/doltserver: get test how i want it
+    - 39691150c78367aa1e4a9b2d00743dc8a7eca21f /internal/storage/{db,doltserver}: add shutdown helper for tests
+    - e8c5d602244106dbd1fb0dc7a251d9e77d31f696 /internal/storage/{db,doltutil}: linting
+    - e8d4d6994d561c4a279f5b737aff23465901cae0 /internal/storage: remove Ping from DatabaseServer
+    - dcc683eaa377c14e76c12cc5726ffac1290bcc64 /internal/storage: some lint
+    - a05e06c0f3b0594aab8124e1baffbbe3fad43952 /internal/storage: wip, need to create db if not exists
+    - 6a2f851a46b3c9c1a142c8c8396a09386edfeed0 /: remove comments, install dolt in ci
+    - 58dc2e1b8be3eb6f8e933f07368c48cd33186a33 /{beads_cgo,cmd,internal}: cache open embedded stores deterministically to prevent deadlocking when multiple store open attempts are made against an opened store
+    - d0fd4759caf93b260bd96bd59e4d3e31a11fc127 /{cmd,internal}: add test server
+    - e211188bbd52d83bf5a3748c543a687096a27f7d /{cmd,internal}: fix import jsonl
+    - dad89ea22d7d559a40d79e203b6041ed27e52d84 /{cmd,internal}: fix linting
+    - 73f2ab613b749a4e6f4ccd5894b3c63dfd8081d3 /{cmd,internal}: maybe fix tool tip closed store bug
+    - 05251d1b7c9edae47fa224054993dacd1df5fb6e /{cmd,internal}: some cleanup
+    - b0a3330671419ce696c48c2b05c2b08df559ee7d /{cmd,internal}: some cleanup
+    - b83fdbf8b6fcd84a35b27e44510eb649ce330238 /{cmd,internal}: some fixes
+    - bed5e5f857cfcbba3e2e10377a6f0ec2fdd6c756 /{cmd,internal}: wire up db proxy child
+    - 7e0d09cbf8737e24a3bb35d6885b67b7a170274e /{internal,cmd}: fix CommitPending
+    - e97532ab5e297ee2c6f0de718d7742af00bb0fc7 :remove uneccessary locking
+    - dcb105a32389119ee333770c0d0dd52099922dc5 Add Linear state_map dotted config regressions (#3500)
+    - f7269b68202f87ce2c3fb4108ef26039fe908b37 Add Linear state_map dotted key regressions (bd-cba)
+    - a97eec9739bb21f58c7bf361b64434812e2710ae Add atomic ready claim (GH-3570)
+    - 112be87f80e17da567174bacefc9d79c7163f339 Add bd init --remote bootstrap path (#3527)
+    - 4f1c296708c43a503f77f5d3efbf5752b7ab2a6f Add explicit Codex skill setup (#3670)
+    - 0fffa44a2302a496dfa4ffa838843b3bbf0ee122 Add external server CLI dir override (bd-fn9) (#3498)
+    - 46be5594d64f6e3d14b6268db878a327fe16639f Add maintainer PR guidelines (bd-k0j) (#3665)
+    - 43715adde7eef947a2b1e86280e1efe3194a0a5d Add shared Beads plugin package
+    - 3e56f0b214fe76a143af2aa6c50a35bcff260ccb Document Linear external_ref pre-linking (#3517)
+    - e2e4975044b70cb370ebbf8efd2ab322fc692ddd Document supported go install modes (bd-o5a) (#3480)
+    - d33799e7bcf37a079dd6ca138c4dd0c5600607a4 Drop redundant trailing comments on Labels and Metadata copies
+    - e9ebb2bc4da6d047e54dc756431bc6b72d783fa8 Fix Nix CI Go toolchain selection (bd-7mh.6)
+    - b5448ef41f0b892c0eae36347b5baf8706cae457 Fix Nix lock hash (bd-7mh.6)
+    - 52fc26afb98d190bdf61c7101d918d8b8fda6fb0 Fix gate and cook regressions (bd-r2l)
+    - bb6b8f226b67c6d5d602eaa8be597db0b11e413f Fix ready/list UX regressions (#3481)
+    - 2f60a10fc53d3b484ddca08e7ddd7d63975823ce Import Linear relations as dependencies (#3519)
+    - f481b767332d00b7b5c4309e3d4ecc2cb9674433 Keep Nix CI smoke test local (bd-7mh.6)
+    - 16c0cd1626a2a5c511c8b963733a5297849e8ba9 Merge PR #3483: fix init permissions repair
+    - 425ae2068308852adb470db529cd3df6db7700e2 Merge main into OAuth client credentials branch
+    - f11830374181c8ff4ccfa869579f9b4c139352ed Merge main into OAuth client credentials branch
+    - f4a1a211dfc4d3bfec7dcfb4a8ad03e4788ffb74 Merge main into staleness signal branch
+    - ef3c991cb066fed92132074537e5e91ede6e9279 Merge remote-tracking branch 'origin/main' into bd-where-is-slow
+    - f993aa60835f39e5f2b734c75de588857186081a Merge remote-tracking branch 'origin/main' into bd-where-is-slow
+    - ea9fa3efca8c0b3a63ce4878313ac54aa68af1bb Merge remote-tracking branch 'origin/main' into fix/export-exclude-memories
+    - 69cd8af63942d0b65fa0d9ce7798418e9531f552 Merge remote-tracking branch 'upstream/main' into bd-where-is-slow
+    - cc31c6046eba21f9b6ff1b0443b8f952a4403411 Rebalance embedded cmd CI shards (bd-8zg) (#3499)
+    - b0ab39e5c95901520f487778ed3ca4e3d5011e7e Refresh Nix lock target (bd-7mh.6)
+    - e93d42a190cef1b510bbccfcd51727b6eae7c92c Repair ignored wisp dependency table bootstrap (bd-8e8) (#3497)
+    - 42064c46fea20c319f763d5c3efa2db3c620f67a Sync Linear milestones as local epics (#3528)
+    - 85cbdea9d9d344baabc5ae264b5814b9d7221b69 Update Nix vendor hash for Go 1.26 (bd-7mh.6)
+    - a2db80a24748b00bfcd23972cb69af93ae473db2 auto-import: don't print progress message before confirming import needed
+    - 275bdb5776a6116f715f820362e3bfb680325893 auto-import: remove redundant commandDidWrite in fallback path
+    - 6c938415cb04a3d78c39a0d9c7009e2bb1ee8797 changelog: document OpenBestAvailable breaking change and flock removal
+    - 24486d142dba5a9c144d9dfc2f976c81eb31deb1 chore(deps): bump DeterminateSystems/determinate-nix-action (#3635)
+    - 33235723dfd80013a6117867a7de6994151ccf7c chore(deps): bump actions/setup-go from 5.6.0 to 6.4.0 (#3636)
+    - 2841d9035ab809370bbcf32508fd8d0f30abf334 chore(deps): bump pydantic in /integrations/beads-mcp (#3467)
+    - 7d94c2da416476cef61595eb28fcc7e187b962a3 chore(deps): bump pydantic-settings in /integrations/beads-mcp
+    - 87e698ad903e5ab733fc4c96a1566440342f224d ci(docs): add --fallback-extensions html to lychee link check (#3736)
+    - 73507cfa6c6a863a6d3b6cebe441325b44b73cff ci(regression): pull Dolt sql-server image so tests use shared container (#3737)
+    - 2cd8864d3da44890ee1ec2817c3447200e8b5717 ci: mint Homebrew tap token from GitHub App (#3472)
+    - e19e31c191827c577437c4ab4a9946fa305c4d24 docs(agents): add Storage Boundary section to AGENTS.md (#3617)
+    - 51f8fae4e7a783c97ab9e85e66ebf1231e8df6f9 docs(changelog): note bd close routing fix (beads-5wr, GH#3608)
+    - 8b7cbfc3bc1da3f7a30f2d0a4ec65aeeb8eb34c3 docs(claude): make root agent guide a source pointer (#3795)
+    - 2e1a0dd56fba19cb57c8a90f4b115935b5d4884f docs(codex): add skill path hint and marker-coexistence note (#3735)
+    - f7b797ace81f9f2c211a8bc71f2b17dc36ea2da1 docs(doctor): align interactions.jsonl policy with bd audit (GH#3622) (#3645)
+    - 45c7a617d405270b142e5f3d3dc4e64374751278 docs(templates): prepend architecture summary to bd-init AGENTS.md (GH#3683) (#3727)
+    - 56cc30e1277819dea221c8b8c65699c9ba7d459f docs(website): config.toml → config.yaml in git-integration.md (GH#3683-followup)
+    - 8694c53589f122ce622600cee377e820452b50ca doctor: detect AGENTS.md / CLAUDE.md user-authored divergence (#3600)
+    - 4fcad21ceeed40a54361ced6d444b4cc8430f634 fix(auto-export): surface git add stderr in failure warning
+    - cc34fbd67a29c794e9153450bc5d8c8bf865f8e5 fix(storage/dolt): apply ExcludeLabels in GetReadyWork (#3479)
+    - b78a62cf10343bfad09dc755e754178d88080772 github: classify rate-limit 403s and stop the push loop when one hits (#3624)
+    - b9e16ac9d08d893235d5decf85c66d929a037695 init: harden --remote error path and broaden test coverage (#3558)
+    - c61f97af4e01fbbe37bceab8afc6c229594dd19e refactor(where-tests): share JSON assertions for selected-db cases (beads-yi0o)
+    - 674561360d7cd98a4e00fb5993bec4720375b043 schema: make DROP COLUMN migrations idempotent (fixes migration 0032 loop) (#3418)
+    - ba9d2507ee09ff3823d27a6e00b5782d92106bbc test(close): table-driven routing-fallback tests (beads-bn1)
+    - 539fb6452612eb5532603c5e72597c7eca6f1c3e test(cmd/bd): build-tag cgo-only test helpers so pure-go tests compile (#3716)
+    - c27aa2b1d2cce2c4014f0698561d295c9cce0df5 test(config): add XDG config path tests for macOS
+    - 609dce0ad98abab8872a7e3c3643d865c1b85841 test(export): add export globals to saveAndRestoreGlobals for isolation
+    - 195ee6575471e6838ad165d909084b8662855b0f test(init): cover config-sourced dotted prefix normalization (beads-gekl.2)
+    - 759456ecd75577a1467ad1ef85f78422296c6227 test(permissions): add regression coverage for FixBeadsDirPermissions
+    - 911137c8ea61eb6b792ee6f34ee57a8dbba28471 test(where): cover BEADS_DB precedence over BD_DB (beads-gekl.1)
+    - d71a3aa9e7777ac2c49f753584ae422e8213501c test(where): cover no-db command selection
+    - f95430f4710031ea1bc64f4791cb50f83db2a664 test(where): cover prefix fallback decisions (beads-53zb)
+    - 2514d2b15976e2f59ab0dafb82463840852b917b test(where): cover remaining prefix resolution branches (beads-454u)
+    - ac98e6c7fc43a2154a86dc7eb68c4c609baa7c50 {cmd,internal}: wip, proxy database server
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gastownhall/beads/releases/tag/v1.0.4
+ReleaseTime: 2026-05-09T15:11:07.0000000Z
