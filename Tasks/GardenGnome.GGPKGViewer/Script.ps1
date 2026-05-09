@@ -1,16 +1,16 @@
 $Prefix = 'https://ggnome.com/ggpkgviewer/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Scope        = 'user'
-  InstallerUrl = $InstallerUrlUser = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('_na') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlUser = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('_na') } catch {} }, 'First')[0].href
 }
 $VersionUser = [regex]::Match($InstallerUrlUser, '(\d+(_\d+)+)').Groups[1].Value.Replace('_', '.')
 
 $this.CurrentState.Installer += [ordered]@{
   Scope        = 'machine'
-  InstallerUrl = $InstallerUrlMachine = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('_na') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrlMachine = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('_na') } catch {} }, 'First')[0].href
 }
 $VersionMachine = [regex]::Match($InstallerUrlMachine, '(\d+(_\d+)+)').Groups[1].Value.Replace('_', '.')
 
