@@ -1,0 +1,36 @@
+Version: "9.15"
+Installer:
+- InstallerUrl: https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v9.15/windows/pgadmin4-9.15-x64.exe
+  ProductCode: pgAdmin 4v9_is1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.pgadmin.org/news/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The pgAdmin Development Team is pleased to announce the release of pgAdmin 4 version 9.15. This release of pgAdmin 4 includes 19 bug fixes and new features, including fixes for eight security vulnerabilities (CVE-2026-7813 through CVE-2026-7820). For more details, please see the release notes.
+    pgAdmin is the leading open-source graphical management tool for PostgreSQL. For more information, please see the website.
+    Notable changes in this release include:
+    Features:
+    - Allow the Docker container image to run as a non-default user via the PUID and PGID environment variables.
+    Bugs/Housekeeping:
+    - Fix cross-user data access and shared-server privilege escalation in server mode (CVE-2026-7813).
+    - Tighten Shared Server feature parity, owner-only field handling, and write guards as a follow-up to the data-isolation hardening.
+    - Fix stored cross-site scripting (XSS) via crafted PostgreSQL object names rendered in the Browser Tree and Explain Visualizer (CVE-2026-7814).
+    - Fix SQL injection in the Maintenance tool option values (CVE-2026-7815).
+    - Fix OS command injection in Import/Export query export (CVE-2026-7816).
+    - Fix local-file inclusion and server-side request forgery in the LLM API configuration endpoints (CVE-2026-7817).
+    - Fix unsafe deserialization in the session manager that could lead to remote code execution (CVE-2026-7818). This change also encrypts session files at rest using Fernet, restricts session-file and DATA_DIR permissions to 0o600, switches the session-digest default from SHA-1 to SHA-256, and drops several non-roundtrippable live objects from the session.
+    - Fix symlink-based path traversal in the file manager (CVE-2026-7819).
+    - Fix account-lockout bypass on Flask-Security's default /login view so the locked field is honored on every authentication path (CVE-2026-7820).
+    - Use absolute paths for a2enmod and a2enconf in the Debian setup script so it works when /usr/sbin is not on PATH.
+    - Bump Python and JavaScript runtime/development dependencies, and upgrade ESLint to v10.
+    - Update the Czech, Italian, Russian, Spanish, and Swedish translations.
+    Deprecations:
+    - The BigAnimal cloud deployment integration is deprecated and will be removed in the next version of pgAdmin 4.
+    Builds for Windows and macOS are available now, along with a Python Wheel, Docker Container, RPM, DEB Package, and source code tarball from the tarball area.
+    [Read News]
+- Key: ReleaseNotesUrl
+  Value: https://www.pgadmin.org/news/#122
+- Key: ReleaseNotesUrl
+  Value: https://www.pgadmin.org/docs/pgadmin4/9.15/release_notes_9_15.html
