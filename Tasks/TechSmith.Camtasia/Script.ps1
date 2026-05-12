@@ -1,9 +1,9 @@
-$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @'
+$Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deploy/Updates.asmx' -Method Post -Body @"
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
     <CheckForUpdates xmlns="http://localhost/TSCUpdater">
       <product>Camtasia</product>
-      <currentVersion>26.0.0</currentVersion>
+      <currentVersion>$($this.Status.Contains('New') ? '26.1.1' : $this.LastState.Version)</currentVersion>
       <language>ENU</language>
       <os>10.0.22000.0</os>
       <dotNet>4.8.9037</dotNet>
@@ -11,7 +11,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
     </CheckForUpdates>
   </soap:Body>
 </soap:Envelope>
-'@ -ContentType 'text/xml; charset=utf-8'
+"@ -ContentType 'text/xml; charset=utf-8'
 
 if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [string]) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
@@ -38,7 +38,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://support.techsmith.com/hc/en-us/articles/35532287170189-Camtasia-2025-Version-History' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://support.techsmith.com/hc/en-us/articles/41261973472269-Camtasia-Windows-2026-Version-History' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '20$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
