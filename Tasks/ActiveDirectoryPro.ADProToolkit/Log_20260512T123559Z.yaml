@@ -1,0 +1,25 @@
+Version: 3.1.9
+Installer:
+- InstallerUrl: https://activedirectorypro.com/downloads/ADProToolkit.msi
+  InstallerSha256: 576C6F1054105F9A3582B1B15F2079F3E4BFC463891B19F3A259B02C9B450E8F
+  ProductCode: '{939F0797-397D-4F12-9127-6C794116183C}'
+  AppsAndFeaturesEntries:
+  - UpgradeCode: '{0974AC06-5134-4B50-BAD1-578FDABD2EF8}'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    Section titled “New Features”
+    - “Last Name, First Name” Display Format for creating users - New display name option that formats as “Smith, John”.
+    Improvements
+    Section titled “Improvements”
+    - DC consistency - All AD operations now target the same domain controller throughout a session. If a DC is manually configured in Domain Settings it is used directly; otherwise the app auto-discovers and pins to a specific DC on startup and domain switch, preventing failures caused by DNS round-robin routing requests to different DCs.
+    Bug Fixes
+    Section titled “Bug Fixes”
+    - Fixed Inactive Accounts scheduled task - Task failed with “There is no such object on the server” when multiple OUs were selected. The service now correctly iterates each OU path individually instead of passing the full semicolon-delimited string as a single LDAP path.
+    - Fixed Disable Accounts scheduled task - Same multi-OU path bug fixed.
+    - Fixed Display Name Format not saving to templates - The field was missing from the template JSON serializer and parser, so the selection was lost on save/reload.
+ReleaseTime: 2020-05-12
+ETag:
+- '"aad800-6519d89c83264"'
