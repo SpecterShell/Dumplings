@@ -1,0 +1,32 @@
+Version: 2.1.140
+Installer:
+- Architecture: x64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.140/win32-x64/claude.exe
+  InstallerSha256: FCFE90297861B1BCFA581D7DB645EC8A71984BAED3B1C44D28032650BAA2617C
+- Architecture: arm64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.140/win32-arm64/claude.exe
+  InstallerSha256: 3F782467EC6E593A5E23522B678CF4268965E4EC6FE904E41729A12D64232C40
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Improved Agent tool subagent_type matching to accept case- and separator-insensitive values (e.g. "Code Reviewer" resolves to code-reviewer)
+    - Updated agent color palette
+    - Fixed /goal silently hanging when disableAllHooks or allowManagedHooksOnly is set — now shows a clear message instead of an indicator that never resolves
+    - Fixed a regression in settings hot-reload where symlinked settings files caused misattributed change events and spurious ConfigChange hooks
+    - Fixed claude --bg failing with "connection dropped mid-request" when the background service was about to idle-exit
+    - Fixed background service startup failing on machines with enterprise endpoint security by allowing more time
+    - Fixed remote managed settings not retrying on 401 — now retries once with a force-refreshed token
+    - Fixed managed extraKnownMarketplaces auto-update policy not being persisted to known_marketplaces.json
+    - Fixed /loop scheduling redundant wakeups to poll for background tasks that already notify on completion
+    - Fixed a recurring event-loop stall on Windows when a missing executable (e.g. gh) triggered synchronous where.exe re-spawns on every check
+    - Fixed Read tool calls failing validation when offset is passed as a whitespace-padded or +-prefixed string
+    - Fixed native terminal cursor not staying at the input caret when the terminal loses focus
+    - Plugins now warn when a default component folder (e.g. commands/) is silently ignored because plugin.json sets the matching key. Shown in /doctor, claude plugin list, and /plugin.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#21140
+ReleaseTime: 2026-05-12T18:36:21.0000000Z
