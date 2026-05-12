@@ -1,0 +1,40 @@
+Version: 0.6.7
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.7/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.7/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Resolves 7 community issues. 2657 tests passing, zero clippy warnings, zero regressions.
+    Web Dashboard
+    - #1179 WebSocket reconnects to the active agent after page refresh. localStorage persists the agent id, init restores it, history hydrates from /api/agents/{id}/session.
+    - #1163 Uninstall an agent from chat. New DELETE /api/agents/{id}/uninstall removes the in-memory entry plus the ~/.openfang/agents/<name>/ directory. Red Uninstall button next to Stop in both the chat header and the agent detail modal. Path-traversal rejected.
+    Kernel
+    - #1164 Agent Stop now deactivates the owning hand. Hand-owned agents no longer hit "Hand already active" on re-activation. WS /stop command mirrors the same path.
+    Runtime
+    - #1169 shell_exec env passthrough. New exec_policy.shell_env_passthrough Vec with aliases env_passthrough and env_allowlist. Wildcard "*" forwards every parent env var. Tested across the merge helper and 10 deser cases.
+    - #1051 TTS and image generation base URLs configurable. media.tts_openai_base_url, media.tts_elevenlabs_base_url, media.image_gen_base_url. Same pattern as audio_base_url from v0.6.4. Local OpenAI-compat services for Whisper, TTS, and DALL-E flavors all swappable now. 8 new tests.
+    Skills
+    - #1170 Backend InstallOptions::require_signed enforces Ed25519 signature verification at install time. Allowed-signer pubkey allowlist supported. CLI wiring pending follow-up.
+    Docs
+    - #1173 Docker host-gateway and curl-equipped reference image documented in troubleshooting.md and getting-started.md. docker-compose.yml has a commented extra_hosts: baseline.
+    PR review activity
+    - 4 PRs merged in round 7-8 (#1147 channel_id binding, #1143 Discord images, #1176 Shift+Enter, #1168 LaTeX render).
+    - 8 PRs closed as abandoned or unfit (#1115, #1116, #1117, #1066, #1057, #1030, #1050, #1056, #1046).
+    - #1055 caught smuggling an X-Frame-Options regression in a metering-named PR. Request-changes posted.
+    Stats
+    - 2657 tests passing (+32 from v0.6.6)
+    - Zero clippy warnings (--workspace --all-targets)
+    - Zero regressions
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.6.6...v0.6.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.6.7
+ReleaseTime: 2026-05-12T12:45:09.0000000Z
