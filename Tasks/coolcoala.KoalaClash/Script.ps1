@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[contains(text(), 'Changelog')]")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[contains(text(), 'Changelog')]|./h2[contains(text(), '$($this.CurrentState.Version)')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match 'Download link'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
