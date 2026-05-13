@@ -4,17 +4,22 @@ $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/a9gent/mindfs/rel
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name -match 'windows' }, 'First')
 $this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\mindfs.exe" })
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }
+
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('arm64') -and $_.name -match 'windows' }, 'First')
 $this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'arm64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('arm64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'arm64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\mindfs.exe" })
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
