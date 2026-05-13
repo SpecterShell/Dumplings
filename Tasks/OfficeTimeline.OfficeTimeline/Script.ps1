@@ -1,8 +1,8 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'OfficeTimeline.msi' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'OfficeTimeline.msi'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'LucenTimeline.msi' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'LucenTimeline.msi'
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # InstallerSha256
