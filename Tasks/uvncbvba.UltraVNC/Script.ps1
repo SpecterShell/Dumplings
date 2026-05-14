@@ -1,17 +1,17 @@
 $Object1 = Invoke-WebRequest -Uri 'https://uvnc.com/downloads/ultravnc.html'
+$Object2 = Invoke-WebRequest -Uri $Object1.Links.Where({ try { $_.href.Contains('https://forum.uvnc.com/viewtopic.php?t=') } catch {} }, 'First')[0].href
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'UltraVNC (\d+(?:\.\d+)+)').Groups[1].Value
-$ShortVersion = $this.CurrentState.Version.Replace('.', '')
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = "https://uvnc.eu/download/${ShortVersion}/UltraVNC_${ShortVersion}_x86_Setup.exe"
+  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://uvnc.eu/download/${ShortVersion}/UltraVNC_${ShortVersion}_x64_Setup.exe"
+  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {
