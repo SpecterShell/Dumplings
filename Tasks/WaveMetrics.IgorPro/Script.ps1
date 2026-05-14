@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
       }
 
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-      if ($ReleaseNotesUrlObject = $Object3.SelectSingleNode("//a[contains(./h2, 'Igor Pro $('{0}.{1}{2}' -f $this.CurrentState.Version.Split('.')) Released')]")) {
+      if ($ReleaseNotesUrlObject = $Object3.SelectSingleNode("//a[contains(./h2, 'Igor Pro $('{0}.{1:d2}' -f @([int[]]$this.CurrentState.Version.Split('.'))) Released')]")) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
