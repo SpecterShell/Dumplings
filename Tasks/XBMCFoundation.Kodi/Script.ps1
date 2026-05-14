@@ -1,4 +1,5 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://kodi.tv/download/windows/' | Join-String -Separator "`n"
+$Prefix = 'https://kodi.tv/download/windows/'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n"
 $Object2 = Get-EmbeddedLinks -Content $Object1
 
 # Version
@@ -7,11 +8,11 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'Kodi v(\d+(?:\.\d+)+)').G
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.Where({ try { $_.href.Contains('x86') } catch {} }, 'First')[0].href | Split-Uri -LeftPart Path
+  InstallerUrl = [System.Web.HttpUtility]::ParseQueryString(([uri](Join-Uri $Prefix $Object2.Where({ try { $_.href.Contains('x86') } catch {} }, 'First')[0].href)).Query)['url'] | Split-Uri -LeftPart Path
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.Where({ try { $_.href.Contains('x64') } catch {} }, 'First')[0].href | Split-Uri -LeftPart Path
+  InstallerUrl = [System.Web.HttpUtility]::ParseQueryString(([uri](Join-Uri $Prefix $Object2.Where({ try { $_.href.Contains('x64') } catch {} }, 'First')[0].href)).Query)['url'] | Split-Uri -LeftPart Path
 }
 
 switch -Regex ($this.Check()) {
