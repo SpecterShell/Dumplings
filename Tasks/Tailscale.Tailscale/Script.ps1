@@ -29,10 +29,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://tailscale.com/changelog'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://tailscale.com/changelog'
       }
 
       $Object2 = (Invoke-RestMethod -Uri 'https://tailscale.com/changelog/index.xml').Where({ $_.title -eq "Tailscale v$($this.CurrentState.Version)" }, 'First')
