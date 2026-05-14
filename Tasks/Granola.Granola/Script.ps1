@@ -1,13 +1,14 @@
 $Prefix = 'https://api.granola.ai/v1/check-for-update/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+$InstallerUrl = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object1.files[0].url)
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  InstallerUrl = $InstallerUrl
 }
 
 switch -Regex ($this.Check()) {
