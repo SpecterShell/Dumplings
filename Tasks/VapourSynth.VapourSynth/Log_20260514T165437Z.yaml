@@ -1,0 +1,18 @@
+Version: R76
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/vapoursynth/vapoursynth/releases/download/R76/VapourSynth-x64-R76.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - vsrepo is now no longer installed automatically for portable installs due to most plugins being available on pypi
+    - the register-install command can now be used on *nix as well (HolyWu)
+    - fixed ctrl-c handling in vspipe on non-windows systems
+    - fixed an issue where certain compilers would occasionally compile the avx2 code path for some internal filters like maximum in a way that could produce pixels garbage along the edges
+    - once again uses XDG_CONFIG_HOME environment variable for config location, was accidentally forgotten in r74
+    - fixed issue where caches could be forgotten with frames still in them and leak memory
+    - completely reworked cache limits so they are much stricter and the number of threads will now be dynamically lowered to avoid using too much memory
+- Key: ReleaseNotesUrl
+  Value: https://github.com/vapoursynth/vapoursynth/releases/tag/R76
+ReleaseTime: 2026-05-14T16:22:58.0000000Z
