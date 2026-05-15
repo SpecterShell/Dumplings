@@ -1,0 +1,53 @@
+Version: 1.14.51
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.14.51/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.14.51/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Improvements
+    - Added experimental background subagents so tasks can keep running while you continue working.
+    - Added the required billing origin header for NVIDIA endpoints. (@nv-kasikritc)
+    Bugfixes
+    - Fixed worktree creation requests that omitted the POST body.
+    - Fixed sessions getting stuck with interrupted assistant messages after cancellation.
+    - Fixed repeated auto-compaction in sessions after compaction reordered messages.
+    - Updated LiteLLM compatibility to require v1.85.0-rc.2+ for current GPT-5 and tool-call behavior. (@Sameerlite)
+    - Fixed truncated shell output streams closing cleanly.
+    - Stopped exposing internal named defect details from the HTTP API.
+    - Fixed Azure gpt-5.5 requests through the completions API. (@frederiknsgo)
+    - Restored automatic image resizing for oversized image attachments.
+    TUI
+    Bugfixes
+    - Preserved text selection when clicking question prompt options. (@nikhil-patel-whatnot)
+    Desktop
+    Improvements
+    - Added MCP connection status for client registration and authentication, with direct re-auth flows in the app. (@OpeOginni)
+    Bugfixes
+    - Fixed Windows app detection by reading where output correctly.
+    Extensions
+    Bugfixes
+    - Fixed DigitalOcean OAuth to request only the GenAI scopes it needs. (@Spherrrical)
+    Thank you to 7 community contributors:
+    - @nikhil-patel-whatnot:
+      - fix(tui): preserve text selection on question prompt options (#24988)
+    - @frederiknsgo:
+      - fix: bug encountered when using azure gpt-5.5 w/ completions api (#26222)
+    - @OpeOginni:
+      - feat(desktop): add mcp client registration status and authentication handling (#27525)
+    - @Sameerlite:
+      - fix(provider): remove LiteLLM workarounds ported upstream, requires LiteLLM v1.85.0-rc.2+ (#26819)
+    - @bo-tato:
+      - docs(app): stale reference to removed multi-edit tool (#27579)
+    - @Spherrrical:
+      - fix(plugin): scope digitalocean oauth to genai (#27599)
+    - @nv-kasikritc:
+      - feat(provider): add NVIDIA endpoints origin header (#27394)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.14.51
+ReleaseTime: 2026-05-15T00:39:56.0000000Z
