@@ -5,6 +5,8 @@ function Read-Installer {
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'piicrawler.exe' -Resolve
   # Version
   $this.CurrentState.Version = [regex]::Match((& $InstallerFile2 --version), 'piicrawler (\d+(?:\.\d+)+)').Groups[1].Value
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
