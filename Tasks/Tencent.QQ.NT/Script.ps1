@@ -3,19 +3,19 @@ $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
-$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
+$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+\.\d+\.\d+[_-]\d+)').Groups[1].Value -replace '[_-]', '.'
 
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadX64Url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
-$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+\.\d+\.\d+[_-]\d+)').Groups[1].Value -replace '[_-]', '.'
 
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Global:DumplingsStorage.QQApps.ntDownloadARMUrl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
-$VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+\.\d+\.\d+_\d+)').Groups[1].Value -replace '_', '.'
+$VersionARM64 = [regex]::Match($InstallerARM64.InstallerUrl, '(\d+\.\d+\.\d+[_-]\d+)').Groups[1].Value -replace '[_-]', '.'
 
 if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -gt 1) {
   $this.Log("x86 version: ${VersionX86}")
