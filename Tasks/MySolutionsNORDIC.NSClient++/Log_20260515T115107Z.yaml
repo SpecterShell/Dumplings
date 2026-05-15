@@ -1,0 +1,238 @@
+Version: 0.12.6
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.12.6/NSCP-0.12.6-Win32-legacy-xp.msi
+- Architecture: x64
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.12.6/NSCP-0.12.6-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New permission system
+    The release has three big stories — a new core permission system with optional client-cert principals on NRPE, a
+    PDH overhaul that fixes long-standing counter-collection crashes and adds counter functions, and a WEB hardening
+    option that lets monitoring-only deployments expose the WEB UI without seeding a privileged admin account. Everything
+    else is bug fixes, small features, and follow-ups around those three threads.
+
+    Highlights
+    - Core permission system — opt-in policy layer that gates which caller can run which command. Configured under
+      /settings/permissions. Disabled by default; existing installs keep working.
+      See https://nsclient.org/docs/concepts/permissions/ for the model, identity table, and rollout recipe.
+    - NRPE client identity from cert CN — when client identity source = cn is set on NRPEServer and the listener
+      verifies the client cert, the CN is stamped as the policy principal so rules can be written per-cert (
+      NRPEServer:icinga-master = ...). Hard guardrail at module start refuses to load the module if the TLS verify mode
+      would let the CN be attacker-supplied.
+    - Global allow exec toggle — exec is now gated by a single on/off switch under /settings/permissions. The
+      per-command rule table applies to queries only. Default true so enabling the policy system does
+      not break exec callers.
+    - PDH (performance counter) overhaul — fixes for service crashes when PDH misbehaves (#592, #547), counter retry
+      when temporarily unavailable (#634), reliable English counter lookup (#652, #906), a resource leak in the
+      counter-lookup path, and a refactor to smart-buffer-based PDH enumeration. Most users running CheckSystem on Windows
+      should see meaningfully better reliability.
+    - check_pdh counter scaling and functions (#281) — details-syntax and related rendering paths can now apply
+      scaling and other functions, e.g. '${counter}'=${value:scale(/1024)}MB.
+    - check_network — human-readable strings, scaling, speed, and percentages (#329); team-network statistics (#625).
+      See https://nsclient.org/docs/reference/check/CheckNet.
+    - Nagios range syntax in performance data (#748) — 1:10, ~:5, @10:20 etc. work in perfdata thresholds,
+      matching the Nagios plugin spec.
+    - disable admin user on WEBServer — monitoring-only deployments can expose the WEB UI without ever seeding the
+      built-in admin (and previously seeded admin entries are ignored). Pairs naturally with the new permission system to
+      lock down reconfiguration surfaces.
+    - Path overrides moved to boot.ini + new --path-override CLI flag — path tokens (module-path,
+      certificate-path, etc.) are now declared early in boot.ini so they take effect before the main config is loaded.
+      Per-invocation overrides via --path-override KEY=VALUE. See https://nsclient.org/docs/concepts/settings.
+    - NRPE startup is no longer fatal on listener failure — bad bind address / port already in use logs a clear error
+      and leaves the module loaded so settings and commands stay usable for diagnostics.
+    - Dual-stack listening fixed (#312) — v4 and v6 acceptors no longer trample each other's pending connection slot.
+    - disable admin user, client identity source, allow exec, and the policy table are all documented in
+      https://nsclient.org/docs/concepts/permissions/ and https://nsclient.org/docs/setup/securing. Treat those two as the
+      starting point for any new
+      install.
+
+    Detailed changes
+    Security and permissions
+    Core permission system
+    A policy layer in the core decides whether a given caller may run a given command. Disabled by default; when enabled,
+    rules form a strict allow-list.
+    [/settings/permissions]
+    enabled = true
+    log denials = true
+    log allows = false      ; noisy, only flip on while rolling out
+    allow exec = true       ; queries-only rule table; exec is a global toggle
+
+    [/settings/permissions/policies]
+    NRPEServer = CheckHelpers.*, CheckSystem.check_cpu
+    WEBServer:admin   = *
+    WEBServer:viewer  = CheckSystem.check_cpu, CheckSystem.check_drivesize
+    Scheduler = CheckHelpers.*, CheckSystem.*
+    Subject is module[:principal]; object is module.command. Wildcards (*, ?) supported. Rules combine additively.
+    See https://nsclient.org/docs/concepts/permissions/ for the full identity model, the
+    CheckHelpers identity-forwarding behaviour, and a step-by-step rollout recipe.
+    NRPE client cert CN as principal
+    When two-way TLS is configured and verifying client certs against your CA, the Common Name is stamped as the policy
+    principal:
+    [/settings/NRPE/server]
+    client identity source = cn        ; default: none
+    verify mode = peer-cert
+    ca = /etc/nsclient/ca.pem
+    [/settings/permissions/policies]
+    NRPEServer:icinga-master   = CheckHelpers.*, CheckSystem.*
+    NRPEServer:metrics-shipper = CheckSystem.check_cpu, CheckSystem.check_drivesize
+    Guardrails: the module refuses to start if client identity source = cn is configured without SSL, without
+    verify_mode containing peer and fail-if-no-peer-cert (or the peer-cert alias), or without a non-empty
+    ca path. The CN is logged at debug level on every accepted handshake for diagnostics. CN-only (not full DN) because
+    INI key syntax uses = as the key/value separator and would corrupt DN-shaped policy keys; see the "Why CN-only"
+    section of the permissions doc. See https://nsclient.org/docs/reference/client/NRPEServer.
+    Global allow exec toggle
+    Per-command rules apply to queries only. The exec surface (WEB scripts UI, lua/python core:simple_exec(...), CLI
+    exec) is gated by a single boolean:
+    [/settings/permissions]
+    allow exec = false   ; hard lockdown; default is true
+    When false and enabled = true, every exec call returns
+    Permission denied: exec is globally disabled (/settings/permissions/allow exec = false).
+    See "Why exec is a single toggle" in https://nsclient.org/docs/concepts/permissions/.
+    disable admin user on WEBServer
+    For installations that expose the WEB UI for status/visualisation only and never want a remote-reconfiguration surface:
+    [/settings/WEB/server]
+    disable admin user = true
+    With this set, the built-in admin is not seeded on first boot, and any existing admin entry in the user settings is
+    ignored at load time.
+    Security guide updates
+    https://nsclient.org/docs/setup/securing was rewritten with concrete configurations for NRPE (with
+    and without mTLS) and the WEB server. Read it before exposing either to a network you don't fully control.
+
+    Performance counters / PDH
+    The PDH subsystem (the Windows performance-counter collection backbone behind CheckSystem, check_cpu, check_pdh,
+    check_network, etc.) got a substantial reliability pass. Most users running NSClient++ as a long-running service on
+    Windows should see fewer crashes and more consistent results.
+    - Service crashes when PDH misbehaves on a particular machine (#592, #547) — root-caused and fixed. Misbehaving
+      counter registrations no longer take the service down.
+    - Counter not retried if unavailable (#634) — counters that fail to bind at first sight now get retried on
+      subsequent collection cycles, instead of being permanently unhealthy for the lifetime of the process.
+    - English counter lookup improved (#652, #906) — addresses reading of localised counters by their canonical English
+      names on non- English Windows installs.
+    - Resource leak in PDH counter lookup fixed.
+    - PDH enumeration refactored to smart buffers — clearer memory ownership across the enumeration path, fewer footguns
+      for future changes.
+    - check_pdh counter scaling and functions (#281) — all the details-syntax / rendering paths can now apply functions.
+      Examples:
+      check_pdh "counter=\Processor(_Total)\% Processor Time" \
+                "details-syntax=${counter} = ${value:round(2)}%"
+      See https://nsclient.org/docs/reference/check/CheckSystem for the function reference.
+
+    check_network
+    - Human-readable strings, scaling, speed, and percentages (#329) — perfdata and message output now render numbers in
+      a way operators actually want to read:
+      check_network 'filter=interface=Ethernet' \
+                    'top-syntax=${list}' \
+                    'detail-syntax=${interface}: ${total_rx_human}/s in, ${total_tx_human}/s out'
+    - Team network statistics (#625) — aggregate stats across Windows NIC teams.
+    See https://nsclient.org/docs/check/CheckNet.
+
+    Performance data formatting
+    - Nagios range syntax in performance data (#748) — the perfdata threshold fields now accept the standard Nagios
+      range syntax: 5:10, ~:5, @10:20, etc. Brings NSClient++ into line with what Nagios consumers already expect.
+
+    Settings, paths, and CLI
+    - Path overrides moved to boot.ini — path tokens (module-path, certificate-path, data-path, log-path, …)
+      now live under [paths] in boot.ini (next to nscp.exe), not in nsclient.ini. Overrides take effect before the
+      main config is loaded — including the bootstrap step that decides where the main config itself lives.
+      ; boot.ini
+      [paths]
+      module-path = D:\monitoring\modules
+      certificate-path = D:\monitoring\certs
+    -  --path-override CLI flag — per-invocation override, repeatable. (Renamed from --path to avoid colliding with
+      the nscp settings --path subcommand option.)
+      nscp client --path-override module-path=/build/modules --path-override log-path=. ...
+    - See https://nsclient.org/docs/concepts/settings for the precedence rules and the migration note for installs that had
+      a [/paths] section in nsclient.ini.
+
+    Aliases and command registration
+    - CheckHelpers alias — aliases can now be defined under [/settings/check helpers/alias] and are registered by
+      CheckHelpers directly, without requiring CheckExternalScripts to be loaded. This is the preferred place going
+      forward; the legacy [/settings/external scripts/alias] is still honoured for backward compatibility.
+    - API to list registered query aliases (#506) — programmatic introspection of the alias table, useful for tooling.
+    - simple_command / simple_command_map — internal refactor that streamlines how modules register aliases. No
+      user-visible behaviour change, but module authors may want to look at the new pattern.
+    - Icinga client alias (7c49a3d3) — minor module-specific addition.
+
+    NRPEServer
+    - Listener failure no longer kills the module — a bad bind to address that the resolver can't look up, or a port
+      already in use, used to make the whole module fail to load. Now the failure is logged clearly, the listener stays
+      down, and the module's settings and commands remain accessible for diagnostics and reconfiguration. Fix the config and
+      reload — no service restart needed.
+    - Dual-stack fixed (#312) — the v4 and v6 acceptors used to share a single pending-connection slot, which caused
+      intermittent Already open errors on v6 once v4 accepted a client. Each family now owns its own slot.
+    - Insecure mode produces an error-level log line — flipping insecure = true (for legacy check_nrpe interop) now
+      surfaces as an ERROR so it shows up in monitoring dashboards, instead of silently disabling cert-based peer auth.
+
+    Plugin lifecycle
+    - prepare_shutdown hook — modules can opt in to a first-phase shutdown pass before any plugin is unloaded. Used
+      by the Scheduler and similar long-running submitters to finish in-flight work cleanly. Operators see fewer "submission
+      failed during shutdown" lines during service stop.
+
+    Settings store
+    - simpleini buffer NUL-termination fix — fixes a buffer allocation issue in the INI parser that could
+      affect non-UTF-8 data paths.
+    - cache allowed host is now a real boolean — previously parsed as a string with surprising truthiness; matches
+      what the docs always claimed.
+
+    Modules and clean-ups
+    - WMI module refactor — target handling and settings management cleaned up.
+    - IcingaClient cleanup — removed unused command-handling code paths.
+    - CheckLogFile config and descriptions — fixed misleading defaults and improved the help text.
+    - Web UI improvements — more settings elements exposed under modules, simpler module configuration. Web dependencies
+      refreshed.
+    - Installer: UninstallString is now correct (#495) — removal via Windows "Apps & Features" works again.
+    - Rust dependencies bumped.
+
+    Upgrade notes
+    Most installs can upgrade in place — defaults are preserved. Read the specific items below if any of them apply.
+    Permission system
+    The new policy layer is disabled by default. Existing installs continue to behave exactly as before until an
+    operator opts in via /settings/permissions/enabled = true.
+    If you do opt in:
+    - Per-command rules under /settings/permissions/policies apply to queries only. Any rules you might have written
+      for exec command patterns will be silently ignored for the exec dispatch path — exec is gated by the single global
+      allow exec boolean.
+    - The default for allow exec is true, so enabling the policy will not silently break the WEB scripts UI, lua/python
+      core:simple_exec(...), or CLI exec. Flip to false only if you want a hard exec lockdown.
+    - Roll out with log allows = true first so you can inventory what your actual traffic looks like before tightening to
+      a real allow-list. See the step-by-step recipe in https://nsclient.org/docs/concepts/permissions/.
+    NRPEServer
+    - The new client identity source setting defaults to none, which matches the previous behaviour (subject is bare
+      NRPEServer). Set to cn only when you want per-cert principals — and only after you've configured
+      verify_mode = peer-cert and a ca path. The module will refuse to start with a clear error if you set cn without
+      those.
+    - Pin the ca path to your private monitoring CA. The system trust store (Windows root store / Linux distro bundle)
+      accepts certs from every public CA on the planet and would let an attacker with a public cert choose their own CN.
+      See "Pin to a private CA" in the permissions doc.
+    Path overrides
+    - If you had a [/paths] section in nsclient.ini from an older NSClient++ install, those overrides moved to [paths]
+      in boot.ini (note: same section name, different file). There is no automatic migration. Copy each key = value to a
+      [paths] section in boot.ini (next to nscp.exe) and delete the old section from nsclient.ini.
+    WEB server
+    - The new disable admin user = true setting is opt-in. Existing installs keep their admin and continue to work
+      unchanged. Use this when you want to expose the WEB UI for status-only viewing and have no need to reconfigure the
+      agent through the web.
+    NRPEServer startup robustness
+    - A failed listener (bad bind address, port in use) used to make the whole NRPEServer module fail to load. It now logs
+      an ERROR and leaves the module loaded with no active listener — so you can reconfigure via
+      nscp settings --path /settings/NRPE/server --key ... --set ... and reload, without restarting the service. If you
+      had monitoring on "module load failed" specifically, you may want to add "NRPE listener failed" as a separate signal.
+    insecure = true on NRPEServer
+    - This option (for legacy check_nrpe interop) now logs at ERROR rather than DEBUG/INFO. Behaviour is unchanged; the
+      message is louder so it shows up in dashboards. If your monitoring filters by severity, you may want to whitelist this
+      specific message on agents that intentionally run in insecure mode.
+    cache allowed host
+    - Previously parsed as a string with surprising truthiness; now a real boolean. If you had cache allowed host = yes or
+      = on, switch to true. Numeric 1 / 0 still work.
+    Nagios range syntax in performance data
+    - This is additive — existing perfdata that doesn't use range syntax continues to work. Plain numbers still parse as
+      before. Only consumers that previously had to special-case NSClient++'s output may need adjusting, but most
+      Nagios-ecosystem tools handle both forms.
+    Full Changelog: https://github.com/mickem/nscp/compare/0.12.5...0.12.6
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mickem/nscp/releases/tag/0.12.6
+RealVersion: 0.12.6.0
+ReleaseTime: 2026-05-15T11:30:47.0000000Z
