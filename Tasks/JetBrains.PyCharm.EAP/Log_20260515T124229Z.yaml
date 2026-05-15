@@ -1,0 +1,35 @@
+Version: 262.5752.27
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-262.5752.27.exe
+  ProductCode: PyCharm 262.5752.27
+  InstallerSha256: CEAAD0B1807701D969E0070B045054FDEE2941CAE8087BD907EEEBB0B8A0A45E
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-262.5752.27-aarch64.exe
+  ProductCode: PyCharm 262.5752.27
+  InstallerSha256: D4ACA45B8FBACC4390EAD426D0698488C7995C379805F44346EA160B89620014
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Here are the highlights of the 2026.2 EAP 2 build that focuses on refining type inference for complex Python structures, improving the reliability of the debugpy engine, and stabilizing Jupyter workflows:
+    Code insight
+    - Improved Pydantic support: Field specifiers like Field() are now correctly recognized when used inside Annotated types (PY-89012). Added support for frozen Pydantic fields (PY-89180) and for validate_by_name and validate_by_alias config options (PY-89182).
+    - Decorator support: Improved typing stability by resolving a false compilation error that triggered when handling a ParamSpec type list in bounds - PY-89092.
+    - Refined generic unification: Fixed a regression where an empty list literal could cause generic unification to collapse to Any - PY-89047.
+    - Enhanced type checking for variadic arguments: PyCharm now performs individual type checking for arguments mapped to *args: *tuple[T1, T2, ...] - PY-88727.
+    - Callable type rendering: Type parameters are now correctly rendered for Callable types when using generics - PY-88621.
+    Debugger
+    - Reliable type rendering: Support for custom type renderers for debugpy was introduced, ensuring variables are displayed according to user-defined rules - PY-86931.
+    - Secure TLS verification: Resolved an issue where debugpy would fail with custom CA-signed TLS certificates - PY-89519.
+    Jupyter
+    - Stability in Colab: Fixed an issue where the Jupyter DAP debugger would fail to restart properly when working with Google Colab - PY-89463.
+    - Reliable cell rendering: Resolved a bug where markdown cells would occasionally become blank after being left idle - PY-89532.
+    Frameworks and tools
+    - Ruff integration: Fixed an issue with Ruff integration failure in workspace projects - PY-88814.
+    - UV remote execution: Resolved a regression that prevented uv run from functioning correctly for remote targets - PY-89538.
+
+    Full release notes.
+- Key: ReleaseNotesUrl
+  Value: https://youtrack.jetbrains.com/articles/PY-A-233538554
+ReleaseTime: 2026-05-15
