@@ -1,0 +1,28 @@
+Version: "9.63"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-963.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#963
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SSH:
+      - The SSH Client will no longer display infinite user authentication banners if the server keeps sending them. If the server sends additional banners after the first, subsequent banners are discarded with a single log warning.
+      - The SSH Client now enforces a maximum per-connection channel limit. Currently, the SSH Client limit is fixed at 1000 channels per connection.
+    - sexec:
+      - When stdout is redirected, the sexec command-line client now writes any errors and help text to stderr instead of stdout.
+        This should make errors easier to diagnose when sexec is used with Git, or with other applications which expect stdout to conform to an application protocol.
+    - Dynamic port forwarding:
+      - Hardened surfaces which could allow runaway memory use when the SSH Client is configured to act as a SOCKSv4 or HTTP CONNECT proxy. Implemented a timeout for the initial proxy request.
+      - When using dynamic port forwarding (proxy forwarding) for server-to-client connections, bind addresses could be matched incorrectly. Fixed.
+    - FTP-to-SFTP bridge:
+      - The FTP bridge now requires that passive-mode data connections arrive from the same client IP address as the FTP control connection.
+      - FTP control connection replies can now correctly contain UTF-8 characters, as advertised.
+      - Double quotes are now escaped if they appear in quoted paths sent in FTP control connection replies.
+      - CR and LF characters are now removed if they appear in file or directory names sent in directory listings.
+      - Control connection commands containing NUL bytes are no longer accepted.
+    - Graphical SFTP:
+      - Disabled icons are now slightly less terrible on very old Windows versions.
+ReleaseTime: 2026-05-16
