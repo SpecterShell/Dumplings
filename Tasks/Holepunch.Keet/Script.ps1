@@ -1,72 +1,54 @@
-# Script to update Holepunch.Keet manifest
-# Keet is distributed via MSIX from https://static.keet.io/downloads/
+$Prefix = 'https://static.keet.io/downloads/'
+$DownloadsPage = Invoke-WebRequest -Uri $Prefix | Read-ResponseContent
 
-# Fetch the directory listing from the downloads page
+$ReleaseEntries = [regex]::Matches(
+  $DownloadsPage,
+  '<a href="(?<Version>\d+\.\d+\.\d+)/">\k<Version>/</a>\s+(?<ReleaseTime>\d{2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2})'
+) | ForEach-Object -Process {
+  [ordered]@{
+    Version     = $_.Groups['Version'].Value
+    ReleaseTime = $_.Groups['ReleaseTime'].Value
+  }
+} | Sort-Object -Property @{ Expression = { [version]$_.Version } } -Descending
+
+if (-not $ReleaseEntries) {
+  throw 'Could not determine latest Keet version'
+}
+
+$LatestRelease = $ReleaseEntries[0]
+$UrlVersion = $LatestRelease.Version
+$InstallerUrl = "${Prefix}${UrlVersion}/Keet.msix"
+$ReleaseTime = $null
+
 try {
-  $DownloadsPage = Invoke-WebRequest -Uri 'https://static.keet.io/downloads/' -ErrorAction SilentlyContinue
-  
-  # Parse version directories from the HTML directory listing
-  # Look for href links like <a href="4.15.0/">4.15.0/</a>
-  $VersionMatches = [regex]::Matches($DownloadsPage.Content, '<a href="(\d+\.\d+\.\d+)/">(\d+\.\d+\.\d+)</a>')
-  
-  if ($VersionMatches.Count -gt 0) {
-    # Extract version numbers and sort them to find the latest
-    $Versions = $VersionMatches | ForEach-Object { $_.Groups[1].Value } | 
-      Sort-Object -Property @{ Expression = { [version]$_ } } -Descending
-    
-    $Version = $Versions[0]
-  }
-  
-  # Try to get the release date from the directory listing
-  # The HTML shows dates like "15-May-2026 21:44"
-  $VersionDates = [regex]::Matches($DownloadsPage.Content, "<a href=""$([regex]::Escape($Version))/"">$([regex]::Escape($Version))</a>\s+(\d+-\w+-\d+\s+\d+:\d+)")
-  
-  if ($VersionDates.Count -gt 0) {
-    try {
-      $DateString = $VersionDates[0].Groups[1].Value
-      # Parse date string like "15-May-2026 21:44"
-      $ReleaseTime = [datetime]::ParseExact($DateString, 'dd-MMM-yyyy HH:mm', [cultureinfo]::InvariantCulture)
-    } catch {
-      Write-Warning "Could not parse release date: $_"
-    }
-  }
+  $ReleaseTime = [datetime]::ParseExact($LatestRelease.ReleaseTime, 'dd-MMM-yyyy HH:mm', [System.Globalization.CultureInfo]::InvariantCulture)
 } catch {
-  Write-Warning "Could not fetch downloads page: $_"
+  $_ | Out-Host
+  $this.Log($_, 'Warning')
 }
 
-if (-not $Version) {
-  Write-Warning "Could not determine latest Keet version"
-  exit
-}
-
-# Normalize version to standard format for winget (e.g., 4.15.0 -> 4.15.0.0)
-if ($Version -notmatch '\d+\.\d+\.\d+\.\d+') {
-  if ($Version -match '^\d+\.\d+\.\d+$') {
-    $Version = "$Version.0"
-  }
-}
-
-# Get installer URL - use the three-part version (strip the .0 we added)
-$UrlVersion = $Version -replace '\.0$'
-$InstallerUrl = "https://static.keet.io/downloads/$UrlVersion/Keet.msix"
-
-# Try to get SHA256 hash
 $InstallerSha256 = $null
 try {
-  $Response = Invoke-WebRequest -Uri $InstallerUrl -Method Head -ErrorAction SilentlyContinue
-  if ($Response.StatusCode -eq 200) {
-    # Download the file to compute hash (this can be slow)
-    $TempFile = [System.IO.Path]::GetTempFileName()
-    Invoke-WebRequest -Uri $InstallerUrl -OutFile $TempFile -ErrorAction SilentlyContinue
-    $InstallerSha256 = (Get-FileHash -Path $TempFile -Algorithm SHA256).Hash
-    Remove-Item -Path $TempFile -Force
+  $Checksums = Invoke-WebRequest -Uri "${Prefix}${UrlVersion}/checksums.txt" | Read-ResponseContent
+  $ChecksumMatch = [regex]::Match($Checksums, '(?im)^(?<Sha256>[a-f0-9]{64})\s+\*?Keet\.msix$')
+  if ($ChecksumMatch.Success) {
+    $InstallerSha256 = $ChecksumMatch.Groups['Sha256'].Value.ToUpperInvariant()
+  } else {
+    $this.Log("No SHA256 checksum found for version ${UrlVersion}", 'Warning')
   }
 } catch {
-  Write-Warning "Could not compute hash for installer: $_"
+  $_ | Out-Host
+  $this.Log($_, 'Warning')
+}
+
+if (-not $InstallerSha256) {
+  $InstallerFile = Get-TempFile -Uri $InstallerUrl
+  $InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # Set version
-$this.CurrentState.Version = $Version
+$this.CurrentState.Version = "${UrlVersion}.0"
 
 # Add installer information for x64
 $InstallerInfo1 = [ordered]@{
