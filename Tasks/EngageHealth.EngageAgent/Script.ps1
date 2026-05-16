@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://support.engagehealth.uk/support/solut
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href | ConvertTo-Https
 }
 
 # Version
