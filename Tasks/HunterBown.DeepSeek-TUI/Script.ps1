@@ -37,7 +37,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hmbown/DeepSeek-TUI/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
