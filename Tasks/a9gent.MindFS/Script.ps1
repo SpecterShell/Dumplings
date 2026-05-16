@@ -23,7 +23,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New| Changed | Updated' {
+  'New|Changed|Updated' {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
@@ -53,7 +53,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed| Updated' {
+  'Changed|Updated' {
     $this.Message()
   }
   'Updated' {
