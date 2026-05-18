@@ -1,0 +1,24 @@
+Version: 0.4.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.8/Mini-Term_0.4.8_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.8/Mini-Term_0.4.8_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.4.8 - 新增 SSH 连接管理器：顶栏「SSH」按钮管理连接（主机/端口/用户名/密码/私钥/跳板机/分组），终端右键子菜单快速连接，后端扫描 PTY 输出自动填充密码 - 新增 SSH 私钥权限自动处理：连接前把私钥复制到权限收紧的临时副本，绕过 Windows OpenSSH UNPROTECTED PRIVATE KEY FILE 拒绝 - 分组右键菜单支持直接添加项目并归入该组 - 修复 hooks 模式下 AI 状态可能卡死的问题，新增兜底回退 - README 同步至 v0.4.8 并补充 SSH 功能特性；package.json、Cargo.toml、tauri.conf.json、Cargo.lock 四处版本号同步升级
+    - chore: record journal
+    - chore(task): archive 05-18-ssh-manager
+    - feat: SSH 连接私钥权限自动处理 - 新增后端 ssh.rs 模块，连接前把私钥复制到权限收紧的临时副本，绕过 Windows OpenSSH "UNPROTECTED PRIVATE KEY FILE" 拒绝 - prepare_ssh_key 命令按源路径稳定哈希命名临时副本，重连复用，启动时清理临时密钥目录；Windows 用 icacls 收紧 ACL、Unix 设 0600 - 前端 connectSsh 连接前调用 prepare_ssh_key 取临时副本路径，准备失败回退原始路径不阻断连接
+    - feat: 新增 SSH 连接管理器 - 顶栏新增「SSH」按钮，打开管理弹窗对 SSH 连接增删改，支持主机/端口/用户名/密码/密钥/跳板机/分组字段，持久化到 config.json - 终端内右键新增「SSH 连接」子菜单，按分组列出已保存连接，选中后在当前终端拼接 ssh 命令直接连接 - 后端新增密码自动填充，扫描 PTY 输出命中密码提示时回写已存密码，每会话只填一次并在密码错误时停止以防连灌错误密码 - 扩展右键菜单组件支持一级子菜单与分组标题；私钥路径反斜杠转正斜杠以兼容 Nushell 等 shell
+    - feat: 分组右键菜单支持添加项目 - 分组右键菜单新增「添加项目」入口，选择目录后直接归入该分组 - 目标分组若处于折叠状态会自动展开，确保新项目可见
+    - fix: hooks 模式下 AI 状态卡死兜底回退
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.8
+ReleaseTime: 2026-05-18T12:35:17.0000000Z
