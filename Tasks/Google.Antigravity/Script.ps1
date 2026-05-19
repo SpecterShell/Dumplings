@@ -15,16 +15,14 @@ $this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture    = 'x64'
-  Scope           = 'user'
-  InstallerUrl    = $Object1.url
-  InstallerSha256 = $Object1.sha256hash.ToUpper()
+  Architecture = 'x64'
+  Scope        = 'user'
+  InstallerUrl = $Object1.url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture    = 'arm64'
-  Scope           = 'user'
-  InstallerUrl    = $Object2.url
-  InstallerSha256 = $Object2.sha256hash.ToUpper()
+  Architecture = 'arm64'
+  Scope        = 'user'
+  InstallerUrl = $Object2.url
 }
 
 switch -Regex ($this.Check()) {
