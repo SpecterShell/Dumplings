@@ -1,4 +1,6 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent).Content
+$Session = [Microsoft.PowerShell.Commands.WebRequestSession]::new()
+$null = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session
+$Object1 = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session).Content
 
 $Match = [regex]::Match($Object1, 'window\.location\.href\s*=\s*"(.+?/pc/dl/gzindex/.+?/sogou_pinyin_(.+?)\.exe.+?)"')
 
