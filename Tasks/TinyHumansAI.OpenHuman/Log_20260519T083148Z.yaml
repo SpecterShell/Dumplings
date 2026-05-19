@@ -1,0 +1,275 @@
+Version: 0.54.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.54.0/OpenHuman_0.54.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.54.0/OpenHuman_0.54.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(observability): skip Sentry for vision-disabled RAM-tier errors (OPENHUMAN-TAURI-3B) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1623
+    - fix(observability): drop transient backend_api + integrations failures from Sentry by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1632
+    - test(local-ai): serialize Ollama env mutations by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1656
+    - fix(socket): route sustained-outage escalation through observability classifier (OPENHUMAN-TAURI-BH) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1672
+    - fix(triage): defer instead of error on prompt-guard rejection (OPENHUMAN-TAURI-X) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1678
+    - docs: add open PR reconciliation handoff by @jwalin-shah in https://github.com/tinyhumansai/openhuman/pull/1680
+    - fix(memory): use floor_char_boundary in body_preview slice by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/1681
+    - feat(memory): add #1538 benchmark fixtures for retrieval scenarios by @unn-Known1 in https://github.com/tinyhumansai/openhuman/pull/1561
+    - fix(credentials): recover from stale auth-profiles.lock by @obchain in https://github.com/tinyhumansai/openhuman/pull/1636
+    - fix(si_server): idempotent start_session, suppress benign 'session already active' (#5J, #5H) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1635
+    - fix(updater): quiet passive check failures by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1685
+    - fix(agent): refresh delegation surface on mid-session Composio connect/revoke by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1687
+    - fix(startup): warn on WSL X11 desktop runs by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1686
+    - docs: add CONTRIBUTING-BEGINNERS.md for new contributors by @hemanth1999k in https://github.com/tinyhumansai/openhuman/pull/1682
+    - Document portfolio readiness lint cleanup by @jwalin-shah in https://github.com/tinyhumansai/openhuman/pull/1646
+    - chore: automate contributor reward invites by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1589
+    - feat(orchestrator): collapse per-integration delegation into one tool (#1335) by @obchain in https://github.com/tinyhumansai/openhuman/pull/1488
+    - fix(integrations): fall back to default backend when api_url points at local AI (#51, #80, #7Z) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1630
+    - fix(agent): skip Sentry on max-iteration cap, emit info (#99, #98) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1634
+    - fix(observability): classify backend 4xx as BackendUserError (OPENHUMAN-TAURI-BC) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1676
+    - fix(normalization): guard function.arguments against malformed JSON and default to by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/1645
+    - Fix UTF-8 body_preview slicing in memory ingest by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1620
+    - fix(windows): retry-with-backoff for transient FS errors on auth-profiles.lock + .openhuman wipe (#9E, #9C, #4Y, #61, #5Q, #9F, #4M) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1641
+    - Update build-desktop.yml by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1706
+    - test(e2e): unify driver onto Appium Chromium attached to CEF CDP by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1696
+    - fix(providers): drop budget-exhausted 400s from Sentry (#3M, #12, #13) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1633
+    - chore(review): inline review/fix prompts and add ws-reset workflow helper by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1695
+    - fix(settings): add type=button to analytics toggle for Windows WebView2 (#1698) by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1722
+    - test: expand unit + e2e coverage from test-map across core domains by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1724
+    - Fix composio integrations URL base normalization by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1715
+    - test(harness): smart mock LLM provider + fake Composio backend + 21 new tests by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1729
+    - fix(orchestrator): prefer live integrations over memory_tree for inbox/doc queries by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1731
+    - feat(agent): add dedicated crypto_agent for wallet & market ops (#1397) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1736
+    - chore(migrations): phase out PROFILE.md from disk on schema_version=1 by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1734
+    - fix(memory_tree, e2e tests ): deterministic query_topic ordering + robust CEF cleanup by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1751
+    - test: expand unit + e2e coverage from test-map (batch 2) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1752
+    - feat(voice): fully-local STT + TTS via Whisper/Piper provider factory by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1755
+    - fix(memory): add fallback model chain for unavailable GMI models by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/1704
+    - fix(composio): retry once on post-OAuth auth-error gap (#1688) by @obchain in https://github.com/tinyhumansai/openhuman/pull/1708
+    - feat(orchestrator): use reasoning-quick-v1 for low-latency chat by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1761
+    - Fix Jira Composio subdomain authorization by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1733
+    - fix(voice): forward audio setup errors through setup_tx (OPENHUMAN-TAURI-AE) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1770
+    - fix(e2e/linux): silence dead-session noise + local docker harness refresh by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1777
+    - fix(update): keep dismissed repeated errors hidden by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1773
+    - fix(onboarding): keep skip completion moving after task sync failure by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1771
+    - fix: pre-CEF single-instance mutex guard on Windows + provider retry for 502s by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/1723
+    - fix(channels): demote channel-message 404s to typed error (OPENHUMAN-TAURI-2Y) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1732
+    - feat(agent-workflows): Cursor Cloud Agents parallel workflow (#1480) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1759
+    - feat(mcp): add stdio memory server by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1760
+    - fix(observability): classify SessionExpired at agent layer (OPENHUMAN-TAURI-26) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1763
+    - refactor(api): migrate callers to effective_backend_api_url by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/1764
+    - Allow private HTTP core URLs by @vaddisrinivas in https://github.com/tinyhumansai/openhuman/pull/1765
+    - fix(tauri): skip deep-link register_all when xdg-mime is missing (OPENHUMAN-TAURI-AS) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1766
+    - chore: gitignore tmp/ by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1780
+    - fix(composio): retry post-oauth action readiness error by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1707
+    - fix(providers): user-actionable hint when model_fallbacks unconfigured (#1596) by @obchain in https://github.com/tinyhumansai/openhuman/pull/1712
+    - Filter transient updater Sentry noise by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1716
+    - test: expand unit + e2e coverage from test-map (batch 3) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1778
+    - fix(security): surface Windows ACL repair hint when .secret_key is unreadable by @Lunar-feedmob in https://github.com/tinyhumansai/openhuman/pull/1748
+    - docs(CONTRIBUTING): add missing macOS prereqs (Ninja, x86_64 target, … by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1783
+    - feat(memory): optional agentmemory backend (closes #1664) by @rohitg00 in https://github.com/tinyhumansai/openhuman/pull/1743
+    - feat(tools): integrate Seltz as a direct-API search tool by @amallia in https://github.com/tinyhumansai/openhuman/pull/1717
+    - Update README.md by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1792
+    - fix(e2e): dismiss BootCheckGate picker before every spec (mega-flow root cause) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1779
+    - refactor(routing): rename hint:reasoning-quick → hint:chat by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1801
+    - fix: add error handling to parseServiceCliOutput by @hobostay in https://github.com/tinyhumansai/openhuman/pull/1737
+    - fix(observability): drop 401 session-expired Sentry noise (#25, #1Q, #27, #1G) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1719
+    - fix(jira): collect Atlassian subdomain and handle ConnectedAccount_MissingRequiredFields by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/1726
+    - fix(tauri): disable GPU on Linux for Mesa 26+ EGL compatibility (closes #1697) by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1809
+    - fix(observability): demote composio validation noise to expected user-state (#3R #3S #33 #34 #97) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1795
+    - fix(voice): atomic install-start guard for Whisper/Piper install RPCs by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1787
+    - fix(app): tame core state and rewards timeout noise by @RajvardhanPatil07 in https://github.com/tinyhumansai/openhuman/pull/1822
+    - test: guard RPC alias catalog freshness by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1705
+    - Files Reviewed by @rafaelfiguereod-stack in https://github.com/tinyhumansai/openhuman/pull/1462
+    - test(composio): pin compound retry count to 4 (unblock CI for #1719/#1727/#1795) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1803
+    - fix(observability): close 3 transient-failure leak paths in Sentry classifier (#1608) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1798
+    - fix(composer): avoid sending during IME composition by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1720
+    - Add LM Studio as a local model provider by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1750
+    - fix(security): round command-log truncation to UTF-8 boundary by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1817
+    - fix(socket): round event-payload log truncation to UTF-8 boundary by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1818
+    - fix: route macOS quit through safe teardown by @vaddisrinivas in https://github.com/tinyhumansai/openhuman/pull/1841
+    - fix(scripts): codesign setup pops keychain dialog on every build + dr… by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1786
+    - docs: add stars and license badges to README by @dwd888999 in https://github.com/tinyhumansai/openhuman/pull/1788
+    - feat(voice): configurable mascot voice with ElevenLabs picker by @obchain in https://github.com/tinyhumansai/openhuman/pull/1821
+    - fix(auth): scope clearAllAppData to active user; fix re-onboarding race; drop dead API call by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/1816
+    - Fix chat composer IME Enter handling by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1730
+    - docs: align Claude/Codex context with current main by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/1789
+    - fix(tauri): disable Linux CEF GPU startup path by @therahul-yo in https://github.com/tinyhumansai/openhuman/pull/1807
+    - chore(build): remove redundant if-skip_resources guards in build.rs by @Lunar-feedmob in https://github.com/tinyhumansai/openhuman/pull/1747
+    - fix(mcp): tighten stdio server logging and error semantics by @justinhsu1477 in https://github.com/tinyhumansai/openhuman/pull/1790
+    - feat(composio): bring-your-own Composio direct mode (#1710) by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1825
+    - socket: panic-safe utf-8 truncation in socket event log (#1814) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1826
+    - fix(composio): default singleEvents + timeZone for googlecalendar list (#1714) by @obchain in https://github.com/tinyhumansai/openhuman/pull/1735
+    - test(e2e): make the harness actually exercise the UI past login by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1859
+    - feat(ai): unified per-workload provider routing + chat-provider factory (#1710) by @sanil-23 in https://github.com/tinyhumansai/openhuman/pull/1858
+    - fix(app): split connectivity into internet/core/backend channels (#1527) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1727
+    - fix(composio): avoid nested auth retry by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1791
+    - chore(scripts): sweep remaining yarn references to pnpm (post-#886 migration) by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1872
+    - feat: add Chinese (简体中文) i18n support by @LuoYe17 in https://github.com/tinyhumansai/openhuman/pull/1518
+    - feat: redesign onboarding, boot, and LLM settings end-to-end by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1885
+    - test: cover memory presentation components by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1875
+    - test: cover intelligence tab states by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1876
+    - test: cover memory detail rendering by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1878
+    - feat(memory/chunker): recognize all 6 ATX heading levels (h1-h6) per CommonMark by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1881
+    - fix(lint): make commands-tokens script fail with a clear error when ripgrep is missing + add to CONTRIBUTING prereqs by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1867
+    - docs(README): add Ninja + ripgrep to the Contributing-from-source prereqs list by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1869
+    - fix(streaming): fix SSE buffer corruption and add CJK sentence splitting by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/1794
+    - fix: make Rust log previews UTF-8 safe by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1874
+    - fix(tauri): own reset_local_data lifecycle in shell (OPENHUMAN-TAURI-AF) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1769
+    - feat: add deep-work automation system by @graycyrus in https://github.com/tinyhumansai/openhuman/pull/1644
+    - fix: quote APT_SIGNING_KEY_ID in gpg export by @hobostay in https://github.com/tinyhumansai/openhuman/pull/1738
+    - fix(composio): normalize bare calendar dates to RFC 3339 before dispatch by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1802
+    - test: cover memory overview widgets by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1879
+    - feat: add Indonesian locale by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1884
+    - fix(whatsapp): recover DOM message bodies — telemetry, tier-3 fallback, source tag, synthetic chat_id (#1376) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/1804
+    - Feat/gmail unsubscribe agent by @HereIsKrishna in https://github.com/tinyhumansai/openhuman/pull/1657
+    - chore(ci): extract reusable e2e/test workflows + release pretest gate by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1887
+    - Improve reset local data guidance for locked Windows files by @Yong-yuan-X in https://github.com/tinyhumansai/openhuman/pull/1811
+    - fix(composio): gracefully handle unknown method for trigger settings RPC by @graycyrus in https://github.com/tinyhumansai/openhuman/pull/1784
+    - feat: add Simplified Chinese README translation by @LuoYe17 in https://github.com/tinyhumansai/openhuman/pull/1890
+    - test(e2e): convert ~22 stub specs to resetApp() UI-driven pattern by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1889
+    - composio: preserve Composio tool error semantics instead of bucketing as 502 (#1797) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/1827
+    - feat(conversations): dedicated worker-thread UI surface (#1624) by @obchain in https://github.com/tinyhumansai/openhuman/pull/1812
+    - feat(providers): slug-keyed cloud providers + per-workload model routing by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1888
+    - Add agent task orchestration by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/1768
+    - test(e2e): deep chat-harness coverage + streaming mock LLM + rust-e2e Linux lane by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1892
+    - Update README.md by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1895
+    - feat(mascot): backend mascot library + meeting-bot banner by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1894
+    - Update README.md by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1903
+    - fix(gmail): remove inbox-only sync restriction to enable sent-mail re… by @aryash45 in https://github.com/tinyhumansai/openhuman/pull/1902
+    - ci: fix staging release workflow gating by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1955
+    - ci: let staging override skip all pretests by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1956
+    - test(rust): deepen parallel subagent harness coverage by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1957
+    - Harden Rust custom provider routing and mock coverage by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1958
+    - test(rust): expand smart harness coverage by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1961
+    - test(rust): move fake integration backend tests to extracted file by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1960
+    - test(composio): expand mock provider coverage and add Codex ship skill by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1959
+    - test(mock-api): add fuzzy socket-aware harness by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1963
+    - feat(wallet): add default rpc and EVM execution tools by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1964
+    - feat(audio): add podcast generation and delivery toolkit by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1970
+    - test(rust): expand coverage for state, threads, and channel prompts by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1969
+    - feat(core): add authenticated static directory hosting by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1966
+    - feat(runtime): add javascript facade and skill creator agent by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1971
+    - Add auth-aware MCP client transport layer by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1972
+    - feat(core): add managed runtime_python installer by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1976
+    - docs: branch ship-and-babysit work off main by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1979
+    - feat: allow inline model pinning for subagents by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1896
+    - feat: expose embedding provider model signatures by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1901
+    - fix(security): audit-log set_browser_allow_all RPC transitions by @ZaynRae in https://github.com/tinyhumansai/openhuman/pull/1907
+    - fix: Fix installer retries for HTTP/2 download failures by @chiehwangs in https://github.com/tinyhumansai/openhuman/pull/1910
+    - fix(memory,security,perf): chunker line splitting, DNS rebinding guard, regex caching by @Liohtml in https://github.com/tinyhumansai/openhuman/pull/1918
+    - fix(security): guard OpenhumanLinkModal against arbitrary event paths (closes #1945) by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1949
+    - fix(security): truncate command in policy error message (closes #1941) by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1950
+    - fix: add max size check on audio base64 input (closes #1944) by @PranavAgarkar07 in https://github.com/tinyhumansai/openhuman/pull/1951
+    - perf (prompt_injection): cache classifier behind Lazy<> (was Box-alloc per call) by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1962
+    - fix(i18n): complete zh-CN onboarding translations by @Monking-21 in https://github.com/tinyhumansai/openhuman/pull/1981
+    - test(e2e): cover runtime picker → login → onboarding → logout by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1982
+    - fix (prompt_injection): drop false positives on credential questions by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1968
+    - fix: surface expired Composio auth state by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1893
+    - fix(socket): preserve queued once listeners by @aqilaziz in https://github.com/tinyhumansai/openhuman/pull/1978
+    - fix(security): prevent path traversal in agent definition prompt file loading by @JasonOA888 in https://github.com/tinyhumansai/openhuman/pull/1904
+    - fix(a11y): add ARIA roles and labels to ProgressIndicator by @ZaynRae in https://github.com/tinyhumansai/openhuman/pull/1906
+    - fix(app): trim URLs before openUrl http fallback by @MackDing in https://github.com/tinyhumansai/openhuman/pull/1954
+    - feat(mcp): add memory navigation and entity discovery tools by @justinhsu1477 in https://github.com/tinyhumansai/openhuman/pull/1974
+    - feat(todos): add CRUD tool + RPC for the agent task board by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1983
+    - feat: add config model pins for agents by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/1905
+    - Add background loop controls and usage diagnostics by @vaddisrinivas in https://github.com/tinyhumansai/openhuman/pull/1965
+    - fix (security): truncate command in policy.rs allowlist-miss Err return by @aregmii in https://github.com/tinyhumansai/openhuman/pull/1967
+    - fix(socket): use core auth user id for socket state scoping by @Yong-yuan-X in https://github.com/tinyhumansai/openhuman/pull/1984
+    - fix(memory/chunker): split oversized single lines at word boundaries by @iuyup in https://github.com/tinyhumansai/openhuman/pull/1891
+    - fix(api): avoid logging bearer tokens in request diagnostics by @Yong-yuan-X in https://github.com/tinyhumansai/openhuman/pull/1987
+    - test(e2e): onboarding simple vs advanced mode spec by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1989
+    - Refactor inference around external Ollama routing by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1975
+    - Add WeChat embedded webview support by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1991
+    - i18n: full UI coverage across 10 languages by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1986
+    - test: expand and stabilize settings e2e coverage by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2024
+    - fix: add provider/model failover to streaming LLM calls by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/2022
+    - feat(vault): folder-of-files ingestion into memory (NotebookLM-style) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1994
+    - fix(core-state): guard refresh commits after unmount by @xuruiray in https://github.com/tinyhumansai/openhuman/pull/1992
+    - fix(linux): update tauri-cef submodule to exclude glibc libraries by @NikhilDhaliya in https://github.com/tinyhumansai/openhuman/pull/1996
+    - fix(app): clean up boot services during HMR by @NgoQuocViet2001 in https://github.com/tinyhumansai/openhuman/pull/1997
+    - fix: harden token handling and key rotation logs by @okbexx in https://github.com/tinyhumansai/openhuman/pull/1999
+    - fix(webhooks): offload persist() I/O to blocking thread by @Sathvik-1007 in https://github.com/tinyhumansai/openhuman/pull/2006
+    - fix(security): enforce DNS-aware URL validation by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/2009
+    - fix: report missing generic CLI parameter values by @paulpanwang in https://github.com/tinyhumansai/openhuman/pull/2016
+    - feat(discord): ingest webview transcripts into memory by @senamakel in https://github.com/tinyhumansai/openhuman/pull/1993
+    - feat(memory): add per-model embedding tables by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/2010
+    - fix: prevent command executors from bypassing security policy by @Yong-yuan-X in https://github.com/tinyhumansai/openhuman/pull/2013
+    - fix: handle missing installer channel value by @paulpanwang in https://github.com/tinyhumansai/openhuman/pull/2015
+    - feat(ui): restore cross-provider RespondQueuePanel and purge legacy Mnemonic page by @rohanvibe in https://github.com/tinyhumansai/openhuman/pull/2000
+    - fix(rust): remove unused import warnings across core domains by @amiitt001 in https://github.com/tinyhumansai/openhuman/pull/2019
+    - feat(core): add global tool registry by @Zavianx in https://github.com/tinyhumansai/openhuman/pull/2003
+    - docs: add Japanese README by @eltociear in https://github.com/tinyhumansai/openhuman/pull/2005
+    - fix: enforce session check before creating custom LLM providers by @xinzhuwang-wxz in https://github.com/tinyhumansai/openhuman/pull/2014
+    - feat(composio): expose capability matrix by @honor2030 in https://github.com/tinyhumansai/openhuman/pull/2002
+    - feat(agent): codify chat → reasoning → worker spawn hierarchy by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2026
+    - fix: validate session token update events by @LawyerLyu in https://github.com/tinyhumansai/openhuman/pull/2018
+    - docs: correct misleading 'non-ASCII removed' claim in TokenJuice description by @YOMXXX in https://github.com/tinyhumansai/openhuman/pull/2031
+    - harden: restrict docker compose container by @LawyerLyu in https://github.com/tinyhumansai/openhuman/pull/2029
+    - docs(README.zh-CN): sync Product Hunt badge + install URL with English by @YOMXXX in https://github.com/tinyhumansai/openhuman/pull/2033
+    - test(e2e): hard-fail mega-flow and fix 6 hidden failures by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2028
+    - fix(linux): exclude bundled NSS libs so AppImage launches on Arch / rolling distros by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2032
+    - docs: add Korean translation (README.ko.md) and update language switc… by @shguddn8591 in https://github.com/tinyhumansai/openhuman/pull/2043
+    - feat(theme): dark mode + UI primitives standardization by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2046
+    - fix(accounts): don't persist activeAccountId across renderer reloads (#2044) by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2047
+    - fix(core): prevent SIGBUS stack overflow in composio tool path by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2069
+    - feat(agent): cross-chat context retrieval for same-user threads (#1505) by @oxoxDev in https://github.com/tinyhumansai/openhuman/pull/2054
+    - fix(security): self-repair locked .secret_key on Windows (OPENHUMAN-TAURI-GN) by @YellowSnnowmann in https://github.com/tinyhumansai/openhuman/pull/2061
+    - test(intelligence): backfill memory-tab unit tests (#1870) by @CodeGhost21 in https://github.com/tinyhumansai/openhuman/pull/2064
+    - feat(i18n): translate ~3,900 strings across 9 locales + add Italian by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2070
+    - chore(sentry): wire source-map + DIF uploads to self-hosted Sentry by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2106
+    - chore(branding): update all app icons and logos to new brand kit by @M3gA-Mind in https://github.com/tinyhumansai/openhuman/pull/2110
+    - refactor(staging): dark mode polish, theme toggle, i18n restore + debug probe by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2095
+    - feat(mascot): locale-aware voice + multilingual LLM replies by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2115
+    - fix(i18n): fix ~80 broken/placeholder strings in en.ts by @M3gA-Mind in https://github.com/tinyhumansai/openhuman/pull/2144
+    - feat(ai-panel): add chat workload and cloud model picker with slug-based lookup fix by @M3gA-Mind in https://github.com/tinyhumansai/openhuman/pull/2152
+    - feat(ai-panel): per-workload temperature + endpoint URL UX for local runtimes by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2165
+    - chore(ci): make pretest optional for release-production by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2174
+    - fix(ci): preserve build jobs in release-production when skip_e2e by @senamakel in https://github.com/tinyhumansai/openhuman/pull/2176
+    New Contributors
+    - @Zavianx made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1656
+    - @Sathvik-1007 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1681
+    - @aqilaziz made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1685
+    - @hemanth1999k made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1682
+    - @vaddisrinivas made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1765
+    - @Lunar-feedmob made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1748
+    - @aregmii made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1783
+    - @rohitg00 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1743
+    - @amallia made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1717
+    - @hobostay made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1737
+    - @RajvardhanPatil07 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1822
+    - @rafaelfiguereod-stack made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1462
+    - @dwd888999 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1788
+    - @therahul-yo made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1807
+    - @justinhsu1477 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1790
+    - @LuoYe17 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1518
+    - @HereIsKrishna made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1657
+    - @Yong-yuan-X made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1811
+    - @aryash45 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1902
+    - @ZaynRae made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1907
+    - @chiehwangs made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1910
+    - @Liohtml made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1918
+    - @Monking-21 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1981
+    - @JasonOA888 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1904
+    - @MackDing made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1954
+    - @xuruiray made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1992
+    - @NikhilDhaliya made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1996
+    - @NgoQuocViet2001 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1997
+    - @okbexx made their first contribution in https://github.com/tinyhumansai/openhuman/pull/1999
+    - @paulpanwang made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2016
+    - @rohanvibe made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2000
+    - @amiitt001 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2019
+    - @eltociear made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2005
+    - @xinzhuwang-wxz made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2014
+    - @LawyerLyu made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2018
+    - @YOMXXX made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2031
+    - @shguddn8591 made their first contribution in https://github.com/tinyhumansai/openhuman/pull/2043
+    Full Changelog: https://github.com/tinyhumansai/openhuman/compare/v0.53.43...v0.54.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tinyhumansai/openhuman/releases/tag/v0.54.0
+ReleaseTime: 2026-05-19T07:17:46.0000000Z
