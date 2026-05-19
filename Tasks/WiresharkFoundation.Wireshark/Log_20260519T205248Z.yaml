@@ -1,0 +1,45 @@
+Version: 4.6.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://2.na.dl.wireshark.org/win64/all-versions/Wireshark-4.6.6-x64.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://2.na.dl.wireshark.org/win64/all-versions/Wireshark-4.6.6-x64.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://2.na.dl.wireshark.org/win64/all-versions/Wireshark-4.6.6-arm64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.wireshark.org/update/relnotes/wireshark-4.6.6.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    The following vulnerabilities have been fixed:
+    - wnpa-sec-2026-51 ROHC protocol dissector crash. Issue 21243.
+    The following bugs have been fixed:
+    - Wireshark crashes when run under Visual Studio on Windows. Work item 24787.
+    - Welcome page slide preferences are now available in the preferences window.
+    - vwr: Read of uninitialized memory in pntoh16. Issue 16460.
+    - vwr: Read of uninitialized memory in find_signature. Issue 16461.
+    - Upgrades on Windows do not retain existing optional features unless explicitly requested, resulting in accidental removal of features. Issue 18925.
+    - Wireshark.exe version 4.6.5 is twice as large as version 4.6.4. Issue 21233.
+    - MACsec dissector global-buffer-overflow. Issue 21235.
+    - Wireshark 4.6.5 does not run on Windows 10 version 1809 (including Server 2019 and some LTSC versions) Issue 21237.
+    - Fuzz job issue: fuzz-2026-05-02-14184750352.pcap. Issue 21240.
+    - packet-bacapp: rename aurth-request to auth-request. Issue 21246.
+    - Fuzz job issue: randpkt-2026-05-10-14293434231.pcap. Issue 21253.
+    New and Updated Features
+    - The Windows installers now ship with Npcap 1.88. They previously shipped with Npcap 1.87.
+    New Protocol Support
+    There are no new protocols in this release.
+    Updated Protocol Support
+    BACapp, BPv7, DB/IB GDS DB, Kafka, MACsec, PFCP, RF4CE, ROHC, RTPS-VT, SAPHDB, and SIP
+    New and Updated Capture File Support
+    JSON and VeriWave
+    New and Updated File Format Decoding Support
+    There is no new or updated file format support in this release.
+    Plugin Development Changes
+    On UN*X systems (excluding macOS when running from an app bundle, as with the official installer) extcap binaries are now searched for under the libexec directory by default, e.g., /usr/libexec/wireshark/extcap instead of /usr/lib64/wireshark/extcap or similar. This is the customary place for helper binaries, which as opposed to libraries do not need multiarch support. The location can be overridden via the environment variable WIRESHARK_EXTCAP_DIR. The extcap binaries shipped with Wireshark are installed in the new location, but third party extcaps may need packaging changes. This change was effective in version 4.6.0, but was not explicitly noted in the release notes previously. Note that some distributions do not use a libexec directory, such as Alpine Linux, which does not have multilib support. On such systems extcap binaries should be in the same location as before.
+ReleaseTime: 2026-05-19T19:44:35.0000000Z
