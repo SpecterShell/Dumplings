@@ -24,14 +24,14 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://help.mypurecloud.com/articles/genesys-cloud-background-assistant-gcba-release-notes/' | ConvertFrom-Html
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'panel') and contains(./div[@class='panel-heading'], '$($this.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://help.genesys.cloud/articles/genesys-cloud-background-assistant-gcba-release-notes/' | ConvertFrom-Html
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'accordion_accordion') and contains(./div[contains(@class, 'accordion_header')], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./div[contains(@class, "panel-collapse")]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./div[contains(@class, "accordion_content")]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
