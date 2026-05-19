@@ -1,113 +1,28 @@
 $Prefix = 'https://static.keet.io/downloads/'
-$DownloadsPage = Invoke-WebRequest -Uri $Prefix | Read-ResponseContent
 
-$ReleaseEntries = [regex]::Matches(
-  $DownloadsPage,
-  '<a href="(?<Version>\d+\.\d+\.\d+)/">\k<Version>/</a>\s+(?<ReleaseTime>\d{2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2})'
-) | ForEach-Object -Process {
-  [ordered]@{
-    Version     = $_.Groups['Version'].Value
-    ReleaseTime = $_.Groups['ReleaseTime'].Value
-  }
-} | Sort-Object -Property @{ Expression = { [version]$_.Version } } -Descending
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
-if (-not $ReleaseEntries) {
-  throw 'Could not determine latest Keet version'
+$FolderName = $Object1.Links.Where({ try { $_.href -match '^\d+(?:\.\d+)+/$' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+
+# Version
+$this.CurrentState.Version = [regex]::Match($FolderName, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+$Prefix += $FolderName
+$Object2 = Invoke-WebRequest -Uri $Prefix
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.msix') } catch {} }, 'First')[0].href
 }
-
-$LatestRelease = $ReleaseEntries[0]
-$UrlVersion = $LatestRelease.Version
-$InstallerUrl = "${Prefix}${UrlVersion}/Keet.msix"
-$ReleaseTime = $null
-
-try {
-  $ReleaseTime = [datetime]::ParseExact($LatestRelease.ReleaseTime, 'dd-MMM-yyyy HH:mm', [System.Globalization.CultureInfo]::InvariantCulture)
-} catch {
-  $_ | Out-Host
-  $this.Log($_, 'Warning')
-}
-
-$InstallerSha256 = $null
-try {
-  $Checksums = Invoke-WebRequest -Uri "${Prefix}${UrlVersion}/checksums.txt" | Read-ResponseContent
-  $ChecksumMatch = [regex]::Match($Checksums, '(?im)^(?<Sha256>[a-f0-9]{64})\s+\*?Keet\.msix$')
-  if ($ChecksumMatch.Success) {
-    $InstallerSha256 = $ChecksumMatch.Groups['Sha256'].Value.ToUpperInvariant()
-  } else {
-    $this.Log("No SHA256 checksum found for version ${UrlVersion}", 'Warning')
-  }
-} catch {
-  $_ | Out-Host
-  $this.Log($_, 'Warning')
-}
-
-if (-not $InstallerSha256) {
-  $InstallerFile = Get-TempFile -Uri $InstallerUrl
-  $InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-}
-
-# Set version
-$this.CurrentState.Version = "${UrlVersion}.0"
-
-# Add installer information for x64
-$InstallerInfo1 = [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'msix'
-  InstallerUrl  = $InstallerUrl
-}
-if ($InstallerSha256) {
-  $InstallerInfo1['InstallerSha256'] = $InstallerSha256
-}
-$this.CurrentState.Installer += $InstallerInfo1
-
-# Add installer information for arm64
-$InstallerInfo2 = [ordered]@{
-  Architecture  = 'arm64'
-  InstallerType = 'msix'
-  InstallerUrl  = $InstallerUrl
-}
-if ($InstallerSha256) {
-  $InstallerInfo2['InstallerSha256'] = $InstallerSha256
-}
-$this.CurrentState.Installer += $InstallerInfo2
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      if ($ReleaseTime) {
-        $this.CurrentState.ReleaseTime = $ReleaseTime
-      }
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMSIX
 
-      # Add locale information (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'Documentations'
-        Value  = @(
-          [ordered]@{
-            DocumentLabel = 'GitHub'
-            DocumentUrl   = 'https://github.com/holepunchto/keet'
-          }
-          [ordered]@{
-            DocumentLabel = 'Website'
-            DocumentUrl   = 'https://keet.io/'
-          }
-        )
-      }
-
-      # Add license information
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'LicenseUrl'
-        Value  = 'https://github.com/holepunchto/keet/blob/main/LICENSE'
-      }
-
-      $this.Print()
-      $this.Write()
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+    $this.Print()
+    $this.Write()
   }
   'Changed|Updated' {
     $this.Message()
