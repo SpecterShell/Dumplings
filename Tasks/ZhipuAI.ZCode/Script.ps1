@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://zcode-ai.com/api/v2/releases/latest?target=windows&arch=x86_64'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://zcode-ai.com/api/v2/releases/latest?target=windows&arch=x86_64' | Join-String -Separator "`n" | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.version
