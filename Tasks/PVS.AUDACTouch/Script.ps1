@@ -9,9 +9,9 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object3 = $Object1 | ConvertFrom-Html
+    $Object4 = $Object1 | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version -replace '(\.0+)+$')')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
@@ -28,14 +28,15 @@ function Get-ReleaseNotes {
   }
 }
 
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://audac.eu/eu/software/audac-touch' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://audac.eu/eu/software/audac-touch' | Join-String -Separator "`n"
+$Object2 = $Object1 | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object2.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('setup') } catch {} }, 'First')[0].href
 }
 
-$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object2.Headers.ETag[0]
+$Object3 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$ETag = $Object3.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
