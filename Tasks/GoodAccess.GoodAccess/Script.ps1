@@ -23,8 +23,7 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.timestamp | ConvertFrom-UnixTimeSeconds
-    }
-    catch {
+    } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
@@ -34,6 +33,11 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
+        # Remove anchors
+        $Object2.SelectNodes("//div[contains(@class, 'hash') and contains(./a/@aria-label, 'Direct link to heading')]").ForEach({ $_.Remove() })
+        # Remove pseudoBefore
+        $Object2.SelectNodes("//div[contains(./div/@style, '--pseudoBefore')]").ForEach({ $_.Remove() })
+
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
