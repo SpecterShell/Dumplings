@@ -1,24 +1,20 @@
-$Prefix = 'https://cpbx-hilfe.deutschland-lan.de/de/direkthilfe/hilfe-downloads/downloads'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-RestMethod -Uri 'https://client-upgrade-a.wbx2.com/client-upgrade/api/v1/webexteamsdesktop/upgrade/@me?channel=gold&model=win-64&partnerOrgId=06441d92-d70e-4d07-9628-f717f39a59a9&r=AC805C72-1377-4FE6-B272-1FB4417B50B7'
+
+# Version
+$this.CurrentState.Version = $Object1.manifest.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ $_.href.Contains('cloud-pbx') -and $_.href.Contains('msi') }, 'First')[0].href
+  Architecture = 'x64'
+  InstallerUrl = $Object1.manifest.manualInstallPackageLocation
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, 'v-(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
-
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://cpbx-hilfe.deutschland-lan.de/de/grundlagen/produktneuerungen' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//table/tbody/tr/td[4]/p[contains(., '$($this.CurrentState.RealVersion)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//table/tbody/tr/td[4]/p[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (de)
         $this.CurrentState.Locale += [ordered]@{
