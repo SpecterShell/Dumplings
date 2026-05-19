@@ -1,0 +1,22 @@
+Version: 0.4.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.9/Mini-Term_0.4.9_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.9/Mini-Term_0.4.9_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.4.9 - 新增 SSH MCP Server：把 SSH 连接作为 MCP 工具暴露给终端内的 AI agent（Claude/Codex），提供 ssh_list_connections、ssh_exec，支持密码自动填充 / 私钥 / 跳板机、超时与审计日志 - SSH MCP 改为按项目关联授权：项目右键「关联 SSH」勾选连接即启用并限定可见范围 - sidecar 二进制抽成独立 mt-sidecars crate，经 Tauri externalBin 打包，新增 stage-sidecars 构建脚本 - README 同步至 v0.4.9：更新版本徽章、补充 SSH MCP 功能说明与多 crate 项目结构 - package.json、Cargo.toml、tauri.conf.json 与 Cargo.lock 版本号同步升级
+    - refactor: sidecar 二进制抽成独立 mt-sidecars crate 并经 externalBin 打包 - 新建 src-tauri/mt-sidecars 独立 crate，迁入 miniterm-hook 与 mt-ssh-mcp，不依赖 tauri/tauri-build，避免单独构建触发主程序 externalBin 校验 - src-tauri/Cargo.toml 移除两个 [[bin]] 声明及随之外迁的 rmcp、tokio 依赖 - 新增 scripts/stage-sidecars.mjs 按 triple 构建并命名就位 sidecar，package.json 以 build-sidecars 替换 build-hook，release.yml 增加构建步骤，tauri.conf.json 声明 bundle.externalBin - .gitignore 忽略本机 SSH MCP 配置（.mcp.json、.codex/）及 sidecar、mt-core 构建产物 - 补充 .trellis 中 SSH MCP server、按项目隔离、sidecar 打包三个任务记录
+    - feat: SSH MCP 连接授权改为按项目关联 - 移除连接级 agentAccessible 开关，所有 SSH 连接默认可被 MCP 工具访问，SshModal 去掉对应勾选框与连接行标签 - 项目右键菜单新增「关联 SSH」弹窗替代原「启用/停用 SSH MCP」，勾选连接即启用并限定范围、全不勾即停用，ProjectConfig 新增 sshConnectionIds 持久化范围 - mt-ssh-mcp sidecar 新增 --project-id 参数，按项目 sshConnectionIds 实时过滤可见连接，enable_ssh_mcp 把项目 id 写入 .mcp.json 与 Codex 注册的 args - mt-core config_reader 增读项目关联范围并新增 read_ssh_connections_for_project，后端 spec 同步函数名引用
+    - docs: 新增后端 spec 记录 Agent 配置注入模式 - 新建 .trellis/spec/backend 规范层，收录 mt-core 共享 crate 约定与 BatchMode、stdio 等坑 - 新增 agent-config-injection 文档，固化「读-改-写 + 命名 marker 幂等」写外部 agent 配置文件的模式
+    - feat: SSH 管理做成按项目隔离的 MCP Server，供终端 AI agent 调用 - 新增 mt-core 库 crate（不依赖 tauri），抽出 SshConnection 类型、SSH 提示词扫描、私钥临时副本处理、config.json 读取，供主程序与 sidecar 共用 - 新增 mt-ssh-mcp sidecar：基于 rmcp 的 stdio MCP server，提供 ssh_list_connections 与 ssh_exec 工具，支持密码 PTY 自动填充、私钥、跳板机、超时与输出封顶，并写审计日志 - SshConnection 新增 agentAccessible 开关，仅勾选的连接对 agent 可见，SshModal 表单加对应勾选框 - 新增 ssh_mcp_registry：项目右键菜单按项目启用/停用 SSH MCP，启用时幂等写入 Claude .mcp.json 与 Codex .codex/config.toml 并放行信任，停用时按 marker 精确移除 - ProjectConfig 新增 sshMcpEnabled 状态，prompt 工具新增 showAlert 提示框
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.9
+ReleaseTime: 2026-05-19T09:10:17.0000000Z
