@@ -1,9 +1,10 @@
+$Prefix = 'https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/'
 # x64
-$Object1 = Invoke-RestMethod -Uri 'https://antigravity-auto-updater-974169037036.us-central1.run.app/api/update/win32-x64-user/stable/latest'
-$VersionX64 = [regex]::Match($Object1.url, '(\d+(?:\.\d+)+)').Groups[1].Value
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-x64-win.yml" | ConvertFrom-Yaml
+$VersionX64 = $Object1.version
 # arm64
-$Object2 = Invoke-RestMethod -Uri 'https://antigravity-auto-updater-974169037036.us-central1.run.app/api/update/win32-arm64-user/stable/latest'
-$VersionArm64 = [regex]::Match($Object2.url, '(\d+(?:\.\d+)+)').Groups[1].Value
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest-arm-win.yml" | ConvertFrom-Yaml
+$VersionArm64 = $Object2.version
 
 if ($VersionX64 -ne $VersionArm64) {
   $this.Log("Inconsistent versions: x64: ${VersionX64}, arm64: ${VersionArm64}", 'Error')
@@ -16,45 +17,18 @@ $this.CurrentState.Version = $VersionX64
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  Scope        = 'user'
-  InstallerUrl = $Object1.url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  Scope        = 'user'
-  InstallerUrl = $Object2.url
+  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.timestamp | ConvertFrom-UnixTimeSeconds
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://antigravity.google/changelog')
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'version')]/following-sibling::div[contains(@class, 'description')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
-
-      if ($ReleaseNotesObject) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
