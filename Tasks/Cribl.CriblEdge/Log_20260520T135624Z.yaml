@@ -1,0 +1,136 @@
+Version: 4.18.0
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.18.0/cribl-4.18.0-dfc74421-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4180/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Cribl Edge 4.18.0 includes significant performance improvements, new capabilities, and important bug fixes.
+    Important Changes ​
+    Breaking Changes to Sensitive Information in API Responses ​
+    API responses for the following endpoints no longer include sensitive information in plaintext:
+    - /system/settings
+    - /system/settings/auth
+    - /lib/database-connections
+    This affects passwords and password-equivalent attributes such as bindCredentials and client_secret. The values for these attributes are omitted or masked in responses.
+    What you need to do: Update any automation or scripts that depend on reading these plaintext values from the API responses for these endpoints.
+    Deprecation Notice: Disable Node Persistence ​
+    The Disable Node persistence setting is deprecated and will be removed in the upcoming 4.19.0 release. Node information is persisted by default. Use the Worker Group/Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    Deprecation Notice: Persistent Queue Buffer Limit Settings ​
+    A new Buffer size limit (bytes) setting is available for Source and Destination persistent queues (PQs). The Buffer size limit (events) setting for Source persistent queues and the Backpressure duration limit for Destination persistent queues are deprecated in favor of the byte-based limit, which provides more predictable memory management during backpressure. These deprecated settings will be fully removed in an upcoming release.
+    On upgraded Worker Groups and Fleets, the byte-based limit defaults to 64 KB. Update your configurations to use the byte-based limit for optimal memory stability.
+    Deprecation Notice: Tee Function ​
+    The Tee Function is deprecated in Cribl Stream and Cribl Edge. As part of ongoing platform hardening, we are moving away from the Tee Function in favor of purpose-built Destinations and Functions that provide clearer operational boundaries and a better-supported path for the same use cases.
+    The Function remains available for existing configurations in this release but is disabled by default for new installations. In an upcoming release, the Tee Function will be disabled by default and you will need to contact Cribl Support to have it enabled. We strongly recommend migrating to alternative data-routing methods.
+    New Features ​
+    This release provides the following improvements:
+    GPU Monitoring ​
+    System Metrics and Windows Metrics Sources now offer options to collect metrics for Nvidia GPUs resource usage, including utilization, memory, temperature, and others.
+    MacOS Apple Unified Logs Source ​
+    A new Apple Unified Logs Source lets you collect logs from Apple’s ULS on macOS Edge Nodes.
+    MacOS System Metrics ​
+    The System Metrics Source has been expanded to work on macOS Edge Nodes, with dedicated collectors for CPU, memory, disk, network, and system-level metrics. The Source also uses a refreshed, OS-agnostic icon.
+    Custom AI Provider Enhancements ​
+    AI provider setup now includes a new 3-step wizard, support for LiteLLM and OpenAI-compatible endpoints, and Model Tier assignments (Small, Frontier, Reasoning). You can test model connections before saving and manage providers directly from the AI Settings dashboard.
+    MCP Integrations for Cribl AI ​
+    Cribl AI now supports external Model Context Protocol (MCP) servers, enabling AI agents to access third-party tools during conversations. You can connect external servers via endpoint URLs, with full support for authentication headers and external providers using API keys. All credentials are encrypted at rest.
+    Cribl Copilot Chatbot Toggle ​
+    Admins can now enable or disable the Cribl Copilot chatbot widget independently of other Cribl AI features. This allows you to hide the chat interface without impacting broader AI functionality. The toggle is enabled by default for consented deployments, preserving existing behavior upon upgrade.
+    Copilot Editor: Streamlined Pipeline Generation and Schema Support ​
+    Copilot Editor now automatically generates pipelines once sample data and a target schema are provided, displaying output events directly in the chat and removing the previous intermediate plan review step. The editor now also maps nested objects within custom schemas correctly, resolving previous formatting issues for sub-level OCSF types such as file metadata, network observables, and cryptographic hashes.
+    REST Collector Interactive Debug Mode ​
+    The REST Collector now includes an interactive debug mode that captures full HTTP request and response details for the authentication, discovery, and collection phases, simplifying troubleshooting of complex REST API integrations.
+    Cribl Guard Detection Analysis and Model Selection ​
+    Cribl Guard can now use agentic Guard to analyze detections and propose recommended mitigation solutions, helping you review and understand detections more quickly.
+    We are also introducing a family of Cribl privacy models, and adding performance improvements to the previous AI model. You get to choose the background detection model that best fits your environment. Find the options in Guard > AI Settings.
+    We’ve also improved Guard Pipeline behavior for protections that you add manually in a Pipeline.
+    App Platform (Preview) ​
+    Use the new App Platform (Preview) to build and run custom apps in Cribl. Apps are packaged UI experiences that call Cribl and third-party APIs, letting you create tailored workflows and front-end experiences that go beyond the built-in product surfaces.
+    Experience Improvements ​
+    - The Kubernetes Logs Source has been enhanced to better handle large numbers of events per second.
+    - Init containers and sidecar container logs are now visible in the Kubernetes tab in the Fleet UI.
+    - Docker container metadata is now available in logs collected from Docker-managed containers.
+    - The machine-id field in OS metadata is now populated on Windows and macOS Edge Nodes.
+    - Windows domain usernames in User Principal Name notation (@-style, for example, user@domain.com) are now supported.
+    - You can now sort hosts in the Status tab for Cribl Edge Sources and Destination by hostname, GUID, and Status.
+    - Improved safeguards against infinite loops and runaway recursions in the Code Function. The Code Function now enforces a maximum limit on the total number of iterations and function calls allowed per event. Once the limit is reached, the Code Function stops processing whatever follows the statement that exhausted the allowed maximum.
+    - When you open a Route inside a Pack, the Data Preview pane now includes a Full Preview tab. This works like the global Full Preview, but the Entry Point and Exit Point controls are limited to resources defined in that Pack, making it easier to validate end-to-end Pack behavior without leaving the Pack context.
+    - The JSON Array Event Breaker now includes the option to remove fields immediately after event breaking. This is useful for reducing data volume by removing fields that are no longer needed once a large array is split, such as the original __raw field or parent metadata.
+    - You can now specify the maximum number of rotated log files to include per log type when creating a diagnostic bundle, using Max log files per type in the UI or the -l argument for ./cribl diag create in the CLI.
+    - In Cribl.Cloud, users with IAM Admin access on Organizations can now manage Connected Environments.
+    - The internal __output field no longer appears in Data Preview or when you loop over all fields in an event using JavaScript in a Pipeline.
+    - The Persistent Queue (PQ) Monitoring view now includes Events Committed and Bytes Committed metrics to provide a definitive count for successful data delivery. These metrics only increment once data is confirmed as successfully flushed and delivered, allowing you to distinguish between attempted sends and verified throughput. Navigate to Monitoring > System > Queues (Sources) to access this view.
+    - The Worker/Edge Node GUID is now exposed in Pipeline metadata and can be referenced in Functions.
+    - The bootstrap installation script now supports SHA-256 verification in addition to MD5.
+    - A new Number of connection listener processes setting in Outpost Group configuration lets you define the number of connection processes for Outpost Nodes.
+    - In the Sample Files Actions menu, the previous Copy to Fleets/Packs option is now split into separate Copy to Fleet and Copy to Pack actions.
+    - A new Buffer size limit (bytes) setting is now available for Source and Destination persistent queues. The Buffer size limit (events) setting for Source persistent queues and the Backpressure duration limit for Destination persistent queues are deprecated in favor of this new byte-based setting, which provides more predictable memory management during backpressure. The legacy event-based setting will be fully removed in version 4.19.1. On upgraded Worker Groups and Fleets, the new byte-based limit defaults to 64 KB. Update your configurations to the new byte-based limit to ensure optimal memory stability.
+    - Node.js used by Cribl Stream and Cribl Edge has been upgraded from version 22.17.1 to 22.22.2 to incorporate upstream security fixes.
+    - The Job Reaper now removes orphaned Collection job artifacts. Orphaned jobs (those without a done file) previously remained on disk indefinitely. They are now reaped after a configurable time-to-live, set with the new orphanedJobTTL parameter in the UI or in job-limits.yml (default: 7d).
+    Sources and Destinations ​
+    - The Kubernetes Logs Source now collects a wider range of Kubernetes containers that were previously omitted.
+    - The Kubernetes Metrics Source now has the capability to scrape Kubelet and cAdvisor metrics.
+    - The new Use field per metric setting in the Prometheus Edge Scraper Source lets you output metrics in the same format as other Edge metric Sources.
+    - The OpenTelemetry Destination now supports dynamic metadata for the gRPC protocol, allowing outbound metadata values to be derived from fields within the inbound event at processing time.
+    - The OpenTelemetry Destination now supports OAuth2 Client Credentials authentication when using the HTTP protocol, enabling integration with endpoints that require this OAuth2 flow.
+    - Updated the Wiz Destination to use Wiz’s v3 ingestion endpoint, improving compatibility with larger payloads and aligning the integration with Wiz’s latest guidance.
+    - The Wiz Defend Destination now includes additional Wiz Source Type options in the dropdown, including AWS VPC Flow Logs, AWS Resolver Query Logs, and OCI Audit Logs.
+    - The ClickHouse Destination now supports a higher Body Size Limit for write batches, allowing configurations up to 25 MB (increased from 10 MB).
+    - The Google Cloud Pub/Sub Destination now maps an event’s __attributes field to native Pub/Sub message attributes on publish, allowing you to attach envelope-level metadata without changing the message body format. This makes it easier to match existing Pub/Sub patterns and integrate with downstream consumers that rely on attributes for routing and policy enforcement.
+    - Prometheus Remote Write integrations now use the v2 parser by default for on-prem deployments.
+    - Event breakers for File Monitor have been enhanced to persist state across restarts, preventing files with custom header-based breakers and stateful breakers (such as multiline .csv files) from breaking incorrectly.
+    - Journal Files Sources have a new Suppress errors when search path does not exist option to suppress errors when a non-existent path is configured.
+    Packs ​
+    Expanded Pack Variables ​
+    Pack variables now provide greater flexibility and portability. You can use variables within simple arrays and across an expanded set of fields in Collectors, Sources, and Destinations, allowing you to templatize almost any field configuration so Packs can adapt to different environments without manual intervention.
+    Pack Notifications for Sources and Destinations ​
+    You can now configure and manage Notifications for Sources and Destinations directly within the Pack context. This allows Pack developers to bundle alerting logic alongside data processing configurations.
+    Corrections ​
+    This release contains the following bug fixes:
+    Security Fixes ​
+    IDDescription
+    CRIBL-35267
+    better-sqlite3 updated to version 12.2.0 to include the latest security updates.
+
+    To learn more about Cribl’s Security Program, please join us in #security in Cribl Community. Inquiries to Cribl’s Security Team may also be sent to security@cribl.io.
+    Operational Fixes ​
+    IDDescription
+    CRIBL-40423
+    Fixed an issue where an upgrade of a Windows Cribl Edge Node could cause machines to reboot unexpectedly.
+    CRIBL-39937Fixed an issue where a Cribl Edge installation on Windows using a custom binary directory would move to the default C:\Program Files\Cribl directory.
+    CRIBL-39618Uninstalling a Cribl Edge Node that had been installed on Windows in a different directory now correctly removes the program directory.
+    CRIBL-38757Cribl Edge Nodes on Windows no longer re-download an MSI that has already been downloaded and verified during an upgrade.
+    CRIBL-39240The Windows installer now displays a meaningful error when a custom service account has no password configured.
+    CRIBL-39633The TLS command-line flag in the .msi installer is now correctly reflected in the UI pre-populated state.
+    CRIBL-19166Fixed an issue where the Redis Function could not resolve C.vars variables from Pack context, causing connections to be attempted against redis://undefined:6379 and repeatedly fail. The function now correctly evaluates Pack-level variables in the Redis URL so Pack-based pipelines can connect to Redis as configured.
+    CRIBL-29894Fixed an issue where HTTP-based Destinations with persistent queueing (PQ) enabled could underreport output bytes when events no longer included the _raw field.
+    CRIBL-38596Fixed an issue where the IBAN regex in the Regex Library did not correctly match Kazakhstan and Romania IBANs, and corrected the sample German IBAN.
+    CRIBL-39185Fixed an issue where the Clear Persistent Queue action could fail on hybrid deployments, even when the configured persistent queue path was valid and the queue was operating normally.
+    CRIBL-39549Fixed an issue where the Fold Keys Function could enter an infinite loop when processing events with circular references.
+    CRIBL-40136Fixed an issue with the install-worker.sh script where a curl output format change caused incorrect reporting and handling of bootstrap failures.
+    CRIBL-40139Fixed an issue where an S2S Source inside a Pack could ignore the Pack’s configured Event Breakers and use the fallback Event Breaker instead.
+    Source and Destination Fixes ​
+    IDDescription
+    CRIBL-37198
+    File Monitor now correctly deletes files with Delete File enabled even when a commit and deploy or restart occurs between the last read and the idle timeout.
+    CRIBL-38786Fixed odd characters appearing in JSON rendering of Windows Event Log events.
+    CRIBL-38177Fixed an issue where the Kubernetes Logs Source would start and stop collectors, issuing log messages about events received from an unknown channel.
+    CRIBL-39384Improved the performance of the Prometheus Edge Scraper Source when handling slow scrapers.
+    CRIBL-39816Fixed an error that caused the Kubernetes Logs Source to fail to initialize on Kubernetes DaemonSets when HTTPS proxy was configured.
+    CRIBL-39385Fixed an issue where Syslog Sources configured with TLS mutual authentication did not log client certificate details at debug level, making it difficult to validate certificate-based authentication. Syslog now logs peer certificate information in debug logs.
+    CRIBL-39475Fixed an error where the File Monitor would fail to delete ZIP files after processing them.
+    CRIBL-39986Fixed an issue where APM traces sent through the Datadog Destination could arrive in Datadog but not be indexed due to sampling priority and target TPS settings.
+    CRIBL-39928Fixed an issue where an unresponsive HTTP destination could cause delivery to stall until the Edge Node was restarted after timed-out requests filled all available delivery slots. Timed-out requests now properly release their socket so retries can continue and delivery resumes when the destination becomes responsive again.
+    Other Functional Fixes ​
+    IDDescription
+    PLAT-11363
+    In Cribl.Cloud, the Cribl.Cloud Role/Permission list at Organization > SSO Management > Organization-Level Mappings now includes IAM Admin and Billing Reader.
+    SDK Changelogs ​
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - Typescript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-05-20
