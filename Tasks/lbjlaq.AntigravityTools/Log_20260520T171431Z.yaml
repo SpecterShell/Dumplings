@@ -1,0 +1,20 @@
+Version: 4.2.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.1/Antigravity.Tools_4.2.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.1/Antigravity.Tools_4.2.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心修复] Windows 进程隔离与进程查杀优化 (Windows Process Segregation):
+      - 问题修复：解决了在 Windows 平台切换 Antigravity 与 Antigravity IDE 时导致双方进程意外互相误杀的问题。
+      - 严格路径过滤：引入了基于可执行文件绝对路径 (canonicalize()) 的严格匹配机制。当用户在配置中显式指定路径后，系统将仅管理与该路径匹配的进程，避免由于模糊匹配引发意外查杀。
+      - ⚠️ 重要提示：Windows 用户务必在“设置 → 高级”中，分别配置经典版自定义路径 (antigravity_executable) 和 IDE 自定义路径 (antigravity_ide_executable)，以激活严格的路径隔离机制。若未配置路径，系统将回退至模糊的进程名称匹配，这可能会在切换账号时导致意外关闭。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.2.1
+ReleaseTime: 2026-05-20T16:48:41.0000000Z
