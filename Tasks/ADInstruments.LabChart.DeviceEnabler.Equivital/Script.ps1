@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/equivital-device-enabler' | ConvertFrom-Html
 
-      if ($Object2.SelectSingleNode("//h1[@class='page-title']").InnerText -match "(\s|^)$([regex]::Escape($this.CurrentState.Version))(\s|$)") {
+      if ($Object2.SelectSingleNode("//*[contains(@id, 'pagetitle')]").InnerText.Contains($this.CurrentState.Version)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
