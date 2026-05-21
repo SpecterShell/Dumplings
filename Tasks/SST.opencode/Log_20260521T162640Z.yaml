@@ -1,0 +1,49 @@
+Version: 1.15.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.7/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.7/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Improvements
+    - Added Grok OAuth sign-in, including device-code login. (@Jaaneek)
+    Bugfixes
+    - V2 session APIs now return safe UnknownError responses with log reference IDs when stored messages are corrupt.
+    - Generic API 500s no longer expose config details from server errors.
+    - Unknown API errors now include reference IDs so you can match responses to server logs.
+    - V2 session APIs now return 503 ServiceUnavailableError for mutations that are not available yet.
+    - V2 session APIs now return SessionNotFoundError for missing sessions.
+    - Deduped concurrent Codex OAuth refreshes to avoid repeated refresh failures. (@cooper-oai)
+    - Restored native OpenAI OAuth requests.
+    - Tool schema failures now surface as friendly tool errors.
+    - Added PDF attachment support for Grok.
+    - Restored OpenAI reasoning streams.
+    TUI
+    Bugfixes
+    - Collapsed thinking labels now use clearer punctuation.
+    - New sessions now default to the local project.
+    - Single-select question checkmarks no longer run into option labels.
+    Desktop
+    Improvements
+    - Added a pinch zoom setting for the desktop app.
+    - Added a new desktop home view, session entry flow, and titlebar.
+    - Refined the new desktop UI and moved app update actions into the titlebar.
+    - Added desktop log export.
+    SDK
+    Bugfixes
+    - V2 global event streams now include account add, remove, and switch events.
+    Thank you to 3 community contributors:
+    - @cooper-oai:
+      - fix(opencode): dedupe concurrent Codex OAuth refreshes (#28236)
+    - @Jaaneek:
+      - feat(opencode): add xAI Grok OAuth (SuperGrok) + device-code login (#28557)
+    - @kagura-agent:
+      - fix(ui): preserve target attribute in DOMPurify config for markdown links (#28598)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.15.7
+ReleaseTime: 2026-05-21T15:51:28.0000000Z
