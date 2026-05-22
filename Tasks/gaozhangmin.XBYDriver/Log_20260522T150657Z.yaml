@@ -1,0 +1,36 @@
+Version: 4.0.12
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.12/BoxPlayer-4.0.12-win-ia32.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.12/BoxPlayer-4.0.12-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.12/BoxPlayer-4.0.12-win-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    BoxPlayer 4.0.12
+    新增
+    - 支持增量更新：应用启动后会自动检查 GitHub Release 中的新版本，发现更新后弹窗提示，下载完成后可重启安装。
+    - 媒体服务器支持下载功能：Emby / Jellyfin / Plex 媒体详情页可创建下载任务，支持当前媒体、剧集单集、当前季和整部剧集等下载入口。
+    优化
+    - 构建流程会自动递增版本号，并生成增量更新所需的 version.json 与 BoxPlayer-版本号.asar.gz。
+    - 调整打包结构，主入口改为 dist-entry，应用主体资源独立打包为 BoxPlayer.asar，为后续增量更新做准备。
+    - 更新安装包命名为 BoxPlayer-${version}-${platform}-${arch}，便于识别不同平台和架构。
+    - 更新项目相关链接到 BoxPlayer 仓库地址。
+    修复
+    - 修复 Vite 8 / Electron 环境下 HttpsAgent is not a constructor 的问题。
+    - 修复开发环境启动时 preload 路径错误导致 ipcRenderer 为 undefined 的问题。
+    - 修复 Node 内置模块在 renderer 构建中被错误预打包导致的 http / https / webdav-server 兼容问题。
+    - 修复 WebDAV、代理服务器、上传模块在 Vite 8 下的 Node 模块导入兼容性问题。
+    - 修复增量更新打包时 renderer 目录复制到自身子目录导致构建失败的问题。
+    发布说明
+    增量更新需要在本次 Release 附件中上传：
+    - version.json
+    - BoxPlayer-4.0.13.asar.gz
+    首次安装或手动安装仍建议下载对应平台完整安装包。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gaozhangmin/boxplayer/releases/tag/v4.0.12
+ReleaseTime: 2026-05-22T14:13:58.0000000Z
