@@ -24,6 +24,10 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     try {
       $Object2 = Invoke-RestMethod -Uri 'https://qq.pinyin.cn/js/history_info_wb_pc.js' | Get-EmbeddedJson -StartsFrom 'var pcinfo = ' | ConvertFrom-Json
 
