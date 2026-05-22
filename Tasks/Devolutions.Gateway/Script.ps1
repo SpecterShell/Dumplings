@@ -21,27 +21,27 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[@id='v$($this.CurrentState.Version)']")
-      if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//article[@data-rn-version='$($this.CurrentState.Version)']")
+      if ($ReleaseNotesNode) {
         # Remove invisible nodes
-        $Object2.SelectNodes("//*[@x-show=`"!expanded['FixedLines-1']`"]").ForEach({ $_.Remove() })
+        $Object2.SelectNodes('.//span[contains(@class, "rn-cs-bar-count")]').ForEach({ $_.Remove() })
+        $Object2.SelectNodes('.//span[contains(@class, "rn-change-bullet")]').ForEach({ $_.Remove() })
 
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./preceding::p[1]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./header').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3' -and -not ($Node.Name -eq 'p' -and $Node.InnerText -match '[a-zA-Z]+\W+\d{1,2}\W+20\d{2}'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('./header/following-sibling::div') | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesNode.SelectSingleNode('./span[@id]').Attributes['id'].Value
         }
       } else {
         $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
