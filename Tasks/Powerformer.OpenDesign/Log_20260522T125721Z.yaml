@@ -1,0 +1,221 @@
+Version: 0.8.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.8.0/open-design-0.8.0-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ✊ 305 PRs · 75 contributors · 7 days — This isn't a release. It's a starting gun. We rebuilt Open Design's core. Then we ported the old world into it.
+    Three things are different underneath now:
+    - 🧩 Everything is a plugin. The engine stays small and boring. Design systems, slices, prototypes, exports, and every legacy workflow — including Figma itself — all live in plugins. You write a plugin; you migrate a piece of the industry.
+    - 🌐 Headless by default. The desktop app is a thin wrapper around the CLI. The same engine runs in Claude Code, OpenClaw, Hermes Agent, or straight inside a Lark / Discord / Slack chat. Design stops being a place you go and becomes a capability your agents have.
+    - ♻️ Plugins create plugins. OD CLI wraps GitHub CLI, so an agent can clone the repo, scaffold a plugin, and open a PR — for you, or for itself. The engine grows itself, in public, with you in the loop.
+    Two movements behind the rebuild:
+    - 🥊 #DeFigma — kill the canvas, keep the craft. Figma isn't broken. It's just the wrong unit of work in an agent-native world. A design system shouldn't be a file you maintain. A prototype shouldn't be 200 frames you nudge by hand. The canvas was a workaround for not having a real engine. We have an engine now.
+    - 🤖 Agent-Native Design — the designer becomes the director. Agent-driven design is no longer a demo. It's shipping production-grade design systems, world-class UI, decks, prototypes — for people who cannot draw a rectangle. The 10×–100× productivity jump people kept promising for AI tooling? It's here. The human gives intent, not coordinates.
+    This is the first release where both movements are real in the same engine. Full announcement and discussion thread →
+    🔥 Highlights
+    - 🧩 Plugin engine rebuild. Open Design's research-preview architecture has been replaced with a small, boring engine plus a plugin surface — every workflow from design-system templates and slices to prototypes, exports, and Figma itself is now a plugin. Engine stays small on purpose so the industry can be ported into it one plugin at a time. Thanks @bulai0408, @YUHAO-corn, @xxiaoxiong, and everyone who shaped the new shape.
+    - 🌐 Headless by default. The desktop app is now a thin wrapper around the OD CLI. The same engine runs from Claude Code, OpenClaw, Hermes Agent, and chat bots in Lark / Discord / Slack — design becomes a capability your agents have, not a place you visit. Custom CLI agent profiles ship in this release. (#378) Thanks @fuyizheng3120.
+    - ♻️ Plugins create plugins. OD CLI wraps GitHub CLI, so an agent can clone the repo, scaffold a plugin, and open a PR — for you, or for itself. The Publish-repo flow now correctly creates the author's GitHub repo (#2332, #2363) and CLI plugin publish reads the live manifest version (#1903). Thanks @lefarcen, @leessju.
+    - 🛒 Plugin Registry + marketplace surface. New plugin registry detail drawer with trust badges, GitHub rate-limit-aware marketplace fallback, polished publish footer, and unified plugin/integration nav. (#2087, #2064, #1806, #1849) Thanks @bulai0408, @zoeforfun, @mturac.
+    - 🎭 Critique Theater matures through Phase 16. What was Phase 7 in 0.7.0 is now a fully observable judge — Phase 9 web client wrapper with native de/ja/ko/zh-TW i18n, Phase 10 adapter conformance lab, Phase 11 Playwright stage suite, Phase 12 with 9 Prometheus metrics + 6 log events + OTel span + Grafana dashboard, Phase 13 reducer p99 bench, Phase 14 user guide, Phase 15 rollout resolver + Settings toggle, Phase 16 M-phase rollout ratchet + /api/critique/conformance — dark-launched M0 by default. (#1315–#1320, #1338, #1483–#1485, #1499) Thanks @Nagendhra-web.
+    - 🎨 149 design systems with structured tokens.css + components manifest. Brand-token fixtures landed for 60+ new brands (Apple, Stripe, Airbnb, Vercel, Notion, Linear, GitHub, Figma, Slack, Discord, OpenAI, Shopify, Spotify, Uber, Cursor, and 50 more across AI / SaaS / devtool / fintech / docs / consumer / hardware / cultural categories) — each ships tokens.css + components.html, served through the design-system token channel that's now default-on. Plus design-system project import. (#1544, #1652, #1794, #1841, #2023, #2028, #2029, #2033, #2037, #2040, #2043, #2049, #2051) Thanks @zoeforfun.
+    - 🤖 Three new media providers: Leonardo.ai, ElevenLabs, SenseAudio. Leonardo.ai image generation (#1123), ElevenLabs audio (#1384), SenseAudio TTS plus BYOK chat with image + video tools (#1633, #2065). Thanks @xxiaoxiong, @bulai0408, @Fl0rencess720, @mzl163.
+    - 🔄 Packaged auto-update — battle-hardened on both macOS and Windows. 0.8.0 is the first release where packaged installs self-update end-to-end on both platforms through the same R2 feed, with a refreshed in-app updater popup, validated download / install handoff, and recovery from interrupted applies. The whole flow was rebuilt and stress-tested through the preview cycle. (#2270, #2362, #2376, #2403, #2429, #2565, #2575, #2592, #2595, #2677, #2687, #2700) Thanks @PerishCode, @mturac.
+    - 🎨 Top-to-bottom visual refresh. New official Open Design app icons, brand glyphs, refreshed wordmark — wrapped together as one coordinated drop in time for 0.8.0. (#2436)
+    - 🌍 Italian (it) locale + CJK font fallback. Open Design now ships full UI in 19 languages including Italian (#1323), and Chinese / Japanese / Korean text falls back to platform-native CJK fonts so the UI reads natively instead of going through Latin substitution (#2227). Thanks @xxiaoxiong, @delamoer.
+    - 🧠 Quick-brief discovery overhaul. Freeform project clarification now collapses into a single form (#2226), plugin inputs are authoritative answers (#2243), brand-answer prompts stabilized (#1861), and the daemon surfaces form answers directly to agents (#2071). Thanks @lefarcen, @YUHAO-corn, @bulai0408.
+    - ✏️ Manual edit UX overhaul. Focus mode, inline upload, remove-element patch, history affordance — manual editing on artifacts finally feels like a real tool instead of a toggle. (#1448, #1516) Thanks @alchemistklk, @nombreregular.
+    - 📊 PostHog v2 event schema. Unified page_name + onboarding/design-system page_views, modernized event taxonomy so product analytics finally reflects the new plugin world. (#2285, #2390) Thanks @lefarcen.
+    - 🌐 HTML Anything page + tutorials channel on the landing site. New /html-anything evangelism page (#2452), rebuilt /templates catalog backed by design-templates (#2369), tutorials section (#2409). Thanks @Tuola-waj, @ashleyashli.
+    📥 Download: Tag open-design-v0.8.0. All assets below are live on GitHub Releases and releases.open-design.ai.
+    Platform Architecture Asset
+    macOS Apple Silicon (arm64) open-design-0.8.0-mac-arm64.dmg
+    macOS Intel (x64) open-design-0.8.0-mac-x64.dmg
+    macOS (auto-update feed) Apple Silicon (arm64) open-design-0.8.0-mac-arm64.zip
+    Windows x64 (unsigned, auto-update 🆕) open-design-0.8.0-win-x64-setup.exe
+    ✨ What's New
+    🧩 Plugin engine, registry & publishing
+    - Plugin registry detail drawer. (#2087) Thanks @bulai0408.
+    - Plugin Publish repo creates the author's GitHub repo. (#2332, #2363) Thanks @lefarcen.
+    - CLI plugin publish reads manifest version when stored row is 0.0.0 sentinel. (#1903) Thanks @leessju.
+    - GitHub rate-limit fallback for marketplace plugins. (#2064) Thanks @bulai0408.
+    - Plugin trust badges unified. (#2331) Thanks @bulai0408.
+    - Demote Plugins + Integrations to nav rail footer so primary surface stays focused. (#1806, #2360, #2397) Thanks @zoeforfun, @lefarcen.
+    - Stop recommending raw publish CLIs from the authoring summary — keep agents on the OD publish path. (#2380) Thanks @bulai0408.
+    - Wire Open Design "Open Design PR" button end-to-end in plugin authoring. Thanks @bulai0408.
+    - Breathing room for plugin publish footer. (#1849) Thanks @mturac.
+    🎭 Critique Theater (Phases 9 – 16)
+    - Phase 9 — drop-in mount wrapper, native i18n for de / ja / ko / zh-TW. (#1315) Thanks @Nagendhra-web.
+    - Phase 10 — daemon adapter conformance lab + degraded registry. (#1316)
+    - Phase 11 — Playwright stage suite (happy path, interrupt, 3 viewports, a11y). (#1317, #1483)
+    - Phase 12 — 9 Prometheus metrics + 6 log events + OTel span + Grafana dashboard. (#1485)
+    - Phase 13 — reducer p99 benchmark + surface coverage walker. (#1318)
+    - Phase 14 — full user guide + 2 AGENTS module maps. (#1319)
+    - Phase 15 — rollout resolver + Settings toggle hook. (#1320)
+    - Phase 16 — M-phase rollout ratchet + /api/critique/conformance. (#1499)
+    - Wireup + M0 dark-launch by default. (#1338)
+    - Settings toggle with dedicated section + i18n. (#1484)
+    🎨 Design systems & tokens
+    - Token channel default-on (PR-D) so the new fixture pipeline is the default surface. (#1544) Thanks @zoeforfun.
+    - Structured tokens.css for 60+ brands across AI, devtool, SaaS, fintech, docs, consumer, hardware, cultural categories — Apple, Stripe, Airbnb, Vercel, Notion, Linear, GitHub, Figma, Slack, Discord, OpenAI, Shopify, Spotify, Uber, Cursor, and many more. (#1652, #1794, #1841, #2023, #2028, #2029, #2033) Thanks @zoeforfun.
+    - Token fixture catalog — 20 brand + 20 product + remaining style fixtures, component-fixture coverage reporting. (#2037, #2040, #2043, #2049)
+    - Component manifests — extract + consume manifests for design systems. (#2051, daemon side)
+    - Perplexity design system. (#1747) Thanks @MJ-thunder.
+    - Import design-system projects via the discovery flow. Thanks @zoeforfun.
+    - Synchronise README inventory badges — skills 31 → 131, design-systems 72 → 149. (#1899) Thanks @leessju.
+    🤖 Agents, providers & media
+    - Local custom CLI agent profiles so users can plug arbitrary CLI agents into the runtime. (#378) Thanks @fuyizheng3120.
+    - Leonardo.ai image provider. (#1123) Thanks @xxiaoxiong.
+    - ElevenLabs audio support. (#1384) Thanks @bulai0408.
+    - SenseAudio TTS provider + BYOK chat with image / video generation tools. (#1633, #2065) Thanks @Fl0rencess720, @mzl163.
+    - OpenAI-compatible media providers for the dispatcher. Thanks @bulai0408.
+    - User-configurable model alias for the media dispatcher (#1277). Thanks @PerishCode.
+    - Cursor Agent live model id parsing. (#2228) Thanks @Derrick-xn.
+    - Cursor Agent auth diagnostics. (#1538) Thanks @alchemistklk.
+    - AskUserQuestion tool wired through Claude chat + TodoWrite pinning. Thanks @lefarcen.
+    - Discover Codex models from the installed CLI. Thanks @alchemistklk.
+    - CODEX_API_KEY support for the Codex CLI lane. Thanks @alchemistklk.
+    - Forward external MCP servers to OpenCode. Thanks @mutoe.
+    🖥️ Web UI
+    - Improve manual edit UX — focus mode, inline uploads, remove-element patch. (#1516) Thanks @nombreregular.
+    - Manual edit inspector. (#1448) Thanks @alchemistklk.
+    - Tweaks toolbar bound to the artifact panel. Thanks @xxiaoxiong.
+    - Custom select primitive for cleaner dropdowns. Thanks @xxiaoxiong.
+    - Collapsible comment side panel. Thanks @xxiaoxiong.
+    - Export-as-image screenshot in the share menu. Thanks @xxiaoxiong.
+    - Render GFM tables in markdown artifacts and chat. Thanks @xxiaoxiong.
+    - Surface saved Project instructions for review and retrieval. Thanks @YUHAO-corn.
+    - Copy-to-clipboard for user messages. Thanks @asim48-ctrl.
+    - Filter-by-kind dropdown on the design-files viewer. Thanks @xxiaoxiong.
+    - Critique Theater drop-in mount + Settings toggle in the web client. (#1315, #1484) Thanks @Nagendhra-web.
+    - Discovery: collapse freeform clarification + plugin-inputs-authoritative. (#2226, #2243) Thanks @lefarcen.
+    🍎🪟 Desktop & packaging
+    - Packaged auto-update for both macOS and Windows. (#2362, #2270, #2403) Thanks @PerishCode, @mturac.
+    - Updater hardening through the preview cycle — release validation, deferred installer on Windows, applied-state clearing, download / install handoff hardening, smoke-recovery. (#2565, #2575, #2592, #2595, #2677, #2687, #2700) Thanks @PerishCode.
+    - Packaged update apply observations captured for telemetry / debugging. (#2429) Thanks @PerishCode.
+    - Keep the macOS Dock icon when the desktop-pet window opens. (#2413) Thanks @PerishCode.
+    - Forward proxy env vars to packaged sidecars so corporate networks work. Thanks @PerishCode.
+    - Detect mise-installed npm bins for the daemon's CLI discovery. Thanks @PerishCode.
+    - Refresh Open Design app visuals — new icons, logo, brand glyphs. (#2436) Thanks codex agent + @lefarcen.
+    - Support nightly + preview package identity so beta channel installs don't collide with stable. (#2437) Thanks @PerishCode.
+    - Linux packaged client parity smoke coverage. Thanks @PerishCode.
+    - Ensure node binary dir is on PATH for agent sub-processes on Windows. (#1989) Thanks @jiannanya.
+    🌍 Internationalization
+    - Italian (it) locale — full UI translation, brings supported languages to 19. (#1323) Thanks @xxiaoxiong.
+    - CJK font fallback for Chinese / Japanese / Korean. (#2227) Thanks @delamoer.
+    - Refresh + polish French UI locale. Thanks @YUHAO-corn.
+    - Translate template platform selection + Companion surfaces to Chinese. (#1491) Thanks @YUHAO-corn.
+    - Localize accent controls in settings. Thanks @YUHAO-corn.
+    - Localize comment panel strings. (#1390, #1392) Thanks @YUHAO-corn.
+    - Localize skill validation messages. Thanks @YUHAO-corn.
+    - Make de / fr / ru content i18n optional to unblock locale rollout. Thanks @YUHAO-corn.
+    - i18n coverage report script (pnpm i18n:coverage). Thanks @YUHAO-corn.
+    📊 Analytics, observability & infra
+    - PostHog v2 event schema. (#2285) Thanks @lefarcen.
+    - Unified page_name + onboarding / design-system page_views. (#2390) Thanks @lefarcen.
+    - Upgrade posthog-node 4 → 5 in the daemon. (#2309) Thanks @neogenix.
+    - One-click log export from Settings → About. Thanks @bulai0408.
+    - Visual regression PR workflow. Thanks @lefarcen.
+    📦 Templates, landing & tutorials
+    - HTML Anything page + responsive landing header. (#2452) Thanks @Tuola-waj.
+    - Rebuild /templates catalog from design-templates. (#2369) Thanks @ashleyashli.
+    - Refresh templates + add tutorials channel. (#2409) Thanks @ashleyashli.
+    - Add blog routes on the landing site. Thanks @ashleyashli.
+    - Search Console reporting workflows. Thanks @lefarcen.
+    - GSC report opportunities. (#2388) Thanks @lefarcen.
+    - Daily blog indexing / 3-day traffic digests. Thanks @lefarcen.
+    - WeRead year-in-review HyperFrames template. Thanks @bulai0408.
+    - Templates: design-system token channel + Refresh-Templates flow. Thanks @ashleyashli.
+    🐛 Selected fixes
+    Web
+    - Block pitch-deck placeholder publishes and unbreak framework decks. Thanks @bulai0408.
+    - Rename FileViewer "Share" button to "Export" to match the action. Thanks @bulai0408.
+    - Confirm before deleting a saved template in New Project. Thanks @YUHAO-corn.
+    - Restore consistent app header layout on the entry view. (#1519) Thanks @Siri-Ray.
+    - Refine preview and project dropdown controls. (#1514) Thanks @Siri-Ray.
+    - Demote Plugins + Integrations to the nav rail footer. (#1806) Thanks @zoeforfun.
+    - Pin chat during content growth. Thanks @YUHAO-corn.
+    - Auto-scroll feedback form. Thanks @YUHAO-corn.
+    - Routines history rows deep-link to their specific conversation (Fixes #1505). Thanks @bulai0408.
+    - Hide resolved comments from preview overlays. Thanks @YUHAO-corn.
+    - Keep filter pill hover labels readable. Thanks @YUHAO-corn.
+    - Improve replace-modal button hover contrast. Thanks @YUHAO-corn.
+    - Freeze completed run durations across conversations. Thanks @bulai0408.
+    - Align Home prompt overlay with textarea so caret lands on click. Thanks @xxiaoxiong.
+    - Restore release-light background. (#1540)
+    - Allow downloads from preview iframes and fall back to srcDoc when the HTML preview needs sandbox shim. Thanks @PerishCode.
+    - Coalesce chokidar rewrite bursts before refreshing files. Thanks @PerishCode.
+    - Memory editor reveals after edit click + distinguish expanded memory preview action. Thanks @xxiaoxiong.
+    - Auto-annotate imported HTML elements for Tweaks selection. (#892) Thanks @bulai0408.
+    - Stable shared frame screen paths from referrer. Thanks @bulai0408.
+    - Daemon run recovery across reloads. (#2374) Thanks @PerishCode.
+    - Restore custom dropdown chevron for the timezone selector in dark mode. Thanks @xxiaoxiong.
+    Desktop & packaging
+    - macOS Dock icon stays put when desktop-pet window opens. (#2413) Thanks @PerishCode.
+    - Align Windows smoke update root with portable installs. (#2376) Thanks @PerishCode.
+    - Nightly release smoke identity. (#2446) Thanks @PerishCode.
+    - Improve desktop updater ready UI. (#2403) Thanks @mturac.
+    - Forward proxy env to sidecars. Thanks @PerishCode.
+    - Detect mise npm package bins. Thanks @PerishCode.
+    - Launch Windows updater fixture via Node. (#2364) Thanks @PerishCode.
+    - macOS close exits fullscreen before hiding. Thanks @PerishCode.
+    - Daemon's external-browser opener fixed on Windows. Thanks @PerishCode.
+    Daemon, runtime & connectivity
+    - Surface discovery form answers to agents. (#2071) Thanks @bulai0408.
+    - Stabilize discovery brand answers in prompts. (#1861) Thanks @YUHAO-corn.
+    - ACP model detection timeout is configurable. Thanks @alchemistklk.
+    - Wrap Claude smoke test stdin as stream-json. Thanks @lefarcen.
+    - Preserve Claude tool inputs. (#1476) Thanks @lefarcen.
+    - Codex CLI path fallback UX. (#1205) Thanks @shangxinyu1.
+    - Treat Codex reconnect events as warnings, not fatal errors. (#1482) Thanks @alchemistklk.
+    - ACP config options used for model selection. (#1208) Thanks @bulai0408.
+    - Remove OpenCode stdin dash sentinel + soft empty API response. Thanks @PerishCode.
+    📚 Documentation
+    - Critique Theater Phase 14 user guide + 2 AGENTS module maps. (#1319) Thanks @Nagendhra-web.
+    - Windows native setup notes in AGENTS.md. Thanks @PerishCode.
+    - Comprehensive contributor guide in TRANSLATIONS.md. Thanks @YUHAO-corn.
+    - RTL_LOCALES UI guidance + es-ES alignment. Thanks @YUHAO-corn.
+    - Sync zh-TW README with the English version. Thanks @YUHAO-corn.
+    - Sync Windows troubleshooting link across locale READMEs. Thanks @YUHAO-corn.
+    - Refresh contributors wall + GitHub metrics SVG.
+    - Clarify Intel Mac ZIP packaging support. Thanks @PerishCode.
+    - README inventory badges sync (skills 31 → 131, design-systems 72 → 149). (#1899) Thanks @leessju.
+    - 0.8.0-preview banner + Discussion #1727 pointer. (#1781) Thanks @lefarcen.
+    - Active 0.8.0 contributors point at main. (#1846)
+    🔨 For Developers
+    Click to expand
+    - 🧪 Critique Theater Playwright stage suite (happy, interrupt, 3 viewports, a11y). (#1317, #1483) Thanks @Nagendhra-web.
+    - 🧪 Reducer p99 bench + surface coverage walker. (#1318) Thanks @Nagendhra-web.
+    - 🧪 Harden e2e extended coverage state assertions. (#2245)
+    - 🧪 Visual regression PR workflow (CI). Thanks @lefarcen.
+    - 🧱 Component manifest extraction + daemon consume path. (#2051, daemon side) Thanks @zoeforfun.
+    - 🧱 OD CLI wraps GitHub CLI. Thanks @lefarcen.
+    - 🧱 Plugin runtime + registry-protocol + host packages bumped for plugin engine.
+    - 🛠️ pnpm i18n:coverage informational report. Thanks @YUHAO-corn.
+    - 🛠️ Issue templates: bug, feature, preview/v0.8.0 + chooser config. (#1708) Thanks @lefarcen.
+    - 🛠️ Search Console reporting workflows + GSC opportunities. Thanks @lefarcen.
+    ✅ System requirements
+    - 🍎 macOS — Apple Silicon (arm64) and Intel (x64), macOS 11 Big Sur or newer.
+    - 🪟 Windows — x64, Windows 10 / 11. Installer is unsigned but now ships packaged auto-update.
+    - 🐧 Linux — headless lifecycle (install / start / stop from CLI). Packaged GUI artifact is still deferred while the release lane is hardened.
+    - ❄️ Nix — official flake at flake.nix with home-manager and NixOS support.
+    - 🧑‍💻 From source — Node.js 24.x and pnpm 10.33.2+ (per engines in package.json).
+    ⚠️ Known issues
+    - 🪟 Windows installer is unsigned. SmartScreen / antivirus warnings expected on first launch. Code signing is follow-up work.
+    - 🐧 No Linux desktop GUI package in 0.8.0 stable — use headless mode, the Nix flake, or run from source.
+    - 🐚 od CLI shadows POSIX od when installed globally. Use /usr/bin/od or command od for the system tool.
+    - 🧪 Several preview-period feedback issues (#1729, #2076, #2059, #1797, …) remain open for community follow-up — see the issue tracker.
+    🙏 Thanks to everyone who shipped 0.8.0
+    305 PRs by 75 contributors. The "everything is a plugin" thesis only works because so many of you came at it from so many different angles. Thank you to:
+    @Abepena, @Derrick-xn, @Fl0rencess720, @GHX5T-SOL, @Hetsavani, @Jeshua09090, @Lucky19112002, @MJ-thunder, @MetaAlms, @MrRockySL, @Nagendhra-web, @PerishCode, @Priyanshudotdev, @Romantin, @Sid-Qin, @Siri-Ray, @Tuola-waj, @YUHAO-corn, @ZZXX-bit, @aaronjmars, @abhid-007, @alchemistklk, @ashleyashli, @asim48-ctrl, @bankielewicz, @bluto447, @bulai0408, @davezfr, @delamoer, @digitalcr8tive, @enaktes9-hub, @epicsagas, @fancyboi999, @feliciaZH, @fuyizheng3120, @hahaplus, @heylakatos, @hobostay, @jeongjin0, @jiannanya, @laihenyi, @leessju, @lefarcen, @mar2181, @mrcfps, @mrzhangkris, @mturac, @mutoe, @mzl163, @mzl2233, @neogenix, @nettee, @ngoduybien, @nmsn, @nombreregular, @ojhendershot, @orbisai0security, @pftom, @portseif, @prantikmedhi, @quangdo126, @sakshyasinha, @samay-hash, @sasha1107, @shangxinyu1, @slamj1, @spurnout, @sukumarp2022, @toby-bridges, @whoughton, @xxiaoxiong, @yuhaoyuan, @zellux, @zhangdongming0607, @zoeforfun.
+    A movement doesn't ship from one team's laptops; it ships from the people who showed up early and built the missing pieces. We see you. 🫡
+
+    Full Changelog: https://github.com/nexu-io/open-design/compare/open-design-v0.7.0...release/v0.8.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.8.0
+ReleaseTime: 2026-05-22T12:43:06.0000000Z
