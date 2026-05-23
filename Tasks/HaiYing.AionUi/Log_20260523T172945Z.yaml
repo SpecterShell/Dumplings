@@ -1,0 +1,151 @@
+Version: 2.1.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v2.1.0/AionUi-2.1.0-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v2.1.0/AionUi-2.1.0-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v2.1.0 — Frontend–Backend Split, Rust Core
+    This is the biggest architectural change in AionUi's history. The backend has been extracted from Electron and rewritten in Rust as a standalone service. Your desktop install still works exactly the same — but now the same backend can also run on a server, a NAS, or a Raspberry Pi, with browser WebUI clients connecting to it.
+    ✨ Highlights
+    1) A Deployable Architecture
+    - AionUi is no longer a closed Electron monolith. The backend (AionCore) now runs as an independent process, versioned and released separately.
+    - Desktop mode embeds the backend transparently — no change in user experience.
+    - Server mode exposes the same backend over HTTP + WebSocket, so any frontend can connect to it.
+    - Result: the same AionUi you install on your laptop can now also power a shared deployment for your team.
+    2) Rust Backend, Single-File Service
+    - The backend has been rewritten in Rust (Axum + Tokio + sqlx + rustls) and ships as a single native binary per platform.
+    - 6 native builds: macOS / Linux / Windows, each with both x64 and arm64 variants.
+    - Binary sizes range from 27 MB to 55 MB — small enough to run on cloud VMs, ARM servers, NAS devices, and even a Raspberry Pi.
+    - Zero OpenSSL dependency (rustls end-to-end), clean cross-compilation, fewer surprises on exotic targets.
+    3) One Backend, Multiple Frontends
+    - The Electron desktop app and the browser-based WebUI now share the same backend service.
+    - WebUI no longer depends on Electron — it runs as a standalone web host (@aionui/web-host), producing a smaller footprint, better compatibility, and a noticeably snappier experience.
+    - Session history, configuration, and tasks live in the backend — switch devices, keep your context.
+    4) Open by Design
+    - Standard HTTP /api/* resources and a /ws WebSocket event bus.
+    - Swap the frontend, fork it, or build your own — the full protocol is open.
+    - Ideal for custom integrations, internal tools, or alternative client implementations.
+    🐛 Bug Fixes
+    - Fixed slash command menu not loading correctly in Aion CLI conversations — the agent now warms up before fetching commands, and API responses parse reliably.
+    - Removed stale Gemini CLI reference from the model settings page.
+    🚀 Improvements
+    - Slash command menu is now available in Aion CLI conversations.
+    - Backend launcher now passes the working directory via --work-dir for more predictable session scoping.
+    - Sentry alerts now include OS name, app architecture, and app version for faster triage.
+    📦 Assets
+    Desktop installers (unchanged formats): .dmg / .zip for macOS, .exe for Windows, .deb for Linux, on both x64 and arm64.
+    AionCore Changes
+    This release is paired with aionui-core v0.1.9.
+    See iOfficeAI/AionCore for full details.
+
+    What's Changed
+    - fix(guid): use navigate() to clear resetAssistant state so HashRouter URL stays intact by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2583
+    - feat(acp): align agent types with new backend API and add bridge logging by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2632
+    - fix(acp): align stream handling with backend and fix message display bugs by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2645
+    - feat(backend): separate backend logs with level-aware routing by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2656
+    - fix(bridge): add backend→frontend response mapping for conversation model by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2659
+    - refactor: migrate Aionrs to backend WebSocket communication by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2662
+    - refactor: merge backend logs into shared log file by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2664
+    - refactor: collapse Gemini agent runtime into ACP backend by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2667
+    - test(e2e): workspace, preview, and team E2E + adapter mapper extraction by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2616
+    - refactor(acp): move first-message skill injection to backend by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2668
+    - test(e2e): add team rename, pin, member ops, view modes E2E coverage by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2670
+    - refactor: migrate frontend wire format from camelCase to snake_case by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2672
+    - feat(acp): fix confirmation API params and deep-merge tool call updates by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2669
+    - fix(e2e): remove preview business logic from E2E helpers by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2671
+    - fix(preview): fix preview-history 400 and office proxy URL resolution by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2673
+    - refactor(skills): read conversation skills from extra.skills snapshot by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2677
+    - test(e2e): add settings display and system E2E tests by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2675
+    - refactor(skills): switch to symlink contract and align workspace layout by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2682
+    - refactor(acp): simplify AcpModelInfo and align API paths to backend by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2685
+    - fix(settings): migrate GET to configService + persistence E2E verification by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2680
+    - feat(cron): complete frontend backend-migration flow by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2690
+    - feat(cron): complete frontend backend-migration flow by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2693
+    - fix(backend-migration): remove stale skill packaging refs by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2695
+    - fix(backend-migration): centralize legacy config cleanup by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2696
+    - refactor(agent): unified AgentMetadata + fix Electron startup deadlock by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2707
+    - fix(backend-migration): harden preview workspace handling by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2709
+    - refactor(conversation): drop msg_id from sendMessage IPC payload by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2715
+    - refactor(backend-migration): route desktop persistence through backend by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2700
+    - fix(guid): show ACP models + custom agents before first session by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2718
+    - fix(sendbox): cancel pending warmup when user submits by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2719
+    - feat(team): consume backend logo assets by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2763
+    - fix(model): disable provider focus revalidation by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2770
+    - fix(conversation): restore workspace grouping and aionrs tab creation by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2772
+    - refactor(webui): decouple WebUI from Electron (M1-M9) by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2792
+    - ci(release): wire aionui-web tarballs + install-web.sh into main release pipeline by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2795
+    - fix(aionrs): handle backend acp_permission wire type so confirmation UI renders by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2798
+    - refactor(agent)!: migrate ACP/agent implementation to backend by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2804
+    - chore: cleanup dead code + rewrite unit tests + restore CI (N1-N5) by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2801
+    - feat(assistant): switch main agent on built-in and preset assistants by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2808
+    - chore: format docs and improve AcpModelSelector model info fallback by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2810
+    - feat(webui): consolidate auth onto backend SQLite (M6-cleanup) by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2816
+    - refactor(agent): migrate custom ACP agent implementation to backend by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2819
+    - chore(ci): backport 7 CI/backend-pin fixes from dev by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2830
+    - style(format): apply oxfmt to chatLib.ts by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2832
+    - chore(ci): bump aionui-backend to v0.1.0-preview-test5 for login fix by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2835
+    - feat(web-cli): bootstrap admin password on first launch by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2837
+    - chore: merge origin/main into feat/backend-migration by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2833
+    - refactor(file): unify upload path to HTTP multipart and improve pasted image naming by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2843
+    - fix(webui): Switch truthful state + end SW poisoning that caused white screen by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2844
+    - feat(sider): visual system refresh + Codex-style grouped history by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2859
+    - feat(ipcBridge,guid): align ACP conversation create payload with backend's type-aware model rule by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2858
+    - refactor(process): remove ~3579 lines of dead frontend code after backend migration by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2862
+    - fix(theme): bump --text-secondary contrast for better legibility by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2863
+    - feat(markdown): tune spacing and add hr/strong/code/blockquote styles by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2866
+    - chore(process): remove dead closeToTray listener chain by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2864
+    - feat(chat): narrow message column to 760px, add breathing room by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2867
+    - refactor(agent): drop acp.cachedModels, read model list from backend /api/agents by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2869
+    - feat(tray): consume /api/conversations/active-count for live task badge by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2870
+    - refactor(agent): drop dead AcpConfigSelector, useless string aliases, and unused acpTypes exports by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2873
+    - refactor(types): split common/types/ by domain by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2874
+    - chore(types): remove dead codex exports and unused codex/types, codex/utils by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2875
+    - style(messages): unify thinking and tool-group summary card UI by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2878
+    - fix(cron): source aionrs model from backend and fix agent display by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2880
+    - fix(sendbox): restore stop button breathing animation with aou color scale by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2877
+    - feat(sendbox): skill quick-invoke via attach menu and sendbox hint text by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2879
+    - fix(conversation): dedupe optimistic user message with server msg_id by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2885
+    - fix(guid): correct session_mode default + hide unreleased agent entries by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2882
+    - refactor(renderer): unify /api/agents fetches through shared SWR cache by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2891
+    - fix(team): include agent_type in teamCapableKeys so aionrs assistants appear by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2893
+    - fix(cron): show real vendor name and logo for ACP scheduled tasks by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2894
+    - fix(assistants): use backend slug as preset_agent_type and refresh logo immediately by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2895
+    - fix(migration): tolerate retired ids, preserve user preset_agent_type, default gemini→aionrs by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2897
+    - refactor(ipcBridge): align ACP endpoints with backend migration by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2898
+    - chore(docs): remove completed migration and archived specs by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2899
+    - fix(acp): display agent-specific slash commands for ACP conversations by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2914
+    - fix(team): include workspace in create team API request by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2915
+    - feat(assistants): combined skills menu + assistant migration polish by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2916
+    - fix(workspace): filter responseStream by conversation_id to prevent infinite refresh by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2908
+    - fix(adapter): map snake_case relative_path in snapshot compare response by @kaizhou-lab in https://github.com/iOfficeAI/AionUi/pull/2919
+    - perf(team): defer agent warmup until user starts typing by @zhuqingyv in https://github.com/iOfficeAI/AionUi/pull/2922
+    - docs(remote-agent): note OpenClaw protocol v3..v4 negotiation range by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2925
+    - refactor: rename backend binary references from aionui-backend to aioncli by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2926
+    - feat(settings/agent): replace per-agent Settings with "Go to Chat" CTA by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2930
+    - refactor: rename aioncli references to aioncore by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2934
+    - fix(chat): redirect to home when conversation is missing by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2936
+    - fix(chat): swallow stop request errors to avoid unhandled rejection (ELECTRON-1CV) by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2937
+    - fix(adapter): silence expected pre-warmup 404s on ACP mode/model GETs (ELECTRON-1BT) by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2942
+    - refactor(conversation): remove workspace tab UI in favor of unified header by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2943
+    - feat: add is_full_url toggle for provider configuration by @piorpua in https://github.com/iOfficeAI/AionUi/pull/2944
+    - fix(desktop): self-heal repeated GPU process crashes (ELECTRON-9A, ELECTRON-9D) by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2945
+    - feat(team): align workspace collapse behavior with single chat by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2965
+    - refactor(workspace): fixed-px sizing + branch picker simplification + click/expand polish by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2978
+    - refactor(workspace): polish folder select dropdown styling by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2975
+    - refactor(team): redesign create-team modal with radio list and search by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2968
+    - style(markdown): redesign code block and customize scrollbar by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2967
+    - feat(guid): redesign sandbox — workspace footnote + flat toolbar (replaces compact picker) by @ringringlin in https://github.com/iOfficeAI/AionUi/pull/2966
+    - style(guid): unify sendbox typography to 14px and align placeholder by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2981
+    - feat(sentry): startup log report + device_id + environment tags by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/2982
+    - style(guid): redesign assistant area as scrollable card grid by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2983
+    - style(guid): polish workspace bar (border-less, sider bg, icon size) by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2984
+    - refactor(sendbox): right-align config and drop context usage pill by @IceyLiu in https://github.com/iOfficeAI/AionUi/pull/2985
+    Full Changelog: https://github.com/iOfficeAI/AionUi/compare/v1.9.19...v2.1.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iOfficeAI/AionUi/releases/tag/v2.1.0
+ReleaseTime: 2026-05-23T17:09:22.0000000Z
