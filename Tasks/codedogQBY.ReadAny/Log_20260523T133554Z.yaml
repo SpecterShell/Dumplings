@@ -1,0 +1,39 @@
+Version: 1.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.1/ReadAny_1.3.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.1/ReadAny_1.3.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ReadAny v1.3.1 来啦，这一版同步重构 + 阅读器细节打磨为主。
+    🚀 新功能
+    - 桌面端 System 主题模式：跟随系统深色/浅色自动切换
+    - 桌面端窗口位置记忆：重启后还原上次窗口大小和位置
+    - 桌面端右下角更新通知：检测到新版自动提示，不再悄无声息
+    - 新的远程同步布局：每本书一个独立目录（含书文件 + 封面），WebDAV/S3 浏览不再是一堆 UUID；首次同步自动迁移旧数据
+    - 下载进度百分比：书籍文件下载时实时显示进度
+    - LAN 文件服务容错：原生模块缺失或启动失败时自动降级到 JS TCP fallback
+    ✨ 优化
+    - Profile 屏幕重排：统计卡片点击直接跳转 Stats 页
+    - 内置 AI Skills 与执行 prompt 全面英文化，降低跨语言模糊
+    - 同步流水线整体优化
+    🐛 修复
+    - 阅读器：
+      - Scroll 模式禁用点击翻页（避免误触）
+      - 分页模式点击区域计算修复 + 首次阅读引导
+      - 选区悬浮工具栏点"播放"不再跳转到听书页，原地朗读
+      - 选区朗读后再开听书页会自动晋升为整页 TTS
+      - Android PDF 打开偶现"无限转圈"修复（Lighttpd 启动 8s 超时降级，#135）
+    - 翻译：支持繁体 ↔ 简体中文转换
+    - AI 聊天：根据 UI 语言而非系统语言响应
+    - 反馈：locale 取 i18n 而非 navigator.language
+    - CI/CD：Android 流水线产物从 preview 变体修正为 production
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/codedogQBY/ReadAny/releases/tag/v1.3.1
+ReleaseTime: 2026-05-21T17:56:35.0000000Z
