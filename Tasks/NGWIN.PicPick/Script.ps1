@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://picpick.app/en/changelog/' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/div/div[1]/div/div/div[2]/div/div/h2[contains(text(), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
