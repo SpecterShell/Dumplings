@@ -1,0 +1,25 @@
+Version: 0.2.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Simprint/simprint/releases/download/v0.2.26/Simprint_0.2.26_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.2.26: refine environment display id and window summary
+    This tag captures the environment launch display-id cleanup and create-window summary adjustments after v0.2.25.
+    Changes included:
+    - Replaced environment launch display ids derived from backend database ids with the environment table index so taskbar numbering now follows the visible table sequence instead of server-side primary keys.
+    - Removed the previous database-id fallback in the launch flow so non-table launches no longer silently reuse the obsolete display-id source.
+    - Fixed the create-window summary panel to render resolution as width × height instead of treating the resolution object as a fingerprint mode key.
+    - Updated the create-window summary panel so long user-agent strings can wrap instead of being truncated to a single line with an ellipsis.
+    - Restricted the visible device-memory options in create-window forms to 4G and 8G by commenting out 16G and 32G selections.
+    Expected result:
+    - Environment launch numbering is now aligned with the table order that users actually see in the UI.
+    - The summary panel presents long UA and resolution data in a readable way.
+    - New window configurations are less likely to expose questionable high device-memory presets from the current UI.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Simprint/simprint/releases/tag/v0.2.26
+ReleaseTime: 2026-05-20T03:01:06.0000000Z
