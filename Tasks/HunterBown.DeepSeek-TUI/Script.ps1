@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Hmbown/DeepSeek-TUI/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Hmbown/CodeWhale/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -32,10 +32,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://github.com/Hmbown/DeepSeek-TUI/blob/HEAD/CHANGELOG.md'
+        Value  = $ReleaseNotesUrl = 'https://github.com/Hmbown/CodeWhale/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hmbown/DeepSeek-TUI/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hmbown/CodeWhale/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
