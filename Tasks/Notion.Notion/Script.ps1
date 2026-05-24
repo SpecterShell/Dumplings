@@ -16,12 +16,24 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix $Object1.files[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix $Object2.files[0].url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'msix'
+  InstallerUrl  = Join-Uri $Prefix "Notion-$($this.CurrentState.Version).msix"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'msix'
+  InstallerUrl  = Join-Uri $Prefix "Notion-arm64-$($this.CurrentState.Version).msix"
 }
 
 switch -Regex ($this.Check()) {
