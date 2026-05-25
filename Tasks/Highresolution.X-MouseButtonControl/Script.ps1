@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://highrez.co.uk/downloads/xmbc_changelog.htm' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.highrez.co.uk/downloads/xmbc_changelog.htm' | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
