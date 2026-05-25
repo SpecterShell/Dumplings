@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://api.toutiaoapi.com/service/settings/v3/?aid=430651&device_platform=pc&from_version=$($this.Status.Contains('New') ? '1.1.7' : $this.CurrentState.Version)"
+$Object1 = Invoke-RestMethod -Uri "https://api.toutiaoapi.com/service/settings/v3/?aid=430651&device_platform=pc&from_version=$($this.Status.Contains('New') ? '1.1.7' : $this.LastState.Version)"
 
 # Version
 $this.CurrentState.Version = $Object1.data.settings.doudian_pc_update.version
