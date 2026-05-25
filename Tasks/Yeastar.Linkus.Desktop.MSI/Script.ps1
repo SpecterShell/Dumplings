@@ -19,7 +19,7 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://help.yeastar.com/zh-cn/p-series-linkus-appliance-edition/release-notes/release-notes-for-linkus-windows-desktop.html' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseNotes (zh-CN)
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
