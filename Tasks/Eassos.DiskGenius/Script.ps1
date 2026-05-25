@@ -42,7 +42,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.diskgenius.cn/download.php' | ConvertFrom-Html
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.diskgenius.cn/download.php' | Join-String -Separator "`n" | ConvertFrom-Html
 
       if ($Object2.SelectSingleNode('//ul[contains(@class, "logmenu")]/li[contains(@class, "cur")]').InnerText.Contains($this.CurrentState.Version.Split('.')[0..2] -join '.')) {
         # ReleaseNotes (zh-CN)
