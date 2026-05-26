@@ -1,0 +1,109 @@
+Version: 2026.05.0+218
+Installer:
+- InstallerUrl: https://download1.rstudio.org/electron/windows/RStudio-2026.05.0-218.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    RStudio
+    - (#17539): The data viewer is now faster and supports pinnable columns, a Summary sidebar with type-aware stats and sparkline histograms, keyboard navigation, and clipboard copy.
+    - (#17539): Added the data_viewer_show_summary user preference, which controls the default visibility of the data viewer’s Summary sidebar.
+    - (#17539): Raised the default value of data_viewer_max_columns from 50 to 200.
+    - (#17477): Posit Assistant: the ui/openDocument JSON-RPC method now accepts an optional 1-based line parameter, and RStudio advertises the ui/openDocument/line capability so the assistant can open documents at a specific line.
+    - (#17478): Posit Assistant: added the ui/revealInFilesPane JSON-RPC method, which navigates the Files pane to a directory (or to a file’s parent directory) and brings the pane to the front.
+    - (#17479): Posit Assistant: added the ui/previewUrl JSON-RPC method, which navigates the Viewer pane to an http(s) URL (e.g., a local Shiny app); supports an optional height parameter that mirrors rstudioapi::viewer() (-1 for maximize, 0 for no change, positive for pixels).
+    - (#17514): Added the allow-package-source-recording session option (default true); when set to false, RStudio will not annotate DESCRIPTION files of packages installed via install.packages() with the remote repository they came from.
+    - (#5809): Roxygen tag autocompletion (e.g. @param, @return) now works on #' lines inside R code chunks of R Markdown and Quarto documents, matching the behavior in plain .R files.
+    - (rstudio/launcher#1368): Added opt-in singularity-image-directory-mode option to launcher.slurm.conf to control how the Launcher Slurm plugin resolves singularity-image-directory when a user matches multiple profile levels. See the Slurm plugin README for details.
+    - (rstudio/launcher#522): Added nfs-heartbeat-poll-threshold option to launcher.local.conf to tune the Launcher Local plugin’s Network File System (NFS)-mode offline detection latency (default 6 polls × 10s = 60s).
+    Posit Workbench
+    - (rstudio-pro#10905, rstudio-pro#10828): Added the assistant-enabled key in /etc/rstudio/profiles as a preview setting for unified Posit Assistant control across RStudio Pro and Positron Pro sessions, with global, per-group, and per-user scopes
+    - (rstudio-pro#10331): Moved the project path to a sub-line under the project name on the homepage. The Path column is now hidden by default but can be re-enabled via column settings
+    - (rstudio-pro#9817): Updated Posit Workbench logo, favicon, and icons to new branded assets across the Workbench UI
+    - (rstudio-pro#10419): Added user-friendly label support to job launcher image dropdown. Use the :: delimiter to append a user-friendly label to images in launcher.{plugin}.profiles.conf
+    - (rstudio-pro#9838): Added a “Quit all” sessions action to the homepage
+    - (rstudio-pro#10337): Added on-hover tooltips to launcher dialog fields, with links to relevant documentation.
+    - (rstudio-pro#9818): Multiple custom OAuth integrations can now share the same issuer URL
+    - (rstudio-pro#5766): Added Proof Key for Code Exchange (PKCE) support for OpenID Connect authentication, enabled by default
+    - (rstudio-pro#10837): CLI administrative commands (including interpreters, user management commands such as add-user, list-users, lock-user, set-admin, and unlock-user, plus user-service and upgrade positron) can now be run by the configured Workbench service account (server-user, default rstudio-server) in addition to root. Previously these commands required root privileges.
+    - (rstudio-pro#10198): Added a startup check for the SELinux policy module when required.
+    - (rstudio-pro#9128): The client-secret field in oauth-clients.conf, databricks.conf, and snowflake.conf can now be encrypted
+    Fixed
+    RStudio
+    - (#17621): Restored top alignment of argument names in the Help pane when running against R 4.6.0 or newer. R’s dynamic help server now emits an id attribute on section headers (e.g. <h3 id='_sec_arguments'>Arguments</h3>), which broke the literal-string match RStudio used to tag the Arguments header for styling.
+    - (#17471): Reformat Document with the styler formatter no longer inserts extra blank lines on Windows. The temporary file written by styler uses platform-native line endings (CRLF on Windows), and RStudio now normalizes those to LF when computing the edits to apply, so the diff against the LF-normalized in-memory document doesn’t produce spurious \r insertions that Ace would convert into blank lines.
+    - (#17363): Posit Assistant: pressing Escape to dismiss a ghost-text Next Edit Suggestion now also clears the Next Edit Suggestion (NES) gutter icon; previously the gutter icon remained visible after dismissal.
+    - (#17589): The diagnostics report now includes positai.log alongside rdesktop.log and the user’s rsession-*.log.
+    - (#17665): .positai and .claude are no longer added to a project’s .Rbuildignore, .gitignore, or svn:ignore unless those files/directories actually exist in the project; previously they were added whenever the AI assistant was enabled (the default), even in projects that had never used AI features. When .positai/.claude are subsequently created mid-session, the project’s ignore files are updated automatically.
+    - (#17581): Diagnostic gutter tooltips no longer show literal <SPAN> markup around the message; lint annotations now keep the original text alongside any rendered HTML so the tooltip renders cleanly while the diagnostics popup continues to support ANSI-colored content.
+    - (#17556): difftime objects (e.g. the result of subtracting two Sys.time() values) now show their formatted value in the Environment pane instead of an empty cell.
+    - (#17568): Source-mode spell check now flags misspelled words inside Markdown, R Markdown, and Quarto headings; previously only paragraph text was checked.
+    - (#17481): Fixed two debugger regressions: top-level breakpoints (e.g. via debugSource()) no longer fail to show the debug highlight or call stack, and multi-line input at the Browse[N]> prompt no longer clears the captured browser context.
+    - (#3780): The Files pane delete confirmation now reflects whether the file will be moved to the system Trash/Recycle Bin or permanently deleted, based on the “Delete files to Trash/Recycle Bin” preference.
+    - (#3780): When sending a file to the system Trash/Recycle Bin fails, the Files pane now reports the error and leaves the file on disk; previously it would silently fall back to permanently deleting the file.
+    - (#12235): RStudio Desktop’s Session > New Session now opens noticeably faster.
+    - (#15614): The splash screen can again be dismissed with a mouse click or key press.
+    - (#15711): Source-mode spell check no longer disappears on Quarto and R Markdown documents when the bundled YAML diagnostics worker fails to respond; spell-check lint is now applied independently of YAML lint.
+    - (#16067): Raise the open file descriptor soft limit at session startup to avoid “Too many open files” errors during project file monitoring on Linux.
+    - (#16541): Section headers now fold hierarchically based on heading level, matching Positron’s default behavior.
+    - (#16966): Restored the desktop terminal bell on Linux, now that the underlying Electron crash has been fixed.
+    - (#17084): The Shiny test commands (Record Test, Run Tests, Compare Results) now use the shinytest2 package; shinytest has been deprecated.
+    - (#17128): The Windows installer’s File Version now matches its Product Version; previously the installer concatenated the major and minor version components into a single value that exceeded NSIS’s 16-bit-per-component limit and was truncated to an unrelated number.
+    - (#17176): Fixed a startup hang when opening a Quarto project containing large directories (e.g. _targets/).
+    - (#17322): Posit Assistant: invoking Uninstall Posit Assistant when it is not installed now shows the message “Posit Assistant is not installed.” and skips the restart, instead of silently restarting RStudio.
+    - (#17417): Added missing French translations for newer commands and preferences, removed an orphaned French key, deduplicated stale entries in the French application strings, and normalized line endings in five English string files.
+    - (#17440): Fixed an issue where triggering tab completion inside [ on a large Matrix-package sparse matrix could hang RStudio and exhaust system memory.
+    - (#17450): Fixed a crash on Windows when Rprofile.site (or .Rprofile) called download.file(), update.packages(), or other code that emitted console output while RStudio’s R runtime dispatch layer was not yet initialized.
+    - (#17506): Source-marker messages in the Build, Markers, and Compile PDF panes are now rendered as plain text by default; only messages that the server explicitly marks as HTML (e.g. C++ Find Usages highlighting) are rendered via innerHTML.
+    - (#17508): Enabled the MathJax Safe extension in the IDE, the HTML preview, the presentation preview, and the rendered R Markdown viewer.
+    - (#17510): Data Import: column names, character options, locale values, and import URLs are now encoded as R string literals when generating preview and import code.
+    - (#17530): The spell-check context menu now shows the full set of correction suggestions; previously a stray loop increment caused every other suggestion to be skipped, capping the menu at 3 items instead of 5.
+    - (#17534): Fix uninformative error in rstudio::sourceMarkers() when marker$type is not a length-one vector.
+    - (#4402): Reindenting C/C++ code with a brace-less control-flow statement (e.g. a for whose body is a single braced if) no longer over-indents the line that follows the body.
+    - (rstudio/rstudio-pro#10805): Server: Enable TCP keepalive on accepted connections so the operating system reaps half-open sockets from disappeared clients (browser tab hibernation, NAT timeouts) instead of holding them indefinitely.
+    - (rstudio/rstudio-pro#10771): Reduced filesystem work performed by the install.packages() hook; the before/after scan is now scoped to the requested packages and their dependency closure rather than the entire library.
+    - (rstudio/rstudio-pro#10771): Tightened the heuristic used to detect package-management commands at the console prompt, reducing spurious Packages pane refreshes triggered by identifiers like updates <- or installed.packages().
+    - (#17446): The Packages pane now retrieves vulnerability information from Posit Package Manager via the POST /filter/packages endpoint, replacing the legacy GET /repos/{repo}/vulns endpoint that was temporarily unavailable in Package Manager 2026.04.0.
+    - (#17613): Restored the column count in the data viewer status bar (e.g. “Showing rows 1 to 18 of 100,000 total rows, 500 total columns”), which had been dropped from the info bar in the vanilla-JS rewrite (#17382).
+    - (#17612): Limit horizontal overscroll in the data viewer so the last column remains visible at maximum scroll, instead of allowing all unpinned columns to be scrolled off-screen.
+    - (#15211): Restored honoring of the COPILOT_AUTH_PROVIDER environment variable, used to point Copilot at a GitHub Enterprise sign-in URL.
+    - (rstudio/launcher#522): Launcher Local plugin sessions on a node that goes offline in a load-balanced deployment are now marked Failed instead of remaining stuck in Running.
+    - (rstudio/launcher#1536): Fixed a race condition in the Launcher Kubernetes plugin that could cause an intermittent crash (SIGSEGV) during stdin writes when the Kubernetes API server rejects the websocket upgrade.
+    Posit Workbench
+    - (rstudio-pro#10885): Fixed database-connection contention and SQLITE_BUSY errors on the homepage when users with multiple Snowflake roles or Databricks instances loaded the page concurrently.
+    - (rstudio-pro#10734): Fixed a regression on the homepage that prevented new sessions from launching on projects marked as “not-found”. Sessions can be started after acknowledging a warning.
+    - (rstudio-pro#4017): Load balancing — recently-offlined nodes (within 5 minutes of transition) are now included in the node-state sync sent to Job Launcher with their actual Offline or Deleting status. This lets the launcher mark sessions on offline nodes as Failed more promptly during admin-initiated node removals, reducing the worst-case detection window from ~3 minutes (silent-absence) to ~60 seconds (one launcher sync cycle). (Companion to rstudio/launcher#1514.)
+    - (rstudio-pro#9477): Fixed Snowflake client-secret field not showing as required in the admin config UI
+    - (rstudio-pro#9631): Managed credentials are now removed from the database when their section is removed from oauth-clients.conf, snowflake.conf, or databricks.conf and Workbench is restarted.
+    - (rstudio-pro#10884): Sign-in pages now display the inactivity timeout as a human-friendly duration (e.g., “3 days” or “2 days, 23 hours, and 59 minutes”) instead of a raw number of minutes.
+    - (rstudio-pro#9637): When Just-In-Time (JIT) user provisioning is active, users are now de-assigned from groups that have been removed from the Single Sign-On (SSO) groups claim (OpenID, SAML, and proxied-auth) on subsequent login.
+    - (rstudio-pro#9965): Direct file downloads from the Files pane now generate session_file_download audit events, matching the behavior of downloads via More -> Export.
+    - (rstudio-pro#9764): Fixed hang in rstudio-server restart when SELinux is in enforcing mode.
+    - (rstudio-pro#10974): Fixed a regression in how user settings are handled that prevented Positron Pro sessions from launching.
+    Upgrade Instructions
+    Posit Workbench
+    - Container image transition: Posit Workbench container images are moving from the rstudio/* Docker Hub organization to posit/* on Docker Hub (also published as ghcr.io/posit-dev/* on the GitHub Container Registry). Legacy rstudio/* images continue to be built during the transition. If you use the Workbench Helm chart, version 0.20.0 and later default to the new image repositories and include breaking changes. See the Helm chart Migrating to Posit Images guide for details.
+    - Existing users must re-authenticate to each Custom OAuth integration after upgrading. Snowflake and Databricks integrations are unaffected.
+    - Downgrading to a release older than 2026.05.0 (Golden Wattle) requires Custom OAuth users to re-authenticate. Snowflake and Databricks integrations are unaffected. On older releases, only the last Custom OAuth section for a given authorize or token URL is operational. Reduce the configuration to one integration per authorize or token URL before downgrading.
+    - Administrators who previously enforced positron.assistant.enable in Positron settings should instead set assistant-enabled in /etc/rstudio/profiles; positron.assistant.enable will be deprecated in a future release. See Posit Assistant Admin Controls.
+    - Proof Key for Code Exchange (PKCE) provides enhanced security during user logins when using OpenID Connect authentication, so it is enabled by default. It can be disabled if necessary by setting auth-openid-pkce-enabled=0 in rserver.conf.
+    Dependencies
+    - Ace 1.43.5
+    - Copilot Language Server 1.480.0
+    - Electron 41.5.0
+    - Job Launcher 2.24.0
+    - Node.js 22.22.2 (copilot, Posit AI)
+    - Quarto 1.9.37
+    - rserver-openid 0.9.0
+    - xterm.js 6.0.0
+    - Positron 2026.05.2-3
+    - PWB Code Server 2026.05-b2746
+    - Code OSS 1.111.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/#rstudio-2026.05.0
+ReleaseTime: 2026-05-26
