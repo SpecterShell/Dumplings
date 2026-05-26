@@ -65,7 +65,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrlCN = 'https://github.com/Fioooooooo/FylloCode/blob/doc/CHANGELOG.zh-CN.md'
+        Value  = $ReleaseNotesUrlCN = 'https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md'
       }
 
       $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Fioooooooo/FylloCode/HEAD/CHANGELOG.zh-CN.md' | Convert-MarkdownToHtml
