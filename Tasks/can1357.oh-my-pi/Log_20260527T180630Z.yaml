@@ -1,0 +1,42 @@
+Version: 15.5.7
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.7/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - SimpleStreamOptions.openrouterVariant ("nitro", "floor", "online", "exacto", …) — when set, appends :<variant> to OpenRouter model IDs at request time, leaving ids that already carry an explicit :suffix untouched. Plumbed through openai-completions and the pi-native gateway forwarder.
+    - xAI Grok OAuth (SuperGrok Subscription) provider in /login. Loopback PKCE flow on 127.0.0.1:56121; the token unlocks Grok-4.x chat. Ported from NousResearch/hermes-agent (MIT).
+    - OpenRouter provider in /login. API-key paste flow validated against https://openrouter.ai/api/v1/auth/key (the /models endpoint is public and cannot validate auth). The pasted key is stored under the existing openrouter provider id used by OPENROUTER_API_KEY.
+    - XAI_OAUTH_TOKEN environment variable accepted as a headless fallback for the xAI Grok OAuth provider.
+    Changed
+    - OpenAIResponsesOptions gains four optional, provider-agnostic fields that adapter wrappers can use to compose provider-specific behavior on top of the generic transport: includeEncryptedReasoning (gates include: ["reasoning.encrypted_content"]; default true, preserves current behavior), filterReasoningHistory (strips replayed type: "reasoning" items from conversation history; default false), headers (merged onto the client's default headers), and extraBody (merged into the request payload).
+    - The existing XAI_API_KEY path is unchanged — it continues to use the OpenAI-completions transport.
+    Fixed
+    - Fixed OpenRouter DeepSeek V4 tool-call follow-up requests replaying normalized reasoning as-is instead of DeepSeek's required reasoning_content, which caused HTTP 400 errors in thinking mode. (#1445)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - providers.openrouterVariant setting (Settings → Providers → "OpenRouter Routing") to default OpenRouter requests to a routing-variant suffix (:nitro, :floor, :online, :exacto). Selectors that already name a variant (e.g. openrouter/anthropic/claude-haiku:nitro) keep precedence.
+    - generate_image supports xAI Grok Imagine via providers.image=xai. Supports grok-imagine-image (default) and grok-imagine-image-quality at aspect ratios 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3. Uses the xAI Grok OAuth credential when available, otherwise XAI_API_KEY.
+    - New tts tool synthesises speech via xAI Grok Voice behind the disabled-by-default tts.enabled setting. Built-in voices ara, eve (default), leo, rex, sal; custom voice IDs also accepted. Output codec inferred from the output_path suffix (.wav → wav, else mp3). Up to 15,000 characters per request.
+    Fixed
+    - Fixed plan-mode re-entry after approval reopening a fresh local://PLAN.md instead of the approved titled plan artifact, which could duplicate plan content and fail approval on an existing destination.
+    - Fixed read URL reader mode aborting after a stalled Jina request instead of falling back to trafilatura/lynx/native: Jina (and Parallel extract) now have their own per-attempt sub-budget capped at 10s, the catch handler honours only real user cancellation, and the in-process native renderer is always attempted on already-loaded HTML (#1449)
+    What's Changed
+    - fix(coding-agent): reopen approved plan on plan-mode reentry by @metaphorics in https://github.com/can1357/oh-my-pi/pull/1448
+    - fix(ai,coding-agent): stabilize xAI Grok OAuth by @metaphorics in https://github.com/can1357/oh-my-pi/pull/1446
+    - fix(agent): compaction reasoning effort — fallback to off when reasoning unsupported by @metaphorics in https://github.com/can1357/oh-my-pi/pull/1444
+    - fix(ai): replay OpenRouter DeepSeek reasoning_content by @roboomp in https://github.com/can1357/oh-my-pi/pull/1447
+    - fix(search): wrap native regex-build errors in ToolError by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1425
+    - fix(providers): prune stale synthetic model cache entries by @roboomp in https://github.com/can1357/oh-my-pi/pull/1418
+    - fix(hashline): require anchor-content alignment in session-chain replay recovery by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1422
+    - fix(xiaomi): add CN token-plan cluster as last fallback by @hanbinnoh in https://github.com/can1357/oh-my-pi/pull/1442
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.5.6...v15.5.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.7
+ReleaseTime: 2026-05-27T17:13:24.0000000Z
