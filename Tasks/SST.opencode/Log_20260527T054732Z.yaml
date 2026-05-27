@@ -1,0 +1,66 @@
+Version: 1.15.11
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.11/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.11/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Improvements
+    - Added headerTimeout config for provider requests, with a 10s default for default OpenAI setups.
+    - Experimental background agents now push updates without polling.
+    - You can now set only modalities.input or modalities.output in config. (@robposch)
+    - Remote-backed projects now resolve a stable project identity.
+    Bugfixes
+    - Dynamically added MCP servers now disconnect cleanly when removed.
+    - DigitalOcean inference now uses your OAuth token directly instead of creating a MAK. (@Spherrrical)
+    - Config loading now falls back cleanly when user info is unavailable.
+    - Fixed Google tool calling after the upstream tool ID regression.
+    - Experimental flags can now override the umbrella experimental flag.
+    - Resumed sessions no longer continue orphaned interrupted tools. (@edevil)
+    - OpenAI reasoning summaries now render as separate blocks.
+    - Updated Google Vertex support for reasoning signatures.
+    - The shell tool now advertises your configured timeout to the model.
+    TUI
+    Improvements
+    - Made the prompt resize with terminal width and added prompt size config. (@bjschafer)
+    Bugfixes
+    - Accelerated diff viewer scrolling.
+    - External editors now open from the worktree directory when available.
+    Desktop
+    Improvements
+    - Refined the Desktop v2 home screen, prompt, status popover, and session controls.
+    Bugfixes
+    - Fixed V2 titlebar errors when a session sync cache was deleted. (@Eric-Guo)
+    - Web deployments no longer run desktop health checks.
+    - Duplicate server connections are now merged in the server list.
+    - Stabilized virtualized session timeline interactions.
+    - Fixed the white flash when restoring the desktop window.
+    Extensions
+    Improvements
+    - Added a dispose hook for plugins.
+    Bugfixes
+    - Fixed Codex plugin requests to send the expected session ID header.
+    Thank you to 7 community contributors:
+    - @jerome-benoit:
+      - fix(nix): re-inherit patches in desktop, ad-hoc sign .app on darwin (#27869)
+    - @edevil:
+      - fix(session): exclude orphaned interrupted tools from run-loop continuation (#26178)
+    - @bjschafer:
+      - feat(tui): make prompt size responsive and configurable (#28255)
+    - @robposch:
+      - tweak (config): make modalities input/output fields optional so that u can specify one without both being required (#29268)
+    - @Eric-Guo:
+      - fix(app): handle deleted session sync cache in V2 titlebar (#29328)
+    - @StarpTech:
+      - docs(web): update LSP docs wording (#29435)
+      - docs: add tip to lsp section (#29444)
+    - @Spherrrical:
+      - fix(digitalocean): use OAuth token directly for inference instead of creating MAK (#28897)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.15.11
+ReleaseTime: 2026-05-27T04:01:13.0000000Z
