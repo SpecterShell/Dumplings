@@ -13,26 +13,26 @@ $this.CurrentState.Version = [regex]::Match($Object1.url, '(\d+(?:\.\d+)+-\d+)')
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesRaw = Invoke-RestMethod -Uri "https://packages.chef.io/release-notes/chef-workstation/$($Object1.version).md" | Convert-MarkdownToHtml | Get-TextContent
-      if ($ReleaseNotesRaw -match 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2}|[a-zA-Z]+\W+\d{1,2}\W+20\d{2})\.') {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+      $Object2 = Invoke-WebRequest -Uri 'https://docs.chef.io/release_notes/workstation/' | ConvertFrom-Html
 
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+          if ($Node.InnerText -match 'Release date: ([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+          } else {
+            $Node
+          }
+        }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesRaw -replace 'Release Date: (\d{1,2}\W+[a-zA-Z]+\W+20\d{2}|[a-zA-Z]+\W+\d{1,2}\W+20\d{2})\.' | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesRaw | Format-Text
-        }
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
