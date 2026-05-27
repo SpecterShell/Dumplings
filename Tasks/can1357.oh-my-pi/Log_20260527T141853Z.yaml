@@ -1,0 +1,32 @@
+Version: 15.5.6
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.6/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added PI_CODEX_WEBSOCKET_MAX_IDLE_REUSE_MS to control how long an idle Codex WebSocket stays eligible for reuse, with 0 disabling the check
+    Fixed
+    - Fixed reused Codex WebSocket connections that had gone silent without activity to be dropped and replaced with a fresh handshake after the idle-reuse threshold, preventing stalled next requests
+    - Fixed stale response frames left in the websocket queue from a completed turn so subsequent requests no longer process terminal frames from the previous response
+    - Fixed websocket dead-socket detection to fail a stale connection when no inbound traffic or pong is observed after a ping timeout, improving recovery on runtimes that do not emit pong events
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Support for multi-range line selectors on URLs (e.g., :5-10,20-30) to fetch and display multiple non-contiguous sections
+    - Support for combining :raw mode with line range selectors on URLs (e.g., :raw:1-120 or :1-120:raw)
+    - Support for line range selectors on directory listings (e.g., :30-40 to view lines 30–40 of a directory tree)
+    - Clear error message when requesting a line offset beyond the end of a directory listing
+    Changed
+    - URL selector parsing now supports multiple trailing selector tokens (e.g., :raw:N-M), applying them left-to-right
+    Fixed
+    - Fixed :raw selector being ignored for JSON and feed URLs, causing them to be pretty-printed or converted to markdown instead of returning raw content
+    - Fixed directory listing line selectors silently dropping the offset parameter and only applying the limit
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.5.5...v15.5.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.6
+ReleaseTime: 2026-05-27T13:13:29.0000000Z

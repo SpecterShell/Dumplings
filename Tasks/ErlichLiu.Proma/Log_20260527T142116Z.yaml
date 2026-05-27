@@ -1,0 +1,38 @@
+Version: 0.10.10
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.10.10-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ErlichLiu/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.10.10
+    对比基准：v0.10.2
+    本次更新主要带来 Mermaid 图表渲染、文件预览查找、Markdown 编辑器自动保存，以及一系列飞书侧体验优化与渲染细节修复。
+    新功能
+    - 聊天与预览中支持 Mermaid 图表 — 消息和文件预览中的 ```mermaid 代码块会自动渲染为图表，头部按钮支持缩小/重置/放大。为避免滚动浏览长消息时被图表"卡住"，移除了滚轮缩放与拖拽交互
+    - 文件预览内查找 — 在文件预览中按 Cmd+F / Ctrl+F 可唤起查找栏，逐项高亮匹配。全局搜索快捷键在 macOS 改回 Cmd+Shift+F，与文件内查找区分
+    - Markdown 编辑器自动保存 — 编辑 Markdown 时停止输入 1.5 秒后自动写盘，切换文件或退出编辑前自动 flush 未保存内容。Save 按钮通过颜色反馈状态：保存成功短暂变绿，失败持续变红可点击重试
+    - 用本机默认 App 打开文件 — 文件预览顶栏和文件浏览器三点菜单新增「用 XX 打开」入口，按文件类型自动识别系统默认应用，并显示真实图标。macOS、Windows、Linux 全平台支持
+    - 搜索弹窗新增 Agent 搜索按钮 — 精准搜索无结果时可一键切换到 Agent 搜索，让 AI 帮你在历史会话里翻找相关内容。优先使用 deepseek-v4-flash 渠道，速度更快
+    - 聊天小地图自动定位 — 鼠标悬停展开右侧聊天小地图（Minimap）时，会自动滚动到当前阅读位置，长会话不用再手动找
+    - Chat 与 Agent 状态条颜色统一为蓝色 — 两种模式流式运行中的状态指示器统一为蓝色，减少视觉认知负担
+    - 飞书 Agent 运行实时同步到桌面 — 飞书侧触发的 Agent 任务会实时镜像到桌面端，桌面上可以看到完整运行过程
+    - 飞书长任务防休眠 — 飞书侧 Agent 跑长任务期间，系统不再被休眠中断
+    Bug 修复
+    - Windows 默认应用探测加固 — 修复 Windows 上某些应用（如 UWP 应用、夸克浏览器等未走标准注册路径的应用）无法被识别为默认应用的问题，新增 MRU 与 OpenWithProgids 双重兜底，匹配 Windows 设置面板显示的默认应用
+    - Markdown 渲染适配 react-markdown v10 — 修复升级 react-markdown 后部分代码块识别失效的问题。同时新增未标语言代码块的自动检测——AI 回复忘了标语言时也能高亮
+    - Agent 卡在旧会话锁释放不掉 — 修复异常路径下 active session 锁未释放导致后续消息被持续拒绝的问题
+    - Agent 过程组折叠的若干边界问题 — 修复流式中思考 + 尾部文本被提前外置又跳回过程组的问题；本轮完成后仍能走自动倒数收起；展示选项弹层恢复 hover 触发 + 150ms 延迟关闭
+    - Agent 工具操作按钮位置优化 — 工具调用区域的预览按钮位置调整，始终可见
+    - PDF 策略描述文案错字 — "知识" → "支持"
+    性能优化
+    - 聊天小地图流式期间不再重建监听器 — 长消息流式输出过程中减少不必要的事件监听器重建
+    - 侧边栏菜单 hover 期间不再触发重渲染 — 流式输出时侧边栏菜单交互更顺滑
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ErlichLiu/Proma/releases/tag/v0.10.10
+ReleaseTime: 2026-05-27T13:49:00.6980000Z
