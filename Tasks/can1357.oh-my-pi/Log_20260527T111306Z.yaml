@@ -1,0 +1,53 @@
+Version: 15.5.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed the package root hashline export so imports from the top-level entrypoint can no longer access hashline helpers directly
+    Added
+    - Added read.summarize.minTotalLines setting (default 100) to set the minimum file length that triggers read summarization
+    - Added <file>:<lines> support to search paths, allowing file-scoped constraints such as :N-M, :N+K, and comma-separated ranges
+    Changed
+    - Changed multi-section hashline edit execution to defer LSP diagnostics flushing until the final section is written
+    - Changed read to return verbatim contents for files shorter than read.summarize.minTotalLines instead of summarizing them
+    - Changed search path line-range filtering to include only matches and context lines that fall inside the requested ranges
+    Fixed
+    - Fixed multi-section hashline edits to reject duplicate canonical targets and preflight write guards before any section is committed
+    Fixed
+    - Fixed createAgentSession() dropping the hidden resolve tool from the registry when no active tool sets deferrable: true, even though plan mode dispatches the plan-approval resolve { action: "apply", ... } call through a standing handler. Read-only plan-mode toolsets (e.g. read, search, find, web_search) silently activated plan mode without resolve, leaving the agent unable to submit the finalized plan and forcing the user to exit plan mode manually. resolve is now kept whenever plan.enabled is true, so the standing handler always has a callable tool (#1428)
+    Fixed
+    - Fixed omp startup and /changelog reading the host project's CHANGELOG.md as omp's — getPackageDir() no longer falls back to the user's cwd when no owning package.json is locatable, preventing spurious lastChangelogVersion writes (#1423)
+    @oh-my-pi/hashline
+    Added
+    - Added a high-level Patcher API with all-or-nothing apply and staged prepare/commit flows for multi-file patch updates
+    - Added pluggable Filesystem and SnapshotStore abstractions with built-in NodeFilesystem, InMemoryFilesystem, and InMemorySnapshotStore adapters
+    - Added patch parsing that consumes ¶PATH#HASH hunk headers, validates section file hashes, and supports optional patch envelope markers
+    - Added tolerant input handling that strips read/search prefixes and supports optional cwd/fallback-path resolution when parsing patch payloads
+    - Added automatic line-ending and BOM normalization on read, with original encoding shape restored on write
+    - Added follow-up helpers buildCompactDiffPreview and streamHashLines for compact diff previews and chunked streaming of numbered lines
+    - Added stale-file-hash recovery that replays edits against snapshots and merges results onto current file content when direct hash validation fails
+    - Initial standalone release. Extracted from @oh-my-pi/pi-coding-agent.
+    Fixed
+    - Fixed repeated patch application mutating cached after_anchor edits between target snapshots
+    - Fixed multi-section patching to preflight write policies and reject duplicate canonical targets before any section is committed
+    - Fixed mixed line-ending restoration to preserve the first newline style instead of rewriting ties to LF
+    @oh-my-pi/pi-natives
+    Added
+    - Added Hashline class with methods to format headers, parse/apply hashline edits, split inputs, compute diffs, generate previews, and recover from stale hashes
+    - Added HashlineChunker class to stream UTF-8 text into numbered hashline chunks incrementally
+    - Added HashlineCursorKind, HashlineEditKind, and HashlineTokenKind exports for hashline cursor/edit/token discrimination
+    - Added unfoldUntilLines and unfoldLimitLines options to SummaryOptions to control BFS unfold visibility with an optional hard cap
+    What's Changed
+    - fix(coding-agent): scope package-dir lookup so omp never reads the host project's CHANGELOG.md by @roboomp in https://github.com/can1357/oh-my-pi/pull/1424
+    - fix(coding-agent): keep hidden resolve tool for plan mode by @roboomp in https://github.com/can1357/oh-my-pi/pull/1430
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.5.3...v15.5.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.4
+ReleaseTime: 2026-05-27T09:20:00.0000000Z
