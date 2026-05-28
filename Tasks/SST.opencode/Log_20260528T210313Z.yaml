@@ -1,0 +1,54 @@
+Version: 1.15.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.12/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.15.12/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Improvements
+    - ACP integrations can now send prompts, slash commands, and usage updates through acp-next
+    - Added WebSocket transport for OpenAI responses on supported channels (set OPENCODE_EXPERIMENTAL_WEBSOCKETS=true)
+    Bugfixes
+    - Enabled adaptive reasoning controls for Anthropic Opus 4.7+ models
+    - Allowed colons in passwords (@neriousy)
+    - Sped up warm acp-next model and config switches
+    - Improved first-session acp-next startup time
+    - Kept OpenAI WebSocket response timeouts active
+    - Retried failed OpenAI WebSocket streams before falling back
+    - Handled acp-next permission prompts correctly
+    - Used the persisted session directory for existing-session requests
+    - Forwarded remote workspace request bodies correctly
+    - Supported custom base URLs for OpenAI WebSocket responses (@Tarquinen)
+    TUI
+    Improvements
+    - Added a workspace management dialog
+    Bugfixes
+    - Kept session navigation working while prompt modes are open
+    - Restored the thinking spinner
+    - Surfaced subagent retry status
+    - Fixed opening editors from non-Git project paths (@OpeOginni)
+    Desktop
+    Improvements
+    - Added a setting to switch tab layouts
+    Bugfixes
+    - Improved the home empty state and fixed V2 font usage
+    - Fixed tab close buttons not showing reliably
+    Thank you to 5 community contributors:
+    - @OpeOginni:
+      - fix(tui): handle non-git project paths when opening editor (#29180)
+    - @gotjoshua:
+      - docs: fix ts error in math examples (#18244)
+    - @Tarquinen:
+      - fix(openai): support websocket custom base URLs (#29636)
+    - @24KaratAu:
+      - docs: fix grammar in config.mdx (#29683)
+    - @neriousy:
+      - fix(core): allow colons inside passwords (#29576)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.15.12
+ReleaseTime: 2026-05-28T19:34:49.0000000Z
