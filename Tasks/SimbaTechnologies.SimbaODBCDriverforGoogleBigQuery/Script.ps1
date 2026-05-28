@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
       }
 
       while (-not $Object2.EndOfStream) {
-        if ($Object2.ReadLine() -match "^$([regex]::Escape($this.CurrentState.Version))") {
+        if ($Object2.ReadLine() -match "^$([regex]::Escape($this.CurrentState.Version.Split('.')[0..2] -join '.'))") {
           break
         }
       }
