@@ -32,8 +32,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = New-TempFile
+    curl -fsSLA $DumplingsInternetExplorerUserAgent -o $InstallerFile $this.CurrentState.Installer[0].InstallerUrl | Out-Host
+
     try {
-      $Object3 = (Invoke-RestMethod -Uri 'https://ggnome.com/rss.xml').Where({ $_.title.Contains("Pano2VR $($this.CurrentState.Version)") }, 'First')
+      $Object3 = (curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://ggnome.com/rss.xml' | Join-String -Separator "`n" | ConvertFrom-Xml).rss.channel.item.Where({ $_.title.Contains("Pano2VR $($this.CurrentState.Version -replace '(\.0+)+$')") }, 'First')
 
       if ($Object3) {
         # ReleaseNotesUrl
