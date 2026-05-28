@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'portable'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url.Replace('//api.atomgit.com/', '//atomgit.com/') | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
