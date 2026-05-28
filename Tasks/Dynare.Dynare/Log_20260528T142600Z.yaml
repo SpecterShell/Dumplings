@@ -1,0 +1,30 @@
+Version: "7.1"
+Installer:
+- InstallerUrl: https://www.dynare.org/release/windows/dynare-7.1-win.exe
+  ProductCode: Dynare 7.1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/news
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We are pleased to announce the release of Dynare 7.1.
+    This maintenance release fixes various bugs.
+    The Windows, macOS, MATLAB Online and source packages are available for download at the Dynare website.
+    This release is compatible with MATLAB versions ranging from 9.8 (R2020a) to 26.1 (R2026a), and with GNU Octave versions ranging from 8.4.0 to 11.1.0 (NB: the Windows package requires version 11.1.0 specifically).
+    Here is a list of the problems identified in version 7.0 and that have been fixed in version 7.1:
+    - Heterogeneity:
+      - Complementarity conditions present in the model(heterogeneity=…) block were interpreted with the wrong sign (i.e. the sign opposite to what the documentation says).
+      - Aggregate variables that only appeared in the heterogeneous model block were not detected as present in the model.
+    - The conditional_forecast command on an estimated model would not correctly update the parameter vector.
+    - OccBin:
+      - With two constraints, OccBin would crash if max_check_ahead_periods option is finite.
+      - The PKF smoother would crash if the decision rules need to be recomputed.
+      - The relaxation algorithm would crash if a parameter draws produced a single-period binding regime.
+      - Shock decomposition would crash if the smoother entered a periodic regime loop.
+    - The contemp_reduced_form option of the sbvar command was broken.
+    - In a shock_paths block, the syntax self.EXOGENOUS_NAME would not work when referring an exogenous variable declared in a previous shock_paths block.
+    As a reminder, the list of new features introduced in versions 7.x can be found in the release notes for 7.0.
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/new-dynare-release/dynare-7.1-released/
+ReleaseTime: 2026-05-27T22:00:00.0000000Z

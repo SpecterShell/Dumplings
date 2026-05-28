@@ -1,0 +1,25 @@
+Version: 15.5.10
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.10/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed compaction summarizer throws losing the provider's HTTP status. generateSummary, generateHandoff, generateShortSummary, and generateTurnPrefixSummary now route their stopReason === "error" throws through a createSummarizationError helper that copies AssistantMessage.errorStatus onto the thrown Error as .status, letting downstream consumers (e.g. AgentSession.#isCompactionAuthFailure in @oh-my-pi/pi-coding-agent) branch on real provider 401/403s without regex-scraping the message body.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added /drop-images slash command that strips every ImageContent block from the current session's branch — user/developer/custom/hookMessage/toolResult content arrays plus toolResult.details.images and fileMention.files[].image — rewrites the session JSONL, rebuilds the agent's in-memory message list, tears down Codex Responses provider sessions, and rebuilds the TUI chat container so the change is visible immediately. ACP clients receive the same handler (returns "Dropped N images …" / "No images found …" through runtime.output). Stripping content that would leave a toolResult or user message with zero blocks inserts a single [image removed] placeholder so providers do not reject empty content arrays.
+    Fixed
+    - Fixed compaction surfacing raw HTTP 401/403 envelopes (e.g. Compaction failed: 401 {"type":"error","error":{"type":"authentication_error",…}}) instead of routing to an authenticated fallback model. The compaction layer now attaches the provider-reported HTTP status onto the thrown error, and AgentSession's auth-failure detector branches on error.status === 401 || 403 in addition to the existing auth_unavailable regex. When a fallback model role (e.g. modelRoles.smol) is configured, compaction retries it transparently; otherwise the user sees the actionable "Compaction requires usable credentials for …" hint instead of the raw provider envelope.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed background bash jobs pinning the JS main thread at ~200% CPU when the child process emits output in many tiny writes (printf-style progress, llama-cli token streams). pi_shell's pipe reader forwarded every chunk through a separate ThreadsafeFunction::call per kernel read(2), so a chatty child produced millions of cross-thread napi callbacks that the JS main thread had to drain serially — even after the child exited, the queue kept the process saturated for seconds. The bridge now greedily coalesces every chunk already in the mpsc queue into a single batched call (capped at 64 KiB) before crossing into JS, collapsing 1-byte writes into one napi dispatch and bringing the steady-state callback rate back to the JS event-loop's throughput.
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.5.9...v15.5.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.10
+ReleaseTime: 2026-05-28T13:00:52.0000000Z

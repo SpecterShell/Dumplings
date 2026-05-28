@@ -1,0 +1,45 @@
+Version: 0.14.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.14.4/codeg_0.14.4_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.14.4/codeg_0.14.4_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(delegation): View sub-agent conversations in a read-only side panel — works on both live and reloaded conversations.
+    - feat(delegation): Multi-agent collaboration is now opt-in — enable it in Settings to use delegate_to_agent.
+    - perf(workspace): Faster external change detection — overhead now scales with the number of changed files instead of the number of open tabs.
+    - fix(workspace): Switching between file tabs no longer flashes a loading state or risks clobbering unsaved edits.
+    - fix(workspace): External edits to background file tabs are detected and reloaded automatically.
+    - fix(workspace): Externally deleted files now show an explicit error instead of silently displaying stale content.
+    - fix(workspace): Eliminated races where the watcher could overwrite unsaved edits or paint stale diff markers.
+    - fix(workspace): Resolved git lock contention between the file watcher and AI agents — thanks to @Kwensiu (#215).
+    - fix(workspace): Opening a conversation from the sidebar now releases the maximized file pane overlay.
+    - fix(export): Desktop conversation export now uses the system Save As dialog and surfaces real save errors.
+    - fix(delegation): Sub-agent errors (auth required, refusal, token limits) now appear in the delegate_to_agent result instead of a generic "canceled".
+    - fix(delegation): Fixed parent-side hang when a sub-agent connection errors out.
+    - refactor(conversation): Moved the "Reload" entry below "Export" in the conversation context menu.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(委派)：可在右侧只读面板查看子智能体会话内容——对实时进行中和历史重载的会话都生效。
+    - 功能(委派)：多智能体协作改为默认关闭，需要在设置中手动启用后才能使用 delegate_to_agent。
+    - 性能(工作区)：外部文件变更检测更快，开销随变更文件数增长，不再随打开标签数线性放大。
+    - 修复(工作区)：切换文件标签不再闪烁加载状态，也不会覆盖未保存的编辑。
+    - 修复(工作区)：后台文件标签被外部修改时也会被检测到并自动重载。
+    - 修复(工作区)：文件被外部删除时会显式提示错误，不再静默展示过期内容。
+    - 修复(工作区)：消除监听器在并发编辑下覆盖未保存内容、绘制陈旧 diff 装饰的多种竞态。
+    - 修复(工作区)：解决文件监听器与 AI 智能体之间的 git 锁竞争问题——感谢 @Kwensiu (#215)。
+    - 修复(工作区)：从侧边栏打开会话时会自动退出文件面板最大化状态。
+    - 修复(导出)：桌面端会话导出改用系统保存对话框，真实的保存错误会正确提示。
+    - 修复(委派)：子智能体错误（鉴权失败、拒绝、token 上限等）现在会显示在 delegate_to_agent 的返回值中，不再统一显示为 "canceled"。
+    - 修复(委派)：修复子智能体连接异常时父端委派挂起的问题。
+    - 重构(会话)：会话右键菜单中"重新加载"调整到"导出"下方。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.14.4
+ReleaseTime: 2026-05-28T03:28:34.0000000Z
