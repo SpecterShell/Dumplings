@@ -29,6 +29,8 @@ switch -Regex ($this.Check()) {
     $InstallerFileExtracted = New-TempFolder
     Start-Process -FilePath $InstallerFile -ArgumentList @('/ExtractCab') -WorkingDirectory $InstallerFileExtracted -Wait
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'SupportFiles' 'CodeMeterRuntime64.msi'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     # ProductCode
     $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries
