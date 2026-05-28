@@ -1,0 +1,51 @@
+Version: 3.9.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.9.1/MotrixNext_3.9.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.9.1/MotrixNext_3.9.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    [!IMPORTANT]
+    This is a major stability and engine modernization update. Motrix Next now ships with the fully modernized Aria2 Next core, refreshed BitTorrent controls, stronger external download handling, improved path recovery, and broader localization.
+    What's Changed
+    Motrix Next 3.9.1 promotes the 3.9.1 beta line to stable. This release focuses on the download engine foundation: Aria2 Next completed its core modernization work, moving major protocol and runtime responsibilities to maintained libraries such as libcurl, Boost.Asio, Boost.Beast, Boost.JSON, OpenSSL, and libtorrent-rasterbar while removing obsolete legacy backends and fallback paths. The app side adds better browser-extension download context handling, clearer BitTorrent settings, safer default paths and ports, improved task details, and expanded localization.
+    ✨ New Features
+    - Modernized Aria2 Next engine — Updated the bundled engine with the completed core modernization work and refreshed sidecar binaries across macOS, Windows, and Linux.
+    - Browser download context forwarding — Preserves final URL, User-Agent, Referer, Cookie, request headers, and trace metadata for extension-created downloads.
+    - BitTorrent discovery controls — Added settings for DHT, Peer Exchange, Local Peer Discovery, forced encryption, and per-task peer connection limits.
+    - Improved BitTorrent seeding controls — Added clearer seeding mode controls with condition-based stop and manual-stop behavior.
+    - Hindi localization — Added Hindi support across the app and website with automatic locale detection.
+    - Download history retention — Added completed-record retention controls.
+    - Port conflict recovery — Added cleaner default port ranges and recovery handling for engine-related ports.
+    🛠 Improvements
+    - Ordinary URL downloads now benefit from the modernized libcurl-backed engine path for HTTP, HTTPS, FTP, FTPS, SFTP, and SCP.
+    - JSON-RPC HTTP and WebSocket handling now use the modern Boost.Beast engine path.
+    - JSON parsing and serialization now use the Boost.JSON engine path.
+    - TLS and crypto ownership are centralized around OpenSSL in the engine.
+    - BitTorrent remains fully backed by libtorrent-rasterbar with cleaner metadata and task handling.
+    - ED2K progress reporting now exposes clearer verified and in-flight progress fields.
+    - Improved default download directory resolution on macOS, Windows, and Linux.
+    - Improved proxy mode behavior and labels.
+    - Refined BT task detail pages with clearer status, tracker, peer, and health information.
+    - Improved task metadata fetching display and localization.
+    - Refined BitTorrent settings layout to match the rest of the preferences UI.
+    - Updated default engine ports to the 29100-range family.
+    🐛 Bug Fixes
+    - Fixed stale browser extension metadata leaking into manual Add Task flows.
+    - Fixed protected browser downloads losing important request context.
+    - Fixed system download directory fallback cases where valid user download folders could be ignored.
+    - Fixed repeated Extension API port auto-switching during engine restarts.
+    - Fixed engine restart reconciliation so Motrix Next does not treat its own Extension API listener as an external conflict.
+    - Fixed unverified BitTorrent files being allowed to seed.
+    - Fixed several ED2K search timeout and cancellation messages.
+    - Fixed Linux and Wayland hardware-rendering stability hints.
+    - Fixed task and speed display wording inconsistencies.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.9.1
+ReleaseTime: 2026-05-28T06:15:55.0000000Z
