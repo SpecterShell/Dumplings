@@ -1,0 +1,36 @@
+Version: 0.4.21
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.21/Mini-Term_0.4.21_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.21/Mini-Term_0.4.21_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.4.21，首次将 cc-connect 集成并入主线
+    - feat: 「连接」弹窗内一键导入项目到 cc-connect，占位平台修复冷启动
+    - fix(cc-connect): 修复 Windows 启动失败/孤儿进程/卡顿，并移除会产出无效配置的项目导入
+    - chore(task): archive research-clawd-on-desk
+    - feat: 「连接」弹窗内置项目导入，支持勾选批量一键导入 - 弹窗新增“导入项目到 cc-connect”区块，可单个导入或勾选后一键批量导入，已关联项显示解除、失效项显示清理 - 新增后端 cc_connect_import_projects 命令：批量一次写盘 + 仅重启一次 cc-connect，避免逐个导入多次断开 IM 会话 - 批量导入在“现有项目 + 批次内部”统一去重（冲突加 hash 后缀），并一次性写入全部 projectLinks - 探活改为常驻 + 放宽右键导入门控，零配置（未保存路径）下也能识别运行态并导入 - 确认框 .prompt-message 支持换行与超长滚动，批量清单超 15 条折叠显示
+    - feat: cc-connect 入口从设置页迁移为顶栏「连接」弹窗并支持零配置 - 顶栏改为「设置 | SSH | 连接」三按钮，移除原 cc-connect 状态点与独立 Dashboard 入口 - 新增 CcConnectModal 整合进程管理（启停/重启/测试/编辑配置）与 Dashboard 嵌入入口，从设置面板移出 - 设置面板删除 cc-connect 分页及对应菜单项、SettingsPage 类型值 - 未填写可执行文件/配置时回退默认值（PATH 中的 cc-connect + ~/.cc-connect/config.toml），启动/停止/重启/测试/编辑配置及开机自启均可零配置使用 - 新增后端命令 cc_connect_config_path 解析默认 config.toml 路径，供「编辑配置文件」在未填写时打开
+    - chore(task): archive 05-28-fluent2-skin
+    - chore(task): archive 05-28-fix-xterm-atlas-mojibake-v2
+    - chore: record journal
+    - docs: 同步 README 与 Cargo.toml 介绍 cc-connect 集成 - README 顶部 slogan 加 · IM 平台远程驱动 (cc-connect) 亮点，功能特性新增 ### cc-connect 集成 分组，涵盖进程管理 (启停 / 测试连接 / autoStart / 顶部状态点三态) / 项目导入与关联 (toml_edit 写盘 + restart + hash 冲突后缀 + race-safe icon) / Dashboard 嵌入 (iframe 自动登录 + createPortal 绕 Fluent 2 + keep-alive) / 半同步态处理 (tomlWritten 与 deletedOk 分支) / 优雅降级 五大子项 - src-tauri/Cargo.toml description 从占位符 "A Tauri App" 改成 mini-term: AI-aware desktop terminal manager built on Tauri v2 — multi-project, multi-tab, split-pane, IM bridged via cc-connect 真实描述
+    - chore: record journal
+    - chore(task): archive 05-29-fix-cc-connect-panel-critical
+    - fix: cc-connect-panel review 三 Critical + Major #7 半同步态修复 - Critical #1:CcConnectDashboard 提到 App 顶层单例，store 加 dashboard slice (ccDashboardOpen/ccDashboardDeepLink + openCcDashboard/closeCcDashboard action),ProjectList 删 local state 改用 store,grep 验证全仓仅 App.tsx 一处挂载，消除双挂载 keep-alive 内存翻倍 + z-index 重叠 + Esc 行为不确定 - Critical #2:CcConnectDashboard 加 lastSeenRunningRef/lastSeenOwnPidRef 边缘检测，running false→true 或 ownPid 变化时 setIframeUrl(null) 强制 rebuild;running true→false 保留 url 避免 cc-connect 临时掉线白屏闪烁；首次 mount 时 lastSeenRunning 初值取 status.running 不误触 - Critical #3:cc_connect_restart fallback 顺序调整，exe_path.ok_or_else 提到 take child 之前，exe_path=None 时不杀 child 不破坏 state,Err 信息提示用户填路径后手动启动避免半同步态 - Major #7:cc_connect_import_project / cc_connect_unlink_project 返回值改 ImportProjectResult/UnlinkProjectResult struct (tomlWritten/restartOk/restartError 与 deletedOk/restartOk/restartError),toml/DELETE 成功后 restart 失败编码到 result 不返 Err,前端按 tomlWritten/deletedOk 仍写/清 projectLinks + 警告 toast 消除"项目存在但未关联""项目已删但 icon 仍红"半同步态 - types.ts 加 ImportProjectResult/UnlinkProjectResult interface 严格 camelCase 对齐；spec cc-connect-integration.md Validation Matrix 同步契约从"返 Err"改"返 result.restartOk=false";cargo test 154 全过 / cargo check / tsc / vite build clean
+    - chore: record journal
+    - chore(task): archive 05-28-embed-cc-connect-panel
+    - docs: 沉淀 cc-connect 集成 4 项 spec (task 05-28-embed-cc-connect-panel 收尾) - backend/toml-edit-array-of-tables.md (新):TOML [[xxx]] 数组表标准模式 + ArrayOfTables 无 Index / 类型推断歧义 / 引号风格 assertion 脆 等坑的 Wrong vs Correct,5 个必跑单测点 - backend/cc-connect-integration.md (新):Management API :9820 接入面 / token 位置 / 创建项目必经 toml_edit + /api/v1/restart (/reload 不生效) / iframe URL + race-safe broken 标记 / probe 不抛错的轮询契约 - backend/tauri-command-nested-args.md (新):后端 command 含 struct 参数时前端 invoke 必须 wrap { req: } 而非散开，跨边界字段严格 camelCase 1:1 对齐 Rust serde 产物，常见错误信息映射 - frontend/fluent2-portal-modal.md (新):[data-panel] backdrop-filter 形成 containing block,fixed inset-0 全屏 modal/iframe 统一 createPortal 到 document.body,沿用 commit e7316e5 七 modal 修复范式 + iframe keep-alive display:none 不卸载避免重 login - backend/index.md / frontend/index.md 同步加索引
+    - feat: cc-connect 项目同步与 dashboard 嵌入 (mini-term × cc-connect PR3) - ProjectList 右键加 "导入到 cc-connect" / "在 cc-connect 配置平台" / "解除关联" / "清理失效关联" 四项，导入流程 confirm 显式提示重启风险 + 冲突 8 字符 hash 后缀 + 立即 probe 刷新，DELETE 失败走二次 confirm 清本地 link 避免 broken 卡死 - 项目 item 右侧加绿色 ◆ / 红色 ⚠ 关联 icon,race-safe 仅 listLoaded 后才标 broken,cc-connect running 切换重置避免刚启动期间误报红；openCcDashboard 项目名走 encodeURIComponent 处理含 / ? # 等特殊字符的项目名 - 新增 CcConnectDashboard 全屏 iframe modal,createPortal 到 document.body 绕开 Fluent 2 [data-panel] backdrop-filter (沿用 commit e7316e5 七 modal 修复范式),keep-alive 关闭走 display:none 避免每次重 login;URL 走 /login?token=&redirect= - 顶部加独立 "Dashboard" 按钮 (cc 未跑灰显) + StatusDot 双击触发 onOpenDashboard,新增 useCcConnectProjects hook (10s 轮询 list_projects + missingLinks) + ccConnectActions 工具封装 import/unlink 流程
+    - feat: cc-connect 集成 UI 入口层 (mini-term × cc-connect PR2) - SettingsModal 新增 cc-connect 栏，提供 exePath/configPath/autoStart/extraArgs 配置 + 启动/停止/重启/测试连接/打开 config.toml 五个按钮 + 顶部状态指示器 (running pid 端口 版本 / stopped / error diagnostic),沿用现有 SettingsPage 分段风格 + Fluent 2 CSS 变量 - App.tsx 标题栏右侧挂 CcConnectStatusDot 三态 (绿●/灰○/红⚠) + hover tooltip + 点击深链跳设置 cc-connect 栏；mount 时若 autoStart && !running 自动 spawn cc-connect 后二次 probe - 新增 useCcConnectProbe hook 走 5s setInterval 轮询 cc_connect_probe,visibilitychange 失焦时暂停，configPath 变更只 mount 探一次后续靠全局轮询保鲜，避免输入半成品路径触发状态闪烁 - types.ts 补 CcConnectStatus / CcProject / ImportProjectRequest 三个 interface 严格对齐 Rust camelCase 产物 (ownPid / workDir / agentType / hasPlatform),store.ts 加 ccConnectStatus slice - 未配置 ccConnect 时状态点不渲染，首次用户零视觉污染
+    - feat: 接入 cc-connect 集成基建层 (mini-term × cc-connect PR1) - 新增 src-tauri/src/cc_connect.rs 提供 8 个 Tauri command (probe/read_token/start/stop/restart/list_projects/import_project/unlink_project),走 ureq 调本机 cc-connect Management API (默认 :9820,Bearer token 从 ~/.cc-connect/config.toml 读),import_project 用 toml_edit 写回 [[projects]] 保留注释 + POST /api/v1/restart 让新项目生效 - AppConfig 扩 ccConnect?: CcConnectConfig 字段 (exePath/configPath/autoStart/extraArgs/projectLinks 项目关联映射),Option 包裹 + skip_serializing_if 保持老 config.json 干净 - 引 ureq 2 依赖支持同步 HTTP 客户端 (不引 tokio runtime),沿用既有 toml_edit 0.22 处理 array-of-tables - 含 5 个单元测试覆盖 toml round-trip / 注释保留 / 创建数组 / 重名检测 / URL 编码，types.ts 同步扩前端 AppConfig.ccConnect 与 CcConnectConfig 接口 - .trellis/tasks/05-28-embed-cc-connect-panel/ 归档 PRD + 5 份 research (cc-connect HTTP API / web UI iframe 嵌入可行性 / config.toml schema / Windows 进程管理 / 项目创建路径必经 restart)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.21
+ReleaseTime: 2026-05-29T13:50:19.0000000Z
