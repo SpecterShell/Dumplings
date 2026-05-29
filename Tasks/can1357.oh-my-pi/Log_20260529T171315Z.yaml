@@ -1,0 +1,36 @@
+Version: 15.5.13
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.13/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Changed hashline edit syntax to verb-based v4: body-bearing ops are replace N..M:, insert before N:, insert after N:, insert head:, and insert tail:, while bodyless delete N..M handles deletion. Removed >A..B repeat rows and the old prepend: / append: virtual insert headers; - rows remain rejected with a teaching error.
+    Changed
+    - Changed hashline tag generation to use full-file snapshots for read/search/ast-grep and related outputs, so hashline anchors now validate only when the complete file matches
+    - Changed hashline tagging to omit file headers for files over 4 MiB or that cannot be snapshotted, so those files are returned without editable hashline anchors
+    - Changed hashline context generation for line edits from partial/sparse snippets to complete-file fingerprints, reducing stale anchors for partially read files
+    Fixed
+    - Restored automatic repair of edit range hunks that break bracket balance — the failure class that previously left a duplicated closing line (a </> / ); / } echoed just below the range) or dropped one (the range swallowed a }); the payload never restated), leaving the file syntactically broken until a follow-up edit. The hashline applier now normalizes each replacement so its payload preserves the deleted region's delimiter balance, dropping a duplicated bordering closer or sparing a deleted one, and surfaces a warning on the tool result. Always on and balance-validated (no edit.hashlineAutoDropPureInsertDuplicates setting); see @oh-my-pi/hashline for the contract.
+    @oh-my-pi/hashline
+    Breaking Changes
+    - Changed hashline section tags from 3-hex to 4-hex content-hash tags, so legacy 3-digit tags are no longer valid
+    - Changed hashline syntax to verb-based v4: body-bearing ops are replace N..M:, insert before N:, insert after N:, insert head:, and insert tail:, while bodyless delete N..M handles deletion. Removed >A..B repeat rows and the old prepend: / append: virtual insert headers; - rows remain rejected with a teaching error.
+    Added
+    - Added maxPaths and maxVersionsPerPath options to InMemorySnapshotStore to bound tracked paths and per-path snapshot history
+    - Re-introduced balance-validated boundary repair in applyEdits. A replacement hunk (replace N..M: + body) is normalized so its payload preserves the deleted region's delimiter balance: when the body restates a closing delimiter that survives just outside the range (duplicate } / ); / ]) the echo is dropped, and when the range deletes a structural closer the body never restates (missing closer) the closer is spared instead of deleted. A repair fires only when one boundary operation drives the per-channel () / [] / {} imbalance to exactly zero while leaving surrounding text byte-identical (single-line ops are limited to pure structural-closer lines), so balance-preserving edits and intentional balanced duplicates are never touched. Bracket counting skips strings, template literals, and comments. Each repair surfaces a delimiter-balance warning through ApplyResult.warnings.
+    Changed
+    - Changed patch application to accept edits whenever the live file's normalized content hash matches the section tag, even when that anchor was not covered by a stored snapshot
+    Removed
+    - Removed SnapshotStore.recordContiguous and SnapshotStore.recordSparse in favor of full-file record(path, fullText) snapshots
+    Fixed
+    - Fixed hash mismatch rejections caused by CRLF or trailing spaces/tabs by normalizing those characters before computing file-hash tags
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.5.12...v15.5.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.13
+ReleaseTime: 2026-05-29T16:40:06.0000000Z
