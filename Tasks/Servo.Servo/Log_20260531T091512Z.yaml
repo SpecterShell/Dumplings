@@ -1,0 +1,517 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/servo/servo/releases/download/v0.2.0/servo-x86_64-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Servo 0.2.0 includes:
+    - revamped browser UI on Android, with a new history view
+    - improved support for Chinese, Japanese, and Korean languages
+    - interactive pretty-printer for JSON files loaded as the top-level document
+    - improved Inspector, Console, and Debugger tabs when using the Firefox DevTools
+    - improved tab navigation, focus handling, and keyboard input
+    - <select multiple> (@lukewarlow, @mrobinson, #43189)
+    - <template shadowrootslotassignment> (@simonwuelker, #44246)
+    - <video> playback on OpenHarmony (@rayguo17, #43208)
+    - ‘minimum-scale’ and ‘maximum-scale’ values in <meta name=viewport> (@shubhamg13, #40098, #43715)
+    - ‘color-mix()’ with any number of <color> values (@Loirooriol, #43890)
+    - ‘&::before’ and ‘&::after’ in ‘::details-content’ (@Loirooriol, #43878)
+    - ‘revert-rule’ (@Loirooriol, #43878)
+    - ‘tab-size’ (@mrobinson, @SimonSapin, #44480)
+    - ‘text-align: match-parent’ (@TG199, #44073)
+    - new Worker() with blob URLs (@jdm, #44004)
+    - getContext("webgl") on OffscreenCanvas (@niyabits, #44159)
+    - the detail property on PerformanceMark and PerformanceMeasure (@shubhamg13, #44289, #44272)
+    - ‘selectionchange’ events on <input> and <textarea> (@TimvdLippe, #44461)
+    - StorageManager, in experimental mode (@Taym95, #43976)
+    - activeElement on Document and ShadowRoot (@mrobinson, #43861)
+    - crypto.subtle.supports() (@kkoyung, #43703) – Servo is the first major browser engine to support this!
+    - cellPadding, cellSpacing, and align properties on HTMLTableElement (@mrobinson, #43903)
+    - relatedTarget on ‘focus’ and ‘blur’ events (@mrobinson, #43926)
+    - transferFromImageBitmap() on ImageBitmapRenderingContext (@Messi002, #43984)
+    See our April blog post for a curated overview of the changes in this release.
+    Trying out the Servo Tech Demo
+    Linux
+    If you see an error loading shared libraries when starting servo on Linux, please refer to the troubleshooting guide.
+    HarmonyOS
+    Please note that the servo-aarch64-linux-ohos.hap attached here is signed for OpenHarmony, not HarmonyOS.
+    For HarmonyOS self-signing is currently required - You can download the servo-aarch64-linux-ohos.so shared library and use DevEco Studio to follow the instructions in the ArkTS Servo Demo repository
+    What's Changed
+    Please check out our April blog post to get a curated overview over the recent changes.
+    Generated Release notes
+    What's Changed
+    - servoshell: Activate accessibility in all webviews by @delan in https://github.com/servo/servo/pull/43558
+    - devtools: Improve encoding of ObjectActor by @eerii in https://github.com/servo/servo/pull/43791
+    - a11y: Miscellaneous cleanups to our accessibility code by @delan in https://github.com/servo/servo/pull/43772
+    - wpt: Add more tests to css-device-adapt to verify clamp behavior. by @shubhamg13 in https://github.com/servo/servo/pull/43715
+    - CODEOWNERS: Add atbrakhi and eerii as DevTools owners by @eerii in https://github.com/servo/servo/pull/43832
+    - script: Use TextInputWidget to implement <textarea> shadow DOM by @mrobinson in https://github.com/servo/servo/pull/43770
+    - devtools: Show variable values in scopes by @eerii in https://github.com/servo/servo/pull/43792
+    - config: Add documentation for the public API. by @mukilan in https://github.com/servo/servo/pull/43802
+    - webgpu: Fix feature guard by @jschwe in https://github.com/servo/servo/pull/43831
+    - layout/script: Free memory earlier by consuming instead of draining the temporary container if it is unused by @yezhizhen in https://github.com/servo/servo/pull/43826
+    - script: Remove focus transaction concept by @mrobinson in https://github.com/servo/servo/pull/43834
+    - devtools: rename LongStringActor name variables by @niyabits in https://github.com/servo/servo/pull/43838
+    - script: Let wheel, keyboard- and pointerevents be composed when fired by the user agent by @simonwuelker in https://github.com/servo/servo/pull/43799
+    - script: Implement PerformanceMeasureOptions by @simonwuelker in https://github.com/servo/servo/pull/43753
+    - script: Move "scroll into view" call out of "focusing steps" by @mrobinson in https://github.com/servo/servo/pull/43842
+    - layout: Update group index when reusing table-column box by @Loirooriol in https://github.com/servo/servo/pull/43846
+    - Fix child disappearing with mixed overflow clip/visible. by @Messi002 in https://github.com/servo/servo/pull/43620
+    - devtools: rename NodeActor related variables by @niyabits in https://github.com/servo/servo/pull/43841
+    - devtools: Rename NodeActor variables in walker.rs by @treetmitterglad in https://github.com/servo/servo/pull/43847
+    - doc: explain how to create a WebView (#43712) by @TG199 in https://github.com/servo/servo/pull/43787
+    - devtools: Update outdated TODO by @yezhizhen in https://github.com/servo/servo/pull/43851
+    - script: Align navigate more with spec steps by @TimvdLippe in https://github.com/servo/servo/pull/43857
+    - base: Implement MallocSizeOf for some more types by @Narfinger in https://github.com/servo/servo/pull/43858
+    - script: Run the focusing steps when navigating to a fragment by @mrobinson in https://github.com/servo/servo/pull/43859
+    - devtools: Merge preview and scopes by @atbrakhi in https://github.com/servo/servo/pull/43860
+    - script: Fully implement DocumentOrShadowRoot#activeElement by @mrobinson in https://github.com/servo/servo/pull/43861
+    - script: Move MutationObserver DOM interfaces to script/dom/mutationobserver by @elomscansio in https://github.com/servo/servo/pull/43865
+    - servo-hyper-serde: Use the workspace version by @jschwe in https://github.com/servo/servo/pull/43866
+    - Used encoding-parsing algorithm in follow_hyperlink by @sabbCodes in https://github.com/servo/servo/pull/43822
+    - script: Move all focus-related code to components/script/document/focus.rs and create DocumentFocusHandler by @mrobinson in https://github.com/servo/servo/pull/43868
+    - stylo: Update Stylo to remove PseudoElement::DetailsSummary. by @TG199 in https://github.com/servo/servo/pull/43849
+    - script: Also set the focus state on focused area's shadow hosts by @mrobinson in https://github.com/servo/servo/pull/43873
+    - devtools: rename ObjectActor and SymbolIteratorActor variables names by @niyabits in https://github.com/servo/servo/pull/43875
+    - refactor: rename PropertyIteratorActor related variable names by @niyabits in https://github.com/servo/servo/pull/43876
+    - Upgrade Stylo to 2026-04-01 by @Loirooriol in https://github.com/servo/servo/pull/43878
+    - wpt: Enable /infrastructure tests (#20889) by @CynthiaOketch in https://github.com/servo/servo/pull/43879
+    - Fix error message for illegal HTML element constructors (#41107) by @treetmitterglad in https://github.com/servo/servo/pull/43882
+    - script: Move eventsource out of event module. by @jdm in https://github.com/servo/servo/pull/43884
+    - script: Implement SubtleCrypto.supports by @kkoyung in https://github.com/servo/servo/pull/43703
+    - net: Set "request-includes-credentials" and URL list of response for "HTTP-network-or-cache fetch" by @yezhizhen in https://github.com/servo/servo/pull/43798
+    - devtools: Replace new with register for StyleSheetsActor by @sabbCodes in https://github.com/servo/servo/pull/43889
+    - script: Support auto generating all types of cx by @sagudev in https://github.com/servo/servo/pull/43174
+    - script: Fix assertion failure when stringifying cross-origin location object by @thebabalola in https://github.com/servo/servo/pull/43844
+    - devtools: Replace new with register for DeviceActor by @sabbCodes in https://github.com/servo/servo/pull/43893
+    - servo: Fix rustdoc warnings by @simonwuelker in https://github.com/servo/servo/pull/43892
+    - servo: Remove WebViewDelegate::play_gamepad_haptic_effect and WebViewDelegate::stop_gamepad_haptic_effect by @mrobinson in https://github.com/servo/servo/pull/43895
+    - servoshell: Only send ImeEvent::Dismissed when the user dismisses the IME by @mrobinson in https://github.com/servo/servo/pull/43872
+    - devtools: Replace new with register for ConsoleActor by @sabbCodes in https://github.com/servo/servo/pull/43896
+    - servo: Add WebView::load_request and UrlRequest to the API by @Narfinger in https://github.com/servo/servo/pull/43338
+    - paint: Use viewport meta tag's min-scale and max-scale to clamp pinch zoom by @shubhamg13 in https://github.com/servo/servo/pull/40098
+    - script: Expose legacy table cellSpacing, cellPadding, and align DOM properties by @mrobinson in https://github.com/servo/servo/pull/43903
+    - script: Modernize the HTMLElement WebIDL by @mrobinson in https://github.com/servo/servo/pull/43904
+    - Replace normal struct instantiation with register for WalkerActor by @foresterre in https://github.com/servo/servo/pull/43881
+    - indexeddb: abort pending worker upgrade and delete new db on rollback by @Taym95 in https://github.com/servo/servo/pull/42998
+    - build(deps): bump rustix from 1.1.2 to 1.1.4 by @xtqqczze in https://github.com/servo/servo/pull/43898
+    - Don’t print passing unit tests by @SimonSapin in https://github.com/servo/servo/pull/43902
+    - Implement the IDL security check by @yvt in https://github.com/servo/servo/pull/28583
+    - devtools: Replace new with register for ReflowActor by @sabbCodes in https://github.com/servo/servo/pull/43906
+    - devtools: Replace new with register for NetworkParentActor by @sabbCodes in https://github.com/servo/servo/pull/43913
+    - devtools: Replace new with register for CssPropertiesActor by @sabbCodes in https://github.com/servo/servo/pull/43908
+    - script: Allow for implicit cx for setters by @TimvdLippe in https://github.com/servo/servo/pull/43524
+    - devtools: Replace new with register for BreakpointListActor by @sabbCodes in https://github.com/servo/servo/pull/43917
+    - devtools: Replace new with register for ThreadActor by @sabbCodes in https://github.com/servo/servo/pull/43910
+    - devtools: Replace new with register for PerformanceActor by @sabbCodes in https://github.com/servo/servo/pull/43921
+    - mach: Fix typo in allocator feature name by @jschwe in https://github.com/servo/servo/pull/43922
+    - devtools: Replace new with register for BrowsingContextActor by @sabbCodes in https://github.com/servo/servo/pull/43924
+    - devtools: Replace new with register for NetworkEventActor by @sabbCodes in https://github.com/servo/servo/pull/43925
+    - Prevent panic on client storage directory conflict by @arihant2math in https://github.com/servo/servo/pull/43918
+    - script: Add an initial implementation of relatedTarget forfocus/blur events by @mrobinson in https://github.com/servo/servo/pull/43926
+    - ci: Secure book-sync secrets with environment by @jschwe in https://github.com/servo/servo/pull/43920
+    - script: Pass &mut JSContext to make_int_setter by @TimvdLippe in https://github.com/servo/servo/pull/43928
+    - devtools: Replace new with register for AccessibilityActor by @sabbCodes in https://github.com/servo/servo/pull/43907
+    - devtools: Replace new with register for ProcessActor by @sabbCodes in https://github.com/servo/servo/pull/43923
+    - Automatically generate CONTENT_EVENT_HANDLER_NAMES from WebIDL by @StaySafe020 in https://github.com/servo/servo/pull/43848
+    - mach: Set up build mode (Side effect: Stylo thread stack size reduced to 512 KiB again for most build) by @yezhizhen in https://github.com/servo/servo/pull/43930
+    - devtools: Replace new with register for ThreadConfigurationActor by @sabbCodes in https://github.com/servo/servo/pull/43916
+    - bootstrap: Sync packages with book by @jschwe in https://github.com/servo/servo/pull/43931
+    - script: Move Web Crypto interfaces to script/dom/webcrypto by @kkoyung in https://github.com/servo/servo/pull/43939
+    - parser: add a pretty printer for top-level json documents by @webbeef in https://github.com/servo/servo/pull/43702
+    - IndexedDB: Fix fire-success/error event exception handling and explicit commit by @Taym95 in https://github.com/servo/servo/pull/43914
+    - script: Support deleting words with backspace in textual inputs by @mrobinson in https://github.com/servo/servo/pull/43940
+    - script: Pass &mut JSContext to RoutedPromiseListener by @TimvdLippe in https://github.com/servo/servo/pull/43943
+    - script: Pass &mut JSContext to make_atomic_setter by @TimvdLippe in https://github.com/servo/servo/pull/43942
+    - script: Pass &mut JSContext to consume_stream by @TimvdLippe in https://github.com/servo/servo/pull/43944
+    - script: Remove CanGc::note() from create.rs by @TimvdLippe in https://github.com/servo/servo/pull/43946
+    - script: Add error messages in StaticRange by @MuhammadMouostafa in https://github.com/servo/servo/pull/43260
+    - servo: Use _ prefixed names for unused arguments for public API functions by @rovertrack in https://github.com/servo/servo/pull/43947
+    - script: Pass &mut JSContext to reflect_node_with_proto by @TimvdLippe in https://github.com/servo/servo/pull/43952
+    - devtools: Replace new with register for TabDescriptorActor by @sabbCodes in https://github.com/servo/servo/pull/43909
+    - layout: Fix line breaking opportunities for Chinese and Japanese by @SharanRP in https://github.com/servo/servo/pull/43744
+    - script/mach: Increase stack size of ScriptThread/StyleThread to 8MiB to match recursion depth of other browsers by @yezhizhen in https://github.com/servo/servo/pull/43888
+    - script: Fix GC tracing of compiled JSScript pointers in ClassicScript by @drasticactions in https://github.com/servo/servo/pull/43933
+    - devtools: Replace new with register for WatcherActor by @sabbCodes in https://github.com/servo/servo/pull/43911
+    - devtools: Replace new with register for PauseActor by @sabbCodes in https://github.com/servo/servo/pull/43957
+    - servoshell: Only dismiss the most-recently opened IME by @mrobinson in https://github.com/servo/servo/pull/43932
+    - devtools: rename the remaining NodeActor variables by @niyabits in https://github.com/servo/servo/pull/43969
+    - devtools: Replace new with register for AccessibleWalkerActor by @sabbCodes in https://github.com/servo/servo/pull/43967
+    - script: implement render-blocking option for script fetch and load events by @elomscansio in https://github.com/servo/servo/pull/43741
+    - devtools: Replace new with register for TargetConfigurationActor by @sabbCodes in https://github.com/servo/servo/pull/43915
+    - IndexedDB: Fix object-store key range handling by @Taym95 in https://github.com/servo/servo/pull/43901
+    - devtools: Replace new with register for LayoutInspectorActor by @sabbCodes in https://github.com/servo/servo/pull/43954
+    - fonts: Clean up application of word-spacing by @mrobinson in https://github.com/servo/servo/pull/43899
+    - storage: Make add_new_environment return a Result instead of panicking by @sabbCodes in https://github.com/servo/servo/pull/43949
+    - net: Improve HTTP fetch compliance by @yezhizhen in https://github.com/servo/servo/pull/43970
+    - script: Add basic implementation of font-size command by @TimvdLippe in https://github.com/servo/servo/pull/43287
+    - script: Pass &mut JSContext to Clipboard API's by @TimvdLippe in https://github.com/servo/servo/pull/43975
+    - Force callers to claim blob url before making a fetch request by @simonwuelker in https://github.com/servo/servo/pull/43746
+    - devtools: Rename WorkerActor variables and add register method by @thebabalola in https://github.com/servo/servo/pull/43963
+    - profile: Add debug_span and minor refactoring by @jschwe in https://github.com/servo/servo/pull/43971
+    - devtools: Rename SourceActor variable names by @thebabalola in https://github.com/servo/servo/pull/43959
+    - layout: Rename confusing SequentialLayoutState::collapse_margins by @sabbCodes in https://github.com/servo/servo/pull/43978
+    - devtools: Rename ThreadActor variable names by @thebabalola in https://github.com/servo/servo/pull/43955
+    - script: Lock blob URL entry during XHR open() by @simonwuelker in https://github.com/servo/servo/pull/43977
+    - devtools: Fix worker targets in debugger tab by @atbrakhi in https://github.com/servo/servo/pull/43981
+    - servoshell: Port from sig to signal_hook_registry by @Narfinger in https://github.com/servo/servo/pull/43891
+    - Don't crash if rustup is not installed by @Messi002 in https://github.com/servo/servo/pull/43982
+    - devtools: Pass steppingType to onPop hook by @eerii in https://github.com/servo/servo/pull/43995
+    - script: Remove FIXME about deprecated performance.timing by @simonwuelker in https://github.com/servo/servo/pull/43996
+    - devtools: Include layer rules in CSS panel using rule tree by @arabson99 in https://github.com/servo/servo/pull/43912
+    - OHOS CI: Fix parsefromstring by @Narfinger in https://github.com/servo/servo/pull/42995
+    - stylo: Enable multiple color arguments in color-mix() by @Loirooriol in https://github.com/servo/servo/pull/43890
+    - script/net: Make URL List closer to spec by @yezhizhen in https://github.com/servo/servo/pull/43987
+    - Modernize and improve the Android UI by @espy in https://github.com/servo/servo/pull/43795
+    - url: Let origins of file:// URLs be potentially trustworthy by @simonwuelker in https://github.com/servo/servo/pull/43989
+    - Remove introduction_type_override field from HTMLScriptElement by @sabbCodes in https://github.com/servo/servo/pull/44003
+    - script: Support sprintf-style substitutions in console methods by @TG199 in https://github.com/servo/servo/pull/43897
+    - script: Use the global's origin when claiming blob tokens. by @jdm in https://github.com/servo/servo/pull/44004
+    - Make localStorage and sessionStorage throw on opaque origins by @Taym95 in https://github.com/servo/servo/pull/44002
+    - script: Pass &CStr to get_callable_property by @rovertrack in https://github.com/servo/servo/pull/44008
+    - devtools: remove impl JsonPacketStream for TcpStream by @Skgland in https://github.com/servo/servo/pull/44006
+    - release: Fix result check for cancelled workflows by @jschwe in https://github.com/servo/servo/pull/44017
+    - script: Reduce ShadowRoot::bind_to_tree complexity from O(2^N) to O(N) by @yezhizhen in https://github.com/servo/servo/pull/44016
+    - mozjs: Rebuild from source if jitspew feature is enabled by @simonwuelker in https://github.com/servo/servo/pull/44010
+    - media: Implement Player for ohos backend by @rayguo17 in https://github.com/servo/servo/pull/43208
+    - paint: Add minimum size checks for RenderingContext by @freyacodes in https://github.com/servo/servo/pull/44011
+    - IndexedDB: Align IndexedDB binary key conversion with the spec by @Taym95 in https://github.com/servo/servo/pull/44009
+    - devtools: Fix recursion in debugger by @atbrakhi in https://github.com/servo/servo/pull/44024
+    - script: Claim blob before loading <video> poster frame by @simonwuelker in https://github.com/servo/servo/pull/44035
+    - script: Remove pointless import renames in components/script/dom/request.rs by @CynthiaOketch in https://github.com/servo/servo/pull/44025
+    - allocator: Add libc Heap information on macos by @jschwe in https://github.com/servo/servo/pull/44037
+    - script: Further implement fontsize command by @TimvdLippe in https://github.com/servo/servo/pull/44030
+    - layout: Integrate more details into FontAndScriptInfo by @mrobinson in https://github.com/servo/servo/pull/43974
+    - script: Fix computation of "fontsize" command value by @TimvdLippe in https://github.com/servo/servo/pull/44039
+    - script: Queue a networking task to proceed when a pending module fetch is terminated by @Gae24 in https://github.com/servo/servo/pull/44042
+    - mach: remove shorthand support for direct test file paths in mach test-unit by @elomscansio in https://github.com/servo/servo/pull/43951
+    - IndexedDB: Align IDBDatabase.transaction validation with the IndexedDB spec by @Taym95 in https://github.com/servo/servo/pull/44059
+    - script/constellation: Rename and consolidate cross-Document focus messaging by @mrobinson in https://github.com/servo/servo/pull/44020
+    - devtools: Handle different number values and their types by @atbrakhi in https://github.com/servo/servo/pull/44022
+    - servoshell (Windows): Add CJK fonts for egui by @yezhizhen in https://github.com/servo/servo/pull/44055
+    - fonts: Use ICU's Language instead of Stylo's XLang by @Loirooriol in https://github.com/servo/servo/pull/44057
+    - devtools: Make isAsync and isGenerator optional by @atbrakhi in https://github.com/servo/servo/pull/44023
+    - devtools: Replace new with register for HighlighterActor by @CynthiaOketch in https://github.com/servo/servo/pull/44067
+    - media: Clean up shadow root content when removing controls by @Messi002 in https://github.com/servo/servo/pull/43983
+    - servoshell: Ignore requests to focus unknown WebViews via keyboard shortcuts by @mrobinson in https://github.com/servo/servo/pull/44070
+    - devtools: Use DebuggerValue in console by @atbrakhi in https://github.com/servo/servo/pull/44064
+    - devtools: Replace new with register for PageStyleActor by @elomscansio in https://github.com/servo/servo/pull/44068
+    - font: Refactor font list generation on OpenHarmony platform by @RichardTjokroutomo in https://github.com/servo/servo/pull/44061
+    - devtools: Replace new with register for NodeActor by @elomscansio in https://github.com/servo/servo/pull/44071
+    - script: Make Node::clean_up_style_and_layout_data work as named by @yezhizhen in https://github.com/servo/servo/pull/44072
+    - script: Skip clearing subtree layout boxes of detached element when attaching shadow to it by @yezhizhen in https://github.com/servo/servo/pull/44052
+    - script: Implement preserving ranges for moves during commands by @TimvdLippe in https://github.com/servo/servo/pull/44041
+    - script: Implement drop-down select multiple by @lukewarlow in https://github.com/servo/servo/pull/43189
+    - script: Rename CanGc::note() to CanGc::deprecated_note() by @TimvdLippe in https://github.com/servo/servo/pull/44081
+    - Stylo: Enable text align match parent servo by @TG199 in https://github.com/servo/servo/pull/44073
+    - devtools: Clean up StyleRuleActor variable names by @eerii in https://github.com/servo/servo/pull/44084
+    - indexeddb: Implement encoding module by @arihant2math in https://github.com/servo/servo/pull/39009
+    - release: Only mark scheduled runs as latest nightly. by @jschwe in https://github.com/servo/servo/pull/44086
+    - script: Accept names of PerformanceTiming members as marks in Performance.measure by @simonwuelker in https://github.com/servo/servo/pull/43990
+    - config: Fix panic when converting convertible PrefValue::Int to u64 by @yezhizhen in https://github.com/servo/servo/pull/44079
+    - script: Further implement fontsize command by @TimvdLippe in https://github.com/servo/servo/pull/44075
+    - layout: Resolve word-spacing percentages against computed font-size by @sabbCodes in https://github.com/servo/servo/pull/44031
+    - release: Add job to publish to crates.io by @jschwe in https://github.com/servo/servo/pull/43972
+    - script: Fix panic in compressedTexSubImage2D when no base image exists by @thebabalola in https://github.com/servo/servo/pull/44050
+    - IndexedDB: Implement storage-key checks for IDBFactory entry points by @Taym95 in https://github.com/servo/servo/pull/44088
+    - localstorage: test storage is not shared across iframes with opaque origins by @niyabits in https://github.com/servo/servo/pull/44038
+    - script: Move more iterators to unrooted iterators by @Narfinger in https://github.com/servo/servo/pull/44018
+    - deps: Fix sea-query pre-release versions by @jschwe in https://github.com/servo/servo/pull/44093
+    - script: implement missing steps for form submission by @TG199 in https://github.com/servo/servo/pull/43700
+    - canvas: Make ImageBitmapRenderingContext render to the canvas by @Messi002 in https://github.com/servo/servo/pull/43984
+    - servoshell: Update egui to 0.34. by @jdm in https://github.com/servo/servo/pull/44053
+    - script: Remove layout helper traits by @simonwuelker in https://github.com/servo/servo/pull/44092
+    - script: Make DocumentFocusHandler hold a FocusableArea by @mrobinson in https://github.com/servo/servo/pull/44029
+    - script: make all keyboard events composed by @webbeef in https://github.com/servo/servo/pull/44094
+    - CI: Simplify release workflow by @jschwe in https://github.com/servo/servo/pull/44085
+    - layout/script: Remove unused layout optimization heuristics by @yezhizhen in https://github.com/servo/servo/pull/44103
+    - storage: fix incorrect data sharing by passing document origin to storage thread by @niyabits in https://github.com/servo/servo/pull/43988
+    - script: Move StyleData to Element from Node by @mrobinson in https://github.com/servo/servo/pull/44074
+    - ci: Secure release workflow using environment by @jschwe in https://github.com/servo/servo/pull/44108
+    - script: Move cookie_store from GlobalScope into Window by @TG199 in https://github.com/servo/servo/pull/44115
+    - servo: Remove unnecessary RefCell from site_data_manager by @sabbCodes in https://github.com/servo/servo/pull/44116
+    - script: Don't associate form elements with forms across shadow boundaries by @simonwuelker in https://github.com/servo/servo/pull/44117
+    - script: Replace WebGLShader Drop implementation with a droppable substruct (#26488) by @willypuzzle in https://github.com/servo/servo/pull/44119
+    - script: Split up contenteditable.rs into multiple files by @TimvdLippe in https://github.com/servo/servo/pull/44110
+    - bootstrap/devcontainer: Install required packages for wpt. by @jschwe in https://github.com/servo/servo/pull/44109
+    - bootstrap: Stop installing cargo-about by @jschwe in https://github.com/servo/servo/pull/44123
+    - libservo: Export CookieSource in public API by @TG199 in https://github.com/servo/servo/pull/44124
+    - script: Push GlobalScope::crypto down into Window and WorkerGlobalScope by @rovertrack in https://github.com/servo/servo/pull/44122
+    - script: Unbind <script> elements properly from the tree by @simonwuelker in https://github.com/servo/servo/pull/44127
+    - devcontainer: Fix build error on macos by @jschwe in https://github.com/servo/servo/pull/44126
+    - script: Rewrite the layout DOM wrappers by @mrobinson in https://github.com/servo/servo/pull/44114
+    - script: Move devtools_wants_updates from GlobalScope to Window by @sabbCodes in https://github.com/servo/servo/pull/44121
+    - script: Invalidate texture if there's a bound framebuffer in WebGLRenderingContext by @simartin in https://github.com/servo/servo/pull/43608
+    - script: Remove the duplicate implementation of selectors::Element by @mrobinson in https://github.com/servo/servo/pull/44134
+    - Make the pull request template more explicit by @mrobinson in https://github.com/servo/servo/pull/44135
+    - Indexeddb: Follow the spec and make IDBRequest result/error getters throw while pending by @Taym95 in https://github.com/servo/servo/pull/44128
+    - devtools: Implement getBlackboxingActor by @freyacodes in https://github.com/servo/servo/pull/44142
+    - script: Implement recording and restoring of values by @TimvdLippe in https://github.com/servo/servo/pull/44137
+    - script: Don't re-parse link relations when binding element to tree by @simonwuelker in https://github.com/servo/servo/pull/44139
+    - servoshell (Linux): Add CJK fonts for egui by @CynthiaOketch in https://github.com/servo/servo/pull/44138
+    - script: Remove unused has_sent_idle_message field from Window by @thebabalola in https://github.com/servo/servo/pull/44154
+    - webxr: Account for mock device VR/AR blend modes by @msub2 in https://github.com/servo/servo/pull/44155
+    - webgl: fix incorrect specification links by @simartin in https://github.com/servo/servo/pull/44156
+    - devcontainer: Verify build on PRs. by @jschwe in https://github.com/servo/servo/pull/44111
+    - script: Avoid forwarding body event handlers without a browsing context by @arabson99 in https://github.com/servo/servo/pull/44046
+    - mach: respect --yes when installing GStreamer on Macos by @niyabits in https://github.com/servo/servo/pull/44091
+    - devtools: Create UUID for objects created by console logging by @eerii in https://github.com/servo/servo/pull/44164
+    - devtools: Move debugger_value_to_json to lib.rs by @eerii in https://github.com/servo/servo/pull/44160
+    - devcontainer: Build multi-arch image by @jschwe in https://github.com/servo/servo/pull/44162
+    - devtools: Implement showing ArrayItems in preview by @atbrakhi in https://github.com/servo/servo/pull/44172
+    - devtools: Do not use MAX_ITEMS in object preview by @atbrakhi in https://github.com/servo/servo/pull/44173
+    - Indexeddb: Cache IDBCursor.key conversion to preserve object identity by @Taym95 in https://github.com/servo/servo/pull/44161
+    - devtools: implement objectPreview in console by @atbrakhi in https://github.com/servo/servo/pull/44181
+    - script: Pass down &mut JSContext/CurrentRealm to AudioContext methods by @elomscansio in https://github.com/servo/servo/pull/44175
+    - Indexeddb: fix IDBKeyRange lowerBound/upperBound open flags by @Taym95 in https://github.com/servo/servo/pull/44183
+    - net: Remove duplicate CoreResourceMsg::GetCookiesDataForUrl by @longvatrong111 in https://github.com/servo/servo/pull/44167
+    - script: Add initial implementation of underline command by @TimvdLippe in https://github.com/servo/servo/pull/44194
+    - Expand fmt and tidy TOML_GLOBS range by @mjgarton in https://github.com/servo/servo/pull/44180
+    - script: Simplify the way that layout flushes shadow root stylesheets by @mrobinson in https://github.com/servo/servo/pull/44165
+    - script : Return PerformanceMark object from the Performance.mark() by @shubhamg13 in https://github.com/servo/servo/pull/44199
+    - script: Expose a LayoutNode::is_root_of_user_agent_widget method by @mrobinson in https://github.com/servo/servo/pull/44197
+    - deps: Upgrade Taffy to v0.10.1 by @nicoburns in https://github.com/servo/servo/pull/44203
+    - servoshell: Fix incorrect calculation of WebView dimension. by @mukilan in https://github.com/servo/servo/pull/44205
+    - script: Don't traverse O(the whole DOM tree) nodes when inserting elements into Vec in tree order by @simonwuelker in https://github.com/servo/servo/pull/44120
+    - layout: Add a basic accessibility tree implementation for web contents by @alice in https://github.com/servo/servo/pull/42338
+    - canvas: fix unrecognized offscreen webgl context by @niyabits in https://github.com/servo/servo/pull/44159
+    - script: Implement wake lock api by @TG199 in https://github.com/servo/servo/pull/43617
+    - webgl: replace WebGLCommandSender with WebGLChan by @niyabits in https://github.com/servo/servo/pull/44214
+    - API: document which Preferences are experimental or enabled by default by @sabbCodes in https://github.com/servo/servo/pull/44171
+    - Indexeddb: fix upgrade transaction completion ordering by @Taym95 in https://github.com/servo/servo/pull/44215
+    - deps: Unblock CI by upgrading rustls-webpki to 0.103.12 by @yezhizhen in https://github.com/servo/servo/pull/44229
+    - embedding: Use non-advertised (standard) shortcut by @yezhizhen in https://github.com/servo/servo/pull/44223
+    - layout: Send accessibility updates directly to embedder from layout. by @alice in https://github.com/servo/servo/pull/44208
+    - Match on NonNull::new instead of using is_null() and expect() by @rovertrack in https://github.com/servo/servo/pull/44221
+    - devtools: implement ArrayPreview in console by @atbrakhi in https://github.com/servo/servo/pull/44196
+    - wpt: Convert several old Servo-specific crash tests into WPT crashtests by @mrobinson in https://github.com/servo/servo/pull/44237
+    - wpt: Remove empty test ini for /_mozilla/mozilla/localeCompare.html by @mrobinson in https://github.com/servo/servo/pull/44240
+    - script: Fix command state for underline command by @TimvdLippe in https://github.com/servo/servo/pull/44234
+    - wpt: Remove the /_mozilla/mozilla/sslfail.html by @mrobinson in https://github.com/servo/servo/pull/44238
+    - script: JSContextify parts of DocumentEventHandler by @Narfinger in https://github.com/servo/servo/pull/44241
+    - devtools: Implement function preview in console by @eerii in https://github.com/servo/servo/pull/44233
+    - wpt: Rename Servo-specific WPT-style tests to match WPT conventions by @mrobinson in https://github.com/servo/servo/pull/44232
+    - layout: Reuse abspos fragments when they didn't change by @Loirooriol in https://github.com/servo/servo/pull/44231
+    - SharedWorker: generalize worker common code for non-dedicated worker globals by @Taym95 in https://github.com/servo/servo/pull/44244
+    - storage: Enable indexeddb as an experimental feature by @arihant2math in https://github.com/servo/servo/pull/44245
+    - wpt: Make /_mozilla/mozilla/getBoundingClientRect.html wait for fonts to load by @mrobinson in https://github.com/servo/servo/pull/44248
+    - wpt: Make /_mozilla/css/offset-properties-inline.html wait for fonts to load by @mrobinson in https://github.com/servo/servo/pull/44247
+    - script: Use OffscreenRenderingContextId instead of DOMString in OffscreenCanvas by @rovertrack in https://github.com/servo/servo/pull/44227
+    - tests: Remove src from audio element in move-element-with-ua-shadow-tree-crash.html by @simonwuelker in https://github.com/servo/servo/pull/44252
+    - api: WebView::animating should only take a reference to self by @JavaDerg in https://github.com/servo/servo/pull/44253
+    - ci: Install cargo nextest conditionally; Give the step consistent name for linux & mac by @yezhizhen in https://github.com/servo/servo/pull/44226
+    - script: Encapsulate logic of underlying compression algorithms by @kkoyung in https://github.com/servo/servo/pull/44195
+    - script: Partially implement IntersectionObserver compute the intersection algo by @stevennovaryo in https://github.com/servo/servo/pull/42204
+    - script: Initialize Sanitizer API implementation by @kkoyung in https://github.com/servo/servo/pull/44198
+    - mach: Support Visual Studio 2026 and VC145 redistributables by @zhangxichang in https://github.com/servo/servo/pull/44264
+    - layout: Cache SameFormattingContextBlock layout results by @mrobinson in https://github.com/servo/servo/pull/42904
+    - devtools: Separate actors into their own files by @eerii in https://github.com/servo/servo/pull/44265
+    - script: Clear style data from detached subtrees when attaching a shadow DOM by @mrobinson in https://github.com/servo/servo/pull/44259
+    - webgl: check TexImage3D's input data length by @simartin in https://github.com/servo/servo/pull/44270
+    - devtools: Use serde structs for ObjectActorMsg by @eerii in https://github.com/servo/servo/pull/44262
+    - android: Support custom build profiles by @jschwe in https://github.com/servo/servo/pull/44182
+    - layout: Avoid unnecessary borrow in TextRun::segment_text_by_font() by @Loirooriol in https://github.com/servo/servo/pull/44279
+    - release: Build android in production mode by @jschwe in https://github.com/servo/servo/pull/44278
+    - servoshell: Remove IndexedDB preference from servo:preferences by @arihant2math in https://github.com/servo/servo/pull/44283
+    - script: Add messages to all errors in components/script/dom/location.rs by @arihant2math in https://github.com/servo/servo/pull/44282
+    - script: Make adjacent errors and console.log messages log in correct order by @sabbCodes in https://github.com/servo/servo/pull/44243
+    - wpt: Correct the name of a __dir__.ini metadata file after #44232 by @mrobinson in https://github.com/servo/servo/pull/44260
+    - layout: depend on web_atoms rather than html5ever by @nicoburns in https://github.com/servo/servo/pull/44277
+    - script: Correctly handle modifiable elements in contenteditable by @TimvdLippe in https://github.com/servo/servo/pull/44250
+    - script: Default configuration of sanitizer by @kkoyung in https://github.com/servo/servo/pull/44290
+    - build: Upgrade mako to 1.3.11 in uv.lock to fix security alert by @yezhizhen in https://github.com/servo/servo/pull/44291
+    - script: Check correct element if text-decoration is effective by @TimvdLippe in https://github.com/servo/servo/pull/44293
+    - storage: use client storage in indexeddb by @gterzian in https://github.com/servo/servo/pull/43900
+    - layout: Fix which axis to consider for baseline propagation of flex items by @SimonSapin in https://github.com/servo/servo/pull/44281
+    - style: When animating a property, ignore keyframes that don't declare that property by @simonwuelker in https://github.com/servo/servo/pull/43461
+    - script: Generate custom fields also, for interfaces inheriting from PerformanceEntry, from impl_performance_entry_struct! by @shubhamg13 in https://github.com/servo/servo/pull/44289
+    - layout: Remove dependency on xi-unicode by @mrobinson in https://github.com/servo/servo/pull/44303
+    - git: Fix CI by removing wrongly commited FETCH_HEAD by @yezhizhen in https://github.com/servo/servo/pull/44309
+    - script: Set shorthand text-decoration instead of longhand by @TimvdLippe in https://github.com/servo/servo/pull/44312
+    - net: Refactor obtain_response and split devtools by @Narfinger in https://github.com/servo/servo/pull/44271
+    - Revert "storage: use client storage in indexeddb" by @yezhizhen in https://github.com/servo/servo/pull/44318
+    - Implement SiteDataManager::cookies_for_url_async by @longvatrong111 in https://github.com/servo/servo/pull/43794
+    - script: Log failed script fetch URL. by @jdm in https://github.com/servo/servo/pull/44319
+    - chore: Remove some clippy complains for 1.95 by @Narfinger in https://github.com/servo/servo/pull/44276
+    - script: Cancel animations for non-rendered nodes in script by @mrobinson in https://github.com/servo/servo/pull/44299
+    - net: Fix link, reduce visibility, add TODO for Response::url by @yezhizhen in https://github.com/servo/servo/pull/44274
+    - script: registration mechanism for selective broadcast from constellation by @webbeef in https://github.com/servo/servo/pull/43124
+    - Android: Fix black screen when exiting menu or resuming activity in lifecycle by @yezhizhen in https://github.com/servo/servo/pull/44327
+    - layout: Fix x/y offset not being set for direct abspos grid children by @nicoburns in https://github.com/servo/servo/pull/44324
+    - script: Clean up prepare the script element related code and remove ModuleOwner by @Gae24 in https://github.com/servo/servo/pull/44179
+    - layout: Produce an empty display list when the Document element is removed by @rovertrack in https://github.com/servo/servo/pull/44133
+    - script: Generate more correct HTML for underline command by @TimvdLippe in https://github.com/servo/servo/pull/44331
+    - net: Keep IP cookie buckets separate by @officialasishkumar in https://github.com/servo/servo/pull/44152
+    - net: Update test cookie expiration dates to one century in the future. by @jdm in https://github.com/servo/servo/pull/44341
+    - net: Update expected Accept-Language header in tests to use current locale. by @jdm in https://github.com/servo/servo/pull/44340
+    - webgl: Update stable test expectations to close intermittent issue by @simartin in https://github.com/servo/servo/pull/44344
+    - ci: Set LLVM_OBJDUMP env-var when compiling libservo with MSRV in linux by @yezhizhen in https://github.com/servo/servo/pull/44352
+    - script: Support shadowrootslotassignment on template elements by @simonwuelker in https://github.com/servo/servo/pull/44246
+    - Use our own http server for the webdriver server by @nicoburns in https://github.com/servo/servo/pull/44338
+    - devtools: Replace dead links in debugger.js by @freyacodes in https://github.com/servo/servo/pull/44358
+    - script: Iterate over correct collections when moving by @TimvdLippe in https://github.com/servo/servo/pull/44347
+    - script: Complete script_module &mut JSContext migration by @Gae24 in https://github.com/servo/servo/pull/44368
+    - webgl: Validate dimensions in TexImage3D properly with level by @simartin in https://github.com/servo/servo/pull/44367
+    - script: Canonicalization of sanitizer configuration by @kkoyung in https://github.com/servo/servo/pull/44335
+    - script: Correctly apply resource timing buffer limit by @shubhamg13 in https://github.com/servo/servo/pull/44228
+    - Implement StorageManager API by @Taym95 in https://github.com/servo/servo/pull/43976
+    - Template for roadmap issues by @mrego in https://github.com/servo/servo/pull/44398
+    - devtools: Always pass ownPropertiesLength to devtools by @atbrakhi in https://github.com/servo/servo/pull/44369
+    - net: Split ResourceTimings into separate file and create batch attribute setting by @Narfinger in https://github.com/servo/servo/pull/44395
+    - script: JSContextify dom/css partially by @Narfinger in https://github.com/servo/servo/pull/44406
+    - script: Achieve failure parity with other browsers for underline command by @TimvdLippe in https://github.com/servo/servo/pull/44390
+    - layout: Simplify the way characters are iterated when segmeting text by @mrobinson in https://github.com/servo/servo/pull/44400
+    - SharedWorker: Add SharedWorker and SharedWorkerGlobalScope WebIDL interfaces by @Taym95 in https://github.com/servo/servo/pull/44375
+    - layout: Add placeholders for text carets after finishing a line by @mrobinson in https://github.com/servo/servo/pull/44370
+    - net: Optimize initial TLS connection by @jschwe in https://github.com/servo/servo/pull/44242
+    - layout: Replace SVG base fragment rect conditionally to support viewBox by @yezhizhen in https://github.com/servo/servo/pull/44420
+    - script: Add initial implementation of strikethrough command by @TimvdLippe in https://github.com/servo/servo/pull/44410
+    - dependabot: Add rustls-webpki related group by @yezhizhen in https://github.com/servo/servo/pull/44429
+    - script: Validate sanitizer configuration by @kkoyung in https://github.com/servo/servo/pull/44421
+    - media: Switch to workspace dependencies and minor cleanup by @Narfinger in https://github.com/servo/servo/pull/44428
+    - script: Add an initial implementation of the "focus update steps" by @mrobinson in https://github.com/servo/servo/pull/44360
+    - script: Rewrite NodeList::ChildrenList with a cached Vec of nodes by @SimonSapin in https://github.com/servo/servo/pull/44435
+    - mozjs: Fix make 4.4 broken parallel compilation by @jschwe in https://github.com/servo/servo/pull/44346
+    - SharedWorker : script unblock shared worker common plumbing for SharedWorker by @Taym95 in https://github.com/servo/servo/pull/44440
+    - script: pass &mut JSContext inside worklet code by @Gae24 in https://github.com/servo/servo/pull/44441
+    - script: Implement Sanitizer.get() method by @kkoyung in https://github.com/servo/servo/pull/44452
+    - profile: Add initial trace event by @jschwe in https://github.com/servo/servo/pull/44443
+    - profile: Add instrumentation to startup related functions by @jschwe in https://github.com/servo/servo/pull/44456
+    - deps: Bump jni-rs to 0.22 by @Gae24 in https://github.com/servo/servo/pull/44322
+    - layout: Allow repeatedly adding the same node to AccessibilityUpdate by @alice in https://github.com/servo/servo/pull/44437
+    - script: propagate VirtualMethods::unbind_from_tree with &mut JSContext by @elomscansio in https://github.com/servo/servo/pull/44422
+    - script: Add initial implementation of italic command by @TimvdLippe in https://github.com/servo/servo/pull/44432
+    - layout: Use an accurately-sized clipping rectangle for box-shadow display list item properties instead of MaxRect by @yezhizhen in https://github.com/servo/servo/pull/44457
+    - layout: Split hard line breaks into their own TextRunItem by @mrobinson in https://github.com/servo/servo/pull/44436
+    - layout: Store AccessibilityTree's nodes in ArcRefCells. by @alice in https://github.com/servo/servo/pull/44438
+    - Gamepad: Implement gamepad buttons to be array, removing GamepadList by @rovertrack in https://github.com/servo/servo/pull/44357
+    - script: Don't panic when trying to de-activate accessibility by @alice in https://github.com/servo/servo/pull/44473
+    - script: propagate &mut JSContext in XMLHttpRequest::change_ready_state by @elomscansio in https://github.com/servo/servo/pull/44475
+    - script: Use frozen array in gamepad axes for spec complience by @log101 in https://github.com/servo/servo/pull/44411
+    - script: propagate &mut JSContext in DebuggerGlobalScope::fire_get_possible_breakpoints by @elomscansio in https://github.com/servo/servo/pull/44478
+    - devtools: Respect SOURCE_DATE_EPOCH for build_id by @jschwe in https://github.com/servo/servo/pull/44459
+    - pass &mut JSContext to remove_script_and_layout_blocker by @rovertrack in https://github.com/servo/servo/pull/44484
+    - script: propagate &mut JSContext in DebuggerGlobalScope::fire_add_debugee by @elomscansio in https://github.com/servo/servo/pull/44476
+    - script: propagate &mut JSContext in DebuggerGlobalScope::fire_eval by @elomscansio in https://github.com/servo/servo/pull/44477
+    - script: Add or remove elements in sanitizer by @kkoyung in https://github.com/servo/servo/pull/44481
+    - Devtools: Enable Stylesheets Resource and Add Basic Fields to StyleSheetsActor by @rovertrack in https://github.com/servo/servo/pull/44462
+    - script: pass &mut JSContext to WritableStreamDefaultController::setup by @Gae24 in https://github.com/servo/servo/pull/44490
+    - layout: Expose some non-interactive accessibility roles based on DOM node type. by @alice in https://github.com/servo/servo/pull/44255
+    - script: Wrap debugger global scope pointers in debuggee's realm. by @jdm in https://github.com/servo/servo/pull/44386
+    - script: Use a u16 for prototype id to speed up Castable::is() by @webbeef in https://github.com/servo/servo/pull/44364
+    - embedder_traits: Move Wakelock trait to Embedder_traits by @rovertrack in https://github.com/servo/servo/pull/44343
+    - script: Refactor HttpsState move from Document to GlobalScope by @sabbCodes in https://github.com/servo/servo/pull/44407
+    - layout: Remove some newline-related dead code from shaping by @mrobinson in https://github.com/servo/servo/pull/44485
+    - script: Extract ErrorInfo from pending exception stack by @Gae24 in https://github.com/servo/servo/pull/43632
+    - layout_api: Use a "type bundle" to encapsulate all layout DOM types by @mrobinson in https://github.com/servo/servo/pull/44454
+    - storage: Add support for temporary storage by @janvarga in https://github.com/servo/servo/pull/44433
+    - script: Pass &mut JSContext to more attribute setters by @TimvdLippe in https://github.com/servo/servo/pull/44494
+    - script: Fire selectionchange events for textcontrol elements by @TimvdLippe in https://github.com/servo/servo/pull/44461
+    - script: propagate &mut JSContext in FileReader::read by @elomscansio in https://github.com/servo/servo/pull/44497
+    - script: propagate &mut JSContext in Activatable::activation_behavior by @elomscansio in https://github.com/servo/servo/pull/44498
+    - layout: Scope table row-group children with TableRowGroupBuilder by @Veercodeprog in https://github.com/servo/servo/pull/43674
+    - script: move drop implementation to a separate struct from WebGLSync and WebGLTransformFeedback by @willypuzzle in https://github.com/servo/servo/pull/44501
+    - script: Guard against stale dirty_root when replacing the document element by @yezhizhen in https://github.com/servo/servo/pull/44503
+    - script: Pass &mut JSContext to HyperlinkElementUtils by @TimvdLippe in https://github.com/servo/servo/pull/44495
+    - script: Pass &mut JSContext to event handler attributes by @TimvdLippe in https://github.com/servo/servo/pull/44505
+    - script: Port some more elements to implicitCxSetters by @TimvdLippe in https://github.com/servo/servo/pull/44506
+    - script: Pass &mut JSContext to webdriver_handlers by @TimvdLippe in https://github.com/servo/servo/pull/44507
+    - script: Use cx from task callback instead of CanGc::deprecated_note() by @TimvdLippe in https://github.com/servo/servo/pull/44508
+    - script: propagate &mut JSContext in VirtualMethods::command_steps by @elomscansio in https://github.com/servo/servo/pull/44509
+    - script: propagate &mut JSContext in HTMLFormElement::static_validation by @elomscansio in https://github.com/servo/servo/pull/44510
+    - script: propagate &mut JSContext in HTMLDialogElement::show_a_modal by @elomscansio in https://github.com/servo/servo/pull/44512
+    - script: Implement bold and fontname commands by @TimvdLippe in https://github.com/servo/servo/pull/44511
+    - servoshell (FreeBSD): Fix build failure and add CJK fonts for egui by @nortti0 in https://github.com/servo/servo/pull/44514
+    - script: propagate &mut JSContext in EventTarget::fire_event_with_params by @elomscansio in https://github.com/servo/servo/pull/44482
+    - script: propagate &mut JSContext in IDBFactory::dispatch_error by @elomscansio in https://github.com/servo/servo/pull/44527
+    - script: propagate &mut JSContext in ExtendableMessageEvent::dispatch_error by @elomscansio in https://github.com/servo/servo/pull/44528
+    - script: propagate &mut JSContext in Extractable::extract by @elomscansio in https://github.com/servo/servo/pull/44531
+    - script: propagate &mut JSContext in MessageEvent::dispatch_error by @elomscansio in https://github.com/servo/servo/pull/44534
+    - script: Remove check for zero request body length in FetchLater by @TimvdLippe in https://github.com/servo/servo/pull/43627
+    - net: Fix net tracing of url by @Narfinger in https://github.com/servo/servo/pull/44532
+    - script: Pass &mut JSContext to HTMLInputElement methods by @TimvdLippe in https://github.com/servo/servo/pull/44542
+    - script: Port HTMLCollection to &mut JSContext by @yezhizhen in https://github.com/servo/servo/pull/44533
+    - layout: Add support for tab stops by @mrobinson in https://github.com/servo/servo/pull/44480
+    - script: Turn on implicitCxSetters for all elements by @TimvdLippe in https://github.com/servo/servo/pull/44543
+    - script: Propagate &mut JSContext to Node::ChildNodes by @yezhizhen in https://github.com/servo/servo/pull/44553
+    - layout: Consider Gaussian blur when computing clip rectangle for box-shadow display list item by @yezhizhen in https://github.com/servo/servo/pull/44474
+    - script: propagate &mut JSContext to GlobalScope::structured_clone by @nodelpit in https://github.com/servo/servo/pull/44547
+    - layout: Use a consistent definition of "document white space" by @mrobinson in https://github.com/servo/servo/pull/44424
+    - servoshell ohos: Cleanup to use platform windows instead of custom solution and allow deleting by @Narfinger in https://github.com/servo/servo/pull/42713
+    - servo: Add referrer and destination fields to WebResourceRequest by @webbeef in https://github.com/servo/servo/pull/44493
+    - script: Propagate &mut JSContext to HTMLElement::Focus/Blur by @yezhizhen in https://github.com/servo/servo/pull/44563
+    - script: pass &mut JSContext to UnderlyingSourceContainer::call_start_algorithm by @Gae24 in https://github.com/servo/servo/pull/44562
+    - script: propagate &mut JSContext to VirtualMethods::moving_steps #43044 by @nodelpit in https://github.com/servo/servo/pull/44565
+    - ci: OHOS better device detection by @Narfinger in https://github.com/servo/servo/pull/44561
+    - script: Replace some usage of children() with children_unrooted() in script/dom/execcommand by @Narfinger in https://github.com/servo/servo/pull/44544
+    - script: move drop implementation to a separate struct from WebGLTexture (#26488) by @willypuzzle in https://github.com/servo/servo/pull/44513
+    - ohos: Add linker version script by @jschwe in https://github.com/servo/servo/pull/44559
+    - crown: ignore must-root return types by @officialasishkumar in https://github.com/servo/servo/pull/44489
+    - script: Propagate &mut JSContext to Selection by @yezhizhen in https://github.com/servo/servo/pull/44558
+    - script: Ignore pipeline update messages if the relevant iframe is not expecting it by @jdm in https://github.com/servo/servo/pull/44573
+    - script: Port GetClientRects & GetBoundingClientRect to safe JS wrapper for Range&Element by @yezhizhen in https://github.com/servo/servo/pull/44583
+    - devtools: Fix flaky test_breakpoint_pause test by @freyacodes in https://github.com/servo/servo/pull/44577
+    - Implement PerformanceMarkOptions by @shubhamg13 in https://github.com/servo/servo/pull/44471
+    - script: Use non-asserting JS API for creating empty arrays. by @jdm in https://github.com/servo/servo/pull/44581
+    - script: Fix name of non-replaceable sanitizer elements by @kkoyung in https://github.com/servo/servo/pull/44585
+    - ci: Always use coverage profile for coverage by @jschwe in https://github.com/servo/servo/pull/44587
+    - script: Enable sequential focus navigation across frame boundaries by @mrobinson in https://github.com/servo/servo/pull/44397
+    - deps: Upgrade to pyrefly 0.63.1 by @mrobinson in https://github.com/servo/servo/pull/44591
+    - fonts: Rename GlyphStore to ShapedText by @mrobinson in https://github.com/servo/servo/pull/44596
+    - storage: use client storage in indexeddb by @gterzian in https://github.com/servo/servo/pull/44374
+    - script: Use current global in CredentialsContainer methods by @CynthiaOketch in https://github.com/servo/servo/pull/44569
+    - script: propagate &mut JSContext in Window::run_resize_steps_for_layout_viewport by @elomscansio in https://github.com/servo/servo/pull/44606
+    - script: propagate &mut JSContext in IDBOpenDBRequest::dispatch_success by @elomscansio in https://github.com/servo/servo/pull/44605
+    - script: Port Gamepad to &mut JSContext by @yezhizhen in https://github.com/servo/servo/pull/44608
+    - script: propagate &mut JSContext in ReadableStreamDefaultReader::read_all_bytes by @elomscansio in https://github.com/servo/servo/pull/44602
+    - Pass PerformanceMeasure's detail attribute by @shubhamg13 in https://github.com/servo/servo/pull/44272
+    - layout: Do not assume layout data structures exist during queries by @mrobinson in https://github.com/servo/servo/pull/44560
+    - devtools: Implement Style Editor tab by @rovertrack in https://github.com/servo/servo/pull/44517
+    - layout: Keep all trailing whitespace after unparented table-levels by @Loirooriol in https://github.com/servo/servo/pull/44550
+    - layout: Handle display: contents in all TraversalHandler by @Loirooriol in https://github.com/servo/servo/pull/44551
+    - Upgrade to Stylo with user-select property enabled by @nicoburns in https://github.com/servo/servo/pull/44612
+    - script: Port DOMPoint{ReadOnly} & DOMQuad & DOMRect{ReadOnly} & some XR to &mut JSContext by @yezhizhen in https://github.com/servo/servo/pull/44584
+    - script: Remove unfulfilled crown expectations by @simonwuelker in https://github.com/servo/servo/pull/44618
+    - servo: Add SiteDataManager::clear_session_cookies by @longvatrong111 in https://github.com/servo/servo/pull/44166
+    - script: Fully propagate &mut JSContext to AudioBuffer by @yezhizhen in https://github.com/servo/servo/pull/44620
+    - script: Propagate &mut JSContext to UnderlyingSourceContainer::call_pull_algorithm by @Gae24 in https://github.com/servo/servo/pull/44590
+    - Disable debug_assertions in release profile by @jschwe in https://github.com/servo/servo/pull/44177
+    - script: use &mut JSContext in components/script/body.rs by @elomscansio in https://github.com/servo/servo/pull/44254
+    - script: Propagate &mut JSContext to DataTransfer* by @yezhizhen in https://github.com/servo/servo/pull/44628
+    - Port methods calling fire event by @elomscansio in https://github.com/servo/servo/pull/44629
+    - layout: value of
+
+      now inherits ‘color’ by default by @sabbCodes in https://github.com/servo/servo/pull/44496
+    - script: Add the "sequential" navigation mechanism for tab navigation by @mrobinson in https://github.com/servo/servo/pull/44535
+    - script_bindings: Port call_setup to use &mut JSContext by @Gae24 in https://github.com/servo/servo/pull/44626
+    - fonts: Remove unused import of euclidnumZero in tests. by @arabson99 in https://github.com/servo/servo/pull/44635
+    - script: Fix small things with existing commands by @TimvdLippe in https://github.com/servo/servo/pull/44529
+    - script: Pass &mut JSContext to some attribute accessors by @TimvdLippe in https://github.com/servo/servo/pull/44638
+    - script: Fix "RefCell already borrowed" for DOMString in DataTransfer.getData by @SimonSapin in https://github.com/servo/servo/pull/44607
+    - script: Guarantee zeroizing of secret in Vec<u8> stored in CryptoKey by @kkoyung in https://github.com/servo/servo/pull/44597
+    - script: Allow and remove attributes in sanitizer by @kkoyung in https://github.com/servo/servo/pull/44594
+    - devcontainer: Stop installing cargo-about by @jschwe in https://github.com/servo/servo/pull/44641
+    - release: Bump version to 0.2.0 by @jschwe in https://github.com/servo/servo/pull/44642
+    - backport: mozjs: Update to v0.15.14 (SM 140.10.1) (#44755) by @jschwe in https://github.com/servo/servo/pull/45130
+    New Contributors
+    - @treetmitterglad made their first contribution in https://github.com/servo/servo/pull/43847
+    - @foresterre made their first contribution in https://github.com/servo/servo/pull/43881
+    - @xtqqczze made their first contribution in https://github.com/servo/servo/pull/43898
+    - @MuhammadMouostafa made their first contribution in https://github.com/servo/servo/pull/43260
+    - @rovertrack made their first contribution in https://github.com/servo/servo/pull/43947
+    - @drasticactions made their first contribution in https://github.com/servo/servo/pull/43933
+    - @espy made their first contribution in https://github.com/servo/servo/pull/43795
+    - @Skgland made their first contribution in https://github.com/servo/servo/pull/44006
+    - @mjgarton made their first contribution in https://github.com/servo/servo/pull/44180
+    - @JavaDerg made their first contribution in https://github.com/servo/servo/pull/44253
+    - @zhangxichang made their first contribution in https://github.com/servo/servo/pull/44264
+    - @officialasishkumar made their first contribution in https://github.com/servo/servo/pull/44152
+    - @log101 made their first contribution in https://github.com/servo/servo/pull/44411
+    Full Changelog: https://github.com/servo/servo/compare/v0.1.0...v0.2.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/servo/servo/releases/tag/v0.2.0
+ReleaseTime: 2026-05-31T09:08:51.0000000Z
+RealVersion: "1.0"
