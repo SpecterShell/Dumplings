@@ -1,0 +1,55 @@
+Version: 0.11.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.11.2/FylloCode-0.11.2-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.11.2
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release focuses on ACP Agent management improvements. Installed Agents can now be uninstalled from inside the app, Agent lists show clearer kind information, and the Chat empty-state picker layout is more stable. Agent installation status detection is also much faster, reducing wait time in settings and selection surfaces.
+    Added
+    - ACP Agent uninstall flow, allowing installed Agents to be removed from settings after confirmation and using the correct uninstall command for each installation method
+    - ACP Agent kind classification, shown in registry cache, settings cards, and Chat empty-state cards to help distinguish different Agent categories
+    - Agent installation status cache with background refresh, allowing the app to show the most recent known result first and then update status asynchronously
+    Changed
+    - Agent installation status detection now runs in batched distribution-level probes, significantly reducing the time spent checking Agents one by one
+    - In the Chat empty state, Agent picker tiles now center automatically when fewer than four Agents are installed, avoiding left-heavy sparse layouts
+    - ACP Agent cards now share a common presentation base, move uninstall into the overflow menu, and use top-right badges for installed and selected states
+    - Agent card external links now prioritize website and repository, and the "latest version" hint has been removed from installed states
+    Fixed
+    - Fixed cases where the Chat empty-state "More Agents" tile could stretch or appear visually unbalanced when only a small number of Agents were installed
+    - Fixed stale local install records and capability caches that could remain after a successful uninstall
+    - Fixed cases where uninstall could be misreported as successful after a silent underlying command failure by rechecking the real installation state after completion
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0112---2026-06-01
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个补丁版本聚焦 ACP Agent 管理体验优化。现在可以在应用内卸载已安装 Agent，Agent 列表会展示更明确的类型信息，Chat 空态下的 Agent 选择布局也更稳定；同时，Agent 安装状态检测明显提速，减少设置页与选择面板的等待感。
+    新增
+    - 新增 ACP Agent 卸载流程，支持在设置页对已安装 Agent 进行确认后卸载，并按不同安装方式执行对应的卸载命令
+    - 新增 ACP Agent 类型分类，在注册表缓存、设置页卡片和 Chat 空态卡片中展示 Agent 的类别信息，帮助区分不同来源与定位
+    - 新增 Agent 安装状态缓存与后台刷新机制，应用可先展示最近一次检测结果，再异步更新最新状态
+    调整
+    - Agent 安装状态检测改为按分发类型批量探测，显著减少逐个 Agent 检测带来的耗时
+    - Chat 空态中，当已安装 Agent 少于 4 个时，Agent 选择卡片会自动居中，避免少量卡片偏左堆积
+    - ACP Agent 卡片统一为共享展示骨架，卸载入口收纳进更多菜单，已安装态与选中态改为右上角角标展示
+    - Agent 卡片的外链信息调整为优先展示 website 与 repository，并移除已安装态中的“最新版本”提示
+    修复
+    - 修复少量已安装 Agent 场景下，Chat 空态“更多 Agent”卡片可能拉伸或布局不均衡的问题
+    - 修复卸载成功后本地安装记录与能力缓存未及时清理可能导致的残留状态问题
+    - 修复卸载流程在底层命令静默失败时可能误判为成功的问题，卸载完成后会重新校验实际安装状态
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md#0112---2026-06-01
+ReleaseTime: 2026-06-01T05:32:14.0000000Z
