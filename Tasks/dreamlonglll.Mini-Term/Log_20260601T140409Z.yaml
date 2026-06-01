@@ -1,0 +1,27 @@
+Version: 0.5.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.1/Mini-Term_0.5.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.1/Mini-Term_0.5.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.5.1 — 稳定性修复
+    继 v0.5.0 之后的修复版，重点解决搜索崩溃与若干资源/数据安全问题。
+    🐛 修复
+    - 搜索遇中文/多字节字符崩溃：搜索含中文（及 emoji、土耳其语 İ 等）的文件名或内容时，后端按字节切分多字节字符会 panic，导致搜索框永久卡在「搜索中」。已重写为按字符匹配，并为搜索线程加 panic 兜底。
+    - 剪贴板图片粘贴内存安全隐患：粘贴非标准格式（部分截图工具）图片时，DIB 解析缺少长度校验，畸形数据可能触发越界读/整数溢出。已补全边界与维度校验。
+    - 配置文件写入防损坏：config.json、cc-connect、MCP/Codex/Claude 等配置改为原子写入（临时文件 + 重命名），杜绝写入中途崩溃/断电留下半截损坏文件而丢失配置；覆盖时保留原文件权限。
+    - 删除项目时的资源泄漏：删除仍开着终端的项目时，会一并回收后端 shell/AI 子进程与前端终端实例，不再残留孤儿进程。
+    - 文件树监听句柄泄漏：展开/折叠目录、切换项目时不再累积文件系统监听句柄。
+    - 点击 Git 上/下箭头（pull/push）偶发 UI 卡顿：移出主线程执行，避免冻结界面。
+    ✨ 细节优化
+    - 项目列表中 idle 状态的项目不再显示状态小圆点，列表更清爽。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.5.1
+ReleaseTime: 2026-06-01T13:36:52.0000000Z
