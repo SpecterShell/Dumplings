@@ -23,6 +23,8 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl -UserAgent $DumplingsBrowserUserAgent
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.glasswire.com/changes/' | ConvertFrom-Html
 
