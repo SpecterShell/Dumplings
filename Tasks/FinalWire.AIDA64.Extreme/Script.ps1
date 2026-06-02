@@ -17,7 +17,13 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -jo
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.aida64.com/aida64extreme$($this.CurrentState.Version.Split('.')[0..1] -join '').exe"
+  InstallerType = 'inno'
+  InstallerUrl  = "https://download.aida64.com/aida64extreme$($this.CurrentState.Version.Split('.')[0..1] -join '').exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://download.aida64.com/aida64extreme$($this.CurrentState.Version.Split('.')[0..1] -join '').zip"
 }
 
 switch -Regex ($this.Check()) {
