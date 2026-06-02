@@ -24,10 +24,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'https://github.com/ErlichLiu/Proma/releases'
+        Value  = 'https://github.com/proma-ai/Proma/releases'
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/ErlichLiu/Proma/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/proma-ai/Proma/releases/tags/v$($this.CurrentState.Version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
@@ -50,7 +50,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/ErlichLiu/Proma/releases/tag/v$($this.CurrentState.Version)"
+        Value  = "https://github.com/proma-ai/Proma/releases/tag/v$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host
