@@ -1,4 +1,4 @@
-$Prefix = 'https://file.cdn.minimax.io/public/minimax-agent-prod/release/'
+$Prefix = 'https://filecdn.minimax.chat/public/minimax-agent-prod/release/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
