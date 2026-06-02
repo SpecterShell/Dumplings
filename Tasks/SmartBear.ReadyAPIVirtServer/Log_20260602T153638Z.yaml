@@ -1,0 +1,13 @@
+Version: 3.32.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://dl.eviware.com/virtserver/3.32.0/VirtServer-x64-3.32.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - High-Traffic Response Processing Improvements: Improved request processing for large virtual services under high-traffic conditions. Previously, delayed response writing could cause gateway timeouts and HTTP 500 responses when concurrent requests saturated ForkJoinPool (FJP) threads. VirtServer now uses refactored parallel request processing to reduce thread bottlenecks and head-of-line blocking during concurrent request handling. This improvement is available in ReadyAPI 3.67.0 when used with VirtServer 3.32.0.
+    - OpenAPI 3.1 Response Handling Improvements: Improved support for OpenAPI 3.1 virtual services to align response behavior with OpenAPI 3.0. VirtServer now correctly resolves values in OAS 3.1 structures, preventing empty responses in certain scenarios.
+    - Set-Cookie Header Handling Fix: Resolved an issue that prevented transaction logs from displaying when virtual service responses included a Set-Cookie header. VirtServer now also handles invalid or incomplete Set-Cookie values without throwing exceptions.
+    - Special Character Handling in Virtual Service Names: Resolved an issue that caused errors when virtual service names contained special characters such as :, ?, or spaces. VirtServer now sanitizes unsupported filename characters before constructing Windows file paths.
+ReleaseTime: 2026-06-02
