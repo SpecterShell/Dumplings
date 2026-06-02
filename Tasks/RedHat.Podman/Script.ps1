@@ -1,4 +1,4 @@
-$RepoOwner = 'containers'
+$RepoOwner = 'podman-container-tools'
 $RepoName = 'podman'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
