@@ -1,0 +1,114 @@
+Version: 15.8.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.8.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Engaged GPT-5 Harmony leak detection on the committed assistant message (openai-codex only). detectHarmonyLeakInAssistantMessage now runs on the streamed done/error result and the trailing fallback, so a leaked final response is aborted-and-retried by the existing mitigation instead of being committed as-is. Tool-argument (tool_arg) scanning is gated on the trailing-garbage T co-signal and only fires when a caller supplies a parse boundary via detectHarmonyLeakInAssistantMessage's new optional toolArgParseEnd resolver. The agent loop passes none — it cannot bound a streamed tool DSL — so that surface stays inert and a legitimate codex tool call whose content legitimately carries to=functions.* next to a channel word or non-Latin script (e.g. editing the harmony fixtures) is never hard-aborted.
+    @oh-my-pi/pi-ai
+    Added
+    - Added AnthropicMessagesClient and related Anthropic wire types/errors via anthropic-client export so callers can build a standalone Anthropic Messages client without depending on @anthropic-ai/sdk
+    - Added parseClaudeRateLimitHeaders and AuthStorage.ingestUsageHeaders so Anthropic rate-limit response headers can warm the per-credential usage cache with throttling while preserving per-tier data from the last full usage report.
+    Changed
+    - Changed Anthropic request handling to use the package-local AnthropicMessagesClient implementation instead of @anthropic-ai/sdk as the default transport
+    - Updated the AnthropicOptions.client surface to accept any AnthropicMessagesClientLike implementation with messages.create, enabling custom compatible clients
+    - Changed generated OAuth metadata user_id to use a deterministic device_id derived from the install ID instead of a random value
+    - claudeCodeVersion bumped to 2.1.148 to match current Claude Code release.
+    - X-Stainless-Package-Version updated to 0.94.0 (matches the bundled @anthropic-ai/sdk version); X-Stainless-Runtime-Version pinned to v24.3.0 (Bun version bundled with CC 2.1.148); X-Stainless-Os header key corrected to X-Stainless-OS.
+    - createClaudeBillingHeader now emits a deterministic billing header (cc_version=<claudeCodeVersion>.<suffix>; cc_entrypoint=cli; cch=00000;), where <suffix> is the first 3 hex chars of SHA-256(salt + msg[4] + msg[7] + msg[20] + version) instead of random bytes. The fingerprint seed is taken from the first user message (skipping synthetic/developer injections), mirroring Claude Code's computeFingerprintFromMessages.
+    - cch attestation implemented: cch=00000 is a placeholder that, for OAuth requests, wrapFetchForCch rewrites on the wire to XXHash64(body, 0x4D659218E32A3268) & 0xFFFFF formatted as 5 lowercase hex chars, computed in-place via Bun.hash.xxHash64. The rewrite is anchored to the system[0] billing-header prefix so user content is never mutated, and is installed only when a billing-header prefix is present (OAuth turns).
+    - anthropic-beta header set for OAuth model discovery and Claude usage-API requests expanded to add context-1m-2025-08-07, redact-thinking-2026-02-12, mid-conversation-system-2026-04-07, advanced-tool-use-2025-11-20, effort-2025-11-24, and extended-cache-ttl-2025-04-11. The usage-API user-agent is bumped to claude-cli/2.1.158 (external, cli).
+    - Reasoning models now append effort-2025-11-24 to the per-request Anthropic-Beta header (matches Claude Code).
+    - buildAnthropicSystemBlocks (CC-instruction mode) now emits the same 3-block layout as Claude Code: billing header (never cached), system instruction (cached), all user content merged into one block with \n\n (cached). Previously emitted one block per item with cache only on the last, which fingerprinted the caller by block count.
+    - applyPromptCaching now matches Claude Code's breakpoint layout: 2 system (instruction + merged content) + 2 message, with no tool breakpoint. The tool breakpoint was redundant — tools follow system in the token sequence, so when system changes the tool cache prefix also changes. The instruction block (system[1]) is stable across every request and now gets its own guaranteed-hit breakpoint.
+    - applyPromptCaching now caches the last two messages regardless of role instead of the last two user messages. The penultimate assistant message (tool calls + response from the previous turn) is larger and more recently created than the penultimate user message, making it the higher-value cache target.
+    - OAuth scope set expanded: added user:sessions:claude_code, user:mcp_servers, user:file_upload. AUTHORIZE_URL stays at claude.ai/oauth/authorize and TOKEN_URL stays at api.anthropic.com/v1/oauth/token — the platform.claude.com equivalents are CC's console-credential flow and do not grant user:inference, which OMP requires for direct OAuth-token inference.
+    - Token refresh POST now sends anthropic-beta: oauth-2025-04-20 and User-Agent: anthropic-sdk-typescript/0.94.0 userOAuthProvider (CC sends these on refresh but not on the initial code exchange).
+    Fixed
+    - Fixed tool argument validation to wrap a plain string in a singleton array when the schema requires an array, allowing tool-level path/list normalization to recover from bare string arguments.
+    - Restored eager_input_streaming and strict flags on OAuth Anthropic tool definitions when model compatibility allows eager streaming.
+    - Fixed OAuth stream calls with injected custom clients missing a beta client by falling back to client.messages.create instead of requiring client.beta.messages.create
+    - Fixed direct use of internal API client typing so retry/timeouts and malformed-error classification remain compatible while not requiring the external SDK
+    - Fixed Cursor provider requests failing with Cannot send empty user message to Cursor API after tool-result history by selecting the latest user/developer turn instead of assuming the final context message is the active user turn.
+    - Fixed Anthropic web search dropping ANTHROPIC_CUSTOM_HEADERS when CLAUDE_CODE_USE_FOUNDRY was unset, causing 401s from corporate API gateways. resolveAnthropicCustomHeadersForBaseUrl now forwards the parsed headers whenever the base URL is non-Anthropic (or Foundry is enabled), and buildAnthropicSearchHeaders threads them through buildAnthropicHeaders so the search and streaming paths behave identically (#1693).
+    - Fixed OpenCode Go Anthropic-format models such as qwen3.7-max sending Anthropic X-Api-Key auth alongside the OpenCode bearer token, avoiding spurious Alibaba 401 Invalid API-key provided errors. (#1661)
+    - Fixed OAuth token exchange and refresh flows to fetch Claude CLI bootstrap identity when token responses omit account information, so accountId and email are now recovered when available
+    - Fixed Anthropic thinking traces being lost on direct OAuth requests. OAuth requests no longer send redact-thinking-2026-02-12 unless thinking is explicitly hidden, Opus 4.7+ adaptive thinking opts into display: "summarized", and the top user-facing thinking tier now sends Anthropic's output_config.effort = "max" rather than the next-lower "xhigh" tier.
+    Removed
+    - Removed the @anthropic-ai/sdk runtime dependency. The Anthropic provider now uses the package-local AnthropicMessagesClient and hand-maintained wire types in providers/anthropic-wire.ts; the SDK was only ever used for URL assembly, auth-header injection, bounded retries, the pre-response timeout, and HTTP-error-to-status mapping, all of which are reproduced with identical observable behavior.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added an all-projects scope to the session picker (pi --resume / /resume). Press Tab to toggle between the current folder's sessions and every session across all projects; the all-projects list is loaded lazily and shows each session's directory. When the current folder has no sessions the picker now opens straight into all-projects scope instead of printing "No sessions found".
+    - Migrated the Kagi web search provider to Kagi's V1 Search API (POST /api/v1/search), replacing the sunset V0 endpoint while keeping the kagi provider id, KAGI_API_KEY credential, and /login kagi flow unchanged (#1272 by @thismat)
+    - Added Anthropic anthropic-ratelimit-unified-* response-header warming for /usage and the status-line usage segment, throttled to reduce direct OAuth /usage probes during active use.
+    Changed
+    - Changed Anthropic API request metadata user_id.device_id to be derived from the persistent install ID so it remains stable across Anthropic account changes on the same install
+    - Changed the eval parallel() / pipeline() helpers to drop their concurrency argument and run as wide as a task tool batch. The worker-pool ceiling now tracks the task.maxConcurrency setting (default 32; 0 = run every item at once) resolved live from the host via a new __concurrency__ bridge, instead of the old per-call concurrency option that defaulted to 4 and capped at 16. This stops eval fan-outs from under-using the parallelism the session is configured for.
+    - Changed subagent / agent:// output ids from a numeric prefix scheme (0-Anna, 1-Bob, nested 0-Anna.1-Bob) to a name-first scheme: the requested name is used verbatim and a -2/-3/… suffix is added only when the same name recurs within a session (Anna, Anna-2, Anna-3). Nested ids stay grouped under the parent (Anna.Bob) and the live task widget renders them as Anna>Bob. The main agent's IRC id is now Main (was 0-Main). AgentOutputManager still scans existing .md outputs on resume so it never reuses a name that would clobber a prior output.
+    - Changed resuming a session that belongs to a different project to switch the process into that project's working directory. pi --resume and the in-session /resume picker now chdir into the resumed session's cwd and re-scope every cwd-derived input — project dir, project settings (.claude/settings.yml, .omp/settings.json, path-scoped enabledModels/disabledProviders), plugin roots, capabilities, slash commands, and the ssh tool — so tools, discovery, configuration, and commands all follow the resumed project. The SessionManager adopts the resumed session's own cwd/session directory on load (rolled back if the switch fails).
+    - Documented ANTHROPIC_SEARCH_API_KEY and ANTHROPIC_SEARCH_BASE_URL more thoroughly in docs/environment-variables.md, surfaced them in docs/tools/web_search.md's Anthropic provider section, and added ANTHROPIC_SEARCH_BASE_URL to omp --help's env-var summary so the search-only overrides are discoverable alongside ANTHROPIC_SEARCH_API_KEY (#1694).
+    - Migrated the Kagi web search provider to Kagi's V1 Search API (POST /api/v1/search), replacing the sunset V0 endpoint while keeping the kagi provider id, KAGI_API_KEY credential, and /login kagi flow unchanged (#1272 by @thismat)
+    Fixed
+    - Fixed read, search, find, ast_grep, and ast_edit recovering when a model flattens multiple existing paths into one comma-, semicolon-, or space-delimited string while preserving real paths that contain delimiters.
+    - Fixed Exa web search reporting available without Exa credentials, which could route searches into the unauthenticated public MCP fallback and stall before trying the next provider. Availability and searchExa() now resolve through the standard AuthStorage cascade (EXA_API_KEY env or stored credential) (#1695).
+    - Fixed Anthropic web search ignoring ANTHROPIC_SEARCH_BASE_URL when credentials came from stored Anthropic auth or generic Anthropic env fallback rather than ANTHROPIC_SEARCH_API_KEY (#1694).
+    - Fixed web_search returning 401 from corporate Anthropic API gateways. ANTHROPIC_CUSTOM_HEADERS is now forwarded to web-search requests whenever ANTHROPIC_BASE_URL points to a non-Anthropic host, not only in Foundry mode (#1693).
+    - Fixed opening exported local files from WSL by sending existing paths through wslpath -w and launching wslview directly when available, avoiding xdg-open's broken file-handler path translation (#950 by @rxreyn3).
+    - Fixed /move (and cross-project resume) not re-scoping the live project settings to the destination directory. Changing a session's working directory now reloads the project settings layer in place (via Settings.reloadForCwd) so project-scoped configuration and path-scoped enabledModels/disabledProviders follow the move instead of remaining pinned to the launch directory.
+    - Fixed read <db.sqlite> freezing the TUI on large databases. Listing tables ran an unbounded SELECT COUNT(*) per table, and since bun:sqlite executes synchronously on the same JS thread that drives rendering and input, a multi-GB database's full-table scans blocked the UI for seconds. The listing now reads the planner's sqlite_stat1 estimate for tables above a scan cap (shown as ~N rows) and only counts exactly when a table is provably small, reading at most cap + 1 rows (a capped table shows N+ rows). On an 8.4 GB stats database the listing dropped from multi-second full scans to ~2 ms.
+    - Fixed a module-load crash (ReferenceError: Cannot access 'evalToolRenderer' before initialization) triggered whenever tools/eval was imported before tools/renderers. The eval JS backend statically pulls the agent/task/sdk/extension chain, which re-enters the root barrel → modes/components → tool-execution → renderers while eval.ts was still initializing, so renderers.ts read evalToolRenderer in its TDZ. The eval TUI renderer is now split into a dependency-light tools/eval-render.ts that renderers.ts imports directly (decoupling pure rendering from the eval runtime); eval.ts re-exports evalToolRenderer/EVAL_DEFAULT_PREVIEW_LINES for compatibility.
+    - Fixed /logout offering providers that were only authenticated by env/config fallbacks, which made OpenCode Go/Zen appear to remain logged in after their stored credentials were removed (#1658).
+    - Fixed omp --resume <id> crashing with an uncaught exception when an interactive user declined the cross-project fork prompt. createSessionManager now returns undefined for that cancellation, while non-interactive invocations still fail with a diagnostic when they cannot answer the fork prompt (#1668).
+    - Fixed history.db never recording the originating session id: the session_id column documented for 15.6.0 was missing from the shipped storage layer, so the column was never created/populated on the write path and every prompt row had session_id NULL. Restored the session_id column, schema migration (ALTER TABLE history ADD COLUMN session_id for pre-existing databases), and HistoryEntry.sessionId; wired interactive mode to register setSessionResolver(...) so prompts are stamped with the session active at submission time (tracking fork/resume switches); and re-enabled prompt-history ranking in the --resume and in-session session pickers via HistoryStorage.matchingSessionIds().
+    - Fixed /quit shutdown leaving the parent shell prompt at the top of the viewport after the final TUI teardown render on Linux terminals (#1620).
+    - Fixed omp update failing with No version matching "X" found for specifier "@oh-my-pi/pi-coding-agent" (but package exists) when bun saw an older catalog than the update check did. The version is resolved by querying https://registry.npmjs.org/ directly, but bun install -g would then consult its on-disk manifest snapshot or a configured npm mirror (corporate proxy, Taobao, …) that hadn't replicated the release. The bun install step now runs with --no-cache --registry=https://registry.npmjs.org/ so it hits exactly the registry the version check used (#1686).
+    - Fixed ACP mode resetting configured async/background job settings to disabled RPC defaults, so explicit ACP background-job opt-ins are preserved during startup (#1324).
+    - Fixed legacy Pi extensions loading their __dirname-relative assets as empty — e.g. @plannotator/pi-extension reading plannotator.html/review-editor.html via readFileSync(join(__dirname, …)), which left planHtmlContent empty and dropped the plugin into its "no UI support" auto-approve path. The compat layer previously mirrored every extension module into a flat temp directory, so import.meta.url (and thus __dirname) pointed at the mirror root and sibling asset reads ENOENTed. Extensions now load in place from their real on-disk location — import.meta.url is the real source file, so asset reads resolve exactly as under the original Pi runtime. A Bun.plugin() onLoad hook scoped to the entry's relative-import graph (the exact set of source modules, never the host, other extensions, node_modules deps, or unrelated project files) rewrites only the legacy @(scope)/pi-* and @sinclair/typebox imports; relative siblings, the extension's own node_modules deps, and bundled assets all resolve natively, with no temp-directory mirroring and no asset copying (#1674).
+    - Fixed plan approval keep-context usage to use the execution model context window, avoid zero-usage aborted turns, and disable keeping context when preserved context exceeds 95%.
+    @oh-my-pi/hashline
+    Fixed
+    - Fixed hashline replacements that accidentally restated unchanged lines above and below the selected range so they no longer duplicate both boundary lines (#1664).
+    @oh-my-pi/pi-tui
+    Fixed
+    - Deferred eager live scrollback rebuilds on POSIX terminals where xterm ED3 (CSI 3 J, erase saved lines) can disturb scrolled-up readers during streaming, while keeping direct user-input and checkpoint rebuilds explicit (#1682).
+    - Fixed TUI shutdown placing the parent shell prompt one row below short rendered content instead of directly on the next line (#1620).
+    - Stopped painting inline color swatches for 4-digit hex runs in Markdown rendering. The #RGBA CSS form collides with hashline #TAG snapshot tags (4 hex digits, e.g. #6C5E), which were sprouting spurious RGB swatches in prose and codespans. Only #RGB, #RRGGBB, and #RRGGBBAA qualify now.
+    What's Changed
+    - fix(coding-agent): exited cleanly when declining cross-project resume fork by @roboomp in https://github.com/can1357/oh-my-pi/pull/1669
+    - fix(auth): limit logout to stored credentials by @roboomp in https://github.com/can1357/oh-my-pi/pull/1659
+    - Fix shell prompt placement after quitting TUI by @roboomp in https://github.com/can1357/oh-my-pi/pull/1621
+    - Fix Cursor request user message selection by @basedcorp99 in https://github.com/can1357/oh-my-pi/pull/1312
+    - fix(ai): use bearer auth for OpenCode Anthropic models by @roboomp in https://github.com/can1357/oh-my-pi/pull/1662
+    - fix(tui): honor todo auto-clear delay by @roboomp in https://github.com/can1357/oh-my-pi/pull/1646
+    - fix(hashline): repair duplicated edit boundary echoes by @roboomp in https://github.com/can1357/oh-my-pi/pull/1667
+    - fix(ai): add CN token-plan host to Xiaomi MiMo login validation by @JacobZyy in https://github.com/can1357/oh-my-pi/pull/1679
+    - fix(acp): show live execute tool details by @jiwangyihao in https://github.com/can1357/oh-my-pi/pull/1311
+    - feat(clipboard): add raw text paste functionality with keyboard shortcut by @pidevxplay in https://github.com/can1357/oh-my-pi/pull/1587
+    - fix(update): bypass bun manifest cache so omp update sees fresh releases by @roboomp in https://github.com/can1357/oh-my-pi/pull/1687
+    - feat(web-search): Added Kagi V1 API Provider by @thismat in https://github.com/can1357/oh-my-pi/pull/1272
+    - docs: documented SYSTEM.md / APPEND_SYSTEM.md customization contract by @roboomp in https://github.com/can1357/oh-my-pi/pull/1673
+    - fix(acp): preserve background job opt-ins by @roboomp in https://github.com/can1357/oh-my-pi/pull/1371
+    - feat: add --hide-thinking CLI flag to suppress thinking blocks in TUI by @ogormans-deptstack in https://github.com/can1357/oh-my-pi/pull/1318
+    - Engage harmony leak detection on the committed assistant message by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/1660
+    - fix(coding-agent): show execution context in plan approval by @superhedge22 in https://github.com/can1357/oh-my-pi/pull/1546
+    - feat(ai): Claude Code 2.1.148 wire-format parity by @apoc in https://github.com/can1357/oh-my-pi/pull/1304
+    - docs: documented ANTHROPIC_SEARCH_API_KEY and ANTHROPIC_SEARCH_BASE_URL by @roboomp in https://github.com/can1357/oh-my-pi/pull/1696
+    - fix(anthropic): forward ANTHROPIC_CUSTOM_HEADERS for non-Foundry enterprise gateways by @roboomp in https://github.com/can1357/oh-my-pi/pull/1697
+    - fix(coding-agent): require exa api key for web search by @roboomp in https://github.com/can1357/oh-my-pi/pull/1698
+    New Contributors
+    - @basedcorp99 made their first contribution in https://github.com/can1357/oh-my-pi/pull/1312
+    - @JacobZyy made their first contribution in https://github.com/can1357/oh-my-pi/pull/1679
+    - @pidevxplay made their first contribution in https://github.com/can1357/oh-my-pi/pull/1587
+    - @thismat made their first contribution in https://github.com/can1357/oh-my-pi/pull/1272
+    - @ogormans-deptstack made their first contribution in https://github.com/can1357/oh-my-pi/pull/1318
+    - @DarkPhilosophy made their first contribution in https://github.com/can1357/oh-my-pi/pull/1660
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.7.6...v15.8.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.8.0
+ReleaseTime: 2026-06-02T10:50:16.0000000Z
