@@ -17,15 +17,15 @@ $this.CurrentState.Version = $Object3.full_version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
+  InstallerUrl = $Object2.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object3.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
+  InstallerUrl = $Object3.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object4.url.Replace('/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/")
+  InstallerUrl = $Object4.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
 }
 
 switch -Regex ($this.Check()) {
