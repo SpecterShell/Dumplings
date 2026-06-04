@@ -1,0 +1,57 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.12.0/FylloCode-0.12.0-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.12.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release focuses on tightening the Chat experience, exposing session execution progress, and improving version visibility. The Settings About panel can now check GitHub official releases for newer versions directly from inside the app. Chat also gains an inline ACP execution plan panel, a loading skeleton for session history, and lower Markdown rendering overhead. In addition, Agent available commands returned during the probe stage are now captured and preserved on the session, and interrupted streaming replies now keep partially generated assistant content instead of dropping it outright.
+    Added
+    - GitHub official release version checking in the Settings About panel, with direct links to the matching release page when an update is available
+    - Inline ACP execution plan display in Chat sessions, showing current plan progress, item status, and priority above the prompt while a session is active
+    - Capture and persistence of Agent available command lists on chat sessions, providing a stable foundation for Slash Commands in both draft and regular sessions
+    - A loading skeleton for chat history while session messages are being fetched, reducing blank waiting states
+    - A shared confirmation dialog component and useConfirmDialog() composable to unify confirmation flows across the renderer
+    Changed
+    - Reduced Markdown rendering overhead in chat messages, improving UI performance for long messages and streaming output
+    - Unified confirmation dialog behavior across settings actions, task cards, Agent cards, and related flows to reduce interaction inconsistencies
+    - Slash Command data is now maintained and restored per session, making command state more consistent when switching conversations
+    Fixed
+    - Fixed a case where partially generated assistant content could be lost when a streaming reply was stopped by the user or interrupted by an error
+    - Fixed cases where interrupted replies were not persisted correctly, causing partial assistant messages to disappear after re-entering the session
+    - Fixed a case where mode category config options could still appear in Chat even though the corresponding permission gating is not yet ready to expose those controls safely
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0120---2026-06-04
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个版本聚焦 Chat 体验收敛、会话执行进度可见性，以及版本信息补齐。设置页 About 面板现在可以直接检查 GitHub 正式 Release 是否有新版本；Chat 也新增了内联的 ACP 执行计划面板、消息加载骨架屏，并进一步优化了 Markdown 渲染开销。同时，Agent 在 probe 阶段返回的可用命令会被捕获并沿会话保存；对于被取消或异常中断的流式回复，应用现在会保留已生成的部分助手内容，而不是直接丢失。
+    新增
+    - 设置页 About 面板新增 GitHub 正式 Release 检测能力，可检查是否有新版本，并直接跳转到对应的 Release 页面
+    - Chat 会话新增内联 ACP 执行计划展示，在会话进行中可在输入框上方查看当前计划进度、条目状态与优先级
+    - 聊天会话新增对 Agent 可用命令列表的捕获与保存，为草稿态和正式会话中的 Slash Commands 提供稳定的数据基础
+    - 聊天历史加载阶段新增骨架屏，减少消息加载过程中的空白等待感
+    - 新增共享的确认弹窗组件与 useConfirmDialog() composable，统一渲染层确认交互的调用方式
+    调整
+    - 优化聊天消息中的 Markdown 渲染开销，提升长消息与流式输出场景下的界面性能
+    - 统一设置页、任务卡片、Agent 卡片等多处操作的确认弹窗交互模式，减少不同区域之间的体验差异
+    - Slash Commands 的命令数据改为按会话维度维护与回显，切换会话时状态更一致
+    修复
+    - 修复流式聊天在用户停止生成或回复因错误中断时，助手已生成的部分内容可能丢失的问题
+    - 修复回复被取消或异常提前结束后，部分助手消息未被持久化、重新进入会话后内容消失的问题
+    - 修复 Chat 中仍可能显示 mode 类配置项的问题；在相关权限控制尚未具备前，这些不安全暴露的控件现已隐藏
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md#0120---2026-06-04
+ReleaseTime: 2026-06-04T09:28:32.0000000Z
