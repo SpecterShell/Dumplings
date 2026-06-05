@@ -1,0 +1,49 @@
+Version: 1.16.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.16.2/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.16.2/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Bugfixes
+    - Reasoning summaries now only run on providers that support them, avoiding GPT-5 request failures on compatible backends.
+    - Edit operations now refuse loose matches that could overwrite the wrong code or replace an existing file by mistake.
+    - Fixed Bedrock sessions hanging before a model response starts. (@alblez)
+    Improvements
+    - Diff viewer now supports next and previous hunk navigation.
+    - Terminal themes now refresh after live terminal reloads without stale colors or broken highlighting.
+    - Running subagents can now be sent to the background so you can keep working.
+    - Sessions now persist system context updates during long-running conversations.
+    - Added Snowflake Cortex provider support. (@kameshsampath)
+    TUI
+    Bugfixes
+    - Fixed the external editor fallback so attach-mode sessions still open when the original project path is unavailable locally. (@pcadena-lila)
+    - Permission replies now route through the correct session directory.
+    - /mo now prefers the models command in slash autocomplete.
+    - Fixed crashes from malformed path or diff metadata in permission and session views.
+    Desktop
+    Bugfixes
+    - Fixed titlebar tab overflow clipping.
+    - Fixed overflowed titlebar tabs so scrolling and drag regions behave correctly.
+    - Improved tab closing and navigation so the next tab is selected more reliably.
+    Improvements
+    - Improved multi-server desktop support with per-server home state and session tabs.
+    Thank you to 5 community contributors:
+    - @kameshsampath:
+      - feat(core): add Snowflake Cortex provider (#29901)
+    - @pcadena-lila:
+      - fix(tui): fall back to local cwd when editor spawns in attach mode (#30583)
+    - @weiconghe:
+      - fix: use mapError instead of orDie for context snapshot decoding (#30905)
+    - @alblez:
+      - fix(opencode): resolve Bedrock hang by using node build conditions (#30873)
+    - @jerome-benoit:
+      - fix(workflows): retry nix-hashes compute-hash on transient failure (#30743)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.16.2
+ReleaseTime: 2026-06-05T15:58:51.0000000Z
