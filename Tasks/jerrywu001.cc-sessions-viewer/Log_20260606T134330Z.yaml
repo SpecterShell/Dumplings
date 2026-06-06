@@ -1,0 +1,40 @@
+Version: 0.1.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.4/cc-sessions-viewer_0.1.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.4/cc-sessions-viewer_0.1.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Jump to prompt — chat header gains a locate button (crosshair icon) that opens a dropdown listing all user prompts in the session. Includes a search box for quick filtering. Clicking an entry scrolls to and flashes the target message.
+    - External terminal app picker — Settings → Advanced gains a "Terminal app" dropdown (only visible when "Use external terminal" is enabled) letting users choose which terminal to open for Resume / New Session. Supports Terminal.app (default), cmux, iTerm2, Ghostty, and Warp. Only installed terminals are shown; the app auto-detects availability on macOS at startup.
+    - cmux deep integration — smart workspace reuse: queries cmux workspace list --json to find an existing workspace with the same cwd; if a matching session is already running (checked via surface.list RPC), focuses the exact surface + triggers a blue flash indicator instead of opening a duplicate. New splits auto-pick direction (right vs down) by comparing the focused pane's width/height ratio. New workspaces are named after the project directory.
+    - iTerm2 support — uses AppleScript write text to open a new tab (or reuse the launch window when iTerm2 was just started).
+    - Ghostty support — launches via open -a Ghostty.app with --working-directory and -e flags.
+    - Warp support — activates Warp, opens a new tab, escapes from Agent mode, pastes the command via clipboard (⌘V) to avoid keystroke garbling, and sets the tab title via OSC 0 escape sequence.
+    - Terminal app brand icons — each option in the dropdown shows its brand icon: Terminal.app (terminal prompt), cmux (official PNG, theme-adaptive), iTerm2 (green $_ on dark bg), Ghostty (official ghost mark from ghostty.org), Warp (cyan-purple gradient).
+    - Launch arguments per agent — Settings → Advanced lets users configure extra CLI flags (e.g. --dangerously-skip-permissions, --yolo) per agent, appended when resuming or starting sessions. One-click fill button for common defaults.
+    - Smart default terminal — if cmux is installed, it's auto-selected as the default external terminal on first launch. Persists once the user manually picks a different option.
+    - Bookmarks — add arbitrary folders to the sidebar per agent, stored in a backend file.
+    Changed
+    - Clear cache now resets all settings — the "Clear cache" button in Settings → General now also resets external terminal toggle, terminal app choice, and launch arguments. Button is no longer disabled when pin/sink prefs are empty.
+    - README refresh — updated screenshots, added session resume and session GIF demos.
+    Fixed
+    - Terminal.app / iTerm2 double-window on cold start — when the terminal app process was not running, activate + do script / create window would open two windows (one blank default + one with the command). Now detects whether the process is already running via System Events and reuses the launch window when cold-starting.
+    - Spawn debounce — added a 2-second per-cwd debounce to spawn_terminal to prevent accidental double-opens from rapid clicks. Applies to all terminal types.
+    - Ghostty false detection — which ghostty matched cmux's bundled Ghostty binary; now only checks /Applications/Ghostty.app.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v014
+ReleaseTime: 2026-06-06T13:42:26.0000000Z
