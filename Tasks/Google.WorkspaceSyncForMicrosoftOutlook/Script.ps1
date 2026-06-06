@@ -19,9 +19,9 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/153463?hl=en' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='cc']//h2[contains(text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'devsite-article-body')]//h2[contains(text(), '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
         if ($Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
@@ -46,9 +46,9 @@ function Get-ReleaseNotes {
   try {
     $Object3 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/153463?hl=zh-Hans' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[@class='cc']//h2[contains(text(), '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'devsite-article-body')]//h2[contains(text(), '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
         if ($Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})' -or $Node.InnerText -match '(20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日)') {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'

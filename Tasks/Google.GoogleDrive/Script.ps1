@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/7577057?hl=en' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='cc']/p[contains(., 'Version $($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'devsite-article-body')]/p[contains(., 'Version $($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./preceding-sibling::h2').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://support.google.com/a/answer/7577057?hl=zh-Hans' | ConvertFrom-Html
 
-      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//div[@class='cc']/p[contains(., '版本 $($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//div[contains(@class, 'devsite-article-body')]/p[contains(., '版本 $($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesCNTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match($ReleaseNotesCNTitleNode.SelectSingleNode('./preceding-sibling::h2').InnerText, '(20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
