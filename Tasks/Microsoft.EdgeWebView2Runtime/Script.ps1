@@ -4,14 +4,11 @@ function Read-Installer {
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*~' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted '*~' | Get-Item -Force | Select-Object -First 1
   $InstallerFile2Extracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile2 '*.obj' | Out-Host
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.obj' | Get-Item -Force | Select-Object -First 1
-  $InstallerFile3Extracted = New-TempFolder
-  $InstallerFile4Name = [regex]::Matches((7z.exe l -ba -slt '-t#' $InstallerFile3), 'Path = (\d+\.tar)')[-1].Groups[1].Value
-  7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile3Extracted}" $InstallerFile3 $InstallerFile4Name | Out-Host
-  $InstallerFile4 = Join-Path $InstallerFile3Extracted $InstallerFile4Name
+  $InstallerFile3Name = [regex]::Matches((7z.exe l -ba -slt '-t#' $InstallerFile2), 'Path = (\d+\.tar)')[-1].Groups[1].Value
+  7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile2 $InstallerFile3Name | Out-Host
+  $InstallerFile3 = Join-Path $InstallerFile2Extracted $InstallerFile3Name
   # Version
-  $this.CurrentState.Version = [regex]::Match((7z.exe e -y '-t#' -so $InstallerFile4 '1'), '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+  $this.CurrentState.Version = [regex]::Match((7z.exe e -y '-t#' -so $InstallerFile3 '1'), '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
