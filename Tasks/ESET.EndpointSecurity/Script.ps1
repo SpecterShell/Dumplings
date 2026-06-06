@@ -1,12 +1,13 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://gwc.eset.com/v1/product/11').Content | ConvertFrom-Json -AsHashtable
 # x86
-$Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.url.Contains('nt32') }, 'First')[0]
+# $Object2 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.url.Contains('nt32') }, 'First')[0]
 # x64
 $Object3 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.url.Contains('nt64') }, 'First')[0]
 # arm64
 $Object4 = $Object1.files.installer.Values.Where({ $_.installer_type -eq 1 -and $_.av_remover -eq 'No' -and $_.url.Contains('arm64') }, 'First')[0]
 
-if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.full_version } -Unique).Count -gt 1) {
+# if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.full_version } -Unique).Count -gt 1) {
+if ($Object3.full_version -ne $Object4.full_version) {
   $this.Log("Inconsistent versions: x86: $($Object2.full_version), x64: $($Object3.full_version), arm64: $($Object4.full_version)", 'Error')
   return
 }
@@ -15,10 +16,10 @@ if (@(@($Object2, $Object3, $Object4) | Sort-Object -Property { $_.full_version 
 $this.CurrentState.Version = $Object3.full_version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object2.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $Object2.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object3.url -replace '(/v\d+)?/latest/', "/v$($this.CurrentState.Version.Split('.')[0])/$($this.CurrentState.Version)/"
