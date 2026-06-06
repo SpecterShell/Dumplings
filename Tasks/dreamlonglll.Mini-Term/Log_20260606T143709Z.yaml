@@ -1,0 +1,25 @@
+Version: 0.5.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.3/Mini-Term_0.5.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.3/Mini-Term_0.5.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🐛 修复
+    SSH MCP（mt-ssh-mcp）无法用传统 PKCS#1 RSA 私钥连接服务器
+    部分服务器下发的私钥是传统 PKCS#1 明文格式（-----BEGIN RSA PRIVATE KEY-----，常见于 Oracle Cloud 控制台、ssh-keygen -m PEM、OpenSSL）。此前用这类 key 通过内置 SSH 工具连接会直接失败（报 Unsupported key type RSA），而系统 ssh 用同一把 key 却能正常登录。本版修复：
+    - 新增 PKCS#1 私钥解析兜底：原本只认 OpenSSH / PKCS#8 格式，现对传统 PKCS#1 明文 RSA 私钥做纯 Rust 解析，无需再手动转换 key 格式。
+    - 修正 RSA 公钥签名算法：此前 RSA 认证默认用 SHA-1（ssh-rsa），会被现代 OpenSSH（≥ 8.8，如 Ubuntu 22.04/24.04）默认拒绝；现按服务器通告的 server-sig-algs 自动选用 rsa-sha2-512/256，并跳过对 ed25519 等密钥的无谓查询。
+    - 加密私钥（带 passphrase）暂仍不支持，会给出明确提示。
+    影响范围：使用 RSA 私钥连接 SSH 的用户，尤其是 Oracle Cloud / 老格式 key 用户。ed25519 等其它密钥类型不受影响。
+
+    下载：Windows 选 Mini-Term_0.5.3_x64-setup.exe（或 .msi）；macOS 选 _aarch64.dmg；Linux 选 .AppImage / .deb / .rpm。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.5.3
+ReleaseTime: 2026-06-06T13:53:00.0000000Z
