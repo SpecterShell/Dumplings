@@ -1,8 +1,11 @@
 function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+  $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
+  $ZipFile.Dispose()
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'jdsd setup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'jdsd setup.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromExe
   # InstallerSha256

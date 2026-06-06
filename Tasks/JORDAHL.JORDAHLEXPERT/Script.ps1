@@ -2,8 +2,8 @@ function Read-Installer {
   foreach ($Installer in $this.CurrentState.Installer) {
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Setup.exe' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'Setup.exe'
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*.exe' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '*.exe' | Get-Item -Force | Select-Object -First 1
     $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
     $InstallerFile3 = Join-Path $InstallerFile2Extracted 'JORDAHL EXPERT.msi'
     # Version
