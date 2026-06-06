@@ -7,7 +7,12 @@ $this.CurrentState.Version = $Object2.Groups['Version'].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = "https://qemu.weilnetz.de/w64/$($Object3.ToString('yyyy'))/qemu-w64-setup-$($Object3.ToString('yyyyMMdd')).exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://qemu.weilnetz.de/aarch64/$($Object3.ToString('yyyy'))/qemu-arm-setup-$($Object3.ToString('yyyyMMdd')).exe"
 }
 
 switch -Regex ($this.Check()) {
