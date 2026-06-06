@@ -23,15 +23,15 @@ function Get-ReleaseNotes {
     $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
       [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
         param([OpenQA.Selenium.IWebDriver]$WebDriver)
-        try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/span/text(), 'Answer')]/div[2]")) } catch {}
+        try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'OutlineElement')]")) } catch {}
       }
     ).GetAttribute('innerHTML') | ConvertFrom-Html
-    $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode(".//h2[contains(., 'Citavi $($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./p[contains(., 'Citavi $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'p'; $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
