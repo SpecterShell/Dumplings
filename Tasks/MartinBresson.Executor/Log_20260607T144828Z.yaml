@@ -1,0 +1,27 @@
+Version: 2.3.7
+Installer:
+- InstallerUrl: https://github.com/executordk/executor-community/releases/download/v2.3.7/ExecutorSetup_v2.3.7.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: Release v2.3.7 of Executor, check https://executor.dk/updates for release notes.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/executordk/executor-community/releases/tag/v2.3.7
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Improvements
+    - Input Assist (Ctrl+Space) is also contextual aware of the following (besides filesystem and url):
+      - files by using the keyword tag file
+      - file extension by using the keyword tag file:[extension], example: file:zip
+      - folders by using the keyword tag folder
+      - folder names by using the keyword tag folder:[name], example folder:logs
+      So while filesystem targets both files and folders, the above give you the ability to target more specifically.
+      For example you have some keywords that only supports folders as a parameter, you then assign those keywords the tag folder. When you then in Executor input have a folder and press Ctrl+Space these keywords will be listed, where if you assigned them the filesystem tag, the keywords would also appear for files.
+    - The default action command $DEF$ that can perform different actions depending if the executed input had a parameter or not, now supports keyword forwarding. Example of a keyword command:
+      $DEF$brave https://google.com$DEF$brave https://google.com/search?q=$U$ this forwards to the brave keyword. Still with the "one level" limitation that you cannot forward to a keyword that then forwards to another keyword.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://executor.dk/updates#v2307
+ReleaseTime: 2026-06-07T14:26:20.0000000Z
