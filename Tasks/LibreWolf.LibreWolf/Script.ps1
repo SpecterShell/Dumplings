@@ -3,11 +3,18 @@ $Object1 = Invoke-RestMethod -Uri 'https://codeberg.org/api/v1/repos/librewolf/b
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
-# Installer
+# x64 Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+
+# arm64 Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
