@@ -1,0 +1,50 @@
+Version: 0.1.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.7/cc-sessions-viewer_0.1.7_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.7/cc-sessions-viewer_0.1.7_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    - Fix cross-agent tab fallback: closing a tab now only falls back to same-agent tabs, fix #14
+    - Fix PTY environment: remove npm_config_prefix to prevent nvm conflict for Codex/Gemini sessions
+    - Fix tab status border: only active tabs show colored state borders
+    - Fix view navigation on tab close: correctly return to session list or chat view
+    - Fix embedded Codex terminal light theme input box black background (PR #17 by @KodeChicken)
+    - Fix terminal tab "unviewed" status dot not clearing after click (PR #17 by @KodeChicken)
+    - Fix update checker version source
+    - Fix Clippy warnings and Rust compilation warnings
+    Features
+    - Add terminal spawning overlay with loading animation
+    - Add batch project delete from sidebar
+    - Add settings tooltip icons replacing verbose descriptions
+    - Add Claude transcript JSONL-based tab status inference — terminal tabs now track idle/working/blocked/review for Claude sessions, not just Codex and Gemini (PR #17 by @KodeChicken)
+    - Add multi-agent session state tracking for terminal tabs (PR #13 by @KodeChicken)
+    - Add new session creation from terminal strip empty area (PR #13 by @KodeChicken)
+    - Drop macOS accessibility permission requirement — external terminal resume (iTerm2 / Warp / Terminal.app) now uses open -a with a temp .command script instead of osascript, eliminating the macOS accessibility permission prompt (fix #16)
+    Performance
+    - Optimize shiki highlighting with explicit language imports and JS regex engine
+    - Add Rust release profile optimizations (strip, LTO, codegen-units, opt-level)
+    - Use shallowRef for large reactive arrays (chatMsgs, sessions, trash)
+    Refactor
+    - Extract turn state classification into per-agent shared functions (codex.rs, gemini.rs)
+    - Clean up TerminalStrip context menu: remove unused browser actions
+    - Replace .at(-1) with .slice(-1)[0] in tests to fix IDE TS diagnostics
+    - Unify agent CLI launch command rendering (PR #13 by @KodeChicken)
+    - Extract independent tabStatus module from TerminalStrip, unify statusKind consumption (PR #17 by @KodeChicken)
+    - Optimize terminal tab status styling (PR #13 by @KodeChicken)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v017
+ReleaseTime: 2026-06-09T10:16:08.0000000Z
