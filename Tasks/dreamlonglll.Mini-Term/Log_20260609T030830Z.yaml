@@ -1,0 +1,22 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.0/Mini-Term_0.6.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.0/Mini-Term_0.6.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.6.0 - package.json / tauri.conf.json / Cargo.toml / Cargo.lock 同步升至 0.6.0 - README 中英双版更新版本徽章至 0.6.0 - 本版新增：mt-ssh-mcp(SSH MCP sidecar)文件传输能力——接入 russh-sftp 2.3.0,在现有 russh 0.61 持久会话池上新增 ssh_upload / ssh_download 两个 MCP 工具，让 AI agent 直接收发远程文件，摆脱 ssh_exec + base64 受 100KB 输出封顶限制的 workaround;大文件流式分块(open_with_flags + 8KB 缓冲)内存恒定；新增安全硬护栏拒传含全部 SSH 明文密码的 config.json;修正 russh-sftp 协议层 set_timeout 默认 10s 逐请求计时致慢链路大文件被误中断的问题
+    - chore: record journal
+    - chore(task): archive 06-09-ssh-mcp-sftp-transfer
+    - docs: 固化 russh-sftp 文件传输后端 spec - 新增 russh-sftp-file-transfer.md:7 段可执行契约(签名/契约/错误矩阵/Good-Base-Bad/Tests/Wrong-vs-Correct),含接入模式(request_subsystem+into_stream)、大文件流式分块、协议层 10s 逐请求超时坑、config.json 明文密码外泄硬护栏 - backend/index.md 规范索引补一行指向新 spec
+    - feat: 新增 mt-ssh-mcp SFTP 文件上传/下载工具 - 接入 russh-sftp 2.3.0,在现有 russh 0.61 持久会话池上新增 ssh_upload / ssh_download 两个 MCP 工具，让 AI agent 直接收发远程文件，摆脱 ssh_exec + base64 受 100KB 输出封顶限制的 workaround - 大文件流式分块(open_with_flags + 8KB 缓冲),内存恒定，不用整文件进内存的 SftpSessionread/write;下载先写 .mt-sftp-partial 临时文件再原子 rename,失败清理半截文件 - 安全硬护栏 is_blocked_local_path:拒传 mini-term 自身 config.json(含全部 SSH 明文密码),canonicalize 比对 + lexical 兜底防 .. 绕过/大小写，upload/download 双向都拦 - 修正 russh-sftp 协议层 SftpSessionset_timeout 默认 10s 且逐请求计时的坑，放宽到外层传输窗口(默认 300s,可 timeout_secs 覆盖),避免慢链路大文件被误中断 - transport 错(channel/subsystem/握手)走 evict+单次 retry,SFTP 业务错(路径不存在/无权限)直接返 agent 不 evict;每次传输记 ssh-mcp-audit.log;错误不含密码 - 依赖复核：russh-sftp 不依赖 russh、Cargo.lock 零 aws-lc、ssh-key/ssh-encoding/rsa 精确锁未变(规避 Windows MSVC NASM),tokio 补 fs/io-util feature - README 中英双版补充两个新工具说明；新增 SFTP 相关单测(护栏/审计行/错误分类/入参解析)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.0
+ReleaseTime: 2026-06-09T03:01:02.0000000Z
