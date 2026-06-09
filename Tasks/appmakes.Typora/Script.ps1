@@ -7,6 +7,7 @@ $Object3 = Invoke-RestMethod -Uri 'https://typora.io/releases/windows_arm.json'
 
 # Version
 $this.CurrentState.Version = @($Object1, $Object2, $Object3) | Select-Object -ExpandProperty version |
+  Select-String -Pattern '^\d+(?:\.\d+)+$' -Raw |
   Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } | Select-Object -Last 1
 
 # Installer
