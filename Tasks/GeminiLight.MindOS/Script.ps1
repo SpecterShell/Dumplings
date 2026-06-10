@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/GeminiLight/MindOS/releases/latest'
+$Object1 = (Invoke-GitHubApi -Uri 'https://api.github.com/repos/GeminiLight/MindOS/releases').Where({ -not $_.prerelease -and $_.tag_name -match '^desktop-v' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^desktop-' -replace '^v'
