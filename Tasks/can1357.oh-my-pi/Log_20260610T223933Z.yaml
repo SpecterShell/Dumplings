@@ -1,0 +1,135 @@
+Version: 15.11.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.11.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Removed compaction/index.ts re-export of snapcompact helpers, so snapcompact utilities are no longer available from the agent compaction barrel and should be imported from @oh-my-pi/snapcompact
+    - Removed the convertToLlm alias export from compaction/messages — it duplicated defaultConvertToLlm under a second name. Import defaultConvertToLlm (array form) or the new convertMessageToLlm (single-message form) instead
+    Added
+    - Added convertMessageToLlm(): the single-message core transformer behind defaultConvertToLlm(). Embedders with app-specific message roles should handle their own roles and delegate every core role (user/developer/assistant/toolResult/custom/hookMessage/branchSummary/compactionSummary) to it instead of duplicating the conversion — a duplicated compactionSummary case is how snapcompact frames once silently dropped off provider requests
+    - Added pruneSupersededToolResults() and the opt-in PruneConfig.supersedeKey hook so harnesses can prune stale tool results superseded by a newer read of the same file; superseded results are pruned ahead of age-based victims during overflow pruning and replaced with a [Superseded by a newer read of this file] placeholder. Without the new config, pruneToolOutputs() behavior is unchanged.
+    - Added readToolSupersedeKey() implementing the read-tool path/selector grammar (selector-free reads supersede range reads of the same file; URL-scheme paths exempt). Pruning honors prompt-cache economics: per-turn prunes only fire when the post-candidate suffix is small or the cache is cold (idle gap).
+    - Added the snapcompact compaction strategy via @oh-my-pi/snapcompact: instead of an LLM summary, discarded history is printed onto dense bitmap frames and re-attached to the compaction summary message as image blocks. CompactionSummaryMessage gains an optional images field, estimateTokens() charges per attached frame, and frames persist under preserveData.snapcompact with an 8-frame middle-out eviction budget.
+    - Snapcompact frames are now rendered in a provider-aware shape (SNAPCOMPACT_SHAPES + resolveSnapcompactShape(api)), following the snapcompact 200k-token monolithic evals: Anthropic-family and unknown APIs get 8x8r-bw (unscii-8 square cells, black ink, every line printed twice with the copy on a pale highlight band — read at F1 parity with raw text at ~2x lower cost and the most refusal-robust), Google gets 8x8r-sent (sentence-hue ink, ~2.9x cheaper), and OpenAI gets 6x6u-sent (unscii Lanczos-stretched to 6x6 cells — OpenAI bills a flat ~2.9k tokens per image, so frame count is the only cost lever) with detail: "original" on the frame images. snapcompactCompact() accepts model/shape options, frames persist their shape metadata, mixed-shape archives (provider switches, legacy 5x8 frames) are flagged in the reading instructions, and snapcompactGeometry()/renderSnapcompactFrame() now take a shape
+    Changed
+    - Compaction and branch-summary file lists are now a single <files> tag instead of <read-files>/<modified-files>: paths render as the grouped, prefix-folded directory tree the find/search tools emit (# dir/ headers, bare basenames), each annotated (Read), (Write), or (RW) — modified files that were also read get (RW). Legacy tags in summaries written by earlier versions are still stripped and self-heal on the next compaction
+    Fixed
+    - Fixed queued steering messages being drained into an externally aborted run: interrupting mid-tool execution (e.g. Enter with a pending steer) dequeued the steer into the dying run — it landed in history without a response and the post-abort resume saw an empty queue, so the agent stopped instead of continuing. Steering/follow-up/aside queue polls are now skipped once the run's abort signal fires, leaving the queue intact for Agent.continue().
+    - Fixed <read-files> compaction lists recording the same file once per line-range/raw selector (src/foo.ts:50-200, :raw, :1-50:raw, …): read-tool selectors are now stripped before tracking, so reads dedupe to the base path and match their write/edit path when splitting read-only vs modified lists. Selector-polluted lists stored by earlier compactions self-heal on the next compaction. readToolSupersedeKey() now shares the same splitter (splitReadSelector()), gaining the .. range alias and L-prefix forms it previously missed.
+    - Fixed estimateTokens() undercounting thinking-heavy assistant messages on replay: thinkingSignature payloads (OpenAI Responses encrypted reasoning items, Anthropic signed thinking blocks, etc.) and redactedThinking.data are now charged alongside the visible thinking text, so the local estimate tracks provider-reported usage instead of straddling the threshold on every turn (#2275).
+    @oh-my-pi/pi-ai
+    Added
+    - Added optional ImageContent.detail ("auto" | "low" | "high" | "original"): an OpenAI resolution hint forwarded by the openai-responses serializers (default stays auto) and by openai-completions for the values Chat Completions supports. "original" preserves native resolution — required for snapcompact frames, whose pixel-font glyphs do not survive the default downscale. Providers without a detail knob ignore the field.
+    Fixed
+    - Fixed OpenRouter DeepSeek V4 strict tool schemas nesting anyOf inside the nullable wrapper for optional unions, which produced a branch without type and triggered OpenRouter's Invalid tool parameters schema : field anyOf: missing field type 400. (#2270)
+    - Hardened strict tool-schema handling beyond the optional-union case: enforceStrictSchema now splices natively nested pure unions into the parent anyOf (only when the inner node carries no constraining siblings, since sibling keywords are conjunctive with anyOf), so source schemas with nested unions no longer produce type-less anyOf branches that strict upstream validators reject. (#2270)
+    - Made the openai-completions non-strict retry reachable for "mixed" strict mode (previously gated to all_strict, i.e. Cerebras only) and taught it to recognize upstream tool-schema validation 400s (Invalid tool parameters schema …, Invalid schema for function …). A matching rejection now retries the request with base (non-strict) schemas and persists strictToolsDisabled on the provider session, so later requests skip the doomed strict attempt instead of paying a 400 + retry round-trip each turn. (#2270)
+    - Cross-model anthropic-messages → anthropic-messages continuations now preserve prior assistant turns' reasoning chains end-to-end: every prior thinking/redactedThinking block survives (not just the latest surviving assistant), and third-party ↔ third-party replays keep their signatures intact so the reasoning chain stays signed for the next turn. Signatures are stripped (and any redacted_thinking sibling without a native landing spot is dropped) only when an official Anthropic endpoint is on either end of the replay — official Anthropic cryptographically binds reasoning signatures to its key+session+model, while compatible reasoning endpoints (Z.AI, DeepSeek, custom anthropic-messages providers configured via models.yaml) treat them as opaque continuation hints. Source-side official detection uses the canonical catalog provider id "anthropic" (assistant messages carry no baseUrl); target-side detection reuses the baked compat.officialEndpoint flag. Latest-turn byte-for-byte behavior (Anthropic's "thinking blocks in the latest assistant message cannot be modified" rule) and existing aborted/errored last-block sanitization are unchanged. (#2257, #2265)
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed buildModel so malformed explicit thinking metadata without efforts is treated as sparse input and inferred instead of crashing during model resolution (#2251).
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed the resume option from the task tool API and its resume execution path; continue work on finished subagents by sending follow-up messages via irc instead
+    - Removed the irc.enabled setting: irc availability is now derived — the tool exists exactly when there is someone to message (the session can spawn subagents through task, or it is a subagent itself). A stale irc.enabled key in config is ignored
+    - The task tool was reworked to always run spawns in the background as independent, persistent agents: results arrive as async job deliveries (block with job poll only when genuinely needed). The wire schema is now shape-swapped by the new task.batch setting (default on): { agent, context, tasks[] } — one subagent per task item, per-item isolated, and a required shared context — or, when disabled, a flat single-spawn shape { agent, id?, description?, assignment, isolated? } with shared background passed via local:// files instead
+    - Removed the task.simple setting and the task tool's per-call schema parameter outright: structured subagent output now comes only from the agent definition's output frontmatter or the inherited session schema, and ad-hoc structured workflows use eval agent(prompt, schema). A stale task.simple key in config is migrated away
+    - Reworked irc to send/wait/inbox/list ops over a per-agent mailbox bus: the blocking awaitReply auto-reply turn is removed — send is fire-and-forget with delivery receipts, and replies are real turns by the recipient observed via wait (or the send await: true sugar)
+    - Removed the context argument from eval agent() in both the JS and Python preludes: pass shared background via a local:// file referenced in the prompt
+    - Replaced the standalone session-observer overlay with the Agent Hub: app.session.observe (ctrl+s) now opens the hub, whose chat view absorbed the observer's transcript renderer
+    Added
+    - Snapcompact compaction now passes the session model so frames render in the provider-optimal shape (unscii 8x8r-bw for Anthropic-family/unknown APIs, 8x8r-sent for Google, Lanczos-stretched 6x6u-sent with detail: "original" for OpenAI), per the snapcompact 200k-token evals
+    - Added per-turn supersede pruning of stale read results: when a file is re-read, older copies of the same path/selector are pruned from context at cache-favorable moments (small suffix, idle gap, or alongside overflow pruning). Gated by the new compaction.supersedeReads setting (default on)
+    - Added soft request budgets for task subagents (explore/quick_task 40, others 90, configurable via task.softRequestBudget, 0 disables): crossing the budget injects a one-time wrap-up steer into the child; crossing 1.5× aborts the run gracefully
+    - Added cancelled/aborted subagent salvage: instead of (no output), merged task results now carry the child's last activity snippet plus request/token stats, and per-child stats lines include request counts
+    - Added a repeat-read notice to the read tool: the third and later reads of the same file in a session append a one-line note suggesting range re-reads or the context echoed in edit results
+    - Added a hard inline byte cap (~50KB) at the bash and browser tool-result boundaries with head/tail elision and an artifact:// footer for the full output, closing paths that previously let 100KB+ results land inline
+    - Added the Agent Hub overlay (ctrl+s, alt+a, or double-tap left arrow on an empty editor): a live table of registered subagents (status, unread IRC count, current task, last activity) with per-agent chat — Enter opens a transcript + input line that steers a running agent, prompts an idle one, and revives a parked one; r revives and x aborts/releases the selected agent
+    - Added the snapcompact compaction strategy (compaction.strategy: "snapcompact"): history is archived onto dense bitmap "snapcompact" frames a vision model reads back directly, instead of an LLM-generated summary — instant, free, and verbatim. Auto compaction (including overflow recovery) and manual /compact both honor it; falls back to context-full with a visible warning notice when the current model is text-only (e.g. Codex API surfaces) or when /compact is given custom instructions. Frames survive context rebuilds and later compactions (budget eviction is middle-out: the session-head frame is pinned); the expanded compaction message notes the attached frame count
+    - Added a persistent subagent lifecycle: finished subagents stay live as idle, are parked to disk after task.agentIdleTtlMs (default 7 minutes; 0 keeps them live until exit), and are revived automatically when messaged or prompted from the Agent Hub
+    - Added the history:// protocol: history:// lists every registered agent and history://<agentId> renders a concise markdown transcript (tool calls collapsed to one line each, thinking elided) for live and parked agents alike
+    - Added an IRC mailbox bus with bounded per-agent inboxes: irc wait blocks until a matching message arrives, inbox drains or peeks pending messages, and sending to an idle or parked agent wakes or revives it for a real turn
+    - Added a dedicated TUI renderer for the irc tool: directional send/receive headers with delivery-outcome coloring, quoted message bodies with expand-aware truncation, per-recipient receipt trees for broadcasts and failures, and status-badged peer listings with unread counts
+    - Added the task.batch setting (default on): the task tool's batch shape { agent, context, tasks[] } spawns one subagent per item — each its own independent background job with the normal idle/parked lifecycle and optional per-item isolation — and prepends the required shared context to every spawned subagent's system prompt; disabling it restores the flat single-spawn schema
+    Changed
+    - Changed task-tool sync execution to fan out multiple tasks[] items in parallel and return a merged result payload when no async job manager is available
+    - Changed the compaction UX so the conversation no longer visually restarts: the TUI renders the full-history display transcript (buildSessionContext({ transcript: true })), with each compaction shown as a slim inline divider — ── 📷 compacted · ctrl+o ── — at the point it fired; expanding (ctrl+o) reveals the summary and snapcompact frame count. Applies to live compaction, /compact, /tree navigation, and session resume
+    - Changed async.enabled to gate async bash commands only — the task tool now runs asynchronously regardless of the setting
+    - Changed irc.timeoutMs to be the default timeout for irc wait and send with await: true
+    - Moved the grouped path-tree helpers (buildPathTree, walkPathTree, find's grouped output formatter — now formatGroupedPaths) to @oh-my-pi/pi-utils so compaction summaries can render file lists with the same prefix-folded tree as find/search; tools/find no longer exports formatFindGroupedOutput
+    - Changed TTSR rule notifications to combine rules into one block: a multi-rule match renders name: description rows (collapsed view caps at 4 rules with a +N more hint, ctrl+o expands), and consecutive notifications merge into the previous block while it is still the live transcript tail
+    Removed
+    - Removed the pre-initialization startup splash and input buffer, so commands typed during launch are no longer queued and are handled only after the interactive TUI initializes
+    Fixed
+    - Fixed irc live message delivery so successfully handed-off messages are no longer enqueued as mailbox mail, so they do not inflate unread irc counts
+    - Fixed irc send with await: true to wait for a fresh reply to the current call instead of consuming previously buffered messages
+    - Fixed main-session chat output to stop duplicating outbound irc sends from the main agent as relay cards
+    - Fixed task-tool runtime compatibility so legacy flat task calls (agent, assignment) still execute under task.batch even though the wire schema is batch-first
+    - Fixed the job tool's TUI preview leaking the model-facing <task-result> envelope for settled task jobs — the preview now shows the inner output body, and pretty-printed JSON bodies are flattened onto one line instead of previewing a lone {
+    - Fixed npm CLI distribution bundles by embedding the stats dashboard client bundle so dashboard assets are served in prebuilt installs
+    - Fixed the resolve tool's result block turning white after the leading icon: the accent-styled symbol embedded a foreground reset inside the inverse-rendered line, dropping the block color for the rest of the row
+    - Fixed the CLI smoke-test command to start the stats server and verify dashboard HTML is served, catching bundled-asset regressions
+    - Added verification of a <div id="root"></div> and index.js in smoke-test dashboard responses
+    - Restored the checkmark glyph on ask-tool custom answers and the multi-select "Done selecting" option, which a status-glyph sweep had swapped for the ask tool icon
+    - Fixed the thinking.autoPending statusbar indicator using question-mark glyphs (▣?, nf-md-help_box, [?]) in every symbol preset, which made the auto-thinking pending state indistinguishable from a terminal missing-glyph fallback. Replaced with clear loading indicators (⟳, fa-circle-o-notch, [~]) (#2267).
+    - Fixed tab.screenshot({ save }) ignoring the save path's extension: an explicit .webp/.jpg destination received hardcoded PNG bytes behind a mismatched name. The full-res capture format is now derived from the save path (png/jpeg/webp, puppeteer-native), and the reported mime type follows the bytes actually written; unknown or missing extensions still capture PNG
+    - Fixed an infinite compaction.strategy: shake auto-continue loop in thinking-heavy sessions: the post-shake check now uses the provider-anchored trigger metric (instead of a local estimate that undercounts thinkingSignature payloads) and only treats pressure as resolved when residual context lands inside an 80% recovery band, so shake reliably falls back to context-full compaction when it cannot create real headroom (#2275).
+    @oh-my-pi/hashline
+    Changed
+    - Block-unresolved errors (replace block N: / delete block N / insert after block N: failing to resolve a syntactic block) now append a numbered preview of the file around the anchor line — same *-marked context rows the hash-mismatch error shows — so the offending line is visible without a re-read
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Changed renderSnapcompactPng(text, options) to return a base64-encoded PNG string instead of a Uint8Array
+    Added
+    - Added dim-span ink toggles to renderSnapcompactPng: U+000E/U+000F in the input switch to a dim gray ink (palette index 9) and back without occupying a glyph cell, letting callers visually de-emphasize spans such as archived tool output
+    - Added renderSnapcompactPng(text, options): rasterizes pre-normalized text onto a square PNG in an eval-validated snapcompact shape. Options select the bundled font (5x8 X.org BDF or 8x8 unscii-8, both public domain, shipped in crates/pi-natives/src/fonts/), the ink variant (sent six-hue sentence cycling or bw black), line repetition (each text line printed N times, copies on a pale highlight band), and a target cell size — cells differing from the font's natural cell render via Lanczos3 stretch into an anti-aliased RGB frame (e.g. the OpenAI-optimal 6x6 unscii shape); native-cell shapes encode as 4-bit indexed PNG. Replaces the JS rasterizer/PNG writer previously in @oh-my-pi/pi-agent-core.
+    @oh-my-pi/snapcompact
+    Breaking Changes
+    - Changed renderSnapcompactFrame output from png: Uint8Array to data: string base64, requiring consumers to read frame payloads from frame.data
+    Added
+    - Added new serialization options toolResultMaxChars, toolArgMaxChars, toolCallMaxChars, truncateHeadRatio, and dimToolResults to snapcompactCompact/serializeSnapcompactConversation so callers can tune how tool results and arguments are archived
+    - Added exported default constants SNAPCOMPACT_TOOL_RESULT_MAX_CHARS, SNAPCOMPACT_TOOL_ARG_MAX_CHARS, SNAPCOMPACT_TOOL_CALL_MAX_CHARS, and SNAPCOMPACT_TRUNCATE_HEAD_RATIO for reuse when configuring truncation limits
+    - Added provider-specific snapcompact frame-shape presets and shape helpers (SNAPCOMPACT_SHAPES, resolveSnapcompactShape, isSnapcompactShape) so callers can consistently select validated image-frame geometry for archive renders
+    - Added file-operations.md and snapcompact-summary.md prompts to preserve file-read/write context and frame metadata in the compaction prompt flow
+    - Added a full packages/snapcompact/research experiment and visualization suite for running snapcompact SQuAD studies, provider probes, and activation-style analyses
+    - Added package-level TypeScript exports and publication config so consumers can import @oh-my-pi/snapcompact with typed access to snapcompact APIs
+    - Published @oh-my-pi/snapcompact as the reusable snapcompact compaction package, including bitmap-frame rendering helpers, archive helpers, and the local snapcompactCompact() strategy.
+    Changed
+    - Changed truncation in archived tool output to keep both the beginning and end of long text using a configurable head/tail ratio instead of a single hard cut
+    - Changed tool-result text rendering so archived tool results are shown in dim gray ink by default and the summary prompt notes that dim text is archived tool output
+    - Changed RenderedFrame visible-character accounting so chars no longer includes invisible dim-control markers
+    - Changed the file-operations summary block to a single <files> tag: one grouped, prefix-folded directory tree with per-file (Read)/(Write)/(RW) markers, replacing the separate <read-files>/<modified-files> lists; upsertSnapcompactFileOperations takes the cumulative read set to distinguish (RW) from blind writes
+    Fixed
+    - Fixed frame rendering at archive chunk boundaries to reopen dim spans when a chunk ends inside a dimmed tool-result segment
+    - Fixed message serialization to strip user- and assistant-provided dim markers so only renderer-generated dim spans can be applied
+    @oh-my-pi/omp-stats
+    Added
+    - Added support for prebuilt npm bundle mode via PI_BUNDLED, allowing the stats server to use an embedded dashboard bundle in packaged CLI distributions
+    Fixed
+    - Fixed handling of legacy embedded-client.generated.txt placeholder content so it is treated as missing archive instead of being decoded into invalid bytes
+    - Fixed ENOENT handling while scanning dashboard source/build directories so missing client/ or dist/client trees no longer crash startup
+    @oh-my-pi/pi-tui
+    Added
+    - Added support for asynchronous onSubmit handlers by allowing the callback to return a Promise<void>
+    @oh-my-pi/pi-utils
+    Added
+    - Added the path-tree module (buildPathTree, walkPathTree, formatGroupedPaths, isUrlLikePath), moved from the coding agent's grouped file output so compaction file lists can share the same prefix-folded directory-tree rendering; formatGroupedPaths gains an optional annotate callback for per-file suffixes
+    Fixed
+    - Fixed the {{join}} prompt helper joining with a literal two-character \n when templates pass "\n" as the separator — Handlebars string literals carry no escape processing. The separator now unescapes \n/\t, matching the {{#list}} helper's documented convention (visible as literal \n between paths in compaction <read-files> lists).
+    What's Changed
+    - fix(ai): preserve 3p anthropic-messages reasoning chains across model swaps by @roboomp in https://github.com/can1357/oh-my-pi/pull/2266
+    - fix(tui): replaced thinking.autoPending question-mark glyphs with loading indicators by @roboomp in https://github.com/can1357/oh-my-pi/pull/2268
+    - fix(catalog): handle missing thinking efforts by @roboomp in https://github.com/can1357/oh-my-pi/pull/2252
+    - fix(ai): flatten OpenRouter DeepSeek strict unions by @roboomp in https://github.com/can1357/oh-my-pi/pull/2271
+    - fix(agent): break shake auto-continue loop when local estimate diverges from provider usage by @roboomp in https://github.com/can1357/oh-my-pi/pull/2277
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.10.12...v15.11.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.11.0
+ReleaseTime: 2026-06-10T22:13:36.0000000Z
