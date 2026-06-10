@@ -5,7 +5,7 @@ $Object1 = Invoke-WebRequest -Uri "${Prefix}latest" | Read-ResponseContent
 # Version
 $this.CurrentState.Version = $Object1.Trim()
 
-$Prefix += $this.CurrentState.Version + '/'
+$Prefix += "binaries/$($this.CurrentState.Version)/"
 $Object2 = Invoke-RestMethod -Uri "${Prefix}manifest.json"
 
 # Installer
