@@ -1,11 +1,10 @@
 function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'install.7z' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'install.7z'
+  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  $this.CurrentState.Version = [regex]::Match((7z.exe l -ba -slt $InstallerFile2), 'Path = (\d+\.\d+\.\d+\.\d+)').Groups[1].Value
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromNSIS
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://pc.weixin.qq.com/' | ConvertFrom-Html
@@ -15,8 +14,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('//a[@id="downloadButton"]').Attributes['href'].Value
 }
 
-# Hash
-$this.CurrentState.Hash = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'X-COS-META-MD5'[0]
+# Last Modified
+$this.CurrentState.LastModified = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -42,9 +41,12 @@ if ($this.Status.Contains('New')) {
   return
 }
 
-# Case 2: The hash is unchanged
-if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`"", 'Warning')
   return
 }
 
@@ -55,17 +57,25 @@ if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
   throw 'The current state has an invalid version'
 }
 
+# Case 4: The Last Modified has updated, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
+
 switch -Regex ($this.Check()) {
-  # Case 5: The hash and the version have changed
+  # Case 6: The Last Modified, the SHA256 and the version have changed
   'Updated|Rollbacked' {
     $this.Print()
     $this.Write()
     $this.Message()
     $this.Submit()
   }
-  # Case 4: The hash has changed, but the version is not
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
   default {
-    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
     $this.Write()
