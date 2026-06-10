@@ -1,0 +1,29 @@
+Version: 0.1.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.8/cc-sessions-viewer_0.1.8_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.8/cc-sessions-viewer_0.1.8_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Font size setting — Settings → General gains a "Font Size" segment control (Small / Normal / Large) with visual "A" icon previews. Uses CSS zoom to scale the entire UI proportionally (0.9× / 1.0× / 1.1×). Persisted to localStorage; defaults to Normal.
+    - Switch pricing data source to models.dev — Replace LiteLLM upstream with models.dev for model pricing. models.dev is significantly more responsive to new model launches (e.g. Claude Fable 5 was available on launch day while LiteLLM lagged by days). Covers all three CLI agents (Claude / Codex / Gemini) with cache pricing and context window data included.
+    - Pricing page "open source" button — Add an external-link icon next to the pricing page title that opens models.dev in the system browser.
+    Bug Fixes
+    - Fix packaged .app unable to launch cmux — resolve cmux binary path via user login shell ($SHELL -l -c "which cmux") so it works even when the bundled app has a minimal system PATH
+    - Fix flaky pricing unit test caused by concurrent with_remote / seed_test_prices sharing the same global key — tests now use exclusive keys and restore-on-cleanup semantics
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v018
+ReleaseTime: 2026-06-10T02:19:49.0000000Z
