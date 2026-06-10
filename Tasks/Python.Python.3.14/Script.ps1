@@ -15,16 +15,37 @@ $this.CurrentState.Version = $Object2.'sort-version'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri $Object1.url "python-$($this.CurrentState.Version).exe"
+  Architecture  = 'x86'
+  InstallerType = 'burn'
+  InstallerUrl  = Join-Uri $Object1.url "python-$($this.CurrentState.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri $Object2.url "python-$($this.CurrentState.Version)-amd64.exe"
+  Architecture  = 'x64'
+  InstallerType = 'burn'
+  InstallerUrl  = Join-Uri $Object2.url "python-$($this.CurrentState.Version)-amd64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = Join-Uri $Object3.url "python-$($this.CurrentState.Version)-arm64.exe"
+  Architecture  = 'arm64'
+  InstallerType = 'burn'
+  InstallerUrl  = Join-Uri $Object3.url "python-$($this.CurrentState.Version)-arm64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x86'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = Join-Uri $Object1.url "python-$($this.CurrentState.Version)-win32.zip"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = Join-Uri $Object2.url "python-$($this.CurrentState.Version)-amd64.zip"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = Join-Uri $Object3.url "python-$($this.CurrentState.Version)-arm64.zip"
 }
 
 switch -Regex ($this.Check()) {
