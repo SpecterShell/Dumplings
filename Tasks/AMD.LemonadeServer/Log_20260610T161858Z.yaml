@@ -1,0 +1,119 @@
+Version: 10.7.0
+Installer:
+- InstallerUrl: https://github.com/lemonade-sdk/lemonade/releases/download/v10.7.0/lemonade-server-minimal.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Headline
+    - LMX-Omni models are now supported for any OpenAI API compatible app that can render multimedia output, including Open WebUI and AnythingLLM.
+    - The new lemonade bench command provides apples-to-apples LLM benchmarking across llama.cpp, FastFlowLM, vLLM, and Ryzen AI SW.
+    - Greatly improved cross-platform compatibility: llama.cpp CUDA support added for Windows and Linux; stable-diffusion.cpp CUDA added for Linux, stable-diffusion.cpp Vulkan added for Windows and Linux.
+    - Added a native Prometheus endpoint for real time stats monitoring.
+    Breaking Changes
+    - The deprecated environment variables for lemond configuration have finally been removed, use lemonade config instead.
+    - Windows AMD users are highly encouraged to update their Adrenalin driver before generating images.
+    Lemonade Server
+    Operating System Downloads
+    Windows lemonade.msi
+    Ubuntu 24.04+ Launchpad PPA
+    Fedora 43 lemonade-server-10.7.0-fc43.x86_64.rpm
+    Fedora 44 lemonade-server-10.7.0-fc44.x86_64.rpm
+    macOS Lemonade-10.7.0-Darwin.pkg
+    Other platforms? See our Installation Options for Docker, Snap, Arch, Debian, and more.
+    Embeddable Lemonade
+    Portable binaries for bundling into your own installer. Run lemond ./ as a subprocess.
+    Platform Download
+    Ubuntu x64 lemonade-embeddable-10.7.0-ubuntu-x64.tar.gz
+    Windows x64 lemonade-embeddable-10.7.0-windows-x64.zip
+    macOS arm64 lemonade-embeddable-10.7.0-macos-arm64.tar.gz
+
+    What's Changed
+    Thanks @Geramy, @Kushal1213, @Phqen1x, @Storce, @ZaneNi, @anditherobot, @bitgamma, @ckuethe, @fl0rianr, @github-actions, @jeremyfowers, @julianxhokaxhiu, @kenvandine, @kylemanna, @lucifer-vali, @noamsto, @ramkrishna2910, @sawansri, @siavashhub, @superm1 for your awesome contributions to this release!
+    Click to expand changelog
+    - Stop backend archive staging from using shared /tmp during ROCm installs by @Copilot in https://github.com/lemonade-sdk/lemonade/pull/1996
+    - Add bench command by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/1953
+    - Remove more cases of hardcoded /tmp or predictable paths to mitigate … by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1997
+    - speech: Avoid duplicate Content-Type headers by @kylemanna in https://github.com/lemonade-sdk/lemonade/pull/2005
+    - fix: harden local model path finder by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/1989
+    - Add llamacpp:cuda backend for NVIDIA GPUs by @Phqen1x in https://github.com/lemonade-sdk/lemonade/pull/1772
+    - feat: update FLM version to v0.9.43 by @ZaneNi in https://github.com/lemonade-sdk/lemonade/pull/2026
+    - fix(kokoro): correct ESPEAK_DATA_PATH construction by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2025
+    - fix: harden markdown link handling against prompt injection by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2016
+    - security: fix path traversal in NPU cache download by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2017
+    - fix(readme): row arrangement fixed by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2023
+    - Smooth displayed download speed by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/1995
+    - fix: bump macOS sd.cpp metal version and macOS release number by @Geramy in https://github.com/lemonade-sdk/lemonade/pull/2030
+    - Add LFM2.5-8B-A1B by @sawansri in https://github.com/lemonade-sdk/lemonade/pull/2036
+    - Fix downloaded status for multi-checkpoint models by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2031
+    - add instructions to start/enable lemond on Fedora based distros by @lucifer-vali in https://github.com/lemonade-sdk/lemonade/pull/2029
+    - Correct websockets not to listen on 0.0.0.0 by default by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2034
+    - fix(server): translate model names before checking if they are downloaded (#2014) by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2048
+    - Map LEMONADE_WHISPERCPP_VULKAN_{BIN,ARGS} env vars for parity by @noamsto in https://github.com/lemonade-sdk/lemonade/pull/2045
+    - Link system cpp-httplib portably (header-only friendly) by @noamsto in https://github.com/lemonade-sdk/lemonade/pull/2047
+    - feat: Add WSL support via librocdxg by @julianxhokaxhiu in https://github.com/lemonade-sdk/lemonade/pull/2049
+    - Vulkan back-end support for sdcpp by @ckuethe in https://github.com/lemonade-sdk/lemonade/pull/2039
+    - Update URL for CUDA backend for llama.cpp (llamacpp:cuda) by @Phqen1x in https://github.com/lemonade-sdk/lemonade/pull/2011
+    - fix: stop refreshing models on download progress by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2051
+    - Allow LEMONADE_GGML_HIP_PATH to locate the HIP plugin on non-FHS installs by @noamsto in https://github.com/lemonade-sdk/lemonade/pull/2044
+    - Fix: Adds SHA check on every download by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/1950
+    - Show 3-line descriptions in Marketplace cards by @Copilot in https://github.com/lemonade-sdk/lemonade/pull/2069
+    - Fix: HF snapshot ref reuse for unchanged model artifacts by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2066
+    - fix: user model RAM filtering by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2067
+    - test: give pull multi endpoint test a unique number by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2059
+    - fix(vLLM): make startup timeout adjustable, increased global_timeout by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2004
+    - Fix spurious model re-downloads: make client pulls cache-first by default by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2065
+    - fix: user model registry writes and stale cache lookups by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2064
+    - fix(cuda): NVIDIA Blackwell/PRIME detection and CUDA device fixes on Linux by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/2070
+    - security: validate URL scheme in openExternal handler by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2019
+    - Fix #1959: Replace old Qwen example model in Lemonade API docs by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2087
+    - Add Gemma 4 12B by @sawansri in https://github.com/lemonade-sdk/lemonade/pull/2090
+    - feat: server-side Omni orchestration for /chat/completions (Open WebUI) by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2071
+    - Separate local and available model list output by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2086
+    - Create a set of working groups by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2079
+    - CI: Limit distro builds to relevant changes by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2104
+    - ci: consolidate GitHub-hosted test jobs to reduce download rate limiting by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2105
+    - Update llama.cpp to b9518 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/2101
+    - feat: support benchmarking multiple models in a single command by @ckuethe in https://github.com/lemonade-sdk/lemonade/pull/2075
+    - feat: add CUDA backend support for stable-diffusion.cpp by @Phqen1x in https://github.com/lemonade-sdk/lemonade/pull/2062
+    - Native Prometheus Metrics Endpoint by @Storce in https://github.com/lemonade-sdk/lemonade/pull/1897
+    - Auto-label issues and PRs by backend and area by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2076
+    - ci / test: fix the 409 CI error by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2117
+    - ci: set HF_HOME before starting hosted Linux server by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2116
+    - test: add coverage for GET /v1/pull/variants (4 paths) by @Kushal1213 in https://github.com/lemonade-sdk/lemonade/pull/2096
+    - Drop all environment variable migration code by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2106
+    - Add Debian 13 to NPU installation instructions by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2114
+    - Remove pointless comments from codebase by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2133
+    - Update llama.cpp to b9550 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/2132
+    - fix(security): prevent path traversal in /web-app/ route by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2084
+    - test: retry transient model pull setup failures by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2123
+    - feat: add Linux ARM64 CPU and Vulkan llamacpp backend support by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/2081
+    - Lemonade CLI within Docker by @siavashhub in https://github.com/lemonade-sdk/lemonade/pull/2126
+    - update sd-cpp backend by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2102
+    - auto-label: teach prompt about area::ci + test coverage ≠ documentation by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2129
+    - fix(sd image): seed UX and drop generation timeout by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/1924
+    - fix: remove references to env vars dropped in #2106 by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2152
+    - Add roadmap for the Auto-Tune working group by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/2138
+    - Readme: Add cuda and vulkan for image gen by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2160
+    - ci: require stx-halo runner for server_omni.py tests by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2157
+    - Allow internal endpoints from remote addresses; warn on unsecured non-loopback bind by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2100
+    - fix(nvidia/snap): CUDA GPU detection under snap strict confinement by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/2154
+    - add cuda to llama.cpp auto updater by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2151
+    - fix: corrupted dowload speed/eta during finalizing by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2165
+    - Update llama.cpp to b9585 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/2168
+    - Adjust runtime directory handling for systemd awareness by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2167
+    - chore: bump version to 10.7.0 by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2172
+    - Remove sd-cpp cuda Windows support from compatibility tables by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2174
+    New Contributors
+    - @kylemanna made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2005
+    - @noamsto made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2045
+    - @julianxhokaxhiu made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2049
+    - @Storce made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1897
+    - @Kushal1213 made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2096
+    Full Changelog: https://github.com/lemonade-sdk/lemonade/compare/v10.6.0...v10.7.0
+
+    Windows installers are signed. Free code signing provided by SignPath.io, certificate by SignPath Foundation. See our Code Signing Policy.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lemonade-sdk/lemonade/releases/tag/v10.7.0
+ReleaseTime: 2026-06-10T14:56:46.0000000Z
