@@ -4,7 +4,7 @@ $EdgeDriver.Navigate().GoToUrl('https://connection.nwea.org/s/technical-resource
 $Object1 = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
   [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
     param([OpenQA.Selenium.IWebDriver]$WebDriver)
-    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(text(), "Version")]')) } catch {}
+    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "Setup_Lockdown_Browser")]')) } catch {}
   }
 )
 
@@ -14,22 +14,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Text, 'Version (\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-        [regex]::Match($Object1.Text, '(\d{1,2}/\d{1,2}/20\d{2})').Groups[1].Value,
-        'M/d/yyyy',
-        $null
-      ).Tostring('yyyy-MM-dd')
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
