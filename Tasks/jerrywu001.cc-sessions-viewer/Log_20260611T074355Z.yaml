@@ -1,0 +1,32 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.9/cc-sessions-viewer_0.1.9_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.9/cc-sessions-viewer_0.1.9_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Terminal tab state persistence — tabs are saved on exit and restored on next launch with lazy hydration (rendered as dashed pills, hydrated on click), avoiding N×xterm+PTY startup cost (fix #18)
+    Performance
+    - Replace regex with regex-lite — binary size reduced by ~856KB; regex-lite drops Unicode tables and DFA engine, sufficient for the simple keyword patterns used in activity classification
+    - Remove staticlib crate-type — eliminates redundant static library output from release builds
+    - Make mcp-bridge optional — moved to an opt-in feature gate (dev-mcp), no longer linked in release builds
+    - Compress cmux icons — resized from 843×844 to 128×128 (179K+100K → 17K+13K)
+    Bug Fixes
+    - Fix topbar border 1px misalignment with sidebar
+    - Replace all hardcoded Chinese error strings in Rust backend with English
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v019
+ReleaseTime: 2026-06-11T05:55:29.0000000Z
