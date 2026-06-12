@@ -1,0 +1,31 @@
+Version: 0.57.40
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.57.40/OpenHuman_0.57.40_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.57.40/OpenHuman_0.57.40_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The Parallel Power Upgrade
+    This release brings a faster, more transparent desktop experience—more concurrency in chat, smoother reliability in memory flows, and easier access to diagnostics. 🚀
+    Highlights
+    Faster chat, more parallelism ⚡
+    Agent inference now runs concurrently instead of one-at-a-time—both across threads (no more single global active-thread lock) and within a thread via parallel “forked” turns. Cancellation is also hardened to be more cooperative and resilient under load. (#3633) — Thank you @senamakel!
+    Memory source reliability improvements 🧠
+    Memory sources now re-fetch when a session becomes authenticated, improving consistency and reducing flakiness in memory-source UI flows after reloads. This also adds test coverage to lock in the behavior. (#3621) — Thank you @sanil-23!
+    Smoother CI + test stability 🧪
+    CI and tests got a cleanup pass to eliminate multiple flaky/failing categories: removing stale UI assertions, fixing async race conditions in autosave/memory, and adjusting Playwright timeouts to reduce infrastructure flakes. Also includes a small UX regression fix where a join success toast could fail to fire due to an unmounting effect. (#3618, #3623) — Thank you @senamakel-droid and @sanil-23!
+    Always-on Developer & Diagnostics access 🛠️
+    Developer & Diagnostics settings are now always visible—no more “Developer Mode” gate. This surfaces the Settings section, related settings search entries, and the Intelligence “council” tab by default, with tests updated accordingly. (#3639) — Thank you @senamakel!
+    Contributor Credits
+    Thanks to everyone who contributed to this release: @github-actions[bot], @sanil-23, @senamakel, and @senamakel-droid.
+    Full Compare
+    https://github.com/tinyhumansai/openhuman/compare/v0.57.39...v0.57.40
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tinyhumansai/openhuman/releases/tag/v0.57.40
+ReleaseTime: 2026-06-12T22:31:59.0000000Z
