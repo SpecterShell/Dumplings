@@ -1,0 +1,23 @@
+Version: 15.12.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.12.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Collab links now dot-join the room secret (<roomId>.<key>, host/r/<roomId>.<key>) instead of using a second #: RFC 3986 forbids a raw # inside a URL fragment, so macOS Foundation (behind terminal click-to-open) percent-encoded the browser deep link's second # to %23 and the web client rejected the session. /join, omp join, and the web client still accept legacy #-joined links and leniently decode %23-mangled ones
+    - Fixed brew install can1357/tap/omp failing on macOS with sandbox-exec … exited with 1: the generated Formula/omp.rb (rendered by scripts/ci-update-brew-formula.ts) now stamps using: :nounzip on every per-platform url so Homebrew leaves the bare Mach-O/ELF asset in the staging CWD (the previous Dir["omp-*"].first returned nil because UnpackStrategy::Uncompressed#extract_nestedly nested the file outside it), and wraps generate_completions_from_executable in with_env(HOME: buildpath) so the popened binary's ~/.omp lookup goes to the writable staging dir instead of the sandbox-denied real home (#2398)
+    @oh-my-pi/collab-web
+    Fixed
+    - Link parsing accepts the new dot-joined room secret (<roomId>.<key>, /r/<roomId>.<key>) and leniently decodes %23-mangled legacy deep links (macOS Foundation percent-encodes a second # when terminals open clicked links), which previously failed to connect
+    What's Changed
+    - fix(brew): unbreak the generated homebrew formula install by @roboomp in https://github.com/can1357/oh-my-pi/pull/2399
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.12.1...v15.12.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.12.2
+ReleaseTime: 2026-06-12T15:43:55.0000000Z
