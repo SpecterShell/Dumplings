@@ -10,12 +10,6 @@ $this.CurrentState.Installer += [ordered]@{
   # InstallerUrl  = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
   InstallerUrl  = "https://download.quillmeetings.com/builds/$([regex]::Match($Object1.artifacts.nsis.x64.path, 'Build ([a-zA-Z0-9]+)').Groups[1].Value)/windows/nsis/x64"
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'arm64'
-  InstallerType = 'appx'
-  # InstallerUrl  = $Object1.artifacts.appx.x64.url | ConvertTo-UnescapedUri
-  InstallerUrl  = "https://download.quillmeetings.com/builds/$([regex]::Match($Object1.artifacts.nsis.x64.path, 'Build ([a-zA-Z0-9]+)').Groups[1].Value)/windows/appx/x64"
-}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
