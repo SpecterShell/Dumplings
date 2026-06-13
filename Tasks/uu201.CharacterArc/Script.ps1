@@ -1,7 +1,7 @@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/uu201/character-arc/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v' -replace '^\.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
