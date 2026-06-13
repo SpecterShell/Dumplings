@@ -1,0 +1,113 @@
+Version: 15.12.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.12.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed remote compaction input trimming to use unlimited context when model.contextWindow is unset
+    @oh-my-pi/pi-ai
+    Added
+    - Added GITLAB_CLIENT_ID and GITLAB_REDIRECT_URI env-var overrides for the GitLab Duo OAuth login flow so users running with their own GitLab OAuth application can replace the bundled credentials when GitLab rejects the bundled client_id's redirect URI. Setting GITLAB_REDIRECT_URI also disables the random-port fallback (strict OAuth providers reject mismatched URIs anyway). (#2424)
+    - Added AuthStorage.listStoredCredentials() and AuthStorage.removeCredential() for per-account credential management.
+    Changed
+    - Replaced the OpenAI SDK client usage in openai-completions, openai-responses, azure-openai-responses, and openai-codex-responses with the new internal postOpenAIStream OpenAI-wire JSON/SSE transport
+    Fixed
+    - Fixed streaming providers to cancel upstream model requests when the client closes the response body, so interrupted SSE sessions stop instead of continuing in the background
+    - Fixed: provider request builders treat unknown model.maxTokens (null) as "no model cap" instead of coercing to 0 via Math.min; Anthropic falls back to the 64k Claude-Code cap for its required max_tokens.
+    - Fixed transient stream failures on OpenAI-compatible providers by retrying HTTP 408/429/5xx responses and transient network errors with Retry-After/quota-hint aware backoff
+    - Fixed SSE stream handling for OpenAI-compatible responses by parsing wire-level JSON frames directly and honoring [DONE] termination
+    - Fixed stream error handling for OpenAI-compatible providers by preserving structured HTTP status/headers and response body details from failed requests for retry and strict-tool fallback logic
+    - Fixed OpenAI-compat streams ending with a bare finish_reason: "error" (gateways like OpenRouter reporting upstream failures, e.g. Gemini MALFORMED_FUNCTION_CALL) surfacing as a non-retryable Provider finish_reason: error. The reason is now mapped to Provider returned error finish_reason, which the session retry classifier recognizes as transient, so the turn auto-retries instead of stopping with a pinned error banner.
+    - Fixed SqliteAuthCredentialStore.open() crashing with SQLITE_BUSY_RECOVERY (errno 261) when several omp --session panes restore concurrently after an unclean shutdown: PRAGMA busy_timeout = 5000 now runs as a standalone statement BEFORE PRAGMA journal_mode=WAL (the first lock-taking statement during WAL recovery), and open() retries the BUSY family — SQLITE_BUSY, SQLITE_BUSY_RECOVERY, SQLITE_BUSY_SNAPSHOT, SQLITE_BUSY_TIMEOUT — with bounded exponential backoff. The exhausted-retry error message includes the DB path. Exported isSqliteBusyError(err) for callers that need the same classifier (#2421).
+    - Fixed MiniMax-M3 OpenAI-compatible streams rendering reasoning twice when the same chunk carried both <think>…</think> content and structured reasoning_content; structured reasoning now wins and cumulative MiniMax reasoning snapshots are collapsed to deltas. (#2433)
+    - Fixed Gemini turns silently halting the agent when the model returned finishReason: STOP with only an empty (or whitespace-only) text part and no tool call — the well-known "empty response" failure. All Google surfaces (public Generative Language streamGoogle, Vertex streamGoogleVertex, and Cloud Code Assist google-gemini-cli/google-antigravity) now classify such a turn as empty via the shared hasMeaningfulGoogleContent check and retry it up to MAX_EMPTY_STREAM_RETRIES times before surfacing an error. The Cloud Code Assist path previously had an empty-stream retry that never fired for this case (its hasContent flag counted an empty-string text part as content), and the public/Vertex path had no retry at all; the retry now emits a single start event so no duplicate partial message leaks downstream.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added bundled Fireworks models deepseek-v4-flash, kimi-k2.7-code, minimax-m2.5, minimax-m3, nemotron-3-ultra-nvfp4, qwen3.6-plus, and qwen3.7-plus
+    - Changed
+    Changed
+    - Model contextWindow/maxTokens are now number | null; discovery emits null when a provider reports no limit, replacing the 222222/8888 (UNK_CONTEXT_WINDOW/UNK_MAX_TOKENS) sentinels (now removed). Bundled models.json unknown limits are null.
+    - Changed the github-copilot model context window to 524288 tokens
+    - Changed Fireworks model discovery to source the control-plane List Models API (GET /v1/accounts/fireworks/models?filter=supports_serverless=true) instead of the OpenAI-compatible /v1/models inference listing. The inference endpoint returns a sparse, account-specific subset that omits on-demand serverless models (e.g. kimi-k2.7-code), so newly published serverless models stayed invisible in the picker until hand-added to the bundled catalog. The control-plane catalog enumerates every serverless model with capability metadata (supportsServerless/supportsTools/supportsImageInput/contextLength/displayName), paginated and filtered to tool-capable READY entries, then merged with bundled/models.dev references — the Kimi K2 max-output clamp and DeepSeek V4 thinking-toggle strip are preserved, and unbundled models default to reasoning so buildModel derives the Fireworks effort map. New serverless releases now surface automatically with no catalog edits.
+    Fixed
+    - Filled missing contextWindow and maxTokens in generated models.json for proxy/reseller variants by inheriting limits from canonical-family and segment-reference models
+    - Ignored zero-cost x-ai subscription entries as reference sources when backfilling limits so inflated values are not propagated
+    - Fixed the model cache opening with PRAGMA journal_mode=WAL before PRAGMA busy_timeout, so concurrent omp startups could crash inside getDb() on SQLITE_BUSY during WAL recovery instead of waiting through the transient lock. The busy handler is now installed before the first lock-taking statement (#2421).
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed the top-level --list-models flag path and migrated model listing to the new omp models command
+    Added
+    - Added omp models command to list and manage models with ls, find, canonical, and refresh actions
+    - Added --json output plus -e/--extension, --no-extensions, and --config controls to omp models listings
+    - Added skills.enableAgentsUser and skills.enableAgentsProject settings (default on) so the canonical OMP-native ~/.agent[s]/skills and project-walkup .agent[s]/skills are configurable independently from the third-party Claude/Codex/Pi toggles.
+    Changed
+    - Model registry merge and omp models / model picker handle unknown context/output limits (null) — unknown limits render as - instead of a fake 222K/8.9K.
+    - Changed omp models to use cached provider data by default and require omp models refresh for a forced online re-fetch
+    - Updated model-resolution errors to point to omp models when a provider or model is not found
+    - Upgraded workspace catalog packages to their latest versions as of 3 days ago, and refactored the ACP agent implementation to be compatible with @agentclientprotocol/sdk version 0.25.0.
+    - Made the zod version requirement in the workspace catalog more tolerant (^4.0.0 instead of 4.4.3), and aligned type definitions in coding-agent extensibility modules.
+    - Changed /logout to pick a stored account after the provider, so multi-account OAuth providers can remove one credential without logging out every account.
+    - Changed the status-line context% to report the provider's real prompt-token count — anchored on the last assistant response, matching the /context panel and the collab host broadcast — instead of an independent cl100k estimate of the whole conversation. The estimate could read several points high and climb past 100% on subscription/Codex models (whose advertised window, e.g. 272K, is already the input budget after reserving max output) while the request was still well within the real limit. Right after compaction the segment now shows ? until the next response re-establishes the true count, and the redundant per-message estimate cache was dropped in favor of memoizing getContextUsage().
+    Fixed
+    - Fixed ACP thinking-delta mapping to tolerate live chunks that only carry delta text.
+    - Fixed image input to Ollama (local ollama, ollama-cloud, and any ollama-chat model) failing with an opaque HTTP 400 when an attached image was encoded as WebP. Ollama decodes images through llama.cpp / stb_image, which is built without WebP support, so the resize pipeline now auto-excludes WebP for those models — the automatic equivalent of OMP_NO_WEBP=1, applied across every image path (@file mentions and prompt/paste/CLI attachments, the read/inspect_image tools, eval display images, fetched images, and browser screenshots). Other providers are unaffected and still honor OMP_NO_WEBP.
+    - Fixed queued steering/follow-up display to derive from the agent-core queue, so queued chips clear when the core dequeues them and no longer strand after empty-Enter aborts.
+    - Fixed model auth gateway probing to avoid skipping candidates with unknown maxTokens limits (null)
+    - Fixed model listings so providers registered via extensions are now included from -e and configured extensions sources
+    - Fixed /mcp reauth, /mcp test, and /mcp unauth to find and operate on MCP servers reported by /mcp list even when they are only runtime-discovered and not stored in writable config, including namespaced plugin servers like cloudflare:cloudflare-api
+    - Fixed MCP server name validation so colon-namespaced server IDs are accepted when persisting reauth overrides so namespaced OAuth MCP servers can be stored in user config as server:subserver entries
+    - Retried assistant turns that stop with reasoning/thinking only and no final text or tool call, so Gemini/Antigravity thought-only STOP responses continue instead of silently ending the session.
+    - Fixed ~/.agent[s]/skills not appearing as /skill:<name> commands when every named source toggle (skills.enableCodexUser, skills.enableClaudeUser, skills.enableClaudeProject, skills.enablePiUser, skills.enablePiProject) was off: loadSkills gated the agents provider on anyBuiltInSkillSourceEnabled, so a user who turned off the Claude/Codex/Pi sources to clean noise also lost their own canonical OMP-native skills. The agents provider now reads the dedicated enableAgentsUser/enableAgentsProject toggles, decoupled from the third-party fall-through (#2401).
+    - Fixed Windows PowerShell image paste so Ctrl+V can fall back to the PowerShell clipboard bridge when the native clipboard reader reports no image (#2429).
+    - Fixed misaligned box borders in Mermaid ASCII rendering for CJK (Korean/Japanese/Chinese) and emoji labels — affects both fenced mermaid code blocks in assistant messages and the render_mermaid tool. beautiful-mermaid@1.1.3 measures label width in UTF-16 code units while terminals render East Asian characters 2 columns wide; a patchedDependencies entry rebuilds its ASCII renderer to measure terminal display columns (grapheme-cluster aware, wcwidth-style policy). The patch mirrors the upstream PR (lukilabs/beautiful-mermaid#128) and should be dropped once it ships in a release.
+    - Fixed interrupt loader state getting stuck after queued-message aborts by removing the session-layer flush/latch path; empty Enter now aborts the active turn and lets the existing post-unwind queue drain resume normally.
+    - Fixed /goal <objective> and /goal set <objective> during streaming so goal context is steered immediately but objective submission waits for the active turn to finish instead of spamming AgentBusyError (#2454).
+    - Fixed concurrent omp --session startups (e.g. cmux pane restore after an unclean shutdown) crashing with SQLITE_BUSY_RECOVERY while the agent SQLite databases were still under WAL recovery. The auth credential store and AgentStorage.open() retry the SQLITE_BUSY family with bounded backoff, and every shared SQLite open path (AgentStorage, history, autoresearch, memories, github cache, auto-QA grievances, catalog model cache, stats) now installs the busy handler before the first lock-taking statement so transient WAL recovery contention waits instead of crashing (#2421).
+    - Mnemopi per-project / per-project-tagged bank derivation is now stable for one cwd, ignoring the surrounding git layout. Previously the bank id was hashed from git.repo.resolveSync(cwd)?.repoRoot ?? path.resolve(cwd), so adding or removing a .git anywhere above the working directory silently repointed the same conversation to a new bank and stranded its memories (e.g. /home/x/projects/repo flipping between projects-… and repo-…). The derivation in packages/coding-agent/src/mnemopi/config.ts now hashes path.resolve(cwd) directly, and session startup widens the recall set with any sibling bank under <dbDir>/banks/ whose working_memory rows already carry the active cwd in metadata_json.$.cwd, so memories stranded by the old, less-stable derivation become visible again on the next session without manual migration (#2412).
+    - Fixed model switching (Ctrl+P role cycling and the alt+p / /switch / /models selector) intermittently freezing the UI for several seconds. AgentSession.setModel/setModelTemporary ran an eager await modelRegistry.getApiKey(model) purely as an existence pre-flight and discarded the value — but getApiKey does real work: it synchronously executes command-backed key programs (apiKey: "!cmd", execSync with a 10s timeout, blocking the event loop) and refreshes OAuth tokens over the network when one crosses the expiry window (the "fine for a few switches, then a multi-second stall" symptom). Switching now uses the synchronous, side-effect-free ModelRegistry.hasConfiguredAuth check; the concrete key (command execution + OAuth refresh) is still resolved lazily per request via the existing resolver, so an unconfigured provider still fails fast with No API key while a healthy switch never touches the network or spawns a subprocess. hasConfiguredAuth no longer runs the command program or refreshes tokens either, matching its documented "probe without resolving an API key" contract.
+    - Fixed session resume (pi -c / --continue / --session) hanging for ~10s at startup — surfaced by the watchdog as Still starting … phase: createAgentSession > restoreSessionModel — when an OAuth token needed refreshing or the auth broker (OMP_AUTH_BROKER_URL) was unreachable. Picking which saved model to restore is a pure selection that only needs to know whether auth is configured, but restoreSessionModel probed each candidate with the async getApiKey, which refreshes OAuth tokens over the network, executes command-backed key programs, and issues auth-broker requests — so a slow or unreachable endpoint stalled resume for the full refresh timeout per candidate. Startup model selection now uses the synchronous, side-effect-free ModelRegistry.hasConfiguredAuth probe (the same fix already applied to interactive model switching); the concrete key is still resolved lazily on the first request via the resolver.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed context usage percentage calculations to return null when context window is missing or non-positive, preventing invalid or Infinity/NaN usage display
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed consolidateToEpisodic (the function backing sleep / sleepAllSessions) never populating the episodic graph: the gists and graph_edges tables stayed at 0 rows across every bank even after multiple consolidation cycles, so Polyphonic Recall's graph voice (BFS over findGistsByParticipant / findRelatedMemories) always returned nothing. Consolidation now best-effort ingests the new episodic memory into EpisodicGraph so the gist row, gist→memory ctx edge, fact edges, and cross-memory similarity/entity/temporal edges land alongside the episodic row. Independent of the existing MNEMOPI_PROACTIVE_LINKING flag, which still gates the same enrichment on the remember() write path. (#2435)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed native shell execution rejecting quoted heredocs whose closing delimiter is the final line without a trailing newline, matching bash paste-run snippets.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed the stats dashboard's SQLite init never setting PRAGMA busy_timeout, so a concurrent omp startup hitting WAL recovery could crash initDb() with SQLITE_BUSY instead of waiting through it. The busy handler is now installed before PRAGMA journal_mode=WAL (#2421).
+    @oh-my-pi/pi-tui
+    Added
+    - PI_FORCE_HYPERLINKS=1 / PI_NO_HYPERLINKS=1 env overrides for the OSC 8 hyperlink capability, mirroring the PI_FORCE_SYNC_OUTPUT/PI_NO_SYNC_OUTPUT shape (opt-out beats force-on).
+    Changed
+    - Auto-enable OSC 8 hyperlinks inside tmux when tmux self-reports >= 3.4 via TERM_PROGRAM_VERSION; tmux 3.4 stores OSC 8 as a cell attribute and forwards it to outer terminals whose terminal-features include hyperlinks. Older tmux, GNU screen, and tmux without a reported version still default off. Resolution is factored into hyperlinksUserOverride() and shouldEnableHyperlinksByDefault() mirroring the sync-output helpers (#2403).
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed abortable stream wrappers to cancel the source stream on abort, so timeout watchdogs release upstream HTTP bodies instead of only stopping the local reader.
+    @oh-my-pi/pi-wire
+    Changed
+    - Changed WireModel.contextWindow and ContextUsage.contextWindow to number | null to allow representing unavailable context-window values
+    What's Changed
+    - fix(tui): respect OSC 8 hyperlinks under tmux >= 3.4 by @roboomp in https://github.com/can1357/oh-my-pi/pull/2404
+    - fix(skills): load ~/.agents/skills even when third-party source toggles are off by @roboomp in https://github.com/can1357/oh-my-pi/pull/2405
+    - fix(coding-agent): stabilize mnemopi per-project bank derivation (#2412) by @roboomp in https://github.com/can1357/oh-my-pi/pull/2414
+    - fix(auth): retried SQLITE_BUSY family and hoisted busy_timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/2423
+    - fix(ai): added GITLAB_CLIENT_ID and GITLAB_REDIRECT_URI overrides for gitlab-duo OAuth by @roboomp in https://github.com/can1357/oh-my-pi/pull/2425
+    - fix(coding-agent): restore Windows image paste fallback by @roboomp in https://github.com/can1357/oh-my-pi/pull/2430
+    - fix(ai): deduplicate MiniMax reasoning stream by @roboomp in https://github.com/can1357/oh-my-pi/pull/2434
+    - fix(mnemopi): populated gists and graph_edges during consolidation by @roboomp in https://github.com/can1357/oh-my-pi/pull/2439
+    - fix: align Mermaid ASCII box borders for CJK/emoji labels by @chan1103 in https://github.com/can1357/oh-my-pi/pull/2442
+    - docs: document project settings and disabledProviders by @roboomp in https://github.com/can1357/oh-my-pi/pull/2448
+    - fix(cli): defer goal objectives while streaming by @roboomp in https://github.com/can1357/oh-my-pi/pull/2455
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.12.3...v15.12.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.12.4
+ReleaseTime: 2026-06-13T16:19:03.0000000Z
