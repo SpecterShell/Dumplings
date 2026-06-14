@@ -27,7 +27,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=en' | ConvertFrom-Html
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesNode) {
@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.catsxp.com/zh-hans/history' | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=zh-CN' | ConvertFrom-Html
 
       $ReleaseNotesCNNode = $Object3.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesCNNode) {
