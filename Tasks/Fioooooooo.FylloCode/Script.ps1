@@ -28,13 +28,14 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = 'https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md'
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Fioooooooo/FylloCode/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Fioooooooo/FylloCode/HEAD/CHANGELOG.en.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -65,10 +66,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrlCN = 'https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md'
+        Value  = $ReleaseNotesUrlCN = 'https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Fioooooooo/FylloCode/HEAD/CHANGELOG.zh-CN.md' | Convert-MarkdownToHtml
+      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Fioooooooo/FylloCode/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
