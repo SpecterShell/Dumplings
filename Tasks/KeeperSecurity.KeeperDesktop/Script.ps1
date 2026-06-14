@@ -36,12 +36,12 @@ switch -Regex ($this.Check()) {
       }
 
       # Remove psuedo bullet points
-      $Object3.SelectNodes('//main/div[1]//li/div[contains(./div/@style, "•")]').ForEach({ $_.Remove() })
+      $Object3.SelectNodes('//div[contains(./div/@style, "•")]').ForEach({ $_.Remove() })
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object3.SelectSingleNode('//main/div[1]') | Get-TextContent | Format-Text
+        Value  = $Object3.SelectSingleNode('//main/div[contains(@class, "whitespace-pre-wrap")]') | Get-TextContent | Format-Text
       }
 
       # ReleaseTime
