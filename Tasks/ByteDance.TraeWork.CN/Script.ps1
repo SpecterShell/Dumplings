@@ -37,7 +37,7 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
         [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
           param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.Version)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]")) } catch {}
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]")) } catch {}
         }
       ).GetAttribute('innerHTML') | ConvertFrom-Html
 
