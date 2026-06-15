@@ -1,0 +1,25 @@
+Version: 0.1.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/QingJ01/Pebble/releases/download/v0.1.2/Pebble_0.1.2_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Updated the desktop release metadata to version 0.1.2.
+    Fixed
+    - Fixed DeepL and DeepLX translation always failing with a 400 "source_lang not supported" error by omitting the source language field when auto-detection is requested (#65).
+    - Fixed adding Outlook/Hotmail accounts: the username field is no longer required, and a blank username now defaults to the account email so app-password logins connect (#60).
+    - Prevented duplicate messages from appearing in the destination mailbox when a move operation is retried after a partial COPY/EXPUNGE failure.
+    - Prevented duplicate message rows from accumulating after a soft-delete followed by a re-sync, via a unique index on live (account_id, remote_id) rows.
+    - Prevented newly-arrived messages from being permanently missing from search results due to a race between the startup background reindex and concurrent sync.
+    - Preserved attachment filenames that were being altered on download and forwarding.
+    - Registered Pebble as the Windows mail client in the registry before opening the default-apps settings so "set as default" works reliably.
+    - Improved POP3 connectivity for legacy servers with a rustls→native-tls TLS backend fallback and optional TLS 1.0.
+    - Synced the native window background color with the active theme on macOS.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QingJ01/Pebble/releases/tag/v0.1.2
+ReleaseTime: 2026-06-15T14:33:50.0000000Z
