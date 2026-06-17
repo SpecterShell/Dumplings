@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/jetyu/NoteWizard/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/jetyu/Snaptium/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -41,10 +41,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://github.com/jetyu/NoteWizard/blob/HEAD/src/assets/changelog/history_en.md'
+        Value  = $ReleaseNotesUrl = 'https://github.com/jetyu/Snaptium/blob/HEAD/docs/Changelog/history_en.md'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/jetyu/NoteWizard/HEAD/src/assets/changelog/history_en.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/jetyu/Snaptium/HEAD/docs/Changelog/history_en.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("./h3[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -75,10 +75,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesCNUrl = 'https://github.com/jetyu/NoteWizard/blob/HEAD/src/assets/changelog/history_cn.md'
+        Value  = $ReleaseNotesCNUrl = 'https://github.com/jetyu/Snaptium/blob/HEAD/docs/Changelog/history_cn.md'
       }
 
-      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/jetyu/NoteWizard/HEAD/src/assets/changelog/history_cn.md' | Convert-MarkdownToHtml
+      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/jetyu/Snaptium/HEAD/docs/Changelog/history_cn.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("./h3[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
