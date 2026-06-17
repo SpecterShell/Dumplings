@@ -1,50 +1,75 @@
-$ProductSlug = 'pdf-tools'
-$InstallerBaseName = 'Tools'
+# x86
+$Object1 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Tools.x32' }, 'First')[0].update[-1]
+$VersionX86 = $Object1.version
 
-$Object1 = Invoke-WebRequest -Uri "https://www.pdf-xchange.com/product/${ProductSlug}"
-$PageText = $Object1.Content -replace '<[^>]+>', ' ' -replace '\s+', ' '
+# x64
+$Object2 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Tools.x64' }, 'First')[0].update[-1]
+$VersionX64 = $Object2.version
+
+# arm64
+$Object3 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Tools.arm64' }, 'First')[0].update[-1]
+$VersionARM64 = $Object3.version
+
+if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}, arm64 version: ${VersionARM64}", 'Error')
+  return
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($PageText, 'Current version:\s*([\d.]+)').Groups[1].Value
-
-$MajorVersion = [version]$this.CurrentState.Version | Select-Object -ExpandProperty Major
+$this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/${InstallerBaseName}V${MajorVersion}.x86.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object1.url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/${InstallerBaseName}V${MajorVersion}.x64.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object2.url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/${InstallerBaseName}V${MajorVersion}.ARM64.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object3.url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          ProductCode   = $Installer['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-          UpgradeCode   = $InstallerFile | Read-UpgradeCodeFromMsi
-          InstallerType = 'wix'
-        }
-      )
-    }
+    try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://www.pdf-xchange.com/product/pdf-tools/history'
+      }
 
-    # ReleaseNotesUrl (en-US)
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'en-US'
-      Key    = 'ReleaseNotesUrl'
-      Value  = "https://www.pdf-xchange.com/product/${ProductSlug}/history?build=$($this.CurrentState.Version)"
+      $Object2 = Invoke-RestMethod -Uri 'https://www.pdf-xchange.com/build-history-feed/pdf-tools.xml'
+
+      if ($ReleaseNotesObject = $Object2.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].pubDate | Get-Date -AsUTC
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesObject[0].link
+        }
+      } else {
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
     $this.Print()

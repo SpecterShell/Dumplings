@@ -1,61 +1,71 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.pdf-xchange.com/build-history-feed/pdf-xchange-editor.xml'
-$Object2 = $Object1[0]
+# x86
+$Object1 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Editor.x32' }, 'First')[0].update[-1]
+$VersionX86 = $Object1.version
+
+# x64
+$Object2 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Editor.x64' }, 'First')[0].update[-1]
+$VersionX64 = $Object2.version
+
+# arm64
+$Object3 = $Global:DumplingsStorage.TrackerSoftwareApps.UpdaterData.bundle.Where({ $_.id -eq 'Editor.arm64' }, 'First')[0].update[-1]
+$VersionARM64 = $Object3.version
+
+if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}, arm64 version: ${VersionARM64}", 'Error')
+  return
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object2.title, 'Build\s+([\d.]+)').Groups[1].Value
-
-$MajorVersion = [version]$this.CurrentState.Version | Select-Object -ExpandProperty Major
+$this.CurrentState.Version = $VersionX64
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/EditorV${MajorVersion}.x86.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object1.url
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/EditorV${MajorVersion}.x64.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object2.url
 }
-$this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/EditorV${MajorVersion}.ARM64.msi"
+  InstallerUrl  = Join-Uri "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/" $Object3.url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          ProductCode   = $Installer['ProductCode'] = $InstallerFile | Read-ProductCodeFromMsi
-          UpgradeCode   = $InstallerFile | Read-UpgradeCodeFromMsi
-          InstallerType = 'wix'
-        }
-      )
-    }
-
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.pubDate | Get-Date -AsUTC
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = 'https://www.pdf-xchange.com/product/pdf-xchange-editor/history'
+      }
 
-    try {
-      $ReleaseNotes = $Object2.description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
-      if (-not [string]::IsNullOrWhiteSpace($ReleaseNotes)) {
+      $Object2 = Invoke-RestMethod -Uri 'https://www.pdf-xchange.com/build-history-feed/pdf-xchange-editor.xml'
+
+      if ($ReleaseNotesObject = $Object2.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseNotesObject[0].pubDate | Get-Date -AsUTC
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotes
+          Value  = $ReleaseNotesObject[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesObject[0].link
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
