@@ -1,0 +1,22 @@
+Version: 0.6.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.1/Mini-Term_0.6.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.1/Mini-Term_0.6.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🐛 Bug 修复
+    中文输入法候选框把窗口布局「顶开」(#34)
+    现象 Windows 11 下用微信 / 系统原生输入法打中文时，候选框一出现，窗口底部就裂出一道缝，透出半透明窗口背板（被压暗的桌面）；英文输入态没有候选框则一切正常。
+    根因 IME composition 期间，WebView2 会对获得焦点的 xterm helper-textarea 执行 scrollIntoView，把某个 overflow:hidden 的布局祖先横向滚动（scrollLeft 被设为非 0）。关键点在于 overflow:hidden 只能阻止用户拖动滚动条，挡不住程序化滚动，于是内容被横向推走、底部/右侧露出背板。
+    修复 新增一个捕获阶段的全局 scroll 监听：一旦发现 overflow:hidden 容器出现横向偏移，立即把 scrollLeft 复位为 0。合法的横向滚动容器（overflow-x:auto/scroll，如代码块、tab 栏、modal）经 scrollLeft===0 短路与 overflowX 判定被放过，不受影响；竖向滚动零额外开销。
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.6.0...v0.6.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.1
+ReleaseTime: 2026-06-17T13:13:40.0000000Z
