@@ -6,7 +6,7 @@ if ($Object1.Contains('IgorExtraInfo') -and -not $Object1.IgorExtraInfo.InfoKeys
 }
 
 # Version
-$this.CurrentState.Version = $Object1.main.Version
+$this.CurrentState.Version = $Object1.main.Version.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
