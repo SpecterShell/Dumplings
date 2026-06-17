@@ -1,0 +1,36 @@
+Version: 1.17.8
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.17.8/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.17.8/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Improvements
+    - Session timelines load much faster and avoid flicker or scroll jumps.
+    Bugfixes
+    - OpenAI-compatible providers now accept MCP tool schemas that previously failed validation. (@jquense)
+    - Cloudflare AI Gateway now receives the configured API key correctly. (@keefetang)
+    - MCP tools without declared schema properties now work with providers that expect object properties.
+    - Long-running MCP tools now keep their timeout alive when they report progress. (@Nomadcxx)
+    - The MCP OAuth callback server now shuts down once authorization finishes or is cancelled.
+    - MCP tool failures now surface the server's error text instead of a generic failure.
+    - MCP OAuth error pages now escape provider error text correctly.
+    Desktop
+    Improvements
+    - Added a Home tab toggle so you can quickly switch between Home and your last tab.
+    - The new desktop file and folder picker is faster and easier to navigate in the v2 layout.
+    Thank you to 3 community contributors:
+    - @Nomadcxx:
+      - fix(mcp): enable progress timeout resets (#32477)
+    - @keefetang:
+      - fix(provider): pass apiKey to createUnified for Cloudflare AI Gateway (#32052)
+    - @jquense:
+      - fix(opencode): sanitize OpenAI MCP tool schemas (#32489)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.17.8
+ReleaseTime: 2026-06-17T21:27:18.0000000Z
