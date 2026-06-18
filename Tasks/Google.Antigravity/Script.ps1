@@ -3,7 +3,7 @@ $Prefix = 'https://antigravity-hub-auto-updater-974169037036.us-central1.run.app
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest-x64-win.yml" | ConvertFrom-Yaml
 $VersionX64 = $Object1.version
 # arm64
-$Object2 = Invoke-RestMethod -Uri "${Prefix}latest-arm-win.yml" | ConvertFrom-Yaml
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest-arm64-win.yml" | ConvertFrom-Yaml
 $VersionArm64 = $Object2.version
 
 if ($VersionX64 -ne $VersionArm64) {
