@@ -47,11 +47,11 @@ if ([Versioning]$Object1.electron_win64.version -lt [Versioning]$Object2.version
   # Installer
   $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x86'
-    InstallerUrl = $Object1.electron_win32.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+    InstallerUrl = $Object1.electron_win32.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com') | ConvertTo-Https
   }
   $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = $Object1.electron_win64.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+    InstallerUrl = $Object1.electron_win64.download_url.Replace('dldir1.qq.com', 'dldir1v6.qq.com') | ConvertTo-Https
   }
 
   # ReleaseTime
