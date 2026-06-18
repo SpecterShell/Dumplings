@@ -10,8 +10,8 @@ $this.CurrentState.Version = $Object1.main.Version.Trim()
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.main.InstallerPath
-  ProductCode  = $Object1.main.ProductCode
+  InstallerUrl = $Object1.main.InstallerPath.Trim()
+  ProductCode  = $Object1.main.ProductCode.Trim()
 }
 
 switch -Regex ($this.Check()) {
