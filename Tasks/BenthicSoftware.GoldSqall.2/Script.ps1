@@ -1,15 +1,15 @@
 # x86
-$Object1 = Invoke-WebRequest -Uri 'https://www.benthicsoftware.com/install/goldsqall2.htm' | ConvertFrom-Html
-$VersionX86 = $Object1.SelectSingleNode('.//meta[@http-equiv="fversion"]').Attributes['content'].Value
+# $Object1 = Invoke-WebRequest -Uri 'https://www.benthicsoftware.com/install/goldsqall2.htm' | ConvertFrom-Html
+# $VersionX86 = $Object1.SelectSingleNode('.//meta[@http-equiv="fversion"]').Attributes['content'].Value
 # x64
 $Object2 = Invoke-WebRequest -Uri 'https://www.benthicsoftware.com/install/goldsqall2-64.htm' | ConvertFrom-Html
 $VersionX64 = $Object2.SelectSingleNode('.//meta[@http-equiv="fversion"]').Attributes['content'].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
-}
+# if ($VersionX86 -ne $VersionX64) {
+#   $this.Log("x86 version: ${VersionX86}")
+#   $this.Log("x64 version: ${VersionX64}")
+#   throw 'Inconsistent versions detected'
+# }
 
 # Version
 $this.CurrentState.Version = $VersionX64
@@ -17,12 +17,12 @@ $this.CurrentState.Version = $VersionX64
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.SelectSingleNode('.//meta[@http-equiv="furl"]').Attributes['content'].Value
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'goldsqall2setup' -and $_.href -match '32bit' }, 'First')[0].href
   ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])32_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.SelectSingleNode('.//meta[@http-equiv="furl"]').Attributes['content'].Value
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'goldsqall2setup' -and $_.href -match '64bit' }, 'First')[0].href
   ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])64_is1"
 }
 

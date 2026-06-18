@@ -17,12 +17,12 @@ $this.CurrentState.Version = $VersionX64
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.SelectSingleNode('.//meta[@http-equiv="furl"]').Attributes['content'].Value
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'pledit7setup' -and $_.href -match '32bit' }, 'First')[0].href
   ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])32_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.SelectSingleNode('.//meta[@http-equiv="furl"]').Attributes['content'].Value
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'pledit7setup' -and $_.href -match '64bit' }, 'First')[0].href
   ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])64_is1"
 }
 
