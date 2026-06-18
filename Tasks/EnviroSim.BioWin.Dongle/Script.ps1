@@ -15,12 +15,9 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Prefix = 'https://envirosim.com/getbw'
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ $_.href.EndsWith('.exe') -and $_.OuterHTML -match 'DONGLE' }, 'First')[0].href
+  InstallerUrl = 'https://envirosim.com/downloads/bw64setup-usb.exe'
 }
 
 # Last Modified
