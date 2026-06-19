@@ -1,0 +1,25 @@
+Version: 16.1.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.1.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - Migrated legacy macOS power settings to a single sleep prevention enum
+    - Defaulted display.cacheMissMarker setting to false to suppress the cache-miss marker by default.
+    - Replaced the four separate power.preventIdleSleep, power.preventSystemSleep, power.declareUserActive, and power.preventDisplaySleep boolean settings with a single cumulative power.sleepPrevention enum (off → idle → display → system). Each level adds the caffeinate flags of all lower levels. Existing configs are migrated automatically.
+    Fixed
+    - Cache-miss marker no longer fires on providers with implicit, best-effort prompt caching (Google/Gemini, OpenAI, Fireworks). Those report cacheWrite: 0 and drop cacheRead to zero intermittently as routine propagation noise that self-heals the next turn. Only explicit, prefix-controlled caches (Anthropic/Bedrock cache_control), which re-create the prefix on a cold turn as cacheWrite > 0, now surface a marker — where a zero cacheRead genuinely means the prefix broke.
+    - Fixed advisor dependent settings staying visible while advisor.enabled is off (#3027).
+    - Fixed LSP servers that dynamically register capabilities, including Expert, hanging semantic requests after client/registerCapability was rejected (#3029).
+    What's Changed
+    - fix(ux): hide advisor sub-options unless advisor is enabled by @roboomp in https://github.com/can1357/oh-my-pi/pull/3028
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.1.0...v16.1.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.1.1
+ReleaseTime: 2026-06-19T07:24:17.0000000Z
