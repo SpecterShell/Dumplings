@@ -87,7 +87,7 @@ switch -Regex ($this.Check()) {
     $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
     $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
-    $Mutex.WaitOne(3600000) | Out-Null
+    $Mutex.WaitOne(10800000) | Out-Null
 
     foreach ($Locale in $Locales) {
       $this.CurrentState.Installer = @()
@@ -129,7 +129,7 @@ switch -Regex ($this.Check()) {
         $this.Log($_, 'Warning')
       }
 
-      Start-Sleep -Seconds 30
+      Start-Sleep -Seconds 60
     }
 
     $Mutex.ReleaseMutex()
