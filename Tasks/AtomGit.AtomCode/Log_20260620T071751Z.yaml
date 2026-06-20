@@ -1,0 +1,36 @@
+Version: 4.25.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://atomgit.com/atomgit_atomcode/atomcode/releases/download/v4.25.3/atomcode-v4.25.3-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    AtomCode v4.25.3 Release Notes
+    发布日期：2026-06-20
+    v4.25.3 聚焦于写入审批模型恢复与增强、Windows 终端鼠标交互全面修复、以及 JetBrains IDE（JediTerm）兼容性改进。
+
+    ✨ 新增功能（Features）
+    写入审批增强
+    - Workspace-aware 自动审批：工作区内非敏感写入操作自动批准，不再每次弹出审批提示
+    - 敏感路径保护：对 ~/.ssh、.env、/etc 等敏感路径的写入操作始终提示审批，且不可被"总是允许"跳过，修复 v2 中相对路径绕过敏感路径检测的安全问题
+    - "总是允许" per 规范路径：工作区外出站写入的"总是允许"按规范路径粒度缓存，而非按工具名全局授予；search_replace / parallel_edit_files 保持按工具粒度
+    🛠 修复（Fixes）
+    Windows 终端鼠标交互
+    - 原生鼠标交互全面恢复：移除对 Windows 控制台模式的主动管理，conhost 和 Windows Terminal 上的拖拽选择、复制、粘贴、滚轮均恢复原生行为；conhost 上点击暂停行为回归（Esc 可取消、Enter 可复制）
+    - conhost 鼠标滚轮修复：滚轮事件正确回退给 conhost 原生窗口滚动，而非应用的空操作处理器
+    - QuickEdit 文档修正：明确 ENABLE_QUICK_EDIT_MODE 关闭会破坏 Windows Terminal 文本选择
+    JetBrains IDE / JediTerm
+    - 修复 JediTerm 鼠标移动乱码：不再在 JediTerm 上启用 Kitty 键盘协议，修复 DevEco Studio / IDEA 中鼠标移动导致输入框出现坐标乱码的问题
+    - 修复 panic 路径 Kitty 协议残留：panic 时正确弹出 Kitty 键盘增强标记，避免残留协议污染父 shell
+    写入审批
+    - 修复"总是允许"退化为"允许一次"：edit_file / write_file 等文件编辑工具的"总是允许"现在正确按工具粒度缓存，不再因参数不同而重复提示
+    📚 文档（Docs）
+    - Slash-command 参考文档同步：README 表格从 23 条命令补全至 48 条，按类别分组；新增 /goal、/effort、/review、/paste、/exit 等缺失命令文档；移除已废弃的 /copy 命令
+    - 新增 Mode & autonomy 特性说明：/plan、/build、/goal、/review 工作模式文档
+    - 微信通道插件文档：新增 /wechat 插件安装说明（AtomCode-Channel 市场官方插件）
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://atomgit.com/atomgit_atomcode/atomcode/releases/v4.25.3
+ReleaseTime: 2026-06-20T06:05:01.0000000Z
