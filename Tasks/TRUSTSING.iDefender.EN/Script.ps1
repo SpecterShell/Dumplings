@@ -47,17 +47,13 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://www.idefender.net/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = 'https://www.idefender.net/publish/iDefender.exe'
 }
 
-$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
 # Last Modified
-$this.CurrentState.LastModified = $Object2.Headers.'Last-Modified'[0]
+$this.CurrentState.LastModified = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.'Last-Modified'[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
