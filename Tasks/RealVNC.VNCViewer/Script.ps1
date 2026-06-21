@@ -1,26 +1,16 @@
 $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.realvnc.com/en/connect/download/viewer/' | Join-String -Separator "`n" | ConvertFrom-Html
-
-$InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
+$Object2 = $Object1.SelectSingleNode('//script[@class="rvnc-mass-config"]').InnerHtml | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
+$this.CurrentState.Version = $Object2.index.products.'realvnc-connect-viewer'.platforms.windows.latest_version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
-  InstallerUrl         = $InstallerUrl
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "VNC-Viewer-$($this.CurrentState.Version)-Windows-en-32bit.msi"
-    }
-  )
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = $InstallerUrl
+  InstallerUrl         = Join-Uri 'https://downloads.realvnc.com/download/file/realvnc-connect-viewer/' $Object2.index.products.'realvnc-connect-viewer'.platforms.windows.files.Where({ $_.arch -eq 'x64' -and $_.pkg -eq 'zip' }, 'First')[0].file
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "VNC-Viewer-$($this.CurrentState.Version)-Windows-en-64bit.msi"
+      RelativeFilePath = "RealVNC-Connect-Viewer-$($this.CurrentState.Version)-Windows.msi"
     }
   )
 }
