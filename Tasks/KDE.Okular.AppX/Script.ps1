@@ -16,7 +16,13 @@ $this.CurrentState.Version = $VersionMatches.Groups['LongVersion'].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'appx'
-  InstallerUrl  = Join-Uri $Prefix $InstallerName
+  InstallerUrl  = $InstallerUrl = Join-Uri $Prefix $InstallerName
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $InstallerUrl + '?_'
 }
 
 switch -Regex ($this.Check()) {
