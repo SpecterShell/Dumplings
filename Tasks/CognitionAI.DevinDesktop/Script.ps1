@@ -56,6 +56,9 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@id, '$($this.CurrentState.Version.Replace('.', '-'))')]")
       if ($ReleaseNotesNode) {
+        # Remove "Download" accordion
+        $Object2.SelectNodes('//summary[contains(., "Download ")]').ForEach({ $_.Remove() })
+
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
