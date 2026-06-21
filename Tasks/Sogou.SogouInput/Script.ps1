@@ -1,25 +1,15 @@
 $Session = [Microsoft.PowerShell.Commands.WebRequestSession]::new()
-$null = Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session
-$Object1 = (Invoke-WebRequest -Uri 'https://pinyin.sogou.com/windows/' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session).Content
-
-$Match = [regex]::Match($Object1, 'window\.location\.href\s*=\s*"(.+?/pc/dl/gzindex/.+?/sogou_pinyin_(.+?)\.exe.+?)"')
+$null = Invoke-WebRequest -Uri 'https://shurufa.sogou.com/windows' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session
+$Object1 = Invoke-WebRequest -Uri 'https://shurufa.sogou.com/windows' -UserAgent $DumplingsBrowserUserAgent -WebSession $Session | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//script[contains(., "window.IFE")]').InnerHtml | Get-EmbeddedJson -StartsFrom 'window.IFE = ' | ConvertFrom-Json
+$Object3 = $Object2.data.downloadConfig | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Match.Groups[2].Value
+$this.CurrentState.Version = [regex]::Match($Object3.windows.normal, '(\d+(?:\.\d+)+[a-zA-Z]?)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $Object2 = $Object1 | ConvertFrom-Html
-
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('//*[@id="banner0_text3"]').InnerText, '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    $InstallerFile = Get-TempFile -Uri $Match.Groups[1].Value
+    $InstallerFile = Get-TempFile -Uri $Object3.windows.normal
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
     # Installer
@@ -33,6 +23,9 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@class='changebox']/h2[contains(text(), '$($this.CurrentState.Version -creplace 'a$', '')')]")
       if ($ReleaseNotesTitleNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(20\d{2}\W+\d{1,2}\W+\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
