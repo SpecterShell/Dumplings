@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = ($ReleaseNotesNodes | Get-TextContent).Replace('[Read News]', '') | Format-Text
         }
 
         # ReleaseNotesUrl
