@@ -1,0 +1,32 @@
+Version: 16.1.13
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.1.13/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added support for Devin as a provider
+    Changed
+    - Updated tool call arguments to use Record<string, unknown> and unknown for tool results
+    Fixed
+    - Fixed OpenAI Responses native history replay dropping failed/incomplete image generation calls instead of resending their transient ig_... item IDs, preventing follow-up requests from failing with 404 Item with id ... not found. (#3225)
+    - Fixed /login fireworks rejecting valid fw_… keys with Fireworks API key validation failed (500): Error listing deployed models. The validator pinged /inference/v1/models, which Fireworks serves from the per-account deployment registry and 500s for accounts without active deployments. Login now hits the static control-plane List Models catalog (GET /v1/accounts/fireworks/models?filter=supports_serverless=true&pageSize=1) — the same endpoint discovery already uses — so authentication no longer depends on the caller's deployment state. (#3219)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for Devin as a model provider
+    - Added capability to fetch dynamic models from the Devin model manager
+    @oh-my-pi/snapcompact
+    Fixed
+    - Fixed the Umans provider image budget to match its 10-image request cap.
+    What's Changed
+    - fix(ai): validated Fireworks login against control-plane catalog by @roboomp in https://github.com/can1357/oh-my-pi/pull/3220
+    - fix(ai): drop stale OpenAI image generation replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/3226
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.1.12...v16.1.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.1.13
+ReleaseTime: 2026-06-22T03:03:31.0000000Z
