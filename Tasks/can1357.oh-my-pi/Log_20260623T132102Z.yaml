@@ -1,0 +1,75 @@
+Version: 16.1.16
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.1.16/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added generateHandoffFromContext(context, model, options) to @oh-my-pi/pi-agent-core/compaction: runs the handoff oneshot against a fully-built provider Context (system prompt, normalized tools, transformed history, trailing handoff prompt) with streamOptions mirroring the live turn's cache routing, so a host that owns the transform pipeline can make the handoff request share the prompt cache the main turn populated. generateHandoff(messages, …) is unchanged and now delegates to it.
+    - Added an optional systemPrompt argument to Agent.buildSideRequestContext(llmMessages, systemPrompt?), defaulting to the live agent prompt; callers can pin a different prompt (e.g. handoff generation, which uses the base prompt rather than a per-turn before_agent_start hook override).
+    Changed
+    - Updated buildSideRequestContext to allow pinning custom system prompts
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Anthropic-compatible thinking requests sending replayed thinking blocks without context_management.keep: "all", preserving multi-turn reasoning context for API-key providers. API-key requests now also advertise the required context-management-2025-06-27 beta header so the field is honored instead of rejected. Injected SDK clients, GitHub Copilot's Anthropic proxy, and Vertex rawPredict are excluded because this code path cannot add the beta to caller-owned clients, Copilot strips Anthropic betas and demotes thinking blocks to text upstream, and Vertex expects betas in the JSON body rather than the Anthropic HTTP beta header. (#3288)
+    - Fixed OpenRouter Responses native history replay leaking Gemini reasoning item format metadata back into follow-up requests, which caused HTTP 400 rejections while preserving encrypted reasoning replay.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Renamed the eval agent() helper parameters agent_type → agent and return_handle → handle across every workflow runtime (Python, JavaScript, Ruby, Julia), so the names are identical in every language (no camelCase/snake_case split) and the agent-selection parameter matches the task tool's agent. The __agent__ eval bridge wire protocol was renamed to match.
+    - Changed the eval tool to take a single cell per call ({ language, code, title?, timeout?, reset? }) instead of a cells array. State still persists per language across separate eval calls, tool calls, and task subagents, so each call is one logical step that reuses everything earlier calls defined — the array only encouraged re-importing/re-declaring the same setup in every batch. The schema, field descriptions, examples, system eval.md/workflowz helper docs, and the [i/n] cell-counter (now hidden for single cells) were updated to match; the renderer, ACP start-text, copy-targets, and collab-web tool view still parse legacy multi-cell transcripts.
+    Added
+    - Added isolated, apply, and merge options to eval agent() across every workflow runtime (Python, JavaScript, Ruby, Julia) so workflowz-driven fan-outs can request the same copy-on-write worktree isolation the task tool offers (strict opt-in via isolated: true, matching the task tool; apply: false keeps captured patches/branches without merging back; merge: false forces patch mode). Extracted the task-isolation lifecycle into task/isolation-runner.ts so the eval bridge and TaskTool share one implementation (#3196)
+    Changed
+    - Made the session picker fullscreen with mouse support for clicking rows and scrolling
+    - Pinned the session picker footer to the bottom of the screen to prevent layout flickering
+    - Simplified eval tool to accept a single logical step (code block) instead of an array of cells
+    - Updated eval tool documentation to emphasize incremental, single-step execution
+    - Restricted bash tool from using ls or find, requiring the use of read or find tools
+    - Simplified todo tool interface to accept a single operation directly instead of an array of ops
+    - Reinforced routing of fragile, multi-step shell logic to the eval tool over bash. The system-prompt tool policy, bash.md, and eval.md now treat loops, conditionals, heredocs, inline -e/-c scripts, multi-stage pipelines, and quote/JSON escaping as the signal to write an eval cell; bash's "compute a fact" carveout is narrowed to single short pipelines, and eval.md now actively claims that territory with runtime-templated examples (only enabled backends are advertised).
+    - Made eval an essential built-in tool (loadMode: "essential", added to the default essential tool set) so it stays active under tools.discoveryMode: "all" instead of being hidden behind search_tool_bm25.
+    - Made the --resume session picker fullscreen on the terminal's alternate screen, so the list scrolls with the mouse wheel and a row resumes its session on left click. Rows are hit-tested against the live scroll window, and the keybinding hint + bottom border are now pinned to the screen bottom instead of drifting up and down as the visible window changes height.
+    Fixed
+    - Fixed local:// URLs decoding images as corrupted text (mojibake) instead of showing the image
+    - Fixed omp --resume hanging instead of exiting when the startup session picker is cancelled (Esc) or there are no sessions to resume. Startup arms long-lived handles (theme/appearance listeners, settings save timer, model registry), so the cancel/empty paths' bare return left the event loop alive and the process stuck after the picker cleared the alternate screen. These paths now exit cleanly via process.exit(0), matching the --version/--export early-exit convention. The in-session /resume picker is unaffected — it keeps its own cancel handler that just closes the overlay.
+    - Fixed the /resume session picker scrolling down after a session is deleted. The delete-confirmation dialog was mounted as a sibling below the picker's bottom border, briefly growing the picker past the terminal height; the TUI committed the picker's header rows into native scrollback to fit, and when the dialog closed windowTop stayed pinned at the new commit boundary, leaving the header stranded above the viewport. The picker now hosts the SessionList in a single content slot and swaps the dialog INTO that slot (replacing the SessionList) while it is open, so the dialog only competes with the SessionList's rendered budget — not the SessionList AND the picker chrome — and the picker frame stays inside the viewport. (#3283)
+    - Fixed the eval tool card not streaming a still-running cell's stdout: a long-running cell (e.g. a time.sleep() monitor loop) showed nothing until it returned or was interrupted, then dumped everything at once. The renderer draws cell output from details.cells[i].output, which was only populated after backend.execute() resolved — live stdout streamed into the transient result content tail (and renderContext.output), which the per-cell render branch ignores. Streamed chunks now append to the active cell's output (a dedicated per-cell tail buffer, capped like the aggregate) as they arrive, so the card shows progress live; on completion the authoritative full output overwrites the live tail. log()/phase()/display() and status ops were unaffected because they already stream via the status channel.
+    - Fixed Escape doing nothing in the Settings text-input fields (e.g. "Python Interpreter") on terminals with the kitty keyboard protocol active (ghostty/kitty). Inside the fullscreen settings overlay the protocol reports Escape as the CSI-u sequence \x1b[27u, which the text-input submenu's raw \x1b compare missed; handleInputOrEscape now decodes Escape via matchesKey, matching every other Escape-to-cancel path.
+    - Fixed Julia eval graph/plot visualization (Plots.jl, GraphRecipes, Makie, etc.) never rendering inline. Two bugs: (1) the runner's build_mime_bundle/emit_error dispatched show/showable/showerror directly from the long-lived main() loop, whose world age is frozen before any cell ran, so rich show(::IO, ::MIME"image/png", …) methods registered when a plotting package is using-ed inside a cell were invisible — show fell back to the default struct repr (which itself threw on Julia 1.12, aborting the whole result). These calls now route through Base.invokelatest, and the text/plain probe is guarded so a failing repr can no longer suppress the image MIME. (2) The default GR backend popped up a native gksqt GUI window on each plot; the runner now defaults GKSwstype=100 (headless, overridable) so plots render only as inline PNGs, mirroring the Python runner's MPLBACKEND=Agg default.
+    - Fixed streaming output blocks incorrectly calculating preview height, preventing flickering banners
+    - Fixed streaming bash/eval tool output duplicating its … (N earlier lines, showing 10 of M) (ctrl+o to expand) preview into native scrollback. The collapsed output is a sliding tail window fixed at 10 lines, so when the box outgrew the live viewport (a tall command/output under a still-live predecessor such as a parallel tool) its mutating tail scrolled above the commit window and the renderer re-committed a fresh snapshot every frame, stacking dozens of stale preview banners and chunks. The output preview is now clamped to the viewport tail (Math.min(10, previewWindowRows())) and measured in visual rows at the box's inner content width (via the new outputBlockContentWidth helper), so on short terminals the volatile tail shrinks to stay on-screen and is never committed. Fixes the duplication introduced when scroll-off commits were made loss-free.
+    - Prevented /handoff from executing while a response is streaming to avoid session corruption
+    - Fixed /handoff cold-missing the provider prompt cache. Handoff generation now builds its request through the same pipeline a live turn uses (convertMessagesToLlm + Agent.buildSideRequestContext + prepareSimpleStreamOptions, via the new generateHandoffFromContext), so it reuses the live system prompt, normalized tools, transformed/obfuscated message history, and — critically — a stable promptCacheKey with a unique side sessionId. Previously the oneshot sent no cache-routing key and skipped the transformContext/transformProviderContext and tool/message normalization the loop applies, so its prefix never matched what the turn populated and every handoff re-read the whole context uncached. Mirrors the cache-preserving path already used by /btw and /omfg.
+    - Fixed /handoff (and the RPC handoff command) resetting the agent while a response was still streaming, which let the live turn keep emitting into the torn-down session. Manual handoff now refuses while a prompt is in flight (matching /fork and /move); the auto-handoff path is unaffected.
+    - Fixed Exa web search requests firing back-to-back with no client-side pacing by adding a configurable exa.searchDelayMs delay (default 1000ms) between Exa search requests. (#3271)
+    - Fixed ask returning (cancelled) or aborting the tool when Escape dismissed Other (type your own) custom input; it now returns to the option selector so the user can pick a listed answer instead. (#3269)
+    - Fixed /goal threshold auto-compaction skipping real sessions through three paths: per-turn supersede/drop-useless pruning no longer deflates the threshold trigger below the last provider-billed context; active-goal text stops now attempt threshold maintenance before unexpected-stop retry continuations can return from post-turn handling; and empty toolUse stops keep the existing cleanup pass that strips the orphan assistant from active context + session history before any compaction continuation. Active-goal compaction continuations now also resolve completed retry gates before returning, preventing isRetrying from staying stuck after a retry succeeds over the threshold. Added agent_end maintenance routing and Auto-compaction threshold decision debug logs so future no-start reports identify the exact early-return branch and the billed/stored/resolved/post-maintenance token counts that fed shouldCompact. (#3174)
+    - Fixed active /goal runs that never reached agent_end because the model kept emitting tool calls inside one agent run. Threshold maintenance now runs between tool-call turns, compacts the live loop context in place, and suppresses queued continuations that would race the still-running goal loop. (#3174)
+    Removed
+    - Removed append, tree, and diff eval helper functions from Python, JavaScript, and Ruby
+    - Removed sort, uniq, and counter text processing eval helpers from Python, JavaScript, and Ruby
+    - Removed the append(path, content), tree(path, max_depth?, show_hidden?), and diff(a, b) eval prelude helpers from every workflow runtime (Python, JavaScript, Ruby, Julia), along with their status renderers, icon entries, and tool/docs references. Use write/read for file mutation and tool.<name>(...) for richer filesystem operations.
+    - Removed the sort(text, reverse?, unique?), uniq(text, count?), and counter(items, limit?, reverse?) eval text helpers from the Python, JavaScript, and Ruby prelude surfaces (Julia never defined them), along with the JS HelperBundle/HelperOptions members and docs references. Sort/dedupe/count inline in cell code instead.
+    @oh-my-pi/collab-web
+    Added
+    - Added support for Ruby and Julia code cells in the eval tool
+    Changed
+    - Updated the eval tool view to render the new single-cell eval args (flat language/code/title/timeout/reset) and to highlight Ruby (rb) and Julia (jl) cells with their own syntax instead of collapsing them to Python, while still parsing legacy multi-cell cells arrays and framed input strings from older transcripts.
+    Fixed
+    - Improved compatibility with legacy todo task transcripts
+    What's Changed
+    - test(eval): raised Julia prelude per-test timeout to 30s by @roboomp in https://github.com/can1357/oh-my-pi/pull/3275
+    - fix(compaction): trigger /goal threshold on billed context, not post-prune estimate by @roboomp in https://github.com/can1357/oh-my-pi/pull/3175
+    - fix(coding-agent): return to ask options after custom escape by @roboomp in https://github.com/can1357/oh-my-pi/pull/3270
+    - fix(web-search): pace exa search requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/3272
+    - fix(session-selector): keep /resume header pinned after delete by @roboomp in https://github.com/can1357/oh-my-pi/pull/3285
+    - fix(ai): keep anthropic thinking context by @roboomp in https://github.com/can1357/oh-my-pi/pull/3290
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.1.15...v16.1.16
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.1.16
+ReleaseTime: 2026-06-23T13:13:46.0000000Z
