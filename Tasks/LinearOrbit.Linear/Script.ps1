@@ -1,23 +1,20 @@
-$Object1 = Invoke-RestMethod -Uri 'https://download.todesktop.com/200315glz2793v6/td-latest.json'
+$Prefix = 'https://releases.linear.app/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.artifacts.nsis.arm64.url | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.createdAt.ToUniversalTime()
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
