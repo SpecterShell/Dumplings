@@ -1,0 +1,121 @@
+Version: 4.18.2
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.18.2/cribl-4.18.2-fd1f0d2f-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4182/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Cribl Edge 4.18.2 includes significant performance improvements, new capabilities, and important bug fixes.
+    Important Changes ​
+    Breaking Change: Single-item GET requests return HTTP 404 for unknown IDs in Cribl.Cloud ​
+    In Cribl.Cloud, CRUD-style GET-by-ID operations in the Cribl API now return HTTP 404 Not Found when the requested resource ID does not exist. Previously, those operations returned HTTP 200 OK with an empty items array and count: 0.
+    This change applies only for unknown resource id values. If a resource id exists but the API cannot return it due to filters, the request still returns HTTP 200 OK with an empty items array and count: 0.
+    What you need to do:
+    In Cribl.Cloud, for the affected endpoint paths, update API clients that treat HTTP 200 OK with an empty items array and count: 0 as “not found” to handle HTTP 404 Not Found instead. To confirm that an operation returns HTTP 404 Not Found for an unknown id before updating clients, send a GET-by-ID request with a deliberately invalid id.
+    Expand the following section for a list of the affected endpoint paths.
+    List of affected endpoint paths
+    - /admin/products/{product}/mappings
+    - /alert/monitors
+    - /alert/silences
+    - /fleet-mappings
+    - /lib/grok
+    - /lib/mdt-devices
+    - /lib/parsers
+    - /lib/protobuf-libraries
+    - /lib/regex
+    - /lib/sds-rules
+    - /lib/sds-rulesets
+    - /mappings
+    - /notification-policies
+    - /notifications
+    - /pack
+    - /products/aetos/config-profiles
+    - /products/aetos/monitors
+    - /products/aetos/shared-configs
+    - /products/lake/lakes/{lakeId}/config
+    - /products/lake/lakes/{lakeId}/direct-access
+    - /products/lake/lakes/{lakeId}/metrics
+    - /search/dashboard-categories
+    - /search/dashboards
+    - /search/dataset-provider-types
+    - /search/datatypes
+    - /search/federated_search/engines
+    - /search/jobs
+    - /search/local_search/dataset-rulesets
+    - /search/local_search/datatype-rulesets
+    - /search/local_search/engines
+    - /search/macros
+    - /search/notebook-templates
+    - /search/notebooks
+    - /search/usage-groups
+    - /system/instance
+    - /system/internal-groups
+    - /system/keys
+    - /system/messages
+    - /system/policies
+    - /system/samples
+    - /system/scripts
+    - /system/users
+    Deprecation Notice: Disable Node Persistence ​
+    The Disable Node persistence setting is deprecated and will be removed in the upcoming 4.19.0 release. Node information is persisted by default. Use the Worker Group/Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    New Features ​
+    This release provides the following improvements:
+    Apps (Preview) RBAC ​
+    Apps (Preview) role based access control (RBAC) lets admins control which users and teams can access each App. For each new App, users will see only the Apps that have been shared with them, and admins can grant or revoke access per App.
+    Experience Improvements ​
+    - Cribl AI agents on an Anthropic via Amazon Bedrock custom provider now use the AWS SDK’s native outputConfig.text format for structured outputs. Bedrock agents return more reliable schema-valid JSON, and an intermittent ValidationException seen in some agent flows is resolved.
+    - You can now update a custom AI provider without re-entering your API key or virtual key. The credential field appears blank in the edit wizard, but Cribl keeps the stored key. Enter a value only to rotate it.
+    - Cribl.Cloud now rejects custom AI provider URLs that use a non-HTTP(S) scheme, resolve to localhost, or use a literal private or link-local IP address. This prevents custom providers from probing internal cloud infrastructure.
+    - Copilot Editor now recommends the most appropriate target schema for your sample data and asks you to approve or adjust it, rather than asking you to pick from a list. It also maps more available fields, such as Source and Destination IP addresses, creating robust pipelines that capture more relevant data. Editing is smoother too: launching Copilot Editor from a Pipeline loads that Pipeline directly, and at the end of the session you can choose to save your changes as a new Pipeline or overwrite the existing one.
+    - Outpost Nodes now support SOCKS proxies for communication with the Leader.
+    - The new cribl diag connect CLI command helps test Leader connectivity from managed Stream Workers and Edge Nodes.
+    Sources and Destinations ​
+    - New Journal Files Sources now collect logs only from the current boot by default, reducing the risk of sending older data during first-time deployment.
+    - The default persistent queue (PQ) buffer size has been increased from 64 KB to 1 MB, reducing CPU and I/O overhead when multiple PQs are active. The maximum configurable buffer size is now 10 MB (previously 1 MB), and the default max file size has been increased to 10 MB. Existing PQ configurations set to the previous 64 KB default will be automatically migrated to the new 1 MB default.
+    - Added a new Line buffer limit setting to the Kubernetes Logs Source to handle reassembling large single-line logs.
+    Packs ​
+    Packs that contain symlinks are now blocked during import. Previously, symlinks within a Pack’s directory structure were preserved when importing from a Git repository, which could lead to unintended file path resolution. Symlinks in Packs are no longer permitted, improving the security posture of Pack installations.
+    Corrections ​
+    This release contains the following bug fixes:
+    Operational Fixes ​
+    IDDescription
+    CRIBL-40408
+    Fixed an issue where the Outpost listener service failed to start when TLS was configured with a private key passphrase. The CRIBL_OUTPOST_LISTENER_URL is now deprecated.
+    CRIBL-41528Fixed an issue where upgrading Cribl Edge Nodes on Windows would fail with files being reported in use.
+    CRIBL-37875Fixed an issue where Cribl Edge on Windows did not gracefully shut down Worker Processes, which could lead to data loss during service restarts.
+    CRIBL-39410Fixed an issue where deploying config bundles to Edge Nodes on Windows could intermittently corrupt their installation and leave Edge unable to run properly or connect to the Leader.
+    CRIBL-41380Fixed an issue where links from the Outpost Target Version screen opened the Fleets page instead of the relevant Outpost group.
+    CRIBL-39909Fixed an issue where persistent queues on Cribl HTTP Destinations could stop draining after backpressure cleared when Strict ordering was disabled, which could leave queued data stuck until the Worker restarted.
+    CRIBL-40995Fixed an issue in self-hosted distributed deployments where newly joined Workers could remain stuck in a “config loading” state when their Worker Group contained deployed lookup files.
+    CRIBL-41259Fixed an issue where modifying an Event Breaker Ruleset at runtime could cause the Multiplexed Event Stream Breaker to throw an error and fall back to default line breaking, resulting in incorrectly broken events.
+    CRIBL-29894Fixed an issue where HTTP-based Destinations with persistent queueing (PQ) enabled could underreport output bytes when events no longer included the _raw field.
+    PLAT-11929Fixed an issue in Leader High Availability (HA) deployments where Leader replication could cause a Leader Node’s local Git repository branch to diverge from the branch used by the failover (HA) volume repository. The fallback branch for Leader bootstrap triggered by the CRIBL_GIT_REMOTE environment variable now uses the Git branch from CRIBL_GIT_BRANCH or falls back to Leader’s current Git branch instead of defaulting to master.
+    CRIBL-37715In the Pipeline Preview pane, fields containing dots in their names (for example, test.test) that hold nested objects now expand correctly.
+    CRIBL-42269Fixed an issue that caused missing metrics for a period of time after an upgrade.
+    Source and Destination Fixes ​
+    IDDescription
+    CRIBL-41634
+    Fixed an issue where the Journal Files Source would omit fields starting with an underscore from the journald field.
+    CRIBL-40586Fixed an issue where File Monitor logged harmless stale file handle errors from NFS or EFS mounts as errors instead of warnings.
+    CRIBL-40990Fixed an issue where File Monitor could leave state behind for nested .zip files when Delete File was enabled.
+    CRIBL-37544Fixed an issue where Sentinel Destinations could remain in a healthy state after OAuth authentication failed, even when data could not be sent out.
+    CRIBL-25942Fixed an issue where large metric values sent through Splunk-to-Splunk v4 Destinations to Splunk Cloud could be silently dropped after ingestion. Cloud-only.
+    CRIBL-35603Fixed an issue where Azure Event Hubs Destinations could log a misleading flush error after an Azure authentication failure, even when the destination successfully reconnected and resent the data.
+    CRIBL-40919Fixed an issue where HTTP-based Destinations sometimes ignored proxy bypass settings for IPv6 addresses.
+    CRIBL-38597Fixed an issue where Google Cloud Storage Destinations could try to upload invalid object names generated by partitioning expressions, leaving staged files behind and requiring manual cleanup.
+    CRIBL-41331Fixed an issue where the Kubernetes Logs Source in load-balanced mode could emit unknown-channel errors under stress.
+    Other Functional Fixes ​
+    IDDescription
+    CRIBL-40007
+    Fixed an issue where the Help link for the Mask Function in Pipelines would display an error instead of opening the documentation.
+    AI-3994Fixed an issue where certain AI features ignored the configured custom AI provider model tiers and fell back to hardcoded default models. This caused Copilot, Investigations, Guard, and other AI features to fail when those default model IDs were not deployed in the BYOM configuration. AI features now use the model IDs you assign to each tier in AI Settings.
+    CRIBL-41507Fixed empty tooltips appearing in Outpost Group Target Version screen.
+    SDK Changelogs ​
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - Typescript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-06-24
