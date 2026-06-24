@@ -8,6 +8,10 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = 'https://web.appeee.nl/Files/UpdateWinApp/appeee/AppeeeSetup.exe'
 }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'wix'
+  InstallerUrl  = 'https://web.appeee.nl/Files/UpdateWinApp/appeee/AppeeeSetup.msi'
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
