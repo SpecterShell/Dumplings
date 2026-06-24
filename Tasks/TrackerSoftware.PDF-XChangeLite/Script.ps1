@@ -28,7 +28,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/StandardV$($this.CurrentState.Version.Split('.')[0]).ARM64.msi"
+  InstallerUrl  = "https://downloads.pdf-xchange.com/$($this.CurrentState.Version)/LiteV$($this.CurrentState.Version.Split('.')[0]).ARM64.msi"
 }
 
 switch -Regex ($this.Check()) {
