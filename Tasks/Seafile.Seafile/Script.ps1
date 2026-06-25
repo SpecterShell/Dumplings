@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//h3[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        if ($ReleaseNotesTitleNode.InnerText -match '(20\d{2}/\d{1,2}/\d{1,2})') {
+        if ($ReleaseNotesTitleNode.InnerText -match '(20\d{2}\W+\d{1,2}\W+\d{1,2})') {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
         } else {
