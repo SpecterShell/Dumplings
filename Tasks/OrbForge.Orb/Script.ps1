@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.AppInstaller.MainPackage.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'appx'
+  InstallerType = 'msix'
   InstallerUrl  = $Object1.AppInstaller.MainPackage.Uri
 }
 
