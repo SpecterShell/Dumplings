@@ -29,11 +29,11 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=en' | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='accordion-item' and contains(./*[@id='heading0'], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode.SelectSingleNode('./a/h4/i').InnerText,
+          $ReleaseNotesNode.SelectSingleNode('./*[@id="heading0"]').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2})'
         ).Groups[1].Value | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
@@ -41,7 +41,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('./div/div') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectNodes('./*[@id="heading0"][1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
@@ -54,11 +54,11 @@ switch -Regex ($this.Check()) {
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=zh-CN' | ConvertFrom-Html
 
-      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//*[@class='accordion-item' and contains(./*[@id='heading0'], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
       if ($ReleaseNotesCNNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match(
-          $ReleaseNotesCNNode.SelectSingleNode('./a/h4/i').InnerText,
+          $ReleaseNotesNode.SelectSingleNode('./*[@id="heading0"]').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2})'
         ).Groups[1].Value | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
@@ -66,7 +66,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesCNNode.SelectSingleNode('./div/div') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode.SelectNodes('./*[@id="heading0"][1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
