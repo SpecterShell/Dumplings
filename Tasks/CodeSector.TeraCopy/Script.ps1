@@ -43,23 +43,25 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    Expand-AdvancedInstaller -Path $InstallerFile | Out-Null
-    $InstallerFileExtracted = Split-Path -Path $InstallerFile -Parent
-    $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.msi" -File | Select-Object -First 1
+    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    $null = Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted
+    $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}" -Filter '*.msi' -Recurse -File | Where-Object -FilterScript { $_.Name -notmatch 'x64|arm|aarch' } | Select-Object -First 1
+    # ProductCode
+    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX86['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
         UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
     )
-    $InstallerFile3 = Get-ChildItem -Path "${InstallerFileExtracted}\*\TeraCopy.x64.msi" -File | Select-Object -First 1
-    # AppsAndFeaturesEntries + ProductCode
+    $InstallerFile3 = Get-ChildItem -Path "${InstallerFileExtracted}" -Filter '*.msi' -Recurse -File | Where-Object -FilterScript { $_.Name -match 'x64' } | Select-Object -First 1
+    # ProductCode
+    $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
     $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
         UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
         InstallerType = 'msi'
       }
