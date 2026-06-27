@@ -1,4 +1,4 @@
-$Prefix = 'https://img02.mockplus.cn/rp-desktop/'
+$Prefix = 'https://d3h2k7ug3o5pb3.cloudfront.net/rp-desktop/'
 
 $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
