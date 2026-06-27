@@ -17,10 +17,11 @@ switch -Regex ($this.Check()) {
           Value  = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesCN
         }
 
-        # ReleaseNotesUrl
+        # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesUrl
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesUrl
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
