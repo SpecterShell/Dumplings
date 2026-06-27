@@ -16,9 +16,9 @@ function Read-Installer {
 }
 
 $Prefix = 'https://support.logmein.com/pro/help/logmein-client-desktop-app-for-windows'
-$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
-$Object2 = Invoke-RestMethod -Uri "https://support.logmein.com/api2/article/$($Object1.SelectSingleNode('//meta[@name="article-immutable-id"]').Attributes['content'].Value)/en"
-$Object3 = $Object2.contentText | Get-EmbeddedLinks
+$Object1 = Invoke-RestMethod -Uri 'https://support.logmein.com/api/i/pro/help/logmein-client-desktop-app-for-windows'
+$Object2 = $Object1.components.Where({ $_.component -eq 'BrowseTree' }, 'First')[0].data.articleBody.content
+$Object3 = $Object2 | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Join-Uri $Prefix $Object3.Where({ try { $_.href.Contains('.msi') } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
