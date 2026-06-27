@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ipu.dk/products/coolpack/'
+$Object1 = Invoke-WebRequest -Uri 'https://www.ipu.dk/refrigeration-software/coolpack'
 $InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0]
 
 # Version
