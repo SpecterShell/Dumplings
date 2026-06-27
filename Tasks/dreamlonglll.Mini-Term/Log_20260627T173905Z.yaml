@@ -1,0 +1,32 @@
+Version: 0.6.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.4/Mini-Term_0.6.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.4/Mini-Term_0.6.4_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Bug 修复
+    - 修复 Markdown 预览中点击本地文件链接导致整个程序重载
+      - 根因：链接点击处理对非 http 链接（相对路径 / 锚点 / mailto）直接放行，而 Markdown 渲染在主文档中，<a> 的默认导航会让 WebView 离开 SPA，造成整个程序重载、状态丢失
+      - 改为任何链接都先阻止默认导航，绝不放行顶层跳转（会话查看器同时受益）
+    功能改进
+    - 文件预览支持本地链接在预览内跳转
+      - 解析相对 / 绝对路径（归一化 ./ 与 ..），经项目根目录校验后在预览内打开
+      - 新增跳转历史与「← 返回」按钮，跳转后内容区自动回到顶部
+    - 文档内锚点链接改为预览内平滑滚动到对应标题（为各级标题生成 slug id）；mailto / tel 等协议交由系统打开
+
+    下载
+    平台 文件
+    Windows Mini-Term_0.6.4_x64-setup.exe / Mini-Term_0.6.4_x64_en-US.msi
+    macOS (Apple Silicon) Mini-Term_0.6.4_aarch64.dmg
+    Linux Mini-Term_0.6.4_amd64.deb / Mini-Term-0.6.4-1.x86_64.rpm / Mini-Term_0.6.4_amd64.AppImage
+    Windows 为主要支持平台；macOS / Linux 为实验性支持。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.4
+ReleaseTime: 2026-06-27T10:47:56.0000000Z
