@@ -1,12 +1,12 @@
 $Object1 = Invoke-RestMethod -Uri 'https://version-cdn.mountainduck.io/5/windows/release/changelog.appinstaller'
 
 # Version
-$this.CurrentState.Version = $Object1.AppInstaller.MainPackage.Version
+$this.CurrentState.Version = $Object1.AppInstaller.MainBundle.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msix'
-  InstallerUrl  = $Object1.AppInstaller.MainPackage.Uri
+  InstallerUrl  = $Object1.AppInstaller.MainBundle.Uri
 }
 
 switch -Regex ($this.Check()) {
