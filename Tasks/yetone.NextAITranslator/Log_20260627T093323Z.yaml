@@ -1,0 +1,14 @@
+Version: 0.6.21
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/nextai-translator/nextai-translator/releases/download/v0.6.21/NextAI.Translator_0.6.21_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.21
+    - Fix model-list fetching and translation failing on the desktop app when the API URL includes an explicit port (#1571). Every desktop request goes through the Tauri HTTP allow-scope, which used http://* / https://* patterns. URLPattern only matches those against default-port URLs, so any host with an explicit port (e.g. a local server at http://192.168.x.x:11434, or a host like https://example.com:1234) was rejected before the request was ever sent. The scope now uses http://*:* / https://*:*, matching URLs both with and without a port.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nextai-translator/nextai-translator/releases/tag/v0.6.21
+ReleaseTime: 2026-06-27T07:04:53.0000000Z

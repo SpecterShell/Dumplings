@@ -1,0 +1,36 @@
+Version: 2.9.3
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.9.3/hysteria-windows-386.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.9.3/hysteria-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/apernet/hysteria/releases/download/app/v2.9.3/hysteria-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added Hysteria Realms UPnP/NAT-PMP port mapping support for easier NAT traversal
+    - Added a Hysteria Realms ipMode option to restrict connections to IPv4 or IPv6 only
+    - Updated quic-go to v0.60.0
+    - Fixed + in the authentication credentials being corrupted to a space when parsing hysteria2:// sharing links
+    - Fixed the HTTP proxy rejecting valid Basic authentication credentials
+    - Fixed the HTTPS proxy outbound using host:port instead of the hostname as the TLS SNI
+    - Fixed a data race in the client's HTTP/SOCKS5 listener multiplexer
+    - Fixed nftables redirect failure when the server binds to a specific IPv6 address
+    - DNS resolver now limits CNAME chain length to prevent unbounded recursion
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 为 Hysteria Realms 新增 UPnP/NAT-PMP 支持以加强 NAT 穿透能力
+    - 为 Hysteria Realms 新增 ipMode 选项，可将连接限制为仅使用 IPv4 或 IPv6
+    - quic-go 更新至 v0.60.0
+    - 修复了解析 hysteria2:// 分享链接时密码中的 + 被错误转换为空格的问题
+    - 修复了 HTTP 代理拒绝有效 Basic 验证凭据的问题
+    - 修复了 HTTPS 代理出站将 host:port 而非主机名用作 TLS SNI 的问题
+    - 修复了客户端 HTTP/SOCKS5 监听多路复用器中的线程安全问题
+    - 修复了服务端绑定指定 IPv6 地址时 nftables 重定向失效的问题
+    - DNS 解析器增加 CNAME 链长度限制，防止无限递归
+- Key: ReleaseNotesUrl
+  Value: https://github.com/apernet/hysteria/releases/tag/app/v2.9.3
+ReleaseTime: 2026-06-27T07:06:08.0000000Z

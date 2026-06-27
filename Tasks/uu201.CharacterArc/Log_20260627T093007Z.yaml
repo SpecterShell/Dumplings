@@ -1,0 +1,28 @@
+Version: 1.11.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/uu201/character-arc/releases/download/v1.11.0/CharacterArc-1.11.0-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1.11.0 - 2026-06-27
+    Added
+    - 番茄风向标页面：新增独立页面，支持查看番茄小说女频/男频新书榜，含 AI 风向速评、热门综合赛道卡片、热门分类、高频题材标签云、分类榜单与排名趋势侧栏，数据来源于 FanqieRankTracker 仓库，经 jsDelivr 四通道镜像加速并本地缓存 6 小时
+    - 书卡操作按钮：分类榜单每张书卡底部新增「访问原文」和「复制简介」按钮，一键在浏览器打开番茄小说原文页或复制简介到剪贴板
+    - 热门综合赛道卡片升级：排名由淡灰水印数字改为金/银/铜小徽章，top1 卡片加主题色渐变背景与顶部高亮条；新增 new_count、dropped_count、active_days 三项指标行；领涨分类改为 chip 微标 + 强调值组合，底部分类标签高亮领涨项
+    - 创作助理放开输出篇幅限制：移除创作助理硬性字数限制，篇幅改由请求内容决定，maxTokens 仅作安全上限；章节助手空状态与续写模式新增引导提示，整章正文创作导向「生成初稿」入口
+    - 章节初稿接续契约：生成本章时自动注入上一章结尾原文（而非开头预览），要求模型在时间、地点、在场人物、情绪上自然承接，禁止场景无交代跳变
+    - agent 循环可靠性增强：步数耗尽时禁用工具强制收尾，把残缺/空输出补成完整答案；新增同参数重复工具调用检测，回灌首次结果节省步数；截断时显式报错，不再静默返回空；各任务补齐独立 maxSteps 配置（深度拆书 16、全局助手 12 等）
+    - skill 选择逻辑增强：required skill 无条件保留，不再被高分 optional 在 slice 时挤掉；叙事功能匹配增加中文 triggers 维度，对中文工具箱真正生效；同分排序加 priority/id 保证跨次运行确定性；选择日志输出评分分项明细便于调参
+    Changed
+    - 公告远程拉取走 CDN 加速：公告拉取从单通道 raw.githubusercontent.com 改为 jsDelivr / fastly / ghproxy / raw 四镜像通道自动切换，新增 1 小时本地磁盘缓存，弱网下可回退旧缓存；抽取公共 GitHub 多镜像抓取工具模块，风向标与公告共用同一套实现
+    - 批量拆书弹窗状态持久化：将批量拆书状态从组件级 ref 提升为模块级单例 composable（useBatchImport），注册到全局 AiTaskProgressDock 浮层，页面切换或最小化后不再丢失进度，可在右下角查看
+    Fixed
+    - story-state 角色过滤失效：修复章节生成时 story-state 角色过滤退化为注入全项目所有角色状态的问题，补回 character id 过滤
+    - 接续契约与 recentEndingsTrail 冲突：调整 recentEndingsTrail，剔除紧邻上一章并改为仅参考收尾形式，消解与接续契约的指令冲突
+    - 清理代码：移除 streaming-orchestrator 中已不再使用的冗余代码
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/uu201/character-arc/releases/tag/v1.11.0
+ReleaseTime: 2026-06-27T08:25:46.0000000Z
