@@ -4,45 +4,45 @@ $Object1 = $Global:DumplingsStorage.PlenomDownloadPage.SelectSingleNode('//ul[@c
 $this.CurrentState.Version = [regex]::Match($Object1.innerText, 'Version: (\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-# $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
-#   Architecture = 'x86'
-#   InstallerUrl = ''
-# }
-# $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-#   Architecture = 'x64'
-#   InstallerUrl = ''
-# }
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = 'https://www.plenom.com/download/208271/'
+}
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = 'https://www.plenom.com/download/208271/'
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # $InstallerFileExtracted = New-TempFolder
-    # 7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Busylight4WebexSetup.msi' 'Busylight4WebexSetup64.msi' | Out-Host
-    # # x86
-    # $InstallerFile2 = Join-Path $InstallerFileExtracted 'Busylight4WebexSetup.msi'
-    # # RealVersion
-    # $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # # ProductCode
-    # $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # # AppsAndFeaturesEntries
-    # $InstallerX86['AppsAndFeaturesEntries'] = @(
-    #   [ordered]@{
-    #     UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-    #     InstallerType = 'wix'
-    #   }
-    # )
-    # # x64
-    # $InstallerFile3 = Join-Path $InstallerFileExtracted 'Busylight4WebexSetup64.msi'
-    # # ProductCode
-    # $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # # AppsAndFeaturesEntries
-    # $InstallerX64['AppsAndFeaturesEntries'] = @(
-    #   [ordered]@{
-    #     UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-    #     InstallerType = 'wix'
-    #   }
-    # )
-    # Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Busylight4WebexSetup.msi' 'Busylight4WebexSetup64.msi' | Out-Host
+    # x86
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'Busylight4WebexSetup.msi'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
+    # ProductCode
+    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $InstallerX86['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        InstallerType = 'wix'
+      }
+    )
+    # x64
+    $InstallerFile3 = Join-Path $InstallerFileExtracted 'Busylight4WebexSetup64.msi'
+    # ProductCode
+    $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $InstallerX64['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
+        InstallerType = 'wix'
+      }
+    )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
       # ReleaseTime
@@ -59,6 +59,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $this.Log('This package requires manual submission. Get the installer from the website.', 'Warning')
+    $this.Submit()
   }
 }
