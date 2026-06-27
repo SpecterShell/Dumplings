@@ -3,7 +3,7 @@ $RepoName = 'semeru25-binaries'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
-$VersionMatches = [regex]::Match($Object1.tag_name, 'jdk-(?<Major>\d+)(?:\.(?<Minor>\d+))?(?:\.(?<Patch>\d+))?\+(?<Build>\d+)')
+$VersionMatches = [regex]::Match($Object1.tag_name, 'jdk-(?<Major>\d+)(?:\.(?<Minor>\d+))?(?:\.(?<Patch>\d+))?[+.](?<Build>\d+)')
 
 $VersionBuilder = [System.Text.StringBuilder]::new($VersionMatches.Groups['Major'].Value).Append('.')
 $VersionBuilder = $VersionMatches.Groups['Minor'].Success ? $VersionBuilder.Append($VersionMatches.Groups['Minor'].Value) : $VersionBuilder.Append('0')
