@@ -1,18 +1,9 @@
 $Prefix = 'https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/'
-# x64
-$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-x64-win.yml" | ConvertFrom-Yaml
-$VersionX64 = $Object1.version
-# arm64
-$Object2 = Invoke-RestMethod -Uri "${Prefix}latest-arm64-win.yml" | ConvertFrom-Yaml
-$VersionArm64 = $Object2.version
 
-if ($VersionX64 -ne $VersionArm64) {
-  $this.Log("Inconsistent versions: x64: ${VersionX64}, arm64: ${VersionArm64}", 'Error')
-  return
-}
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest-x64-win.yml" | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -21,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url 'Antigravity-arm64.exe'
 }
 
 switch -Regex ($this.Check()) {
