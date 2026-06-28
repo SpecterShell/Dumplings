@@ -15,7 +15,8 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = New-TempFile
+    curl -fsSLA $DumplingsInternetExplorerUserAgent -o $InstallerFile $this.CurrentState.Installer[0].InstallerUrl | Out-Host
     $InstallerFileExtracted = New-TempFolder
     7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Busylight4WebexSetup.msi' 'Busylight4WebexSetup64.msi' | Out-Host
     # x86

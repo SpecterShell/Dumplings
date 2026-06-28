@@ -11,7 +11,8 @@ $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = New-TempFile
+    curl -fsSLA $DumplingsInternetExplorerUserAgent -o $InstallerFile $this.CurrentState.Installer[0].InstallerUrl | Out-Host
     $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
     $InstallerFileExtracted = New-TempFolder
     # x86
