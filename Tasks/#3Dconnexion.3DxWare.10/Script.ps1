@@ -5,14 +5,14 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['3DxWare10'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri 'http://updatecheck.3dconnexion.com/AvailableSoftware_xml'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'http://updatecheck.3dconnexion.com/AvailableSoftware_xml' | Join-String -Separator "`n" | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.AvailableSoftware.Software.Where({ $_.Id -eq '3DxWare64' }, 'First')[0].'_3DxWareVersion'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
-    $Object2 = Invoke-RestMethod -Uri ($Object1.AvailableSoftware.ProductNewsURL | Split-Uri -LeftPart Path)
+    $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent ($Object1.AvailableSoftware.ProductNewsURL | Split-Uri -LeftPart Path) | Join-String -Separator "`n" | ConvertFrom-Xml
 
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
