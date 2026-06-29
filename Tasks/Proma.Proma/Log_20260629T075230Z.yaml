@@ -1,0 +1,35 @@
+Version: 0.13.22
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.13.22-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.13.22
+    对比基准：v0.13.16
+    这是一个架构升级 + 稳定性强化的版本：引入了 proma CLI 与渐进式会话读取体系，让 Agent 跨会话引用不再撑爆上下文；流式消息支持完整的引用语法；新增 WPS/Office 文档附件解析；同时修复了批量委派时父会话消失、渠道连接测试误判、执行错误无法自动重试等多个影响稳定性的问题。
+    新功能
+    - Proma CLI 与渐进式会话读取 — 全新独立的 proma CLI 工具，基于新抽取的 @proma/session-core 包，为上下文有限的 Agent 提供渐进式会话消费能力。支持 session info（体量概览）、session outline（turn 级地图）、session search（会话内搜索）、session export（窗口化 Markdown 导出，超预算自动落盘）。CLI 编译为自包含二进制并随桌面版一起分发，session-cleaner skill 作为薄壳封装引导 Agent 按需读取。引用会话（&session）时默认完整读取，仅大会话才渐进式节省上下文。(#988, #989, #990, #991, #992, #994)
+    - 流式注入支持 /skill、#mcp、&session 引用语法 — 之前在 Agent 流式会话中输入 /skill:xxx 会被 SDK 误判为未知命令直接终止会话。现在流式路径完整支持 Proma 的引用语法：前端提取引用、结构化传递到后端构建 prompt 注入块，引用不再丢失。(#965)
+    - 支持 WPS/Office 文档附件 — 新增对 .xlsm、.pptm、.ppsx 等 OOXML 宏/模板格式的解析，以及内建 RTF 纯文本提取器（无新依赖），覆盖 WPS 和 Microsoft Office 的常见文档格式。(#979)
+    - 长文本粘贴转附件 — 粘贴大段文本时可选择将其作为附件发送，避免输入框被超长内容撑开。(#987)
+    - 侧栏自动任务 / Skills 入口支持点击切回 — 点击已激活的自动任务或 Skills 侧栏入口时，现在会切回会话列表，而不是无响应。(#972)
+    Bug 修复
+    - 批量委派时父会话从侧栏消失 — 多个子任务并行创建时，全局 IPC 监听器的全量覆写存在竞态，导致父会话被从 atom 中丢弃、子会话浮到顶层。改为函数式 upsert + 快照合并，保证并发安全。(#985)
+    - 引用弹窗按 Esc 无法关闭 + 异步竞态幽灵弹窗 — 修复 /skill、#mcp、&session、@file 引用弹窗按 Esc 无反应的问题；同时解决异步 items() 返回时触发符已删除仍建弹窗的竞态。(#984)
+    - 委派子会话同时带定时任务来源时显示错误 — 当委派子会话恰好由定时任务触发的父会话创建时，会同时带有两个来源标记。统一为 sourceDelegationId 优先，不再被误判为定时任务。(#993)
+    - 渠道连接测试误判修复 — 之前部分 Provider 把收到任何 HTTP 响应都等同于连接成功，导致 403/404/429/5xx 被误报为正常。现在统一以 HTTP 2xx 为成功判据，并增加状态码分类器消解歧义、脱敏错误信息、统一 15s 超时。(#960)
+    - 执行错误透传并接上自动重试 — error_during_execution 类型的错误之前会丢弃详情、且绕过重试逻辑。现在 result.errors[] 完整透传到前端 Toast，并对可恢复的瞬时故障（502/529/overloaded/网络瞬断）自动重试。(#961)
+    - 兼容渠道 baseUrl 存量迁移 — 修复 custom / anthropic-compatible 渠道 baseUrl 语义变化后，存量用户升级会向缺少端点后缀的地址发请求而失败的问题。新增幂等迁移逻辑，CONFIG_VERSION 升至 2。(#982)
+    - 预览面板在 Skills / Automations 视图未隐藏 — 切换到 Agent Skills 或自动任务视图时，预览面板仍占据空间。加入 activeView 守卫，全屏视图正确获得 100% 宽度。(#962)
+    - 侧栏 extra 区已可见会话点击不再强制置顶 — pinnedCurrent 判断扩展为检查完整可见列表（含 extraSessions），不再误将已可见会话强制排到第一位。(#958)
+    - 主题优化 — 调亮旧屏微光背景 (#966)；调整森息晨光护眼配色 (#969)。
+    - 其他 UI 细节 — 文件面板按钮对齐 + Windows 拖拽区域重叠修复 (#963)；文件树粘性目录行保持不透明 (#959)；主标签选中指示条调整 (#954)；Agent 文件标签与行内代码对齐 (#964)；子会话侧栏控件优化 (#986)。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.13.22
+ReleaseTime: 2026-06-29T07:44:39.0490000Z
