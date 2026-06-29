@@ -77,7 +77,23 @@ switch -Regex ($this.Check()) {
     }
 
     $this.Print()
-    $this.Write()
+
+    $ToWrite = $false
+
+    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLockMozilla')
+    $Mutex.WaitOne(30000) | Out-Null
+    if (-not $Global:DumplingsStorage.Contains('Mozilla-ToWrite')) {
+      $Global:DumplingsStorage['Mozilla-ToWrite'] = $ToWrite = $true
+    }
+    $Mutex.ReleaseMutex()
+    $Mutex.Dispose()
+
+    if ($ToWrite) {
+      $this.Write()
+    } else {
+      $this.Log('Another task is submitting manifests for this publisher', 'Warning')
+      return
+    }
   }
   'Changed|Updated' {
     $this.Message()
