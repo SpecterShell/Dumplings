@@ -32,30 +32,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $Object4 = Invoke-WebRequest -Uri 'https://argenteutilities.com/en/blog' | ConvertFrom-Html
-
-      $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ul').InnerText, '(\d{1,2}\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-        # Remove download buttons
-        $Object4.SelectNodes('//div[contains(@class, "more")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::ul[1]/following-sibling::node()') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
