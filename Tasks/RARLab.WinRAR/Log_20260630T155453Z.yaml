@@ -1,0 +1,114 @@
+Version: "7.23"
+Installer:
+- InstallerLocale: en
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723.exe
+- InstallerLocale: ar
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723ar.exe
+- InstallerLocale: am
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723am.exe
+- InstallerLocale: az-Latn
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723az.exe
+- InstallerLocale: ca
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723ca.exe
+- InstallerLocale: zh-Hant
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723tc.exe
+- InstallerLocale: hr
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723cro.exe
+- InstallerLocale: da
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723dk.exe
+- InstallerLocale: eu
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723eu.exe
+- InstallerLocale: fi
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723fi.exe
+- InstallerLocale: gl
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723gl.exe
+- InstallerLocale: de
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723d.exe
+- InstallerLocale: hu
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723hu.exe
+- InstallerLocale: id
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723id.exe
+- InstallerLocale: ko
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723kr.exe
+- InstallerLocale: lt
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723lt.exe
+- InstallerLocale: mn-MN
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723mn.exe
+- InstallerLocale: pt-PT
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723pt.exe
+- InstallerLocale: ru
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723ru.exe
+- InstallerLocale: sr-Cyrl
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723srbcyr.exe
+- InstallerLocale: es
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723es.exe
+- InstallerLocale: sv
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723sw.exe
+- InstallerLocale: th
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723th.exe
+- InstallerLocale: tr
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723tr.exe
+- InstallerLocale: uk
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723uk.exe
+- InstallerLocale: vi
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-723vn.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    1. Heap overflow vulnerability is fixed in RAR5 recovery volume
+         data reconstruction code. It affects WinRAR, RAR and UnRAR.
+         UnRAR.dll library doesn't include recovery volume processing,
+         so it is not affected.
+
+         We are thankful to Arjun Basnet from Securin Labs for letting us know
+         about this security issue.
+
+      2. Symbolic link pointing outside of destination folder could be created
+         even without -ola switch, when extracting a specially crafted
+         RAR archive by WinRAR, RAR, UnRAR or UnRAR.dll library.
+
+         Further check in extraction code prevents placing files to such folder
+         even in case of multiple extraction commands, excluding the possibility
+         of path traversal attack for WinRAR, RAR or UnRAR based extraction.
+         It limits the potential threat to a case where another tool uses this
+         symbolic link to store files.
+
+         We are thankful to scofaild23-bnomran for letting us know about this
+         security issue.
+
+      3. 7zxa.dll 7z extraction library is updated to version 26.02 to include
+         bug and vulnerability fixes by the library developer.
+
+      4. Switch -iver prints RAR version even if -idc is specified
+         in the command line, configuration file or RARINISWITCHES environment
+         variable. Previously -idc blocked -iver action.
+
+         Also a new line character is added to -iver output.
+RealVersion: 7.23.0
