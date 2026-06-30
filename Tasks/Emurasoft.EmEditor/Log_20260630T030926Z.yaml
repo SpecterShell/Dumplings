@@ -1,0 +1,68 @@
+Version: 26.2.0.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.emeditor.com/emed64_26.2.0.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.emeditor.com/blog/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Today, we released EmEditor v26.2.0.
+    1. Enhanced AI Features
+    In this version, we enhanced the highly requested AI-related features. As in previous versions, the AI-related features fall into two main categories.
+    1-1. AI Writing Assistance
+    AI Writing Assistance, first introduced in v24.1, has been further enhanced with the following additional options.
+    - Customize dialog > AI Options
+      - AI Provider and Model: Previously, AI-assisted writing could use only OpenAI, but starting with this version, you can also select Anthropic, DeepSeek, Google, and LM Studio/OpenAI-compatible providers. For example, by using a local LLM through LM Studio, you can enjoy the benefits of AI-assisted writing without worrying about AI usage costs. When using a paid AI provider that requires an API key, you must specify the API key in advance under Settings in Chat with AI.
+      - Show additional information on status bar: When this option is turned on, information is shown on the status bar whenever a prompt is sent to the AI or a response is received.
+    - Configuration Properties > AI Assist
+      - Show suggestions only when confident: If you do not want to receive AI suggestions too frequently, you can check this option to show suggestions only when the AI is confident. When this is checked, you can use the Confidence level slider below it to set the minimum confidence level required to display a suggestion. Because judging confidence is difficult for AI, and some AI models may not interpret it correctly, we recommend turning this off if you do not need it.
+      - Set the temperature: In AI, temperature is a parameter that controls the “randomness (creativity)” used when the LLM chooses the next word while generating text. The lower the temperature, the lower the randomness, and the more deterministic the suggestions you receive. The higher the temperature, the higher the randomness, and the more creative the suggestions you receive. When the Set the temperature option is off, the model’s default temperature is always used. When it is on, a temperature of 0.0 is used initially so that you receive deterministic suggestions; however, when you press Ctrl + Space to request a different suggestion, the temperature is raised to produce more creative suggestions. Many recent reasoning models do not accept a temperature parameter, in which case this option is ignored. If an error appears on the status bar because the temperature cannot be set for a particular model, please turn this option off. For AI-assisted writing, we recommend specifying a lightweight model that returns responses quickly, rather than a reasoning model.
+      - Don’t show suggestions after any of the following: If you check this and enter characters that indicate the end of a sentence in the field below—for example, “.。”—suggestions will no longer appear after symbols such as “.” or “。”. This lets you tailor the feature for easy use according to the type of text you are editing.
+      - Delay Time: AI suggestions appear automatically after the specified amount of time has elapsed once typing stops and the editor becomes idle. You can adjust this delay time in milliseconds using the slider.
+      - Additional instructions: Here, you can add instructions such as what kind of suggestions you want to receive, which language to use, and the desired tone. For example, when writing code in JavaScript, you can specify “Use JavaScript,” and if you want to use polite language, you can specify “Write in a polite style.” However, depending on the AI model, these additional instructions may not always be fully understood or produce an appropriate response, and entering too many instructions may slow down the response. Even so, now that more customization is possible, we believe you will be able to fine-tune the behavior to your liking through trial and error.
+
+    1-2. AI Prompts
+    This version enhances the AI Prompts feature, which was first introduced in v24.3. With AI Prompts, you can write a question to the AI in the editor and then easily send it to the AI. However, AI can make mistakes, and by comparing the answers from two AIs, you can obtain a more reliable answer. In this version, you can now specify two or more AI providers/models for each AI Prompt when needed. For example, you can send the same prompt to both OpenAI and Anthropic and compare their responses side by side in a split view. If the responses from two or more AI models differ significantly, you can suspect that one of them may contain an error. When using AI Prompts with program code, verifying with multiple models can help reduce bugs introduced by the AI. Note that when specifying two local AI models, make sure both models are loaded in LM Studio in advance. Otherwise, you may encounter an error indicating that one of the models could not be loaded.
+
+    1-3. The ChatAI Plug-in Is Required
+    Please note that to use the AI features, you need to install the ChatAI plug-in separately, in addition to EmEditor. However, as described below, the Store version of EmEditor will include the ChatAI plug-in, so there is no need to install it separately.
+    2. Introduction of MSIX Technology (coming soon)
+    MSIX is the latest Windows app package format provided by Microsoft. The existing Store version of EmEditor is soon going to be changed to a package based on this MSIX technology, and many features that were not available in the previous Store version are going to be available in it as well. As a result, the difference in features between the Store version (MSIX) and the Installer version (MSI) will be almost completely eliminated. The features that were not available in the previous Store version but will be available in this version include the following.
+    - Explorer Context Menu: The Windows 11 context menu in Explorer, a feature introduced in v24.1, will be available in the MSIX version.
+    - Jump List: The Jump List, which lets you run commands such as opening recently used files and Find in Files from the menu that appears when you right-click the EmEditor icon on the taskbar, will be available in the MSIX version.
+    - Command Prompt/PowerShell commands: Commands such as Command Prompt and PowerShell, which can be run from menus such as the one displayed when you right-click a document tab, will be available.
+    - Plug-ins that are not bundled: In the previous Store version, plug-ins that were not bundled could not be used. In the MSIX version, you will be able to download and use your own custom plug-ins as well as plug-ins published in the library.
+    - Export to the Registry and Import from the Registry: Using the Import and Export commands, you will be able to export EmEditor settings as a registry file or import them from a registry file.
+    - Saving files in protected folders with elevated privileges: In the previous Store version, files could not be saved to OS-protected folders such as C:\Program Files or C:\Windows. In the MSIX version, just like the other versions, you will be able to save files after responding to the privilege elevation confirmation prompt.
+    The MSIX package will soon be available not only as the Store version (MSIX) but also as a direct download. Corporate customers who cannot use the Microsoft Store will be able to use this Installer version (MSIX, direct download).
+    For a detailed comparison, please see Comparison of Installer, Portable, and Store Versions.
+    The MSIX version (both the Store version and the direct download) will be usable more safely than the Installer version (MSI) for the following reasons.
+    - The package installs and uninstalls cleanly, and settings are stored in a location dedicated to the app, so it makes no changes that affect the entire system.
+    - The Installer version (MSIX, direct download) will be signed with Emurasoft’s certificate. Because the package is designed so that it cannot be installed unless the signature of each file inside the package and the signature of the entire package match completely, it protects against tampering by hackers.
+    - With the MSI installer, arbitrary scripts could be executed through custom actions, but the MSIX package has no equivalent feature, so it protects against tampering by hackers who would exploit such scripts.
+    - The Store version (MSIX) is equally secure in terms of the tamper protection described above, but because it is additionally verified and signed by the Microsoft Store, it can be considered the most secure version.
+    Therefore, the MSIX version—whether distributed through the Store or as a direct download—is the latest Windows app package format recommended by Microsoft and is the most secure. If you are installing EmEditor for the first time, we recommend the MSIX version. If you are already using the Installer (MSI), you can continue to use it without any problem by updating with the update checker as before.
+    Individual customers who can access the Store are encouraged to use the Store version. Customers—mainly corporate customers—who cannot access the Store or are prohibited from using AI can continue to use the Installer version (MSI) as before.
+    For corporate customers or anyone who wants to completely disable AI features, please see “Disabling AI Features” in the FAQ “Are AI features enabled in EmEditor?”.
+    You can disable all AI features by using an IT management tool, such as Microsoft Intune, to create a REG_DWORD value named DisableAIAdmin in one of the following Registry locations:
+    - HKLM\Software\EmSoft\EmEditor v3\Common
+    - HKLM\Software\Policies\Emurasoft\EmEditor (v26.2 or later)
+    Set the value of DisableAIAdmin to 1.
+    3. Performance Improvements
+    In this version, we further accelerated the performance when opening huge files with very long lines, which was already improved in v26.1. According to our tests, horizontal scrolling of huge files without line breaks is about 14 times faster than in v26.0.
+    We also fixed bugs found during the development of the preview version.
+    We hope you will be satisfied with both the Pro and Free versions. If you have any questions, feature requests, or ideas, please contact us.
+    Thank you for your continued support of EmEditor.
+    — Yutaka Emura
+    For more details, including the main changes and screenshots, please see “New in Version 26.2”.
+    If you are using the Installer version (MSI), you can update from Check for Updates in the Help menu. If that does not work, please download the latest version and run the installer. Publication on the Microsoft Store is scheduled in a few days. When downloading the MSI directly, please confirm that the digital signature is signed by Emurasoft, Inc.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.emeditor.com/emeditor-core/emeditor-v26-2-0-released-enhanced-ai-features-introduction-of-msix-technology-and-faster-performance/
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://zh-cn.emeditor.com/blog/
+RealVersion: 26.2.0
+ReleaseTime: 2026-06-29
