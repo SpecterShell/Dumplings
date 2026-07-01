@@ -1,0 +1,33 @@
+Version: 16.2.13
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.2.13/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed pre-5.4 OpenAI Codex models (gpt-5.1-codex, gpt-5.3-codex, gpt-5.3-codex-spark) rejecting requests with Unsupported parameter: 'reasoning.summary' is not supported with this model by gating reasoning.summary behind the same gpt-5.4 wire floor as reasoning.context: "all_turns".
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for human-readable reasoning summaries on compatible OpenAI Codex models (v5.4+)
+    Fixed
+    - Fixed discovered OpenAI Codex models to advertise V2 streaming remote compaction, avoiding the legacy compact endpoint timeout path for Codex sessions. (#4146)
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Fixed models.yml remote compaction schema support for V2 streaming endpoint fields. (#4146)
+    - Fixed the SSH tool to reject cwd values of ~ and ~/... before sending guaranteed-bad quoted tilde paths to remote POSIX shells. (#4002)
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed fuzzy-search filtering for CJK and other non-ASCII queries by preserving Unicode letters and numbers during query normalization (#4114).
+    What's Changed
+    - fix(tool): reject ssh tilde cwd by @roboomp in https://github.com/can1357/oh-my-pi/pull/4003
+    - fix(tui): preserve unicode fuzzy search terms by @roboomp in https://github.com/can1357/oh-my-pi/pull/4119
+    - fix(catalog): enable codex v2 remote compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/4147
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.2.12...v16.2.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.2.13
+ReleaseTime: 2026-07-01T18:21:52.0000000Z
