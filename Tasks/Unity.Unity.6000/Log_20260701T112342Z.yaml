@@ -1,0 +1,125 @@
+Version: 6000.5.2f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/eb73d3b415a1/Windows64EditorInstaller/UnitySetup64-6000.5.2f1.exe
+  ProductCode: Unity 6000.5.2f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/eb73d3b415a1/WindowsArm64EditorInstaller/UnitySetupArm64-6000.5.2f1.exe
+  ProductCode: Unity 6000.5.2f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.5.2
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.5/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.5/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.5.2f1
+    - 6000.0.11f1: Crash on ProfilerMutexLock when closing a project with specific Assets (UUM-144371)
+    - 6000.0.67f1: [iOS] Audio is cut out when accessing iOS Control Center (UUM-145522)
+    - 6000.4.0a1: Crash on AnnotationManager::CanHideLODLabels when opening the Gizmos dropdown menu (UUM-144488)
+    - 6000.4.0a2: Editor freezes when LoadSceneAsync is called in the same frame as destroying SpriteRenderer GameObjects (UUM-143745)
+    - 6000.6.0a2: GPU Occlusion Culling fails to cull obstructed instances when GPU Resident Drawer is enabled (UUM-146214)
+    - Asset Importers: Editor crashes on "(Unity) WriteObjectToVector" when entering into the Play Mode (UUM-112617)
+    - Text (TextMeshPro): Crash on UNITY_FT_Load_Glyph when generating multi-threaded Font Atlas in TMPro Font Asset Creator (UUM-125366)
+    - : Crash on mdb_cursor_sibling when performing various actions in the Editor (UUM-141720)
+    - : Crash on mono_log_write_logfile when more than one copy of bee_backend is running (UUM-142773)
+    - : Crash with multiple stack traces when generating a Font Atlas (UUM-141061)
+    - : [Universal 3D Sample] NullReferenceException is thrown when opening GardenScene in URP 17.3.0 sample (UUM-145743)
+    6000.5.2f1 Release Notes
+    Features
+    - Editor: Project Auditor: Use AutoStaticsCleanup analyzer when Roslyn is enabled.
+    Improvements
+    - Editor: Project Auditor: flag issues for unsafe use of EntityId.
+    - Multiplayer: Multiplayer PlayMode clone editors now adhere to the Hierarchy window version preference. When switching between Scene Hierarchy and the new Hierarchy window in the main Editor, it is now automatically reflected across all active clones.
+    Changes
+    - Physics 2D: "PhysicsCoreSettings2D" asset is now located in the asset menu"2D/Physics (Core)/" (UUM-144698)
+    Fixes
+    - 2D: Fixed Install 2D Package button is disabled when it should not be. (UUM-143583)
+    - Accessibility: Fixed accessibility frames being reset when the application window is moved or resized on desktop platforms. (UUM-126569)
+    - Android: Fixed problem with GameActivity based application being killed while backgrounded. (UUM-143555)
+    - Android: Fixed split APKs by target architecture all receiving the same version code. (UUM-144372)
+    - Animation: Fixed function name changing on Animation Event inspector on multi selection when editing another field. (UUM-144456)
+    - Audio: Fixed exception thrown when initializing SampleProvider with compressed in memory multi-channel clips. (UUM-144480)
+    - Audio: Fixed for looping AudioSource resumes from the wrong playback position when the app is backgrounded and resumed on iOS Safari. (UUM-144080)
+    - Build System: Added MSBUILDDEBUGPATH to other method used when invoking dotnet.
+    - Build System: Set MSBUILDDEBUGPATH so that when there are the random MS build errors we see occasionally we capture the error information.
+    - Documentation: Fixed spacing issue in UI Toolkit documentation.
+    - Editor: Adding GhostFields to IInputComponentData in a nested class no longer causes a compilation error.
+    - Editor: Changed how the automatic graphics API toggle logic works when prompting a restart editor prompt. (UUM-140948)
+    - Editor: Fixed a bug where pinging/framing hierarchy element would cause warnings in the console. (UUM-141271)
+    - Editor: Fixed a crash that would occur when switching a FontAsset from static to Dynamic in ATG. (UUM-144549)
+    - Editor: Fixed an issue where EditorSceneManager.SaveOpenScenes return true despite open scenes are not saved due to being blocked in ShouldSaveScenesAndAssets. (UUM-142487)
+    - Editor: Fixed an issue where the Scene Template inspector's dependency list was not updated when the Template Scene was changed. (UUM-143123)
+    - Editor: Fixed an ArgumentOutOfRangeException that would occur in the TextField IME preview. (UUM-136872)
+    - Editor: Fixed broken rendering while profiling a marker. (UUM-133980)
+    - Editor: Fixed crash when launching MPPM Editor instances after entering Play Mode in Netcode for Entities projects by adding null check for gImportScheduler. (UUM-142514)
+    - Editor: Fixed font corruption with ATG when using 2 different FontAssets pointing to the same Font. (UUM-133996)
+    - Editor: Fixed null reference exception that occurred when displaying the entities content load profiler module. (UUM-142876)
+    - Editor: Fixed resets in Graphics Settings. (UUM-139127)
+    - Editor: Fixed VCCache infinite re-query loop for untracked folders in Perforce. (UUM-143313)
+    - Editor: GraphToolkit: Fixed an issue where hovering over a blackboard variable would not show the hover outline when the pointer was over the type icon or the capsule edge. (UUM-131397)
+    - Editor: GTK : Fixed an issue where duplicating multi-selection with a block node places the duplicated nodes in the wrong position. (UUM-126506)
+    - Editor: Improved Hash code calculation for Vectors. (UUM-143005)
+    - Editor: Lightmap Modes and Fog Modes reverts correctly when Reset is used. (UUM-139005)
+    - Editor: Local documentation was accidentally removed and has now been restored. (UUM-143984)
+    - Editor: Multiplayer Play Mode enterPlayModeFromMppm analytics event not being sent when entering Play Mode with Reload Domain enabled. (UUM-144601)
+    - Editor: Prevent a crash that would occur when a prefab is using reserved fields. (UUM-144557)
+    - Editor: Project Auditor: Don't perform locale conversions for audio Hz values, or time values. (UUM-143643)
+    - Editor: Project Auditor: Ensure analysis progress bar knows its total items as soon as it is created. (UUM-144829)
+    - Editor: Project Auditor: ensure docs links go to the correct version. (UUM-142283)
+    - Editor: Project Auditor: ensure docs links go to the correct version. (UUM-143402)
+    - Editor: Project Auditor: Fix "Install Rules" and "Start Analysis" not working if there are compile errors. (UUM-142915)
+    - Editor: Project Auditor: Fix "Install Rules" not working if there are compile errors. (UUM-142644)
+    - Editor: Project Auditor: Fix truncation of Total Assets size label. (UUM-143283)
+    - Editor: Project Auditor: keep the first column visible in the Issue Tables. (UUM-142342)
+    - Editor: Project Auditor: Show correct preload flag for Audio clips. (UUM-143063)
+    - Editor: The Editor now sanitizes references before writing the Player data to prevent type mismatches. (UUM-143556)
+    - Editor: Tier Settings Editor window correctly handles long text properly on resize. (UUM-138911)
+    - Entities: Fixed NullReferenceException when reordering columns of the System window. (UUM-142865)
+    - Graph Toolkit: Ensure the label Graph Processing Pending shows in editor light skin. (UUM-133702)
+    - Graphics: Added support for procedural instancing in Graphics.RenderPrimitivesIndexedIndirect. (UUM-132672)
+    - Graphics: Fixed an issue where "ImageConversion.LoadImage" could leak memory when attempting to load PNG files with a corrupt IDAT chunk. (UUM-143641)
+    - Graphics: Log successful write operation for GSC based on stream results. (UUM-129591)
+    - Graphics: Optimized shadow request processing by caching visible light index mapping per frame. (UUM-143278)
+    - Graphics: Stop motion vectors from being corrupted when GPU instancing is enabled on a material but the associated shader is missing the instanced shader variant. (UUM-130621)
+    - HDRP: Fixed incorrect lighting colors when using Screen Space Global Illumination with Adaptive Probe Volumes by correcting a parameter type mismatch in the SSGI compute shader dispatch. (UUM-143777)
+    - Input System: Fixed a bug on Windows where HID devices with large vendor-defined reports (e.g. ReportCount=1024) could produce a huge device capabilities string due to duplicate descriptor elements being emitted. The descriptor is now the correct size and the device's real controls are unaffected. (UUM-144506)
+    - Linux: Added a input text check to prevent AltGr text composition to avoid event shortcut path. (UUM-142414)
+    - Physics: Fixed a crash caused by disabled Rigidbody component instances keeping their internal actor alive indefinitely. (UUM-143658)
+    - Physics 2D: Added "PhysicsBody.totalForce" and "PhysicsBody.totalTorque" getters and setters. (UUM-144878)
+    - Physics 2D: Added drawing of collision normal (opposite one-way side) for ChainSegmentGeometry. (UUM-145454)
+    - Physics 2D: Added missing definition get/set property from all joints to match all other physics objects. (UUM-145454)
+    - Physics 2D: Added missing physicscore2d Transform / InverseTransform for geometry spans of Circle, Capsule, Polygon, Segment and ChainSegment. (UUM-145454)
+    - Physics 2D: Fixed "PhysicsBody.collisionThreshold" being ignored so it controls when a PhysicsBody uses continuous collision against every shape type, including chain segments. (UUM-144698)
+    - Profiler: Fixed crash in ProfilerSymbolsDelayedDeletion::AddCloneObject. (UUM-144194)
+    - Services: Fixed the "Will this app be targeted to children as defined by applicable laws?" dropdown showing a transient "Please select" placeholder after unlinking and re-linking a project. (UUM-143147)
+    - Terrain: Avoid buffer overflow when generating the buffers for the detail meshes. (UUM-139959)
+    - Text: Fixed invisible CJK glyphs in editor text fields on macOS. (UUM-144095)
+    - UI: Fixed ScrollView drag-scrolling into blank space when content fits. (UUM-142498)
+    - UI Toolkit: Fixed FillGradient.radius being ignored by Painter2D. (UUM-138358)
+    - UI Toolkit: Fixed minor tessellation issue with SVG in Antialiased Arc Encodings. (UUM-144586)
+    - UI Toolkit: Fixed SVG radial focus not working when imported as "Antialiased Arc Encodings". (UUM-138043)
+    - UI Toolkit: Fixed the missing label on the data source field in the UI Builder inspector when the data source is set to a type. (UUM-139568)
+    - Undo System: Updated bound checks in EraseUndos. (UUM-142925)
+    - Windows: Fixed an issue where Windows pen input did not generate mouse pointer events (Input.GetMouseButtonDown) when using the Input Manager in standalone Player builds. (UUM-140737)
+    - Windows: Fixed UI Toolkit buttons becoming unresponsive to touch after performing a pinch gesture on Windows touchscreen devices. (UUM-138595)
+    - Windows: Fixed Windows IL2CPP build failing with LNK1104. (UUM-139929)
+    Package changes in 6000.5.2f1
+    Packages updated
+    - com.unity.localization: 1.5.11 to 1.5.12
+    - com.unity.probuilder: 6.0.9 to 6.1.2
+    - com.unity.services.authentication: 3.7.0 to 3.7.1
+    - com.unity.xr.interaction.toolkit: 3.5.0 to 3.5.1
+    - com.unity.netcode.gameobjects: 2.12.0 to 2.13.0
+    - com.unity.multiplayer.tools: 2.2.8 to 2.2.9
+    - com.unity.services.multiplayer: 2.1.3 to 2.2.3
+ReleaseTime: 2026-07-01T10:41:48.9880000Z
