@@ -1,0 +1,31 @@
+Version: 0.13.28
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.13.28-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.13.28
+    对比基准：v0.13.24
+    这是一个体验打磨与稳定性修复的小版本：更新流程重构进侧边栏和设置页，代码预览默认切到 diff 视图，AskUser 支持语音输入，并同步了最新的 Claude Sonnet 5 与 Agent SDK。
+    新功能
+    - 一键更新流程重构 — 更新按钮从弹窗移到了侧边栏，随时可见、随点随更新；UpdateDialog.tsx 已移除，检查更新、当前版本等信息统一并入 Settings → About，不再需要单独的弹窗页面。(#1041)
+    - 代码预览默认改为统一 diff 视图 — 打开代码改动时默认展示 diff 对比，改动内容一目了然；同时支持预览任意本地路径，不再局限于项目内文件。(#1044、#1042)
+    - AskUser 自定义回答框支持语音输入 — 在 AskUser 的自定义回答输入框里新增了语音按钮，和 ScratchPad、主聊天输入框保持一致的操作方式；同时修复了语音转文字结果没有正确落到该输入框的问题。(#1032、#1021)
+    - select_model 恢复动作接入共享模型选择器状态 — 出错卡片上的"切换模型"恢复操作现在会直接联动全局的模型选择器状态，点击后无需额外操作即可完成切换。(#1036)
+    Bug 修复
+    - 修复内置 MCP 保留名冲突 — 内置 MCP 的命名统一由单一配置来源管理，避免与用户自定义 MCP 撞名。(#1043、#1022)
+    - 修复 nano-banana 命名漂移 — SDK 会把 MCP server 名里的连字符自动转成下划线（nano-banana 实际以 nano_banana 注册），此前代码里两处名字对不上，现已统一。(#1022)
+    其它改进
+    - 1M 上下文判定改为声明式配置表 — 支持 1M 上下文的模型列表改为配置化维护，后续增减模型无需改动判定逻辑；同时补上了 claude-sonnet-5 的 1M 上下文支持。(#1031)
+    - claude-sonnet-4-6 重命名为 claude-sonnet-5 — 跟随 Anthropic 官方命名调整，默认模型 ID 与相关文案同步更新。(#1035)
+    依赖升级
+    - Claude Agent SDK 从 0.3.185 升级至 0.3.197。(#1040)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.13.28
+ReleaseTime: 2026-07-01T05:27:06.0940000Z
