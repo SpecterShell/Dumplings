@@ -1,0 +1,27 @@
+Version: 3.18.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win32/3.18.0/snowflake32_odbc-3.18.0.msi
+- Architecture: x64
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win64/3.18.0/snowflake64_odbc-3.18.0.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-2026.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features
+    - Added support for the BINARY_OUTPUT_FORMAT session parameter to control whether binary values are returned in BASE64 or HEX format.
+    - Added the QUERY_TAG connection parameter to set a default query tag for the connection. Values longer than 2000 characters are truncated.
+    - Added the SF_SKIP_TOKEN_FILE_PERMISSIONS_VERIFICATION environment variable as the namespaced replacement for SKIP_TOKEN_FILE_PERMISSIONS_VERIFICATION when reading JSON token files. The unprefixed variable still works but is now logged as deprecated.
+    - Changed AWS Workload Identity Federation attestation from a base64-encoded signed STS GetCallerIdentity request to a JWT obtained from STS GetWebIdentityToken.
+    Customer-facing bug fixes
+    - Fixed path handling in GET downloads by validating server-provided destination file names before writing locally. Unsafe names (path separators, . / .., NUL bytes, and on Windows \ / :) are now rejected instead of being used as download targets.
+    - Fixed an infinite JWT renewal loop during login when renew_timeout elapses repeatedly (for example, behind a bad proxy or slow network). Renewal is now bound by the configured login retry count and overall login timeout.
+    Other updates and internal changes
+    - Upgraded libsnowflakeclient to version 2.9.1.
+    - Upgraded curl to version 8.20.0.
+    - Upgraded OpenSSL to version 3.0.21.
+    - Upgraded AWS SDK for C++ to version 1.11.806.
+    - Updated client_environment telemetry to include libc family and version (LIBC_FAMILY and LIBC_VERSION) on Linux, detecting glibc or musl.
+ReleaseTime: 2026-06-18T13:10:23.0000000Z
