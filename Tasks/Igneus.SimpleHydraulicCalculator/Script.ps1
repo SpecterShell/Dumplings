@@ -49,15 +49,11 @@ function Get-ReleaseNotes {
     $Object3.Close()
     Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }
-
 }
-
-$Prefix = 'https://www.igneusinc.com/download.html'
-$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'Setup' -and $_.href -match 'SHC' }, 'First')[0].href
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.IgneusPrefix $Global:DumplingsStorage.IgneusDownloadPage.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'Setup' -and $_.href -match 'SHC' }, 'First')[0].href
 }
 
 $ETag = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.ETag[0]
