@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
         ).ToString('yyyy-MM-dd')
 
         # Remove "Introduction" and "User Guide" links
-        $Object2.SelectNodes('//a[contains(text(), "Introduction") and contains(text(), "User Guide")]').ForEach({ $_.Remove() })
+        $Object2.SelectNodes('//li[contains(a, "Introduction") or contains(a, "User Guide")]').ForEach({ $_.Remove() })
 
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'b'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
