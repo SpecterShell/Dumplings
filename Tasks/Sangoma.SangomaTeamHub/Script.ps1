@@ -5,12 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri "https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/$($this.CurrentState.Version)/windows/" $Object1.files.Where({ $_.url.Contains('ia32') }, 'First')[0].url
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Join-Uri "https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/$($this.CurrentState.Version)/windows/" $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
+  InstallerUrl = Join-Uri "https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/$($this.CurrentState.Version)/windows/" $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
