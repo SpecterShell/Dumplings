@@ -1,4 +1,4 @@
-$Prefix = 'https://www.visual-3d.com/software/downloadvisualcontrols.aspx'
+$Prefix = 'https://www.visual-3d.com/software/downloadvisual.aspx'
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
 # Version
@@ -6,21 +6,20 @@ $this.CurrentState.Version = [regex]::Match($Object1.OuterHtml, 'Release:\s+(\d+
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(@onclick, "Download")]').Attributes['href'].Value
-  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe" })
+  InstallerUrl = Get-RedirectedUrl -Uri (Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(@onclick, "Download")]').Attributes['href'].Value)
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.visual-3d.com/News/vc/ReadMe.aspx' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://www.visual-3d.com/Support/ReadMe.aspx' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//b[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}/\d{1,2}/20\d{2})').Groups[1].Value,
-          'M/d/yyyy',
+          [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{1,2}/\d{1,2}/\d{2})').Groups[1].Value,
+          'MM/dd/yy',
           $null
         ).ToString('yyyy-MM-dd')
 
