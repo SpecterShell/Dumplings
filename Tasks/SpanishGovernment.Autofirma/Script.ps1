@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://administracionelectronica.gob.es/ctt/clienteafirma/descargas'
 
 # EXE x86
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('AutoFirma') -and -not $_.href.Contains('MSI') -and $_.href.Contains('32') } catch {} }, 'First')[0]
+$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'AutoFirma' -and -not $_.href.Contains('MSI') -and $_.href.Contains('32') } catch {} }, 'First')[0]
 $VersionEXEx86 = [regex]::Match($InstallerLink.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
@@ -15,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $InstallerLink.href
 }
 # EXE x64
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('AutoFirma') -and -not $_.href.Contains('MSI') -and $_.href.Contains('64') } catch {} }, 'First')[0]
+$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'AutoFirma' -and -not $_.href.Contains('MSI') -and $_.href.Contains('64') } catch {} }, 'First')[0]
 $VersionEXEx64 = [regex]::Match($InstallerLink.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
@@ -29,7 +29,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $InstallerLink.href
 }
 # MSI x86
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('AutoFirma') -and $_.href.Contains('MSI') -and $_.href.Contains('32') } catch {} }, 'First')[0]
+$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'AutoFirma' -and $_.href.Contains('MSI') -and $_.href.Contains('32') } catch {} }, 'First')[0]
 $VersionMSIx86 = [regex]::Match($InstallerLink.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
@@ -43,7 +43,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $InstallerLink.href
 }
 # MSI x64
-$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('AutoFirma') -and $_.href.Contains('MSI') -and $_.href.Contains('64') } catch {} }, 'First')[0]
+$InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'AutoFirma' -and $_.href.Contains('MSI') -and $_.href.Contains('64') } catch {} }, 'First')[0]
 $VersionMSIx64 = [regex]::Match($InstallerLink.outerHTML, '(\d+(?:\.\d+)+)').Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
