@@ -1,6 +1,9 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sonos.com/redir/controller_software_pc2'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sonos.com/redir/controller_software_pc2'-Headers @{
+    'Accept'          = '*/*'
+    'Accept-Language' = 'en-US'
+  }
 }
 
 # Version
