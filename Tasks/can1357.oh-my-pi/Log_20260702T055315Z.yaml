@@ -1,0 +1,178 @@
+Version: 16.3.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.3.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added support for Anthropic fallback content blocks in agent-loop assistant messages, ensuring they are preserved across session persistence and event fanout.
+    Fixed
+    - Fixed an issue where legacy steering messages were prematurely consumed and dropped during in-flight tool execution polls.
+    - Fixed an issue where skipped tool results in queued messages were incorrectly treated as completed, preventing necessary retries.
+    - Improved branch summaries to preserve informative tool results from abandoned branches while filtering out redundant output.
+    - Fixed interruptible tool waits to properly abort on host-provided IRC interrupts in addition to user steering.
+    - Fixed schema validation errors for closed union tools by correctly injecting intent tracing into each variant.
+    - Fixed token compaction reserve-budget logic to honor explicit reserveTokens values equal to the built-in default, and clamped the fallback reserve to at least one token for very small context windows.
+    @oh-my-pi/pi-ai
+    Added
+    - Added opt-in support for Anthropic's server-side fallback beta (server-side-fallback-2026-06-01) on the anthropic-messages provider, including support for AnthropicOptions.fallbacks and automatic filtering of fallback blocks during cross-provider message transformations.
+    Changed
+    - Improved stream healing for official first-party endpoints (Anthropic, OpenAI, and OpenAI Codex) by skipping leaked-thinking healing, preventing misfires on legitimate code blocks while maintaining healing for third-party gateways and custom base URLs.
+    - Updated CoreWeave Serverless Inference login instructions to clarify persisting COREWEAVE_PROJECT in shell startup files.
+    Fixed
+    - Fixed an issue where same-model Anthropic message replays incorrectly demoted unsigned thinking into textual content during API calls
+    - Fixed a performance issue where broker usage fetch failures were not cached, causing redundant network requests when the broker is offline.
+    - Fixed Xiaomi MiMo API key validation to use the supported mimo-v2.5 model.
+    - Fixed certificate verification errors for custom gateways behind private CA bundles by ensuring NODE_EXTRA_CA_CERTS is respected across all provider fetches.
+    - Fixed Claude Fable demoted-thinking replay to use markdown-italic assistant prose instead of tags, preventing context issues after model switches.
+    - Fixed OpenAI Responses replay errors (400 Bad Request) caused by missing reasoning items during history replay.
+    @oh-my-pi/pi-catalog
+    Breaking Changes
+    - Renamed the requiresJuiceZeroHack compatibility flag to requiresReasoningSuppressionPrompt (affecting OpenAICompat and ResolvedOpenAIResponsesCompat) and removed the unused "juice-zero-developer-message" member from OpenAIReasoningDisableMode.
+    Fixed
+    - Fixed stream markup healing pattern misfires by disabling the healer on the official OpenAI endpoint.
+    - Updated the Xiaomi provider's default model to the supported mimo-v2.5 model.
+    - Fixed model discovery probes (including Ollama and metadata fetches) failing behind private-CA gateways by ensuring they honor the NODE_EXTRA_CA_CERTS environment variable.
+    - Fixed CoreWeave Serverless Inference project-header detection to ensure blank OpenAI-Project overrides do not block the COREWEAVE_PROJECT fallback.
+    - Fixed LiteLLM MiniMax M3 discovery to remove reseller-only display suffixes and invalidated the model cache to clear stale suffixes immediately.
+    - Fixed ZenMux's anthropic-messages proxy being misclassified as a non-signing reasoning endpoint (replayUnsignedThinking: true), matching the GitHub Copilot fix (#2851). ZenMux's zenmux.ai/api/anthropic route forwards to signature-enforcing Anthropic, so replaying a stripped/unsigned historical thinking block as signature: "" — most visibly an end_turn-bound checkpoint/branch-return turn whose signature the transform must strip — caused 400 messages.1.content.0: Invalid signature in thinking on Claude Sonnet 5 and other reasoning models. (#4192)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added providers.anthropic.serverSideFallback configuration option to opt into Anthropic's server-side-fallback beta chain, allowing Claude requests to automatically retry on alternative models when blocked by classifiers.
+    - Added task.softRequestBudgetNotice configuration option to enable subagent soft-budget wrap-up steering notices while keeping the graceful abort guard active.
+    Changed
+    - Significantly optimized session loading and rendering performance, including a 10x speedup for streaming reveals on large messages, 35% faster session resumes for large files using native streaming JSONL parsing, and reduced overhead for edit-patch fallbacks.
+    - Improved TUI responsiveness and reduced CPU usage during long-running tool sessions by throttling status-line redraws and optimizing subagent persistence checks.
+    - Updated the tester subagent prompt to allow skipping tests for trivial changes.
+    - Improved DuckDuckGo web search error clarity and documented datacenter/shared-egress limitations in provider settings.
+    Fixed
+    - Fixed session persistence corrupting Anthropic, OpenAI, and Google signed thinking blocks and reasoning payloads, ensuring cryptographic signatures and encrypted content are preserved verbatim to prevent API replay rejections (HTTP 400).
+    - Fixed several issues with the apply_patch and edit tools, including preventing dirty buffers on early aborts, rejecting overwrites of pre-existing files, stopping at the first failing file in multi-file operations, and pruning extremely large file snapshots to prevent session inflation.
+    - Fixed process termination (SIGTERM, SIGHUP, uncaught exceptions) to ensure editor drafts are saved, sessions shut down cleanly, and background jobs are cleaned up.
+    - Fixed /quit and /exit commands blocking session closure by introducing a shutdown budget and backgrounding remaining tasks.
+    - Fixed git clone and fetch operations being killed prematurely by applying a separate 30-minute deadline for network transfers instead of the standard 5-minute local-command timeout.
+    - Fixed git index corruption issues in mergeTaskBranches and applyNestedPatches when post-merge stash pops conflicted with the cherry-picked HEAD.
+    - Fixed collaboration (/collab) issues, including preventing teardowns from cancelling active host dialogs, sanitizing host-delivered errors for guests, and ensuring guest UI requests are correctly routed and rendered.
+    - Fixed RPC mode deferred shutdown (pi.shutdown()) and abort_bash commands from being blocked by active background bash processes.
+    - Fixed model discovery ignoring NODE_EXTRA_CA_CERTS and resolved a rare Bun garbage collection segfault during discovery.
+    - Fixed task.maxConcurrency and task.maxRecursionDepth limits being bypassed by sub-spawn paths or when queued spawns were cancelled.
+    - Fixed various TUI and rendering issues, including macOS Ghostty Command+V image pasting, CJK history rendering across compactions, status-line redraw crashes with BigInt values, and overlapping rows in the subagent progress tree.
+    - Fixed /copy code and /copy cmd commands being treated as normal prompts instead of copying the requested blocks.
+    - Fixed legacy tool compatibility issues for createReadTool, createGrepTool, and extension validation failures for omp install pi-lean-ctx.
+    - Improved robustness of MCP authentication error detection, Smithery command authorization failures, and streaming preview responsiveness for write, edit, and eval tools.
+    - Fixed llama.cpp router/preset mode reporting 128k context in the status bar for every preset picked from /model regardless of the preset's configured --ctx-size.
+    - Fixed post-rewind context to tell the agent the checkpoint completed and to make repeat rewind calls recover with guidance instead of a bare no-checkpoint error.
+    - Fixed grep/ast_grep search scopes rejecting www. and collapsed-scheme (https:/host) URL spellings.
+    - Fixed ctrl+p role-model cycling getting stuck on one transition and skipping every other role.
+    - Fixed interactive bash status line not updating after directory changes (cd).
+    - Fixed session title refreshes ignoring user TITLE_SYSTEM.md overrides during replans, and prevented auto-generated titles from incorrectly preserving all-caps text from user messages.
+    - Fixed the live todo HUD going stale during long tool-use loops by adding mid-run reminders for incomplete items.
+    - Fixed /shake and mid-stream chat rebuilds erasing active LLM output.
+    - Fixed Tavily web search to retry without recency filters if no content is returned.
+    - Fixed user-configured LiteLLM discovery providers keeping stale reseller display-name suffixes for up to 24 hours after upgrade by invalidating the warm model cache.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed missing response controls for "ask" questions in the mobile collaboration web UI.
+    - Fixed an issue where re-sending an editor "ask" request would clear a guest's in-progress draft response.
+    - Fixed infinite retry loops in the agent transcript drawer by ensuring terminal errors are displayed and polling stops.
+    - Fixed a delay in displaying pre-welcome connection errors (such as protocol version rejections), allowing the session to terminate immediately with the host's error reason.
+    @oh-my-pi/hashline
+    Changed
+    - Significantly improved performance on large files by optimizing stale-anchor remap validation.
+    Fixed
+    - Fixed an issue where snapshot tag collisions could cause line-anchored edits to be incorrectly applied to unrelated content, improving recovery and edit-preview safety.
+    - Fixed tracking of edit anchors when earlier in-session insertions or deletions shift unchanged target lines.
+    - Fixed hashline edit guidance and parsing errors for Markdown list rows.
+    @oh-my-pi/pi-natives
+    Added
+    - Added workingDir to ShellRunResult to allow hosts to synchronize the session's current working directory without executing a hidden probe command.
+    Fixed
+    - Fixed an issue where panics in native worker tasks (such as grep, AST parsing, globbing, workspace listing, HTML-to-markdown conversion, fuzzy finding, and clipboard image reading) would abort the host process instead of properly rejecting the returned JavaScript Promise.
+    - Fixed a crash on Windows under low memory or commit charge conditions when spawning worker threads for token counting or sorting operations.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed a potential event loop hang when processing oversized, unterminated terminal escape sequences (OSC/DCS/APC).
+    - Fixed an issue where large Windows terminal session restores could get truncated mid-frame during ConPTY full-paint resume.
+    @oh-my-pi/pi-utils
+    Added
+    - Added wrapFetchForExtraCa and withExtraCaFetch utility functions to apply NODE_EXTRA_CA_CERTS to Bun's RequestInit.tls.ca configuration.
+    @oh-my-pi/pi-wire
+    Breaking Changes
+    - Upgraded the collaboration protocol to version 3. Guests using version 2 will now be rejected during the handshake with a protocol-mismatch error.
+    Added
+    - Added support for interactive UI request and response frames, enabling browser guests to respond to prompts initiated by the host.
+    What's Changed
+    - perf(tui): memoize fuzzy search index + prepare query once per filter by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3828
+    - fix(web-search): clarify DuckDuckGo bot detection failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/3865
+    - fix(coding-agent): handle BigInt tool-call fingerprints by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/3884
+    - fix(coding-agent): replay scrollback on theme changes by @lederniermagicien in https://github.com/can1357/oh-my-pi/pull/3891
+    - fix(cli): restore /copy code and /copy cmd shortcuts by @roboomp in https://github.com/can1357/oh-my-pi/pull/3894
+    - fix(task): respect task.maxConcurrency + task.maxRecursionDepth across spawn paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/3896
+    - fix(agent): reject stale yield labels for override schemas by @roboomp in https://github.com/can1357/oh-my-pi/pull/3927
+    - fix(collab): reject oversized remote transcript entries by @roboomp in https://github.com/can1357/oh-my-pi/pull/3938
+    - fix(coding-agent): sync status cwd after bash cd by @roboomp in https://github.com/can1357/oh-my-pi/pull/3959
+    - fix(eval): keep agent progress commit-unstable while partial by @metaphorics in https://github.com/can1357/oh-my-pi/pull/3987
+    - fix(collab): enable mobile ask responses by @roboomp in https://github.com/can1357/oh-my-pi/pull/4049
+    - fix(auth-broker): cache /v1/usage failures for documented 15s TTL by @roboomp in https://github.com/can1357/oh-my-pi/pull/4053
+    - docs(advisor): describe full-agent tool grants and WATCHDOG.yml roster by @roboomp in https://github.com/can1357/oh-my-pi/pull/4054
+    - fix(tui): smooth write streaming previews by @roboomp in https://github.com/can1357/oh-my-pi/pull/4056
+    - fix(providers): switch Xiaomi validation to mimo-v2.5 by @roboomp in https://github.com/can1357/oh-my-pi/pull/4066
+    - fix(agent): add retry path diagnostics by @roboomp in https://github.com/can1357/oh-my-pi/pull/4077
+    - fix(natives): catch task::blocking panics before FFI to reject JS Promise by @roboomp in https://github.com/can1357/oh-my-pi/pull/4110
+    - fix(edit): guard apply_patch against clobber and swallowed multi-file failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/4111
+    - fix(agent): preserve tool results in branch summaries by @roboomp in https://github.com/can1357/oh-my-pi/pull/4112
+    - fix(hashline): guarded against 16-bit snapshot tag collisions by @roboomp in https://github.com/can1357/oh-my-pi/pull/4113
+    - fix(coding-agent): bound git subprocess execution by @roboomp in https://github.com/can1357/oh-my-pi/pull/4116
+    - fix(rpc): dispatch bash concurrently and reset abort controller on restart by @roboomp in https://github.com/can1357/oh-my-pi/pull/4117
+    - fix(coding-agent): route SIGTERM/SIGHUP/uncaughtException through session teardown by @roboomp in https://github.com/can1357/oh-my-pi/pull/4121
+    - fix(tui): bound terminal input parsing so malformed sequences and non-bracketed pastes do not block the event loop by @roboomp in https://github.com/can1357/oh-my-pi/pull/4122
+    - test(tui): pin committed-prefix resync earliest-mismatch contract by @roboomp in https://github.com/can1357/oh-my-pi/pull/4126
+    - fix(coding-agent): preserved explicit :auto suffix in modelRoles by @roboomp in https://github.com/can1357/oh-my-pi/pull/4129
+    - fix(agent): handle already-applied patch-mode merges by @roboomp in https://github.com/can1357/oh-my-pi/pull/4137
+    - fix(coding-agent): fall back for Kernel field when os.version returns "unknown" by @roboomp in https://github.com/can1357/oh-my-pi/pull/4143
+    - fix(tui): coalesce editor top-border rebuild to render tempo (#4145) by @roboomp in https://github.com/can1357/oh-my-pi/pull/4149
+    - fix(ai): reword GPT-5 Responses fallback prompt by @roboomp in https://github.com/can1357/oh-my-pi/pull/4153
+    - fix(coreweave): harden project header setup by @lance0 in https://github.com/can1357/oh-my-pi/pull/4154
+    - fix(coding-agent): paint selectedBg band on focused HookSelector row by @roboomp in https://github.com/can1357/oh-my-pi/pull/4158
+    - fix(agent): interrupt waits for IRC delivery by @roboomp in https://github.com/can1357/oh-my-pi/pull/4161
+    - fix(agent): preserve approved plan path by @roboomp in https://github.com/can1357/oh-my-pi/pull/4166
+    - fix(tui): cap subagent live progress output by @roboomp in https://github.com/can1357/oh-my-pi/pull/4167
+    - fix(session): record silent exit diagnostics by @roboomp in https://github.com/can1357/oh-my-pi/pull/2607
+    - fix(tool): require browser run code in schema by @roboomp in https://github.com/can1357/oh-my-pi/pull/3647
+    - fix(tools): materialize URL paths for search scopes by @roboomp in https://github.com/can1357/oh-my-pi/pull/3650
+    - fix(coding-agent): nudge todo reconciliation mid-run instead of only at stop by @roboomp in https://github.com/can1357/oh-my-pi/pull/3652
+    - fix(tui): keep ask Other context visible by @roboomp in https://github.com/can1357/oh-my-pi/pull/3662
+    - fix(setup): harden global omp symlink against bun pm -g bin failure by @roboomp in https://github.com/can1357/oh-my-pi/pull/3702
+    - fix(catalog): strip LiteLLM reseller usage suffixes by @roboomp in https://github.com/can1357/oh-my-pi/pull/3717
+    - fix(ai): honor NODE_EXTRA_CA_CERTS on every provider fetch by @roboomp in https://github.com/can1357/oh-my-pi/pull/3732
+    - fix(coding-agent): replan title refresh honors TITLE_SYSTEM.md override by @roboomp in https://github.com/can1357/oh-my-pi/pull/3736
+    - fix(session): compaction summary at chronological position in collapsed transcript by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/3759
+    - fix(natives): cap rayon pool on Windows by @roboomp in https://github.com/can1357/oh-my-pi/pull/3774
+    - Fix hidden thinking glyph-only status rows by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/3776
+    - fix(hashline): recover stale edit anchors after line shifts by @roboomp in https://github.com/can1357/oh-my-pi/pull/3778
+    - fix(plugins): restore legacy tool factory shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/3809
+    - perf(coding-agent): memoize incremental grapheme slicing in streaming reveal by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3848
+    - perf(coding-agent): speed up large-session resume with Bun.JSONL by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3849
+    - fix(coding-agent): log Esc/Ctrl+C abort failures instead of swallowing them by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3851
+    - fix(agent): clarify queued skipped tool results by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/3855
+    - perf: cut edit-pipeline and session-branch hot-path complexity by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3862
+    - fix(coding-agent): identify user-invoked skills and expose skill directory by @metaphorics in https://github.com/can1357/oh-my-pi/pull/3903
+    - fix(coding-agent/task): keep .git/index clean when stash pop conflicts after task merge by @roboomp in https://github.com/can1357/oh-my-pi/pull/4176
+    - fix(tui): support command-v image paste in ghostty by @roboomp in https://github.com/can1357/oh-my-pi/pull/4180
+    - fix(edit): teach markdown bullet escaping by @roboomp in https://github.com/can1357/oh-my-pi/pull/4181
+    - fix(ai): handle Anthropic Fable fallback responses by @roboomp in https://github.com/can1357/oh-my-pi/pull/4182
+    - feat/make token info nicer by @DeprecatedLuke in https://github.com/can1357/oh-my-pi/pull/4185
+    - fix(model-discovery): honor --ctx-size for llama.cpp router presets by @roboomp in https://github.com/can1357/oh-my-pi/pull/4191
+    - fix(agent): frame completed rewind context by @roboomp in https://github.com/can1357/oh-my-pi/pull/4188
+    - fix(catalog): treated zenmux anthropic proxy as a signing endpoint by @roboomp in https://github.com/can1357/oh-my-pi/pull/4193
+    New Contributors
+    - @jeffscottward made their first contribution in https://github.com/can1357/oh-my-pi/pull/3776
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.2.13...v16.3.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.3.0
+ReleaseTime: 2026-07-02T03:15:06.0000000Z
