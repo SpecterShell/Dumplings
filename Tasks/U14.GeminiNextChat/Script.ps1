@@ -1,5 +1,5 @@
 $RepoOwner = 'u14app'
-$RepoName = 'gemini-next-chat'
+$RepoName = 'neo-chat'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
