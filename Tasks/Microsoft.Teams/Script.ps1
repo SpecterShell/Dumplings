@@ -12,16 +12,37 @@ $this.CurrentState.Version = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x86.buildLink
+  Architecture  = 'x86'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x86.buildLink
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x64.buildLink
+  Architecture  = 'x64'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x64.buildLink
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.arm64.buildLink
+  Architecture  = 'arm64'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.arm64.buildLink
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x86'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x86.buildLink + '?p'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.x64.buildLink + '?p'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.TeamsBuilds.BuildSettings.WebView2Canary.arm64.buildLink + '?p'
 }
 
 switch -Regex ($this.Check()) {
