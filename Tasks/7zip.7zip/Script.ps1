@@ -1,43 +1,38 @@
-$RepoOwner = 'ip7z'
-$RepoName = '7zip'
-$Prefix = 'https://7-zip.org/a/'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/ip7z/7zip/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
-$ShortVersion = $this.CurrentState.Version.Replace('.', '')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'exe'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}.exe"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -notmatch 'x64|arm' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'exe'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}-x64.exe"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm'
   InstallerType = 'exe'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}-arm.exe"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'exe'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}-arm64.exe"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'wix'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}.msi"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -notmatch 'x64|arm' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = $Prefix + "7z${ShortVersion}-x64.msi"
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
