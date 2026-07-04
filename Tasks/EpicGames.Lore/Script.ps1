@@ -27,22 +27,22 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h2[contains(., "Release Notes")]')
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-          # ReleaseNotes (zh-CN)
+          # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
+            Locale = 'en-US'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl (zh-CN)
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
+        Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
         Value  = $Object1.html_url
       }
