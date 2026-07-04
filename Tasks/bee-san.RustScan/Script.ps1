@@ -1,23 +1,20 @@
-$RepoOwner = 'bee-san'
-$RepoName = 'RustScan'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/bee-san/RustScan/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$installerFiles = $Object1.assets.Where({ $_.name.EndsWith('.exe.zip') })
-Write-Output $installerFiles
-# x86 installer file
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $installerFiles.Where({ $_.name.StartsWith('x86') })[0].browser_download_url | ConvertTo-UnescapedUri
-  Architecture = 'x86'
+  Architecture        = 'x86'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.StartsWith('x86-') -and $_.name -match 'windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-# x64 installer file
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $installerFiles.Where({ $_.name.StartsWith('x86_64-') })[0].browser_download_url | ConvertTo-UnescapedUri
-  Architecture = 'x64'
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.StartsWith('x86_64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
