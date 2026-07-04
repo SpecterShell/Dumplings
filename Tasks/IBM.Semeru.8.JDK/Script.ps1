@@ -1,12 +1,7 @@
-$RepoOwner = 'ibmruntimes'
-$RepoName = 'semeru8-binaries'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
-
-$VersionMatches = [regex]::Match($Object1.tag_name, 'jdk(?<Major>\d+)u(?<Patch>\d+)-?b0*(?<Build>\d+)')
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/ibmruntimes/semeru8-binaries/releases/latest'
 
 # Version
-$this.CurrentState.Version = "$($VersionMatches.Groups['Major']).0.$($VersionMatches.Groups['Patch']).$($VersionMatches.Groups['Build'])"
+$this.CurrentState.Version = [regex]::Match($Object1.tag_name, 'jdk-(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -24,7 +19,7 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
         Value = $Object1.html_url
@@ -33,6 +28,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     $this.Print()
     $this.Write()
