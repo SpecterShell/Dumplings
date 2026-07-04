@@ -1,14 +1,12 @@
-$RepoOwner = 'Chill-Astro'
-$RepoName = 'Lamina-Calculator'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Chill-Astro/Lamina-Calculator/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType = 'inno'
+  InstallerUrl  = $Object1.assets.Where({ $_.name -eq 'Setup.exe' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -18,11 +16,18 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./h3[contains(., "Release Notes")]')
+        if ($ReleaseNotesTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'h3', 'hr'); $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
