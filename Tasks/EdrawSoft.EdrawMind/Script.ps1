@@ -1,5 +1,10 @@
 $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5370']
 
+if ($this.CurrentState.Installer[0].InstallerUrl.Contains('_gray')) {
+  $this.Log("The version $($this.CurrentState.Version) is an A/B test version", 'Error')
+  return
+}
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
