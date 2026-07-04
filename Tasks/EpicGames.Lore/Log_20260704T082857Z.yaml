@@ -1,0 +1,47 @@
+Version: 0.8.4
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.8.4/lore-debug-v0.8.4-x86_64-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.8.4/lore-setup-v0.8.4-x86_64-pc-windows-msvc.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changes since v0.8.3.
+    Features
+    - Add --dry-run to revision commit and lock acquire/release
+    - Run incremental store GC by default; replace --gc with --no-gc to disable
+    - Expose the mutable store through the low-level storage C API
+    - Add ForwardedRevisionService gRPC endpoint to forward BranchCreate to a remote server
+    - Carry structured error detail and FFI codes on the Complete event
+    - Show staged renames as moves in diff output
+    - lore status prints paths relative to the current working directory
+    Fixes & Improvements
+    - Fix use-after-free in write_fragmented when the chunker future is cancelled
+    - Fix LoreArray<T> dealloc layout mismatch in Drop
+    - Fix commit --stats panic and report real fragment stats
+    - Fix link contents surfacing as parent adds in file diff
+    - Fix clone not materializing view-filtered directories with all-excluded children
+    - Reject malformed metadata set args instead of panicking; default branch metadata to current branch
+    - Reset staged add/remove/update for link nodes
+    - Propagate dirty to committed ancestor directories on dirty add
+    - Make dirty add idempotent so a repeat dirty doesn't duplicate the node
+    - Stage empty dirty-added directories by their own path
+    - Honor --dry-run on branch push
+    - Rename [server.replication] config to [server.grpc_internal] (not backwards-compatible)
+    - Map GRPC storage errors correctly and stop classifying Unknown/EOF errors as server errors
+    - Handle thin-client RevisionDiff/RevisionTree RPCs with a zeroed revision
+    - Tag linked-repo RevisionDiff changes with an indexed partition table
+    - Standardise HTTP tracing and log levels
+    - Seed QUIC clients with an initial CWND on regeneration
+    - Remove redundant dry_run field from lock events
+    - Rename shared store config file to shared_store.toml with auto-migration
+    - Change stats flag to u8 for C ABI consistency
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EpicGames/lore/releases/tag/v0.8.4
+ReleaseTime: 2026-06-26T19:14:30.0000000Z

@@ -1,0 +1,260 @@
+Version: 0.14.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.14.0/NSCP-0.14.0-Win32-legacy-xp.msi
+- Architecture: x64
+  InstallerUrl: https://github.com/mickem/nscp/releases/download/0.14.0/NSCP-0.14.0-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Linux parity — native checks, real-time monitoring, first-class packaging, and a secure-by-default web server
+    This release brings Linux up to near-parity with Windows and completes the Linux story that began in 0.13.0. On the checks side it adds a full suite of Linux-native system checks (CheckSystemUnix) sourced directly from /proc and /sys, event-driven real-time monitoring on Linux, Linux disk / file / mount support in CheckDisk, and a round of cross-platform CheckNet improvements — TLS for check_tcp, a fuller check_http, multi-record-type DNS, and two new network checks. Around the daemon it delivers first-class Linux packaging (FHS layout, official .deb/.rpm), a secure-by-default web server, one-command installs via winget / Chocolatey / Scoop and nscp web install-ui, a Lua CLI, and a broad set of security and reliability fixes. It also hardens plugin shutdown so a misbehaving module can no longer crash the service on exit.
+    🌟 Highlights
+    - Linux system checks (CheckSystemUnix). New native checks — check_load, check_cpu_utilization,
+      check_kernel_stats, check_swap_io, check_cpu_frequency, check_temperature, check_battery, check_network —
+      plus overhauled check_process (with process history / delta CPU) and a systemd-aware check_service. All read
+      /proc and /sys directly, with thresholds and syntax that match their Windows counterparts.
+    - Real-time monitoring on Linux. CheckSystemUnix gains an event-driven real-time thread, so CPU, memory and
+      process alerts can fire the moment a threshold is crossed rather than only on poll — the same real-time model
+      previously available only on Windows.
+    - Disk, file and mount checks on Linux (CheckDisk). CheckDisk is no longer Windows-only: free-space
+      (check_drivesize), file (check_files) and disk-I/O checks now run on Linux, with per-device I/O sampling from
+      /proc/diskstats, LVM / device-mapper mapping, inode statistics, file-integrity checksums, and a new check_mount.
+    - TLS-aware network checks (CheckNet). check_tcp now speaks TLS (ssl=true) with new SPOP / SIMAP / SSMTP
+      presets; check_http gains redirect policy, certificate-expiry reporting, Basic auth, SNI and non-GET methods;
+      check_dns queries any record type against a custom resolver; and two new checks arrive — check_ssh and
+      check_nsclient_web_online.
+    - First-class Linux packaging. The build follows the FHS / CMAKE_INSTALL_PREFIX, with official .deb/.rpm
+      targeting /usr, and a Boost.Beast web backend by default.
+    - One-command installs everywhere. Windows via winget / Chocolatey / Scoop; the Linux web UI via
+      nscp web install-ui.
+    - Secure by default. The web server refuses to serve cleartext HTTP without an explicit opt-in, plus check_nt
+      command allow-listing and stricter external-script argument checks.
+    - Run Lua scripts straight from the CLI with nscp lua execute, backed by Lua thread-safety hardening.
+    - Safer plugin shutdown. The plugin manager isolates broken plugins and tears modules down cleanly, so a module
+      that fails to unload can no longer take the service down on shutdown.
+    📖 Detailed changes
+    🐧 CheckSystemUnix — native Linux system checks
+    A new family of checks reads Linux kernel state directly. Thresholds and detail-syntax keywords mirror the Windows
+    checks so alerts port across platforms.
+    Command Source What it reports
+    check_load /proc/loadavg 1/5/15-minute run-queue averages; load shortcut; percpu=true scaling
+    check_cpu_utilization /proc/stat (~1s sample) Per-mode breakdown — user, system, iowait, steal, idle, total
+    check_kernel_stats /proc/stat, /proc/loadavg Context-switch rate, fork/process-creation rate, live thread count
+    check_swap_io /proc/vmstat Swap paging rates (swap_in/swap_out pages/s and bytes/s)
+    check_cpu_frequency /sys cpufreq Current / max / min CPU frequency
+    check_temperature thermal zones + hwmon Thermal-zone and hwmon sensor temperatures
+    check_battery /sys power_supply Charge level, power source, health
+    check_network /proc/net/dev + sysfs Per-interface link status and throughput
+    check_load "warn=load5 > 4" "crit=load5 > 8"
+    check_cpu_utilization "warn=iowait > 20" "crit=iowait > 50"
+    check_swap_io "warn=swap_out > 100" "crit=swap_out > 1000"
+    check_kernel_stats "warn=current > 8000" "crit=current > 10000"
+    ⚙️ CheckSystemUnix — check_process history and check_service on systemd
+    - check_process now tracks process history and computes delta CPU between samples (rather than lifetime CPU),
+      and exposes memory keywords (rss, vms), matching the Windows process semantics.
+    - check_service now inspects systemd units. The raw systemd state is mapped to a normalised state keyword so
+      thresholds read the same as on Windows, while the raw fields (active, sub_state, preset) are exposed too. The
+      default critical expression is
+      ( state not in ('running', 'oneshot', 'static') or active = 'failed' ) and preset != 'disabled' — so a
+      stopped-but-disabled unit stays OK while an enabled unit that failed is CRITICAL. Per-unit process metrics
+      (rss, vms, cpu, tasks, age) are parsed from /proc for the unit's main process.
+    check_service service=cron "detail-syntax=${name}=${state} active=${active} preset=${preset}"
+    check_service service=mysql "warn=rss > 1G" "crit=rss > 2G"
+    - check_os_version now parses /etc/os-release and reports the distribution and kernel details.
+    ⚡ CheckSystemUnix — real-time monitoring
+    CheckSystemUnix gains a real-time collection thread and real-time data model, bringing event-driven checks to Linux.
+    CPU, memory and process real-time filters evaluate continuously and emit the moment a threshold is crossed, matching the
+    Windows real-time behaviour. See the Real-Time System Monitoring scenario, now cross-platform.
+    💾 CheckDisk — now on Linux: disk metrics, inodes, checksums, and check_mount
+    CheckDisk is no longer Windows-only. Linux builds gain the core free-space and file checks (check_drivesize,
+    check_files) plus disk-I/O sampling, and this release adds:
+    - Linux disk I/O. check_disk_io and check_disk_health now sample per-device I/O from /proc/diskstats once per
+      second on Linux (mirroring the Windows PDH path). LVM / device-mapper and RAID volumes are mapped back to their
+      backing devices via sysfs, so space and I/O join correctly for /dev/mapper/… filesystems. The first query after
+      startup can return UNKNOWN while the collector takes its first sample.
+    - Inode statistics. check_drivesize exposes inodes_total, inodes_free, inodes_used, inodes_free_pct and
+      inodes_used_pct, so you can catch inode exhaustion (free bytes but no free inodes).
+    - File-integrity checksums. check_files exposes md5_checksum, sha1_checksum, sha256_checksum,
+      sha384_checksum and sha512_checksum, computed lazily only when referenced.
+    - check_mount (new). Verifies a filesystem is mounted — and optionally that it is mounted with the expected type
+      and options — reading the live mount table (/proc/self/mounts). A path that is not mounted is CRITICAL; a fstype
+      or missing-options mismatch is WARNING.
+    check_drivesize drive=/ "warn=used>80%" "crit=used>90%"
+    check_drivesize drive=/ "warn=inodes_used_pct > 85" "crit=inodes_used_pct > 95"
+    check_files path=/var/log pattern=*.log "crit=size>100M"
+    check_mount mount=/data fstype=ext4
+    (Some Windows-only legacy CheckDisk commands are not registered on Linux.)
+    🔐 CheckNet — TLS for check_tcp
+    check_tcp can now establish a TLS session over the connected socket (ssl=true), with tls-version (default
+    tlsv1.2+), verify (default none) and ca options, and a response regex to match the server's greeting. Three
+    new TLS service presets ship alongside the existing plaintext ones:
+    Preset Port TLS Expected greeting
+    SPOP 995 yes ^\+OK
+    SIMAP 993 yes ^\* OK
+    SSMTP 465 yes ^220
+    check_tcp host=pop.example.com ssl=true "response=^\+OK"
+    check_tcp host=imap.example.com SIMAP
+    Peers that close the TLS session without a close_notify (reported by OpenSSL as stream_truncated) are now treated
+    as a clean end-of-data rather than a read failure.
+    🌐 CheckNet — check_http features
+    check_http gains the features needed for real service checks:
+    - Redirect policy — onredirect=ok|follow (default ok) with max-redirs (default 15); follows 301/302/303/307/308.
+    - Certificate expiry — reports ssl_expiry_days (days until the served certificate expires) for HTTPS targets.
+    - Authentication — username / password send an HTTP Basic Authorization header.
+    - Methods and bodies — method= (HEAD/POST/…), post-data, content-type; supplying post-data with a GET
+      promotes the request to POST.
+    - SNI — sni= overrides the TLS server name / verification host.
+    check_http url=https://example.com method=HEAD
+    check_http url=https://example.com username=user password=secret
+    check_http url=http://example.com/old onredirect=follow
+    check_http url=https://example.com "warn=ssl_expiry_days < 30" "crit=ssl_expiry_days < 7"
+    🔎 CheckNet — check_dns record types and custom server
+    check_dns now queries any record type (type=A|AAAA|MX|TXT|NS|CNAME|SOA|PTR|SRV) and can direct the query at a
+    specific resolver (server=), rather than only resolving an A record against the system resolver.
+    check_dns host=example.com type=MX server=8.8.8.8
+    🔑 CheckNet — check_ssh (new)
+    Connects to an SSH port and validates the protocol banner (implemented on top of the check_tcp service-preset
+    machinery). Flags a server that fails to present a valid SSH-2.0 / SSH-1.x identification string.
+    check_ssh host=server.example.com
+    check_ssh host=server.example.com port=2222
+    📡 CheckNet — check_nsclient_web_online (new)
+    Verifies that a remote NSClient++ agent's REST/WEB endpoint is reachable and that credentials authenticate — a
+    lightweight liveness probe for the agent's management interface. Reports the base URL and distinguishes "unreachable"
+    from "authentication failed (HTTP 401/403)".
+    check_nsclient_web_online url=https://agent:8443 password=... verify=none
+    This command is deliberately named _online because it only checks reachability. A future check_nsclient_web
+    will run actual remote checks through the endpoint.
+    🌙 Lua — run scripts straight from the command line
+    nscp lua execute runs a Lua script directly from the CLI — useful for developing and debugging check scripts without
+    wiring them into the configuration first:
+    nscp lua execute --script myscript.lua
+    Lua also got thread-safety hardening (a proper GIL), new helpers for targeted and forwarded queries, clearer errors when
+    a script fails to load, and log lines that report the actual script line number.
+    🔏 TLS — outbound SNI and Op5 client options
+    - SNI is now sent on outbound TLS connections (Graphite and the generic TLS client), so a TLS proxy hosting several
+      certificates returns the right one.
+    - The Op5 client gained explicit TLS settings:
+      [/settings/op5/client/targets/default]
+      tls version = 1.2+
+      verify mode = peer
+      ca = ${ca-path}
+    🔒 Security — secure-by-default web server and hardening
+    - The web server refuses to run unencrypted by default. To stop NSClient++ from silently serving the REST API /
+      web UI over plain HTTP, the WEB server now refuses to start without a certificate unless you explicitly opt in
+      with allow insecure = true (see Upgrade notes).
+    - check_nt can now be restricted to specific commands. The legacy check_nt protocol is password-only (and
+      source-IP filtering is spoofable), so you can now limit which of its ten request codes are answered. The default is
+      any (unchanged behaviour):
+      [/settings/NSClient/server]
+      # Answer only harmless system metrics; deny arbitrary counter/file reads
+      # and service/process enumeration:
+      allow = metrics, info
+      A request outside the list is rejected with ERROR: Command not allowed.
+    - Stricter shell-metacharacter checks in external scripts. User-supplied argument values containing more shell
+      metacharacters are now rejected.
+    - Graphite metric paths are sanitized before being written to the line protocol, preventing injection of extra
+      metrics.
+    - Python sys.path handling hardened to prevent code-injection via path manipulation.
+    🪟 Windows — winget / Chocolatey / Scoop packages
+    NSClient++ is now published to the common Windows package managers:
+    winget install Mickem.NSClient
+    choco install nsclient
+    scoop install nsclient   # still pending approval
+    📦 Linux packaging — FHS layout and install prefix
+    The Linux build honours CMAKE_INSTALL_PREFIX like a normal CMake project, and the official .deb/.rpm are built for
+    /usr. The file layout is now:
+    What Location
+    Daemon /usr/sbin/nscp
+    Modules /usr/lib/nsclient/modules
+    Private libs /usr/lib/nsclient
+    Config /etc/nsclient
+    State / logs /var/lib/nsclient · /var/log/nsclient
+    If you previously patched hardcoded paths to build for a custom location, that is no longer needed — pass
+    - DCMAKE_INSTALL_PREFIX=/opt/nsclient (or the standard CMAKE_INSTALL_*DIR knobs) instead. To point an
+    already-installed daemon at a boot.ini in a non-standard place there is a new override:
+    nscp service --run --path-override boot-conf=/etc/nsclient/boot.ini
+    🖥️ Linux — web UI is a separate download (.deb / .rpm)
+    The Linux packages no longer bundle the React/Vite web frontend (Debian/Fedora policy forbids npm install during
+    package builds). The daemon, REST API, NRPE/NSCA listeners and every check module are still in the package — only the
+    browser UI ships separately. After installing the package, fetch the matching UI bundle as root:
+    sudo nscp web install-ui      # downloads + verifies NSCP-Web-<version>.zip
+    sudo nscp web ui-status       # show installed version / source
+    sudo nscp web uninstall-ui    # remove only what install-ui put down
+    Until you do, the web port shows a small built-in placeholder page; the REST API and all listeners work normally
+    without it. The Windows MSI still bundles the UI inline.
+    🧩 Core — filter summary-variable rendering
+    All check filters now prefer summary variables during summary rendering. Previously a keyword that exists both
+    per-item and as a summary aggregate (notably status) could render the last item's value in the summary line, making
+    the overall status read incorrectly. Summary context now resolves to the summary value, so top-syntax reports the
+    aggregate correctly.
+    🛡️ Service — safer plugin shutdown
+    The plugin manager now handles broken plugins defensively and prevents a module that misbehaves during teardown from
+    crashing the service on shutdown. Modules get a clean teardown path so listeners and background threads stop before
+    unload.
+    📈 collectd client — encoding and protocol fixes
+    Correct (little-endian) gauge encoding, working IPv6 multicast, a configurable send interval (default 10s), and
+    previously dropped metric types (counter / derive / absolute) are now mapped instead of discarded.
+    🐛 Bug fixes
+    - Fixed a Windows build break introduced during the Linux work.
+    - Fixed regressions where some metrics and real-time checks stopped reporting.
+    - Corrected check_ntp_offset threshold handling and improved default accuracy.
+    - Improved check_connections performance-data accuracy for total connections.
+    - Yet another possible fix for installer deleting config on upgrade.
+    - Fix unreliable per-process CPU% from check_process delta=true. The delta calculation for per-process CPU usage
+      produced inconsistent readings; it now returns stable, accurate values.
+    - Fix perf-config=none reporting "Failed to parse syntax". Setting perf-config=none to suppress performance-data
+      formatting no longer fails parsing.
+    - Fixed http(s) headers should be case-insensitive.
+    - IPv6: listeners set IPV6_V6ONLY on Linux to avoid port conflicts with IPv4, and IPv6 address resolution was
+      improved.
+    - Thread-safety: logger subscriber management, the scheduler, and timer callbacks were made properly thread-safe;
+      CommandClient now shuts down gracefully on POSIX signals.
+    - check_mk server: fixed a memory leak.
+    🚚 Packaging & distribution notes
+    - The bundled check_nsclient Nagios plugin moved to its own repository (mickem/check_nsclient) and is pulled in
+      at build time. This only matters if you build from source.
+    - Package/file names were normalised — double-check the exact asset name on the releases page if you script
+      downloads.
+    - Reduced Linux build dependencies: the build now uses libzip (instead of vendored Miniz), can use the system
+      Google Test, and degrades cleanly when an optional dependency is missing. Linux uses the Boost.Beast web backend by
+      default.
+    📚 Documentation and tests
+    - New Linux Server Health scenario, plus updated cross-platform Network Checks, Disk Space Alerting,
+      Service & Process Monitoring and Real-Time System Monitoring scenarios.
+    - New docs/samples/ usage examples and clarifying descriptions for every new command.
+    - Extensive new unit tests (CheckSystemUnix, CheckDisk unix, CheckNet) and REST-driven integration tests under
+      tests/ covering the new system, disk and network checks.
+    ⚠️ Upgrade notes
+    A few defaults were tightened for security and the Linux packaging layout changed. None of these affect a normal Windows
+    MSI upgrade, but Linux users and anyone running the web server in cleartext should read this section.
+    - The web server refuses to run unencrypted by default. If you intentionally run the web server in cleartext (e.g.
+      behind a TLS-terminating proxy, or on an isolated network), set allow insecure = true:
+      [/settings/WEB/server]
+      allow insecure = true
+      Otherwise, provide a certificate (certificate = …). If you do nothing and the server has no certificate, it logs an
+      error and does not start the listener.
+    - The web UI is a separate download on Linux (.deb / .rpm). After installing the package, run
+      sudo nscp web install-ui to fetch the matching UI bundle. Until then the web port serves a built-in placeholder;
+      the REST API and all listeners work normally without it. The Windows MSI still bundles the UI inline.
+    - Linux install layout now follows the FHS / install prefix. The official .deb/.rpm install to /usr
+      (daemon /usr/sbin/nscp, config /etc/nsclient, state/logs under /var). If you patched hardcoded paths to build
+      for a custom location, pass -DCMAKE_INSTALL_PREFIX (and the standard CMAKE_INSTALL_*DIR knobs) instead.
+    - Linux check_service now targets systemd. If you previously scripted around the old behaviour, note the
+      normalised state keyword and the default expression that keeps disabled units OK. Match units by unit name
+      (e.g. service=ssh), and use state, active, sub_state and preset in thresholds.
+    - Linux check_process reports delta CPU. CPU is now the usage between samples rather than lifetime CPU. Review any
+      CPU thresholds that assumed the old semantics.
+    - Linux disk I/O needs one collector sample. The first check_disk_io / check_disk_health query immediately after
+      startup may return UNKNOWN ("collector still initializing"); this is invisible with a running service and normal in
+      one-shot testing.
+    - check_tcp / check_http boolean ssl. Enable TLS with ssl=true. When verifying certificates, set
+      verify=peer and provide a ca= bundle; the default remains verify=none.
+    🙌 New Contributors
+    - @Fantu made their first contribution.
+    Full Changelog: https://github.com/mickem/nscp/compare/0.12.6...0.14.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mickem/nscp/releases/tag/0.14.0
+RealVersion: 0.14.0.0
+ReleaseTime: 2026-07-04T05:52:10.0000000Z
