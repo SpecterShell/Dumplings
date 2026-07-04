@@ -1,0 +1,30 @@
+Version: 0.6.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.5/Mini-Term_0.6.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.5/Mini-Term_0.6.5_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - Session 块支持查看 WSL 内的 Claude / Codex 历史会话
+      - WSL 根项目（\\wsl$ / \\wsl.localhost 路径）零配置：自动从路径推导发行版与项目目录，直接加载 WSL 内的历史会话
+      - Windows 路径项目：右键菜单新增「WSL 会话」子菜单选择发行版，按 /mnt 规则映射路径后扫描，并靠会话内 cwd 精确校验，不会串到其他项目的会话
+      - WSL 会话与本机会话按时间合并混排，条目带 WSL 标识；列表分段加载——本机会话先显示，WSL 会话到达后再合入，加载期间头部显示 spinner
+      - 右键「查看」同样支持读取 WSL 会话正文
+      - 实现上不启动 wsl.exe：发行版列表读注册表枚举，会话文件走 \\wsl$ UNC 直读，发行版未运行或读取失败时静默降级，不影响本机会话展示
+
+    下载
+    平台 文件
+    Windows Mini-Term_0.6.5_x64-setup.exe / Mini-Term_0.6.5_x64_en-US.msi
+    macOS (Apple Silicon) Mini-Term_0.6.5_aarch64.dmg
+    Linux Mini-Term_0.6.5_amd64.deb / Mini-Term-0.6.5-1.x86_64.rpm / Mini-Term_0.6.5_amd64.AppImage
+    Windows 为主要支持平台；macOS / Linux 为实验性支持。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.5
+ReleaseTime: 2026-07-04T10:16:42.0000000Z

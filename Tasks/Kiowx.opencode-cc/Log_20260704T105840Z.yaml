@@ -1,0 +1,23 @@
+Version: 1.3.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kiowx/opencode-cc/releases/download/v1.3.1/opencode-cc_v1.3.1_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: opencode-cc_v1.3.1_windows_amd64\opencode-cc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kiowx/opencode-cc/releases/download/v1.3.1/opencode-cc_v1.3.1_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: opencode-cc_v1.3.1_windows_arm64\opencode-cc.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - 修复 Anthropic 流式响应最终 message_delta.usage 字段不完整的问题，现在会返回 input_tokens、cache_creation_input_tokens、cache_read_input_tokens 和 output_tokens，方便 new-api 等客户端正确统计用量和缓存命中。 #9
+    - 新增多上游 / 多 API Key 场景的会话粘性路由：同一个 session / prompt cache key 会稳定落到同一个上游 key，减少 provider 侧 prompt cache 被轮询打散导致的缓存击穿。 #10
+    - 已关闭未采纳的本地响应缓存 PR，避免默认启用本地响应缓存、流式缓存丢失 reasoning/tool_calls 等风险；本次改为更稳妥的上游 prompt cache 命中优化。 #8
+    - 同步项目版本号到 1.3.1，包括 Web 包版本、/api/status 版本和 README Docker 固定版本示例。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kiowx/opencode-cc/releases/tag/v1.3.1
+ReleaseTime: 2026-07-04T10:43:08.0000000Z
