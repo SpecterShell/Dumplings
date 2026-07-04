@@ -1,4 +1,13 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.scootersoftware.com/checkupdates.php?product=bc5&lang=silent'
+$LastVersionParts = $this.Status.Contains('New') ? $null : $this.LastState.Version.Split('.')
+
+$Object1 = Invoke-RestMethod -Uri 'https://www.scootersoftware.com/checkupdates.php' -Body @{
+  product  = 'bc5'
+  minor    = $this.Status.Contains('New') ? '2' : $LastVersionParts[1]
+  maint    = $this.Status.Contains('New') ? '2' : $LastVersionParts[2]
+  build    = $this.Status.Contains('New') ? '32209' : $LastVersionParts[3]
+  platform = 'win32'
+  lang     = 'silent'
+}
 
 # Version
 $this.CurrentState.Version = $Object1.Update.latestversion -replace '\s+build\s+', '.'
