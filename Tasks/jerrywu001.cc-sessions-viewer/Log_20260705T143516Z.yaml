@@ -1,0 +1,39 @@
+Version: 0.2.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.6/Sessions.Viewer_0.2.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.6/Sessions.Viewer_0.2.6_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.2.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Antigravity CLI support — replaces the Gemini agent with Antigravity CLI (agy) across the app. Sessions are discovered from ~/.gemini/antigravity-cli/brain/ and Antigravity Chat's IDE store, grouped by workspace, searchable, readable, renameable, and resumable through agy --conversation <id> when the session came from the CLI. IDE-created Antigravity Chat sessions are shown read-only with an explicit "open in Antigravity Chat" path instead of trying to resume them in a terminal.
+    - Antigravity transcript parser — reads transcript_full.jsonl when available, falls back to transcript.jsonl, strips <USER_REQUEST> wrappers, renders model thinking, assistant text, tool calls, tool results, web/question events, and CODE_ACTION unified diffs. Antigravity's checkpointed transcripts are handled as rewriteable files rather than append-only logs.
+    - Antigravity app integration — added Antigravity branding, labels, localized strings, README copy, Settings visibility / launch-args support, CLI environment detection, and update checks via Antigravity's platform manifest plus the built-in agy update command.
+    - File and image extraction from messages — text blocks now lift inline @[path], @path, quoted paths, absolute paths, and pasted local image paths into dedicated file/image blocks so shared files and screenshots render like first-class attachments.
+    - Codex transcript polish — Codex assistant messages now carry the current model hint, function-call outputs can render image blocks, and post-processing lifts file/image references from Codex sessions too.
+    - Custom stats date range — the token/cost stats view gains a calendar range picker plus new presets (this month, last 3 months, last 6 months) alongside today / 7 days / 30 days. Custom spans flow through to the backend scanner as custom:YYYY-MM-DD:YYYY-MM-DD, and the header shows the resolved date range for whichever selection is active.
+    - Paste images into the embedded terminal — on macOS, Cmd+V of an image inside a TUI or shell tab now saves it to a temp file and pastes the file path into the terminal, so claude / codex pick it up as an attachment. Backed by a new save_clipboard_image command.
+    - Open project folder from the context menu — the project right-click menu gains an "Open folder" action that reveals the project directory in Finder.
+    Bug Fixes
+    - Local image rendering — local image blocks now go through Tauri's asset protocol (convertFileSrc) so screenshots and file attachments render correctly in packaged builds.
+    - Live session freshness — when the app regains focus it re-reads the active session, restarts the watcher, checks terminal turn state, and briefly shows the live-tail indicator if new messages arrived while the window was inactive.
+    - Antigravity watcher and turn tracking — live-tail and turn-state polling use the preferred Antigravity transcript file and expose explicit check commands so rewritten transcripts and focus changes do not leave stale chat or tab status.
+    - Antigravity stats behavior — Antigravity is hidden from token/cost stats scopes because its transcripts do not expose usage data yet, while pricing keeps Gemini-family rows under an Antigravity/Gemini label for model reference.
+    - Chat layout details — assistant bubbles no longer stretch full-width, long tool chips truncate cleanly, and model badges strip trailing parenthesized provider/details noise.
+    - Terminal cursor jitter during full-screen redraws — the PTY reader now coalesces the many small chunks a TUI redraw (e.g. Claude Code's ink UI) gets split into within a short quiet window (2 ms debounce, 16 ms / 128 KB cap), so a whole redraw lands in a single frontend event and paints in one frame. This replaces the old "hide the cursor while output is busy" workaround — the cursor no longer visibly flickers to the status bar and back.
+    - Agent switch no longer drops you to the welcome page — switching agents in the sidebar now remembers each agent's last-visited project and its active tab and optimistically restores it (the project list loads in parallel and only falls back to welcome if that project is truly gone), instead of forcing you to re-pick a project every time.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v026
+ReleaseTime: 2026-07-05T13:18:10.0000000Z

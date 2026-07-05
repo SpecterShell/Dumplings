@@ -1,0 +1,39 @@
+Version: 0.6.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.6/Mini-Term_0.6.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.6/Mini-Term_0.6.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - SSH 远程项目 — 把远程服务器上的目录直接添加为 mini-term 项目：
+      - 项目列表新增「添加远程项目」入口，选择已保存的 SSH 连接并填写远程路径，保存前自动远程验证目录存在
+      - 文件树经 SFTP 懒加载展开，展开行内 loading 反馈，支持手动刷新，遵循远端根 .gitignore 过滤
+      - 终端直连远程服务器并自动进入项目目录，断线后覆盖层一键重连
+      - Session 面板按时间混排远程机器上的 Claude / Codex 历史会话，支持查看会话正文
+      - 远程项目带连接名徽标；引用的 SSH 连接被删除时显示「断链」状态而非静默失效
+      - 全部新界面文案中英双语
+    体验
+    - 远程文件树展开目录时以行内旋转圆环替换箭头，SFTP 拉取期间有明确反馈，加载中忽略重复点击避免叠发请求
+    - 远程项目下不适用的本地能力（git 徽章、文件监听、搜索、环境变量、cc-connect 导入等）逐点隐藏，不再展示无效入口
+    架构
+    - russh 持久会话池与 SFTP 原语抽为 mt-ssh 共享 crate，主程序与 SSH MCP sidecar 共用同一套实现
+    - 远程数据缓存键掺入连接 id，防止两台服务器同名路径互相串数据
+    下载
+    平台 产物
+    Windows Mini-Term_0.6.6_x64-setup.exe / Mini-Term_0.6.6_x64_en-US.msi
+    macOS Mini-Term_0.6.6_aarch64.dmg（Apple Silicon）
+    Linux Mini-Term_0.6.6_amd64.AppImage / Mini-Term_0.6.6_amd64.deb / Mini-Term-0.6.6-1.x86_64.rpm
+    macOS 提示：产物未做 Apple Developer ID 签名，首次打开若提示"已损坏"，将 .app 拖入 /Applications 后执行 xattr -cr /Applications/Mini-Term.app 即可。
+    平台支持：Windows 为主要支持平台；macOS / Linux 可用性欠佳，欢迎反馈 Issue。
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.6.5...v0.6.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.6
+ReleaseTime: 2026-07-05T14:00:04.0000000Z
