@@ -1,0 +1,39 @@
+Version: 1.91.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.91.0/Lime-1.91.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.91.0
+    新功能
+    - App Server agentSession 事件链新增 typed notification 投影，覆盖 message/created、turn/*、item/* 和 assistant message delta，协议 schema 与 npm client 同步生成可直接消费的类型。
+    - 应用中心收口到 current Plugins 页面：插件市场旧页面下线，安装态、云端态、能力清单、activation entries、subagents / skills、权限与版本摘要统一在应用详情中呈现。
+    - 插件 activation 支持带 project context 跳转 Agent 工作区，workflow / runtime entry 可转成 @ 触发提示，避免继续走旧 adapter mock 执行路径。
+    - 自动化 Agent Turn 任务新增 session / thread lineage 约束，创建自动化时会绑定来源会话和线程，避免脱离当前工作区上下文执行。
+    修复
+    - 修复 Agent Runtime typed delta、turn lifecycle、runtime status、web search preflight、credential provider bridge 和会话恢复投影的多个边界，降低流式输出错序、误停和上下文丢失风险。
+    - 修复团队 / 子代理恢复事实、workspace team runtime、subagent timeline、右侧 surface readiness 和 service skill entry action 的投影一致性。
+    - 修复插件安装 / 卸载流程中的删除数据确认、dry-run gate、manifest normalization、source version、能力标签和详情摘要展示。
+    - 修复 Claw current fixture 的 read model 等待、右侧 surface 视觉断言、场景断言拆分和多 Agent 团队 fixture 覆盖。
+    优化与重构
+    - tool-runtime 拆出 execution policy、execution rules、shell planning、tool batch plan / outcome 与 policy service，App Server 不再经 lime-agent Aster adapter 消费纯 shell 文本提取。
+    - App Server protocol / client 重构 request / notification 方法、catalog、schema export 与 generated types，让 JSON-RPC current contract 更接近单一事实源。
+    - lime-agent 继续收缩 Aster residual，把 tool inventory、workspace patch、event / reply、session store 和 subagent profile 迁移到更窄的 adapter 边界。
+    - 删除旧插件市场页面和路由分支，Skills 工作区默认项目选择改为 current project hook，减少并行 UI 入口。
+    测试与质量
+    - 新增 App Server event notification、protocol schema、plugin task evidence、team facts、provider telemetry、turn lifecycle 和 media task JSON-RPC 回归。
+    - 新增 / 更新 workspace plugin activation、intent routing、runtime readiness、service skill actions、team session runtime、restored team facts、automation thread lineage 和插件 UI 回归。
+    - 更新 current fixture smoke、OpenAI compatible fixture server、managed objective automation smoke、MCP contract guard、App Server client contract 和 governance boundary 覆盖。
+    - 继续维护五语言 i18n 资源，覆盖应用中心、自动化和 Agent 工作区新增文案。
+    文档
+    - 新增 2026-07-05 Aster 迁移进度现实校准，把整体退出条件口径校准到约 69%，明确不能再按 99% 或无 Aster 依赖完成态汇报。
+    - 更新 Aster migration 主计划、ProjectThread-first 执行计划 / PRD、技术债追踪和 workflow reference，保持路线图与 current 实现一致。
+    其他
+    - 版本事实源更新到 1.91.0：根应用、CLI npm package、Rust workspace、lime-rs/Cargo.lock 和 current-turn smoke client。
+    完整变更：v1.90.0 → v1.91.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.91.0
+ReleaseTime: 2026-07-05T04:43:21.0000000Z
