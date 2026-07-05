@@ -1,0 +1,57 @@
+Version: 26.1.2
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.2/dbeaver-ce-26.1.2-windows-x86_64.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.2/dbeaver-ce-26.1.2-windows-x86_64.exe
+  ProductCode: DBeaver
+- Architecture: arm64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.2/dbeaver-ce-26.1.2-windows-aarch64.exe
+  ProductCode: DBeaver (current user)
+- Architecture: arm64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.2/dbeaver-ce-26.1.2-windows-aarch64.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - AI Assistant: Added AI Chat with the ability to generate SQL queries and answer user questions
+    - Data Editor:
+        - Updated the appearance of Find/Replace
+        - Added quick filter: enter a value in the Find field and use the dedicated icon to hide rows that do not match
+        - Fixed incorrect data display when expanding complex types in record mode with "Show complex column structure" disabled
+        - Fixed handling of JSONB and other text content values in SQL generation and CSV import (thanks to @HellAmbro)
+    - SQL Editor: Changed confusing localization for "Enable parameters in DDL and $$..$$ blocks"
+    - Metadata Editor: Fixed entity background color
+    Data transfer: Fixed an issue where import jobs continued running after cancellation
+    - Security:
+        - Fixed an XXE vulnerability caused by an unhardened XML parser (CWE-611)
+        - Fixed an SQL injection vulnerability in Exasol related to string formatting (CWE-89)
+    - Miscellaneous:
+        - Added the ability to specify the main and monospace fonts on the User Interface page in Preferences
+        - Added the DBEAVER_WORKSPACE and DBEAVER_DATA environment variables to set the workspace path and DBeaverData location in the application
+        - Fixed a macOS launcher crash that occurred when the application was started without launch arguments
+        - Data Search: Fixed an issue where the "Search in LOBs" checkbox used the "Search in numbers" state instead of its own (thanks to @Srltas)
+        - Fixed an issue where a new debug log was not created after application restart
+        - Fixed background color for Tip of the Day in the Dark theme for MacOS
+        - Fixed the application installation as Eclipse extension
+    - Development: Added custom instructions for GitHub Copilot code review
+    - New Drivers:
+        - Add support for Timeplus database (thanks to @MkDev11)
+    - Databases:
+        - CUBRID:
+            - Added Table Triggers and User Triggers nodes to the Navigator (thanks to @longhaseng52)
+            - Fixed object search by partial names in Go to Object and metadata search (thanks to @Srltas)
+        - DuckDB: Fixed formatting for DATE values (thanks to @EastLord)
+        - GBase 8s: Fixed editing CLOB values in the Data Editor (thanks to @Downstream1998)
+        - PostgreSQL:
+            - Fixed connection with Asia/Saigon time zone
+            - Fixed an issue where the connection limit was not applied when editing role properties (thanks to @Adul23)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/26.1.2
+ReleaseTime: 2026-07-05T17:58:16.0000000Z
