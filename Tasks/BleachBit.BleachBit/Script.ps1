@@ -16,10 +16,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.updates.stable.'#text' | Split-Uri -LeftPart Path
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.updates.stable.'#text' | Split-Uri -LeftPart Path
       }
     } catch {
       $_ | Out-Host
@@ -35,13 +36,13 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode('//div[contains(@class, "field-item")]/h2[contains(., "Changes") or contains(., "Known issues")]')
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.SelectSingleNode('./self::*[contains(@class, "update-notice") or contains(@id, "download") or contains(.//@class, "download2")]'); $Node = $Node.NextSibling) { $Node }
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = @($ReleaseNotesTitleNode, $ReleaseNotesNodes) | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
