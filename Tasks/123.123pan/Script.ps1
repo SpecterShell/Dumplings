@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
+$Object1 = Invoke-RestMethod -Uri 'https://api.123278.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
   'app-version' = $this.Status.Contains('New') ? '109' : $this.LastState.Version.Replace('.', '')
 }
