@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
 
       # ReleaseNotes (zh-CN)
       $ReleaseNotesObject = $Object1.ver_info.desc | Convert-MarkdownToHtml
-      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[text()='$($this.CurrentState.Version.Split('.')[0..2] -join '.')']")
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
