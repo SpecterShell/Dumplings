@@ -1,0 +1,186 @@
+Version: 16.3.7
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.3.7/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed an issue where provider orchestration tokens were incorrectly included in context token calculations, which could trigger premature context auto-compaction and promotion.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed formatting of demoted reasoning blocks to prevent accidental concatenation with prose
+    - Fixed terminal whitespace issues in assistant messages that caused rejections by Anthropic API
+    - Fixed Cursor provider handling of empty-pattern grep arguments to return a clear, actionable error instead of a generic error and a broken TUI rendering.
+    - Fixed Google Cloud Code Assist API (Antigravity) and Gemini CLI to immediately bubble up underlying API errors (such as safety or recitation blocks) instead of incorrectly retrying and hiding them behind a generic empty-response message.
+    - Fixed GitHub Copilot OpenAI Responses replay to prevent empty reasoning-only assistant turns from being persisted in history and poisoning subsequent requests.
+    - Fixed classification of provider gateway quota-insufficient errors so they are correctly identified as usage-limit errors rather than generic 403 failures.
+    - Fixed OpenAI-compatible Responses models (such as DeepSeek endpoints) to preserve user-configured tool strictness settings unless strict mode is explicitly unsupported.
+    - Fixed custom openai-codex-responses providers failing when no ChatGPT account ID claim is present by omitting the header when it cannot be derived.
+    - Fixed token accounting for OpenAI Responses and Codex providers to correctly include provider-side orchestration tokens in billing totals without misclassifying them as uncached prompt input.
+    - Fixed Google Gemini and Cloud Code Assist providers to preserve the requested reasoning tier when sending requests with hidden thinking summaries.
+    - Fixed parallel OpenAI-compatible tool-call streaming to prevent argument data from bleeding across concurrent commands when identifiers are missing.
+    - Fixed Anthropic Claude reasoning and thinking replay handling. Same-model replays now drop unsigned prior reasoning blocks to prevent reasoning-extraction refusals, while cross-model replays (including Bedrock cross-region profiles) correctly demote reasoning without emitting raw thinking tags or causing text-flattening formatting issues.
+    - Fixed custom OpenAI-compatible relays serving standard OpenAI model IDs to be correctly classified as OpenAI-family targets for fast mode.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed usage cost calculation to correctly account for provider orchestration token sidecars without misclassifying them as standard input, output, or cache tokens.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added support for reading full memory rows (working or episodic) via read memory://<id> under the mnemopi backend, returning a YAML-frontmatter header with metadata to prevent blind overwrites during edits.
+    - Updated the URI grammar to support memory://root[/…] for file-backed summaries and memory://<memory-id> for specific mnemopi IDs.
+    Changed
+    - Updated recall and memory_edit tool prompts to document truncation markers and require reading a memory ID before updating a truncated preview.
+    - Parallelized resolution of system files (SYSTEM.md, APPEND_SYSTEM.md, and TITLE_SYSTEM.md) at startup to improve performance.
+    - Optimized TUI performance and reduced CPU usage during streaming and live tool calls by scoping renders to changed subtrees, interning the working-message shimmer palette, and memoizing copy-selector preview highlights.
+    - Loaded persisted Agent Hub subagents asynchronously to prevent blocking the TUI on directory walks.
+    - Cached persisted message keys in AgentSession to avoid repeated branch walks on message completion.
+    - Skipped TTSR delta buffering for text/thinking sources when no registered rules match.
+    Fixed
+    - Fixed macOS Backspace behavior in the /resume picker for terminals delivering \x7f instead of \e[3~.
+    - Fixed queued follow-up message rows leaking into native terminal scrollback during live repaints by anchoring the pending-messages container.
+    - Fixed /rename title arguments treating # prompt-action tokens as autocomplete triggers instead of literal text.
+    - Fixed empty session .jsonl files accumulating in the sessions directory after a draft-then-clear exit cycle.
+    - Fixed advisor being disabled for the entire session when resolving to a reasoning model with no controllable effort surface (e.g., devin/glm-5-2*).
+    - Fixed legacy extension plugin validation failures by re-exporting relocated catalog symbols (such as calculateCost, modelsAreEqual, and getBundledProviders) through the legacy pi-ai root shim.
+    - Fixed legacy Pi extension imports of DefaultResourceLoader by adding a compatibility loader shim that translates resourceLoader into native session discovery options.
+    - Fixed legacy Pi extension reloads on POSIX to ensure same-process re-imports pick up edits across the entire dependency graph.
+    - Fixed bash tool pipeline execution preserving stale upstream output when the final stage was a stripped head or tail limiter.
+    - Fixed the status-line token-rate segment rendering as a clickable hyperlink in Ghostty.
+    - Fixed xAI web_search to prioritize xai-oauth credentials before falling back to xai API keys, and enforced result counts locally to avoid sending unsupported parameters.
+    - Fixed token-usage badges disappearing on session resume for empty automated assistant turns.
+    - Fixed /model search escaping the active provider tab and silently persisting a same-named model from a different provider as the default role.
+    - Fixed Esc key behavior to immediately silence active TTS audio playback (such as Kokoro) once an assistant reply finishes streaming.
+    - Fixed grep and bash tool guidance to instruct agents to use Rust-style patterns or grep -E instead of GNU BRE assumptions.
+    - Fixed tool-call renderers crashing the TUI when providers send array/object path arguments before schema validation.
+    - Fixed glob tool rejecting slash-only root searches (e.g., path:"/") with a documented error instead of returning empty results.
+    - Fixed omp read hanging on PDFs whose inline-image binary payloads contain delimiter-looking bytes.
+    - Fixed pi/<role> model resolution crashing on YAML list-valued modelRoles entries.
+    - Fixed the snapcompact settings UI to expose silver16-bw and improved renderability warnings to report unsupported glyphs.
+    - Fixed session and status usage totals to preserve provider-reported orchestration tokens separately from input and cache-hit buckets.
+    - Fixed published .d.ts declaration files to be consumable under moduleResolution: "node16" | "nodenext" by rewriting relative specifiers to explicit .js extensions.
+    - Fixed omitThinking settings propagation so settings-aware streams request hidden thinking summaries when explicitly enabled.
+    - Preserved isolated branch-mode task output as a patch artifact when commitToBranch fails, surfacing the captured patch path through the evaluation failure message.
+    - Fixed task-class subagents dropping unresolved explicit model-role selectors before startup.
+    - Fixed large legacy snapcompact archives causing crashes on resume due to oversized archived frame payloads.
+    - Fixed LSP diagnostics staleness by sending watched-file change notifications to running language servers before reading edit-time diagnostics.
+    - Documented the bash tool timeout clamp (capped at 3600 seconds for async jobs) in the model-facing schema and prompt.
+    - Fixed /fast on for custom OpenAI-compatible providers serving OpenAI models, and reported unsupported models as unavailable.
+    - Fixed extension pasteToEditor and setEditorText prompt mutations leaving the editor visually stale by scheduling a repaint after mutations.
+    - Fixed session title generation, commit-message generation, speech-enhancer rewrites, and classifiers silently truncating on non-reasoning-flagged models that still emit thinking output.
+    - Fixed plan-mode "Approve and compact context" discarding queued operator turns and leaking internal plan-distillation prompts to extension hooks.
+    - Fixed malformed pi.sendMessage custom-message payloads persisting bare session entries that crashed subsequent resumes.
+    - Hid internal display: false session-update reminders from compact history and advisor transcripts.
+    - Fixed idle recap crashes caused by side-channel stream malformations.
+    - Applied WebSocket send backpressure with ordered drain retries to prevent unbounded buffer growth.
+    - Capped docs.rs gunzip decompressed size at 256 MB to prevent zip-bomb out-of-memory crashes.
+    - Deleted pre-created shell snapshot files when snapshot creation fails.
+    - Aborted underlying MCP calls when proxy tool timeouts fire.
+    - Surfaced unexpected JS eval worker exits via close listeners to prevent silent hangs.
+    - Cached failed !command config resolutions and timed out extension dynamic model fetches after 15 seconds.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed an issue where the workspace advertised a stale package version (15.11.7) instead of the current release version.
+    @oh-my-pi/pi-mnemopi
+    Added
+    - Added RecallOptions.contentPreviewChars to allow customizing or disabling the content preview cap (default is 500, set to 0 for full content).
+    - Added RecallResult.truncated and RecallResult.full_length properties to easily identify clipped previews without parsing trailing markers.
+    Fixed
+    - Fixed background LLM fact extraction to preserve specific extractor categories (instructions, preferences, timelines, and kg triples) in MEMORIA tables and graph triples instead of flattening them into generic fact/entity rows.
+    - Improved recall previews and factLine context to append a trailing ellipsis (…) when content is clipped, preventing mid-word truncation without a marker.
+    @oh-my-pi/snapcompact
+    Fixed
+    - Fixed resolveShapeForText(..., "auto") to correctly select the silver16-bw shape for CJK-heavy transcript text while preserving explicit shape overrides.
+    @oh-my-pi/omp-stats
+    Changed
+    - Optimized session-entry lookup and file reading performance by caching file metadata to avoid repeated full-file scans.
+    @oh-my-pi/swarm-extension
+    Fixed
+    - Fixed the peer dependency range for @oh-my-pi/pi-coding-agent to match the current ^16 major version.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed an issue where @ file-reference tokens in slash-command arguments incorrectly triggered prompt-composer autocompletion when the command did not define argument completions.
+    - Fixed a memory leak caused by unbounded map growth in the image budget cache.
+    @oh-my-pi/pi-utils
+    Added
+    - Added classifyJsonPrefix, a strict RFC 8259 streaming-buffer classifier ("complete" | "prefix" | "invalid"). Providers use it to disambiguate identifierless streaming tool-call deltas: a {-prefixed chunk only advances to a sibling call when the current argument buffer cannot absorb it.
+    What's Changed
+    - fix(tui): avoid auto-linked token rate format by @roboomp in https://github.com/can1357/oh-my-pi/pull/4544
+    - fix(metadata): correct collab package contracts by @roboomp in https://github.com/can1357/oh-my-pi/pull/4560
+    - fix(tool): preserve bash pipeline output by @roboomp in https://github.com/can1357/oh-my-pi/pull/4563
+    - fix(agent): reload edited legacy Pi modules by @roboomp in https://github.com/can1357/oh-my-pi/pull/4568
+    - fix(agent): restore legacy DefaultResourceLoader shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/4569
+    - fix(session): drop empty session file on close when no messages and no draft by @roboomp in https://github.com/can1357/oh-my-pi/pull/4572
+    - fix(ai): classify quota insufficient gateway errors by @cagedbird043 in https://github.com/can1357/oh-my-pi/pull/4575
+    - fix(cursor): reject empty grepArgs.pattern at exec dispatch (#4574) by @roboomp in https://github.com/can1357/oh-my-pi/pull/4576
+    - fix(session-selector): Backspace on empty search deletes session by @JagravNaik in https://github.com/can1357/oh-my-pi/pull/4580
+    - fix(advisor): clamp default thinking against the resolved model by @roboomp in https://github.com/can1357/oh-my-pi/pull/4581
+    - fix(ai): prevent empty-response retry loop on non-STOP finishReason in Gemini CLI by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/4582
+    - fix(coding-agent): re-export calculateCost + siblings from legacy pi-ai shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/4585
+    - fix(ai): drop hidden-empty Responses replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/4601
+    - fix(tui): scope autocomplete in slash command arguments by @roboomp in https://github.com/can1357/oh-my-pi/pull/4602
+    - perf(session): cache persisted-message keys, invalidate on branch change by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4272
+    - fix(eval): surface unexpected JS eval worker exit via close listener by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4273
+    - fix(collab): add WebSocket backpressure with ordered pending-send drain by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4277
+    - fix(web): cap docs.rs gunzip decompressed size at 256 MB by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4278
+    - fix(tui): evict purged image keys from ImageBudget key map by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4279
+    - perf(stats): stream session lookup and cache snapcompact JSONL reads by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4280
+    - fix(install): add network timeouts to install script downloads by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4282
+    - fix: hide hidden custom session updates by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/4334
+    - fix(extension): refresh editor after extension paste by @roboomp in https://github.com/can1357/oh-my-pi/pull/4342
+    - fix(session): handle malformed custom messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/4349
+    - fix(coding-agent): size title budget for backends that ignore disableReasoning by @roboomp in https://github.com/can1357/oh-my-pi/pull/4356
+    - fix(session): harden runEphemeralTurn against dropped provider content on idle recap by @roboomp in https://github.com/can1357/oh-my-pi/pull/4357
+    - fix(coding-agent): queue approved plan behind turns flushed by compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/4381
+    - fix(compaction): keep plan-mode guidance off the session_before_compact hook by @roboomp in https://github.com/can1357/oh-my-pi/pull/4382
+    - perf(coding-agent/tui): scoped renders + shimmer band fast-path by @roboomp in https://github.com/can1357/oh-my-pi/pull/4383
+    - fix(fast): enable custom OpenAI-compatible providers by @roboomp in https://github.com/can1357/oh-my-pi/pull/4387
+    - fix(mnemopi): preserve extraction categories by @roboomp in https://github.com/can1357/oh-my-pi/pull/4392
+    - fix(gemini): honor hidden summary requests by @cagedbird043 in https://github.com/can1357/oh-my-pi/pull/4400
+    - fix(mnemopi): surface extracted facts in recall by @roboomp in https://github.com/can1357/oh-my-pi/pull/4405
+    - docs(tool): document bash timeout clamp by @roboomp in https://github.com/can1357/oh-my-pi/pull/4409
+    - fix(ai): isolate batched tool call arguments by @roboomp in https://github.com/can1357/oh-my-pi/pull/4417
+    - fix(task): respect deferred task model role selectors by @roboomp in https://github.com/can1357/oh-my-pi/pull/4423
+    - fix(ai): restore the drop guard for undefined thinking signatures by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4427
+    - fix(ai): demote prior reasoning to bare prose for all Anthropic-dialect Claude models by @roboomp in https://github.com/can1357/oh-my-pi/pull/4432
+    - fix(task): preserve isolated commits on transfer failure by @roboomp in https://github.com/can1357/oh-my-pi/pull/4439
+    - fix(mnemopi): let agents read stored memories in full by @roboomp in https://github.com/can1357/oh-my-pi/pull/4445
+    - fix(ai): persist provider error response in http-400 dumps by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4446
+    - fix(tui): emit BEL under Zellij so notifications flag backgrounded panes by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4449
+    - fix(session): drop content-less provider-rejection turns from persisted history by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4457
+    - fix(lsp): notify servers about harness file writes by @roboomp in https://github.com/can1357/oh-my-pi/pull/4462
+    - fix(build): emit NodeNext-consumable .d.ts (explicit .js on relative re-exports) by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4464
+    - fix(ai): separate Codex orchestration usage by @roboomp in https://github.com/can1357/oh-my-pi/pull/4471
+    - Guard legacy snapcompact frames on resume by @cexll in https://github.com/can1357/oh-my-pi/pull/4473
+    - fix(snapcompact): select silver shape for CJK-heavy auto text by @roboomp in https://github.com/can1357/oh-my-pi/pull/4489
+    - docs(coding-agent): align workflowz recursion wording by @roboomp in https://github.com/can1357/oh-my-pi/pull/4494
+    - fix(models): accept list-valued model role entries by @roboomp in https://github.com/can1357/oh-my-pi/pull/4496
+    - fix(coding-agent): handle inline image PDF delimiters by @roboomp in https://github.com/can1357/oh-my-pi/pull/4514
+    - fix(tool): reject root glob paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/4518
+    - fix(tts): stop queued TTS playback on Esc after stream end by @roboomp in https://github.com/can1357/oh-my-pi/pull/4523
+    - fix(coding-agent): scoped /model search to the active provider tab by @roboomp in https://github.com/can1357/oh-my-pi/pull/4524
+    - fix(ai): allow opaque Codex proxy keys by @roboomp in https://github.com/can1357/oh-my-pi/pull/4528
+    - fix(tui): handle invalid path render args by @roboomp in https://github.com/can1357/oh-my-pi/pull/4529
+    - fix(providers): align openai-responses strict-mode gate with openai-completions by @roboomp in https://github.com/can1357/oh-my-pi/pull/4531
+    - fix(tui): suppress empty assistant token badges by @roboomp in https://github.com/can1357/oh-my-pi/pull/4534
+    - fix(providers): remove xAI web_search search_parameters by @roboomp in https://github.com/can1357/oh-my-pi/pull/4538
+    - fix(providers): prefer xAI OAuth for web search by @roboomp in https://github.com/can1357/oh-my-pi/pull/4539
+    - fix(tool): clarify grep alternation and pipe guidance by @roboomp in https://github.com/can1357/oh-my-pi/pull/4543
+    - fix(bash): delete pre-created snapshot file on creation failure by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4265
+    - fix(config): cache failed !command resolutions, bound dynamic fetch timeout by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4266
+    - perf(tui): memoize copy-selector preview highlight across renders by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4267
+    - perf(tui): load persisted subagents asynchronously by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4268
+    - fix(task): abort underlying MCP call when proxy tool timeout fires by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4271
+    - perf(export): skip TTSR delta buffering when no rule matches text/thinking by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4274
+    - perf(cli): parallelize prompt file resolution at startup by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4276
+    New Contributors
+    - @JagravNaik made their first contribution in https://github.com/can1357/oh-my-pi/pull/4580
+    - @mattwilkinsonn made their first contribution in https://github.com/can1357/oh-my-pi/pull/4446
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.3.6...v16.3.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.3.7
+ReleaseTime: 2026-07-05T16:05:42.0000000Z
