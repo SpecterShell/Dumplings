@@ -1,0 +1,29 @@
+Version: 0.27.6
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.27.6/MuteMe-Client-0.27.6 Setup.exe
+- InstallerType: wix
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.27.6/MuteMe-Client.msi
+  ProductCode: '{AEE30FB5-F610-4DD5-BC15-E84B1F574586}.msq'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We're pleased to announce the release of MuteMe version 0.27.6. This release includes critical memory leak fixes across native controllers, improved Microsoft Teams meeting hold detection, device connection stability improvements, and enhanced OBS Studio documentation.
+    #403 – Native Controller Memory Leak Fixes
+    We conducted a comprehensive investigation and added memory leak detection across multiple native controllers on macOS and Windows. This work included adding a new memory monitoring service with debugging capabilities, stress test tooling, and debug state inspection for all platform controllers. The fixes span macOS FaceTime, GoToMeeting, Teams, Zoom, and Mic-In-Use controllers, as well as Windows Discord, Teams, Zoom, and WebEx controllers. This continues the work we were doing with version 0.27.2
+    #401 – Zoom Controller Memory Leak Fix
+    Fixed a memory leak in the macOS Zoom controller that could cause unbounded memory growth during extended Zoom sessions. The fix addresses improper memory management calls weren't being properly released.
+    #396 – Microsoft Teams Meeting Hold/Park Detection
+    Fixed an issue where Microsoft Teams on both macOS and Windows would incorrectly latch onto a meeting that had been placed on hold. When a meeting is parked, Teams keeps the mute button enabled, which caused MuteMe to continue controlling the held meeting instead of the active one. We've added logic to detect "resume-button" and "hold-timer" UI elements that Teams displays when a meeting is on hold, and the controller now properly skips held meetings and continues scanning for the active meeting window. This continues our migration work away from the Microsoft Teams API which we started in version 0.27.2
+    #407 – Device Connection Stability Improvements
+    Fixed a bug in the device reconcile logic that could cause LED flickering every 5 seconds on Windows. The previous implementation would trigger a reconnect when certain conditions were met. The reconcile now only triggers when a supported device is present but not connected, and it never tears down a healthy connection. This also eliminates a race condition with the HID write path that could cause device controller crashes also causing it to appear like the device was restarting.
+    #405 – OBS Studio Support Documentation
+    Added comprehensive OBS Studio support documentation covering setup instructions for Windows, macOS, and Linux. The guide includes step-by-step WebSocket API configuration, troubleshooting tips, and security notes explaining why localhost connections don't require firewall changes. Also added an in-app configuration dialog that prompts users to enable OBS WebSocket when they first connect.
+    #408 – Amazon Chime Deprecation
+    Amazon Chime meetings and Business Calling services have been officially discontinued by AWS. MuteMe has removed Amazon Chime support. Users are encouraged to migrate to supported platforms like Zoom, Microsoft Teams, or Google Meet.
+    #409 – Windows Build Improvements
+    Updated the Windows code signing certificate and improved the Electron Forge configuration to make signing faster and more reliable. This make the app a bit lighter for downloads but has no real user impacts.
+
+    Update your software today to enjoy these improvements!
+ReleaseTime: 2026-07-05
