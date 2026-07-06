@@ -1,0 +1,62 @@
+Version: 0.2.11
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/shihuili1218/rssh/releases/download/v0.2.11/rssh-0.2.11-windows-x86_64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/shihuili1218/rssh/releases/download/v0.2.11/rssh-0.2.11-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    RSSH v0.2.11 — terminal workflows, safer SSH key import, and observable AI ops
+    RSSH is a Rust/Tauri SSH client with a desktop GUI, CLI, mobile build, JetBrains tool-window mode, and an AI-assisted ops diagnosis workflow. v0.2.11 focuses on the parts of SSH tools that are mostly muscle memory: tab switching, text selection, local shells, multi-session broadcast, and making AI tool actions visible instead of mysterious.
+    Why
+    Terminal UX regressions are expensive because users notice them immediately. After the xterm.js 6 upgrade, macOS Option+Left/Right stopped behaving like word-jump in shells. Apps that enable mouse tracking, such as tmux, zellij, and vim, also made it hard to select and copy text locally on macOS.
+    At the same time, RSSH's broadcast editor and AI diagnosis panels had useful state hidden behind the UI: users could send text to multiple sessions without enough confidence about the target state, and some AI tool calls were only visible internally. This release makes those flows more inspectable and safer.
+    What's new
+    - Fast session tab switching. Use Cmd+1..9 on macOS and Alt+1..9 on Windows/Linux to jump directly to session tabs. RSSH skips the fixed Home tab so the shortcut targets real SSH/local sessions.
+    - Optional local terminal on startup. A new Shell setting opens one local terminal tab automatically when RSSH starts, without affecting cloned windows or AI handoff windows.
+    - Live broadcast previews. The broadcast editor now shows a compact minimap for each target session, plus a larger hover preview. The preview is rendered from the existing terminal buffer, with no extra PTY or SSH subscription.
+    - Selection-aware broadcast. If text is selected in the editor, RSSH sends only that selection; otherwise it keeps the previous behavior and sends the whole document.
+    - Visible AI tool-call hints. Chat and audit panels now show loaded skills, blocked commands, proposed local-analysis handoffs, and download size limits instead of leaving those actions implicit.
+    - Safer right-click menu changes. RSSH now asks for confirmation before switching away from the native terminal context menu, which is often the user's entry point for copy/paste.
+    Rust/Tauri implementation notes
+    - The macOS word-jump fix restores Option+Left/Right by translating the xterm.js key sequence into Meta-b / Meta-f and sending it through the existing terminal onData -> PTY path. Linux and Windows keep their native Ctrl-arrow behavior.
+    - macOS local selection while terminal apps own mouse input now follows the iTerm-style Option-drag convention by enabling xterm's macOptionClickForcesSelection.
+    - The broadcast minimap is derived from xterm viewport snapshots. The implementation handles scrollback cursor position and wide-glyph continuation cells so previews do not paint misleading cells.
+    - Backend hardening includes an idempotent migration for legacy regex highlight rules with blank names, plus a shared 1 MiB cap for default SSH key-file reads so the native Rust path matches the existing webview import limit.
+    - AI audit additions are in-memory event variants, so no data migration is required.
+    How to try it
+    - Open several sessions and press Cmd+1..9 on macOS or Alt+1..9 elsewhere.
+    - Enable Shell → Open local terminal on startup if you usually begin in a local shell.
+    - Open the broadcast editor, hover target sessions to inspect their previews, and select only the text you want to send.
+    - In AI diagnosis, blocked commands and loaded skills should now appear in the chat/audit timeline.
+    Fixes and hardening
+    - Restored macOS Option+Left/Right word navigation after the xterm.js 6 behavior change.
+    - Enabled local text selection on macOS while mouse-tracking terminal apps are running.
+    - Fixed the AI chat send/stop button stretching with multi-line input.
+    - Unified modal/dialog styling behind a shared component and theme-driven surfaces.
+    - Fixed legacy regex highlight migration naming.
+    - Capped default SSH private-key file reads at 1 MiB.
+    Contributors
+    Thanks to @ZYist for the tab-switching work, and to everyone who reviewed the release PRs.
+    These notes were drafted with LLM assistance.
+
+    What's Changed
+    - fix(terminal): restore macOS Option+Left/Right word jump (#151)
+    - feat(tab): jump to the Nth session tab with Cmd/Alt+1..9 (#152)
+    - feat(ai): show tool-call hints in chat and audit panels (#155)
+    - feat(shell): optionally open a local terminal on startup (#154)
+    - refactor(ui): unify popups behind a Modal component and theme-driven surfaces (#157)
+    - fix(ai): shrink chat send button and stop it stretching (#156)
+    - feat(edit): live session previews and selection-aware broadcast (#159)
+    - fix(db/ssh): highlight-rule migration and capped default key-file read (#161)
+    - feat(shell): confirm before turning off the terminal right-click menu (#162)
+    - fix(terminal): allow text selection when app owns the mouse (#166)
+    Full Changelog: https://github.com/shihuili1218/rssh/compare/v0.2.10...v0.2.11
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/shihuili1218/rssh/releases/tag/v0.2.11
+ReleaseTime: 2026-07-06T05:43:53.0000000Z
