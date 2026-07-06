@@ -1,0 +1,32 @@
+Version: 0.6.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.7/Mini-Term_0.6.7_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.7/Mini-Term_0.6.7_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    本版为深度 review 修复版，修复三处问题——其中一处影响多服务器场景下的文件树正确性，两处涉及 SSH 凭据边界。
+    修复
+    - 文件树跨服务器串台 — 同时管理两个远程路径相同的 SSH 项目（如两台服务器都有 /root/app）时，从一个切回另一个（缓存命中）会让文件树里已展开的子目录显示另一台服务器的文件。根因是文件树节点的 React key 只用了路径、未掺连接 id，切回时复用了上一台服务器遗留的子树状态。改为 key 掺入连接 id：不同服务器强制整树重挂并按当前连接重新拉取，切回同一项目仍复用实例、保留展开态。
+    - SSH 登录密码被灌进远程 su / mysql -p / passwd 提示 — SSH 远程项目的连接同时配了私钥和密码时，publickey 登录成功后全程不出现密码提示，密码自动填充便终身待命，会把 SSH 登录密码打进之后任意以 password: 结尾的提示。改为用户首次在终端真实输入即解除自动填充（排除 xterm 焦点进/出序列，不误伤认证阶段），并在 PTY 退出时清除驻留的明文密码；终端右键「SSH 连接」功能行为保持不变。
+    - 关联 SSH 范围静默扩大 — 「关联 SSH」范围为旧空值（语义是"含未来新增连接"）的项目，在全选保存时被判为无变化而不落盘迁移，导致之后新增 SSH 连接被静默纳入该项目的可访问范围。改为强制迁移成显式连接列表；有效范围不变时静默落盘、不打扰。
+    质量
+    - 新增 4 条 SSH 密码自动填充单元测试，Rust 单元测试总数 313 → 317，全绿。
+    下载
+    平台 产物
+    Windows Mini-Term_0.6.7_x64-setup.exe / Mini-Term_0.6.7_x64_en-US.msi
+    macOS Mini-Term_0.6.7_aarch64.dmg（Apple Silicon）
+    Linux Mini-Term_0.6.7_amd64.AppImage / Mini-Term_0.6.7_amd64.deb / Mini-Term-0.6.7-1.x86_64.rpm
+    macOS 提示：产物未做 Apple Developer ID 签名，首次打开若提示"已损坏"，将 .app 拖入 /Applications 后执行 xattr -cr /Applications/Mini-Term.app 即可。
+    平台支持：Windows 为主要支持平台；macOS / Linux 可用性欠佳，欢迎反馈 Issue。
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.6.6...v0.6.7
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.7
+ReleaseTime: 2026-07-06T14:32:04.0000000Z
