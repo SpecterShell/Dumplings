@@ -1,0 +1,27 @@
+Version: 0.14.17
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.14.17-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.14.17 更新
+    新功能
+    - 图片预览支持多图翻页 — 输入框和消息气泡中的多图预览现在支持左右翻页浏览，点击两侧箭头或按方向键即可切换，顶部显示当前/总数角标，首尾循环。覆盖 Chat 和 Agent 两种模式，已加载的缩略图会复用，不触发额外 IO。(#1126)
+    - 草稿页支持右侧分屏 — 在 Agent 会话中可将草稿页拖拽到右侧分屏面板，边看对话边记笔记。关闭分屏后草稿 Tab 自动恢复原位，内容实时自动保存。(#1124)
+    - 新增 Ark Coding Plan 渠道预设 — 渠道管理新增「Ark Coding Plan」预设，预配置 Doubao Seed 2.0 Code/Pro/Lite、GLM-5.2、Kimi K2.7 Code、MiniMax M3、DeepSeek V4 Flash/Pro 共 8 个模型，一键添加即可使用。(#1118)
+    Bug 修复
+    - 防止 Agent 消息静默丢失 — 当模型异常结束且未返回任何可展示内容时，现在会保留用户已发送的消息，并在对话中显示清晰的错误提示和重试按钮，不再静默丢失整轮交互。(#1122)
+    - 消息队列支持附件显示 — 排队中的消息现在会显示附件标识（文件名或附件数量），仅附件无文本时标注「仅附件」，让队列内容一目了然。同时重构了附件发送逻辑，区分剪贴板草稿、侧面板文件和新上传文件三类场景，处理更可靠。(#1116)
+    - 修复 macOS 全屏窗口关闭黑屏 — 在 macOS 全屏状态下关闭窗口时，现在会先退出全屏再隐藏窗口，避免下次打开出现黑屏。同时抽取了主窗口生命周期管理模块，窗口状态持久化也更健壮。(#1119)
+    - 存储清理内存安全防护 — 存储空间扫描现在跳过工作区元数据目录（如 skills、.claude），避免误清理；新增孤立项预览列表和路径安全检查，防止越界删除。(#1114)
+    - 委派子会话跟随父会话移动 — 将 Agent 父会话迁移到其他工作区时，其派出的协作子会话现在会正确跟随移动，工作目录和元数据同步更新，不再遗留。(#1113)
+    - 消除无预览时主区域白条缝隙 — 右侧预览面板关闭时，主区域右侧不再出现多余的 2px 白条缝隙，视觉更一体。(#1115)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.14.17
+ReleaseTime: 2026-07-08T10:13:15.8930000Z
