@@ -1,0 +1,143 @@
+Version: 16.3.12
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.3.12/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added per-tool abort metadata so stream-wide aborts can label matching tool-call placeholders separately from unaffected sibling calls (#2783).
+    Fixed
+    - Fixed handoff generation retrying with toolChoice: "auto" when custom OpenAI-compatible providers reject toolChoice: "none" with an auto-only 400. (#4715)
+    - Fixed generic remote compaction against OpenAI-compatible /chat/completions endpoints (for example llama.cpp openai-completions) by sending chat messages instead of the custom { systemPrompt, prompt } summarizer payload. (#4630)
+    @oh-my-pi/pi-ai
+    Added
+    - Added AssistantMessage.toolCallAbortMessages for per-tool placeholder labels on aborted assistant turns (#2783).
+    Fixed
+    - Fixed Anthropic replay 400s (tool_use ids were found without tool_result blocks immediately after) when a persisted assistant turn carries content after a completed tool call — such as a mid-turn server-side-fallback handoff (fallback block plus continued text/tool calls after the primary model's tool_use) or trailing text from cross-provider replays — by stable-partitioning assistant content so all tool_use blocks trail the non-tool_use chain. (#4781, #544)
+    - Fixed access-token-only OAuth credentials attempting token refresh with an empty refresh token after expiry.
+    - Fixed gateway usage-limit retries falling through to cross-provider model fallback before trying a sibling credential from the same provider.
+    - Fixed Codex usage-limit rotation treating Plus and K-12 accounts as separate quota groups for shared 5-hour/7-day windows.
+    - Fixed OpenAI Responses streams that end with response.done being misclassified as premature stream closures.
+    - Fixed OpenCode Go /login credentials being shadowed by an existing OPENCODE_API_KEY env fallback after switching accounts. (#4688)
+    - Fixed OpenAI Codex WebSocket continuations to treat proxy stale-anchor codes such as codex_previous_response_stale as an expired previous_response_id chain — same recovery class as the OpenAI-standard previous_response_not_found — so the turn is retried with full context instead of surfacing the error to the user (#4624).
+    - Fixed Azure Foundry Anthropic utility requests to omit the structured-output beta whenever strict tools are disabled, preventing structured_outputs not supported in your workspace failures for Sonnet 5 compaction (#4679).
+    - Fixed OAuth launchUrl advertisement for flows whose redirect never returns to the local callback server: custom-scheme redirects (e.g. GitLab Duo's vscode:// URI, which new URL parses without complaint) and fixed non-loopback hosts no longer receive a http://localhost:<port>/launch copy target that misrepresents the callback endpoint and resolves nowhere for remote users.
+    - Codex load balancing: clear stale persisted and in-memory usage-limit blocks for an openai-codex account when a fresh live usage report shows it is allowed and below all limits, including broker-backed gateway snapshots, so traffic returns to recovered accounts instead of funneling to one sibling.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed LiteLLM discovery stopping at /model_group/info when that endpoint omitted supports_vision; it now continues to /model/info and preserves model_info.supports_vision=true for vision-capable proxy models. (#4747)
+    - Fixed LiteLLM discovery to fall back to bundled catalog metadata when models.dev lacks a model reference, preserving reasoning and thinking support for models such as glm-5.2. (#4695)
+    - Detected Azure AI Inference / Foundry Anthropic routes as strict-tool-incompatible so resolved Anthropic compat disables strict tools before request construction (#4679).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Typing #<number> (e.g. #3164) in the prompt now offers PR and Issue autocomplete candidates that rewrite to the pr:///issue:// internal URL, resolved from the current repo's git remote via the existing read tool → InternalUrlRouter → gh pipeline. Naming the type (pr #3164 / issue #3164) constrains the candidates to that kind, and embedded hashes like owner/repo#N, foo#N, or URL fragments are left untouched (#3218)
+    Changed
+    - Memoized non-message token totals (system prompt, tool schemas, skills) so the per-turn compaction and context-threshold paths recompute them at most once per input change instead of on every call. getContextBreakdown and #estimateStoredContextTokens previously re-tokenized the system prompt and every tool's wire schema (per-tool JSON.stringify) several times per turn over inputs that change at most once per turn.
+    Fixed
+    - Improved handling of unawaited promises in JS eval cells to prevent process crashes
+    - Added warning logs for unhandled rejections originating from finished eval cells
+    - Improved advisor robustness by blocking exhausted accounts during consecutive turn failures
+    - Fixed advisor turns hammering the same usage-limited account: a failed advisor turn now marks the exhausted credential blocked (with the provider's retry hint and usage-report reset time), so the next retry rotates to a sibling instead of re-picking the blocked account every few seconds. Previously the in-stream auth retry rotated within a request but never blocked the last failing credential, and the advisor loop — unlike the primary retry pipeline — never called markUsageLimitReached.
+    - Added the account key to the codex-auto-reset: skipped debug log so skip reasons (e.g. weekly-not-exhausted) can be attributed to the evaluated account.
+    - Fixed unawaited promise rejections in JS eval cells crashing the session: a floating rejection now fails the owning cell run (Unhandled rejection (missing await?): …) instead of escaping to the global unhandledRejection handler, which printed [Unhandled Rejection] and killed the process (inline fallback) or tore down the eval worker (dedicated worker). Rejections surfacing after a cell settled are downgraded to a warn log attributed to the finished cell.
+    - Fixed project .omp/RULES.md sticky rules being shadowed by user ~/.omp/agent/RULES.md rules with the same synthesized RULES name, so both user and project sticky rules now inject (#4739).
+    - Fixed bash internal-URL expansion so unresolved literal memory:// / skill:// text stays verbatim instead of aborting command execution (#4737).
+    - Fixed agent://<id> (and the output() eval helper) failing with Not found for a subagent spawned by another subagent (any spawn chain 2+ levels deep). artifactsDirsFromRegistry scanned only each ref's adopted (root-wide) ArtifactManager dir, but a subagent's own children are written one level deeper under its sessionFile-derived dir — so a live, addressable nested peer's output was unresolvable. The resolver now collects both candidate dirs per registered agent. (#4650)
+    - Fixed plan mode to document local:// artifacts as writable session-local planning files and to carry every pre-approval local:// artifact into the fresh session created by Approve and Execute.
+    - Fixed the browser tool failing to launch Microsoft Edge-only Windows installs with Puppeteer's empty Code: 0 launch error by keeping Edge's required --enable-automation default while preserving Chrome/Chromium stealth launch defaults.
+    - Fixed bash/tool command environments inheriting Bun-autoloaded launch .env.local values, so nested apps can load their own dotenv values without parent deployment variables taking precedence. (#4723)
+    - Fixed legacy plugin validation for extension graphs that import JSON with with { type: "json" }, leaving JSON files on Bun's native loader instead of parsing them as JavaScript (#4687).
+    - Fixed pasted terminal transcripts beginning with a shell prompt ($ ...) being mistaken for local Python shortcuts instead of being submitted as normal prompts (#4678).
+    - Fixed wrapped OAuth copy-URL rows corrupting on paste: continuation chunks no longer carry a leading indent, so a multi-row terminal selection reassembles to the exact authorize URL (browsers strip newlines on paste but preserve or percent-encode embedded spaces, which previously corrupted the URL at every chunk boundary).
+    - Fixed Windows browser-launch failures being unobservable: the opener now uses %SystemRoot%-resolved PowerShell Start-Process (via -EncodedCommand) instead of rundll32, which exits 0 unconditionally. Failures ShellExecute itself reports — missing target, no handler executable, access denied — now surface as non-zero exits and are logged; the encoded payload also keeps OAuth query strings (&-bearing) opaque to shell metacharacter parsing.
+    - Fixed system prompt date rendering to use the host local calendar date instead of UTC.
+    - Fixed bash tool timeout: 0 so it disables the command deadline instead of falling back to the minimum timeout.
+    - Fixed read and grep refusing to access filesystem paths whose names end in a selector-shaped suffix (e.g. test:1-2, log:raw) by preferring a literal match over the trailing :<selector> peel when the raw path exists on disk (#4618).
+    - Fixed wrapped Edit-diff rows leaking inverse video into the result card's right-edge padding: a row that broke inside an intra-line highlight left inverse active at the row end, so the frame padding after it rendered as a default-foreground block (#4616 by @chan1103)
+    - Fixed Edit-diff continuation rows escaping into the line-number column when the row's gutter was left-padded (line number narrower than the widest in the diff) or blanked by the gutter dedup (the bare + row of a single-line replacement); such rows now wrap behind a continuation gutter, while body lines that merely start with | keep wrapping generically (#4616 by @chan1103)
+    - Fixed live advisors continuing to use a stale modelRoles.advisor selection after /model changed the advisor model. (#4612)
+    - Fixed Claude plugin slash commands and skills silently vanishing when the plugin manifest declares commands/slash-commands/skills as a JSON array — the shape the Claude plugins reference documents and real plugins like addyosmani/agent-skills ship. resolvePluginDir in packages/coding-agent/src/discovery/claude-plugins.ts typed those fields as string and dropped array values on the floor; it now normalizes both shapes, loads every in-root entry, and reports one out-of-plugin-root warning per bad entry. The resolver also now honours Claude's per-field merge semantic — skills adds to the default skills/ scan; commands/slash-commands replace the default commands/ — so plugins like {"skills":["./extra-skills"]} no longer lose their default skills/ folder while {"commands":["./admin"]} still replaces commands/ as documented. (#4609)
+    - Fixed macOS Backspace on empty search not deleting sessions in the /resume picker; Fn+Backspace terminals that deliver \x7f instead of \e[3~ now reach the delete confirmation dialog. (#4580 by @JagravNaik)
+    - Fixed /rename title arguments treating # prompt-action tokens as autocomplete triggers instead of literal session title text. (#4600)
+    - Fixed empty session .jsonl files accumulating in ~/.omp/agent/sessions/<cwd>/ after a draft-then-clear exit cycle. SessionManager.saveDraft(text) materializes the session file so the draft sidecar has a parent; a subsequent saveDraft("") unlinked the sidecar but left the metadata-only JSONL behind (title slot + session header + startup selector entries, ~500–750 B), and #shouldHaveSessionFile() could no longer prune it once #fileIsCurrent/#forceFileCreation were latched. SessionManager.close() now drops only draft-owned metadata-only sessions with no saved draft sidecar to reattach to, while keeping real conversations, meaningful non-message entries such as handoff custom messages, explicit ensureOnDisk() sessions, drafts still pending for --resume, and never-materialized sessions untouched (#4571).
+    - Fixed the advisor being disabled for the entire session when the advisor role resolves to a reasoning model that exposes no controllable effort surface (Devin devin/glm-5-2*: reasoning: true, thinking: undefined — Cascade routes by sibling model id rather than a wire param). #resolveAdvisorRuntimeDescriptors in packages/coding-agent/src/session/agent-session.ts used to hardcode ThinkingLevel.Medium, which tripped requireSupportedEffort on the first advisor prompt with Thinking effort medium is not supported by devin/glm-5-2. Supported efforts: (empty list). The advisor descriptor now clamps the requested effort against the resolved model via resolveThinkingLevelForModel and forwards no explicit effort when the model has no controllable efforts — matching the auto-path fix (clampAutoThinkingEffort) and the Autonomous Memory stage fix (clampThinkingLevelForModel). Explicit :off still disables reasoning, and models that support medium (e.g. Anthropic) keep receiving it (#4579).
+    - Fixed legacy extension plugin validation failing with Export named 'calculateCost' not found in module '.../legacy-pi-ai-shim.ts' when the extension imports calculateCost (or modelsAreEqual / getBundledProviders) from @oh-my-pi/pi-ai. Those symbols were relocated to @oh-my-pi/pi-catalog/models during the catalog split but were never bridged back through the legacy pi-ai root shim; the shim now re-exports them alongside the existing getModel / getModels aliases so plugins written against pre-split pi-ai load again (#4584).
+    - Fixed legacy extension plugin validation failing with Export named 'calculateCost' not found in module '.../legacy-pi-ai-shim.ts' when the extension imports relocated catalog symbols such as calculateCost, modelsAreEqual, getBundledProviders, getBundledModel, or getBundledModels from @oh-my-pi/pi-ai. Those symbols were relocated to @oh-my-pi/pi-catalog/models during the catalog split but were never bridged back through the legacy pi-ai root shim; the shim now re-exports them alongside the existing getModel / getModels aliases so plugins written against pre-split pi-ai load again (#4584).
+    - Fixed legacy pi extension imports of DefaultResourceLoader from @mariozechner/pi-coding-agent / @earendil-works/pi-coding-agent by adding a compatibility loader shim that translates resourceLoader into OMP's native session discovery options. (#4567)
+    - Fixed legacy Pi extension reloads on POSIX so loadLegacyPiModule imports the entry through a cache-busting filesystem path, refreshes load-time graph hooks when reloads add new modules, and threads the current load's ?mtime tag through the extension source graph — relative ./helper.ts siblings, #alias/* package-imports, extension-local bare dependency entries, and their relative children all rekey per reload, so same-process re-imports pick up edits across the whole graph. (#4565)
+    - Fixed bash tool pipeline execution preserving stale upstream output when the final stage was a stripped head/tail limiter; the tool now runs the command as written so seq 1 5 | head -n2 returns only 1 and 2. (#4562)
+    - Fixed the status-line token-rate segment rendering as <number>/s, which Ghostty auto-detected as a hyperlink on Ctrl+hover. (#4541)
+    - Fixed retry fallback model recovery by exposing retry.fallbackChains in /settings, adding a /model action to assign the selected default fallback model, and clearing a selected model's retry cooldown marker on manual model switches. (#4533)
+    - Fixed /handoff and auto-handoff skipping extension lifecycle hooks by emitting cancellable session_before_switch hooks and a session_switch with reason: "handoff" after the replacement session is ready (#4434).
+    - Fixed TTSR stream interrupts so only the tool call whose stream matched a rule receives the rule-named abort result; sibling tool-call placeholders now use a neutral abort reason (#2783).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed the native build script failing to locate the @napi-rs/cli napi binary on Windows because the PATH lookup joined entries with a Unix : separator instead of the platform delimiter (path.delimiter).
+    - Fixed a Windows regression where an abnormal omp exit or bash cancellation could TerminateProcess unrelated pwsh.exe / powershell.exe sessions (including other Cursor terminal tabs). SpawnRegistry stored only the raw pid of each brush-spawned child and re-opened it via Process::from_pid at cancellation time; between those two moments Windows could recycle a freed pid onto an unrelated PowerShell, and signal_tree then walked the wrong subtree via Toolhelp. The observer now pins a stable Process handle at spawn time — on Windows the open handle keeps the pid slot reserved, on Linux the pidfd carries identity, on macOS the (pid, start_time) triple detects impersonation — so cancellation can only reach children this run actually launched. The registry sweeps exited entries once the recorded set crosses a small threshold so a long bash loop of short external commands cannot pin one owned OS handle per historical spawn. (#4605)
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed selector rendering when a legacy theme omits symbol settings by falling back to an ASCII cursor instead of crashing (#4745).
+    - Kept slash command autocomplete rows compact by truncating descriptions instead of wrapping them into multi-line blocks.
+    - Fixed mid-prompt skill autocomplete so Tab and Enter accept the highlighted /skill:<name> suggestion and Backspace dismisses the popup immediately after removing the triggering slash (#4619).
+    - Fixed submitted slash-command arguments treating @ file-reference tokens as prompt-composer autocomplete triggers when the command does not define argument completions. (#4600)
+    - Fixed box-drawing tree lines (├── item — directory layouts, decision trees) in prose shearing apart when they wrap: continuation rows now hang under the node text with ancestor rails carried through (├ → │, └ → blank) instead of restarting at column 0. Applies to prose paragraphs (including inside blockquotes) only when a line with a branch-connector prefix (├──, └─, …) actually overflows; fitting lines, non-tree prose, and code blocks render byte-for-byte as before.
+    @oh-my-pi/pi-utils
+    Added
+    - Added postmortem.interceptUnhandledRejections() to register interceptors consulted before an unhandled rejection tears the process down; a consuming interceptor (e.g. the JS eval runtime claiming rejections floated by user cell code) keeps the process alive and owns reporting.
+    Fixed
+    - Fixed child shell environment filtering to drop launch-directory .env.local values that Bun auto-loaded before OMP starts command shells. (#4723)
+    What's Changed
+    - Perf/memoize non message tokens by @H4vC in https://github.com/can1357/oh-my-pi/pull/4775
+    - fix(tui): dispose stale session UI renderers by @roboomp in https://github.com/can1357/oh-my-pi/pull/4693
+    - fix(agent): retry handoff auto-only tool choice errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/4720
+    - fix(cli): stop exporting launch .env.local into commands by @roboomp in https://github.com/can1357/oh-my-pi/pull/4729
+    - fix(coding-agent): preserve literal bash internal URLs by @roboomp in https://github.com/can1357/oh-my-pi/pull/4738
+    - fix(agent): keep project sticky RULES active by @roboomp in https://github.com/can1357/oh-my-pi/pull/4742
+    - fix(Dockerfile): Do bun run gen:tool-views alongside gen:docs by @moutazhaq in https://github.com/can1357/oh-my-pi/pull/4743
+    - fix(tui): guard selector cursor symbol by @roboomp in https://github.com/can1357/oh-my-pi/pull/4746
+    - fix(catalog): preserve LiteLLM vision metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/4749
+    - fix(ai): keep assistant tool_use blocks trailing on Anthropic replay by @any-victor in https://github.com/can1357/oh-my-pi/pull/4782
+    - fix(plan): carry local artifacts into approve execute by @vmcall in https://github.com/can1357/oh-my-pi/pull/4785
+    - fix(coding-agent): resolve agent:// for nested subagent output by @any-victor in https://github.com/can1357/oh-my-pi/pull/4791
+    - fix(auth): rotate Codex credentials before provider fallback by @cagedbird043 in https://github.com/can1357/oh-my-pi/pull/4799
+    - Fix browser launch on Microsoft Edge installs by @qfrtt in https://github.com/can1357/oh-my-pi/pull/4804
+    - Fix JS eval worker cwd conflict handling by @cexll in https://github.com/can1357/oh-my-pi/pull/4839
+    - feat(coding-agent): recognize # as a GitHub issue/PR reference by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3224
+    - fix(agent): emit session_switch for handoff by @roboomp in https://github.com/can1357/oh-my-pi/pull/4435
+    - fix(coding-agent): restore fallback model selection by @roboomp in https://github.com/can1357/oh-my-pi/pull/4535
+    - fix(pi-shell): pin spawn observer identity against Windows pid reuse by @roboomp in https://github.com/can1357/oh-my-pi/pull/4606
+    - fix(tui): hang wrapped box-drawing tree lines under their node text by @chan1103 in https://github.com/can1357/oh-my-pi/pull/4607
+    - fix(discovery): accept array-form Claude plugin manifest paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/4610
+    - fix(coding-agent): refresh advisor on model role changes by @roboomp in https://github.com/can1357/oh-my-pi/pull/4613
+    - fix(coding-agent/edit): sealed inverse video and preserved gutters in wrapped diff rows by @chan1103 in https://github.com/can1357/oh-my-pi/pull/4616
+    - fix(tui): accept mid-prompt slash skill autocomplete by @roboomp in https://github.com/can1357/oh-my-pi/pull/4620
+    - fix(tools): prefer literal filesystem match over trailing :selector peel by @roboomp in https://github.com/can1357/oh-my-pi/pull/4622
+    - fix(ai): recognize proxy stale-anchor codes for codex websocket previous_response chain by @roboomp in https://github.com/can1357/oh-my-pi/pull/4625
+    - fix(agent): support chat completions remote compaction endpoints by @roboomp in https://github.com/can1357/oh-my-pi/pull/4633
+    - fix: cramped slash autocomplete menu by @paralin in https://github.com/can1357/oh-my-pi/pull/4641
+    - fix(bash): support disabled command deadlines by @paralin in https://github.com/can1357/oh-my-pi/pull/4642
+    - fix(coding-agent): use local date in system prompt by @paralin in https://github.com/can1357/oh-my-pi/pull/4643
+    - fix(prompting): hide eval guidance when disabled by @paralin in https://github.com/can1357/oh-my-pi/pull/4644
+    - fix(coding-agent): guard pasted shell prompts from python by @roboomp in https://github.com/can1357/oh-my-pi/pull/4681
+    - Fix Azure Foundry Anthropic strict tools by @roboomp in https://github.com/can1357/oh-my-pi/pull/4682
+    - Fix legacy plugin JSON import validation by @roboomp in https://github.com/can1357/oh-my-pi/pull/4690
+    - fix(ai): accept response.done terminal event by @cexll in https://github.com/can1357/oh-my-pi/pull/4692
+    - fix(auth): prioritize login API keys over env fallbacks by @roboomp in https://github.com/can1357/oh-my-pi/pull/4694
+    - fix(catalog): restore LiteLLM bundled metadata fallback by @roboomp in https://github.com/can1357/oh-my-pi/pull/4701
+    - fix(coding-agent): hide marketplace temp clone paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/4704
+    - fix: preserve status line path under overflow by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/4728
+    - fix(coding-agent): scoped TTSR abort reason to matching tool call by @roboomp in https://github.com/can1357/oh-my-pi/pull/4542
+    - fix(ai): self-heal stale Codex usage-limit blocks by @joswha in https://github.com/can1357/oh-my-pi/pull/4844
+    New Contributors
+    - @moutazhaq made their first contribution in https://github.com/can1357/oh-my-pi/pull/4743
+    - @any-victor made their first contribution in https://github.com/can1357/oh-my-pi/pull/4782
+    - @paralin made their first contribution in https://github.com/can1357/oh-my-pi/pull/4641
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.3.11...v16.3.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.3.12
+ReleaseTime: 2026-07-08T18:04:36.0000000Z
