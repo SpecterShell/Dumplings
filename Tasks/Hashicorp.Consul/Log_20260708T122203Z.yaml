@@ -1,0 +1,30 @@
+Version: 2.0.2
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/2.0.2/consul_2.0.2_windows_386.zip
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/2.0.2/consul_2.0.2_windows_amd64.zip
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SECURITY:
+    - Upgrade alpine base image version to 3.24 to address [CVE-2026-41989], [ALPINE-CVE-2026-2100]. [GH-23711]
+    - dependency: Upgrade Serf and Memberlist to use the latest versions. [GH-23704]
+    - xds: Return errors when injecting the L4 intention (RBAC) filter or the mTLS transport socket onto an inbound public listener, so the listener is not served without intention enforcement or mTLS. [GH-23686]
+    FEATURES:
+    - config-entry(api-gateway): (Enterprise only) Add ExtAuthzFilter to HTTPRoute Filters and gateway-wide ExtAuthz toggle to the api-gateway config entry [GH-23703]
+    - config-entry: (Enterprise only) Addition of External Processor (ext_proc) Envoy Extension support to api-gateway and connect-proxy [GH-23705]
+    IMPROVEMENTS:
+    - ci: upgrade GitHub Actions that used the deprecated Node 20 runtime to Node 24, and restore GOTOOLCHAIN=auto after setup-go so backward-compatibility and integration test lanes resolve the correct Go toolchain. [GH-23687]
+    - connect: update support for nomad and vault version to v2.0.3 [GH-23624]
+    - deps: Migrate armon/go-metrics to hashicorp/go-metrics and update Go dependencies across all modules [GH-23635]
+    BUG FIXES:
+    - xds: only emit the client cert SDS block when both CertFile and KeyFile are set. [GH-23679]
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases/tag/v2.0.2
+ReleaseTime: 2026-07-08T10:39:04.0000000Z
