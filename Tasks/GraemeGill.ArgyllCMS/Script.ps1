@@ -14,6 +14,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains($this.CurrentState.Version) -and $_.href.Contains('win64') -and -not $_.href.Contains('llvm') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains($this.CurrentState.Version) -and $_.href.Contains('win_arm64') -and -not $_.href.Contains('llvm') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
