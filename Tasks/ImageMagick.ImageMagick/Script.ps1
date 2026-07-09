@@ -34,10 +34,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://github.com/ImageMagick/Website/blob/HEAD/ChangeLog.md'
+        Value  = $ReleaseNotesUrl = 'https://github.com/ImageMagick/Website/blob/HEAD/docs/changelog/index.md'
       }
 
-      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ImageMagick/Website/HEAD/ChangeLog.md' | Convert-MarkdownToHtml
+      $Object3 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ImageMagick/Website/HEAD/docs/changelog/index.md' | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("/h2[contains(.//text(), '${Version}')]")
       if ($ReleaseNotesTitleNode) {
