@@ -1,0 +1,30 @@
+Version: 1.0.55
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work-Review/releases/download/v1.0.55/Work_Review_1.0.55_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    English → | 繁體中文 →
+
+    修复
+    - 右键 WebView 原生菜单（#126）：应用壳层全局拦截 contextmenu，避免桌面应用内弹出浏览器默认右键菜单；新增回归测试覆盖监听与清理逻辑。
+    - 概览指定日期选择框（#119 / #127）：日期选择器浮层已改为挂载到 body 并使用 fixed 定位，避免被概览容器裁剪；同步修复日期范围前后切换口径。
+    - AI 助手时间上下文（#122）：向助手提示词注入当前日期与时间，避免回答中出现过期或错误时间。
+    - 桌宠多屏位置（#120）：记录并恢复桌宠所在显示器位置，减少多屏环境下重启或拖拽后的漂移。
+    - 设置页更新开关：自动检查更新开关现在会立即持久化，避免切换后未保存导致下次启动状态不同步。
+    - 启动与 Linux 发布链路：修复开机自启、Linux release 工作流与相关打包校验问题。
+    - 构建 CSS 警告：避免 Tailwind 把 Markdown 表格分隔符正则误识别为任意属性 class，生产构建不再输出 CSS minify syntax warning；新增构建警告守护测试。
+    优化
+    - 日报页面：重做日报视觉结构，收紧 Markdown 表格布局，避免表格右侧留下大块空白。
+    - 工作助手：优化模型选择器尺寸、Markdown 渲染与流式输出节流，提升长回复阅读和输入体验。
+    - 设置页本地 API：本地 API 地址在未启用或本机地址场景下跳过无意义自动测试，减少误报。
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work-Review/releases/tag/v1.0.55
+ReleaseTime: 2026-07-09T15:44:01.0000000Z
