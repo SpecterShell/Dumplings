@@ -1,0 +1,24 @@
+Version: 1.0.11
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.11/OpenCowork-win-amd64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.11/OpenCowork-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added split provider persistence under ~/.open-cowork/ai-provider/, with atomic per-provider JSON writes, automatic migration from the legacy config.json entry, and native-worker sync coverage.
+    - Added versioned built-in provider presets and a "Restore defaults" action that refreshes built-in model definitions while preserving credentials, enabled states, and custom providers.
+    Changed
+    - Reduced main-process startup work by deferring terminal, SSH, image/GIF, migration, channel-provider, updater, MCP, and database initialization until needed or after the first window begins loading.
+    - Split renderer window surfaces and lazy-loaded secondary pages, update release-note rendering, Mermaid support, tokenizer data, and per-language locale bundles to improve first-paint time and reduce memory use.
+    - Delayed the first Native Worker spawn until shell-environment initialization completes and moved high-volume startup diagnostics to deferred file writes.
+    - Extracted SSH connection and proxy-jump payload resolution from the full SSH IPC handler so Git, cron, and sidecar consumers can load it independently.
+    Fixed
+    - Prevented a rejected second app instance from accessing Electron session APIs or starting the Native Worker before app readiness, eliminating Session can only be received when app is ready during shutdown.
+    - Temporarily stopped sending the unsupported "mode":"pro" parameter for GPT-5.6 Sol/Terra ultra requests while retaining their medium-effort fallback.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/OpenCowork/releases/tag/1.0.11
+ReleaseTime: 2026-07-10T03:12:45.0000000Z
