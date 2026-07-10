@@ -38,10 +38,10 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
           }
         } else {
-          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-          # ReleaseNotes (en-US)
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
+            Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
           }
