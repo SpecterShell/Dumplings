@@ -1,0 +1,23 @@
+Version: 3.26.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.tabulareditor.com/files/TabularEditor.3.26.3.x64.Net8.msi
+- Architecture: arm64
+  InstallerUrl: https://cdn.tabulareditor.com/files/TabularEditor.3.26.3.ARM64.Net8.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.tabulareditor.com/references/release-notes
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bugfixes in 3.26.3
+    - Fixed an issue where a failed File > Revert (for example, when the on-disk TMDL contains an unresolvable reference) could permanently disable unsaved-changes tracking for the rest of the session. Previously, subsequent edits would no longer show the dirty asterisk, and Revert or Close could silently discard unsaved changes without warning. Change tracking now remains active after a failed revert.
+    - On folder-serialized (TMDL) models, File > Revert no longer leaves the model showing as having unsaved changes after a successful revert. Previously the title-bar asterisk and the "Refresh metadata from source?" confirmation would persist on every subsequent revert until the model was saved.
+    - Fixed DAX auto-complete suggesting user-defined functions (UDFs) that are not valid in the current argument context, and omitting valid ones. UDFs are now filtered by their inferred return type: where a scalar is expected, only UDFs returning a scalar, a single-column table, or an untyped input parameter are shown; where a table is expected, only table-returning (or passthrough) UDFs are shown; and filter arguments (such as those of CALCULATE / CALCULATETABLE) now suggest UDFs, which were previously omitted entirely. UDFs whose definition contains a semantic error (for example, one that requires row context or misuses MATCHBY) are no longer offered as suggestions, as they cannot be validly invoked.
+    - The DAX formatter no longer replaces the = of a DAX function's default parameter value with a :. Previously, formatting a function such as (p = [m]) => 1 produced the invalid (p: [m]) => 1, because the formatter assumed any tokens after a parameter name were a : type annotation. Type annotations, default values, and the combination of both (p: INT64 = 1) are now formatted correctly.
+    - Fixed an issue where marking a DAX Optimizer issue as ignored had no effect after uploading a new version of an obfuscated model: the ignored issue would reappear as open. Ignored issues are now retained across versions of obfuscated models.
+    - Fixed an intermittent crash ("Collection was modified") that could occur in the DAX Optimizer view right after uploading a model or a new version. The view is now refreshed while the progress spinner is still shown, instead of refreshing in the background as the window was being redrawn.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.tabulareditor.com/en/references/release-notes/3_26_3.html
