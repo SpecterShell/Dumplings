@@ -1,0 +1,32 @@
+Version: "9.65"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-965.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#965
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - General:
+      - The SSH Client is now less permissive with regard to NUL characters in protocol strings where NULs are not expected.
+      - When making an outgoing connection via an HTTP CONNECT proxy, the SSH Client now limits the maximum size of received HTTP headers.
+    - SSH:
+      - The SSH Client now implements a configurable timeout for the duration of the initial SSH key exchange.
+      - The Keep-alive / broken session detection feature now has a configurable initial timeout. Previously, it could be enabled or disabled, but the period could not be configured.
+    - SFTP:
+      - The SSH Client now implements more granular limits for the sizes of decoded SFTP strings.
+      - The SSH Client now limits the maximum backlog of unfulfilled handle close operations.
+    - Graphical client:
+      - Restoring the SSH Client main window after it's hidden to the system tray should now work better if it was previously displayed on a second monitor that was unplugged.
+    - Graphical terminal:
+      - The window title and scroll bar for the SSH Client's graphical terminal window now support dark mode.
+    - New Remote Desktop:
+      - The RDP profile signing feature introduced in version 9.61 could cause Remote Desktop to exit abruptly on some systems. The implementation of this feature should now be more resilient.
+    - sftpc:
+      - The sftpc command-line client now supports Stat and RealPath commands.
+      - A long-standing issue prevented auto-completion from working correctly when a switch parameter was passed before a path. Fixed.
+    - stermc:
+      - The stermc command-line client now supports a pass-through rendering mode for Windows Terminal. This substantially improves stermc usability with Windows Terminal.
+        Pass-through mode cannot be used with bvterm. Pass-through mode does not support printable session recording, but supports full session recording which includes escape sequences.
+ReleaseTime: 2026-07-11
