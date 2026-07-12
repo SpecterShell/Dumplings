@@ -65,7 +65,7 @@ After merge, the publish pipeline applies the merged manifest changes to the bui
 Use the bundled read-only PowerShell script to find the latest `wingetbot` pipeline comment and download both `InstallationVerificationLogs` and `ValidationResult`:
 
 ```powershell
-.\.agent\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
+.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
   -PullRequest 123456 `
   -OutputDirectory .\ValidationLogs\123456
 ```
@@ -75,11 +75,11 @@ Anonymous GitHub access works for public PRs but is rate limited. The script use
 When the Azure link or build ID is already known:
 
 ```powershell
-.\.agent\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
+.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
   -PipelineUrl 'https://dev.azure.com/shine-oss/winget-pkgs/_build/results?buildId=123456' `
   -Force
 
-.\.agent\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
+.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
   -BuildId 123456 `
   -ArtifactName InstallationVerificationLogs
 ```

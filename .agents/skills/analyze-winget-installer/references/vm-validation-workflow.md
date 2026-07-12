@@ -21,7 +21,7 @@ Start from a clean checkpoint. Do not attach host submission directories as writ
 The host controller stages the Windows PowerShell 5.1-compatible guest collector and retrieves JSON through PowerShell Direct:
 
 ```powershell
-$Tool = '.\.agent\skills\analyze-winget-installer\scripts\Invoke-WinGetVMInstalledState.ps1'
+$Tool = '.\.agents\skills\analyze-winget-installer\scripts\Invoke-WinGetVMInstalledState.ps1'
 
 & $Tool -Action Capture -VMName PackageValidation -Phase BeforeInstall `
   -UserName PandaTopo -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
