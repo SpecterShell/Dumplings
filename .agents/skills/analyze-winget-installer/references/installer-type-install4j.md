@@ -56,21 +56,25 @@ $Info.Scope
 $Info.SupportedScopes
 $Info.ScopeEvidence
 $Info.Warnings
+$Info.LauncherConfiguration.Entries
+$Info.Config.Source
 
-Read-ProductCodeFromInstall4j -Path $InstallerFile
-Read-ProductVersionFromInstall4j -Path $InstallerFile
-Read-ProductNameFromInstall4j -Path $InstallerFile
-Read-PublisherFromInstall4j -Path $InstallerFile
-Read-ScopeFromInstall4j -Path $InstallerFile
-Read-SupportedScopesFromInstall4j -Path $InstallerFile
-
+$ConfigPath = Expand-Install4jInstaller -Path $InstallerFile -Name 'i4jparams.conf'
 $ExpandedPath = Expand-Install4jInstaller -Path $InstallerFile -Name '*.exe'
 Get-ChildItem -Path $ExpandedPath -Recurse -File
 ```
 
-`Get-Install4jInfo` parses extracted or directly embedded `i4jparams.conf` XML when available. For launchers that pack application content into `0.dat`, it can still recover `ProductCode` from `allinstdirs<ApplicationId>` and use PE version resources for name, version, and publisher.
+`Get-Install4jInfo` reads the launcher configuration block at the PE overlay,
+validates its declared range and CRC32, decodes the startup-file transform, and
+parses `i4jparams.conf`. Read the returned object once instead of reparsing the
+same installer with individual `Read-*FromInstall4j` helpers. Those helpers are
+compatibility conveniences for callers that need only one field.
 
-`Expand-Install4jInstaller` reads the embedded-file table. It validates and decodes standard LZMA-alone `0.dat` streams, then extracts selected files from the resulting ZIP without using `7z.exe`. It enforces dictionary/output limits and rejects links and traversal paths. The decoded application ZIP normally does not contain `i4jparams.conf`; payload extraction and installer-config parsing remain separate operations.
+`Expand-Install4jInstaller` extracts transformed launcher startup files and the
+separate embedded-file table. It validates and decodes standard LZMA-alone
+`0.dat` streams, then extracts selected files from the resulting ZIP without
+using `7z.exe`. It enforces CRC, dictionary, range, and output limits and rejects
+links and traversal paths.
 
 ### Step 2: Determine Whether install4j Writes ARP
 
@@ -80,7 +84,9 @@ install4j `RegisterAddRemoveAction` creates:
 Software\Microsoft\Windows\CurrentVersion\Uninstall\<ApplicationId>
 ```
 
-Use the application ID as top-level `ProductCode` when deterministic. Do not assume the action exists when config XML was not recovered; use VM ARP validation when `WritesAppsAndFeaturesEntry` is unknown.
+Use the application ID as top-level `ProductCode` when deterministic. Confirm
+`WritesAppsAndFeaturesEntry` from the parsed `RegisterAddRemoveAction`; older or
+unsupported launcher revisions may still require VM ARP validation.
 
 ### Step 3: Determine Privilege-Dependent Scope And Payload Architecture
 

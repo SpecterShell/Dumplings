@@ -23,6 +23,12 @@ setup database is proprietary; `Expand-InstallMateInstaller` currently refuses
 extraction and the parser does not guess ARP fields, associations, or scope
 from compressed bytes.
 
+The parser does interpret the PE requested execution level using InstallMate's
+documented install-level behavior. `requireAdministrator` proves machine scope;
+`highestAvailable` and `asInvoker` can produce user or machine installations
+depending on elevation, so they are reported as conditional dual-scope evidence
+rather than a definite manifest `Scope`.
+
 ## Manifest Shape
 
 Switch documentation: [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm).
@@ -77,7 +83,8 @@ Load PackageModule, parse once, and retain the generation-specific TIZ evidence:
 
 $Info = Get-InstallMateInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
-  ProductCodeEvidence, PackageCode, Scope, RequestedExecutionLevel, CanExpand, Warnings
+  ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes,
+  SupportsDualScope, ScopeEvidence, RequestedExecutionLevel, CanExpand, Warnings
 $Info.ArchiveInfo
 ```
 
@@ -106,7 +113,10 @@ $Info.Protocols
 $Info.FileExtensions
 ```
 
-The compressed setup database prevents static recovery of literal ARP writes, so validate visible ARP fields in a VM.
+The compressed setup database prevents static recovery of literal ARP writes,
+so validate visible ARP fields in a VM. Do not turn conditional scope evidence
+into duplicate WinGet installer entries unless the package exposes a supported
+scope-selection command line.
 
 For `Tarma.PublishOrPerish` 8.19.5300.9483, isolated VM validation produced a
 machine-wide EXE entry keyed `{D7808C1C-93A9-4369-8385-A789888ED9D7}`, with
