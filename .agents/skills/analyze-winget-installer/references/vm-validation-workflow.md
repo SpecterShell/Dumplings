@@ -2,17 +2,38 @@
 
 Use this workflow only for facts static analysis cannot prove. Never execute an unknown installer on the host. The bundled scripts capture state but deliberately do not launch installers or applications.
 
-## 1. Prepare Hyper-V From PowerShell Core
+## 1. Preserve The Windows Environment And Prepare Hyper-V
 
-Codex on Windows must load the Windows PowerShell Hyper-V module explicitly:
+For local Windows validation, configure Codex to inherit the normal process environment while retaining its default filtering of variable names containing `KEY`, `SECRET`, or `TOKEN`:
+
+```toml
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = false
+```
+
+Restart Codex or start a new task after changing `config.toml`. Do not use `inherit = "core"` for this workflow: its Windows allowlist omits `WINDIR`, `COMPUTERNAME`, and the inherited `PSModulePath`. Without them, PowerShell Core cannot discover or natively load the inbox Hyper-V module, and `Get-VM` cannot infer the local host.
+
+Verify the environment and load Hyper-V natively so commands return native Hyper-V objects:
 
 ```powershell
-$env:PSModulePath += ';C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules'
-Import-Module Hyper-V -UseWindowsPowerShell -PassThru
+Get-Item Env:WINDIR, Env:COMPUTERNAME, Env:PSModulePath
+Import-Module Hyper-V -PassThru
 Get-Command Get-VM, Copy-VMFile
 ```
 
-Compatibility-session Hyper-V objects are deserialized. Use their values for orchestration, not methods. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for `Copy-VMFile`.
+If an existing task was started with `inherit = "core"`, repair that process before importing the module:
+
+```powershell
+$env:WINDIR = $env:SystemRoot
+$env:COMPUTERNAME = [Environment]::MachineName
+$env:PSModulePath = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\Modules;$env:PSModulePath"
+
+Import-Module Hyper-V -PassThru
+Get-Command Get-VM, Copy-VMFile
+```
+
+Keep the repair and Hyper-V operation in the same Codex shell call because each call may start a fresh PowerShell process. Do not add `-UseWindowsPowerShell` when native import succeeds; that compatibility mode returns deserialized proxy objects. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for `Copy-VMFile`.
 
 Start from a clean checkpoint. Do not attach host submission directories as writable shared storage.
 
@@ -24,7 +45,7 @@ The host controller stages the Windows PowerShell 5.1-compatible guest collector
 $Tool = '.\.agents\skills\analyze-winget-installer\scripts\Invoke-WinGetVMInstalledState.ps1'
 
 & $Tool -Action Capture -VMName PackageValidation -Phase BeforeInstall `
-  -UserName PandaTopo -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
+  -UserName SpecterShell -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
 ```
 
 Prefer `-Credential $Credential` for normal password-protected guests. `-AllowEmptyPassword` must always be explicit and never stores a password in the repository.
@@ -58,7 +79,7 @@ Run cancellation, elevated/non-elevated behavior, user/machine scope, and quiet/
 
 ```powershell
 & $Tool -Action Capture -VMName PackageValidation -Phase AfterInstall `
-  -UserName PandaTopo -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
+  -UserName SpecterShell -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
 
 & $Tool -Action Compare `
   -BeforePath .\VMValidation\Package\BeforeInstall.json `
@@ -74,7 +95,7 @@ Some applications register protocols and extensions only on first launch. Launch
 
 ```powershell
 & $Tool -Action Capture -VMName PackageValidation -Phase AfterFirstRun `
-  -UserName PandaTopo -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
+  -UserName SpecterShell -AllowEmptyPassword -OutputDirectory .\VMValidation\Package
 
 & $Tool -Action Compare `
   -BeforePath .\VMValidation\Package\AfterInstall.json `
