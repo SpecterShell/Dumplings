@@ -2,26 +2,25 @@
 
 ## When To Use
 
-Use `InstallerType: exe` for installers built with DeployMaster.
+Use `InstallerType: exe` for installers built with DeployMaster. WinGet has no
+DeployMaster-specific defaults, so every non-default mode and switch must be
+supported by static documentation or VM evidence.
 
 ## Detection
 
-Strong evidence includes `DeployMaster`, `DeployMaster Installation`, or `deploymaster.com` strings.
-
-### Parser API
+Strong evidence is a validated DeployMaster package locator at file offset
+`0x80`, a matching CRC32-protected package region, and DeployMaster PE version
+comments. Do not classify an arbitrary LZMA overlay from marker strings alone.
 
 ```powershell
+. .\Modules\PackageModule\Index.ps1
 $Info = Get-DeployMasterInfo -Path $InstallerPath
 ```
 
-The parser validates the post-PE transformed LZMA-like payload header and
-reads PE identity and requested execution level. Current DeployMaster payloads
-are not direct LZMA streams; `Expand-DeployMasterInstaller` rejects them
-deterministically rather than applying an unsafe guessed transform.
-
 ## Manifest Shape
 
-Switch documentation: [DeployMaster silent installation](https://www.deploymaster.com/manual.html#silent).
+DeployMaster is a generic EXE family. The documented silent and install-folder
+switches therefore need explicit installer-level fields:
 
 ```yaml
 Installers:
@@ -38,64 +37,106 @@ Installers:
     InstallLocation: /appfolder "<INSTALLPATH>"
 ```
 
+Remove a switch or mode that the current package does not support. Do not infer
+an unattended switch from another generic EXE family.
+
 ## WinGet Defaults And Overrides
 
-WinGet supplies no DeployMaster defaults for generic `InstallerType: exe`. Treat `/silent` and related fields as complete family-specific overrides, explicitly specify supported modes, and remove any switch not proved for the current package.
+WinGet supplies no DeployMaster defaults for generic `InstallerType: exe`.
+Treat the documented DeployMaster switches as complete installer-level
+overrides, and retain only modes demonstrated by the current package.
 
 ## Step-By-Step Analysis
 
-### Step 1: Parse DeployMaster Metadata
+### Step 1: Parse Once
 
-Load PackageModule once and inspect the validated overlay evidence:
-
-```powershell
-. .\Modules\PackageModule\Index.ps1
-
-$Info = Get-DeployMasterInfo -Path $InstallerPath
-$Info | Select-Object DisplayName, DisplayVersion, Publisher, Scope,
-  RequestedExecutionLevel, WritesAppsAndFeaturesEntry, CanExpand, Warnings
-$Info.OverlayInfo
-```
-
-Do not infer payload metadata from the transformed compressed stream.
-
-### Step 2: Attempt Extraction Only When Supported
-
-`Expand-DeployMasterInstaller` is the bounded extraction entry point, but the currently recognized transformed format is intentionally unsupported. Keep the call guarded and treat a deterministic rejection as an unresolved format, not as permission to execute the installer:
+`Get-DeployMasterInfo` validates the locator, file size, CRC32, current or
+legacy control-header layout, and structured LZMA metadata. Reuse the returned
+object instead of calling multiple `Read-*FromDeployMaster` helpers:
 
 ```powershell
-if ($Info.CanExpand) {
-  Expand-DeployMasterInstaller -Path $InstallerPath -DestinationPath $DestinationPath
-} else {
-  Write-Warning 'DeployMaster payload cannot be expanded statically by this parser revision.'
-}
-```
+$Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
+  Scope, SupportedScopes, InstallerArchitecture,
+  ApplicationArchitectureMode, ApplicationArchitectures,
+  SupportedOperatingSystemArchitectures, WritesAppsAndFeaturesEntry, Warnings
 
-### Step 3: Resolve ARP And Product Identity
-
-The current parser exposes the common registry-evidence contract, but returns no literal writes for this format:
-
-```powershell
-$Info.RegistryWrites | Where-Object Key -Match '\\Uninstall\\'
-$Info.RegistryAssociationInfo
-$Info.Protocols
+$Info.FileEntries
+$Info.FileAssociations
 $Info.FileExtensions
 ```
 
-When `ProductCode` and `WritesAppsAndFeaturesEntry` are null, verify the visible ARP entry in a VM. Do not infer ARP fields from DeployMaster marker strings alone.
+The parser distinguishes these builder modes:
 
-For `Brinno.BrinnoVideoPlayer`, isolated VM validation produced an x86 HKLM
-EXE entry keyed `Brinno Video Player`, with `WindowsInstaller` absent. This is
-package evidence, not a universal DeployMaster ProductCode rule.
+- x86 application for x86 Windows only.
+- x86 application for x86 and x64 Windows.
+- x86 and x64 applications selected for the running Windows architecture.
+- x64 application with an x86 installer stub.
+- x64 application with a pure x64 installer.
 
-### Step 4: Validate Silent And Runtime Behavior
+Use the installed application architecture for manifest authoring. The outer
+stub architecture is separate evidence and does not by itself determine the
+manifest `Architecture`.
 
-Verify accepted switch spelling and visible ARP behavior for each package.
+### Step 2: Expand Bounded Content
+
+Expansion never starts the installer. It writes each decoded runtime core,
+structured metadata block, and package file beneath separate safe paths:
+
+```powershell
+$Files = Expand-DeployMasterInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+$Files
+```
+
+Inspect `Runtime\DeployMasterCore-x86.exe` and/or
+`Runtime\DeployMasterCore-x64.exe` for runtime behavior. Inspect `Payload` for
+the installed files and nested installers. Use `-Name` to select one file.
+
+### Step 3: Resolve Scope And ARP
+
+The package-control scope byte is authoritative static builder evidence:
+
+- `0`: current user.
+- `1`: all users.
+- `2`: user and machine scope.
+
+The structured identity block supplies `DisplayName`, `DisplayVersion`,
+`Publisher`, and separate user/machine install locations. DeployMaster's
+built-in uninstaller uses the display name as its uninstall-key identity, so
+the parser returns that value as `ProductCode` and emits built-in ARP writes.
+
+Custom Registry-tab actions are not decoded yet. If `Warnings` reports this
+limitation, use VM evidence to detect custom ARP overrides before relying on
+the built-in values. For `Brinno.BrinnoVideoPlayer`, VM evidence confirms an
+x86 HKLM EXE ARP entry keyed `Brinno Video Player` with no `WindowsInstaller`
+value.
+
+### Step 4: Resolve File Associations
+
+`FileAssociations` contains each literal extension, description, default flag,
+icon indexes, action names, executable indexes, and parameters. Include
+`FileExtensions` when the literal extensions are valid.
+
+An executable index of `-1` means the action did not resolve to a packaged
+file and should not be treated as an installed open command. Protocols and
+arbitrary custom registry associations still require separate static or VM
+evidence.
 
 ## VM Validation
 
-Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) when transformed payload metadata, `/silent`, scope, or visible ARP identity cannot be proved statically.
+Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for
+silent behavior, exit codes, default scope of a dual-scope package, custom ARP
+writes, or first-run associations. DeployMaster-specific checks are:
 
-## Known DeployMaster Packages
+- Test `/silent` and `/appfolder` exactly as documented for the package.
+- Compare HKCU and both HKLM uninstall views with the parsed scope.
+- Confirm whether unresolved file-type actions are intentionally omitted.
+- Confirm installed executable architecture rather than using the stub alone.
+
+## Known Packages
 
 - `Brinno.BrinnoVideoPlayer`
+
+## Implementation Sources
+
+- [DeployMaster manual](https://www.deploymaster.com/manual.html)
+- [DeployMaster silent installation](https://www.deploymaster.com/manual.html#silent)

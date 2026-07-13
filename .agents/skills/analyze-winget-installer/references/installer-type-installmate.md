@@ -14,20 +14,18 @@ Strong evidence includes `InstallMate`, `Tarma Installer`, or `Tarma Software`.
 $Info = Get-InstallMateInfo -Path $InstallerPath
 ```
 
-The parser requires a bounded `tiz1` through `tiz4` archive header after the
-PE image and before any Authenticode certificate. It reports archive schema,
-PE identity, requested elevation, and named `ProductCode`/`PackageCode`
-`StringFileInfo` values from the PE version resource. These named values are
-explicit metadata, not arbitrary GUID probing. InstallMate's compressed TIZ
-setup database is proprietary; `Expand-InstallMateInstaller` currently refuses
-extraction and the parser does not guess ARP fields, associations, or scope
-from compressed bytes.
+The parser requires a bounded `tiz1` through `tiz4` archive after the PE image
+and before any Authenticode certificate. It decodes the raw-LZMA `tzf3` stream,
+the first `tin*` setup-database record, structured InstallMate 11 install-level
+evidence, and file records. It also reads named `ProductCode` and `PackageCode`
+values from the PE `StringFileInfo` resource. These are explicit metadata, not
+arbitrary GUID probing.
 
-The parser does interpret the PE requested execution level using InstallMate's
-documented install-level behavior. `requireAdministrator` proves machine scope;
-`highestAvailable` and `asInvoker` can produce user or machine installations
-depending on elevation, so they are reported as conditional dual-scope evidence
-rather than a definite manifest `Scope`.
+For InstallMate 11 database format 15.11, the structured install level is
+authoritative. Older formats are decoded for files but currently fall back to
+the PE requested execution level for scope. `asInvoker` maps to current-user
+scope, `requireAdministrator` maps to machine scope, and `highestAvailable`
+remains conditional without a decoded install-level record.
 
 ## Manifest Shape
 
@@ -84,25 +82,32 @@ Load PackageModule, parse once, and retain the generation-specific TIZ evidence:
 $Info = Get-InstallMateInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
   ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes,
-  SupportsDualScope, ScopeEvidence, RequestedExecutionLevel, CanExpand, Warnings
+  SupportsDualScope, InstallLevel, InstallLevelName, ScopeEvidence,
+  RequestedExecutionLevel, DatabaseInfo, CanExpand, Warnings
 $Info.ArchiveInfo
+$Info.FileEntries
 ```
 
 Use `ProductCode` only when `ProductCodeEvidence` identifies the named PE `StringFileInfo.ProductCode` value.
 
-### Step 2: Handle The Proprietary Setup Database
+### Step 2: Expand Nested Files When Needed
 
-`Expand-InstallMateInstaller` is present as a safe, explicit rejection boundary. The current parser cannot decode the proprietary compressed TIZ database:
+Use the same parsed `FileEntries` to select payloads. The file table does not
+yet resolve component/folder objects, so extraction deliberately writes each
+file below `Payload/<record-key>/` instead of inventing an installation path:
 
 ```powershell
 if ($Info.CanExpand) {
   Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -Name '*.msi'
 } else {
-  Write-Warning 'InstallMate TIZ extraction is not implemented; no installer was executed.'
+  Write-Warning 'The bounded InstallMate setup database could not be decoded.'
 }
 ```
 
-Do not replace this with arbitrary string probing or host execution.
+The extractor streams exact `tzf3` lengths through bounded LZMA decoding. It
+does not execute setup. Duplicate file names remain distinct because record
+keys are included in output paths.
 
 ### Step 3: Resolve Product And Uninstall Identity
 
@@ -113,10 +118,11 @@ $Info.Protocols
 $Info.FileExtensions
 ```
 
-The compressed setup database prevents static recovery of literal ARP writes,
-so validate visible ARP fields in a VM. Do not turn conditional scope evidence
-into duplicate WinGet installer entries unless the package exposes a supported
-scope-selection command line.
+Custom registry records and the full component/folder graph are not decoded
+yet, so validate visible ARP fields and associations in a VM. Use the named PE
+`ProductCode` for uninstall identity when present. Do not turn conditional
+scope evidence into duplicate WinGet installer entries unless the package
+exposes a supported scope-selection command line.
 
 For `Tarma.PublishOrPerish` 8.19.5300.9483, isolated VM validation produced a
 machine-wide EXE entry keyed `{D7808C1C-93A9-4369-8385-A789888ED9D7}`, with
@@ -124,13 +130,32 @@ machine-wide EXE entry keyed `{D7808C1C-93A9-4369-8385-A789888ED9D7}`, with
 
 ### Step 4: Validate Generation-Specific Behavior
 
-Verify accepted switch spelling because InstallMate packages may customize command-line handling.
+For format 15.11, interpret `InstallLevel` as follows:
+
+- `0` (`NotChecked`): machine only, without an access check.
+- `1` (`CurrentUser`): user only.
+- `2` (`AllUsersOrCurrentUser`): machine when possible, otherwise user.
+- `3` (`AllUsersQueryCurrentUser`): machine with an interactive user-scope fallback prompt.
+- `4` (`AllUsers`): machine only.
+- `5` (`Administrator`): machine only with administrator rights.
+
+Levels 2 and 3 describe runtime fallback, not proof that command-line scope
+selection exists. Verify accepted switch spelling because InstallMate packages
+may customize command-line handling.
 
 ## VM Validation
 
-Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for generation-specific switches, cancellation/reboot codes, scope, and visible ARP behavior.
+Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for
+generation-specific switches, cancellation/reboot codes, custom registry
+records, associations, and visible ARP behavior. For install level 3, verify
+what silent mode does when all-users installation is unavailable because the
+interactive fallback prompt cannot be answered.
 
-## Known InstallMate Packages
+## Known Packages
 
 - `WaveMetrics.IgorPro`
 - `Tarma.PublishOrPerish`
+
+## Implementation Sources
+
+- [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm)
