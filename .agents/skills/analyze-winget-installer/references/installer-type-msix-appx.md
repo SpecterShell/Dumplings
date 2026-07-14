@@ -2,7 +2,7 @@
 
 ## When To Use
 
-Use `InstallerType: msix`, `msixbundle`, `appx`, or `appxbundle` when the manifest installer URL points directly to that package type. Do not use `.appinstaller` URLs as manifest installers.
+Use `InstallerType: msix` for `.msix` and `.msixbundle` URLs, or `InstallerType: appx` for `.appx` and `.appxbundle` URLs. Do not use `.appinstaller` URLs as manifest installers.
 
 ## Detection
 
@@ -31,7 +31,7 @@ Installers:
   - runFullTrust
 ```
 
-WinGet accepts `.appx` and `.appxbundle` for AppX installer types, and `.msix` and `.msixbundle` for MSIX installer types. Use `appx`, `appxbundle`, `msix`, or `msixbundle` according to the real package extension.
+WinGet accepts `.appx` and `.appxbundle` under `InstallerType: appx`, and `.msix` and `.msixbundle` under `InstallerType: msix`. The WinGet manifest schema does not expose separate `appxbundle` or `msixbundle` installer-type values.
 
 `.appinstaller` is not accepted by winget-pkgs manifests. Treat it as update metadata only: parse the `.appinstaller` file, find `MainPackage` or `MainBundle`, then use that real `.appx`, `.appxbundle`, `.msix`, or `.msixbundle` URL as `InstallerUrl`. Examples of `.appinstaller`-sourced packages include `OrbForge.Orb`, `Dalux.Dalux`, `DuckDuckGo.DesktopBrowser`, `TheBrowserCompany.Arc`, and `Python.PythonInstallManager`.
 
@@ -77,24 +77,30 @@ Use `Modules\PackageModule\Libraries\MSIX.psm1` to read package metadata without
 ```powershell
 Import-Module .\Modules\PackageModule\Libraries\MSIX.psm1 -Force
 
-$Info = Get-MSIXInfo -Path $InstallerFile
+$KnownInstallerType = $null # Set to appx or msix when preserved from the source URL, appinstaller, or existing manifest.
+$InfoParameters = @{ Path = $InstallerFile }
+if ($KnownInstallerType) { $InfoParameters.InstallerTypeHint = $KnownInstallerType }
+$Info = Get-MSIXInfo @InfoParameters
 
-$InstallerType = Get-MSIXInstallerType -Path $InstallerFile
-$PackageFamilyName = Read-FamilyNameFromMSIX -Path $InstallerFile
-$ProductVersion = Read-ProductVersionFromMSIX -Path $InstallerFile
-$Platform = Read-PlatformFromMSIX -Path $InstallerFile
-$MinimumOSVersion = Read-MinimumOSVersionFromMSIX -Path $InstallerFile
-$Dependencies = Read-DependenciesFromMSIX -Path $InstallerFile
+$InstallerType = $Info.InstallerType
+$PackageKind = $Info.PackageKind
+$PackageFamilyName = $Info.PackageFamilyName
+$ProductVersion = $Info.Version
+$Platform = $Info.Platform
+$MinimumOSVersion = $Info.MinimumOSVersion
+$Dependencies = $Info.Dependencies
 $UnknownDependencies = $Info.UnknownPackageDependencies
 $Warnings = $Info.Warnings
-$Capabilities = Read-CapabilitiesFromMSIX -Path $InstallerFile
-$RestrictedCapabilities = Read-RestrictedCapabilitiesFromMSIX -Path $InstallerFile
-$SignatureSha256 = Read-SignatureSha256FromMSIX -Path $InstallerFile
+$Capabilities = $Info.Capabilities
+$RestrictedCapabilities = $Info.RestrictedCapabilities
+$SignatureSha256 = $Info.SignatureSha256
 $SignatureStatus = Get-AuthenticodeSignature -LiteralPath $InstallerFile
 if ($SignatureStatus.Status -ne 'Valid') { throw "Reject MSIX/AppX package: $($SignatureStatus.StatusMessage)" }
 ```
 
-Use `Get-MSIXInfo` as the preferred single call; it returns installer type, identity, architecture, platform, minimum OS version, package family name, filtered dependencies, unknown dependencies, warnings, capabilities, restricted capabilities, signature hash, and Apps & Features display evidence. For bundles, it reads nested package manifests when available.
+Use `Get-MSIXInfo` as the preferred single call; it returns installer type, package kind (`Package` or `Bundle`), type evidence and ambiguity, identity, architecture, platform, minimum OS version, package family name, filtered dependencies, unknown dependencies, warnings, capabilities, restricted capabilities, signature hash, and Apps & Features display evidence. For bundles, it reads nested package manifests when available.
+
+`Get-MSIXPackageKind` identifies direct packages and bundles from `AppxManifest.xml` or `AppxMetadata/AppxBundleManifest.xml`, independent of the outer filename. `Get-MSIXPackageTypeInfo` prefers the original URL extension, an explicit installer-type hint, or HTTP content type. An extensionless bundle can also use payload filenames from its bundle manifest. A direct AppX package and direct MSIX package cannot be distinguished reliably from package structures alone; in that case the helper returns the WinGet-compatible `msix` fallback with `IsAmbiguous: true` and a warning. Preserve a known `appx` type from the original URL, `.appinstaller`, or existing manifest by passing `-InstallerTypeHint appx`.
 
 `Read-DependenciesFromMSIX` returns only allowlisted dependency packages suitable for WinGet manifests. `Get-MSIXInfo.UnknownPackageDependencies` returns other XML `PackageDependency` entries found in the package, and `Get-MSIXInfo.Warnings` includes messages such as unknown dependency packages being omitted from manifest dependencies.
 
