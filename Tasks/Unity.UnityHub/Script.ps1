@@ -9,12 +9,12 @@ $this.CurrentState.Version = $Object1.version
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = Join-Uri $Prefix "$($this.CurrentState.Version)/UnityHubSetup-$($this.CurrentState.Version)-x64.exe"
+  InstallerUrl  = Join-Uri $Prefix $Object1.files.Where({ $_.url.Contains('x64') }).url
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = Join-Uri $Prefix "$($this.CurrentState.Version)/UnityHubSetup-$($this.CurrentState.Version)-arm64.exe"
+  InstallerUrl  = Join-Uri $Prefix $Object1.files.Where({ $_.url.Contains('arm64') }).url
 }
 
 switch -Regex ($this.Check()) {
