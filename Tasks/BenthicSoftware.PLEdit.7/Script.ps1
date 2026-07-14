@@ -18,12 +18,12 @@ $this.CurrentState.Version = $VersionX64
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'pledit7setup' -and $_.href -match '32bit' }, 'First')[0].href
-  ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])32_is1"
+  ProductCode  = "PLEdit$($this.CurrentState.Version.Split('.')[0])32_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'pledit7setup' -and $_.href -match '64bit' }, 'First')[0].href
-  ProductCode  = "Golden$($this.CurrentState.Version.Split('.')[0])64_is1"
+  ProductCode  = "PLEdit$($this.CurrentState.Version.Split('.')[0])64_is1"
 }
 
 switch -Regex ($this.Check()) {
@@ -36,10 +36,14 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://www.benthicsoftware.com/pledit.html' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@id='pledit_history_tabpanel']//h2[contains(text(), 'Version $($this.CurrentState.Version.Split('.')[0..1] -join '.') Build $($this.CurrentState.Version.Split('.')[3])')]")
+      $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@id='pledit_history_tabpanel']//h2[contains(text(), 'Version $($this.CurrentState.RealVersion.Split('.')[0..1] -join '.') Build $($this.CurrentState.RealVersion.Split('.')[3])')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
