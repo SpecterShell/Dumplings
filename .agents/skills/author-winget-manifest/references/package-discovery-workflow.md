@@ -191,10 +191,28 @@ An official URL that works in a browser, curl, or `Invoke-WebRequest` can still 
 $Result = Test-WinGetInstallerDownload `
   -Uri $InstallerUrl `
   -ExpectedSha256 $InstallerSha256 `
-  -Method Default
+  -Method Default `
+  -ConnectionTimeoutSeconds 30 `
+  -OperationTimeoutSeconds 60
 ```
 
 `Default` follows WinGet behavior: an explicit proxy uses WinINet; otherwise Delivery Optimization runs first, fatal policy failures stop, nonfatal failures fall back to WinINet, redirects follow WinGet's rules, and a complete download is checked against content length and SHA256.
+
+The native Delivery Optimization and WinINet helpers display byte progress
+after one second and cancel the active native operation when the PowerShell
+pipeline is stopped with Ctrl+C. Their timeout and retry controls follow
+`Invoke-WebRequest` naming:
+
+- `ConnectionTimeoutSeconds` (alias `TimeoutSec`) bounds connection and response-header receipt; `0` disables this timeout.
+- `OperationTimeoutSeconds` bounds each period without body progress; `0` disables this timeout.
+- `MaximumRetryCount` defaults to `0` and retries HTTP `304` and `400` through `599` responses.
+- `RetryIntervalSec` defaults to `5`; an integer `Retry-After` header overrides it for HTTP `429`.
+
+Delivery Optimization additionally retains WinGet's
+`NoProgressTimeoutSeconds` and the probe safety bound
+`MaximumDurationSeconds`. Use retries only to test documented transient server
+behavior. A URL that requires repeated retries is not necessarily suitable for
+a static manifest.
 
 Use response-only diagnostics for large files:
 
