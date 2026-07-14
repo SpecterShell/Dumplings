@@ -1,0 +1,43 @@
+Version: 0.20.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.20.3/codeg_0.20.3_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.20.3/codeg_0.20.3_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(chat-channel): Telegram Topic mode. Run multiple sessions inside one Telegram forum supergroup, each bound to its own topic. /task <description> opens a new topic and session, /resume <id> binds an existing one, and plain text follows up in the current topic. Requires a forum supergroup with the bot as a topic-managing admin. Thanks @AnotiaWang (#322).
+    - feat(codex): Custom Codex models without hand-editing JSON. A structured editor in Codex settings lets you define custom models and curate the list — clone an official model, override only what differs, pick enum fields from dropdowns. Official models are read live from the launched Codex, so new ones appear automatically.
+    - feat(grok): Real Grok permission modes and reasoning effort. Permission mode now uses Grok's own --permission-mode values (old settings migrate automatically), and the reasoning-effort selector follows the chosen model — showing only the efforts it supports, or hiding entirely when it has none.
+    - feat(skills): Author your own skills. A new Custom tab in Skill Packs lets you create, edit, duplicate, and delete skills in the shared store and enable them for any agent — write once, reuse everywhere. Import from a local folder or from an agent's existing global skills.
+    - fix(chat): Async sub-agent results settle cleanly into their turn. Held-turn content no longer double-renders, the launch card updates in place to its finished result, and the "syncing results" strip stops lingering.
+    - fix(chat): Correct first-reply stats after resuming a conversation. The first reply after reopening a conversation no longer absorbs every earlier turn's duration and tokens — each reply reports only its own.
+    - fix(acp): A session's last error survives a reconnect. Reconnecting after missing the live error event still shows what went wrong, and a stale error is never resurrected onto a session that moved on. Thanks @ijry (#314).
+    - fix(chat-channel): Telegram tokens no longer leak; @username channels bind correctly. Bot tokens are scrubbed from error messages, and an @username is resolved to its numeric chat id so a follow-up no longer spawns a duplicate agent.
+    - fix(session): Completed sessions show their true runtime, computed from start and end timestamps. Thanks @cnYui (#311).
+    - fix(editor): Windows IME composition is preserved when typing Chinese, Japanese, or Korean in the built-in editor. Thanks @youxikexue (#332).
+    - fix(docker): Docker builds include the pnpm workspace config, so container and self-hosted deployments build cleanly. Thanks @AnotiaWang (#322).
+    - chore(agents): Bundled agents refreshed — Claude Code (0.59.0), OpenCode (1.17.20), OpenClaw (2026.7.1), Cline (3.0.40), CodeBuddy (2.121.2), Kimi Code (0.24.1), Grok (0.2.101).
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(聊天渠道)：Telegram 话题模式。 在一个 Telegram 论坛超级群里同时跑多个会话，每个会话绑定各自的话题。/task <描述> 开新话题并启动新会话，/resume <id> 绑定已有会话，纯文本即为当前话题的跟进。需要论坛超级群、并把机器人设为有话题管理权限的管理员。感谢 @AnotiaWang（#322）。
+    - 功能(Codex)：无需手写 JSON 的 Codex 自定义模型。 Codex 设置里的结构化编辑器让你定义自定义模型、精选列表——克隆官方模型、只覆盖差异字段、枚举字段从下拉选取。官方模型从启动的 Codex 实时读取，新模型会自动出现。
+    - 功能(Grok)：真实的 Grok 权限模式与推理强度。 权限模式改用 Grok 自己的 --permission-mode 取值（旧设置自动迁移），推理强度选择器跟随所选模型——只显示它支持的强度，无强度调节时则完全隐藏。
+    - 功能(技能)：创作你自己的技能。 技能包新增「自定义」标签，可在共享库里创建、编辑、复制、删除技能，并为任意智能体启用——一次编写、处处复用。支持从本地文件夹或某个智能体已有的全局技能导入。
+    - 修复(聊天)：异步子智能体的结果干净地归入所属回合。 回合内容不再重复渲染，启动卡片就地更新为完成结果，「同步结果中」提示条不再残留。
+    - 修复(聊天)：恢复会话后的首条回复统计正确了。 重开对话后的第一条回复不再吸收之前所有回合的时长与 token，每条回复只报告自己的数据。
+    - 修复(会话)：会话最近一次错误在重连后保留。 错过实时错误事件、之后重连仍能看到出错原因，且旧错误不会被复活到已经继续下去的会话上。感谢 @ijry（#314）。
+    - 修复(聊天渠道)：Telegram token 不再泄漏，@username 渠道正确绑定。 机器人 token 会从错误信息中抹除，@username 会解析为数字 chat id，跟进消息不再重复启动智能体。
+    - 修复(会话)：已完成会话显示真实运行时长， 依据开始与结束时间戳计算。感谢 @cnYui（#311）。
+    - 修复(编辑器)：保留 Windows 输入法组词， 在内置编辑器中输入中日韩文时不再丢字或错乱。感谢 @youxikexue（#332）。
+    - 修复(Docker)：Docker 构建包含 pnpm workspace 配置， 容器与自托管部署可正常构建。感谢 @AnotiaWang（#322）。
+    - 更新(智能体)：内置智能体已刷新 —— Claude Code（0.59.0）、OpenCode（1.17.20）、OpenClaw（2026.7.1）、Cline（3.0.40）、CodeBuddy（2.121.2）、Kimi Code（0.24.1）、Grok（0.2.101）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.20.3
+ReleaseTime: 2026-07-14T17:16:44.0000000Z
