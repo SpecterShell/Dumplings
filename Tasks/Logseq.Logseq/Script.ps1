@@ -3,6 +3,11 @@ $RepoName = 'logseq'
 
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
+if ($this.CurrentState.Version -match 'untagged') {
+  $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
