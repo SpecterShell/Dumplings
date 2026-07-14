@@ -1,0 +1,33 @@
+Version: 0.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.1/Sessions.Viewer_0.3.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.1/Sessions.Viewer_0.3.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.3.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Ctrl+Del delete line in chat composer — pressing Ctrl+Del in the GUI chat input deletes the entire line at the cursor position, matching common editor behavior.
+    - Shift+Enter newline in TUI terminal — Shift+Enter now inserts a newline (\n) instead of submitting (\r) in both TUI and shell terminal tabs, matching native terminal behavior.
+    - Keyboard shortcuts reorganized — Settings → Shortcuts now splits chat-specific shortcuts (Ctrl+S stash, Ctrl+Del delete line, Shift+Enter newline, ⌘U attach files, ⌘J side chat) into a dedicated "Chat (GUI)" group, separate from session-level shortcuts.
+    Bug Fixes
+    - Text selection floating at small font sizes — font sizes below 14px caused selected text to visually "float" away from the cursor due to CSS body.style.zoom coordinate mismatch in WKWebView. Replaced with Tauri's native webview.setZoom() which keeps selection, right-click menus, and mouse events aligned at all zoom levels.
+    - Right-click context menu position offset — native Tauri menu popups in the terminal strip appeared offset from the click position when font size was not 14px. LogicalPosition coordinates are now multiplied by the zoom factor to compensate.
+    - Split/close pane key repeat blocked — holding down ⌘D / ⌘⇧D / ⌘⇧W no longer rapid-fires split or close pane actions; only the initial keypress is honored.
+    - Windows CLI environment check found zero installs — the diagnosis used a bare where, which in PowerShell is an alias for Where-Object, so where claude matched nothing and every CLI showed as "not installed". Now uses where.exe; the --version probe invokes quoted paths via the & call operator (a bare '…' --version is a PowerShell parse error); the several launcher shims one npm install drops (codex, codex.cmd, codex.ps1) collapse to a single install; and package-manager detection reads the shim for a node_modules reference instead of guessing from the install directory (the old hard-coded \nvm\ match only worked on one machine's layout).
+    - Duplicate version line in CLI environment card — the per-install version is now shown only when multiple conflicting installs exist; with a single install it no longer duplicates the version already in the card header.
+    - Codex resume — friendly hint on stale model provider — resuming an older Codex session whose recorded model_provider is no longer defined in ~/.codex/config.toml (e.g. renamed) failed inside the embedded TUI with a raw Model provider \…` not found` dump. The terminal now appends a localized, actionable hint (naming the missing provider and noting the transcript stays fully viewable) whenever a Codex resume exits non-zero on a config/provider load failure.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v031
+ReleaseTime: 2026-07-14T01:37:59.0000000Z
