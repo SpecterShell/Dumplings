@@ -1,0 +1,62 @@
+Version: 1.1.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/usestrix/strix/releases/download/v1.1.0/strix-1.1.0-windows-x86_64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: strix-1.1.0-windows-x86_64.exe
+    PortableCommandAlias: strix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Strix v1.1.0
+    First release since v1.0.4. Highlights below (~56 merged PRs).
+    New security skills
+    - Weak-password detection skill (#621, #654)
+    - LLM prompt-injection skill (#616)
+    - GCP and Auth0 reconnaissance skills
+    - Five new skills: OAuth, AWS, prototype pollution, deserialization, Django (#617)
+    - Skill-directory registration (#746)
+    SARIF / CI integration
+    - SARIF 2.1.0 emitter for GitHub code-scanning / ASPM ingestion (#626)
+    - STRIDE tagging of SARIF rules derived from CWE (#708)
+    - Omit SARIF version-control provenance for multi-repo scans (#726)
+    Dependency / SCA reporting
+    - New dependency reporting fields (#751)
+    - Require advisory_cvss for dependency findings + SCA TUI renderer (#753)
+    Cost & scope controls
+    - Configurable token / cost usage limits, --max-budget-usd (#576)
+    - Bind-mount option for large target repos (#577)
+    -  --target list-file CLI option (#711)
+    LLM / provider
+    - Use core LiteLLM dependency (#752); cap openai<2.45 + litellm[proxy] so fresh installs run (#748)
+    - force_required_tool_choice setting (#730) and routed OpenAI required tool choice (#732)
+    - Scan-agent tool registration (#733); root scan prompt options (#750)
+    - Attribute OpenRouter usage to the Strix app (#760)
+    - Warn when the configured LLM is not a recommended/frontier model (#586)
+    - Route ollama models through ollama_chat so tool calling works (#562)
+    - Report cost for streamed OpenRouter calls (#634)
+    Reliability / fixes
+    - Default sandbox exec commands to Bash so source works (#764)
+    - Provider import-error hints for Bedrock/Vertex, full exception-chain walk (#588)
+    - Env vars win over persisted JSON across all aliases (#689)
+    - Graceful stop with resume hint on persistent RateLimitError (#593)
+    - Collapse child-agent initial input into a single user message (#589)
+    - Atomic CSV/MD writes to prevent corruption on crash (#628, #631); csv_path indentation (#637); avoid note-ID collisions (#630)
+    - Swallow torn-down docker socket on sandbox delete (#721); Caido HTTPS scheme (#722) + configured UI domains (#723)
+    - Keep verbose openai.agents DEBUG off sandbox stdout (#704)
+    - Strip ANSI escapes / control bytes from terminal tool output (#554)
+    TUI
+    - Reduce scroll stutter via throttled refresh + render caching (#687)
+    - "More content available" hint for long views (#687)
+    - Restore snappy sweep/progress animation frame rate (#759)
+    CI / telemetry / chores
+    - Lower Linux release glibc baseline (#707)
+    - Deduplicate scan-ended telemetry (#758); minor telemetry updates (#761); drop unhandled-exception collection (#585)
+    - Config-loader tests (#596); report-writer artifact tests (#667); uv.lock refresh (#606); README/docs updates
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/usestrix/strix/releases/tag/v1.1.0
+ReleaseTime: 2026-07-14T11:47:01.0000000Z
