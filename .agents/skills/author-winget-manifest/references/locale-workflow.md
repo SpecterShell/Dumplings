@@ -3,6 +3,7 @@
 ## Contents
 
 - [When To Use](#when-to-use)
+- [Manifest Headers](#manifest-headers)
 - [Locale Selection And Inheritance](#locale-selection-and-inheritance)
 - [Additional Locale Fields](#additional-locale-fields)
 - [Required Identity Fields](#required-identity-fields)
@@ -23,6 +24,10 @@
 Use this reference to author or review the `defaultLocale` manifest and any additional `locale` manifests. Use only official publisher metadata and evidence that can be tied to the package.
 
 The default-locale manifest is the complete fallback localization. An additional locale manifest is an overlay containing only fields for which reliable localized metadata exists.
+
+## Manifest Headers
+
+Use the exact fixed `defaultLocale` or `locale` header from [Installer Manifest Workflow](manifest-workflow.md#fixed-headers). The schema URL must use the latest stable version, currently `1.12.0`, and must match `ManifestVersion` and the schema version used by every other file in the manifest set.
 
 ## Locale Selection And Inheritance
 
@@ -324,6 +329,7 @@ The schema supports `IconUrl`, `IconFileType`, `IconResolution`, `IconTheme`, an
 ## Validation Checklist
 
 - The default locale matches the version manifest's `DefaultLocale`.
+- The file begins with the exact fixed header for `defaultLocale` or `locale`, and its versioned schema URL matches `ManifestVersion`.
 - Every locale tag is valid BCP-47 and unique in the manifest set.
 - Required default-locale fields are present.
 - `Publisher` and `PackageName` reflect visible ARP identity where available.

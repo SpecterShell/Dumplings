@@ -23,7 +23,43 @@ Create multi-file manifests:
 - `<PackageIdentifier>.locale.<default-locale>.yaml` with `ManifestType: defaultLocale`
 - Optional additional locale files only when there is reliable localized metadata.
 
-Use schema `1.12.0` by default. Preserve an older accepted schema only when updating a package and there is a specific compatibility reason.
+Use the latest stable schema accepted by winget-pkgs, currently `1.12.0`. Before authoring, verify the latest stable version in the official [winget-cli manifest schemas](https://github.com/microsoft/winget-cli/tree/master/schemas/JSON/manifests) or [winget-pkgs schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema). If the stable version has changed, update both the schema URL and `ManifestVersion` consistently in every file.
+
+When updating an existing package, upgrade every YAML file included in the submitted manifest set to the latest stable schema. Do not retain an older schema merely because the previous package version used it.
+
+## Fixed Headers
+
+Every manifest must start with exactly two comment lines followed by one blank line. Keep the first line fixed, and select the second line from the manifest type. Do not add a YamlCreate version, debug value, timestamp, agent name, or other generated text to this header.
+
+Version manifest:
+
+```yaml
+# Created with YamlCreate.ps1 Dumplings Mod
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.12.0.schema.json
+```
+
+Installer manifest:
+
+```yaml
+# Created with YamlCreate.ps1 Dumplings Mod
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
+```
+
+Default-locale manifest:
+
+```yaml
+# Created with YamlCreate.ps1 Dumplings Mod
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.12.0.schema.json
+```
+
+Additional-locale manifest:
+
+```yaml
+# Created with YamlCreate.ps1 Dumplings Mod
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.12.0.schema.json
+```
+
+The schema family must agree with `ManifestType`: `version`, `installer`, `defaultLocale`, or `locale`. The version in the schema URL must agree with `ManifestVersion`, and all files in one manifest set must use the same version. Use a versioned schema URL in committed manifests; do not use `latest` or `preview` in the header.
 
 ## Version File
 
@@ -219,7 +255,9 @@ Author complete installer-level entries first. Dumplings calls `Move-KeysToInsta
 Minimal installer skeleton:
 
 ```yaml
+# Created with YamlCreate.ps1 Dumplings Mod
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
+
 PackageIdentifier: Publisher.Package
 PackageVersion: 1.2.3
 Installers:
@@ -239,6 +277,8 @@ Before claiming the manifest is ready:
 - All installer hashes match downloaded files.
 - Installer URLs are stable across refreshes or intentionally use a stable official redirect URL.
 - Manifest path matches `PackageIdentifier` and `PackageVersion`.
+- Every file begins with the exact fixed two-line header for its `ManifestType`.
+- Every schema URL is versioned, matches `ManifestVersion`, and uses the latest stable schema consistently across the manifest set.
 - Required fields exist in all files.
 - Installer type and architecture match evidence.
 - Version and ARP mapping will not cause upgrade loops.

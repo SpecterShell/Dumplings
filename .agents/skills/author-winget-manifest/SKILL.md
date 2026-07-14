@@ -17,7 +17,7 @@ Use official WinGet docs and repo-local evidence, not memory. Read only the work
 
 Use `scripts/Get-WinGetPRValidationLog.ps1` to download `wingetbot` Azure validation artifacts without modifying the pull request.
 
-Default to multi-file manifests using schema `1.12.0` unless updating an existing package that intentionally uses another accepted schema. The minimum manifest set is the version file, default locale file, and installer file.
+Use the latest stable manifest schema accepted by winget-pkgs, currently `1.12.0`. Every YAML file must begin with the fixed Dumplings header and the manifest-type-specific, versioned schema directive documented in `references/manifest-workflow.md`. Use the same schema version throughout the submitted manifest set, including when updating manifests that previously used an older schema. The minimum manifest set is the version file, default locale file, and installer file.
 
 Before recursively searching a local winget-pkgs checkout, query the public source with `winget search`. Once an identifier is known, navigate directly to its manifest path. Reserve broad repository file searches for cases that cannot be resolved through WinGet or direct path lookup.
 

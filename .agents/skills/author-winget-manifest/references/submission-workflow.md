@@ -8,6 +8,8 @@ Run validation before submission when tools are available:
 winget validate --manifest <manifest-directory>
 ```
 
+Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Installer Manifest Workflow](manifest-workflow.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the latest stable version consistently.
+
 For local install testing:
 
 ```powershell
