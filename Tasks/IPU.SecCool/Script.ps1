@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ipu.dk/refrigeration-software/seccool-'
+$Object1 = Invoke-WebRequest -Uri 'https://www.ipu.dk/refrigeration-software/seccool'
 
 # x86
 # $InstallerLink = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.outerHTML.Contains('x86') } catch {} }, 'First')[0]
