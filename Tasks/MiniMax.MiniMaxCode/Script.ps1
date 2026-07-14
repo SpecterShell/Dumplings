@@ -44,6 +44,9 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
+        # Remove anchors
+        $Object2.SelectNodes('//div[@class="absolute" and ./a[@aria-label="Navigate to header"]]').ForEach({ Write-Host '???'; $_.Remove() })
+
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -71,26 +74,29 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://agent.minimaxi.com/docs/changelog'
+        Value  = $ReleaseNotesCNUrl = 'https://agent.minimaxi.com/docs/changelog'
       }
 
-      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri $ReleaseNotesCNUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesCNTitleNode) {
+        # Remove anchors
+        $Object3.SelectNodes('//div[@class="absolute" and ./a[@aria-label="Navigate to header"]]').ForEach({ $_.Remove() })
+
+        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Value  = $ReleaseNotesCNUrl + '#' + $ReleaseNotesCNTitleNode.Attributes['id'].Value
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
