@@ -1,30 +1,32 @@
-# Unity Hub — winget update task for SpecterShell/Dumplings.
-#
-# Discovers the current GA version from Unity Hub's electron-updater feed and
-# submits the immutable, version-pinned x64 installer URL. This mirrors the
-# Unity Editor tasks, which discover versions from a feed rather than from
-# installer-hash changes, so it works with pinned URLs (pinned URLs are what
-# keep older winget versions from being auto-deleted).
-$FeedBase = 'https://public-cdn.cloud.unity3d.com/hub/prod'
+$Prefix = 'https://public-cdn.cloud.unity3d.com/hub/prod/'
 
-# Version — latest.yml (the GA channel's electron-updater feed) carries the
-# current GA version.
-$Version = (Invoke-RestMethod -Uri "${FeedBase}/latest.yml" | ConvertFrom-Yaml).version
-$this.CurrentState.Version = $Version
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-# Installer — build the immutable, version-pinned URL deterministically from the
-# version, matching the published layout (<base>/<version>/<file>) and the
-# installer file name. This intentionally does NOT reuse latest.yml's own file
-# paths, so the submitted URL stays pinned even if the feed ever points at the
-# rolling alias. x64 only: Unity Hub's Windows arm64 installer currently trips
-# winget's `Validation-Defender-Error` in the install test.
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "${FeedBase}/${Version}/UnityHubSetup-${Version}-x64.exe"
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix "$($this.CurrentState.Version)/UnityHubSetup-$($this.CurrentState.Version)-x64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix "$($this.CurrentState.Version)/UnityHubSetup-$($this.CurrentState.Version)-arm64.exe"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
