@@ -15,7 +15,7 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Prefix = 'https://www.speedbooks.nl/speedbooks-downloaden'
+$Prefix = 'https://www.speedbooks.nl/kennisbank/speedbooks-downloaden'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
 $this.CurrentState.Installer += [ordered]@{
