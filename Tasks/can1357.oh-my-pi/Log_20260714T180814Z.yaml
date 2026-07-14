@@ -1,0 +1,129 @@
+Version: 16.5.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.5.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed compatibility with Copilot gpt-5.6 models by correcting token escaping in compaction summaries.
+    @oh-my-pi/pi-ai
+    Added
+    - Added Cursor OAuth and access-token usage reporting to omp usage via Cursor's account usage endpoint.
+    Fixed
+    - Fixed OpenAI Responses content_filter terminal events being auto-retried as provider finish errors, ensuring content-filtered turns remain hard failures without triggering a retry loop.
+    - Improved credential rotation on usage and account-quota failures to cycle through all eligible credentials instead of stopping early, while maintaining rate-limit backoffs and safety guards.
+    - Fixed GLM tool call parsing to correctly handle and recover from missing or mistyped argument closers, preventing subsequent arguments from being swallowed.
+    - Fixed Anthropic credential management and usage routing for users with multiple organizations under a single email. Credentials, OAuth refreshes, usage reports, and active sessions are now correctly partitioned and isolated by organization, preventing subscriptions from overwriting or merging with each other.
+    - Fixed OpenAI and Codex response finalization to preserve streamed text when receiving empty content on completion. ([#5146])
+    - Fixed OpenAI Chat Completions request parsing to correctly accept assistant tool-call replay messages with null content. ([#5121])
+    - Fixed session-sticky OAuth credential mappings remaining active after credential changes, ensuring sessions correctly reselect accounts after login or logout. ([#4982])
+    - Fixed concurrent reasoning summaries to ignore legacy streaming events under cutoff contracts.
+    - Fixed Codex saved-reset redemption to apply to the selected OpenAI account in multi-account configurations. ([#5054])
+    - Updated the OAuth completion page to instruct users to close the tab manually when the browser blocks automatic window closing. ([#4855])
+    - Fixed Cursor max_mode requests to correctly send max-mode metadata on both model payload fields. ([#4797])
+    - Fixed configuration discovery to support both nested and flat YAML formats for auth.broker.url and auth.broker.token keys. ([#4734])
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed reasoning effort mapping for Z.ai GLM-5.2 on the Anthropic messages endpoint to correctly use the two-tier scale (high, max) and emit output_config.effort.
+    - Fixed an issue where stale cached model limits would override updated static catalog limits after a catalog fingerprint mismatch.
+    - Fixed Cursor discovery to correctly preserve GetUsableModels max-mode metadata for premium models and invalidate stale cache entries.
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - Enhanced Anthropic credential and usage management to support organization-scoped accounts, including displaying organization names in /usage, /logout, omp token --list, and OAuth login success messages, resolving active-account matching for shared organizations, and deduplicating identities during migration.
+    Fixed
+    - Fixed compatibility of GNU-flavored shell builtins (such as stat, date, sed, mktemp, tail, find, base64, and ln) when invoked with macOS/BSD-style arguments.
+    - Fixed subagent model and thinking level resolution to correctly respect the configured modelRoles.task selector instead of intermittently falling back to the parent session's model.
+    - Fixed TUI rendering issues, including preventing macOS runtime diagnostics from painting into the viewport, bounding transcript retention in long sessions, and fixing scrollback repainting when collapsing history.
+    - Fixed /tan and /fork clones failing to inherit or persist the parent session's prompt cache keys.
+    - Fixed Python and JavaScript evaluation kernels suspending the CLI on subprocess foregrounding, deadlocking on non-serializable values, or losing in-flight subagent work during external aborts.
+    - Fixed configured retry.fallbackChains failing to engage when encountering non-retryable provider errors.
+    - Improved auto-compaction to automatically drop images and elide content when context is tight, and added persistent warning badges to the compaction divider when manual intervention is required.
+    - Fixed the downshift plan nudge silently ending runs with no code written when the model answered with a text-only reply.
+    - Fixed launch tool rendering and status reporting, including resolving contradictory readiness timeout messages and preventing backgrounded Bash blocks from continuing to repaint.
+    - Fixed Advisor containment and timing issues, preventing hallucinated tool calls from contaminating later advice and ensuring late-arriving transcript deltas are coalesced before advisor calls.
+    - Fixed omp update on npm-managed Windows installations to prevent downloaded release binaries from overwriting npm launchers.
+    - Fixed --max-time duration values (e.g., 5s, 10m, 1h) being ignored instead of setting a session deadline.
+    - Fixed omp plugin install --force failing with a dependency loop when replacing an existing pinned Git plugin source.
+    - Fixed MCP tools receiving session image attachments as raw local:// URIs instead of resolving them to local filesystem paths.
+    - Fixed Pyright LSP semantic requests hanging during startup.
+    - Fixed Codex web search requests for GPT-5.6 Responses-Lite models.
+    - Fixed custom model/provider configuration discovery to correctly load ~/.omp/agent/models.yaml when models.yml is absent.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed an issue in the live collaboration transcript where duplicate tool cards and a stale "thinking..." shimmer were rendered while a committed tool call was running.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Optimized the Markdown rendering cache to prevent large documents from indefinitely occupying cache slots, improving memory usage and performance (#4820).
+    - Fixed viewport corruption on macOS caused by unmanaged stderr writes (such as libmalloc or framework diagnostics) while the terminal is active.
+    - Fixed an issue where streamed diff code fences retained unhighlighted rows in native scrollback when long transient blocks left the viewport before finalization (#5126).
+    - Fixed native Windows Terminal sessions failing to detect mid-run light/dark theme changes when Mode 2031 appearance notifications are unavailable (#5091).
+    - Hid empty HTML comment separators in Markdown-rendered TUI output instead of displaying them literally (#4911).
+    @oh-my-pi/pi-utils
+    Added
+    - Added terminal stderr guard utilities (suppressTerminalStderr and restoreTerminalStderr) to prevent macOS runtime diagnostics from corrupting TUI viewports while ensuring crash reports remain visible.
+    Fixed
+    - Fixed an issue in Mermaid ASCII routing where unreachable edge attachment points caused unbounded pathfinder searches.
+    What's Changed
+    - fix(coding-agent): suppress todo reminders for interactive questions by @roboomp in https://github.com/can1357/oh-my-pi/pull/5097
+    - fix(tui): highlighted streamed diff scrollback rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/5129
+    - fix(coding-agent): support models.yaml custom config by @roboomp in https://github.com/can1357/oh-my-pi/pull/5147
+    - fix(ai): preserve streamed Responses text on empty done items by @roboomp in https://github.com/can1357/oh-my-pi/pull/5149
+    - fix(rpc): prevent rpc-ui extension UI response deadlock by @roboomp in https://github.com/can1357/oh-my-pi/pull/5156
+    - fix(tui): display Cursor final answers after tool output by @roboomp in https://github.com/can1357/oh-my-pi/pull/5158
+    - fix(tui): sanitize subagent progress output by @roboomp in https://github.com/can1357/oh-my-pi/pull/5162
+    - fix(coding-agent): reject unknown continued session ids by @paralin in https://github.com/can1357/oh-my-pi/pull/5167
+    - fix(session): recover interrupted session turns by @paralin in https://github.com/can1357/oh-my-pi/pull/5168
+    - fix(ai): scope Anthropic credential identity by organization, not just email by @chan1103 in https://github.com/can1357/oh-my-pi/pull/5170
+    - fix(coding-agent): load web search fallbacks lazily by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/5182
+    - fix(advisor): quarantine unknown tool responses by @roboomp in https://github.com/can1357/oh-my-pi/pull/5183
+    - fix(coding-agent): preserve late advisor notes after terminal answers by @roboomp in https://github.com/can1357/oh-my-pi/pull/5186
+    - fix(agent): escape Harmony compaction markers by @roboomp in https://github.com/can1357/oh-my-pi/pull/5190
+    - fix(coding-agent): reject empty advisor stop completions by @roboomp in https://github.com/can1357/oh-my-pi/pull/5216
+    - fix(coding-agent): accept Auto-Learn capture empty stops by @roboomp in https://github.com/can1357/oh-my-pi/pull/5217
+    - fix(codex): preserve sequential reasoning summaries by @riverpilot in https://github.com/can1357/oh-my-pi/pull/5233
+    - fix(tui): compact transcript retention without losing resize history by @RensTillmann in https://github.com/can1357/oh-my-pi/pull/5239
+    - Fix automatic rollover across quota-limited accounts by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/5247
+    - fix(ai): route Z.AI API keys by usage by @roboomp in https://github.com/can1357/oh-my-pi/pull/5275
+    - fix(coding-agent): respect role thinking for temporary model picks by @roboomp in https://github.com/can1357/oh-my-pi/pull/5297
+    - fix(coding-agent): isolate eval runtimes from terminal by @masonc15 in https://github.com/can1357/oh-my-pi/pull/5327
+    - fix(coding-agent): forward sessionId to getApiKey in subagent auth fallback (Closes #5325) by @djdembeck in https://github.com/can1357/oh-my-pi/pull/5377
+    - fix(coding-agent): support GPT-5.6 Codex web search by @daandden in https://github.com/can1357/oh-my-pi/pull/5392
+    - fix(auth-broker): resolve nested auth.broker.url/token yaml keys by @roboomp in https://github.com/can1357/oh-my-pi/pull/5406
+    - fix(cli): show progress for print mode prompts by @roboomp in https://github.com/can1357/oh-my-pi/pull/4906
+    - fix(tui): hide empty html comments by @roboomp in https://github.com/can1357/oh-my-pi/pull/4912
+    - fix(coding-agent): skip autolearn capture after aborted turns by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4924
+    - fix(mcp): resolve local image paths for tool calls by @roboomp in https://github.com/can1357/oh-my-pi/pull/4950
+    - fix(collab-web): dedup active transcript tools by @roboomp in https://github.com/can1357/oh-my-pi/pull/4952
+    - fix(ai): clarify OAuth completion close copy by @roboomp in https://github.com/can1357/oh-my-pi/pull/4955
+    - fix(catalog): preserve static limits on cache fingerprint mismatch by @roboomp in https://github.com/can1357/oh-my-pi/pull/4959
+    - fix(plugin): handle pinned git source replacements by @roboomp in https://github.com/can1357/oh-my-pi/pull/4967
+    - fix(prompting): allow magic keywords beside punctuation by @roboomp in https://github.com/can1357/oh-my-pi/pull/4968
+    - fix(cursor): preserve max-mode flag by @roboomp in https://github.com/can1357/oh-my-pi/pull/4975
+    - fix(ai): clear stale OAuth session stickies after credential changes by @roboomp in https://github.com/can1357/oh-my-pi/pull/4986
+    - fix(eval): shield Python agent bridge aborts by @roboomp in https://github.com/can1357/oh-my-pi/pull/5015
+    - fix(cli): parse max-time duration suffixes by @roboomp in https://github.com/can1357/oh-my-pi/pull/5044
+    - fix(ai): apply codex reset to selected account by @roboomp in https://github.com/can1357/oh-my-pi/pull/5056
+    - fix(cli): route npm self-updates through npm by @roboomp in https://github.com/can1357/oh-my-pi/pull/5057
+    - fix(coding-agent): prevent memory URL writes from leaking to cwd by @roboomp in https://github.com/can1357/oh-my-pi/pull/5078
+    - fix(agent): isolate memory root resolution by @roboomp in https://github.com/can1357/oh-my-pi/pull/5086
+    - fix(advisor): reduce stale advisories via delta coalescing, WIP markers, and delivery annotation by @apoc in https://github.com/can1357/oh-my-pi/pull/5090
+    - fix(agent): abort repeated empty yield results by @roboomp in https://github.com/can1357/oh-my-pi/pull/5099
+    - fix(ai): stop retrying messages that were blocked by the provider by @belchetz in https://github.com/can1357/oh-my-pi/pull/5101
+    - fix(catalog): classify Z.ai GLM-5.2 anthropic-messages endpoint as budget-effort with high/max by @oldschoola in https://github.com/can1357/oh-my-pi/pull/5119
+    - fix(ai): accept null assistant chat content by @roboomp in https://github.com/can1357/oh-my-pi/pull/5123
+    - fix(tui): suppress unmanaged macOS stderr writes corrupting the viewport by @korri123 in https://github.com/can1357/oh-my-pi/pull/5131
+    - fix(coding-agent): flush throttled output tails by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/5139
+    - feat(ai): report Cursor account usage by @riverpilot in https://github.com/can1357/oh-my-pi/pull/5248
+    - fix(lsp): send initial workspace configuration by @roboomp in https://github.com/can1357/oh-my-pi/pull/5277
+    - fix(utils): bound Mermaid ASCII pathfinder by @roboomp in https://github.com/can1357/oh-my-pi/pull/5295
+    New Contributors
+    - @belchetz made their first contribution in https://github.com/can1357/oh-my-pi/pull/5101
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.5.0...v16.5.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.5.1
+ReleaseTime: 2026-07-14T17:47:02.0000000Z
