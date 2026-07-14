@@ -6,12 +6,13 @@ $Version = $Object1.SelectSingleNode('/html/body/ul/li[2]/a').InnerText.Trim() -
 
 # Version
 $this.CurrentState.Version = $Version -replace '_', ' #'
+$MainVersion = $Version.Split('_')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "${Prefix}${Version}/x86_64_nt/ECLiPSe_${Version}_x86_64_nt.exe"
-  ProductCode  = "ECLiPSe $($Version.Split('_')[0]) (64 bit)"
+  ProductCode  = "ECLiPSe ${MainVersion} (64 bit)"
 }
 
 switch -Regex ($this.Check()) {
@@ -21,5 +22,16 @@ switch -Regex ($this.Check()) {
   }
   'Changed|Updated' {
     $this.Message()
+  }
+  'Updated' {
+    if ($MainVersion -ne ($this.Config.WinGetIdentifier.Split('.')[-2..-1] -join '.')) {
+      $this.Config.WinGetNewPackageIdentifier = "Coninfer.ECLiPSeCLP.${MainVersion}"
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'PackageName'
+        Value  = { $_ -replace '(\d+(?:\.\d+)+)', $MainVersion }
+      }
+    }
+    $this.Submit()
   }
 }
