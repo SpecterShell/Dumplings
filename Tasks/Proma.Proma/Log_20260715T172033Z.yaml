@@ -1,0 +1,26 @@
+Version: 0.14.21
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.14.21-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.14.21 更新
+    新功能
+    - 会话快速切换快捷键 — 用 ⌘ + 数字（macOS）或 Ctrl + 数字（Windows）即可在最近的会话之间快速切换，支持 1–9 共 9 个位置；鼠标悬停会话项时会显示对应的快捷键提示，切换更顺手。(#1163)
+    - 显示渠道订阅套餐额度 — 在渠道选择器与 Agent 上下文用量徽标处展示订阅套餐（Plan）的剩余额度与重置时间，剩余不足 20% 时高亮提醒；额度查询按渠道缓存并做请求去重，避免重复请求。(#1156)
+    Bug 修复
+    - 修正 1M 模型后缀路由与上下文窗口判定 — [1m] 后缀改为按供应商精准匹配，仅对已验证的内置供应商组合（Claude、智谱 GLM、小米 MiMo、MiniMax、DeepSeek、通义千问等）追加后缀；通用 Anthropic-compatible 端点保留用户配置的真实模型 ID，不再因收到带后缀的模型名导致请求失败。同时对话压缩（compact）的自动压缩阈值改为按实际窗口判定，1M 模型不再被错误降级为 200K。(#1152, #1151)
+    - SDK 最大输出 token 限制改为仅对 Claude 生效 — 之前按供应商区分对所有模型强制覆盖最大输出（Anthropic 64000 / 其他 32768），现仅对 Claude 模型设置 64000，其他模型不再强制覆盖，避免影响非 Claude 供应商的输出行为。(#1151)
+    - 修复小米套餐渠道鉴权 header — 修复 xiaomi token plan 渠道鉴权 header 的处理异常。(#1151)
+    - Skill 扫描对损坏符号链接容错 — Skill 扫描遇到 dangling / broken symlink 时跳过该条目，不再因单个坏链接终止整个扫描、导致后续 Skill 丢失。(#1161)
+    - 关闭 Markdown linkify 模糊匹配 — 关闭 linkify 的模糊匹配，避免 SKILL.md 等文件名被误判为 URL 而合成出错误的内联链接。(#1162)
+    - 澄清工作区 Memory 提示词路径 — 优化注入提示词中工作区 Memory 路径的表述，让 Agent 更准确地引用 Memory 位置。(#1157)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.14.21
+ReleaseTime: 2026-07-15T16:50:14.2250000Z
