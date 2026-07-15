@@ -12,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url 'Antigravity-arm64.exe'
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url '../windows-arm/Antigravity-arm64.exe'
 }
 
 switch -Regex ($this.Check()) {
