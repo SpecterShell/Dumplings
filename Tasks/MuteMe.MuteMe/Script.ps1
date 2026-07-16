@@ -16,10 +16,6 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # ProductCode
-    $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
-
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://muteme.com/pages/release-notes' | ConvertFrom-Html
 

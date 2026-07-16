@@ -57,13 +57,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
       Architecture           = 'x64'
       InstallerUrl           = $Uri1
       InstallerSha256        = $this.CurrentState.InstallerSha256
-      ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-      AppsAndFeaturesEntries = @(
-        [ordered]@{
-          ProductCode = $InstallerFile | Read-ProductCodeFromMsi
-          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-        }
-      )
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -108,13 +101,6 @@ if ($this.Status.Contains('New')) {
       Architecture           = 'x64'
       InstallerUrl           = $Uri1
       InstallerSha256        = $this.CurrentState.InstallerSha256
-      ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-      AppsAndFeaturesEntries = @(
-        [ordered]@{
-          ProductCode = $InstallerFile | Read-ProductCodeFromMsi
-          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-        }
-      )
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -217,13 +203,6 @@ if ($ETag -in $this.LastState.ETag) {
           Architecture           = 'x64'
           InstallerUrl           = $Uri1
           InstallerSha256        = $this.CurrentState.InstallerSha256
-          ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-          AppsAndFeaturesEntries = @(
-            [ordered]@{
-              ProductCode = $InstallerFile | Read-ProductCodeFromMsi
-              UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-            }
-          )
         }
         # Mode
         $this.CurrentState.Mode = $false
@@ -258,13 +237,6 @@ if ($ETag -in $this.LastState.ETag) {
         Architecture           = 'x64'
         InstallerUrl           = $Uri1
         InstallerSha256        = $this.CurrentState.InstallerSha256
-        ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-        AppsAndFeaturesEntries = @(
-          [ordered]@{
-            ProductCode = $InstallerFile | Read-ProductCodeFromMsi
-            UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-          }
-        )
       }
       # Mode
       $this.CurrentState.Mode = $false

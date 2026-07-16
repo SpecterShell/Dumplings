@@ -52,13 +52,6 @@ switch -Regex ($this.Check()) {
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'BluebeamOCR x64 21.msi'
       # Version
       $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-      # AppsAndFeaturesEntries
-      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          ProductCode = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-          UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        }
-      )
 
       $this.Submit()
     } catch {

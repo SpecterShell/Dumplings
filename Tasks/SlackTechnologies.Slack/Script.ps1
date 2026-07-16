@@ -41,10 +41,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    # $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # # ProductCode
-    # $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
-
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{

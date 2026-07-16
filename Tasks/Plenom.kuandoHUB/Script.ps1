@@ -23,26 +23,8 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
     # x64
     $InstallerFile3 = Join-Path $InstallerFileExtracted 'kuandoHUBSetup_64bit.msi'
-    # ProductCode
-    $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {

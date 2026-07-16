@@ -60,23 +60,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     $this.Print()
     $this.Write()
   }

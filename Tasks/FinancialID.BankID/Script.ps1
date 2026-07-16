@@ -27,14 +27,6 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'BankID.msi'
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi
-      }
-    )
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()

@@ -4,15 +4,6 @@ function Read-Installer {
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile | Read-ProductCodeFromBurn
-  # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      DisplayName = $InstallerFile | Read-ProductNameFromBurn
-      UpgradeCode = $InstallerFile | Read-UpgradeCodeFromBurn
-    }
-  )
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 

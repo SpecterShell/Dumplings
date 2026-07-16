@@ -12,10 +12,6 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # ProductCode
-    $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
-
     $this.Print()
     $this.Write()
   }

@@ -22,9 +22,6 @@ function Read-Installer {
     InstallerType = 'wix'
     InstallerUrl  = "https://desktop.figma.com/win/build/Figma-$($this.CurrentState.Version).msi"
   }
-  $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-  # ProductCode
-  $Installer['ProductCode'] = "$($InstallerFile | Read-ProductCodeFromMsi).msq"
 }
 
 function Send-Manifest {

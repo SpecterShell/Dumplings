@@ -31,12 +31,6 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl           = $Uri1
       InstallerSha256        = $this.CurrentState.InstallerSha256
-      ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-      AppsAndFeaturesEntries = @(
-        [ordered]@{
-          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-        }
-      )
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -77,12 +71,6 @@ if ($this.Status.Contains('New')) {
     $this.CurrentState.Installer += [ordered]@{
       InstallerUrl           = $Uri1
       InstallerSha256        = $this.CurrentState.InstallerSha256
-      ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-      AppsAndFeaturesEntries = @(
-        [ordered]@{
-          UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-        }
-      )
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -174,12 +162,6 @@ if ($ETag -in $this.LastState.ETag) {
         $this.CurrentState.Installer += [ordered]@{
           InstallerUrl           = $Uri1
           InstallerSha256        = $this.CurrentState.InstallerSha256
-          ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-          AppsAndFeaturesEntries = @(
-            [ordered]@{
-              UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-            }
-          )
         }
         # Mode
         $this.CurrentState.Mode = $false
@@ -210,12 +192,6 @@ if ($ETag -in $this.LastState.ETag) {
       $this.CurrentState.Installer += [ordered]@{
         InstallerUrl           = $Uri1
         InstallerSha256        = $this.CurrentState.InstallerSha256
-        ProductCode            = $InstallerFile | Read-ProductCodeFromMsi
-        AppsAndFeaturesEntries = @(
-          [ordered]@{
-            UpgradeCode = $InstallerFile | Read-UpgradeCodeFromMsi
-          }
-        )
       }
       # Mode
       $this.CurrentState.Mode = $false

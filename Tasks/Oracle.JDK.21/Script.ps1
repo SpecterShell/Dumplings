@@ -7,7 +7,6 @@ function Read-Installer {
   $this.CurrentState.Installer += [ordered]@{
     InstallerUrl    = "https://download.oracle.com/java/21/archive/jdk-${ShortVersion}_windows-x64_bin.msi"
     InstallerSha256 = $InstallerSha256
-    ProductCode     = $InstallerFile | Read-ProductCodeFromMsi
   }
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }

@@ -21,15 +21,6 @@ switch -Regex ($this.Check()) {
     $InstallerFile2 = Join-Path $InstallerFileExtracted $InstallerX86.NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'wix'
-      }
-    )
     $ZipFile.Dispose()
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
