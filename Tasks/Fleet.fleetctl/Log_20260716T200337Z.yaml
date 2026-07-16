@@ -1,0 +1,24 @@
+Version: 4.89.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.89.1/fleetctl_v4.89.1_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.89.1_windows_amd64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+- Architecture: arm64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.89.1/fleetctl_v4.89.1_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.89.1_windows_arm64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug fixes
+    - Fixed a bug where fresh Windows 11 25H2 (and other recent builds) failed MDM enrollment with error
+      80180006 because the device's discovery RequestVersion (e.g. "9.0") was rejected by an exact-match
+      allow-list. Fleet now accepts any MS-MDE2 discovery RequestVersion at or above the minimum supported
+      version ("4.0").
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fleetdm/fleet/releases/tag/fleet-v4.89.1
+ReleaseTime: 2026-07-16T18:41:31.0000000Z
