@@ -163,6 +163,13 @@ No installer, updater, 7-Zip, or NanaZip process is invoked.
 The outer updater/metainstaller may not be the final application's ARP writer.
 
 - Bare mini-installer: nested `setup.exe` normally writes the browser ARP entry; obtain ProductCode/display evidence from explicit setup behavior or VM ARP delta.
+- Google Chrome mini-installer: resolve the command-line-selected ARP key from the already parsed result and manifest switches:
+
+  ```powershell
+  $ProductCode = Resolve-ChromiumSetupProductCode -Info $Info -InstallerSwitches $Installer.InstallerSwitches
+  ```
+
+  `--chrome-sxs`, `--chrome-beta`, and `--chrome-dev` select `Google Chrome SxS`, `Google Chrome Beta`, and `Google Chrome Dev`; an unqualified Google Chrome mini-installer selects `Google Chrome`. This mapping applies only when parser metadata identifies `Google LLC` and `Google Chrome Installer`. Do not apply it to vendor forks.
 - Untagged updater package: model the updater's own ARP entry.
 - Tagged Updater/Omaha: model the downloaded target application's visible ARP entry, not `appguid`.
 - Tagged Updater/Omaha: the outer PE product version belongs to the updater. Do not use it as the target package version; obtain target-version evidence from the downloaded installer/feed or VM traffic.
