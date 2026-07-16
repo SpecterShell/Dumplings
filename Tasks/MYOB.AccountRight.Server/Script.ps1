@@ -15,7 +15,7 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'RELEASES' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'RELEASES'
     # RealVersion
-    $this.CurrentState.RealVersion = Get-Content -Path $InstallerFile2 -Raw | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [RawVersion]$_.Version } -Bottom 1 | Select-Object -ExpandProperty Version
+    $this.CurrentState.RealVersion = Get-Content -Path $InstallerFile2 -Raw | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]$_.Version } -Bottom 1 | Select-Object -ExpandProperty Version
 
     $this.Print()
     $this.Write()

@@ -2,7 +2,7 @@ $Prefix = 'https://download.kde.org/stable/kdiff3/'
 
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$InstallerName = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }).href | Sort-Object -Property { [RawVersion]$_ } -Bottom 1
+$InstallerName = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }).href | Sort-Object -Property { [ChunkVersion]$_ } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerName, 'kdiff3-(\d+(?:\.\d+)+)').Groups[1].Value

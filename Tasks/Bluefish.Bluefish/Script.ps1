@@ -2,7 +2,7 @@ $Prefix = 'https://www.bennewitz.com/bluefish/stable/binaries/windows_x64/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;P=*.exe;F=0"
 
-$InstallerName = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | ConvertTo-UnescapedUri | Where-Object -FilterScript { $_ -match '^Bluefish (\d+(?:\.\d+)+) Setup\.exe$' } | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$InstallerName = $Object1.Links | Select-Object -ExpandProperty 'href' -ErrorAction SilentlyContinue | ConvertTo-UnescapedUri | Where-Object -FilterScript { $_ -match '^Bluefish (\d+(?:\.\d+)+) Setup\.exe$' } | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

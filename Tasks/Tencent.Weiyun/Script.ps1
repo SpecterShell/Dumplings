@@ -7,7 +7,7 @@ $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml" | ConvertFrom-Yaml
 $Prefix3 = 'https://dldir1v6.qq.com/weiyun/electron-update/release/win32/'
 $Object3 = Invoke-RestMethod -Uri "${Prefix3}latest-win32.yml" | ConvertFrom-Yaml
 
-if ([Versioning]$Object1.electron_win64.version -lt [Versioning]$Object2.version) {
+if ([ChunkVersion]$Object1.electron_win64.version -lt [ChunkVersion]$Object2.version) {
   if ($Object2.version -ne $Object3.version) {
     $this.Log("x86 version: $($Object3.version)")
     $this.Log("x64 version: $($Object2.version)")

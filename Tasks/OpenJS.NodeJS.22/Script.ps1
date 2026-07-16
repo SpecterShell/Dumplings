@@ -3,7 +3,7 @@ $RepoName = 'node'
 
 $Object1 = $Global:DumplingsStorage.NodeJSReleases |
   Where-Object -FilterScript { $_.version.StartsWith('v22.') } |
-  # Sort-Object -Property { $_.version -replace '\d+', { $_.Value.PadLeft(20) } } |
+  # Sort-Object -Property { [ChunkVersion]($_.version) } |
   Select-Object -First 1
 
 # Version

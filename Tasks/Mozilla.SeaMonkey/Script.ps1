@@ -8,7 +8,7 @@ $Prefix = 'https://s3.osuosl.org/seamonkey-archive/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://s3.osuosl.org/seamonkey-archive/?delimiter=/&prefix=releases/'
 
 # Version
-$this.CurrentState.Version = $Version = $Object1.ListBucketResult.CommonPrefixes.Prefix -replace '^releases/' -replace '/$' -match '^(\d+(?:\.\d+)+)$' | Sort-Object -Property { $_ -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$this.CurrentState.Version = $Version = $Object1.ListBucketResult.CommonPrefixes.Prefix -replace '^releases/' -replace '/$' -match '^(\d+(?:\.\d+)+)$' | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Installer
 foreach ($Locale in $Locales) {

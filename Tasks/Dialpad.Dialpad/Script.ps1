@@ -1,7 +1,7 @@
 # x86
-$Object1 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/dialpad_native/stable/win32/ia32/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/dialpad_native/stable/win32/ia32/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 # x64
-$Object2 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/dialpad_native/stable/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object2 = Invoke-WebRequest -Uri 'https://storage.googleapis.com/dialpad_native/stable/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 if ($Object1.Version -ne $Object2.Version) {
   $this.Log("x86 version: $($Object1.Version)")

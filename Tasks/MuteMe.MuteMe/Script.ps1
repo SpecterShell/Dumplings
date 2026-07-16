@@ -1,5 +1,5 @@
 $Prefix = "https://muteme.io/update/win64/$($this.Status.Contains('New') ? '0.25.7' : $this.LastState.Version)/"
-$Object1 = Invoke-WebRequest -Uri "${Prefix}RELEASES" | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [RawVersion]$_.Version } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri "${Prefix}RELEASES" | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]$_.Version } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Object1.Version

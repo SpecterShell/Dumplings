@@ -1,7 +1,7 @@
 $Object1 = (Invoke-WebRequest -Uri 'https://hackolade.com/versionInfo/versioninfo.json').Content | ConvertFrom-Json -AsHashtable
 
 # Version
-$this.CurrentState.Version = ($Object1.versions.GetEnumerator() | Sort-Object -Property { [RawVersion]$_.Key } -Bottom 1).Value.Where({ $_.os -eq 'windows' }, 'First')[0].version[@('major', 'minor', 'revisionNumber')] -join '.'
+$this.CurrentState.Version = ($Object1.versions.GetEnumerator() | Sort-Object -Property { [ChunkVersion]$_.Key } -Bottom 1).Value.Where({ $_.os -eq 'windows' }, 'First')[0].version[@('major', 'minor', 'revisionNumber')] -join '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -2,10 +2,10 @@ $RepoOwner = 'element-hq'
 $RepoName = 'element-web'
 
 # x64
-$Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/x64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 # arm64
-$Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object2 = Invoke-WebRequest -Uri 'https://packages.element.io/desktop/update/win32/arm64/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 if ($Object1.Version -ne $Object2.Version) {
   $this.Log("x64 version: $($Object1.Version)")

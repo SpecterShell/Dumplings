@@ -1,4 +1,4 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://tandemhealth.blob.core.windows.net/tandem-public/native/releases.win.json' | Read-ResponseContent | ConvertFrom-Json).Assets | Where-Object -FilterScript { $_.Type -eq 'Full' } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = (Invoke-WebRequest -Uri 'https://tandemhealth.blob.core.windows.net/tandem-public/native/releases.win.json' | Read-ResponseContent | ConvertFrom-Json).Assets | Where-Object -FilterScript { $_.Type -eq 'Full' } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Object1.Version

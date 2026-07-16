@@ -2,7 +2,7 @@ $Prefix = 'https://cdn.kde.org/ci-builds/network/neochat/'
 
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$Prefix += ($Object1.Links.Where({ try { $_.href.StartsWith('release-') } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1) + 'windows/'
+$Prefix += ($Object1.Links.Where({ try { $_.href.StartsWith('release-') } catch {} }).href | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1) + 'windows/'
 
 $Object2 = Invoke-WebRequest -Uri $Prefix
 

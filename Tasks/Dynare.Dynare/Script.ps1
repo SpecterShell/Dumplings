@@ -1,7 +1,7 @@
 $Prefix = 'https://www.dynare.org/release/windows/'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$InstallerUrl = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.href -match '^dynare-(\d+(?:\.\d+)+)-win\.exe$' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1)
+$InstallerUrl = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.href -match '^dynare-(\d+(?:\.\d+)+)-win\.exe$' } catch {} }).href | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1)
 
 # Version
 $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value

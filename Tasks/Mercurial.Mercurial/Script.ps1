@@ -6,7 +6,7 @@ if (@($Object1.Version | Sort-Object -Unique).Count -gt 1) {
 }
 
 # Version
-$this.CurrentState.Version = $Object1.Version | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$this.CurrentState.Version = $Object1.Version | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

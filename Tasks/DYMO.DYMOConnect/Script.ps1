@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Connect for Desktop'.Windows.GetEnumerator() | Sort-Object -Property { [regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Connect for Desktop'.Windows.GetEnumerator() | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -4,7 +4,7 @@ $RepoName = 'ultimatevocalremovergui'
 $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
 
 # Installer
-$Asset = $Object1.assets | Where-Object -Property 'name' -Match -Value 'UVR_v([\d\.]+)_setup\.exe' | Sort-Object -Property { $_.name -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Asset = $Object1.assets | Where-Object -Property 'name' -Match -Value 'UVR_v([\d\.]+)_setup\.exe' | Sort-Object -Property { [ChunkVersion]($_.name) } -Bottom 1
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }

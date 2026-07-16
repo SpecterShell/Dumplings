@@ -2,7 +2,7 @@ $Prefix = 'https://imagemagick.org/archive/binaries/'
 
 $InstallerObjects = $Global:DumplingsStorage.ImageMagickFileList.RDF.Content |
   Where-Object -FilterScript { $_.about -match '\.(exe|zip)' -and $_.about.Contains('Q16') -and $_.about.Contains('HDRI') } |
-  Sort-Object -Property { $_.about -replace '\d+', { $_.Value.PadLeft(20) } }
+  Sort-Object -Property { [ChunkVersion]($_.about) }
 
 $InstallerObjectX86 = $InstallerObjects.Where({ $_.about.Contains('x86') -and $_.about.Contains('dll') }, 'Last')[0]
 $VersionX86 = [regex]::Match($InstallerObjectX86.about, '(\d+\.\d+\.\d+-\d+)').Groups[1].Value
@@ -20,7 +20,7 @@ if (@(@($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Unique).Count -g
   throw 'Inconsistent versions detected'
 }
 
-$Version = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Version = @($VersionX86, $VersionX64, $VersionArm64) | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Version.Replace('-', '.')

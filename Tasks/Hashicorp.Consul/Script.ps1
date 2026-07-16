@@ -1,7 +1,7 @@
 $Prefix = 'https://releases.hashicorp.com/consul/'
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$FolderName = $Object1.Links.Where({ try { $_.href -match '^/consul/\d+(?:\.\d+)+/$' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$FolderName = $Object1.Links.Where({ try { $_.href -match '^/consul/\d+(?:\.\d+)+/$' } catch {} }).href | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($FolderName, '(\d+(?:\.\d+)+)').Groups[1].Value

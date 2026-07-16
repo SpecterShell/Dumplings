@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://download.lifesizecloud.com/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { $_.Version -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object1 = Invoke-WebRequest -Uri 'https://download.lifesizecloud.com/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 # Version
 $this.CurrentState.Version = $Object1.Version

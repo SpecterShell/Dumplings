@@ -1,6 +1,6 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://www.python.org/api/v2/downloads/release/?version=3&pre_release=false' -MaximumRetryCount 0) |
   Where-Object -FilterScript { $_.name.Contains('3.14.') } |
-  Sort-Object -Property { $_.name -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+  Sort-Object -Property { [ChunkVersion]($_.name) } -Bottom 1
 
 $Object2 = (Invoke-RestMethod -Uri "https://www.python.org/api/v2/downloads/release_file/?os=1&release=$([regex]::Match($Object1.resource_uri, 'release/(\d+)/').Groups[1].Value)" -MaximumRetryCount 0)
 

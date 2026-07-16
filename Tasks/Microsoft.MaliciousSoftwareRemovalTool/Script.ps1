@@ -1,9 +1,9 @@
 # x86
 $Object1 = (Invoke-WebRequest -Uri 'https://www.microsoft.com/en-us/download/details.aspx?id=16').Content | Get-EmbeddedJson -StartsFrom 'window.__DLCDetails__=' | ConvertFrom-Json
-$Object2 = $Object1.dlcDetailsView.downloadFile | Where-Object -FilterScript { $_.name.EndsWith('.exe') } | Sort-Object -Property { [regex]::Match($_.name, 'V(\d+(?:\.\d+)+)').Groups[1].Value -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object2 = $Object1.dlcDetailsView.downloadFile | Where-Object -FilterScript { $_.name.EndsWith('.exe') } | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.name, 'V(\d+(?:\.\d+)+)').Groups[1].Value) } -Bottom 1
 # x64
 $Object3 = (Invoke-WebRequest -Uri 'https://www.microsoft.com/en-us/download/details.aspx?id=9905').Content | Get-EmbeddedJson -StartsFrom 'window.__DLCDetails__=' | ConvertFrom-Json
-$Object4 = $Object3.dlcDetailsView.downloadFile | Where-Object -FilterScript { $_.name.EndsWith('.exe') } | Sort-Object -Property { [regex]::Match($_.name, 'V(\d+(?:\.\d+)+)').Groups[1].Value -creplace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$Object4 = $Object3.dlcDetailsView.downloadFile | Where-Object -FilterScript { $_.name.EndsWith('.exe') } | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.name, 'V(\d+(?:\.\d+)+)').Groups[1].Value) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

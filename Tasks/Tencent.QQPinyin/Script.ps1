@@ -18,7 +18,7 @@ $Object2 = Invoke-RestMethod -Uri 'https://config.android.qqpy.sogou.com/update?
 $Version2 = $Object2.NewVer
 
 # Version
-$this.CurrentState.Version = [Versioning]$Version1 -lt [Versioning]$Version2 ? $Version2 : $Version1
+$this.CurrentState.Version = [ChunkVersion]$Version1 -lt [ChunkVersion]$Version2 ? $Version2 : $Version1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      if ([Versioning]$Version1 -lt [Versioning]$Version2) {
+      if ([ChunkVersion]$Version1 -lt [ChunkVersion]$Version2) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'

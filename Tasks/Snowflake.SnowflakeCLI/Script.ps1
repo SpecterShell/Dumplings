@@ -2,7 +2,7 @@ $Prefix = 'https://sfc-repo.snowflakecomputing.com/snowflake-cli/windows_x86_64/
 
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$Prefix = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.href -match '^\d+(?:\.\d+)+/' } catch {} }).href | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1)
+$Prefix = Join-Uri $Prefix ($Object1.Links.Where({ try { $_.href -match '^\d+(?:\.\d+)+/' } catch {} }).href | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1)
 
 $Object2 = Invoke-WebRequest -Uri $Prefix
 

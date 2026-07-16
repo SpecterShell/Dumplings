@@ -3,7 +3,7 @@ $Prefix = 'https://download.documentfoundation.org/libreoffice/stable/'
 $Object1 = Invoke-WebRequest -Uri 'https://www.libreoffice.org/download/' | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $Object1.SelectNodes('//*[@class="version_heading"]').InnerText | ForEach-Object -Process { $_.Trim() } | Sort-Object -Property { $_ -replace '\d+', { $_.Value.PadLeft(20) } } -Bottom 1
+$this.CurrentState.Version = $Object1.SelectNodes('//*[@class="version_heading"]').InnerText | ForEach-Object -Process { $_.Trim() } | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
