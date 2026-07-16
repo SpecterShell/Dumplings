@@ -43,31 +43,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$InstallerX86.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerX86.InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    $null = Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted
-    $InstallerFile2 = Get-ChildItem -Path "${InstallerFileExtracted}" -Filter '*.msi' -Recurse -File | Where-Object -FilterScript { $_.Name -notmatch 'x64|arm|aarch' } | Select-Object -First 1
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries + ProductCode
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    $InstallerFile3 = Get-ChildItem -Path "${InstallerFileExtracted}" -Filter '*.msi' -Recurse -File | Where-Object -FilterScript { $_.Name -match 'x64' } | Select-Object -First 1
-    # ProductCode
-    $InstallerX64['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-
     $this.Print()
     $this.Write()
   }

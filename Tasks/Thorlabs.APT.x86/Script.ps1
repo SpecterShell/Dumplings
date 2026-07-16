@@ -21,22 +21,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Thorlabs APT*.msi' | Get-Item -Force | Select-Object -First 1
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{

@@ -40,9 +40,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $ChromiumSetupInfo = Get-ChromiumSetupInfo -Path $InstallerFile
+    if ($ChromiumSetupInfo.Variant -cne 'Omaha') { throw "Unexpected Brave Updater installer variant: $($ChromiumSetupInfo.Variant)" }
+    $InstallerFileExtracted = New-TempFolder
+    try {
+      $BraveUpdateFiles = @(Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BraveUpdate.exe')
+      if ($BraveUpdateFiles.Count -ne 1) { throw "Expected one BraveUpdate.exe payload, but extracted $($BraveUpdateFiles.Count)" }
+      $FileSha256 = (Get-FileHash -LiteralPath $BraveUpdateFiles[0].FullName -Algorithm SHA256).Hash
+    } finally {
+      Remove-Item -LiteralPath $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
     # InstallationMetadata > Files > FileSha256
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/silent', '/install "runtime=true"', '/enterprise' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-    $FileSha256 = (Get-FileHash -Path (Join-Path $Env:LOCALAPPDATA 'BraveSoftware' 'Update' $this.CurrentState.Version 'BraveUpdate.exe') -Algorithm SHA256).Hash
     $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallationMetadata.Files[0]['FileSha256'] = $FileSha256 }
 
     $this.Print()

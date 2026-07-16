@@ -18,26 +18,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Software\setup_x64.exe' | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'setup_x64.exe'
-      $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted 'ThorAOControl.msi'
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     try {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{

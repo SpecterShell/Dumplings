@@ -117,13 +117,25 @@ Use `Modules\PackageModule\Libraries\AdvancedInstaller.psm1` without running the
 Import-Module .\Modules\PackageModule\Libraries\AdvancedInstaller.psm1 -Force
 
 $Info = Get-AdvancedInstallerInfo -Path $InstallerFile
-$MsiInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile
+$MsiInfo = Get-AdvancedInstallerMsiInfo -Installer $Info -Architecture $Installer.Architecture
+$Info.MsiPayloadSelection
+$MsiInfo.Name
+$MsiInfo.SelectedMsiPath
+$MsiInfo.PackageArchitecture
 $MsiInfo.AppsAndFeaturesInstallerType
 $MsiInfo.AppsAndFeaturesProductCode
 $MsiInfo.InstallLocationSwitch
 ```
 
-`Get-AdvancedInstallerMsiInfo` should decide the embedded MSI builder metadata, install-location property, visible ARP type, and Apps & Features product code. Prefer its `InstallLocationSwitch` over hard-coding `APPDIR` when present.
+`Get-AdvancedInstallerInfo` parses the SFX payload-table selector fields and embedded `GeneralOptions`. For a direct package, Advanced Installer resolves the first main `(1, 0)` MSI entry. For a compressed package, it resolves the main `(3, 7)` archive entry and changes that archive path to `.msi`. `MsiPayloadSelection` exposes the selected paths and `ArchitectureSelectionMode` without executing the bootstrapper.
+
+`ArchitectureSelectionMode: Wow64Suffix` means `AllPlatforms=true`: the x86 bootstrapper uses its base MSI on an x86 host and inserts `.x64` before the extension when `IsWow64Process` succeeds. An x86 bootstrapper running under ARM64 emulation follows the same `.x64` branch; this does not make its x64 MSI ARM64-compatible. `Get-AdvancedInstallerMsiInfo` validates the selected MSI metadata and rejects that mismatch.
+
+`ArchitectureSelectionMode: FixedPath` means the bootstrapper does not branch by host architecture. The same base path may contain an x86, x64, or ARM64 MSI, so do not infer architecture from the EXE stub or filename. For example, `FxSound.FxSound` uses one `AllPlatforms` EXE containing x86 and x64 MSIs and a separate fixed-path EXE containing `fxsound.arm64.msi`.
+
+If `GeneralOptions` defines `MainAppURL`, the runtime takes that download path before the embedded branch. The parser reports `SelectionMethod: MainAppUrl` and does not substitute an unrelated embedded MSI.
+
+Always pass the concrete manifest architecture. `Get-AdvancedInstallerMsiInfo` first reproduces the bootstrapper path selection, then reads MSI Summary Information to validate the selected package architecture. It does not choose by scanning every MSI database. Use `-Name` only as an additional constraint or an explicit override when no payload selector is available. Prefer `InstallLocationSwitch` over hard-coding `APPDIR` when present.
 
 ### Step 2: Resolve The Visible Apps & Features Entry
 

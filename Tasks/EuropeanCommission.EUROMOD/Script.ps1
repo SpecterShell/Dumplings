@@ -40,22 +40,6 @@ switch -Regex ($this.Check()) {
         }
       )
       $ZipFile.Dispose()
-      $InstallerFileExtracted = New-TempFolder
-      7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $Installer.NestedInstallerFiles[0].RelativeFilePath | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted $Installer.NestedInstallerFiles[0].RelativeFilePath
-      $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted 'EUROMOD.msi'
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 
     $this.Print()

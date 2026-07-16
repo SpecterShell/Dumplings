@@ -18,26 +18,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'MCLS2_Software_Package\Components\MCLS2\MCLS2_Setup.exe' | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'MCLS2_Setup.exe'
-      $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted 'MCLS2.msi'
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     $this.Print()
     $this.Write()
   }

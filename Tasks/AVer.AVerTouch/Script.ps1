@@ -18,25 +18,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = New-TempFolder
-      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'AVerTouchQt.exe' | Out-Host
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'AVerTouchQt.exe'
-      $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted 'AVerTouch.msi'
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer.AppsAndFeaturesEntries = @(
-        [ordered]@{
-          ProductCode   = $Installer.ProductCode = $InstallerFile3 | Read-ProductCodeFromMsi
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     $this.Print()
     $this.Write()
   }

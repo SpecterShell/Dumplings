@@ -28,21 +28,6 @@ $this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Installer[0].
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Idea Mapper K12.msi'
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
 
     try {
       # ReleaseNotesUrl (en-US)

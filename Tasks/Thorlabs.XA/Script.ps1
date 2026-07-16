@@ -41,23 +41,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Thorlabs XA*.msi' | Get-Item -Force | Select-Object -First 1
-      # RealVersion
-      $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
+    $Installer = $this.CurrentState.Installer.Where({ $_.Architecture -eq 'x64' }, 'First')[0]
+    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'Thorlabs XA*.msi'
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
 
     $this.Print()
     $this.Write()

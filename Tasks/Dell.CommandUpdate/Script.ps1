@@ -48,32 +48,15 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd -y -o"${InstallerX64FileExtracted}" $InstallerX64File | Out-Host
     $Object3 = Join-Path $InstallerX64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
     $InstallerX64File2 = Join-Path $InstallerX64FileExtracted $Object3.MUPDefinition.executable.executablename
-    $InstallerX64File2Extracted = $InstallerX64File2 | Expand-InstallShield
-    $InstallerX64File3 = Join-Path $InstallerX64File2Extracted 'DellCommandUpdate.msi'
+    $InstallerX64Info = Get-InstallShieldMsiInfo -Path $InstallerX64File2 -Name 'DellCommandUpdate.msi'
     # AppsAndFeaturesEntries + ProductCode
     $InstallerX64['AppsAndFeaturesEntries'] = @(
       [ordered]@{
-        ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64File3 | Read-ProductCodeFromMsi
-        UpgradeCode   = $InstallerX64File3 | Read-UpgradeCodeFromMsi
+        ProductCode   = $InstallerX64['ProductCode'] = $InstallerX64Info.ProductCode
+        UpgradeCode   = $InstallerX64Info.UpgradeCode
         InstallerType = 'msi'
       }
     )
-    # $this.InstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerARM64File = Get-TempFile -Uri $InstallerARM64.InstallerUrl -UserAgent $WinGetUserAgent
-    # $InstallerARM64FileExtracted = New-TempFolder
-    # 7z.exe e -aoa -ba -bd -y -o"${InstallerARM64FileExtracted}" $InstallerARM64File | Out-Host
-    # $Object4 = Join-Path $InstallerARM64FileExtracted 'Mup.xml' | Get-Item | Get-Content -Raw | ConvertFrom-Xml
-    # $InstallerARM64File2 = Join-Path $InstallerARM64FileExtracted $Object4.MUPDefinition.executable.executablename
-    # $InstallerARM64File2Extracted = $InstallerARM64File2 | Expand-InstallShield
-    # $InstallerARM64File3 = Join-Path $InstallerARM64File2Extracted 'DellCommandUpdate.msi'
-    # # AppsAndFeaturesEntries + ProductCode
-    # $InstallerARM64['AppsAndFeaturesEntries'] = @(
-    #   [ordered]@{
-    #     ProductCode   = $InstallerARM64['ProductCode'] = $InstallerARM64File3 | Read-ProductCodeFromMsi
-    #     UpgradeCode   = $InstallerARM64File3 | Read-UpgradeCodeFromMsi
-    #     InstallerType = 'msi'
-    #   }
-    # )
-
     try {
       $Object4 = Join-Path $InstallerX64FileExtracted 'package.xml' | Get-Item | Get-Content -Raw -Encoding unicode | ConvertFrom-Xml
 
@@ -89,9 +72,6 @@ switch -Regex ($this.Check()) {
     }
 
     Remove-Item -Path $InstallerX64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerX64File2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    # Remove-Item -Path $InstallerARM64FileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    # Remove-Item -Path $InstallerARM64File2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.Print()
     $this.Write()

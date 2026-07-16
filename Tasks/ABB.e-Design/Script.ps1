@@ -36,21 +36,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'e-Design.msi'
-      # AppsAndFeaturesEntries + ProductCode
-      $Installer.AppsAndFeaturesEntries = @(
-        [ordered]@{
-          ProductCode   = $Installer.ProductCode = $InstallerFile2 | Read-ProductCodeFromMsi
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    }
-
     $this.Print()
     $this.Write()
   }

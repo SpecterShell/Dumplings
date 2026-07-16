@@ -4,22 +4,11 @@ function Read-Installer {
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*.exe' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted '*.exe' | Get-Item -Force | Select-Object -First 1
-    $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-    $InstallerFile3 = Join-Path $InstallerFile2Extracted 'JORDAHL EXPERT.msi'
+    $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'JORDAHL EXPERT.msi'
     # Version
-    $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
+    $this.CurrentState.Version = $InstallerInfo.ProductVersion
     # InstallerSha256
     $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-    # ProductCode
-    $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $Installer['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }
 }

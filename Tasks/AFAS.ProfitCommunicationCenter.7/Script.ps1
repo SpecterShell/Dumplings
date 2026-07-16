@@ -20,20 +20,9 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     foreach ($Installer in $this.CurrentState.Installer) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-      $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-      $InstallerFile2 = Join-Path $InstallerFileExtracted 'Profit Communication Center.msi'
+      $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'Profit Communication Center.msi'
       # RealVersion
-      $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-      # ProductCode
-      $Installer.ProductCode = $InstallerFile2 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer.AppsAndFeaturesEntries = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
     }
 
     $this.Print()

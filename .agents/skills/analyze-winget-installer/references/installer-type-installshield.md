@@ -198,6 +198,8 @@ Import-Module .\Modules\PackageModule\Libraries\InstallShield.psm1 -Force
 
 $Info = Get-InstallShieldInfo -Path $InstallerFile
 $MsiInfo = Get-InstallShieldMsiInfo -Installer $Info
+$Info.MsiPayloadSelection
+$MsiInfo.SelectedMsiPath
 
 $ProductVersion = Read-ProductVersionFromInstallShield -Installer $Info
 $ProductCode = Read-ProductCodeFromInstallShield -Installer $Info
@@ -211,7 +213,9 @@ $OutputDirectory = Join-Path $env:TEMP 'InstallShieldExtract'
 Expand-InstallShieldInstaller -Path $InstallerFile -DestinationPath $OutputDirectory
 ```
 
-`Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. Use `Get-InstallShieldMsiInfo` for MSI payloads.
+`Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. For Basic MSI and InstallScript MSI wrappers, it parses the extracted `Setup.ini`, reads `[Startup] PackageName` and the matching package section's `Location`, and exposes the exact path as `MsiPayloadSelection.SelectedMsiPath`. `Get-InstallShieldMsiInfo` reads that selected MSI instead of taking the first `*.msi` match.
+
+Do not pass `-Name` during normal analysis. Use it only as a reviewed manual constraint when `MsiPayloadSelection.SelectionMethod` is unresolved and static inspection proves which payload the bootstrapper launches. If multiple MSIs are extracted and `Setup.ini` does not select one, the parser stops rather than using MSI architecture or enumeration order as a selector. An unselected MSI may be a prerequisite or chained package.
 
 For direct MSI databases, `Get-MsiInstallerInfo` can also classify InstallShield authoring markers. InstallShield-authored MSIs commonly use `INSTALLDIR="<INSTALLPATH>"`, but confirm with `$Info.InstallerBuilder -eq 'InstallShield'` because WiX and other builders can use the same public property.
 
@@ -232,3 +236,4 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) to disti
 ## Implementation Sources
 
 - [ISx](https://github.com/lifenjoiner/ISx)
+- [Revenera SetupIni.exe and embedded Setup.ini](https://docs.revenera.com/installshield26helplib/helplibrary/SetupIniExe.htm)

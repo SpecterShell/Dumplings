@@ -25,23 +25,29 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+    $DotNetInstallerInfo = Get-DotNetInstallerInfo -Path $InstallerFile
+    $MsiPayloads = @($DotNetInstallerInfo.ExecutedPayloads | Where-Object { [System.IO.Path]::GetExtension($_) -ieq '.msi' })
+    if ($MsiPayloads.Count -ne 1) { throw "Expected one dotNetInstaller MSI payload, but found $($MsiPayloads.Count)" }
     $InstallerFileExtracted = New-TempFolder
-    Start-Process -FilePath $InstallerFile -ArgumentList @('/ExtractCab') -WorkingDirectory $InstallerFileExtracted -Wait
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'SupportFiles' 'CodeMeterRuntime64.msi'
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    try {
+      $ExtractedMsiFiles = @(Expand-DotNetInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name $MsiPayloads[0])
+      if ($ExtractedMsiFiles.Count -ne 1) { throw "Expected one extracted dotNetInstaller MSI, but found $($ExtractedMsiFiles.Count)" }
+      $MsiInfo = Get-MsiInstallerInfo -Path $ExtractedMsiFiles[0]
+      # RealVersion
+      $this.CurrentState.RealVersion = $MsiInfo.ProductVersion
+      # ProductCode
+      $this.CurrentState.Installer[0]['ProductCode'] = $MsiInfo.ProductCode
+      # AppsAndFeaturesEntries
+      $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+        [ordered]@{
+          UpgradeCode   = $MsiInfo.UpgradeCode
+          InstallerType = 'msi'
+        }
+      )
+    } finally {
+      Remove-Item -LiteralPath $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
 
     $this.Print()
     $this.Write()

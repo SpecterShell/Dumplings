@@ -18,25 +18,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -Resolve
-    $InstallerFile2Extracted = New-TempFolder
-    Expand-AdvancedInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted | Out-Null
-    $InstallerFile3 = Get-ChildItem -Path $InstallerFile2Extracted -Include 'msi.x64.msi' -Recurse | Select-Object -First 1
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
-    # ProductCode
-    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $NestedInstallerPath = $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $NestedInstallerPath
+    try {
+      # RealVersion
+      $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $NestedInstallerPath) -Name 'msi.x64.msi').ProductVersion
+    } finally {
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
 
     $this.Print()
     $this.Write()

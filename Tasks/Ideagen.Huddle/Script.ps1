@@ -1,23 +1,10 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-  $InstallerFileExtracted = New-TempFolder
-  Expand-AdvancedInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted | Out-Null
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'HuddleSetup.msi'
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+  $InstallerInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile -Name 'HuddleSetup.msi'
   # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+  $this.CurrentState.Version = $InstallerInfo.ProductVersion
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-  # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{

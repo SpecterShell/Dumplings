@@ -16,37 +16,13 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe x -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'ConfigSoft 32bit\setup.exe' 'ConfigSoft 64bit\setup.exe' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'ConfigSoft 32bit\setup.exe'
-    $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-    $InstallerFile3 = Join-Path $InstallerFile2Extracted 'ConfigSoft.msi'
-    # ProductCode
-    $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX86['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    $InstallerFile4 = Join-Path $InstallerFileExtracted 'ConfigSoft 64bit\setup.exe'
-    $InstallerFile4Extracted = $InstallerFile4 | Expand-InstallShield
-    $InstallerFile5 = Join-Path $InstallerFile4Extracted 'ConfigSoft.msi'
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile5 | Read-ProductVersionFromMsi
-    # ProductCode
-    $InstallerX64['ProductCode'] = $InstallerFile5 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerX64['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile5 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFile4Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ConfigSoft 64bit\setup.exe'
+    try {
+      # RealVersion
+      $this.CurrentState.RealVersion = (Get-InstallShieldMsiInfo -Path (Join-Path $InstallerFileExtracted 'ConfigSoft 64bit\setup.exe') -Name 'ConfigSoft.msi').ProductVersion
+    } finally {
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
 
     $this.Print()
     $this.Write()

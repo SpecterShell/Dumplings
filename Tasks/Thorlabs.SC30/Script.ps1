@@ -30,20 +30,9 @@ switch -Regex ($this.Check()) {
       $InstallerFileExtracted = New-TempFolder
       7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'SC30_Software_Package\Components\SC30\SC30_Setup.exe' | Out-Host
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'SC30_Setup.exe'
-      $InstallerFile2Extracted = $InstallerFile2 | Expand-InstallShield
-      $InstallerFile3 = Join-Path $InstallerFile2Extracted 'SC30.msi'
+      $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'SC30.msi'
       # RealVersion
-      $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
-      # ProductCode
-      $Installer['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-      # AppsAndFeaturesEntries
-      $Installer['AppsAndFeaturesEntries'] = @(
-        [ordered]@{
-          UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-          InstallerType = 'msi'
-        }
-      )
-      Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 

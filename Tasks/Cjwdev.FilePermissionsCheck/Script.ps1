@@ -1,36 +1,15 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FilePermissionsCheckInstaller.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'FilePermissionsCheckInstaller.exe'
-  $InstallerFile2Extracted = New-TempFolder
-  Expand-AdvancedInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted | Out-Null
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'FilePermissionsCheckInstaller.msi'
-  $InstallerFile4 = Join-Path $InstallerFile2Extracted 'FilePermissionsCheckInstaller.x64.msi'
-  # Version
-  # $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
-  $this.CurrentState.Version = $InstallerFile4 | Read-ProductVersionFromMsi
+  $InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
+  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'FilePermissionsCheckInstaller.exe'
+  try {
+    # Version
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'FilePermissionsCheckInstaller.exe') -Architecture x64).ProductVersion
+  } finally {
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  }
   # InstallerSha256
   $InstallerX86['InstallerSha256'] = $InstallerX64['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $InstallerX86['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-  $InstallerX64['ProductCode'] = $InstallerFile4 | Read-ProductCodeFromMsi
-  # AppsAndFeaturesEntries
-  $InstallerX86['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  $InstallerX64['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile4 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {

@@ -52,21 +52,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$InstallerMachine.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerMachine.InstallerUrl
-    $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'HP Click.msi'
-    # ProductCode
-    $InstallerMachine['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $InstallerMachine['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        Publisher     = $InstallerFile2 | Read-MsiProperty -Query "SELECT Value FROM Property WHERE Property='Manufacturer'"
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-
     $this.Print()
     $this.Write()
   }

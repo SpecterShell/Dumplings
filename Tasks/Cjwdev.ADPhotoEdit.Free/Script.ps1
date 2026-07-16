@@ -1,27 +1,15 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'ADPhotoEditFreeSetup.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'ADPhotoEditFreeSetup.exe'
-  $InstallerFile2Extracted = New-TempFolder
-  Expand-AdvancedInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted | Out-Null
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted 'ADPhotoEditFreeSetup.msi'
-  # Version
-  $this.CurrentState.Version = $InstallerFile3 | Read-ProductVersionFromMsi
+  $InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
+  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ADPhotoEditFreeSetup.exe'
+  try {
+    # Version
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ADPhotoEditFreeSetup.exe')).ProductVersion
+  } finally {
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  }
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile3 | Read-ProductCodeFromMsi
-  # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile3 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {

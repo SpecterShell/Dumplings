@@ -1,20 +1,9 @@
 function Read-Installer {
   foreach ($Installer in $this.CurrentState.Installer) {
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    $InstallerFileExtracted = $InstallerFile | Expand-InstallShield
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'Mitel Connect.msi'
+    $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'Mitel Connect.msi'
     # Version
-    $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-    # ProductCode
-    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $Installer['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $this.CurrentState.Version = $InstallerInfo.ProductVersion
   }
 }
 
