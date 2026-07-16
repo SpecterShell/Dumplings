@@ -118,6 +118,8 @@ Installers:
 
 Choose the outer `InstallerType` from the MSI builder; the example uses `wix` because Figma's machine installer is WiX-authored. The visible entry is EXE-style because WinGet classifies ARP entries by `WindowsInstaller`, not by the database that created the registry key. Don't include `UpgradeCode` because the installer type in the visible ARP is not MSI, and do not duplicate `ProductCode` inside the entry. Known `.msq` examples include `Figma.Figma`, `Dizzion.Frame`, `MuteMe.MuteMe`, and `Tulip.TulipPlayer`.
 
+Velopack-generated MSIs use the same custom-entry pattern with a visible `MSI:<PackageId>` key. For example, the Tower MSI hides its GUID-based native entry with `ARPSYSTEMCOMPONENT=1` and explicitly writes `Software\Microsoft\Windows\CurrentVersion\Uninstall\MSI:Tower` without `WindowsInstaller=1`. The MSI artifact therefore has a native `{GUID}` product code, while the visible WinGet-matchable entry is EXE-style with installer-level `ProductCode: MSI:Tower`; do not strip the prefix or reuse the Velopack EXE key `Tower` for the MSI entry.
+
 ## WinGet Defaults And Overrides
 
 WinGet populates missing switch fields independently for both `InstallerType: msi` and `InstallerType: wix`:
