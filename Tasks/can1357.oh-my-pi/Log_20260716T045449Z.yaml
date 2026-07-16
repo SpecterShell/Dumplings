@@ -1,0 +1,169 @@
+Version: 17.0.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.0.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed OpenRouter cost reporting to use the provider's authoritative account charge instead of catalog token-price estimates on both Responses and Chat Completions streams.
+    - Fixed OpenAI Responses and Chat Completions requests forwarding unsupported sampling parameters such as temperature to o-series and GPT-5+ models, preventing 400 errors for mnemopi memory calls through GitHub Copilot GPT-5.6 Luna. (#5606)
+    - Fixed boolean JSON Schema subschemas (true/false) in MCP tool inputs triggering 400 INVALID_ARGUMENT on the Google/Cloud Code Assist (Antigravity) transport by coercing them to their object equivalents (true → {}, false → { not: {} }) before sending (#5604).
+    - Fixed thinking-enabled Claude requests routed to google-vertex sending the effort-2025-11-24 beta as an anthropic-beta HTTP header, which Vertex rawPredict rejects with a 400. The effort beta and the output_config.effort field are now gated off the Vertex path the same way context-management-2025-06-27 already is (#5614).
+    - Fixed custom and Foundry-routed Anthropic endpoints receiving first-party eager/legacy tool-streaming controls (#5572).
+    - Parsed Ollama NDJSON response bytes directly instead of decoding and buffering every network chunk as text. (#5542)
+    - Fixed Amazon Bedrock stream error handling for non-Error values that JSON.stringify cannot serialize (#5539).
+    - Fixed concurrent provider OAuth refreshes by serializing rotating-token updates across processes, fencing stale writes, and preventing background usage probes from disabling otherwise usable credentials (#5396).
+    - Fixed OpenAI Codex WebSocket connections ignoring PI_PROXY, provider-specific proxy settings, and standard HTTPS/ALL proxy variables (#5384).
+    - Fixed Anthropic account quota exhaustion (This request would exceed your account's monthly spend limit) hanging until the local deadline instead of surfacing the error: the rate_limit_error "spend limit" wording is now classified as a persistent usage limit, so it fails fast and rotates to a sibling credential rather than looping in the provider retry backoff. (#4787)
+    - Fixed OpenRouter daily free-model allowance errors (free-models-per-day) being treated as transient rate limits, so requests rotate from an exhausted API key to a healthy sibling credential. (#4832)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added GPT-5.6 Luna, Sol, and Terra entries for Amazon Bedrock, Azure, and Cloudflare
+    - Added KAT-Coder Air/Pro V2.5 entries across Kilo, OpenRouter, NanoGPT, and Vercel
+    - Added Inkling model entries for Baseten and Vercel AI Gateway
+    - Added Umans DeepSeek V4 Pro DSpark as an experimental model listing
+    - Added Claude Opus 4.7 Fast and 4.8 Fast on Vercel AI Gateway
+    - Added Workers AI GLM-5.2, Muse Spark 1.1, Stealth GPT-5.6 Sol, and nano-gpt-help entries
+    Changed
+    - Added image input and reasoning support to several existing Codeium and Kilo GPT-5.6 models
+    - Enabled image input and reasoning for Gemini Flash Latest and Grok 4.5
+    - Renamed many model labels for consistency, including Claude, Grok, DeepSeek, GLM, and Gemi­ni names
+    - Updated pricing for many existing models, including input, output, and cache cost values
+    - Updated context window and max token limits for many catalog models across providers
+    Fixed
+    - Fixed Z.AI (GLM) coding-plan token costs all showing as "Free" in /models: the zai provider descriptor sourced the models.dev zai-coding-plan key (all-$0 subscription rates) instead of the zai pay-as-you-go key, which carries the real per-token rates for the identical GLM ids (#5598).
+    - Fixed custom Anthropic endpoints receiving the first-party-only eager_input_streaming tool field by default (#5572).
+    - Added resolved OpenAI sampling-parameter compatibility metadata for o-series and GPT-5+ models.
+    - Fixed GitHub Copilot mai-code-1-flash-picker (and other mai-* models) to route through the /responses endpoint instead of /chat/completions, which rejected them with 400 unsupported_api_for_model (#5612).
+    - Extended the reasoning streamIdleTimeoutMs floor (300s) to native Kimi K2.7 Code (kimi-k2.7-code / kimi-k2.7-code-highspeed), which previously fell through to the 120s default and aborted on long reasoning turns (#4836).
+    - Fixed GLM-5.x coding-plan streams via the OpenCode Go/Zen gateways (opencode.ai/zen/…) timing out with OpenAI completions stream stalled while waiting for the next event during slow plan-writing/reasoning phases. The 600s idle-timeout floor for GLM coding-plan SKUs was gated to the native Z.AI/Zhipu hosts only, so OpenCode-fronted GLM fell back to the 120s default watchdog. (#4758)
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - Fixed a crash when a plugin/custom tool renderer returns a component that throws during its later render() pass (e.g. TypeError: th.bold is not a function from a plugin that styles its header off an object without a bold method). ToolExecutionComponent now wraps every renderer-returned call/result component so a throwing render() degrades to the safe fallback (tool label or raw result text) instead of taking down the transcript (#4978).
+    Fixed
+    - Fixed the omp grep CLI subcommand failing on paths with a stray leading colon (e.g. :/abs/path); it now routes the path argument through expandPath like read/edit/in-agent grep. Broadened expandPath's leading-colon strip to also recover Windows-style shapes (:C:\repo\file, :.\src, :..\rel, :\\server\share) (#5624).
+    - Fixed the tail builtin exiting the entire omp process with code 13 on Windows when its output pipe broke (e.g. seq ... | tail -n 3 | head -n 0); a broken pipe now surfaces as a normal error instead of calling std::process::exit (#5609).
+    - Fixed a late advisor blocker after a terminal primary answer being deferred to the next user turn instead of continuing the current turn: resolveAdvisorDeliveryChannel preserved every interrupting severity as a passive card once the primary ended with a terminal text answer and no queued work remained, so a blocker flagging a mistake in the final output sat idle until the next prompt. A blocker now steers a triggered turn so the primary acknowledges and continues before the turn is considered done; a late concern still preserves as a visible card (#5628).
+    - Fixed independently keyed extension hook statuses sharing one truncated line; each status now renders on its own deterministic line (#5617).
+    - Fixed xAI web search bypassing configured xai / xai-oauth proxy endpoints and headers, while preventing official OAuth tokens from being sent to custom endpoints (#5599).
+    - Fixed models.yml rejecting the Anthropic compat.supportsEagerToolInputStreaming override for custom endpoints (#5572).
+    - Fixed long streamed table responses duplicating in terminal scrollback when later rows widened an earlier column.
+    - Fixed Bash internal URLs remaining unresolved when used as unquoted arguments inside command substitutions (#5535).
+    - Fixed the built-in fd printing fd: Broken pipe (os error 32) when a downstream pipeline reader exited early (e.g. fd … | head); it now exits silently with 141 (128+SIGPIPE), matching real fd.
+    - Fixed prewalk repeatedly continuing after a bash-only task such as commit had already completed (#5551).
+    - Fixed the Codex config.toml MCP importer dropping cwd and leaving relative command values unrooted, which broke the bundled Codex Computer Use server (ENOENT on spawn); relative command/cwd now resolve against the Codex config directory like the claude-plugins/omp-plugins providers (#5561).
+    - Fixed streamed replace-mode edits with ssh:// paths terminating the active prompt before normal tool dispatch (#5552).
+    - Fixed concurrent provider OAuth refreshes from invalidating Anthropic's rotating refresh token, and prevented background usage probes from permanently disabling credentials after refresh failures (#5396).
+    - Restored the regression test guarding compiled-binary web-search header generation: browser-headers.ts lazily constructs header-generator and falls back to a static Chrome profile when its data_files are absent, but the test defending that contract had been removed. Without the guard, a compiled binary threw ENOENT at import time, breaking the Bing web_search provider (undefined is not a constructor) and extension loading / omp plugin install. (#5256)
+    - Fixed browser tabs hanging indefinitely at Closing <tab> when a worker, CDP target, browser process, or cmux surface stalls during teardown; close deadlines now release the operation with backend, tab, and pending-resource diagnostics. (#5259)
+    - Fixed the agent://<parent>/<child> slash form failing to resolve a nested subagent's output: the path segment was always treated as a jq JSON-extraction key against <parent>.md, so a precise-planner reading its own scout child (agent://Plan/Scout) got Not found. The slash is now a hierarchy separator first (agent://Parent/Child → Parent.Child.md), falling back to JSON extraction only when no nested output matches the path. (#5238)
+    - Fixed fullscreen Plan Review jumping to the top while scrolling when a transient terminal resize or Markdown reflow made the body temporarily non-scrollable. (#5232)
+    - Fixed generate_image preferring Antigravity over the active session provider and stopping instead of trying the next credentialed provider after an image HTTP failure. (#5218)
+    - Fixed /reload-plugins, plugin setting changes, and manage_skill writes leaving runtime skills and skill:// resolution stale until restart; sessions now rediscover enabled skills and rebuild /skill:<name> commands before the next prompt (#4996).
+    - Fixed documented omp marketplace/discover/upgrade/uninstall/enable/disable CLI verbs silently leaking to the model as a launch prompt instead of managing plugins. omp marketplace add xyz (and similar multi-word invocations following the documented omp plugin <action> grammar) now surface a hint pointing at the real omp plugin <action> command, while genuine prose prompts beginning with these words still route to launch (#4845).
+    - Fixed /mcp, /mcp list, and /tools output duplicating in terminal scrollback when invoked during agent streaming by deferring command panels until the active turn ends (#4806).
+    - Fixed bash/eval/ssh output that was only per-line column-capped being misreported as byte-window truncation, which appended a bogus Showing lines X-Y of Z (…B limit). Read artifact://N for full output footer even though every line was shown. Column-cap trimming now surfaces solely as the Some lines truncated to N chars notice (#4735).
+    - Fixed the nerd status-line preset's session icon using a removed Nerd Fonts v2 codepoint instead of the current Nerd Fonts v3 mapping (#4795).
+    - Fixed omp crashing at startup (TypeError: undefined is not an object (evaluating 'this.#theme.symbols.boxRound')) after installing a plugin whose custom editor subclasses CustomEditor/Editor and forwards the upstream-pi super(tui, theme, keybindings) constructor — the arg order that setEditorComponent's factory contract advertises. CustomEditor now resolves the real EditorTheme by shape rather than position and captures a leading TUI for plugin overrides (#4766).
+    - Fixed Other response editors leaving Windows Terminal IME candidate windows at the terminal edge by forwarding dialog focus to the nested editor (#4760).
+    - Rendered and persisted native OpenAI Responses image_generation_call results as session images (#4768).
+    - Fixed ACP stdio EOF/EPIPE disconnects bypassing awaited session teardown and leaving in-flight tool calls pending in persisted rollouts (#4788).
+    - Routed the print-mode assistant-error/aborted exit, RPC pi.shutdown() and stdin-EOF shutdowns, and the extension command-context shutdown() through the awaited, idempotent session.dispose() before process.exit(), so the bounded browser reaper (releaseTabsForOwner) always runs and OMP-owned Chromium no longer outlives the process (#5643).
+    Removed
+    - Fixed /login for paste-code providers (Codex, Anthropic, Gemini CLI, GitLab Duo, Antigravity, Devin) dropping the pasted fallback redirect URL: the login dialog captured focus but never mounted an input, and the "complete pairing with /login <url>" tip pointed at the hidden, unfocused editor. The dialog now mounts a focused input for the manual code/URL paste (#5339).
+    - Fixed /tan and /fork clones cold-missing the provider prompt cache: the per-turn supersede/useless-result prune rewrote the live context without persisting it, so file-based forks and resume rebuilt a divergent (un-pruned) prefix and re-wrote the entire cache
+    - Fixed /tan pinning the clone's prompt-cache key to the parent's session id instead of the parent's effective cache key, dropping shard affinity when the parent was itself a fork or tan
+    - Fixed /resume and plan approval exposing the previous session while their asynchronous session replacement was still loading by keeping fullscreen overlays mounted until the rebuilt transcript is ready (#5319).
+    - Fixed inconsistent history rendering when toggling the display setting for compacted items
+    - Fixed configured retry.fallbackChains never engaging on non-retryable provider errors (e.g. "Cloud Code Assist API returned an empty response"): a hard error on a model covered by a fallback chain now switches to the next candidate instead of failing the turn, while still never backoff-retrying the failing model itself
+    - Fixed transcript rebuilds (compaction, /compact, and toggling history display) repainting content below stale scrollback when collapsing history; rebuilds now correctly clear the scrollback buffer when history is collapsed
+    - Improved auto-compaction to automatically drop images and elide content when context is tight, and added persistent warning badges to the compaction divider when manual intervention is required
+    - Fixed backgrounded Bash blocks continuing to repaint with live and final job output; they now freeze with a compact job notice while completion is delivered separately
+    - Fixed the downshift plan nudge silently ending the run with no code written when the model answered with a text-only reply (no tool call): the agent loop treats a tool-call-free turn as a natural stop and never prompts again, which the nudge's own "write the plan in your next reply" instruction makes common. The nudge now explicitly tells the model this is a checkpoint, not a final answer, and the session forces one more turn whenever a post-nudge reply lands with zero tool calls
+    - Fixed launch tool rendering stacking a stale pending header over a bare ✓ Launch line and raw text: the tool now uses a merged registry renderer with one per-op status header (op, target, state · pid · uptime meta), stripped log cursor suffixes, capped collapsed log/list previews, and a launch tool glyph
+    - Fixed confusing launch start/wait results when readiness timed out with the log pattern already matched (readiness needs log AND port): the result printed a contradictory Ready: <match> next to Readiness timed out without naming the failing condition. Daemon snapshots now carry the unmet conditions (readyPending), and start/wait results state exactly what never happened (e.g. port 3100 on 127.0.0.1 never accepted connections); the TUI shows a waiting on port badge on starting daemons
+    - Fixed the in-process stat builtin mangling BSD-style invocations like stat -f "%Sm %N" file (macOS muscle memory): GNU -f means --file-system, so the format string was treated as a file operand — printing filesystem info for the real operands and erroring with cannot read file system information for '%Sm %N'. A -f whose format value contains % is now detected as BSD syntax and translated to the GNU equivalent (%Sm→%y, %N→%n, %z→%s, epoch/S-form times, owner/group/permission and H/L sub-field directives, -L/-n/-q/-F flag clusters, with %n/%t as literal newline/tab); directives with no GNU counterpart fail with a clear unsupported BSD format directive error
+    - Fixed the remaining GNU-flavored shell builtins that broke under macOS/BSD muscle memory, using the same unambiguous-detection approach as the stat fix (only invocations that are invalid or nonsensical under GNU semantics are reinterpreted; unsupported BSD forms fail loudly instead of producing wrong output): date -r <epoch> formats the epoch when no such file exists (GNU -r FILE mtime preserved), signed date -v±N<unit> adjustments translate to -d relative dates and -j is accepted (-j -f strptime parse mode and field-set -v error clearly); sed -i '' 's/…/…/' file drops the BSD empty backup-suffix token instead of treating it as the script; mktemp -t prefix without X's creates $TMPDIR/prefix.XXXXXXXXXX (the GNU too few X's error path); tail -r reverses input by delegating to tac (with -n/-c/-f combinations erroring clearly); find -E maps to -regextype posix-extended ahead of the expression; base64 -D decodes as an alias of -d; and ln -sfh works via a -h alias of --no-dereference (clap's -h help short is dropped to match real GNU/BSD ln; --help unchanged)
+    - Fixed the browser tool crashing the whole process (parent session and every subagent) when a CDP world re-acquire failed mid-navigation: the stealth puppeteer-core patch called the bare debugError logger, which is undefined while the puppeteer:error debug channel is disabled (the default), turning a transient acquire failure into a fatal TypeError unhandled rejection. The patched FrameManager/WebWorker acquire paths now use debugCatchError (#5296)
+    - Fixed a role with a :high thinking suffix resolving to a longer sibling model whose id embeds the tier name (e.g. kimi-for-coding:high → kimi-for-coding-highspeed). The thinking suffix is now stripped before any fuzzy match, so provider/model:high keeps the exact model at high effort (#5151).
+    @oh-my-pi/collab-web
+    Fixed
+    - Rendered user and host transcript messages as Markdown and separated adjacent assistant content blocks. (#5559)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed working-memory TTL trim silently deleting restored or imported durable rows: rows keeping consolidated_at = NULL with an old timestamp are no longer trimmed when flagged IMPORTED, importFromDict stamps imported rows as consolidated, and every working-memory delete path (trim, forgetWorking, force-import overwrite) now cascades linked annotations, embeddings, facts, memoria projections, gists, and graph edges instead of leaving orphans. (#4819)
+    - Fixed Mnemopi local embeddings on Windows loading an unrelated onnxruntime.dll from the inherited system path instead of fastembed's cached ORT runtime. (#4849)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed the pi-natives version sentinel emitting "reinstall to re-sync" when a long-lived process survives an in-place upgrade: the loader now detects that the resident addon exposes a prior release's sentinel and reports "omp was upgraded while this session was running — restart to pick up the new version (disk is already consistent)" instead of misdiagnosing it as a stale on-disk file (#4812).
+    @oh-my-pi/pi-tui
+    Added
+    - Added native cmux notification delivery targeted to the current terminal surface.
+    Fixed
+    - Fixed a tmux regression where every non-Kitty pane was forced into legacy keyboard input, collapsing Ctrl+H into Backspace and Shift+Enter into Enter even with extended-keys on; the xterm modifyOtherKeys fallback is requested again so tmux honors or ignores it per its own extended-keys setting (#5620).
+    - Fixed @ file-reference and path completion falling through incorrectly inside slash command arguments when command-specific argument completion has no matches (#5580).
+    - Fixed streamed Markdown tables reflowing rows already written to native scrollback when later cells widen a column.
+    - Fixed fullscreen session-replacement overlays and resize drags exposing stale normal-buffer frames on terminals without effective DEC 2026: asynchronous replacements now keep their overlay visible until the rebuilt transcript is ready, overlay exit is fused into the destructive paint, and resize viewport frames rewrite the normal buffer without alternate-screen switches. Inconclusive DECRQM probes also no longer disable statically detected synchronized output (#5319).
+    - Fixed autocomplete popups moving Windows Terminal IME candidate windows away from the prompt by keeping the terminal cursor anchored at the text insertion point (#4760).
+    @oh-my-pi/pi-utils
+    Fixed
+    - Added scoped graceful handling for stdio-write EPIPE rejections so protocol servers can await postmortem cleanup when their peer disconnects (#4788).
+    What's Changed
+    - fix(editor): accept upstream-pi editor constructor in CustomEditor by @roboomp in https://github.com/can1357/oh-my-pi/pull/5415
+    - fix(ai): classify Anthropic spend-limit as persistent usage limit by @roboomp in https://github.com/can1357/oh-my-pi/pull/5418
+    - fix(acp): await teardown on stdio disconnect by @roboomp in https://github.com/can1357/oh-my-pi/pull/5419
+    - fix(tui): use Nerd Fonts v3 session icon by @roboomp in https://github.com/can1357/oh-my-pi/pull/5421
+    - fix(tools): stop column cap from faking window truncation by @roboomp in https://github.com/can1357/oh-my-pi/pull/5422
+    - fix(natives): distinguish process-stale from disk-stale sentinel mismatch by @roboomp in https://github.com/can1357/oh-my-pi/pull/5423
+    - fix(tui): defer command output during streaming by @roboomp in https://github.com/can1357/oh-my-pi/pull/5427
+    - fix(catalog): extend streamIdleTimeoutMs floor to Kimi K2.7 Code by @roboomp in https://github.com/can1357/oh-my-pi/pull/5428
+    - fix(ai): fail over exhausted OpenRouter daily keys by @roboomp in https://github.com/can1357/oh-my-pi/pull/5429
+    - fix(mnemopi): pin Windows ORT DLL path by @roboomp in https://github.com/can1357/oh-my-pi/pull/5432
+    - fix(mnemopi): protect durable working memory from trim and cascade linked artifacts by @roboomp in https://github.com/can1357/oh-my-pi/pull/5434
+    - fix(cli): guard documented marketplace verbs from launch leak by @roboomp in https://github.com/can1357/oh-my-pi/pull/5436
+    - fix(tui): guard plugin tool renderer components against render crashes by @roboomp in https://github.com/can1357/oh-my-pi/pull/5438
+    - fix(tools): prefer active image provider and fall back by @roboomp in https://github.com/can1357/oh-my-pi/pull/5443
+    - fix(tui): preserve Plan Review scroll position by @roboomp in https://github.com/can1357/oh-my-pi/pull/5444
+    - fix(model-resolver): strip thinking suffix before fuzzy model match by @roboomp in https://github.com/can1357/oh-my-pi/pull/5447
+    - test(coding-agent): guard compiled header fallback regression by @roboomp in https://github.com/can1357/oh-my-pi/pull/5452
+    - fix(browser): bound tab teardown waits by @roboomp in https://github.com/can1357/oh-my-pi/pull/5453
+    - fix(coding-agent): resolve agent:// slash form for nested subagent output by @roboomp in https://github.com/can1357/oh-my-pi/pull/5462
+    - fix(browser): use debugCatchError in stealth acquire paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/5473
+    - fix(tui): prevent stale-buffer flicker by @roboomp in https://github.com/can1357/oh-my-pi/pull/5476
+    - fix(auth): mount login dialog input for paste-code fallback URL by @roboomp in https://github.com/can1357/oh-my-pi/pull/5484
+    - fix(ai): honor proxies for Codex WebSockets by @roboomp in https://github.com/can1357/oh-my-pi/pull/5510
+    - fix(skills): reload runtime skill state by @roboomp in https://github.com/can1357/oh-my-pi/pull/5515
+    - fix(auth): serialize provider OAuth refreshes by @roboomp in https://github.com/can1357/oh-my-pi/pull/5519
+    - fix(session): skip ssh paths during streaming edit pre-cache by @roboomp in https://github.com/can1357/oh-my-pi/pull/5554
+    - fix(collab-web): render user and host messages as markdown by @roboomp in https://github.com/can1357/oh-my-pi/pull/5560
+    - fix(discovery): root Codex config.toml MCP command/cwd at config dir by @roboomp in https://github.com/can1357/oh-my-pi/pull/5562
+    - fix: disable eager tool streaming for custom Anthropic endpoints by @roboomp in https://github.com/can1357/oh-my-pi/pull/5573
+    - fix(tui): stabilize streamed table scrollback by @pppobear in https://github.com/can1357/oh-my-pi/pull/5574
+    - fix(tui): restore file completion in slash arguments by @roboomp in https://github.com/can1357/oh-my-pi/pull/5581
+    - fix(web-search): honor configured xAI transport by @roboomp in https://github.com/can1357/oh-my-pi/pull/5601
+    - fix(agent-loop): reclassify empty toolUse stop as retryable error by @roboomp in https://github.com/can1357/oh-my-pi/pull/5602
+    - fix(catalog): sourced zai GLM pricing from PAYG models.dev key by @roboomp in https://github.com/can1357/oh-my-pi/pull/5603
+    - fix(schema): coerce boolean subschemas for google/cca transport by @roboomp in https://github.com/can1357/oh-my-pi/pull/5607
+    - fix(ai): omit sampling params for OpenAI reasoning models by @roboomp in https://github.com/can1357/oh-my-pi/pull/5608
+    - fix(tail): stop windows broken-pipe flush from killing omp by @roboomp in https://github.com/can1357/oh-my-pi/pull/5610
+    - fix(catalog): route Copilot mai-code models to the /responses endpoint by @roboomp in https://github.com/can1357/oh-my-pi/pull/5613
+    - fix(anthropic): gate effort beta off google-vertex header path by @roboomp in https://github.com/can1357/oh-my-pi/pull/5615
+    - fix(tui): render keyed hook statuses separately by @roboomp in https://github.com/can1357/oh-my-pi/pull/5619
+    - fix(tui): restore modifyOtherKeys fallback in tmux by @roboomp in https://github.com/can1357/oh-my-pi/pull/5621
+    - fix(tui): route notifications through cmux by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/5623
+    - fix(tool): route omp grep CLI path through expandPath by @roboomp in https://github.com/can1357/oh-my-pi/pull/5625
+    - fix(advisor): steer late blocker after terminal answer by @roboomp in https://github.com/can1357/oh-my-pi/pull/5631
+    - fix(catalog): widen GLM coding-plan idle timeout to OpenCode gateways by @roboomp in https://github.com/can1357/oh-my-pi/pull/5408
+    - fix(tui): anchor IME candidates in interactive inputs by @roboomp in https://github.com/can1357/oh-my-pi/pull/5412
+    - fix(openai): render native response images by @roboomp in https://github.com/can1357/oh-my-pi/pull/5417
+    New Contributors
+    - @pppobear made their first contribution in https://github.com/can1357/oh-my-pi/pull/5574
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.0.0...v17.0.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.0.1
+ReleaseTime: 2026-07-16T04:00:37.0000000Z
