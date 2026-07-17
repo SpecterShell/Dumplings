@@ -1,0 +1,47 @@
+name: Setup PowerShell modules
+description: Restore required PowerShell modules from cache or populate the cache from PowerShell Gallery
+
+inputs:
+  cache-path:
+    description: Directory containing the cached PowerShell modules
+    required: true
+  cache-key:
+    description: Exact GitHub Actions cache key
+    required: true
+
+outputs:
+  cache-hit:
+    description: Whether an exact module cache entry was restored
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Restore PowerShell module cache
+      id: restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ inputs.cache-path }}
+        key: ${{ inputs.cache-key }}
+
+    - name: Initialize PowerShell modules
+      shell: pwsh
+      env:
+        DUMPLINGS_MODULE_CACHE_HIT: ${{ steps.restore.outputs.cache-hit }}
+        DUMPLINGS_MODULE_CACHE_PATH: ${{ inputs.cache-path }}
+      run: |-
+        $RepositoryRoot = Split-Path (Split-Path (Split-Path $env:GITHUB_ACTION_PATH -Parent) -Parent) -Parent
+        $UtilityPath = Join-Path $RepositoryRoot 'Utilities' 'GitHubActions'
+        Import-Module (Join-Path $UtilityPath 'PowerShellModuleCache.psm1') -Force
+        Initialize-DumplingsPowerShellModuleCache `
+          -LockPath (Join-Path $RepositoryRoot 'PowerShellModules.psd1') `
+          -CachePath $env:DUMPLINGS_MODULE_CACHE_PATH `
+          -CacheHit ($env:DUMPLINGS_MODULE_CACHE_HIT -eq 'true') `
+          -GitHubEnvironmentPath $env:GITHUB_ENV
+
+    - name: Save PowerShell module cache
+      if: steps.restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ inputs.cache-path }}
+        key: ${{ inputs.cache-key }}

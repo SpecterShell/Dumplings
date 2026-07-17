@@ -33,6 +33,11 @@ jobs:
         run: git pull
         working-directory: Dumplings
         shell: pwsh
+      - name: Setup PowerShell modules
+        uses: ./Dumplings/.github/actions/setup-powershell-modules
+        with:
+          cache-path: ${{ runner.temp }}\DumplingsPowerShellModules
+          cache-key: dumplings-pwsh-modules-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/PowerShellModules.psd1') }}
       - name: Run tasks
         run: .\Core\Index.ps1 ${{ github.event.inputs.params }}
         working-directory: Dumplings
