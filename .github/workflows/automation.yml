@@ -41,7 +41,7 @@ jobs:
           cache-path: ${{ runner.temp }}\DumplingsPowerShellModules
           cache-key: dumplings-pwsh-modules-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/PowerShellModules.psd1') }}
       - name: Run tasks
-        run: .\Core\Index.ps1 -ThrottleLimit 2 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
+        run: .\Core\Index.ps1 -ThrottleLimit 4 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
         working-directory: Dumplings
         shell: pwsh
         env:
