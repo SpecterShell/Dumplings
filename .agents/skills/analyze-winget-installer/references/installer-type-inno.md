@@ -10,11 +10,11 @@ Use `InstallerType: inno` when WinGet invokes an Inno Setup installer directly. 
 
 Route here when `Get-InnoInfo` succeeds, the installer contains the Inno loader resource `#11111`, or the analyzer returns high-confidence Inno evidence.
 
-`Get-InnoInfo.WritesAppsAndFeaturesEntry` statically evaluates `CreateUninstallRegKey` and `Uninstallable`. Do not trust outer Inno ARP metadata when it is false; route the package through wrapper/no-ARP analysis instead.
+`Get-InnoInfo.WritesAppsAndFeaturesEntry` resolves literal `CreateUninstallRegKey` and `Uninstallable` values. It is `$null` when either directive requires compiled-code evaluation, because the runtime result cannot be inferred safely. Do not trust outer Inno ARP metadata when it is false or unresolved; route the package through wrapper/no-ARP analysis instead.
 
 ## Manifest Shape
 
-Use this shape when [Step 2](#step-2-identify-the-visible-arp-owner) proves that the outer Inno installer writes the visible entry, [Step 4](#step-4-determine-scope) finds one supported scope, and no Apps & Features override is required. `$Info.ProductCode` exposes the Inno `AppId` identity; verify the actual visible uninstall key, including any Inno-generated `_is1` suffix, before writing manifest `ProductCode`.
+Use this shape when [Step 2](#step-2-identify-the-visible-arp-owner) proves that the outer Inno installer writes the visible entry, [Step 4](#step-4-determine-scope) finds one supported scope, and no Apps & Features override is required. `$Info.ProductCode` is the source-derived built-in uninstall key, including Inno's `_is1` suffix. `$Info.AppId` remains available as the distinct application identity.
 
 ```yaml
 Installers:
@@ -125,9 +125,12 @@ $Info.SupportsDualScope
 $Info.WritesAppsAndFeaturesEntry
 $Info.SupportedArchitectures
 $Info.UnsupportedArchitectures
+$Info.EncryptionUse
+$Info.CompressMethod
+$Info.Warnings
 ```
 
-`Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `UninstallDisplayName`, privilege directives, architecture expressions, loader signature, and parser version evidence. Reuse these properties throughout the analysis.
+`Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `ResolvedAppId`, `UninstallRegKeyBaseName`, `UninstallDisplayName`, raw directive values, unresolved constants/fields, privilege directives, architecture expressions or packed architecture sets, encryption evidence, loader signature, and `ParserVersionInfo`. Reuse these properties throughout the analysis.
 
 Do not follow `$Info` with `Read-ProductVersionFromInno`, `Read-ProductNameFromInno`, `Read-PublisherFromInno`, `Read-ProductCodeFromInno`, `Test-InnoDualScope`, `Read-SupportedScopesFromInno`, `Read-UnsupportedArchitecturesFromInno`, `Test-InnoUnsupportedArchitecture`, or `Test-InnoAppsAndFeaturesEntry` for the same installer. Those convenience functions invoke `Get-InnoInfo` again.
 
@@ -137,14 +140,18 @@ First use `$Info.WritesAppsAndFeaturesEntry`, `CreateUninstallRegKey`, `Uninstal
 
 - true and metadata matches the product: the outer Inno setup should write its own visible entry; continue with the first or dual-scope shape.
 - false: treat the installer as a wrapper or no-ARP package. Do not use outer `AppId` as the manifest product code without payload/VM evidence.
-- unresolved or unsupported header: extract only the relevant payloads and require VM validation if ownership remains unclear.
+- `$null`: one of the directives is dynamic. Preserve the product code only with payload or VM evidence; do not substitute the directive's default.
 
 Use file extraction only on this branch or when architecture evidence requires it:
 
 ```powershell
 $OutputDirectory = Join-Path $env:TEMP 'InnoExtract'
-Expand-InnoInstaller -Path $InstallerFile -DestinationPath $OutputDirectory
+Expand-InnoInstaller -Path $InstallerFile -DestinationPath $OutputDirectory -Name 'nested.msi'
 ```
+
+`Expand-InnoInstaller` performs bounded, source-backed extraction of one exact source name, destination name, or base file name from unencrypted Inno 5.3 through 7.x installers. It supports ANSI and Unicode file-entry layouts, 32-bit and 64-bit location offsets, SHA-1 and SHA-256 file verification, solid chunks, the Inno CALL/JMP transforms, and stored, Zlib, BZip2, LZMA, and LZMA2 payloads. The returned path preserves compiled destination constants such as `{app}` instead of guessing their runtime value.
+
+Do not use `-Name '*'` as a full-unpack shortcut. Target the nested file needed for the next analysis step so unrelated solid-chunk data is discarded through a bounded stream rather than written to disk. Fully encrypted headers cannot be parsed, file-encrypted payloads require the setup password, and external disk-spanning slice files are not accepted by this path. These conditions fail deterministically; they do not imply malformed metadata.
 
 Inspect embedded `.msi`, `.msp`, `.msu`, setup `.exe`, and `[Run]`-target payloads. Route nested MSI/WiX files through `Get-MsiInstallerInfo`; route custom EXEs through their focused parser. Do not infer ownership merely because a setup-like file is embedded.
 
@@ -152,16 +159,17 @@ Known wrapper example: `Argente.*` uses an Inno wrapper around a custom installe
 
 ### Step 3: Determine Architecture
 
-Use these `$Info` fields together:
+Use these `$Info` fields together. Inno 5.3 through 6.2 stores architecture choices as packed sets; Inno 6.3 and later stores expressions. The parser normalizes both forms:
 
 - `ArchitecturesAllowed` and `EffectiveArchitecturesAllowed` describe supported operating-system architectures.
 - `ArchitecturesInstallIn64BitMode` and its effective value identify when Inno uses 64-bit install mode.
 - `SupportedArchitectures` and `UnsupportedArchitectures` contain the parser's normalized result.
+- `PackedArchitecturesAllowed` and `PackedArchitecturesInstallIn64BitMode` preserve legacy raw set bytes when applicable.
 - `InstallerArchitecture` is the setup stub architecture and does not by itself determine installed application architecture.
 
 Set manifest `Architecture` from the installed payload and effective architecture expressions. Do not label a universal x86 stub as x86 when `ArchitecturesAllowed` excludes x86 and the payload is x64 or arm64. Treat operating-system compatibility as distinct from payload architecture, and never use `neutral` when binaries are installed.
 
-If architecture directives are missing in a legacy/unsupported header, inspect extracted binaries or route to Step 8. `UnsupportedOSArchitectures` should reflect proven exclusions, not filename guesses.
+If the parser warns that a future, malformed, or unknown architecture expression cannot be evaluated, inspect extracted binaries or route to Step 8. `UnsupportedOSArchitectures` should reflect proven exclusions, not filename guesses.
 
 ### Step 4: Determine Scope
 
@@ -290,7 +298,13 @@ Do not treat Inno generally as lacking `silentWithProgress`; `/SILENT` is its Wi
 
 ### Step 6: Record Metadata And Associations
 
-Use `$Info.DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, and `AppId` as structured header evidence. Do not derive missing values from arbitrary strings. Confirm that manifest `ProductCode` matches the visible uninstall registry key rather than assuming raw `AppId` is the complete key.
+Use `$Info.DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `ProductCode`, and `AppId` as structured header evidence. Do not derive missing values from arbitrary strings. For the built-in visible ARP entry, Inno expands `AppId`, shortens ASCII values longer than 57 characters to a 48-character prefix plus `~` and CRC32, and appends `_is1`; the parser applies the same rules. `ProductCode` is null when the outer installer does not write its built-in ARP entry or when `AppId` contains unresolved runtime constants.
+
+The parser converts deterministic directory constants to manifest-safe environment paths, including `{win}`, `{sysnative}`, `{sd}`, `{localappdata}`, `{userappdata}`, `{commonappdata}`, `{userpf}`, `{usercf}`, `{userfonts}`, `{commonfonts}`, explicit 32/64-bit Program Files/Common Files constants, and `auto*` constants when default scope and install mode make their result unambiguous. It leaves redirectable shell folders, architecture-dependent system-directory constants such as `{sys}`/`{syswow64}`, and runtime-dependent constants such as `{code:...}`, `{param:...}`, `{reg:...}`, `{ini:...}`, `{cm:...}`, `{src}`, and `{tmp}` unresolved. Check `$Info.UnresolvedFields` and `$Info.UnresolvedConstants`; Dumplings preserves the corresponding existing manifest fields instead of writing unresolved expressions.
+
+Inno's constant expander treats `{{` outside a constant as a literal `{`. This is why an AppId compiled from `{{GUID}` becomes `{GUID}` before the uninstall key is calculated; it is not a Kiro/Qoder-specific workaround.
+
+For Inno 6.5 and later, check `EncryptionUse`. `Files` means header metadata is readable but payload extraction requires the setup password. `Full` encrypts metadata too, so parsing fails deterministically rather than probing alternate offsets. The parser validates the encryption-header CRC before reading compressed blocks.
 
 The current Inno aggregate parser does not expose compiled `[Registry]` protocol and file-extension associations. Inspect extracted/static script evidence when available, otherwise capture associations during VM installation and first run. An absent static result does not prove that the application never registers an association.
 
@@ -312,8 +326,9 @@ Select the shape from the previous routes, then apply these rules:
 Do not execute the installer on the host. Use the Hyper-V workflow when any required fact remains unresolved, especially:
 
 - outer and nested ARP ownership cannot be proven;
-- the raw `AppId` does not establish the exact visible uninstall key;
-- legacy headers omit privilege or architecture directives;
+- `ProductCode` is unresolved because `AppId` contains runtime constants or custom ARP behavior;
+- a future or malformed header leaves privilege or architecture evidence unresolved;
+- payload files are encrypted and required metadata is not available from the header;
 - scope changes according to elevation/UAC rather than command-line overrides;
 - custom code may reject or alter silent installation;
 - extracted payload architecture conflicts with header expressions;

@@ -68,6 +68,23 @@ Parser results should retain stable properties used by tasks and the analyzer. A
 
 Run parity, parser contracts, ScriptAnalyzer, documentation validation, and `git diff --check`.
 
+## Optimization Workflow
+
+Optimize measured work rather than rewriting a parser wholesale:
+
+1. Establish stable real fixtures and malformed synthetic fixtures. Record three or more fresh-process samples before changing code, then profile parser stages for elapsed time and cumulative managed allocation.
+2. Reduce work before tuning loops. Probe the outer format once, rank structurally plausible parsers, stop after a validated match, and defer heavyweight assemblies until their family is selected.
+3. Use one aggregate `Get-*Info` result. Do not call scalar `Read-*` helpers after `Get-*Info`, reopen the same database/archive for each field, or bridge the same GPL parser repeatedly.
+4. Keep one installer stream and parsed binary context per operation. Parse payload catalogs before payload data, select exact architecture/name entries, and materialize only metadata or the nested payload that the bootstrapper invokes.
+5. Prevent PowerShell output expansion. Return binary values as a non-enumerated `byte[]`; add a type regression test for every binary-returning helper. Avoid byte-array range expressions, pipeline filters in record loops, and `@(...)` around scalar results.
+6. Parse scalar requests as scalars. Seek directly to a fixed-size indexed record instead of producing every record as `PSCustomObject[]`. Use typed collections only when the public contract genuinely returns multiple values.
+7. Allocate from declared sizes when bounded and trustworthy. Avoid `List[byte]` growth plus `ToArray()` copies. Reuse or pool transfer buffers, spill seek-required content above the memory threshold, and keep decompressed-output limits separate from memory limits.
+8. Move only measured mechanical hot loops to narrow, source-visible C#. Format interpretation, validation policy, and result construction stay in PowerShell.
+9. Preserve semantic evidence while optimizing: hashes, CRCs, selected-entry identity, stream ownership, decoded-byte counts, file-open counts, parser invocation counts, limits, warnings, and malformed-input behavior.
+10. Benchmark stream wrappers with the real decoder. A generic seekable bounded stream can be worse for a sequential decoder that performs many small reads because every wrapper seek becomes a file seek. When the format and decoder already accept an exact compressed-size bound, use a dedicated sequential file stream at the payload offset, pass that bound to the decoder, and verify both declared input and exact decoded output. Reject abstractions that improve code uniformity while regressing measured time or allocation.
+
+Interpret metrics carefully. `GC.GetTotalAllocatedBytes()` measures cumulative allocation churn, not live memory; peak working set includes the PowerShell runtime and loaded assemblies. Report cold end-to-end time separately from parser-operation time. Solid compression can require decoding a large prefix before a small selected file, so catalog parsing may reduce metadata work without eliminating that format-imposed cost. Performance targets are review gates, not wall-clock CI assertions.
+
 ## Performance Validation
 
 Use `Modules\PackageModule\Tests\Benchmark-InstallerParsers.ps1` with stable cached fixtures when changing binary I/O or decompression. Record elapsed time and peak working set as diagnostic evidence, never as flaky CI thresholds.
@@ -83,10 +100,38 @@ The 2026-07-11 stream-refactor sample used PowerShell 7.6.3 and fresh hidden pro
 
 The available pre-refactor NSIS baseline used 639,787,008 peak bytes and 1,704 ms on the same CCFLink fixture. The parser traded CPU for roughly 47% lower peak working set, but the baseline predates semantic changes and is directional only.
 
+The 2026-07-17 Inno targeted-extraction refactor used PowerShell 7.6.3 and medians from three fresh processes. The parser now reads one requested location record, allocates chunked metadata once, preserves `byte[]` values across PowerShell branches, reuses a pooled payload buffer, and performs the source-backed CALL/JMP transform in narrow GPL C#.
+
+| Operation | Fixture bytes | Before ms | After ms | Time change | Before allocated MiB | After allocated MiB | Allocation change |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Kiro metadata | 170,403,336 | 797.46 | 674.53 | -15.4% | 67.48 | 66.98 | -0.8% |
+| Kiro `Kiro.exe` extraction | 170,403,336 | 9,595.85 | 7,434.86 | -22.5% | 3,129.08 | 2,900.82 | -7.3% |
+| WinSCP metadata | 12,317,368 | 686.35 | 697.02 | +1.6% | 70.08 | 69.45 | -0.9% |
+| WinSCP `WinSCP.exe` extraction | 12,317,368 | 1,644.95 | 1,639.07 | -0.4% | 436.65 | 333.26 | -23.7% |
+| BankLink metadata | 16,953,152 | 654.54 | 657.20 | +0.4% | 53.84 | 54.88 | +1.9% |
+| BankLink `BK5WIN.EXE` extraction | 16,953,152 | 1,601.12 | 1,379.35 | -13.9% | 732.90 | 269.15 | -63.3% |
+
+Kiro's target begins after a 308,164,848-byte solid LZMA prefix. SharpCompress must decode that prefix sequentially, so its cumulative allocation remains proportional to decoded output even though the parser no longer constructs all location objects or copies the solid payload.
+
+The 2026-07-17 Chromium Setup refactor used medians from three fresh PowerShell 7.6.3 processes. It parses PE layout, resources, and certificate tags once; applies Chromium's `B7` > `BL` > `BN` setup precedence; and reads Omaha's offline manifest directly from the decoded TAR. A first implementation that spooled LZMA through a generic bounded stream was rejected after Brave rose to 15,592 ms and 9,529 MiB cumulative allocation. The retained implementation uses Omaha's declared compressed size with a dedicated sequential source and exact output checks.
+
+| Fixture | Before ms | After ms | Before allocated MiB | After allocated MiB |
+| --- | ---: | ---: | ---: | ---: |
+| Chrome mini-installer | 261.98 | 260.65 | 38.19 | 38.87 |
+| Chromium Updater | 276.94 | 264.90 | 40.96 | 41.06 |
+| Legacy Omaha | 268.45 | 260.98 | 39.04 | 38.75 |
+| Brave standalone Omaha | 10,191.68 | 10,676.68 | 64.38 | 59.70 |
+| Vivaldi mini-installer | 262.29 | 259.83 | 37.81 | 38.27 |
+| Edge WebView2 standalone Omaha | 13,778.45 | 13,764.01 | 65.62 | 60.71 |
+
+The large Omaha fixtures reduced cumulative allocation by about 7.4%; elapsed time was neutral for Edge and 4.8% slower for Brave in this sample. Treat that Brave delta as a residual regression to watch, not as an improvement. The small-layout results mainly validate that one-pass PE parsing did not add meaningful cost.
+
 ```powershell
 .\Modules\PackageModule\Tests\Benchmark-InstallerParsers.ps1 `
   -NSISPath <path> `
   -ChromiumPath <path> `
+  -InnoPath <path> `
+  -InnoExtractName <exact-payload-name> `
   -QtInstallerFrameworkPath <path> `
   -Install4jPath <path> `
   -OutputPath $env:TEMP\DumplingsParserBenchmarkResults.json
