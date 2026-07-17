@@ -1,9 +1,13 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://lva.lenovo.com.cn/')
+$InstallerUrl = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+
+  $EdgeDriver.Navigate().GoToUrl('https://lva.lenovo.com.cn/')
+  $EdgeDriver.ExecuteScript('return downloadURl.lva', $null)
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.ExecuteScript('return downloadURl.lva', $null)
+  InstallerUrl = $InstallerUrl
 }
 
 # Version

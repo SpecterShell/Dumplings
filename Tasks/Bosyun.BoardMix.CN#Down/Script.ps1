@@ -1,7 +1,8 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://boardmix.cn/download/')
-
-$Object1 = $EdgeDriver.ExecuteScript('return ossMap', $null)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://boardmix.cn/download/')
+  $EdgeDriver.ExecuteScript('return ossMap', $null)
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

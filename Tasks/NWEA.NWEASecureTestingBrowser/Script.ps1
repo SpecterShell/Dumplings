@@ -1,16 +1,17 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://connection.nwea.org/s/technical-resources')
-
-$Object1 = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-  [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-    param([OpenQA.Selenium.IWebDriver]$WebDriver)
-    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "Setup_Lockdown_Browser")]')) } catch {}
-  }
-)
+$InstallerUrl = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://connection.nwea.org/s/technical-resources')
+  [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+      param([OpenQA.Selenium.IWebDriver]$WebDriver)
+      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "Setup_Lockdown_Browser")]')) } catch {}
+    }
+  ).GetAttribute('href')
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.GetAttribute('href')
+  InstallerUrl = $InstallerUrl
 }
 
 # Version

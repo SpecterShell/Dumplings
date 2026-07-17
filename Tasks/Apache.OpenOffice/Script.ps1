@@ -1,13 +1,24 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
+$DownloadInfo = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
 
-# $Prefix1 = $EdgeDriver.ExecuteScript('return DL.SF', $null)
-$Prefix2 = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
-$Lang = $EdgeDriver.ExecuteScript('return DL.REL_FULL_LANG', $null)
+  $EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
+  $Version = $EdgeDriver.ExecuteScript('return DL.VERSION', $null)
+  [pscustomobject]@{
+    Prefix2         = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
+    Lang            = $EdgeDriver.ExecuteScript('return DL.REL_FULL_LANG', $null)
+    Version         = $Version
+    Build           = $EdgeDriver.ExecuteScript('return DL.BUILD', $null)
+    ReleaseDate     = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null)
+    ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
+  }
+}
+
+$Prefix2 = $DownloadInfo.Prefix2
+$Lang = $DownloadInfo.Lang
 
 # Version
-$Version = $EdgeDriver.ExecuteScript('return DL.VERSION', $null)
-$Build = $EdgeDriver.ExecuteScript('return DL.BUILD', $null)
+$Version = $DownloadInfo.Version
+$Build = $DownloadInfo.Build
 $this.CurrentState.Version = [regex]::Replace($Version, '(\d+)\.(\d+)\.(\d+)', '$1.$2$3') + '.' + $Build
 
 # Installer
@@ -62,12 +73,12 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null) | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $DownloadInfo.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
+        Value = $ReleaseNotesUrl = $DownloadInfo.ReleaseNotesUrl
       }
     } catch {
       $_ | Out-Host

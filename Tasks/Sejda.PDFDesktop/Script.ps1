@@ -1,7 +1,8 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.sejda.com/desktop')
-
-$Object1 = $EdgeDriver.ExecuteScript('return releases', $null)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.sejda.com/desktop')
+  $EdgeDriver.ExecuteScript('return releases', $null)
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

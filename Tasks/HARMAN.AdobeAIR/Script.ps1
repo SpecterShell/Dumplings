@@ -1,16 +1,20 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://airsdk.harman.com/runtime')
+$WebData = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://airsdk.harman.com/runtime')
+  [pscustomobject]@{
+    Version = [regex]::Match(
+      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "miniTitle") and contains(text(), "version")]')).Text,
+      '(\d+(?:\.\d+){3,})'
+    ).Groups[1].Value
+    InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@class, "downloadLink") and contains(@href, ".exe")]')).GetAttribute('href')
+  }
+}
 
 # Version
-$this.CurrentState.Version = [regex]::Match(
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "miniTitle") and contains(text(), "version")]')).Text,
-  '(\d+(?:\.\d+){3,})'
-).Groups[1].Value
+$this.CurrentState.Version = $WebData.Version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@class, "downloadLink") and contains(@href, ".exe")]')).GetAttribute('href')
-}
+$this.CurrentState.Installer += [ordered]@{ InstallerUrl = $WebData.InstallerUrl }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

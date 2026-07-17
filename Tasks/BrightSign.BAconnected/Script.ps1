@@ -21,15 +21,17 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://docs.brightsign.biz/releases/latest')
+      $ReleaseNotesObject = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "slate-editor")]')) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.Navigate().GoToUrl('https://docs.brightsign.biz/releases/latest')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "slate-editor")]')) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(.//div/@class, 'slate-h1') and contains(.//h1, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.SelectSingleNode(".//div[contains(@class, 'slate-h1')]"); $Node = $Node.NextSibling) {

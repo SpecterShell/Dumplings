@@ -21,15 +21,17 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.typeless.com/help/release-notes/windows')
+      $ReleaseNotesNode = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/span, '$($this.CurrentState.Version)')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.Navigate().GoToUrl('https://www.typeless.com/help/release-notes/windows')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/span, '$($this.CurrentState.Version)')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./div[1]/h2').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'

@@ -1,7 +1,8 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
-
-$Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
+  $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
+}
 
 # Version
 $this.CurrentState.Version = $Object1.version

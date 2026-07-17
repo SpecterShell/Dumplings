@@ -29,10 +29,12 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.yuque.com/yuque/yuque-desktop/'
       }
 
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
+      $Object2 = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $Object2 = $EdgeDriver.ExecuteScript('return window.appData', $null)
+        $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
+        $EdgeDriver.ExecuteScript('return window.appData', $null)
+      }
       $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.Contains($this.CurrentState.Version) -or $_.title.Contains("$($this.CurrentState.Version.Split('.')[0..1] -join '.').x") }, 'First')
       if ($ReleaseNotesUrlObject) {
         # ReleaseNotesUrl

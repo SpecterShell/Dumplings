@@ -31,15 +31,17 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.trae.cn/changelog')
+      $ReleaseNotesNode = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.Navigate().GoToUrl('https://www.trae.cn/changelog')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{

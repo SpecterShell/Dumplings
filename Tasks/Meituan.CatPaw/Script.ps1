@@ -22,14 +22,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://catpaw.meituan.com/changelog')
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@class='timeline-item' and contains(.//*[@class='version-title'], '$($this.CurrentState.Version)')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      $ReleaseNotesObject = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
+
+        $EdgeDriver.Navigate().GoToUrl('https://catpaw.meituan.com/changelog')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@class='timeline-item' and contains(.//*[@class='version-title'], '$($this.CurrentState.Version)')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {
         # ReleaseTime

@@ -12,15 +12,17 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.izarc.org/news')
+      $ReleaseNotesNode = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(.//h2, '$($this.CurrentState.Version)')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.Navigate().GoToUrl('https://www.izarc.org/news')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(.//h2, '$($this.CurrentState.Version)')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
       if ($ReleaseNotesNode) {
         # Remove unnecessary list prefixes
         $ReleaseNotesNode.SelectNodes('.//span[@class="text-primary"]').ForEach({ $_.Remove() })

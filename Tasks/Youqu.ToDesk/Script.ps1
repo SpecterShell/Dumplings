@@ -1,7 +1,8 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.todesk.com/download.html')
-
-$Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].clientInfo', $null)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.todesk.com/download.html')
+  $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].clientInfo', $null)
+}
 
 # Version
 $this.CurrentState.Version = $Object1.win_version

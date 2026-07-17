@@ -1,9 +1,12 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://pixso.cn/download/')
+$InstallerUrl = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://pixso.cn/download/')
+  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]')).GetAttribute('data-href')
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]')).GetAttribute('data-href')
+  InstallerUrl = $InstallerUrl
 }
 
 # Version

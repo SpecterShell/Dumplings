@@ -1,7 +1,8 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.51dzt.com/rubik-ssr/51dzt')
-
-$Object1 = $EdgeDriver.ExecuteScript('return window.__NUXT__.state.application.project_components.filter(obj => obj.name === "dzt-banner")[0].user_props', $null)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.51dzt.com/rubik-ssr/51dzt')
+  $EdgeDriver.ExecuteScript('return window.__NUXT__.state.application.project_components.filter(obj => obj.name === "dzt-banner")[0].user_props', $null)
+}
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.downloadVersion, '（([\d\.]+)）').Groups[1].Value

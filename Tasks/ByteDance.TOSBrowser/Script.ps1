@@ -34,15 +34,17 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.volcengine.com/docs/6349/148777')
+      $ReleaseNotesNode = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.Navigate().GoToUrl('https://www.volcengine.com/docs/6349/148777')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{

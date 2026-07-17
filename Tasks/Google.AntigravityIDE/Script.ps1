@@ -36,14 +36,17 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://antigravity.google/changelog')
-      $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'version') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'description')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML') | ConvertFrom-Html
+      $ReleaseNotesObject = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
+
+        $EdgeDriver.Navigate().GoToUrl('https://antigravity.google/changelog')
+        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+            param([OpenQA.Selenium.IWebDriver]$WebDriver)
+            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'version') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'description')]")) } catch {}
+          }
+        ).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)

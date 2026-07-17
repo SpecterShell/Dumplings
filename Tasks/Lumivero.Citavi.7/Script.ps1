@@ -9,15 +9,17 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $EdgeDriver = Get-EdgeDriver -Headless
-    $EdgeDriver.Navigate().GoToUrl('https://community.lumivero.com/s/article/citavi-7-release-notes')
+    $ReleaseNotesObject = Use-EdgeDriver -Headless {
+      param($EdgeDriver)
 
-    $ReleaseNotesObject = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-      [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-        param([OpenQA.Selenium.IWebDriver]$WebDriver)
-        try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'OutlineElement')]")) } catch {}
-      }
-    ).GetAttribute('innerHTML') | ConvertFrom-Html
+      $EdgeDriver.Navigate().GoToUrl('https://community.lumivero.com/s/article/citavi-7-release-notes')
+      [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+          param([OpenQA.Selenium.IWebDriver]$WebDriver)
+          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'OutlineElement')]")) } catch {}
+        }
+      ).GetAttribute('innerHTML')
+    } | ConvertFrom-Html
     $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./p[contains(., 'Citavi $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
       # ReleaseTime

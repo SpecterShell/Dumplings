@@ -21,27 +21,37 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://www.flowyaipc.com/download')
+      $ReleaseNotes = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[1]')).Click()
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
+        $EdgeDriver.Navigate().GoToUrl('https://www.flowyaipc.com/download')
+
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[1]')).Click()
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
+        $English = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML')
+
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[2]')).Click()
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
+        [pscustomobject]@{
+          English = $English
+          Chinese = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML')
+        }
+      }
+
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML') | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $ReleaseNotes.English | ConvertFrom-Html | Get-TextContent | Format-Text
       }
 
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[2]')).Click()
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML') | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $ReleaseNotes.Chinese | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host

@@ -1,18 +1,21 @@
 $Prefix = 'https://www.bullzip.com/products/pdf/download.php'
 
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl($Prefix)
-Start-Sleep -Seconds 5
-$Object1 = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-  [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-    param([OpenQA.Selenium.IWebDriver]$WebDriver)
-    try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "BullzipPDFPrinter")]')) } catch {}
-  }
-)
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+
+  $EdgeDriver.Navigate().GoToUrl($Prefix)
+  Start-Sleep -Seconds 5
+  [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+      param([OpenQA.Selenium.IWebDriver]$WebDriver)
+      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "BullzipPDFPrinter")]')) } catch {}
+    }
+  ).GetAttribute('href')
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.GetAttribute('href') | Split-Uri -LeftPart 'Path'
+  InstallerUrl = Join-Uri $Prefix $Object1 | Split-Uri -LeftPart 'Path'
 }
 
 # Version
@@ -28,7 +31,12 @@ switch -Regex ($this.Check()) {
         Value  = 'https://www.bullzip.com/products/pdf/info.php'
       }
 
-      $Object2 = $EdgeDriver.ExecuteScript('return await fetch("https://www.bullzip.com/products/pdf/rss.php").then(r => r.text())') | ConvertFrom-Xml
+      $Object2 = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
+
+        $EdgeDriver.Navigate().GoToUrl($Prefix)
+        $EdgeDriver.ExecuteScript('return await fetch("https://www.bullzip.com/products/pdf/rss.php").then(r => r.text())')
+      } | ConvertFrom-Xml
       $Object3 = $Object2.rss.channel.item.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object3) {

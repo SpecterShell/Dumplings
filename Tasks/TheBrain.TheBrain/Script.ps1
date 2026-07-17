@@ -1,9 +1,12 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://www.thebrain.com/download')
+$DownloadUrl = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.thebrain.com/download')
+  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(.//span, "Download")]')).GetAttribute('href')
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(.//span, "Download")]')).GetAttribute('href') -TimeoutSec 30 | ConvertTo-UnescapedUri
+  InstallerUrl = Get-RedirectedUrl -Uri $DownloadUrl -TimeoutSec 30 | ConvertTo-UnescapedUri
 }
 
 # Version

@@ -1,12 +1,14 @@
-$EdgeDriver = Get-EdgeDriver -Headless
-$EdgeDriver.Navigate().GoToUrl('https://market.m.taobao.com/app/im/ww-home/index.html')
-
-$Button1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//span[@class="newVersion"]'))
-[OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button1).Build().Perform()
+$InstallerUrl = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://market.m.taobao.com/app/im/ww-home/index.html')
+  $Button = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//span[@class="newVersion"]'))
+  [OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button).Build().Perform()
+  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//a[@class='windowVersions']")).GetAttribute('href')
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//a[@class='windowVersions']")).GetAttribute('href')
+  InstallerUrl = $InstallerUrl
 }
 
 # Version

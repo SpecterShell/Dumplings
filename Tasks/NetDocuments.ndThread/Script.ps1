@@ -21,19 +21,21 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl('https://support.netdocuments.com/s/article/360006895372')
-
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//tr[contains(./td[1], 'Desktop App $($this.CurrentState.Version)')]/td[3]")) } catch {}
-          }
-        ).GetAttribute('innerHTML') | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = Use-EdgeDriver -Headless {
+          param($EdgeDriver)
+
+          $EdgeDriver.Navigate().GoToUrl('https://support.netdocuments.com/s/article/360006895372')
+          [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
+            [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+              param([OpenQA.Selenium.IWebDriver]$WebDriver)
+              try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//tr[contains(./td[1], 'Desktop App $($this.CurrentState.Version)')]/td[3]")) } catch {}
+            }
+          ).GetAttribute('innerHTML')
+        } | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host

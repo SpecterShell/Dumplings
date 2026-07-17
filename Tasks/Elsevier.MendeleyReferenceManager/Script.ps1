@@ -28,18 +28,19 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesUrl = "https://www.mendeley.com/release-notes-reference-manager/v$($this.CurrentState.Version)"
 
-      $EdgeDriver = Get-EdgeDriver -Headless
-      $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
+      $ReleaseNotesObject = Use-EdgeDriver -Headless {
+        param($EdgeDriver)
 
-      # Hide cookies banner
-      # Banner does not show up immediately after loaded. Put a global style here so we don't have to wait
-      $EdgeDriver.ExecuteScript(@'
+        $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
+
+        # Banner does not show up immediately after loaded. Put a global style here so we don't have to wait.
+        $EdgeDriver.ExecuteScript(@'
 let element = document.createElement('style')
 element.innerText = '#onetrust-consent-sdk { display: none }'
 document.querySelector("head").appendChild(element)
 '@, $null)
-
-      $ReleaseNotesObject = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'rightCol')]")).GetAttribute('innerHTML') | ConvertFrom-Html
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'rightCol')]")).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
       if (-not [string]::IsNullOrWhiteSpace($ReleaseNotesObject.InnerText)) {
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode(".//h2[contains(text(), 'v$($this.CurrentState.Version)')]")
         if ($ReleaseNotesTitleNode) {
