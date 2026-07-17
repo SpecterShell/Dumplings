@@ -29,7 +29,7 @@ Strong resource evidence is:
 | `ChromiumUpdater` | `B7` resource named `updater.packed.7z`; its archive contains `updater.7z`, whose launcher is `bin\updater.exe` |
 | `Omaha` | `B` resource ID `102` containing LZMA + BCJ2 + TAR payload data, with updater identity/tag evidence |
 
-`Read-ChromiumInstallerTag` searches only the Authenticode certificate table for the framed `Gact2.0Omaha` tag. The `appguid` is updater protocol identity, **not** an ARP `ProductCode`.
+`Read-ChromiumInstallerTag` searches only the Authenticode certificate table for the framed `Gact2.0Omaha` tag. The `appguid` is updater protocol identity, **not** an ARP `ProductCode`. It may select a separately proven uninstall key, however: Brave's source defines exact app GUID-to-uninstall-key mappings, which `Get-ChromiumSetupInfo` returns as `ProductCode` without using the GUID itself as the value.
 
 Primary source references:
 
@@ -127,9 +127,9 @@ Installers:
 
 Both installers contain PE resource `B/102`, decode through LZMA + BCJ2 + TAR, and place `GoogleUpdate.exe` first in TAR execution order. Do not replace these Omaha slash switches with Chromium Updater `--system` switches.
 
-### Tagged Application Bootstrapper
+### Tagged Online Or Offline Application Bootstrapper
 
-There is no safe universal snippet. Read the tag, expand the embedded updater, identify the first executed EXE, and validate the target application's final installer and ARP entry. Omaha/Updater command lines can describe updater installation while the tag selects a different application payload.
+There is no safe universal snippet. A tag does not prove that the wrapper is online-only. For Omaha, first inspect `OfflineManifest.gup`: when present, it identifies the target version, package name, hash, size, action executable, arguments, and elevation requirement. When absent, read the tag, expand the embedded updater, capture its download, and validate the target application's final installer and ARP entry. Omaha/Updater command lines can describe updater installation while the tag selects a different application payload.
 
 ## WinGet Defaults And Overrides
 
@@ -154,7 +154,9 @@ Expansion is source-backed and bounded:
 - `BN`/`BD` resources are exported directly.
 - `BL` resources are decoded as cabinets.
 - `B7` resources are opened with the bundled SharpCompress library; Chromium Updater's nested `updater.7z` is opened recursively so `bin\updater.exe` can be selected directly.
+- Branded mini-installers may replace `CHROME.PACKED.7Z` with a product name such as Vivaldi's `VIVALDI.PACKED.7Z`. Identify this layout from one non-setup/non-updater `B7` or `BN` archive paired with a `B7`, `BL`, or `BN` setup resource; do not require the `CHROME` prefix.
 - Omaha resource `102` is decoded as LZMA, four-stream BCJ2, then TAR. The Omaha stub executes the first EXE in TAR order.
+- For tagged Omaha, `Get-ChromiumSetupInfo` extracts and parses `OfflineManifest.gup` under the same bounds. `IsOnlineBootstrapper` is true only when the tag exists and no offline target manifest is found.
 
 No installer, updater, 7-Zip, or NanaZip process is invoked.
 
@@ -169,10 +171,11 @@ The outer updater/metainstaller may not be the final application's ARP writer.
   $ProductCode = Resolve-ChromiumSetupProductCode -Info $Info -InstallerSwitches $Installer.InstallerSwitches
   ```
 
-  `--chrome-sxs`, `--chrome-beta`, and `--chrome-dev` select `Google Chrome SxS`, `Google Chrome Beta`, and `Google Chrome Dev`; an unqualified Google Chrome mini-installer selects `Google Chrome`. This mapping applies only when parser metadata identifies `Google LLC` and `Google Chrome Installer`. Do not apply it to vendor forks.
+  `--chrome-sxs`, `--chrome-beta`, and `--chrome-dev` select `Google Chrome SxS`, `Google Chrome Beta`, and `Google Chrome Dev`; an unqualified Google Chrome mini-installer selects `Google Chrome`. Vivaldi's exact PE branding plus `VIVALDI.PACKED.7Z` resolves to its shared `Vivaldi` ARP key. Do not infer ProductCode for other vendor forks without equally explicit evidence.
 - Untagged updater package: model the updater's own ARP entry.
-- Tagged Updater/Omaha: model the downloaded target application's visible ARP entry, not `appguid`.
-- Tagged Updater/Omaha: the outer PE product version belongs to the updater. Do not use it as the target package version; obtain target-version evidence from the downloaded installer/feed or VM traffic.
+- Tagged Updater/Omaha: model the target application's visible ARP entry, not `appguid`. Use a source-defined mapping such as Brave's only when it maps the updater identity to a separate literal uninstall key.
+- Tagged Omaha with `OfflineManifest.gup`: use `OfflineManifest.Version` as target-version evidence and inspect `Packages` and `InstallAction` before expanding the selected payload.
+- Tagged updater without an offline manifest: the outer PE product version belongs to the updater. Do not use it as the target package version; obtain target-version evidence from the downloaded installer/feed or VM traffic.
 - If the target is downloaded at runtime, static analysis cannot prove the final installer version, ARP type, or associations. Capture the updater traffic and validate in the VM.
 
 ### Step 3: Determine Scope And Target Architecture
@@ -189,9 +192,9 @@ The outer updater/metainstaller may not be the final application's ARP writer.
 - `Google.GoogleUpdater` `1.3.35.452` and `1.3.36.372`: untagged Omaha runtime installers containing resource `B/102`; the first TAR executable is `GoogleUpdate.exe`.
 - `Google.GoogleUpdater` `126.0.6441.0` and later: untagged Chromium Updater packages containing `updater.packed.7z`.
 - Chrome consumer download bootstrapper: tagged Chromium Updater with Chrome `appguid` and `needsadmin=prefers`.
-- `Brave.Brave`: current standalone setup is Omaha-derived; older accepted manifests may be marked `# Chromium Setup`.
-- `Brave.Brave.Beta`: Chromium-derived vendor setup; verify the current artifact because packaging can change.
-- `Vivaldi.Vivaldi`: Chromium-derived vendor setup using `--vivaldi-silent` and `--vivaldi-install-dir`; do not substitute upstream switches.
+- `Brave.Brave`, `Brave.Brave.Beta`, `Brave.Brave.Dev`, and `Brave.Brave.Nightly`: current standalone setups are tagged Omaha wrappers with an offline manifest and embedded browser installer. The parser maps their source-defined app GUIDs to `BraveSoftware Brave-Browser*` uninstall keys.
+- `Brave.BraveOrigin.Nightly`: uses the source-defined `BraveSoftware Brave-Origin-Nightly` uninstall key. Brave source also defines parallel Origin stable, beta, and dev identities, although they are not separate current WinGet package IDs. Verify current packaging because vendor formats can change.
+- `Vivaldi.Vivaldi` and `Vivaldi.Vivaldi.Snapshot`: branded Chromium mini-installers containing `VIVALDI.PACKED.7Z` and `SETUP.EX_`, using `--vivaldi-silent` and `--vivaldi-install-dir`; do not substitute upstream switches.
 - `360.360SE`: vendor setup using `--silent-install` and `--install-path`.
 - `360.360Chrome.X`: vendor setup using `--silent-install` and `--install-path`.
 - `360.360Chrome`: vendor Chromium setup; verify current switches and scope.
@@ -217,3 +220,4 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for vend
 
 - [Chromium](https://chromium.googlesource.com/chromium/src)
 - [Google Omaha](https://github.com/google/omaha)
+- [Brave Chromium install modes](https://github.com/brave/brave-core/tree/master/chromium_src/chrome/install_static)

@@ -10,6 +10,8 @@ Use `InstallerType: nullsoft` when WinGet invokes an NSIS/Nullsoft installer dir
 
 Route here when `Get-NSISInfo` succeeds, the NSIS archive first header is found at a 512-byte aligned PE overlay start with `DEADBEEF` followed by `NullsoftInst`, or the analyzer returns high-confidence NSIS evidence.
 
+`Get-NSISInfo` also recognizes the NSISBI large-installer fork. Its parser evidence reports `ParserVersionInfo.IsNsisBi`, 64-bit data-block offsets, and external-payload flags; do not reject an otherwise valid installer merely because its documented first-header flags extend beyond upstream NSIS's `0x0F` mask.
+
 For NSIS, the simplest wrapper test is whether the outer installer writes uninstall registry values. `Get-NSISInfo` reports only explicit uninstall registry writes recovered from the compiled script, not arbitrary version-string probing. If `WritesAppsAndFeaturesEntry` is false or nested installer payloads exist, inspect the payload or use VM ARP deltas.
 
 ## Manifest Shape
@@ -314,6 +316,7 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for dual
 ## Implementation Sources
 
 - [NSIS](https://github.com/NSIS-Dev/nsis)
+- [NSISBI](https://sourceforge.net/projects/nsisbi/)
 - [7-Zip](https://github.com/ip7z/7zip)
 - [Komac](https://github.com/russellbanks/Komac)
 - [electron-builder](https://github.com/electron-userland/electron-builder)
