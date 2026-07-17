@@ -82,6 +82,29 @@ $Publisher = $InstallerPath | Read-PublisherFromSquirrel
 
 Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) when the embedded package identity is unresolved or to verify HKCU ARP registration, `--silent`, upgrade behavior, and first-run associations for the current Squirrel/Velopack generation.
 
+### Validate Launch After Silent Installation
+
+Do not stop after the silent installer exits successfully and writes an ARP entry. From a restored VM checkpoint with no prior application state:
+
+1. Capture `BeforeInstall`, run the installer with the verified `--silent` or `-s` switch, record its exit code, and capture `AfterInstall`.
+2. Launch the installed application normally through its generated shortcut, `Update.exe --processStart`, or versioned application executable without adding lifecycle switches.
+3. Confirm that the application process remains running and its usable main window opens. A transient process, updater-only process, crash dialog, or exit code `0` from setup is insufficient.
+4. Capture `AfterFirstRun` and compare it with `AfterInstall` to identify files, registry values, protocols, and extensions created only when the application starts.
+5. If normal launch fails, collect the Squirrel/Velopack setup log and application log before changing state. Then test the family-specific first-run route separately to determine whether skipped first-run initialization caused the failure.
+
+This check is required because both families intentionally suppress the post-install application launch in silent mode:
+
+- Squirrel.Windows still invokes each Squirrel-aware executable with `--squirrel-install <version>`, but it does not perform the final launch with `--squirrel-firstrun` when `silentInstall` is true. The missing lifecycle invocation is therefore `--squirrel-firstrun`, not `--squirrel-install`.
+- Velopack still invokes its install hook with `--veloapp-install`, but a non-silent setup is what launches the application with the `VELOPACK_FIRSTRUN` environment variable. Do not translate this environment marker into a manifest command-line switch.
+
+Treat lifecycle invocation as diagnostic evidence, not an outer installer switch. Do not add `--squirrel-firstrun`, `--squirrel-install`, `--veloapp-install`, or a Velopack environment marker to `InstallerSwitches`: WinGet passes installer switches to the setup bootstrapper, while these lifecycle values belong to the installed application.
+
+### Discord Fresh-Install Caveat
+
+`Discord.Discord` is a known case where a fresh silent installation can leave Discord unable to complete a later normal launch because the suppressed `--squirrel-firstrun` run did not create all Discord-specific first-run state. Community package validation has reproduced a fatal JavaScript `InconsistentInstallerState` failure and uses the versioned `Discord.exe --squirrel-firstrun` invocation as the recovery/diagnostic route. Test the current Discord build rather than assuming the behavior is fixed or universal.
+
+In the VM, first prove that a normal Discord launch fails after silent setup. Preserve the logs and `AfterInstall` snapshot, invoke the latest installed `app-*\Discord.exe` once with `--squirrel-firstrun`, and then retry a normal launch. Capture the resulting `AfterFirstRun` state. If that sequence fixes launch, report the exact created or modified files from the comparison; do not label them as a version database unless the observed file format or Discord logs prove that identity.
+
 ### Known Squirrel And Velopack Layouts
 
 - `Atlassian.Sourcetree`: nested `SourceTree-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `SourceTree`.
@@ -92,7 +115,7 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) when the
 - `Toggl.TogglTrack`: Squirrel.Windows setup resource ZIP with nested `TogglTrack-<version>-full.nupkg`; `ProductCode` is `TogglTrack`.
 - `SlackTechnologies.Slack`: nested `slack-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `slack`.
 - `Figma.Figma`: nested `Figma-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `Figma`.
-- `Discord.Discord`: nested `Discord-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `Discord`.
+- `Discord.Discord`: nested `Discord-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `Discord`. Fresh silent installs require the launch validation and `--squirrel-firstrun` diagnostic described above.
 
 ## Implementation Sources
 
