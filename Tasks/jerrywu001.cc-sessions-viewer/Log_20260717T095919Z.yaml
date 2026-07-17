@@ -1,0 +1,31 @@
+Version: 0.3.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.3/Sessions.Viewer_0.3.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.3/Sessions.Viewer_0.3.3_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.3.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Codex /side side chat — Codex GUI chat gains a floating side panel (mirroring Claude's /btw), accessible via Ctrl+J, the /side slash command, or the side-panel button. Forks the current Codex thread via the app-server so the side chat inherits context without polluting the main conversation. Session files are purged on close to keep the session list clean.
+    - Slash command one-press delete — pressing Backspace when the cursor is within a recognized slash command token (the blue-highlighted /git-push, /side, etc.) deletes the entire token in one keystroke instead of character-by-character.
+    - Slash command hover tooltip — hovering over a recognized slash command in the composer now shows a tooltip with the command name and description, using the app's custom tooltip system rather than native browser tooltips.
+    - Tab strip auto-scroll — opening a new session, chat, or TUI tab now automatically scrolls the tab strip to reveal the newly activated tab, so it's always visible even when many tabs are open.
+    Bug Fixes
+    - Topbar search bar not restoring after tab switch — switching from a TUI or session tab to a chat GUI or git diff tab and then back left the global topbar empty (no "Search terminal" / "Search sessions" bar). The topbar condition now checks whether a TUI tab is active before checking for chat/git view tabs, so the correct topbar always renders when switching back.
+    - Git diff tab showing "Search sessions" — the git diff view tab fell through to the SessionsTopbar condition, showing an irrelevant search bar. Git tabs now render an empty topbar since GitChangesView has its own built-in toolbar.
+    - Washed-out Codex TUI colors on Windows — Codex neither queries the terminal background (no OSC 11) nor reads COLORFGBG on Windows, so it always paints with its dark-theme palette and every foreground comes out pale under the light theme. Rather than discarding those colors (which flattened hints, paths, and syntax highlighting to black), the SGR normalizer now converts Codex's dark palette into its light twin: it mirrors each color's lightness in HSL and keeps hue and saturation. The full brightness ladder survives the flip — body text becomes the darkest, faint separators become the lightest — and accents keep their color instead of turning to mud. The foreground mirror is Windows-only, since that's where Codex is confirmed to mis-detect the background; other platforms and the dark theme are untouched. Also fixes extended-color parameters (38;2;40;…) being mis-read as standalone SGR codes and silently corrupting the color.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v033
+ReleaseTime: 2026-07-17T09:53:58.0000000Z
