@@ -9,7 +9,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.CiscoDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('NBRConverter') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.CiscoDownloadPage.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('NBRConverter') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

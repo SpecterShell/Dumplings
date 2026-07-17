@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.mathworks.com/products/compiler/matlab-runtime.html' -Headers @{
-  Accept            = 'text/html'
-  'Accept-Encoding' = 'gzip, deflate'
-  Connection        = 'close'
-} -UserAgent $DumplingsBrowserUserAgent | ConvertFrom-Html
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.mathworks.com/products/compiler/matlab-runtime.html')
+  $EdgeDriver.PageSource
+} | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//tr[contains(./td[2]//@href, ".zip")]')
 
 # Version

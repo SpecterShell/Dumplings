@@ -62,7 +62,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://files.flashbackrecorder.com/flashbackexpress6_setup.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Get-WebResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl -Method GET -UserAgent $DumplingsBrowserUserAgent
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
@@ -135,7 +135,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

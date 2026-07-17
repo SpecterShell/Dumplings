@@ -1,4 +1,8 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent -H 'Referer: https://www.google.com/' 'https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default' | Join-String -Separator "`n" | ConvertFrom-Json -AsHashtable
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default')
+  $EdgeDriver.FindElement([OpenQA.Selenium.By]::TagName('pre')).GetAttribute('textContent')
+} | ConvertFrom-Json -AsHashtable
 $Object2 = $Object1.data.GetEnumerator().Where({ $_.Value.post_title -eq 'Bloomberg Terminal – New/Upgrade Installation' }, 'First')[0].Value
 
 # Installer
@@ -24,7 +28,11 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.bloomberg.com/professional/support/documentation/release-notes/' | Join-String -Separator "`n" | ConvertFrom-Html
+      $Object2 = Use-EdgeDriver {
+        param($EdgeDriver)
+        $EdgeDriver.Navigate().GoToUrl('https://www.bloomberg.com/professional/support/documentation/release-notes/')
+        $EdgeDriver.FindElement([OpenQA.Selenium.By]::TagName('html')).GetAttribute('innerHTML')
+      } | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[contains(./td[1]/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

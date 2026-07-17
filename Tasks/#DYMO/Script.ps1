@@ -1,1 +1,1 @@
-$Global:DumplingsStorage.DYMOApps = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.dymo.com/dymo-compatibility-chart.html' | Join-String -Separator "`n" | Get-EmbeddedJson -StartsFrom 'var userObject =' | ConvertFrom-Json -AsHashtable
+$Global:DumplingsStorage.DYMOApps = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.dymo.com/dymo-compatibility-chart.html' | Join-String -Separator "`n" | Get-EmbeddedJson -StartsFrom 'var userObject =' | ConvertFrom-Json -AsHashtable

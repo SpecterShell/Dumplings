@@ -1,4 +1,4 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.realvnc.com/en/connect/download/viewer/' | Join-String -Separator "`n" | ConvertFrom-Html
+$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.realvnc.com/en/connect/download/viewer/' | Join-String -Separator "`n" | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//script[@class="rvnc-mass-config"]').InnerHtml | ConvertFrom-Json
 
 # Version

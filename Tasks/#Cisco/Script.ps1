@@ -1,1 +1,5 @@
-$Global:DumplingsStorage.CiscoDownloadPage = Invoke-WebRequest -Uri 'https://www.webex.com/video-recording.html' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = 'text/html'; 'Accept-Language' = 'en-US' }
+$Global:DumplingsStorage.CiscoDownloadPage = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.webex.com/video-recording.html')
+  $EdgeDriver.PageSource
+} | Get-EmbeddedLinks

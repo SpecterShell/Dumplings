@@ -1,4 +1,4 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.realvnc.com/en/connect/download/vnc/' | Join-String -Separator "`n" | ConvertFrom-Html
+$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.realvnc.com/en/connect/download/vnc/' | Join-String -Separator "`n" | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
 

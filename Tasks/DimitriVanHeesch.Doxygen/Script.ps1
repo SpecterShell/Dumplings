@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.doxygen.nl/download.html'
+$Object1 = Invoke-WebRequest -Uri 'https://www.doxygen.nl/download.html' -UserAgent $DumplingsBrowserUserAgent
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

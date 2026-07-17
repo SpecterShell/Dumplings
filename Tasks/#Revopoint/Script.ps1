@@ -1,1 +1,1 @@
-$Global:DumplingsStorage.RevopointDownloadPage = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.revopoint3d.com/pages/support-download' | Join-String -Separator "`n" | ConvertFrom-Html
+$Global:DumplingsStorage.RevopointDownloadPage = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.revopoint3d.com/pages/support-download' | Join-String -Separator "`n" | ConvertFrom-Html

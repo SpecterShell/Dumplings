@@ -1,8 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/downloads/jabber.html' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = 'text/html'; 'Accept-Language' = 'en-US' }
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.webex.com/downloads/jabber.html')
+  $EdgeDriver.PageSource
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = [regex]::Match($Object1.Content, "jabberAppUrl = '([^']+)'").Groups[1].Value
+  InstallerUrl = [regex]::Match($Object1, "jabberAppUrl = '([^']+)'").Groups[1].Value
 }
 
 # Version

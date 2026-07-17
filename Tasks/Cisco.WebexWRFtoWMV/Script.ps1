@@ -11,10 +11,14 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://help.webex.com/en-us/article/WBX000026388/WRF2WMV-Converter'
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://help.webex.com/en-us/article/WBX000026388/WRF2WMV-Converter')
+  $EdgeDriver.PageSource
+} | Get-EmbeddedLinks
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('atwrf2wmv') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('atwrf2wmv') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
@@ -86,7 +90,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

@@ -1,8 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.webex.com/downloads/jabber/jabber-vdi.html' -UserAgent $DumplingsBrowserUserAgent -Headers @{ Accept = 'text/html'; 'Accept-Language' = 'en-US' }
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.webex.com/downloads/jabber/jabber-vdi.html')
+  $EdgeDriver.PageSource
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('CiscoJVDIAgent') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('CiscoJVDIAgent') } catch {} }, 'First')[0].href
 }
 
 # Version

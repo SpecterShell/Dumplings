@@ -5,7 +5,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrl -Uri $this.CurrentState.Installer[0].InstallerUrl), '(\d+(?:\.\d+){3})').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrls -Uri $this.CurrentState.Installer[0].InstallerUrl -Method GET -UserAgent $DumplingsBrowserUserAgent | Select-Object -Last 1), '(\d+(?:\.\d+){3})').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   InstallerType        = 'zip'

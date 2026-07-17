@@ -34,7 +34,7 @@ function Get-ReleaseNotes {
 }
 
 $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
