@@ -1,19 +1,14 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*~' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted '*~' | Get-Item -Force | Select-Object -First 1
-  $InstallerFile2Extracted = New-TempFolder
-  $InstallerFile3Name = [regex]::Matches((7z.exe l -ba -slt '-t#' $InstallerFile2), 'Path = (\d+\.tar)')[-1].Groups[1].Value
-  7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFile2Extracted}" $InstallerFile2 $InstallerFile3Name | Out-Host
-  $InstallerFile3 = Join-Path $InstallerFile2Extracted $InstallerFile3Name
-  # Version
-  $this.CurrentState.Version = [regex]::Match((7z.exe e -y '-t#' -so $InstallerFile3 '1'), '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  try {
+    # Read the signed Edge tag and embedded OfflineManifest.gup without executing or externally extracting the installer.
+    $InstallerInfo = Get-ChromiumSetupInfo -Path $InstallerFile
+    if ($InstallerInfo.ProductCode -cne 'Microsoft EdgeWebView') { throw 'The installer does not identify the Microsoft Edge WebView2 Runtime.' }
+    $this.CurrentState.Version = $InstallerInfo.DisplayVersion
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  } finally {
+    Remove-Item -Path $InstallerFile -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  }
 }
 
 # x86
