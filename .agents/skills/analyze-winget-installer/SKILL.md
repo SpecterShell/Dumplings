@@ -35,11 +35,15 @@ Return installer evidence, not just a guessed `InstallerType`:
 - Whether the EXE writes an EXE ARP entry, an MSI ARP entry, both, or hides one with `SystemComponent`.
 - Literal protocol and file-extension association evidence, or an explicit statement that the parser cannot prove it statically.
 - Required `InstallerSwitches`, `InstallModes`, `InstallerSuccessCodes`, `ExpectedReturnCodes`, `Scope`, `ElevationRequirement`, and `AppsAndFeaturesEntries`.
+- Which switch and mode values are WinGet defaults for the effective installer type, so the authoring step can omit redundant fields such as NSIS `/S`.
+- Unsupported-architecture evidence for selecting valid installer entries; do not turn this evidence into `UnsupportedOSArchitectures` at the moment.
 - Whether dynamic VM validation is required before manifest submission.
 
 ## Decision Rules
 
 Use specific WinGet installer types when supported: `inno`, `nullsoft`, `burn`, `wix`, `msi`, `msix`, `appx`, `zip`, and `portable`. Use generic `exe` only when the installer is not a supported known type and silent behavior is known.
+
+For known installer types, distinguish required overrides from WinGet defaults. Do not recommend manifest keys that merely repeat the defaults. For a ZIP, apply this rule using the effective `NestedInstallerType`.
 
 When an EXE wraps an MSI, do not assume `AppsAndFeaturesEntries.InstallerType` matches manifest `InstallerType`. Model the visible ARP entry WinGet will see.
 

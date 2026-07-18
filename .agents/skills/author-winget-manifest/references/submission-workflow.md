@@ -2,11 +2,14 @@
 
 ## Local Validation
 
-Run validation before submission when tools are available:
+Load Dumplings and run its offline, process-safe validator before submission:
 
 ```powershell
-winget validate --manifest <manifest-directory>
+Import-Module .\Modules\PackageModule\Index.ps1 -Force
+Test-WinGetManifest -Path <manifest-directory>
 ```
+
+Use `Get-WinGetManifestValidationResult` or `Test-WinGetManifest -PassThru` when structured diagnostics, effective installer entries, or dependency evidence are needed. Add `-ErrorOnWarning` for the strict warning behavior of `winget validate`. This validation does not download or execute installers and does not require `winget.exe`; the Azure pipeline remains authoritative for repository and installer-content checks.
 
 Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Installer Manifest Workflow](manifest-workflow.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the latest stable version consistently.
 

@@ -41,6 +41,10 @@ Never execute an unknown installer on the host. If static extraction is insuffic
 
 Use official publisher URLs only. Do not use third-party download aggregators, mirrors, repackagers, or search-result download sites as `InstallerUrl`, `PackageUrl`, `PublisherUrl`, release notes, or support links.
 
+Do not stop after satisfying the schema's required fields. Perform a field-by-field completeness pass over the installer and locale schemas and actively search the official product page, support/documentation pages, legal pages, release history, static installer metadata, and compact VM comparison evidence for every applicable optional field. Omit an optional field only after its likely authoritative sources were checked or when the field is intentionally excluded by this workflow. Never invent a value to make a manifest look complete.
+
+Do not author `UnsupportedOSArchitectures` at the moment. Architecture analysis remains evidence for choosing or rejecting an installer entry, but this field must be omitted from new manifests until this project adopts it explicitly.
+
 Prefer version-specific installer URLs. Avoid vanity/latest URLs and signed/session query parameters unless no stable version URL exists; if unavoidable, call out the hash-mismatch or expiry risk and consider whether automation should use headers, page metadata, or VM traffic capture to detect changes.
 
 Use `PackageVersion` from the installed ARP version when that is the best user-facing upgrade behavior. If the upstream marketing version differs from ARP `DisplayVersion`, include `AppsAndFeaturesEntries.DisplayVersion` when required by WinGet behavior.
@@ -48,6 +52,8 @@ Use `PackageVersion` from the installed ARP version when that is the best user-f
 For EXE wrappers around MSI payloads, distinguish manifest `InstallerType` from the ARP entry type. Add `AppsAndFeaturesEntries.InstallerType` when the registry entry type differs from the manifest installer type.
 
 For GitHub release sources, inspect the latest non-prerelease release unless the package is explicitly a preview/beta channel. Report repository legitimacy signals: stars, commits, issues, pull requests, archived status, latest release tag, and whether multiple release asset families should map to separate package identifiers.
+
+After all manifest files are authored, run each parsed YAML object through `Format-WinGetManifest` as documented in `references/manifest-workflow.md`. This formatter is mandatory before validation; it only normalizes legal field levels and schema ordering and must not replace the evidence-completeness pass.
 
 ## Stop Conditions
 

@@ -46,8 +46,7 @@ WinGet correlates manifests with installed entries through exact keys and normal
 Check a manifest against collected entries:
 
 ```powershell
-$Manifest = Read-WinGetLocalManifests -Path C:\Path\To\ManifestDirectory |
-  Convert-WinGetManifestsFromYaml
+$Manifest = Read-WinGetManifest -Path C:\Path\To\ManifestDirectory
 
 Find-WinGetManifestInstalledEntryMatch -Manifest $Manifest -InstalledEntry $Entries
 ```

@@ -7,6 +7,7 @@
 - [Locale Selection And Inheritance](#locale-selection-and-inheritance)
 - [Additional Locale Fields](#additional-locale-fields)
 - [Required Identity Fields](#required-identity-fields)
+- [Locale Field Completeness Pass](#locale-field-completeness-pass)
 - [Package Identifier Ownership](#package-identifier-ownership)
 - [Publisher And Author](#publisher-and-author)
 - [Package Identity And URLs](#package-identity-and-urls)
@@ -70,6 +71,21 @@ Every default-locale manifest requires:
 - `ManifestVersion`: the schema version used by the complete manifest set.
 
 An additional locale manifest requires only `PackageIdentifier`, `PackageVersion`, `PackageLocale`, `ManifestType: locale`, and `ManifestVersion`. Add optional fields only when localized evidence exists.
+
+## Locale Field Completeness Pass
+
+The required fields are a schema minimum, not an authoring target. For the default locale, actively check every applicable optional field before finalizing:
+
+- Publisher identity and contact: `PublisherUrl`, `PublisherSupportUrl`, `PrivacyUrl`, and `Author`.
+- Product identity and legal metadata: `PackageUrl`, `LicenseUrl`, `Copyright`, and qualifying `CopyrightUrl`.
+- Discovery and explanation: `Description`, `Moniker`, and `Tags`.
+- Commercial and legal interaction: `PurchaseUrl` and `Agreements` when explicit unattended acceptance is required.
+- Release and operation: version-specific `ReleaseNotes`, `ReleaseNotesUrl`, and necessary `InstallationNotes`.
+- Help resources: useful official `Documentations`, including an enabled and populated repository Wiki where applicable.
+
+Search the official product, download, support, contact, privacy, terms/license, purchase, documentation, FAQ, and release-history pages rather than stopping at the package homepage. Corroborate `Author` with official legal/product evidence and installer metadata without fabricating a legal-name expansion. `Icons` remains intentionally excluded by this project.
+
+For an additional locale, perform the same applicability review but include only reliable localized overrides. Translate translatable descriptions, classifications, tags, documentation labels, release notes, and installation notes when evidence permits; omit invariant or unavailable values so they inherit from the default locale. Do not copy default-language prose merely to increase field count.
 
 ## Package Identifier Ownership
 
@@ -345,6 +361,9 @@ The schema supports `IconUrl`, `IconFileType`, `IconResolution`, `IconTheme`, an
 - `Agreements` appears only when explicit unattended acceptance is required.
 - `Icons` is omitted.
 - Additional locales contain only evidenced localized overrides.
+- Every default-locale optional field was checked against its likely official source, even when ultimately omitted.
+- Every additional-locale field is a useful localized override rather than an unchanged duplicate.
+- The complete manifest set has passed through `Format-WinGetManifest` after authoring.
 
 ## Sources
 

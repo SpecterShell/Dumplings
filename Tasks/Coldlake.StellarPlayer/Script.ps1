@@ -35,20 +35,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $ToSubmit = $false
-
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockStellarPlayer')
-    $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("StellarPlayer-$($this.CurrentState.Version)-ToSubmit")) {
-      $Global:DumplingsStorage["StellarPlayer-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
-    }
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
-
-    if ($ToSubmit) {
-      $this.Submit()
-    } else {
-      $this.Log('Another task is submitting manifests for this package', 'Warning')
-    }
+    $this.Submit()
   }
 }

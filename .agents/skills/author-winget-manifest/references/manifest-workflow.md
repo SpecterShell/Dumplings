@@ -106,6 +106,7 @@ Architecture rules:
 - Specify the installed application architecture, not just the bootstrapper architecture.
 - Use `neutral` only when the same installer and installed binaries are architecture-neutral.
 - Split installers by architecture when URLs or hashes differ.
+- Do not add `UnsupportedOSArchitectures` at the moment. Use unsupported-architecture evidence to avoid creating an incorrect installer entry, but omit the manifest field.
 
 Installer locale rules:
 
@@ -118,6 +119,18 @@ Switch and behavior rules:
 - Prefer WinGet defaults for known installer types.
 - Add `InstallerSwitches` only when required for silent install, custom install behavior, or known publisher-specific requirements.
 - Add `UnsupportedArguments` when `--location` or `--log` is known unsupported.
+- For `nullsoft`, omit `InstallerSwitches.Silent` and `SilentWithProgress` when both are the default `/S`. The same per-key omission rule applies to every known installer type and to a ZIP's effective `NestedInstallerType`.
+
+## Installer Field Completeness Pass
+
+Do not treat the minimal skeleton as the target output. Before finalizing, inspect every applicable schema field and record evidence or a reason for omission. At minimum, check:
+
+- Container and payload shape: `InstallerType`, `NestedInstallerType`, `NestedInstallerFiles`, `Architecture`, `Scope`, `InstallerLocale`, and `Platform`.
+- OS and execution behavior: `MinimumOSVersion`, `InstallModes`, `InstallerSwitches`, `InstallerSuccessCodes`, `ExpectedReturnCodes`, `ElevationRequirement`, `UpgradeBehavior`, `RepairBehavior`, `InstallerAbortsTerminal`, `DownloadCommandProhibited`, and `UnsupportedArguments`.
+- Installed identity: `ProductCode`, `PackageFamilyName`, `AppsAndFeaturesEntries`, `InstallationMetadata`, and `ReleaseDate`.
+- Integration evidence: `Commands`, `Protocols`, `FileExtensions`, `Dependencies`, `Capabilities`, `RestrictedCapabilities`, `Markets`, and `ArchiveBinariesDependOnPath`.
+
+Use static parser output first, then the compact VM before/after comparison for facts only observable after installation or first run. Do not read full VM snapshots unless a compact comparison identifies an ambiguity. Do not add a field merely because it exists in the schema: every value must be applicable and evidenced. `Protocols` and `FileExtensions` can be included when observed, but absence from static parsing is not proof that an application never registers them on first run.
 
 ### InstallerSwitches
 
@@ -285,3 +298,31 @@ Before claiming the manifest is ready:
 - Install modes, elevation, success codes, expected return codes, and release date are backed by recorded evidence.
 - No third-party URLs are used.
 - No host execution of unknown installers occurred.
+- Every applicable installer and locale field was considered; optional fields were not omitted merely because the first source lacked them.
+- `UnsupportedOSArchitectures` is absent.
+- Known default switches, including NSIS `/S`, are not redundantly authored.
+- Every manifest object has passed through `Format-WinGetManifest` after authoring.
+
+## Final Formatting
+
+After completing the evidence pass, format each manifest object through Dumplings. `Format-WinGetManifest` does not download or inspect installers and does not infer or validate manifest values. It deep-copies the object, moves only schema-supported common fields between root and installer levels, and applies schema property order. Run WinGet validation separately after formatting.
+
+```powershell
+Import-Module .\Modules\PackageModule\Index.ps1 -Force
+
+$Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Yaml -Ordered
+$Manifest = Format-WinGetManifest -Manifest $Manifest
+$SchemaUri = Get-WinGetManifestSchemaUrl -ManifestType $Manifest.ManifestType -ManifestVersion $Manifest.ManifestVersion
+$Content = @"
+# Created with YamlCreate.ps1 Dumplings Mod
+# yaml-language-server: `$schema=$SchemaUri
+
+$((ConvertTo-Yaml -Data $Manifest -Options DisableAliases).TrimEnd())
+
+"@
+Set-Content -LiteralPath $ManifestPath -Value $Content -Encoding utf8NoBOM
+```
+
+Run this only after field authoring. Formatting cannot discover missing metadata. Review the diff afterward: values must remain unchanged, while common installer values may move to the manifest level and keys/arrays may be deterministically ordered according to the schema.
+
+For package-level processing, parse once with `Read-WinGetManifest` or `ConvertFrom-WinGetManifestYaml`. These return the logical model containing effective authored installers and separate localizations. Use `ConvertTo-WinGetManifestDocumentSet` for ordered objects, `ConvertTo-WinGetManifestYaml` for the raw multi-file bundle, and `Update-WinGetManifest` for Dumplings state updates. Singleton input is intentionally emitted as a multi-file manifest; WinGet runtime default switches and return codes are validation evidence and are never written into the logical model.

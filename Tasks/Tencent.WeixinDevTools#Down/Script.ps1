@@ -51,20 +51,6 @@ switch -Regex ($this.Check()) {
     $this.Message()
   }
   'Updated' {
-    $ToSubmit = $false
-
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockWeixinDevTools')
-    $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains("WeixinDevTools-$($this.CurrentState.Version)-ToSubmit")) {
-      $Global:DumplingsStorage["WeixinDevTools-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
-    }
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
-
-    if ($ToSubmit) {
-      $this.Submit()
-    } else {
-      $this.Log('Another task is submitting manifests for this package', 'Warning')
-    }
+    $this.Submit()
   }
 }

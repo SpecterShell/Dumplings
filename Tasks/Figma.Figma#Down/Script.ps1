@@ -17,28 +17,10 @@ function Read-Installer {
     InstallerType = 'exe'
     InstallerUrl  = "https://desktop.figma.com/win-arm/build/Figma-$($this.CurrentState.Version).exe"
   }
-  $this.CurrentState.Installer += $Installer = [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     Architecture  = 'x64'
     InstallerType = 'wix'
     InstallerUrl  = "https://desktop.figma.com/win/build/Figma-$($this.CurrentState.Version).msi"
-  }
-}
-
-function Send-Manifest {
-  $ToSubmit = $false
-
-  $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockFigma')
-  $Mutex.WaitOne(30000) | Out-Null
-  if (-not $Global:DumplingsStorage.Contains("Figma-$($this.CurrentState.Version)-ToSubmit")) {
-    $Global:DumplingsStorage["Figma-$($this.CurrentState.Version)-ToSubmit"] = $ToSubmit = $true
-  }
-  $Mutex.ReleaseMutex()
-  $Mutex.Dispose()
-
-  if ($ToSubmit) {
-    $this.Submit()
-  } else {
-    $this.Log('Another task is submitting manifests for this package', 'Warning')
   }
 }
 
@@ -57,7 +39,7 @@ if ($Global:DumplingsPreference.Contains('Force')) {
   $this.Print()
   $this.Write()
   $this.Message()
-  Send-Manifest
+  $this.Submit()
   return
 }
 
@@ -108,7 +90,7 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
     $this.Message()
-    Send-Manifest
+    $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
   default {
@@ -117,6 +99,6 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
     $this.Message()
-    Send-Manifest
+    $this.Submit()
   }
 }

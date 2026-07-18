@@ -88,13 +88,11 @@ switch -Regex ($this.Check()) {
 
     $ToWrite = $false
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsWriteLockMozilla')
-    $Mutex.WaitOne(30000) | Out-Null
-    if (-not $Global:DumplingsStorage.Contains('Mozilla-ToWrite')) {
-      $Global:DumplingsStorage['Mozilla-ToWrite'] = $ToWrite = $true
+    Use-Mutex -Name 'DumplingsWriteLockMozilla' -TimeoutMilliseconds 30000 -ScriptBlock {
+      if (-not $Global:DumplingsStorage.Contains('Mozilla-ToWrite')) {
+        $Global:DumplingsStorage['Mozilla-ToWrite'] = $ToWrite = $true
+      }
     }
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
 
     if ($ToWrite) {
       $this.Write()
@@ -110,54 +108,51 @@ switch -Regex ($this.Check()) {
   'Updated' {
     $WinGetIdentifierPrefix = $this.Config.WinGetIdentifier
 
-    $Mutex = [System.Threading.Mutex]::new($false, 'DumplingsSubmitLockMozilla')
-    $Mutex.WaitOne(10800000) | Out-Null
+    Use-Mutex -Name 'DumplingsSubmitLockMozilla' -TimeoutMilliseconds 10800000 -ScriptBlock {
+      foreach ($Locale in $Locales) {
+        $this.CurrentState.Installer = @()
 
-    foreach ($Locale in $Locales) {
-      $this.CurrentState.Installer = @()
+        if ($Locale -eq 'multi') {
+          $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
 
-      if ($Locale -eq 'multi') {
-        $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.MSIX"
-
-        foreach ($Arch in @('x86', 'x64', 'arm64')) {
-          # Installer
-          $this.CurrentState.Installer += [ordered]@{
-            Architecture  = $Arch
-            InstallerType = 'msix'
-            InstallerUrl  = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.msix"
+          foreach ($Arch in @('x86', 'x64', 'arm64')) {
+            # Installer
+            $this.CurrentState.Installer += [ordered]@{
+              Architecture  = $Arch
+              InstallerType = 'msix'
+              InstallerUrl  = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.msix"
+            }
           }
-        }
-      } else {
-        if ($Locale -eq 'en-US') {
-          $this.Config.WinGetIdentifier = $WinGetIdentifierPrefix
         } else {
-          $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.${Locale}"
-        }
+          if ($Locale -eq 'en-US') {
+            $this.Config.WinGetIdentifier = $WinGetIdentifierPrefix
+          } else {
+            $this.Config.WinGetIdentifier = "${WinGetIdentifierPrefix}.${Locale}"
+          }
 
-        foreach ($Arch in @('x86', 'x64', 'arm64')) {
-          # Installer
-          $this.CurrentState.Installer += [ordered]@{
-            Architecture    = $Arch
-            InstallerType   = 'nullsoft'
-            InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
-            InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
-            ProductCode     = $MajorVersion -ge 148 ? 'Mozilla Firefox ESR' : "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
+          foreach ($Arch in @('x86', 'x64', 'arm64')) {
+            # Installer
+            $this.CurrentState.Installer += [ordered]@{
+              Architecture    = $Arch
+              InstallerType   = 'nullsoft'
+              InstallerUrl    = "${Prefix}${OriginalVersion}/$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"
+              InstallerSha256 = $Object2["$($ArchMap[$Arch])/${Locale}/Firefox Setup ${OriginalVersion}.exe"]
+              ProductCode     = $MajorVersion -ge 148 ? 'Mozilla Firefox ESR' : "Mozilla Firefox ${ShortVersion} ESR (${Arch} ${Locale})"
+            }
           }
         }
+
+        try {
+          $this.Submit()
+        } catch {
+          $_ | Out-Host
+          $this.Log($_, 'Warning')
+        }
+
+        Start-Sleep -Seconds 60
       }
 
-      try {
-        $this.Submit()
-      } catch {
-        $_ | Out-Host
-        $this.Log($_, 'Warning')
-      }
-
-      Start-Sleep -Seconds 60
     }
-
-    $Mutex.ReleaseMutex()
-    $Mutex.Dispose()
   }
   'Changed|Updated' {
     $this.Message()
