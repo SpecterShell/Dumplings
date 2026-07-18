@@ -23,6 +23,21 @@ identity, install directory, scope, registry associations, and payload files.
 `SupportsSilentInstallation` is authoritative when false. Extraction uses the
 bundled SharpCompress library and does not execute setup or require 7-Zip.
 
+## Binary Structure
+
+InstallForge separates configuration and payload into two standard 7z containers. The configuration archive is a named PE resource; payload bytes are in the PE overlay.
+
+```text
+PE setup stub
++-- .rsrc/RCDATA/SETUPCONFIGURATION
+|   `-- 7z archive
+|       `-- SC.dat                  structured setup configuration
+`-- overlay
+    `-- 7z archive                  install payload files
+```
+
+Both archives begin with `37 7A BC AF 27 1C` and are bounded independently. `SC.dat` supplies identity, directory, scope, registry associations, and payload metadata. Some stored path components are Base64-encoded UTF-16LE; decoding is applied only where the structured configuration marks those values. Archive extraction still enforces traversal, duplicate-path, entry-count, and byte limits.
+
 ## Manifest Shape
 
 InstallForge does not support silent installation for WinGet-compatible unattended installs.

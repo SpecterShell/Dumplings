@@ -8,6 +8,36 @@ Use `InstallerType: burn` when WinGet invokes a WiX Burn bootstrapper bundle dir
 
 Route here when `Get-BurnInfo` succeeds, the PE section table contains `.wixburn`, or structured Burn manifest/bootstrapper data is available. The bundle PE architecture and filename are supporting evidence only; package conditions and chain metadata determine installed architecture and behavior.
 
+## Binary Structure
+
+Burn stores a fixed bundle header in the PE section named `.wixburn`; attached container bytes begin after the recorded stub. The first container is a CAB with the Burn manifest and UX data, followed by zero or more chain payload containers.
+
+```text
+PE bundle stub
++-- .wixburn section                bundle registration/header record
+`-- attached region at StubSize
+    +-- UX CAB                      contains entry "0" (BurnManifest XML)
+    +-- attached container 1        declared length
+    `-- attached container N        declared length
+```
+
+```text
+Base       Offset  Size       Field
+---------  ------  ---------  ----------------------------------------
+[section]  0x00    4          Magic 0x00F14300, uint32 LE
+[section]  0x04    4          Format version (supported: 2), uint32 LE
+[section]  0x08    16         Bundle GUID, Windows GUID byte order
+[section]  0x18    4          StubSize, uint32 LE -> [abs]
+[section]  0x1C    4          OriginalChecksum, uint32 LE
+[section]  0x20    4          OriginalSignatureOffset, uint32 LE
+[section]  0x24    4          OriginalSignatureSize, uint32 LE
+[section]  0x28    4          ContainerFormat (1 = CAB), uint32 LE
+[section]  0x2C    4          ContainerCount, uint32 LE
+[section]  0x30    4*N        Container sizes, uint32 LE
+```
+
+Container sizes frame exact sequential ranges. Manifest XML describes chain order, package conditions, cache IDs, install arguments, scope variables, and ARP registration; physical adjacency does not by itself identify the visible ARP owner.
+
 ## Manifest Shape
 
 Use this shape when [Step 2](#step-2-identify-the-visible-arp-owner) proves that the Burn bundle writes the visible ARP entry, [Step 4](#step-4-determine-scope) finds one supported scope, and no Apps & Features override is required. Obtain the bundle `ProductCode` with `Read-ProductCodeFromBurn`. Add `Scope` only when `Get-BurnScopeInfo.DefaultScope` is conclusive.

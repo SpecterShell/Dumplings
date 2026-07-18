@@ -12,6 +12,37 @@ Route here when `Get-AdvancedInstallerInfo` succeeds or static evidence contains
 
 Do not decide the visible Apps & Features type from the presence of an embedded MSI. Advanced Installer EXE packages can expose either MSI ARP entries or EXE-style ARP entries.
 
+## Binary Structure
+
+The supported Advanced Installer bootstrapper stores a catalog and payload ranges before a fixed footer near the end of the PE file. An Authenticode certificate may follow the logical footer, so the parser searches backward in a bounded tail instead of assuming `EOF - 70`.
+
+```text
+PE bootstrapper
++-- payload ranges                  MSI/CAB/config bytes
++-- file catalog at InfoOffset
+|   `-- repeated 24-byte entry + UTF-16LE name
+`-- footer (70 bytes; observed variants may include 2 tail bytes)
+    `-- "ADVINSTSFX" at footer + 0x3C
+```
+
+```text
+Base      Offset  Size     Field
+--------  ------  -------  ----------------------------------------
+[footer]  0x04    4        FileCount, uint32 LE
+[footer]  0x10    4        InfoOffset, uint32 LE -> [abs] catalog
+[footer]  0x14    4        FileOffset, uint32 LE -> [abs] payload area
+[footer]  0x3C    10       Magic: 41 44 56 49 4E 53 54 53 46 58
+[record]  0x00    4        SelectorType, uint32 LE
+[record]  0x04    4        SelectorGroup, uint32 LE
+[record]  0x08    4        TransformFlag, uint32 LE
+[record]  0x0C    4        PayloadSize, uint32 LE
+[record]  0x10    4        PayloadOffset, uint32 LE -> [abs]
+[record]  0x14    4        NameLength, uint32 LE UTF-16 code units
+[record]  0x18    N*2      Name, UTF-16LE
+```
+
+`TransformFlag == 2` means the first `min(512, PayloadSize)` bytes are XORed with `0xFF`; the remainder is direct. Selector type/group and the configuration INI choose the architecture-specific MSI by configured path. A wildcard MSI search would not reproduce the bootstrapper's selection behavior.
+
 ## Manifest Shape
 
 Common Advanced Installer EXE fields:

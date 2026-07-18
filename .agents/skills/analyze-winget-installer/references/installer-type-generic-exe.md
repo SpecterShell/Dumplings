@@ -8,6 +8,17 @@ Use this page only after structured static detection fails. Known families must 
 
 Run the static analyzer, then secondary Detect It Easy and Exeinfo PE diagnostics. Do not assign a family from a filename, icon, version string, archive signature alone, or an online `--silent` mention.
 
+## Binary Structure
+
+Generic EXE is a fallback classification, not a file format, so it has no canonical binary layout. Record only structures independently proven by the analyzer, such as a valid PE header, resource tree, certificate range, overlay, or embedded standard archive. Do not combine unrelated markers into an invented proprietary header.
+
+```text
+PE image (known)
++-- DOS/PE/section headers
++-- resources and certificate table (if present)
+`-- overlay or nested ranges (format unknown until separately validated)
+```
+
 ## Manifest Shape
 
 Keep all snippet fields at installer level according to the authoring skill's `manifest-workflow.md`. Add only fields proved by publisher documentation, structured evidence, a matching current package, or recorded VM validation.

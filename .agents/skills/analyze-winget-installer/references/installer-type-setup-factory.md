@@ -15,6 +15,36 @@ Get-SetupFactoryInfo -Path C:\Path\To\Setup.exe
 
 Setup Factory 7 overlays begin with `E0 E1 E2 E3 E4 E5 E6 E7`. Versions 8 and 9 use `E0 E0 E1 E1 ... E7 E7` after the last PE section. Generic `Setup Factory`, `Indigo Rose`, or `IRSetup` strings are supporting evidence only.
 
+## Binary Structure
+
+Setup Factory appends a versioned file table to the PE overlay. The embedded runtime is lightly transformed, while each catalog entry has its own compressed payload and CRC.
+
+```text
+PE setup stub
+`-- overlay
+    +-- v7 or v8/9 signature
+    +-- transformed irsetup.exe runtime
+    +-- optional lua5.1.dll (v8/9)
+    +-- EntryCount, uint32 LE
+    `-- repeated file records
+        +-- fixed UTF-8/NUL name field
+        +-- PackedSize
+        +-- CRC32
+        +-- optional padding
+        `-- LZMA/LZMA2/PKWARE-compressed data
+```
+
+```text
+Variant  Initial fields after signature
+-------  -------------------------------------------------------------
+7        skip 9 bytes; RuntimeSize uint32 LE; names are 260 bytes;
+         PackedSize uint32 LE
+8/9      skip 26 bytes; RuntimeSize int64 LE; optional Lua length/data;
+         names are 264 bytes; PackedSize int64 LE; 4 observed pad bytes
+```
+
+Version 7 magic is `E0 E1 E2 E3 E4 E5 E6 E7`; versions 8/9 use `E0 E0 E1 E1 E2 E2 E3 E3 E4 E4 E5 E5 E6 E6 E7 E7`. Only the first 2,000 runtime bytes are XORed with `0x07`. `irsetup.dat` contains structured session variables, uninstall configuration, and Lua actions. Entry count, names, sizes, CRC32, compression output, PKWARE back-references/end marker, variable recursion, and extraction paths are bounded.
+
 ## Manifest Shape
 
 ```yaml

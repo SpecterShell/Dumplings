@@ -8,6 +8,26 @@ Use `InstallerType: exe` for 7z self-extracting wrappers. These wrappers usually
 
 Strong evidence includes `;!@Install@!UTF-8!`, `;!@InstallEnd@!`, `7zS.sfx`, `7zSD.sfx`, `7-Zip SFX`, or a successful `Get-SevenZipSfxInfo` result.
 
+## Binary Structure
+
+The parser treats 7z SFX as a PE launcher, a UTF-8 configuration record, and a standard 7z archive. The configured command determines execution; archive order alone does not.
+
+```text
+PE SFX stub
++-- [abs] configuration block (normally within the first 2 MiB)
+|   +-- ";!@Install@!UTF-8!" + CR/LF
+|   +-- UTF-8 key="value" records
+|   `-- ";!@InstallEnd@!"
+`-- [abs] 7z archive
+    +-- 37 7A BC AF 27 1C          7z signature
+    +-- 7z start header/catalog
+    `-- packed payload streams
+
+RunProgram / ExecuteFile / AutoInstall -> named archive entry + arguments
+```
+
+The configuration delimiters and 7z signature are absolute-file search targets. Values are decoded as UTF-8 and may be repeated. `Expand-SevenZipSfx` passes only the bounded archive range to SharpCompress and applies entry-count, expanded-byte, duplicate-path, and traversal limits.
+
 ## Manifest Shape
 
 Switch documentation: [7z SFX switches](https://olegscherbakov.github.io/7zSFX/switches.html).

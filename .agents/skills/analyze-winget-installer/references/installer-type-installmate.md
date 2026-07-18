@@ -27,6 +27,38 @@ the PE requested execution level for scope. `asInvoker` maps to current-user
 scope, `requireAdministrator` maps to machine scope, and `highestAvailable`
 remains conditional without a decoded install-level record.
 
+## Binary Structure
+
+InstallMate appends a Tarma TIZ archive after the PE image and before any Authenticode certificate. The archive wraps a raw-LZMA stream whose first decoded segment is the installer database.
+
+```text
+PE launcher
+`-- overlay before certificate table
+    +-- "tiz1" .. "tiz4"           TIZ header
+    +-- format/version/size fields
+    +-- raw-LZMA properties at +0x38 (5 bytes)
+    `-- raw-LZMA data at +0x3D
+        +-- 64-byte "tzf3" segment header
+        +-- "tin?" setup database
+        `-- repeated file segments
+```
+
+```text
+Base       Offset  Size  Field
+---------  ------  ----  --------------------------------------------
+[archive]  0x00    4     Signature: "tiz1" through "tiz4"
+[archive]  0x04    2     FormatMajor, uint16 LE
+[archive]  0x06    2     FormatMinor, uint16 LE
+[archive]  0x08    8     Reserved/observed
+[archive]  0x10    8     DeclaredArchiveSize, uint64 LE
+[archive]  0x38    5     LZMA properties
+[archive]  0x3D    ...   raw-LZMA bytes
+[tzf3]     0x08    2     SegmentType, uint16 LE (database = 2)
+[tzf3]     0x10    8     SegmentLength, uint64 LE
+```
+
+The decoded database signature must match `tin?`. Format 15.11's install-level byte and file records are interpreted only at validated record offsets; older layouts remain conditional. Decompressed bytes, file records, names, archive size, and certificate boundary are bounded.
+
 ## Manifest Shape
 
 Switch documentation: [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm).

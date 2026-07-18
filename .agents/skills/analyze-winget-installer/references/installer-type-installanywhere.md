@@ -8,6 +8,24 @@ Use `InstallerType: exe` for InstallAnywhere installers. InstallAnywhere is a ge
 
 Strong evidence includes `InstallAnywhere`, `Zero G`, `lax.nl.current.vm`, `com.zerog`, `IAClasses.zip`, `Execute.zip`, `InstallScript.iap_xml`, or `InstallerData/Disk1/InstData/Resource1.zip`.
 
+## Binary Structure
+
+The supported InstallAnywhere layout is a native launcher followed by a self-contained standard ZIP range. Installer logic may be nested in another ZIP entry.
+
+```text
+native PE launcher
+`-- embedded ZIP range
+    +-- local-file records
+    +-- central directory
+    +-- EOCD                         establishes archive start/end
+    +-- InstallerData/Execute.zip   optional nested ZIP
+    |   `-- InstallScript.iap_xml
+    +-- IAClasses.zip
+    `-- InstallerData/.../Resource1.zip and payloads
+```
+
+Dumplings derives the embedded ZIP base from the end-of-central-directory and central-directory offset; the first `PK` local header is not trusted as the archive base. Nested ZIP ranges receive independent entry, size, path, and expansion checks. `InstallScript.iap_xml` is structured Java-bean XML containing product identity and actions; built-in ARP synthesis may still require VM evidence.
+
 ## Manifest Shape
 
 Switch documentation: [InstallAnywhere command line install and uninstall](https://docs.revenera.com/installanywhere/Content/helplibrary/ia_ref_command_line_install_uninstall.htm).

@@ -10,6 +10,27 @@ Route here when `Test-SquirrelInstaller` or `Get-SquirrelInfo` succeeds, when th
 
 Do not route here from `--silent` alone; unrelated installers use the same switch.
 
+## Binary Structure
+
+Squirrel.Windows stores an update ZIP in PE `DATA` resource ID `131` in the canonical layout. Velopack commonly stores a referenced nupkg/ZIP range in the launcher bundle header. A bounded ZIP fallback is used only when its nuspec structure validates the candidate.
+
+```text
+Squirrel PE setup
+`-- .rsrc/DATA/#131
+    `-- ZIP
+        +-- *.nupkg -> ZIP -> *.nuspec
+        `-- RELEASES / package payload
+
+Velopack PE setup
+`-- bundle locator
+    +-- PayloadOffset, int64 LE      16 bytes before signature
+    +-- PayloadLength, int64 LE
+    +-- 32-byte Velopack signature
+    `-- [PayloadOffset, Length] -> nupkg/ZIP
+```
+
+Velopack's signature is `94 F0 B1 7B 68 93 E0 29 37 EB 34 EF 53 AA E7 D4 2B 54 F5 70 7E F5 D6 F5 78 54 98 3E 5E 94 ED 7D`. Resource and locator ranges are absolute after PE RVA mapping. The parser requires a valid ZIP/nupkg and nuspec metadata, bounds candidate count/range extraction, and does not classify from `--silent` or a bare ZIP signature alone.
+
 ## Manifest Shape
 
 ```yaml

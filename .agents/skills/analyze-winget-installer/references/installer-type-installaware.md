@@ -21,6 +21,22 @@ requested elevation, nested setup files, protocols, and file extensions.
 Current project metadata does not prove a visible uninstall key, so keep
 `ProductCode` unset until explicit payload or VM evidence is available.
 
+## Binary Structure
+
+The supported InstallAware parser recognizes standard 7z archives embedded in a PE launcher and requires InstallAware-specific project entries inside the archive.
+
+```text
+PE setup launcher
+`-- one or more embedded 7z ranges
+    +-- 37 7A BC AF 27 1C          7z signature
+    +-- 7z catalog
+    +-- mia.lib / *.mia            project evidence
+    +-- _setup.exe / resources     nested setup logic
+    `-- data/ and payload entries
+```
+
+Each 7z candidate is opened as a bounded archive and ranked by structured entry evidence. The parser does not claim an undocumented InstallAware header around the standard archive. PE requested-execution-level and version resources are separate supporting layers; nested MSI/EXE files must be routed independently.
+
 ## Manifest Shape
 
 Switch documentation: [InstallAware setup command line parameters](https://www.installaware.com/mh52/desktop/setupcommandlineparameters.htm).

@@ -39,6 +39,43 @@ Primary source references:
 - [Chromium Updater source](https://source.chromium.org/chromium/chromium/src/+/main:chrome/updater/)
 - [Google Omaha source](https://github.com/google/omaha)
 
+## Binary Structure
+
+All supported variants are PE launchers, but their payload records differ. PE resource names are resource-relative; installer tags are bounded to the Authenticode certificate-table file range, which is outside mapped PE sections.
+
+```text
+Chromium mini-installer PE
++-- B7 setup*.7z                   preferred nested setup resource
++-- BL setup.ex_                   compressed setup fallback
++-- BN setup.exe                   uncompressed setup fallback
+`-- B7/BN product archive          chrome.7z or vendor equivalent
+
+Chromium Updater PE
++-- B7 updater.packed.7z
+|   `-- updater.7z/bin/updater.exe
+`-- certificate table              optional length/framed updater tag
+
+Omaha metainstaller PE
++-- B resource ID 102
+|   `-- LZMA -> BCJ2 -> TAR
+|       +-- offline manifest
+|       `-- first configured EXE payload
+`-- certificate table              optional Omaha tag
+```
+
+```text
+Omaha UTF-8 tag in certificate table
++----------------------+ 0x00
+| "Gact2.0Omaha"       | 12 ASCII bytes
++----------------------+ 0x0C
+| TagLength            | uint16 BE
++----------------------+ 0x0E
+| QueryString          | TagLength UTF-8 bytes
++----------------------+
+```
+
+Chromium Updater uses bounded UTF-16LE start/end markers `Gact2.0Omaha` and reversed `ahamO0.2tcaG`; Edge uses `MSEDGE_` and `_EGDESM`. The parser applies source-defined setup precedence `B7 > BL > BN`, validates decoded sizes, and reads Omaha's TAR catalog before deciding which nested EXE is executed. The updater `appguid` is protocol metadata, not an ARP product code.
+
 ## Manifest Shape
 
 ### Bare Chromium Mini-Installer

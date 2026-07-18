@@ -10,6 +10,24 @@ Strong evidence includes `Actual Installer`, `actualinstaller`, `aisetup.ini`, o
 
 The tested `Softeza.ActualInstaller` installer `ActualInstallerFree10-online.exe` contains two valid embedded ZIP archives. The final archive contains `aisetup.ini`, language files, `ailogo.bmp`, and `7za.exe`. The earlier archive contains numbered payload entries.
 
+## Binary Structure
+
+Actual Installer uses a PE stub with one or more physically embedded standard ZIP ranges. Dumplings validates each candidate by its own central directory and selects the archive containing `aisetup.ini`; it does not treat the last `PK` byte sequence as sufficient evidence.
+
+```text
+PE launcher
++-- ZIP range 0 (optional payload archive)
+|   +-- 50 4B 03 04                local-file records
+|   +-- compressed payload entries
+|   `-- 50 4B 05 06                matching EOCD
+`-- ZIP range N (setup metadata)
+    +-- aisetup.ini                product/switch/ARP settings
+    +-- *ai.lng                    language resources
+    `-- optional helper payloads
+```
+
+ZIP offsets are absolute file offsets; ZIP-local offsets remain relative to that embedded ZIP range. Every selected range must have a self-consistent end-of-central-directory record and bounded entries. The parser assigns no invented meaning to other embedded ZIPs until their catalogs identify them.
+
 ## Manifest Shape
 
 Actual Installer documents `/CU` for current-user installation and `/RUNAS /ALL` for elevated all-users installation. Keep scope-specific switches on each installer entry.

@@ -8,6 +8,26 @@ Use `InstallerType: exe` for Microsoft IExpress/WExtract self-extracting package
 
 Route here when `Get-IExpressInfo` succeeds, or named PE resources include `CABINET` and `RUNPROGRAM`. Supporting strings include `IExpress`, `WExtract`, `WEXTRACT`, `RunProgram=`, `InstallPrompt=`, and `Extracting files`.
 
+## Binary Structure
+
+IExpress/WExtract packages keep both configuration strings and one or more CAB files in named PE resources.
+
+```text
+WExtract PE stub
+`-- .rsrc
+    +-- RUNPROGRAM / POSTRUNPROGRAM  text command resources
+    +-- ADMQCMD / USRQCMD            administrative/user command variants
+    +-- other SED-derived settings  prompt and extraction behavior
+    `-- CABINET*                     Microsoft CAB resources
+        +-- 4D 53 43 46 ("MSCF")
+        +-- folder/file catalog
+        `-- compressed payloads
+
+selected command -> script, EXE, or MSI from CAB catalog + configured arguments
+```
+
+PE resource RVAs are mapped through the section table; each resource size bounds its CAB or text. Resource names, not neighboring strings, associate commands with settings. The configured command is execution evidence, while CAB entry order is only physical catalog order.
+
 ## Manifest Shape
 
 ```yaml

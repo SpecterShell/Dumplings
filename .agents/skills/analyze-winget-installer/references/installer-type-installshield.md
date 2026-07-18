@@ -21,6 +21,51 @@ Classify the variant before writing manifest fields:
 
 Block InstallScript-only installers when silent installation requires a response file, because response-file replay is not accepted by winget-pkgs validation.
 
+## Binary Structure
+
+InstallShield has several incompatible generations. Dumplings first separates the PE launcher from its overlay, then decodes only the supported stream/catalog variants. A nested MSI is selected from decoded metadata rather than from a recursive `*.msi` wildcard.
+
+```text
+PE setup launcher
+`-- overlay
+    +-- optional "NB10" debug prefix
+    +-- encoded stream form
+    |   +-- "InstallShield" or "ISSetupStream" header (46 bytes)
+    |   +-- repeated old (0x138-byte) or stream attributes
+    |   `-- transformed/zlib payload ranges
+    `-- plain form
+        +-- ANSI or UTF-16 record headers
+        `-- adjacent bounded file ranges
+```
+
+```text
+Decoded stream header (record-relative)
+Offset  Size      Field
+------  --------  ---------------------------------------------
+0x00    14        NUL-padded ASCII "InstallShield"/"ISSetupStream"
+0x0E    2         FileCount, uint16 LE
+0x10    4         AttributeType, uint32 LE (supported: 0..4)
+0x14    26        Reserved/observed header bytes
+
+Legacy attribute (0x138 bytes)
+0x00    260       NUL-terminated file name bytes
+0x104   4         EncodedFlags, uint32 LE
+0x10C   4         FileLength, uint32 LE
+0x118   2         Unicode-launcher evidence, uint16 LE
+0x138   FileLen   adjacent encoded file payload
+
+ISSetupStream attribute
+0x00    4         FileNameLength, uint32 LE
+0x04    4         EncodedFlags, uint32 LE
+0x0A    4         FileLength, uint32 LE
+0x16    2         Unicode-launcher evidence, uint16 LE
+0x18    24        optional extra record when AttributeType == 4
+...     N         UTF-16LE file name
+...     FileLen   adjacent encoded file payload
+```
+
+The payload transform is applied only to the declared file range; a valid decoded zlib prefix is checked before decompression. Header count, name length, file length, next-record position, safe output path, and decoded output are bounded. Basic MSI, InstallScript MSI, InstallScript-only, and Advanced UI classification depends on the decoded catalog and nested payload evidence, not on a shared marker alone.
+
 ## Manifest Shape
 
 Use this only when MSI extraction/metadata and silent behavior are verified:

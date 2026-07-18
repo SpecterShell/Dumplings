@@ -14,6 +14,36 @@ Route here when `Get-NSISInfo` succeeds, the NSIS archive first header is found 
 
 For NSIS, the simplest wrapper test is whether the outer installer writes uninstall registry values. `Get-NSISInfo` reports only explicit uninstall registry writes recovered from the compiled script, not arbitrary version-string probing. If `WritesAppsAndFeaturesEntry` is false or nested installer payloads exist, inspect the payload or use VM ARP deltas.
 
+## Binary Structure
+
+NSIS appends its archive to a PE stub at a 512-byte-aligned file offset. The first header frames a compressed logical header; that header contains block directories for compiled commands, strings, languages, and payload metadata.
+
+```text
+PE NSIS stub
+`-- 512-byte-aligned archive start
+    +-- first header (28 bytes; NSISBI extends it)
+    +-- packed-header size word (uint32 or uint64 LE)
+    +-- compressed logical header
+    |   +-- common header
+    |   +-- eight block descriptors
+    |   +-- compiled command entries
+    |   +-- string/language tables
+    |   `-- data block metadata
+    `-- compressed payload streams
+```
+
+```text
+Base       Offset  Size  Field
+---------  ------  ----  ---------------------------------------------
+[archive]  0x00    4     Flags, uint32 LE
+[archive]  0x04    16    EF BE AD DE + ASCII "NullsoftInst"
+[archive]  0x14    4     DecompressedHeaderSize, uint32 LE
+[archive]  0x18    4     ArchiveSize, uint32 LE
+[archive]  0x1C    8     NSISBI data-block length, uint64 LE (variant)
+```
+
+The packed-size high bit marks solid compression. Compression may be zlib, BZip2, LZMA, or an NSIS variant identified from source-compatible framing. Standard compiled command entries are 28 bytes; NSISBI uses 36-byte entries/64-bit data offsets. NSIS 2, NSIS 3 Unicode, Park Unicode, and log-enabled builds shift opcode layouts, so Dumplings normalizes the command table before interpreting `EW_WRITEREG`. It validates nearby PE structure, alignment, flags, header/archive sizes, block counts, string offsets, execution steps, decompressed output, and watchdog time before accepting registry evidence.
+
 ## Manifest Shape
 
 Use this shape when [Step 2](#step-2-identify-the-visible-arp-owner) proves that the outer NSIS installer writes the visible ARP entry, the installer has only one WinGet-selectable scope, and no Apps & Features override is required. Obtain `ProductCode` from `Get-NSISInfo.ProductCode`; it is the uninstall registry key name. Remove `ProductCode` if the parser cannot prove a stable key rather than deriving one from filenames or arbitrary strings. Use `Get-NSISInstallerSwitchInfo` and, for electron-builder packages, `Get-ElectronBuilderNSISInfo` before deciding that no additional fields are needed.

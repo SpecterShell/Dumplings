@@ -8,6 +8,26 @@ Use this page for ZIP/archive installers, archive-contained portable packages, l
 
 Route here when magic and structured inspection identify an archive, a standalone portable binary, or a font file. Inspect archive entries before choosing `NestedInstallerType`; do not assume ZIP means portable, and do not trust a filename extension over file content.
 
+## Binary Structure
+
+This route has no single container format. Identify the outer magic first, then apply the corresponding standard structure and analyze selected binary entries independently.
+
+```text
+Archive
++-- format header/signature         ZIP, 7z, RAR, TAR, or another supported type
++-- entry catalog                   names, sizes, compression, CRC/hash
+`-- selected entry range
+    `-- PE / MSI / MSIX / font      route again by content
+
+Loose PE
++-- DOS header: 4D 5A ("MZ")
++-- PE signature: 50 45 00 00
++-- COFF/optional headers           machine, subsystem, data directories
+`-- sections / CLR metadata / imports
+```
+
+Archive entry offsets and lengths are container-relative; PE RVAs are image-relative and must be mapped through the section table. A ZIP central directory is catalog evidence, not proof that an entry is safe to export. Dumplings bounds expansion and rejects rooted, traversing, duplicate, linked, or escaping paths. Any package containing a binary uses concrete WinGet architecture, never `neutral`.
+
 ## Manifest Shape: ZIP With Nested EXE
 
 Use this shape after [Step 2](#step-2-route-each-nested-installer) proves that the selected archive entry is the installer WinGet should invoke. Route the extracted EXE through its focused family page before adding switches.

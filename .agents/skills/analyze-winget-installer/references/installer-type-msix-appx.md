@@ -8,6 +8,26 @@ Use `InstallerType: msix` for `.msix` and `.msixbundle` URLs, or `InstallerType:
 
 Route here when ZIP content contains `AppxManifest.xml`, `AppxMetadata/AppxBundleManifest.xml`, or `AppxSignature.p7x`, even if the extension is wrong. Also route here for `.appinstaller` metadata, but parse `MainPackage` or `MainBundle`, then analyze the resolved package URL.
 
+## Binary Structure
+
+AppX/MSIX packages are ZIP-based Open Packaging Convention containers. The package manifest defines identity and dependencies; the block map hashes payload blocks; `AppxSignature.p7x` carries the package signature. Bundles contain a bundle manifest plus nested package files.
+
+```text
+ZIP/OPC package
++-- [Content_Types].xml
++-- AppxManifest.xml                identity, architecture, capabilities
++-- AppxBlockMap.xml                per-file block hashes
++-- AppxSignature.p7x               PKCS #7 signature
+`-- application payload files
+
+ZIP/OPC bundle
++-- AppxMetadata/AppxBundleManifest.xml
++-- AppxBlockMap.xml / AppxSignature.p7x
+`-- nested *.appx / *.msix packages selected by architecture/resource
+```
+
+The ZIP central directory supplies entry ranges; OPC relationships and manifests supply meaning. Dumplings detects the type from required entry names rather than the filename extension, validates safe bounded ZIP entries, reads XML declarations, hashes the signature entry for `SignatureSha256`, and separately verifies that Windows reports a valid trusted signature. `.appinstaller` is XML update metadata pointing to a package/bundle URL and is not itself an accepted WinGet installer container.
+
 ## Manifest Shape
 
 ```yaml

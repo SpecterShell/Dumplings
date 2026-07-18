@@ -8,6 +8,22 @@ Use `InstallerType: exe` for Paquet Builder installers.
 
 Detection evidence includes `Paquet Builder`, `G.D.G. Software`, `installpackbuilder.com`, `PaquetBuilder`, or a PE product name such as `Paquet Builder Setup`.
 
+## Binary Structure
+
+The supported Paquet Builder layout appends two independently valid standard 7z archives to a PE launcher. Dumplings classifies them by catalog contents rather than physical order.
+
+```text
+PE launcher
+`-- overlay
+    +-- payload 7z archive
+    |   `-- installed/nested application files
+    `-- runtime 7z archive
+        +-- pbfprop.dat
+        `-- PBCore.dll / PBCore64.dll
+```
+
+Each archive starts with `37 7A BC AF 27 1C` and has its own start header, catalog, packed streams, and bounded range. Runtime markers classify the runtime archive; the other validated archive is the payload. The parser does not infer ARP behavior from archive adjacency and keeps extraction paths/counts/expanded bytes bounded.
+
 ## Manifest Shape
 
 Package switch documentation: [Paquet Builder installer command line](https://www.installpackbuilder.com/help/automation-command-line/package-installer-command-line).

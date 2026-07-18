@@ -12,6 +12,41 @@ Route here when `Get-InnoInfo` succeeds, the installer contains the Inno loader 
 
 `Get-InnoInfo.WritesAppsAndFeaturesEntry` resolves literal `CreateUninstallRegKey` and `Uninstallable` values. It is `$null` when either directive requires compiled-code evaluation, because the runtime result cannot be inferred safely. Do not trust outer Inno ARP metadata when it is false or unresolved; route the package through wrapper/no-ARP analysis instead.
 
+## Binary Structure
+
+Inno stores an offset table in PE `RCDATA` resource ID `11111`. That table points to compressed setup metadata and file data elsewhere in the executable. Offsets are absolute file offsets after the resource record is decoded.
+
+```text
+PE setup loader
++-- .rsrc/RCDATA/#11111             offset table
+`-- setup data
+    +-- Offset0 -> 64-byte setup signature
+    |   +-- optional encryption header
+    |   `-- chunk-framed compressed setup header/tables
+    `-- Offset1 -> file-data streams
+        `-- 7A 6C 62 1A ("zlb" 1A) + compressed chunks
+```
+
+```text
+Offset-table resource (v1, 44 bytes)
+Base        Offset  Size  Field
+----------  ------  ----  -------------------------------------------
+[resource]  0x00    12    Magic: 72 44 6C 50 74 53 CD E6 D7 7B 0B 2A
+[resource]  0x0C    4     Table version, uint32 LE
+[resource]  0x10    4     TotalSize, uint32 LE
+[resource]  0x20    4     Offset0, uint32 LE -> [abs]
+[resource]  0x24    4     Offset1, uint32 LE -> [abs]
+[resource]  0x28    4     CRC32 of bytes 0x00..0x27
+
+Offset-table resource (v2, 64 bytes)
+[resource]  0x10    8     TotalSize, int64 LE
+[resource]  0x28    8     Offset0, int64 LE -> [abs]
+[resource]  0x30    8     Offset1, int64 LE -> [abs]
+[resource]  0x3C    4     CRC32 of bytes 0x00..0x3B
+```
+
+Before Inno 6.7 a compressed-block header stores `[StoredSize:uint32 LE][Compressed:byte]`; 6.7+ uses an `int64 LE` size. `StoredSize` frames repeated `[CRC32:uint32 LE][data:up to 4096 bytes]` chunks. The reassembled payload is stored bytes or raw LZMA with five property bytes. Setup-header and file-location records are version-dependent; the parser chooses layouts from the source-defined setup version, validates every pointer/range/CRC, and does not scan arbitrary strings for ARP values.
+
 ## Manifest Shape
 
 Use this shape when [Step 2](#step-2-identify-the-visible-arp-owner) proves that the outer Inno installer writes the visible entry, [Step 4](#step-4-determine-scope) finds one supported scope, and no Apps & Features override is required. `$Info.ProductCode` is the source-derived built-in uninstall key, including Inno's `_is1` suffix. `$Info.AppId` remains available as the distinct application identity.

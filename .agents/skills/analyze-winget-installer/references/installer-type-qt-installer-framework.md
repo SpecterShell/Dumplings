@@ -54,6 +54,35 @@ The CLI uses `--root` when supplied and otherwise falls back to config `<TargetD
 
 When `RequiresExplicitInstallLocation` is false, omit `--root` from the ordinary silent switches and expose it as the optional `InstallLocation` switch instead.
 
+## Binary Structure
+
+Qt IFW appends binary content to the launcher and terminates it with a source-defined segment table and magic cookie. Segment pairs are `[offset:int64 LE][length:int64 LE]`, initially relative to the binary-content base and then mapped to absolute file ranges.
+
+```text
+PE installerbase launcher
+`-- appended binary content
+    +-- resource collection segment
+    +-- N metadata resource segments
+    +-- operations segment
+    +-- resource/package archive data
+    `-- trailer + cookie
+```
+
+```text
+Trailer ending at EndOfBinaryContent (cookie end)
+Field order                         Size
+---------------------------------  ----
+ResourceCollection range           16 bytes
+MetaResource range[MetaCount]      16 bytes each
+Operations range                   16 bytes
+ResourceCount                      int64 LE
+BinaryContentSize                  int64 LE
+MagicMarker                        int64 LE
+MagicCookie                        8 bytes
+```
+
+Cookies are `F8 68 D6 99 1C 0A 63 C2` for installer content and `F9 68 D6 99 1C 0A 63 C2` for DAT content. Supported marker values identify installer `0x12023233`, uninstaller `0x12023234`, updater `0x12023235`, and package manager `0x12023236`. Metadata may be Qt RCC data with 14-byte tree nodes; package payloads are standard 7z archives. Counts, segment arithmetic, RCC names, resources, archives, and expanded output are bounded before extraction.
+
 ## Manifest Shape
 
 Use this when both `SupportsSilentInstallation` and `RequiresExplicitInstallLocation` are true:

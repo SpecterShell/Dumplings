@@ -18,6 +18,42 @@ MSI and MSP files are both Compound File Binary files with magic bytes `D0 CF 11
 
 Do not route an MSP or MST through the direct MSI manifest shapes. Use structured CFB and Windows Installer database evidence rather than the file extension.
 
+## Binary Structure
+
+MSI, MSP, and MST are OLE Compound File Binary (CFB) containers. The root storage CLSID identifies the Windows Installer document class; database tables are streams inside the CFB hierarchy.
+
+```text
+CFB document
++-- 512-byte CFB header
+|   +-- D0 CF 11 E0 A1 B1 1A E1   signature
+|   +-- sector shifts and FAT roots
+|   `-- DIFAT entries
++-- FAT / DIFAT / mini-FAT sectors
++-- directory stream
+|   `-- Root Entry + storage/stream records (UTF-16LE names)
+`-- Windows Installer streams
+    +-- _StringPool / _StringData
+    +-- SummaryInformation
+    +-- encoded table streams       Property, Directory, File, Component, ...
+    `-- embedded Binary/Icon/cabinet streams
+```
+
+```text
+CFB header
+Offset  Size  Field
+------  ----  -------------------------------------------------
+0x00    8     Magic: D0 CF 11 E0 A1 B1 1A E1
+0x08    16    CLSID (normally zero in header)
+0x18    2     Minor version, uint16 LE
+0x1A    2     Major version, uint16 LE
+0x1C    2     Byte order: FE FF (little-endian)
+0x1E    2     SectorShift, uint16 LE
+0x20    2     MiniSectorShift, uint16 LE
+...     ...   FAT, directory, mini-stream, and DIFAT locations/counts
+```
+
+The root directory CLSID distinguishes MSI-family documents: `{000C1084-0000-0000-C000-000000000046}` for installer databases, `{000C1086-0000-0000-C000-000000000046}` for patches, and `{000C1082-0000-0000-C000-000000000046}` for transforms. Dumplings queries decoded database tables through Windows Installer APIs/DTF; WiX, Advanced Installer, and InstallShield are authoring systems over the same MSI storage. Builder classification and visible ARP behavior come from table/property evidence, not from a different outer magic.
+
 ## Manifest Shape
 
 Use this shape when [Step 2](#step-2-classify-the-msi-builder) reports a non-WiX or unknown builder, [Step 3](#step-3-identify-the-visible-arp-entry) proves that the native MSI entry is visible, and the manifest identity agrees with the MSI metadata. Obtain `ProductCode` from `Get-MsiInstallerInfo.ProductCode`. Do not add `AppsAndFeaturesEntries` merely to repeat the MSI identity.

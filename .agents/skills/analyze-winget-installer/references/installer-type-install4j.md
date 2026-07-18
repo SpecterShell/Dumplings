@@ -15,6 +15,29 @@ Prefer `Test-Install4jInstaller` and `Get-Install4jInfo`. Supporting markers inc
 - `allinstdirs<dddd-dddd-dddd-dddd>`, where the numeric value is the application ID.
 - An install4j unextracted-file table or LZMA-compressed `0.dat`.
 
+## Binary Structure
+
+Current launchers use a PE overlay configuration; older generations may expose an unextracted-file table. Java-style fields in these records are big-endian unless stated otherwise.
+
+```text
+PE launcher
+`-- overlay
+    +-- D5 13 E4 E8                launcher configuration magic
+    +-- data version/flags
+    +-- DataLength, int64
+    +-- UTF-8 parameter map
+    +-- UTF-16LE localized/nested maps
+    +-- startup-file table
+    `-- CRC32 of bounded configuration data
+
+Legacy/unextracted data
++-- E8 E4 13 D5                    table magic
++-- Java DataInput-style records   big-endian lengths/integers
+`-- 0.dat / config / runtime files raw or LZMA-compressed
+```
+
+The overlay magic is at the PE overlay base. Length-prefixed strings cannot cross the declared configuration end, and startup entries point to exact file ranges. The parser also recognizes `i4jparams.conf` XML and application-ID records after structural validation. LZMA output, parameter bytes, entry count, and scan candidates are bounded; marker text alone is not sufficient classification.
+
 ## Manifest Shape
 
 ```yaml

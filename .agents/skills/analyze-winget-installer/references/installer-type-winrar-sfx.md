@@ -8,6 +8,26 @@ Use `InstallerType: exe` for WinRAR GUI self-extracting wrappers. These wrappers
 
 Strong evidence includes `WinRAR SFX`, `WinRAR self-extracting archive`, `RarSFX`, `SFX module by Alexander Roshal`, an embedded RAR marker plus a WinRAR SFX comment, or a successful `Get-WinRarSfxInfo` result.
 
+## Binary Structure
+
+WinRAR GUI SFX is a PE launcher followed by a standard RAR archive. SFX commands are stored in the archive comment/configuration; they are execution metadata rather than payload bytes.
+
+```text
+PE WinRAR SFX stub
+`-- RAR archive
+    +-- 52 61 72 21 1A 07 00       RAR4 signature
+    |   or 52 61 72 21 1A 07 01 00 RAR5 signature
+    +-- archive headers/catalog
+    +-- SFX comment
+    |   +-- Presetup=<command>
+    |   `-- Setup=<command>
+    `-- compressed entries
+
+Presetup/Setup -> named archive entry + configured arguments
+```
+
+Dumplings asks SharpCompress for the bounded archive/comment structure, resolves configured commands against catalog entries, and applies safe-path/count/byte limits during export. The first EXE in archive order is not assumed to be the executed payload.
+
 ## Manifest Shape
 
 Switch documentation: [WinRAR GUI SFX commands](https://documentation.help/WinRAR/HELPGUISFXCmd.htm).

@@ -22,6 +22,35 @@ scope, allowed architectures, and literal association actions. An incomplete
 download may still expose metadata from complete leading records, but
 `Expand-QSetupInstaller` rejects an incomplete record table.
 
+## Binary Structure
+
+QSetup appends a preamble and a sequence of length-framed zlib records to its PE launcher. Each decompressed record starts with a small pipe-delimited catalog header.
+
+```text
+PE launcher
+`-- overlay
+    +-- 9-byte preamble header
+    +-- UTF-8 preamble text
+    `-- repeated records
+        +-- CompressedLength, uint32 LE
+        `-- zlib stream -> "|Name[*]?|Stamp|" + file bytes
+```
+
+```text
+Base       Offset  Size  Field
+---------  ------  ----  --------------------------------------------
+[overlay]  0x00    4     FormatVersion, uint32 LE
+[overlay]  0x04    1     CompressionFormat
+[overlay]  0x05    4     PreambleLength, uint32 LE
+[overlay]  0x09    N     UTF-8 preamble, must match |...exe|
+[record]   0x00    4     CompressedLength, uint32 LE
+[record]   0x04    N     zlib bytes
+[decoded]  0x00    M     ASCII |Name[*]?|Stamp| header
+[decoded]  ...     ...   record content
+```
+
+`*` marks a required record. `Setup.txt` directives are authoritative metadata after exact record framing. Dumplings bounds preamble size, record count, compressed/expanded bytes, header length, next offset, and output path. Metadata from complete leading records may be reported for a truncated download, but expansion requires a complete table.
+
 ## Manifest Shape
 
 Switch documentation: [QSetup manual](https://www.panta-ray.com/pdf/qsetup_manual.pdf).

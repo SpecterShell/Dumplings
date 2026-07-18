@@ -8,6 +8,27 @@ Use `InstallerType: exe` for dotNetInstaller bootstrapper packages. dotNetInstal
 
 Route here when `Get-DotNetInstallerInfo` succeeds, or PE resources include `CUSTOM/RES_CONFIGURATION` and one or more `RES_CAB` resources.
 
+## Binary Structure
+
+dotNetInstaller is a PE resource wrapper. Its XML configuration controls conditional execution; embedded CAB order alone does not.
+
+```text
+PE bootstrapper
+`-- .rsrc
+    +-- CUSTOM / RES_CONFIGURATION  UTF-8 or BOM-marked UTF-16 XML
+    `-- RES_CAB / <resource name>    one or more Microsoft CAB ranges
+        +-- 4D 53 43 46 ("MSCF")
+        +-- CAB folders/file catalog
+        `-- compressed component payloads
+
+configuration/component
+  +-- OS and architecture conditions
+  +-- interactive/basic/silent command
+  `-- payload reference -> matching RES_CAB entry
+```
+
+Resource offsets are PE resource-relative until mapped to absolute file ranges. CAB payloads are bounded by each resource's declared size. The XML is authoritative for component order, conditions, executable, and arguments; extracting every CAB does not prove every component will run.
+
 ## Manifest Shape
 
 ```yaml

@@ -17,6 +17,32 @@ comments. Do not classify an arbitrary LZMA overlay from marker strings alone.
 $Info = Get-DeployMasterInfo -Path $InstallerPath
 ```
 
+## Binary Structure
+
+DeployMaster keeps an absolute package locator at file offset `0x80`. The locator protects a bounded package range with expected file size and CRC32. The package begins with LZMA properties followed by a version-dependent control header and compressed metadata/file ranges.
+
+```text
+PE setup stub
++-- locator at [abs] 0x80
+`-- package at PackageOffset
+    +-- 5-byte LZMA properties
+    +-- 70/74-byte observed control header
+    +-- compressed metadata range
+    `-- compressed file-data range
+```
+
+```text
+Base   Offset  Size  Field
+-----  ------  ----  ---------------------------------------------
+[abs]  0x80    4     PackageOffset, uint32 LE -> [abs]
+[abs]  0x84    4     IntegrityLength, uint32 LE
+[abs]  0x88    4     ExpectedCRC32, uint32 LE
+[abs]  0x8C    8     ExpectedFileSize, uint64 LE
+[abs]  0x94    4     Reserved/observed
+```
+
+The CRC covers the declared integrity range, not all bytes to EOF. Current and legacy control headers are selected only after size/range checks. Undocumented control fields remain `Observed`; the parser uses only fields demonstrated by controlled builder samples and rejects truncated or expanding-out-of-bound ranges.
+
 ## Manifest Shape
 
 DeployMaster is a generic EXE family. The documented silent and install-folder

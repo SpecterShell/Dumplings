@@ -32,6 +32,58 @@ PackageModule `Index.ps1` and InstallerParsers `Cli.ps1` load infrastructure in 
 
 Format modules may call already-loaded module functions. Do not add parser-local `Import-Module` calls or duplicate dependency loaders.
 
+## Binary Structure Notation
+
+Focused installer pages and parser module headers describe the byte structures that Dumplings actually consumes. Read the diagrams as protocol layouts, not as CPU architecture diagrams or parser call graphs.
+
+Layered maps show physical containment:
+
+```text
+PE image
++-- .rsrc                          structured loader metadata
++-- certificate table             file range outside mapped PE sections
+`-- overlay                       bytes after the mapped PE image
+    +-- format header
+    +-- repeated catalog records
+    `-- compressed payload ranges
+```
+
+Byte tables use the following conventions:
+
+```text
+Base       Offset  Size       Field
+---------  ------  ---------  -------------------------------------------
+[abs]      0x0080  4          PackageOffset, uint32 LE -> [abs]
+[overlay]  0x0000  4          Magic: 47 45 41 00 ("GEA\0")
+[record]   0x0004  2          NameLength, uint16 LE, UTF-16 code units
+[record]   0x0006  N*2        Name, UTF-16LE, no terminator
+```
+
+- `[abs]` is an absolute file offset. `[PE]`, `[resource]`, `[overlay]`, and `[record]` are relative to the named enclosing range.
+- `-> [abs]` means that the field points to another range; it does not mean that the target bytes follow the field physically.
+- `LE` and `BE` identify little- and big-endian integers. Integers are unsigned unless marked `int`; strings state their encoding and whether their terminator contributes to the size.
+- `N`, `M`, and `...` identify variable or repeated fields. `optional`, `version-dependent`, and `observed` fields must not be treated as universally present.
+- Alignment and padding are explicit. A parser must not infer packed adjacency where a format aligns records or stores absolute pointers.
+- A transform label applies only to the enclosed range. For example, `LZMA(compressed payload)` does not imply that its framing header or following CRC is compressed.
+- Execution arrows such as `RunProgram -> payload.exe --silent` describe configured nested execution, not physical byte adjacency.
+- Proprietary fields without source-backed meaning are named `Reserved`, `Unknown`, or `Observed`. Do not invent semantics from sample values.
+
+Record framing is drawn from the containing record's offset zero:
+
+```text
++----------------------+ 0x00
+| CompressedSize       | uint32 LE
++----------------------+ 0x04
+| UncompressedSize     | uint32 LE
++----------------------+ 0x08
+| CompressedData       | CompressedSize bytes
++----------------------+
+| CRC / next record    | outside the compressed range
++----------------------+
+```
+
+Document parser limits beside the field they constrain. A declared range must fit its containing stream, checked arithmetic must not overflow, output must stay below the format-specific expansion limit, and repeated records must stay below the parser's count limit.
+
 ## Stream Rules
 
 - Public parser and bridge APIs stay path-based. One parser operation opens the installer once and passes its stream and parsed layout internally.

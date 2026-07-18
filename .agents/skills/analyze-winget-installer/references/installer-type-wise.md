@@ -10,6 +10,23 @@ Route here when `Test-WiseInstaller` succeeds. The parser requires both Wise eng
 
 Detect It Easy may report `Installer: Wise Installer`. Treat that label as supporting evidence; use the Dumplings parser to prove the embedded MSI.
 
+## Binary Structure
+
+The implemented Wise variant is a PE wrapper containing a complete CFB MSI range. Wise marker strings identify the engine; the CFB root CLSID proves that the nested object is an MSI database.
+
+```text
+Wise PE launcher
++-- Wise engine resources/markers
+`-- embedded CFB range
+    +-- D0 CF 11 E0 A1 B1 1A E1   CFB header
+    +-- FAT/directory streams
+    `-- Root Entry CLSID
+        `{000C1084-0000-0000-C000-000000000046}`
+        `-- Windows Installer tables and payload streams
+```
+
+The embedded range starts at the validated CFB signature and ends before the Authenticode certificate table or file end. Dumplings validates CFB/root-storage structure before carving, then passes the exact MSI to `Get-MsiInstallerInfo`. Other historical Wise formats are outside this parser and must not be inferred from this layout.
+
 ## Manifest Shape
 
 This installer-entry shape matches the supported Wise MSI wrapper. Replace `INSTALLDIR` if the nested MSI reports a different install-location property.
