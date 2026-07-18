@@ -1,4 +1,4 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://update.openmpt.org/api/v3/update/release' | Read-ResponseContent | ConvertFrom-Json -AsHashtable).GetEnumerator() | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1 | Select-Object -ExpandProperty 'Value'
+$Object1 = (Invoke-WebRequest -Uri 'https://update.openmpt.org/api/v3/update/release' | Read-ResponseContent | ConvertFrom-Json -AsHashtable).GetEnumerator() | Sort-Object -Property { [ChunkVersion]($_.Key) } -Bottom 1 | Select-Object -ExpandProperty 'Value'
 
 # Version
 $this.CurrentState.Version = $Object1.version
