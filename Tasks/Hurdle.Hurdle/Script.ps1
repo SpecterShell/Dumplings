@@ -6,10 +6,10 @@ $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ try { $_.url.Contains('ia32') } catch {} }, 'First')[0].url
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ try { $_.url.Contains('ia32') } catch {} }, 'First')[0].url
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ try { $_.url.Contains('x64') } catch {} }, 'First')[0].url
