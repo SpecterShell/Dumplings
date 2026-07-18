@@ -1,11 +1,16 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/glp-client' -UserAgent $DumplingsBrowserUserAgent
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.adinstruments.com/support/downloads/windows/glp-client')
+  $EdgeDriver.PageSource
+}
+$Object2 = $Object1 | Get-EmbeddedLinks
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'GLP Client (\d+(\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1, 'GLP Client (\d+(\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = Get-RedirectedUrl -Uri $Object2.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
   Dependencies = @(
     [ordered]@{
       PackageIdentifier = 'ADInstruments.LabChart'
@@ -21,7 +26,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('ReleaseNotes') } catch {} }, 'First')[0].href | ConvertTo-Https
+        Value  = $Object2.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('ReleaseNotes') } catch {} }, 'First')[0].href | ConvertTo-Https
       }
     } catch {
       $_ | Out-Host

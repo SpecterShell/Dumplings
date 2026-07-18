@@ -1,11 +1,15 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.adinstruments.com/support/downloads/windows/configsoft' -UserAgent $DumplingsBrowserUserAgent
+$Object1 = Use-EdgeDriver {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl('https://www.adinstruments.com/support/downloads/windows/configsoft')
+  $EdgeDriver.PageSource
+} | Get-EmbeddedLinks
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri $Object1.Links.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri $Object1.Where({ try { $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl
 }

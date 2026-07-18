@@ -34,7 +34,11 @@ function Get-ReleaseNotes {
 }
 
 $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
-$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = Use-EdgeDriver -Headless {
+  param($EdgeDriver)
+  $EdgeDriver.Navigate().GoToUrl($Prefix)
+  $EdgeDriver.PageSource
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
