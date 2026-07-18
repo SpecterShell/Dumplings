@@ -4,7 +4,9 @@ $PatternPath = '.+?/'
 $PatternFilename = 'wampserver(\d+(?:\.\d+)+)_x64\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1 | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.title.'#cdata-section', "^$([regex]::Escape($RootPath))${PatternPath}${PatternFilename}$").Groups[1].Value) } -Bottom 1
+$Assets = $Object1 |
+  Where-Object -FilterScript { $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))${PatternPath}${PatternFilename}$" } |
+  Sort-Object -Property { [ChunkVersion]([regex]::Match($_.title.'#cdata-section', "^$([regex]::Escape($RootPath))${PatternPath}${PatternFilename}$").Groups[1].Value) } -Bottom 1
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Assets.title.'#cdata-section', "^$([regex]::Escape($RootPath))${PatternPath}${PatternFilename}").Groups[1].Value
