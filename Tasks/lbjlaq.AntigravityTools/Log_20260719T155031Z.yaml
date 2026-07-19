@@ -1,0 +1,21 @@
+Version: 4.4.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.4.7/Antigravity.Tools_4.4.7_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.4.7/Antigravity.Tools_4.4.7_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [问题修复] 修复 Linux 平台上的自动更新与进程关闭问题 (Fix Linux Auto-Update & Process Close Bugs):
+      - 免杀家族树修正：修复了获取家族进程树时误将子孙进程纳入豁免名单的问题。现在可以正确识别并关闭由 Manager 调起的 antigravity-ide 进程。
+      - Keyring 写入超时保护：为 Linux 平台上的 secret-tool 命令注入 10 秒超时门禁，防止由于 Wayland 会话中 D-Bus 服务不可达而导致账号切换无限期卡死。
+      - 非 AppImage 更新拦截：增加了 AppImage 运行环境检测。在非 AppImage（如 RPM/DEB）安装环境下，将拦截原生的自动覆盖更新流程（避免引发 ENOEXEC 错误），引导用户前往发布页手动下载。
+      - 相关 Issue: 详见 Issue #3260。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.4.7
+ReleaseTime: 2026-07-19T15:11:06.0000000Z
