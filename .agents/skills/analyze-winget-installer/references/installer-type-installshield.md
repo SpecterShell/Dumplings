@@ -236,7 +236,7 @@ WinGet supplies no InstallShield-specific defaults for outer `InstallerType: exe
 
 ### Step 1: Classify And Parse The InstallShield Variant
 
-Use `Modules\PackageModule\Libraries\InstallShield.psm1` to extract and classify InstallShield payloads without running the installer or shelling out to `ISx.exe`. The module contains an in-process parser based on the ISx container format; see the [ISx source repository](https://github.com/lifenjoiner/ISx).
+Use `Modules\PackageModule\Libraries\InstallShield.psm1` to extract and classify InstallShield payloads without running the installer or shelling out to `ISx.exe`. The module contains an in-process parser based on the ISx container format; see the [ISx source repository](https://github.com/lifenjoiner/ISx). ISx is format attribution only: Dumplings neither distributes nor requires the ISx executable.
 
 ```powershell
 Import-Module .\Modules\PackageModule\Libraries\InstallShield.psm1 -Force

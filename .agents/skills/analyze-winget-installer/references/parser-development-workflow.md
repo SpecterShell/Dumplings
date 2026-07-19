@@ -14,9 +14,9 @@ The two submodules carry byte-identical MIT infrastructure files:
 - `Archive.psm1`: SharpCompress archive entries and bounded export.
 - `PE.psm1`: PE layout, resources, imports, CLR headers, and managed target-framework metadata.
 - `RegistryAssociations.psm1`: protocol and file-extension evidence.
-- `Assets/InstallerInfrastructure/*.cs`: auditable mechanical hot paths compiled once with `Add-Type`.
+- `Assets/Source/InstallerInfrastructure/*.cs`: auditable mechanical hot paths compiled once with `Add-Type`.
 
-Pester compares mirrored source and pinned SharpCompress/ZstdSharp assets by SHA-256. Modify both copies in one patch.
+Pester compares mirrored source and pinned SharpCompress/ZstdSharp assets by SHA-256. PackageModule groups them under `Assets/Source` and `Assets/Assemblies`; InstallerParsers retains its independently consumable flat asset layout. Modify both copies in one patch.
 
 ## Loading
 
