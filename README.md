@@ -11,14 +11,14 @@ The repository contains thousands of independent package tasks backed by a concu
 - Detects and statically analyzes many Windows installer and bootstrapper formats.
 - Reads, updates, formats, and validates multi-file WinGet manifests without invoking `winget validate`.
 - Writes task state, sends queued Telegram or Matrix notifications, and submits guarded pull requests.
-- Keeps GPL installer implementations behind a JSON child-process boundary from the MIT PackageModule.
+- Keeps GPL installer implementations behind a JSON child-process boundary from the Apache-2.0 PackageModule.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
     Core["Core runner"] --> Tasks["Tasks/*"]
-    Core --> Package["PackageModule (MIT)"]
+    Core --> Package["PackageModule (Apache-2.0)"]
     Tasks --> Package
     Package -->|"JSON child process"| Parsers["InstallerParsers (GPL-2.0/GPL-3.0)"]
     Package --> Output["State, manifests, and messages"]
@@ -164,4 +164,4 @@ Installer fixtures are cached outside user download and temporary directories. T
 
 ## License
 
-The root project, Core, and PackageModule are licensed under the [MIT License](LICENSE). InstallerParsers has file-specific GPL licensing described in its [README](Modules/InstallerParsers/README.md). Redistributed assets and source-derived implementations are documented in each submodule's third-party notices.
+The root project remains licensed under the [MIT License](LICENSE). Core and PackageModule use the [Apache License 2.0](Core/LICENSE) and [Apache License 2.0](Modules/PackageModule/LICENSE), respectively. PackageModule contains documented file-level MIT and third-party exceptions. InstallerParsers has file-specific GPL licensing described in its [README](Modules/InstallerParsers/README.md).

@@ -2,7 +2,7 @@
 
 ## Boundaries
 
-`Modules/PackageModule` is MIT-licensed and is loaded in-process by Dumplings. It owns bridges, task-facing helpers, MSI/MSIX/Burn support, portable analysis, and parsers whose source permits MIT distribution.
+`Modules/PackageModule` is Apache-2.0-licensed and is loaded in-process by Dumplings. It owns bridges, task-facing helpers, MSI/MSIX/Burn support, portable analysis, and parsers whose source permits Apache-2.0 distribution. Its mirrored installer infrastructure remains explicitly MIT-licensed so the GPL-2.0 Advanced Installer parser can consume it; preserve those file-level exceptions and byte-identical copies.
 
 `Modules/InstallerParsers` is an independently consumable GPL command-line submodule. `Cli.ps1` is the process boundary used by `InstallerBridge.psm1`. NSIS, Inno, Qt Installer Framework, and Setup Factory are GPL-3.0-or-later; Advanced Installer is GPL-2.0. Do not move GPL implementation details into PackageModule.
 
