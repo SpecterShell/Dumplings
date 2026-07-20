@@ -18,7 +18,7 @@ $this.CurrentState.Version = $Object2.Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://wingware.com/pub/wingpro/$($this.CurrentState.Version)/wingpro-$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://wingware.com/pub/wingpro/$($this.CurrentState.Version)/wing-$($this.CurrentState.Version).exe"
   ProductCode  = "Wing Pro $($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
