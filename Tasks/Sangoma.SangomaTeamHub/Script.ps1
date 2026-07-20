@@ -1,11 +1,13 @@
-$Object1 = Invoke-RestMethod -Uri 'https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/latest/windows/latest.yml' | ConvertFrom-Yaml
+$Prefix = 'https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/latest/windows/latest.yml'
+
+$Object1 = Invoke-RestMethod -Uri $Prefix | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri "https://stagingmeetsangoma.z13.web.core.windows.net/teamhub/$($this.CurrentState.Version)/windows/" $Object1.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
