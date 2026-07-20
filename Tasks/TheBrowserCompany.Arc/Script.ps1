@@ -26,7 +26,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://arc.net/windows/release-notes' | Join-String -Separator "`n" | ConvertFrom-Html
+      $Object3 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://arc.net/windows/release-notes'
+        Read-PlaywrightPageContent -Page $Page
+      } | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//p[contains(text(), 'V${ShortVersion}') or contains(text(), 'V.${ShortVersion}')]")
       if ($ReleaseNotesTitleNode) {

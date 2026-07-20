@@ -50,7 +50,11 @@ switch -Regex ($this.Check()) {
       #   Value  = $ReleaseNotesUrl = 'https://docs.apifox.com/doc-5807637'
       # }
 
-      $Object3 = Invoke-WebRequest -Uri 'https://docs.apifox.com/doc-5807637' | ConvertFrom-Html
+      $Object3 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://docs.apifox.com/doc-5807637'
+        Read-PlaywrightPageContent -Page $Page
+      } | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[@id='$($this.CurrentState.Version.Replace('.', ''))']")
       if ($ReleaseNotesTitleNode) {
