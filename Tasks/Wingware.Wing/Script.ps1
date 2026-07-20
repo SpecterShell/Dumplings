@@ -19,16 +19,16 @@ $this.CurrentState.Version = $Object2.Groups[1].Value
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://wingware.com/pub/wingpro/$($this.CurrentState.Version)/wing-$($this.CurrentState.Version).exe"
-  ProductCode  = "Wing Pro $($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://wingware.com/pub/wingpro/$($this.CurrentState.Version)/CHANGELOG.txt"
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = "https://wingware.com/pub/wingpro/$($this.CurrentState.Version)/CHANGELOG.txt"
       }
 
       $Object3 = [System.IO.StreamReader]::new((Invoke-WebRequest -Uri $ReleaseNotesUrl).RawContentStream)
@@ -68,13 +68,8 @@ switch -Regex ($this.Check()) {
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
-    }
-
-    try {
+    } finally {
       $Object3.Close()
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
     }
 
     $this.Print()
