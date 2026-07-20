@@ -1,20 +1,18 @@
-$WebData = Use-PlaywrightPage -Stealth -Headless {
+$Prefix = 'https://airsdk.harman.com/runtime'
+
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
   param($Page)
-  $null = Open-PlaywrightPage -Page $Page -Uri 'https://airsdk.harman.com/runtime'
-  [pscustomobject]@{
-    Version = [regex]::Match(
-      (Read-PlaywrightLocator -Page $Page -Selector 'xpath=//div[contains(@class, "miniTitle") and contains(text(), "version")]' -Property InnerText),
-      '(\d+(?:\.\d+){3,})'
-    ).Groups[1].Value
-    InstallerUrl = Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@class, "downloadLink") and contains(@href, ".exe")]' -Property Attribute -AttributeName href
-  }
-}
+  $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
+  Read-PlaywrightPageContent -Page $Page
+} | ConvertFrom-Html
 
 # Version
-$this.CurrentState.Version = $WebData.Version
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//div[contains(@class, "miniTitle") and contains(text(), "version")]').InnerText, '(\d+(?:\.\d+){3,})').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{ InstallerUrl = $WebData.InstallerUrl }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(@class, "downloadLink") and contains(@href, ".exe")]').Attributes['href'].Value
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
