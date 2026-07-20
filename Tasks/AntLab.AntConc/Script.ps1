@@ -13,30 +13,30 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'version_history.pdf'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'ReleaseNotesUrl'
+      #   Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'version_history.pdf'
+      # }
 
       # LicenseUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'LicenseUrl'
-        Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'license.pdf'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'LicenseUrl'
+      #   Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'license.pdf'
+      # }
       # CopyrightUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'CopyrightUrl'
-        Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'license.pdf'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Key   = 'CopyrightUrl'
+      #   Value = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'license.pdf'
+      # }
 
       # Documentations
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'Documentations'
         Value = @(
-          [ordered]@{
-            DocumentLabel = 'Help'
-            DocumentUrl   = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'help.pdf'
-          }
+          # [ordered]@{
+          #   DocumentLabel = 'Help'
+          #   DocumentUrl   = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'help.pdf'
+          # }
           [ordered]@{
             DocumentLabel = 'Downloadable Guides'
             DocumentUrl   = 'https://www.laurenceanthony.net/software/antconc/#downloadable-guides'
@@ -56,10 +56,10 @@ switch -Regex ($this.Check()) {
         Locale = 'zh-CN'
         Key    = 'Documentations'
         Value  = @(
-          [ordered]@{
-            DocumentLabel = '帮助'
-            DocumentUrl   = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'help.pdf'
-          }
+          # [ordered]@{
+          #   DocumentLabel = '帮助'
+          #   DocumentUrl   = Join-Uri $this.CurrentState.Installer[0].InstallerUrl 'help.pdf'
+          # }
           [ordered]@{
             DocumentLabel = '可下载指南'
             DocumentUrl   = 'https://www.laurenceanthony.net/software/antconc/#downloadable-guides'
