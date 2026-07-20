@@ -60,6 +60,6 @@ Use these repository-relative sources for deeper implementation details. Upstrea
 - Dumplings parser bridge: `Modules\PackageModule\Libraries\InstallerBridge.psm1`
 - Dumplings shared core: `Modules\PackageModule\Libraries\Runtime.psm1`, `Binary.psm1`, `Compression.psm1`, `Archive.psm1`, `PE.psm1`, `RegistryAssociations.psm1`
 - Portable analysis: `PEArchitecture.psm1`, `DotNetHost.psm1`, `PEDependency.psm1`, `Portable.psm1`
-- Dumplings parser wrappers: `NSIS.psm1`, `Inno.psm1`, `Burn.psm1`, `AdvancedInstaller.psm1`, `InstallShield.psm1`, `Squirrel.psm1`, `ChromiumSetup.psm1`, `Wise.psm1`, `QtInstallerFramework.psm1`, `Install4j.psm1`, `MSI.psm1`, `MSIX.psm1`
+- Dumplings parser wrappers: `NSIS.psm1`, `Inno.psm1`, `Burn.psm1`, `AdvancedInstaller.psm1`, `InstallShield.psm1`, `Squirrel.psm1`, `ZeroInstall.psm1`, `ChromiumSetup.psm1`, `Wise.psm1`, `QtInstallerFramework.psm1`, `Install4j.psm1`, `MSI.psm1`, `MSIX.psm1`
 - GPL parser module: `Modules\InstallerParsers\Cli.ps1`, `Libraries\NSIS.psm1`, `Libraries\Inno.psm1`, `Libraries\AdvancedInstaller.psm1`, `Libraries\QtInstallerFramework.psm1`
 - [WinGet manifest examples](https://github.com/microsoft/winget-pkgs/tree/master/manifests): search for installer family comments and `AppsAndFeaturesEntries`.

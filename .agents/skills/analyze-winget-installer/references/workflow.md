@@ -50,6 +50,7 @@ This is the only installer-family route table in the skill.
 | Advanced Installer EXE | [Advanced Installer](installer-type-advanced-installer.md) |
 | InstallShield EXE or Advanced UI | [InstallShield](installer-type-installshield.md) |
 | Squirrel or Velopack | [Squirrel and Velopack](installer-type-squirrel.md) |
+| Zero Install bootstrapper | [Zero Install](installer-type-zero-install.md) |
 | Chromium Setup, Chromium Updater, Google Updater, Omaha | [Chromium Setup](installer-type-chromium-setup.md) |
 | Wise wrapper | [Wise](installer-type-wise.md) |
 | IExpress | [IExpress](installer-type-iexpress.md) |
