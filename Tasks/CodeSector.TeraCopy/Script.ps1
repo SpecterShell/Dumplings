@@ -7,13 +7,13 @@ $this.CurrentState.Version = $Object1.Update.Version
 $this.CurrentState.RealVersion = $Object1.Update.ProductVersion
 
 # Installer
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.Update.URL
+  InstallerUrl = $Object1.Update.URL.Replace('//codesector.nyc3.cdn.digitaloceanspaces.com/', '//codesector.com/files/')
 }
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.Update.URL
+  InstallerUrl = $Object1.Update.URL.Replace('//codesector.nyc3.cdn.digitaloceanspaces.com/', '//codesector.com/files/')
 }
 
 switch -Regex ($this.Check()) {
