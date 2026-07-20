@@ -34,10 +34,10 @@ function Get-ReleaseNotes {
 }
 
 $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl($Prefix)
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
+  Read-PlaywrightPageContent -Page $Page
 } | Get-EmbeddedLinks
 
 # Installer

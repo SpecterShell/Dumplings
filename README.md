@@ -44,7 +44,7 @@ flowchart LR
 - Network access for release checks and installer downloads
 - GitHub credentials, and optionally a local `winget-pkgs` checkout, only when submission is enabled
 
-The runner installs missing PowerShell modules declared in `Preference.yaml`. GitHub Actions uses the pinned versions in [`PowerShellModules.psd1`](PowerShellModules.psd1) and caches them between runs.
+The runner installs missing PowerShell modules declared in `Preference.yaml`. GitHub Actions uses the pinned versions in [`PowerShellModules.psd1`](PowerShellModules.psd1) and caches them between runs. The optional browser helper similarly restores the Apache-2.0 Patchright runtime pinned by [`PlaywrightRuntime.psd1`](Modules/PackageModule/Assets/PlaywrightRuntime.psd1); its large version-coupled driver payload is cached outside Git rather than committed.
 
 ## Getting Started
 

@@ -1,16 +1,10 @@
 $Prefix = 'https://www.bullzip.com/products/pdf/download.php'
 
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
 
-  $EdgeDriver.Navigate().GoToUrl($Prefix)
-  Start-Sleep -Seconds 5
-  [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-      param([OpenQA.Selenium.IWebDriver]$WebDriver)
-      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "BullzipPDFPrinter")]')) } catch {}
-    }
-  ).GetAttribute('href')
+  $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@href, ".exe") and contains(@href, "BullzipPDFPrinter")]' -Property Attribute -AttributeName href
 }
 
 # Installer
@@ -31,11 +25,11 @@ switch -Regex ($this.Check()) {
         Value  = 'https://www.bullzip.com/products/pdf/info.php'
       }
 
-      $Object2 = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $Object2 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl($Prefix)
-        $EdgeDriver.ExecuteScript('return await fetch("https://www.bullzip.com/products/pdf/rss.php").then(r => r.text())')
+        $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
+        Invoke-PlaywrightJavaScript -Page $Page -Expression 'async () => await fetch("https://www.bullzip.com/products/pdf/rss.php").then((response) => response.text())'
       } | ConvertFrom-Xml
       $Object3 = $Object2.rss.channel.item.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 

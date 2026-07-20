@@ -36,17 +36,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesObject = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesHtml = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://antigravity.google/changelog')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'version') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'description')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
-      } | ConvertFrom-Html
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://antigravity.google/changelog'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'version') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'description')]" -Optional -TimeoutMilliseconds 10000
+      }
+      $ReleaseNotesObject = if ($ReleaseNotesHtml) { $ReleaseNotesHtml | ConvertFrom-Html }
 
       if ($ReleaseNotesObject) {
         # ReleaseNotes (en-US)

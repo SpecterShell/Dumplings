@@ -34,16 +34,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesNode = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesNode = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.volcengine.com/docs/6349/148777')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.volcengine.com/docs/6349/148777'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//table/tbody/tr[contains(./td[1], '$($this.CurrentState.Version)')]"
       } | ConvertFrom-Html
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)

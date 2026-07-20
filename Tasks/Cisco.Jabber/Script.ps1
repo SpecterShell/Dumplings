@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.webex.com/downloads/jabber.html')
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.webex.com/downloads/jabber.html'
+  Read-PlaywrightPageContent -Page $Page
 }
 
 # Installer

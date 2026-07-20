@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.todesk.com/download.html')
-  $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].clientInfo', $null)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.todesk.com/download.html'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.data[0].clientInfo'
 }
 
 # Version

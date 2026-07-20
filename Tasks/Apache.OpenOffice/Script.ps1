@@ -1,16 +1,17 @@
-$DownloadInfo = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
+$DownloadInfo = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
 
-  $EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
-  $Version = $EdgeDriver.ExecuteScript('return DL.VERSION', $null)
-  [pscustomobject]@{
-    Prefix2         = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
-    Lang            = $EdgeDriver.ExecuteScript('return DL.REL_FULL_LANG', $null)
-    Version         = $Version
-    Build           = $EdgeDriver.ExecuteScript('return DL.BUILD', $null)
-    ReleaseDate     = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null)
-    ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
-  }
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.openoffice.org/download/index.html'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression @'
+() => ({
+  Prefix2: DL.ASF_DIST,
+  Lang: DL.REL_FULL_LANG,
+  Version: DL.VERSION,
+  Build: DL.BUILD,
+  ReleaseDate: DL.REL_DATE,
+  ReleaseNotesUrl: l10n[`dl_rel_notes_aoo${DL.VERSION.replaceAll('.', '')}_link`]
+})
+'@
 }
 
 $Prefix2 = $DownloadInfo.Prefix2

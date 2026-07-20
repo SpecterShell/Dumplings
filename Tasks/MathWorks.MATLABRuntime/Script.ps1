@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.mathworks.com/products/compiler/matlab-runtime.html')
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.mathworks.com/products/compiler/matlab-runtime.html'
+  Read-PlaywrightPageContent -Page $Page
 } | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//tr[contains(./td[2]//@href, ".zip")]')
 

@@ -1,11 +1,9 @@
-$WebData = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.huaweicloud.com/product/ideahub/ideashare.html')
-  Start-Sleep -Seconds 3
-  [pscustomobject]@{
-    Version      = [regex]::Match($EdgeDriver.ExecuteScript('return versionDict.opsVersion'), '(\d+(?:\.\d+)+)').Groups[1].Value
-    InstallerUrl = $EdgeDriver.ExecuteScript('return opsUrl')
-  }
+$WebData = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.huaweicloud.com/product/ideahub/ideashare.html'
+  $Data = Invoke-PlaywrightJavaScript -Page $Page -Expression '() => ({ Version: versionDict.opsVersion, InstallerUrl: opsUrl })'
+  $Data.Version = [regex]::Match($Data.Version, '(\d+(?:\.\d+)+)').Groups[1].Value
+  $Data
 }
 
 # Version

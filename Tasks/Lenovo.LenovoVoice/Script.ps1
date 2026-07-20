@@ -1,8 +1,8 @@
-$InstallerUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
 
-  $EdgeDriver.Navigate().GoToUrl('https://lva.lenovo.com.cn/')
-  $EdgeDriver.ExecuteScript('return downloadURl.lva', $null)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://lva.lenovo.com.cn/'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => downloadURl.lva'
 }
 
 # Installer

@@ -30,39 +30,30 @@ switch -Regex ($this.Check()) {
         Value  = $ReleaseNotesUrl = 'https://kiro.dev/changelog/ide/'
       }
 
-      $BrowserResult = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $BrowserResult = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
-        $ReleaseNotesNode = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/div/span[2], 'IDE') and (contains(./div[1]/div/div/span[1], '$($this.CurrentState.Version -replace '(\.0+)+$')') or contains(./div[1]/div/div/span[1], '$('{0}.{1}' -f $this.CurrentState.Version.Split('.'))'))]")) } catch {}
-          }
-        )
-        try { $ReleaseNotesNode.FindElements([OpenQA.Selenium.By]::XPath('.//button[@data-state="closed"]')).ForEach({ $_.Click() }) } catch {}
-        $MainHtml = $ReleaseNotesNode.GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri $ReleaseNotesUrl
+        $ReleaseNotesSelector = "xpath=//div[contains(./div[1]/div/div/span[2], 'IDE') and (contains(./div[1]/div/div/span[1], '$($this.CurrentState.Version -replace '(\.0+)+$')') or contains(./div[1]/div/div/span[1], '$('{0}.{1}' -f $this.CurrentState.Version.Split('.'))'))]"
+        $ReleaseNotesNode = $Page.Locator($ReleaseNotesSelector).First
+        $null = Wait-PlaywrightTask -Task $ReleaseNotesNode.WaitForAsync()
+        $MainHtml = [string](Wait-PlaywrightTask -Task $ReleaseNotesNode.InnerHTMLAsync())
         $MainObject = $MainHtml | ConvertFrom-Html
         $DetailUrl = if ($MainObject) { Join-Uri $ReleaseNotesUrl $MainObject.SelectSingleNode('.//a[./h2]').Attributes['href'].Value }
-        $PatchHtml = $null
-
-        if ($DetailUrl) {
-          $EdgeDriver.Navigate().GoToUrl($DetailUrl)
-          $PatchButton = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-            [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-              param([OpenQA.Selenium.IWebDriver]$WebDriver)
-              try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//article//*[@id="patches"]//button[@data-state="closed"]')) } catch {}
-            }
-          )
-          # Trigger the click event through JavaScript to avoid the "Element is not clickable" exception.
-          $EdgeDriver.ExecuteScript('arguments[0].click();', $PatchButton) | Out-Null
-          $PatchHtml = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[contains(@id, 'patch-$($this.CurrentState.Version.Replace('.', '-'))')]/p/following-sibling::node()")).GetAttribute('innerHTML')
-        }
 
         [pscustomobject]@{
           DetailUrl = $DetailUrl
           MainHtml  = $MainHtml
-          PatchHtml = $PatchHtml
+          PatchHtml = $null
+        }
+      }
+      if ($BrowserResult.DetailUrl) {
+        # Re-enter the FIFO queue for the detail page so each browser lease stays
+        # inside the 30-second contention quantum.
+        $BrowserResult.PatchHtml = Use-PlaywrightPage -Stealth -Headless {
+          param($Page)
+          $null = Open-PlaywrightPage -Page $Page -Uri $BrowserResult.DetailUrl
+          Read-PlaywrightLocator -Page $Page -Selector "xpath=//*[contains(@id, 'patch-$($this.CurrentState.Version.Replace('.', '-'))')]/p/following-sibling::*[1]" -Optional -TimeoutMilliseconds 10000
         }
       }
       $ReleaseNotesObject = $BrowserResult.MainHtml | ConvertFrom-Html

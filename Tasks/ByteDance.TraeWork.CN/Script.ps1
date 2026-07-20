@@ -31,16 +31,11 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $ReleaseNotesNode = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesNode = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.trae.cn/changelog')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.trae.cn/changelog'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]"
       } | ConvertFrom-Html
 
       # ReleaseNotes (en-US)

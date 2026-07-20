@@ -9,16 +9,11 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $ReleaseNotesObject = Use-EdgeDriver -Headless {
-      param($EdgeDriver)
+    $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+      param($Page)
 
-      $EdgeDriver.Navigate().GoToUrl('https://community.lumivero.com/s/article/citavi-7-release-notes')
-      [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-        [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-          param([OpenQA.Selenium.IWebDriver]$WebDriver)
-          try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'OutlineElement')]")) } catch {}
-        }
-      ).GetAttribute('innerHTML')
+      $null = Open-PlaywrightPage -Page $Page -Uri 'https://community.lumivero.com/s/article/citavi-7-release-notes'
+      Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'OutlineElement')]"
     } | ConvertFrom-Html
     $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./p[contains(., 'Citavi $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {

@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default')
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::TagName('pre')).GetAttribute('textContent')
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.bloomberg.com/professional/wp-json/bb-api/v1/get_downloads_feed_data?feed_order=release_date&order_direction=DESC&date_format=M%20j,%20Y&category=3&date_options=default'
+  Read-PlaywrightLocator -Page $Page -Selector pre -Property TextContent
 } | ConvertFrom-Json -AsHashtable
 $Object2 = $Object1.data.GetEnumerator().Where({ $_.Value.post_title -eq 'Bloomberg Terminal – New/Upgrade Installation' }, 'First')[0].Value
 
@@ -28,10 +28,10 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Use-EdgeDriver {
-        param($EdgeDriver)
-        $EdgeDriver.Navigate().GoToUrl('https://www.bloomberg.com/professional/support/documentation/release-notes/')
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::TagName('html')).GetAttribute('innerHTML')
+      $Object2 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.bloomberg.com/professional/support/documentation/release-notes/'
+        Read-PlaywrightLocator -Page $Page -Selector html
       } | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[contains(./td[1]/text(), '$($this.CurrentState.Version)')]")

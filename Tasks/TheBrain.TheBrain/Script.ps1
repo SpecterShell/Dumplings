@@ -1,7 +1,7 @@
-$DownloadUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.thebrain.com/download')
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(.//span, "Download")]')).GetAttribute('href')
+$DownloadUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.thebrain.com/download'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(.//span, "Download")]' -Property Attribute -AttributeName href
 }
 
 # Installer

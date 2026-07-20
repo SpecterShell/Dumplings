@@ -1,12 +1,7 @@
-$InstallerUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://connection.nwea.org/s/technical-resources')
-  [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-      param([OpenQA.Selenium.IWebDriver]$WebDriver)
-      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "Setup_Lockdown_Browser")]')) } catch {}
-    }
-  ).GetAttribute('href')
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://connection.nwea.org/s/technical-resources'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@href, ".exe") and contains(@href, "Setup_Lockdown_Browser")]' -Property Attribute -AttributeName href
 }
 
 # Installer

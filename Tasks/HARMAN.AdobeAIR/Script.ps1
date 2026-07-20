@@ -1,12 +1,12 @@
-$WebData = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://airsdk.harman.com/runtime')
+$WebData = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://airsdk.harman.com/runtime'
   [pscustomobject]@{
     Version = [regex]::Match(
-      $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "miniTitle") and contains(text(), "version")]')).Text,
+      (Read-PlaywrightLocator -Page $Page -Selector 'xpath=//div[contains(@class, "miniTitle") and contains(text(), "version")]' -Property InnerText),
       '(\d+(?:\.\d+){3,})'
     ).Groups[1].Value
-    InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@class, "downloadLink") and contains(@href, ".exe")]')).GetAttribute('href')
+    InstallerUrl = Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@class, "downloadLink") and contains(@href, ".exe")]' -Property Attribute -AttributeName href
   }
 }
 

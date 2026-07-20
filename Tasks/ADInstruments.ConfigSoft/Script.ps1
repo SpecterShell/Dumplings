@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.adinstruments.com/support/downloads/windows/configsoft')
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.adinstruments.com/support/downloads/windows/configsoft'
+  Read-PlaywrightPageContent -Page $Page
 } | Get-EmbeddedLinks
 
 # Installer

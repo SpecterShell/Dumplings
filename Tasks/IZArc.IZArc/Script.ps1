@@ -12,16 +12,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesNode = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.izarc.org/news')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//article[contains(.//h2, '$($this.CurrentState.Version)')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.izarc.org/news'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//article[contains(.//h2, '$($this.CurrentState.Version)')]"
       } | ConvertFrom-Html
       if ($ReleaseNotesNode) {
         # Remove unnecessary list prefixes

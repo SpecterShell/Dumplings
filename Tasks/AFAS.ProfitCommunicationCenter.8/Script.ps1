@@ -1,12 +1,7 @@
-$InstallerUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://klant.afas.nl/update-center/downloads')
-  [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-    [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-      param([OpenQA.Selenium.IWebDriver]$WebDriver)
-      try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[contains(@href, ".exe") and contains(@href, "PccSetup8")]')) } catch {}
-    }
-  ).GetAttribute('href')
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://klant.afas.nl/update-center/downloads'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@href, ".exe") and contains(@href, "PccSetup8")]' -Property Attribute -AttributeName href
 }
 
 # Installer

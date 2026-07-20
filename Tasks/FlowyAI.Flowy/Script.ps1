@@ -21,22 +21,22 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotes = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotes = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.flowyaipc.com/download')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.flowyaipc.com/download'
 
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[1]')).Click()
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
-        $English = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML')
+        $null = Wait-PlaywrightTask -Task $Page.Locator('xpath=/html/body/div[2]/div/button').ClickAsync()
+        $null = Wait-PlaywrightTask -Task $Page.Locator('xpath=/html/body/div[2]/div/div/button[1]').ClickAsync()
+        $null = Wait-PlaywrightTask -Task $Page.Locator("xpath=//h3[contains(., '$($this.CurrentState.Version)')]").ClickAsync()
+        $English = Read-PlaywrightLocator -Page $Page -Selector "xpath=//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*[1]"
 
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/button')).Click()
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('/html/body/div[2]/div/div/button[2]')).Click()
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]")).Click()
+        $null = Wait-PlaywrightTask -Task $Page.Locator('xpath=/html/body/div[2]/div/button').ClickAsync()
+        $null = Wait-PlaywrightTask -Task $Page.Locator('xpath=/html/body/div[2]/div/div/button[2]').ClickAsync()
+        $null = Wait-PlaywrightTask -Task $Page.Locator("xpath=//h3[contains(., '$($this.CurrentState.Version)')]").ClickAsync()
         [pscustomobject]@{
           English = $English
-          Chinese = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*")).GetAttribute('innerHTML')
+          Chinese = Read-PlaywrightLocator -Page $Page -Selector "xpath=//h3[contains(., '$($this.CurrentState.Version)')]/following-sibling::*[1]"
         }
       }
 

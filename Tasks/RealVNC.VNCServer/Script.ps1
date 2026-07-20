@@ -1,4 +1,8 @@
-$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.realvnc.com/en/connect/download/vnc/' | Join-String -Separator "`n" | ConvertFrom-Html
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.realvnc.com/en/connect/download/vnc/'
+  Read-PlaywrightPageContent -Page $Page
+} | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
 

@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://boardmix.cn/download/')
-  $EdgeDriver.ExecuteScript('return ossMap', $null)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://boardmix.cn/download/'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => ossMap'
 }
 
 # Installer

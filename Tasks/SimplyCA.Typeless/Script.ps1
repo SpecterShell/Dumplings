@@ -21,26 +21,26 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesNode = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesHtml = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.typeless.com/help/release-notes/windows')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(./div[1]/div/span, '$($this.CurrentState.Version)')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
-      } | ConvertFrom-Html
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.typeless.com/help/release-notes/windows'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(./div[1]/div/span, '$($this.CurrentState.Version)')]" -Optional -TimeoutMilliseconds 10000
+      }
+      $ReleaseNotesNode = if ($ReleaseNotesHtml) { $ReleaseNotesHtml | ConvertFrom-Html }
 
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./div[1]/h2').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      if ($ReleaseNotesNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./div[1]/h2').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNode.SelectSingleNode('./div[2]') | Get-TextContent | Format-Text
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode.SelectSingleNode('./div[2]') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host

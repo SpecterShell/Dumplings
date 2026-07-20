@@ -22,16 +22,11 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesObject = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://catpaw.meituan.com/changelog')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//*[@class='timeline-item' and contains(.//*[@class='version-title'], '$($this.CurrentState.Version)')]")) } catch {}
-          }
-        ).GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://catpaw.meituan.com/changelog'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//*[@class='timeline-item' and contains(.//*[@class='version-title'], '$($this.CurrentState.Version)')]"
       } | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {

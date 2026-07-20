@@ -1,0 +1,45 @@
+name: Setup Patchright runtime
+description: Restore or populate Dumplings' pinned Windows Patchright/Playwright driver runtime
+
+inputs:
+  cache-path:
+    description: Parent directory containing versioned Playwright runtimes
+    required: true
+  cache-key:
+    description: Exact GitHub Actions cache key
+    required: true
+
+outputs:
+  cache-hit:
+    description: Whether an exact runtime cache entry was restored
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Restore Playwright runtime cache
+      id: restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ inputs.cache-path }}
+        key: ${{ inputs.cache-key }}
+
+    - name: Initialize Playwright runtime
+      shell: pwsh
+      env:
+        DUMPLINGS_PLAYWRIGHT_CACHE_PATH: ${{ inputs.cache-path }}
+      run: |-
+        $RepositoryRoot = Split-Path (Split-Path (Split-Path $env:GITHUB_ACTION_PATH -Parent) -Parent) -Parent
+        $PackageModuleRoot = Join-Path $RepositoryRoot 'Modules' 'PackageModule'
+        Import-Module (Join-Path $PackageModuleRoot 'Utilities' 'PlaywrightRuntime.psm1') -Force
+        $RuntimePath = Initialize-DumplingsPlaywrightRuntime `
+          -LockPath (Join-Path $PackageModuleRoot 'Assets' 'PlaywrightRuntime.psd1') `
+          -CachePath $env:DUMPLINGS_PLAYWRIGHT_CACHE_PATH
+        "DUMPLINGS_PLAYWRIGHT_RUNTIME_PATH=${RuntimePath}" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
+
+    - name: Save Playwright runtime cache
+      if: steps.restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ inputs.cache-path }}
+        key: ${{ inputs.cache-key }}

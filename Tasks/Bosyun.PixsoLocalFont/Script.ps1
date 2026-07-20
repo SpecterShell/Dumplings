@@ -1,7 +1,7 @@
-$InstallerUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://pixso.cn/download/')
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]')).GetAttribute('data-href')
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://pixso.cn/download/'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]' -Property Attribute -AttributeName data-href
 }
 
 # Installer

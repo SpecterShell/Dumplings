@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.51dzt.com/rubik-ssr/51dzt')
-  $EdgeDriver.ExecuteScript('return window.__NUXT__.state.application.project_components.filter(obj => obj.name === "dzt-banner")[0].user_props', $null)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.51dzt.com/rubik-ssr/51dzt'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.state.application.project_components.find((obj) => obj.name === "dzt-banner").user_props'
 }
 
 # Version

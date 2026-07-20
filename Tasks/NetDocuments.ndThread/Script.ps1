@@ -25,16 +25,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = Use-EdgeDriver -Headless {
-          param($EdgeDriver)
+        Value  = Use-PlaywrightPage -Stealth -Headless {
+          param($Page)
 
-          $EdgeDriver.Navigate().GoToUrl('https://support.netdocuments.com/s/article/360006895372')
-          [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-            [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-              param([OpenQA.Selenium.IWebDriver]$WebDriver)
-              try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//tr[contains(./td[1], 'Desktop App $($this.CurrentState.Version)')]/td[3]")) } catch {}
-            }
-          ).GetAttribute('innerHTML')
+          $null = Open-PlaywrightPage -Page $Page -Uri 'https://support.netdocuments.com/s/article/360006895372'
+          Read-PlaywrightLocator -Page $Page -Selector "xpath=//tr[contains(./td[1], 'Desktop App $($this.CurrentState.Version)')]/td[3]"
         } | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {

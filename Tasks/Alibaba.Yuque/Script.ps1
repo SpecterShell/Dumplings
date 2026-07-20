@@ -29,11 +29,11 @@ switch -Regex ($this.Check()) {
         Value = 'https://www.yuque.com/yuque/yuque-desktop/'
       }
 
-      $Object2 = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $Object2 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.yuque.com/yuque/yuque-desktop/changelog')
-        $EdgeDriver.ExecuteScript('return window.appData', $null)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.yuque.com/yuque/yuque-desktop/changelog'
+        Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.appData'
       }
       $ReleaseNotesUrlObject = $Object2.book.toc.Where({ $_.title.Contains($this.CurrentState.Version) -or $_.title.Contains("$($this.CurrentState.Version.Split('.')[0..1] -join '.').x") }, 'First')
       if ($ReleaseNotesUrlObject) {

@@ -11,10 +11,10 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://help.webex.com/en-us/article/WBX000026388/WRF2WMV-Converter')
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://help.webex.com/en-us/article/WBX000026388/WRF2WMV-Converter'
+  Read-PlaywrightPageContent -Page $Page
 } | Get-EmbeddedLinks
 # Installer
 $this.CurrentState.Installer += [ordered]@{

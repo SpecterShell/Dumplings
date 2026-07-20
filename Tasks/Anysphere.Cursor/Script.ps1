@@ -62,17 +62,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $ReleaseNotesObject = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://www.cursor.com/changelog')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, string]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElements([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]//button[@data-state='closed']")).ForEach({ $_.Click() }) } catch {}
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath("//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")).GetAttribute('innerHTML') } catch {}
-          }
-        )
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.cursor.com/changelog'
+        $ArticleSelector = "xpath=//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]"
+        $Article = $Page.Locator($ArticleSelector).First
+        $null = Wait-PlaywrightTask -Task $Article.WaitForAsync()
+        [string](Wait-PlaywrightTask -Task $Article.InnerHTMLAsync())
       } | ConvertFrom-Html
 
       if ($ReleaseNotesObject) {

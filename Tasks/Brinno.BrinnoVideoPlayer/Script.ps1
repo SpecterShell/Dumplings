@@ -1,4 +1,8 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://brinno.com/pages/support-support-center' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://brinno.com/pages/support-support-center'
+  Read-PlaywrightPageContent -Page $Page
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

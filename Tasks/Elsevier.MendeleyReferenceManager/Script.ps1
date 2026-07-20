@@ -28,18 +28,20 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesUrl = "https://www.mendeley.com/release-notes-reference-manager/v$($this.CurrentState.Version)"
 
-      $ReleaseNotesObject = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl($ReleaseNotesUrl)
+        $null = Open-PlaywrightPage -Page $Page -Uri $ReleaseNotesUrl
 
         # Banner does not show up immediately after loaded. Put a global style here so we don't have to wait.
-        $EdgeDriver.ExecuteScript(@'
-let element = document.createElement('style')
-element.innerText = '#onetrust-consent-sdk { display: none }'
-document.querySelector("head").appendChild(element)
-'@, $null)
-        $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//div[contains(@class, 'rightCol')]")).GetAttribute('innerHTML')
+        $null = Invoke-PlaywrightJavaScript -Page $Page -Expression @'
+() => {
+  const element = document.createElement('style');
+  element.innerText = '#onetrust-consent-sdk { display: none }';
+  document.querySelector('head').appendChild(element);
+}
+'@
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'rightCol')]"
       } | ConvertFrom-Html
       if (-not [string]::IsNullOrWhiteSpace($ReleaseNotesObject.InnerText)) {
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode(".//h2[contains(text(), 'v$($this.CurrentState.Version)')]")

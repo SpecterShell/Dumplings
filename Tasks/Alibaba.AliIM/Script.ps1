@@ -1,9 +1,8 @@
-$InstallerUrl = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://market.m.taobao.com/app/im/ww-home/index.html')
-  $Button = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//span[@class="newVersion"]'))
-  [OpenQA.Selenium.Interactions.Actions]::new($EdgeDriver).MoveToElement($Button).Build().Perform()
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath("//a[@class='windowVersions']")).GetAttribute('href')
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://market.m.taobao.com/app/im/ww-home/index.html'
+  $null = Wait-PlaywrightTask -Task ($Page.Locator('xpath=//span[@class="newVersion"]').First.HoverAsync())
+  Read-PlaywrightLocator -Page $Page -Selector "xpath=//a[@class='windowVersions']" -Property Attribute -AttributeName href -State Visible
 }
 
 # Installer

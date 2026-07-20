@@ -21,16 +21,11 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $ReleaseNotesObject = Use-EdgeDriver -Headless {
-        param($EdgeDriver)
+      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
 
-        $EdgeDriver.Navigate().GoToUrl('https://docs.brightsign.biz/releases/latest')
-        [OpenQA.Selenium.Support.UI.WebDriverWait]::new($EdgeDriver, [timespan]::FromSeconds(30)).Until(
-          [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
-            param([OpenQA.Selenium.IWebDriver]$WebDriver)
-            try { $WebDriver.FindElement([OpenQA.Selenium.By]::XPath('//div[contains(@class, "slate-editor")]')) } catch {}
-          }
-        ).GetAttribute('innerHTML')
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://docs.brightsign.biz/releases/latest'
+        Read-PlaywrightLocator -Page $Page -Selector 'xpath=//div[contains(@class, "slate-editor")]'
       } | ConvertFrom-Html
       $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./div[contains(.//div/@class, 'slate-h1') and contains(.//h1, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

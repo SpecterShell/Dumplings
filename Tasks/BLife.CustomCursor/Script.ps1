@@ -1,8 +1,13 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://custom-cursor.com/products/custom-cursor-for-windows' | Join-String -Separator "`n" | Get-EmbeddedLinks
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://custom-cursor.com/products/custom-cursor-for-windows'
+  $null = Invoke-PlaywrightCloudflareChallenge -Page $Page
+  Read-PlaywrightLocator -Page $Page -Selector 'a[href$=".exe"]' -Property Attribute -AttributeName href
+}
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1
 }
 
 # Version

@@ -19,10 +19,10 @@ function Read-Installer {
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Use-EdgeDriver {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.crucial.com/support/storage-executive.html')
-  $EdgeDriver.PageSource
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.crucial.com/support/storage-executive.html'
+  Read-PlaywrightPageContent -Page $Page
 } | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{

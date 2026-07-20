@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
-  $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.cocos.com/creator-download'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.data[0].dashboardLatest'
 }
 
 # Version

@@ -1,7 +1,7 @@
-$Object1 = Use-EdgeDriver -Headless {
-  param($EdgeDriver)
-  $EdgeDriver.Navigate().GoToUrl('https://www.sejda.com/desktop')
-  $EdgeDriver.ExecuteScript('return releases', $null)
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.sejda.com/desktop'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => releases'
 }
 
 # Installer
