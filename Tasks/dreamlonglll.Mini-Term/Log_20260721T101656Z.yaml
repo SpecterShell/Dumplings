@@ -1,0 +1,31 @@
+Version: 0.6.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.9/Mini-Term_0.6.9_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.9/Mini-Term_0.6.9_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.9 · Codex 终端兼容与状态修复
+    🖥️ Codex 滚动与内容折叠
+    - 固定 Windows ConPTY 运行时：Windows 安装包内置官方 ConPTY 兼容运行时，并在启动时完成资源与架构校验；资源异常时自动回退系统 ConPTY，改善不同 Windows 版本下 Codex 的滚动兼容性。
+    - 恢复 Codex 自动折叠：重新遵循 CSI 3J（ED3），允许 Codex 清理流式临时历史并重放折叠后的最终内容；继续保留 10 万行滚动缓冲和 alternate-screen 拦截，/clear 也能真正清除旧历史。
+    🤖 AI 状态检测
+    - 修复 Codex 审批状态：PermissionRequest 从审批弹出、用户批准到工具执行完成期间保持 ai-working，不再提前进入 idle 或误报“任务完成”。
+    - 修正 Hook Agent 识别：改用 Codex 专有的 turn_id 区分 Codex 与 Claude Code，避免两者都携带 transcript_path 时识别错误。
+    🐛 其他修复
+    - 修复 Git Changes 面板丢弃新增（未跟踪）文件无反应的问题，新增文件和新增目录内文件均可正确删除。
+    - 补充 Tauri set-title 权限，原生标题栏恢复显示 Mini-Term v0.6.9。
+    ⚙️ 工程维护
+    - 补充 ConPTY 资源布局、架构选择、加载回退和 xterm 滚动行为的回归测试与契约说明。
+    - 移除已停用的 Trellis 工作流及相关项目集成。
+
+    Windows：Mini-Term_0.6.9_x64-setup.exe（推荐）或 _x64_en-US.msi · macOS（Apple Silicon）：_aarch64.dmg · Linux：.AppImage / .deb / .rpm
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.9
+ReleaseTime: 2026-07-21T07:32:20.0000000Z
