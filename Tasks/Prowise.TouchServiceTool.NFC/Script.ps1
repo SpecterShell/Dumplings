@@ -1,18 +1,20 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
-  Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/S' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-  $this.CurrentState.Version = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{6737984A-C830-94F3-A97C-2AB0A64041AC}' -Name 'DisplayVersion'
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromNSIS
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://service.prowise.com/hc/en-gb/articles/4403331598225-Touch-Service-Tool-with-NFC'
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://service.prowise.com/hc/en-gb/articles/4403331598225-Touch-Service-Tool-with-NFC'
+  Read-PlaywrightPageContent -Page $Page
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
