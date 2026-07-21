@@ -14,11 +14,9 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # RealVersion
-    # The version can only be obtained from the ARP registry after installation
-    # The installer is not totally silent (a messagebox will popup when the software is running)
-    # Use ThreadJob with a timeout to avoid being stuck, and the script will fail in the next expression
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '/skipdlgs' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-    $this.CurrentState.RealVersion = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Internet Download Manager' -Name 'DisplayVersion'
+    # Read the version statically from the installer's own PE version resource
+    # The raw version is 4-part (e.g., 6.43.6.1) while the ARP DisplayVersion carries the first 3 parts
+    $this.CurrentState.RealVersion = (Read-FileVersionRawFromExe -Path $InstallerFile).ToString(3)
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.internetdownloadmanager.com/news.html' | ConvertFrom-Html

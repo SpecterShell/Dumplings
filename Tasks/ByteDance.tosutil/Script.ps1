@@ -1,7 +1,39 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   # Version
-  $this.CurrentState.Version = [regex]::Match((& $InstallerFile version), 'version: v([\d\.]+)').Groups[1].Value
+  # Read the version statically from the Go string headers in .rdata. The version
+  # string lives next to the "tosutil version" command name in the header table.
+  $Layout = Get-PELayout -Path $InstallerFile
+  $Section = $Layout.Sections | Where-Object -Property Name -EQ '.rdata'
+  $Stream = [System.IO.File]::Open($InstallerFile, 'Open', 'Read', 'ReadWrite')
+  try {
+    # Anchor: the "tosutil version" command-name string in .rdata
+    $AnchorOffset = (Find-BinaryPattern -Stream $Stream -Pattern ([System.Text.Encoding]::ASCII.GetBytes('tosutil version')) -StartOffset $Section.RawOffset -Length $Section.RawSize -Maximum 1)[0]
+
+    # Go string headers are {pointer, length} pairs holding absolute virtual addresses
+    $AnchorAddress = [uint64]$Layout.ImageBase + $Section.VirtualAddress + ($AnchorOffset - $Section.RawOffset)
+    $HeaderOffset = $null
+    foreach ($Candidate in (Find-BinaryPattern -Stream $Stream -Pattern ([System.BitConverter]::GetBytes($AnchorAddress)) -StartOffset $Section.RawOffset -Length $Section.RawSize -Maximum 32)) {
+      if ((Read-BinaryInteger -Stream $Stream -Offset ($Candidate + 8) -Size 8 -Signed) -eq 'tosutil version'.Length) { $HeaderOffset = $Candidate; break }
+    }
+    if ($null -eq $HeaderOffset) { throw 'The tosutil command name string header was not found in the installer' }
+
+    # The version string header follows the anchor header in 16-byte slots
+    $Version = $null
+    foreach ($Offset in ($HeaderOffset + 16)..($HeaderOffset + 64) | Where-Object { ($_ - $HeaderOffset) % 16 -eq 0 }) {
+      $Pointer = Read-BinaryInteger -Stream $Stream -Offset $Offset -Size 8
+      $Length = Read-BinaryInteger -Stream $Stream -Offset ($Offset + 8) -Size 8 -Signed
+      if ($Length -gt 0 -and $Length -lt 32) {
+        $StringOffset = [long]$Pointer - [long]$Layout.ImageBase - $Section.VirtualAddress + $Section.RawOffset
+        $Value = [System.Text.Encoding]::ASCII.GetString((Read-BinaryBytes -Stream $Stream -Offset $StringOffset -Count ([int]$Length)))
+        if ($Value -match '^v(?<Version>\d+(?:\.\d+)+)$') { $Version = $Matches.Version; break }
+      }
+    }
+    if ([string]::IsNullOrWhiteSpace($Version)) { throw 'The tosutil version string was not found in the installer' }
+    $this.CurrentState.Version = $Version
+  } finally {
+    $Stream.Dispose()
+  }
   Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 

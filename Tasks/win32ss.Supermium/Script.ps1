@@ -42,10 +42,20 @@ switch -Regex ($this.Check()) {
 
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # RealVersion
-    # The version can only be obtained from the ARP registry after installation
-    # Use ThreadJob with a timeout to avoid being stuck, and the script will fail in the next expression
-    Start-ThreadJob -ScriptBlock { Start-Process -FilePath $using:InstallerFile -ArgumentList '-y', '--silent', '--system-level' -Wait } | Wait-Job -Timeout 300 | Receive-Job | Out-Host
-    $this.CurrentState.RealVersion = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Supermium' -Name 'DisplayVersion'
+    # Read the ARP DisplayVersion statically from the nested setup.exe of the 7-Zip SFX installer
+    # The custom installer (github.com/win32ss/supermium-installer) writes DisplayVersion
+    # as a hardcoded string literal, stored right before the "DisplayVersion" field
+    # name in its uninstall registration data
+    $SetupFile = Expand-SevenZipSfx -Path $InstallerFile -Name 'setup.exe' | Select-Object -First 1
+    $SetupBytes = [System.IO.File]::ReadAllBytes($SetupFile)
+    $AnchorOffset = (Find-BinaryPattern -Bytes $SetupBytes -Pattern ([System.Text.Encoding]::Unicode.GetBytes('DisplayVersion')) -Maximum 1)[0]
+    foreach ($Offset in (Find-BinaryPattern -Bytes $SetupBytes -Pattern ([System.Text.Encoding]::Unicode.GetBytes('1')) -StartOffset ($AnchorOffset - 256) -Length 256)) {
+      $EndOffset = $Offset
+      while ($EndOffset + 1 -lt $SetupBytes.Length -and ($SetupBytes[$EndOffset] -ne 0 -or $SetupBytes[$EndOffset + 1] -ne 0)) { $EndOffset += 2 }
+      $Candidate = [System.Text.Encoding]::Unicode.GetString($SetupBytes, $Offset, $EndOffset - $Offset)
+      if ($Candidate -match '^\d+\.\d+\.\d+\.\d+( \S+)?$') { $this.CurrentState.RealVersion = $Candidate }
+    }
+    if ([string]::IsNullOrWhiteSpace($this.CurrentState.RealVersion)) { throw 'Failed to extract the real version from the installer' }
 
     $this.Print()
     $this.Write()

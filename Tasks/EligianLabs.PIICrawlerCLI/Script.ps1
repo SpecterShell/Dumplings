@@ -1,13 +1,27 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'piicrawler.exe' | Out-Host
+  Expand-Archive -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Force
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'piicrawler.exe' -Resolve
   # Version
-  $this.CurrentState.Version = [regex]::Match((& $InstallerFile2 --version), 'piicrawler (\d+(?:\.\d+)+)').Groups[1].Value
+  # Read the version statically from the string literals in the .rdata section (YY.MMDD.build)
+  # The version is a compile-time constant and is the only string of this shape in the section
+  $Section = (Get-PELayout -Path $InstallerFile2).Sections | Where-Object -Property Name -EQ '.rdata'
+  $Stream = [System.IO.File]::OpenRead($InstallerFile2)
+  try {
+    $Stream.Position = $Section.RawOffset
+    $Buffer = [byte[]]::new($Section.RawSize)
+    $Read = 0
+    while ($Read -lt $Buffer.Length) { $Read += $Stream.Read($Buffer, $Read, $Buffer.Length - $Read) }
+  } finally {
+    $Stream.Dispose()
+  }
+  $VersionCandidates = @([regex]::Matches([System.Text.Encoding]::ASCII.GetString($Buffer), '(?<![\d.])\d{2}\.\d{4}\.\d{4}(?![\d.])').Value | Sort-Object -Unique)
+  if ($VersionCandidates.Count -ne 1) { throw "Failed to extract the version from the installer: $($VersionCandidates.Count) candidates found" }
+  $this.CurrentState.Version = $VersionCandidates[0]
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  Remove-Item -Path $InstallerFile, $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{
