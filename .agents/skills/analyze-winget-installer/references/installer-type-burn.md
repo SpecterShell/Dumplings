@@ -6,7 +6,7 @@ Use `InstallerType: burn` when WinGet invokes a WiX Burn bootstrapper bundle dir
 
 ## Detection
 
-Route here when `Get-BurnInfo` succeeds, the PE section table contains `.wixburn`, or structured Burn manifest/bootstrapper data is available. The bundle PE architecture and filename are supporting evidence only; package conditions and chain metadata determine installed architecture and behavior.
+Route here when `Get-BurnEngineInfo` succeeds, the PE section table contains `.wixburn`, or structured Burn manifest/bootstrapper data is available. The bundle PE architecture and filename are supporting evidence only; package conditions and chain metadata determine installed architecture and behavior.
 
 ## Binary Structure
 
@@ -133,7 +133,7 @@ Load PackageModule and collect each detailed evidence object without executing t
 ```powershell
 . .\Modules\PackageModule\Index.ps1
 
-$BurnInfo = Get-BurnInfo -Path $InstallerFile
+$BurnEngineInfo = Get-BurnEngineInfo -Path $InstallerFile
 $Manifest = Get-BurnManifest -Path $InstallerFile
 $BootstrapperData = try {
   Get-BurnBootstrapperApplicationData -Path $InstallerFile
@@ -148,7 +148,7 @@ $UpgradeCode = Read-UpgradeCodeFromBurn -Path $InstallerFile
 $ProductName = Read-ProductNameFromBurn -Path $InstallerFile
 ```
 
-Use `$BurnInfo` for `.wixburn`, bundle code, machine, container, and engine-layout evidence. Use `$Manifest` and `$BootstrapperData` for registration, chain package, variable, and display metadata. Use `$ScopeInfo` and `$ArchitectureInfo` directly; do not then call `Read-ScopeFromBurn`, `Read-SupportedScopesFromBurn`, `Test-BurnDualScope`, `Read-UnsupportedArchitecturesFromBurn`, or `Test-BurnUnsupportedArchitecture` for the same installer.
+Use `$BurnEngineInfo` for `.wixburn`, bundle code, machine, container, and engine-layout evidence. Use `$Manifest` and `$BootstrapperData` for registration, chain package, variable, and display metadata. Use `$ScopeInfo` and `$ArchitectureInfo` directly; do not then call `Read-ScopeFromBurn`, `Read-SupportedScopesFromBurn`, `Test-BurnDualScope`, `Read-UnsupportedArchitecturesFromBurn`, or `Test-BurnUnsupportedArchitecture` for the same installer.
 
 The `Read-Product*FromBurn` helpers handle WiX-version fallback between bootstrapper application data and the Burn manifest. Keep their returned values with the detailed objects for the remaining steps.
 
