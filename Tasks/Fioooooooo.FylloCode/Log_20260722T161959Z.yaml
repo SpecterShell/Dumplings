@@ -1,0 +1,78 @@
+Version: 0.14.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.14.3/FylloCode-0.14.3-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.14.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release improves readability in long Chat sessions and while Agents are working. Chat can now pin important sessions, streaming assistant messages show a runtime indicator, and consecutive Thinking / Tool activity is grouped into expandable Activity groups. Claude Code subagent calls also get a dedicated inspector for parent-child tool relationships, runtime statistics, and final responses, while dependency pinning and release workflow guidance reduce upgrade and release risk.
+    Added
+    - Chat sessions can now be pinned and unpinned; the pinned state is persisted with project session metadata, the sidebar shows Pinned Sessions and Recent Sessions groups, and the pinned group is height-limited so recent sessions remain visible
+    - Streaming assistant messages now show a message-level runtime indicator with a 4×4 dot matrix animation, generic status text, and natural elapsed-time units; the state exists only in renderer runtime and is not stored in historical messages
+    - Added a Claude Code subagent call inspector: parent Agent tools render as standalone cards, and details show prompt, status, model, tokens, duration, tool statistics, child tool activity, and final response
+    - Added OpenSpec capabilities for assistant-stream-indicator, pinned-sessions, subagent-call-inspector, assistant-activity-display, and chat-prompt-timeline to capture this release's Chat observability and navigation contracts
+    Changed
+    - Chat prompt timeline now uses a compact line index with continuous nearest-prompt hit testing, drag-to-locate, one summary popover, keyboard navigation, and more stable reading-position synchronization
+    - Consecutive Thinking and normal tool calls in assistant messages are grouped into collapsible Activity groups; tool details use separate Input and Output sections and show the complete final output returned by Codex MCP calls
+    - The ACP event mapper is split into an Agent-neutral baseline, Claude / Codex adapters, a tool-call mapper, and update normalizers, preserving multi-Agent mapping boundaries while improving Claude Code and Codex session update compatibility
+    - The default Settings entry now opens /settings/preferences, and the Preferences and About pages are tightened around preference and release-update information
+    - Dependencies were updated to the current locked set, with markstream-vue 1.0.5 and stream-monaco 0.0.46 explicitly pinned together with compatibility notes for future upgrades
+    - references/ is reorganized into designs/ and third-party/, with added research and designs for ACP subagents, the Claude MCP initialization race, built-in MCP HTTP, and bundled MCP work
+    - The repository release skill now has tighter versioning, documentation-audit, release-note timing, and MCP server version decision rules
+    Fixed
+    - Fixed a Claude Code MCP initialization race by waiting for MCP startup before treating the session as ready, reducing early tool-unavailable failures
+    - Fixed Claude Code and Codex ACP session update mapping details so session titles, tool names, MCP call titles, and subagent output remain more stable while streaming
+    - Fixed prompt timeline summary popovers potentially stealing focus, reopening immediately, or shifting the summary window during hover, click, and focus transitions
+    - Fixed Chat session item width, config dropdown hover behavior, confirmation dialogs, and local layout/state details in lineage, task, and settings pages
+    - Removed redundant dynamic imports from the main process so runtime dependency paths stay direct
+    Notes
+    - The application version is now 0.14.3.
+    - fyllo-specs MCP server is now 0.8.2, containing only an internal archive outcome parsing type normalization with no changes to tool names, inputs, outputs, instructions, or archive behavior.
+    - fyllo-cortex MCP server remains at 0.5.0; that server did not change in this release range.
+    - Pinned sessions add an optional isPinned field to existing session metadata. Historical sessions without the field are read as unpinned and require no manual migration.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0143---2026-07-22
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个版本提升长对话和 Agent 执行过程的可读性：Chat 现在可以置顶重要会话，正在生成的 assistant 消息会展示运行状态，连续 Thinking / Tool 活动会收拢为可展开的 Activity group。Claude Code 子 Agent 调用也获得独立检查器，方便查看父子工具关系、运行统计和最终回复；同时依赖版本和发版流程文档进一步收敛，降低后续升级和发布风险。
+    新增
+    - Chat 会话支持置顶和取消置顶；置顶状态随项目会话元数据持久化，侧栏按“置顶会话 / 最近会话”分组展示，并限制置顶分组高度以保留最近会话可视空间
+    - 正在 stream 的 assistant 消息新增消息级运行状态指示，显示 4×4 dot matrix 动画、通用状态文案和自然单位耗时；该状态仅保存在 renderer 运行时，流结束后不会进入历史消息
+    - 新增 Claude Code 子 Agent 调用检查器：父 Agent 工具显示为独立卡片，详情展示 prompt、状态、模型、token、耗时、工具统计、子工具活动和最终回复
+    - 新增 assistant-stream-indicator、pinned-sessions、subagent-call-inspector、assistant-activity-display 和 chat-prompt-timeline OpenSpec 能力规约，沉淀本轮 Chat 可观测性和导航行为契约
+    调整
+    - Chat prompt 时间线改为紧凑横线索引，支持连续命中最近 prompt、拖动即时定位、单一摘要浮层、键盘导航和更稳定的阅读位置同步
+    - Assistant 消息中的连续 Thinking 与普通工具调用统一收拢为可折叠 Activity group；工具详情使用独立 Input / Output 分区，并完整展示 Codex MCP 返回的最终输出
+    - ACP event mapper 拆分为 Agent 无关基线、Claude / Codex adapter、tool-call mapper 和 update normalizer，保留多 Agent 映射边界并增强 Claude Code / Codex 会话更新兼容性
+    - 设置页默认入口调整为 /settings/preferences，Preferences 与 About 页面内容收敛为更聚焦的偏好和版本更新信息
+    - 依赖升级到当前锁定组合，并显式锁定 markstream-vue 1.0.5 与 stream-monaco 0.0.46，记录升级前需要验证的兼容性约束
+    - references/ 重新整理为 designs/ 和 third-party/，补充 ACP 子 Agent、Claude MCP 初始化竞态、内置 MCP HTTP 与 bundled MCP 相关调研和设计资料
+    - 仓库发版 skill 增强版本、文档审计、release notes 展示时机和 MCP server 版本决策规则
+    修复
+    - 修复 Claude Code MCP 初始化竞态，等待 MCP 启动完成后再进入可用状态，减少启动早期工具不可用的问题
+    - 修复 Claude Code 和 Codex ACP 会话更新映射细节，避免会话标题、工具名称、MCP 调用标题和子 Agent 输出在流式过程中显示不稳定
+    - 修复 prompt 时间线摘要浮层在 hover、点击和焦点切换时可能抢占焦点、重复打开或摘要窗口跳动的问题
+    - 修复 Chat 会话条目宽度、配置下拉 hover、确认弹窗、lineage/task/settings 局部布局和会话状态细节
+    - 移除 main 进程冗余动态导入，保持运行时依赖路径更直接
+    备注
+    - 应用版本升级到 0.14.3。
+    - fyllo-specs MCP server 升级到 0.8.2，仅包含 archive outcome 解析类型的内部规范化，不改变 tool 名称、输入、输出、指引或 archive 行为。
+    - fyllo-cortex MCP server 保持 0.5.0；本次发布范围没有修改该 server。
+    - 本次置顶会话会在既有 session 元数据中新增可选 isPinned 字段；缺少该字段的历史会话按未置顶读取，无需手动迁移。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0143---2026-07-22
+ReleaseTime: 2026-07-22T16:05:52.0000000Z
