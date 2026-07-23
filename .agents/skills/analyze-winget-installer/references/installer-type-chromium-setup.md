@@ -26,7 +26,7 @@ Strong resource evidence is:
 | Variant | PE resource evidence |
 | --- | --- |
 | `ChromiumMiniInstaller` | One non-setup `B7` or `BN` `.7z` resource plus a setup resource. Source-defined setup precedence is `B7` (`setup*.7z`), then `BL` (`setup.ex_`), then `BN` (`setup.exe`) |
-| `ChromiumUpdater` | `B7` resource named `updater.packed.7z`; its archive contains `updater.7z`, whose launcher is `bin\updater.exe` |
+| `ChromiumUpdater` | `B7` resource named `updater.packed.7z`; its archive contains `updater.7z`, whose launcher is `bin\updater.exe` and whose optional `bin\Offline\{bundle-guid}` tree contains an offline manifest and target installer |
 | `Omaha` | `B` resource ID `102` containing LZMA + BCJ2 + TAR payload data, with updater identity/tag evidence |
 
 `Read-ChromiumInstallerTag` searches only the Authenticode certificate table. It supports Omaha's length-framed UTF-8 `Gact2.0Omaha` tag, Chromium Updater's source-defined wide `Gact2.0Omaha...ahamO0.2tcaG` framing, and Microsoft Edge's bounded UTF-16 `MSEDGE_..._EGDESM` tag. The `appguid` is updater protocol identity, **not** an ARP `ProductCode`. It selects the matching `OfflineManifest.gup` application when present; the parser then verifies and analyzes that application's configured nested installer. Online wrappers do not contain enough target evidence and intentionally return no ProductCode.
@@ -36,7 +36,7 @@ Primary source references:
 - [Chromium mini-installer source](https://chromium.googlesource.com/chromium/src/+/main/chrome/installer/mini_installer/)
 - [Chromium installer constants](https://source.chromium.org/chromium/chromium/src/+/main:chrome/installer/util/util_constants.cc)
 - [Chromium install-static registry construction](https://chromium.googlesource.com/chromium/src/+/main/chrome/install_static/install_util.cc)
-- [Chromium Updater functional specification](https://chromium.googlesource.com/chromium/src/+/57d342625c/docs/updater/functional_spec.md)
+- [Chromium Updater functional specification](https://chromium.googlesource.com/chromium/src/+/main/docs/updater/functional_spec.md)
 - [Chromium Updater source](https://source.chromium.org/chromium/chromium/src/+/main:chrome/updater/)
 - [Google Omaha source](https://github.com/google/omaha)
 
@@ -53,7 +53,11 @@ Chromium mini-installer PE
 
 Chromium Updater PE
 +-- B7 updater.packed.7z
-|   `-- updater.7z/bin/updater.exe
+|   `-- updater.7z
+|       +-- bin/updater.exe
+|       `-- bin/Offline/{bundle-guid}
+|           +-- OfflineManifest.gup or {app-id}.gup
+|           `-- {app-id}/target installer
 `-- certificate table              optional length/framed updater tag
 
 Omaha metainstaller PE
@@ -218,10 +222,10 @@ Expansion is source-backed and bounded:
 
 - `BN`/`BD` resources are exported directly.
 - `BL` resources are decoded as cabinets.
-- `B7` resources are opened with the bundled SharpCompress library; Chromium Updater's nested `updater.7z` is opened recursively so `bin\updater.exe` can be selected directly.
+- `B7` resources are opened with the bundled SharpCompress library; Chromium Updater's nested `updater.7z` is opened recursively so `bin\updater.exe` and any `bin\Offline\{bundle-guid}` payload can be inspected.
 - Branded mini-installers may replace `CHROME.PACKED.7Z` with a product name such as Vivaldi's `VIVALDI.PACKED.7Z`. Identify this layout from one non-setup/non-updater `B7` or `BN` archive paired with a `B7`, `BL`, or `BN` setup resource; do not require the `CHROME` prefix.
 - Omaha resource `102` is decoded as LZMA, four-stream BCJ2, then TAR according to Omaha's metainstaller build pipeline. Declared compressed and expanded sizes are enforced. Untagged legacy payloads execute the first EXE; tagged offline payloads use the install action selected from `OfflineManifest.gup`.
-- For tagged Omaha, `Get-ChromiumSetupInfo` reads `OfflineManifest.gup`, selects the signed-tag application, locates its configured executable, verifies the declared size and SHA-256, and recursively analyzes that target. Omaha may suffix the physical TAR name with an app GUID or use a different physical name; a unique size match is accepted only after hash verification. `IsOnlineBootstrapper` is true only after a tagged payload was checked and no offline target manifest was found; it is null when that check fails.
+- For tagged Chromium Updater and Omaha wrappers, `Get-ChromiumSetupInfo` reads `OfflineManifest.gup` or the matching `{app-id}.gup`, selects the signed-tag application, locates its configured executable, verifies the declared size and SHA-256, and recursively analyzes that target. Omaha may suffix the physical TAR name with an app GUID or use a different physical name; a unique size match is accepted only after hash verification. `IsOnlineBootstrapper` is true only after the applicable nested archive was checked and no offline target manifest was found; it is null when that check fails.
 
 No installer, updater, 7-Zip, or NanaZip process is invoked.
 
@@ -229,7 +233,7 @@ No installer, updater, 7-Zip, or NanaZip process is invoked.
 
 The outer updater/metainstaller may not be the final application's ARP writer.
 
-- Bare mini-installer: nested `setup.exe` normally writes the browser ARP entry. `Get-ChromiumSetupInfo` extracts only the source-selected setup resource and prefers explicit uninstall registry paths. When the generic Chromium uninstall-root literal proves runtime composition, it combines structured updater company/product paths with the validated `kInstallModes` table. A one-component updater root may use the primary `base_app_name` when it already begins with that company; otherwise the parser accepts a product-path candidate only when the primary direct-launch scheme maps to an independently stored, null-terminated wide product constant. `ProductCodeSource` identifies the evidence path, and `NestedSetupInfo.InstallModes` retains selectors and suffixes. Repeated literal uninstall paths outrank incidental keys; ambiguous evidence remains unresolved. Never infer ProductCode from outer PE branding or arbitrary version/display strings.
+- Bare mini-installer: nested `setup.exe` normally writes the browser ARP entry. `Get-ChromiumSetupInfo` extracts only the source-selected setup resource and prefers explicit uninstall registry paths. When the generic Chromium uninstall-root literal proves runtime composition, it combines structured updater company/product paths with the validated `kInstallModes` table. A one-component updater root may use the primary `base_app_name` when it already begins with that company; otherwise the parser accepts a product-path candidate only when the direct-launch-derived name or `base_app_name` also exists as a separate, null-terminated wide product constant outside its `InstallConstants` field. `ProductCodeSource` identifies the evidence path, and `NestedSetupInfo.InstallModes` retains selectors and suffixes. Repeated literal uninstall paths outrank incidental keys; ambiguous evidence remains unresolved. Never infer ProductCode from outer PE branding or arbitrary version/display strings.
 - Google Chrome mini-installer: resolve the command-line-selected ARP key from the already parsed result and manifest switches:
 
   ```powershell
@@ -262,6 +266,7 @@ The outer updater/metainstaller may not be the final application's ARP writer.
 - Brave online channel installers: small tagged Omaha wrappers without `OfflineManifest.gup`; their ProductCode is intentionally unresolved because updater identity alone does not prove the ARP key.
 - `Brave.BraveOrigin.Nightly`: the corresponding offline Origin target can derive the `BraveSoftware Brave-Origin-Nightly` key from its own embedded constants. Do not infer that key from an online Origin app GUID.
 - `Microsoft.EdgeWebView2Runtime`: Microsoft Edge tagged Omaha standalone installer with `OfflineManifest.gup`; accepted silent command is `/silent /install`. The parser returns target version/action evidence but not a ProductCode.
+- `Perplexity.Comet`: tagged Chromium Updater offline bundle. Its nested `OfflineManifest.gup` selects and hash-verifies `mini_installer.exe`; the nested setup's updater company path, validated `InstallConstants`, and independent product-path literal derive `ProductCode: Perplexity Comet` without mapping the updater app GUID.
 - `Vivaldi.Vivaldi` and `Vivaldi.Vivaldi.Snapshot`: branded Chromium mini-installers containing `VIVALDI.PACKED.7Z` and `SETUP.EX_`, using `--vivaldi-silent` and `--vivaldi-install-dir`; the parser derives `ProductCode: Vivaldi` from the nested setup's composed uninstall root and corroborating product switch/registry-path constants, not from a vendor mapping. Do not substitute upstream switches.
 - `360.360SE`: vendor setup using `--silent-install` and `--install-path`.
 - `360.360Chrome.X`: vendor setup using `--silent-install` and `--install-path`.
