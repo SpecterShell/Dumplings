@@ -1,13 +1,4 @@
-# User
 $Object1 = Invoke-RestMethod -Uri 'https://copilot.tencent.com/v2/update?platform=workbuddy-win32-x64-user'
-# Machine
-# $Object2 = Invoke-RestMethod -Uri 'https://copilot.tencent.com/v2/update?platform=workbuddy-win32-x64-system'
-
-# if ($Object1.productVersion -ne $Object2.productVersion) {
-#   $this.Log("User version: $($Object1.productVersion)")
-#   $this.Log("Machine version: $($Object2.productVersion)")
-#   throw 'Inconsistent versions detected'
-# }
 
 # Version
 $this.CurrentState.Version = $Object1.productVersion
@@ -15,14 +6,8 @@ $this.CurrentState.Version = $Object1.productVersion
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  Scope        = 'user'
   InstallerUrl = $Object1.url
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x64'
-#   Scope        = 'machine'
-#   InstallerUrl = $Object2.url
-# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
