@@ -83,12 +83,10 @@ switch -Regex ($this.Check()) {
 
     $this.Print()
 
-    $ToWrite = $false
-
-    Use-Mutex -Name 'DumplingsWriteLockMozilla' -TimeoutMilliseconds 30000 -ScriptBlock {
-      if (-not $Global:DumplingsStorage.Contains('Mozilla-ToWrite')) {
-        $Global:DumplingsStorage['Mozilla-ToWrite'] = $ToWrite = $true
-      }
+    $ToWrite = Use-Mutex -Name 'DumplingsWriteLockMozilla' -TimeoutMilliseconds 30000 -ScriptBlock {
+      if ($Global:DumplingsStorage.Contains('Mozilla-ToWrite')) { return $false }
+      $Global:DumplingsStorage['Mozilla-ToWrite'] = $true
+      return $true
     }
 
     if ($ToWrite) {
