@@ -1,0 +1,27 @@
+Version: 0.6.10
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.10/Mini-Term_0.6.10_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.10/Mini-Term_0.6.10_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.10 · SSH 连接分组管理
+    🗂️ SSH 分组管理
+    - 两栏管理弹窗：SSH 连接弹窗重构为左右两栏——左侧分组列表（全部连接 / 具名分组 / 未分组，带连接数），右侧展示选中分组的连接；「全部连接」视图下分组标题可折叠 / 展开。
+    - 分组增删改：左栏空白处右键「新增分组」，分组右键可重命名 / 解散；空分组可持久保存（新增 sshGroups 配置字段，老配置无感兼容），重命名自动同步组内所有连接，重命名为已有组名时自然合并。
+    - 拖拽调整归属：右侧连接行按住拖到左侧任意分组（含「未分组」）松手即切换归属，落点虚线高亮；采用鼠标事件模拟拖拽，规避 WebView2 dragDropEnabled 拦截 HTML5 拖放的限制。
+    - 表单分组下拉：连接编辑表单的分组字段升级为组合输入框，聚焦即可下拉选择已有分组（随输入过滤），也可直接输入新分组名；在某个分组视图下新建连接会自动预填该分组。
+    ⚙️ 工程维护
+    - 修复 Git Bash 环境下 npm run tauri dev 报错：解压 ConPTY .nupkg 时固定使用 Windows 自带的 bsdtar（System32\tar.exe），不再受 PATH 上 GNU tar 无法识别 zip 容器影响。
+    - Rust 单元测试增至 328 个，补充 sshGroups 配置字段的 round-trip 与向后兼容测试。
+
+    Windows：Mini-Term_0.6.10_x64-setup.exe（推荐）或 _x64_en-US.msi · macOS（Apple Silicon）：_aarch64.dmg · Linux：.AppImage / .deb / .rpm
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.10
+ReleaseTime: 2026-07-23T08:17:31.0000000Z
