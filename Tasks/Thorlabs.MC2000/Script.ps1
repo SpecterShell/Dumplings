@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'setup.exe'
       $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'MC2000.msi'
       # RealVersion
-      $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+      $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 

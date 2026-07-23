@@ -4,7 +4,7 @@ function Read-Installer {
   $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'GetLocalAdminsGUISetup.exe'
   try {
     # Version
-    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'GetLocalAdminsGUISetup.exe') -Architecture x64).ProductVersion
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'GetLocalAdminsGUISetup.exe') -Architecture x64).DisplayVersion
   } finally {
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }

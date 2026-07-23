@@ -35,7 +35,7 @@ switch -Regex ($this.Check()) {
       if ($ExtractedMsiFiles.Count -ne 1) { throw "Expected one extracted dotNetInstaller MSI, but found $($ExtractedMsiFiles.Count)" }
       $MsiInfo = Get-MsiInstallerInfo -Path $ExtractedMsiFiles[0]
       # RealVersion
-      $this.CurrentState.RealVersion = $MsiInfo.ProductVersion
+      $this.CurrentState.RealVersion = $MsiInfo.DisplayVersion
       # ProductCode
       $this.CurrentState.Installer[0]['ProductCode'] = $MsiInfo.ProductCode
       # AppsAndFeaturesEntries

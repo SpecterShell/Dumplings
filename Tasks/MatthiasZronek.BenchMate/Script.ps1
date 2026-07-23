@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $MsiInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile
     # RealVersion
-    $this.CurrentState.RealVersion = $MsiInfo.ProductVersion
+    $this.CurrentState.RealVersion = $MsiInfo.DisplayVersion
 
     try {
       $Object3 = Invoke-WebRequest -Uri 'https://benchmate.org/changelog/all' | ConvertFrom-Html

@@ -72,7 +72,7 @@ WinGet supplies no family-specific switches for generic `InstallerType: exe`. Tr
 $Info = Get-Install4jInfo -Path $InstallerFile
 $Info.ProductCode
 $Info.DisplayVersion
-$Info.ProductName
+$Info.DisplayName
 $Info.Publisher
 $Info.WritesAppsAndFeaturesEntry
 $Info.Scope

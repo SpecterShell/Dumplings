@@ -100,14 +100,34 @@ Keep format interpretation in PowerShell. C# is appropriate for chunked pattern 
 
 ## Output Contract
 
-Parser results should retain stable properties used by tasks and the analyzer. Add evidence rather than replacing metadata fields:
+Every aggregate family parser directly returns the same leading properties: `Path`, `InstallerType`, `ProductCode`, `UpgradeCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `WritesAppsAndFeaturesEntry`, `AppsAndFeaturesProductCode`, `AppsAndFeaturesInstallerType`, `Warnings`, and `UnresolvedFields`. Construct this envelope in the format parser so ARP ownership, aliases, and unresolved values are decided from family-specific evidence rather than inferred by a shared normalizer. Preserve family-specific evidence after the common fields.
 
-- identity: `DisplayName`, `DisplayVersion`, `Publisher`, `ProductCode`, `UpgradeCode`
-- installation: `Scope`, `SupportedScopes`, architecture evidence, switches
-- ARP: `WritesAppsAndFeaturesEntry`, visible entry type, registry writes, `SystemComponent`
-- wrappers: `ExtractedFiles`, `ExecutedPayloads`, nested payload type and arguments
-- associations: `Protocols`, `FileExtensions`, `RegistryAssociationInfo`
-- diagnostics: `Warnings`, `ParserVersionInfo`
+Do not expose duplicate identity aliases such as `ProductName`, `ProductVersion`, `DefaultInstallationDirectory`, `InstallLocation`, or `TargetDir`. Internal format records may retain vendor-native names, but aggregate callers use the canonical properties. `Warnings` and `UnresolvedFields` are always string arrays, including when empty.
+
+Parsers return diagnostics as data and do not call `Write-Warning`, `Write-Host`, or other logging commands. The analyzer or manifest-update boundary logs each unique warning once with the selected parser name. A wrapper that only extracts and executes another installer reports `WritesAppsAndFeaturesEntry: false`; it must not present the nested payload's ARP identity as outer-wrapper metadata.
+
+Additional evidence remains family-specific: supported scopes and architectures, switches, registry writes, `SystemComponent`, extracted/executed payloads, associations, parser-version evidence, and validated binary-layout records.
+
+## Format Match And Parse Failures
+
+Manifest updating parses a known manifest-declared family before running broad detection. A successful `Get-<Family>Info` result is authoritative for that installer entry; marker candidates from embedded payloads must not override it.
+
+Keep format identity separate from metadata completeness when parsing fails:
+
+- `Matched`: structural evidence proves the declared outer family, but a metadata stage is unsupported or incomplete. Warn, preserve unresolved existing fields, and apply any independently resolved values.
+- `NotMatched`: content evidence definitively identifies an incompatible container or another high-confidence structural family. Throw a manifest type mismatch.
+- `Indeterminate`: evidence cannot prove either outcome, including malformed or unsupported variants and conflicting structural candidates. Warn and preserve existing fields; absence of parser output is not proof of another family.
+
+Low- and medium-confidence string markers only select parsers for further analysis. They never establish a fatal mismatch. Parser exceptions should describe the failed stage; callers classify the failure using structural evidence rather than matching exception text. For MSI and WiX, an unknown package builder is incomplete metadata, not proof that the physical Windows Installer type is wrong.
+
+The analyzer preserves this distinction in its output contract:
+
+- `DetectedFamilies` contains families confirmed by a successful parser or a decisive outer-container structure.
+- `RoutingHints` contains bounded strings and incomplete structures that only justify trying a parser.
+- `RejectedCandidates` records routes whose parser rejected the surrounding layout; these are diagnostics, not detections.
+- `FamilyCandidates` is a confirmed-only compatibility projection of `DetectedFamilies`.
+
+Do not promote a routing hint because it has several matching strings. Common names such as `Update.exe`, `RELEASES`, `.nupkg`, `project.xml`, and `.ciq` routinely occur in payloads or application resources unrelated to the outer installer. A generic `exe` update may consume metadata only when exactly one compatible family parser succeeds; conflicting successful parsers require manual review.
 
 ## Adding A Parser
 

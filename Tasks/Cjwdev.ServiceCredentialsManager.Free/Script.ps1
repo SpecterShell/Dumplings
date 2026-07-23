@@ -4,7 +4,7 @@ function Read-Installer {
   $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ServiceCredentialsManagerFreeInstaller.exe'
   try {
     # Version
-    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ServiceCredentialsManagerFreeInstaller.exe')).ProductVersion
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ServiceCredentialsManagerFreeInstaller.exe')).DisplayVersion
   } finally {
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }

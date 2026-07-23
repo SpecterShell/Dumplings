@@ -28,7 +28,7 @@ switch -Regex ($this.Check()) {
       $InstallerFile2 = Join-Path $InstallerFileExtracted 'pCon.planner_Plugin_Acoustics.exe'
       $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'pCon.planner Plugin - Acoustics.msi'
       # RealVersion
-      $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+      $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
 

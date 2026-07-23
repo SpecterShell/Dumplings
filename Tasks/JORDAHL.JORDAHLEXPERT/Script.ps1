@@ -6,7 +6,7 @@ function Read-Installer {
     $InstallerFile2 = Join-Path $InstallerFileExtracted '*.exe' | Get-Item -Force | Select-Object -First 1
     $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'JORDAHL EXPERT.msi'
     # Version
-    $this.CurrentState.Version = $InstallerInfo.ProductVersion
+    $this.CurrentState.Version = $InstallerInfo.DisplayVersion
     # InstallerSha256
     $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'

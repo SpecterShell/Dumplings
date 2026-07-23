@@ -4,7 +4,7 @@ function Read-Installer {
   $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'NtfsPermissionsReporterInstaller.exe'
   try {
     # Version
-    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'NtfsPermissionsReporterInstaller.exe') -Architecture x64).ProductVersion
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'NtfsPermissionsReporterInstaller.exe') -Architecture x64).DisplayVersion
   } finally {
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }

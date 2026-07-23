@@ -22,7 +22,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $NestedInstallerPath
     try {
       # RealVersion
-      $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $NestedInstallerPath) -Name 'msi.x64.msi').ProductVersion
+      $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $NestedInstallerPath) -Name 'msi.x64.msi').DisplayVersion
     } finally {
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }

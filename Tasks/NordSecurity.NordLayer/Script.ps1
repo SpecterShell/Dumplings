@@ -13,7 +13,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile -Name 'NordLayerSetup.msi'
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+    $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
 
     $this.Print()
     $this.Write()

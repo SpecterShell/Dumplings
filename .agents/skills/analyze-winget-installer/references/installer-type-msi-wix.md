@@ -191,8 +191,8 @@ Load PackageModule and call the detailed parser with the installer path:
 
 $Info = Get-MsiInstallerInfo -Path $InstallerFile
 
-$Info.ProductVersion
-$Info.ProductName
+$Info.DisplayVersion
+$Info.DisplayName
 $Info.ProductCode
 $Info.UpgradeCode
 $Info.AllUsers

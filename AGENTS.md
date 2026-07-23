@@ -153,6 +153,15 @@ installer repeatedly with individual `Read-*From<Family>` helpers. Metadata must
 come from explicit structures or registry writes, not arbitrary version/product
 string probing.
 
+Parser output contract: family parsers share the same property names for the
+same semantics — `Path`, `InstallerType`, `ProductCode`, `UpgradeCode`,
+`DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`,
+`WritesAppsAndFeaturesEntry`, `AppsAndFeaturesProductCode`,
+`AppsAndFeaturesInstallerType` — plus `Warnings` and `UnresolvedFields` (string
+arrays, empty when none). Do not introduce legacy aliases such as
+`ProductName`/`ProductVersion` in new outputs; keep family-specific extras on
+top of the shared contract.
+
 Parser implementation rules:
 
 - Open an installer once per operation and pass parsed layouts or bounded streams.
@@ -215,6 +224,11 @@ they implement Delivery Optimization and WinINet behavior, progress, retries,
 timeouts, rate-limit bounds, and cleanup. Do not rebuild their fallback logic in
 `WinGetManifestUpdate` or task scripts.
 
+GitHub REST calls go through `Invoke-GitHubApi`. GitHub GraphQL reports failures
+as HTTP 200 with an `errors` array and a null payload instead of an error status;
+check the `errors` collection before reading `data` (see
+`Assert-WinGetGitHubGraphQLCommit`).
+
 Browser automation is a leased process-wide resource:
 
 - Prefer `Use-EdgeDriver` for Selenium and `Use-PlaywrightPage` or
@@ -242,6 +256,12 @@ Downloaded test installers live under the persistent sibling cache
 `../Dumplings-TestFixtures`, managed by each submodule's `Tests/TestFixture.ps1`.
 Do not depend on `Downloads`, `Temp`, `Sandbox`, or a user's submission-installer
 directory. Never commit large installer binaries merely to stabilize a test.
+
+Pester mocks apply in the session state where the call executes. When the code
+under test calls a helper that lives in another module, mock it with
+`-ModuleName <that module>` (for example `Mock Get-BurnManifest -ModuleName Burn`);
+a plain `Mock` defined inside `InModuleScope X` does not intercept calls made
+from module Y's internals.
 
 Minimum targeted verification:
 

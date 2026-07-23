@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'Thorlabs Kinesis.msi'
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+    $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
 
     try {
       # ReleaseNotesUrl (en-US)

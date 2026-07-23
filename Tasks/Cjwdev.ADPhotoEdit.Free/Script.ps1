@@ -4,7 +4,7 @@ function Read-Installer {
   $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ADPhotoEditFreeSetup.exe'
   try {
     # Version
-    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ADPhotoEditFreeSetup.exe')).ProductVersion
+    $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ADPhotoEditFreeSetup.exe')).DisplayVersion
   } finally {
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }

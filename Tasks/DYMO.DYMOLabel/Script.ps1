@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
       $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
       $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'DYMO Label.msi'
       # RealVersion
-      $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+      $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
     }
 
     $this.Print()

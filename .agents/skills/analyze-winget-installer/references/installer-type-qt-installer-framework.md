@@ -43,7 +43,7 @@ Check whether the installer has a usable embedded `TargetDir`:
 
 ```powershell
 $Info = Get-QtInstallerFrameworkInfo -Path $InstallerFile
-$Info.TargetDir
+$Info.DefaultInstallLocation
 $Info.RequiresExplicitInstallLocation
 $Info.InstallLocationEvidence
 

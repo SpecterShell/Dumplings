@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     $InstallerInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerInfo.ProductVersion
+    $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
 
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://logtagrecorders.com/logtag-analyzer-3-release-notes/' | ConvertFrom-Html

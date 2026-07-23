@@ -21,10 +21,12 @@ Load PackageModule and analyze by file content rather than extension:
 $Analysis = Get-WinGetInstallerAnalysis -Path C:\Path\To\Installer.exe
 $Analysis.DetectedFileType
 $Analysis.ParserResults | Where-Object Success
-$Analysis.FamilyCandidates
+$Analysis.DetectedFamilies
+$Analysis.RoutingHints
+$Analysis.RejectedCandidates
 ```
 
-Use high-confidence structured parser results first. Treat marker candidates as routing evidence, not proof of scope, silent switches, visible ARP type, or installed architecture.
+Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
 
 Optional diagnostics must not become CI dependencies:
 

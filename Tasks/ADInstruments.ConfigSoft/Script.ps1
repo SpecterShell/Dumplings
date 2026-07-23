@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
     $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ConfigSoft 64bit\setup.exe'
     try {
       # RealVersion
-      $this.CurrentState.RealVersion = (Get-InstallShieldMsiInfo -Path (Join-Path $InstallerFileExtracted 'ConfigSoft 64bit\setup.exe') -Name 'ConfigSoft.msi').ProductVersion
+      $this.CurrentState.RealVersion = (Get-InstallShieldMsiInfo -Path (Join-Path $InstallerFileExtracted 'ConfigSoft 64bit\setup.exe') -Name 'ConfigSoft.msi').DisplayVersion
     } finally {
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }

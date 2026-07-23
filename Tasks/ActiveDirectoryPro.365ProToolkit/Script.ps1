@@ -2,7 +2,7 @@ function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   $InstallerInfo = Get-AdvancedInstallerMsiInfo -Path $InstallerFile -Name '365 Pro Toolkit.msi'
   # Version
-  $this.CurrentState.Version = $InstallerInfo.ProductVersion
+  $this.CurrentState.Version = $InstallerInfo.DisplayVersion
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }

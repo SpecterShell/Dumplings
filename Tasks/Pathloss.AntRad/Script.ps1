@@ -3,7 +3,7 @@ function Read-Installer {
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'AntRad.msi'
     # Version
-    $this.CurrentState.Version = $InstallerInfo.ProductVersion
+    $this.CurrentState.Version = $InstallerInfo.DisplayVersion
   }
 }
 
