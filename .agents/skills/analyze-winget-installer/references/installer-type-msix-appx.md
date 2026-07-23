@@ -74,7 +74,7 @@ For `Dependencies`, include only these framework package families in WinGet mani
 - `Microsoft.WindowsAppRuntime.*.*`
 - `Microsoft.UI.Xaml.*.*`
 
-Preserve `MinimumVersion` when the MSIX/AppX manifest declares `MinVersion`. If the package XML declares other `PackageDependency` names, do not write them into `Dependencies`; report them as unknown dependencies for manual review. Current examples with allowed dependency packages include `Elgato.WaveLink`, `BicomSystems.gloCOM`, `FilesCommunity.Files`, `Microsoft.WindowsApp`, `TheBrowserCompany.Arc`, `Elgato.Studio`, `CharlesMilette.TranslucentTB`, and `Microsoft.FoundryLocal`.
+Package XML uses framework identity names rather than WinGet package identifiers. Normalize `Microsoft.VCLibs.140.00.UWPDesktop` to `Microsoft.VCLibs.Desktop.14` and `Microsoft.VCLibs.140.00` to `Microsoft.VCLibs.14`; Windows App Runtime and Microsoft.UI.Xaml identities already match their corresponding WinGet package IDs. Preserve `MinimumVersion` when the MSIX/AppX manifest declares `MinVersion`. If the package XML declares other `PackageDependency` names, do not write them into `Dependencies`; report them as unknown dependencies for manual review. Current examples with allowed dependency packages include `Elgato.WaveLink`, `BicomSystems.gloCOM`, `FilesCommunity.Files`, `Microsoft.WindowsApp`, `TheBrowserCompany.Arc`, `Elgato.Studio`, `CharlesMilette.TranslucentTB`, and `Microsoft.FoundryLocal`.
 
 MSIX/AppX-family packages must have a signature that is valid and trusted by the local system certificate roots. Reject packages that have no embedded `AppxSignature.p7x`, no Authenticode signature, or `Get-AuthenticodeSignature` does not return `Status: Valid`.
 
