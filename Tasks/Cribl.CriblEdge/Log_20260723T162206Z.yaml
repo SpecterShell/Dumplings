@@ -1,0 +1,179 @@
+Version: 4.19.0
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.19.0/cribl-4.19.0-0fbd6d34-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4190/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Cribl Edge 4.19.0 includes significant performance improvements, new capabilities, and important bug fixes.
+    Important Changes
+    This release introduces breaking changes and deprecations that require action if you use the affected features:
+    - Breaking Change: Selected Cribl API endpoints for Pipelines, Routes, profiler, and job logs now return correct HTTP status codes
+    - Breaking Change: Single-item GET requests return HTTP 404 for unknown IDs in on-prem deployments
+    - Notice: Upcoming HTTP/S (Bulk API) Source byte accounting change affects Cribl.Cloud billing
+    - Review the full list of important changes for additional critical updates.
+    New Features
+    This release provides the following improvements:
+    Global Secrets in Cribl.Cloud
+    Cribl.Cloud now supports global secrets, which you can retrieve from HashiCorp Vault or the built-in Cribl secret store. Use global secrets to define credentials once and reuse them across Cribl Stream and Edge. Teams can share and rotate credentials in one place instead of maintaining duplicates.
+    Cribl.Cloud Release Channels
+    In Cribl.Cloud, Enterprise customers can assign each Workspace to the Regular or Slow release channel. The Regular release channel (default) follows the standard monthly release cadence. The Slow release channel also updates on a monthly basis but is one version behind Regular. Release channels give teams self-service control over Cribl upgrade cadence on a per-Workspace basis and allow them to validate new Cribl versions in pre-production Workspaces before deploying to production environments. The Slow release channel is not updated in November and December to accommodate holiday season change freezes.
+    Multi-Region Workspaces in Cribl.Cloud
+    In Cribl.Cloud, Admins can now add new Workspaces in any region, independently of the Organization region. This allows customers with global footprints to locate Workspaces within geographic and political boundaries as needed to meet standards for compliance, data residency and sovereignty, and local processing.
+    Gemini as a Custom AI Provider
+    This release introduces Gemini as a custom AI provider and lets you easily reset BYOM tier assignments to their suggested defaults. Enhanced UI visibility makes verifying BYOM test results quick and seamless.
+    Apps (Preview): Capra in the App Scaffold
+    The Create App scaffold for Apps (Preview) now installs Capra, the Cribl design system, by default. New projects include a Capra-based sample UI, Capra packages from the public npm registry, and AGENTS.md guidance for AI-assisted development. You can use Capra components and design tokens, apply Capra styling with your own components, or replace Capra with another UI stack.
+    Windows Signed Executable
+    The Cribl Edge executable on Windows is now digitally signed, ensuring the application is from Cribl.
+    macOS Process Metrics
+    The System Metrics Source now collects process-level metrics on macOS Edge Nodes, extending the per-process monitoring already available on Linux and Windows.
+    Parser Function: New Auto Type
+    You can now set Type to Auto to detect event format and extract top-level fields from _raw using the same auto-datatyping logic as Cribl Search, without manual parser configuration.
+    Enhanced pipe CLI Command
+    The cribl pipe CLI command now supports --breaker (-e) and --fields (-f) options. Use --breaker to apply an Event Breaker Ruleset to raw stdin, and --fields to apply Source-style field expressions before Pipeline processing. When you use both options together, fields are applied before breaking, so Ruleset rule conditions can evaluate against them. This makes it easier to perform end-to-end testing of Packs: you can pipe raw data through a Pipeline and have it broken and enriched the same way a configured Source would, without a live Source connection.
+    Source Persistent Queues: Queue-full Behavior
+    Queue-full behavior is now available on Source persistent queues, matching Destination persistent queues. When a queue reaches its Queue size limit, you can block incoming data or drop new events. Use Drop new data to keep UDP and other senders that cannot slow down flowing during sustained backpressure, while queued data continues to drain.
+    New Sources and Destinations
+    Google BigQuery: A new Google BigQuery Destination enables Cribl Edge to write events directly into BigQuery tables using Google’s Storage Write API, eliminating the need to route through intermediate storage.
+    IBM Cloud Object Storage: A new IBM Cloud Object Storage Destination enables you to route and store data directly in IBM Cloud Object Storage buckets using HMAC-based authentication.
+    Experience Improvements
+    - Cribl AI is now directly embedded into the suite by default, introducing AI-accelerated workflows across your Workspace. You can use natural language to build pipelines, automatically generate commit messages, and mitigate privacy risks. These capabilities are supported by either Cribl-supplied models or your own custom provider configurations, giving you full control over how AI processes your data.
+    - The File Monitor Source now logs internal telemetry every 5 minutes, including directory count, matched file count, excluded file count, active file count, and log state store size.
+    - This release delivers performance improvements to Copilot Editor and adds support for OCSF schema versions 1.7 and 1.8 to ensure compatibility with newer detection rules.
+    - You can now connect AI coding tools directly to the embedded MCP server on your Cribl Leader - no separate container required. Enable it in AI Settings and use a bearer token to manage your environment via natural language, securely tied to your native Cribl permissions. The standalone Docker MCP server remains fully supported.
+    - Edge Node and Stream Worker information now opens in a full dedicated page instead of a side drawer.
+    - Outpost Group settings now expose an API Server Settings section, including host, port, and TLS settings.
+    - QuickConnect now includes an Enabled only filter that hides disabled Sources from the view. The filter is off by default.
+    - The Data Preview toolbar now shows inline fields and bytes statistics after you run a Simple Preview, so you can see how a Pipeline changes your data without opening a modal. Select Pipeline diagnostics for full statistics and profiling.
+    - Added a new metric, breaker.ts_extract_failures, that reports timestamp extraction failures and out-of-window timestamps per Source, making it easier to identify events with timestamp parsing problems.
+    - Improved the delete experience for Event Breaker Rulesets. The delete flow now makes in-use Rulesets easier to identify and shows where they are referenced before removal, helping prevent accidental Pipeline-impacting changes.
+    - Git commits now record the actual user as the Git author instead of a generic admin user, making configuration history easier to audit.
+    - You can now reference Worker Group or Fleet variables from inside a Pack using C.systemVars, in JavaScript-enabled fields across Sources, Destinations, Collectors, and Pipeline Functions. Pack variables still use C.vars. The expression editor includes C.systemVars typeahead in Pack context.
+    - The sidebar, top bar, dialogs, tables, and login screens are now more accessible for screen readers and users who rely on keyboards for navigation. Icons have been updated and color contrast has been enhanced for users with impaired vision.
+    - The Team Details page now lists SSO users under Team Members.
+    - A new secure, read-only external API lets you programmatically access FinOps Center billing and usage data, so you can integrate Cribl cost and consumption metrics into your own BI dashboards, chargeback, and automated reporting.
+    - In the FinOps Center, a new Global Date Range picker lets you set the date range for all of your billing graphs in the FinOps Center at one time, reducing the number of clicks and saving you just a little time for more important work.
+    - Your Organization role(s) now appear under your name in the account menu, so you can see your role without navigating to Members & Teams.
+    - The Linux System Metrics Source now collects the node_filesystem_free_bytes metric.
+    Sources and Destinations
+    - The Windows Event Logs Source now offers a Suppress missing event log errors option to suppress errors for events logs that are not configured on the host.
+    - The Datadog Source and Destination now support APM client stats alongside traces.
+    - The Alibaba OSS Destination now supports multiple authentication methods for both IAM-based and cross-account deployments.
+    - The SNMP Destination now supports an option to preserve the original source device’s IP address when forwarding traps.
+    Important Changes
+    Breaking Change: Selected Cribl API Endpoints for Pipelines, Routes, Profiler, and Job Logs Now Return Correct HTTP Status Codes
+    Endpoints that previously returned HTTP 500 Internal Server Error for client error conditions now return the correct 4xx status codes. This change reduces false-positive 5xx alerts and lets API clients distinguish bad requests from server failures.
+    What you need to do:
+    For the endpoints in the following table, update any automation that treats 500 Internal Server Error as the signal for the specified condition to handle 400 Bad Request or 404 Not Found instead. Error messages and response bodies are unchanged; only the HTTP status codes differ.
+
+    | Endpoint                             | Condition                           | Corrected HTTP status code |
+    | ------------------------------------ | ----------------------------------- | -------------------------- |
+    | POST /pipelines                      | Invalid Pipeline or Function schema | 400                        |
+    | PATCH /pipelines/{id}                | Invalid Pipeline or Function schema | 400                        |
+    | PATCH /routes/{id}                   | Invalid Route schema                | 400                        |
+    | POST /system/profiler                | Worker Process not registered       | 404                        |
+    | DELETE /system/profiler/{id}         | Profile not found                   | 404                        |
+    | GET /system/jobs/logs/{id}/{groupId} | Job or log files not found          | 404                        |
+
+    Breaking Change: Single-Item GET Requests Return HTTP 404 for Unknown IDs in On-Prem Deployments
+    In on-prem deployments, CRUD-style GET-by-ID operations in the Cribl API now return HTTP 404 Not Found when the requested resource ID does not exist. Previously, those operations returned HTTP 200 OK with an empty items array and count: 0. This change applies to the following endpoint paths:
+
+    |                                             |                                        |
+    | ------------------------------------------- | -------------------------------------- |
+    | /admin/products/{product}/mappings          | /search/dashboard-categories           |
+    | /alert/monitors                             | /search/dashboards                     |
+    | /alert/silences                             | /search/dataset-provider-types         |
+    | /fleet-mappings                             | /search/datatypes                      |
+    | /lib/grok                                   | /search/federated_search/engines       |
+    | /lib/mdt-devices                            | /search/jobs                           |
+    | /lib/parsers                                | /search/local_search/dataset-rulesets  |
+    | /lib/protobuf-libraries                     | /search/local_search/datatype-rulesets |
+    | /lib/regex                                  | /search/local_search/engines           |
+    | /lib/sds-rules                              | /search/macros                         |
+    | /lib/sds-rulesets                           | /search/notebook-templates             |
+    | /mappings                                   | /search/notebooks                      |
+    | /notification-policies                      | /search/usage-groups                   |
+    | /notifications                              | /system/instance                       |
+    | /pack                                       | /system/internal-groups                |
+    | /products/aetos/config-profiles             | /system/keys                           |
+    | /products/aetos/monitors                    | /system/messages                       |
+    | /products/aetos/shared-configs              | /system/policies                       |
+    | /products/lake/lakes/{lakeId}/config        | /system/samples                        |
+    | /products/lake/lakes/{lakeId}/direct-access | /system/scripts                        |
+    | /products/lake/lakes/{lakeId}/metrics       | /system/users                          |
+
+    This change applies only for unknown resource ID values. If a resource ID exists but the API cannot return it due to filters, the request still returns HTTP 200 OK with an empty items array and count: 0.
+    What you need to do:
+    In on-prem deployments, for the listed endpoint paths, update API clients that treat HTTP 200 OK with an empty items array and count: 0 as “not found” to handle HTTP 404 Not Found instead. To confirm that an operation returns HTTP 404 Not Found for an unknown ID before updating clients, send a GET-by-ID request with a deliberately invalid ID.
+    Deprecation Notice: Disable Node Persistence
+    The Disable Node persistence setting is deprecated and will be removed in a future release. Node information is persisted by default. Use the Worker Group/Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    Notice: End of Support and End of Life for CentOS 7
+    Cribl has officially transitioned CentOS 7 to End of Support (EOS) and End of Life (EOL) for all on-premises deployments for Cribl Stream/Edge Leader and Worker/Edge Nodes. This milestone follows the deprecation notice introduced in Cribl Stream 4.9 and adheres to our standard product lifecycle policy.
+    Cribl will no longer provide new feature updates, bug fixes, or security patches for Leaders and Worker/Edge Nodes running on CentOS 7.
+    To maintain uninterrupted enterprise support and safeguard your data pipelines, migrate your on-prem Cribl infrastructure to a supported, modern Linux distribution (such as RHEL 9) as soon as possible.
+    Notice: Future Removal of AppScope Source
+    The AppScope Source is in End of Support (EOS) and will be removed from Cribl Edge in a future release.
+    Notice: Upcoming HTTP/S (Bulk API) Source Byte Accounting Change Affects Cribl.Cloud Billing
+    The upcoming 4.20.0 release will correct byte accounting for the HTTP/S (Bulk API) Source. Previously, when events arrived with an object-valued _raw field rather than a string, Cribl counted events but reported zero bytes. In Cribl.Cloud, billed ingress uses the same bytes-ingested metric, so that traffic was not charged.
+    After this change, Source monitoring will reflect the actual inbound payload size. Cribl.Cloud customers who send object-valued _raw events to this Source may see higher billed ingress. That increase aligns with data already being processed.
+    Deprecation Notice: Smart Mode for Source Persistent Queue
+    To improve data integrity, Smart mode is deprecated for Source persistent queue on hybrid and on-prem deployments. In January 2027, affected configurations will automatically migrate to Always On mode. Consider updating existing configurations to Always On mode prior to the automatic migration date. Before changing the configuration:
+    - Monitor your persistent queue usage so that you can allocate enough disk space.
+    - Before making changes to your persistent queue, remember to drain the queues first to avoid orphaned data.
+    - Verify that data routing and filtering behaves as expected in a test environment before rolling out the new configuration to production.
+    Notice: Cribl as Code TypeScript and Go SDK Discontinuation
+    Cribl is stopping active development of the Cribl as Code Go and TypeScript SDKs, which were previously in preview. To give existing users a clear path forward, we are moving the SDKs from the criblio GitHub organization to the Cribl Community GitHub organization and open sourcing them as community resources. This allows customers and community members to continue using the SDKs and build on them, while Cribl steps back from active feature development and long-term support.
+    The SDKs will continue to be available through their new home in the Cribl Community GitHub organization, where users can keep using them, fork them, and extend them based on their own needs. Customers looking to stay on a supported integration should consider migrating to either the Python SDK, Terraform Provider, or direct Cribl API access. Cribl support will be limited to critical issues only, such as security vulnerabilities or P0 blockers, for the defined transition period. On October 1, 2026, support will end and the SDK repositories will be archived and marked read-only.
+    Notice: End of Support for Edge Nodes Running Version 3.x
+    To optimize Leader performance and accelerate the delivery of modern edge observability features, Cribl is officially ending support and testing for Edge Nodes running version 3.x that connect to the Leader. To ensure a smooth transition for legacy environments, modern Leaders will not actively block inbound connections from Edge Nodes running version 3.x at this time. However, backward compatibility is no longer actively maintained or tested.
+    If you have legacy Edge Nodes running version 3.x remaining in your Fleet, we strongly recommend upgrading them to a currently supported release. This guarantees uninterrupted configuration management and telemetry collection.
+    Notice: Upcoming Removal of Legacy Edge Upgrade Option
+    The Enable Legacy Edge upgrades check box will be removed as an upgrade option in a future release. If you are running Cribl Edge Nodes older than version 4.5.0, they can no longer be upgraded automatically via the Leader. You must manually upgrade these specific Nodes to version 4.5.0 or later. Once they are on a modern version, they will automatically inherit the standard upgrade framework for all future updates.
+    Notice: Upcoming Removal of Stream-Specific Sources
+    The following three Sources will be removed from Cribl Edge in an upcoming release:
+    - Zscaler Cloud NSS
+    - Model Driven Telemetry
+    - Amazon Firehose
+    These Sources are designed for high-volume, remote data streaming and are architecturally optimized for Cribl Stream rather than Cribl Edge. If you are using these Sources in Cribl Edge, consider migrating to the Cribl Stream Sources instead.
+    Notice: Upcoming Removal of Legacy Windows Collection Settings
+    The legacy Use Windows Tools setting (found in the Windows Event Logs, Windows Metrics, and System State Sources) will be removed in a future release. This setting enables a legacy PowerShell-based collection method. By default, these Sources use the newer native collection method, which is faster, more reliable, and collects the same data.
+    No action is required. When Cribl removes these settings, affected Sources automatically use the native method.
+    Corrections
+    Operational Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                |
+    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | CRIBL-42081 | Fixed an issue where upgrading a Windows Edge Node using msiexec would fail when username was provided.                                                                                                                                                                                    |
+    | CRIBL-42946 | Fixed an issue where an interrupted upgrade of a Windows Edge Node would switch the Node to standalone mode and prevent connecting to the Leader.                                                                                                                                          |
+    | CRIBL-37875 | Fixed an issue where the Worker Process would not shut down gracefully on an Edge Node on Windows, causing potential data loss.                                                                                                                                                            |
+    | PLAT-12786  | Fixed a memory leak that could cause steady heap growth when inter-process RPC calls timed out.                                                                                                                                                                                            |
+    | PLAT-7290   | Fixed an issue in Cribl.Cloud where users with the Admin Workspace Permission through an SSO-mapped Team could not access the Workspace tab in the sidebar.                                                                                                                                |
+    | PLAT-11447  | Fixed an issue in Cribl.Cloud where logging back in after a session timeout redirected every open browser tab to the same page instead of restoring each tab to the page you were viewing before logout.                                                                                   |
+    | CRIBL-39583 | Fixed an issue where the GeoIP Function in a Pack returned a file not found error when referencing a global Worker Group or Fleet MMDB file using the cribl. prefix.                                                                                                                       |
+    | CRIBL-41261 | Fixed an issue where the Sources and Destinations status pages could hang indefinitely when any Worker/Node process was unresponsive.                                                                                                                                                      |
+    | CRIBL-42079 | The status icon (grey circle) indicating that no Source or Destination metrics are being collected now correctly navigates to the Sources or Destinations page.                                                                                                                            |
+    | CRIBL-41304 | Fixed an incorrect Default Worker Group label in Cribl Edge and Cribl Outpost settings.                                                                                                                                                                                                    |
+    | CRIBL-42079 | Fixed an issue where the status icon indicating that no Source or Destination metrics are being collected did not navigate to the Sources or Destinations page when clicked.                                                                                                               |
+    | CRIBL-42599 | Fixed an issue where the Outpost Info tab displayed incorrect labels instead of the Stream version and Worker Group.                                                                                                                                                                       |
+    | CRIBL-41935 | Fixed an issue where testing an existing Database Connection from the UI failed after credential fields were masked in API responses.                                                                                                                                                      |
+    | CRIBL-41979 | Fixed an issue where Sources with Enable persistent queue turned on could leak memory and consume excessive CPU when many TCP connections stayed open under sustained backpressure, such as when downstream delivery was blocked.                                                          |
+    | CRIBL-28488 | Fixed an issue where the C.Text.parseXml() expression method, used in the Eval Function in Pipelines, left XML-encoded characters (such as <) in parsed field values. You can now pass true for the optional unescapeXml parameter to decode XML entities in text and attribute values. |
+    | CRIBL-43383 | Fixed a warning about proper formatting of TLS paths appearing in TLS setting sections where it did not apply.                                                                                                                                                                             |
+
+    Source and Destination Fixes
+
+    | ID          | Description                                                                                                                                 |
+    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-37299 | Fixed a dashboard issue where blocked status did not clear correctly after backpressure resolved.                                           |
+    | CRIBL-42875 | Fixed an issue in file-system-based destinations where a failed upload could cause orphan recovery to re-compress already-compressed files. |
+
+    SDK Changelogs
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - Typescript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-07-22
