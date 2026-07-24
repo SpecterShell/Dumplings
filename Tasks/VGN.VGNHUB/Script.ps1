@@ -1,18 +1,22 @@
-$Object1 = Invoke-RestMethod -Uri 'https://vgnclub.com/api/drive/hub/x64'
+$Object1 = Invoke-RestMethod -Uri 'https://www.vgnlab.com.cn/api/vhub/version'
 
 # Version
 $this.CurrentState.Version = $Object1.data.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.downloadPathWin
+  InstallerUrl = $Object1.data.downloadPath
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.updateTime | Get-Date -Format 'yyyy-MM-dd'
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.descriptionEnglish | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+      }
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
