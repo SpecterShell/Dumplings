@@ -61,40 +61,40 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
-        param($Page)
+    # try {
+    #   $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
+    #     param($Page)
 
-        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.cursor.com/changelog'
-        $ArticleSelector = "xpath=//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]"
-        $Article = $Page.Locator($ArticleSelector).First
-        $null = Wait-PlaywrightTask -Task $Article.WaitForAsync()
-        [string](Wait-PlaywrightTask -Task $Article.InnerHTMLAsync())
-      } | ConvertFrom-Html
+    #     $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.cursor.com/changelog'
+    #     $ArticleSelector = "xpath=//main//article[contains(.//span[@class='label'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]"
+    #     $Article = $Page.Locator($ArticleSelector).First
+    #     $null = Wait-PlaywrightTask -Task $Article.WaitForAsync()
+    #     [string](Wait-PlaywrightTask -Task $Article.InnerHTMLAsync())
+    #   } | ConvertFrom-Html
 
-      if ($ReleaseNotesObject) {
-        # # ReleaseTime
-        $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
+    #   if ($ReleaseNotesObject) {
+    #     # # ReleaseTime
+    #     $this.CurrentState.ReleaseTime = $ReleaseNotesObject.SelectSingleNode('.//time').Attributes['datetime'].Value | Get-Date -AsUTC
 
-        # Remove video players
-        $ReleaseNotesObject.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
-        # Remove accordion buttons
-        $ReleaseNotesObject.SelectNodes('.//span[contains(@class, "group-data-[state=open]:")]').ForEach({ $_.Remove() })
-        # Remove anchor icons
-        $ReleaseNotesObject.SelectNodes('.//*[contains(@class, "anchor-icon")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes('.//div[contains(@class, "prose")]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
+    #     # Remove video players
+    #     $ReleaseNotesObject.SelectNodes('.//*[contains(@aria-label, "Video player container")]').ForEach({ $_.Remove() })
+    #     # Remove accordion buttons
+    #     $ReleaseNotesObject.SelectNodes('.//span[contains(@class, "group-data-[state=open]:")]').ForEach({ $_.Remove() })
+    #     # Remove anchor icons
+    #     $ReleaseNotesObject.SelectNodes('.//*[contains(@class, "anchor-icon")]').ForEach({ $_.Remove() })
+    #     # ReleaseNotes (en-US)
+    #     $this.CurrentState.Locale += [ordered]@{
+    #       Locale = 'en-US'
+    #       Key    = 'ReleaseNotes'
+    #       Value  = $ReleaseNotesObject.SelectNodes('.//div[contains(@class, "prose")]') | Get-TextContent | Format-Text
+    #     }
+    #   } else {
+    #     $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    #   }
+    # } catch {
+    #   $_ | Out-Host
+    #   $this.Log($_, 'Warning')
+    # }
 
     $this.Print()
     $this.Write()
