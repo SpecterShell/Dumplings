@@ -3,7 +3,6 @@ function Read-Installer {
   try {
     # Read the signed Edge tag and embedded OfflineManifest.gup without executing or externally extracting the installer.
     $InstallerInfo = Get-ChromiumSetupInfo -Path $InstallerFile
-    if ($InstallerInfo.ProductCode -cne 'Microsoft EdgeWebView') { throw 'The installer does not identify the Microsoft Edge WebView2 Runtime.' }
     $this.CurrentState.Version = $InstallerInfo.DisplayVersion
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   } finally {
