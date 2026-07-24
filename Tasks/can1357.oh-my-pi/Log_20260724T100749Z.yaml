@@ -1,0 +1,80 @@
+Version: 17.1.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.1.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added the provider-neutral native computer-call lifecycle, preserving observation outputs and input actions across pending and acknowledged tool results.
+    Changed
+    - Queued steering no longer hard-aborts non-interruptible tools (e.g. bash): it aborts interruptible waits only and raises a cooperative steering signal (ToolCallContext.steeringSignal) that long-running tools may observe to finish early or background themselves. The mid-batch steering/IRC watch now runs for every tool batch instead of only batches containing an interruptible tool.
+    @oh-my-pi/pi-ai
+    Added
+    - Added setCodexAttestationProvider API for injecting x-oai-attestation headers in ChatGPT-OAuth Codex requests
+    - Added OAuth account session pinning and active status tracking in storage
+    - Added OpenAI Responses native computer-use transport, including batched actions and exact computer_call/computer_call_output replay with pending/acknowledged safety checks and image_url/file_id output references. Models without native support receive the same action surface as a regular function tool; provider-specific tool-choice forcing is used where supported.
+    - Added PI_CODEX_RESPONSES_LITE to override the catalog-selected Codex Responses transport for diagnostics (1/true forces Lite; 0/false forces the standard body).
+    - Added caller-owned cachedContent on google-generative-ai and google-vertex GenerateContent options: pass an opaque cache resource name through the shared builder (blank values rejected); no create/refresh/delete lifecycle and no guessed model/project/location validation; existing cachedContentTokenCount → Usage.cacheRead normalization is unchanged.
+    - Added Anthropic extra-usage reporting across omp usage, interactive /usage, and ACP /usage: the OAuth usage endpoint's authoritative spend payload (or legacy extra_usage fallback when absent) is normalized into a Claude Extra Usage USD row; capped accounts show limit/remaining/fractions and status, while uncapped spend exposes only its absolute used amount—rendered as $… used in CLI/TUI and 123.45 usd used in ACP—without a fabricated cap, percentage, or status. (#5575)
+    - Added process-scoped OAuth account pools for trusted auth-broker clients via OMP_AUTH_BROKER_ACCOUNT_POOL_FILE, consistently filtering snapshots, streaming updates, refreshes, and usage reports to selected OAuth identities while leaving API-key credentials and the shared encrypted snapshot cache unrestricted.
+    - Added opt-in Vercel AI Gateway automatic prompt caching for OpenAI Chat Completions while preserving only and order routing preferences.
+    - Added Vercel AI Gateway Responses cache anchors and cache lifetimes, emitted only with automatic caching.
+    - Added opt-in OpenAI GPT-5.6 explicit prompt-cache controls for Responses and Chat Completions. Existing requests remain implicit; the policy marks at most one existing stable-history block and is rejected locally on unsupported explicit routes.
+    - Forwarded statefulResponses through streamSimple, so diagnostic callers can explicitly disable OpenAI Responses previous_response_id chaining.
+    - Added native QwenCloud Token Plan API-key login, model discovery, and an optional interactive console-Cookie prompt for 5-hour and 7-day quota reporting (#6151).
+    - Added model-scoped usage health and same-provider reselection for native coding-plan credential pools, preserving OAuth/login-pool precedence, scoped broker blocks, sibling rotation state, and conservative unknown-account handling while excluding ordinary configured API keys (#5018).
+    Fixed
+    - Fixed stateful OpenAI Responses explicit cache breakpoints being restored onto edited historical messages, ensuring full replays recompute the latest stable cache boundary.
+    - Fixed ChatGPT Codex standard and Lite transports rejecting or hiding native computer-use payloads by unrolling the tool definition, forced choice, computer_call, and computer_call_output into ordinary function-tool forms.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added catalog metadata for models that support native computer-use requests.
+    - Added resolved Bedrock Converse prompt-cache compatibility limits, including explicit 5-minute checkpoint support for bundled Nova Lite, Micro, Pro, Premier, and Nova 2 Lite models plus their documented in-region, regional, and global IDs, and model-specific 1-hour Claude retention.
+    - Added resolved Bedrock Converse prompt-cache compatibility limits, including explicit 5-minute checkpoint support for bundled Nova Lite, Micro, Pro, and Premier models plus Nova Premier's documented in-region model ID, and model-specific 1-hour Claude retention.
+    - Added the native Meta Model API provider and Muse Spark 1.1 with Responses API reasoning replay, image input, and the full supported reasoning-effort ladder (#4941).
+    - Added an opt-in Vercel AI Gateway automatic prompt-cache compatibility option alongside provider routing preferences.
+    - Added Vercel AI Gateway Responses cache-anchor and cache-lifetime compatibility controls.
+    - Added resolved OpenAI GPT-5.6 prompt-cache breakpoint capability metadata, keeping older models and compatible endpoints opt-in only.
+    - Added the native alibaba-token-plan provider with QwenCloud Token Plan Individual discovery and a curated chat-model fallback catalog (#6151).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the /session pin subcommand and account picker to pin provider OAuth accounts for the current session
+    - Added the disabled-by-default computer essential tool with configurable enablement, backend, display, and maximum width/height settings. Native desktop execution runs through a DesktopSession worker; observation uses read approval, input uses exec approval, and provider checks always prompt and fail closed.
+    - Added the /computer slash command (on/off/status/toggle) to enable or disable the computer tool for the current session without persisting settings.
+    - Exposed computer to models without native OpenAI computer-use support as a regular function tool with a typed GA action schema; the same native desktop backend and approval policy apply on both paths.
+    - Hardened computer action ingress: action-specific fields, modifier/key arrays, coordinates, drag points, and scroll deltas fail closed before native input; numeric fields must be signed 32-bit integers and coordinates must be non-negative.
+    Changed
+    - Replaced Chromium-backed /live media and external speech recorder/player subprocesses with the cross-platform native microphone, speaker, Opus, and WebRTC stack from @oh-my-pi/pi-natives.
+    Fixed
+    - Fixed live-call attestation depending on the ChatGPT desktop app being installed: generateLiveAttestation now mints DeviceCheck tokens in-process through the @oh-my-pi/pi-natives deviceCheckGenerateToken binding instead of probing /Applications for the app's devicecheck.node addon, so the x-oai-attestation header works on hosts without the desktop app and drops the createRequire addon probing; the attestation provider is now wired up to @oh-my-pi/pi-ai for ChatGPT-OAuth Codex requests.
+    - Fixed xd:// device execution failures rendering as write errors instead of using the mounted tool's own error renderer.
+    - Fixed custom tools without bespoke renderers losing the default state-tinted card when mounted under xd://; dispatched calls now keep their label, arguments, status, output preview, and expansion affordance instead of dumping a bare result line into the transcript.
+    - Fixed the clipboard image-paste keybind mangling copied URL text into a bogus path error on macOS (e.g. Image not found at /https/::i.can.ac:CE4Ek3.png for a copied https://i.can.ac/CE4Ek3.png). AppleScript's the clipboard as «class furl» coerces plain text into a file URL by treating the string as an HFS path (:↔/ swap), so readMacFileUrlsFromClipboard returned a garbage path that dead-ended in handleImagePathPaste instead of falling through to the text paste. The script now bails early via clipboard info for «class furl» unless the pasteboard actually carries a public.file-url representation, so URL/text clipboards paste as text.
+    - Fixed spilled tool-output artifact descriptors leaking on error/abort paths. OutputSink.dump() was the only path that closed the spill Bun.FileSink, but the bash and Python executors re-throw on failure and their finally blocks never closed the sink, so a large-output command that errored leaked the artifact descriptor until an unrelated read (e.g. a SKILL.md load) hit EMFILE. OutputSink now exposes an idempotent dispose() that closes the sink exactly once, wired into every executor's finally (#6463).
+    - Fixed the first submitted prompt stalling while the local tiny-title worker started: the interactive submit handler now paints the pending user row before starting title generation, and startup prewarms an idle, unref'd worker so the first submit reuses a live subprocess instead of paying spawn latency ahead of the first frame (#6462).
+    - Fixed legacy Pi extensions failing validation when importing the upstream keyText keybinding helper (#6470).
+    @oh-my-pi/pi-natives
+    Added
+    - Added native AudioCapture, AudioPlayback, and LiveWebRtcPeer classes for low-latency microphone capture, gapless speaker playback, and WebRTC offer/answer sessions with Opus media and oai-events data-channel delivery.
+    - Added a macOS deviceCheckGenerateToken export that generates Apple DeviceCheck attestation tokens natively: it drives DCDevice.generateToken through raw Objective-C runtime FFI with a hand-built completion block literal and a bounded one-second wait, resolving { supported, tokenBase64, error, latencyMs } to mirror the ChatGPT desktop app's devicecheck.node addon contract. Non-macOS builds resolve supported: false without touching the network.
+    - Added a genuine native desktop backend for computer use, bundled in the core addon on every published platform: macOS Quartz/CGEvent, Windows Win32/SendInput, and a pure-Rust Linux X11 backend (x11rb capture over the display socket, XTest input with keysym mapping) that links no GUI system libraries — so Linux x64/arm64, glibc and musl are all supported and headless hosts are unaffected. Wayland sessions work through XWayland. Execute batches enforce a 60-second native deadline (DESKTOP_DEADLINE_EXCEEDED) and never emit input after it expires; unsupported pure-Wayland capture and out-of-XTest-range or negative-origin coordinate layouts fail closed.
+    Fixed
+    - Fixed macOS computer screenshots taking roughly 30 seconds under Bun by replacing xcap's deprecated window-list capture with a bounded system capture path; direct screenshots now complete in under half a second on the verified host.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed WarpTerminal wrapping streamed Compatibility Jamo at the platform-default width instead of its rendered one-cell width (#6461).
+    What's Changed
+    - feat: add native Codex computer use by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6448
+    - fix(tui): correct Warp compatibility Jamo width by @roboomp in https://github.com/can1357/oh-my-pi/pull/6467
+    - fix(tools): close spilled output descriptors on error/abort paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/6468
+    - fix(tui): prewarm tiny-title worker off the first-submit hot path by @roboomp in https://github.com/can1357/oh-my-pi/pull/6469
+    - fix(coding-agent): restore legacy keyText export by @roboomp in https://github.com/can1357/oh-my-pi/pull/6472
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.1.0...v17.1.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.1.1
+ReleaseTime: 2026-07-24T08:41:58.0000000Z
