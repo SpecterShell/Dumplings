@@ -16,7 +16,11 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
+  # DATEV's portal version string is not monotonic under WinGet chunk comparison
+  # (e.g. "5.5" sorts below "5.49" because chunk 5 < 49), so a genuine update can be
+  # classified as "Rollbacked". Treat rollbacks like updates, matching the other DATEV
+  # tasks. DATEV does not publish real downgrades on this channel.
+  'New|Changed|Updated|Rollbacked' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
@@ -24,10 +28,10 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
   }
-  'Changed|Updated' {
+  'Changed|Updated|Rollbacked' {
     $this.Message()
   }
-  'Updated' {
+  'Updated|Rollbacked' {
     $this.Submit()
   }
 }
