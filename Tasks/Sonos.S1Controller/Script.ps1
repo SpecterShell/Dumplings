@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-WinGetDeliveryOptimizationRedirectedUrl -Uri 'https://www.sonos.com/redir/controller_software_pc'
+  InstallerUrl = Get-WinGetDeliveryOptimizationRedirectedUrl -Uri 'https://www.sonos.com/en/redir/controller_software_pc'
 }
 
 # Version

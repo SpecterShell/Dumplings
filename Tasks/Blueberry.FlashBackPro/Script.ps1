@@ -11,7 +11,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://files.bbsoftware.co.uk/bbflbk5.exe'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+$Object1 = Get-WinGetDeliveryOptimizationResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest

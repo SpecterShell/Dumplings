@@ -1,4 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless {
+$Object1 = Use-PlaywrightPage -Stealth -Screenshot {
   param($Page)
   $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.adinstruments.com/support/downloads/windows/glp-client'
   Read-PlaywrightPageContent -Page $Page

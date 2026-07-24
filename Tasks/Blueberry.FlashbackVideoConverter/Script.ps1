@@ -62,7 +62,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://files.flashbackrecorder.com/vidconverter_setup.exe'
 }
 
-$Object1 = Get-WebResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl -Method GET -UserAgent $DumplingsBrowserUserAgent
+$Object1 = Get-WinGetDeliveryOptimizationResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl
 $ETag = $Object1.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
