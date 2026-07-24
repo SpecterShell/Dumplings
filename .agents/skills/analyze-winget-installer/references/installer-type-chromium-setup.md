@@ -215,7 +215,7 @@ $Info.OfflineManifest
 Use the aggregate result throughout the analysis. Do not call the scalar `Read-*` or `Test-*` helpers after `Get-ChromiumSetupInfo`; they are alternatives for callers that need only one value. Expand only when nested payload evidence is required:
 
 ```powershell
-$Files = Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $DestinationPath
+$Files = Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 Expansion is source-backed and bounded:

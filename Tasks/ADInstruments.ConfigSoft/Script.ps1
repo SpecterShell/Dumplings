@@ -20,7 +20,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
-    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ConfigSoft 64bit\setup.exe'
+    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ConfigSoft 64bit\setup.exe' -CollisionAction Rename
     try {
       # RealVersion
       $this.CurrentState.RealVersion = (Get-InstallShieldMsiInfo -Path (Join-Path $InstallerFileExtracted 'ConfigSoft 64bit\setup.exe') -Name 'ConfigSoft.msi').DisplayVersion

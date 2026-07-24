@@ -46,7 +46,7 @@ switch -Regex ($this.Check()) {
     # The custom installer (github.com/win32ss/supermium-installer) writes DisplayVersion
     # as a hardcoded string literal, stored right before the "DisplayVersion" field
     # name in its uninstall registration data
-    $SetupFile = Expand-SevenZipSfx -Path $InstallerFile -Name 'setup.exe' | Select-Object -First 1
+    $SetupFile = Expand-SevenZipSfx -Path $InstallerFile -Name 'setup.exe' -CollisionAction Rename | Select-Object -First 1
     $SetupBytes = [System.IO.File]::ReadAllBytes($SetupFile)
     $AnchorOffset = (Find-BinaryPattern -Bytes $SetupBytes -Pattern ([System.Text.Encoding]::Unicode.GetBytes('DisplayVersion')) -Maximum 1)[0]
     foreach ($Offset in (Find-BinaryPattern -Bytes $SetupBytes -Pattern ([System.Text.Encoding]::Unicode.GetBytes('1')) -StartOffset ($AnchorOffset - 256) -Length 256)) {

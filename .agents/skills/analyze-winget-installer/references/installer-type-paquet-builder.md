@@ -53,7 +53,7 @@ WinGet supplies no Paquet Builder defaults for generic `InstallerType: exe`. Tre
 
 ```powershell
 $Info = Get-PaquetBuilderInfo -Path $InstallerPath
-Expand-PaquetBuilderInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+Expand-PaquetBuilderInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 The parser locates and validates the independent payload and Paquet Builder

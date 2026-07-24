@@ -44,7 +44,7 @@ switch -Regex ($this.Check()) {
     if ($ChromiumSetupInfo.Variant -cne 'Omaha') { throw "Unexpected Brave Updater installer variant: $($ChromiumSetupInfo.Variant)" }
     $InstallerFileExtracted = New-TempFolder
     try {
-      $BraveUpdateFiles = @(Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BraveUpdate.exe')
+      $BraveUpdateFiles = @(Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BraveUpdate.exe' -CollisionAction Rename)
       if ($BraveUpdateFiles.Count -ne 1) { throw "Expected one BraveUpdate.exe payload, but extracted $($BraveUpdateFiles.Count)" }
       $FileSha256 = (Get-FileHash -LiteralPath $BraveUpdateFiles[0].FullName -Algorithm SHA256).Hash
     } finally {

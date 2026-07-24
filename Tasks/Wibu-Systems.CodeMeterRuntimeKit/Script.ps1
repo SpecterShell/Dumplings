@@ -31,7 +31,7 @@ switch -Regex ($this.Check()) {
     if ($MsiPayloads.Count -ne 1) { throw "Expected one dotNetInstaller MSI payload, but found $($MsiPayloads.Count)" }
     $InstallerFileExtracted = New-TempFolder
     try {
-      $ExtractedMsiFiles = @(Expand-DotNetInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name $MsiPayloads[0])
+      $ExtractedMsiFiles = @(Expand-DotNetInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name $MsiPayloads[0] -CollisionAction Rename)
       if ($ExtractedMsiFiles.Count -ne 1) { throw "Expected one extracted dotNetInstaller MSI, but found $($ExtractedMsiFiles.Count)" }
       $MsiInfo = Get-MsiInstallerInfo -Path $ExtractedMsiFiles[0]
       # RealVersion

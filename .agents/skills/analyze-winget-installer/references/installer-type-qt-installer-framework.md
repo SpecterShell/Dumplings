@@ -138,7 +138,7 @@ $Info.RecommendedUpgradeBehavior
 $Info.UpgradeEvidence
 $Info.Warnings
 
-$ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -Name '*.exe'
+$ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -Name '*.exe' -CollisionAction Rename
 Get-ChildItem -Path $ExpandedPath -Recurse -File
 ```
 

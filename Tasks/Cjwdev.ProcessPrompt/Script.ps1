@@ -1,7 +1,7 @@
 function Read-Installer {
   $InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
   $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
-  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ProcessPrompt.exe'
+  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'ProcessPrompt.exe' -CollisionAction Rename
   try {
     # Version
     $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'ProcessPrompt.exe') -Architecture x64).DisplayVersion

@@ -109,7 +109,7 @@ Expansion never starts the installer. It writes each decoded runtime core,
 structured metadata block, and package file beneath separate safe paths:
 
 ```powershell
-$Files = Expand-DeployMasterInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+$Files = Expand-DeployMasterInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 $Files
 ```
 

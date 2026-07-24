@@ -12,7 +12,7 @@ Strong evidence includes `InstallAware` or `MimarSinan` strings.
 
 ```powershell
 $Info = Get-InstallAwareInfo -Path $InstallerPath
-Expand-InstallAwareInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+Expand-InstallAwareInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 The parser requires a validated embedded 7z archive with InstallAware project
@@ -80,7 +80,7 @@ $Info | Select-Object DisplayName, DisplayVersion, Publisher, Scope, SupportedSc
 ### Step 2: Extract And Analyze Nested Installers
 
 ```powershell
-$Files = Expand-InstallAwareInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+$Files = Expand-InstallAwareInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 $Files | Where-Object Extension -In '.exe', '.msi', '.msp', '.msix', '.appx' | ForEach-Object {
   Get-WinGetInstallerAnalysis -Path $_.FullName
 }

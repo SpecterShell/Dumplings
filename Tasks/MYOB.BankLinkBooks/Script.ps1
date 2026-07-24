@@ -1,7 +1,7 @@
 function Read-Installer {
   $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   $InstallerFileExtracted = New-TempFolder
-  $InstallerFile2 = Expand-InnoInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BK5WIN.EXE' | Select-Object -First 1 -ExpandProperty 'FullName'
+  $InstallerFile2 = Expand-InnoInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BK5WIN.EXE' -CollisionAction Rename | Select-Object -First 1 -ExpandProperty 'FullName'
   # Version
   $this.CurrentState.Version = Read-FileVersionFromExe -Path $InstallerFile2
   # InstallerSha256

@@ -69,8 +69,8 @@ Use the parser to recover the zlib-compressed `project.xml` and unencrypted Cook
 
 ```powershell
 $Info = Get-InstallBuilderInfo -Path C:\Path\To\Installer.exe
-Expand-InstallBuilderInstaller -Path C:\Path\To\Installer.exe -Name project.xml
-Expand-InstallBuilderInstaller -Path C:\Path\To\Installer.exe -Name 'payload/setup.msi'
+Expand-InstallBuilderInstaller -Path C:\Path\To\Installer.exe -Name project.xml -CollisionAction Rename
+Expand-InstallBuilderInstaller -Path C:\Path\To\Installer.exe -Name 'payload/setup.msi' -CollisionAction Rename
 ```
 
 The parser reads `shortName`, `fullName`, `version`, `vendor`, `requireInstallationByRootUser`, built-in uninstaller actions, literal `registrySet` actions, and the CookFS `CFS0002` file index. `PayloadFiles` lists logical payload paths; `___bitrockBigFileN` segments are reassembled under their base file name during extraction. Supported unencrypted page encodings are raw, Deflate, BZip2, and the InstallBuilder `lzmadec` LZMA-alone form.

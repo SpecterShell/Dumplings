@@ -12,7 +12,7 @@ Strong evidence includes `CreateInstall`, `Novostrim`, CreateInstall project ext
 
 ```powershell
 $Info = Get-CreateInstallInfo -Path $InstallerPath
-Expand-CreateInstallInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+Expand-CreateInstallInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 The parser validates Gentee GEA v1/v2 container structures and expands stored,
@@ -125,7 +125,7 @@ rejects truncated blocks rather than reading into the following record.
 
 ```powershell
 if ($Info.CanExpand) {
-  $Files = Expand-CreateInstallInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+  $Files = Expand-CreateInstallInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
   $Files | Select-Object FullName, Length
 }
 ```

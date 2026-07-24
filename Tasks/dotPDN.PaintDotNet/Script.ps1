@@ -69,7 +69,7 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$InstallerX64.InstallerUrl] = $InstallerFileX64 = Get-TempFile -Uri $InstallerX64.InstallerUrl
-    $InstallerFileX642 = $InstallerFileX64 | Expand-TempArchive | Join-Path -ChildPath $InstallerX64.NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFileX642 = $InstallerFileX64 | Expand-TempArchive -CollisionAction Rename | Join-Path -ChildPath $InstallerX64.NestedInstallerFiles[0].RelativeFilePath
     $InstallerFileX642Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileX642Extracted}" $InstallerFileX642 'x64\PaintDotNet_x64.msi' | Out-Host
     $InstallerFileX643 = Join-Path $InstallerFileX642Extracted 'PaintDotNet_x64.msi'
@@ -84,7 +84,7 @@ switch -Regex ($this.Check()) {
     Remove-Item -Path $InstallerFileX642Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     $this.InstallerFiles[$InstallerARM64.InstallerUrl] = $InstallerFileARM64 = Get-TempFile -Uri $InstallerARM64.InstallerUrl
-    $InstallerFileARM642 = $InstallerFileARM64 | Expand-TempArchive | Join-Path -ChildPath $InstallerARM64.NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFileARM642 = $InstallerFileARM64 | Expand-TempArchive -CollisionAction Rename | Join-Path -ChildPath $InstallerARM64.NestedInstallerFiles[0].RelativeFilePath
     $InstallerFileARM642Extracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileARM642Extracted}" $InstallerFileARM642 'arm64\PaintDotNet_arm64.msi' | Out-Host
     $InstallerFileARM643 = Join-Path $InstallerFileARM642Extracted 'PaintDotNet_arm64.msi'

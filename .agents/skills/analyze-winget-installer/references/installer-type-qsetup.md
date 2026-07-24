@@ -12,7 +12,7 @@ Strong evidence includes `QSetup` or `Pantaray`.
 
 ```powershell
 $Info = Get-QSetupInfo -Path $InstallerPath
-Expand-QSetupInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+Expand-QSetupInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 The parser expands QSetup's bounded length-prefixed zlib records and treats
@@ -95,7 +95,7 @@ $Info.SetupDirectives
 ### Step 2: Extract The Complete Record Table
 
 ```powershell
-$Files = Expand-QSetupInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+$Files = Expand-QSetupInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 $Files | Select-Object FullName, Length
 ```
 

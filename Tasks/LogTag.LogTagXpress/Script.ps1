@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
     curl -fsSLA $DumplingsInternetExplorerUserAgent -o $InstallerFile $this.CurrentState.Installer[0].InstallerUrl | Out-Host
     # NestedInstallerFiles
     $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @(7z.exe l -ba -slt $InstallerFile '*.exe' | Where-Object -FilterScript { $_ -match '^Path = ' } | ForEach-Object -Process { [ordered]@{ RelativeFilePath = [regex]::Match($_, '^Path = (.+)').Groups[1].Value } } | Select-Object -First 1)
-    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -CollisionAction Rename
     try {
       # RealVersion
       $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath)).DisplayVersion

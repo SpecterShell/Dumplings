@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFile2 = $InstallerFile | Expand-TempArchive | Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFile2 = $InstallerFile | Expand-TempArchive -CollisionAction Rename | Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     Remove-Item -Path $InstallerFile2 -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'

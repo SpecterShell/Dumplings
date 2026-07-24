@@ -21,7 +21,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     # RealVersion
-    $Object2 = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Expand-TempArchive |
+    $Object2 = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Expand-TempArchive -CollisionAction Rename |
       Join-Path -ChildPath $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath |
       ForEach-Object -Process { 7z.exe e -y -so $_ 'product-info.json' } | ConvertFrom-Json
     $this.CurrentState.RealVersion = $Object2.buildNumber

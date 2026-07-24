@@ -189,6 +189,17 @@ Route according to the combined evidence:
 - Outer NSIS does not write a visible entry and launches a custom EXE: route the payload to its focused installer parser. Do not label the ARP entry as MSI/WiX without MSI evidence.
 - No component can be proven to write a visible entry: route to Step 8 for VM ARP-delta validation.
 
+Use `Expand-NSISInstaller` when the payload is embedded in a compiled `File` command. Select the narrowest useful wildcard instead of expanding the complete application:
+
+```powershell
+$NestedMsi = Expand-NSISInstaller -Path $InstallerFile -Name '*.msi' -MaximumExpandedBytes 1GB -CollisionAction Rename
+$MsiInfo = Get-MsiInstallerInfo -Path $NestedMsi[0]
+```
+
+Omit `-Name` only when a complete bounded payload expansion is required. `-CollisionAction Prompt|Error|Skip|Overwrite|Rename` controls duplicate or existing outputs. Interactive calls default to `Prompt`; functions and unattended automation must pass `Rename` for deterministic suffix renaming.
+
+The GPL parser reads the source-backed data offset from `EW_EXTRACTFILE`, seeks directly to non-solid records, and advances one bounded decoder through solid records. It supports stored, LZMA/LZMA2, BZip2, zlib, raw DEFLATE, x86-BCJ-filtered LZMA, and NSISBI MTW payload streams without `7z.exe`. Output paths are projected below the selected destination, aliases count toward `MaximumExpandedBytes`, and partial files are removed on failure. An NSISBI archive that declares an external payload sidecar is rejected because an embedded-only result would be incomplete; obtain and analyze the sidecar explicitly.
+
 Existing manifests with `InstallerType: nullsoft` and `AppsAndFeaturesEntries.InstallerType: msi` or `wix` are useful leads, but are not evidence for a new installer version by themselves.
 
 Known wrapper examples:

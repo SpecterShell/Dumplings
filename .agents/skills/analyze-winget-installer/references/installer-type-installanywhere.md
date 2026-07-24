@@ -61,7 +61,7 @@ Use the PackageModule parser directly; it never launches the native stub or Java
 
 ```powershell
 $Info = Get-InstallAnywhereInfo -Path C:\Path\To\Installer.exe
-Expand-InstallAnywhereInstaller -Path C:\Path\To\Installer.exe -Name 'InstallerData/Execute.zip'
+Expand-InstallAnywhereInstaller -Path C:\Path\To\Installer.exe -Name 'InstallerData/Execute.zip' -CollisionAction Rename
 ```
 
 `Get-InstallAnywhereInfo` returns validated archive-range evidence, embedded file names, product and upgrade IDs, display metadata, explicit uninstall-path registry writes when present, and a warning when built-in uninstall registration still needs VM validation.

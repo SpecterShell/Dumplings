@@ -140,6 +140,14 @@ Do not promote a routing hint because it has several matching strings. Common na
 
 Run parity, parser contracts, ScriptAnalyzer, documentation validation, and `git diff --check`.
 
+### Extractor Contract
+
+Public `Expand-*` functions resolve installer and destination paths with PowerShell provider semantics before calling .NET or C#. Relative paths therefore follow the runspace location, not `[Environment]::CurrentDirectory`.
+
+Make `-Name` optional and select every catalogued file when it is omitted. A supplied name may narrow work before decompression. Every public family extractor that can encounter duplicate catalog names or pre-existing files accepts `-CollisionAction Prompt|Error|Skip|Overwrite|Rename`; `Prompt` is the interactive default and preselects `Rename`. Any function, task, bridge action, or other unattended caller must pass `Rename` explicitly, using deterministic `name (1).ext` suffixes without waiting for input. Shared low-level archive and path primitives retain non-interactive `Rename` defaults. Reserve target paths before decompression so duplicate records obey the same policy, and do not charge skipped files against expanded-byte limits.
+
+Apply the same rules to archive, CAB, MSP, PE-resource, and temporary-ZIP primitives. Keep parser-specific output limits stricter than the shared outer bounds, reject traversal before allocation, and preserve the existing return shape (`FileInfo`, path strings, or structured expansion evidence) unless a deliberate breaking API change is documented.
+
 ## Optimization Workflow
 
 Optimize measured work rather than rewriting a parser wholesale:

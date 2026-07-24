@@ -130,8 +130,8 @@ file below `Payload/<record-key>/` instead of inventing an installation path:
 
 ```powershell
 if ($Info.CanExpand) {
-  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath
-  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -Name '*.msi'
+  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
+  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -Name '*.msi' -CollisionAction Rename
 } else {
   Write-Warning 'The bounded InstallMate setup database could not be decoded.'
 }

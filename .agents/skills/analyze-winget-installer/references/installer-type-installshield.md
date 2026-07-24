@@ -255,7 +255,7 @@ Use `Expand-InstallShieldInstaller` when file-level inspection is needed:
 
 ```powershell
 $OutputDirectory = Join-Path $env:TEMP 'InstallShieldExtract'
-Expand-InstallShieldInstaller -Path $InstallerFile -DestinationPath $OutputDirectory
+Expand-InstallShieldInstaller -Path $InstallerFile -DestinationPath $OutputDirectory -CollisionAction Rename
 ```
 
 `Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. For Basic MSI and InstallScript MSI wrappers, it parses the extracted `Setup.ini`, reads `[Startup] PackageName` and the matching package section's `Location`, and exposes the exact path as `MsiPayloadSelection.SelectedMsiPath`. `Get-InstallShieldMsiInfo` reads that selected MSI instead of taking the first `*.msi` match.

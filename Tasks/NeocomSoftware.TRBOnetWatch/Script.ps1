@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $NestedInstallerPath = $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
-    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $NestedInstallerPath
+    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $NestedInstallerPath -CollisionAction Rename
     try {
       # RealVersion
       $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $NestedInstallerPath) -Name 'msi.x64.msi').DisplayVersion

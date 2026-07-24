@@ -181,12 +181,12 @@ Use file extraction only on this branch or when architecture evidence requires i
 
 ```powershell
 $OutputDirectory = Join-Path $env:TEMP 'InnoExtract'
-Expand-InnoInstaller -Path $InstallerFile -DestinationPath $OutputDirectory -Name 'nested.msi'
+Expand-InnoInstaller -Path $InstallerFile -DestinationPath $OutputDirectory -Name 'nested.msi' -CollisionAction Rename
 ```
 
-`Expand-InnoInstaller` performs bounded, source-backed extraction of one exact source name, destination name, or base file name from unencrypted Inno 5.3 through 7.x installers. It supports ANSI and Unicode file-entry layouts, 32-bit and 64-bit location offsets, SHA-1 and SHA-256 file verification, solid chunks, the Inno CALL/JMP transforms, and stored, Zlib, BZip2, LZMA, and LZMA2 payloads. The returned path preserves compiled destination constants such as `{app}` instead of guessing their runtime value.
+`Expand-InnoInstaller` performs bounded, source-backed extraction from unencrypted Inno 5.3 through 7.x installers. Omit `-Name` to enumerate and extract the complete validated file table, or supply an exact name/wildcard to limit work. It supports ANSI and Unicode file-entry layouts, 32-bit and 64-bit location offsets, SHA-1 and SHA-256 verification, solid chunks, source-defined 64 KiB CALL/JMP transforms, and stored, Zlib, BZip2, LZMA, and LZMA2 payloads. Virtual roots such as `{app}` are removed while catalog subdirectories are preserved.
 
-Do not use `-Name '*'` as a full-unpack shortcut. Target the nested file needed for the next analysis step so unrelated solid-chunk data is discarded through a bounded stream rather than written to disk. Fully encrypted headers cannot be parsed, file-encrypted payloads require the setup password, and external disk-spanning slice files are not accepted by this path. These conditions fail deterministically; they do not imply malformed metadata.
+Prefer the narrowest useful `-Name` when only one nested payload is needed. For complete extraction, omit `-Name` and set an appropriate `-MaximumExpandedBytes`. Use `-CollisionAction Prompt|Error|Skip|Overwrite|Rename` when the installer has language aliases or duplicate destinations; interactive calls default to `Prompt`, while automation must pass `Rename`. Fully encrypted headers cannot be parsed, file-encrypted payloads require the setup password, and external disk-spanning slice files are not accepted by this path. These conditions fail deterministically; they do not imply malformed metadata. Some custom 5.x compilers permit exact-name compatibility extraction but do not expose a coherent full table; omitted `-Name` correctly rejects those layouts rather than returning an incomplete archive.
 
 Inspect embedded `.msi`, `.msp`, `.msu`, setup `.exe`, and `[Run]`-target payloads. Route nested MSI/WiX files through `Get-MsiInstallerInfo`; route custom EXEs through their focused parser. Do not infer ownership merely because a setup-like file is embedded.
 

@@ -76,7 +76,7 @@ WinGet supplies no Setup Factory defaults for generic `InstallerType: exe`. Trea
 $Info = Get-SetupFactoryInfo -Path C:\Path\To\Setup.exe
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode, InstallLocation, Scope, WritesAppsAndFeaturesEntry
 
-Expand-SetupFactoryInstaller -Path C:\Path\To\Setup.exe -DestinationPath C:\Temp\SetupFactory -Name irsetup.dat
+Expand-SetupFactoryInstaller -Path C:\Path\To\Setup.exe -DestinationPath C:\Temp\SetupFactory -Name irsetup.dat -CollisionAction Rename
 ```
 
 The parser extracts bounded overlay records, verifies CRC values, parses `CSessionVar`, recursively resolves `%Variable%` expressions, and reads built-in uninstall configuration and literal Lua registry writes. It does not probe arbitrary strings.

@@ -45,7 +45,7 @@ switch -Regex ($this.Check()) {
     )
     $InstallerFile2Extracted = New-TempFolder
     # InstallationMetadata > Files > FileSha256
-    $InstallerFile3 = Expand-InnoInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted -Name 'VUSC.exe' -Language 'en' | Select-Object -First 1 -ExpandProperty 'FullName'
+    $InstallerFile3 = Expand-InnoInstaller -Path $InstallerFile2 -DestinationPath $InstallerFile2Extracted -Name 'VUSC.exe' -Language 'en' -CollisionAction Rename | Select-Object -First 1 -ExpandProperty 'FullName'
     $FileSha256 = (Get-FileHash -Path $InstallerFile3 -Algorithm SHA256).Hash
     $this.CurrentState.Installer | ForEach-Object -Process { $_.InstallationMetadata.Files[0]['FileSha256'] = $FileSha256 }
     Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'

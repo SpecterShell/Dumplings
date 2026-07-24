@@ -82,8 +82,8 @@ $Info.Warnings
 $Info.LauncherConfiguration.Entries
 $Info.Config.Source
 
-$ConfigPath = Expand-Install4jInstaller -Path $InstallerFile -Name 'i4jparams.conf'
-$ExpandedPath = Expand-Install4jInstaller -Path $InstallerFile -Name '*.exe'
+$ConfigPath = Expand-Install4jInstaller -Path $InstallerFile -Name 'i4jparams.conf' -CollisionAction Rename
+$ExpandedPath = Expand-Install4jInstaller -Path $InstallerFile -Name '*.exe' -CollisionAction Rename
 Get-ChildItem -Path $ExpandedPath -Recurse -File
 ```
 

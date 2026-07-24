@@ -58,7 +58,7 @@ WinGet supplies no dotNetInstaller defaults for generic `InstallerType: exe`. Co
 
 Use `Get-DotNetInstallerInfo -Path $InstallerFile` to read the embedded `CUSTOM/RES_CONFIGURATION` XML and list every install component, its OS/architecture filters, and its interactive/basic/silent command. `ExecutedPayloads` resolves component references against files in embedded `RES_CAB` resources.
 
-Use `Expand-DotNetInstaller -Path $InstallerFile -DestinationPath $Folder` to extract the embedded cabinets without running the bootstrapper. Analyze all selected or required components; dotNetInstaller can conditionally chain more than one payload.
+Use `Expand-DotNetInstaller -Path $InstallerFile -DestinationPath $Folder -CollisionAction Rename` to extract the embedded cabinets without running the bootstrapper. Analyze all selected or required components; dotNetInstaller can conditionally chain more than one payload.
 
 ### Step 2: Route The Selected Nested ARP Owner
 

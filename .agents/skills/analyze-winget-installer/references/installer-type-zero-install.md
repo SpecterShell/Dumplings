@@ -144,8 +144,8 @@ Zero Install desktop integration writes `DisplayName` and `Publisher` from the f
 List embedded resources from `$Info.EmbeddedResources` or export bounded selections:
 
 ```powershell
-$Files = Expand-ZeroInstallInstaller -Path $InstallerPath -DestinationPath $Destination
-$ConfigOnly = Expand-ZeroInstallInstaller -Path $InstallerPath -DestinationPath $OtherDestination -Name 'BootstrapConfig.ini'
+$Files = Expand-ZeroInstallInstaller -Path $InstallerPath -DestinationPath $Destination -CollisionAction Rename
+$ConfigOnly = Expand-ZeroInstallInstaller -Path $InstallerPath -DestinationPath $OtherDestination -Name 'BootstrapConfig.ini' -CollisionAction Rename
 ```
 
 Embedded `ZeroInstall.content.*` files seed feeds, archives, icons, keys, or desktop-integration stubs. Their physical presence does not prove which target implementation the feed solver will select.

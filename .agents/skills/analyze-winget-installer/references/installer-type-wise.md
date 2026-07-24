@@ -64,7 +64,7 @@ WinGet supplies no Wise-wrapper defaults for generic `InstallerType: exe`. The s
 
 ```powershell
 $Info = Get-WiseInfo -Path $InstallerFile
-$Msi = Expand-WiseInstaller -Path $InstallerFile
+$Msi = Expand-WiseInstaller -Path $InstallerFile -CollisionAction Rename
 
 $Info.ProductCode
 $Info.UpgradeCode

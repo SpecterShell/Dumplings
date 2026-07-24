@@ -1,7 +1,7 @@
 function Read-Installer {
   $InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
   $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerUrl
-  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'NtfsPermissionsReporterInstaller.exe'
+  $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath 'NtfsPermissionsReporterInstaller.exe' -CollisionAction Rename
   try {
     # Version
     $this.CurrentState.Version = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted 'NtfsPermissionsReporterInstaller.exe') -Architecture x64).DisplayVersion

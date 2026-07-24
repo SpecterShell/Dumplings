@@ -14,7 +14,7 @@ Use the PackageModule parser instead of marker strings:
 
 ```powershell
 $Info = Get-InstallForgeInfo -Path $InstallerPath
-Expand-InstallForgeInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+Expand-InstallForgeInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 ```
 
 `Get-InstallForgeInfo` reads the named `SETUPCONFIGURATION` PE resource and
@@ -73,7 +73,7 @@ $Info | Select-Object DisplayName, DisplayVersion, Publisher, DefaultInstallatio
 ### Step 2: Extract Payload Files
 
 ```powershell
-$Files = Expand-InstallForgeInstaller -Path $InstallerPath -DestinationPath $DestinationPath
+$Files = Expand-InstallForgeInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
 $Files | Select-Object FullName, Length
 ```
 

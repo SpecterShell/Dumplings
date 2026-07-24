@@ -81,7 +81,7 @@ Prefer structured `aisetup.ini` metadata over arbitrary string probing. In the t
 
 ```powershell
 $Info = Get-ActualInstallerInfo -Path C:\Path\To\Installer.exe
-Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -Name aisetup.ini
+Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -Name aisetup.ini -CollisionAction Rename
 ```
 
 The PackageModule parser validates each embedded ZIP range independently, selects the archive containing `aisetup.ini`, and returns its range, files, setup values, user/machine scope capability, and registry-action evidence. It returns build-time placeholders such as `AppVersion=<V>` as null with a warning rather than treating them as product versions.
