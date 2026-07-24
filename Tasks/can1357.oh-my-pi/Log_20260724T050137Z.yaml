@@ -1,0 +1,184 @@
+Version: 17.1.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.1.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added support for tracking Cloudflare AI Gateway cache status (hit, miss, bypass, unknown) on chat spans.
+    Changed
+    - Improved tool execution steering behavior: queued steering now cooperatively signals long-running, non-interruptible tools (via ToolCallContext.steeringSignal) to allow graceful early termination or backgrounding, rather than hard-aborting them.
+    Fixed
+    - Fixed an out-of-memory (OOM) crash caused by an infinite loop when a steer or follow-up message was queued on an agent session with an empty transcript.
+    - Fixed an issue where switching providers or models on a session could lose compacted history; the agent now correctly falls back to a portable local summary if the new model cannot replay the prior provider's remote-compaction payload.
+    - Fixed a compaction failure with Anthropic models where serializing prior assistant reasoning inside tags triggered reasoning_extraction refusals.
+    @oh-my-pi/pi-ai
+    Added
+    - Added support for caller-owned cachedContent on Google Generative AI and Google Vertex AI GenerateContent options, allowing passing of opaque cache resource names.
+    - Added Anthropic extra-usage reporting across CLI, interactive, and ACP usage endpoints, normalizing the authoritative spend payload into a 'Claude Extra Usage' USD row with accurate limit, remaining, and status details.
+    - Added process-scoped OAuth account pools for trusted auth-broker clients via OMP_AUTH_BROKER_ACCOUNT_POOL_FILE to filter snapshots, updates, refreshes, and usage reports to selected OAuth identities.
+    - Added opt-in Vercel AI Gateway automatic prompt caching for OpenAI Chat Completions, including support for cache anchors and cache lifetimes.
+    - Added opt-in explicit prompt-cache controls for OpenAI GPT-5.6+ Responses and Chat Completions, supporting stable boundary selection, stateful Responses markers, and future GPT-5.x/6.x models.
+    - Added support for forwarding statefulResponses through streamSimple to allow diagnostic callers to explicitly disable OpenAI Responses previous_response_id chaining.
+    - Added native QwenCloud Token Plan support, including API-key login, model discovery, and an optional interactive console-Cookie prompt for quota reporting.
+    - Added interactive Meta Model API key login and support for MODEL_API_KEY and META_API_KEY environment variables.
+    - Added model-scoped usage health tracking and same-provider reselection for native coding-plan credential pools.
+    Fixed
+    - Fixed AWS Bedrock cache checkpoints to use resolved model compatibility, falling back to the provider-default 5-minute cache for unsupported 1-hour retentions, emitting AWS-recommended explicit checkpoints for Nova models (Lite, Micro, Pro, Premier, Nova 2 Lite), and honoring configured checkpoint maxima.
+    - Fixed Pi-native and compatibility-wrapper requests dropping cache controls required by omp bench --cache to preserve explicit prompt-cache affinity and allow disabling OpenAI Responses chaining.
+    - Fixed outbound credential-pattern redaction running unconditionally; it is now opt-in via configureCredentialRedaction and disabled by default.
+    - Fixed SuperGrok (xai-oauth) /usage reporting for unified-billing accounts by falling back to the default monthly limit and usage payload when credit usage percentages are absent.
+    - Fixed sessions wedging with a 400 Invalid signature in thinking block error when switching Anthropic-compatible providers by stripping signatures whose issuing provider differs from the target.
+    - Fixed OAuth callback servers aborting login on premature invalid callbacks, and restricted localhost callback listeners to the IPv4 loopback interface.
+    - Fixed Google Gemini CLI and Antigravity OAuth login hanging indefinitely during Cloud Code Assist project provisioning by introducing request timeouts, cancellation checks, and bounded polling.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Bedrock Converse prompt-cache compatibility limits, including 5-minute checkpoint support for Nova models (Lite, Micro, Pro, Premier, Nova 2 Lite) and 1-hour Claude retention.
+    - Added native Meta Model API provider and Muse Spark 1.1 support, featuring Responses API reasoning replay, image input, and reasoning-effort controls.
+    - Added Vercel AI Gateway integration features, including opt-in automatic prompt-cache compatibility, provider routing preferences, and Responses cache-anchor and cache-lifetime controls.
+    - Added prompt-cache breakpoint capability metadata for OpenAI GPT-5.6, with opt-in support for older models and compatible endpoints.
+    - Added native alibaba-token-plan provider with QwenCloud Token Plan Individual discovery and a curated chat-model fallback catalog.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Replaced the providers.webSearch and providers.image single-preference configuration options with providers.webSearchOrder and providers.imageOrder priority lists. Existing configurations migrate automatically on startup.
+    Added
+    - Added dynamic multi-root workspace context support, allowing users to manage multiple workspace directories mid-session via /add-dir, /remove-dir, and /dirs slash commands, or seed them at launch using the --add-dir CLI flag.
+    - Added /live, a Codex-authenticated real-time voice interface that streams microphone audio over WebRTC and routes coding tasks through the active agent session.
+    - Added opt-in usage-aware model fallback for rationed coding plans, including a /usage command to view live quantitative usage data and automatic fallback chain traversal.
+    - Added error.notify configuration to allow failed model turns to trigger distinct terminal or desktop notifications.
+    - Added auto-following light and dark themes to HTML session exports, with a /export --themes option to bundle selected TUI themes.
+    - Added owner-routed asynchronous job delivery, ensuring background bash and task results are injected directly into the owning subagent or agent session rather than the top-level session.
+    - Added background-on-steer capability for auto-backgrounded bash commands, allowing incoming user or peer messages to immediately background running commands.
+    - Added friendlyName support for hidden secrets, allowing model-visible placeholders to carry sanitized semantic labels, hashes, and case hints.
+    - Added support for Jujutsu (jj) repositories in the statusline git segment, displaying the nearest bookmark or change ID and retrieving working-copy change counts.
+    - Added block and unblock operations for tasks, introducing a blocked status for tasks waiting on external input to exclude them from incomplete-todo reminders.
+    - Added a toggle-list editor in /settings for managing array-of-enum settings like search and image provider orders.
+    - Added models.yml Bedrock Converse prompt-cache capability overrides for bundled and opaque inference profiles.
+    - Added getServiceTiers() and setServiceTier() extension APIs to read and modify the live per-family service tier for session requests.
+    - Added opt-in omp bench --cache for independent cold/warm prompt-cache benchmarking with stable-prefix controls.
+    - Added tools.xdevDocs prompt-doc modes and the tools.xdevInlineDevices glob allowlist to control which mounted device documentation is inlined into the system prompt.
+    - Added the opt-in read.renderMarkdown setting for formatted Markdown read previews.
+    Changed
+    - Updated subagent behavior to inherit async.enabled and bash.autoBackground.enabled from parent sessions, and refined subagent run completion to wait for background jobs to settle.
+    - Added ordered bash.patterns command approval rules to allow, prompt, or deny bash commands by pattern.
+    - Updated Markdown file handling so all Markdown flavors (.markdown, .mdx, .mdc, etc.) respect the read.summarize.prose setting.
+    - Upgraded xAI web search to use grok-4.5 at low reasoning effort instead of grok-4.3.
+    - Improved search provider resilience by cascading and falling back through other configured search providers when the preferred provider fails.
+    - Extended the bash tool's direnv and devenv auto-loading to all backends (including the ACP client terminal and interactive PTY) while honoring direnv's local allow list.
+    Fixed
+    - Fixed a path traversal vulnerability in blob reference resolution by rejecting non-canonical hashes in parseBlobRef.
+    - Fixed multiple edge cases in the secret obfuscation and redaction engine, including handling of context-sensitive regexes, placeholder key requirements in unwritable directories, friendly-name forgery vulnerabilities, and regex match boundaries straddling existing placeholders.
+    - Fixed a first-use race condition in ArtifactManager where concurrent callers could allocate duplicate artifact IDs.
+    - Fixed Vibe-mode session stability, resolving issues with workers disappearing across restarts, hanging during teardown, clobbering target tools during session switches, and resolving against incorrect models.
+    - Fixed concurrent MCP configuration mutations losing updates by serializing read-modify-write operations under a per-file lock with atomic writes.
+    - Fixed legacy extensions failing to load on npm/source-link installs due to transitive CommonJS dependency graph clobbering.
+    - Fixed omp auth-gateway commands bypassing the process-scoped OAuth account pool configured via environment variables.
+    - Fixed terminal transcript rendering issues where displaceable snapshots (like waiting polls and todo lists) spammed native scrollback.
+    - Fixed the terminal title to reflect the active agent run state (working, waiting, or blocked) when tui.titleState is enabled.
+    - Fixed the browser tool's open action ignoring timeouts during browser acquisition and leaking orphaned browser instances.
+    - Fixed the write tool silently creating empty files when a read-tool selector was mis-dispatched as a write.
+    - Fixed snapcompact archiving reproducing assistant reasoning (¶think: sections) into replayed frames for Anthropic-dialect models.
+    - Fixed Linux socket-mode DAP launches hanging indefinitely on connection failures.
+    - Fixed Plan Review annotations being discarded on dismissal and limited to headings.
+    - Fixed Assistant-mode TTS playback aborting prematurely when an agent continued after a tool call.
+    - Fixed absolute usage amounts rendering inconsistently across CLI, TUI, and ACP output surfaces.
+    - Fixed MCP sessions dropping tools from servers that finished connecting after the initial startup window.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed action metadata loss on xd://resolve, xd://reject, and xd://propose cards to ensure correct action badges are rendered.
+    - Added proper rendering support for reject, propose, and hub-family aliases (irc, job, await, poll, cancel_job) to prevent them from falling back to generic JSON.
+    @oh-my-pi/snapcompact
+    Added
+    - Added an includeThinking serialization option (defaulting to true) to allow excluding assistant reasoning (¶think: sections) from archived transcripts.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed an issue where malformed persisted content blocks could abort stats ingestion for subsequent projects, and ensured pending full-session migrations are properly settled after successful backfills.
+    @oh-my-pi/pi-tui
+    Added
+    - Added Text.setStyleFn() to apply foreground stylers at render time, allowing components to dynamically re-resolve colors after invalidation instead of baking in the palette active at construction.
+    Fixed
+    - Fixed an issue where exiting or tearing down the TUI left the terminal in cursor-key/keypad application mode (DECCKM), which broke arrow keys in the parent shell. Both stop() and emergencyTerminalRestore() now correctly emit standard rmkx resets.
+    What's Changed
+    - feat(ai): report Anthropic extra usage in omp usage by @LunarECL in https://github.com/can1357/oh-my-pi/pull/6382
+    - fix: preserve oauth links across wrapped rows by @ondrejsojka in https://github.com/can1357/oh-my-pi/pull/6383
+    - feat(providers): browser OAuth sign-in for Z.AI (GLM Coding Plan) by @cefege in https://github.com/can1357/oh-my-pi/pull/6385
+    - feat(catalog): add native Meta Model API provider by @eggpeat in https://github.com/can1357/oh-my-pi/pull/6386
+    - feat(coding-agent): opt-in Markdown read previews by @oldschoola in https://github.com/can1357/oh-my-pi/pull/4001
+    - fix(bash): bound interactive bash live display write queue by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4269
+    - fix(bash): bound ACP terminal lifecycle with abort/timeout by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4270
+    - perf(hindsight): cache full-session retention transcript incrementally by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4275
+    - feat(todo): add blocked status with block/unblock ops by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4448
+    - feat(statusline): make git segment jj-aware by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4450
+    - feat(coding-agent): reflect agent run state in terminal title by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4451
+    - feat(coding-agent): auto-load direnv environment into the bash session by @mattwilkinsonn in https://github.com/can1357/oh-my-pi/pull/4455
+    - feat(secrets): add friendly names to secret placeholders by @Mathews-Tom in https://github.com/can1357/oh-my-pi/pull/4636
+    - feat(notifications): add error turn notifications by @Mathews-Tom in https://github.com/can1357/oh-my-pi/pull/4637
+    - feat(coding-agent): use Grok 4.5 for xAI web search by @metaphorics in https://github.com/can1357/oh-my-pi/pull/4890
+    - fix(coding-agent): persist vibe sessions across restarts by @roboomp in https://github.com/can1357/oh-my-pi/pull/5464
+    - feat(omp): configure web search provider order by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6029
+    - feat: lift subagent async/auto-background limits via owner-routed delivery and quiescence by @korri123 in https://github.com/can1357/oh-my-pi/pull/6119
+    - Add dynamic multi-root workspace context (#2569) by @maatheusgois-dd in https://github.com/can1357/oh-my-pi/pull/6255
+    - Support light, dark, and system themes in HTML exports by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/6349
+    - fix(compaction): rescue snapcompact archives stuck past the maintenance threshold (#4786 gap) by @HugoLopes45 in https://github.com/can1357/oh-my-pi/pull/6362
+    - feat(coding-agent): support per-command bash approval rules by @WahidinAji in https://github.com/can1357/oh-my-pi/pull/6363
+    - fix(ai): strip foreign thinking signatures on the latest assistant turn by @LunarECL in https://github.com/can1357/oh-my-pi/pull/6380
+    - fix(edit): align relative path resolution by @roboomp in https://github.com/can1357/oh-my-pi/pull/6417
+    - fix(tui): re-resolve transient status colors on theme swap by @roboomp in https://github.com/can1357/oh-my-pi/pull/6420
+    - fix(tts): play buffered audio when streaming backend exits nonzero by @roboomp in https://github.com/can1357/oh-my-pi/pull/6421
+    - fix(mcp): serialize mcp.json config writes and use unique temp path by @roboomp in https://github.com/can1357/oh-my-pi/pull/6424
+    - fix(session): serialize ArtifactManager first-use init by @roboomp in https://github.com/can1357/oh-my-pi/pull/6426
+    - fix(memory): synchronize live backend lifecycle by @roboomp in https://github.com/can1357/oh-my-pi/pull/6428
+    - fix(session): resume resolved tool stalls by @roboomp in https://github.com/can1357/oh-my-pi/pull/6435
+    - docs: document /vibe mode and /fresh command by @roboomp in https://github.com/can1357/oh-my-pi/pull/6441
+    - fix(tui): reset cursor-key and keypad mode on terminal teardown by @roboomp in https://github.com/can1357/oh-my-pi/pull/6398
+    - fix(stats): prevent malformed entries from stalling sync by @roboomp in https://github.com/can1357/oh-my-pi/pull/6400
+    - fix(coding-agent): make PDF image cache content-aware by @roboomp in https://github.com/can1357/oh-my-pi/pull/6404
+    - fix(eval): coalesce dead Python kernel replacement by @roboomp in https://github.com/can1357/oh-my-pi/pull/6405
+    - fix(agent): deliver queued steer on empty transcript instead of looping by @roboomp in https://github.com/can1357/oh-my-pi/pull/6406
+    - fix(browser): bound open timeout and lease browser across tab acquisition by @roboomp in https://github.com/can1357/oh-my-pi/pull/6407
+    - fix(compaction): judge remote-preserve reuse against the active model by @roboomp in https://github.com/can1357/oh-my-pi/pull/6415
+    - fix(tool): expand internal urls inside backtick substitutions by @roboomp in https://github.com/can1357/oh-my-pi/pull/6418
+    - fix(robomp): route issues.reopened to admission-gated re-triage by @roboomp in https://github.com/can1357/oh-my-pi/pull/6419
+    - fix(collab-web): restore resolve/reject/propose cards after xdev unwrap by @roboomp in https://github.com/can1357/oh-my-pi/pull/6422
+    - fix(ai): prevent invalid callbacks from aborting oauth by @roboomp in https://github.com/can1357/oh-my-pi/pull/6423
+    - fix(session): validate blob refs before path join by @roboomp in https://github.com/can1357/oh-my-pi/pull/6427
+    - fix(compaction): stop feeding reasoning back to Claude summarizer by @roboomp in https://github.com/can1357/oh-my-pi/pull/6439
+    - feat(ai): add process-scoped OAuth account pools by @atyrode in https://github.com/can1357/oh-my-pi/pull/6416
+    - fix(session): preserve compaction data for rewinds by @roboomp in https://github.com/can1357/oh-my-pi/pull/6429
+    - fix(dap): reject and bound the unix socket connect on Linux by @roboomp in https://github.com/can1357/oh-my-pi/pull/6430
+    - fix(acp): pick up MCP tools that connect after the startup race by @barisdemirdelen in https://github.com/can1357/oh-my-pi/pull/6437
+    - fix(plan): preserve and line-anchor review annotations by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/6444
+    - feat(extensions): expose session service tiers by @atyrode in https://github.com/can1357/oh-my-pi/pull/6445
+    - fix(extensibility): guard legacy-pi-compat commonjs registration first-wins by @roboomp in https://github.com/can1357/oh-my-pi/pull/6450
+    - fix(tts): preserve playback across internal turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/6396
+    - fix(write): reject local read-selector-shaped write targets by @roboomp in https://github.com/can1357/oh-my-pi/pull/6397
+    - feat(google): reference caller-owned cached content by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6408
+    - feat(gateway): map Vercel prompt cache controls by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6410
+    - feat(agent): classify Cloudflare response cache status by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6411
+    - feat(openai): add explicit prompt cache policy by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6412
+    - feat(cli): benchmark prompt cache reuse by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6413
+    - fix(agent): commit plan-reference flag on delivery, not construction by @roboomp in https://github.com/can1357/oh-my-pi/pull/6431
+    - fix(oauth): bound and cancel Google Cloud Code Assist provisioning poll by @roboomp in https://github.com/can1357/oh-my-pi/pull/6433
+    - fix(coding-agent): return from cancelled /omfg amendments by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/6442
+    - fix(coding-agent): make mixed-agent task batches atomic and inspectable by @TechDufus in https://github.com/can1357/oh-my-pi/pull/6443
+    New Contributors
+    - @LunarECL made their first contribution in https://github.com/can1357/oh-my-pi/pull/6382
+    - @ondrejsojka made their first contribution in https://github.com/can1357/oh-my-pi/pull/6383
+    - @cefege made their first contribution in https://github.com/can1357/oh-my-pi/pull/6385
+    - @eggpeat made their first contribution in https://github.com/can1357/oh-my-pi/pull/6386
+    - @maatheusgois-dd made their first contribution in https://github.com/can1357/oh-my-pi/pull/6255
+    - @anatoli-tsinovoy made their first contribution in https://github.com/can1357/oh-my-pi/pull/6349
+    - @HugoLopes45 made their first contribution in https://github.com/can1357/oh-my-pi/pull/6362
+    - @WahidinAji made their first contribution in https://github.com/can1357/oh-my-pi/pull/6363
+    - @atyrode made their first contribution in https://github.com/can1357/oh-my-pi/pull/6416
+    - @barisdemirdelen made their first contribution in https://github.com/can1357/oh-my-pi/pull/6437
+    - @TechDufus made their first contribution in https://github.com/can1357/oh-my-pi/pull/6443
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.0.9...v17.1.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.1.0
+ReleaseTime: 2026-07-24T02:05:17.0000000Z
