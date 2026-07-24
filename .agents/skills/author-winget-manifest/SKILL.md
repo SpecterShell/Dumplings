@@ -53,7 +53,7 @@ For EXE wrappers around MSI payloads, distinguish manifest `InstallerType` from 
 
 For GitHub release sources, inspect the latest non-prerelease release unless the package is explicitly a preview/beta channel. Report repository legitimacy signals: stars, commits, issues, pull requests, archived status, latest release tag, and whether multiple release asset families should map to separate package identifiers.
 
-After all manifest files are authored, run each parsed YAML object through `Format-WinGetManifest` as documented in `references/manifest-workflow.md`. This formatter is mandatory before validation; it only normalizes legal field levels and schema ordering and must not replace the evidence-completeness pass.
+After all manifest files are authored, parse and serialize the complete set through the logical manifest pipeline as documented in `references/manifest-workflow.md`. Complete-manifest serialization applies cross-document redundancy rules, legal field levels, and schema ordering. Use `Format-WinGetManifest` only for an isolated document that is not yet part of a complete set; it cannot compare installer fields with locale manifests and must not replace the evidence-completeness pass.
 
 ## Stop Conditions
 

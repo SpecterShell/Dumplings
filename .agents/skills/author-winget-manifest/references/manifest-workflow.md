@@ -112,6 +112,7 @@ Installer locale rules:
 
 - Add `InstallerLocale` only when two or more installer entries are differentiated by locale, such as separate locale-specific binaries, URLs, or hashes.
 - Omit `InstallerLocale` for a single installer, a multilingual installer, or identical installer binaries shared across locales.
+- As a final post-processing rule, remove `InstallerLocale` from every installer when every effective installer has the same non-empty value. A common locale does not distinguish payloads and can cause validation to force that locale onto dependencies that do not declare one, as documented in [winget-pkgs#335187](https://github.com/microsoft/winget-pkgs/issues/335187) and [Komac#1718](https://github.com/russellbanks/Komac/issues/1718).
 - Do not infer `InstallerLocale` from the manifest's locale files or from an installer UI language selector. It describes which locale-specific installer payload the entry represents.
 
 Switch and behavior rules:
@@ -228,6 +229,10 @@ Rules:
 - Omit `DisplayName` when the only difference from `PackageName` is a version string that WinGet normalization removes. For example, `7pace Timetracker 1.37.55247` and `7pace Timetracker` normalize to the same package name.
 - Retain `DisplayName` when meaningful text survives normalization or when an architecture-bearing ARP name is required for more accurate architecture correlation.
 - Keep `ProductCode` at installer level. Do not duplicate the same value in `AppsAndFeaturesEntries.ProductCode`.
+- When an installer has exactly one Apps & Features entry and its `ProductCode` equals the installer-level `ProductCode`, remove the entry-level duplicate.
+- Independently of ProductCode, remove a sole entry's `DisplayName` or `Publisher` when WinGet normalization makes it equal to `PackageName` or `Publisher` in the default locale manifest. Do not compare against additional locale manifests.
+- In a sole Apps & Features entry, remove `InstallerType` when it equals the effective installer type, including a ZIP's `NestedInstallerType`. Retain it when the visible ARP technology genuinely differs from the installer payload type.
+- Delete the sole Apps & Features entry if no meaningful fields remain after these independent checks.
 - When an `AppsAndFeaturesEntries` item is needed and either the outer `InstallerType` or that item's `InstallerType` is `msi`, `wix`, or `burn`, always include its `UpgradeCode`.
 - Include `InstallerType` inside `AppsAndFeaturesEntries` only when it differs from the installer node type or is needed to disambiguate.
 - If a wrapper writes an EXE ARP entry and hides the MSI ARP entry, model the visible ARP entry, not only the embedded MSI.
@@ -301,28 +306,21 @@ Before claiming the manifest is ready:
 - Every applicable installer and locale field was considered; optional fields were not omitted merely because the first source lacked them.
 - `UnsupportedOSArchitectures` is absent.
 - Known default switches, including NSIS `/S`, are not redundantly authored.
-- Every manifest object has passed through `Format-WinGetManifest` after authoring.
+- The complete manifest set has passed through logical-model serialization after authoring; isolated drafts have passed through `Format-WinGetManifest`.
 
 ## Final Formatting
 
-After completing the evidence pass, format each manifest object through Dumplings. `Format-WinGetManifest` does not download or inspect installers and does not infer or validate manifest values. It deep-copies the object, moves only schema-supported common fields between root and installer levels, and applies schema property order. Run WinGet validation separately after formatting.
+After completing the evidence pass, parse and serialize the complete manifest set through Dumplings. `ConvertTo-WinGetManifestYaml` deep-copies the logical model, removes cross-document redundancies, recomputes legal root/installer field levels, and applies schema property order. Its post-processing removes a common `InstallerLocale` and redundant fields from a sole Apps & Features entry as described above. It does not discover missing metadata or replace validation.
 
 ```powershell
 Import-Module .\Modules\PackageModule\Index.ps1 -Force
 
-$Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Yaml -Ordered
-$Manifest = Format-WinGetManifest -Manifest $Manifest
-$SchemaUri = Get-WinGetManifestSchemaUrl -ManifestType $Manifest.ManifestType -ManifestVersion $Manifest.ManifestVersion
-$Content = @"
-# Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: `$schema=$SchemaUri
-
-$((ConvertTo-Yaml -Data $Manifest -Options DisableAliases).TrimEnd())
-
-"@
-Set-Content -LiteralPath $ManifestPath -Value $Content -Encoding utf8NoBOM
+$Manifest = Read-WinGetManifest -Path $ManifestDirectory
+$ManifestBundle = ConvertTo-WinGetManifestYaml -Manifest $Manifest
 ```
 
-Run this only after field authoring. Formatting cannot discover missing metadata. Review the diff afterward: values must remain unchanged, while common installer values may move to the manifest level and keys/arrays may be deterministically ordered according to the schema.
+Write the returned `Version`, `Installer`, and locale contents through the repository writer used by the current workflow. Review the diff afterward: meaningful evidence must remain unchanged, common installer values may move to the manifest level, redundant locale/ARP fields may disappear, and keys may be deterministically ordered according to the schema.
+
+For an isolated manifest dictionary, `Format-WinGetManifest` remains available as a non-destructive formatter. It cannot perform the common-locale or locale-to-ARP comparisons because the other physical documents are not available.
 
 For package-level processing, parse once with `Read-WinGetManifest` or `ConvertFrom-WinGetManifestYaml`. These return the logical model containing effective authored installers and separate localizations. Use `ConvertTo-WinGetManifestDocumentSet` for ordered objects, `ConvertTo-WinGetManifestYaml` for the raw multi-file bundle, and `Update-WinGetManifest` for Dumplings state updates. Singleton input is intentionally emitted as a multi-file manifest; WinGet runtime default switches and return codes are validation evidence and are never written into the logical model.

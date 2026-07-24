@@ -363,7 +363,7 @@ The schema supports `IconUrl`, `IconFileType`, `IconResolution`, `IconTheme`, an
 - Additional locales contain only evidenced localized overrides.
 - Every default-locale optional field was checked against its likely official source, even when ultimately omitted.
 - Every additional-locale field is a useful localized override rather than an unchanged duplicate.
-- The complete manifest set has passed through `Format-WinGetManifest` after authoring.
+- The complete manifest set has passed through logical-model serialization after authoring; `Format-WinGetManifest` is only the fallback for an isolated draft.
 
 ## Sources
 
