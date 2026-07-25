@@ -70,9 +70,25 @@ Installers:
 
 Apply the WinGet defaults below. Do not copy default `InstallModes` or `InstallerSwitches` into this minimal shape.
 
+## Manifest Shape: Localized ARP Identities
+
+Use this shape when `Get-NSISInfo.AppsAndFeaturesEntries` contains more than one distinct visible identity for the same uninstall key because `DisplayName` or `Publisher` is compiled from NSIS language strings. Keep the installer-level `ProductCode` once. Map each evidenced identity to `PackageName` and `Publisher` in its corresponding locale manifest, because WinGet indexes those localized values for ARP lookup. Do not select only the parser's scalar `DisplayName` and `Publisher`; those scalar properties intentionally remain the primary-language compatibility values.
+
+```yaml
+PackageIdentifier: Publisher.Product
+PackageVersion: 1.2.3
+PackageLocale: zh-CN
+Publisher: 本地化发布者名称
+PackageName: 本地化产品名称
+ManifestType: locale
+ManifestVersion: 1.12.0
+```
+
+Review `AppsAndFeaturesEntryEvidence` to correlate each value with its `LanguageId`, `Locale`, registry hive/key, scope, and visibility. `Notices` and `Warnings` explain when distinct localized identities were found. Confirm runtime language selection in the VM if the installed locale cannot be inferred statically. Retain a localized `DisplayName` or `Publisher` in `AppsAndFeaturesEntries` only when no corresponding locale manifest exists; `Optimize-WinGetManifest` otherwise removes values matched by any authored localization.
+
 ## Manifest Shape: Dual Scope
 
-Use this shape only when one installer binary has independently selectable user and machine modes through WinGet-usable command-line switches. Select this route in [Step 5](#step-5-determine-silent-behavior-and-scope) when `Get-ElectronBuilderNSISInfo.SupportedScopes` reports both scopes and the corresponding switches are present, or when ordinary NSIS control-flow and registry evidence proves explicit `/CurrentUser` and `/AllUsers` support. `Get-NSISInfo.Scope` alone describes only the simulated default path and is not sufficient evidence for this shape.
+Use this shape only when one installer binary has independently selectable user and machine modes through WinGet-usable command-line switches. Select this route in [Step 5](#step-5-determine-silent-behavior-and-scope) when `Get-ElectronBuilderNSISInfo.SupportedScopes` reports both scopes and the corresponding switches are present, or when ordinary NSIS control-flow and registry evidence proves explicit `/CurrentUser` and `/AllUsers` support. For compiled MultiUser scope setters, call `Get-NSISInfo -Scope user` and `Get-NSISInfo -Scope machine`; use each result's `ProductCode`, `DisplayName`, `Scope`, and `DefaultInstallLocation` only for the matching installer entry. `HasScopeRuntimeCheck` and `SupportedScopes` report the source-backed branch evidence. An untargeted `Get-NSISInfo.Scope` describes only the simulated default path and is not sufficient evidence for this shape.
 
 ```yaml
 Installers:
@@ -149,24 +165,30 @@ Load PackageModule and perform the complete metadata parse without running the i
 ```powershell
 . .\Modules\PackageModule\Index.ps1
 
-$Info = Get-NSISInfo -Path $InstallerFile
+$Info = Get-NSISInfo -Path $InstallerFile -Architecture $TargetArchitecture -Scope $TargetScope
 $ProductVersion = $Info.DisplayVersion
 $ProductName = $Info.DisplayName
 $Publisher = $Info.Publisher
 $ProductCode = $Info.ProductCode
 $Info.WritesAppsAndFeaturesEntry
 $Info.RegistryWrites
+$Info.AppsAndFeaturesEntries
+$Info.AppsAndFeaturesEntryEvidence
+$Info.Notices
+$Info.HasLocalizedAppsAndFeaturesEntries
 $Info.ExtractedFiles
 $Info.ExecutedPayloads
+$Info.IsPortable
+$Info.PortableEvidence
 $Info.Protocols
 $Info.FileExtensions
 $Info.Warnings
 $Info.ParserVersionInfo
 ```
 
-`Get-NSISInfo` performs the complete NSIS metadata parse. Reuse its properties throughout the analysis. Do not call `Read-ProductVersionFromNSIS`, `Read-ProductNameFromNSIS`, `Read-PublisherFromNSIS`, `Read-ProductCodeFromNSIS`, `Read-ProtocolsFromNSIS`, or `Read-FileExtensionsFromNSIS` after obtaining `$Info`; each convenience reader invokes the parser again. Use a `Read-*FromNSIS` function only when one isolated field is needed and no `Get-NSISInfo` result already exists.
+`Get-NSISInfo` performs the complete NSIS metadata parse. Pass the effective WinGet installer architecture when it is already known, because an x86 NSIS stub can select different ARP keys, names, and install roots on x86, x64, or ARM64 Windows. Pass the effective authored scope when it is known; compiled MultiUser installers such as `DBeaver.DBeaver.*` can write different HKCU/HKLM uninstall keys, display names, and install roots from the same binary. When a manifest has multiple effective architecture/scope combinations, parse once per distinct combination and reuse each result for the corresponding entry. Omit `-Scope` on the discovery pass when scope support is not yet known, then inspect `HasScopeRuntimeCheck` and `SupportedScopes` before requesting targeted results. Do not call `Read-ProductVersionFromNSIS`, `Read-ProductNameFromNSIS`, `Read-PublisherFromNSIS`, `Read-ProductCodeFromNSIS`, `Read-ProtocolsFromNSIS`, or `Read-FileExtensionsFromNSIS` after obtaining the applicable `$Info`; each convenience reader invokes the parser again. Use a `Read-*FromNSIS` function only when one isolated field is needed and no `Get-NSISInfo` result already exists.
 
-Treat explicit uninstall registry writes as authoritative. Use `DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `SystemComponent`, and the uninstall key represented by `ProductCode`. Do not infer a version from arbitrary strings when `DisplayVersion` is absent. Review every parser warning before continuing; unresolved values must remain unresolved until another static source or VM evidence supplies them.
+Treat explicit uninstall registry writes as authoritative. Use `DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `SystemComponent`, and the uninstall key represented by `ProductCode`. When `AppsAndFeaturesEntries` contains multiple identities, route through the localized ARP manifest shape and author the corresponding locale values instead of discarding non-primary languages or copying every identity into the installer manifest. Do not infer a version from arbitrary strings when `DisplayVersion` is absent. Review every parser warning before continuing; unresolved values must remain unresolved until another static source or VM evidence supplies them.
 
 Always continue to Step 2. Do not call the switch or electron-builder helpers yet unless their later route requires them.
 
@@ -180,9 +202,11 @@ Inspect these `$Info` properties together:
 - `ExecutedPayloads` for `Exec`, `ExecWait`, or `ShellExec` commands that launch extracted setup files.
 - `WritesAppsAndFeaturesEntry` to determine whether the simulated outer NSIS path writes a visible uninstall entry. A `SystemComponent=1` write is hidden and does not count as visible ARP ownership.
 - `RegistryWrites` to confirm the uninstall root, key, and values rather than relying only on filenames.
+- `AppsAndFeaturesEntries` and `AppsAndFeaturesEntryEvidence` to map distinct localized `DisplayName`/`Publisher` values from every compiled NSIS language table to locale manifests.
 
 Route according to the combined evidence:
 
+- `IsPortable` is true: the compiled electron-builder portable template sets all three `PORTABLE_EXECUTABLE_*` environment variables, executes the unpacked application from a temporary directory, and writes no visible ARP entry. Do not author it as `InstallerType: nullsoft`; route it to the portable manifest workflow and retain the parser warning as evidence. `DefaultInstallLocation` is intentionally null because the observed directory is transient.
 - Outer NSIS writes the visible entry and no nested payload supersedes it: retain the first manifest shape and continue to Step 3.
 - Outer NSIS writes an entry and also launches a nested installer: inspect both entries. Model the entry that remains visible and matches the installed application; escalate to Step 8 if ownership cannot be proven statically.
 - Outer NSIS does not write a visible entry and launches a nested MSI/WiX: extract or otherwise obtain that payload, call `$MsiInfo = Get-MsiInstallerInfo -Path $NestedMsi`, and use the nested MSI/WiX manifest shape only when `$MsiInfo.AppsAndFeaturesInstallerType` and `$MsiInfo.HidesMsiAppsAndFeaturesEntry` prove its visible ARP behavior.
@@ -215,11 +239,14 @@ Many modern desktop NSIS installers, especially Electron applications, are elect
 ```powershell
 $ElectronBuilderInfo = Get-ElectronBuilderNSISInfo -Path $InstallerFile
 $IsElectronBuilder = $ElectronBuilderInfo.IsElectronBuilder
+$ElectronBuilderInfo.IsPortable
 $ElectronBuilderInfo.Architectures
 $ElectronBuilderInfo.Architecture
 $ElectronBuilderInfo.SupportedScopes
 $ElectronBuilderInfo.Evidence
 ```
+
+If `IsPortable` is true, return to the portable route in Step 2. The presence of `app-*.7z` alone proves electron-builder packaging but not a portable target; the helper requires the complete portable environment-variable and temporary-execution evidence before setting this property.
 
 Use `Test-ElectronBuilder` instead only when a Boolean result is the sole required output and no architecture or scope decision will follow. Do not call `Test-ElectronBuilder` immediately before `Get-ElectronBuilderNSISInfo`, because that parses the installer twice.
 
@@ -260,6 +287,8 @@ See [Electron-Builder Update Feeds](../../author-winget-manifest/references/pack
 For electron-builder, reuse `$ElectronBuilderInfo`. The helper detects embedded app packages such as `app-32.7z`, `app-64.7z`, and `app-arm64.7z`. It reports every embedded architecture in `Architectures`; its singular `Architecture` property applies the WinGet-compatible heuristic that x86 wins for a universal installer containing an x86 payload.
 
 For ordinary NSIS, the PE stub architecture is not sufficient when it extracts a differently-architected application. Determine the manifest architecture from extracted payload names, nested installer metadata, and installed executable architecture. If static payload evidence is missing or contradictory, route architecture validation to Step 8. Exclude unsupported architectures rather than declaring an installer neutral.
+
+When one installer URL serves more than one WinGet architecture, obtain one targeted result per effective installer entry and reuse it for that entry. `CometNetwork.BitComet`, for example, uses the source-backed `System::Call kernel32::IsWow64Process` branch to write `BitComet` on x86 Windows and `BitComet_x64` on x64 Windows. Do not copy one architecture's `ProductCode` across duplicate entries merely because their URL and hash are identical.
 
 Known electron-builder evidence examples:
 
@@ -307,7 +336,7 @@ Known non-default or rejected-silent examples:
 Then determine scope:
 
 - electron-builder: use `$ElectronBuilderInfo.SupportedScopes`, but verify the associated `/currentuser` and `/allusers` control-flow evidence before writing duplicate entries.
-- ordinary NSIS: use explicit `/CurrentUser` and `/AllUsers` variants, scope macros, `SetShellVarContext`, and conditional HKCU/HKLM uninstall writes as evidence. `$Info.Scope` reports only the simulated/default scope and cannot prove dual-scope support by itself.
+- ordinary NSIS: use explicit `/CurrentUser` and `/AllUsers` variants, compiled MultiUser scope setters, `SetShellVarContext`, and conditional HKCU/HKLM uninstall writes as evidence. Confirm `HasScopeRuntimeCheck`, inspect `SupportedScopes`, then call `Get-NSISInfo -Scope user` and `Get-NSISInfo -Scope machine` to obtain each branch's ARP identity. An untargeted `$Info.Scope` reports only the simulated/default scope and cannot prove dual-scope support by itself.
 - user only or machine only: keep one installer entry and write `Scope` only when the evidence supports it.
 - both scopes with usable switches: select the dual-scope manifest shape. Preserve the exact switch casing accepted by that installer.
 - scope selected only by current privilege, UAC acceptance, or a response file: do not create normal dual-scope entries. `JetBrains.*` and `Mozilla.*` are known rare examples of this behavior.
@@ -340,6 +369,7 @@ Apply these field rules:
 
 - Recheck `InstallModes` and every `InstallerSwitches` child against the WinGet defaults. Remove equal values; explicitly retain complete non-default overrides.
 - Keep `ProductCode` at installer level; do not duplicate it in `AppsAndFeaturesEntries.ProductCode`.
+- Put localized ARP names and publishers in their corresponding locale manifests. Keep them in `AppsAndFeaturesEntries` only when that locale manifest does not exist.
 - Add `AppsAndFeaturesEntries` only for a meaningful visible-ARP mismatch, including nested installer type, publisher, package name, or display version.
 - Add `InstallerType: msi` or `wix` inside the entry only when the visible ARP entry has that effective type.
 - Include `UpgradeCode` whenever the outer or Apps & Features installer type is `msi`, `wix`, or `burn`.
@@ -372,3 +402,4 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for dual
 - [7-Zip](https://github.com/ip7z/7zip)
 - [Komac](https://github.com/russellbanks/Komac)
 - [electron-builder](https://github.com/electron-userland/electron-builder)
+- [NsisMultiUser](https://github.com/Drizin/NsisMultiUser)

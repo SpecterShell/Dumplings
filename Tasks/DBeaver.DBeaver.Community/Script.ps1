@@ -11,25 +11,21 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = 'DBeaver (current user)'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'machine'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = 'DBeaver'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   Scope        = 'user'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('aarch64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = 'DBeaver (current user)'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   Scope        = 'machine'
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('aarch64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = 'DBeaver'
 }
 
 switch -Regex ($this.Check()) {

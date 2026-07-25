@@ -39,6 +39,7 @@ Use the exact fixed `defaultLocale` or `locale` header from [Installer Manifest 
 - Arrays and structured fields such as `Tags`, `Agreements`, `Documentations`, and `Icons` replace the complete default-locale field. Their individual elements are not merged.
 - `Moniker` exists only in the default-locale schema and cannot be overridden by an additional locale manifest.
 - Localized `PackageName` and `Publisher` values participate in WinGet search and ARP correlation. Do not add arbitrary translations that do not represent the product's actual localized identity.
+- When static parsing or VM evidence shows a localized ARP `DisplayName` or `Publisher`, put that evidenced identity in the matching locale manifest rather than `AppsAndFeaturesEntries`. Use an Apps & Features override only when the corresponding locale manifest does not exist.
 
 ## Additional Locale Fields
 
@@ -349,6 +350,7 @@ The schema supports `IconUrl`, `IconFileType`, `IconResolution`, `IconTheme`, an
 - Every locale tag is valid BCP-47 and unique in the manifest set.
 - Required default-locale fields are present.
 - `Publisher` and `PackageName` reflect visible ARP identity where available.
+- Every evidenced localized ARP name or publisher is represented in its corresponding locale manifest when that locale exists, rather than duplicated in `AppsAndFeaturesEntries`.
 - The new package identifier's publisher segment and `Author` reflect the product's actual retained developer identity; acquisition or parent-company ownership was not treated as an automatic rename.
 - Any missing ARP publisher is compensated by an independent matching identity or explicitly reported as a correlation risk.
 - Every URL is official, public, and appropriate for its field.

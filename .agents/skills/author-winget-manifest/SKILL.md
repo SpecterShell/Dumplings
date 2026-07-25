@@ -51,6 +51,8 @@ Use `PackageVersion` from the installed ARP version when that is the best user-f
 
 For EXE wrappers around MSI payloads, distinguish manifest `InstallerType` from the ARP entry type. Add `AppsAndFeaturesEntries.InstallerType` when the registry entry type differs from the manifest installer type.
 
+When an installer writes localized ARP names or publishers, prefer the corresponding additional locale manifest's `PackageName` and `Publisher`. Use `AppsAndFeaturesEntries` for a localized identity only when that locale manifest does not exist or another non-localization ARP override is still required.
+
 For GitHub release sources, inspect the latest non-prerelease release unless the package is explicitly a preview/beta channel. Report repository legitimacy signals: stars, commits, issues, pull requests, archived status, latest release tag, and whether multiple release asset families should map to separate package identifiers.
 
 After all manifest files are authored, parse and serialize the complete set through the logical manifest pipeline as documented in `references/manifest-workflow.md`. Complete-manifest serialization applies cross-document redundancy rules, legal field levels, and schema ordering. Use `Format-WinGetManifest` only for an isolated document that is not yet part of a complete set; it cannot compare installer fields with locale manifests and must not replace the evidence-completeness pass.

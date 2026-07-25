@@ -51,7 +51,7 @@ $Manifest = Read-WinGetManifest -Path C:\Path\To\ManifestDirectory
 Find-WinGetManifestInstalledEntryMatch -Manifest $Manifest -InstalledEntry $Entries
 ```
 
-For new packages, keep installer-level `ProductCode` when useful but do not duplicate it inside `AppsAndFeaturesEntries`. For a sole Apps & Features entry, independently remove a repeated ProductCode, a `DisplayName` or `Publisher` whose WinGet-normalized value equals the corresponding default-locale field, and an `InstallerType` equal to the effective installer type, including a ZIP's nested type. Additional locale manifests do not participate in the name/publisher comparison. Delete the entry if no mismatch evidence remains. Add an Apps & Features entry only when visible ARP type, name, publisher, or display version differs materially from what WinGet derives from the manifest.
+For new packages, keep installer-level `ProductCode` when useful but do not duplicate it inside `AppsAndFeaturesEntries`. Put evidenced localized ARP names and publishers in the corresponding locale manifests; retain them in Apps & Features only when that locale manifest does not exist. For a sole Apps & Features entry, independently remove a repeated ProductCode, a `DisplayName` or `Publisher` whose WinGet-normalized value equals the corresponding field in the default or any additional locale manifest, and an `InstallerType` equal to the effective installer type, including a ZIP's nested type. Delete the entry if no mismatch evidence remains. Add an Apps & Features entry only when visible ARP type, name, publisher, or display version differs materially from what WinGet derives from the complete manifest set.
 
 ## Protocol And File-Extension Evidence
 

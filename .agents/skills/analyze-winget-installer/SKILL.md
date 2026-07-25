@@ -47,6 +47,8 @@ For known installer types, distinguish required overrides from WinGet defaults. 
 
 When an EXE wraps an MSI, do not assume `AppsAndFeaturesEntries.InstallerType` matches manifest `InstallerType`. Model the visible ARP entry WinGet will see.
 
+Map evidenced localized ARP `DisplayName` and `Publisher` values to `PackageName` and `Publisher` in the corresponding locale manifests. Retain them in `AppsAndFeaturesEntries` only when that locale manifest does not exist.
+
 For new packages, avoid adding `AppsAndFeaturesEntries.ProductCode` unless the package policy or an existing manifest style specifically requires it. Keep product codes as useful evidence for MSI correlation, not as a default Apps & Features field.
 
 When an Inno or NSIS installer supports both user and machine scopes, create duplicate installer entries with distinct `Scope` and custom switches such as `/CURRENTUSER` vs `/ALLUSERS` or lowercase variants, matching the installer’s actual parser or VM evidence.
