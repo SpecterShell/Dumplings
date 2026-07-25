@@ -1,0 +1,31 @@
+Version: 0.82.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/earendil-works/pi/releases/download/v0.82.1/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Claude Opus 5 — Available on Anthropic and Amazon Bedrock with adaptive thinking (including xhigh), inference profiles, and prompt caching. See Providers.
+    - Anthropic gateway bearer auth — ANTHROPIC_AUTH_TOKEN authenticates against Anthropic-compatible gateways that require Authorization: Bearer, including compaction and branch summaries. See Environment Variables or Auth File.
+    - Faster, more resilient model catalogs — pi.dev catalogs revalidate with If-None-Match so unchanged providers answer with an empty 304, and llama.cpp models stay listed across restarts. See llama.cpp.
+    Added
+    - Exposed the outputPad setting to custom message renderers. See Extensions (#7045 by @xl0).
+    - Added inherited ANTHROPIC_AUTH_TOKEN bearer authentication for Anthropic-compatible gateways. See Providers (#5871).
+    - Added inherited Claude Opus 5 support for Anthropic and Amazon Bedrock with adaptive thinking, inference profiles, prompt caching, and preserved AWS validation messages (#7081 by @unexge, #7083 by @davidbrai).
+    Changed
+    - Changed pi.dev model catalog refreshes to revalidate with If-None-Match, so unchanged provider catalogs answer with an empty 304 instead of a full download.
+    - Changed inherited Radius OAuth device authorization, token exchange, and refresh requests to use the configured gateway directly.
+    - Changed inherited model loading errors to append the underlying cause, so auth failures such as OAuth refresh failed for openai-codex report the provider response instead of a bare wrapper message.
+    Fixed
+    - Fixed compaction and branch summaries for providers whose authentication resolves entirely to request headers (#5871)
+    - Fixed unavailable scoped models being hidden from /models, allowing them to be removed without editing settings manually (#6949, #7032 by @christianklotz).
+    - Fixed startup context file discovery to skip directories that match context file names such as AGENTS.md, which produced EISDIR warnings (#7106 by @mrexodia).
+    - Fixed the llama.cpp extension to persist its model catalog, so llama.cpp models stay listed before the first successful refresh. See llama.cpp (#7072 by @davidbrai).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/earendil-works/pi/releases/tag/v0.82.1
+ReleaseTime: 2026-07-25T12:47:23.0000000Z
