@@ -1,0 +1,31 @@
+Version: 1.2.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.2.5/OpenCowork-win-amd64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.2.5/OpenCowork-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added an openai-video provider type with a dedicated native-worker module and Sora 2 preset model, alongside the existing Seedance and xAI video paths.
+    - Added Seedance 2.0, 2.0 Fast, and 2.0 mini video models to the Volcengine and Routin AI presets, and Gemini 3 Pro Preview plus Gemini 3.6 Flash to the Google preset.
+    - Added custom provider icon upload (PNG, JPG, WebP, GIF, SVG up to 1 MB) with validation, surfaced through ProviderIcon for user-added providers.
+    - Expanded the draw-canvas assistant into a full agentic tool loop with 23 canvas tools — read/create/update/delete/duplicate/connect/move/resize/select nodes, run/retry/cancel generations, image and video generation, image editing, trigger management, and canvas import/clear — plus approval prompts for destructive actions.
+    - Added assistant conversation controls: message edit-and-regenerate, regenerate, delete with side-effect warnings, pinned node context, and image attachments for vision-capable models.
+    - Added a per-canvas Agent workspace with ensure/rename/trash IPC handlers; deleting a canvas now moves its workspace to the system trash.
+    - Added node event triggers so one node can run another when it changes state (queued, started, progress, succeeded, failed, cancelled, interrupted, updated), with cycle and duplicate detection.
+    - Added dedicated image, video, and text generation node types with quality and size controls, including Sora reference-image size validation and single-reference limits.
+    - Added a node error banner that exposes the complete provider response with copy-to-clipboard for troubleshooting.
+    - Added HTTP Range support to the local media protocol so video seeking works and MP4 files with trailing metadata no longer stall on playback.
+    - Added a disconnect action with loading state to the SSH connected workspace and connection detail panel.
+    Changed
+    - Migrated CodeGraph.Core, CodeGraph.Tests, and Worker.Runtime into the external AIDotNet/CodeGraph submodule, removing 200+ locally vendored C# sources. Cloning now requires git submodule update --init --recursive; predev.mjs and publish-native-worker.mjs fail early with an explicit message when the submodule is missing.
+    - Extracted MCP tool and resource definition builders (buildMcpToolDefinitions, buildMcpResourceDefinitions) so the canvas agent can reuse the same schemas as the chat runtime.
+    - Reworked canvas graph persistence, node factory, and generation hooks around the new node types and trigger graph.
+    Fixed
+    - Restored the 1.0.1 through 1.2.4 changelog history that was accidentally dropped from CHANGELOG.md.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/OpenCowork/releases/tag/1.2.5
+ReleaseTime: 2026-07-26T10:17:46.0000000Z
