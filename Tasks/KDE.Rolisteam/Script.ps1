@@ -23,7 +23,6 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # AppsAndFeaturesEntries > DisplayVersion
     $NSISInfo = Get-NSISInfo -Path $InstallerFile
-    $this.Log("Read static $($NSISInfo.InstallerType) metadata for $($NSISInfo.ProductCode)", 'Info')
     $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @{
       DisplayVersion = $NSISInfo.DisplayVersion
     }

@@ -18,9 +18,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
     # RealVersion
-    $NSISInfo = Get-NSISInfo -Path $InstallerFile
-    $this.Log("Read static $($NSISInfo.InstallerType) metadata for $($NSISInfo.ProductCode)", 'Info')
-    $this.CurrentState.RealVersion = $NSISInfo.DisplayVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromNSIS
 
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://apps.kde.org/haruna/index.xml').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')

@@ -180,6 +180,10 @@ $Info.ExtractedFiles
 $Info.ExecutedPayloads
 $Info.IsPortable
 $Info.PortableEvidence
+$Info.IsTauri
+$Info.TauriInstallerMode
+$Info.RequestedExecutionLevel
+$Info.TauriEvidence
 $Info.Protocols
 $Info.FileExtensions
 $Info.Warnings
@@ -189,6 +193,8 @@ $Info.ParserVersionInfo
 `Get-NSISInfo` performs the complete NSIS metadata parse. Pass the effective WinGet installer architecture when it is already known, because an x86 NSIS stub can select different ARP keys, names, and install roots on x86, x64, or ARM64 Windows. Pass the effective authored scope when it is known; compiled MultiUser installers such as `DBeaver.DBeaver.*` can write different HKCU/HKLM uninstall keys, display names, and install roots from the same binary. When a manifest has multiple effective architecture/scope combinations, parse once per distinct combination and reuse each result for the corresponding entry. Omit `-Scope` on the discovery pass when scope support is not yet known, then inspect `HasScopeRuntimeCheck` and `SupportedScopes` before requesting targeted results. Do not call `Read-ProductVersionFromNSIS`, `Read-ProductNameFromNSIS`, `Read-PublisherFromNSIS`, `Read-ProductCodeFromNSIS`, `Read-ProtocolsFromNSIS`, or `Read-FileExtensionsFromNSIS` after obtaining the applicable `$Info`; each convenience reader invokes the parser again. Use a `Read-*FromNSIS` function only when one isolated field is needed and no `Get-NSISInfo` result already exists.
 
 Treat explicit uninstall registry writes as authoritative. Use `DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `SystemComponent`, and the uninstall key represented by `ProductCode`. When `AppsAndFeaturesEntries` contains multiple identities, route through the localized ARP manifest shape and author the corresponding locale values instead of discarding non-primary languages or copying every identity into the installer manifest. Do not infer a version from arbitrary strings when `DisplayVersion` is absent. Review every parser warning before continuing; unresolved values must remain unresolved until another static source or VM evidence supplies them.
+
+For the standard Tauri NSIS template, `IsTauri` requires the compiled `nsis_tauri_utils.dll`, `MainBinaryName`, and placeholder-install-directory markers together. `TauriInstallerMode` distinguishes `currentUser`, `perMachine`, and `both` from the compiled ARP scope, MultiUser setters, and PE requested execution level. In `both` mode, pass `-Scope user` and `-Scope machine`; NSIS 3 `GetKnownFolderPath` resolves the per-user root to `%LocalAppData%\Programs\<Product>`. A custom Tauri template may not retain this evidence and must be analyzed as ordinary NSIS rather than inferred from its product name.
 
 Always continue to Step 2. Do not call the switch or electron-builder helpers yet unless their later route requires them.
 
@@ -256,6 +262,8 @@ If `$IsElectronBuilder` is false, skip the remainder of this step and continue t
 2. If that fails, inspect the embedded `app-*.7z` application's `resources\app-update.yml`, `resources\latest.yml`, or equivalent updater configuration.
 3. Fetch the selected feed in the task with any package-specific headers, query parameters, cookies, or fallback handling. Pass only the returned YAML string to the converter.
 4. Resolve relative asset paths against the feed URL and verify the feed version, size, SHA512, downloaded SHA256, and official domain.
+
+Tauri is separate from electron-builder even though both produce generated NSIS installers. When `$Info.IsTauri` is true, call `Get-NSISInstallerSwitchInfo` once and review `TauriSwitches`: `/P` is Tauri's passive mode with progress, `/NS` suppresses shortcuts, `/UPDATE` is internal updater mode, and `/R` launches the application after silent or passive installation with optional `/ARGS`. Therefore `/P` can be evidence for an explicit `SilentWithProgress` override, while `/R`, `/ARGS`, and `/UPDATE` are not general silent-install switches. Do not add any of them unless the intended manifest behavior requires that exact source-backed mode.
 
 ```powershell
 $LatestYaml = Invoke-RestMethod -Uri $LatestYamlUri -Headers $Headers
@@ -402,4 +410,5 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for dual
 - [7-Zip](https://github.com/ip7z/7zip)
 - [Komac](https://github.com/russellbanks/Komac)
 - [electron-builder](https://github.com/electron-userland/electron-builder)
+- [Tauri NSIS bundler](https://github.com/tauri-apps/tauri/tree/dev/crates/tauri-bundler/src/bundle/windows/nsis)
 - [NsisMultiUser](https://github.com/Drizin/NsisMultiUser)
