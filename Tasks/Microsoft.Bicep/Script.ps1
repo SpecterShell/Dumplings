@@ -17,7 +17,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'portable'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('setup') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
@@ -25,14 +25,6 @@ $this.CurrentState.Installer += $Installer = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    # AppsAndFeaturesEntries > DisplayVersion
-    $Installer['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
-      }
-    )
-
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()

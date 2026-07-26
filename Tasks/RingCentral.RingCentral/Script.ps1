@@ -7,24 +7,14 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = $Prefix + $Object1.files[0].url
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $Object1.version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Prefix + $Object1.files[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'arm64'
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = $Prefix + $Object1.files[0].url.Replace('.exe', '-arm64.exe')
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $Object1.version
-    }
-  )
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Prefix + $Object1.files[0].url.Replace('.exe', '-arm64.exe')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'

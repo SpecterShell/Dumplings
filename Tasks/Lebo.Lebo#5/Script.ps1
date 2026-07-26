@@ -9,7 +9,6 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture      = 'x86'
   InstallerUrl      = $Object1.url
   InstallerSwitches = @{}
-  ProductCode       = 'PCCast'
 }
 
 switch -Regex ($this.Check()) {

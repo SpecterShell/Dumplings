@@ -6,7 +6,6 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:_\d+)+)').Gro
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
-  ProductCode  = "WatchGuard System Manager $($this.CurrentState.Version.Split('.')[0..1] -join '.')_is1"
 }
 
 switch -Regex ($this.Check()) {

@@ -5,13 +5,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.Content, 'Amira-Avizo 3D (\
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
-  ProductCode            = "Amira Avizo 3D Software $($this.CurrentState.Version)_is1"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = "$($this.CurrentState.Version)."
-    }
-  )
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {

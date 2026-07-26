@@ -12,13 +12,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'
-    }
-  )
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

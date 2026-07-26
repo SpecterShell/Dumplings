@@ -6,12 +6,7 @@ $this.CurrentState.Version = $ReleaseNotesTitleNode.SelectSingleNode('./text()')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $ReleaseNotesTitleNode.SelectSingleNode('./following::a[contains(@href, ".exe")][1]').Attributes['href'].Value
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = "$($this.CurrentState.Version)_x64"
-    }
-  )
+  InstallerUrl = $ReleaseNotesTitleNode.SelectSingleNode('./following::a[contains(@href, ".exe")][1]').Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {

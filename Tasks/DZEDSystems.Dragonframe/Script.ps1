@@ -10,7 +10,6 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.download_url | ConvertTo-Https
-  ProductCode  = "Dragonframe $($this.CurrentState.Version.Split('.')[0]) $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

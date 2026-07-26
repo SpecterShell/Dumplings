@@ -8,7 +8,6 @@ $OriginalVersion = $this.CurrentState.Version -replace 'c\d+$'
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.downloadUrl
-  ProductCode  = "Unity $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

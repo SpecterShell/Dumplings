@@ -66,19 +66,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      if ($Installer.InstallerType -eq 'nullsoft') {
-        $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFileExe = Get-TempFile -Uri $Installer.InstallerUrl
-        # AppsAndFeaturesEntries + ProductCode
-        $Installer['AppsAndFeaturesEntries'] = @(
-          [ordered]@{
-            DisplayVersion = $InstallerFileExe | Read-FileVersionFromExe
-            Publisher      = 'Netbird'
-          }
-        )
-      }
-    }
-
     $this.Print()
     $this.Write()
   }

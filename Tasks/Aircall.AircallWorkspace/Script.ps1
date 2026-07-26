@@ -5,15 +5,9 @@ $this.CurrentState.Version = $Object1.Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'exe'
-  InstallerUrl           = "https://download-electron.aircall.io/aircall-workspace/Aircall-Workspace-$($this.CurrentState.Version)-x64.exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName    = 'Aircall-Workspace'
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = "https://download-electron.aircall.io/aircall-workspace/Aircall-Workspace-$($this.CurrentState.Version)-x64.exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'

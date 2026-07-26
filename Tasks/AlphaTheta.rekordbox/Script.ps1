@@ -9,7 +9,6 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'x64_(\d+(?:_\d+)+)')
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl
-  ProductCode  = "Pioneer rekordbox $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

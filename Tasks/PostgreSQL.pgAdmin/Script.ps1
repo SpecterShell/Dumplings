@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.pgadmin4.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v$($this.CurrentState.Version)/windows/pgadmin4-$($this.CurrentState.Version)-x64.exe"
-  ProductCode  = "pgAdmin 4v$($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
 switch -Regex ($this.Check()) {

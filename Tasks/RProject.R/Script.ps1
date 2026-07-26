@@ -9,7 +9,6 @@ $this.CurrentState.Version = $Version = [regex]::Match(
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://cloud.r-project.org/bin/windows/base/old/${Version}/R-${Version}-win.exe"
-  ProductCode  = "R for Windows ${Version}_is1"
 }
 
 switch -Regex ($this.Check()) {

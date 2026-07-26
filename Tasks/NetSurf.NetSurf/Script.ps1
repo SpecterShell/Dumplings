@@ -9,12 +9,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version + '.0'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $Object2.Attributes['href'].Value
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = '"' + $this.CurrentState.RealVersion + '"'
-    }
-  )
+  InstallerUrl = $Object2.Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {

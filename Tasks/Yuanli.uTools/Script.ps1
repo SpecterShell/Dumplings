@@ -2,23 +2,15 @@ $Object1 = Invoke-WebRequest -Uri 'https://u.tools/download/'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x86'
-  InstallerUrl           = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('ia32') } catch {} }, 'First')[0].href
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = ($VersionX86 = [regex]::Match($InstallerUrlX86, '-([\d\.]+)[-\.]').Groups[1].Value) + '-ia32'
-    }
-  )
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrlX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('ia32') } catch {} }, 'First')[0].href
 }
+$VersionX86 = [regex]::Match($InstallerUrlX86, '-([\d\.]+)[-\.]').Groups[1].Value
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerUrl           = $InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('ia32') } catch {} }, 'First')[0].href
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $VersionX64 = [regex]::Match($InstallerUrlX64, '-([\d\.]+)[-\.]').Groups[1].Value
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrlX64 = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('ia32') } catch {} }, 'First')[0].href
 }
+$VersionX64 = [regex]::Match($InstallerUrlX64, '-([\d\.]+)[-\.]').Groups[1].Value
 
 if ($VersionX86 -ne $VersionX64) {
   $this.Log("x86 version: ${VersionX86}")

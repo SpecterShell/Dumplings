@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   # NestedInstallerFiles
@@ -10,11 +10,8 @@ function Read-Installer {
   $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath -Resolve
   # Version
   $this.CurrentState.Version = ($InstallerFile2 | Read-ProductVersionRawFromExe).ToString(3)
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = "TT SMT $($this.CurrentState.Version)"
 
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.turbocoroem.com/en/categories-page/compressor-software/'

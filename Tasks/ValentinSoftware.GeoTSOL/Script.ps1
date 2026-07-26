@@ -57,7 +57,6 @@ switch -Regex ($this.Check()) {
         Key    = 'PackageName'
         Value  = { $_ -replace '20\d{2}', $this.CurrentState.Version.Split('.')[0] }
       }
-      $this.CurrentState.Installer[0].ProductCode = "GeoT*SOL $($this.CurrentState.Version.Split('.')[0])_is1"
     }
     $this.Submit()
   }

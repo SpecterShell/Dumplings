@@ -10,14 +10,6 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # RealVersion
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromExe
-      }
-    )
-
     try {
       $Object2 = ((Invoke-RestMethod -Uri 'https://invent.kde.org/education/rkward/-/raw/master/ChangeLog') -split '\s+--- ').Where({ $_.Contains($this.CurrentState.Version) }, 'First')
 

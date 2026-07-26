@@ -6,16 +6,11 @@ $this.CurrentState.Version = $Object1.applications.collaboration.win.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = Join-Uri $Prefix $Object1.applications.collaboration.win.file
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix $Object1.applications.collaboration.win.file
 }
-$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
   InstallerUrl  = Join-Uri $Prefix $Object1.applications.collaboration.win.msi
@@ -23,15 +18,6 @@ $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$InstallerWiX.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerWiX.InstallerUrl
-    # AppsAndFeaturesEntries
-    $InstallerWiX['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        DisplayVersion = $InstallerFile | Read-ProductVersionFromMsi
-        UpgradeCode    = $InstallerFile | Read-UpgradeCodeFromMsi
-      }
-    )
-
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.wildix.com/new-releases-and-updates/collaboration-native-app-changelog/' | ConvertFrom-Html
 

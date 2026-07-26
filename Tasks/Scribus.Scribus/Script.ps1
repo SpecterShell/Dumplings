@@ -12,7 +12,6 @@ $VersionX86 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape(
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
-  ProductCode  = "Scribus ${VersionX86}"
 }
 
 $Asset = $Assets.Where({ $_.title.'#cdata-section'.Contains('x64') }, 'First')[0]
@@ -20,7 +19,6 @@ $VersionX64 = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape(
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Asset.link | ConvertTo-UnescapedUri
-  ProductCode  = "Scribus ${VersionX64}"
 }
 
 if ($VersionX86 -ne $VersionX64) {

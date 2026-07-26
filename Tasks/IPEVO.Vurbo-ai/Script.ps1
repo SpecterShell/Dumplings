@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloadUrl
-  ProductCode  = "Vurbo.ai $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

@@ -11,7 +11,6 @@ $this.CurrentState.Version = [regex]::Match($Object1, 'UP_VER=([^;]+)').Groups[1
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = [regex]::Match($Object1, 'UP_URL=([^;]+)').Groups[1].Value
-  ProductCode = "Pioneer rekordbox $($this.CurrentState.Version)"
 }
 
 # RealVersion

@@ -5,15 +5,7 @@ $this.CurrentState.Version = $Object1.wsrp.downloader.runtime.version.'#cdata-se
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $Object1.wsrp.downloader.runtime.download_url.'#cdata-section' | ConvertTo-Https
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName   = "OrgCharting $($this.CurrentState.Version)"
-      Publisher     = 'EdrawSoft'
-      ProductCode   = 'OrgCharting_is1'
-      InstallerType = 'inno'
-    }
-  )
+  InstallerUrl = $Object1.wsrp.downloader.runtime.download_url.'#cdata-section' | ConvertTo-Https
 }
 
 switch -Regex ($this.Check()) {

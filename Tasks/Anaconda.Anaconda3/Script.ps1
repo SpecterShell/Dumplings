@@ -17,14 +17,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # ProductCode / AppsAndFeaturesEntries (DisplayName)
-    $PythonVersion = [regex]::Match(
-      (7z.exe e -y -so $InstallerFile 'conda-meta\history' | Select-String -Pattern '::python-' -Raw | Select-Object -First 1),
-      '::python-([\d\.]+)'
-    ).Groups[1].Value
-    $this.CurrentState.Installer[0]['ProductCode'] = "Anaconda3 $($this.CurrentState.Version) (Python ${PythonVersion} 64-bit)"
-
     try {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{

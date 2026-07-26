@@ -7,13 +7,8 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = Join-Uri $Prefix $Object1.files[0].url
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  InstallerType = 'nullsoft'
+  InstallerUrl  = Join-Uri $Prefix $Object1.files[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'

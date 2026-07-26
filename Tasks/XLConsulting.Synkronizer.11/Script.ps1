@@ -11,7 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
       RelativeFilePath = "Synkronizer.$($this.CurrentState.Version).exe"
     }
   )
-  ProductCode          = "Synkronizer 11 $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

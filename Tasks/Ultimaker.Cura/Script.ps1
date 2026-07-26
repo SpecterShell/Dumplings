@@ -11,7 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('X64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode   = "UltiMaker Cura $($this.CurrentState.Version)-$($this.CurrentState.Version)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'

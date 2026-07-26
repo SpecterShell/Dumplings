@@ -12,7 +12,6 @@ $MainVersion = $Version.Split('_')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "${Prefix}${Version}/x86_64_nt/ECLiPSe_${Version}_x86_64_nt.exe"
-  ProductCode  = "ECLiPSe ${MainVersion} (64 bit)"
 }
 
 switch -Regex ($this.Check()) {

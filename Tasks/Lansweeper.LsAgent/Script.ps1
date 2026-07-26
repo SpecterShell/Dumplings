@@ -6,7 +6,6 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Gr
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
-  ProductCode  = "LsAgent $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

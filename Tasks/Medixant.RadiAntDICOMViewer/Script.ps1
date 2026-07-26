@@ -5,17 +5,14 @@ $Object1 = Invoke-WebRequest -Uri $Prefix
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
-  ProductCode  = 'RadiAnt32'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl
-  ProductCode  = 'RadiAnt64'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $InstallerUrl
-  ProductCode  = 'RadiAnt64ARM'
 }
 
 # Version

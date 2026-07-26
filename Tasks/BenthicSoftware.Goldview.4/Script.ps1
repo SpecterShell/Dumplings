@@ -18,12 +18,10 @@ $this.CurrentState.Version = $VersionX64
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'goldview4setup' -and $_.href -match '32bit' }, 'First')[0].href
-  ProductCode  = "Goldview$($this.CurrentState.Version.Split('.')[0])32_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri $Global:DumplingsStorage.BenthicSoftwarePrefix $Global:DumplingsStorage.BenthicSoftwareApps.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'goldview4setup' -and $_.href -match '64bit' }, 'First')[0].href
-  ProductCode  = "Goldview$($this.CurrentState.Version.Split('.')[0])64_is1"
 }
 
 switch -Regex ($this.Check()) {

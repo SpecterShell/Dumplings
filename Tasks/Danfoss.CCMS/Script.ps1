@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
   $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
   $ZipFile.Dispose()
@@ -10,10 +10,7 @@ function Read-Installer {
   $this.CurrentState.Version = ($InstallerFile2 | Read-ProductVersionRawFromExe).ToString(3)
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = "CCMS $($this.CurrentState.Version)"
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.turbocoroem.com/en/categories-page/compressor-software/'

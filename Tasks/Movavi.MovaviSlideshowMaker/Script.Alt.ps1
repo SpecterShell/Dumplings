@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.data.Product.version.DefaultValue
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.Installers.Where({ $_.id.DefaultValue -eq 'slideshowmaker' })[0].url.DefaultValue
-  ProductCode  = "Movavi Slideshow Maker $($this.CurrentState.Version.Split('.')[0])"
 }
 
 switch -Regex ($this.Check()) {

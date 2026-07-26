@@ -32,7 +32,6 @@ $this.CurrentState.Version = $Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloads[0].url
-  ProductCode  = "Unity ${Version}"
 }
 
 switch -Regex ($this.Check()) {

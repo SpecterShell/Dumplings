@@ -1,31 +1,18 @@
 function Read-Installer {
-  $InstallerEXEFile = Get-TempFile -Uri $InstallerEXE.InstallerUrl
+  $this.InstallerFiles[$InstallerEXE.InstallerUrl] = $InstallerEXEFile = Get-TempFile -Uri $InstallerEXE.InstallerUrl
   # Version
   $this.CurrentState.Version = ($InstallerEXEFile | Read-ProductVersionRawFromExe).ToString()
   # InstallerSha256
   $InstallerEXE['InstallerSha256'] = (Get-FileHash -Path $InstallerEXEFile -Algorithm SHA256).Hash
-  # AppsAndFeaturesEntries
+  # Preserve the EXE ARP version because its generic installer family cannot be parsed reliably.
   $InstallerEXE['AppsAndFeaturesEntries'] = @(
     [ordered]@{
       DisplayVersion = $this.CurrentState.Version
     }
   )
-  Remove-Item -Path $InstallerEXEFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-
-  $InstallerMSIFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
+  $this.InstallerFiles[$InstallerMSI.InstallerUrl] = $InstallerMSIFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
   # InstallerSha256
   $InstallerMSI['InstallerSha256'] = (Get-FileHash -Path $InstallerMSIFile -Algorithm SHA256).Hash
-  # ProductCode
-  $InstallerMSI['ProductCode'] = $InstallerMSIFile | Read-ProductCodeFromMsi
-  # AppsAndFeaturesEntries
-  $InstallerMSI['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      DisplayName    = 'RingCentralRooms Installer'
-      DisplayVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
-      UpgradeCode    = $InstallerMSIFile | Read-UpgradeCodeFromMsi
-    }
-  )
-  Remove-Item -Path $InstallerMSIFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {
@@ -148,7 +135,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()

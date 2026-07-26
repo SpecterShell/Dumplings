@@ -21,13 +21,9 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    # AppsAndFeaturesEntries > DisplayVersion
     $NSISInfo = Get-NSISInfo -Path $InstallerFile
-    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @{
-      DisplayVersion = $NSISInfo.DisplayVersion
-    }
     # RealVersion
-    $this.CurrentState.RealVersion = $this.CurrentState.Installer[0].AppsAndFeaturesEntries.DisplayVersion.Split('/')[-1].Trim()
+    $this.CurrentState.RealVersion = $NSISInfo.DisplayVersion.Split('/')[-1].Trim()
 
     $this.Print()
     $this.Write()

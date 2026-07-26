@@ -8,24 +8,12 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x86'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('gcc') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode            = "libjpeg-turbo-gcc $($this.CurrentState.Version)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.Version) for GCC"
-    }
-  )
+  Architecture = 'x86'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('gcc') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerUrl           = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('gcc') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode            = "libjpeg-turbo-gcc64 $($this.CurrentState.Version)"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "libjpeg-turbo SDK v$($this.CurrentState.Version) for GCC 64-bit"
-    }
-  )
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('gcc') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

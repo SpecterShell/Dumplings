@@ -25,7 +25,6 @@ switch -Regex ($this.Check()) {
         Key    = 'PackageName'
         Value  = { $_ -replace '\d{2}$', $this.CurrentState.Version.Split('.')[0] }
       }
-      $this.CurrentState.Installer[0].ProductCode = "cryptainer$($this.CurrentState.Version.Split('.')[0])_is1"
     }
     $this.Submit()
   }

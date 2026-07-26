@@ -8,13 +8,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -jo
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = "https://download2.eassos.com/DGEngSetup$($this.CurrentState.Version.Replace('.','')).exe"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName = "DiskGenius V$($this.CurrentState.RealVersion)"
-      ProductCode = '{2661F2FA-56A7-415D-8196-C4CB3D3ACFFE}_is1'
-    }
-  )
+  InstallerUrl = "https://download2.eassos.com/DGEngSetup$($this.CurrentState.Version.Replace('.','')).exe"
 }
 
 switch -Regex ($this.Check()) {

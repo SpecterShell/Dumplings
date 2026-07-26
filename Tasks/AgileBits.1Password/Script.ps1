@@ -6,14 +6,9 @@ $this.CurrentState.Version = $Object1.available -eq '0' ? $this.LastState.Versio
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'msi'
-  InstallerUrl           = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).msi"
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $this.CurrentState.Version
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'msi'
+  InstallerUrl  = "https://c.1password.com/dist/1P/win8/1PasswordSetup-$($this.CurrentState.Version).msi"
 }
 $this.CurrentState.Installer += $InstallerMSIX = [ordered]@{
   Architecture  = 'x64'

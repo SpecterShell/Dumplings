@@ -1,7 +1,5 @@
 $this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['14204']
 
-# ProductCode
-$this.CurrentState.Installer[0]['ProductCode'] = "UniConverter $($this.CurrentState.Version.Split('.')[0])_is1"
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {

@@ -15,7 +15,6 @@ $this.CurrentState.RealVersion = $RealVersion.ToString()
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $InstallerUrl
-  ProductCode  = "FlowJo $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

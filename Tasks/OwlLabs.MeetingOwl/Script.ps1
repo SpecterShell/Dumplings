@@ -22,15 +22,6 @@ if ($VersionEXE -ne $VersionMSIX) {
 # Version
 $this.CurrentState.Version = $VersionMatches.Groups[2..3].Value -join '.'
 
-# AppsAndFeaturesEntries
-$InstallerEXE['AppsAndFeaturesEntries'] = @(
-  [ordered]@{
-    DisplayName    = 'Meeting Owl Uninstaller'
-    Publisher      = 'Owl Labs, Inc.'
-    DisplayVersion = $VersionEXE
-  }
-)
-
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.Print()

@@ -35,19 +35,6 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    foreach ($Installer in $this.CurrentState.Installer) {
-      if ($Installer.InstallerType -eq 'wix') {
-        $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-        # AppsAndFeaturesEntries
-        $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-          [ordered]@{
-            DisplayVersion = $InstallerFile | Read-ProductVersionFromMsi
-            UpgradeCode    = $InstallerFile | Read-UpgradeCodeFromMsi
-          }
-        )
-      }
-    }
-
     $this.Print()
     $this.Write()
   }

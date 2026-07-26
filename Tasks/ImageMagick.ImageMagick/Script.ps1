@@ -9,19 +9,16 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('dll') -and $_.name.Contains('Q16') -and $_.name.Contains('HDRI') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode   = "ImageMagick $($Version.Split('-')[0]) Q16-HDRI (32-bit)_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('dll') -and $_.name.Contains('Q16') -and $_.name.Contains('HDRI') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode   = "ImageMagick $($Version.Split('-')[0]) Q16-HDRI (64-bit)_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'inno'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('dll') -and $_.name.Contains('Q16') -and $_.name.Contains('HDRI') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode   = "ImageMagick $($Version.Split('-')[0]) Q16-HDRI (arm64)_is1"
 }
 
 switch -Regex ($this.Check()) {

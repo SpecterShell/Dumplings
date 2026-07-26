@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.translationEditor3PartVersion
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://download.memsource.com/production/updates/memsource-editor/win/archive/install/Phrase-$($this.CurrentState.Version)-windows.exe"
-  ProductCode  = "Phrase $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

@@ -19,7 +19,6 @@ $this.CurrentState.Version = $Object2.Groups[1].Value
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://wingware.com/pub/wing-personal/$($this.CurrentState.Version)/wing-personal-$($this.CurrentState.Version).exe"
-  ProductCode  = "Wing Personal $($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
 switch -Regex ($this.Check()) {

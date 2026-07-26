@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.installerInformation.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://www.literatureandlatte.com/scappleforwindows/downloads/Scapple-$($this.CurrentState.Version.Replace('.', ''))-installer.exe"
-  ProductCode  = "Scapple $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

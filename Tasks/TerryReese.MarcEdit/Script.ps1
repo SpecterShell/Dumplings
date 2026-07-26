@@ -11,7 +11,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType          = 'exe'
   Scope                  = 'user'
   InstallerUrl           = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('User_Install') } catch {} }, 'First')[0].href
-  ProductCode            = "MarcEdit ${ShortVersion} (User) $($this.CurrentState.Version)"
   AppsAndFeaturesEntries = @(
     [ordered]@{
       DisplayName = "MarcEdit ${ShortVersion} (User) User Installation (Self Contained)"
@@ -26,7 +25,6 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
   Scope         = 'machine'
   InstallerUrl  = $Object3.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
-  ProductCode   = "MarcEdit ${ShortVersion} $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

@@ -12,13 +12,11 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'user'
   InstallerUrl = $Prefix + $InstallerName
-  ProductCode  = "Octave-$($this.CurrentState.Version) (Local)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   Scope        = 'machine'
   InstallerUrl = $Prefix + $InstallerName
-  ProductCode  = "Octave-$($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

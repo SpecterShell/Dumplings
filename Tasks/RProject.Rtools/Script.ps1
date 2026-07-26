@@ -14,12 +14,10 @@ $Object2 = Invoke-WebRequest -Uri "${Prefix}rtools${MainVersionShort}/files/"
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrlX64 = "${Prefix}rtools${MainVersionShort}/files/$($Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and -not $_.href.Contains('aarch64') } catch {} }, 'First')[0].href)"
-  ProductCode  = "Rtools${MainVersionShort}_is1"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $InstallerUrlARM64 = "${Prefix}rtools${MainVersionShort}/files/$($Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('aarch64') } catch {} }, 'First')[0].href)"
-  ProductCode  = "Rtools${MainVersionShort}-aarch64_is1"
 }
 
 $BuildX64 = [regex]::Match($InstallerUrlX64, "rtools${MainVersionShort}-(\d+)").Groups[1].Value

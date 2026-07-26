@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.data.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.data.full.url.Replace('upgrade', 'cbs_down') | ConvertTo-Https
-  ProductCode  = "Wondershare Filmora $($this.CurrentState.Version.Split('.')[0])_is1"
 }
 
 switch -Regex ($this.Check()) {

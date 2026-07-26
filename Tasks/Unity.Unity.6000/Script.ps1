@@ -38,12 +38,10 @@ $this.CurrentState.Version = $Version = $Object1.version
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.downloads.Where({ $_.architecture -eq 'X86_64' }, 'First')[0].url
-  ProductCode  = "Unity ${Version}"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Object1.downloads.Where({ $_.architecture -eq 'ARM64' }, 'First')[0].url
-  ProductCode  = "Unity ${Version}"
 }
 
 # # Modules

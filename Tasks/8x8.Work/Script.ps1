@@ -18,13 +18,8 @@ $this.CurrentState.FullVersion = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType          = 'exe'
-  InstallerUrl           = "https://work-desktop-assets.8x8.com/prod-publish/ga/work-64-exe-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).exe"
-  AppsAndFeaturesEntries = @(
-    @{
-      DisplayVersion = "$($VersionMatches.Groups[1].Value)-b$($VersionMatches.Groups[3].Value)"
-    }
-  )
+  InstallerType = 'exe'
+  InstallerUrl  = "https://work-desktop-assets.8x8.com/prod-publish/ga/work-64-exe-v$($VersionMatches.Groups[1].Value)-$($VersionMatches.Groups[3].Value).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'

@@ -8,7 +8,6 @@ $this.CurrentState.Version = $Object1.Links.ForEach({ try { if ($_.href -match '
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "${Prefix}$($this.CurrentState.Version)/dist/ZeroTierOne.msi"
-  ProductCode  = "ZeroTier One $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

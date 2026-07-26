@@ -9,7 +9,6 @@ $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  ProductCode  = "VirusTotalUploader $($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

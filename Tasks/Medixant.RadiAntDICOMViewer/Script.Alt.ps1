@@ -18,17 +18,14 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -jo
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $InstallerUrl = "https://www.radiantviewer.com/files/RadiAnt-$($this.CurrentState.RealVersion)-Setup.exe"
-  ProductCode  = 'RadiAnt32'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $InstallerUrl
-  ProductCode  = 'RadiAnt64'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $InstallerUrl
-  ProductCode  = 'RadiAnt64ARM'
 }
 
 switch -Regex ($this.Check()) {

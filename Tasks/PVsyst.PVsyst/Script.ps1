@@ -9,7 +9,6 @@ $this.CurrentState.RealVersion = $Object1.releases.release[-1].version[@('major'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.releases.release[-1].url
-  ProductCode  = "PVsyst $($this.CurrentState.RealVersion)"
 }
 
 switch -Regex ($this.Check()) {
@@ -27,8 +26,8 @@ switch -Regex ($this.Check()) {
 
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
-        Key    = 'ReleaseNotesUrl'
-        Value  = "https://www.pvsyst.com/help/release-notes/index.html#$($this.CurrentState.RealVersion)"
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://www.pvsyst.com/help/release-notes/index.html#$($this.CurrentState.RealVersion)"
       }
     } catch {
       $_ | Out-Host

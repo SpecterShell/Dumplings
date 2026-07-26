@@ -6,7 +6,6 @@ $this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('./td[2]')
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.SelectSingleNode('./td[3]//a').Attributes['href'].Value
-  ProductCode  = "Carrier PLV Pro v$($this.CurrentState.Version)"
 }
 
 switch -Regex ($this.Check()) {

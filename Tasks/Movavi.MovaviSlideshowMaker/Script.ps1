@@ -6,7 +6,6 @@ $this.CurrentState.Version = $Object1.enclosure.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.enclosure.url
-  ProductCode  = "Movavi Slideshow Maker $($this.CurrentState.Version.Split('.')[0])"
 }
 
 switch -Regex ($this.Check()) {
