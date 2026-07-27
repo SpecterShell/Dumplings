@@ -1,0 +1,95 @@
+Version: 17.1.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.1.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed proxy-stream clients dropping finalized provider-only content blocks, including Anthropic native web-search history, by allowing done and error events to carry terminal assistant content while retaining delta-reconstructed content from older proxy servers that omit it (#6703).
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed OpenAI Responses replay treating a tool output as paired with a matching call that appeared later in the input, or a tool call as paired with an earlier output. Pair repair now respects wire order before preserving or synthesizing each side.
+    - Fixed adaptive-thinking Anthropic models omitting the interleaved-thinking beta on signature-enforcing proxies, which caused persisted interleaved assistant turns to fail on replay (#6717).
+    - Kimi Code now sends its session-stable prompt cache key on both supported transports: prompt_cache_key for OpenAI-compatible requests and metadata.user_id for Anthropic-compatible requests. Explicit keys survive side-channel session IDs, while cacheRetention: "none" still disables automatic affinity (#6049).
+    - Fresh encrypted auth-broker snapshot caches are revalidated within a short startup budget, so one-shot clients see newly imported or revoked credentials immediately when the broker is reachable while retaining cache fallback for transport and server failures.
+    - Fixed custom anthropic-messages endpoints dropping native web-search call/result blocks in the leaked-thinking wrapper, preserving signed continuation history in source order without carrying a preceding text signature onto later unsigned blocks (#6703).
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Kimi Code (kimi-code) reporting maxTokens: 32000 for every model — its /coding/v1/models discovery mapper and the bundled catalog applied a blanket constant, truncating k3/k3-256k output at ~4x below their real 131072 ceiling and kimi-for-coding/kimi-for-coding-highspeed below their 32768 ceiling. Output caps are now derived per family, and the model cache is invalidated so upgrades drop the stale maxTokens: 32000 rows (including the discovery-only k3-256k) instead of serving them until the next network refresh (#6711).
+    - Fixed Anthropic model discovery 404ing when the registry derived the provider base URL from a bundled model without the /v1 suffix (https://api.anthropic.com/models instead of /v1/models), which let a stale text-only cache row shadow fresh models.dev vision metadata — surfacing as snapcompact refusing to run on claude-opus-5. Discovery now always targets /v1/models while model rows keep the provider base URL (#6563).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added a configurable per-request timeout for the inspect_image tool (inspect_image.timeoutMs, default 5 minutes; set to 0 to disable) so a stalled vision-model provider fails fast with a clear error instead of blocking until manual abort (#4165).
+    Changed
+    - Reduced default startup resident memory by constructing the default-off ComputerTool ArkType schema only on first parameter access, then reusing it across tool instances without changing validation or tool behavior (#6742 by @usr-bin-roygbiv).
+    - Reduced startup CPU and memory by loading the bundled changelog only when needed, while preserving source, npm bundle, standalone binary, and native absolute-path fallback resolution.
+    - Moved PTY log replay into the shared project launch broker, so normal CLI and Hub startup no longer load the xterm runtime while launch logs return validated rendered terminal rows.
+    Fixed
+    - Fixed DeepSeek V4 Flash and Step 3.7 Flash models using hashline edit mode by default despite repeatedly misreading its range grammar; both now use the simpler replace-mode fallback unless explicitly overridden (#6671).
+    - Fixed an Ask form appearing while the main prompt contains a draft hiding that text and consuming the next in-flight keystroke. The draft now remains visible and keeps receiving input until it is submitted or cleared; only then do form controls activate (#6737).
+    - Fixed glob rejecting safe memory://root/<directory>/** patterns. Memory globs now resolve their directory prefix inside the project memory root while rejecting traversal and percent-encoded path separators across the complete glob path.
+    - Fixed omp --resume <id> prompting to fork sessions from another existing directory instead of switching the process and cwd-scoped settings into the resumed session's recorded directory (#6752).
+    - Fixed deferred CLI model roles resolving ambiguous bare model IDs to a preferred but unauthenticated provider instead of the authenticated provider selected by the eager path (#6727).
+    - Fixed Windows sessions crashing with an unhandled EPIPE: broken pipe, write when an LSP server closed its stdin between filesystem mutations; LSP writes now observe asynchronous FileSink.write() failures and route them through the existing request/notification failure path.
+    - Fixed the bash tool's stat builtin failing on native Windows with stat: unsupported on this platform (exit 1) for every invocation. The vendored uu-stat now ships a Windows-native backend that maps the GNU format directives onto std::fs::Metadata, the windows_by_handle metadata extensions (inode, hard-link count, and device via GetFileInformationByHandle), and the Win32 volume APIs for --file-system mode; Unix behavior is unchanged (#6723).
+    - Fixed auto-retry wedging the session after an assistant-tail removal miss: when a context rebuild recreated the failed turn's message object, the identity-keyed cleanup logged assistant removal missed but the retry still scheduled continue(), which rejected the terminal assistant error message locally (Cannot continue from message role: assistant) before any provider request — auto_retry_end never fired, the TUI kept showing retry progress, and the in-flight prompt() hung until a manual follow-up. The retry path now strips a still-failed assistant tail positionally after the backoff, and a continuation that still fails locally closes the retry saga with a failed auto_retry_end (#5382).
+    - Fixed native Anthropic web-search history being recursively truncated during session persistence or retained under a different user turn, preserving opaque replay bytes across reload and stripping them on reparent (#6703).
+    - Fixed malformed or temporarily unreadable config.yml files being treated as empty settings and then overwritten by the next setting change, which could permanently erase broker tokens, model roles, and provider configuration. Invalid YAML is now moved to a timestamped .broken-* backup, read failures abort without touching the source, pending changes remain retryable with the last successfully loaded settings, atomic writes preserve symlink targets and handle Windows EPERM replacement, concurrent startup failures are fully observed and quarantine races fail closed, and omp config set/reset waits for persistence before reporting success.
+    - Fixed mounted MCP tools being hard to invoke when server or plugin guidance names their original calls: sessions now include one bounded, exact original-name-to-xd:// route map for every live mounted MCP tool—including servers without initialize instructions—and refresh it as catalogs change without disabling schema virtualization.
+    - Fixed inspect_image blocking indefinitely when the vision-model API stalls by combining the caller's abort signal with an AbortSignal.timeout() and surfacing a distinct timeout ToolError (separate from user-triggered abort) (#4165).
+    - Fixed MiMo models using hashline edit mode by default despite needing the same replace-mode fallback as Kimi. (#3772)
+    - Fixed omp refusing to start on Windows when no bash.exe is discoverable — most visibly with scoop-installed Git, whose manifest shims sh.exe/git.exe but never bash.exe, so PATH lookup missed it. Startup threw No bash shell found while merely building the bash tool description, even though bash tool commands always execute in the embedded brush-core shell and need no host bash. Shell discovery now also checks GIT_INSTALL_ROOT, scoop and per-user Git for Windows install roots, and sh.exe on PATH, then falls back to cmd.exe for the spawn-only paths (interactive PTY, ACP client terminals) instead of failing; the cmd fallback is never used to wrap user-shell commands — brush runs the POSIX line directly.
+    - Added a selectable voice setting for /live realtime sessions (#6566).
+    @oh-my-pi/hashline
+    Changed
+    - Improved reversed-range and invalid block-anchor diagnostics with absolute endpoint corrections plus nearby syntactic opener suggestions, without auto-applying the suggested edit (#6671).
+    - Accepted a single dot between integer range endpoints, such as DEL 235.258, as an unambiguous range separator (#6671).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed the native sort builtin panicking with SendError(..) at chunks.rs:248 when the chunk-channel receiver disconnected early (e.g. a consumer thread stopping after an error or closed output); the reader now stops gracefully instead of unwrapping the failed send, and a panicking external-sort worker thread is surfaced as an error instead of silently emitting truncated output (#6736).
+    @oh-my-pi/snapcompact
+    Fixed
+    - Fixed snapcompact resume guides reporting only the HQ grid width for mixed-width foveated archives (#6712).
+    @oh-my-pi/pi-utils
+    Fixed
+    - getShellConfig no longer throws No bash shell found on Windows hosts without a discoverable bash. resolveWindowsShell searches Git for Windows install roots (machine, per-user, GIT_INSTALL_ROOT, scoop app dirs — scoop shims sh.exe/git.exe but never bash.exe), then bash.exe/sh.exe on PATH, and finally falls back to cmd.exe from ComSpec with /c args, so shell resolution always succeeds.
+    What's Changed
+    - fix(ai): avoid OAuth barrel import cycle by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6645
+    - fix(mcp): map mounted tools to xd routes by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/6670
+    - fix(ai): preserve custom Anthropic web-search history by @roboomp in https://github.com/can1357/oh-my-pi/pull/6706
+    - fix(catalog): derive kimi-code output caps per family by @roboomp in https://github.com/can1357/oh-my-pi/pull/6713
+    - fix(snapcompact): report all foveated frame widths by @roboomp in https://github.com/can1357/oh-my-pi/pull/6714
+    - fix(ai): send interleaved beta through signing proxies by @roboomp in https://github.com/can1357/oh-my-pi/pull/6718
+    - fix(coding-agent): handle asynchronous LSP pipe failures by @shoucandanghehe in https://github.com/can1357/oh-my-pi/pull/6719
+    - fix(ai): preserve Kimi Code cache affinity by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6721
+    - fix(auth-broker): revalidate fresh snapshot caches by @Git-on-my-level in https://github.com/can1357/oh-my-pi/pull/6722
+    - fix(shell): implement native Windows stat builtin by @roboomp in https://github.com/can1357/oh-my-pi/pull/6725
+    - fix(coding-agent): prevented invalid configs from being overwritten by @Ant39140 in https://github.com/can1357/oh-my-pi/pull/6726
+    - fix(coding-agent): prefer auth in deferred model resolution by @roboomp in https://github.com/can1357/oh-my-pi/pull/6728
+    - fix(coding-agent): safely glob memory directories by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6733
+    - fix(ai): respect Responses replay pair order by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6735
+    - fix(tui): preserve prompt input while ask opens by @roboomp in https://github.com/can1357/oh-my-pi/pull/6738
+    - perf(coding-agent): lazily construct computer schema by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6742
+    - perf(coding-agent): avoid unused compact tool metadata by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6743
+    - perf(ai): lazily construct auth broker wire schemas by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6744
+    - perf: lazily construct models config schema by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6745
+    - perf(catalog): lazily materialize provider models by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6746
+    - perf(coding-agent): replace legacy Babel traversal by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6747
+    - perf(launch): isolate PTY replay in broker by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6748
+    - perf(coding-agent): load changelog asset on demand by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6749
+    - fix(cli): resume cross-directory sessions in place by @roboomp in https://github.com/can1357/oh-my-pi/pull/6753
+    - fix(agent): exclude MiMo and DeepSeek from hashline edits by @roboomp in https://github.com/can1357/oh-my-pi/pull/3773
+    - fix(inspect-image): bounded per-request timeout on the vision-model call by @roboomp in https://github.com/can1357/oh-my-pi/pull/4168
+    - feat(live): add selectable voice setting by @roboomp in https://github.com/can1357/oh-my-pi/pull/6724
+    - fix(natives): stopped sort panicking on disconnected receiver by @roboomp in https://github.com/can1357/oh-my-pi/pull/6760
+    New Contributors
+    - @Git-on-my-level made their first contribution in https://github.com/can1357/oh-my-pi/pull/6722
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.1.4...v17.1.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.1.5
+ReleaseTime: 2026-07-27T04:53:00.0000000Z
