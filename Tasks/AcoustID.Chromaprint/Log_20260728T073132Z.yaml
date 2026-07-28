@@ -1,0 +1,23 @@
+Version: 1.6.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: chromaprint-fpcalc-1.6.1-windows-x86_64\fpcalc.exe
+    PortableCommandAlias: fpcalc
+  InstallerUrl: https://github.com/acoustid/chromaprint/releases/download/v1.6.1/chromaprint-fpcalc-1.6.1-windows-x86_64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed a heap buffer overflow when decoding a fingerprint that has extra data after the encoded values. Applications that decode fingerprints from untrusted sources should update.
+    - Fixed building against FFmpeg 4.x, which had not compiled since the channel layout API changed in 5.1
+    - Audio can now be fed in buffers that do not end on a frame boundary; previously a partial frame at the end of a call was dropped
+    - Fixed an implicit integer conversion warning on LLVM
+    - Fixed installing to absolute paths
+    - Build fpcalc against the system FFmpeg in CI
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/acoustid/chromaprint/releases/tag/v1.6.1
+ReleaseTime: 2026-07-28T06:18:07.0000000Z

@@ -1,0 +1,33 @@
+Version: 0.8.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.3/Mini-Term_0.8.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.3/Mini-Term_0.8.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - 修复分屏终端长时间静置后整屏乱码：多个终端共享同一份 WebGL 字形纹理图集(atlas),此前单个终端挂载或切回可见时会把共享图集整个清空、却只修复自己 —— 其余终端的顶点数据仍指向旧坐标，在图集按新布局重新填充后的下一次渲染出现整屏「换字」乱码，只能靠滚动或切换项目恢复。现在改为只重建本终端自身的渲染模型与顶点缓冲，不再触碰共享图集，静置的分屏终端不会再被其他终端的操作「投毒」
+    - 修复 WebGL context 丢失后无法恢复的问题：此前显卡上下文丢失(如驱动重置)后该终端会永久退回 DOM 渲染，现在重新打开标签页即可恢复 WebGL 渲染
+    下载
+
+    | 平台                  | 文件                           |
+    | --------------------- | ------------------------------ |
+    | Windows (推荐)        | Mini-Term_0.8.3_x64-setup.exe  |
+    | Windows (MSI)         | Mini-Term_0.8.3_x64_en-US.msi  |
+    | macOS (Apple Silicon) | Mini-Term_0.8.3_aarch64.dmg    |
+    | Linux (Debian/Ubuntu) | Mini-Term_0.8.3_amd64.deb      |
+    | Linux (Fedora/RHEL)   | Mini-Term-0.8.3-1.x86_64.rpm   |
+    | Linux (通用)          | Mini-Term_0.8.3_amd64.AppImage |
+
+    macOS 未签名，首次打开若提示「已损坏」,请在终端执行：xattr -cr /Applications/Mini-Term.app
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.8.2...v0.8.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.8.3
+ReleaseTime: 2026-07-28T05:06:50.0000000Z
