@@ -21,7 +21,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('atwrf2wmv') } catch {} }, 'First')[0].href
 }
 
-$Object2 = Get-WinGetWinINetResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl
+$Object2 = Get-WinGetDeliveryOptimizationResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl
 $ETag = $Object2.Headers.ETag[0]
 
 # Case 0: Force submit the manifest
