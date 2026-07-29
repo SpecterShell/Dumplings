@@ -33,7 +33,7 @@ switch -Regex ($this.Check()) {
 
         $ReleaseNotesObject = $Object2[0].description | ConvertFrom-Html
         # Remove download link
-        $ReleaseNotesObject.SelectSingleNode('.//a[contains(., "Download S3 Browser")]').Remove()
+        $ReleaseNotesObject.SelectSingleNode('.//a[contains(., "Download S3 Browser") or contains(., "Download CS Browser")]')?.Remove()
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
