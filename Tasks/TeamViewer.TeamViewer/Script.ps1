@@ -1,7 +1,7 @@
 # $Object1 = Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVMSIVersion15.txt'
 
 # Version
-$this.CurrentState.Version = (Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVVersion15.txt').Content | Split-LineEndings | ForEach-Object -Process { $_.Trim() } | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
+$this.CurrentState.Version = (Invoke-WebRequest -Uri 'https://download.teamviewer.com/download/update/TVVersion15.txt').Content | Split-LineEndings | ForEach-Object -Process { $_.Trim() } | Where-Object -FilterScript { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Property { [ChunkVersion]($_) } -Bottom 1
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
