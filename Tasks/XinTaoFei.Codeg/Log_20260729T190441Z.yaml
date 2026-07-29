@@ -1,0 +1,31 @@
+Version: 0.22.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.22.1/codeg_0.22.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.22.1/codeg_0.22.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(settings): A rebuilt Kimi Code panel with honest status. It reads config.toml back and shows the provider, model and context window really on disk, instead of turning green whenever a token was seeded. Required fields are validated before saving — including "Max context size", which Kimi needs or it discards the whole model block and every prompt comes back empty.
+    - feat(git-log): Follow the branch you're on in the Commits tab. A HEAD row keeps the history on your current branch across checkouts made anywhere, works while detached, and reports push status against the branch HEAD actually resolves to.
+    - feat(sidebar): Import local sessions without hunting for the button. The empty sidebar offers it directly, and it's in the right-click menu on the blank area of the list.
+    - perf(acp): Custom-agent conversations open far faster. Streamed fragments are merged as they're written: a 100-turn conversation goes from 9.3 MB and 78 ms to read, to 0.7 MB and under a millisecond. Existing transcripts read exactly the same.
+    - fix(chat): Images and files sent from Windows work again. Pasting an image in a web or remote workspace failed with os error 123, and attachments arrived as links the agent couldn't open. Fixed on both sides, so mismatched client and server versions still work (#392).
+    - fix(acp): Running a script the agent just wrote no longer fails. A "Text file busy" refusal on Linux is now retried briefly instead of surfaced as an error.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(设置)：重做的 Kimi Code 面板，状态如实呈现。 面板会把 config.toml 读回来，显示磁盘上真正生效的供应商、模型与上下文窗口，而不再一种下令牌就变绿。必填项在保存前即校验，包括「最大上下文长度」——Kimi 缺了它会丢弃整个模型配置块，导致每次提问都毫无回应。
+    - 功能(提交历史)：在「提交」标签里跟随你当前所在的分支。 新增的 HEAD 行让历史随任意方式的分支切换自动跟随，分离 HEAD 也可用，并按 HEAD 实际解析到的分支判断推送状态。
+    - 功能(侧边栏)：导入本地会话不必再找入口。 空侧边栏直接提供该操作，列表空白处右键菜单里也有。
+    - 性能(智能体)：自定义智能体的会话打开快得多。 流式片段在写入时即合并：100 个回合的会话从 9.3 MB、读取 78 ms 降到 0.7 MB、不足 1 ms。已有记录读取结果完全一致。
+    - 修复(聊天)：从 Windows 发送的图片与文件恢复正常。 在网页端或远程工作区粘贴图片会以 os error 123 失败，附件也变成智能体打不开的链接。两侧均已修复，客户端与服务器版本不一致时仍可配合工作（#392）。
+    - 修复(智能体)：运行智能体刚写出的脚本不再失败。 Linux 上「Text file busy」的拒绝现在会短暂重试，而不是直接抛错。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.22.1
+ReleaseTime: 2026-07-29T17:23:34.0000000Z
