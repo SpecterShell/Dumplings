@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://pro.libreview.io/articles/meter-drivers'
+$Object1 = Invoke-RestMethod -Uri 'https://api.libreview.io/config' -Method Post -Body '{"country":"US"}' -ContentType 'application/json'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri 'https://www.libreview.com/support' $Object1.data.lddManifest.windows.urls.update
 }
 
 # Version
