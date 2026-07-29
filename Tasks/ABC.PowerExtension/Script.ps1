@@ -12,9 +12,8 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = 'https://perbank.cdn-static.abchina.com/POBNew/ext/PowerExtensionABC.exe'
 }
 
-$Object1 = [System.Net.WebRequest]::Create($this.CurrentState.Installer[0].InstallerUrl).GetResponse()
+$Object1 = Get-WebResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl -Method GET -UserAgent $WinGetUserAgent
 $ETag = $Object1.Headers['ETag']
-$Object1.Close()
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
@@ -82,7 +81,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
