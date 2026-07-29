@@ -22,6 +22,28 @@ winget install --manifest <manifest-directory>
 
 Do not run unknown installers on the host. Use Windows Sandbox, a Hyper-V VM, or the installer-analysis workflow for dynamic install validation.
 
+## Dumplings Parser Bypass
+
+When an existing package must retain its authored installer metadata without
+running Dumplings' static parser stage, use the global submission preference:
+
+```powershell
+.\Core\Index.ps1 -Name Vendor.Package -Force -EnableSubmit -Dry -SkipInstallerAnalysis
+```
+
+For one automation task, set the equivalent model-specific option in
+`Config.yaml`:
+
+```yaml
+SkipInstallerAnalysis: true
+```
+
+Either setting skips nested payload extraction, installer-family detection, and
+static metadata parsers. Installer downloads required for SHA-256, release-date
+handling, manifest formatting, validation, and submission still run. Use this
+only when the preserved manifest fields are already supported by other evidence;
+it does not waive installer analysis or VM validation during manifest authoring.
+
 ## Common Blocking Issues
 
 Check for these before opening or updating a PR:

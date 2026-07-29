@@ -90,9 +90,13 @@ Arguments not owned by `Core\Index.ps1` override values from `Preference.yaml`. 
 
 # Exercise manifest generation and submission logic without opening a PR.
 .\Core\Index.ps1 -Name Vendor.Package -Force -EnableSubmit -Dry
+
+# Preserve existing installer metadata while still downloading, hashing, validating, and submitting manifests.
+.\Core\Index.ps1 -Name Vendor.Package -Force -EnableSubmit -Dry -SkipInstallerAnalysis
 ```
 
 `-EnableMessage` and non-dry `-EnableSubmit` perform external side effects. Enable them only after configuring their credentials and reviewing the selected tasks.
+`-SkipInstallerAnalysis` is a global preference override. A task can opt out independently with `SkipInstallerAnalysis: true` in its `Config.yaml`; either setting skips static parser and detector work but not installer hashing or manifest validation.
 
 ## Configuration
 
