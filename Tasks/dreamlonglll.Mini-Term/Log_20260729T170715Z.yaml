@@ -1,0 +1,37 @@
+Version: 0.8.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.4/Mini-Term_0.8.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.4/Mini-Term_0.8.4_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    界面动效
+    - 弹窗、菜单、抽屉统一进出场动画 — 此前所有弹窗都是瞬间出现、关闭直接消失。现在遮罩淡入、面板从上方落下并放大到位；关闭时反向播完再卸载，这段时间面板已退出覆盖物栈，不再响应点击与 Esc,内容也被冻结，不会在淡出过程中变空。右键菜单改为从光标位置展开(贴边翻转时展开原点跟着换角),右侧抽屉与终端查找条补上滑入
+    - 切换终端与新建分屏的过渡 — 同一格子里切换终端时新终端淡入并轻抬；新分出来的 pane 淡入并放大到位
+    - 抽屉内 Sessions / Git 切换 — 选中态改为一块底色滑过去，内容区横向淡入，替代原先两边各自亮灭
+    - 系统关掉窗口动画时仍保留转场 — Windows 关闭「动画效果」会让 WebView 报告 prefers-reduced-motion: reduce,此前应用内所有动画会被一并压掉，这套新动效在这些机器上等于不存在。现在浮层与终端切换的一次性转场照常播放，只停掉状态点闪烁这类循环动画
+    修复
+    - 侧拉抽屉被分屏分隔线压住 — 抽屉层级低于分屏分隔条，Sessions / Git 面板上会看到一根穿过去的竖线
+    下载
+
+    | 平台                  | 文件                           |
+    | --------------------- | ------------------------------ |
+    | Windows (推荐)        | Mini-Term_0.8.4_x64-setup.exe  |
+    | Windows (MSI)         | Mini-Term_0.8.4_x64_en-US.msi  |
+    | macOS (Apple Silicon) | Mini-Term_0.8.4_aarch64.dmg    |
+    | Linux (Debian/Ubuntu) | Mini-Term_0.8.4_amd64.deb      |
+    | Linux (Fedora/RHEL)   | Mini-Term-0.8.4-1.x86_64.rpm   |
+    | Linux (通用)          | Mini-Term_0.8.4_amd64.AppImage |
+
+    macOS 未签名，首次打开若提示「已损坏」,请在终端执行：xattr -cr /Applications/Mini-Term.app
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.8.3...v0.8.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.8.4
+ReleaseTime: 2026-07-29T15:00:43.0000000Z
