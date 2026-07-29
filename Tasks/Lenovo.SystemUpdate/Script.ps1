@@ -1,8 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://support.lenovo.com/us/en/downloads/ds012808' -Headers @{
-  'Accept'          = 'text/html'
-  'Accept-Language' = 'en-US'
-} -UserAgent $DumplingsBrowserUserAgent
-$Object2 = $Object1.Content | Get-EmbeddedJson -StartsFrom 'window.customData || ' | ConvertFrom-Json
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://support.lenovo.com/us/en/downloads/ds012808'
+  Read-PlaywrightPageContent -Page $Page
+}
+$Object2 = $Object1 | Get-EmbeddedJson -StartsFrom 'window.customData || ' | ConvertFrom-Json
 $Object3 = $Object2.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.exe') })[0]
 
 # Version
