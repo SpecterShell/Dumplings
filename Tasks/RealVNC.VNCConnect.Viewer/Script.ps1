@@ -1,13 +1,16 @@
-$Object1 = curl --retry 3 --retry-all-errors --retry-delay 2 -fsSLA $DumplingsBrowserUserAgent 'https://www.realvnc.com/en/connect/download/viewer/' | Join-String -Separator "`n" | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//script[@class="rvnc-mass-config"]').InnerHtml | ConvertFrom-Json
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.realvnc.com/en/connect/download/viewer/'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//script[@class="rvnc-mass-config"]'
+} | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object2.index.products.'realvnc-connect-viewer'.platforms.windows.latest_version
+$this.CurrentState.Version = $Object1.index.products.'realvnc-connect-viewer'.platforms.windows.latest_version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = Join-Uri 'https://downloads.realvnc.com/download/file/realvnc-connect-viewer/' $Object2.index.products.'realvnc-connect-viewer'.platforms.windows.files.Where({ $_.arch -eq 'x64' -and $_.pkg -eq 'zip' }, 'First')[0].file
+  InstallerUrl         = Join-Uri 'https://downloads.realvnc.com/download/file/realvnc-connect-viewer/' $Object1.index.products.'realvnc-connect-viewer'.platforms.windows.files.Where({ $_.arch -eq 'x64' -and $_.pkg -eq 'zip' }, 'First')[0].file
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "RealVNC-Connect-Viewer-$($this.CurrentState.Version)-Windows.msi"
