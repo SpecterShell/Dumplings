@@ -1,0 +1,38 @@
+Version: 0.8.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.5/Mini-Term_0.8.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.5/Mini-Term_0.8.5_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - 内置文件编辑器：文件树里点开文件不再只是预览，而是一个完整的代码编辑器（CodeMirror 6 内核）
+      - 140+ 语言语法高亮，按文件类型自动匹配、按需懒加载，不拖慢启动
+      - 查找替换（Ctrl+F，面板已中文化）、代码折叠、括号匹配、多光标编辑
+      - Ctrl+S 保存，原子落盘不怕写坏文件；CRLF 文件按原行尾保存，不会产生整文件行尾 diff；有未保存修改时关闭会先确认
+      - 文件被外部程序改动时自动感知：无本地修改直接静默重载，有修改则出提示条由你决定
+      - Markdown / HTML 的「预览 / 源码」切换保留，预览实时渲染未保存的草稿
+      - 语法配色跟随主题与皮肤（Dark / Light / Blueprint / Fluent2 各成一套）
+    体验
+    - Git 抽屉的「提交历史 / 更改」tab 切换补齐动效：内容横向淡入、下划线滑动定位，与其他面板切换手感一致
+    修复
+    - 修复切 tab / 切项目 / 分屏重挂载时 ConPTY 收到同尺寸 resize 触发 TUI（Claude Code 等）整屏重绘、往回滚缓冲区漏重复内容的问题：后端对 resize_pty 做同尺寸去重
+    下载
+
+    | 平台    | 文件                                  | 说明                                                                     |
+    | ------- | ------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.8.5_x64-setup.exe / .msi  | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.8.5_aarch64.dmg / x64.dmg | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.8.5_amd64.AppImage / .deb | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.8.4...v0.8.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.8.5
+ReleaseTime: 2026-07-30T14:14:23.0000000Z
