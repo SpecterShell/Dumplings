@@ -229,6 +229,11 @@ Default return-code families:
 
 ### ElevationRequirement
 
+- Treat this field as author-controlled. Installer parsers may return elevation
+  evidence for review, but Dumplings package updating does not add, replace, or
+  remove `ElevationRequirement` automatically. The same artifact can require
+  different behavior for different scope entries, as in dual-scope packages
+  such as `Anaconda.Miniconda`.
 - Use `elevationProhibited` only when the installer cannot run elevated and explicitly rejects or fails elevated execution. `Spotify.Spotify` is a known example.
 - Do not use `elevationProhibited` on the user-scope entry of an installer that selects user or machine scope from current privileges. This includes many install4j packages, `Git.Git`, `JetBrains.*`, and `Mozilla.*`. Otherwise an elevated WinGet process cannot prefer the machine-scope entry correctly.
 - Use `elevationRequired` only when non-elevated execution is unsupported: the installer rejects it, exits immediately, or cannot proceed without elevation.
