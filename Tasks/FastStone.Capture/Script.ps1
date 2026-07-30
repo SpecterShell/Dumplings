@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.faststone.org/FSCaptureDetail.htm' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[.//a/@name='History']/following-sibling::tr[contains(.//font[@color='#0066FF'], '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[.//p/@id='History']/following-sibling::tr[contains(.//font[@color='#0066FF'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
         $this.CurrentState.ReleaseTime ??= [regex]::Match($ReleaseNotesTitleNode.SelectSingleNode('.//font[@color="#FF0000"]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
