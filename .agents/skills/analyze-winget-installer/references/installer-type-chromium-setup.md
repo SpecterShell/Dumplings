@@ -253,6 +253,7 @@ The outer updater/metainstaller may not be the final application's ARP writer.
 - Untagged Chromium Updater: default user, `--system` machine.
 - Untagged Omaha runtime package: user `/install "runtime=true" /enterprise`; machine `/install "runtime=true&needsadmin=true" /enterprise`.
 - Tagged updater: `needsadmin=true` means machine, `false` means user, and `prefers` allows elevation or user fallback. For `prefers`, duplicate entries only when a deterministic scope switch for that exact package is proven.
+- Plain `--silent` intentionally suppresses Chromium Updater UAC and fails when elevation is required; only `--silent=allow-uac` permits the updater to prompt. When an MSI launches Chromium Updater, the outer Windows Installer may elevate independently. Use the [MSI/WiX workflow](installer-type-msi-wix.md#chromium-enterprise-msi-wrappers) to distinguish the MSI prompt, immediate custom actions, and deferred nested execution.
 - Microsoft documents both per-user and per-machine installation for the latest WebView2 bootstrapper and standalone installer. Elevation selects machine scope; a pre-existing machine Edge Updater may replace a requested user installation with machine scope.
 - Determine target architecture from the embedded/downloaded installer and installed binaries, not from an x86 updater stub.
 

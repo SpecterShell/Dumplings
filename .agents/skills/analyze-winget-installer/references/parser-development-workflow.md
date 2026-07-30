@@ -32,6 +32,13 @@ PackageModule `Index.ps1` and InstallerParsers `Cli.ps1` load infrastructure in 
 
 Format modules may call already-loaded module functions. Do not add parser-local `Import-Module` calls or duplicate dependency loaders.
 
+Keep one `.psm1` for each installer family. Organize a large parser with clear
+section comments and cohesive functions rather than nested `.ps1` fragments.
+Create another `.psm1` only when the code is independently reusable across
+installer families and has a deliberate exported contract. A top-level
+operation should construct one analysis context and reuse its open stream,
+extraction index, parsed XML/INI documents, and nested MSI evidence.
+
 ## Binary Structure Notation
 
 Focused installer pages and parser module headers describe the byte structures that Dumplings actually consumes. Read the diagrams as protocol layouts, not as CPU architecture diagrams or parser call graphs.

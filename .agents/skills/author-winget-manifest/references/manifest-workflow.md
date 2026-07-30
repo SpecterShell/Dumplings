@@ -27,6 +27,38 @@ Use the latest stable schema accepted by winget-pkgs, currently `1.12.0`. Before
 
 When updating an existing package, upgrade every YAML file included in the submitted manifest set to the latest stable schema. Do not retain an older schema merely because the previous package version used it.
 
+## Authoring API
+
+For programmatic authoring, load `Modules/PackageModule/Index.ps1` and operate on the logical manifest model:
+
+```powershell
+$Suggestion = Get-WinGetInstallerManifestSuggestion `
+  -InstallerUrl https://downloads.example.test/setup.exe `
+  -InstallerPath C:\Installers\setup.exe `
+  -PackageVersion 1.2.3
+
+if ($Suggestion.BlockingIssues) {
+  throw ($Suggestion.BlockingIssues -join "`n")
+}
+
+$Manifest = New-WinGetManifest `
+  -PackageIdentifier Vendor.Package `
+  -PackageVersion 1.2.3 `
+  -DefaultLocalization $DefaultLocale `
+  -Installer $Suggestion.Installers
+
+Save-WinGetManifest -Manifest $Manifest `
+  -Path C:\winget-pkgs\manifests\v\Vendor\Package\1.2.3
+```
+
+- Call `Get-WinGetInstallerManifestSuggestion` once per physical installer and reuse its `Installers` and `Analysis` output. Do not follow it with individual `Read-*` parser calls.
+- Treat `BlockingIssues` as hard stops. Review `Suggestions` manually; they are intentionally not authored because the evidence is heuristic, ambiguous, first-run-only, or requires VM validation.
+- Use `Add-WinGetManifestInstaller`, `Set-WinGetManifestInstaller`, and `Remove-WinGetManifestInstaller` for effective installer entries. Exact-match selectors must identify one entry.
+- Use `Add-WinGetManifestLocale`, `Set-WinGetManifestLocale`, and `Remove-WinGetManifestLocale` for locale dictionaries. Locale tags match case-insensitively and the default locale cannot be removed.
+- Use `Set-WinGetManifestValue` and `Remove-WinGetManifestValue` for focused RFC 6901 property paths. Dictionary patches merge recursively, arrays replace atomically, and null patch values remove fields.
+- `Save-WinGetManifest` serializes, optimizes, validates, stages, and atomically replaces a complete leaf directory. Use `-ErrorOnWarning` for strict warning behavior and `-WhatIf` before an unfamiliar mutation.
+- `Modules/PackageModule/Utilities/WinGetManifest.ps1` exposes the same workflow as a thin CLI with `new`, installer/locale/value operations, `validate`, and `show`. It never submits manifests or executes installers.
+
 ## Fixed Headers
 
 Every manifest must start with exactly two comment lines followed by one blank line. Keep the first line fixed, and select the second line from the manifest type. Do not add a YamlCreate version, debug value, timestamp, agent name, or other generated text to this header.

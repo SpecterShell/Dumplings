@@ -24,7 +24,34 @@ native PE launcher
     `-- InstallerData/.../Resource1.zip and payloads
 ```
 
-Dumplings derives the embedded ZIP base from the end-of-central-directory and central-directory offset; the first `PK` local header is not trusted as the archive base. Nested ZIP ranges receive independent entry, size, path, and expansion checks. `InstallScript.iap_xml` is structured Java-bean XML containing product identity and actions; built-in ARP synthesis may still require VM evidence.
+Dumplings derives the embedded ZIP base from the end-of-central-directory and central-directory offset; the first `PK` local header is not trusted as the archive base. Nested ZIP ranges receive independent entry, size, path, and expansion checks. `InstallScript.iap_xml` is structured Java-bean XML containing product identity and actions.
+
+```text
+InstallScript.iap_xml
++-- com.zerog.ia.installer.Installer
+|   +-- supportsSilentUI / supportsConsoleUI
+|   +-- responseFileEnabled
+|   +-- installDir -> Windows magic-folder object + relative expression
+|   `-- instanceDefinition -> enableInstanceManagement
++-- com.zerog.ia.installer.util.InstallerInfoData
+|   +-- productName / productVersion / vendorName
+|   +-- productID -> com.zerog.registry.UUID
+|   `-- upgradeCode -> com.zerog.registry.UUID
++-- com.zerog.ia.installer.actions.InstallUninstaller
+|   `-- shouldUninstall / destinationName / execLevel
+`-- com.zerog.ia.installer.actions.SpeedRegistry
+    `-- repeated SpeedRegistryData
+        +-- keyPath
+        +-- dataType
+        `-- data
+```
+
+The InstallAnywhere runtime creates the built-in Windows uninstall subkey from
+`productName`, optionally suffixed for instance-managed installations. It writes
+the project UUID as the ARP value named `ProductID`; that UUID is not the WinGet
+`ProductCode`. The runtime initially targets HKLM and can fall back to HKCU, so
+the exact scope remains runtime evidence unless an explicit uninstall write
+fixes the hive.
 
 ## Manifest Shape
 
@@ -64,7 +91,7 @@ $Info = Get-InstallAnywhereInfo -Path C:\Path\To\Installer.exe
 Expand-InstallAnywhereInstaller -Path C:\Path\To\Installer.exe -Name 'InstallerData/Execute.zip' -CollisionAction Rename
 ```
 
-`Get-InstallAnywhereInfo` returns validated archive-range evidence, embedded file names, product and upgrade IDs, display metadata, explicit uninstall-path registry writes when present, and a warning when built-in uninstall registration still needs VM validation.
+`Get-InstallAnywhereInfo` returns validated archive-range evidence, embedded file names, ARP ProductCode, project UUID as `ProjectProductId`, upgrade code, display metadata, built-in uninstaller evidence, silent/console/response-file settings, instance-management state, and structured `SpeedRegistryData` writes and associations. It also returns `Actions`, `Rules`, `InstalledPayloads`, `ExecutedPayloads`, `Shortcuts`, and `Launchers` from the serialized Java-bean graph. `ConditionalActionCount` identifies records guarded by a rule expression, while `UnsupportedActionClasses` records action families that are cataloged but not semantically projected.
 
 The tested `FlowJo-Win64-10.10.0.exe` has a valid embedded ZIP range starting at offset `722436`. Its nested `InstallerData/Execute.zip` contains `InstallScript.iap_xml`, which is stronger evidence than raw string probing. Parse the `installerInfoData` object for product identity:
 
@@ -74,11 +101,41 @@ The tested `FlowJo-Win64-10.10.0.exe` has a valid embedded ZIP range starting at
 - `upgradeCode`: `c1599e08-1f2b-11b2-a7ae-869c7b752225`
 - `vendorName`: `FlowJo LLC`
 
-This is better than arbitrary registry/version string probing, but it is still product identity evidence. In the tested sample, explicit `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall` or `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall` writes were not present as literal registry actions in `InstallScript.iap_xml`; InstallAnywhere can synthesize its uninstall registration from built-in product metadata.
+For this sample, `Get-InstallAnywhereInfo` reports `ProductCode: FlowJo
+10.10.0`; `ProjectProductId` is the UUID above. The enabled
+`InstallUninstaller` action proves built-in ARP creation, while its runtime hive
+fallback leaves `Scope` unresolved. The structured `SpeedRegistryData` records
+also expose FlowJo's `.wsp`, `.jo`, `.jot`, and other file associations.
+
+FlowJo's `ExecFile` action identifies `vcredist_x64.exe` and its nested
+arguments, while `MakeExecutable` records expose the LaunchAnywhere main class,
+JVM behavior, and LAX properties. These remain static action definitions:
+preserve each `RuleExpression` and correlate it with `Rules` before treating an
+action as a Windows execution path. Custom Java actions remain unresolved and
+require VM validation.
+
+Evaluate platform-only conditions against an explicit target descriptor. The
+expression parser supports `!`, `&&`, `||`, and parentheses. It returns
+three-valued results; variable, registry, file, and custom-code rules remain
+`Unknown`, and the analysis host is never consulted.
+
+```powershell
+$WindowsActions = Get-InstallAnywhereActionEligibility -Info $Info -PlatformName 'Windows 11'
+$WindowsActions | Where-Object State -NE 'False'
+
+# Inspect one authored expression directly when routing a specific payload.
+Resolve-InstallAnywhereRuleExpression `
+  -Expression 'WINDOWS_RULE && !SERVER_ONLY' -Rule $Info.Rules -PlatformName 'Windows 11'
+```
 
 ### Step 2: Resolve Uninstaller And ARP Metadata
 
-Use parsed product metadata as candidate `ProductCode`, display name, version, publisher, and upgrade evidence. Require VM ARP delta validation when the exact visible uninstall key, `WindowsInstaller` flag, or scope matters.
+Use `ProductCode` only when the parser found an explicit uninstall key or an
+enabled built-in uninstaller without instance management. `ProjectProductId` is
+diagnostic project identity, not a substitute ARP key. When
+`InstanceManagementEnabled` is true, require VM evidence because the runtime can
+append `(N)` to the uninstall key. Require VM ARP delta validation when scope or
+conditional custom actions remain unresolved.
 
 ### Step 3: Determine JVM, Payload Architecture, And Scope
 

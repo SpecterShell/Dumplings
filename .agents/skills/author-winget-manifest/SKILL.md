@@ -57,6 +57,8 @@ For GitHub release sources, inspect the latest non-prerelease release unless the
 
 After all manifest files are authored, parse and serialize the complete set through the logical manifest pipeline as documented in `references/manifest-workflow.md`. Complete-manifest serialization applies cross-document redundancy rules, legal field levels, and schema ordering. Use `Format-WinGetManifest` only for an isolated document that is not yet part of a complete set; it cannot compare installer fields with locale manifests and must not replace the evidence-completeness pass.
 
+Prefer the PackageModule authoring APIs when constructing or editing a complete set. `Get-WinGetInstallerManifestSuggestion` downloads or inspects an installer and returns authoritative applied fields separately from suggestions, warnings, and blocking issues. Reuse that result with `Add-WinGetManifestInstaller`; do not call the analyzer or individual installer-family readers again for the same file. Use the immutable installer, locale, and RFC 6901 value functions for edits, then call `Save-WinGetManifest` so serialization, optimization, offline validation, staging, and atomic replacement run together. The standalone entry point is `Modules/PackageModule/Utilities/WinGetManifest.ps1`.
+
 ## Stop Conditions
 
 Stop and warn instead of writing a manifest when:
