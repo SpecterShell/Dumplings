@@ -20,14 +20,13 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://cli.devin.ai/docs/changelog/stable' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@id, '$($this.CurrentState.Version.Replace('.', '-'))')]")
+      if ($ReleaseNotesNode) {
         # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('./div[last()]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
