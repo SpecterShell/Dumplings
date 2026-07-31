@@ -16,8 +16,10 @@ Classify the variant before writing manifest fields. The presence of an MSI is
 not sufficient by itself because Advanced UI and Suite/Advanced UI can carry MSI
 parcels:
 
-- Basic MSI: the selected MSI is InstallShield-authored and has no compiled
-  InstallScript custom-action markers.
+- Basic MSI: the selected MSI is InstallShield-authored but lacks the
+  InstallScript MSI runtime verifier/tables. A Basic MSI may still contain
+  individual compiled InstallScript custom actions in `Binary.ISSetup.dll`;
+  those actions do not change the project type.
 - InstallScript MSI: the selected MSI contains `ISInstallScriptAction`,
   `ISScriptFile`, `ISInstallScript*`, or `ISVerifyScriptingRuntime` evidence.
 - InstallScript-only: no MSI payload; often requires response-file replay.
@@ -28,23 +30,28 @@ Block InstallScript-only installers when silent installation requires a response
 
 ## Binary Structure
 
-InstallShield has several incompatible generations. Dumplings first separates the PE launcher from its overlay, then decodes only the supported stream/catalog variants. A nested MSI is selected from decoded metadata rather than from a recursive `*.msi` wildcard.
+InstallShield has several incompatible generations. Dumplings first separates the PE launcher from its overlay, then decodes only the supported stream/catalog variants. A nested MSI is selected from decoded metadata rather than from a recursive `*.msi` wildcard. Older Basic MSI media can instead keep `Setup.ini` and the MSI beside `setup.exe`; that sibling relationship is metadata, not an embedded overlay.
 
 ```text
 PE setup launcher
-`-- overlay
-    +-- PackageForTheWeb preamble
-    |   `-- Microsoft Cabinet extending exactly to end of file
-    |       +-- Setup.exe / Setup.ini / setup.inx
-    |       `-- data*.cab and project media
-    +-- optional "NB10" debug prefix
-    +-- encoded stream form
-    |   +-- "InstallShield" or "ISSetupStream" header (46 bytes)
-    |   +-- repeated old (0x138-byte) or stream attributes
-    |   `-- transformed/zlib payload ranges
-    `-- plain form
-        +-- ANSI or UTF-16 record headers
-        `-- adjacent bounded file ranges
++-- overlay
+|   +-- PackageForTheWeb preamble
+|   |   `-- Microsoft Cabinet extending exactly to end of file
+|   |       +-- Setup.exe / Setup.ini / setup.inx
+|   |       `-- data*.cab and project media
+|   +-- optional "NB10" debug prefix
+|   +-- encoded stream form
+|   |   +-- "InstallShield" or "ISSetupStream" header (46 bytes)
+|   |   +-- repeated old (0x138-byte) or stream attributes
+|   |   `-- transformed/zlib payload ranges
+|   `-- plain form
+|       +-- ANSI or UTF-16 record headers
+|       `-- adjacent bounded file ranges
+`-- optional legacy external media
+    +-- Setup.ini
+    |   +-- [Startup] PackageName -> package section
+    |   `-- [PackageName] Location -> exact media-relative MSI path
+    `-- selected sibling MSI
 ```
 
 PackageForTheWeb is a distinct outer generation. Dumplings searches only the
@@ -117,8 +124,39 @@ Extracted Advanced UI media
 |       `-- Detect/When                package-presence conditions
 +-- Setup_UI.xml / Setup_UI.dll        suite user interface
 +-- Setup.inx                          suite runtime script, not proof of InstallScript MSI
+|   `-- roots named by Actions/CallInstallScript/@Arguments
 `-- {parcel-id}/payload.msi|exe         embedded package files
 ```
+
+Basic MSI and InstallScript MSI projects can also compile authored
+InstallScript custom actions into the MSI `Binary` table. The physical payload
+and dispatch metadata are separate: `CustomAction.Target` is commonly an opaque
+`fN` export, while `IsConfig.ini` supplies the authored function name.
+
+```text
+MSI database
++-- Binary.Name = "ISSetup.dll"
+|   `-- PE image
+|       `-- overlay: "ISSetupStream"
+|           +-- Setup.inx              compiled InstallScript bytecode
+|           +-- IsConfig.ini
+|           |   `-- [fN] Function=<authored function name>
+|           +-- StringLLLL.txt         localized __LoadString resources
+|           `-- InstallScript runtime support files
+`-- CustomAction
+    +-- Source = "ISSetup.dll"
+    +-- Target = "fN"
+    `-- Action + sequence tables        invocation and condition evidence
+
+Resolution chain
+CustomAction.Target "f1" -> IsConfig.ini [f1].Function
+                         -> bounded emulation of only that Setup.inx function
+```
+
+`ISVerifyScriptingRuntime`, `ISInstallScriptAction`, `ISScriptFile`, and the
+`ISInstallScript*` table/action families classify an InstallScript MSI.
+`Source=ISSetup.dll` plus an `fN` target proves a compiled custom action but does
+not by itself distinguish Basic MSI from InstallScript MSI.
 
 Some script-driven media stores `setup.inx` inside InstallShield's proprietary
 cabinet format rather than in the outer launcher catalog. Dumplings enumerates
@@ -152,9 +190,13 @@ dataN.cab
     `-- repeated uint16-LE compressed length + raw Deflate block
 ```
 
-The focused reader rejects old pre-v6 catalogs, split/linked support entries,
-missing volumes, invalid ranges, oversized output, malformed Deflate chunks,
-expanded-size mismatches, and MD5 mismatches. `Get-InstallShieldInfo` exposes
+The focused reader rejects old pre-v6 catalogs, missing volumes, invalid ranges,
+oversized output, malformed Deflate chunks, expanded-size mismatches, and MD5
+mismatches. Split files are read as one bounded stream over the first/last-file
+ranges in consecutive volume headers, including when Deflate framing crosses a
+volume boundary. Linked descriptors resolve through `LinkPrevious` with index,
+flag, depth, and cycle validation; `LinkNext` is retained as the forward alias
+relationship. `Get-InstallShieldInfo` exposes
 `InstallShieldCabinetSupport` with catalog counts and selected support-file
 evidence without returning every application-file record.
 
@@ -278,19 +320,37 @@ Call instruction 0x0020/0x0021
     +-- 0x06: uint16 length + ASCII string
     +-- 0x07: int32 LE
     `-- 0x02..0x0A: variable, local, or label references
+
+Property proxy registration 0x003B (official 11.5 compiler observation)
++-- uint16 EncodedCount = 3 (destination plus two operands)
++-- tagged destination: runtime-backed variable
++-- tagged int32 GetterFunctionIndex
+`-- tagged int32 SetterFunctionIndex
+    `-- normally followed by numeric-slot = RESULT, storing the opaque handle
 ```
 
-The reader validates every catalog count, offset, string, operand, instruction count, and function boundary. Modern core and extension records are structurally decoded through their tagged operand framing. The abstract interpreter evaluates source-backed arithmetic, comparisons, string operations, RESULT-slot operations, generated wrappers, and structure-member state. Address/indirection, exception/handler, DLL lifetime, and the observed `0x003B` compiler-support record are structural only; `0x003B` is intentionally not called `AskOptions` because current InstallShield compiler output uses it for generated runtime support and no source-backed semantics are available. Other unknown extension semantics remain in `UnsupportedOpcodes` and are never assigned invented behavior. Limits bound recursion, loops, paths, calls, instructions, value alternatives, and emitted effects. `Get-InstallShieldInstallScriptDialogTrace` follows entry-point calls and generated wrapper literals, grouping `OnFirstUIBefore` with `OnFirstUIAfter` and maintenance equivalents. Mutually exclusive license/completion dialogs remain alternatives rather than being flattened into an invented sequence.
+The reader validates every catalog count, offset, string, operand, instruction count, and function boundary. Modern core and extension records are structurally decoded through their tagged operand framing. The abstract interpreter evaluates source-backed arithmetic, comparisons, string operations, RESULT-slot operations, generated wrappers, and structure-member state. InstallShield 11.5 differential builds ground `AddressOf`, primitive `Indirect`, pointer-parameter prologues, and prototype flag `0x02` (`BYREF`): referenced structure snapshots survive function-frame changes, primitive references can be read without creating a host pointer, and callee assignments are written back to the caller. The same official compiler output grounds `Handler(eventId, functionIndex)`, `ExecuteHandler(eventId)`, and inline `try`/`catch`/`endcatch` framing. Normal-path analysis skips exception-only catch bodies; imported calls are not executed, so catch-only effects remain conditional rather than being promoted to ARP evidence. `UseDLL` and `UnUseDLL` produce `DllOperations` containing the requested module path, but the DLL is never loaded and its exported functions remain opaque. Official 11.5 compiler output also grounds opcode `0x003B` as a runtime property-proxy registration: `PropertyHandlers` exposes the target variable, paired getter/setter functions, and compiler-generated handle slot. The parser does not invoke those handlers or guess their process-dependent initial values. It intentionally does not call `0x003B` `AskOptions`; historical decompilers disagree on that label. Other unknown extension semantics remain in `UnsupportedOpcodes` and are never assigned invented behavior. Limits bound recursion, loops, paths, calls, instructions, value alternatives, and emitted effects. `Get-InstallShieldInstallScriptDialogTrace` follows entry-point calls and generated wrapper literals, grouping `OnFirstUIBefore` with `OnFirstUIAfter` and maintenance equivalents. Mutually exclusive license/completion dialogs remain alternatives rather than being flattened into an invented sequence.
 
 Direct `RegDBSetKeyValueEx`, legacy registry setters, and compiler-generated `_RegSetKeyValue` wrappers produce `RegistryWrites`. Complete HKCR writes are converted to `Protocols`, `FileExtensions`, `ProtocolAssociations`, and `FileExtensionAssociations`; localized `.ips` resources are resolved before association matching. `RegDBSetItem` produces `RegistryItems` and can override built-in `DisplayName`, `DisplayVersion`, `Publisher`, `InstallLocation`, `ProductGuid`, and `SystemComponent` before `MaintenanceStart`. `CreateProcess`, `LaunchApp*`, `ShellExecute*`, file APIs, and shortcut APIs produce typed evidence without performing the operation. `CreateRegistrySet` and `CreateShellObjects` select the independently parsed media-database records described above. Selection and records are reported separately so conditional project data is not mistaken for an executed effect.
 
 Older generated scripts may expose only a `program` entry point which delegates
-to the data-driven `ISRT._ShowWizardPages` runtime. The dialog table is not a
-sequence of direct `Sd*` calls in that INX generation, so Dumplings reports an
-incomplete trace and does not invent a response-file order. The Unitronics U90
-Ladder 6.6.45 sample uses this PackageForTheWeb/Stirling layout and is retained as its regression
-fixture. The SHARP Pen Software 3.9 sample is MSI-bearing InstallShield media and
-does not add a distinct InstallScript behavior to the focused fixture set.
+to `ISRT._ShowWizardPages`. Official InstallShield framework source shows that
+the runtime calls the exported `IfxOnShowWizardPages` function, which then
+selects first-install, maintenance, or update UI. Dumplings follows that callback
+back into ordinary INX functions, preserves nested call order, and reports the
+result as `DialogTraces.Source: FrameworkCallback`. It does not treat the runtime
+function as an opaque data table.
+
+Framework reconstruction still remains incomplete when `MODE`, `MAINTENANCE`,
+feature selection, or BACK/NEXT branches can suppress, repeat, or replace pages.
+Completion choices such as `SdFinish` versus `SdFinishReboot` remain alternatives,
+and the generated response template requires review against a VM-recorded file.
+The Unitronics U90 Ladder 6.6.45 PackageForTheWeb/Stirling fixture exercises this
+path: its fresh-install sequence exposes `SdWelcome`, `SdLicense`,
+`SdAskDestPath`, `SdSelectFolder`, and `SdStartCopy`, while maintenance exposes
+`SdWelcomeMaint` and `SdComponentTree`. The SHARP Pen Software 3.9 sample is
+MSI-bearing InstallShield media and does not add a distinct InstallScript behavior
+to the focused fixture set.
 
 For scrambled INX generations, each byte is decoded from its absolute file offset as `ROR8(encoded XOR 0xF1, 2) - (offset modulo 71)`. The parser validates the copyright marker in the decoded header before accepting the transform. It reports only documented default ARP values and labels custom script assignments as unresolved.
 
@@ -509,7 +569,7 @@ $CabinetOutput = Expand-InstallShieldCabinet `
   -CollisionAction Rename
 ```
 
-`Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. For Basic MSI and InstallScript MSI wrappers, it parses the extracted `Setup.ini`, reads `[Startup] PackageName` and the matching package section's `Location`, and exposes the exact path as `MsiPayloadSelection.SelectedMsiPath`. `Get-InstallShieldMsiInfo` reads that selected MSI instead of taking the first `*.msi` match. `Get-MsiInstallerInfo` reports `InstallShieldProjectType` and its exact table/custom-action evidence.
+`Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. For Basic MSI and InstallScript MSI wrappers, it parses `Setup.ini`, reads `[Startup] PackageName` and the matching package section's `Location`, and exposes the exact path as `MsiPayloadSelection.SelectedMsiPath`. The configuration can be embedded or, for legacy media, beside `setup.exe`; `MsiPayloadSelection.SourceKind: ExternalSibling` identifies the latter. External-media resolution accepts only that safe, exact `.msi` path and never scans the sibling directory. `Get-InstallShieldMsiInfo` reads the selected MSI instead of taking the first `*.msi` match. `Get-MsiInstallerInfo` reports `InstallShieldProjectType` and its exact table/custom-action evidence.
 
 For Advanced UI media, reuse `$Info.AdvancedUiInfo` and
 `$Info.SuitePackages`. The former resolves `SuiteId`, ARP metadata, scope, and
@@ -518,6 +578,12 @@ file path/URL, operation targets, normal/silent arguments, elevation, detection
 condition, and whether MSI command lines set `ARPSYSTEMCOMPONENT=1`. Do not call
 `Get-InstallShieldMsiInfo` to obtain the outer ProductCode: nested MSI metadata
 is parcel evidence, while the suite ARP entry is authoritative.
+
+`AdvancedUiInfo.InstallScriptEntryPoints` resolves literal
+`CallInstallScript` arguments, and `$Info.InstallScriptInfo` contains effects
+reachable only from those functions. `SilentSupport: NotApplicable` means the
+suite owns silent invocation; it is not evidence that every suite event is
+unattended. A reachable dialog requires VM validation of the containing event.
 
 Evaluate target-specific package eligibility before selecting nested metadata,
 then dispatch only locally extracted targets. `Unknown` is a possible package,
@@ -605,13 +671,39 @@ neither the outer nor nested setup program is executed.
 
 For InstallScript-only media, reuse `$Info.InstallScriptInfo`; do not parse `setup.inx` again. `SilentSupport` is `Supported`, `ResponseFileRequired`, or `Indeterminate`, and `ResponseFileRequirement` distinguishes `Embedded`, `External`, `None`, and `Unknown`. Only `Supported` is sufficient static evidence for the reported `SilentSwitches`. A reachable-path result that cannot be proven remains `Indeterminate` and requires VM validation.
 
-`DialogTraces` contains the fresh-install and maintenance entry-point sequences. `EmbeddedResponseValidation` compares a shipped `setup.iss` with the reconstructed fresh-install order. A syntactically valid but mismatched response file does not prove self-contained silent support.
+`DialogTraces` contains the fresh-install and maintenance entry-point sequences.
+`Source: DirectBytecode` identifies ordinary named event handlers;
+`Source: FrameworkCallback` identifies the source-backed
+`_ShowWizardPages -> IfxOnShowWizardPages` route. A framework callback with
+reachable response-backed dialogs and no valid embedded `setup.iss` is reported
+as `ResponseFileRequired`, not `Indeterminate`. `EmbeddedResponseValidation`
+compares a shipped `setup.iss` with the reconstructed fresh-install order. A
+syntactically valid but mismatched response file does not prove self-contained
+silent support.
 
-The same object contains the ARP and side-effect projection. Reuse `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `URLInfoAbout`, `HelpLink`, `WritesAppsAndFeaturesEntry`, `AppsAndFeaturesEntries`, `RegistryWrites`, `RegistryItems`, `MediaRegistrySets`, `MediaRegistryWrites`, `ConditionalMediaRegistryWrites`, `CabinetFileGroups`, `CabinetComponents`, `MediaSetupTypes`, `MediaShellFolders`, `MediaShortcuts`, `ConditionalMediaShortcuts`, `Protocols`, `FileExtensions`, `ExecutedPayloads`, `FileOperations`, `Shortcuts`, `OpcodeCoverage`, `UnsupportedOpcodes`, and `ArpValueSources`; do not parse the INX or cabinet header again with separate readers. The `Features` and `SetupTypes` arrays on conditional media effects explain which authored selections can create them; they do not prove the runtime selection. The parser accepts `Setup.ini [Startup] ProductGUID` only when it is a valid GUID and requires compiled `MaintenanceStart`/uninstall-path evidence before promoting it to ARP `ProductCode`. A default media set can define additional visible uninstall keys; all distinct entries are returned while the MaintenanceStart GUID remains primary. If registration evidence is missing, `ProjectProductCode`, `ProjectName`, and `ProjectPublisher` remain diagnostic project metadata while manifest-facing ARP fields stay null. Registry-only values remain analysis evidence and are not inserted into WinGet `AppsAndFeaturesEntries`, whose schema accepts a smaller field set. The parser deliberately does not use `setup.iss [Application] Version`: response-file application metadata can be stale and is not the value written by `MaintenanceStart`.
+The same object contains the ARP and side-effect projection. Reuse `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `URLInfoAbout`, `HelpLink`, `WritesAppsAndFeaturesEntry`, `AppsAndFeaturesEntries`, `RegistryWrites`, `RegistryItems`, `MediaRegistrySets`, `MediaRegistryWrites`, `ConditionalMediaRegistryWrites`, `CabinetFileGroups`, `CabinetComponents`, `MediaSetupTypes`, `MediaShellFolders`, `MediaShortcuts`, `ConditionalMediaShortcuts`, `Protocols`, `FileExtensions`, `ExecutedPayloads`, `FileOperations`, `DllOperations`, `PropertyHandlers`, `Shortcuts`, `OpcodeCoverage`, `UnsupportedOpcodes`, and `ArpValueSources`; do not parse the INX or cabinet header again with separate readers. Treat `DllOperations` as an opaque-code warning boundary, not as proof of the DLL's registry, file, or process effects. `PropertyHandlers` is structural compiler evidence and not a source of resolved runtime values. The `Features` and `SetupTypes` arrays on conditional media effects explain which authored selections can create them; they do not prove the runtime selection. The parser accepts `Setup.ini [Startup] ProductGUID` only when it is a valid GUID and requires compiled `MaintenanceStart`/uninstall-path evidence before promoting it to ARP `ProductCode`. A default media set can define additional visible uninstall keys; all distinct entries are returned while the MaintenanceStart GUID remains primary. If registration evidence is missing, `ProjectProductCode`, `ProjectName`, and `ProjectPublisher` remain diagnostic project metadata while manifest-facing ARP fields stay null. Registry-only values remain analysis evidence and are not inserted into WinGet `AppsAndFeaturesEntries`, whose schema accepts a smaller field set. The parser deliberately does not use `setup.iss [Application] Version`: response-file application metadata can be stale and is not the value written by `MaintenanceStart`.
 
 Do not pass `-Name` during normal analysis. Use it only as a reviewed manual constraint when `MsiPayloadSelection.SelectionMethod` is unresolved and static inspection proves which payload the bootstrapper launches. If multiple MSIs are extracted and `Setup.ini` does not select one, the parser stops rather than using MSI architecture or enumeration order as a selector. An unselected MSI may be a prerequisite or chained package.
 
-For direct MSI databases, `Get-MsiInstallerInfo` can also classify InstallShield authoring markers. For InstallScript MSI it returns `InstallShieldScriptActions`, including each action's authored sequence table, ordering, and raw condition. These conditions are not evaluated outside Windows Installer. InstallShield-authored MSIs commonly use `INSTALLDIR="<INSTALLPATH>"`, but confirm with `$Info.InstallerBuilder -eq 'InstallShield'` because WiX and other builders can use the same public property.
+For direct MSI databases, `Get-MsiInstallerInfo` can also classify InstallShield
+authoring markers. `InstallShieldScriptActions` includes runtime actions and
+compiled custom actions with their sequence table, ordering, raw condition,
+opaque target, and resolved `Function`. When `Binary.ISSetup.dll` is present,
+`InstallShieldScriptInfo` exposes mapped `EntryPoints`, relative extracted
+support files, bounded analysis, and warnings without returning temporary paths.
+The parser opens the MSI once, streams the Binary-table payload through a 128
+MiB bound, expands its validated `ISSetupStream`, and emulates only mapped
+functions. Reuse this result rather than extracting `ISSetup.dll` or parsing
+`Setup.inx` again.
+
+`InstallShieldLauncherRequirement` reports whether
+`ISVerifyScriptingRuntime` proves that an InstallScript MSI must be launched
+through InstallShield `Setup.exe`; this verifier is launcher-contract evidence,
+not proof that the MSI contains an extractable INX program. Conditions are not
+evaluated outside Windows Installer. InstallShield-authored MSIs commonly use
+`INSTALLDIR="<INSTALLPATH>"`, but confirm with
+`$Info.InstallerBuilder -eq 'InstallShield'` because WiX and other builders can
+use the same public property.
 
 InstallScript MSI classification does not prove support for Windows Installer's
 basic-UI `/passive` mode. `CrisisGo.CrisisGo` is a validated counterexample: a
@@ -663,7 +755,7 @@ These helpers assist analysis and authoring; they do not make response-file-depe
 
 ## VM Validation
 
-Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) to distinguish Basic MSI, InstallScript MSI, InstallScript-only, and Advanced UI behavior, verify nested ARP ownership, and stop when silent installation requires a response file. Test prerequisite behavior from a checkpoint where the selected dependency is absent; compare unelevated and elevated silent runs, capture the outer and child exit codes, and verify whether the dependency was installed. For Advanced UI, compare the observed child process and arguments with `SuitePackages.Operations`, and confirm whether the suite or a non-hidden parcel owns the visible ARP entry.
+Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) to distinguish Basic MSI, InstallScript MSI, InstallScript-only, and Advanced UI behavior, verify nested ARP ownership, and stop when silent installation requires a response file. Test prerequisite behavior from a checkpoint where the selected dependency is absent; compare unelevated and elevated silent runs, capture the outer and child exit codes, and verify whether the dependency was installed. For Advanced UI, compare the observed child process and arguments with `SuitePackages.Operations`, confirm whether the suite or a non-hidden parcel owns the visible ARP entry, and exercise events whose scoped `CallInstallScript` analysis reports reachable dialogs or unresolved calls. For MSI custom actions, compare the observed sequence with `InstallShieldScriptActions`; do not execute an opaque `fN` export directly.
 
 ## Implementation Sources
 
