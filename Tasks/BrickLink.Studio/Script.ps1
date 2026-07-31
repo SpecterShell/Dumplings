@@ -11,10 +11,10 @@ while (-not $Object1.EndOfStream) {
 }
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://studio.download.bricklink.info/Studio2.0/Archive/$($this.CurrentState.Version)/Studio+2.0_32.exe"
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = "https://studio.download.bricklink.info/Studio2.0/Archive/$($this.CurrentState.Version)/Studio+2.0_32.exe"
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = "https://studio.download.bricklink.info/Studio2.0/Archive/$($this.CurrentState.Version)/Studio+2.0.exe"
