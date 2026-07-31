@@ -1,0 +1,174 @@
+Version: 17.2.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed an issue where response-only usage records were incorrectly treated as authoritative context anchors, while ensuring prompt and total-only provider telemetry remains preserved.
+    - Fixed context compaction summaries growing excessively with large context windows by capping the summary output budget to 16,384 tokens, ensuring conversations are properly compressed rather than duplicated.
+    @oh-my-pi/pi-ai
+    Added
+    - Added support for the gmi-cloud provider registry, including API-key paste login validation and integration with @oh-my-pi/pi-catalog.
+    Changed
+    - Updated AuthStorage.redeemResetCredit to prioritize spending the soonest-expiring available saved reset credit, and improved error handling to distinguish between transport failures (credit_list_failed) and a genuine lack of credits.
+    - Exported SENSITIVE_TOKEN_RE from providers/transform-messages to allow hosts to route credential shapes through reversible obfuscation instead of irreversible redaction.
+    Fixed
+    - Fixed an issue where Cursor conversation checkpoints were incorrectly recorded as billable output tokens, ensuring accurate usage totals.
+    - Fixed an issue in AuthStorage.refreshStoredOAuthCredential where expired OAuth credentials were returned without being refreshed when a credential mismatch occurred, which previously resulted in misleading "No API key found" errors.
+    - Fixed Cursor history replay issues by preserving structured message order for assistant tool calls/results, retaining Kimi K3 thinking blocks, and preventing unsafe mid-session switches to K3.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for the GMI Cloud provider (gmi-cloud), an OpenAI-compatible inference gateway with dynamic model discovery and API-key authentication via the GMI_API_KEY environment variable.
+    - Added optional authoritative context occupancy to usage records for providers with separate checkpoint telemetry and billable token buckets.
+    Fixed
+    - Fixed classification of dynamically discovered Cursor Kimi K3 effort variants as non-reasoning models when thinkingDetails is omitted.
+    - Fixed Google AI Studio OpenAI-compatible requests failing with HTTP 400 by omitting the unsupported store field.
+    - Fixed Synthetic models losing capabilities (such as reasoning/thinking selectors, vision input, output limits, and pricing) by correcting how the discovery mapper parses Synthetic's advertised features, effort vocabularies, and pricing structures.
+    - Fixed Cursor model discovery to correctly expose the 1M-token context window for supported models (including Claude, GPT, Kimi K3, and GLM 5.2+ families) instead of defaulting to 200k.
+    - Fixed GitHub Copilot routing for grok-4.5 to use the correct Responses endpoint instead of the unsupported Chat Completions endpoint.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added an app.live.toggle keybinding (default Ctrl+L) to start or stop live voice mode.
+    - Added ctx.invokeTool(params, options?) to extension contexts, allowing wrappers to run native tools while inheriting context, abort signals, and progress updates.
+    Changed
+    - Moved the display-reset default keybinding (app.display.reset) from Ctrl+L to Alt+L to accommodate the new live-mode toggle.
+    - Updated the hashline edit tool, streaming preview, and plan-mode guidance to support the unified PUT/CUT grammar, .= ranges, and named registers.
+    - Improved startup performance by moving subagent model-registry refresh and session-file opening off the launch critical path.
+    - Optimized session file writing performance by batching same-turn file-session appends.
+    - Rewrote the Codex saved-reset auto-redeem algorithm to be pool-wide, window-exact, and expiry-aware, ensuring banked resets are automatically and reliably redeemed across multi-account setups before they expire.
+    Fixed
+    - Fixed a crash in Kitty terminals when rendering non-PNG tool-result images if PNG conversion fails.
+    - Fixed subagent evaluation resets (reset: true) wiping the shared kernel inherited from the parent session; resets from non-exclusive owners now fork into a private per-owner kernel.
+    - Fixed the copy selector and ask dialog rendering raw key IDs instead of human-readable keybinding labels.
+    - Fixed CLI positional initial messages bypassing automatic session-title generation.
+    - Fixed the environment-variable reference omitting Kitty Unicode placeholder controls and tmux placement caveats.
+    - Fixed extension validation failures during omp plugin install for extensions importing compact from @earendil-works/pi-coding-agent by adding the missing re-export.
+    - Fixed Bash interceptor rules to inspect unquoted/unescaped compound command fragments (e.g., &&, ||, ;, |, &, and newlines) instead of only matching the complete command input.
+    - Fixed ExtensionContext.cwd staying pinned to the initial session directory; it now dynamically tracks the active session's current working directory.
+    - Fixed the web-search provider picker description for xAI/Grok to clarify that it supports SuperGrok/X Premium+ OAuth sign-ins.
+    - Fixed /reload-plugins failing to reconnect MCP servers or refresh MCP tool and prompt-command registries.
+    - Enforced the centralized artifact spill threshold on oversized read results, persisting them as recoverable session artifacts.
+    - Fixed DuckDuckGo web search under-returning results above the first-page limit by automatically submitting continuation forms.
+    - Fixed DuckDuckGo web search ignoring after: and before: date bounds by correctly parsing and filtering result timestamps.
+    - Fixed env-driven OTLP trace export ignoring OTEL_RESOURCE_ATTRIBUTES.
+    - Fixed a fresh session with deferred MCP discovery injecting the newly mounted xd:// tool catalog twice into the first model request.
+    - Fixed the bash tool failing with EACCES permission errors on multi-user machines by scoping the snapshot directory per user ID.
+    - Fixed LSP write batching replaying stale whole-file snapshots over newer external changes made before the batch flushed.
+    - Fixed ctx.ui.editor() in ACP mode always resolving to undefined by routing it through the elicitation bridge.
+    - Fixed omp commit failing to resolve extension-provided models in both agentic and legacy pipelines.
+    - Fixed RPC hosts receiving no subagent lifecycle or progress frames when an IRC message revives an idle or parked keep-alive subagent.
+    - Fixed copied fenced-code body rows in assistant messages retaining component and container margins.
+    - Fixed mid-turn auto-compaction repeating dead-end rescue work and warnings at every tool boundary within a single oversized turn.
+    - Fixed automatic terminal appearance changes clearing native scrollback and snapping readers away from their current scroll position.
+    - Fixed exact-match edits failing on files containing credential-shaped tokens when secrets.enabled is active by using reversible placeholders instead of irreversible redactions.
+    - Fixed context usage collapsing to the latest response size for Cursor models that omit prompt-token usage.
+    - Fixed the browser tool crashing with EBUSY errors on Windows when a headless Chromium profile is locked during cleanup.
+    - Fixed the Python RPC client dropping context, compaction, OAuth URL, and terminal-settlement fields.
+    - Fixed the browser tool ignoring the url parameter when opening a new tab on an attached browser.
+    - Fixed browser automation disrupting attached browsers by adopting the active foreground tab and avoiding raising new tabs during screenshots.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed an issue where the guest UI could incorrectly appear idle (such as the loading spinner disappearing) while the host agent was still running after a reconnection, and ensured tool cards are properly cleared if a connection drop occurs.
+    @oh-my-pi/hashline
+    Breaking Changes
+    - Replaced legacy SWAP, INS, and PASTE syntax with unified PUT and CUT hunks
+    Added
+    - Added named register support (@reg) and span paste capabilities to clipboard operations
+    - Added conservative recovery for uniformly omitted replacement indents near brace openers, preserving intentional indentation-only edits
+    Changed
+    - Made .= the canonical inclusive range separator while retaining legacy separator variants as lenient input
+    - Unified replacement, insertion, register paste, block, head/tail, move, and removal headers under a composable PUT, CUT, MV, and REM grammar
+    Fixed
+    - Improved resilience against common model output formatting errors, including numbered read rows, summarized ranges, diff-style old/new rows, empty PUT deletes, harmless CUT colons, and single-line span shorthand
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed a resource leak where SQLite prepared statements were not properly released, keeping the database connection alive after calling close(). This resolves file locking issues on Windows (which prevented deleting, moving, or rotating database files) and silent file handle leaks on POSIX systems.
+    @oh-my-pi/pi-natives
+    Changed
+    - Updated native HTML-to-Markdown rendering to html-to-markdown-rs 3.9.2 defaults, which may result in formatting differences (such as fenced code blocks and cycling nested-list bullets) compared to version 2.30.0.
+    Fixed
+    - Fixed a heap corruption crash when opening PulseAudio on Linux ARM64 by shipping target-specific miniaudio Rust layouts for GNU and musl native addons.
+    - Fixed local Bazel addon builds on NixOS by exposing system CMake tools to sandboxed build scripts and correctly bundling Opus.
+    - Fixed workspace native addon loading to correctly prefer the workspace build over an installed leaf package.
+    - Fixed process crashes caused by pathological HTML inputs; conversions that exceed the native-stack DOM depth limit now reject instead of returning silently truncated Markdown.
+    @oh-my-pi/pi-tui
+    Added
+    - Added request tokens to explicit OSC 11 appearance refreshes to allow consumers to correlate responses across queued and coalesced terminal probes.
+    Fixed
+    - Fixed the event-loop watchdog incorrectly reporting system sleep or suspension as a synchronous ui.loop-blocked stall.
+    - Fixed terminal copies of fenced-code blocks retaining margins from components, lists, or blockquotes in assistant messages (#7055 by @GratefulDave).
+    What's Changed
+    - Add GMI Cloud as a first-class provider by @definitelynotguru in https://github.com/can1357/oh-my-pi/pull/5884
+    - fix(natives): correct miniaudio layouts on Linux ARM64 by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/7138
+    - fix(ai): refresh expired oauth credential on observed mismatch by @roboomp in https://github.com/can1357/oh-my-pi/pull/7180
+    - fix(coding-agent): reload MCP servers on /reload-plugins by @roboomp in https://github.com/can1357/oh-my-pi/pull/7192
+    - feat(extensions): add ctx.invokeTool for native built-in delegation by @psyrendust in https://github.com/can1357/oh-my-pi/pull/6840
+    - fix(collab-web): make host state authoritative for guest liveness by @metaphorics in https://github.com/can1357/oh-my-pi/pull/6990
+    - fix(tools): stop browser automation from stealing focus in an attached browser by @terrxo in https://github.com/can1357/oh-my-pi/pull/7006
+    - fix(compaction): cap the generated summary output budget by @terrxo in https://github.com/can1357/oh-my-pi/pull/7008
+    - fix(tui): preserve literal code block rows by @GratefulDave in https://github.com/can1357/oh-my-pi/pull/7055
+    - fix(browser): own headless Chromium profile dir to survive Windows EBUSY cleanup by @roboomp in https://github.com/can1357/oh-my-pi/pull/7060
+    - test(coding-agent): avoid MCP startup race by @GratefulDave in https://github.com/can1357/oh-my-pi/pull/7063
+    - fix(secrets): exact-match edits failing on files with credential-shaped tokens by @iacore in https://github.com/can1357/oh-my-pi/pull/7067
+    - fix(coding-agent): prevent stale LSP batch writes by @Ant39140 in https://github.com/can1357/oh-my-pi/pull/7069
+    - feat(cursor): expose 1M context windows in model discovery by @mmmeff in https://github.com/can1357/oh-my-pi/pull/7072
+    - acp: wire ctx.ui.editor through elicitFromAcpClient by @marton78 in https://github.com/can1357/oh-my-pi/pull/7079
+    - fix(mnemopi): release one-shot prepared statements by @Cyrus580529 in https://github.com/can1357/oh-my-pi/pull/7084
+    - fix(rpc): harden Python protocol compatibility by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7088
+    - fix(catalog): route Copilot Grok 4.5 to Responses by @roboomp in https://github.com/can1357/oh-my-pi/pull/7097
+    - fix(commit): load extension-provided models by @roboomp in https://github.com/can1357/oh-my-pi/pull/7100
+    - fix(test): gave CLI-spawning tests explicit timeouts by @psyrendust in https://github.com/can1357/oh-my-pi/pull/7103
+    - fix(rpc): restore frames for IRC-revived subagents by @roboomp in https://github.com/can1357/oh-my-pi/pull/7108
+    - fix(web-search): honor lang: directive in DuckDuckGo kl param by @roboomp in https://github.com/can1357/oh-my-pi/pull/7111
+    - fix(tui): ignore system sleep in loop watchdog by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7113
+    - fix(coding-agent): spill oversized read results to artifacts by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7117
+    - fix(search): paginate DuckDuckGo HTML results by @roboomp in https://github.com/can1357/oh-my-pi/pull/7121
+    - fix(web-search): extract duckduckgo result timestamps for date bounds by @roboomp in https://github.com/can1357/oh-my-pi/pull/7122
+    - perf(task): defer subagent launch setup by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7124
+    - perf(tui): batch persistence work off the render path by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7129
+    - fix(telemetry): merge OTEL_RESOURCE_ATTRIBUTES into export resource by @roboomp in https://github.com/can1357/oh-my-pi/pull/7135
+    - fix(agent): suppress redundant xd:// mount notice after catalog rebuild by @roboomp in https://github.com/can1357/oh-my-pi/pull/7140
+    - fix(bash): scope shell snapshots per uid so shared-/tmp accounts don't EACCES by @dangreco in https://github.com/can1357/oh-my-pi/pull/7141
+    - fix(natives): prevent deep HTML crashes and silent truncation by @br411 in https://github.com/can1357/oh-my-pi/pull/7143
+    - docs: Add link to LSP config docs in README by @jorisw in https://github.com/can1357/oh-my-pi/pull/7152
+    - fix(session): stop repeated mid-turn compaction dead ends by @roboomp in https://github.com/can1357/oh-my-pi/pull/7153
+    - test(ai): stop bedrock payload suites from needing ambient AWS auth by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7155
+    - fix(catalog): read Synthetic's advertised model capabilities by @Gareth-Rouse in https://github.com/can1357/oh-my-pi/pull/7159
+    - fix(tui): contain synchronous image conversion failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/7161
+    - fix(session): reconstruct context without prompt usage by @harshav167 in https://github.com/can1357/oh-my-pi/pull/7163
+    - fix(tui): format selector keybinding hints by @roboomp in https://github.com/can1357/oh-my-pi/pull/7165
+    - fix(cli): generate titles for positional initial messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/7167
+    - docs: document Kitty placeholder environment controls by @roboomp in https://github.com/can1357/oh-my-pi/pull/7173
+    - fix(coding-agent): re-export compact from legacy pi shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/7175
+    - fix(coding-agent): inspect compound Bash commands in interceptor by @Vincent-Huang-2000 in https://github.com/can1357/oh-my-pi/pull/7176
+    - fix(coding-agent): keep ExtensionContext.cwd live across /move by @KennethHoff in https://github.com/can1357/oh-my-pi/pull/7177
+    - fix(web-search): surface xai-oauth support in Grok search provider label by @smoldrago in https://github.com/can1357/oh-my-pi/pull/7178
+    - fix(cursor): preserve structured K3 history replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/7186
+    - fix(coding-agent): preserve scrollback on appearance changes by @Sairen777 in https://github.com/can1357/oh-my-pi/pull/7188
+    - fix(catalog): disable store field for Google AI Studio openai-compat host by @yevman in https://github.com/can1357/oh-my-pi/pull/7191
+    - fix(tools): navigate to the requested url when opening an attached browser tab by @terrxo in https://github.com/can1357/oh-my-pi/pull/7005
+    New Contributors
+    - @definitelynotguru made their first contribution in https://github.com/can1357/oh-my-pi/pull/5884
+    - @olegpulatov made their first contribution in https://github.com/can1357/oh-my-pi/pull/7138
+    - @mmmeff made their first contribution in https://github.com/can1357/oh-my-pi/pull/7072
+    - @marton78 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7079
+    - @Cyrus580529 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7084
+    - @dangreco made their first contribution in https://github.com/can1357/oh-my-pi/pull/7141
+    - @br411 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7143
+    - @jorisw made their first contribution in https://github.com/can1357/oh-my-pi/pull/7152
+    - @harshav167 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7163
+    - @Vincent-Huang-2000 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7176
+    - @KennethHoff made their first contribution in https://github.com/can1357/oh-my-pi/pull/7177
+    - @smoldrago made their first contribution in https://github.com/can1357/oh-my-pi/pull/7178
+    - @Sairen777 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7188
+    - @yevman made their first contribution in https://github.com/can1357/oh-my-pi/pull/7191
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.1...v17.2.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.2
+ReleaseTime: 2026-07-31T19:36:09.0000000Z
