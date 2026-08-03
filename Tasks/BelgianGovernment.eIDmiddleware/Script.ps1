@@ -5,11 +5,13 @@ $Object2 = Invoke-WebRequest -Uri 'https://eid.belgium.be/en/download/35/license
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
   InstallerUrl = $InstallerX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 $VersionX86 = [regex]::Match($InstallerX86, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
   InstallerUrl = $InstallerUrlX64 = $Object2.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(?:\.\d+)+)').Groups[1].Value
