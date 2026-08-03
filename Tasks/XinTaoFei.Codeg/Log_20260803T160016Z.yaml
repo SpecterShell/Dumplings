@@ -1,0 +1,47 @@
+Version: 0.23.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.1/codeg_0.23.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.1/codeg_0.23.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Multi-folder workspaces. Link other directories into a workspace as subdirectories when you open a folder — a shared library, a sibling service, the docs repo. The agent reads and edits across all of them, and the file tree and workspace search cover them too. Links can be renamed, recreated or removed from the folder menu, and one switch keeps them out of git status.
+    - Per-stage task prompts. Append your own instructions to any stage a task runs through — first run, retry, return from review, merge. Each stage carries its own example, and your text is added to codeg's built-in prompt rather than replacing it.
+    - A Preparing status for tasks. Worktree setup and dependency install now show as Preparing under In Progress; Queued means only that a task is waiting for a free slot. Cancelling really stops the install, and an interrupted install runs again instead of starting the agent on half-installed dependencies.
+    - A way back from full-page views. A back arrow on the Task Board and the Automations page returns you to your conversations, including when the sidebar is collapsed.
+    Improved
+    - Task settings redesigned. Split into General, Workflow and Prompts, with options grouped in cards. The merge strategy is two choices side by side instead of a dropdown, and what happens to the working copy afterwards now sits with it.
+    - One path field everywhere. Home, parent directory and the system picker moved inside the path box, and cloning, new worktrees and new projects all share it. The icon shows which picker opens — the OS dialog for local files, codeg's own browser for files on a server. Choosing a folder fills the field in instead of opening it and skipping the confirm step.
+    - Task results render as markdown. Headings, lists and code display properly, and a long result folds behind show more.
+    - Long plans collapse. Plan documents cap their height and offer show more / show less, like long messages already do.
+    Fixed
+    - Clicking around the sidebar no longer interrupts a running agent. Replacing a preview tab used to kill the agent mid-turn and leave "Request interrupted by user" in its transcript.
+    - A new conversation keeps its tab after the first prompt. Tab state from your other devices now merges with what is open here instead of replacing it wholesale.
+    - Imported sessions keep their /rename title and a truthful timestamp. Claude Code and CodeBuddy both. Re-scanning also refreshes already-imported sessions, so ones you keep using in the agent's own CLI sort by real activity. Renames, pins and status are untouched.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 工作区支持多文件夹。 打开文件夹时可将其他目录以子目录形式链接进来——共用的库、隔壁的服务、旁边的文档仓库。智能体可跨目录读写，文件树与工作区搜索一并覆盖。链接可在文件夹菜单中重命名、重建或移除，并支持一键排除出 git status。
+    - 任务提示词按阶段自定义。 首次执行、重试、评审打回、合并等各阶段均可追加自己的说明。每个阶段附有示例，你写的内容追加在内置提示词之后，不会将其替换。
+    - 任务新增「准备中」状态。 创建工作树与安装依赖期间显示为「进行中 / 准备中」，「排队中」则仅表示在等待空闲名额。此时取消会真正中止安装，被中断的安装下次重新执行，不会让智能体在半装的依赖上开工。
+    - 整页视图可返回。 任务看板与自动化页面右上角新增返回箭头，可直接回到会话，侧边栏收起时同样可用。
+    改进
+    - 任务设置重做。 拆分为「通用 / 工作流 / 提示词」，选项按卡片归组；合并方式由下拉菜单改为并排两个选项，合并后工作副本的处理方式与其同处一张卡片。
+    - 路径输入全局统一。 主目录、上一级与系统选择器收入路径框内部，克隆仓库、新建工作树、新建项目共用同一控件。图标会提示将打开哪种选择器：本地文件为系统对话框，服务器上的文件为 codeg 内置浏览器。选定目录后仅填入路径，不再直接打开并跳过确认步骤。
+    - 任务结果按 markdown 渲染。 标题、列表与代码正常显示，结果过长时折叠，可展开查看。
+    - 长计划可折叠。 计划文档限制高度并提供展开 / 收起，与长消息一致。
+    修复
+    - 点击侧边栏不再中断运行中的智能体。 此前预览标签被替换时会话会被中途杀掉，记录里还留下一句「Request interrupted by user」。
+    - 新会话发出首条消息后不再丢失标签页。 来自其他设备的标签状态改为与本机合并，不再整份覆盖。
+    - 导入的会话保留 /rename 名称与真实活动时间。 Claude Code 与 CodeBuddy 同理。重新扫描会刷新已导入的会话，你在智能体自带 CLI 里继续使用的会话按真实活动时间排序；重命名、置顶与状态不受影响。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.23.1
+ReleaseTime: 2026-08-03T15:19:51.0000000Z

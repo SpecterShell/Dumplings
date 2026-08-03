@@ -1,0 +1,32 @@
+Version: 0.9.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.3/Mini-Term_0.9.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.3/Mini-Term_0.9.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - 修复 AI 任务跑完之后，完成通知每隔 20~50 秒重复触发一次的问题：任务其实早就结束了，状态却在 ai-working 和 ai-idle 之间反复横跳，每跳一次就响一声提示音、闪一次任务栏
+      - 根因是状态判定里一条无记忆的兜底：当 hook 卡在 ai-working（Stop 事件丢失，或同一会话里迟到的 PostToolUse 又把状态推了回去），「连续 3 秒无输出即视为空闲」算出的降级结果并不落盘。于是 AI 空闲期每一次 TUI 定时重绘都会把状态抬回 ai-working、3 秒后再落回 ai-idle，形成以重绘间隔为周期的假完成脉冲
+      - 现在 hook 一旦接入，就是该面板唯一的状态来源，输出活跃度不再参与判定；没有 hook 的面板（WSL / SSH / 手动关掉 hook）仍走原来的进程轮询降级，行为不变
+      - 代价是 Stop 事件真的丢失时，徽章会残留在 ai-working，直到下一个 hook 事件或会话结束——罕见、纯视觉，下一轮对话即自愈
+    - 修复权限审批框弹出时被误报成「任务完成」：PermissionRequest 和 Stop 一样都落到 ai-idle，此前每次弹审批都会播报一次完成。现在完成信号只认 Stop 事件，通知与澄清请求同理不再误报（Codex 侧此前已单独规避，本次补齐 Claude 侧）
+    下载
+
+    | 平台    | 文件                                         | 说明                                                                     |
+    | ------- | -------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.9.3_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.9.3_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.9.3_amd64.AppImage / .deb / .rpm | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.9.2...v0.9.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.9.3
+ReleaseTime: 2026-08-03T12:15:59.0000000Z
