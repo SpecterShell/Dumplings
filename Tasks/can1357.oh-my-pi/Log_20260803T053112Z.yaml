@@ -1,0 +1,144 @@
+Version: 17.2.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Tool examples embedded in tool descriptions now always render in Python call syntax, and the exampleDialect option has been removed from AppendOnlyContextManager build options.
+    - Updated normalizeTools to accept a NormalizeToolsOptions configuration object ({ injectIntent, pruneDescriptions }) instead of positional booleans.
+    Fixed
+    - Fixed an issue where runs would fail with an error if an Anthropic stream was truncated after complete tool calls were streamed; the agent now recovers and executes those tool calls.
+    - Fixed an issue where artifact recovery reads could be incorrectly elided during compaction.
+    @oh-my-pi/pi-ai
+    Changed
+    - Standardized tool-call examples in renderToolExamples and renderToolInventory to use Python keyword-argument syntax (name(key="value")) across all models, removing the model-specific dialect parameter and the DialectRenderOptions.example flag.
+    - Updated renderToolInventory to render the tool catalog as a unified OpenAI-Harmony-style ## functions block using TypeScript type declarations and comments, replacing the previous per-tool Markdown sections.
+    - Added a style: "harmony" option to jsonSchemaToTypeScript for generating compact, comma-delimited TypeScript definitions.
+    Fixed
+    - Fixed a session-blocking issue where unescaped Harmony control tokens in replayed assistant responses and tool inputs caused subsequent requests to be rejected with invalid_prompt errors.
+    - Fixed an issue where Codex Responses dropped native image-generation results from assistant content and replays due to stale generating statuses.
+    - Fixed Anthropic stream truncation handling where unexpected connection closures were incorrectly treated as clean stops, causing the agent loop to halt silently mid-sentence.
+    - Optimized Anthropic prompt caching to prevent unnecessary cache invalidation of the entire system prefix when volatile project footer details (such as current working directory, date, or workspace tree) change.
+    @oh-my-pi/browser-relay
+    Added
+    - Initial release of the Chrome MV3 extension, enabling the omp browser tool to attach to and drive existing browser tabs via chrome.debugger.
+    - Added automatic, robust tab management that groups active agent-driven tabs into a dedicated per-window "omp" tab group and ensures clean dissolution upon disconnect.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed an issue where newly advertised chat models were dropped during dynamic discovery for the alibaba-token-plan provider.
+    - Fixed a 400 error when forcing a specific tool with DeepSeek reasoning models on OpenCode Zen/Go gateways by automatically downgrading the tool selection mode to auto while keeping the tool advertised.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Replaced the computer tool's coordinate-batch schema with persistent JavaScript runs, and removed computer.backend and model-specific controller switching.
+    - Changed the edit tool's replace mode from a multi-edit batch schema to a single-edit schema ({ path, old_string, new_string, replace_all? }).
+    Added
+    - Added a relay browser mode to drive local Chrome tabs via the OMP Browser Relay extension, supporting automatic daemon startup and tab grouping.
+    - Added a scriptable desktop session featuring window-targeted capture and input, native accessibility trees, clipboard access, and streamed screenshots.
+    - Added broker-shared language servers (controlled by the lsp.shared setting) to multiplex LSP servers across multiple instances in a project, reducing cold-start times and resource usage.
+    - Added optional timeoutMs to discovery configuration in provider options to configure custom HTTP probe timeouts for llama.cpp, Ollama, and OpenAI-compatible endpoints.
+    - Added a cross-platform, in-process ps shell builtin with custom columns, sorting, and process metrics.
+    - Added the --service-tier flag to override the OpenAI service tier for a session.
+    - Added a configurable per-request web search timeout via providers.webSearchTimeoutSeconds.
+    - Added turn-aware /tree navigation shortcuts (Alt+Up/Alt+Down, Home/End, PageUp/PageDown) to traverse user and assistant turns.
+    - Added display.hideToolActivity and a Ctrl+Shift+O shortcut to toggle the visibility of model-initiated tool calls and results.
+    Changed
+    - Exposed the script-driven computer schema to all models, including those with provider-native Computer Use support.
+    - Reduced omp --help cold-start latency and memory usage by rendering lightweight command metadata.
+    Fixed
+    - Fixed durability of session transcripts to prevent data loss on process crashes.
+    - Fixed a bug on Windows where a timed-out bash command could terminate the main omp process.
+    - Fixed headless runs hanging or leaving background workers alive after completion.
+    - Fixed a crash when opening the Agent Hub after resuming a session.
+    - Fixed /mcp reauth environment variable expansion and token validation.
+    - Fixed fuzzy replace-all edits re-matching replacement text indefinitely, which could freeze the TUI.
+    - Fixed inspect_image ignoring configured thinking effort for vision models.
+    - Fixed compiled binaries dropping certain extensions with complex CommonJS/ESM dependency graphs.
+    - Fixed template argument substitution executing recursive placeholder expansion when positional arguments contain literal $@ or $ARGUMENTS tokens.
+    - Fixed project-scoped session directories using leading-hyphen names and collapsing distinct paths.
+    - Fixed manual /shake leaving the context budget anchored to stale pre-shake token counts.
+    - Fixed Mnemopi scoped recall reporting "No relevant memories found" when individual targets fail internally.
+    - Fixed skill:// resolution ignoring custom directories when a same-named skill exists in a default path.
+    - Fixed image paste failing on Wayland-only Linux sessions.
+    - Fixed prewalk switching to the fast model during read-only investigations.
+    - Fixed self-update misclassifying glibc Linux hosts with an installed musl loader as musl hosts.
+    - Fixed omp setup python to validate the correct interpreter used by the Python eval runtime.
+    - Fixed the terminal-tab title dropping to idle while an unsuppressed async job was still running.
+    - Fixed redirected stdin being ignored when Bun reports a pipe with an undefined isTTY.
+    - Fixed a literal API key configured via /login being hijacked on Windows by case-differing system environment variables.
+    - Fixed Esc during a streaming /loop iteration pausing the loop instead of aborting the current turn.
+    - Fixed heavily branched conversation trees shifting linear continuations into disconnected columns.
+    - Fixed plugin installation validation failures for legacy compatibility shims.
+    - Removed hard-coded references to disabled or absent agents in system and tool prompts.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Replaced DesktopSession.execute(actions, window) and action batches with dedicated per-operation methods for capture, pointer, keyboard, window, and accessibility. Capture capabilities now apply per call, and coordinate input requires a prior frame for the same target.
+    Added
+    - Added a cross-platform, in-process ps shell builtin supporting BSD/procps selection forms, custom output columns, sorting, process metrics, and header suppression.
+    - Added unified desktop backends for macOS, Win32, X11, and Wayland behind a single session API, featuring capture-free window discovery, isolated capture, explicit background/foreground delivery, native accessibility trees (AX/UIA/AT-SPI) with generational references, and structured errors for unsupported background input.
+    Fixed
+    - Fixed accessibility snapshots incorrectly marking a window root as focused based on its app-local AXFocused attribute when another application held global focus; the root annotation now correctly reflects the global window-roster focus flag.
+    - Improved coordinate-frame error messages for pointer input before capture, out-of-frame coordinates, and between-display points to clearly explain the capture-frame contract and remedy instead of throwing a generic bounds check.
+    - Fixed duplicated characters in AppKit targets on macOS caused by background keyboard events being posted through both CoreGraphics and SkyLight; events are now delivered once via the authenticated SkyLight route.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed Kitty and Ghostty keyboard shortcuts on non-Latin keyboard layouts by requesting base-layout key reporting from the terminal.
+    @oh-my-pi/pi-utils
+    Added
+    - Added utility functions parseFlag(), getBrowserRelayDir(), and getGlobalDaemonRuntimeDir() to support browser relay mode and global daemon runtime directory resolution.
+    Changed
+    - Updated the lightweight CLI runner to support static command metadata, allowing root help to render without importing full command implementations.
+    What's Changed
+    - perf(cli): keep root help off runtime graph by @eggpeat in https://github.com/can1357/oh-my-pi/pull/7205
+    - fix(coding-agent): let customDirectories skills win over default-path duplicates by @zhang17-24 in https://github.com/can1357/oh-my-pi/pull/7246
+    - fix(omp): refresh context budget after shake by @oleksoleksoleks in https://github.com/can1357/oh-my-pi/pull/7310
+    - fix(agent): skip prewalk switch on read-only xd:// device calls by @roboomp in https://github.com/can1357/oh-my-pi/pull/7314
+    - fix(catalog): downgrade forced tool choice for deepseek reasoning models by @roboomp in https://github.com/can1357/oh-my-pi/pull/7317
+    - fix(coding-agent): support Wayland image paste by @roboomp in https://github.com/can1357/oh-my-pi/pull/7318
+    - fix(tui): requested base-layout keys for shortcuts by @roboomp in https://github.com/can1357/oh-my-pi/pull/7321
+    - fix(ai): cache stable system prefix across cwd/date footer changes by @roboomp in https://github.com/can1357/oh-my-pi/pull/7326
+    - fix(compaction): stop shake from re-eliding artifact recovery reads by @jwmacd in https://github.com/can1357/oh-my-pi/pull/7327
+    - fix(tui): preserve loop after cancelling iteration by @roboomp in https://github.com/can1357/oh-my-pi/pull/7331
+    - fix(tui): compact linear branch continuations by @roboomp in https://github.com/can1357/oh-my-pi/pull/7333
+    - test(vibe): fix kill-before-init race with a worker-ready handshake by @szavadsky in https://github.com/can1357/oh-my-pi/pull/7340
+    - fix(agent): stop leaking scout into prompts when it is disabled by @szavadsky in https://github.com/can1357/oh-my-pi/pull/7344
+    - fix(eval): preserve console for ConPTY Python kernels by @roboomp in https://github.com/can1357/oh-my-pi/pull/7350
+    - fix(mnemopi): bound locked retention during teardown by @roboomp in https://github.com/can1357/oh-my-pi/pull/7355
+    - fix(mnemopi): bound embed worker IPC and reap on timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/7356
+    - fix(auth): guard config-value resolvers against case-insensitive env hijack by @roboomp in https://github.com/can1357/oh-my-pi/pull/7362
+    - fix(mnemopi): surface scoped recall failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/7367
+    - docs: document role-backed task agents by @fatihaziz in https://github.com/can1357/oh-my-pi/pull/7371
+    - fix(cli): restore piped custom session persistence by @roboomp in https://github.com/can1357/oh-my-pi/pull/7382
+    - test(browser): stop gating chromium tests on a top-level-await export by @paralin in https://github.com/can1357/oh-my-pi/pull/7384
+    - fix(coding-agent): keep focused status bar caps bright by @art-wiedzmin in https://github.com/can1357/oh-my-pi/pull/7385
+    - fix(tui): keep working title across non-terminal agent_end by @roboomp in https://github.com/can1357/oh-my-pi/pull/7387
+    - fix(setup): align Python setup probe with eval by @paolofraz in https://github.com/can1357/oh-my-pi/pull/7390
+    - fix(catalog): admit discovered Token Plan chat models by @roboomp in https://github.com/can1357/oh-my-pi/pull/7392
+    - fix(update): detect active Linux libc by @BrianHotopp in https://github.com/can1357/oh-my-pi/pull/7394
+    - fix(postmortem): resolve native hard-exit per call by @roboomp in https://github.com/can1357/oh-my-pi/pull/7395
+    - fix(session): make project directories safe and unique by @roboomp in https://github.com/can1357/oh-my-pi/pull/7397
+    - feat(omp): navigate conversation turns in tree by @oleksoleksoleks in https://github.com/can1357/oh-my-pi/pull/7126
+    - feat(coding-agent): configure web search timeout by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/7197
+    - fix(edit): prevent fuzzy replace-all self-matching by @roboomp in https://github.com/can1357/oh-my-pi/pull/7437
+    - fix(mcp): expand env vars in reauth OAuth credentials and reject empty tokens by @roboomp in https://github.com/can1357/oh-my-pi/pull/7441
+    - fix(coding-agent): keep completed session entries durable across crashes by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/7444
+    - fix(openai): preserve Codex native image results by @roboomp in https://github.com/can1357/oh-my-pi/pull/7447
+    - feat(tui): add hidden tool activity mode by @dannyboy-ai in https://github.com/can1357/oh-my-pi/pull/7342
+    - fix(extensions): resolve compiled dependency graphs by @roboomp in https://github.com/can1357/oh-my-pi/pull/7405
+    - fix(coding-agent): restore legacy compaction exports by @roboomp in https://github.com/can1357/oh-my-pi/pull/7406
+    New Contributors
+    - @zhang17-24 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7246
+    - @jwmacd made their first contribution in https://github.com/can1357/oh-my-pi/pull/7327
+    - @fatihaziz made their first contribution in https://github.com/can1357/oh-my-pi/pull/7371
+    - @paolofraz made their first contribution in https://github.com/can1357/oh-my-pi/pull/7390
+    - @BrianHotopp made their first contribution in https://github.com/can1357/oh-my-pi/pull/7394
+    - @dannyboy-ai made their first contribution in https://github.com/can1357/oh-my-pi/pull/7342
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.4...v17.2.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.5
+ReleaseTime: 2026-08-03T05:06:56.0000000Z
