@@ -26,6 +26,27 @@ Loose PE
 `-- sections / CLR metadata / imports
 ```
 
+A Tauri application executable adds generated Rust asset records to PE
+read-only data:
+
+```text
+PE .rdata
++-- PHF entry slice
+|   +-- name VA          uint32 on PE32, uint64 on PE32+
+|   +-- name byte count  same pointer-sized unsigned word
+|   +-- payload VA       same pointer-sized unsigned word
+|   `-- stored byte count
++-- rooted UTF-8 names   /index.html, /assets/app.js, ...
++-- Brotli or raw bytes  one compression mode per generated asset map
+`-- Tauri markers        bundle type, internal API, and asset origin
+```
+
+The record is 16 bytes in PE32 x86 applications and 32 bytes in PE32+ x64 or
+ARM64 applications. Its pointers are absolute image virtual addresses. Convert
+them through the PE image base and section table before reading data. The HTML
+CSP hash PHF map has the same pointer shape but does not contain file bytes;
+`Get-TauriExecutableInfo` reports it separately as an auxiliary map.
+
 Archive entry offsets and lengths are container-relative; PE RVAs are image-relative and must be mapped through the section table. A ZIP central directory is catalog evidence, not proof that an entry is safe to export. Dumplings bounds expansion and rejects rooted, traversing, duplicate, linked, or escaping paths. Any package containing a binary uses concrete WinGet architecture, never `neutral`.
 
 ## Manifest Shape: ZIP With Nested EXE
@@ -159,7 +180,35 @@ The helpers accept DLL primary paths for static evidence, but a DLL alone is not
 
 For .NET 5+ apps, inspect the apphost-bound managed DLL and `runtimeconfig.json`, including uncompressed single-file bundle metadata. Map framework-dependent apps to `Microsoft.DotNet.Runtime.N`, `Microsoft.DotNet.DesktopRuntime.N`, or `Microsoft.DotNet.AspNetCore.N`; omit the base Runtime when Desktop or ASP.NET Core covers the same major. Do not add runtime dependencies when `includedFrameworks`, `hostfxr.dll`, `hostpolicy.dll`, `coreclr.dll`, or `System.Private.CoreLib.dll` proves self-contained deployment.
 
-### Step 5: Build And Validate The Manifest
+### Step 5: Inspect Tauri Application Assets
+
+Use these functions on the application executable, not its NSIS or MSI wrapper:
+
+```powershell
+if (Test-TauriExecutable -Path C:\Path\To\Application.exe) {
+  $Tauri = Get-TauriExecutableInfo -Path C:\Path\To\Application.exe
+  $Tauri.AssetDescriptors
+  Expand-TauriExecutable -Path C:\Path\To\Application.exe -Name '/index.html'
+}
+```
+
+`Get-TauriExecutableInfo` returns architecture, subsystem, PE version strings,
+the earliest patched bundle token, generated asset maps, entry-page candidates,
+and stored and expanded byte counts. Reverse-domain package identifiers and ACL
+permission strings are labeled as candidates with offsets. They are not
+authoritative package metadata because optimized Rust output does not retain the
+original `tauri.conf.json` or capability document around those strings.
+
+`CanExpand: false` with Tauri markers means the executable may use a custom or
+URL-backed asset provider. Sidecars and external bundle resources are separate
+files and cannot be recovered from the application PE. Do not infer missing
+resources or fetch them from strings found in the binary.
+
+When `-Name` is omitted, `Expand-TauriExecutable` extracts all generated
+frontend assets. Interactive collisions prompt with `Rename` preselected;
+automation must pass `-CollisionAction Rename` explicitly.
+
+### Step 6: Build And Validate The Manifest
 
 Choose the shape only after nested type, command target, architecture, and dependencies are resolved. Reject portable classification for setup-like behavior. Require VM validation when first run mutates the machine, architecture depends on native DLL loading, or static evidence cannot distinguish command binaries from installer/bootstrapper binaries.
 
@@ -171,3 +220,9 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) when nes
 
 - [.NET](https://github.com/dotnet/dotnet)
 - [Dependencies](https://github.com/lucasg/Dependencies)
+- [Tauri embedded asset generation](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-codegen/src/embedded_assets.rs)
+- [Tauri context generation](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-codegen/src/context.rs)
+- [Tauri asset runtime](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-utils/src/assets.rs)
+- [Tauri bundle-token runtime](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-utils/src/platform.rs)
+- [Tauri bundle-token patching](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-bundler/src/bundle.rs)
+- [tauri-dumper](https://github.com/Mas0nShi/tauri-dumper) (MIT behavioral reference only)

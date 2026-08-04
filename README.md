@@ -11,6 +11,7 @@ The repository contains thousands of independent package tasks backed by a concu
 - Detects and statically analyzes many Windows installer and bootstrapper formats.
 - Reads, updates, formats, and validates multi-file WinGet manifests without invoking `winget validate`.
 - Writes task state, sends queued Telegram or Matrix notifications, and submits guarded pull requests.
+- Publishes a task status dashboard to GitHub Pages after each Automation workflow run.
 - Keeps GPL installer implementations behind a JSON child-process boundary from the Apache-2.0 PackageModule.
 
 ## Architecture

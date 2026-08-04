@@ -72,3 +72,53 @@ jobs:
           }
         working-directory: Dumplings
         shell: pwsh
+      # The RunnerStopping module hook writes the task status report to
+      # Outputs/Status. Publish it even when the run failed, falling back to a
+      # placeholder page when the run ended before the report was generated.
+      - name: Fall back to a placeholder status page when the report is missing
+        if: always()
+        run: |
+          $StatusPath = Join-Path $PWD 'Dumplings' 'Outputs' 'Status'
+          if (-not (Test-Path -LiteralPath (Join-Path $StatusPath 'index.html') -PathType Leaf)) {
+            $null = New-Item -Path $StatusPath -ItemType Directory -Force
+            $RunUrl = "${env:GITHUB_SERVER_URL}/${env:GITHUB_REPOSITORY}/actions/runs/${env:GITHUB_RUN_ID}"
+            $Html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Dumplings task status</title></head><body><h1>Dumplings task status</h1><p>The automation run ended before the task status report was generated. See the <a href="' + $RunUrl + '">workflow run</a> for details.</p></body></html>'
+            Set-Content -LiteralPath (Join-Path $StatusPath 'index.html') -Value $Html -Encoding utf8NoBOM
+          }
+        shell: pwsh
+      - name: Upload status page
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: status-page
+          path: Dumplings/Outputs/Status
+          retention-days: 1
+          if-no-files-found: error
+  deploy:
+    name: Deploy status page
+    needs: build
+    # Deploy the status page even when the task run failed; skip only on cancellation
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download status page
+        uses: actions/download-artifact@v4
+        with:
+          name: status-page
+          path: status-page
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Package status page
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: status-page
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
