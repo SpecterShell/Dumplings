@@ -1,0 +1,26 @@
+Version: 34.3.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://rm-eu.palemoon.org/release/palemoon-34.3.2.win32.installer.exe
+- Architecture: x64
+  InstallerUrl: https://rm-eu.palemoon.org/release/palemoon-34.3.2.win64.installer.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This is a security and minor web compat release.
+
+    Changes/fixes:
+    - Implemented the URL.Parse() convenience function.
+    - Added multiple bounds checks on internal browser functions to avoid potential out-of-bounds accesses, underflows and overflows. (DiD)
+    - Fixed several issues with loading and parsing content-supplied fonts.
+    - Set a bottom limit on the frequency for audio samples to avoid a whole class of potential bugs surrounding audio loading, processing and playback.
+      Audio formats with a sample rate below 8kHz (the commonly accepted lowest sample rate of "telephone"/"walkie-talkie" quality) are now rejected.
+    - Fixed a potential issue in CSS rounded corners with dotted styling.
+    - Image elements in forms are no longer associated if they are not in the same subtree.
+    - Made image animation checks more strict to avoid potential issues if decoding would be slow.
+    - Video region checks are now more strict to avoid issues with malformed video files.
+    - Updated NSS to 3.90.13.0 (UXP) addressing all applicable security issues from NSS upstream.
+    - Another large security audit of over 200 sec bugs in Mozilla land has been performed, with the vast majority not being applicable to our code base (primarily e10s/IPC bugs).
+    - Security issues addressed: CVE-2026-16353, CVE-2026-16408, CVE-2026-16389 and many others that do not have a CVE designation.
+ReleaseTime: 2026-08-04
