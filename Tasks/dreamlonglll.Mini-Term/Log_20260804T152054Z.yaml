@@ -1,0 +1,49 @@
+Version: 0.10.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.0/Mini-Term_0.10.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.0/Mini-Term_0.10.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    本版合入社区贡献者 @hitechr 的功能同步批次（#38，35 个提交、80+ 文件），并附维护者审查修复批。
+    新增
+    - 使用统计面板 — 顶栏「统计」查看 Claude Code / Codex 的成本、调用、会话数多维聚合：按日 / 按小时趋势图、模型与项目排行、Top 会话。本地会话记录解析进 rusqlite 账本，面板毫秒级出数、后台增量同步；fork 复制的历史按血缘去重不重复计费，缓存读写按官方价差精确计价；价格表每日从 models.dev 拉一次（只读公开价目，不上传任何用量数据），拉不到用缓存，绝不显示凭空编造的数字
+    - 系统托盘状态灯 — 黄=待确认、蓝=处理中、绿=完成未读、灰=安静，多状态失焦轮播；右键按项目查看各自状态，左键唤起主窗口；仅权限 / 确认类文案点黄灯，API 错误与重试等待不误报
+    - AI 会话自动续接 — 重启后每个分屏自动 claude --resume / codex resume 续回原会话：身份来自 hook 上报、随布局持久化；写回终端前白名单校验（仅字母数字与 -_、长度上限），远程 pane 不参与，识别不了的一律不写
+    - 满屏图标 — 文件树 Material 文件图标、项目行技术栈 + AI 品牌图标（按厂商去重、单色品牌图标上品牌色）、pane 标签与会话列表品牌图标；全量图标数据（gzip ≈1.2MB）独立 chunk 动态加载，主包零增量
+    - 项目描述 — 右键「编辑描述」给项目补一行灰色小字备注，一排 worktree 子项目各自在干什么一眼分清
+    - 拖选停留自动复制 — 拖选后按住鼠标静止超过设定时长自动复制选区并弹「已复制」气泡，时长可调（默认 1s，0 = 关闭）
+    - 配置写盘令牌 — load_config 成功才发放写盘令牌，空白页面 / 异常启动不再可能用空配置覆盖磁盘完整配置；备份自愈覆盖后台启动路径，损坏主文件不会覆盖有效备份
+    性能
+    - 启动路径零网络请求 — 移除 index.html 的 Google Fonts 渲染阻塞外链（离线 / 受限网络下首帧挂数秒的元凶），字体改 @fontsource 本地 woff2 随安装包分发（+204KB）
+    - 五个重型弹窗 React.lazy 按需加载（设置 / 文件查看 / 会话查看 / 移动端 / 统计）：主包 gzip 631KB → 378KB
+    - Rust / WebView 统一时间轴启动埋点写 stderr（[startup+xxxms]），便于回归定位；实测 release 冷启动约 1.5s、热启动约 0.7s（macOS ARM）
+    修复（审查修复批）
+    - 用量账本 sync 锁 panic 中毒后统计永久停更（恢复中毒 guard 继续执行，新增回归测试）；恢复 merge 时误删的 v0.9.3 完成通知回归测试
+    - 文件监听 watcher 引用计数：目录压缩链多节点 watch 同一路径不再互相摘除；压缩链加 8 层深度上限；文件图标 data URI 加缓存，消除每次渲染全量 base64 编码
+    - resume 命令拼装收口为统一白名单守卫，会话列表手动恢复同样过校验，id 形态异常不再提供写终端 / 复制入口
+    - 拖选自动复制松手时选区已增长则补复制一次，剪贴板始终是最终完整选区；worktree 子项目缩进恢复 16px 相对层级；用量面板动效纳入 reduced-motion 豁免体系
+    构建
+    - MSRV 升至 Rust 1.95（libsqlite3-sys 0.38 的 cfg_select! 要求），从源码构建请先 rustup update
+    - git2 启用 vendored-openssl，修复 macOS ARM 本地构建误链 Intel Homebrew OpenSSL；仅 unix 平台生效，Windows 构建不受影响（openssl 不在 Windows 依赖图，已实证）
+    致谢
+    - 感谢 @hitechr 贡献本版全部五块主体功能（#38）
+    下载
+
+    | 平台    | 文件                                          | 说明                                                                     |
+    | ------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.10.0_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.10.0_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.10.0_amd64.AppImage / .deb / .rpm | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.9.3...v0.10.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.10.0
+ReleaseTime: 2026-08-04T13:25:40.0000000Z
