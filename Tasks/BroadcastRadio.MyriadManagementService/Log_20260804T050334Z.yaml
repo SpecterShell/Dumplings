@@ -1,0 +1,29 @@
+Version: 6.9.26138
+Installer:
+- InstallerUrl: https://support.broadcastradio.com/products/Myriad/v6/v6.9.26138/Service/BRMyriadManagementSvc6.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://support.broadcastradio.com/products/Myriad/v6/v6.9.26138/Service/MyriadManagementSvc6VersionHistory.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features/Changes:
+    Media Engine:
+    - Ducking has been changed to add a very fast 'ramp' to the duck and unduck so the volume change is smoothed out.
+    - Myriad has been updated to the latest version of the Broadcast Radio SmoothStream playback engine. This brings significant performance improvements on modern computers with a higher number of logical CPU cores.
+    Scheduled Tasks:
+    - Copy Log hour Task: There is a new option to overwrite any existing hours when copying, so you no longer need to have a separate Delete Hour Task as well.
+    - Task Display: Tasks are now groupable, and are grouped by Type by default. You can also now sort via the Enabled and Status columns.
+    - Task History: When a task run's, all User History events that are created as part of that 'Run' are now tagged with that Run so you can group those together making it very easy to track which events happened due to the Task. This works by storing the Task ID and the new Run ID in the user history. You can then Group by these columns in the User History window to show a clearer picture of how the task executed.
+    - Edit Task: You can see the recent history for a Task on a new Task History tab on the Edit Task window.
+    Remote Edit Server Daemon:
+    - Important - new SSL Certificate: Myriad RES now uses a new enhanced SSL Certificate to sign all https communication with Myriad Anywhere and anyone using the OpenAPI REST API. You can install this new certificate via the button on the Management Settings window.
+    - Anywhere Tunnel: If you are running the RES Daemon manually (i.e. not via the Management Service) then you can now use a new /AnywhereRegion=<url> command line parameter to specify which Anywhere servers to connect to. For example /AnywhereRegion=us1.myriadanywhere.com
+    Database structure changes:
+    The first time a new version of Myriad is installed and run, it checks to ensure the database structure is fully up to date and automatically applies any changes needed. This process has been changed to allow extra time for stations that have very large databases or slow running database servers.
+    Database administrators who look after Mirrored/Always On SQL databases should be aware of the following changes that might require re-synchronisation of your database servers:
+    - The Myriad database structure has been changed to add a secure new storage area for Login Credentials/API keys etc. for use with external 3rd party services such as the Promo Only service detailed above. These will be used in future releases of Myriad to access new services.
+    - There is also a change to the MyriadTasks table to add in the Last Run information.
+    - The Directory Database has changes to the Events table to store the Task and Run Ids.
+ReleaseTime: 2026-06-16T09:03:29.0000000Z
