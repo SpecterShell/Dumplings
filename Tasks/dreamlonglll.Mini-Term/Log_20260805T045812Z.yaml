@@ -1,0 +1,35 @@
+Version: 0.10.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.2/Mini-Term_0.10.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.2/Mini-Term_0.10.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    标题栏不再是系统那条灰白色的了 —— 换成应用自绘，配色跟着主题走，并按各平台的窗口习惯分别适配（#39）。另修掉用量统计里成本金额随刷新反复横跳的问题。
+    新增
+    - 自定义标题栏 — 窗口去掉系统装饰，改由应用自绘 32px 顶栏：左侧应用名与版本号，右侧全局状态灯与窗口控制，配色直接读主题变量，深色主题下不会再顶着一条浅色系统标题栏。按平台适配：
+      - Windows / Linux — 最小化 / 最大化 / 关闭三键靠右，关闭键悬停变红。Win11 的贴靠布局照常可用：后端子类化窗口过程，在 WM_NCHITTEST 中把最大化按钮那块矩形认作系统最大化按钮，悬停即弹分屏菜单
+      - macOS — 保留系统原生交通灯（titleBarStyle: Overlay），左上角留出让位，不自绘三色圆点，全屏 / 手势 / 系统集成一并保住
+      - 双击顶栏最大化 / 还原；拖拽走 Tauri 原生 API，避开 WebView2 模态循环导致的输入锁定
+    - 标题栏全局状态灯 — 汇总所有项目所有分屏的最紧急一档（异常 > 待确认 > 处理中 > 已完成），点一下直接跳到「下一个该我处理」的会话：待确认 / 异常优先，其次是最先跑完的那个，最后才是还在跑的。与托盘右键菜单的排序有意不同 —— 托盘回答「哪些项目还活着」，状态灯回答「下一件该做什么」
+    修复
+    - 用量统计成本不再随刷新在两个金额间跳变 — models.dev 上同一个模型被数十家 provider 以不同 id、不同价登记，原先按原始 modelId 建价格键使「官方价优先」的规则失效，碰撞最终由 HashMap 的随机迭代顺序决定谁胜出，表现为每点一次刷新金额换一个值（实测 claude-opus-5 的官方价与某欧区转售价恰好差 1.10 倍，同一天用量在 $10.02 / $11.02 之间来回跳）。现在价格键改为 canonical 形式并按全序比较器择优，构造结果与迭代顺序无关；同时丢弃会把整段成本抹成 0 的占位价、让缓存单价齐全者胜出（缺 cacheRead 会砍掉 Claude 侧七成以上成本），定价缓存加版本号避免旧缓存被当新鲜值使用
+    下载
+
+    | 平台    | 文件                                          | 说明                                                                     |
+    | ------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.10.2_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.10.2_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.10.2_amd64.AppImage / .deb / .rpm | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.10.1...v0.10.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.10.2
+ReleaseTime: 2026-08-05T04:16:40.0000000Z

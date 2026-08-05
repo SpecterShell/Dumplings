@@ -1,0 +1,132 @@
+Version: 17.2.9
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.9/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Preserved queued steering and follow-up messages when a continuation is cancelled before or during pre-dequeue hooks, and propagated the caller's cancellation signal through every continuation model-call loop.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed GitHub Copilot requests failing with a raw HTTP 400 model_not_available_for_integrator on roughly half of all turns for recently rolled-out models. Copilot's fleet is not uniform — part of it rejects models that /models advertises on the same host — and the transient classifier matched only the older model_not_supported code at a fixed envelope depth, so these rejections surfaced as terminal errors instead of entering the existing retry path. Model-availability 400s are now recognized at any envelope depth and rerolled on a flat delay with a dedicated 8-attempt budget on the OpenAI transports; every other retryable failure keeps its previous backoff and attempt count.
+    - Fixed Cursor reads with inline OMP range selectors reporting the returned slice length as the source file's totalLines, which made sequential reads of an unchanged file appear inconsistent (#7590).
+    - Made model-scoped usage health ignore Codex accounts that cannot use the requested plan-gated model while retaining conservative unknown-state handling and independent usage-window resets.
+    - Fixed OpenAI Codex usage telemetry blocking explicitly allowed ChatGPT Team credentials when a weekly used_percent rounded to 100, which could route multi-account sessions to an actually exhausted sibling instead (#7617).
+    - Fixed OpenAI Codex GPT-5.x requests sending optional reasoning.summary, reasoning.context, and text.verbosity controls by default, reducing Codex server_error disconnects from unsupported request shapes. (#4949)
+    - Classified concurrent-request caps separately from quota exhaustion so they use a short retry backoff without burning a credential, and rotate credentials for account-scoped 403 caps such as Devin's overall message limit.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Amazon Bedrock catalog generation omitting AWS GovCloud us-gov.* Claude inference-profile IDs, so selectors like amazon-bedrock/us-gov.anthropic.claude-sonnet-4-5-… resolve instead of failing model lookup (or misrouting commercial us.* geos onto us-east-1 with GovCloud credentials).
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Renamed compareVersions to compareChangelogEntries in @oh-my-pi/pi-coding-agent/utils/changelog. The function signature and behavior are unchanged; update imports to use the new name.
+    Added
+    - Added automatic detection of common Ungoogled Chromium Linux installations for the browser tool.
+    Changed
+    - Restored the legacy project-scoped session directory naming scheme and removed its automatic migration (#7646).
+    - Routed Bun install-cache pruning in update-cli through the shared compareVersions utility (@oh-my-pi/pi-utils), removing a duplicate local comparator that rounded large numeric version identifiers via Number.
+    Fixed
+    - Retried concurrent-request caps with a short backoff without deleting valid Copilot credentials or rotating through sibling accounts.
+    - Fixed the default textVerbosity setting being forwarded to OpenAI Codex requests unless the user explicitly configures it, preserving Codex's native response-control defaults. (#4949)
+    - Reduced streaming CPU usage by coalescing the cumulative message_update deltas of a turn at the event-controller dispatch boundary: at most one streaming-state rebuild runs per ~33ms window instead of one per token, cutting the per-token handler work that dominated the CPU profile of streaming sessions (especially at high token rates) while preserving per-delta speech output. Subscriber dispatch is serialized so a rapid stream tail (message_update → message_end → agent_end) cannot overtake the coalesced flush. (#7443)
+    - Fixed translated MCP importers (Claude Code, Cursor, Gemini CLI, Windsurf, VS Code) silently dropping a server's enabled: false flag, so a server disabled at the source config stayed mounted; the flag is now propagated and honored like Codex, OpenCode, and native mcp.json. These importers now also load project entries before same-named user entries (matching native/Codex) so a project enabled: false suppresses a same-named user server (#7652).
+    - Removed the per-call model override from the eval agent() helper (all runtimes), completing the earlier task-tool removal (9f8aa87dbf). Subagents always use their selected agent's frontmatter model and settings; a legacy model argument is silently ignored, so an explicit model: "default" can no longer route children onto the parent session model (#6438).
+    - Fixed legacy Pi extension validation rejecting plugins such as remote-pi that import the package-root convertToPng image helper. (#7610)
+    - Fixed the legacy session-directory migration silently deleting a live session's transcript when its filename collided with an existing entry in the destination: colliding entries are now preserved in place, the legacy directory is only removed when empty, and collisions/migration failures are logged (#7593).
+    - Fixed PUPPETEER_EXECUTABLE_PATH being ignored when a system Chrome installation was detected, preventing Windows users from selecting a compatible headless browser for the shared browser daemon (#7601).
+    - Fixed openai-models-list discovery ignoring server-advertised input modalities, so custom virtual tier IDs absent from the bundled catalog showed images: no even when the /v1/models response reported input: ["text","image"] (#7583).
+    - Exposed exact source line counts in read results when selector-based reads reach EOF, allowing protocol bridges to distinguish a returned slice from the complete file (#7590).
+    - Fixed grep/glob silently collapsing a semicolon-delimited path list to one literal path when the joined string was too long for the OS to name (ENAMETOOLONG) — a list of bare filenames past NAME_MAX or absolute paths past PATH_MAX failed with Path not found: <whole list> even though every entry existed. The multipath probe now treats ENAMETOOLONG as a definitively non-existent single path so the split proceeds, and glob surfaces a clean Path not found instead of leaking the raw errno (#7597).
+    - Fixed --mode json (and text) print mode truncating a large final record (e.g. a multi-MB agent_end) when the process exited before stdout drained, while still exiting 0. Per-event writes are now serialized on their own completion callbacks and shutdown blocks on the last one, so the terminal record is delivered in full (#7635).
+    - Fixed text print mode treating buffered partial responses as replay-unsafe, allowing transient mid-stream connection failures to retry without exposing duplicated output (#7625).
+    - Fixed Hindsight autoRecall intermittently not reaching the model: two recall paths shared the hasRecalledForFirstTurn flag, and the agent_start event path could consume it first and inject only via an unawaited background prompt rebuild that a fast turn outran. beforeAgentStartPrompt (awaited before the turn builds) is now the sole injection path (#7568).
+    - Fixed read memory://<id> returning a confusing "Unknown memory namespace" error under memory.backend=hindsight (Hindsight stores memories server-side and has no memory:// addressing); the handler now returns a corrective pointer to recall/reflect so a stray read — steered by the shared recall tool description — self-corrects in one turn (#7587).
+    - Fixed extension/custom/hook tool wrappers stripping schema methods off parameters: applyToolProxy bound every callable property, and binding a schema (a plain function carrying toJsonSchema/assert) dropped those properties, breaking wire-schema detection and crashing the status-line token estimator with JSON.stringify(schema) === undefined. Prototype methods are still bound; own data properties and schema callables now pass through untouched.
+    - Fixed bug where agent() calls in eval cells ignored turn cancellation and continued running indefinitely
+    - Fixed the built-in tail printing tail: Broken pipe and failing when a downstream pipeline reader exited early (e.g. tail -c N file.jsonl | jq … with jq aborting on a parse error); it now exits silently with 141 (128+SIGPIPE) like a real tail, in every output path including --follow.
+    - Fixed the in-process ps shell builtin rejecting common procps/BSD format specifiers (ps -o tpgid,... failed with unknown output format specifier); added tpgid, pri, flags, real/effective user and group columns, wchan, fault counters, sz, and the STAT + foreground flag.
+    - Fixed Herdr rejecting the macOS development launcher because its foreground process was reported as bun instead of omp.
+    - Completed usage-aware model fallback across startup, queued turns, same-turn tool continuations, ACP/TUI confirmation cancellation, eligible account reselection, cooldown restoration, and isolated subagent settings so low-usage handoffs remain lossless and cannot consume cancelled queued work.
+    - Fixed Agent Hub opening and selection becoming O(all rows) on large rosters: row rendering is now lazy around the selected viewport, and observer lookup is O(1) by id instead of copy-sorting every session per row.
+    - Fixed the bash interceptor blocking grep/cat/find used as a downstream pipeline stage (e.g. printf 'x\n' | grep x); a stage consuming piped stdin cannot be replaced by a path-based dedicated tool, so it is no longer matched, while standalone and first-stage searches stay intercepted (#7496).
+    - Fixed floating rejections from cmux browser guest JavaScript terminating the main process and every active session; attributable rejections now fail the browser run as tool errors while unrelated process rejections retain the fatal path (#7365).
+    - Fixed the Windows bash tool silently taking down the whole omp process when a command blocked until its timeout: cancelling a timed-out run walked the spawned child's descendant tree from raw th32ParentProcessID links, and a recycled pid matching the harness's stale recorded parent pid could enumerate omp as a false descendant and TerminateProcess it, killing the session with no session_exit record. Run-cancellation sweeps now refuse to signal the harness or any process collected beneath it, while still reaping the timed-out target when it owns a recycled ancestor pid (#7452).
+    - Fixed the unexpected-stop guard (features.unexpectedStopDetection) never firing for thinking-only stops: isUnexpectedStopCandidate only counted non-whitespace text blocks, so a stopReason: "stop" turn whose sole content was a signed thinking block (a trapped response or a truncated reasoning fragment from reasoning models) bypassed classification and silently ended the turn mid-task. Such stops are now candidates and are classified on their thinking text (#7499).
+    - Fixed Task cancellation hanging forever when a child ignored abort or stalled during cleanup (#7483).
+    - Fixed LSP diagnostics being dropped when servers normalize file URI percent-encoding or Windows path casing.
+    - Fixed WSL sessions missing Agent Skills stored in the Windows host profile's .agents/skills directory. (#3779)
+    - Fixed omp setup python to validate the same configured or discovered interpreter used by the Python eval runtime.
+    - Fixed self-update misclassifying glibc Linux hosts with an installed musl loader as musl hosts, which could download an unusable musl binary instead of the glibc release.
+    - Fixed a crash where opening the Agent Hub after a resume and moving the selection triggered an unbounded ExtensionExitError unhandled-rejection storm and exit 129. The postmortem module bound the native hard-exit at first evaluation; when the bundler deferred that evaluation into a withHostGuard window it froze the guard's throwing replacement, poisoning every later signal/fatal exit. The native exit is now resolved per call, and the guard stamps its replacement with the native primitive it shadows so mid-guard signals still exit (#7393).
+    @oh-my-pi/pi-natives
+    Changed
+    - Bounded fuzzy-find scored-match retention to the top-K results (worst-first heap) instead of collecting and fully sorting every hit; ranking and totals are unchanged (#7415).
+    Fixed
+    - Fixed newer OMP versions deleting a freshly created older native addon cache directory during concurrent startup, which could interrupt extraction with ENOENT.
+    @oh-my-pi/omptype
+    Fixed
+    - Fixed the TypeBox adapter emitting an invalid left-bound-only DSL for min-only numeric schemas (e.g. Type.Integer({ minimum: 1 })), which threw left bound requires a corresponding right bound and broke extension tool loading (#7648).
+    @oh-my-pi/omp-stats
+    Fixed
+    - Restricted the stats dashboard to IPv4 loopback and removed wildcard CORS access to its API (#7633).
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed table borders (and adjacent cells) inheriting an open inline-code color when a cell's content wraps mid-code-span, by terminating each wrapped cell line's SGR state before the border glyphs (#7575).
+    - Fixed inline images not rendering under WSL + Windows Terminal: the SIXEL capability probe gated on process.platform === "win32", but WSL reports linux, so the probe never ran and images fell back to the text placeholder even on Sixel-capable Windows Terminal. The probe now runs on any ConPTY host (native win32 or WSL) (#6009).
+    @oh-my-pi/pi-utils
+    Added
+    - Added a public compareVersions utility (@oh-my-pi/pi-utils) that compares two version strings with SemVer-2.0 prerelease ordering, build-metadata stripping, and numeric segment comparison without float overflow; never throws.
+    Fixed
+    - Honor the current process PATH when caching executable lookups, preventing stale tool paths after environment reloads.
+    - Parsed account-cap reset windows such as “Your limit will reset in 13 minutes” so credential backoff honors the provider's full reset duration.
+    What's Changed
+    - revert(session): restore legacy project directory names by @roboomp in https://github.com/can1357/oh-my-pi/pull/7656
+    - fix(ai): retry GitHub Copilot fleet-skew model 400s by @lederniermagicien in https://github.com/can1357/oh-my-pi/pull/7651
+    - fix(catalog): emit AWS GovCloud us-gov Bedrock Claude inference profiles by @psamwel77 in https://github.com/can1357/oh-my-pi/pull/7645
+    - fix(natives): avoid cross-version cache cleanup races by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/6953
+    - fix(task): bound abort cleanup and quarantine late jobs by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7488
+    - fix(tool): exempt piped-stdin stages from bash interceptor by @roboomp in https://github.com/can1357/oh-my-pi/pull/7497
+    - fix(utils): honor current PATH in cached lookups by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/7498
+    - perf(agent-hub): bound roster rendering to viewport by @hancens1024 in https://github.com/can1357/oh-my-pi/pull/7500
+    - fix(agent): classify thinking-only unexpected stops by @roboomp in https://github.com/can1357/oh-my-pi/pull/7501
+    - feat(browser): auto-detect Ungoogled Chromium on Linux by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/7515
+    - perf(fuzzy-find): retain only the bounded top-K scored matches by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/7536
+    - fix(coding-agent): complete usage-aware fallback integration by @eggpeat in https://github.com/can1357/oh-my-pi/pull/7539
+    - fix(coding-agent): coalesce streaming message_update handler work per render window (#7443) by @szavadsky in https://github.com/can1357/oh-my-pi/pull/7542
+    - fix(cli): preserve OMP identity inside Herdr by @jessemcnew in https://github.com/can1357/oh-my-pi/pull/7554
+    - fix(coding-agent/hindsight): route recall through single injection path by @roboomp in https://github.com/can1357/oh-my-pi/pull/7570
+    - fix(tui): terminate wrapped table cell lines' SGR state so borders keep default color by @miaopan607 in https://github.com/can1357/oh-my-pi/pull/7576
+    - fix(config): read server input modalities in openai-models-list discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/7584
+    - refactor: centralize version comparison in pi-utils by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7586
+    - fix(coding-agent): corrective memory:// error under hindsight backend by @roboomp in https://github.com/can1357/oh-my-pi/pull/7588
+    - refactor(ai): isolate SQLite credential store by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7589
+    - fix(cursor): correct inline read range metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/7592
+    - fix(coding-agent): split semicolon path lists that trip ENAMETOOLONG by @roboomp in https://github.com/can1357/oh-my-pi/pull/7598
+    - fix(browser): honor explicit Chromium executable override by @roboomp in https://github.com/can1357/oh-my-pi/pull/7604
+    - chore(ts): enforce switch non-fallthrough by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7609
+    - fix(coding-agent): restore legacy convertToPng export by @roboomp in https://github.com/can1357/oh-my-pi/pull/7611
+    - chore(ts): enforce noImplicitOverride by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7612
+    - fix(ai): respect explicit Codex usage allowance by @roboomp in https://github.com/can1357/oh-my-pi/pull/7618
+    - fix(coding-agent/eval): remove per-call model override from agent() by @szavadsky in https://github.com/can1357/oh-my-pi/pull/7621
+    - fix(coding-agent): retry buffered print streams by @roboomp in https://github.com/can1357/oh-my-pi/pull/7629
+    - fix(stats): restrict dashboard to loopback by @roboomp in https://github.com/can1357/oh-my-pi/pull/7634
+    - fix(cli): flush final json record before print-mode exit by @roboomp in https://github.com/can1357/oh-my-pi/pull/7637
+    - fix(omptype): emit postfix bound for min-only numeric typebox schemas by @roboomp in https://github.com/can1357/oh-my-pi/pull/7649
+    - fix(mcp): propagate enabled flag from translated tool configs by @roboomp in https://github.com/can1357/oh-my-pi/pull/7654
+    - fix(lsp): normalize published diagnostic URI keys by @roboomp in https://github.com/can1357/oh-my-pi/pull/7663
+    - fix(tui): run sixel probe under WSL + Windows Terminal by @roboomp in https://github.com/can1357/oh-my-pi/pull/7580
+    New Contributors
+    - @psamwel77 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7645
+    - @hancens1024 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7500
+    - @Mustaqeem66 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7515
+    - @jessemcnew made their first contribution in https://github.com/can1357/oh-my-pi/pull/7554
+    - @miaopan607 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7576
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.8...v17.2.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.9
+ReleaseTime: 2026-08-05T01:32:09.0000000Z
