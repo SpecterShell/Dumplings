@@ -21,7 +21,24 @@ Create multi-file manifests:
 - `<PackageIdentifier>.yaml` with `ManifestType: version`
 - `<PackageIdentifier>.installer.yaml` with `ManifestType: installer`
 - `<PackageIdentifier>.locale.<default-locale>.yaml` with `ManifestType: defaultLocale`
-- Optional additional locale files only when there is reliable localized metadata.
+- `<PackageIdentifier>.locale.<locale>.yaml` with `ManifestType: locale` for each optional additional locale that has reliable localized metadata.
+
+The version filename has no manifest-type suffix. Use
+`<PackageIdentifier>.yaml`, never `<PackageIdentifier>.version.yaml`. Likewise,
+the default-locale filename uses `.locale.<default-locale>.yaml`, not
+`.defaultLocale.yaml`; `ManifestType` distinguishes the default locale from an
+additional locale. These names follow the winget-pkgs 1.12 multi-file structure
+and its manifest-path validation rules. See the official
+[YAML filename and folder structure](https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.12.0/README.md#yaml-file-name-and-folder-structure)
+and [`Manifest-Path-Error` guidance](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md#manifest-path-error).
+
+Build the directory hierarchy by splitting `PackageIdentifier` at every dot.
+Preserve each component's casing and place it in its own directory. Thus,
+`Google.Chrome.Canary` belongs in
+`manifests/g/Google/Chrome/Canary/<PackageVersion>/`; neither
+`manifests/g/Google.Chrome.Canary/` nor `manifests/g/Google/Chrome.Canary/` is a
+valid identifier hierarchy. The final directory is the exact `PackageVersion`,
+so dots are valid there.
 
 Use the latest stable schema accepted by winget-pkgs, currently `1.12.0`. Before authoring, verify the latest stable version in the official [winget-cli manifest schemas](https://github.com/microsoft/winget-cli/tree/master/schemas/JSON/manifests) or [winget-pkgs schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema). If the stable version has changed, update both the schema URL and `ManifestVersion` consistently in every file.
 
@@ -97,7 +114,9 @@ The schema family must agree with `ManifestType`: `version`, `installer`, `defau
 
 Set:
 
-- `PackageIdentifier`: exact casing and segments matching the manifest path.
+- `PackageIdentifier`: exact casing and segments matching the manifest path. For
+  a new package, follow [Define The Package Identifier](package-discovery-workflow.md#define-the-package-identifier)
+  before creating the directory tree.
 - `PackageVersion`: normally the installed ARP version or the version that best prevents upgrade loops.
 - `DefaultLocale`: the locale of the default locale manifest, usually `en-US` unless the publisher metadata is primarily another language.
 - `ManifestVersion`: `1.12.0`.
@@ -136,6 +155,7 @@ Installer type rules:
 Architecture rules:
 
 - Specify the installed application architecture, not just the bootstrapper architecture.
+- Treat filename labels as discovery hints. Bare `arm` may mean ARM32 or ARM64, and `win32` may label either x86 or x64 software; inspect installer metadata and installed or nested binaries before assigning the architecture. `win64` identifies x64.
 - Use `neutral` only when the same installer and installed binaries are architecture-neutral.
 - Split installers by architecture when URLs or hashes differ.
 - Do not add `UnsupportedOSArchitectures` at the moment. Use unsupported-architecture evidence to avoid creating an incorrect installer entry, but omit the manifest field.
@@ -334,7 +354,7 @@ Before claiming the manifest is ready:
 - The source is official and cross-referenced.
 - All installer hashes match downloaded files.
 - Installer URLs are stable across refreshes or intentionally use a stable official redirect URL.
-- Manifest path matches `PackageIdentifier` and `PackageVersion`.
+- Manifest path splits every `PackageIdentifier` component into its own directory and ends with the exact `PackageVersion`.
 - Every file begins with the exact fixed two-line header for its `ManifestType`.
 - Every schema URL is versioned, matches `ManifestVersion`, and uses the latest stable schema consistently across the manifest set.
 - Required fields exist in all files.

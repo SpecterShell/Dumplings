@@ -168,6 +168,8 @@ If `GeneralOptions` defines `MainAppURL`, the runtime takes that download path b
 
 Always pass the concrete manifest architecture. `Get-AdvancedInstallerMsiInfo` first reproduces the bootstrapper path selection, then reads MSI Summary Information to validate the selected package architecture. It does not choose by scanning every MSI database. Use `-Name` only as an additional constraint or an explicit override when no payload selector is available. Prefer `InstallLocationSwitch` over hard-coding `APPDIR` when present.
 
+If the publisher also serves a direct MSI, parse it once with `Get-MsiInstallerInfo -Path` and compare it with `$MsiInfo`. Prefer only the direct MSI when its product code, upgrade code, version, architecture, scope, and visible ARP evidence match the wrapper-selected payload. Retain the EXE only when `GeneralOptions`, payload selection, prerequisites, transforms, or custom ARP evidence proves that the wrapper changes the installation. See [Choose Between EXE And MSI](../../author-winget-manifest/references/package-discovery-workflow.md#choose-between-exe-and-msi).
+
 ### Step 2: Resolve The Visible Apps & Features Entry
 
 Advanced Installer can hide the native MSI ARP entry and write a custom uninstall key, for both MSI and EXE packages. Use `AppsAndFeaturesInstallerType` to decide whether `AppsAndFeaturesEntries[0].InstallerType` should be `msi` or `exe`.

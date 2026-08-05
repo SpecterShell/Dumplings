@@ -9,15 +9,29 @@ description: Author, review, or update Windows Package Manager winget-pkgs YAML 
 
 Use official WinGet docs and repo-local evidence, not memory. Read only the workflow needed for the current stage:
 
-- `references/package-discovery-workflow.md`: official source discovery, legitimacy checks, URL stability, release date, and WinGet download compatibility.
+- `references/package-discovery-workflow.md`: existing-package lookup, package identifier design, official source discovery, legitimacy checks, URL stability, release date, and WinGet download compatibility.
 - `references/manifest-workflow.md`: installer/default-locale evidence, Apps & Features rules, field priority, defaults, sorting, and manifest shape.
 - `references/locale-workflow.md`: default and additional locale fields, translations, documentation, tags, and source conventions.
-- `references/electron-builder-automation.md`: Dumplings tasks driven by electron-builder/electron-updater feeds.
 - `references/submission-workflow.md`: local validation, blocking issues, evidence reporting, and PR scope.
+
+After the manifest is accepted, use `$author-dumplings-task` to create or update
+release automation, including electron-updater feeds and versionless URLs.
 
 Use `scripts/Get-WinGetPRValidationLog.ps1` to download `wingetbot` Azure validation artifacts without modifying the pull request.
 
 Use the latest stable manifest schema accepted by winget-pkgs, currently `1.12.0`. Every YAML file must begin with the fixed Dumplings header and the manifest-type-specific, versioned schema directive documented in `references/manifest-workflow.md`. Use the same schema version throughout the submitted manifest set, including when updating manifests that previously used an older schema. The minimum manifest set is the version file, default locale file, and installer file.
+
+Name the version manifest `<PackageIdentifier>.yaml`. Do not add a `.version`
+segment to its filename. The `ManifestType: version` field and version-schema
+header identify the document type. Follow the complete multi-file naming table
+in `references/manifest-workflow.md` for installer and locale files.
+
+Map every dot-delimited `PackageIdentifier` component to a separate repository
+directory. For example, store `Google.Chrome.Canary` under
+`manifests/g/Google/Chrome/Canary/<PackageVersion>/`, never under a directory
+named `Google.Chrome.Canary` or `Chrome.Canary`. This restriction applies to
+identifier directories; the leaf version directory retains the exact
+`PackageVersion` and may contain dots.
 
 Before recursively searching a local winget-pkgs checkout, query the public source with `winget search`. Once an identifier is known, navigate directly to its manifest path. Reserve broad repository file searches for cases that cannot be resolved through WinGet or direct path lookup.
 
@@ -27,6 +41,9 @@ Collect and preserve evidence before writing YAML:
 
 - Official package source and cross-reference proof that the source is legitimate.
 - Product developer, brand, ownership, and legal-entity evidence, especially when the product was acquired or rebranded.
+- Package-identifier evidence showing whether region, channel, major version,
+  edition, architecture, extension/plugin family, or installer versioning requires
+  a separate package identity.
 - Exact installer URL, redirect chain, dynamic query-parameter assessment, response headers, file size, and SHA256.
 - Version source: release tag, page text, installer metadata, MSI/MSIX metadata, or ARP `DisplayVersion`.
 - Installer technology and architecture mapping.
@@ -45,11 +62,18 @@ Do not stop after satisfying the schema's required fields. Perform a field-by-fi
 
 Do not author `UnsupportedOSArchitectures` at the moment. Architecture analysis remains evidence for choosing or rejecting an installer entry, but this field must be omitted from new manifests until this project adopts it explicitly.
 
+Do not add `Moniker` automatically when creating a new package. Do not infer it
+from the product name, executable name, command alias, or package identifier.
+Preserve an established moniker when updating an existing package, but add or
+change one only when the task explicitly requires it.
+
 Prefer version-specific installer URLs. Avoid vanity/latest URLs and signed/session query parameters unless no stable version URL exists; if unavoidable, call out the hash-mismatch or expiry risk and consider whether automation should use headers, page metadata, or VM traffic capture to detect changes.
 
 Use `PackageVersion` from the installed ARP version when that is the best user-facing upgrade behavior. If the upstream marketing version differs from ARP `DisplayVersion`, include `AppsAndFeaturesEntries.DisplayVersion` when required by WinGet behavior.
 
 For EXE wrappers around MSI payloads, distinguish manifest `InstallerType` from the ARP entry type. Add `AppsAndFeaturesEntries.InstallerType` when the registry entry type differs from the manifest installer type.
+
+When an official release offers both an InstallShield or Advanced Installer EXE and its direct MSI for the same application, prefer the MSI and do not add the equivalent EXE to the manifest. First confirm that the direct MSI represents the same version, architecture, scope, features, and visible ARP identity. Keep the EXE only when static or VM evidence proves that it supplies required prerequisites, transforms, payload selection, or other behavior that the MSI cannot reproduce directly. Follow the artifact-comparison procedure in `references/package-discovery-workflow.md`.
 
 When an installer writes localized ARP names or publishers, prefer the corresponding additional locale manifest's `PackageName` and `Publisher`. Use `AppsAndFeaturesEntries` for a localized identity only when that locale manifest does not exist or another non-localization ARP override is still required.
 

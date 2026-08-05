@@ -571,6 +571,8 @@ $CabinetOutput = Expand-InstallShieldCabinet `
 
 `Get-InstallShieldInfo` returns `Variant`, `HasMsi`, `HasInstallScript`, extracted MSI paths, InstallScript `.inx`/`.ins` paths, CAB/HDR paths, and extracted `*_sfx.exe` launchers. For Basic MSI and InstallScript MSI wrappers, it parses `Setup.ini`, reads `[Startup] PackageName` and the matching package section's `Location`, and exposes the exact path as `MsiPayloadSelection.SelectedMsiPath`. The configuration can be embedded or, for legacy media, beside `setup.exe`; `MsiPayloadSelection.SourceKind: ExternalSibling` identifies the latter. External-media resolution accepts only that safe, exact `.msi` path and never scans the sibling directory. `Get-InstallShieldMsiInfo` reads the selected MSI instead of taking the first `*.msi` match. `Get-MsiInstallerInfo` reports `InstallShieldProjectType` and its exact table/custom-action evidence.
 
+If the publisher also serves that MSI directly, compare `Get-MsiInstallerInfo -Path` for the direct artifact with the exact `$MsiInfo` selected from `Setup.ini`. Prefer only the direct MSI when product code, upgrade code, version, architecture, scope, features, and visible ARP evidence match. Keep the EXE when it is required for InstallScript MSI launcher support, release-selected prerequisites, transforms, chained packages, or a distinct outer ARP entry. See [Choose Between EXE And MSI](../../author-winget-manifest/references/package-discovery-workflow.md#choose-between-exe-and-msi).
+
 For Advanced UI media, reuse `$Info.AdvancedUiInfo` and
 `$Info.SuitePackages`. The former resolves `SuiteId`, ARP metadata, scope, and
 `INSTALLDIR`; the latter records every parcel's type, ID, identity attributes,

@@ -146,6 +146,7 @@ Use nearby tasks from the same publisher as implementation references, but verif
 
 - [`analyze-winget-installer`](.agents/skills/analyze-winget-installer/SKILL.md) covers static installer detection, parser routing, Apps & Features evidence, and isolated VM validation.
 - [`author-winget-manifest`](.agents/skills/author-winget-manifest/SKILL.md) covers official source discovery, manifest fields, localization, automation, validation, and submission.
+- [`author-dumplings-task`](.agents/skills/author-dumplings-task/SKILL.md) covers task creation, state comparison, source/feed patterns, manifest-update projection, shared providers, and dry-run validation.
 
 These workflows are the canonical detailed guidance. The READMEs intentionally focus on repository and API operation.
 

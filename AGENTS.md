@@ -56,6 +56,9 @@ Use the detailed skills for domain work:
   parser routing, ARP evidence, and VM validation.
 - `.agents/skills/author-winget-manifest/SKILL.md` for source discovery,
   manifest and locale authoring, formatting, validation, and submission.
+- `.agents/skills/author-dumplings-task/SKILL.md` for creating or reviewing task
+  configuration, release detection, state entries, shared providers, and dry-run
+  manifest automation.
 
 Do not duplicate their installer-family or manifest-field rules in general
 documentation. Update the focused workflow when a newly learned rule affects
@@ -65,6 +68,10 @@ future authoring.
 
 - Follow `.editorconfig`: UTF-8 without BOM, CRLF, final newline, no trailing
   whitespace, and two-space indentation for PowerShell, YAML, and JSON.
+- In fenced source examples under `.agents/skills`, keep each command or
+  expression on one physical line. Do not wrap pipelines, argument lists, or
+  conditions solely to fit the Markdown width; use new lines only for actual
+  block and collection structure.
 - Prefer `[ordered]` dictionaries where deterministic serialization matters.
 - Add comment-based help to public functions. Document parameters, stream
   ownership, offset bases, units, and output contracts when they are not obvious.

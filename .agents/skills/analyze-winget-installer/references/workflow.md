@@ -94,6 +94,14 @@ For every SFX, bootstrapper, nested MSI, or download-and-execute installer:
 
 Do not infer nested behavior from the outer stub architecture, extension, or family defaults.
 
+Treat architecture words in filenames as routing hints. `win64` identifies an
+x64 artifact, but bare `arm` may mean ARM32 or ARM64 and `win32` may describe
+either x86 or x64 Windows software. Resolve ambiguous labels from PE machine
+types, package metadata, installer conditions, and nested or installed primary
+binaries before returning a manifest architecture.
+
+When official InstallShield or Advanced Installer downloads include both an EXE wrapper and a direct MSI, compare the direct MSI with the wrapper-selected MSI as described in the [package discovery workflow](../../author-winget-manifest/references/package-discovery-workflow.md#choose-between-exe-and-msi). Recommend only the MSI when the two paths install the same release and visible ARP identity. Do not recommend duplicate EXE and MSI entries merely because both artifacts are published.
+
 ## 5. Escalate Unresolved Facts
 
 Read [Installed-State And Association Workflow](installed-state-workflow.md) for ARP matching and association evidence. Read [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) only when static parsing cannot prove visible ARP ownership, scope, architecture, silent behavior, exit codes, elevation, network payload selection, or first-run associations.

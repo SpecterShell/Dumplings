@@ -13,6 +13,16 @@ Use `Get-WinGetManifestValidationResult` or `Test-WinGetManifest -PassThru` when
 
 Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Installer Manifest Workflow](manifest-workflow.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the latest stable version consistently.
 
+Also check the exact physical names from [File Set](manifest-workflow.md#file-set).
+The version document must be `<PackageIdentifier>.yaml`; a filename such as
+`<PackageIdentifier>.version.yaml` fails the winget-pkgs manifest-path rules even
+when the YAML contains `ManifestType: version`.
+
+Check the identifier directory hierarchy at the same time. Split every
+dot-delimited `PackageIdentifier` component into a separate directory. Do not
+submit `Google.Chrome.Canary` under `Google.Chrome.Canary` or `Chrome.Canary`;
+its hierarchy is `manifests/g/Google/Chrome/Canary/<PackageVersion>/`.
+
 For local install testing:
 
 ```powershell
@@ -78,6 +88,10 @@ manifests\g\Google\Chrome\150.0.7871.115\
 ```
 
 Do not place YAML files directly in `manifests\g\Google\Chrome\` or another publisher/package directory. The leaf directory must represent the exact `PackageVersion`, and its path must match the package identifier hierarchy.
+
+The no-dot rule applies only to the identifier directories. A version directory
+such as `150.0.7871.115` keeps its dots because it must match `PackageVersion`
+exactly.
 
 ## Validation And Publishing Lifecycle
 

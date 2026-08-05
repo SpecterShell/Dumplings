@@ -47,6 +47,8 @@ For known installer types, distinguish required overrides from WinGet defaults. 
 
 When an EXE wraps an MSI, do not assume `AppsAndFeaturesEntries.InstallerType` matches manifest `InstallerType`. Model the visible ARP entry WinGet will see.
 
+When a release serves both an InstallShield or Advanced Installer EXE and a direct MSI, compare the direct MSI with the exact MSI selected by the wrapper. If version, architecture, scope, features, and visible ARP identity are equivalent, recommend the MSI only. Report any wrapper-only prerequisites, transforms, chained payloads, or custom ARP behavior that prevents this simplification.
+
 Map evidenced localized ARP `DisplayName` and `Publisher` values to `PackageName` and `Publisher` in the corresponding locale manifests. Retain them in `AppsAndFeaturesEntries` only when that locale manifest does not exist.
 
 For new packages, avoid adding `AppsAndFeaturesEntries.ProductCode` unless the package policy or an existing manifest style specifically requires it. Keep product codes as useful evidence for MSI correlation, not as a default Apps & Features field.

@@ -231,7 +231,12 @@ Use a longer official product description when it adds useful detail beyond `Sho
 
 ### Moniker
 
-Use one short, distinctive, commonly recognized command or search alias. Keep it only in the default-locale manifest. Omit it when no unambiguous moniker exists.
+Do not add `Moniker` automatically for a new package, even when the product name,
+executable, command, or package identifier suggests an obvious alias. Keep the
+field only in the default-locale manifest when the task explicitly requires a
+short, distinctive, commonly recognized moniker. Preserve an existing package's
+established moniker during routine updates unless evidence shows that it is
+incorrect.
 
 ### Tags
 
