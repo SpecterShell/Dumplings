@@ -1,0 +1,22 @@
+Version: 0.32.6
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/ollama/ollama/releases/download/v0.32.6/OllamaSetup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Qwen3.5 is faster on Apple GPUs: the MLX engine now uses the model's MTP head for speculative decoding automatically
+    - /v1/chat/completions streaming now matches OpenAI's wire format: role only on the first chunk, finish_reason on its own chunk,
+      and usage in a separate chunk with stream_options.include_usage.
+    - Truncated OpenAI responses now report finish_reason: "length" instead of "tool_calls".
+    - ollama run kimi-k3 now offers kimi-k3:cloud for cloud-only models that publish no default tag, instead of failing.
+    - TUI fixes: pipe-delimited prose no longer renders as a table, Enter accepts the highlighted @ file completion, and /prompt
+      scrolling is no longer laggy.
+    - Experimental image generation has been temporarily removed. Continue using 0.32.5 for image generation support
+    - Updated the MLX and llama.cpp engines.
+    Full Changelog: https://github.com/ollama/ollama/compare/v0.32.5...v0.32.6-rc0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/ollama/ollama/releases/tag/v0.32.6
+ReleaseTime: 2026-08-04T18:49:20.0000000Z
