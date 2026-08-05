@@ -67,6 +67,8 @@ from the product name, executable name, command alias, or package identifier.
 Preserve an established moniker when updating an existing package, but add or
 change one only when the task explicitly requires it.
 
+Always quote `<INSTALLPATH>` inside every explicitly authored install-location command. Use the syntax required by the installer, such as `APPDIR="<INSTALLPATH>"` or `--root "<INSTALLPATH>"`, so a user-selected path containing spaces remains one argument or property value. If the installer rejects path-only quoting, VM-test whether it requires double quotes around the complete switch. Preserve those literal double quotes with a single-quoted YAML scalar, for example `InstallLocation: '"/DIR=<INSTALLPATH>"'` for `Ekahau.Capture`. Do not use whole-switch quoting without installer-specific evidence.
+
 Prefer version-specific installer URLs. Avoid vanity/latest URLs and signed/session query parameters unless no stable version URL exists; if unavoidable, call out the hash-mismatch or expiry risk and consider whether automation should use headers, page metadata, or VM traffic capture to detect changes.
 
 Use `PackageVersion` from the installed ARP version when that is the best user-facing upgrade behavior. If the upstream marketing version differs from ARP `DisplayVersion`, include `AppsAndFeaturesEntries.DisplayVersion` when required by WinGet behavior.
@@ -92,6 +94,7 @@ Stop and warn instead of writing a manifest when:
 - Cross-reference checks suggest a fake website, fake repository, or unconnected source.
 - The only installer URL contains dynamic keys, signatures, expiring hashes, or session parameters and no stable official fallback URL can be found.
 - The installer cannot install silently, requires unapproved scripts, is flagged as malicious/PUA, or cannot be downloaded publicly.
+- VM validation stalls at the Windows Security **Would you like to install this device software?** driver-publisher consent dialog. Do not make the package appear unattended by approving the prompt, pre-trusting its certificate, pre-staging the driver, or changing driver policy. Follow the [driver trust rejection procedure](../analyze-winget-installer/references/vm-validation-workflow.md#reject-blocking-driver-trust-prompts).
 - The package identity, publisher, or installer domain changed suspiciously from existing manifests.
 
 ## Source Documents

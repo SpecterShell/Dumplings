@@ -22,6 +22,8 @@ When resolving an existing package identifier or finding package examples, use `
 
 For a quick static pass inside Dumplings, call `Get-WinGetInstallerAnalysis -Path <installer>` after loading `Modules\PackageModule\Index.ps1`. The analyzer uses magic bytes and structured evidence before extensions and invokes already-loaded parsers without launching the installer. Route the resulting family through `references/workflow.md`. For JSON output, use `scripts\Analyze-WinGetInstaller.ps1 -Path <installer>`.
 
+Agents may use external static tools such as 7-Zip, NanaZip, Detect It Easy, or Exeinfo PE to investigate or cross-check a file. Dumplings parser modules, bridges, analyzers, tests, and CI paths must not invoke or depend on those executables. Treat tool output as supporting evidence and keep installer or payload execution off the host.
+
 For staged Hyper-V evidence capture, use `scripts\Invoke-WinGetVMInstalledState.ps1`. It stages `Get-WinGetVMInstalledState.ps1` and captures named checkpoints but never launches the installer or application.
 
 ## Required Output
@@ -56,6 +58,8 @@ For new packages, avoid adding `AppsAndFeaturesEntries.ProductCode` unless the p
 When an Inno or NSIS installer supports both user and machine scopes, create duplicate installer entries with distinct `Scope` and custom switches such as `/CURRENTUSER` vs `/ALLUSERS` or lowercase variants, matching the installer’s actual parser or VM evidence.
 
 Block InstallShield InstallScript-only installers when no MSI can be extracted and silent install requires a response file. Response-file installation is not supported by WinGet validation for winget-pkgs.
+
+Reject an installer when VM validation stalls at the Windows Security **Would you like to install this device software?** driver-publisher consent dialog. Record the dialog and process state, then restore the checkpoint. Do not approve the prompt, pre-trust the publisher certificate, pre-stage the driver, or change driver policy to manufacture an unattended result. Follow [VM-Only Dynamic Validation Workflow](references/vm-validation-workflow.md#reject-blocking-driver-trust-prompts) for the evidence and rejection procedure.
 
 ## Local Implementation Pointers
 

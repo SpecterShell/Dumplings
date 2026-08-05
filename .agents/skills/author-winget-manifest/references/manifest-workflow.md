@@ -171,6 +171,7 @@ Switch and behavior rules:
 
 - Prefer WinGet defaults for known installer types.
 - Add `InstallerSwitches` only when required for silent install, custom install behavior, or known publisher-specific requirements.
+- Quote `<INSTALLPATH>` inside every explicitly authored install-location switch. The quotes must reach the installer command line, as in `APPDIR="<INSTALLPATH>"` or `--root "<INSTALLPATH>"`; wrapping only the YAML scalar does not protect a path containing spaces. If the installer does not support path-only quoting, test whether it accepts the complete switch inside literal double quotes. Use a single-quoted YAML scalar to preserve them, as in `InstallLocation: '"/DIR=<INSTALLPATH>"'` for `Ekahau.Capture`.
 - Add `UnsupportedArguments` when `--location` or `--log` is known unsupported.
 - For `nullsoft`, omit `InstallerSwitches.Silent` and `SilentWithProgress` when both are the default `/S`. The same per-key omission rule applies to every known installer type and to a ZIP's effective `NestedInstallerType`.
 
@@ -197,6 +198,7 @@ WinGet fills each missing known switch key independently. Omit a manifest switch
 | All other effective types | none | none | none | none |
 
 - If one key differs, include the complete replacement for that key; WinGet does not merge individual command-line tokens into an overridden value.
+- Every manifest-authored `InstallLocation` value, or install-location argument embedded in `Silent` or `SilentWithProgress`, must protect `<INSTALLPATH>` with installer-supported quoting. Prefer quoting the path value. Use whole-switch quoting only when static documentation or VM validation proves that path-only quoting fails, and represent the literal double quotes with a single-quoted YAML scalar. Do not copy the unquoted WinGet-generated NSIS default `/D=<INSTALLPATH>` into a manifest merely to make it explicit.
 - Keep switches that prevent an automatic reboot in `Silent` and `SilentWithProgress`. Examples include MSI `/norestart`, Advanced Installer EXE `/norestart`, and InstallShield `/V/norestart`.
 - Put behavior common to every install mode in `Custom`. In particular, post-install launch suppression belongs in `Custom`, not duplicated in the silent fields.
 - Chromium mini-installer uses `Custom: --do-not-launch-chrome` when that switch is verified for the package.

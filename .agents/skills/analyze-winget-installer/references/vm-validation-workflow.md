@@ -75,6 +75,14 @@ $Process = Start-Process -FilePath C:\DumplingsValidation\Installer.exe `
 
 Run cancellation, elevated/non-elevated behavior, user/machine scope, and quiet/passive variants as separate checkpoint-restored cases. For wrappers, record whether the outer process propagates nested MSI codes. Exit code `0` alone is not proof of installation.
 
+### Reject Blocking Driver Trust Prompts
+
+Stop the test when the installer stalls and Windows Security displays **Would you like to install this device software?** with **Install** and **Don't install** choices. The publisher trust checkbox shown by this dialog is additional driver-publisher consent, not an ordinary UAC elevation prompt. An installer that requires this choice cannot complete unattended on an ordinary WinGet target and is not currently acceptable for winget-pkgs.
+
+Capture the dialog, displayed driver name and publisher, tested command line, launch elevation, elapsed time, and still-running process state. Then mark the validation as failed, skip manifest creation or submission for that installer, and restore the checkpoint. Do not click **Install**, select **Always trust software from ...**, import the publisher certificate into Trusted Publishers or Trusted Root Certification Authorities, pre-stage the driver with `pnputil`, or weaken driver-signing policy to make the test pass. Those actions add machine preparation that WinGet cannot express or reproduce during normal package installation.
+
+This rejection applies only when driver trust consent blocks the tested unattended route. A signed driver that installs silently without this dialog can continue through validation. A normal UAC prompt is evaluated separately as elevation behavior. The [manual certificate-trust workaround discussion](https://www.reddit.com/r/Intune/comments/19378nd/hide_windows_security_for_unknown_driver_install/) is useful for identifying the cause, but it does not make the installer acceptable for winget-pkgs.
+
 ## 4. Capture After Installation
 
 ```powershell
@@ -125,4 +133,4 @@ Focused installer pages link here and list only additional checks. Typical examp
 
 ## Stop Conditions
 
-Stop when the installer requires a response file, unavoidable user interaction, hardware, private credentials, account activation, email-delivered links, unofficial payloads, or session-bound URLs that cannot be reproduced. Do not weaken the VM boundary to continue.
+Stop when the installer requires a response file, unavoidable user interaction, a blocking Windows Security driver-trust prompt, hardware, private credentials, account activation, email-delivered links, unofficial payloads, or session-bound URLs that cannot be reproduced. Do not weaken the VM boundary to continue.

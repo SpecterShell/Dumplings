@@ -32,6 +32,14 @@ PackageModule `Index.ps1` and InstallerParsers `Cli.ps1` load infrastructure in 
 
 Format modules may call already-loaded module functions. Do not add parser-local `Import-Module` calls or duplicate dependency loaders.
 
+## External Tool Boundary
+
+An installer parser must remain usable from a clean checkout with the dependencies loaded by its owning module. Parser modules, bridge actions, analyzers, automated tests, and CI paths must not launch or require external parser or extractor executables such as 7-Zip, NanaZip, `isx.exe`, Detect It Easy, Exeinfo PE, vendor builders, or Python extraction utilities. If the parser needs a format feature, implement it with repository source, approved managed assemblies such as SharpCompress or ZstdSharp, or built-in .NET and PowerShell APIs.
+
+Agents may use those programs outside the parser while investigating a format, comparing extraction results, locating embedded records, or debugging a fixture. This is diagnostic evidence. Confirm important findings against upstream source, binary structures, or stable fixtures before adding them to the parser. A test may compare previously recorded format facts, but it must not call the external program or fail because that program is absent.
+
+Never copy an external command invocation into a parser as a fallback. Never parse an external tool's console text as the parser's production result. Static inspection with an external tool does not permit executing the installer or an extracted payload on the host.
+
 Keep one `.psm1` for each installer family. Organize a large parser with clear
 section comments and cohesive functions rather than nested `.ps1` fragments.
 Create another `.psm1` only when the code is independently reusable across

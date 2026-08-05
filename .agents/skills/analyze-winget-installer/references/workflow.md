@@ -28,14 +28,14 @@ $Analysis.RejectedCandidates
 
 Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
 
-Optional diagnostics must not become CI dependencies:
+Optional agent diagnostics must not become parser or CI dependencies:
 
 ```powershell
 diec.exe -j C:\Path\To\Installer.exe
 exeinfope.exe 'C:\Path\To\Installer.exe*' /s /log:C:\Path\To\exeinfo.log
 ```
 
-`diec` prints help in a GUI when invoked incorrectly. Exeinfo PE writes its useful console-mode result to the requested log and may briefly show an empty countdown window. Do not use either tool to extract or execute an installer.
+`diec` prints help in a GUI when invoked incorrectly. Exeinfo PE writes its useful console-mode result to the requested log and may briefly show an empty countdown window. Agents may also use 7-Zip, NanaZip, or another static extractor to cross-check archive boundaries and nested files. Keep all such invocations outside Dumplings parser modules, bridges, analyzers, tests, and CI paths. Treat their output as supporting evidence and confirm it against source-backed structures or stable fixtures. Never execute the installer or an extracted payload on the host.
 
 ## 3. Route To One Focused Workflow
 

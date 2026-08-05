@@ -4,6 +4,7 @@
 
 - [Required Installer Evidence](#required-installer-evidence)
 - [Selection Order](#selection-order)
+- [Reject Stale Captured Sources](#reject-stale-captured-sources)
 - [Example Index](#example-index)
 - [HTML Installer Links](#html-installer-links)
 - [Select Full Installer Assets](#select-full-installer-assets)
@@ -33,7 +34,7 @@ failure boundary used by `ReleaseTime`, `ReleaseNotes`, and `ReleaseNotesUrl`.
 
 ## Selection Order
 
-Prefer the least fragile official source that exposes the required facts:
+Among sources that pass the freshness check below, prefer the least fragile official source that exposes the required facts:
 
 1. Structured vendor or forge API.
 2. Product update feed such as electron-updater or Squirrel `RELEASES`.
@@ -45,6 +46,14 @@ Prefer the least fragile official source that exposes the required facts:
 
 Fetch source data in the task. Feed converters accept already-retrieved strings
 because endpoints may require package-specific headers, cookies, or parameters.
+
+## Reject Stale Captured Sources
+
+Do not assume that an auto-update feed, API request captured from an application, or endpoint discovered in browser traffic is the current release source. During task authoring, compare its latest version with the official download page and, when needed, the version parsed from the page's installer. Compare the same product, channel, architecture, locale, and full-installer class using `[ChunkVersion]`; a beta feed, staged rollout, architecture lag, or regional release is not evidence that the endpoint is stale.
+
+If the captured source remains older after those distinctions are excluded, do not use it as the required `Version` or `InstallerUrl` source in `Script.ps1`. Prefer the download page or the current authoritative endpoint that backs it. Do not combine the newer page version with an older feed URL, and do not wait for the stale feed merely because a structured source normally ranks above HTML. The stale endpoint may still supply optional metadata only when that metadata is explicitly version-matched.
+
+Record the mismatch in the task-authoring evidence. Recheck a captured source when the publisher updates it later; skipping it is a source decision, not a permanent claim that the endpoint is invalid.
 
 ## Example Index
 
@@ -312,7 +321,9 @@ Use this fallback when a proprietary or custom EXE wrapper is not supported by
 PackageModule and the nested MSI contains the authoritative version or ARP
 identity. First run the installer analyzer and the applicable family parser. Do
 not use 7z when Dumplings already has a source-backed extractor for that outer
-format.
+format. This narrow task-side fallback does not permit reusable installer
+parsers, bridges, analyzers, tests, or CI parser paths to depend on 7-Zip,
+NanaZip, or another external parser executable.
 
 List the wrapper contents before writing the task, then select the exact nested
 file that the wrapper installs. A first `*.msi` match is unsafe when the wrapper
@@ -382,7 +393,8 @@ Extraction rules:
 - Remove temporary extraction directories in `finally`. Do not remove the outer
   file registered in `$this.InstallerFiles`; PackageTask owns that file.
 - Keep 7z in task-specific discovery only. Installer parsers and CI-critical
-  static analysis must not depend on NanaZip-specific format support.
+  static analysis must not invoke or depend on 7-Zip, NanaZip, or another
+  external parser executable.
 
 Open these concrete tasks according to the wrapper layout being analyzed. Their
 archive paths are useful evidence, but several retain legacy individual readers

@@ -37,6 +37,12 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
   the provider through `DependsOn` for every shared consumer.
 - Populate `$this.CurrentState.Version` and every required installer URL before
   calling `$this.Check()`. Call `Check()` once in the ordinary lifecycle.
+- Cross-check a captured auto-update feed, API, or browser-discovered endpoint
+  against the official download page for the same product, channel,
+  architecture, and locale. If `[ChunkVersion]` shows that the captured source
+  is older, investigate staged rollout or variant differences. When neither
+  explains the mismatch, skip that stale source in `Script.ps1` and automate
+  the current download page or its authoritative backing source instead.
 - Use `[ordered]` installer and locale dictionaries so state and diagnostics are
   deterministic.
 - Select the full installer intended for a fresh installation. Reject updater,
@@ -55,6 +61,9 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
   that PackageModule cannot parse. Select the exact nested MSI, call
   `Get-MsiInstallerInfo` once, and reuse its result. See
   [Custom EXE Wrappers With Nested MSI](references/installer-source-patterns.md#custom-exe-wrappers-with-nested-msi).
+  This task-specific fallback is not a reusable installer parser pattern. Never
+  move the external executable call into PackageModule, InstallerParsers, an
+  analyzer, a parser test, or another CI-critical parser path.
 - Let manifest generation download, hash, classify, and parse installers. Do not
   repeat ProductCode, UpgradeCode, Apps & Features, or association parsing in the
   task unless the source exposes authoritative data that the parser cannot.

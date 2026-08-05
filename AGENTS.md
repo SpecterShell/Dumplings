@@ -177,8 +177,14 @@ Parser implementation rules:
 - Preserve caller-owned stream position and never dispose caller-owned streams.
 - Put reusable mechanics in the shared runtime/binary/compression/archive/PE
   modules; keep installer-format semantics in the focused parser.
-- Do not depend on `7z.exe`, NanaZip, `isx.exe`, builder executables, Python
-  extractors, or installer execution at runtime.
+- Parser modules, bridges, analyzers, tests, and CI paths must not invoke or
+  depend on external parser or extractor executables such as `7z.exe`, NanaZip,
+  `isx.exe`, builder executables, or Python extractors. Implement required
+  parsing with repository source, approved managed libraries, or built-in APIs.
+- Agents may run external static-analysis and extraction tools separately while
+  researching, debugging, or cross-checking a format. Treat their output as
+  supporting evidence, never as the parser's implementation or sole regression
+  oracle. Do not execute the installer or an extracted payload on the host.
 - Distinguish an outer wrapper from the nested payload that owns the visible ARP
   entry and silent switches.
 - Return conditional or incomplete evidence as structured warnings. Never assign

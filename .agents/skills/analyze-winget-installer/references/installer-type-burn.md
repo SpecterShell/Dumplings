@@ -10,15 +10,16 @@ Route here when `Get-BurnEngineInfo` succeeds, the PE section table contains `.w
 
 ## Binary Structure
 
-Burn stores a fixed bundle header in the PE section named `.wixburn`; attached container bytes begin after the recorded stub. The first container is a CAB with the Burn manifest and UX data, followed by zero or more chain payload containers.
+Burn stores a fixed bundle header in the PE section named `.wixburn`. The first container is the UX CAB at `StubSize`. Attached payload CABs begin at WiX's calculated engine boundary, after the UX data and any preserved original engine signature. A separately applied current Authenticode signature can follow the attached containers.
 
 ```text
 PE bundle stub
 +-- .wixburn section                bundle registration/header record
-`-- attached region at StubSize
-    +-- UX CAB                      contains entry "0" (BurnManifest XML)
-    +-- attached container 1        declared length
-    `-- attached container N        declared length
++-- UX CAB at StubSize              contains entry "0" (BurnManifest XML)
++-- optional original signature     included in EngineSize
++-- attached container 1            begins at EngineSize
++-- attached container N            follows the previous declared range
+`-- optional current signature      PE certificate table after payloads
 ```
 
 ```text
@@ -36,7 +37,22 @@ Base       Offset  Size       Field
 [section]  0x30    4*N        Container sizes, uint32 LE
 ```
 
-Container sizes frame exact sequential ranges. Manifest XML describes chain order, package conditions, cache IDs, install arguments, scope variables, and ARP registration; physical adjacency does not by itself identify the visible ARP owner.
+Container sizes frame exact sequential ranges. `AttachedIndex` maps physical attached slots to authored container IDs. Manifest XML describes logical payload paths, chain order, package conditions, cache IDs, install arguments, scope variables, and ARP registration; physical adjacency does not by itself identify the visible ARP owner.
+
+`Expand-BurnInstaller` projects the embedded bytes using the WiX 7 extraction model:
+
+```text
+<Destination>\
++-- UX\
+|   +-- manifest.xml
+|   `-- <UX Payload.FilePath>
++-- WixAttachedContainer\
+|   `-- <Payload.FilePath>
+`-- <CustomContainerId>\
+    `-- <Payload.FilePath>
+```
+
+Entry `0` becomes `UX\manifest.xml`; opaque `u*` and `a*` source names are replaced with their manifest `FilePath` values. Unmapped CAB records retain their authored CAB paths under the corresponding directory. External payloads and detached containers are reported but never downloaded. WiX 7 provides this behavior through `wix burn extract`; `dark -x` is the older WiX 3 command.
 
 ## Manifest Shape
 
@@ -66,7 +82,7 @@ Installers:
   InstallerUrl: https://example.com/Product-1.2.3-x64.exe
   InstallerSha256: <SHA256>
   InstallerSwitches:
-    InstallLocation: DefaultJustForMeTargetDir=<INSTALLPATH>
+    InstallLocation: DefaultJustForMeTargetDir="<INSTALLPATH>"
     Custom: InstallAllUsers=0
   ProductCode: <ProductCode>
 - Architecture: x64
@@ -75,7 +91,7 @@ Installers:
   InstallerUrl: https://example.com/Product-1.2.3-x64.exe
   InstallerSha256: <SHA256>
   InstallerSwitches:
-    InstallLocation: DefaultAllUsersTargetDir=<INSTALLPATH>
+    InstallLocation: DefaultAllUsersTargetDir="<INSTALLPATH>"
     Custom: InstallAllUsers=1
   ProductCode: <ProductCode>
 ```
@@ -212,7 +228,15 @@ Compare the bundle's actual behavior with the WinGet defaults:
 
 ### Step 6: Analyze Chained Payload Metadata And Associations
 
-The Burn parser exposes chain evidence but does not infer all metadata written by every payload. For each payload that can execute on the selected path:
+Extract only the payloads needed for the selected installation route. Specify `Rename` for unattended analysis because Burn manifests can intentionally project architecture- or condition-specific source entries to the same logical name:
+
+```powershell
+$ExtractedPayloads = Expand-BurnInstaller -Path $InstallerFile -DestinationPath $ExtractedPath -Name '*.msi' -CollisionAction Rename
+```
+
+Omit `Name` to extract every embedded UX and attached-container record. A selector matches the WiX-projected path, the opaque CAB source path, or its leaf name. The extractor rejects ambiguous multi-container layouts rather than guessing an `AttachedIndex`, and it does not fetch external or detached payloads.
+
+The Burn parser exposes chain evidence but does not infer all metadata written by every payload. For each extracted payload that can execute on the selected path:
 
 - MSI/WiX: use `Get-MsiInstallerInfo` for product/upgrade code, visible ARP type, architecture, install location, protocols, and file extensions.
 - EXE: route to its focused parser and determine whether the bundle or payload owns ARP.
@@ -250,4 +274,6 @@ Follow [VM-Only Dynamic Validation Workflow](vm-validation-workflow.md) for cond
 
 ## Implementation Sources
 
-- [WiX Toolset](https://github.com/wixtoolset/wix)
+- [WiX Burn common header and engine-boundary reader](https://github.com/wixtoolset/wix/blob/main/src/wix/WixToolset.Core.Burn/Bundles/BurnCommon.cs)
+- [WiX Burn UX and attached-container extraction](https://github.com/wixtoolset/wix/blob/main/src/wix/WixToolset.Core.Burn/Bundles/BurnReader.cs)
+- [WiX 7 `wix burn extract` command](https://github.com/wixtoolset/wix/blob/main/src/wix/WixToolset.Core.Burn/CommandLine/ExtractSubcommand.cs)

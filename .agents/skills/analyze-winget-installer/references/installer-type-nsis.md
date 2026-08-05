@@ -151,6 +151,7 @@ Apply these omission and override rules:
 - Keep additional mode-independent arguments in `InstallerSwitches.Custom`, including scope selection and post-install launch suppression.
 - Add `Log` only when the installer implements a verified logging switch. Nullsoft has no WinGet default for it.
 - Do not add `Silent: /S`, `SilentWithProgress: /S`, or `InstallLocation: /D=<INSTALLPATH>` merely to document NSIS defaults.
+- When a custom NSIS command rejects path-only quoting, VM-test whether the complete install-location switch must be quoted. `Ekahau.Capture` uses the literal argument `"/DIR=<INSTALLPATH>"`, authored as `InstallLocation: '"/DIR=<INSTALLPATH>"'` so YAML preserves the double quotes. Do not generalize this syntax to ordinary NSIS installers.
 
 These defaults come from winget-cli [`GetDefaultKnownSwitches`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/ManifestCommon.cpp).
 
