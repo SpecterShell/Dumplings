@@ -1,0 +1,138 @@
+Version: 17.2.10
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.10/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed an issue in remote OpenAI response compaction replay where output-only status fields were incorrectly sent back as input, affecting persisted native and V1/V2 replacement history.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Removed the zod dependency and z/ZodType re-exports. Tool schemas now use omptype type() schemas, with Zod-style authoring still available via @oh-my-pi/omptype/zod.
+    @oh-my-pi/pi-catalog
+    Changed
+    - Removed the zod dependency by migrating GitLab Duo Workflow discovery schemas to omptype.
+    Fixed
+    - Corrected thinking-effort tiers for deepseek-v4-flash to include the low tier alongside high and max.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Replaced the re-exported zod API with an omptype-backed compatibility facade (@oh-my-pi/omptype/zod). Plugins retain the standard Zod-style builder interface, but real Zod-specific APIs are no longer available.
+    Added
+    - Added a --trusted-extension <absolute-path> CLI flag to load an exact extension-module allowlist, bypassing ambient extension discovery.
+    - Added resumable session details to fatal crash outputs, including a suggested omp --resume <session-id> command to quickly resume persisted live agent sessions.
+    Changed
+    - Reworked the Ctrl+S Agent Hub into a responsive fullscreen roster and selected-agent inspector, featuring aggregate status/usage metrics, detailed per-agent views (task, model, activity, usage, lineage), roster and spawn-tree views, stable ordering, asynchronous persisted-session discovery, restored historical metadata, and improved keyboard and mouse navigation.
+    - Replaced arktype with @oh-my-pi/omptype for all tool parameter and configuration schemas, resulting in significantly faster startup times. Configuration schema errors are now reported via OmpErrors entries using the standard path/problem format.
+    Fixed
+    - Fixed panel commands (such as /usage and /advisor status) appearing unresponsive during active turns by flushing the deferred-panel queue at every settle, terminal or not. The deferral itself stays silent: mounting a status line into the transcript mid-turn re-renders rows below the live block and duplicates them in native scrollback (issues #4806/#6767).
+    - Fixed the bundled ts-no-tiny-functions rule failing to match one-line arrow functions in files with trailing newlines.
+    - Fixed advisor refusals skipping the model fallback chain, and bounded refusal recovery to a single attempt per model to prevent infinite fallback loops.
+    - Fixed repeated /mcp reauth commands getting stuck by ensuring new reauthorization requests cancel and clean up any pending MCP OAuth login flows.
+    - Fixed WSL host-home resolution to build /mnt/<drive>/... fallback paths using POSIX semantics regardless of the host platform.
+    - Fixed Python evaluation shell helpers (!cmd, %%bash, %pip) letting child processes inherit the runner's stdin, which previously caused deadlocks on Windows. Additionally, %%bash now correctly resolves Git Bash on Windows.
+    - Fixed subagents spawned via model-role aliases incorrectly falling back to the default role's retry chain instead of their own configured role chain.
+    - Fixed Linux/X11 clipboard reads failing when xclip is missing but xsel is available.
+    - Hardened Linux Chromium executable detection to filter out non-executable files, invalid wrappers, and candidates that hang during version probes.
+    - Fixed Bash command preview crashes caused by malformed tool arguments containing non-string environment values.
+    - Fixed UI rendering in the model browser and model hub where nerd-preset role chips would overlap and obscure the first character of labels.
+    - Fixed Codex web search sending incompatible request shapes to certain models, which caused the hosted web_search tool to ignore them.
+    - Fixed resumed or rebuilt sessions incorrectly applying stale rewind reports from previous checkpoint cycles to new checkpoints.
+    - Fixed the read tool incorrectly parsing semicolon-delimited internal URLs (such as batched skill:// resources) as a single invalid resource.
+    - Fixed pi.getAllTools() returning bare strings instead of ToolInfo[] objects, restoring compatibility with extensions built against the upstream contract.
+    - Fixed legacy extensions failing to load in compiled binaries when resolving bundled dependencies via dynamic createRequire factories.
+    - Fixed Wayland window activation and native input handling by correctly reporting them as unavailable rather than attempting unsupported foreground-delivery paths.
+    - Fixed live execution progress being hidden in the conversation view after approving a plan in the fullscreen Plan Review.
+    - Fixed omp -r failing to discover sessions created under the temporary hashed project-directory scheme by adding a one-way migration back to legacy path-based names.
+    - Prevented the read tool from advertising or resolving memory:// URIs when the memory backend is disabled.
+    - Fixed the Shift-Tab thinking mode UI rendering the off state as a blank label, which made it appear that reasoning could not be disabled.
+    - Fixed parsing of POSIX $EDITOR commands that contain quoted arguments or executable paths with spaces.
+    - Fixed persisted Agent Hub rows losing the explicit caller model role when a subagent used a model override, preserving role provenance across restarts.
+    - Fixed unobserved promise rejections in browser helpers (such as tab.waitForResponse()) causing tab workers to hang or crash.
+    @oh-my-pi/collab-web
+    Changed
+    - Updated the Markdown parsing implementation to use @oh-my-pi/pi-utils.
+    @oh-my-pi/hashline
+    Changed
+    - Updated internal caching dependency to use @oh-my-pi/pi-utils/lru.
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Updated internal LRU cache implementation.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed per-window capture failing on Wayland with InvalidTarget errors for window IDs returned by desktop.windows().
+    - Fixed desktop.capabilities() incorrectly reporting capture: true on Wayland builds compiled without the wayland-pipewire feature.
+    @oh-my-pi/omptype
+    Changed
+    - Reimplemented the Zod compatibility facade (@oh-my-pi/omptype/zod) to run purely on internal mechanics, removing the dependency on zod.
+    @oh-my-pi/omp-stats
+    Changed
+    - Optimized package dependencies by replacing date-fns with @oh-my-pi/pi-utils/dates and removing unused test dependencies.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed a startup crash (EIO error) in multiplexer or SSH sessions when a revoked pty leaves stdin.isTTY active.
+    - Fixed prompt autocomplete to support Windows drive-absolute paths (e.g., C:/ or C:).
+    - Fixed desktop notifications in systemd, tmux, or SSH-attached Linux sessions when DBUS_SESSION_BUS_ADDRESS is unset.
+    - Fixed an issue where Shift+letter and shifted symbol inputs (such as capital letters, ?, and !) were silently dropped on Windows and WSL terminals using ConPTY (e.g., WezTerm).
+    @oh-my-pi/pi-utils
+    Added
+    - Introduced zero-dependency in-house modules replacing external packages, importable via @oh-my-pi/pi-utils/<module>: acp (Agent Client Protocol), browsers (Chrome for Testing discovery/install), chalk (ANSI styling), dates (date formatting), dom (HTML parser, WHATWG DOM subset, and CSS selectors), docx (DOCX to HTML), headers (browser header generation), lru (LRU cache), marked (GFM markdown lexer/parser), readability (article extraction), template (Handlebars-compatible templating), turndown (HTML to Markdown), vterm (headless terminal emulator), and xml (XML parser).
+    - Added postmortem fatal recovery hint providers to allow applications to print actionable recovery commands before cleanup starts.
+    Changed
+    - Rewrote the logger file backend in-house, maintaining the identical line format, daily rotation, and pruning behavior without external dependencies.
+    Fixed
+    - Fixed PowerShell (powershell.exe / pwsh) support when used as a custom shellPath by correctly passing -NoLogo -Command (and -NoProfile under PI_BASH_NO_LOGIN) instead of POSIX flags.
+    - Fixed the in-house marked list tokenizer consuming the trailing blank line into the list token when the next top-level line was a plain paragraph. The blank now always becomes a separate space token (matching real marked), so a list's token shape no longer depends on what follows it — restoring the TUI streaming lexer's freeze invariant — and a list followed by a paragraph is tight, not loose, per CommonMark.
+    - Added the missing Handlebars built-in lookup helper to the in-house template engine ({{lookup obj key}}, proto-safe property access; a user-registered lookup helper still takes precedence).
+    Removed
+    - Removed external dependencies on handlebars, winston, and winston-daily-rotate-file.
+    What's Changed
+    - refactor(coding-agent): polish fullscreen Agent Hub by @kmccleary3301 in https://github.com/can1357/oh-my-pi/pull/7551
+    - Fix/browser timeout crash recovery by @brymko in https://github.com/can1357/oh-my-pi/pull/7354
+    - fix(tui): use Kitty flag 1 on Windows to fix Shift+letter input by @0xGREG in https://github.com/can1357/oh-my-pi/pull/7573
+    - fix(read): split semicolon-delimited internal URLs by @revofusion in https://github.com/can1357/oh-my-pi/pull/7657
+    - ci(release): add SHA256SUMS.txt to GitHub releases by @andrew-scott-fischer in https://github.com/can1357/oh-my-pi/pull/7660
+    - fix(model-hub): separate status glyph from role label by @jamesarch in https://github.com/can1357/oh-my-pi/pull/7665
+    - fix(web-search): keep GPT-5.6 hosted tools top-level by @roboomp in https://github.com/can1357/oh-my-pi/pull/7667
+    - fix(catalog): exposed low effort tier for deepseek-v4-flash by @roboomp in https://github.com/can1357/oh-my-pi/pull/7669
+    - fix(memory): hide disabled memory protocol by @roboomp in https://github.com/can1357/oh-my-pi/pull/7675
+    - fix(session): migrate hashed session dirs back to legacy names by @roboomp in https://github.com/can1357/oh-my-pi/pull/7678
+    - fix(coding-agent): stringify Bash preview env values by @GratefulDave in https://github.com/can1357/oh-my-pi/pull/7680
+    - fix(utils): support PowerShell as custom shellPath by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7691
+    - fix(install): make install.ps1 compatible with Windows PowerShell 5.1 by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7693
+    - fix(task): inherit the aliased role's retry fallback chain for subagents by @enieuwy in https://github.com/can1357/oh-my-pi/pull/7694
+    - fix(tui): trigger autocomplete for Windows drive-absolute paths by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7695
+    - fix(coding-agent): stop Python eval shell children inheriting the runner control channel; resolve Git Bash on Windows by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7696
+    - test: fix Windows portability of bash ACP, Warp capability, and logger closure tests by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7697
+    - fix(coding-agent): build WSL mount fallback paths with POSIX semantics by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7698
+    - fix(coding-agent): cancelled stale mcp oauth reauthorization by @brymko in https://github.com/can1357/oh-my-pi/pull/7699
+    - fix(natives): gate wayland capture capability on pipewire feature by @roboomp in https://github.com/can1357/oh-my-pi/pull/7704
+    - fix(coding-agent): validate Linux browser executables before launch by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7705
+    - fix(coding-agent): fall back to xsel for Linux X11 clipboard reads by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7706
+    - fix(tui): detect systemd user bus for Linux desktop notifications by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7707
+    - fix(coding-agent): preserve shell quoting in POSIX $EDITOR commands by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7708
+    - fix(computer): correct Wayland foreground delivery by @roboomp in https://github.com/can1357/oh-my-pi/pull/7711
+    - fix(computer): accept backend-minted window ids in Wayland capture by @roboomp in https://github.com/can1357/oh-my-pi/pull/7712
+    - ci: ran the mnemopi suite in the workspace bucket by @Cyrus580529 in https://github.com/can1357/oh-my-pi/pull/7726
+    - fix(plugins): resolve createRequire deps in legacy-pi shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/7730
+    - fix(coding-agent): return ToolInfo[] from getAllTools extension API by @roboomp in https://github.com/can1357/oh-my-pi/pull/7735
+    - fix(session): isolate rewind reports by checkpoint cycle by @roboomp in https://github.com/can1357/oh-my-pi/pull/7740
+    - fix(agent): strip output statuses from remote compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/7743
+    - fix(advisor): fail a refusal over to the model fallback chain by @mvid in https://github.com/can1357/oh-my-pi/pull/7745
+    - fix(tui): surface deferred command output instead of failing silently by @mvid in https://github.com/can1357/oh-my-pi/pull/7746
+    - fix(tui): handle raw-mode startup EIO instead of aborting by @mvid in https://github.com/can1357/oh-my-pi/pull/7747
+    - feat(omp): load only explicitly trusted extensions by @oleksoleksoleks in https://github.com/can1357/oh-my-pi/pull/7754
+    New Contributors
+    - @0xGREG made their first contribution in https://github.com/can1357/oh-my-pi/pull/7573
+    - @revofusion made their first contribution in https://github.com/can1357/oh-my-pi/pull/7657
+    - @andrew-scott-fischer made their first contribution in https://github.com/can1357/oh-my-pi/pull/7660
+    - @jamesarch made their first contribution in https://github.com/can1357/oh-my-pi/pull/7665
+    - @mvid made their first contribution in https://github.com/can1357/oh-my-pi/pull/7745
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.9...v17.2.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.10
+ReleaseTime: 2026-08-06T12:28:54.0000000Z
