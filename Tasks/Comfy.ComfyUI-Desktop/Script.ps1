@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
 
     try {
       $RepoOwner = 'Comfy-Org'
-      $RepoName = 'desktop'
+      $RepoName = 'Comfy-Desktop'
 
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
@@ -37,7 +37,7 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h3' -and $Node.InnerText.Contains('Download Latest:')); $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText -match 'Download Latest|Install'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
