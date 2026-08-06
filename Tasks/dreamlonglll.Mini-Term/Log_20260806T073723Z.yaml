@@ -1,0 +1,34 @@
+Version: 0.10.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.4/Mini-Term_0.10.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.4/Mini-Term_0.10.4_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    本版把 pi（pi.dev）接进了 AI 会话识别，顺带修掉一个会把别人的对话贴到你这个分屏上的镜像串台问题；另外文件拖到终端途中现在可以按 Esc 反悔。
+    新增
+    - 支持 pi coding agent — 终端里跑 pi 会像 Claude / Codex 一样被认出来：分屏状态徽章、完成播报、AI 启动器校验、从手机发起会话四条链路一起打通，项目行与标签上显示 pi 的品牌图标。命令匹配是 basename 全等，pip / ping / pixi / pi.py 不会被误判；pi --model claude-sonnet-5 这类写法显示的是 pi 自己而不是 Claude
+    - 文件拖到终端途中可以按 Esc 取消 — 拖到一半改主意，按 Esc 当场取消：路径不写进终端（这次 Esc 被就地吞掉，不会变成 \x1b 送给 AI），松手也不会退化成一次普通点击把文件打开，悬停虚线框同步消失。只有真正进入拖拽后才吞 Esc，别处的 Esc 照常生效
+    修复
+    - 对话镜像不再串台 — opencode / pi 这类只靠输入检测识别的 agent 没有可解析的本地会话记录，此前手机端点进它们的会话，镜像会退而绑到同项目里最新的 Claude / Codex 会话文件，把别人的对话贴到这个分屏上。现在按白名单判定，没有会话记录的 agent 直接给空镜像；opencode 的同款老问题一并修掉。状态徽章与移动端发指令不受影响，照常可用
+    文档
+    - 双语 README 与完整功能清单补上上述两项，并订正 AI 识别的过时说法（无 hook 时是「输入检测 + 输出活跃度轮询」，名单为 claude / codex / opencode / pi）
+    下载
+
+    | 平台    | 文件                                          | 说明                                                                     |
+    | ------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.10.4_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.10.4_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.10.4_amd64.AppImage / .deb / .rpm | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.10.3...v0.10.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.10.4
+ReleaseTime: 2026-08-06T06:48:37.0000000Z

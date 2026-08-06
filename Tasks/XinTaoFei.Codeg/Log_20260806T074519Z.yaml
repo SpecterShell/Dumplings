@@ -1,0 +1,57 @@
+Version: 0.23.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.3/codeg_0.23.3_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.3/codeg_0.23.3_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    In this release, we've focused on making task follow-ups clearer, improving usage reporting accuracy, and polishing several everyday interactions across desktop and web.
+    New
+    - Guide reviewed tasks with a clear follow-up intent. Choose Rework, Keep going, Ask, or Double-check when a task needs another pass. Questions instruct the agent to answer without changing files, while a double-check can be started without writing an additional prompt.
+    - Carry context through retries and cancellations. Retrying or requeueing a task can now include an optional note for the next run. Cancelling or abandoning a task can record a reason in its timeline. These fields use the full composer, including @ references, agent slash commands, and Codex $ skills.
+    - Complete no-change tasks without merging. When a reviewed task only answered a question or verified existing work, it can be marked complete directly. No empty merge is created, and you can choose whether to keep its worktree.
+    Improved
+    - Recent task activity stays at the top. Every task board column now shows the most recently updated cards first, so newly moved, retried, or completed work is easier to find.
+    - Live guidance reaches Claude more reliably. With the updated Claude Code ACP adapter, instructions sent during a running turn are delivered immediately, and the task remains active until the follow-up work actually finishes.
+    - ACP troubleshooting logs are more informative. Rejected concurrent prompts and unhandled extension notifications now leave clearer diagnostic traces — thanks to @ijpq for the improvement (#415).
+    - Bundled agents have been refreshed. Claude Code ACP is updated to 0.65.0, OpenCode to 1.18.14, Cline to 3.0.50, and Kimi Code to 0.33.0.
+    Fixed
+    - Token usage now matches what agents report. Claude API calls are counted once, Codex tool-calling rounds are no longer missed, Claude sub-agent usage is included, and usage is assigned to the day the turn began. Existing usage history is rebuilt automatically after upgrading.
+    - Execution times are accurate across agents. Multi-step Codex turns no longer multiply elapsed time, Gemini no longer includes time spent between messages, and completed Claude replies retain their duration.
+    - Removed task worktrees disappear immediately. Deleted worktrees no longer remain in the sidebar until a reload, and any local tabs belonging to them are closed.
+    - Links and popups open reliably in web-based environments. Markdown links and app windows now work correctly in Safari, WebKit-based webviews, and remote desktop mode.
+    - Hidden editors stay hidden. Git diff panes no longer show through the Task Board, Automations, Token Usage, or conversation overlays.
+    - Slash command menus are no longer clipped by dialogs. Command suggestions can escape scrollable containers, reposition when space is limited, and remain clickable inside modal views.
+    - Custom Codex authentication settings are preserved. Saving Codex or model-provider settings no longer overwrites an explicit requires_openai_auth = false configuration.
+    - Claude transcripts no longer show internal interruption markers. Messages such as [Request interrupted by user], generated internally while applying live guidance, are no longer displayed as if the user had sent them.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版我们重点完善了任务的后续沟通，修正了用量与耗时统计，并打磨了桌面端和 Web 端的一批日常交互。
+    新增
+    - 按明确意图继续评审中的任务。 任务进入评审后，可以选择「修改返工」「继续推进」「提问答疑」或「自查验证」。提问时会明确要求 agent 只回答、不修改文件；自查验证无需补充说明也能直接发起。
+    - 重试、重新排队和取消时可补充上下文。 重试或重新排队时，可以附上一段说明并随下一轮提示词交给 agent；取消或放弃任务时，也可以将原因记录在进度时间线中。这些输入框现在支持完整编辑能力，包括 @ 引用、agent 的斜杠命令和 Codex 的 $ skills。
+    - 无代码变更的任务可直接完成。 如果任务只是回答问题或检查现有工作，并未产生文件改动，评审时可以直接标记完成，无需创建空合并，同时仍可选择是否保留工作树。
+    改进
+    - 任务看板优先展示最新动态。 所有看板列都会将最近更新的任务排在前面，刚移动、重试或完成的任务更容易找到。
+    - 运行中的 Claude 能更可靠地接收追加指令。 更新后的 Claude Code ACP 适配器可以立即接收运行中发送的指令，并在后续工作真正结束前保持任务处于执行状态。
+    - ACP 排障日志更加完整。 并发提示被拒绝或扩展通知未处理时，现在会留下更清晰的诊断信息——感谢 @ijpq 在 #415 中贡献这项改进。
+    - 内置 agent 版本更新。 Claude Code ACP 升级至 0.65.0，OpenCode 升级至 1.18.14，Cline 升级至 3.0.50，Kimi Code 升级至 0.33.0。
+    修复
+    - Token 用量与 agent 的实际统计保持一致。 Claude 的同一次 API 调用不再重复计数，Codex 的工具调用轮次不再遗漏，Claude 子智能体的消耗也会纳入统计；用量日期改为按回合开始时间归档。升级后会自动重新计算一次历史用量。
+    - 各类 agent 的执行耗时更加准确。 Codex 的多阶段回合不再重复累加耗时，Gemini 不再将两次消息之间的等待时间算入执行时长，Claude 回复结束后也能保留正确耗时。
+    - 删除任务工作树后，侧边栏立即同步。 已移除的工作树不再残留到下次刷新，属于该工作树的本地标签页也会一并关闭。
+    - Web 环境下的链接和弹窗可以正常打开。 Markdown 链接与应用弹窗在 Safari、WebKit webview 和远程桌面模式下不再被静默拦截。
+    - 隐藏的编辑器不再穿透页面。 Git 差异视图不会再透过任务看板、自动化、Token 用量页面或会话遮罩显示出来。
+    - 斜杠命令菜单不再被对话框裁切。 命令建议可以越过滚动容器，在空间不足时自动调整位置，并且在弹窗中保持可点击。
+    - 自定义 Codex 认证设置不再被覆盖。 保存 Codex 或模型提供商设置时，会保留用户明确配置的 requires_openai_auth = false。
+    - Claude 会话不再显示内部中断提示。 追加运行中指令时产生的 [Request interrupted by user] 等内部记录，不会再被误显示为用户发送的消息。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.23.3
+ReleaseTime: 2026-08-06T06:15:01.0000000Z
