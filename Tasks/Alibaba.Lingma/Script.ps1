@@ -68,7 +68,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://help.aliyun.com/zh/lingma/product-overview/changelogs-of-lingma-ide' | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri 'https://help.aliyun.com/zh/lingma/qoder-cn-update-log' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object3.SelectSingleNode("//*[(self::h2 or self::h3) and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
