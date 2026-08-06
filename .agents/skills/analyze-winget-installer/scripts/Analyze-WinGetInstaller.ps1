@@ -2,7 +2,7 @@
 .SYNOPSIS
   Compatibility wrapper for the PackageModule WinGet installer analyzer.
 .DESCRIPTION
-  The analyzer implementation lives in Modules\PackageModule\Libraries\WinGetInstallerAnalyzer.psm1.
+  Provider-neutral detection lives in Libraries\Infrastructure\InstallerAnalyzer.psm1. WinGet-specific projection lives in Libraries\WinGet\WinGetAnalysis.psm1.
   This script only loads PackageModule for ad-hoc skill usage and serializes the returned object as JSON.
 .PARAMETER Path
   The installer path to inspect.

@@ -22,8 +22,8 @@ request logic.
 Read these implementations when behavior is unclear:
 
 - `Modules/PackageModule/Models/PackageTask.ps1`
-- `Modules/PackageModule/Libraries/WinGetSubmission.psm1`
-- `Modules/PackageModule/Libraries/WinGetManifestUpdate.psm1`
+- `Modules/PackageModule/Libraries/WinGet/WinGetSubmission.psm1`
+- `Modules/PackageModule/Libraries/WinGet/WinGetManifestUpdate.psm1`
 - `Core/README.md`
 - `Modules/PackageModule/README.md`
 

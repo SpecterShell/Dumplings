@@ -76,8 +76,8 @@ future authoring.
 - Add comment-based help to public functions. Document parameters, stream
   ownership, offset bases, units, and output contracts when they are not obvious.
 - Comment meaningful parsing and failure paths, not individual assignments.
-- Avoid introducing local copies of helpers already provided by `General.psm1`,
-  shared binary/archive/PE infrastructure, or Core synchronization.
+- Avoid introducing local copies of helpers already provided by the focused
+  Data, Networking, FileSystem, binary/archive/PE, or Core synchronization modules.
 - Do not set module-wide `$ErrorActionPreference` merely to force helper errors.
   Use advanced functions, terminating errors where required, and common
   `-ErrorAction` behavior.

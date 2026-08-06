@@ -93,10 +93,10 @@ MSIX/AppX deployment does not use EXE command-line switch fields. Omit `InstallM
 
 ### Step 1: Parse Package Identity, Dependencies, And Signature
 
-Use `Modules\PackageModule\Libraries\MSIX.psm1` to read package metadata without installing the package:
+Use `Modules\PackageModule\Libraries\Installers\MSIX.psm1` to read package metadata without installing the package:
 
 ```powershell
-Import-Module .\Modules\PackageModule\Libraries\MSIX.psm1 -Force
+Import-Module .\Modules\PackageModule\Libraries\Installers\MSIX.psm1 -Force
 
 $KnownInstallerType = $null # Set to appx or msix when preserved from the source URL, appinstaller, or existing manifest.
 $InfoParameters = @{ Path = $InstallerFile }
@@ -139,7 +139,7 @@ Use `Get-WinGetInstallerAnalysis -Path $InstallerFile` when PackageModule is loa
 For `.appinstaller` metadata:
 
 ```powershell
-Import-Module .\Modules\PackageModule\Libraries\MSIX.psm1 -Force
+Import-Module .\Modules\PackageModule\Libraries\Installers\MSIX.psm1 -Force
 
 $AppInstallerInfo = Get-AppInstallerInfo -Uri 'https://bim.dalux.com/Desktop/Dalux.appinstaller'
 $InstallerUrl = $AppInstallerInfo.InstallerUrl

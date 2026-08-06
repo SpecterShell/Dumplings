@@ -10,10 +10,9 @@ The two submodules carry byte-identical MIT infrastructure files:
 
 - `Runtime.psm1`: deterministic C# and managed-assembly loading.
 - `Binary.psm1`: bounded ranges, seekable spill streams, pattern search, CRC32, endian reads, and safe paths.
-- `Compression.psm1`: LZMA, LZMA2, BZip2, Zlib, Deflate, and BCJ2 streams.
-- `Archive.psm1`: SharpCompress archive entries and bounded export.
+- `Archive.psm1`: bounded LZMA, LZMA2, BZip2, Zlib, Deflate, and BCJ2 decoding plus SharpCompress archive entries and export.
 - `PE.psm1`: PE layout, resources, imports, CLR headers, and managed target-framework metadata.
-- `RegistryAssociations.psm1`: protocol and file-extension evidence.
+- `InstallerEvidence.psm1`: bounded condition evaluation plus protocol and file-extension evidence.
 - `Assets/Source/InstallerInfrastructure/*.cs`: auditable mechanical hot paths compiled once with `Add-Type`.
 
 Pester compares mirrored source and pinned SharpCompress/ZstdSharp assets by SHA-256. PackageModule groups them under `Assets/Source` and `Assets/Assemblies`; InstallerParsers retains its independently consumable flat asset layout. Modify both copies in one patch.
@@ -24,11 +23,10 @@ PackageModule `Index.ps1` and InstallerParsers `Cli.ps1` load infrastructure in 
 
 1. `Runtime.psm1`
 2. `Binary.psm1`
-3. `Compression.psm1`
-4. `Archive.psm1`
-5. `PE.psm1`
-6. `RegistryAssociations.psm1`
-7. Format-specific modules
+3. `Archive.psm1`
+4. `PE.psm1`
+5. `InstallerEvidence.psm1`
+6. Format-specific modules
 
 Format modules may call already-loaded module functions. Do not add parser-local `Import-Module` calls or duplicate dependency loaders.
 

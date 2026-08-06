@@ -142,10 +142,10 @@ WinGet supplies no family-specific switches for `InstallerType: exe`. Treat the 
 
 ### Step 1: Parse The Bootstrapper And Embedded MSI
 
-Use `Modules\PackageModule\Libraries\AdvancedInstaller.psm1` without running the installer:
+Use `Modules\PackageModule\Libraries\Installers\AdvancedInstaller.psm1` without running the installer:
 
 ```powershell
-Import-Module .\Modules\PackageModule\Libraries\AdvancedInstaller.psm1 -Force
+Import-Module .\Modules\PackageModule\Libraries\Installers\AdvancedInstaller.psm1 -Force
 
 $Info = Get-AdvancedInstallerInfo -Path $InstallerFile
 $MsiInfo = Get-AdvancedInstallerMsiInfo -Installer $Info -Architecture $Installer.Architecture

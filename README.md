@@ -37,6 +37,8 @@ flowchart LR
 
 `Core`, `PackageModule`, and `InstallerParsers` are Git submodules and are also usable as independently versioned projects.
 
+PackageModule's supported standalone entry point is `Modules/PackageModule/PackageModule.psd1`. Core uses `Modules/PackageModule/Index.ps1` to import that manifest and load task model classes.
+
 ## Requirements
 
 - Windows

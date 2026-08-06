@@ -62,7 +62,7 @@ WinGet supplies no Squirrel/Velopack defaults for generic `InstallerType: exe`. 
 
 ### Step 1: Parse Embedded Package And Feed Evidence
 
-Use `Get-WinGetInstallerAnalysis` for the first pass, or call `Test-SquirrelInstaller` and `Get-SquirrelInfo` from `Modules\PackageModule\Libraries\Squirrel.psm1`. Parse the installer once and reuse the result for ARP identity. The parser is implemented directly in PackageModule under the project license and does not require the GPL installer parser bridge.
+Use `Get-WinGetInstallerAnalysis` for the first pass, or call `Test-SquirrelInstaller` and `Get-SquirrelInfo` from `Modules\PackageModule\Libraries\Installers\Squirrel.psm1`. Parse the installer once and reuse the result for ARP identity. The parser is implemented directly in PackageModule under the project license and does not require the GPL installer parser bridge.
 
 Static parser workflow:
 

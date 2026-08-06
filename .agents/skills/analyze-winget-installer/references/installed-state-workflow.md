@@ -27,7 +27,7 @@ $Delta = Compare-WinGetInstalledEntrySnapshot -Before $Before -After $After
 For MSI user-data context:
 
 ```powershell
-Resolve-WinGetMsiARPInstallContext -ProductCode '{PRODUCT-CODE}'
+Resolve-MsiARPInstallContext -ProductCode '{PRODUCT-CODE}'
 ```
 
 `S-1-5-18` is machine-context evidence, the current user SID is current-user evidence, and another SID indicates another user's registration. WinGet does not currently use this additional context for matching.
@@ -95,4 +95,4 @@ Every change includes `Before` and `After` objects with stable registry identiti
 
 ## Source Trace
 
-The helper behavior follows winget-cli's installed source, ARP correlation, manifest comparator, and AppX inventory implementations in [microsoft/winget-cli](https://github.com/microsoft/winget-cli). Dumplings implements auditable PowerShell equivalents in `WinGetARP.psm1` and `RegistryAssociations.psm1`.
+The helper behavior follows winget-cli's installed source, ARP correlation, manifest comparator, and AppX inventory implementations in [microsoft/winget-cli](https://github.com/microsoft/winget-cli). Dumplings keeps provider-neutral registry collection in `Libraries/Infrastructure/ARP.psm1`, shared registry evidence in `Libraries/Infrastructure/InstallerEvidence.psm1`, and WinGet normalization and matching in `Libraries/WinGet/WinGetMatching.psm1`.
