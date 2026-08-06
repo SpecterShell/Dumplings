@@ -1,0 +1,184 @@
+Version: 1.1.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/nearai/ironclaw/releases/download/ironclaw-v1.1.0/ironclaw-x86_64-pc-windows-msvc.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release Notes
+    First stable release since 1.0.0, promoting 1.1.0-rc.1 plus the fixes listed
+    under "Fixed since 1.1.0-rc.1". The headline work is extension reach —
+    registering arbitrary hosted MCP servers, installing from IronHub deep links,
+    durable file attachments that cross channels, and Slack /ironclaw slash
+    commands — plus a broad pass on making failures legible: to the model, which
+    now gets told what to do next instead of an opaque stop, and to the user, who
+    gets localized, actionable errors instead of silent dead ends.
+    Upgrading from 1.0.0. No migration steps. Extension lifecycle state moved
+    to a normalized on-disk shape; rows written by 1.0.0 keep deserializing. The
+    one behavioral removal is the /webhooks/slack/events compatibility alias
+    (see Removed).
+    Added
+    - Custom MCP servers. Register a hosted MCP server from the WebUI and use
+      its tools like any other extension: discovery accepts bounded
+      OpenAPI-derived tool catalogs within the manifest's declared tool budget,
+      auth is resolved during registration, and the registered tools are exposed
+      to the model.
+    - IronHub install flow. Install extensions from an IronHub deep link,
+      including private manifest sources, through a register/install gateway.
+    - Attachments. Durable cross-channel file flows: a file sent on one
+      channel stays retrievable from the others and from the WebUI.
+    - Slack slash commands. Native /ironclaw commands in Slack, backed by a
+      role-filtered command palette in the WebUI and role gating on admin command
+      actions.
+    - Memory as an extension. The memory provider is modeled as a userland
+      extension with a host-managed lifecycle and a contract built around declared
+      capabilities, so a provider advertises what it can actually do instead of
+      being assumed uniform.
+    - Sandbox lane (opt-in, partly unwired). A RuntimeKind::Sandbox runtime
+      lane with credential reuse, leaf-scoped mount containment, per-user sandbox
+      identity primitives, and a credential placeholder registry. Docker-connect
+      retry, the egress allowlist, and shell limits ship unwired in this release.
+    - Trigger poller on production-shaped runtimes (opt-in), and the SSO/admin
+      identity resolver wired into those runtimes.
+    - QA run artifacts. Caller-scoped run and full-thread artifact export,
+      gated off by default, plus a regression promotion loop for the test suite.
+    - BENCHMARKING_MODE. An opt-in system-prompt addendum for unattended
+      evaluation runs.
+    Changed
+    - Extension persistence: normalize filesystem-backed extension lifecycle
+      state into typed installation (with the embedded, hash-pinned manifest
+      definition), user-membership, and credential-binding records with bounded
+      CAS updates, a CAS-protected mutation lease for membership and removal
+      transitions, removed_at soft-removal tombstones, legacy aggregate
+      compatibility views, and restart repair. Retires the per-installation
+      diagnostic health snapshot: it was always healthy, never read, and never
+      surfaced, while the host's activation record already owns extension failure
+      state. Rows written by the previous release keep deserializing.
+    - Model failures now carry a next step. Every termination path — no
+      progress, iteration limit, disabled capability, denied call, provider error
+      — tells the model what would unlock the call instead of stopping opaquely.
+    - WebUI performance: route-level code splitting, deferred Markdown and
+      syntax highlighting during chat streaming, optimized embedded static-asset
+      delivery, and pagination for the sidebar thread list, admin users list, and
+      older logs.
+    - Shared WebUI controls: a common settings Switch, a shared
+      ConfirmDialog replacing native browser confirmations, and normalized
+      control typography.
+    Fixed
+    - libSQL prefix queries scanned the whole table: record reads, subtree
+      deletes, and FTS backfill matched descendants with path LIKE ? ESCAPE '!',
+      which cannot use the primary key, so every one of them scanned all of
+      root_filesystem_entries. Their cost therefore grew with the total size of
+      the database — threads, turns, memory, events — rather than with what the
+      caller asked for. They now use the same path >= ? AND path < ? bounds the
+      Postgres backend and libSQL's own list_dir already used, so each seeks the
+      path index. Measured end-to-end on a 200k-row database:
+      /api/webchat/v2/extensions 260ms → 28ms and .../extensions/registry
+      380ms → 20ms. This is what made the hosted Extensions page take seconds and
+      left removed extensions on screen until a manual refresh: the page's
+      post-removal refetch was aborted before the server answered.
+    - Extension list issued a query per installation: normalizing the
+      aggregate into child rows made list_installations read each installation's
+      membership and credential-binding rows separately, costing 1 + 2N round
+      trips. Both child collections are now read once and joined in memory (3
+      queries regardless of installation count).
+    - Agent-loop termination recovery: tell the model when no-progress or the
+      iteration limit would otherwise stop a run, preserve that one-shot warning
+      across checkpoints, and allow one normal capability-enabled recovery turn
+      before taking the existing typed failure path.
+    - Recoverable capability errors: carry the complete producer-scrubbed cause
+      through the bounded model diagnostic channel, including path-shaped context,
+      and emit an explicit fallback when a runtime supplies no usable detail.
+    - Skill selection: instruct the model to review visible skills before
+      answering and clarify that skill_activate loads full instructions for
+      relevant skills selected by exact listed name.
+    - Model recovery: preserve typed, sanitized context-overflow,
+      content-filter, and invalid-output recovery controls across checkpoints so a
+      restarted turn can still ask the model to recover without exposing provider
+      diagnostics or granting an unbounded retry budget.
+    - Generic channel pairing: accept command-wrapped proof codes only through
+      bounded manifest-declared prefixes; Telegram now declares /start, while
+      undeclared commands remain ordinary inbound messages.
+    - Extension OAuth authorization: resolve provider, account label, and
+      scopes from the installed extension's manifest requirement instead of
+      accepting browser-selected credential authority; after OAuth, retry only
+      internal caller-scoped readiness until the extension is active, without a
+      second provider exchange or public activation step.
+    - Hosted MCP discovery: accept bounded OpenAPI-derived tool catalogs within
+      the manifest's declared tool budget, reject malformed catalogs atomically,
+      and never publish bundled static declarations as a fallback for failed live
+      discovery.
+    - Channel delivery: consume durable turn-lifecycle events through the
+      generic, source-route-revalidating coordinator so OAuth-delayed final replies
+      return to Slack, Telegram, and future channels without a polling watcher.
+    - Automation delivery: honor each trigger's creator-selected outbound
+      target at fire time instead of silently falling back to the user-wide
+      default.
+    - Telegram automation delivery: expose paired Telegram DMs through the
+      generic outbound-target registry so creator-selected routine results resolve
+      and deliver through the shipping Telegram channel.
+    - Channel removal: revoke caller-owned OAuth or proof-code pairing state
+      through the shared lifecycle before deleting any channel installation, so
+      removing Telegram, Slack, or a future channel unpairs it on every surface.
+    - One authorization per vendor account: authorizing a vendor now covers
+      every installed extension sharing that account, instead of re-prompting per
+      extension. Token response scopes are trusted over the OAuth redirect echo.
+    - Extension package roots are persisted rather than fabricated on load, so
+      a stale or partial catalog entry no longer takes down startup.
+    - Tool disclosure is narrowed by the caller's allow-set, closing three
+      paths that leaked tool definitions the caller was not granted.
+    - Provider errors are classified correctly: rate limits are no longer read
+      as auth failures, a missing model is not retried, adapters report the
+      provider's real finish reason, and the runner stops silently retrying
+      model-stage failures that cannot succeed.
+    - Context overflow and compaction: secret matches are redacted during
+      compaction and a run recovers from context overflow instead of terminating.
+    - libSQL durability: writers are serialized, cancelled transactions and
+      interrupted history migrations recover, and transient writer contention no
+      longer surfaces as a failed run.
+    - Panic and cancellation safety on the run path, plus bounded
+      deterministic gateway failures so a wedged model stage cannot hang a turn.
+    - WebUI streaming and navigation: smooth streaming with preserved model
+      phases, route state and workspace-tree state preserved across SPA
+      navigation, viewport preserved while loading older messages, message actions
+      kept visible, and active run state preserved when cancellation fails.
+    - WebUI correctness and a11y: localized chat/extension/OAuth failure
+      messages, surfaced admin user-management failures, recovery from transient
+      session checks, focus trapping in the extension configuration modal, no
+      crash on admin configuration paste, pairing prompts rendered without a text
+      input, tool-permission selection retained while saving, always-allow reset
+      when the approval gate changes, and authenticated previews for workspace
+      file links.
+    - Automations inherit the implicit source channel target, and the
+      outbound delivery-target registry is caller-scoped structurally rather than
+      by convention.
+    - Skills: the model is told to review the available skills before
+      answering.
+    - ironclaw service: the generated systemd unit no longer quotes
+      WorkingDirectory=.
+    - Projects show only API-backed data instead of placeholder rows.
+    Performance
+    - Hosted Postgres API capacity regressed by the row-native process journal
+      is recovered.
+    - Durable turn-event reads are served by an indexed scope+cursor query
+      instead of a scan.
+    Removed
+    - Slack compatibility route: retire the one-release
+      /webhooks/slack/events forwarding alias. Slack Event Subscriptions must use
+      /webhooks/extensions/slack/events; generic product-auth OAuth callbacks are
+      unchanged.
+    Fixed since 1.1.0-rc.1
+    - 1.0 state is preserved across the 1.1 startup migration: the release-pair
+      migration keeps existing rc1 workspace, extension, and Railway artifacts
+      intact, recovers across restarts, and bounds extension secret discovery.
+    - Hosted MCP egress target is preserved for registered MCP servers.
+    - Readable text logs stay writable: write_file's read-before-edit
+      backstop uses the same lenient binary classification as read_file, on both
+      the owning executor and host-runtime caller paths (apply_patch stays
+      strict).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nearai/ironclaw/releases/tag/ironclaw-v1.1.0
+ReleaseTime: 2026-08-06T08:39:11.0000000Z
