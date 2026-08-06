@@ -3,6 +3,13 @@ function Get-ReleaseNotes {
     $RepoOwner = 'itchio'
     $RepoName = 'itch'
 
+    # ReleaseNotesUrl (en-US)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'ReleaseNotesUrl'
+      Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+    }
+
     $Object3 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
 
     # ReleaseTime
@@ -18,6 +25,13 @@ function Get-ReleaseNotes {
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+    }
+
+    # ReleaseNotesUrl (en-US)
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $Object3.html_url
     }
   } catch {
     $_ | Out-Host
