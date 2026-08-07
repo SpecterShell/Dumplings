@@ -1,0 +1,27 @@
+Version: 0.10.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.6/Mini-Term_0.10.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.6/Mini-Term_0.10.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Git 面板重排：变更与提交历史同屏
+    ✨ 改进
+    - 上下两个可折叠区块取代互斥 tab — 更改在上、提交历史在下，同一仓库的变更与历史同屏可见；中缝可拖拽调节比例（钳 15%~85%），折叠态与比例在会话内记忆
+    - 顶部新增仓库栏 — 仓库级操作一处集中：下拉切换仓库（worktree 条目标 ⎇）、分支徽章点击只切历史查看分支（不 checkout，查看非 HEAD 分支时高亮提示）、刷新 / Pull / Push 收在栏上；右键仓库名可在终端打开或进入 Worktree 管理
+    - 提交历史直接平铺 — 历史区不再渲染逐仓库展开的仓库树，直接展示选中仓库的提交列表；分支拓扑图、滚动分页、双击看 diff、右键复制 hash 原样保留
+    - 折叠 / 展开带动画 — flex-grow 补间收放，两块同时补间总和不变、不跳动；按浮层惯例豁免系统「减弱动态效果」设置，拖拽调比例期间自动关掉补间保持跟手
+    🔧 内部
+    - 两个区块常驻挂载，折叠只把高度收到 0——已加载的提交列表、展开状态与提交说明草稿不会因折叠丢失，commit 成功仍自动刷新历史
+    - 换仓库 / 换分支用请求令牌作废在途响应，防止迟到数据串到别的仓库
+    ⚠️ 行为变化
+    - 历史区严格跟随顶部选中的仓库，不再支持同时展开多个仓库的提交历史；多仓库项目通过顶部仓库栏切换查看
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.10.6
+ReleaseTime: 2026-08-06T14:05:01.0000000Z
