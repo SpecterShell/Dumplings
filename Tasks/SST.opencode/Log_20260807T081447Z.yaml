@@ -1,0 +1,38 @@
+Version: 1.18.15
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.18.15/opencode-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/anomalyco/opencode/releases/download/v1.18.15/opencode-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Core
+    Bugfixes
+    - Chronological message ordering now stays correct even when imported or legacy message IDs are out of order.
+    - Revert and fork actions now use real message chronology instead of message ID ordering.
+    - Truncation cleanup now removes stale files by file timestamp more reliably.
+    - Repeated compaction now keeps earlier tool-call history in summaries instead of dropping orphaned results.
+    - Blob-based attachments now load correctly in the web UI. (@rexdotsh)
+    Desktop
+    Improvements
+    - Added much broader locale coverage across the desktop app.
+    - Export full session transcripts as JSON from the UI.
+    Bugfixes
+    - Session timelines now respect chronological message boundaries more reliably.
+    - Stored messages now stay ordered by creation time.
+    - Session lists now sort by persisted activity time more reliably.
+    - Language names now stay native in the locale picker.
+    - Filled in missing translations across existing locales.
+    Thank you to 3 community contributors:
+    - @rexdotsh:
+      - fix(server): allow blob attachments in web UI (#40692)
+    - @ayubun:
+      - fix(tui): support copying over ssh with set-clipboard on tmux config (#30472)
+    - @dangooddd:
+      - feat(tui): add cursor style configuration (#32295)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anomalyco/opencode/releases/tag/v1.18.15
+ReleaseTime: 2026-08-07T06:49:55.0000000Z
