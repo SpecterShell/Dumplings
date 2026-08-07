@@ -1,0 +1,63 @@
+Version: 0.23.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.5/codeg_0.23.5_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.23.5/codeg_0.23.5_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The Task Board is now To-dos — and it can plan ahead: schedule a card to start on its own, or swap the whole page for a list. Agents can park work too: with your permission, they can save an automation or drop a to-do without leaving the conversation. This release also carries everything from 0.23.4, which never made it out.
+    New
+    - Schedule a to-do to start on its own. Pick a date and a time on any To do card; the task stays where it is until then and starts exactly as if you had pressed Start, with the folder's concurrency limit still deciding what actually launches. A time missed while the app was closed fires at the next launch, pressing Start yourself takes over from the plan, and cancelling a task clears it so a later requeue can't resurrect a forgotten time.
+    - Agents can create automations and to-dos from a conversation. Two new tools let an agent park work instead of only doing it: one saves an Automation (on a schedule or manual), the other queues a to-do card in the right project — worktrees resolve back to the repository they were cut from. Both are off by default under Settings → General → Create from chat, and switching one off stops even already-running sessions from using it.
+    - A list view for To-dos. One flat, freshest-first list carrying the same actions as the cards — shown as labelled icon buttons instead of hidden behind an overflow menu — plus a status filter that speaks the four column names. The board/list toggle and the settings entry now sit in the window's top-right cluster beside the gear, and your choice of view is remembered.
+    - Folder badges count what's running. The number beside a folder shows how many of its sessions are working right now — worktrees included — and disappears when none are.
+    Improved
+    - The Task Board is called To-dos. The page, the sidebar entry, the settings copy, and the tool description an agent reads all use the new name.
+    - Custom date ranges got a real calendar. Token Usage's custom range is one pill opening a two-month calendar anchored a month back, so the second pane isn't all-future and greyed out, and clicking into a finished range starts a new one rather than dragging whichever end you didn't touch. Scheduling a to-do uses the same calendar plus a clock, and it opens empty — a task that was never planned no longer looks planned.
+    - To-dos show a loading skeleton. While the first fetch is in flight the page draws the layout it's about to fill, instead of flashing "no tasks yet".
+    - The skill shortcuts sit still. The row under the quick actions no longer drifts on its own; an arrow at each end moves it, and each arrow is live exactly while there is somewhere left to go.
+    - A quieter folder list. The expand/collapse chevron only shows on hover — the folder icon already says whether it's open.
+    - The rotating tip has caught up. Twelve new tips cover To-dos, Automations, Token Usage, @ mentions, split tabs, worktrees, importing sessions, sub-agent runs, live feedback, Skill Packs, model providers, and backgrounds.
+    - Tapping Automations or To-dos closes the mobile sidebar, the same way tapping a conversation already did.
+    - The toolbar's "Process all" button is gone. Start a task from the card itself, or turn on "Process automatically" in Task settings to let a folder work through its to-dos up to the concurrency limit.
+    Fixed
+    - Forking no longer renames the conversations it splits. A fork used to lose its [Fork] marker — or quietly revert a conversation you had renamed back to its old name — the next time its details loaded, leaving both halves wearing the same title.
+    - Date ranges no longer land a day early. The usage range and a scheduled start now speak your local calendar days from end to end, instead of drifting a day for anyone west of Greenwich.
+    - Deleting a to-do that was just starting cleans up after itself. The delete and the start are now settled against each other, so a run can no longer slip through and leave its worktree and agent process behind.
+    - Card and row buttons stay buttons. Pressing Enter or Space on an action no longer also opens the task's detail sheet, and an archived task keeps its session viewer.
+    - A retried task starts from a clean slate. It no longer carries the result the previous run reported about itself.
+    - The Automations empty state is centered again. With nothing configured yet, the template gallery no longer hugs the left edge of the page.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    「任务看板」正式更名为**「待办任务」**，并且学会了提前安排：给卡片定个时间让它自己开跑，或者把整页切成列表。智能体也能替你把活儿存下来——在你授权的前提下，它可以直接在对话里保存一条自动化，或排一张待办卡片。本次发布同时包含了未能成功发布的 0.23.4 的全部内容。
+    新增
+    - 待办任务可以定时自动开始。 在任意「待办」卡片上选好日期和时间，任务原地等待，到点后就像你亲手按下「开始」一样启动，文件夹的并发上限依然决定真正能跑几个。应用关闭期间错过的时间会在下次启动时补跑；你自己按「开始」会直接接管并消费掉这个计划；取消任务则会清除计划，避免以后重新排队时复活一个早已被遗忘的时间。
+    - 智能体可以从对话里创建自动化和待办任务。 两个新工具让智能体不只是"当场做完"，还能把工作存起来：一个保存自动化（定时或手动触发），另一个把待办卡片排进正确的项目——工作树会自动归回它所属的仓库。两者默认关闭，开关在 设置 → 通用 → 从聊天中创建；关掉之后，连已经在运行的会话也会立刻失去这个能力。
+    - 待办任务新增列表视图。 一条扁平的、最近更新在前的列表，动作与卡片完全一致——直接以带提示的图标按钮排开，不再藏在「更多」菜单里——并配有一个按四个列名筛选的状态选择器。看板/列表切换和设置入口移到了窗口右上角的按钮组，紧挨着齿轮图标，你选的视图会被记住。
+    - 文件夹角标改为统计正在运行的会话。 数字不再是会话总数，而是该文件夹（含工作树）里正在运行的会话数，没有在跑时自动隐藏。
+    改进
+    - 「任务看板」更名为「待办任务」。 页面标题、侧边栏入口、设置文案，以及智能体读到的工具说明，全部统一为新名字。
+    - 自定义日期区间换成了真正的日历。 Token 用量的自定义区间收成一颗药丸按钮，点开是双月日历，并以一个月前为起点——第二个月不再整片是禁用的未来日期；在已选好的区间里再点一下会重新开始选择，而不是拖动你没碰的那一端。待办任务的定时同样使用这套日历加时钟，且默认留空——从未安排过的任务不会看起来像已经安排过。
+    - 待办任务页面加入了加载骨架屏。 首次加载期间会先画出即将填充的布局，而不是一闪而过地显示「暂无任务」。
+    - 技能快捷条不再自己滚动。 快捷卡片下方的技能条改为静止，两端各有一个箭头按需推进；箭头只在确实还有内容可翻时才可点击。
+    - 文件夹列表更清爽。 展开/收起的小箭头改为悬停时才出现——文件夹图标本身已经表明了展开与否。
+    - 新建会话页的轮换提示补上了新功能。 新增十二条提示，涵盖待办任务、自动化、Token 用量、@ 引用、标签分屏、工作树、导入会话、子智能体会话、实时反馈、技能包、模型提供商和工作区背景。
+    - 移动端点击「自动化」或「待办任务」会自动收起侧边栏，与点击会话时的行为一致。
+    - 工具栏的「全部处理」按钮已移除。 请从卡片自身启动任务，或在任务设置里打开「自动处理」，让文件夹按并发上限自行消化待办。
+    修复
+    - 分叉不再改掉被拆分会话的名字。 此前分叉出的会话会在下次加载详情时丢掉 [Fork] 前缀，或把你手动改过的名字悄悄还原成旧标题，导致两半会话顶着同一个名字。
+    - 日期区间不再整体偏移一天。 用量区间和定时开始现在全程按本地日历日计算，格林尼治以西的用户不会再看到区间往前挪一天。
+    - 删除刚要启动的待办任务能正确收尾。 删除与启动之间做了严格排序，不会再有一次运行"漏网"，留下无人认领的工作树和智能体进程。
+    - 卡片和列表行上的按钮就只是按钮。 在动作按钮上按 Enter 或空格不会再连带打开任务详情抽屉；已归档的任务也保留了会话查看入口。
+    - 重试的任务从干净状态开始。 不会再带着上一次运行自我上报的结论。
+    - 自动化的空状态重新居中。 一条自动化都没有时，模板画廊不再贴着页面左边。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.23.5
+ReleaseTime: 2026-08-07T17:17:56.0000000Z
