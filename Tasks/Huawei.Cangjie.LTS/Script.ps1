@@ -1,9 +1,7 @@
-$Prefix = 'https://cangjie-lang.cn/download'
+$Prefix = Join-Uri $Global:DumplingsStorage.CangjiePrefix $Global:DumplingsStorage.CangjieDownloadPage.SelectSingleNode('//div[@class="download-version-item" and contains(.//div[@class="download-version-item-n"], "LTS Version")]//a').Attributes['href'].Value
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
-$Prefix = Join-Uri $Prefix $Object1.SelectSingleNode('//div[@class="download-version-item" and contains(.//div[@class="download-version-item-n"], "LTS Version")]//a').Attributes['href'].Value
-$Object2 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
-$Filename = $Object2.SelectSingleNode("//div[contains(@class, 'ivu-col') and contains(text(), '.exe')]").InnerText.Trim()
-$Object3 = Invoke-RestMethod -Uri $Object2.SelectSingleNode('//script[contains(@src, "version") and contains(@src, ".js")]').Attributes['src'].Value
+$Filename = $Object1.SelectSingleNode("//div[contains(@class, 'ivu-col') and contains(text(), '.exe')]").InnerText.Trim()
+$Object3 = Invoke-RestMethod -Uri $Object1.SelectSingleNode('//script[contains(@src, "version") and contains(@src, ".js")]').Attributes['src'].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -24,13 +22,13 @@ switch -Regex ($this.Check()) {
       }
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('//div[@class="subpage-content-time"]').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//div[@class="subpage-content-time"]').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = Join-Uri $Prefix $Object2.SelectSingleNode('//a[contains(., "版本说明")]').Attributes['href'].Value
+        Value  = $ReleaseNotesUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(., "版本说明")]').Attributes['href'].Value
       }
 
       $Object4 = Invoke-WebRequest -Uri ('https://docs.cangjie-lang.cn/docs' + [System.Web.HttpUtility]::ParseQueryString(([uri]$ReleaseNotesUrl).Query)['url']) | ConvertFrom-Html
