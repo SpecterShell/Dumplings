@@ -1,17 +1,18 @@
 # $Object1 = Invoke-WebRequest -Uri 'https://sonic-pi.net/static/info/latest_version.txt'
 
-$RepoOwner = 'sonic-pi-net'
-$RepoName = 'sonic-pi'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/sonic-pi-net/sonic-pi/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://sonic-pi.net/files/releases/v$($this.CurrentState.Version)/Sonic-Pi-for-Win-x64-v$($this.CurrentState.Version.Replace('.', '-')).msi"
+  InstallerUrl = "https://sonic-pi.net/files/releases/v$($this.CurrentState.Version)/Sonic-Pi-for-Win-x64-v$($this.CurrentState.Version).msi"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://sonic-pi.net/files/releases/v$($this.CurrentState.Version)/Sonic-Pi-for-Win-arm64-v$($this.CurrentState.Version).msi"
 }
 
 switch -Regex ($this.Check()) {
@@ -33,10 +34,11 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
