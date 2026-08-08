@@ -1,0 +1,38 @@
+Version: 0.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/gantrol/aiy-desktop/releases/download/v0.3.1/AIY-Image-Tools-0.3.1-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AIY 0.3.1
+    AIY 0.3.1 adds the first macOS distribution for Apple Silicon Macs and provides Windows x64 packages built from the same release tag. It keeps the released 0.3.0 application and data baseline and includes release-gate fixes discovered while validating the macOS build.
+    Downloads
+    - AIY-Image-Tools-0.3.1-win-x64.exe: Windows 10/11 x64 installer.
+    - AIY-Image-Tools-0.3.1-win-x64.zip: Windows 10/11 x64 portable archive.
+    - AIY-Image-Tools-0.3.1-mac-arm64.dmg: macOS disk image for Apple Silicon Macs.
+    - AIY-Image-Tools-0.3.1-mac-arm64.zip: macOS application archive for Apple Silicon Macs.
+    - SHA256SUMS.txt: SHA-256 checksums for all four packages.
+    Security notices
+    The Windows packages are not Authenticode-signed, so Windows SmartScreen may identify the publisher as unknown. Verify the package against SHA256SUMS.txt before opening it.
+    The macOS packages are not Apple Developer-signed or notarized, so macOS Gatekeeper may block the first launch. The application bundle carries only an ad-hoc code signature so its arm64 binaries remain executable after packaging. An ad-hoc signature does not establish publisher identity and does not replace Developer ID signing or notarization.
+    Release validation
+    Windows x64 packages passed formatting, lint, TypeScript, 503 Vitest tests, coverage thresholds, production bundling, packaged-resource and native-module architecture checks, and ZIP integrity validation.
+    The macOS arm64 packages passed formatting, lint, TypeScript, 503 Vitest tests, coverage thresholds, all 24 Electron E2E tests, production bundling, deep code-signature verification, mounted-DMG startup smoke testing, DMG verification, and ZIP integrity checks.
+    Release-gate fixes include:
+    - Normalized macOS temporary-directory fixtures so /var and its canonical /private/var target are tested consistently without weakening production path-containment checks.
+    - Removed the obsolete pinned image-runtime workaround; image generation now uses the configured CLI unless an explicit diagnostic override is supplied.
+    - Set the AIY Dock icon explicitly on macOS development and validation launches.
+    - Ad-hoc signed the complete macOS bundle after Electron fuse patching.
+    - Raised the sandboxed image-decoder ceiling to a bounded 32 megapixels while retaining the 128 MB output limit.
+    - Re-anchored the coverage gate to the measured 0.3.1 release-source baseline.
+    Compatibility boundary
+    AIY 0.3.1 uses the released 0.3.0 database baseline. It does not adopt, migrate, repair, or replace development and pre-release databases.
+    License
+    AIY is licensed under the PolyForm Noncommercial License 1.0.0. The license permits use, modification, and distribution for noncommercial purposes. Commercial use requires separate authorization.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gantrol/aiy-desktop/releases/tag/v0.3.1
+ReleaseTime: 2026-08-07T10:14:39.0000000Z
