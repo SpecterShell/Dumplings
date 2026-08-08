@@ -138,6 +138,14 @@ a separate block. Do not include later release-note requests in the same block.
 Preserve source precision when practical; manifest generation formats the value
 as `yyyy-MM-dd`.
 
+Do not derive `ReleaseTime` from the installer's HTTP `Last-Modified` header.
+Manifest updating reads that header and supplies the fallback `ReleaseDate`
+automatically when no authoritative task or installer date exists. Set
+`ReleaseTime` only from release metadata whose meaning is established, such as a
+release API timestamp, appcast publication date, or versioned changelog entry.
+`CurrentState.LastModified` may still track changes to a versionless URL, but it
+must not be copied into `CurrentState.ReleaseTime`.
+
 ## Clear Stale Release Fields
 
 Manifest updating removes old `ReleaseNotes` before applying locale entries, but

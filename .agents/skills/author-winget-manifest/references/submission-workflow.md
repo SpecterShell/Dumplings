@@ -9,7 +9,7 @@ Import-Module .\Modules\PackageModule\Index.ps1 -Force
 Test-WinGetManifest -Path <manifest-directory>
 ```
 
-Use `Get-WinGetManifestValidationResult` or `Test-WinGetManifest -PassThru` when structured diagnostics, effective installer entries, or dependency evidence are needed. Add `-ErrorOnWarning` for the strict warning behavior of `winget validate`. This validation does not download or execute installers and does not require `winget.exe`; the Azure pipeline remains authoritative for repository and installer-content checks.
+`Get-WinGetManifestValidationResult -Path <manifest-directory>` always returns structured diagnostics, effective installer entries, and dependency evidence. It also accepts `-Manifest` for an in-memory logical manifest. Use `Test-WinGetManifest -Path <manifest-directory> -PassThru` when the same result should be returned only after validation errors have been converted to a terminating error. Add `-ErrorOnWarning` to `Test-WinGetManifest` for the strict warning behavior of `winget validate`; that switch does not belong to `Get-WinGetManifestValidationResult`. Validation does not download or execute installers and does not require `winget.exe`; the Azure pipeline remains authoritative for repository and installer-content checks.
 
 Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Installer Manifest Workflow](manifest-workflow.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the latest stable version consistently.
 

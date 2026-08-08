@@ -498,7 +498,9 @@ $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash $File -Algori
 For `Last-Modified`, compare parsed `[datetime]` values and warn when the current
 date regresses rather than treating it as an update. `BitSum.ProcessLasso.Beta`
 shows separate values for x86 and x64. `Content-Length` is last because unrelated
-files can have the same size.
+files can have the same size. Store the header only as validator state; do not
+copy it to `CurrentState.ReleaseTime`, because manifest updating already uses the
+download response as the fallback release-date source.
 
 Do not copy `ABC.PowerExtension`, `AnyDesk.AnyDesk`, or `Ardisk.Ardisk` file
 cleanup into a new task; retaining the registered file allows manifest

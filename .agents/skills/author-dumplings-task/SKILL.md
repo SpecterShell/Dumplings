@@ -12,17 +12,20 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
    substitute for authoring the first package version.
 2. Read [Task Workflow](references/task-workflow.md) before creating
    `Config.yaml`, `Script.ps1`, or initial state.
-3. Read [Manifest Update Contract](references/manifest-update-contract.md) before
+3. Use [Common Functions For Task Scripts](references/common-functions.md) to
+   choose PackageModule, PowerHTML, and powershell-yaml helpers. Do not infer a
+   function contract from a legacy task call.
+4. Read [Manifest Update Contract](references/manifest-update-contract.md) before
    choosing installer selectors, `Query`, locale entries, cached files, or
    `WinGetReplaceMode`.
-4. Read only the applicable recipe in
+5. Read only the applicable recipe in
    [Installer Source Patterns](references/installer-source-patterns.md) and
    [Release Metadata Patterns](references/release-metadata-patterns.md). Use
    source behavior, not a similar package name, to choose a template.
-5. Use `$author-winget-manifest` for package-source legitimacy, manifest-field,
+6. Use `$author-winget-manifest` for package-source legitimacy, manifest-field,
    locale, and submission policy. Use `$analyze-winget-installer` when installer
    metadata cannot be established without static parsing.
-6. Run the task read-only, seed or refresh state only after reviewing the result,
+7. Run the task read-only, seed or refresh state only after reviewing the result,
    then exercise dry manifest generation.
 
 ## Required Design
@@ -71,6 +74,11 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
   recoverable `try`/`catch` blocks. Handle `ReleaseTime`, `ReleaseNotes`, and
   `ReleaseNotesUrl` only after a possible change is established, with each
   optional source isolated in its own `try`/`catch`.
+- Do not assign `CurrentState.ReleaseTime` from an installer response's
+  `Last-Modified` header. Manifest updating already uses a valid header as the
+  fallback `ReleaseDate` when neither task state nor the installer entry supplies
+  one. A task may still store `LastModified` solely as a last-resort change
+  validator for a versionless URL.
 - Replace an existing `ReleaseNotesUrl` with a trustworthy general changelog URL
   or a null locale entry before fallible version-specific logic. Preserve
   release-note source text through the project's HTML or Markdown conversion

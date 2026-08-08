@@ -342,8 +342,10 @@ pipeline is stopped with Ctrl+C. Their timeout and retry controls follow
 
 - `ConnectionTimeoutSeconds` (alias `TimeoutSec`) bounds connection and response-header receipt; `0` disables this timeout.
 - `OperationTimeoutSeconds` bounds each period without body progress; `0` disables this timeout.
-- `MaximumRetryCount` defaults to `0` and retries HTTP `304` and `400` through `599` responses.
-- `RetryIntervalSec` defaults to `5`; an integer `Retry-After` header overrides it for HTTP `429`.
+- `MaximumRetryCount` defaults to `3` and retries HTTP `304` and `400` through `599` responses.
+- `RetryIntervalSec` defaults to `3`; a valid `Retry-After` header overrides it for HTTP `429`.
+- `MaximumRetryDelaySeconds` defaults to `30` and rejects a requested per-retry delay above that bound.
+- `MaximumTotalRetryDelaySeconds` defaults to `60` and bounds cumulative delay for each transport.
 
 Delivery Optimization additionally retains WinGet's
 `NoProgressTimeoutSeconds` and the probe safety bound
@@ -355,10 +357,12 @@ Use response-only diagnostics for large files:
 
 ```powershell
 $Result = Test-WinGetInstallerDownload -Uri $InstallerUrl -Method Both -ResponseOnly
-$Result.Results | Format-Table Method, ServerAcceptedRequest, HttpStatusCode, HResult, ErrorMessage
+$Result.Results | Format-Table Method, ServerAcceptedRequest, HttpStatusCode, AttemptCount, HResult, ErrorMessage
 ```
 
 `ServerAcceptedRequest` proves only that the native path accepted the request. `WouldWinGetDownload` requires a completed download. Run full `Default` mode before submission when practical.
+
+A first-attempt HTTP `429` followed by success within the bounded retry policy is transient evidence, not proof that WinGet is incompatible with the URL. Record `AttemptCount` and the final status. Treat persistent failure after the configured retry and delay bounds as actionable download evidence.
 
 - Delivery Optimization succeeds and WinINet fails: default WinGet can work, but explicit proxy or WinINet users can fail.
 - Delivery Optimization fails nonfatally and WinINet succeeds: default fallback works.

@@ -151,6 +151,8 @@ manifest shape first; subsequent task runs keep parser-owned fields current.
 `CurrentState.ReleaseTime` is formatted as `yyyy-MM-dd` and copied to every
 installer entry unless that entry supplies `ReleaseDate`. If neither source is
 available, the downloader may use a valid installer `Last-Modified` header.
+Task scripts must not duplicate this fallback by assigning that header to
+`CurrentState.ReleaseTime`.
 
 ```powershell
 $this.CurrentState.ReleaseTime = $Release.published_at.ToUniversalTime()
