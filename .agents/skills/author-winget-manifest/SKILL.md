@@ -19,6 +19,12 @@ Read only the references needed for the current stage:
 
 Use `$analyze-winget-installer` for installer evidence and `$author-dumplings-task` after the first package version is accepted.
 
+## Incremental authoring
+
+Create the working multi-file manifest as soon as the package identifier, package version, default locale, and enough installer evidence to satisfy the required schema fields are known. For an existing package, create the new version leaf from the logical model at this point. Do not postpone file creation until source research, static analysis, locale research, and VM validation are all finished.
+
+Update and save the working manifest after each meaningful evidence milestone: artifact selection and hashing, installer-family parsing, locale discovery, release-note discovery, and VM validation. Read the current logical model before the next mutation, inspect each diff, and omit unresolved optional fields rather than inserting guesses or placeholders. When handling several packages, create and maintain each package's working manifest while researching it instead of collecting evidence for the whole batch and writing all YAML at the end. Format and validate the complete set after the initial save and after structural changes; run the final strict review before submission.
+
 ## Non-negotiable rules
 
 Use official publisher sources. Do not use download aggregators, mirrors, repackagers, or search-result download sites. Cross-check websites and repositories before trusting either.
@@ -33,6 +39,6 @@ Do not add `Moniker` automatically. Do not author `UnsupportedOSArchitectures` a
 
 ## Output discipline
 
-Operate on the complete logical manifest model. Serialize with `Save-WinGetManifest` or the documented model APIs, then validate offline. Use `Format-WinGetManifest` only for an isolated document; it cannot perform cross-document optimization or prove missing evidence.
+Operate on the complete logical manifest model throughout authoring. Serialize each evidence-backed revision with `Save-WinGetManifest` or the documented model APIs, then validate offline. Use `Format-WinGetManifest` only for an isolated document; it cannot perform cross-document optimization or prove missing evidence.
 
 Preserve full source, installer, VM, and validation records in the transient evidence tree. Report only the decisions, unresolved warnings, and evidence path in the task.

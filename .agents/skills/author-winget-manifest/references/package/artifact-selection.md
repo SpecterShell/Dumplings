@@ -58,7 +58,7 @@ Use the direct official installer URL that WinGet validation can download public
 - If the final redirect target is dynamic but the previous official URL is stable and public, use the previous official URL.
 - If only a dynamic URL exists, stop manifest authoring and hand off to automation analysis with VM traffic-capture evidence.
 
-Before writing the manifest, verify the URL, redirect chain, parameter stability, final redirected URL, content length, file name, and SHA256.
+Before adding or replacing an `InstallerUrl` in the working manifest, verify the URL, redirect chain, parameter stability, final redirected URL, content length, file name, and SHA256. Save the verified installer coordinates promptly, then continue enriching the same manifest as parser and VM evidence arrives.
 
 ## WinGet Download Compatibility
 

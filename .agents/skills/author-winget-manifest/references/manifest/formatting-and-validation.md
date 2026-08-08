@@ -59,9 +59,9 @@ Before claiming the manifest is ready:
 - Known default switches, including NSIS `/S`, are not redundantly authored.
 - The complete manifest set has passed through logical-model serialization after authoring; isolated drafts have passed through `Format-WinGetManifest`.
 
-## Final Formatting
+## Iterative formatting and final validation
 
-After completing the evidence pass, parse and serialize the complete manifest set through Dumplings. `ConvertTo-WinGetManifestYaml` deep-copies the logical model, removes cross-document redundancies, recomputes legal root/installer field levels, and applies schema property order. Its post-processing removes a common `InstallerLocale` and redundant fields from a sole Apps & Features entry as described above. It does not discover missing metadata or replace validation.
+Parse and serialize the complete working manifest set immediately after its initial valid creation, then repeat this after each meaningful evidence-backed change. Do not wait for the final evidence pass. `ConvertTo-WinGetManifestYaml` deep-copies the logical model, removes cross-document redundancies, recomputes legal root/installer field levels, and applies schema property order. Its post-processing removes a common `InstallerLocale` and redundant fields from a sole Apps & Features entry as described above. It does not discover missing metadata or replace validation.
 
 ```powershell
 Import-Module .\Modules\PackageModule\Index.ps1 -Force
@@ -70,7 +70,7 @@ $Manifest = Read-WinGetManifest -Path $ManifestDirectory
 $ManifestBundle = ConvertTo-WinGetManifestYaml -Manifest $Manifest
 ```
 
-Write the returned `Version`, `Installer`, and locale contents through the repository writer used by the current workflow. Review the diff afterward: meaningful evidence must remain unchanged, common installer values may move to the manifest level, redundant locale/ARP fields may disappear, and keys may be deterministically ordered according to the schema.
+Write the returned `Version`, `Installer`, and locale contents through the repository writer used by the current workflow. Review every incremental diff: meaningful evidence must remain unchanged, common installer values may move to the manifest level, redundant locale/ARP fields may disappear, and keys may be deterministically ordered according to the schema. Run ordinary validation after each saved milestone so structural mistakes are corrected while the evidence is still fresh, then perform the strict final review before submission.
 
 For an isolated manifest dictionary, `Format-WinGetManifest` remains available as a non-destructive formatter. It cannot perform the common-locale or locale-to-ARP comparisons because the other physical documents are not available.
 

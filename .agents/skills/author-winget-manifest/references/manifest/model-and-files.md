@@ -2,7 +2,7 @@
 
 ## Inputs
 
-Use this reference after source discovery has produced trusted installer evidence. If installer metadata is incomplete, use the installer-analysis workflow before writing final YAML.
+Use this reference as soon as source discovery establishes a stable package identity and release. Create the first valid working manifest when `PackageIdentifier`, `PackageVersion`, `DefaultLocale`, the minimum required default-locale fields, and at least one installer's URL, SHA256, architecture, and type are known. Treat the remaining evidence below as incremental enrichment rather than a prerequisite for creating files.
 
 Expected inputs:
 
@@ -31,6 +31,14 @@ Use the latest stable schema accepted by winget-pkgs, currently `1.12.0`. Before
 
 When updating an existing package, upgrade every YAML file included in the submitted manifest set to the latest stable schema. Do not retain an older schema merely because the previous package version used it.
 
+## Working manifest lifecycle
+
+Create the target version leaf early. For a new package, initialize the logical model and save its minimal valid version, installer, and default-locale documents. For an update, read the latest manifest model, change the package version and initial installer coordinates, and save the new version leaf before investigating optional metadata.
+
+Keep one working manifest set as the source of truth. After a download or parser proves installer metadata, apply it and save. After an official page proves locale, legal, release-note, or documentation fields, apply them and save. After VM validation proves scope, switches, ARP identity, exit codes, or first-run associations, apply them and save. Inspect the diff after each milestone so a later formatter or optimizer change is associated with the evidence that caused it.
+
+Do not keep completed field values only in chat, scratch variables, or a final checklist while the manifest remains stale. Large raw evidence still belongs under `Sandbox/Evidence`; the working YAML and logical model should contain every field already proved. Omit unresolved optional fields until evidence arrives. If a required field is still unresolved, keep the pre-manifest evidence under `Sandbox/Evidence/.../manifest` and create the valid working set immediately after that blocker is resolved.
+
 ## Authoring API
 
 For programmatic authoring, load `Modules/PackageModule/Index.ps1` and operate on the logical manifest model:
@@ -42,6 +50,8 @@ if ($Suggestion.BlockingIssues) { throw ($Suggestion.BlockingIssues -join "`n") 
 $Manifest = New-WinGetManifest -PackageIdentifier Vendor.Package -PackageVersion 1.2.3 -DefaultLocalization $DefaultLocalization -Installer $Suggestion.Installers
 Save-WinGetManifest -Manifest $Manifest -Path C:\winget-pkgs\manifests\v\Vendor\Package\1.2.3
 ```
+
+This initial save is a working revision, not the end of authoring. Re-read or retain `$Manifest`, apply each later locale, parser, release, and VM result through the focused mutation functions, and call `Save-WinGetManifest` again after each meaningful batch.
 
 `New-WinGetManifest` constructs the complete logical model. `-DefaultLocalization` accepts the full default-locale dictionary, not a locale tag. `-Installer` accepts one or more complete effective installer dictionaries, and `-Localization` accepts additional locale dictionaries. The function has no `-Target`, `-PackageLocale`, or `-ManifestType` parameter; target selectors belong to the focused mutation functions, while serialization derives each physical manifest type from the logical model.
 

@@ -19,6 +19,32 @@ Use this fallback when a proprietary or custom EXE wrapper is not supported by P
 
 List the wrapper contents before writing the task, then select the exact nested file that the wrapper installs. A first `*.msi` match is unsafe when the wrapper contains prerequisites, language packs, or architecture-specific packages. Confirm the mapping from the wrapper configuration, archive layout, MSI summary information, and `Get-MsiInstallerInfo` evidence.
 
+### 7-Zip parser-mode examples
+
+Use quoted `'-t#'` only after ordinary listing or the installer analyzer shows that the proprietary wrapper needs 7-Zip's parser view. Parser mode scans for embedded supported streams and can expose positional names such as `2.msi`, `3.msp`, or `2.wrapper_jre_offline.exe`. Always list the exact current artifact first because these names can change between releases:
+
+```powershell
+7z.exe l -ba -slt '-t#' $OuterPath | Out-Host
+```
+
+`DuoSecurity.Duo2FAAuthenticationforWindows` demonstrates multiple architecture-specific MSI streams, and the Foxit tasks demonstrate an MSI plus an optional MSP:
+
+```powershell
+7z.exe e -aoa -ba -bd -y '-t#' -o"${ExtractedPath}" $OuterPath '2.msi' '3.msi' '4.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${ExtractedPath}" $OuterPath '2.msi' '3.msp' | Out-Host
+```
+
+The Altova tasks extract a CAB through parser mode and then open the CAB with ordinary archive detection. `Oracle.JavaRuntimeEnvironment` performs two parser passes through an embedded EXE before reaching the MSI:
+
+```powershell
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OuterDirectory}" $OuterPath '*.cab' | Out-Host
+7z.exe e -aoa -ba -bd -y -o"${CabDirectory}" $CabPath '*.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OuterDirectory}" $OuterPath '2.wrapper_jre_offline.exe' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${InnerDirectory}" $NestedExePath '2.msi' | Out-Host
+```
+
+Check `$LASTEXITCODE` and each expected path after every command. Parse each MSI once with `Get-MsiInstallerInfo`, verify its `PackageArchitecture`, ProductCode, and UpgradeCode, and do not map architecture from parser-stream order alone. See the installer-analysis [7-Zip diagnostics](../../../analyze-winget-installer/references/workflows/installer-analysis.md#2-run-static-analysis) for the parser boundary and safety rules.
+
 For one named MSI payload, keep the outer installer in PackageTask's cache and parse the extracted database once:
 
 ```powershell

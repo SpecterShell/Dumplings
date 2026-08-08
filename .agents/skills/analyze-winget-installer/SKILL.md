@@ -1,6 +1,6 @@
 ---
 name: analyze-winget-installer
-description: Analyze Windows installers for WinGet manifests and Dumplings automation. Use when Codex needs to identify EXE/MSI/MSIX/ZIP/portable installer technologies, inspect static metadata, decide InstallerType, ProductCode, UpgradeCode, Scope, InstallerSwitches, AppsAndFeaturesEntries, detect embedded MSI behavior, or plan VM-only dynamic installer testing without executing installers on the host.
+description: Analyze Windows installers for WinGet manifests and Dumplings automation. Use when the agent needs to identify EXE/MSI/MSIX/ZIP/portable installer technologies, inspect static metadata, decide InstallerType, ProductCode, UpgradeCode, Scope, InstallerSwitches, AppsAndFeaturesEntries, detect embedded MSI behavior, or plan VM-only dynamic installer testing without executing installers on the host.
 ---
 
 # Analyze WinGet installers
@@ -17,6 +17,8 @@ description: Analyze Windows installers for WinGet manifests and Dumplings autom
 8. Read [Parser development](references/parser-development/workflow.md) before changing parser code.
 
 Use `winget search` before scanning a winget-pkgs checkout. Once an identifier is known, navigate directly to its manifest and Dumplings task.
+
+When installer analysis is part of manifest authoring, work against the current manifest draft. As soon as the manifest has the minimum required identity and installer fields, create and save it through `$author-winget-manifest`. Apply each conclusive parser or VM result to that working manifest before moving to the next unresolved question; do not retain all proven metadata for one final write at the end.
 
 ## Safety
 

@@ -1,6 +1,6 @@
 ---
 name: author-dumplings-task
-description: Create, review, debug, or refactor Dumplings automation under Tasks, including Config.yaml, Script.ps1, state detection, installer and locale entries, GitHub release asset selection, HTML pages, redirects, Sparkle/electron-updater/Squirrel feeds, versionless URLs tracked by headers and hashes, shared provider tasks, and dry-run validation. Use when Codex needs to automate an existing WinGet package or explain how PackageTask projects task state into updated manifests.
+description: Create, review, debug, or refactor Dumplings automation under Tasks, including Config.yaml, Script.ps1, state detection, installer and locale entries, GitHub release asset selection, HTML pages, redirects, Sparkle/electron-updater/Squirrel feeds, versionless URLs tracked by headers and hashes, shared provider tasks, and dry-run validation. Use when the agent needs to automate an existing WinGet package or explain how PackageTask projects task state into updated manifests.
 ---
 
 # Author Dumplings tasks
@@ -15,6 +15,8 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
 6. Load [`$use-dumplings-functions`](../use-dumplings-functions/SKILL.md) before writing `Script.ps1`, then read only the networking, file, content, feed, browser, or external-module reference required by the task.
 7. Find current examples in the [task example index](references/example-index.md). Open each named task directly and verify its assumptions.
 8. Persist large records through [Transient evidence](../analyze-winget-installer/references/workflows/evidence.md).
+
+Start manifest feedback early. As soon as the task can produce the required version and installer state, run a dry submission and inspect the generated manifests under `Outputs/WinGet`. Repeat the dry run after installer parsing, locale projection, or release-metadata changes instead of waiting until the task is otherwise finished. Keep these changes in `CurrentState` and the manifest update pipeline; do not edit winget-pkgs YAML from `Script.ps1`.
 
 ## Design rules
 

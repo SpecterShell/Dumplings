@@ -35,6 +35,30 @@ diec.exe -j C:\Path\To\Installer.exe
 exeinfope.exe 'C:\Path\To\Installer.exe*' /s /log:C:\Path\To\exeinfo.log
 ```
 
+7-Zip parser mode is another optional static diagnostic. Quote `'-t#'` in PowerShell. The `#` type asks 7-Zip's parser to scan the file for embedded supported streams instead of forcing one ordinary archive handler; numbered names such as `2.msi` are observations of the current binary layout, not stable product identities. List the current installer before selecting a stream:
+
+```powershell
+7z.exe l -ba -slt '-t#' C:\Path\To\Installer.exe | Out-Host
+```
+
+The existing `DuoSecurity.Duo2FAAuthenticationforWindows` task extracts three architecture-specific MSI streams, while `Foxit.FoxitReader` extracts an MSI and optional MSP:
+
+```powershell
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OutputDirectory}" $InstallerFile '2.msi' '3.msi' '4.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OutputDirectory}" $InstallerFile '2.msi' '3.msp' | Out-Host
+```
+
+The Altova tasks first use parser mode to locate a CAB and then open that CAB normally. `Oracle.JavaRuntimeEnvironment` uses parser mode twice because the outer installer exposes `2.wrapper_jre_offline.exe`, which then exposes `2.msi`:
+
+```powershell
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OuterDirectory}" $InstallerFile '*.cab' | Out-Host
+7z.exe e -aoa -ba -bd -y -o"${CabDirectory}" $CabPath '*.msi' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${OuterDirectory}" $InstallerFile '2.wrapper_jre_offline.exe' | Out-Host
+7z.exe e -aoa -ba -bd -y '-t#' -o"${InnerDirectory}" $NestedExePath '2.msi' | Out-Host
+```
+
+Check `$LASTEXITCODE`, verify every expected output with `Test-Path`, inspect nested MSI architecture and identity, and use a separate temporary directory for each layer. Do not assume that stream `2` remains the same across versions. These commands are agent diagnostics only; Dumplings parsers, analyzers, tests, and CI must continue to use in-process source-backed implementations.
+
 `diec` prints help in a GUI when invoked incorrectly. Exeinfo PE writes its useful console-mode result to the requested log and may briefly show an empty countdown window. Agents may also use 7-Zip, NanaZip, or another static extractor to cross-check archive boundaries and nested files. Keep all such invocations outside Dumplings parser modules, bridges, analyzers, tests, and CI paths. Treat their output as supporting evidence and confirm it against source-backed structures or stable fixtures. Never execute the installer or an extracted payload on the host.
 
 ## 3. Route to one focused workflow
@@ -91,4 +115,4 @@ Follow [Wrapper installers](wrapper-installers.md) for SFX, bootstrapper, nested
 
 Read [Installed state](installed-state.md) for ARP matching and association evidence. Read [VM validation](vm-validation.md) only when static parsing cannot prove visible ARP ownership, scope, architecture, silent behavior, exit codes, elevation, network payload selection, or first-run associations.
 
-Write full parser and VM output to [transient evidence](evidence.md). For manifest field placement, defaults, and sorting, use the manifest-authoring skill rather than duplicating those rules in installer-family pages.
+Write full parser and VM output to [transient evidence](evidence.md). When this analysis supports an authored package, project each conclusive result into the existing working manifest and save it before continuing; do not wait until every static and dynamic question is resolved. For manifest creation, field placement, defaults, incremental serialization, and sorting, use the manifest-authoring skill rather than duplicating those rules in installer-family pages.
