@@ -59,6 +59,9 @@ Use the detailed skills for domain work:
 - `.agents/skills/author-dumplings-task/SKILL.md` for creating or reviewing task
   configuration, release detection, state entries, shared providers, and dry-run
   manifest automation.
+- `.agents/skills/use-dumplings-functions/SKILL.md` for shared networking, file,
+  archive, content, feed, browser, HTML, and YAML helper APIs used by all three
+  domain workflows.
 
 Do not duplicate their installer-family or manifest-field rules in general
 documentation. Update the focused workflow when a newly learned rule affects

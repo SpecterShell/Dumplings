@@ -391,6 +391,13 @@ function Get-WinGetVMInstalledStateSnapshot {
   param ([Parameter(Mandatory)][string]$SnapshotPhase)
 
   $Associations = Get-VMAssociationSnapshot
+  $ARPEntries = @(Get-VMArpEntrySnapshot)
+  $Protocols = @($Associations.ProtocolAssociations)
+  $FileExtensions = @($Associations.FileExtensionAssociations)
+  if (($ARPEntries.Count + $Protocols.Count + $FileExtensions.Count) -eq 0) {
+    throw 'The installed-state collector returned no ARP, protocol, or file-extension records. This usually means the guest registry was not accessible in the current PowerShell Direct session; discard this capture and verify the guest credential and registry access.'
+  }
+
   return [pscustomobject][ordered]@{
     SchemaVersion             = 1
     Phase                     = $SnapshotPhase
@@ -402,9 +409,14 @@ function Get-WinGetVMInstalledStateSnapshot {
     OperatingSystem           = [Environment]::OSVersion.VersionString
     Is64BitOperatingSystem    = [Environment]::Is64BitOperatingSystem
     Is64BitProcess            = [Environment]::Is64BitProcess
-    ARPEntries                = @(Get-VMArpEntrySnapshot)
-    ProtocolAssociations      = @($Associations.ProtocolAssociations)
-    FileExtensionAssociations = @($Associations.FileExtensionAssociations)
+    EvidenceCounts            = [pscustomobject][ordered]@{
+      ARPEntries     = $ARPEntries.Count
+      Protocols      = $Protocols.Count
+      FileExtensions = $FileExtensions.Count
+    }
+    ARPEntries                = $ARPEntries
+    ProtocolAssociations      = $Protocols
+    FileExtensionAssociations = $FileExtensions
   }
 }
 

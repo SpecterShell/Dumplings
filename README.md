@@ -29,8 +29,8 @@ flowchart LR
 | Path | Responsibility |
 | --- | --- |
 | [`Core`](Core/README.md) | Task discovery, dependency planning, worker coordination, hooks, timeouts, and synchronization. |
-| [`Modules/PackageModule`](Modules/PackageModule/README.md) | Package task model, release helpers, installer analysis, WinGet manifest processing, messaging, and submission. |
-| [`Modules/InstallerParsers`](Modules/InstallerParsers/README.md) | Process-isolated static parsers for formats whose implementations use GPL-compatible licenses. |
+| [`Modules/PackageModule`](https://github.com/SpecterShell/Dumplings.PackageModule/blob/main/README.md) | Package task model, release helpers, installer analysis, WinGet manifest processing, messaging, and submission. |
+| [`Modules/InstallerParsers`](https://github.com/SpecterShell/Dumplings.InstallerParsers/blob/main/README.md) | Process-isolated static parsers for formats whose implementations use GPL-compatible licenses. |
 | `Tasks` | One directory per automation task, containing `Config.yaml`, `Script.ps1`, and persisted state. |
 | [`.agents/skills`](.agents/skills) | Workflow documentation for installer analysis and WinGet manifest authoring. |
 | `Utilities` | Repository maintenance and GitHub Actions support scripts. |
@@ -149,6 +149,7 @@ Use nearby tasks from the same publisher as implementation references, but verif
 - [`analyze-winget-installer`](.agents/skills/analyze-winget-installer/SKILL.md) covers static installer detection, parser routing, Apps & Features evidence, and isolated VM validation.
 - [`author-winget-manifest`](.agents/skills/author-winget-manifest/SKILL.md) covers official source discovery, manifest fields, localization, automation, validation, and submission.
 - [`author-dumplings-task`](.agents/skills/author-dumplings-task/SKILL.md) covers task creation, state comparison, source/feed patterns, manifest-update projection, shared providers, and dry-run validation.
+- [`use-dumplings-functions`](.agents/skills/use-dumplings-functions/SKILL.md) covers shared networking, temporary-file, archive, content, feed, browser, HTML, and YAML helper APIs.
 
 These workflows are the canonical detailed guidance. The READMEs intentionally focus on repository and API operation.
 

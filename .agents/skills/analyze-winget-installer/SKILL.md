@@ -3,71 +3,42 @@ name: analyze-winget-installer
 description: Analyze Windows installers for WinGet manifests and Dumplings automation. Use when Codex needs to identify EXE/MSI/MSIX/ZIP/portable installer technologies, inspect static metadata, decide InstallerType, ProductCode, UpgradeCode, Scope, InstallerSwitches, AppsAndFeaturesEntries, detect embedded MSI behavior, or plan VM-only dynamic installer testing without executing installers on the host.
 ---
 
-# Analyze WinGet Installer
+# Analyze WinGet installers
 
 ## Workflow
 
-Use this skill before writing manifest installer fields or Dumplings task parsing logic:
+1. Read [Installer analysis](references/workflows/installer-analysis.md), run `Get-WinGetInstallerAnalysis`, and select one family from its route table.
+2. Read that family's `workflow.md`. Open its linked internals page only when implementing or debugging a parser.
+3. Follow [Wrapper installers](references/workflows/wrapper-installers.md) when an outer executable selects, downloads, or launches another installer.
+4. Read [Installed state](references/workflows/installed-state.md) when ARP matching, protocols, or file extensions matter.
+5. Use [VM validation](references/workflows/vm-validation.md) only for facts static parsing cannot prove.
+6. Persist large records through [Transient evidence](references/workflows/evidence.md).
+7. Use [`$use-dumplings-functions`](../use-dumplings-functions/SKILL.md) when analysis needs shared networking, file, archive, content, feed, browser, HTML, or YAML helpers.
+8. Read [Parser development](references/parser-development/workflow.md) before changing parser code.
 
-1. Read `references/workflow.md`, run the analyzer, and use its single route table to select one focused installer-family page.
-2. Read `references/installed-state-workflow.md` when ARP matching, `Protocols`, or `FileExtensions` matter.
-3. Read `references/vm-validation-workflow.md` only for facts static parsing cannot prove.
-4. Read `references/parser-development-workflow.md` only when implementing or refactoring parser code.
+Use `winget search` before scanning a winget-pkgs checkout. Once an identifier is known, navigate directly to its manifest and Dumplings task.
 
-The focused family page owns its parser commands, manifest shapes, defaults, exceptions, examples, and implementation sources. Shared manifest field placement and ordering live in the authoring skill's `manifest-workflow.md`.
+## Safety
 
-Never execute unknown installers on the host. Prefer static parsing. Use dynamic installation only in Windows Sandbox or a Hyper-V VM with checkpoint/restore.
+Never execute an unknown installer or extracted payload on the host. Dynamic installation belongs in a checkpointed Windows Sandbox or Hyper-V VM.
 
-When resolving an existing package identifier or finding package examples, use `winget search` first. After WinGet returns an identifier, navigate directly to that package's manifest path. Do not recursively scan the complete winget-pkgs tree unless the public source and scoped direct lookup cannot provide the required evidence.
+Agents may use external static tools such as 7-Zip, NanaZip, Detect It Easy, or Exeinfo PE to investigate a format. Dumplings parsers, bridges, analyzers, tests, and CI must not invoke or depend on them. Treat their output as supporting evidence rather than the implementation or sole regression oracle.
 
-For a quick static pass inside Dumplings, call `Get-WinGetInstallerAnalysis -Path <installer>` after loading `Modules\PackageModule\Index.ps1`. The analyzer uses magic bytes and structured evidence before extensions and invokes already-loaded parsers without launching the installer. Route the resulting family through `references/workflow.md`. For JSON output, use `scripts\Analyze-WinGetInstaller.ps1 -Path <installer>`.
+Do not invent package metadata, registry values, format fields, silent switches, or installer behavior. Return unresolved facts as warnings and escalate only the affected decisions to VM validation.
 
-Agents may use external static tools such as 7-Zip, NanaZip, Detect It Easy, or Exeinfo PE to investigate or cross-check a file. Dumplings parser modules, bridges, analyzers, tests, and CI paths must not invoke or depend on those executables. Treat tool output as supporting evidence and keep installer or payload execution off the host.
+## Required result
 
-For staged Hyper-V evidence capture, use `scripts\Invoke-WinGetVMInstalledState.ps1`. It stages `Get-WinGetVMInstalledState.ps1` and captures named checkpoints but never launches the installer or application.
+Report the detected family and decisive evidence; outer and installed architecture; static metadata and visible ARP owner; scope and elevation evidence; switches, modes, exit codes, and WinGet defaults; nested payload selection; protocols and extensions when proven; unresolved warnings; and whether VM validation is required.
 
-## Required Output
+Do not author `UnsupportedOSArchitectures` at present. Do not duplicate a localized ARP identity in `AppsAndFeaturesEntries` when the corresponding locale manifest can represent it.
 
-Return installer evidence, not just a guessed `InstallerType`:
+## Implementation boundaries
 
-- Installer family and confidence level.
-- Static parser/tool used and exact metadata extracted.
-- Installer architecture and installed application architecture.
-- `ProductVersion`, `UpgradeCode`, `PackageFamilyName`, visible ARP evidence from HKLM/HKCU uninstall keys, and optional `ProductCode` evidence when useful.
-- Whether the EXE writes an EXE ARP entry, an MSI ARP entry, both, or hides one with `SystemComponent`.
-- Literal protocol and file-extension association evidence, or an explicit statement that the parser cannot prove it statically.
-- Required `InstallerSwitches`, `InstallModes`, `InstallerSuccessCodes`, `ExpectedReturnCodes`, `Scope`, `ElevationRequirement`, and `AppsAndFeaturesEntries`.
-- Which switch and mode values are WinGet defaults for the effective installer type, so the authoring step can omit redundant fields such as NSIS `/S`.
-- Unsupported-architecture evidence for selecting valid installer entries; do not turn this evidence into `UnsupportedOSArchitectures` at the moment.
-- Whether dynamic VM validation is required before manifest submission.
+Shared Apache-2.0 or MIT-compatible infrastructure belongs in PackageModule. GPL parser logic remains in InstallerParsers and crosses through the JSON child-process bridge. Keep mirrored common sources byte-identical.
 
-## Decision Rules
+Use these entry points:
 
-Use specific WinGet installer types when supported: `inno`, `nullsoft`, `burn`, `wix`, `msi`, `msix`, `appx`, `zip`, and `portable`. Use generic `exe` only when the installer is not a supported known type and silent behavior is known.
-
-For known installer types, distinguish required overrides from WinGet defaults. Do not recommend manifest keys that merely repeat the defaults. For a ZIP, apply this rule using the effective `NestedInstallerType`.
-
-When an EXE wraps an MSI, do not assume `AppsAndFeaturesEntries.InstallerType` matches manifest `InstallerType`. Model the visible ARP entry WinGet will see.
-
-When a release serves both an InstallShield or Advanced Installer EXE and a direct MSI, compare the direct MSI with the exact MSI selected by the wrapper. If version, architecture, scope, features, and visible ARP identity are equivalent, recommend the MSI only. Report any wrapper-only prerequisites, transforms, chained payloads, or custom ARP behavior that prevents this simplification.
-
-Map evidenced localized ARP `DisplayName` and `Publisher` values to `PackageName` and `Publisher` in the corresponding locale manifests. Retain them in `AppsAndFeaturesEntries` only when that locale manifest does not exist.
-
-For new packages, avoid adding `AppsAndFeaturesEntries.ProductCode` unless the package policy or an existing manifest style specifically requires it. Keep product codes as useful evidence for MSI correlation, not as a default Apps & Features field.
-
-When an Inno or NSIS installer supports both user and machine scopes, create duplicate installer entries with distinct `Scope` and custom switches such as `/CURRENTUSER` vs `/ALLUSERS` or lowercase variants, matching the installer’s actual parser or VM evidence.
-
-Block InstallShield InstallScript-only installers when no MSI can be extracted and silent install requires a response file. Response-file installation is not supported by WinGet validation for winget-pkgs.
-
-Reject an installer when VM validation stalls at the Windows Security **Would you like to install this device software?** driver-publisher consent dialog. Record the dialog and process state, then restore the checkpoint. Do not approve the prompt, pre-trust the publisher certificate, pre-stage the driver, or change driver policy to manufacture an unattended result. Follow [VM-Only Dynamic Validation Workflow](references/vm-validation-workflow.md#reject-blocking-driver-trust-prompts) for the evidence and rejection procedure.
-
-## Local Implementation Pointers
-
-Use these repository-relative sources for deeper implementation details. Upstream format references are recorded in each focused installer page and parser module header.
-
-- Dumplings parser bridge: `Modules\PackageModule\Libraries\Infrastructure\InstallerBridge.psm1`
-- Dumplings shared core: `Modules\PackageModule\Libraries\Infrastructure\Runtime.psm1`, `Binary.psm1`, `Archive.psm1`, `PE.psm1`, and `InstallerEvidence.psm1`
-- Portable analysis: `Modules\PackageModule\Libraries\Infrastructure\PEArchitecture.psm1` and `PEDependency.psm1`
-- Dumplings parser wrappers: `Modules\PackageModule\Libraries\Installers\*.psm1`
-- GPL parser module: `Modules\InstallerParsers\Cli.ps1`, `Libraries\Installers\NSIS.psm1`, `Inno.psm1`, `AdvancedInstaller.psm1`, and `QtInstallerFramework.psm1`
-- [WinGet manifest examples](https://github.com/microsoft/winget-pkgs/tree/master/manifests): search for installer family comments and `AppsAndFeaturesEntries`.
+- `Modules/PackageModule/Libraries/Infrastructure/InstallerBridge.psm1`
+- `Modules/PackageModule/Libraries/Infrastructure/Runtime.psm1`, `Binary.psm1`, `Archive.psm1`, and `PE.psm1`
+- `Modules/PackageModule/Libraries/Installers/*.psm1`
+- `Modules/InstallerParsers/Cli.ps1` and `Modules/InstallerParsers/Libraries/Installers/*.psm1`

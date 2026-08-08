@@ -3,118 +3,42 @@ name: author-dumplings-task
 description: Create, review, debug, or refactor Dumplings automation under Tasks, including Config.yaml, Script.ps1, state detection, installer and locale entries, GitHub release asset selection, HTML pages, redirects, Sparkle/electron-updater/Squirrel feeds, versionless URLs tracked by headers and hashes, shared provider tasks, and dry-run validation. Use when Codex needs to automate an existing WinGet package or explain how PackageTask projects task state into updated manifests.
 ---
 
-# Author Dumplings Task
+# Author Dumplings tasks
 
 ## Workflow
 
-1. Confirm the package already exists with `winget search` and inspect its latest
-   manifests. Dumplings updates an existing reference manifest; it is not a
-   substitute for authoring the first package version.
-2. Read [Task Workflow](references/task-workflow.md) before creating
-   `Config.yaml`, `Script.ps1`, or initial state.
-3. Use [Common Functions For Task Scripts](references/common-functions.md) to
-   choose PackageModule, PowerHTML, and powershell-yaml helpers. Do not infer a
-   function contract from a legacy task call.
-4. Read [Manifest Update Contract](references/manifest-update-contract.md) before
-   choosing installer selectors, `Query`, locale entries, cached files, or
-   `WinGetReplaceMode`.
-5. Read only the applicable recipe in
-   [Installer Source Patterns](references/installer-source-patterns.md) and
-   [Release Metadata Patterns](references/release-metadata-patterns.md). Use
-   source behavior, not a similar package name, to choose a template.
-6. Use `$author-winget-manifest` for package-source legitimacy, manifest-field,
-   locale, and submission policy. Use `$analyze-winget-installer` when installer
-   metadata cannot be established without static parsing.
-7. Run the task read-only, seed or refresh state only after reviewing the result,
-   then exercise dry manifest generation.
+1. Confirm the package with `winget search`; Dumplings updates an existing manifest rather than authoring its first version.
+2. Read [Task lifecycle](references/task/lifecycle.md), [state, versions, and cache](references/task/state-version-cache.md), and [dependencies and providers](references/task/dependencies-and-providers.md).
+3. Read the [manifest update contract](references/manifest/update-contract.md) before selecting installers, locales, queries, or replace mode.
+4. Select the relevant source workflow: [source selection](references/sources/selection.md), [pages and releases](references/sources/pages-and-releases.md), [update feeds](references/sources/update-feeds.md), [wrappers and providers](references/sources/wrappers-and-providers.md), or [versionless sources](references/sources/versionless.md).
+5. Select the relevant release workflow: [release metadata](references/release/workflow.md), [HTML and Markdown](references/release/html-markdown.md), or [feeds and line-oriented text](references/release/feeds-text.md).
+6. Load [`$use-dumplings-functions`](../use-dumplings-functions/SKILL.md) before writing `Script.ps1`, then read only the networking, file, content, feed, browser, or external-module reference required by the task.
+7. Find current examples in the [task example index](references/example-index.md). Open each named task directly and verify its assumptions.
+8. Persist large records through [Transient evidence](../analyze-winget-installer/references/workflows/evidence.md).
 
-## Required Design
+## Design rules
 
-- Keep package-specific network discovery in `Script.ps1`; keep reusable feed,
-  text, installer, and manifest mechanics in PackageModule.
-- Decode web responses with `Read-ResponseContent` when their text may use a
-  BOM or a non-default encoding. Parse the returned string rather than reading
-  `RawContentStream` with an assumed encoding.
-- Create a shared vendor provider when at least three tasks fetch the same
-  upstream source. Keep retrieval local for one or two consumers, and declare
-  the provider through `DependsOn` for every shared consumer.
-- Populate `$this.CurrentState.Version` and every required installer URL before
-  calling `$this.Check()`. Call `Check()` once in the ordinary lifecycle.
-- Cross-check a captured auto-update feed, API, or browser-discovered endpoint
-  against the official download page for the same product, channel,
-  architecture, and locale. If `[ChunkVersion]` shows that the captured source
-  is older, investigate staged rollout or variant differences. When neither
-  explains the mismatch, skip that stale source in `Script.ps1` and automate
-  the current download page or its authoritative backing source instead.
-- Use `[ordered]` installer and locale dictionaries so state and diagnostics are
-  deterministic.
-- Select the full installer intended for a fresh installation. Reject updater,
-  delta, auto-update, and electron-builder portable artifacts unless the WinGet
-  package intentionally represents that artifact. Verify derived full-installer
-  URLs before recording them.
-- Filter release assets by every distinguishing fact exposed by the source and
-  require an unambiguous result. Map explicit source architecture names such as
-  `x86_64`, `amd64`, and `aarch64` to WinGet architecture values. Treat bare
-  `arm` and `win32` as candidate filters only, then inspect the installer or
-  nested binaries before assigning `Architecture`; `win64` identifies x64.
-- Cache a downloaded installer in `$this.InstallerFiles[$InstallerUrl]` when the
-  same file is used for version or hash detection. PackageTask disposes cached
-  files and manifest generation can reuse them for static analysis.
-- Use task-side `7z.exe` extraction only as a fallback for a custom EXE wrapper
-  that PackageModule cannot parse. Select the exact nested MSI, call
-  `Get-MsiInstallerInfo` once, and reuse its result. See
-  [Custom EXE Wrappers With Nested MSI](references/installer-source-patterns.md#custom-exe-wrappers-with-nested-msi).
-  This task-specific fallback is not a reusable installer parser pattern. Never
-  move the external executable call into PackageModule, InstallerParsers, an
-  analyzer, a parser test, or another CI-critical parser path.
-- Let manifest generation download, hash, classify, and parse installers. Do not
-  repeat ProductCode, UpgradeCode, Apps & Features, or association parsing in the
-  task unless the source exposes authoritative data that the parser cannot.
-- Keep required installer downloads and `RealVersion` parsing outside
-  recoverable `try`/`catch` blocks. Handle `ReleaseTime`, `ReleaseNotes`, and
-  `ReleaseNotesUrl` only after a possible change is established, with each
-  optional source isolated in its own `try`/`catch`.
-- Do not assign `CurrentState.ReleaseTime` from an installer response's
-  `Last-Modified` header. Manifest updating already uses a valid header as the
-  fallback `ReleaseDate` when neither task state nor the installer entry supplies
-  one. A task may still store `LastModified` solely as a last-resort change
-  validator for a versionless URL.
-- Replace an existing `ReleaseNotesUrl` with a trustworthy general changelog URL
-  or a null locale entry before fallible version-specific logic. Preserve
-  release-note source text through the project's HTML or Markdown conversion
-  pipeline rather than summarizing it.
-- Use response validators only as a last resort when no official API, feed,
-  page, redirect, or browser-accessible source exposes the version and it must
-  be extracted from the downloaded installer. Prefer a content-hash or checksum
-  header, then `ETag`, `Last-Modified`, and `Content-Length`. Treat the value as
-  a download prefilter, never as the package version or manifest hash, and
-  confirm changed content with SHA256.
-- Never execute a downloaded installer on the host. Dynamic checks belong in the
-  isolated VM workflow.
+Keep package-specific discovery in `Script.ps1`; keep reusable mechanics in PackageModule. Create a shared provider when at least three tasks fetch the same source and declare every dependency in `Config.yaml`.
 
-## Review Existing Tasks Carefully
+Populate the current version and installer URLs before calling `Check()` once. Keep required installer downloads and `RealVersion` parsing outside recoverable `try`/`catch` blocks. Isolate optional release metadata sources in separate `try`/`catch` blocks.
 
-Task scripts are production evidence, not immutable templates. Reuse the part
-named by the example index and re-check it against current infrastructure.
-Legacy tasks may manually set hashes, call individual installer readers, invoke
-`7z.exe`, omit `$this.InstallerFiles`, or select artifact combinations that no
-longer match current authoring policy. Do not copy those details into new tasks.
+Select full installers, not updater, delta, or electron-builder portable artifacts. Require unambiguous asset filters and verify architecture from package or binary evidence. Cache reused downloads in `$this.InstallerFiles`.
+
+Let manifest generation download, classify, hash, and parse installers. Do not copy legacy individual `Read-Product*` sequences into new tasks. External `7z.exe` extraction is a task-local last resort for an unsupported custom wrapper and must never become parser or CI infrastructure.
+
+Use response validators only when no official page, feed, API, redirect, or browser source exposes the version. Prefer checksum/hash headers, then `ETag`, `Last-Modified`, and `Content-Length`, and confirm changed content with SHA256. Do not derive `ReleaseTime` from `Last-Modified`; the framework handles that fallback.
+
+Set `ReleaseNotesUrl` only to a human-readable HTTP(S), text, or Markdown source. An API, JSON response, XML appcast, or other machine feed may supply content but not the public URL.
+
+Never execute an installer on the host. Use `$analyze-winget-installer` for static parsing and its VM workflow for unresolved behavior.
 
 ## Validation
 
-Run from the Dumplings root:
-
 ```powershell
-# Discover the current state without writes or submission.
 .\Core\Index.ps1 -Name Vendor.Package -ThrottleLimit 1 -PassThru
-
-# Generate and validate updated manifests without opening a pull request.
 .\Core\Index.ps1 -Name Vendor.Package -Force -EnableSubmit -Dry -ThrottleLimit 1
-
 Invoke-ScriptAnalyzer .\Tasks\Vendor.Package\Script.ps1
 git diff --check
 ```
 
-For a new task, review the read-only `New` result, then use `-EnableWrite` to
-create the timestamped state log and `State.yaml` link. Do not enable real
-messaging or submission during initial validation.
+Review a new task's read-only result before enabling state writes. Do not enable real submission or messaging during initial validation.

@@ -98,6 +98,20 @@ function Copy-DumplingsCollectorToVM {
   return $GuestScriptPath
 }
 
+function ConvertFrom-DumplingsVMSnapshotJson {
+  param ([Parameter(Mandatory)][AllowEmptyString()][string]$Json)
+
+  try { $Snapshot = $Json | ConvertFrom-Json -ErrorAction Stop } catch { throw "The VM collector returned invalid JSON: $($_.Exception.Message)" }
+  foreach ($Property in @('SchemaVersion', 'Phase', 'ARPEntries', 'ProtocolAssociations', 'FileExtensionAssociations')) {
+    if (-not $Snapshot.PSObject.Properties[$Property]) { throw "The VM collector result is missing required property '$Property'." }
+  }
+  $EvidenceCount = @($Snapshot.ARPEntries).Count + @($Snapshot.ProtocolAssociations).Count + @($Snapshot.FileExtensionAssociations).Count
+  if ($EvidenceCount -eq 0) {
+    throw 'The VM collector returned an empty installed-state snapshot. Discard it and verify the guest credential, PowerShell Direct session, and registry access before continuing validation.'
+  }
+  return $Snapshot
+}
+
 if ($Action -eq 'Compare') {
   if ([string]::IsNullOrWhiteSpace($BeforePath) -or [string]::IsNullOrWhiteSpace($AfterPath)) {
     throw 'BeforePath and AfterPath are required for Compare.'
@@ -125,10 +139,11 @@ $Json = Invoke-Command -VMName $VMName -Credential $VMCredential -ScriptBlock {
   & $CollectorPath -Action Capture -Phase $SnapshotPhase -OutputPath $SnapshotPath
   Get-Content -LiteralPath $SnapshotPath -Raw
 } -ArgumentList $GuestScriptPath, $Phase, $GuestOutputPath
+$Snapshot = ConvertFrom-DumplingsVMSnapshotJson -Json ([string]$Json)
 
 $null = [IO.Directory]::CreateDirectory([IO.Path]::GetFullPath($OutputDirectory))
 $HostOutputPath = Join-Path $OutputDirectory "$Phase.json"
-[IO.File]::WriteAllText([IO.Path]::GetFullPath($HostOutputPath), [string]$Json, (New-Object Text.UTF8Encoding($false)))
+[IO.File]::WriteAllText([IO.Path]::GetFullPath($HostOutputPath), ($Snapshot | ConvertTo-Json -Depth 30), (New-Object Text.UTF8Encoding($false)))
 [pscustomobject]@{
   VMName          = $VMName
   Phase           = $Phase
