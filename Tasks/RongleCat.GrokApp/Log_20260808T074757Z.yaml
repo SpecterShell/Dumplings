@@ -1,0 +1,58 @@
+Version: 0.2.11
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.11/Grok_0.2.11_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.11
+    Highlight: Desktop UX polish batch — native Copy image (Feishu-pasteable), per-session composer drafts, closable side pane + titlebar maximize, Mark as unread, and DeepSeek balance in settings/sidebar.
+    中文 · 亮点： 桌面体验补丁包：原生复制图片（可贴飞书）、按会话保留输入草稿、非最大化可关侧栏 + 标题栏双击最大化、标为未读，以及 DeepSeek 余额查询。
+    Added
+    - DeepSeek balance probe: Host providers_balance calls GET https://api.deepseek.com/user/balance (Bearer key; amounts stay strings). Settings → Custom providers shows Check balance; active DeepSeek route shows 110.00 CNY on the sidebar footer and in UserMenu (5 min session cache, no invented zeros). Other providers unsupported for now (#534).
+    - Mark as unread: Session menu toggle uses existing unread storage; hold while the chat stays open so focus auto-clear does not wipe it instantly (#532).
+    中文 · 新增
+    - DeepSeek 余额查询：Host providers_balance 请求官方 /user/balance；设置页可查完整明细，激活 DeepSeek 时侧栏左下角与个人菜单显示 110.00 CNY 一行（会话内 5 分钟缓存，失败不编造 0）（#534）。
+    - 标为未读：会话菜单切换未读标记；当前打开会话保持至离开再进入（#532）。
+    Fixed
+    - Copy image to OS clipboard (Tauri): Chat / attachment / lightbox “Copy image” prefers Host clipboard_write_image_path for local files (disk → arboard, no WebView fetch), then clipboard_write_image for URLs, then browser ClipboardItem. Fixes silent no-ops when pasting into Feishu and other apps (#535, #536).
+    - Per-session composer drafts: Switching threads no longer drops a half-typed follow-up. Each real session keeps text / attachments / goal mode in localStorage (grok.composerSessionDrafts); restore on open, debounced persist while typing, clear on send or explicit clear. New-chat still uses the existing per-project buffer (#533).
+    - Right side pane closable (non-maximized): Sync-clamp aside width before paint, keep main top toggle while open, re-clamp window into the work area after grow, protect side chrome under narrow width (#532).
+    - Titlebar double-click maximize (mac): Enable maximize on all desktop hosts; mousedown(detail=2) fallback when drag regions swallow dblclick (#532).
+    中文 · 修复
+    - 复制图片到系统剪贴板（桌面端）：聊天/附件/灯箱「复制图片」本地文件优先 Host clipboard_write_image_path（读盘 → arboard，不经 WebView fetch），URL 再走 clipboard_write_image，最后才回退浏览器 ClipboardItem；修复粘贴到飞书等应用为空（#535, #536）。
+    - 按线程保留输入框草稿：切换会话不再丢掉半截 follow-up。真实线程的文字/附件/Goal 模式写入 localStorage（grok.composerSessionDrafts），打开时恢复、输入防抖持久化、发送或清空时清除；新对话页仍用原有按项目草稿（#533）。
+    - 非最大化时右侧栏可关闭：打开前同步钳位宽度，保留主顶栏切换，增长后回钳到工作区，窄宽度下保护侧栏控件（#532）。
+    - 标题栏双击最大化（mac）：全桌面端启用；拖拽区吞掉 dblclick 时用 mousedown 回退（#532）。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.11
+    Highlight: Desktop UX polish batch — native Copy image (Feishu-pasteable), per-session composer drafts, closable side pane + titlebar maximize, Mark as unread, and DeepSeek balance in settings/sidebar.
+    中文 · 亮点： 桌面体验补丁包：原生复制图片（可贴飞书）、按会话保留输入草稿、非最大化可关侧栏 + 标题栏双击最大化、标为未读，以及 DeepSeek 余额查询。
+    Added
+    - DeepSeek balance probe: Host providers_balance calls GET https://api.deepseek.com/user/balance (Bearer key; amounts stay strings). Settings → Custom providers shows Check balance; active DeepSeek route shows 110.00 CNY on the sidebar footer and in UserMenu (5 min session cache, no invented zeros). Other providers unsupported for now (#534).
+    - Mark as unread: Session menu toggle uses existing unread storage; hold while the chat stays open so focus auto-clear does not wipe it instantly (#532).
+    中文 · 新增
+    - DeepSeek 余额查询：Host providers_balance 请求官方 /user/balance；设置页可查完整明细，激活 DeepSeek 时侧栏左下角与个人菜单显示 110.00 CNY 一行（会话内 5 分钟缓存，失败不编造 0）（#534）。
+    - 标为未读：会话菜单切换未读标记；当前打开会话保持至离开再进入（#532）。
+    Fixed
+    - Copy image to OS clipboard (Tauri): Chat / attachment / lightbox “Copy image” prefers Host clipboard_write_image_path for local files (disk → arboard, no WebView fetch), then clipboard_write_image for URLs, then browser ClipboardItem. Fixes silent no-ops when pasting into Feishu and other apps (#535, #536).
+    - Per-session composer drafts: Switching threads no longer drops a half-typed follow-up. Each real session keeps text / attachments / goal mode in localStorage (grok.composerSessionDrafts); restore on open, debounced persist while typing, clear on send or explicit clear. New-chat still uses the existing per-project buffer (#533).
+    - Right side pane closable (non-maximized): Sync-clamp aside width before paint, keep main top toggle while open, re-clamp window into the work area after grow, protect side chrome under narrow width (#532).
+    - Titlebar double-click maximize (mac): Enable maximize on all desktop hosts; mousedown(detail=2) fallback when drag regions swallow dblclick (#532).
+    中文 · 修复
+    - 复制图片到系统剪贴板（桌面端）：聊天/附件/灯箱「复制图片」本地文件优先 Host clipboard_write_image_path（读盘 → arboard，不经 WebView fetch），URL 再走 clipboard_write_image，最后才回退浏览器 ClipboardItem；修复粘贴到飞书等应用为空（#535, #536）。
+    - 按线程保留输入框草稿：切换会话不再丢掉半截 follow-up。真实线程的文字/附件/Goal 模式写入 localStorage（grok.composerSessionDrafts），打开时恢复、输入防抖持久化、发送或清空时清除；新对话页仍用原有按项目草稿（#533）。
+    - 非最大化时右侧栏可关闭：打开前同步钳位宽度，保留主顶栏切换，增长后回钳到工作区，窄宽度下保护侧栏控件（#532）。
+    - 标题栏双击最大化（mac）：全桌面端启用；拖拽区吞掉 dblclick 时用 mousedown 回退（#532）。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.11
+ReleaseTime: 2026-08-07T16:22:56.0000000Z
