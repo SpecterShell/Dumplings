@@ -5,7 +5,7 @@ $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/defisym/FFmpeg-B
 $this.CurrentState.Version = $Object1.tag_name -creplace '^autobuild-'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') -and $_.name.Contains('-gpl') -and -not $_.name.Contains('shared') -and $_.name.Contains('N-') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') -and $_.name.Contains('-gpl') -and -not $_.name.Contains('7.1') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
   'Updated' {
     foreach ($License in @('GPL', 'LGPL')) {
       foreach ($Shared in @($false, $true)) {
-        foreach ($Branch in @('master', '7.1', '8.1')) {
+        foreach ($Branch in @('7.1', '8.1')) {
           $this.Config.WinGetIdentifier = "Defisym.FFmpeg.${License}$($Shared ? '.Shared' : '')$($Branch -eq 'master' ? '' : ".${Branch}")"
 
           $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') -and $_.name.Contains("-$($License.ToLower())") -and ($Shared -eq $_.name.Contains('shared')) -and ($Branch -eq 'master' ? $_.name.Contains('N-') : $_.name.Contains("n${Branch}")) }, 'First')[0]
