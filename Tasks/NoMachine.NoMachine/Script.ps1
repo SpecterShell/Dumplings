@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://downloads.nomachine.com/download/?id=3&platform=windows' -WebSession $Global:DumplingsStorage.NoMachineWebSession
+$Object1 = Invoke-WebRequest -Uri 'https://downloads.nomachine.com/download/?id=41&platform=windows' -WebSession $Global:DumplingsStorage.NoMachineWebSession
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
