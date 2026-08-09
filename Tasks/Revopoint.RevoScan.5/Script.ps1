@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.RevopointDownloadPage
-$Object2 = $Object1.SelectSingleNode('//*[@class="SSIC__content" and contains(., "Revo Scan 5") and not(contains(., "MetroX"))]//div[@class="SSIC__supported-os-card" and @data-os="os-win"]')
+$Object2 = $Object1.SelectSingleNode('//*[@id="rs5"]//div[@class="SDNI__os-list"]/div[@data-os="win"]')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -14,7 +14,7 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode('.//*[contains(@class, "SDNI__os-name-updated-time")]').InnerText, '(\d{1,2}\W+[a-zA-Z]+\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
       if ($Global:DumplingsStorage.Contains('RevoScan5') -and $Global:DumplingsStorage.RevoScan5.Contains($ShortVersion)) {
         # ReleaseNotes (en-US)
