@@ -25,12 +25,20 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $null
+      }
+
       $Object4 = $Object2.driver.body.DriverDetails.Files.Where({ $_.URL.EndsWith('.txt') })[0]
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object4.URL
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object4.URL
       }
     } catch {
       $_ | Out-Host
