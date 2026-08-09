@@ -1,0 +1,335 @@
+Version: 1.0.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v1.0.0/zerolaunch-rs_1.0.0_x64_en-US.msi
+- Architecture: arm64
+  InstallerUrl: https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v1.0.0/zerolaunch-rs_1.0.0_arm64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🤖 更新摘要
+    🧑‍🔧 此更新摘要由 AI 基于 commit 历史自动生成
+    一句话版本定位：本版本以插件化架构重构为主线，统一配置与命令通道，并引入多项用户可见的新功能。
+    用户可见亮点：
+    - 新增多引擎翻译插件，支持按输入语气翻译。
+    - 新增书签详情预览面板，书签管理更直观。
+    - 设置页全面升级：搜索管道改为列表-详情分栏，支持背景图片、图标大小、窗口边框与阴影等外观配置。
+    - 结果列表单击即可执行，搜索栏右键菜单可刷新数据库，检测到的书签默认不启用。
+    稳定性与体验改进：修复设置页不刷新、窗口焦点丢失、热键配置不生效、异步查询竞态等多项问题，并优化窗口提升与清除背景图片等体验。
+    开发者备注：本次重构将核心能力拆分为 Plugin SDK 与 ConfigManager，统一了插件注册与生命周期管理，属架构级变化。
+    📋 完整更新记录（按类型分类）
+    ✨ 新功能
+    - feat: 实现了插件系统框架 (abc2e53) @ghost-him
+    - feat: 初步设计了配置系统的结构 (617838e) @ghost-him
+    - feat: 新增配置动作机制，支持插件在设置面板中声明和执行辅助操作 (fdf4974) @ghost-him
+    - feat: 实现 ConfigManager 统一配置管理系统 (8aa46d9) @ghost-him
+    - feat: 初步设计并实现 plugin sdk (4e512c9) @ghost-him
+    - feat(sdk): 实现 Plugin SDK 的 PathResolver 迁移 (1f4dca6) @ghost-him
+    - feat(sdk): 迁移应用(windows 下为 uwp 应用)枚举与启动逻辑至 SDK 层 (eeab36e) @ghost-him
+    - feat(sdk): 扩展 ShellExecutor 新增 shell_execute_command，重构 CommandExecutor 委托 PluginHandle (acb8e0a) @ghost-him
+    - feat(sdk): 完成 Plugin SDK 三项改进：添加 LnkResolver、ResourceLoader，完成 Plugin::init() 整合 (bdb0030) @ghost-him
+    - feat: 完成 StorageService 的 SDK 重构，统一平台存储接口 (ba9044d) @ghost-him
+    - feat: 为快捷键监听模块添加配置项，统一核心程序配置项保存的位置 (7965738) @ghost-him
+    - feat(sdk): 添加 TimerManager 定时器服务 (7cc4abd) @ghost-him
+    - feat: 初步设计了前端的结构与需求文档 (4dfc1b4) @ghost-him
+    - feat: phase 4 - 前端插件系统与端到端 CalculatorPlugin (839233e) @ghost-him
+    - feat: 优化了设置页面的显示 (bae30bb) @ghost-him
+    - feat: 优化了搜索页面的显示效果 (64cbfd7) @ghost-him
+    - feat: 为窗口添加了边框，修复了窗口阴影显示的问题 (05db346) @ghost-him
+    - feat: 添加了相关的外观配置项 (dd0ecd2) @ghost-him
+    - feat: 添加 Image SettingType，同时支持相应的后端与前端的 schema 处理逻辑 (f7a3ed5) @ghost-him
+    - feat: 支持通过 CLI 来调用 zerolaunch (e7aea9d) @ghost-him
+    - feat(bookmark): 新增书签详情预览面板 (e36053d) @ghost-him
+    - feat(config): 新增 GeneralConfigComponent 通用设置组件 (0f74cdf) @ghost-him
+    - feat: 支持唤醒时保持插件面板状态，新增 reset_session_on_wake 配置 (5b72119) @ghost-him
+    - feat: 内置插件自动注册 + Plugin Inspector 调试面板 (8cc89ad) @ghost-him
+    - feat(third-party): 第三方插件运行时支持 (f0dc195) @ghost-him
+    - feat(api): 资源 API 路径遍历防护 + resource_put 方法 (0218af2) @ghost-him
+    - feat(optimize-rules): 新增 Agent 0 — Paths Frontmatter 覆盖分析 (00700f0) @ghost-him
+    - feat(code-review): 新增项目专属多 agent 并行代码审查技能 (b62868d) @ghost-him
+    - feat(ui): 将结果列表由双击执行改为单击执行 (46dbd39) @ghost-him
+    - feat: 添加更多日志信息 (9b892d5) @ghost-him
+    - feat(tauri): 引入内置命令系统，托盘菜单重构为复用 AppCommand 通道 (038d934) @ghost-him
+    - feat(src-tauri): 为 Configurable 添加优先级排序，重构插件注册类型 (5991971) @ghost-him
+    - feat: 优化了第三方插件的日志系统 (cdb2549) @ghost-him
+    - feat(ui): 搜索栏右键菜单增加 刷新数据库 选项 (c87a04f) @ghost-him
+    - feat: 更改探测出来的书签的默认启用状态为 false (25651bf) @ghost-him
+    - feat(settings): 用列表-详情分栏布局替换搜索管道的垂直卡片布局 (1d95886) @ghost-him
+    - feat(plugin-system): 为 Configurable 组件新增 description 字段并在设置页展示 (4bd1838) @ghost-him
+    - feat: 添加 APPEND_SYSTEM.md 为项目优化 omp 的 agent 能力 (9d2f2ad) @ghost-him
+    - feat(sdk): 游戏模式启用/禁用时自动管理全局快捷键 (9431cda) @ghost-him
+    - feat(src-tauri): 新增 KeywordInjector 领域 trait 和别名注入内置插件 (1a14788) @ghost-him
+    - feat(ui): search table array 组件自动加载候选项并防止保存无效条目 (4d79319) @ghost-him
+    - feat(plugin-api): 将 Configurable trait 的配置动作方法迁移为 async (4b00e45) @ghost-him
+    - feat(config): 默认开启「跟随鼠标显示器」设置 (ed1470e) @ghost-him
+    - feat(plugin-system): 新增搜索结果固定偏移量配置系统 (99ff03e) @ghost-him
+    - feat: 优化了 summarize-changes SKILL (0939aa2) @ghost-him
+    - feat(frontend): 引入 lucide-vue-next 统一图标系统，迁移全部手写 SVG (2b0ac6c) @ghost-him
+    - feat: 在退出时，会先主动卸载快捷键 (e649730) @ghost-him
+    - feat(omp): 新增 add-rule 技能，支持将编码约束沉淀为 TTSR 规则 (8ac4460) @ghost-him
+    - feat(ui): 搜索结果项支持显示/隐藏副标题开关 (0573c2e) @ghost-him
+    - feat: 新增图标覆盖配置组件，扩展 schema 系统支持瞬态字段和 fieldMapping (47e577d) @ghost-him
+    - feat(cli): 基于 Unicode 显示宽度重构表格输出，修复终端控制字符与中文对齐问题 (12250cb) @ghost-him
+    - feat: 多引擎翻译插件 (396572f) @1gcat
+    - feat(plugin-api): 将 PanelInteraction 提取为独立 trait 方法，新增独立 IPC 查询通道 (9196846) @ghost-him
+    - feat(translator): 优化翻译提示词，让模型支持根据输入语气翻译 (97b6ef9) @ghost-him
+    - feat: 行内插件 Enter 确认改为显式协议标志并重构手动模式 (ea527b5) @ghost-him
+    - feat(src-ui): 即时模式翻译查询发出时提示已开始并加快默认防抖 (68f42e4) @ghost-him
+    - feat(src-ui): 翻译面板接入 i18n 支持中英文界面切换 (72d3745) @ghost-him
+    - feat(clipboard): 新增剪贴板能力域并统一面板复制到后端执行 (51793f7) @ghost-him
+    - feat(plugin): 厂商预设改为可编辑持久化设置并加固查询通道隔离 (fd90637) @ghost-him
+    - feat(installation-monitor): 补全安装监控与定时刷新链路 (323f2c0) @ghost-him
+    - feat(plugins): 统一插件管理页并让插件启停真实生效于触发词路由 (76b58c1) @ghost-him
+    - feat(settings): 无配置项的组件显示空态提示而非空白区域 (56d7fbd) @ghost-him
+    - feat(plugins): 关闭第三方插件安装与加载入口并提示暂不支持 (1640787) @ghost-him
+    - feat(i18n): 补齐繁体中文界面语言并修复切换不生效 (372f17a) @ghost-him
+    - feat(settings): 搜索表格恢复图标列并修正列标题为中文 (13615fe) @ghost-him
+    🐛 Bug 修复
+    - fix: 补充 route_confirm 中 ScoreBooster::record() 调用并简化接口签名 (4a55a24) @ghost-him
+    - fix: 将未注册到管理器的插件注册进来 (d48b2f5) @ghost-him
+    - fix: 补全 HostApi 初始化缺失的必需组件 (e7765a6) @ghost-him
+    - fix: 修复异步上下文中嵌套 block_on 导致的 panic (803fa5e) @ghost-him
+    - fix: 修复设置页组件不显示、权限缺失、useNotification 位置错误、同步命令 panic (7261542) @ghost-him
+    - fix: 将防抖机制去除 (ef3a215) @ghost-him
+    - fix: 修复快速输入时加载闪烁 (bc7ac4a) @ghost-him
+    - fix: 修复了空闲态搜索栏无底部圆角的问题，将操作按钮从结果项移到底栏 (e14a1db) @ghost-him
+    - fix: 修复了窗口显示的问题 (bd9d56a) @ghost-him
+    - fix: 修复了 tauri 权限的问题 (708ad52) @ghost-him
+    - fix: 修复了图标显示的问题 (374d77f) @ghost-him
+    - fix: 修复了搜索页面的多项 bug (957f341) @ghost-him
+    - fix: 修复 doConfirm 后窗口未隐藏、搜索栏未同步 store 及列表高度计算缺失 padding (af4ec61) @ghost-him
+    - fix: 修复了设置页面无法更新的 bug，修复了搜索栏字体显示被裁剪的 bug (d056445) @ghost-him
+    - fix: 增加 tags_ui 类型校验并在 ObjectTableArray 中添加路径浏览按钮 (c13c8de) @ghost-him
+    - fix: 在 hostapi 与 pluginhandle 之间共享 storage rwlock (29cdf7f) @ghost-him
+    - fix: 修复了设置页面更新后，搜索页面无更新的 bug (a7d936e) @ghost-him
+    - fix: 将 rename_all 替换为字段级 rename，修复 enum variant 字段名泄露 snake_case 的 bug (5b8c5db) @ghost-him
+    - fix: 修复数个 bug (8d28fc3) @ghost-him
+    - fix: 删除旧系统的代码 (afb6cca) @ghost-him
+    - fix(config): 统一配置项 key 为 snake_case (f5e29d2) @ghost-him
+    - fix: 规范化命名 (1bf888d) @ghost-him
+    - fix: 修复潜在的 bug (d8a53c1) @ghost-him
+    - fix: 修复 code review 发现的 5 个问题 (454a38a) @ghost-him
+    - fix: 修正代码注释的问题 (633e005) @ghost-him
+    - fix: 修正了 com 库初始化的问题 (ad33b0d) @ghost-him
+    - fix: 修复潜在 bug (dd7bcc3) @ghost-him
+    - fix: 修复潜在 bug (7ae63a6) @ghost-him
+    - fix: 修复参数面板自动聚焦失效与 Enter 键跳转逻辑 (7ad6a0a) @ghost-him
+    - fix: 修复小 bug (f01578d) @ghost-him
+    - fix: 修复小 bug (588f59f) @ghost-him
+    - fix: 修复小 bug (0b1a94d) @ghost-him
+    - fix: 修复多个潜在的 bug (d8d1763) @ghost-him
+    - fix: 添加更多调试信息 (a9df9a2) @ghost-him
+    - fix: 删除了不应该被跟踪的文件 (7770938) @ghost-him
+    - fix(logging): 轮转日志文件名以 .log 结尾而非日期结尾 (252e87b) @ghost-him
+    - fix(plugin-host): 修复第三方插件加载的多个缺陷 (b1125b4) @ghost-him
+    - fix(plugin_system): uninstall 后缺失 refresh 调用，导致缓存残留已卸载插件的候选项 (8650ec6) @ghost-him
+    - fix(cli-server): 将 axum 路由参数从 :param 语法迁移到 语法 (b9b5551) @ghost-him
+    - fix: 修复前端与后端对应不上的硬编码问题，添加更多日志 (cc33269) @ghost-him
+    - fix(tauri): 补充 CSP 中缺失的 style-src 和 font-src 指令 (4869e2d) @ghost-him
+    - fix(tauri): 修复双 layer 下 trace_id 日志重复输出问题 (0136e8c) @ghost-him
+    - fix(plugin-system): 修复 PluginHostManager 崩溃重启后原始 DashMap 未更新的 bug (f516d2d) @ghost-him
+    - fix(plugin-system): 修复插件重启循环 DashMap 守卫跨 await 新增优先级支持 (21c892b) @ghost-him
+    - fix(plugin-host): 增强子进程关闭兜底、安全校验与字段命名 (361420d) @ghost-him
+    - fix(plugin-host): 修复 shutdown 中 TOCTOU 竞争和 PID 复用风险 (bf116b5) @ghost-him
+    - fix(frontend): 右键菜单智能定位，避免溢出窗口边界 (b7ad4e1) @ghost-him
+    - fix: 优化了 summarize-changes skill (f580bde) @ghost-him
+    - fix(ci): 修复手动触发 release 时指定不存在的 tag 导致 changelog 404 (663300c) @ghost-him
+    - fix(Footer): 移除 .is-default 常驻蓝色样式，默认 action 失焦后正确显示灰色 (aa20b38) @ghost-him
+    - fix(ui): 搜索栏为空时 ESC 直接隐藏窗口 (6388599) @ghost-him
+    - fix(frontend-plugin): 修正在 production 构建中 import.meta.glob 的 @ 别名不生效导致内置插件面板未被包含的问题 (298ca46) @ghost-him
+    - fix(src-tauri): 修复热键配置反序列化类型不匹配导致修改后不生效的问题 (e82016b) @ghost-him
+    - fix(cli): 修复 CLI 输出中的 UTF-8 panic、控制序列注入、插件状态列及前端模板过滤问题 (f0c8ffa) @ghost-him
+    - fix(core): 在 register() 中预置 schema 默认值，消除零值冲突 (7795d74) @ghost-him
+    - fix(core): 修复配置系统启动校验与持久化的时序及可靠性问题 (b86eb9f) @ghost-him
+    - fix(plugin): 剔除冗余 enabled 字段并阻止注册失败组件进入前端搜索 (ad5458e) @ghost-him
+    - fix(src-tauri): 路由确定插件面板时即时推送交互策略避免慢查询期间防抖失效 (fe0193d) @ghost-him
+    - fix(src-tauri): 丢弃过期查询的结果与副作用写入避免异步竞态 (b42ea0f) @ghost-him
+    - fix(src-tauri): 翻译语言码改为 @ 前缀显式标记，避免英文首词被误判 (a35f53f) @ghost-him
+    - fix(search): 新查询与隐藏窗口先取消挂起防抖避免幽灵查询 (e42e64b) @ghost-him
+    - fix(query): 按来源通道隔离查询，辅助查询不再干扰 GUI 会话 (22ab5be) @ghost-him
+    - fix(onenter): 面板已有动作时 Enter 直接执行而非重复确认 (02d5bcf) @ghost-him
+    - fix(plugins): 插件加载与崩溃重启前预检组件 id 冲突并清理残留 (fc6f171) @ghost-him
+    - fix(debug): 评分明细区分加法乘法项并全量展示，总分可核对 (9dc32bf) @ghost-him
+    - fix(settings): 修复配置表单被裁剪且无法滚动查看的问题 (3e9cb0f) @ghost-him
+    - fix(settings): 修复外观设置中清除背景图片无效的问题(github #63) (8f389d9) @ghost-him
+    - fix(search): 修复窗口重新唤起后输入焦点丢失的问题 (github #77) (5999110) @ghost-him
+    - fix(search): 简化结果列表布局并以原生滚动跟随修复滚动展示问题 (e097231) @ghost-him
+    - fix(window): 设置窗口被遮挡时用置顶闪切强制提升到前台 (f2cf329) @ghost-him
+    - fix(keyboard): 拦截 Alt 菜单模式避免按过 Alt 后首个字母被吞 (a31164c) @ghost-him
+    - fix(settings): 书签自动检测结果按路径去重合并写入设置 (bcbb348) @ghost-him
+    - fix(config): 修正跟随鼠标显示器默认值并为存储层补齐深度验证 (6c46dcf) @ghost-him
+    ⚡ 性能优化
+    - perf(build): 关闭 LTO 并提升 codegen-units 以加速编译 (7916ddf) @ghost-him
+    ♻️ 重构
+    - refactor: 初步完成对于路径检索的重构工作 (db4897a) @ghost-him
+    - refactor: 重新设计了 keywordoptimizer trait 的接口 (6b5d7df) @ghost-him
+    - refactor: 将 convert_search_keywords 中的基本函数封装为可插拔的 KeywordOptimizer 插件 (a80a9e4) @ghost-him
+    - refactor: 完成 PinyinMapper 的重构工作 (e92c5f8) @ghost-him
+    - refactor: 完成 标准匹配算法 的重构工作 (844703c) @ghost-him
+    - refactor: 将 ProgramRanker 拆分为 HistoryBooster 和 QueryAffinityBooster 插件 (1c7612e) @ghost-him
+    - refactor: 优化架构，移除 Launcher::launch() 方法，统一由 execute() 处理所有动作分发 (3e2cc95) @ghost-him
+    - refactor: 重构完成 ProgramLauncher 的 Path 启动逻辑 (7fa6566) @ghost-him
+    - refactor: 初步完成端到端的测试，目前可以正常的工作 (d2f1ba2) @ghost-him
+    - refactor: 重构完成 ProgramLoader 的 uwp 检索逻辑，新增 UwpSource 数据源插件，Configurable trait 新增 enabled() 方法 (715943e) @ghost-him
+    - refactor: 重构完成 ProgramLoader 的 bookmark 检索逻辑，新增 BookmarkSource 数据源插件 (9abc8c8) @ghost-him
+    - refactor: 新增 UrlSource 数据源插件，将 load_web 重构为插件化实现 (f3f765a) @ghost-him
+    - refactor: 新增 CommandSource 数据源插件，将 load_custom_command 重构为插件化实现 (74dc986) @ghost-him
+    - refactor: 实现 UwpLauncher 插件的 UWP 应用启动逻辑 (ca449f1) @ghost-him
+    - refactor: 将 File 启动与 Url 启动重构，新增 FileLauncher 并完成 UrlLauncher 实现 (c764618) @ghost-him
+    - refactor: 重构完成 skim 匹配算法与 launchy 匹配算法 (bcd3268) @ghost-him
+    - refactor: 重构 launch_command 函数，实现 CommandLauncher 命令启动器 (93cefd8) @ghost-him
+    - refactor: 重构完成 windows_activator，同时优化了架构的设计，Launcher → ActionExecutor 重构 (d8045e3) @ghost-him
+    - refactor: 重构完成 image_processor，同时优化了 plugin sdk 的设计架构 (5e4e8c8) @ghost-him
+    - refactor: feat: 完成 Plugin SDK 的 Shell 服务迁移 (0bb0482) @ghost-him
+    - refactor: 完成 Plugin SDK 的窗口服务迁移 (1eeff70) @ghost-him
+    - refactor(sdk): 使用 Builder 模式重构 HostApi 构造 (3beb2e5) @ghost-him
+    - refactor(sdk): 使用重构完成 Parameter Resolver (adbc4e1) @ghost-him
+    - refactor: 将 TaskScheduler 重构为 SDK AutoStartManager 平台能力组件 (14b7bff) @ghost-him
+    - refactor: 将 HotKeyManager 重构为 SDK HotkeyManager 平台能力组件 (1d55289) @ghost-him
+    - refactor: 重构了安装监控器，优化了文档，优化了 agents.md (e7db94f) @ghost-him
+    - refactor(core): 将各模块的配置信息的验证职责统一交由 ConfigManager 处理 (3b72865) @ghost-him
+    - refactor: 删除旧系统，逐步迁移代码 (2dce34f) @ghost-him
+    - refactor: 完成前端重构与后端对齐 (f966b50) @ghost-him
+    - refactor: 将图标资源服务迁移到 SDK 层并修复 CommandSource 默认图标 (b60f39e) @ghost-him
+    - refactor: 将系统托盘重构到 Core 层并遵循新系统架构 (8a98d78) @ghost-him
+    - refactor: 将 Plugin API 融合进 HostAPI 中 (40d5ee0) @ghost-him
+    - refactor: 完成前端 Phase 2 重构 — 搜索界面核心、设置窗口独立化、动态窗口尺寸 (f3b89cc) @ghost-him
+    - refactor: 将 SearchCandidate.icon 类型从 String 改为 IconRequest (136a85f) @ghost-him
+    - refactor: 删除残余的 ai 推理模块的代码 (0185e97) @ghost-him
+    - refactor: 将鼠标检测重构为 focus monitor (cb04061) @ghost-him
+    - refactor: 重构初始化流程为三阶段(创建→加载配置→构建管道)并修复快捷键注册 (1d0a619) @ghost-him
+    - refactor: sdk 支持查看当前的窗口是不是可见，同时支持当窗口显示的时候，再次按下时隐藏 (a6a66b8) @ghost-him
+    - refactor: phase 3 - 完善设置界面，修复 Phase 2 结构性缺口 (9fd1d13) @ghost-him
+    - refactor: phase 5 - 统一错误处理、i18n 框架、外观配置后端化与管道动态重建 (6fe7fc9) @ghost-him
+    - refactor: 统一副作用契约、ActionExecutor 异步化、清理死代码并沉淀设计规范 (5043dfb) @ghost-him
+    - refactor: config_manager 持久化异步化并传播错误 (17acdb2) @ghost-him
+    - refactor: 将窗口定位逻辑从前端统一管理，修复 DPI 缩放下居中偏移 (2097395) @ghost-him
+    - refactor: 使用统一构建函数来建构 schema (7f3e213) @ghost-him
+    - refactor: 引入 SchemaBuilder 链式 API 统一所有 schema 构建 (fe9feea) @ghost-him
+    - refactor: 将 DynamicFormField 从 881 行构石拆分为 16 个模块化组件 (bdb9538) @ghost-him
+    - refactor: 将 hostapi 中与 plugin handle 重合的功能全部融合到一起 (19ac8fc) @ghost-him
+    - refactor: 支持自定义背景图片 (c315a05) @ghost-him
+    - refactor: 删除所有与 http 以及 cli 相关的代码，当前的软件重构程度不支持这样的设计 (8ee4057) @ghost-him
+    - refactor: 支持 4 个窗口配置项 (e157bcc) @ghost-him
+    - refactor: 支持设置图标的大小 (1e38d63) @ghost-him
+    - refactor: 规范化插件的配置信息的填写方式 (7955694) @ghost-him
+    - refactor: 优化了 rules 文件 (05fe10f) @ghost-him
+    - refactor: 支持窗口拖动与窗口唤醒跟随鼠标两个配置项 (65863e9) @ghost-him
+    - refactor: 初步支持参数系统 (c4f0ae4) @ghost-him
+    - refactor: 将行内参数模式检测从纯前端移到后端，简化模式管理 (c9153b7) @ghost-him
+    - refactor: 初步将 sdk 拆分为独立的 crate (ffee430) @ghost-him
+    - refactor: 清理 sdk/ 中冗余的纯 re-export 子目录 (2cb780b) @ghost-him
+    - refactor: 优化了 installer 的逻辑，删除了无用的代码 (5591ca4) @ghost-him
+    - refactor: 统一 PluginManager 作为插件管理中心，修复多个 bug (22435b3) @ghost-him
+    - refactor: 统一 PluginManager 作为第三方插件生命周期管理唯一入口 (5bc8074) @ghost-him
+    - refactor: 将应用数据目录从 %APPDATA% 切换至 HOME/.ZeroLaunch-rs (a6d772d) @ghost-him
+    - refactor(plugin_system): 合并 plugin_manager 至 plugin_system 并内联 QueryDispatcher (15ab8ea) @ghost-him
+    - refactor(plugin-host): 将看门狗改为事件驱动 + 持久化崩溃计数修复 (31524b3) @ghost-him
+    - refactor(plugin_manager): 通过 AdapterRegistrar trait 解耦 PluginManager 与注册逻辑 (08f30aa) @ghost-him
+    - refactor(plugin_system): 统一内置/第三方注册路径，分离注册与刷新职责 (9945285) @ghost-him
+    - refactor(plugin_system): 移除 AdapterRegistrar，事件驱动解耦 PM↔CM↔SR (86bd38c) @ghost-him
+    - refactor: 修复三层架构耦合问题 (56691da) @ghost-him
+    - refactor: 拆分 PluginManager 与 lib.rs 职责，提取 4 个新模块 (d531cec) @ghost-him
+    - refactor(plugin-protocol): 提取 LSP Content-Length 帧编解码到共享 codec 模块 (fd73375) @ghost-him
+    - refactor(build): 移除 NSIS 安装包，新增 CLI 命令行工具作为构建产物 (553c1ee) @ghost-him
+    - refactor(src-tauri): 将依赖集中到 workspace 管理，移除 Everything 集成 (9e2215a) @ghost-him
+    - refactor(cli-server): 移除 CLI HTTP API 中的可写端点，仅保留只读查询 (6bd0488) @ghost-him
+    - refactor(plugin-system): 移除 plugin_system/types.rs 冗余 re-export shim (7cfb267) @ghost-him
+    - refactor(plugin-system): 重命名 plugin/ → builtin_plugin/，plugin_system/ → plugin_framework/ (1e7141c) @ghost-him
+    - refactor(core): 移除 ServiceLocator 全局静态，统一 AppState 访问为 Tauri State (30ebd51) @ghost-him
+    - refactor(builtin-plugin): 将核心配置组件统一迁入 builtin_plugin 并重构注册体系 (16ccb91) @ghost-him
+    - refactor: 消除 core/types 和 sdk/mod 冗余 re-export 中间层 (8c47b33) @ghost-him
+    - refactor(plugin-system): 统一配置组件 ID 命名规范并清理跨层导入 (5115419) @ghost-him
+    - refactor(tauri): 引入 trace_id 全链路追踪体系，重构 BridgeError 与内部错误类型 (1010a74) @ghost-him
+    - refactor(tray): 托盘菜单全部走 AppCommand 通道，清理半复用状态 (66195f3) @ghost-him
+    - refactor(plugin-system): 将 Plugin Inspector 从编译期 feature gate 迁移为运行时配置控制 (37e9b5c) @ghost-him
+    - refactor(bootstrap): 将 Inspector 录制状态同步移至配置加载阶段的正确位置 (c4c6f28) @ghost-him
+    - refactor: 将 Plugin Inspector 从轮询更新替换为事件驱动通知 (a3c73ce) @ghost-him
+    - refactor(settings): 将设置面板布局从固定高度迁移到弹性 flex 填充模式 (4fc4f59) @ghost-him
+    - refactor(plugin-system): 统一组件身份模型，合并远程插件适配器为单一 RemoteComponent (d94f984) @ghost-him
+    - refactor(plugin-host): 删除 block_on_rpc (c5971dd) @ghost-him
+    - refactor(rules): 将 5 个大规则文件中的编码模式拆为 25 个 TTSR 条件规则 (874ef82) @ghost-him
+    - refactor: 重构调试页面，优化插件检查器的布局，对代码架构做了小重构 (5f7ca5c) @ghost-him
+    - refactor(commands): 将 bridge_error 与 cli_token 模块迁至合理目录 (df10f33) @ghost-him
+    - refactor: 优化 code review skill (83ac44d) @ghost-him
+    - refactor(data-source): 为 data source 引入强类型配置结构，同时统一 settings 初始化风格 (d1753ab) @ghost-him
+    - refactor: 重构了 cli 的显示界面 (2af8b74) @ghost-him
+    - refactor(skills): 精简 summarize-changes 产出篇幅，篇幅与变更规模成正比 (d7d7639) @ghost-him
+    - refactor(config): 替换旧 SettingDefinition 体系为 SchemaKind 驱动的 settings 架构 (c5242da) @ghost-him
+    - refactor(builtin_plugin): 将 setting_schema 改为必需方法并修复关联问题 (c239060) @ghost-him
+    - refactor(rules): 审计并优化全部 48 条 TTSR 规则，删除重复文件并修正事实错误 (625ffdb) @ghost-him
+    - refactor(rules): 拆分规则文件并优化 optimize-rules 技能 (892b15b) @ghost-him
+    - refactor: 引入 PanelInteraction 通用面板交互策略，重构翻译插件前后端交互 (1c0d3b3) @ghost-him
+    - refactor(translator): 补齐翻译插件结构体注释并显式标注序列化键名 (7b047f6) @ghost-him
+    - refactor(session): 统一会话系统并落地声明式按键契约 (2c26e87) @ghost-him
+    - refactor(plugin-host): 崩溃恢复复用加载并简化插件冲突预检 (ac8744a) @ghost-him
+    - refactor(debug): 重构调试页为卡片布局并补全国际化 (9495901) @ghost-him
+    📝 文档
+    - docs: 新增 Plugin SDK 与跨平台架构设计章节 (f63ae1b) @ghost-him
+    - docs: 同步文档与代码重构变更 (1e6e14b) @ghost-him
+    - docs: 更新重构文档 (4c4564e) @ghost-him
+    - docs: 优化文档 (ae660be) @ghost-him
+    - docs: 优化了前端设计文档 (62f2abe) @ghost-him
+    - docs: 拆分文档为 AI 规则与人类设计文档 (d0ee61f) @ghost-him
+    - docs: 修正 rules 与设计文档，使其与代码一致 (dc5ae3a) @ghost-him
+    - docs: 补充和完善 AI 约束规则文档 (bdad726) @ghost-him
+    - docs: 完善 HostApi/PluginHandle 权限隔离模型文档；清理 lib.rs 导入风格 (58e2c6e) @ghost-him
+    - docs(contributing): 优化 CONTRIBUTING.md，新增 Claude Code Harness 体系和开发工作流 (ecd2c07) @ghost-him
+    - docs(rules): 同步规则文件中的路径和架构描述以匹配 plugin-system 重构 (5beebc7) @ghost-him
+    - docs: 在 CONTRIBUTING.md 中新增 /code-review 技能文档并更新贡献流程 (5f6e24b) @ghost-him
+    - docs: 更新 readme (1bb83f9) @ghost-him
+    - docs(summarize-changes): 优化 commit message 模板，增加结构化分区模板 (8f18005) @ghost-him
+    - docs(smoke-test): 补齐发布前关键入口与配置联动的冒烟用例 (bfde725) @ghost-him
+    - docs(rules): 收窄 TTSR 规则触发条件并补充编码设计规范 (2186b3d) @ghost-him
+    - docs(skill): 变更结束后结合对话上下文精准提炼改动目标 (c6fa1d9) @ghost-him
+    - docs(agents): 编码规范新增不要过度设计与不要过度容错两条纪律 (14bd489) @ghost-him
+    🔧 构建 / CI
+    - ci(release): 重构发布流水线，支持多平台并行发布与 AI 更新摘要 (b5ebcad) @ghost-him
+    🧹 杂项
+    - chore: 新增 AGENTS.md: AI 协作指南文档 (d9cd033) @ghost-him
+    - chore: 优化 Agents.md (bd79373) @ghost-him
+    - chore: 优化 agents.md (be5d01e) @ghost-him
+    - chore: 同步重构文档 (fb2a697) @ghost-him
+    - chore: 添加前后端职责边界的约束 (bb62362) @ghost-him
+    - chore: 优化 data-flow.md (22de7da) @ghost-him
+    - chore: 升级依赖库的版本号，将语义搜索删除 (36cc25c) @ghost-him
+    - chore: 优化 rules (6af5e2b) @ghost-him
+    - chore(harness): 同步 AI 约束规则与项目文档，适配 Cargo workspace 重构 (39d4528) @ghost-him
+    - chore: 清理重构遗留项，适配 workspace 基础设施 (2cb1383) @ghost-him
+    - chore(skills): 新增 bump-version 技能，支持自动化版本号变更 (c657850) @ghost-him
+    - chore(skills): 新增 summarize-changes 技能，支持自动化总结代码更改 (fae0377) @ghost-him
+    - chore(summarize-changes): 用 shell 脚本替换临时 git status 方案，完善安全检查流程 (f3bf31a) @ghost-him
+    - chore: 清理无用导入、为便携模式添加条件编译、增强 clippy 覆盖范围 (e892899) @ghost-him
+    - chore(ci): 合并 CI job、提取 i18n 复制为 composite action、更新文档 (98d0c1d) @ghost-him
+    - chore: 优化 ci (115bd86) @ghost-him
+    - chore: 将 AI 辅助开发配置从 Claude Code 迁移至 OMP (5ffc103) @ghost-him
+    - chore(ci): 启用 DeepSeek 深度思考模式提升 Release Notes 质量 (5231443) @ghost-him
+    - chore(omp): 扩展 cargo 命令权限并启用 LSP 与调试器 (52e7401) @ghost-him
+    - chore(skills): 修复多个 skill 中过时的路径与文件名，修正过时的脚本 (c747342) @ghost-him
+    - chore(rules): 将规则文件迁移至 OMP TTSR 格式并新增 10 条编码规则 (3eff916) @ghost-him
+    - chore(rules): 优化规则 (ce3e2a5) @ghost-him
+    - chore(ttsr): 将 3 条无例外硬性规则的 interruptMode 从 never 改为 tool-only (58570a2) @ghost-him
+    - chore(ci): 优化 release body 的生成信息 (4a3fb70) @ghost-him
+    - chore: 添加新的规则，当创建一个结构体的时候，必须要写上对应的注释 (1a42038) @ghost-him
+    - chore: 优化 summarize-changes SKILL (539d0b8) @ghost-him
+    - chore(justfile): 调整 just style 的执行顺序 (32fe90d) @ghost-him
+    - chore: 修正 codegraph mcp 的配置信息 (3f2474a) @ghost-him
+    - chore: 优化 summarize-changes SKILL 中对于 scope 的判定 (c7a0c13) @ghost-him
+    - chore(rules): 收紧 TTSR 规则触发条件与作用范围 (851b105) @ghost-him
+    - chore(build): 消除编译与测试阶段的两类警告噪音 (e424da1) @ghost-him
+    💬 其他
+    - Merge pull request #72 from ghost-him/feature/workspace-split (a6bccc1) @ghost-him
+    - Merge branch 'main' into refactor/plugin-system (bedd6ab) @ghost-him
+    - Merge pull request #73 from ghost-him/refactor/plugin-system (deeee42) @ghost-him
+    - Merge branch 'main' into pr-76 (06e6ecb) @ghost-him
+    - Merge pull request #76 from 1gcat/dev (1aabe10) @ghost-him
+    Full Changelog: https://github.com/ghost-him/ZeroLaunch-rs/compare/v0.6.13...v1.0.0
+    📦 版本说明
+    - 安装版 (.msi): 提供传统的安装体验，支持深层代码签名。
+    - 便携版 (.zip): 无需安装，解压即用，适合移动或绿色版爱好者。
+    - 命令行工具 (zerolaunch-cli_*.exe): zl 命令行客户端，可通过本地 HTTP API 与 ZeroLaunch 交互（文件名含版本和架构信息）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ghost-him/ZeroLaunch-rs/releases/tag/v1.0.0
+ReleaseTime: 2026-08-09T05:50:43.0000000Z
