@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.prestosoft.com/latest_versions.txt' | ConvertFrom-Csv -Delimiter '|' -Header @('Name', 'Edition', 'Version', 'ShortVersion', 'ReleaseDate', 'InstallerUrlX86', 'InstallerUrlX64', 'InstallerUrlARM64') | Where-Object -FilterScript { $_.Name -eq 'edp' } | Select-Object -First 1
+$Object1 = Invoke-RestMethod -Uri 'https://www.prestosoft.com/latest_versions.txt' -UserAgent 'PS UpdatesCheck/1.0' | ConvertFrom-Csv -Delimiter '|' -Header @('Name', 'Edition', 'Version', 'ShortVersion', 'ReleaseDate', 'InstallerUrlX86', 'InstallerUrlX64', 'InstallerUrlARM64') | Where-Object -FilterScript { $_.Name -eq 'edp' } | Select-Object -First 1
 
 # Version
 $this.CurrentState.Version = $Object1.Version
