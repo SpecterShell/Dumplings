@@ -1,14 +1,14 @@
 # x86
-$Object1 = Invoke-WebRequest -Uri 'https://eid.belgium.be/en/download/34/license'
+# $Object1 = Invoke-WebRequest -Uri 'https://eid.belgium.be/en/download/34/license'
 # x64
 $Object2 = Invoke-WebRequest -Uri 'https://eid.belgium.be/en/download/35/license'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
-}
-$VersionX86 = [regex]::Match($InstallerX86, '(\d+(?:\.\d+)+)').Groups[1].Value
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = $InstallerX86 = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+# }
+# $VersionX86 = [regex]::Match($InstallerX86, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
@@ -16,11 +16,11 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
-}
+# if ($VersionX86 -ne $VersionX64) {
+#   $this.Log("x86 version: ${VersionX86}")
+#   $this.Log("x64 version: ${VersionX64}")
+#   throw 'Inconsistent versions detected'
+# }
 
 # Version
 $this.CurrentState.Version = $VersionX64
