@@ -10,7 +10,11 @@ $Object2 = Invoke-WebRequest -Uri $Link
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Query        = @{ Architecture = 'x64' }
-  InstallerUrl = $Object2.Links.Where({ try { $_.outerHTML.Contains('Windows') -and $_.outerHTML.Contains('64-bit') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object2.Links.Where({ try { $_.outerHTML.Contains('Windows') -and $_.outerHTML.Contains('x86_64') } catch {} }, 'First')[0].href
+}
+$this.CurrentState.Installer += [ordered]@{
+  Query        = @{ Architecture = 'arm64' }
+  InstallerUrl = $Object2.Links.Where({ try { $_.outerHTML.Contains('Windows') -and $_.outerHTML.Contains('ARM64') } catch {} }, 'First')[0].href
 }
 
 # TODO: Implement manifest field removal
