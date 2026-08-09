@@ -1,32 +1,14 @@
 function Read-Installer {
-  foreach ($Installer in $this.CurrentState.Installer) {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'GVCInstall*.msi' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted 'GVCInstall*.msi' | Get-Item -Force | Select-Object -First 1
-    # Version
-    $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-    # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile2 -Algorithm SHA256).Hash
-    # ProductCode
-    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-    # AppsAndFeaturesEntries
-    $Installer['AppsAndFeaturesEntries'] = @(
-      [ordered]@{
-        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-        InstallerType = 'msi'
-      }
-    )
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  }
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 }
 
 $Object1 = $Global:DumplingsStorage.SonicWallApps.Where({ $_.Count -ge 2 -and $_[1] -is [string] -and $_[1].Contains('GVCSetup') -and $_[1].Contains('.exe') }, 'First')[0][1] -replace '^[a-zA-Z0-9]+:I?'
 $Object2 = [Newtonsoft.Json.Linq.JArray]::Parse($Object1)
 
 # x86
-$Object3 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup32\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
+$Object3 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup-Win32_.+\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object3.link.href
@@ -35,7 +17,7 @@ $Object1 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head
 $ETag = $Object1.Headers.ETag[0]
 
 # x64
-$Object4 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup64\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
+$Object4 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup-x64_.+\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object4.link.href
