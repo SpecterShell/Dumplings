@@ -45,9 +45,11 @@ switch -Regex ($this.Check()) {
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # Remove anchors
-        $Object2.SelectNodes('//div[@class="absolute" and ./a[@aria-label="Navigate to header"]]').ForEach({ Write-Host '???'; $_.Remove() })
+        $Object2.SelectNodes('//div[@class="absolute" and ./a[@aria-label="Navigate to header"]]').ForEach({ $_.Remove() })
 
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+          if (-not $Node.InnerText.Contains('Download v')) { $Node }
+        }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
@@ -84,7 +86,9 @@ switch -Regex ($this.Check()) {
         # Remove anchors
         $Object3.SelectNodes('//div[@class="absolute" and ./a[@aria-label="Navigate to header"]]').ForEach({ $_.Remove() })
 
-        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
+          if (-not $Node.InnerText.Contains('下载 v')) { $Node }
+        }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
