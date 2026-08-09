@@ -33,9 +33,14 @@ $ShortVersion = $this.CurrentState.Version -replace '-I\d+$'
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      # RealVersion
+      $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
+      # Avoid 429
+      Start-Sleep -Seconds 60
+    }
 
     try {
       $RepoOwner = 'OpenVPN'
