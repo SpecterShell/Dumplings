@@ -13,12 +13,16 @@ function Get-ReleaseNotes {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotesUrl'
-      Value  = $ReleaseNotesUrl = 'https://www.idefender.net/changelog.html'
+      Value  = $ReleaseNotesUrl = 'https://www.idefender.net/changelog'
     }
 
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+    $Object2 = Use-PlaywrightPage -Stealth -Headless {
+      param($Page)
+      $null = Open-PlaywrightPage -Page $Page -Uri $ReleaseNotesUrl
+      Read-PlaywrightLocator -Page $Page -Selector "//h3[contains(., '$($this.CurrentState.Version)')]/parent::*"
+    } | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(., '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
         if (-not $Node.Attributes.Contains('id') -or $Node.Attributes['id'].Value -ne 'download') {
