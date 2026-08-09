@@ -30,14 +30,6 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.exe' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.exe'
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromExe
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-
     $this.Print()
     $this.Write()
   }
