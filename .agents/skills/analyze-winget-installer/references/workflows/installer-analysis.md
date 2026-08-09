@@ -111,7 +111,13 @@ Important magic and structured evidence:
 
 Follow [Wrapper installers](wrapper-installers.md) for SFX, bootstrapper, nested MSI, and download-and-execute layouts. Do not infer nested behavior from the outer stub architecture, extension, or family defaults.
 
-## 5. Escalate unresolved facts
+## 5. Resolve external dependencies
+
+Review the selected outer installer and effective payload for hard prerequisites. `Get-PEDependencyInfo` covers VC runtime imports and framework-dependent .NET applications. For MSIX/AppX, `Get-MSIXInfo` projects supported manifest-declared VCLibs, Windows App Runtime, and Microsoft UI XAML framework identities and reports unknown package dependencies separately. Neither helper infers Visual Studio Tools for Office Runtime or Microsoft Office. For VSTO and Office add-ins, inspect MSI launch conditions, AppSearch or registry searches, VSTO deployment metadata, InstallShield `.prq` definitions, Burn or suite package chains, and publisher requirements. Distinguish an external prerequisite from one already installed by the selected wrapper.
+
+Map a proven Visual Studio Tools for Office Runtime requirement to `Microsoft.VSTOR`. Map a proven requirement for the installed Microsoft Office desktop suite or a host such as Outlook, Word, Excel, or PowerPoint to `Microsoft.Office`. Map a proven requirement for the Windows .NET Framework 3.5 optional component to `Dependencies.WindowsFeatures: [NetFx3]`; do not use this feature for .NET Framework 4.x or modern .NET runtimes. Follow the manifest-authoring [dependency workflow](../../../author-winget-manifest/references/manifest/dependencies.md) for the complete mapping set, evidence thresholds, `MinimumVersion`, field placement, and optional-integration exclusions.
+
+## 6. Escalate unresolved facts
 
 Read [Installed state](installed-state.md) for ARP matching and association evidence. Read [VM validation](vm-validation.md) only when static parsing cannot prove visible ARP ownership, scope, architecture, silent behavior, exit codes, elevation, network payload selection, or first-run associations.
 

@@ -10,7 +10,7 @@ description: Author, review, or update Windows Package Manager winget-pkgs YAML 
 Read only the references needed for the current stage:
 
 - Package selection: [Identity](references/package/identity.md), [official source discovery](references/package/source-discovery.md), [artifact selection](references/package/artifact-selection.md), and [release evidence](references/package/release-evidence.md).
-- Manifest construction: [Model and files](references/manifest/model-and-files.md), [installer fields](references/manifest/installer-fields.md), [defaults and return codes](references/manifest/defaults-and-return-codes.md), [Apps and Features](references/manifest/apps-and-features.md), and [formatting and validation](references/manifest/formatting-and-validation.md).
+- Manifest construction: [Model and files](references/manifest/model-and-files.md), [installer fields](references/manifest/installer-fields.md), [dependencies](references/manifest/dependencies.md), [defaults and return codes](references/manifest/defaults-and-return-codes.md), [Apps and Features](references/manifest/apps-and-features.md), and [formatting and validation](references/manifest/formatting-and-validation.md).
 - Localization: [Locale model](references/locale/model.md), [locale identity](references/locale/identity.md), and [locale content](references/locale/content-and-resources.md).
 - Completion: [Submission](references/submission/workflow.md).
 - Shared helper APIs: use [`$use-dumplings-functions`](../use-dumplings-functions/SKILL.md) for source retrieval, redirects, response decoding, temporary files, HTML or Markdown processing, YAML, and browser evidence.

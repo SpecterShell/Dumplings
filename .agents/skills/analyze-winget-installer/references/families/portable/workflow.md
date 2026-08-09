@@ -57,7 +57,7 @@ $Dependencies = Get-PEDependencyInfo -Path C:\Path\To\Product.exe -RelatedFile $
 
 Use `RecommendedWinGetArchitecture` when singular and create concrete entries from `RecommendedWinGetArchitectures` when multiple values are supported. AnyCPU still requires concrete architectures. Never use `neutral` when a package contains PE binaries; ARM32 is excluded.
 
-`Get-PEDependencyInfo` maps VC runtime imports to WinGet dependencies and reports UCRT evidence separately. Verify whether the runtime DLLs are bundled. For .NET 5 and later, inspect the bound managed DLL, `runtimeconfig.json`, and bundle metadata. Do not add a runtime dependency when bundled `hostfxr.dll`, `hostpolicy.dll`, `coreclr.dll`, `System.Private.CoreLib.dll`, or `includedFrameworks` proves a self-contained deployment.
+`Get-PEDependencyInfo` maps VC runtime imports to WinGet dependencies and reports UCRT evidence separately. Verify whether the runtime DLLs are bundled. For .NET 5 and later, inspect the bound managed DLL, `runtimeconfig.json`, and bundle metadata. Do not add a runtime dependency when bundled `hostfxr.dll`, `hostpolicy.dll`, `coreclr.dll`, `System.Private.CoreLib.dll`, or `includedFrameworks` proves a self-contained deployment. This helper does not infer Windows App Runtime, Microsoft UI XAML, VSTO Runtime, or Office requirements for unpackaged applications; follow the manifest-authoring [dependency workflow](../../../../author-winget-manifest/references/manifest/dependencies.md) when structured installer or publisher evidence proves one of these requirements.
 
 ## Tauri assets
 

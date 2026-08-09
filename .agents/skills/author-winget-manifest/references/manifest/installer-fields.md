@@ -48,6 +48,8 @@ Switch and behavior rules:
 - Add `UnsupportedArguments` when `--location` or `--log` is known unsupported.
 - For `nullsoft`, omit `InstallerSwitches.Silent` and `SilentWithProgress` when both are the default `/S`. The same per-key omission rule applies to every known installer type and to a ZIP's effective `NestedInstallerType`.
 
+For package prerequisites, follow [Installer dependencies](dependencies.md). In addition to VC and .NET runtimes, check for hard requirements on Visual Studio Tools for Office Runtime (`Microsoft.VSTOR`) and Microsoft Office or an Office host such as Outlook, Word, Excel, or PowerPoint (`Microsoft.Office`). Do not infer either dependency from optional integration or product-name strings.
+
 ## Installer Field Completeness Pass
 
 Do not treat the minimal skeleton as the target output. Before finalizing, inspect every applicable schema field and record evidence or a reason for omission. At minimum, check:

@@ -30,7 +30,7 @@ Do not invent package metadata, registry values, format fields, silent switches,
 
 ## Required result
 
-Report the detected family and decisive evidence; outer and installed architecture; static metadata and visible ARP owner; scope and elevation evidence; switches, modes, exit codes, and WinGet defaults; nested payload selection; protocols and extensions when proven; unresolved warnings; and whether VM validation is required.
+Report the detected family and decisive evidence; outer and installed architecture; static metadata and visible ARP owner; scope and elevation evidence; switches, modes, exit codes, and WinGet defaults; nested payload selection; external dependency evidence; protocols and extensions when proven; unresolved warnings; and whether VM validation is required.
 
 Do not author `UnsupportedOSArchitectures` at present. Do not duplicate a localized ARP identity in `AppsAndFeaturesEntries` when the corresponding locale manifest can represent it.
 
