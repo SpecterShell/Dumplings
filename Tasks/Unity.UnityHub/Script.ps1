@@ -16,6 +16,16 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
   InstallerUrl  = $InstallerUrl.Replace('x64', 'arm64')
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msix'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl.Replace('x64', 'arm64') -replace '\.exe$', '.msix'
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
