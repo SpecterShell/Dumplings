@@ -1,0 +1,27 @@
+Version: 0.11.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.2/Mini-Term_0.11.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.2/Mini-Term_0.11.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    AI 停下来等你，也会叫你了
+    ✨ 新功能
+    - 待确认提醒 — 此前只有「AI 跑完了」才发通知，而实际最需要被叫回来的往往是另一种停：AI 停下来等你批工具权限、等你填 MCP 表单，或这一轮因 API 错误结束需要你回来重发。这三种情形（PermissionRequest / Elicitation / StopFailure，与项目行黄灯同一判定）现在走完成通知的同一套通道——提示音、任务栏闪烁、右下角 Toast，共用你设的自定义提示音。Toast 用警告色 + 感叹号与绿色的「已完成」区分，点击同样跳到该项目；不发 DONE 徽章，那是完成态的标
+    - 开关独立，默认开 — 「设置 → AI → 通知提醒 → 触发时机」可单独关掉。没有和完成通知合用一个开关，是因为它触发得频繁得多（每次工具授权都算一次），只想留完成通知的人得能关
+    🔧 内部
+    - 判据取黄灯的上升沿，而不是「本次成因属待确认类」：后端 StatusEmitter 把这类事件显式排除在去重之外（为的是同一轮里第二次授权请求不被吞掉），按成因判会一次待确认响好几声。黄灯亮着期间不重复提醒；你往那个终端里敲字即视为已在处理（黄灯清除），下一次请求才重新构成上升沿
+    - 顺带修掉一处会被新 Toast 踩到的旧逻辑：完成 Toast 的去重原本只看项目 id，而待确认 Toast 挂的是同一个 id——批准后马上跑完的话，完成 Toast 会被自己的前一条吞掉。现已收窄为同类去重
+    - 设置页该分页的中文名随语义扩大从「完成通知」改为「通知提醒」
+    - 回归测试：Node 20 个文件 / 100 条用例。aiCompletion 新增三组上升沿断言（黄灯未亮才响、亮着不重复响、非待确认成因一律不响）
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.11.1...v0.11.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.11.2
+ReleaseTime: 2026-08-10T14:20:35.0000000Z
