@@ -1,0 +1,31 @@
+Version: 0.17.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.17.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.17.0 更新
+    新功能
+    - Agent 运行时全面迁移至 Pi-only — Agent 能力改由 Proma 内置 Pi 运行时承载，不再依赖第三方 Agent 运行时，安装包更轻、启动更快、跨平台行为一致；同时移除已接入的 Nowledge Mem 集成与自动本地召回，记忆能力收敛为本地工作区记忆，数据更可控。
+    - 受信项目指令管理 — 项目可通过 AGENTS.md 管理交给 Agent 的稳定指令，Proma 按作用域解析并自动激活受信的项目指令；旧的 CLAUDE.md 工作区指令自动迁移到 AGENTS.md，历史配置无需手动整理。
+    - 工作区记忆维护升级 — 重构工作区知识维护流程：新增记忆变更追踪与刷新服务，Agent 写入记忆后界面出现更新提示，保持记忆索引同步；knowledge-maintenance 技能新增自组织维护指引，自动识别超载与错位的主题并建议重组；工作区记忆页同步简化，重点信息更聚焦。
+    - Windows shell 可选 — Windows 上不再强制预装命令行 Shell，首次配置更轻量；需要时可按引导安装，环境检查面板也会给出更明确的状态提示。
+    - 上下文压缩二次确认 — 手动压缩按钮改为「点击两次确认」触发：第一次点击进入确认态（按钮变警示色、提示「再次点击确认压缩」），再次点击才真正压缩；3 秒无操作自动重置，与界面归档的二次确认模式保持一致，避免误触清空上下文。
+    Bug 修复
+    - Agent 灵动岛运行体验修复 — 运行中的会话状态在灵动岛中优先显示，不会被其他会话事件抢占；修复运行中关闭灵动岛后又被流式事件立刻重新弹出的问题：正在运行的会话改用稳定的会话指纹决定是否重新唤醒，只有状态切换（需要交互 / 出错 / 完成）或新会话才重新弹出。
+    - 队列消息后台发送 — 运行中发送的消息进入队列后会在后台继续发送，不再静默等待运行结束；排队时新增 toast 提示与「立即打断」发送入口，发送状态一目了然。
+    - Agent 可访问会话附件之外的文件 — 文件浏览器与差异查看中打开的文件现在也能直接交给 Agent 处理，不再局限于会话内附件。
+    - 代理设置生效于网络搜索与 Chrome MCP — 系统代理设置现在同样应用到 Tavily 网络搜索与 Chrome DevTools MCP，并优化启动逻辑避免代理与 MCP 初始化互相阻塞。
+    - 预览标签页文件面板快捷键修复 — 修复预览标签页中「切换文件面板」快捷键不生效的问题。
+    - 引用历史后输入框失焦修复 — 从历史记录引用条目后，输入焦点正确回到对话输入框。
+    - Git 变更面板扫描优化 — 统一仓库扫描缓存与一致性基准，避免重复扫描造成的卡顿；会话文件状态标记（新增 / 修改 / 删除）在差异列表中显示一致。
+    - 模型选择器加宽 — Agent 输入框的模型选择器加宽，长模型名不再被截断。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.17.0
+ReleaseTime: 2026-08-10T10:02:23.4620000Z

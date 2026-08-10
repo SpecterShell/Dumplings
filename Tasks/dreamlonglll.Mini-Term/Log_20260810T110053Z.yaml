@@ -1,0 +1,28 @@
+Version: 0.11.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.1/Mini-Term_0.11.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.1/Mini-Term_0.11.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    pane 预览只对 AI 会话开闸 + 主题包示例一键生成
+    ✨ 新功能
+    - 「生成示例」按钮 — 「设置 → 外观 → 外置皮肤」区新增，点一下就有一份可直接改的示例皮肤落进 themes/example/：全字段 theme.json（colors / art / effects / terminal / tokens）、示范锚点与旋钮变量的 theme.css，外加逐字段说明的 README.md（JSON 写不了注释，说明只能外置）。改完保存即热重载。同一份文件也在仓库 docs/theme-pack-example/——Rust 侧编译期嵌的就是它，文档模板与你点出来的产物不会漂开。目录已存在时报错而非覆盖，你改过的那份不会被静默抹掉
+    🎯 体验
+    - 悬停 pane 预览改为只对跑着 AI 会话的项目弹 — 判定与项目行的 AI 品牌图标同口径：行上亮着图标才有预览，AI 退出即收起。这张卡要回答的是「AI 在别的项目里跑到哪一步了」，普通 shell 项目悬停弹一张 520px 的卡只是打断视线；这类项目现在悬停只出绝对路径提示（路径此前挪进了浮层卡头，不弹卡就看不见了）
+    🔧 内部
+    - 浮层收起走「渲染 gate + effect 收 state」两道：只留渲染 gate 的话，同一次悬停里 AI 再起来，浮层会拿旧锚点复活，而列表这期间完全可能已经增删过项目，卡就贴到别的行上了
+    - 生成示例写到一半失败（盘满 / 权限 / 杀软锁文件）整个目录收回：留下只有 theme.json 的残包照样会被列成可选皮肤，而下次生成又撞「已存在」，用户从此自愈不了
+    - 外置皮肤区按钮增至五个，标题行与按钮组加换行防挤压
+    - 回归测试：Node 20 个文件 / 100 条用例，Rust 411 条。新增用例直接拿仓库里的示例文件跑应用自己的校验器——它同时是一键生成的产物，过不了校验就等于用户点一下拿到个装不上的包
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.11.0...v0.11.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.11.1
+ReleaseTime: 2026-08-10T09:10:36.0000000Z
