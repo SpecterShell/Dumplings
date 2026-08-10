@@ -1,0 +1,27 @@
+Version: 0.0.86
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.86/cursor-byok-0.0.86-windows-x32-installer.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.86/cursor-byok-0.0.86-windows-x64-installer.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.86/cursor-byok-0.0.86-windows-arm64-installer.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.0.86
+    本版本是基于 v0.0.85 的热修复版本，仅修复 OpenAI Responses 工具参数异常，不包含主分支在 v0.0.85 之后的其他功能改动。
+    修复
+    - 修复 gpt-5.6 工具调用参数偶发损坏：OpenAI Responses 请求不再默认开启并行工具调用，避免同一轮多个工具的参数流出现 JSON 截断、错误转义或无法解析，导致 Ls、Shell 等工具报 incomplete or malformed tool input。
+    - 保留显式配置能力：如果用户通过 OpenAI extra params 或请求体覆盖显式设置 parallel_tool_calls，仍尊重用户配置。
+    测试与质量
+    - 新增串行默认值、请求体覆盖、extra params 显式 true/false、非 Responses 请求、空工具列表及非 gpt-5.6 模型的回归覆盖。
+    - 完成全仓 Go 测试和版本/tag 一致性检查。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/cursor-byok/releases/tag/v0.0.86
+ReleaseTime: 2026-08-10T01:13:41.0000000Z
