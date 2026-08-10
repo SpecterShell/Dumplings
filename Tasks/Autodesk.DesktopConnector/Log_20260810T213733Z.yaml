@@ -1,0 +1,79 @@
+Version: 2027.2.2.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://up.autodesk.com/2017/CDX/AB4AADCC-F890-4B4F-A7A6-B0FBD2386796/DesktopConnector-x64-2027.2.2.3.exe
+  ProductCode: '{D7884B57-3D48-38BC-921E-760EB9540C7D}'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important: We encourage all users on v2027.2.0.85 or v2027.2.1.104 to upgrade to v2027.2.2.3 at your earliest convenience.
+
+    Note:
+    If you are upgrading from a previous major release (for example, 17.x to 2027.x), we recommend running the Reset Utility, uninstalling, and then reinstalling. For minor release upgrades, you can upgrade in place. For complete instructions, see Update Desktop Connector for manual installs and Admin deployment guide for administrator deployment installs.
+    Reliability and Service Improvements
+    - This release includes important reliability improvements: These improvements optimize how Desktop Connector communicates with Autodesk services and reduce unnecessary service requests. These changes are important to maintain the health and efficiency of Desktop Connector file syncing.
+    FAQ
+    If I am already on v2027.2.0.85 or v2027.2.1.104, do I need to upgrade to v2027.2.2.3?
+    - Yes, we encourage all users on v2027.2.0.85 and v2027.2.1.104 to upgrade to v2027.2.2.3 at your earliest opportunity.
+    - This v2027.2.2.3 release contains all the enhancements and fixes mentioned in the v2027.2.0.85 + v2027.2.1.104 release notes below.
+    - Versions v2027.2.0.85 and v2027.2.1.104 are planned for retirement and will eventually no longer be available for continued use. Customers using either of these versions should plan to move to v2027.2.2.3 or a later release.
+    - To help ensure a smooth transition, we recommend that administrators plan their upgrade soon.
+
+    August 6, 2026 (v2027.2.1.104)
+    This download is no longer available
+
+    Important:
+    Customers who have installed Desktop Connector v2027.2.1.104 are encouraged to upgrade in place to the v2027.2.2.3 release.
+
+    Bug fixes and stability
+    - Resolved intermittent upload failures in Autodesk Forma projects: Desktop Connector 2027.2.0 could intermittently fail to upload or update files in Autodesk Forma projects, showing errors such as "Upload Failed: Too many people or processes appear to be accessing this service at the same time" or "Upload failed: RetryAfter header invoked to break the circuit until time." in Desktop Connector Home.
+    - Resolved Issues Management failure in Revit 2027: Corrected a regression in Desktop Connector 2027.2.0 that could prevent Issues Management from working correctly in Revit 2027 for projects connected through Desktop Connector.
+    Enhanced user experience
+    - Clearer guidance on supported projects in Select Projects: The Select Projects dialog now includes a Learn more link with more information about supported projects. The link has also moved to the top of the dialog for easier access. Learn more about managing projects.
+
+    July 22, 2026 (v2027.2.0.85)
+    This download is no longer available
+
+    Important:
+    Customers who have installed Desktop Connector v2027.2.0.85 are encouraged to upgrade in place to the v2027.2.2.3 release.
+
+    What's new
+    - Enhanced Select Projects experience: The Select Projects dialog has been redesigned for Autodesk Forma and Autodesk Fusion. You can now search across project name, hub, cloud solution, and region as you type, sort by any column, filter to show only your selected projects, and deselect all projects at once. Learn more about managing projects.
+    - Improved permission handling in Autodesk Forma and Autodesk Fusion: Desktop Connector now reads the permissions set in Forma or Fusion on the web and enforces them in your local workspace automatically. Files in Forma or Fusion folders where you cannot edit are marked Read-only in File Explorer, so authoring applications can warn you before you make changes that cannot be uploaded. When permissions change on the web, Desktop Connector updates your local files automatically with no restart required. Learn more about permissions in Desktop Connector.
+    - Forma Data Management Description attribute now available in AutoCAD-based products: Desktop Connector now delivers the Forma Data Management Description attribute to the Autodesk Projects tab in AutoCAD 2026, AutoCAD 2027, Civil 3D 2026, and Civil 3D 2027, and other AutoCAD-based products that connect Autodesk Projects using Desktop Connector. Description shows up as a column in App Home, which you can reorder or remove. You can also view it in the Data Panel. Learn more.
+    Upcoming change: some files will no longer process for viewing automatically
+    How is viewing in the Files tool changing when uploading files through Desktop Connector?
+    Files uploaded through Desktop Connector still upload and display in the Files tool. However, not all of them are processed for viewing automatically. Files remain available in Forma Data Management and can be processed on demand when your team needs them for review, coordination, or publish workflows. If a file is not processed automatically, you can initiate processing for viewing when needed. See Process for viewing for more information.
+    Note: This change does not affect how Desktop Connector uploads or syncs files between the Files tool and File Explorer.
+    Learn more about processing behaviors for viewing files.
+    Enhanced user experience
+    - Open Data Panel from File Explorer: You can now right-click a file in a connected drive and select Data panel to open it with that file's cloud properties already selected. Learn more about Data Panel.
+    - Pre-configured project subscriptions for new installations: Administrators can now define a list of projects for Desktop Connector to subscribe to automatically the first time it starts after a fresh installation. Learn more.
+    - Faster initial subscription for Autodesk Fusion projects: Initial subscriptions for large Autodesk Fusion projects are now up to 6× faster after addressing a performance issue that made subscribing to large Autodesk Fusion projects significantly slower than comparable Forma projects.
+    - Open in Desktop now available for Autodesk Fusion projects in India: Open in Desktop from Autodesk Fusion web now works for projects in the India region.
+    - Naming Standards: searchable large attribute lists in the Naming Validator: When renaming a file using a Forma Naming Standard that includes a large list attribute type, the Naming Validator now lets you search and filter options as you type. Results load on demand instead of all at once, and more options appear automatically as you scroll.
+    Reset Utility
+    - Resubscribe to projects after a reset: The Reset Utility now includes a Reset Desktop Connector and restore existing projects option. When selected, Desktop Connector automatically resubscribes you to your projects on the next startup.
+    - Clearer Reset Utility output: The Reset Utility now lists the database and configuration paths it removes, matching the detail shown for other reset steps.
+    - Reset Utility exit codes for automation: The Reset Utility now returns an exit code when it finishes, so administrators can detect success or failure when running the utility from a script or deployment tool. The utility returns 0 for success and 1 for failure.
+    Learn more about the Reset Utility
+    Bug fixes and stability
+    Stability improvements
+    - Resolved crash during extended sync activity on Windows: Resolved an issue where Desktop Connector could stop responding after running continuously with active sync subscriptions for 30 or more minutes. Desktop Connector now runs reliably during extended sync sessions.
+    - Addressed crash with project selection open: Addressed an intermittent crash that could occur when the Select Projects dialog was left open while Desktop Connector was idle.
+    - Resolved Upload Wizard crash after clearing file selection: Resolved a crash that could occur in the Upload Wizard after removing the selected source files and then attempting to move to the next step.
+    - Addressed crash during workspace scan: Addressed a crash that could occur when a file was deleted in File Explorer at the same moment Desktop Connector was scanning the workspace.
+    - Corrected file corruption during upload: Resolved an issue where saving a file while Desktop Connector was copying it for upload could corrupt the uploaded file. Desktop Connector now locks the file during the copy step.
+    - Prevented unexpected error on local drives: Resolved an error message that could appear when right-clicking files on non-connector drives (such as C: or D:) while Desktop Connector was running.
+    - Corrected Civil 3D PDF export processing: Resolved an issue where PDF files exported from Civil 3D directly to a Forma project folder through Desktop Connector could fail to process for viewing in Forma Data Management.
+    - Corrected Troubleshoot button availability: Resolved an issue where the Troubleshoot button on the home screen did not appear if you had not manually switched between connectors.
+    Sync reliability
+    - Resumed downloads after going back online: Addressed an issue where file downloads that were in progress when you switched to offline mode did not resume after you went back online. Pending downloads now continue automatically.
+    - Improved rename chain reliability: Resolved an issue where renaming several folders in quick succession (for example, D→E, C→D, B→C, A→B) could fail because move jobs ran in parallel instead of in order.
+    - Reduced scanning after Free up space: Addressed an issue where using Free up space on downloaded files or folders could trigger an unnecessary workspace scan after the files were converted to placeholders.
+    - Corrected version history after restore: Resolved an issue where the Data Panel could show a higher version number than Forma Data Management after you restored a previous file version on the web.
+    - Resolved silent Revit Link Topography failure: Addressed an issue where linking cloud topography in Revit through Desktop Connector could silently deliver an incomplete model when the service was temporarily busy, resulting in a "no usable surfaces" error that appeared permanent. Desktop Connector now reports a recoverable failure so Revit can retry and succeed.
+    - Clearer error when a file cannot be synced because it is in use: When Desktop Connector cannot upload a file because another application has it open with exclusive access, the error now explains that the file is locked by another process, instead of showing a generic copy-failure message.
+    - Corrected sync status for non-workshared Revit Cloud models: Resolved an issue where opening and saving a non-workshared Revit Cloud model through Desktop Connector could show a synced status in File Explorer even though the upload had failed. Desktop Connector now reflects the error state correctly and displays a more descriptive error message
+ReleaseTime: 2026-08-10
