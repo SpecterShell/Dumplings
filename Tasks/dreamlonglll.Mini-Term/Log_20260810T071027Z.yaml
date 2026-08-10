@@ -1,0 +1,40 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.0/Mini-Term_0.11.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.0/Mini-Term_0.11.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    自定义主题体系 + 项目 pane 悬停预览
+    本版合入社区贡献者 @hitechr 的功能批次（#43，32 个提交 / 36 个文件），并附维护者审查加固批。
+    ✨ 新功能
+    - 外置主题包 / 自定义皮肤 — 「设置 → 外观」可从文件夹或 zip 导入 Dream Skin 兼容格式的皮肤，落在 {app_data_dir}/themes/<themeId>/（theme.json 必需，theme.css / 背景图可选）。包内带 manifest.json 时逐文件核对 bytes + sha256 防损坏；导入先落暂存目录、校验通过才原子换入，坏包不会连累同名的既有皮肤。改动包内文件即热重载（300ms 防抖），设置页卡片直接铺实况缩略图
+    - 背景图氛围层 — 皮肤可自带背景图：面板与终端表面转半透明压在图上，压暗层与表面不透明度都能在 theme.json 里调。透明主题下终端渲染退回 DOM（xterm 上游的 WebGL canvas 不透明，会把图整块盖住），切回不透明主题自动恢复 WebGL。皮肤的明暗由作者在 appearance 里定死，激活期间内置主题按钮置为未选中态
+    - 项目行悬停 pane 预览 — 悬停项目行 250ms 弹出该项目终端区的微缩布局拼图：按分屏树等比复现真实排布，与切过去看到的所见即所得；打开期间 500ms 重画，预览是活的。每个分屏格显示当前 tab 的画面，隐藏 tab 以「+N」徽章示数并附其中最高优先级的状态点——藏在非激活 tab 里的 AI 状态不漏报；没起过终端的项目显示占位卡
+    🐛 修复
+    - 分屏下 + 号的落位 — 点某一组的 + 号，新 tab 就加进那一组。此前靠 DOM 焦点猜「用户在哪」，焦点不在任何终端上时会落到第一个分屏去
+    - 会话续接报 No conversation found — claude --resume 只认「启动目录」对应的会话桶，起于子目录的会话在项目根恢复必然找不到。现在续接直接以会话记录里的 cwd 起 PTY，存量记录反查一次后随身份写回持久化，下次重启免查
+    - 背景图皮肤下分不清激活的 pane tab — 该皮肤下 --bg-terminal 与 --bg-elevated 几乎同色，激活态补一条不吃主题的 accent 指示条
+    - 关掉 hook 开关会让黄灯永久卡死 — AI 正跑着时去设置里关掉 hook，该 pane 仍被认作 hook 权威、状态停在处理中，而唯一能把它拉回来的停摆收敛却被跳过
+    🔒 安全加固（维护者审查）
+    外置皮肤是从别处下载来的共享产物，而 tauri.conf.json 的 csp 为 null，没有第二道防线——一个外链就能把应用启动时机与 IP 回传。本版把闸口补齐：
+    - theme.css 与 theme.json 的 tokens 走同一道外链闸 — 此前只有 theme.css 查 url()，而 tokens 只校验「必须是对象」，键值原样进 setProperty：键名不带 -- 时设的是真实 CSS 属性，一行 {"background-image":"url(https://…)"} 就绕开了全部检查。现在键名限 -- 开头的 CSS 变量，值过同一道闸，effects 的两个旋钮同理
+    - 裸字符串写法一并挡住 — Chromium 认 image-set("https://…" 1x)，不带 url() 照样发请求。现在 url() 与字符串字面量双查，取样前先剥 CSS 注释（注释里的 URL 是说明，不误杀）
+    - terminal 字段补色值校验 — 此前只有 colors 过校验，坏值会让 xterm 在换主题时半途抛，只改到一半、剩下的终端停在旧配色
+    - 带背景图时忽略 terminal.background — 它在展开顺序上排在透明化之后，一个照着内置主题抄全 24 字段的皮肤会把氛围图整块盖死，且没有任何提示
+    - 外置皮肤加载失败的回落 — 失败点若落在应用之后，此前只清配置不清 DOM，会留下「配置说没启用、界面上却还挂着」的半死状态
+    🔧 内部
+    - 6 套内置终端配色收敛进 builtinThemes.ts 统一出口
+    - pane 预览走「读 buffer 自绘」而非截图：隐藏 pane 的渲染是暂停的、WebGL 也没有 preserveDrawingBuffer，像素不可靠，但它的 buffer 一直被全局 pty-output 监听实时更新
+    - 回归测试：Node 20 个文件 / 99 条用例，Rust 410 条
+
+    - 感谢 @hitechr 贡献本版两块主体功能（#43）
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.11.0
+ReleaseTime: 2026-08-10T06:17:13.0000000Z

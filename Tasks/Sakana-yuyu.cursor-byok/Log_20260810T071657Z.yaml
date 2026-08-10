@@ -1,0 +1,27 @@
+Version: 0.0.87
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.87/cursor-byok-0.0.87-windows-x32-installer.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.87/cursor-byok-0.0.87-windows-x64-installer.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.87/cursor-byok-0.0.87-windows-arm64-installer.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.0.87
+    本版本聚焦三个稳定性修复：gpt-5.6 并行工具调用参数流回退安全默认、上下文 preflight 超限时的自动强制压缩兜底，以及长时 native 子代理不再被 exec 看门狗误杀。
+    修复
+    - gpt-5.6 并行工具调用回退串行默认：v0.0.85 自动开启 parallel_tool_calls 后，模型偶发返回截断或错误转义的工具参数，导致工具调用残缺。本版本改为安全默认：gpt-5.6 Responses 请求默认串行（parallel_tool_calls:false），用户通过 extra params 显式选择并行时仍尊重其配置。
+    - 上下文超限自动兜底压缩（自动 /summarize）：长会话中被冻结的头部历史让自动投影压缩结构性压不动，请求体积持续增长，最终以「Context Too Large After Compaction」终态失败。现在当自动压缩链穷尽、provider 请求前预算校验仍超限时，会先自动执行一次 /summarize 式强制压缩（覆盖所有历史轮次并真正重写会话），压缩完成后自动继续原请求；仅当压缩后仍超限才报错（每回合最多触发一次，避免死循环）。
+    - 长时 native 子代理不再被误杀：Cursor 原生子代理在客户端运行，长任务（约 30 分钟）因客户端不回传 exec 心跳，会被 30 分钟 exec 看门狗在与完成信号赛跑时强杀成超时。现在看门狗到期时若子代理仍在运行会先延期一次（总上限 60 分钟），只有真正失去信号才按超时收口；同时成功完成的子代理不再被误记为错误日志。
+    说明
+    - 本版本同时包含 v0.0.85 的全部更新（会话级调度与隔离、全局上下文投影、委派与子代理增强、设置与历史界面优化等）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/cursor-byok/releases/tag/v0.0.87
+ReleaseTime: 2026-08-10T06:22:48.0000000Z
