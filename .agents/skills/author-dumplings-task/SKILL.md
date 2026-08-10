@@ -5,6 +5,10 @@ description: Create, review, debug, or refactor Dumplings automation under Tasks
 
 # Author Dumplings tasks
 
+## Runtime
+
+Run Dumplings module commands and task validation with PowerShell 7.4 or later (`pwsh`). Windows PowerShell 5.1 is unsupported for PackageModule and Core.
+
 ## Workflow
 
 1. Confirm the package with `winget search`; Dumplings updates an existing manifest rather than authoring its first version.

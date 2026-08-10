@@ -7,6 +7,8 @@ description: Select and use shared Dumplings PackageModule, Core, PowerHTML, and
 
 ## Execution context
 
+Run these module functions with PowerShell 7.4 or later (`pwsh`). PackageModule and Core do not support Windows PowerShell 5.1.
+
 Core loads PackageModule and the PowerShell modules declared in `Preference.yaml` before it runs task scripts. Do not add `Import-Module` calls to `Tasks/*/Script.ps1`.
 
 For an independent repository shell, load the external modules and PackageModule before using the references:

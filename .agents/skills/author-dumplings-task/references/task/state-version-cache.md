@@ -51,4 +51,6 @@ Do not remove the cached file yourself. `PackageTask.Dispose()` owns cleanup. Su
 
 Prefer one aggregate `Get-<Family>Info` call when family-specific inspection is unavoidable. Do not call several `Read-*` helpers against the same installer.
 
+`Read-ProductVersionFromExe` returns the PE `ProductVersion` verbatim. A .NET informational version can include prerelease or build metadata such as `11.31.22413+d6e55d8f98`; do not assign it directly when the publisher, feed, or ARP uses a different package version. Compare authoritative source and installed-version evidence, keep the complete monotonic source value in `Version` when it is useful for update detection, and set an evidence-backed `RealVersion` for the WinGet `PackageVersion`. Do not strip arbitrary suffixes automatically.
+
 If the downloaded file is an unsupported custom EXE wrapper and the required version or ARP identity exists only in a nested MSI, follow [Custom EXE wrappers with nested MSI](../sources/wrappers-and-providers.md#custom-exe-wrappers-with-nested-msi). That fallback keeps the outer file cached, extracts only the verified payload, and parses the MSI once with `Get-MsiInstallerInfo`.

@@ -36,6 +36,8 @@ $MsiInfo.InstallLocationSwitch
 
 `Get-AdvancedInstallerInfo` parses the SFX payload-table selector fields and embedded `GeneralOptions`. For a direct package, Advanced Installer resolves the first main `(1, 0)` MSI entry. For a compressed package, it resolves the main `(3, 7)` archive entry and changes that archive path to `.msi`. `MsiPayloadSelection` exposes the selected paths and `ArchitectureSelectionMode` without executing the bootstrapper.
 
+The outer `$Info` object does not project nested MSI ARP fields. Read `ProductCode`, `UpgradeCode`, `AppsAndFeaturesProductCode`, `AppsAndFeaturesInstallerType`, display metadata, and install-location evidence from `$MsiInfo`. An Advanced Installer package can use an MSI product code internally while the MSI Registry table writes a visible custom EXE ARP key such as `Badge Studio 2.5.1`; `Get-AdvancedInstallerMsiInfo` returns that custom key when the table contains literal evidence.
+
 `ArchitectureSelectionMode: Wow64Suffix` means `AllPlatforms=true`: the x86 bootstrapper uses its base MSI on an x86 host and inserts `.x64` before the extension when `IsWow64Process` succeeds. An x86 bootstrapper running under ARM64 emulation follows the same `.x64` branch; this does not make its x64 MSI ARM64-compatible. `Get-AdvancedInstallerMsiInfo` validates the selected MSI metadata and rejects that mismatch.
 
 `ArchitectureSelectionMode: FixedPath` means the bootstrapper does not branch by host architecture. The same base path may contain an x86, x64, or ARM64 MSI, so do not infer architecture from the EXE stub or filename. For example, `FxSound.FxSound` uses one `AllPlatforms` EXE containing x86 and x64 MSIs and a separate fixed-path EXE containing `fxsound.arm64.msi`.
@@ -168,3 +170,4 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) to distinguish
 
 - `Cjwdev.ADAccountResetTool`: architecture-selected embedded MSI payloads.
 - `FxSound.FxSound`: x86/x64 selection in one bootstrapper and a separate ARM64 payload.
+- Evolis Badge Studio: nested MSI metadata exposes a versioned custom EXE ARP key even though the outer `Get-AdvancedInstallerInfo` result has no ARP identity.

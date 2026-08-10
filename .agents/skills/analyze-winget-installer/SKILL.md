@@ -5,6 +5,10 @@ description: Analyze Windows installers for WinGet manifests and Dumplings autom
 
 # Analyze WinGet installers
 
+## Runtime
+
+Run Dumplings module commands and host-side skill scripts with PowerShell 7.4 or later (`pwsh`). Windows PowerShell 5.1 is unsupported unless a specific self-contained guest collector says otherwise.
+
 ## Workflow
 
 1. Read [Installer analysis](references/workflows/installer-analysis.md), run `Get-WinGetInstallerAnalysis`, and select one family from its route table.

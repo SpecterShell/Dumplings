@@ -2,6 +2,8 @@
 
 Use this workflow only for facts static analysis cannot prove. Never execute an unknown installer on the host. The bundled scripts capture state but deliberately do not launch installers or applications.
 
+Run the host controller and Hyper-V commands in PowerShell 7.4 or later (`pwsh`). `Invoke-WinGetVMInstalledState.ps1` enforces this requirement because `Import-Module -UseWindowsPowerShell` is a PowerShell Core compatibility feature. Only the staged guest collector, `Get-WinGetVMInstalledState.ps1`, is designed for Windows PowerShell 5.1.
+
 ## 1. Preserve the Windows environment and prepare Hyper-V
 
 For local Windows validation, configure Codex to inherit the normal process environment while retaining its default filtering of variable names containing `KEY`, `SECRET`, or `TOKEN`:
@@ -37,6 +39,10 @@ Get-Command Get-VM, Copy-VMFile
 Keep the repair and Hyper-V operation in the same Codex shell call because each call may start a fresh PowerShell process. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for the controller's small collector-script transfer.
 
 Start from a clean checkpoint. Do not attach host submission directories as writable shared storage.
+
+### Checkpoints with GPU partitions
+
+Hyper-V can reject `Restore-VMSnapshot` while a VM with a GPU partition adapter is running. Shut down the guest before restoring the checkpoint, wait for the VM state to become `Off`, restore the checkpoint, and then start it. If restore still fails, use a validation VM without GPU-P or remove and recreate the GPU partition around the checkpoint lifecycle. A failed restore is not a clean baseline; do not continue validation against the previous installed state.
 
 ## 2. Capture the baseline
 

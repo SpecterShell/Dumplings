@@ -40,6 +40,8 @@ $LatestRelease = $ReleasesContent | ConvertFrom-SquirrelReleases | Where-Object 
 
 Prefer the parser result over string probing. The `--silent` switch is common for Squirrel, but it is also used by unrelated installers and can produce false positives. Strong static evidence is an embedded `.nupkg` containing `.nuspec`, a direct Squirrel/Velopack nuspec ZIP payload, or the Squirrel.Windows setup resource layout where the update ZIP is stored as PE resource type `DATA` with resource ID `131`. If `Get-SquirrelInfo` fails but the package is still known to be Squirrel from a `RELEASES` feed, use the feed metadata only as update evidence and VM-validate the setup EXE before writing manifest ARP fields.
 
+A .NET single-file bundle that contains `Squirrel.dll` or `NuGet.Squirrel.dll` is not necessarily a Squirrel setup. The application may use Squirrel as a runtime update client while downloading or constructing package state after launch. `Get-SquirrelInfo` accepts this layout only when the bundle or another validated container exposes nupkg, nuspec, or RELEASES metadata. Microsoft Advertising Editor is a current example: its .NET bundle contains Squirrel libraries but no embedded Squirrel package metadata, so the parser rejects it quickly and VM evidence remains necessary for its installed ARP identity.
+
 ### Resolve package identity, scope, and ARP
 
 Squirrel-style installers are usually user-scope and write HKCU ARP entries. Use parser-derived `.nuspec` `id`, title, version, and publisher values for ProductCode/display evidence. VM-check ARP and upgrade behavior when the parser cannot prove the embedded package identity.

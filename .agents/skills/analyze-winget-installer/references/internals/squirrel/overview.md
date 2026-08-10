@@ -25,13 +25,18 @@ Velopack PE setup
     +-- PayloadLength, int64 LE
     +-- 32-byte Velopack signature
     `-- [PayloadOffset, Length] -> nupkg/ZIP
+
+.NET single-file application using Squirrel libraries
+`-- .NET bundle header and file-entry table
+    +-- Squirrel.dll / NuGet.Squirrel.dll
+    `-- no nupkg, nuspec, or RELEASES entry -> reject as a Squirrel setup
 ```
 
 Velopack's signature is `94 F0 B1 7B 68 93 E0 29 37 EB 34 EF 53 AA E7 D4 2B 54 F5 70 7E F5 D6 F5 78 54 98 3E 5E 94 ED 7D`. Resource and locator ranges are absolute after PE RVA mapping. The parser requires a valid ZIP/nupkg and nuspec metadata, bounds candidate count/range extraction, and does not classify from `--silent` or a bare ZIP signature alone.
 
 ## Detection invariants
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence.
+Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence. A validated .NET bundle file table containing Squirrel libraries without package metadata is a runtime-client false positive, not an alternate setup layout.
 
 ## Metadata projection
 
@@ -47,7 +52,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Custom runtime bootstrappers that contain Squirrel libraries but obtain package metadata after launch cannot provide static nuspec identity through this parser. Their installed ARP identity requires VM evidence.
 
 ## Implementation mapping
 
@@ -61,3 +66,4 @@ Use generated malformed fixtures and the behaviorally distinct real installers c
 
 - [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 - [Velopack](https://github.com/velopack/velopack)
+- [.NET single-file bundle manifest](https://github.com/dotnet/dotnet/tree/main/src/runtime/src/installer/managed/Microsoft.NET.HostModel/Bundle)

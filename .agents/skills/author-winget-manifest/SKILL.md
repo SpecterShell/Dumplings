@@ -5,6 +5,10 @@ description: Author, review, or update Windows Package Manager winget-pkgs YAML 
 
 # Author WinGet manifests
 
+## Runtime
+
+Run Dumplings module commands and host-side skill scripts with PowerShell 7.4 or later (`pwsh`). Windows PowerShell 5.1 is unsupported unless a specific self-contained guest collector says otherwise.
+
 ## Workflow
 
 Read only the references needed for the current stage:

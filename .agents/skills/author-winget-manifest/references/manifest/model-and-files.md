@@ -39,9 +39,19 @@ Keep one working manifest set as the source of truth. After a download or parser
 
 Do not keep completed field values only in chat, scratch variables, or a final checklist while the manifest remains stale. Large raw evidence still belongs under `Sandbox/Evidence`; the working YAML and logical model should contain every field already proved. Omit unresolved optional fields until evidence arrives. If a required field is still unresolved, keep the pre-manifest evidence under `Sandbox/Evidence/.../manifest` and create the valid working set immediately after that blocker is resolved.
 
+## Logical field locations
+
+The logical model separates package identity, installer data, and localization instead of mirroring one physical YAML file:
+
+- `PackageIdentifier`, `PackageVersion`, `Channel`, `Moniker`, and `ManifestVersion` are model-level fields. `Moniker` serializes to the default-locale document, but mutate it with `-Target Package -Path '/Moniker'`; it is not stored inside `DefaultLocalization`.
+- `InstallerDefaults` contains fields legal at the installer-manifest root. `Installers` contains effective authored entries after those defaults are applied. Arrays remain atomic, while dictionary leaves inherit recursively.
+- `DefaultLocalization` contains default-locale fields other than promoted model fields such as `Moniker`. `Localizations` contains additional locale dictionaries.
+
+`New-WinGetManifest -InstallerDefaults` applies the supplied defaults to compatible effective installer entries before validation and serialization. With `Set-WinGetManifestValue -Target Package`, direct installer-root paths such as `/AppsAndFeaturesEntries`, `/Protocols`, or `/ReleaseDate` are routed through `InstallerDefaults` and applied across compatible installers. Use `-Target Installer` for one installer and `-Target Locale` for localized fields. Unknown package paths terminate instead of being silently discarded.
+
 ## Authoring API
 
-For programmatic authoring, load `Modules/PackageModule/Index.ps1` and operate on the logical manifest model:
+For programmatic authoring, run PowerShell 7.4 or later, load `Modules/PackageModule/Index.ps1`, and operate on the logical manifest model:
 
 ```powershell
 $DefaultLocalization = [ordered]@{ PackageLocale = 'en-US'; Publisher = 'Vendor'; PackageName = 'Package'; License = 'Proprietary'; ShortDescription = 'Package description.' }
@@ -60,7 +70,8 @@ This initial save is a working revision, not the end of authoring. Re-read or re
 - Use `Add-WinGetManifestInstaller`, `Set-WinGetManifestInstaller`, and `Remove-WinGetManifestInstaller` for effective installer entries. Exact-match selectors must identify one entry.
 - Use `Add-WinGetManifestLocale`, `Set-WinGetManifestLocale`, and `Remove-WinGetManifestLocale` for locale dictionaries. Locale tags match case-insensitively and the default locale cannot be removed.
 - Use `Set-WinGetManifestValue` and `Remove-WinGetManifestValue` for focused RFC 6901 property paths. Numeric segments traverse existing array items, so `/AppsAndFeaturesEntries/0/DisplayName` addresses the first entry. Arrays do not merge, and adding or removing an array item requires replacing the parent array.
-- `Save-WinGetManifest` serializes, optimizes, validates, stages, and atomically replaces a complete leaf directory. Use `-ErrorOnWarning` for strict warning behavior and `-WhatIf` before an unfamiliar mutation.
+- Use exported `ConvertTo-WinGetAuthoringDictionary` when a `PSCustomObject` must become a detached ordered dictionary. Existing ordered dictionaries and other `IDictionary` values can be passed directly.
+- `Save-WinGetManifest` serializes, optimizes, validates, stages, and atomically replaces a complete leaf directory. When the path is under a directory named `manifests`, it verifies the first-letter, identifier-component, and version hierarchy before writing. Use `-ErrorOnWarning` only when every warning must block, and use `-WhatIf` before an unfamiliar mutation.
 - `Modules/PackageModule/Utilities/WinGetManifest.ps1` exposes the same workflow as a thin CLI with `new`, installer/locale/value operations, `validate`, and `show`. It never submits manifests or executes installers.
 
 `Save-WinGetManifest` runs `Optimize-WinGetManifest` before serialization. A sole `AppsAndFeaturesEntries` item loses `ProductCode` when it duplicates installer-level `ProductCode`, and loses `DisplayName` or `Publisher` when WinGet normalization matches an authored locale identity. The optimizer removes the entry entirely when no meaningful override remains. These fields are editable, but redundant values are intentionally not emitted.
