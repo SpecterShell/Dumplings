@@ -1,0 +1,84 @@
+Version: 0.5.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.5.4/Agentero_0.5.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.5.4/Agentero_0.5.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.5.4 focuses on visible background processing and typography freedom: notes can now be exported to PDF / PNG, interface and editor fonts and line height are fully configurable, and PDF parsing, reference extraction, layout analysis, and bulk downloads all run through a unified background task center. Full-document translation works per page and is cached on disk, and the sidebar graph is now a citation graph. A broad set of editor, PDF viewer, and Agent performance improvements lands alongside fixes for PDF blank pages, swallowed inline math, and external rename tracking.
+    Features
+    - Note export: Markdown notes can be exported to PDF or PNG, with expanded ![[]] embeds, optional paper-note headers and watermark; PDFs keep a selectable text layer and clickable links. (#267 by @ffy6511)
+    - Fonts & typography: Appearance settings gain separate interface / text / monospace fonts plus Markdown font size and line height, with a searchable picker that lists installed system fonts; legacy settings migrate automatically. (#287 by @ffy6511)
+    - Background task center: PDF body parsing, reference extraction, layout analysis, and bulk downloads now run through the JobCenter scheduler: per-kind concurrency caps, cancellation, aggregated progress in the tasks panel, and automatic backfill of missing parses and PAPER.md when opening a vault or paper. (commit by @Phil-Fan)
+    - Per-page layout translation: Full-document PDF translation can run page by page, and completed translations are cached in a local sidecar file so reopening a document never re-translates. (commit by @Phil-Fan)
+    - Citation graph: The sidebar graph switches from wikilinks to a paper citation graph, with nodes scaled by incoming citation count and centered on the selected paper; editor backlinks move to a status bar hover card. (commit by @Phil-Fan)
+    - Editor status bar: The Markdown editor gains a status bar showing backlinks, word count, and character count. (commit by @Phil-Fan)
+    - Highlight editing: Existing PDF highlights can be deleted or recolored directly from the selection. (commit by @Phil-Fan)
+    - Split pane shortcut: A new keyboard shortcut quickly splits the workspace pane. (commit by @Phil-Fan)
+    - File tree interactions: Dragging or pasting onto a paper item resolves to its parent folder; paper items no longer offer rename, while files and folders use inline rename. (commit by @Phil-Fan)
+    Improvements
+    - PDF streaming rendering: Agent streaming replies no longer re-render the whole viewer and every mounted page per chunk; the layout-translate overlay caches font fitting and buckets items per page so unchanged pages skip redraws. (#280, #279 by @Phil-Fan)
+    - Annotation loading: Highlight and mark files load concurrently, self-write echo refreshes are suppressed, and bulk annotation imports rebuild once instead of once per item. (#278 by @Phil-Fan)
+    - Editor hot paths: Cursor movement, TOC, wikilink completion, and the find bar drop redundant full-document scans and add debouncing for smoother typing in large documents. (#282 by @Phil-Fan)
+    - Agent resource management: Closing panels or switching agents cleans up streaming listeners, cancels pending runs, and debounces warm-up spawns; unchanged config-sync RPCs are skipped and session loading waits for replay silence instead of a fixed delay. (#277, #281 by @Phil-Fan)
+    - Wiki index: Autosave echo events no longer trigger a full Wiki graph rebuild; external modifications still refresh as before. (#276 by @Phil-Fan)
+    - Translation session reuse: When using an Agent as the translation backend, one ACP session is reused per paper instead of creating a new session per translation. (commit by @Phil-Fan)
+    - Import downloads: PDF and arXiv TeX source download concurrently during paper import, shortening import time. (commit by @Phil-Fan)
+    - Agent lifecycle progress: Agent lifecycle task progress now shows inline on each agent row and syncs to the background tasks panel. (commit by @Phil-Fan)
+    - Linux requirements: Documentation now states the Linux desktop baseline as Ubuntu 22.04+ / webkit2gtk 4.1; older systems are no longer supported. (commit by @ffy6511)
+    Fixes
+    - PDF blank pages: Fixed the tab-switch race where a stale document close disposed a freshly opened document, breaking layout analysis and blanking pages; the ref-count patch now covers the worker-engine cache. (commit by @JiaheChen2002)
+    - Rename tracking: The file watcher now initializes its file-ID cache at startup, so external renames on macOS pair correctly and flow into wikilink repair. (#289 by @July-h5kf3)
+    - Duplicate catalog rows: Doctor detects and repairs duplicate catalog rows with one click, and the paper list deduplicates by id. (commit by @Phil-Fan)
+    - Inline math: Inline math followed immediately by plain text is no longer swallowed by the editor. (commit by @Phil-Fan)
+    - Context menu: The webview default context menu is disabled, hiding its reload button. (commit by @Phil-Fan)
+    - Vault initialization: Opening a vault no longer creates a default plans folder. (commit by @Phil-Fan)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.5.3...v0.5.4
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 笔记可导出为 PDF / PNG
+    - 外观字体与行距全面可配；
+    - PDF 解析、参考文献提取、版面分析、批量下载统一进入后台任务中心，
+    - 全文翻译支持按页并落盘缓存；
+    - 侧栏关系图升级为文献引用图谱。
+    新功能
+    - 笔记导出：Markdown 笔记可导出为 PDF 或 PNG，支持展开 ![[]] 内嵌内容、论文笔记页眉与可选水印，PDF 保留可选中文字层与可点击链接。（#267 by @ffy6511）
+    - 字体与排版：外观设置新增界面 / 正文 / 等宽三分字体与 Markdown 字号、行距配置，字体选择器支持检索本机已安装字体，旧配置自动迁移。（#287 by @ffy6511）
+    - 后台任务中心：PDF 正文解析、参考文献提取、版面分析、批量下载统一进入 JobCenter 调度：按类型限流、支持取消、进度聚合显示在任务面板，打开 Vault 与打开论文时自动补齐缺失的解析与 PAPER.md 回填。（commit by @Phil-Fan）
+    - 按页版面翻译：PDF 全文翻译支持按页进行，整篇翻译结果缓存到本地 sidecar 文件，重开文档不再重复翻译。（commit by @Phil-Fan）
+    - 引用关系图谱：侧栏图谱由双链图切换为基于文献引用关系的关系图谱，节点按被引量缩放、以当前选中论文为中心；编辑器反向链接移至状态栏悬浮卡片。（commit by @Phil-Fan）
+    - 编辑器状态栏：Markdown 编辑器新增状态栏，展示反向链接、字数与字符数。（commit by @Phil-Fan）
+    - 高亮编辑：PDF 中选中已有高亮可直接删除或更换颜色。（commit by @Phil-Fan）
+    - 分屏快捷键：新增快速分栏快捷键，一键拆分工作区面板。（commit by @Phil-Fan）
+    - 文件树交互：拖拽或粘贴到论文条目时自动落到其所在文件夹；论文条目不再提供重命名，文件与文件夹改为行内重命名。（commit by @Phil-Fan）
+    改进
+    - PDF 流式渲染：Agent 流式回复不再逐 chunk 重渲染整个阅读器与全部挂载页；全文翻译覆盖层增加字号拟合缓存并按页分桶，未变化的页不再重绘。（#280、#279 by @Phil-Fan）
+    - 批注加载：高亮与批注文件改为并发读取，抑制自写回声刷新，批量导入注释由逐条全量重建合并为一次重建。（#278 by @Phil-Fan）
+    - 编辑器热路径：光标移动、目录、双链补全与查找栏收敛全文遍历并加防抖，大文档连续输入与移动更顺滑。（#282 by @Phil-Fan）
+    - Agent 资源管理：关闭面板 / 切换 Agent 时清理流式监听并取消挂起任务，预热进程去抖启动；跳过未变化的配置同步 RPC，会话加载改为等待历史回放静默，移除固定等待。（#277、#281 by @Phil-Fan）
+    - Wiki 索引：编辑器自动保存的回声事件不再触发全量 Wiki 索引重建，外部修改仍照常刷新。（#276 by @Phil-Fan）
+    - 翻译会话复用：使用 Agent 作为翻译后端时按文献复用 ACP 会话，不再每次翻译新建会话。（commit by @Phil-Fan）
+    - 入库下载：导入论文时 PDF 与 arXiv TeX 源码并发下载，缩短入库等待。（commit by @Phil-Fan）
+    - Agent 生命周期进度：Agent 生命周期任务进度直接显示在对应 Agent 行内，并同步到后台任务面板。（commit by @Phil-Fan）
+    - Linux 依赖下限：文档明确 Linux 桌面端需要 Ubuntu 22.04+ / webkit2gtk 4.1，低版本系统不再承诺支持。（commit by @ffy6511）
+    修复
+    - PDF 白屏：修复切换标签页时旧文档关闭与新文档打开竞态导致版面分析失败、页面空白的回归，引用计数补丁扩展到 worker 引擎缓存。（commit by @JiaheChen2002）
+    - 重命名监听：启动文件监听时初始化文件 ID 缓存，macOS 上的外部重命名事件可正确配对前后路径并进入双链修复流程。（#289 by @July-h5kf3）
+    - 目录重复数据：Doctor 新增目录重复行检测与一键修复，论文列表按 id 去重显示。（commit by @Phil-Fan）
+    - 内联公式：修复内联公式后紧跟正文时被编辑器吞掉的问题。（commit by @Phil-Fan）
+    - 右键菜单：禁用 webview 默认右键菜单，隐藏其中的 reload 按钮。（commit by @Phil-Fan）
+    - Vault 初始化：打开 Vault 时不再自动创建默认 plans 文件夹。（commit by @Phil-Fan）
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.5.3...v0.5.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.5.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.5.4
+ReleaseTime: 2026-08-11T06:16:16.0000000Z
