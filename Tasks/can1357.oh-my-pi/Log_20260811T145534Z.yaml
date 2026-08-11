@@ -1,0 +1,152 @@
+Version: 17.2.13
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.13/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed Cursor sessions re-executing settled tools when an owned dialect projector rebuilds toolCall blocks: snapshotAssistantContentBlock now copies kCursorExecResolved explicitly so agent-loop still skips already-settled calls.
+    @oh-my-pi/pi-ai
+    Changed
+    - Standardized first-party outbound User-Agent headers on omp/<version> via the shared USER_AGENT utility.
+    Fixed
+    - Fixed the Amazon Bedrock and Cursor transports ignoring StreamOptions.headers; both built their request headers from scratch, so caller-supplied tracing or attribution headers were silently dropped while working on every other provider (#8107 by @svperfecta).
+    - Fixed Antigravity Flash turns hanging after successful response headers when the endpoint never emitted an SSE event; the provider now cancels the stalled body and fails over after 60 seconds while retaining the longer allowance for Pro reasoning starts.
+    - Fixed Cursor exec-bridge bash/grep calls failing ArkType validation when the server omitted optional frame fields: synthesized and executed tool args now drop undefined keys (cwd, case, skip, timeout) instead of writing optional: value || undefined.
+    - Fixed Cursor sessions double-executing settled tools when tools.format is an owned dialect (e.g. gemini): wrapInbandToolStream rebuilt toolCall blocks without copying kCursorExecResolved, so agent-loop re-ran bash/grep/todo and appended a second result for the same call id.
+    - Fixed Codex Responses Lite requests for opaque model codenames such as Daybreak omitting the required reasoning.context: "all_turns" value and failing with HTTP 400.
+    - Fixed Cursor personal usage reporting for current Pro / Pro+ / Ultra /api/usage-summary payloads that expose individualUsage.plan (and optional onDemand) instead of the older individualUsage.overall bucket (#7998 by @dnth).
+    - Allowed passive Google callers to accept empty or thinking-only STOP responses as successful silence instead of exhausting the provider's empty-response retry budget. (#8223)
+    - Fixed the AWS credential resolver ignoring role_arn profiles: shared-config role chaining (source_profile recursion, web_identity_token_file, credential_source) now resolves via STS AssumeRole/AssumeRoleWithWebIdentity, honoring role_session_name/duration_seconds/external_id, so Bedrock is detected on EKS/IRSA and multi-account setups instead of reporting "No models available" (#8209).
+    - Fixed Bedrock availability being under-detected on Nitro/EKS hosts: the EC2 metadata probe now recognizes Nitro DMI markers (board_asset_tag instance ids, Amazon EC2 vendor fields) in addition to the Xen ec2 UUID prefix (#8209).
+    - Fixed DeepSeek Responses targets (opencode-go) rejecting a thinking-mode continuation with 400 The reasoning_text in the thinking mode must be passed back to the API after a prewalk hand-off plus mid-run compaction: the Responses input builder re-encoded replayed assistant turns without a reasoning item, so the request enabled reasoning but shipped no reasoning_text. The encoder now synthesizes a reasoning_text reasoning item for every replayed assistant turn when the target requires reasoning replay in thinking mode (requiresReasoningContentForAllAssistantTurns / requiresReasoningContentForToolCalls), mirroring the chat-completions reasoning_content safety net (#8248).
+    @oh-my-pi/pi-catalog
+    Changed
+    - Standardized catalog discovery User-Agent headers on omp/<version> via the shared USER_AGENT utility.
+    Fixed
+    - Marked meta/muse-spark-1.2 and muse-spark-1.2-contributor as image-capable (input: ["text", "image"]) with the same Responses reasoning, thinking, and cost metadata as muse-spark-1.1 (contributor uses its discounted 0.1/0.2 pricing), so omp models no longer lists them as text-only.
+    - Fixed GLM-5.2 thinking levels across Baseten, CoreWeave, HuggingFace, and other uppercase-ID resellers, which were getting the generic xhigh effort ladder instead of the GLM-5.2-specific tiers. Also added Baseten zai-org/GLM-5.2-Fast and Fireworks glm-5.2-fast as reasoning models (#8200 by @jcfrancisco).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added searxng.safesearch setting option for SearXNG searches
+    - omp update now honors an omp.dist distribution field published in the release's npm manifest and treats major-version bumps without one as binary-only: bun/npm-managed installs are migrated to the standalone GitHub release binary in place instead of running a package-manager install that a non-npm release (e.g. a runtime change) would break. Windows script-shim installs (npm's omp.cmd/omp.ps1) are taken over seamlessly by installing omp.exe beside the shims and retiring them.
+    - Added support for Cloudflare AI Gateway routing for Gemini search
+    - Added support for Exa MCP search provider
+    - Added domain inclusion/exclusion filtering and URL deduplication for TinyFish search
+    - Fixed /vibe mode losing the pre-vibe toolset when a session already in vibe mode switches into another session that is also in vibe mode, which left bash, edit, write, grep, glob, task, and hub silently unavailable after exiting the mode; the pre-vibe toolset is now recorded on the mode_change entry and restored from there.
+    - Preserved extension-filtered pasted image payloads and source links when /goal, /plan, or /vibe submits the composer draft.
+    - Fixed Agent Hub lineage registration timestamps displaying in UTC instead of the user's local timezone.
+    - Fixed Python/Julia/Ruby eval kernels failing to start after their staged runner script was cleared mid-session (e.g. a macOS tmpdir sweep): the memoized runner path is now re-validated so a long-lived process self-heals instead of only recovering on restart (#8140).
+    - Fixed session resume fully reading and parsing the journal twice by reusing the entries already loaded by SessionManager.open() (#8117).
+    - Fixed RPC message_end frames being serialized more than once before output while preserving v1 and v2 wire bytes (#8118).
+    - Fixed message conversion caching strongly retaining the last session transcript and converted output after session disposal (#8119).
+    - Fixed timed-out LSP requests continuing to consume server CPU and block queued requests by sending $/cancelRequest (#8116).
+    - Fixed shutdownAll() leaving the configured LSP idle checker alive and preventing short-lived SDK hosts from exiting (#8115).
+    - Fixed terminal Mermaid borders and junctions using low-contrast UI chrome colors instead of the active theme's readable content color.
+    - Fixed Cursor provider sessions flooding bash/grep validation errors (cwd/case/skip "was undefined") when Cursor omitted optional exec-frame fields; the exec bridge now omits unset optional kwargs before tool execution and transcript synthesis.
+    - Added structured reset-reason logging to advisor context re-primes (issue #7226): every history-rewrite trigger (compact, auto-compaction, compaction-rescue, shake, drop-images, prune-tool-outputs, prune-stale-tool-results, conversation-boundary, context-maintenance) now emits an advisor context reset debug event with its reason, so full-transcript replays can be attributed to a concrete path.
+    - Added quarantine-recovery and quarantine-retry-exhausted reset reasons to advisor context-reset debug logs, so advisor full re-primes after quarantined output remain attributable without changing quarantine retry semantics (issue #7226).
+    Changed
+    - Standardized first-party outbound User-Agent headers on omp/<version> via the shared USER_AGENT utility.
+    Fixed
+    - Fixed /usage, /advisor status, and every other panel command answering only after the agent stopped working. Since 17.0.1 their output was queued until the turn settled (to stop mid-turn transcript mounts duplicating rows in native scrollback, issues #4806/#6767), and the deferral was silent, so on a long turn the command was indistinguishable from a dead one. The panel now renders immediately above the editor in an anchored container that is cleared and rebuilt in place, never entering the transcript, and the full output still lands in the transcript at the next settle. The preview is capped to 40% of the viewport (minimum 6 rows) so a tall report cannot push the prompt off screen.
+    - Fixed the todo panel showing no progress while the agent worked through a plan: every sub-todo read as unchecked no matter how far along the run was. Three causes, all in the collapsed (default) view — the walking viewport dropped every closed row, so a completion only ever removed a line and the card's strike-reveal animation ran against a row nobody rendered; the phase the agent was actually in was the one phase header rendered without a done/total count; and the 60s todo auto-clear deleted closed tasks from an unfinished plan, resetting the phase counter to 0/n and renumbering the stages until the next todo call restored the real snapshot. The viewport now keeps the newest closed task as a checked lead row (additive to the open-task cap), every phase header carries its progress, counts include abandoned tasks, and auto-clear only fires once the whole list is settled.
+    - Status-line usage now renders monthly Cursor quotas (mo N%) in addition to the existing 5h / 7d windows (#7998 by @dnth).
+    - Restored the ctx.ui.custom() overlay API that regressed after v0.45.6: overlayOptions (anchor/width/maxHeight/margin positioning and sizing) is now forwarded to showOverlay instead of a hardcoded full-cover geometry, onHandle receives the resulting OverlayHandle, and OverlayHandle/OverlayOptions are exported from the extension API types again.
+    - Fixed a content refusal that arrives after the model already emitted a tool call ending the turn outright instead of consulting the model fallback chain. When the refused turn produced nothing visible and every emitted tool call provably never executed (each paired with a synthetic executed: false result), the turn is now retryable and the configured retry.fallbackChains entry gets its chance, matching how a refusal with no tool calls already behaves.
+    - Fixed proxy discovery preferring the bundled catalog name over the proxy-reported name, so omp models refresh now updates stale display names (e.g. a proxy serving longcat-2.0 as "LongCat" no longer shows the raw id).
+    - Fixed the compiled binary build on Windows: Bun.Glob.scan yields backslash-separated paths, which the legacy Pi virtual module used verbatim for export keys and generated identifiers, producing invalid JavaScript.
+    - Fixed Ctrl+O (app.tools.expand) not expanding truncated tool output while a tool-approval prompt or other selection dialog held keyboard focus, by promoting the shortcut to a global input listener that fires regardless of focus (it still defers to fullscreen overlays and the tree selector's own Ctrl+O filter cycle) (#7837).
+    - Fixed omp commit printing a wall of bundled source when a pre-commit/commit-msg hook refuses a commit: hook failures are now reported with the hook's own message, split plans report how far they got, and the command exits non-zero cleanly (#7834).
+    - Fixed omp commit --push exiting 0 without pushing when the working tree is already clean; it now pushes the existing commits (or fails non-zero if the push is refused) (#7834).
+    - Subagents spawned through a model-role alias now inherit that role's retry.fallbackChains entry instead of the default chain. Both spawn paths (task and vibe workers) expand the alias — the bundled task agent's @task, sonic/scout's @smol — before it reaches the executor, so the role identity was lost and every child was pinned to the default chain, routing retries onto models the operator had deliberately kept out of the role's chain. Completes #7694, which only covered agents whose unexpanded alias reached the executor (#7910 by @enieuwy).
+    - Fixed standalone AGENTS.md discovery stopping at nested Git repository roots, so enclosing workspace instructions are loaded while home-level instructions remain scoped correctly.
+    - Split the advisor Session update delivery into per-source-message user messages (single Agent.prompt(AgentMessage[]) call) so provider prompt caches grow with the session instead of staying pinned at the instructions/tools boundary; rendering stays byte-identical to the old single-block update.
+    - Restore the advisor primary-context dedup map when a failed advisor turn is rolled back, so retried batches re-deliver first-time plan/goal context in full instead of collapsing it to "(unchanged — still in effect)".
+    - Include all renderer-read fields (excludeFromContext, bashExecution command, pythonExecution code, branch/compaction summary + fromId, fileMention files) in advisor prefix fingerprints so clones changing only those fields correctly trigger a re-render.
+    - Fixed Gemini advisors treating a valid silent review as an empty-response failure, repeatedly retrying the turn and eventually dropping the advisor backlog. (#8223)
+    - Fixed bash-tool commands receiving an unguarded CI=1, which broke clap-based CLIs (e.g. tauri android build) that parse CI as a strict boolean, and ignored the documented PI_BASH_NO_CI opt-out. The per-command env now injects clap-compatible CI=true and honors PI_BASH_NO_CI/CLAUDE_BASH_NO_CI (#8229).
+    - Fixed macOS key hints rendering the Linux/Windows modifier names Alt and Super across every hint surface (/hotkeys, status bar, autocomplete, pending-message bar, copy selector, ask dialog): alt now renders as Option and super as Cmd on darwin, and the static /hotkeys navigation rows are platform-aware instead of hardcoding macOS Option/Cmd names on every platform (#8235).
+    - Fixed omp plugin uninstall <plugin> --dry-run actually removing the plugin on both the npm and marketplace routes; dry-run now reports what would be removed and leaves installed plugin state unchanged (#8178).
+    - Fixed handled OMP shutdown persisting running subagents as terminally aborted instead of restoring their transcripts as parked and revivable. (#8216)
+    - Fixed always-ask approval prompts opening before large edit previews finish rendering, preventing blind approvals (#7957).
+    - Fixed Pi-compatible extensions registering tools during asynchronous session startup being omitted from the live model tool registry.
+    Removed
+    - Removed the resolveAgentModelSource model-resolver export, whose only use was being fed to resolveExplicitModelRole. Replaced by resolveAgentModelSelection, which returns the expanded patterns and the pre-expansion role together so a spawn path cannot derive one without the other (#7910 by @enieuwy).
+    - A run is now attributed to the model that actually produced its output, not whichever model the session was last pointed at. A retry fallback that errored on its first request — an exhausted quota, a hard provider error — was credited with the whole run in the Agent Hub row and the settled task result, even when the previous model did every turn. Sessions expose the serving model directly, holding the last model that produced output while a candidate is armed but unproven, and transcript-derived history stops at the newest turn that produced output.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed inline images rendering permanently cropped on Kitty direct-placement terminals (WezTerm, Warp) when an image block straddled the viewport top during streaming: placements are now clipped to the visible slice at write time, and a placement id whose cells reached native scrollback is never re-used (#8070 by @voonfoo)
+    @oh-my-pi/pi-utils
+    Changed
+    - Changed stale process-log retention from the newest five files globally to one newest file per completed process and day within the current and previous four local calendar days. This preserves bounded daily diagnostic coverage while continuing to remove one-use audit files.
+    - Changed outbound User-Agent consumers to share the versioned USER_AGENT constant (omp/<version>).
+    Fixed
+    - Fixed Mermaid ASCII state pseudostates rendering empty boxes, miscoloring final-state borders, and inverting rounded corners in bottom-to-top diagrams.
+    What's Changed
+    - fix(lsp): stop idle checker during shutdown by @MikeeI in https://github.com/can1357/oh-my-pi/pull/8154
+    - fix: make terminal Mermaid state diagrams readable by @shawnkoh in https://github.com/can1357/oh-my-pi/pull/8172
+    - fix(cursor): omit undefined exec args and keep exec-resolved under owned dialects by @jairuspace in https://github.com/can1357/oh-my-pi/pull/8183
+    - fix(ai): resolve AWS role_arn/source_profile role chains for Bedrock by @roboomp in https://github.com/can1357/oh-my-pi/pull/8212
+    - Fix/8030 osc133 command start by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/8213
+    - fix(agent): park subagents on shutdown by @roboomp in https://github.com/can1357/oh-my-pi/pull/8218
+    - fix(ai): support Daybreak Responses Lite by @pickpocket in https://github.com/can1357/oh-my-pi/pull/8228
+    - fix(coding-agent): emit clap-compatible CI=true and honor PI_BASH_NO_CI by @roboomp in https://github.com/can1357/oh-my-pi/pull/8230
+    - fix(tui): render platform-aware modifier labels on macOS by @roboomp in https://github.com/can1357/oh-my-pi/pull/8238
+    - fix(utils): retain one rolled log per process day by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/7120
+    - fix(advisor): prevent false full replays and preserve cache growth by @cuipengfei in https://github.com/can1357/oh-my-pi/pull/7247
+    - fix: discover workspace AGENTS files by @listellm in https://github.com/can1357/oh-my-pi/pull/7703
+    - fix(coding-agent): answer panel commands immediately during a turn by @mvid in https://github.com/can1357/oh-my-pi/pull/7856
+    - fix(task): key subagent fallback chains off the pre-expansion model role by @enieuwy in https://github.com/can1357/oh-my-pi/pull/7910
+    - fix(coding-agent): let a classifier refusal cascade when its tool calls never ran by @mvid in https://github.com/can1357/oh-my-pi/pull/7930
+    - fix(coding-agent): resolve xd:// device dispatches against device user policy first by @re2zero in https://github.com/can1357/oh-my-pi/pull/7945
+    - fix(tui): show edit previews before approval by @roboomp in https://github.com/can1357/oh-my-pi/pull/7959
+    - fix(coding-agent): surface todo progress in the collapsed panel by @z80dev in https://github.com/can1357/oh-my-pi/pull/7965
+    - fix(session): attribute a run to the model that produced its output by @enieuwy in https://github.com/can1357/oh-my-pi/pull/7980
+    - fix(vibe): restore the pre-vibe toolset when switching between vibe sessions by @iskWang in https://github.com/can1357/oh-my-pi/pull/7983
+    - fix(ai): map Cursor plan rails to dashboard percents and show mo N% by @dnth in https://github.com/can1357/oh-my-pi/pull/7998
+    - test(coding-agent): hermeticize agent dir in claude-plugins discovery tests by @szavadsky in https://github.com/can1357/oh-my-pi/pull/8018
+    - fix(tui): keep pasted images when a mode command submits the draft by @fatihaziz in https://github.com/can1357/oh-my-pi/pull/8050
+    - fix(prompts): disambiguate the grep tool from shell grep in the system prompt by @zhang17-24 in https://github.com/can1357/oh-my-pi/pull/8066
+    - fix(extensions): register lifecycle tools by @mrexodia in https://github.com/can1357/oh-my-pi/pull/8069
+    - fix(tui): clip direct Kitty placements when image blocks straddle the viewport top by @voonfoo in https://github.com/can1357/oh-my-pi/pull/8070
+    - fix(coding-agent): display subagent registration time locally by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/8074
+    - fix(ai): bind the IPv6 loopback so dev servers stop stealing OAuth callbacks by @jwaldrip in https://github.com/can1357/oh-my-pi/pull/8081
+    - test(coding-agent): flush immediate before asserting tiny-title prewarm by @szavadsky in https://github.com/can1357/oh-my-pi/pull/8087
+    - fix(catalog): mark muse-spark-1.2 as image capable by @chenb67 in https://github.com/can1357/oh-my-pi/pull/8089
+    - fix(ai): honor StreamOptions.headers in Bedrock and Cursor by @svperfecta in https://github.com/can1357/oh-my-pi/pull/8107
+    - fix(ai): fail over stalled Antigravity streams by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/8130
+    - fix(eval): re-validate memoized kernel runner path by @roboomp in https://github.com/can1357/oh-my-pi/pull/8141
+    - perf(session): reuse parsed journal during resume by @MikeeI in https://github.com/can1357/oh-my-pi/pull/8149
+    - perf(rpc): reuse serialized output frames by @MikeeI in https://github.com/can1357/oh-my-pi/pull/8150
+    - perf(session): weakly cache conversion histories by @MikeeI in https://github.com/can1357/oh-my-pi/pull/8152
+    - fix(lsp): cancel requests after client timeout by @MikeeI in https://github.com/can1357/oh-my-pi/pull/8153
+    - fix(cli): honor dry-run in plugin uninstall by @roboomp in https://github.com/can1357/oh-my-pi/pull/8179
+    - fix(status-line): recognized kimi-code subscription windows in the usage segment by @tehfiend in https://github.com/can1357/oh-my-pi/pull/8197
+    - fix(catalog): Fix reasoning levels of GLM-5.2 models; add Fireworks GLM 5.2 Fast by @jcfrancisco in https://github.com/can1357/oh-my-pi/pull/8200
+    - fix(advisor): accept silent Gemini reviews by @roboomp in https://github.com/can1357/oh-my-pi/pull/8226
+    New Contributors
+    - @shawnkoh made their first contribution in https://github.com/can1357/oh-my-pi/pull/8172
+    - @jairuspace made their first contribution in https://github.com/can1357/oh-my-pi/pull/8183
+    - @pickpocket made their first contribution in https://github.com/can1357/oh-my-pi/pull/8228
+    - @cuipengfei made their first contribution in https://github.com/can1357/oh-my-pi/pull/7247
+    - @listellm made their first contribution in https://github.com/can1357/oh-my-pi/pull/7703
+    - @re2zero made their first contribution in https://github.com/can1357/oh-my-pi/pull/7945
+    - @z80dev made their first contribution in https://github.com/can1357/oh-my-pi/pull/7965
+    - @iskWang made their first contribution in https://github.com/can1357/oh-my-pi/pull/7983
+    - @dnth made their first contribution in https://github.com/can1357/oh-my-pi/pull/7998
+    - @mrexodia made their first contribution in https://github.com/can1357/oh-my-pi/pull/8069
+    - @jwaldrip made their first contribution in https://github.com/can1357/oh-my-pi/pull/8081
+    - @chenb67 made their first contribution in https://github.com/can1357/oh-my-pi/pull/8089
+    - @svperfecta made their first contribution in https://github.com/can1357/oh-my-pi/pull/8107
+    - @tehfiend made their first contribution in https://github.com/can1357/oh-my-pi/pull/8197
+    - @jcfrancisco made their first contribution in https://github.com/can1357/oh-my-pi/pull/8200
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.12...v17.2.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.13
+ReleaseTime: 2026-08-11T14:41:52.0000000Z
