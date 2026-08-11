@@ -12,7 +12,7 @@ Classify the container before interpreting updater metadata. For the current for
 
 ## Metadata projection
 
-Keep updater identity and version separate from the target application's ProductCode, version, and visible ARP entry. Only target-package evidence is eligible for manifest projection.
+Keep updater identity and version separate from the target application's version and visible ARP entry. The parser does not project ProductCode from Google Updater, its application identity, or its target payload.
 
 ## Limits and gaps
 

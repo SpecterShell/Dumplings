@@ -28,7 +28,7 @@ Read only resource ID `102`, decode the bounded LZMA and BCJ2 streams, then enum
 
 ## Metadata projection
 
-The certificate tag identifies the updater application and request parameters. It is not ARP ProductCode evidence. Analyze the selected nested executable to obtain target application metadata and switch behavior.
+The certificate tag identifies the updater application and request parameters. It is not ARP ProductCode evidence. Analyze the selected nested executable for target version and switch behavior, but leave ProductCode unresolved.
 
 ## Limits and gaps
 

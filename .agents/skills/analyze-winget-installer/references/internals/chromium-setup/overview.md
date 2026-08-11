@@ -6,7 +6,7 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 
 ## Supported formats and variants
 
-- [Mini-installer](mini-installer.md): embedded setup resources and `InstallConstants` identity.
+- [Mini-installer](mini-installer.md): embedded setup resources and `InstallConstants` configuration.
 - [Chromium Updater](chromium-updater.md): packed updater archive, offline bundles, and updater tags.
 - [Google Updater](google-updater.md): Google-branded current updater behavior.
 - [Omaha](omaha.md): legacy metainstaller resources, certificate tags, and selected EXE payload.
@@ -23,7 +23,7 @@ Accept the family only when the surrounding headers, ranges, counts, and relatio
 
 ## Metadata projection
 
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields.
+Project only structured metadata into the shared parser result. The parser does not construct or detect an ARP `ProductCode`; that field remains unresolved for every supported variant.
 
 ## Bounds and malformed input
 
@@ -52,7 +52,6 @@ Use generated malformed fixtures and the behaviorally distinct real installers c
 - [Chromium](https://chromium.googlesource.com/chromium/src)
 - [Chromium mini-installer selection](https://chromium.googlesource.com/chromium/src/+/main/chrome/installer/mini_installer/mini_installer.cc)
 - [Chromium mini-installer resource constants](https://chromium.googlesource.com/chromium/src/+/main/chrome/installer/mini_installer/mini_installer_constants.cc)
-- [Chromium install-static uninstall registry construction](https://chromium.googlesource.com/chromium/src/+/main/chrome/install_static/install_util.cc)
 - [Chromium InstallConstants layout](https://chromium.googlesource.com/chromium/src/+/main/chrome/install_static/install_constants.h)
 - [Chromium Updater tag format](https://chromium.googlesource.com/chromium/src/+/main/chrome/updater/tag.h)
 - [Google Omaha](https://github.com/google/omaha)

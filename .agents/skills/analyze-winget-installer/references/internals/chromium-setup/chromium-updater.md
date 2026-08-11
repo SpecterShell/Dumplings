@@ -23,8 +23,8 @@ Open the `B7` resource named `updater.packed.7z`, select `updater.7z`, and inspe
 
 ## Metadata projection
 
-Treat the updater `appguid` as update-protocol identity, never as the target application's ARP `ProductCode`. Project target version, product identity, ARP metadata, and executed payload only after the matching offline manifest and installer validate.
+Treat the updater `appguid` as update-protocol identity, never as the target application's ARP `ProductCode`. Project target version and executed payload only after the matching offline manifest and installer validate. Leave ProductCode unresolved even when a nested target is available.
 
 ## Limits and gaps
 
-Tagged online bootstrappers do not contain authoritative target metadata. Return no target ProductCode or version when the matching offline bundle is absent. Bound certificate-table reads, nested archive sizes, manifest selection, and extracted payload paths.
+Tagged online bootstrappers do not contain authoritative target metadata. Return no target version when the matching offline bundle is absent. ProductCode is always unresolved. Bound certificate-table reads, nested archive sizes, manifest selection, and extracted payload paths.

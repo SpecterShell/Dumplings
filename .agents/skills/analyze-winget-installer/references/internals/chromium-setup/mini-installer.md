@@ -17,7 +17,7 @@ Chromium mini-installer PE
 Current setup executables also expose a contiguous `kInstallModes` array. PE32+ records are 232 bytes; PE32 records are 168 bytes.
 
 ```text
-InstallConstants identity prefix (PE32+; PE32 uses 4-byte pointers)
+InstallConstants configuration prefix (PE32+; PE32 uses 4-byte pointers)
 Offset  Size  Field
 ------  ----  -----------------------------------------------
 0x00       8  sizeof(InstallConstants), size_t = 232
@@ -38,12 +38,12 @@ Offset  Size  Field
 
 ## Parsing behavior
 
-Apply the source-defined setup precedence `B7`, then `BL`, then `BN`. Decode only the selected setup resource, then parse linked `InstallConstants` records through mapped PE pointers rather than searching arbitrary product strings.
+Apply the source-defined setup precedence `B7`, then `BL`, then `BN`. Decode only the selected setup resource, then parse linked `InstallConstants` records through mapped PE pointers.
 
 ## Metadata projection
 
-Use the selected install mode for product identity, channel, application GUID, ProgID, and protocol evidence. Report the product archive and selected setup resource separately so nested execution remains distinct from physical adjacency.
+Use validated install modes for channel selectors and system-level support. Report the product archive and selected setup resource separately so nested execution remains distinct from physical adjacency. Do not combine application GUIDs, names, suffixes, ProgIDs, protocols, updater paths, or registry literals into `ProductCode`.
 
 ## Limits and gaps
 
-Every pointer must resolve through a mapped PE section, strings must satisfy their field encoding, and mode indexes must be contiguous. Reject tied but different candidate arrays. Vendor forks without a source-compatible resource or identity layout remain unresolved evidence.
+Every pointer must resolve through a mapped PE section, strings must satisfy their field encoding, and mode indexes must be contiguous. Reject tied but different candidate arrays. Vendor forks without a source-compatible resource or configuration layout remain unresolved evidence.

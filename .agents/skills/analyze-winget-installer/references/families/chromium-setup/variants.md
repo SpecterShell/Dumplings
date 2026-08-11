@@ -18,7 +18,6 @@ Installers:
   InstallerSwitches:
     Custom: --do-not-launch-chrome
     Log: --verbose-logging --log-file="<LOGPATH>"
-  ProductCode: <VerifiedArpKey>
 - Architecture: x64
   InstallerType: exe # Chromium Setup
   Scope: machine
@@ -29,10 +28,9 @@ Installers:
   InstallerSwitches:
     Custom: --do-not-launch-chrome --system-level
     Log: --verbose-logging --log-file="<LOGPATH>"
-  ProductCode: <VerifiedArpKey>
 ```
 
-The `Custom` values are Chrome examples, not universal Chromium defaults. Keep scope-specific `Custom` atoms on each installer entry; Dumplings can hoist only identical nested dictionary values.
+The `Custom` values are Chrome examples, not universal Chromium defaults. Keep scope-specific `Custom` atoms on each installer entry; Dumplings can hoist only identical nested dictionary values. Add `ProductCode` only from accepted manifest history or installed-state evidence because the Chromium parser intentionally leaves it unresolved.
 
 ## Current Google Updater package
 

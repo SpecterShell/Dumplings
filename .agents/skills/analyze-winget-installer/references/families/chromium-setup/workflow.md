@@ -6,7 +6,7 @@ Use `InstallerType: exe` for Chromium-family setup executables after distinguish
 
 ## Detection
 
-Strong evidence includes the mini-installer's `B7`, `BL`, and `BN` setup resources; Chromium Updater's `updater.packed.7z`; Omaha's resource ID 102 LZMA, BCJ2, and TAR payload; and tags bounded to the Authenticode certificate table. An updater `appguid` is protocol identity rather than an ARP `ProductCode`.
+Strong evidence includes the mini-installer's `B7`, `BL`, and `BN` setup resources; Chromium Updater's `updater.packed.7z`; Omaha's resource ID 102 LZMA, BCJ2, and TAR payload; and tags bounded to the Authenticode certificate table. An updater `appguid` is protocol identity rather than an ARP `ProductCode`. The parser does not derive `ProductCode` for any Chromium Setup, Chromium Updater, Google Updater, or Omaha variant.
 
 ## Static analysis
 
@@ -49,6 +49,6 @@ Follow [VM validation](../../workflows/vm-validation.md) when online payload sel
 
 - `Google.Chrome.EXE`: Chromium mini-installer behavior.
 - `Brave.Brave`: vendor-specific Chromium install modes.
-- `360.360Ent`: ProductCode recovery from source-compatible identity records.
+- `360.360Ent`: vendor-specific payload and switch behavior with ProductCode left to installed-state evidence.
 - `Microsoft.EdgeWebView2Runtime`: runtime-specific Chromium Setup identity.
 - `Vivaldi.Vivaldi`: vendor resource-layout differences.
