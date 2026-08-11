@@ -155,7 +155,7 @@ Use explicit parser evidence for scope and installed payload architecture. Prese
 
 ## VM validation
 
-Follow [VM validation workflow](../../workflows/vm-validation.md) only when package registration, runtime dependency availability, first-run associations, or upgrade behavior cannot be established from the signed package manifests.
+Complete the mandatory [VM validation workflow](../../workflows/vm-validation.md). Focus family-specific checks on package registration, runtime dependency availability, first-run associations, and upgrade behavior when the signed package manifests do not establish them.
 
 ## Known examples
 

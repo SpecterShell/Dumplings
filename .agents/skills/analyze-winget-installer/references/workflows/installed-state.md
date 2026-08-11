@@ -74,6 +74,14 @@ Ignore `UserChoice`, Explorer caches, recent-file state, and ambient shell chang
 
 `Protocols` and `FileExtensions` are not currently indexed like `Commands`, but include them when literal evidence exists because they document package behavior and may become useful to clients later.
 
+## Command and PATH evidence
+
+The VM collector snapshots user and machine PATH entries as `EnvironmentPaths`; comparison emits added, modified, and removed `EnvironmentPathChanges`. Each entry records its original and expanded path, scope, existence, ordinal, and top-level command candidates. A modified entry can reflect newly installed commands in a directory that was already on PATH. Verify the intended CLI entry points from a fresh shell. Add only commands users are expected to type. Exclude GUI applications, uninstallers, update helpers, diagnostics, crash dump utilities, and framework-provided implementation commands such as .NET's `createdump`.
+
+`Commands` is indexed as package-search metadata for every installer type. WinGet aggregates it into the Commands table, and command-not-found integrations can query that field to recommend a package for an unknown command. This indexing behavior is separate from installation behavior: non-portable installers do not receive renamed files or aliases from `Commands`.
+
+Portable installation has additional semantics. A direct `InstallerType: portable` entry may contain at most one command; WinGet uses that value as the installed executable name and portable link alias. A ZIP with `NestedInstallerType: portable` uses `NestedInstallerFiles[].PortableCommandAlias` for each exposed binary instead, while its `Commands` values remain searchable index metadata. See [Installer fields](../../../author-winget-manifest/references/manifest/installer-fields.md#commands-and-portable-command-aliases) for authoring rules.
+
 ## Dynamic evidence script
 
 Use the staged scripts documented in [VM validation](vm-validation.md). Their comparison output separates:
@@ -82,6 +90,7 @@ Use the staged scripts documented in [VM validation](vm-validation.md). Their co
 - Hidden or incomplete ARP changes.
 - Protocol changes.
 - File-extension changes.
+- User and machine PATH changes with observed command candidates.
 
 Every change includes `Before` and `After` objects with stable registry identities. A change is evidence, not automatically a manifest field: verify that its command resolves to the installed application and that it is not an unrelated dependency or runtime registration.
 

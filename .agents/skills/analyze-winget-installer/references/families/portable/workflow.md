@@ -16,6 +16,8 @@ Read [Portable parser internals](../../internals/portable/overview.md) before ch
 ## Manifest shape
 
 ```yaml
+Commands:
+- product
 Installers:
 - Architecture: x64
   InstallerType: zip
@@ -29,6 +31,8 @@ Installers:
 
 Use `NestedInstallerFiles` only for portable command targets. Set `ArchiveBinariesDependOnPath` only with evidence.
 
+Add `Commands` at the installer or common root level for source-index search, and set `PortableCommandAlias` on every nested binary that should become a user-facing command. Bundled helper executables remain in `NestedInstallerFiles` only when WinGet must preserve them; omit their alias and do not list them in `Commands`.
+
 ```yaml
 Installers:
 - Architecture: x64
@@ -39,9 +43,11 @@ Installers:
   - product
 ```
 
+A direct portable installer must have exactly one `Commands` value. WinGet renames the installed executable and creates its portable link from that command. When the downloaded filename includes architecture, platform, toolchain, version, or packaging text, derive the clean command from the project's documentation. For example, use `codex` for `codex-x86_64-pc-windows-msvc.exe`.
+
 ## WinGet defaults and overrides
 
-Omit `InstallModes` and `InstallerSwitches`; no installer wizard is invoked. Use [VM validation](../../workflows/vm-validation.md) when first run mutates the machine, architecture depends on native DLL loading, or portable behavior remains ambiguous.
+Omit `InstallModes` and `InstallerSwitches`; no installer wizard is invoked. Complete mandatory [VM validation](../../workflows/vm-validation.md), with additional attention when first run mutates the machine, architecture depends on native DLL loading, or portable behavior remains ambiguous.
 
 ## Apps & Features
 
@@ -74,7 +80,7 @@ Treat reverse-domain identifiers and ACL strings as candidates rather than packa
 
 ## VM validation
 
-Follow the canonical [VM validation workflow](../../workflows/vm-validation.md) and record only family-specific differences discovered during installation and first run.
+Follow the canonical [VM validation workflow](../../workflows/vm-validation.md). Install through WinGet, open a fresh shell, and verify every authored `Commands` or `PortableCommandAlias` value resolves to the intended binary. Confirm helper binaries without aliases are not presented as commands.
 
 ## Known examples
 

@@ -4,11 +4,12 @@
 .SYNOPSIS
   Capture or compare WinGet installed-state evidence inside a validation VM.
 .DESCRIPTION
-  Collects ARP entries, protocol registrations, and file-extension associations
-  without launching installers or applications. The script is self-contained
-  and compatible with Windows PowerShell 5.1 so it can be copied into a clean VM.
+  Collects ARP entries, protocol registrations, file-extension associations,
+  environment PATH entries, and bounded installer-log evidence without launching
+  installers or applications. The script is self-contained and compatible with
+  Windows PowerShell 5.1 so it can be copied into a clean VM.
 .PARAMETER Action
-  Capture a snapshot or compare two existing snapshot files.
+  Capture a snapshot, compare two snapshots, or collect installer-log evidence.
 .PARAMETER Phase
   A stable label such as BeforeInstall, AfterInstall, or AfterFirstRun.
 .PARAMETER OutputPath
@@ -19,10 +20,32 @@
   Snapshot captured after the operation being validated.
 .PARAMETER PassThru
   Return the snapshot or comparison object in addition to writing JSON.
+.PARAMETER LogPath
+  Requested installer log file, directory, or filename prefix. Repeat as needed.
+.PARAMETER SinceUtc
+  UTC launch time used to select adjacent and temporary log files.
+.PARAMETER LogOutputDirectory
+  Guest directory that receives bounded copies of discovered log files.
+.PARAMETER InstallerExitCode
+  Exit code captured by the caller from the installer process.
+.PARAMETER InstallerMode
+  Validation mode associated with the process result.
+.PARAMETER InstallerTimedOut
+  Indicates that the installer exceeded the validation timeout.
+.PARAMETER IncludeTemporaryLogs
+  Search the current user's temporary directory for recent text-oriented logs.
+.PARAMETER MaximumLogFiles
+  Maximum number of discovered log files to process.
+.PARAMETER MaximumLogFileBytes
+  Maximum size of one log file copied into evidence.
+.PARAMETER MaximumTotalLogBytes
+  Maximum combined size of copied log files.
+.PARAMETER LogTailLineCount
+  Maximum number of trailing text lines retained in JSON for each log.
 #>
 [CmdletBinding()]
 param (
-  [ValidateSet('Capture', 'Compare')]
+  [ValidateSet('Capture', 'Compare', 'CollectLogs')]
   [string]$Action = 'Capture',
 
   [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$')]
@@ -34,6 +57,32 @@ param (
   [string]$BeforePath,
 
   [string]$AfterPath,
+
+  [string[]]$LogPath,
+
+  [Nullable[datetime]]$SinceUtc,
+
+  [string]$LogOutputDirectory,
+
+  [Nullable[int]]$InstallerExitCode,
+
+  [string]$InstallerMode = 'silent',
+
+  [switch]$InstallerTimedOut,
+
+  [bool]$IncludeTemporaryLogs = $true,
+
+  [ValidateRange(1, 4096)]
+  [int]$MaximumLogFiles = 256,
+
+  [ValidateRange(1, 1073741824)]
+  [long]$MaximumLogFileBytes = 33554432,
+
+  [ValidateRange(1, 4294967296)]
+  [long]$MaximumTotalLogBytes = 134217728,
+
+  [ValidateRange(1, 10000)]
+  [int]$LogTailLineCount = 200,
 
   [switch]$PassThru
 )
@@ -387,6 +436,225 @@ function Test-VMProcessElevated {
   return $Principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+function Get-VMPathCommandCandidate {
+  param (
+    [Parameter(Mandatory)][string]$DirectoryPath,
+    [ValidateRange(1, 4096)][int]$MaximumCommands = 1024
+  )
+
+  if (-not [IO.Directory]::Exists($DirectoryPath)) { return @() }
+  $ExecutableExtensions = @($env:PATHEXT -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.ToLowerInvariant() })
+  if ($ExecutableExtensions.Count -eq 0) { $ExecutableExtensions = @('.com', '.exe', '.bat', '.cmd') }
+  if ('.ps1' -notin $ExecutableExtensions) { $ExecutableExtensions += '.ps1' }
+  $Commands = Get-ChildItem -LiteralPath $DirectoryPath -File -Force -ErrorAction SilentlyContinue | Where-Object { [IO.Path]::GetExtension($_.Name).ToLowerInvariant() -in $ExecutableExtensions } | Sort-Object Name | Select-Object -First $MaximumCommands | ForEach-Object { [IO.Path]::GetFileNameWithoutExtension($_.Name) }
+  return @($Commands | Sort-Object -Unique)
+}
+
+function Get-VMEnvironmentPathSnapshot {
+  $Entries = foreach ($Definition in @(
+      [pscustomobject]@{ Scope = 'user'; Target = [EnvironmentVariableTarget]::User },
+      [pscustomobject]@{ Scope = 'machine'; Target = [EnvironmentVariableTarget]::Machine }
+    )) {
+    $PathValue = [Environment]::GetEnvironmentVariable('Path', $Definition.Target)
+    $Ordinal = 0
+    foreach ($RawEntry in @([string]$PathValue -split ';')) {
+      $Ordinal++
+      $TrimmedEntry = $RawEntry.Trim().Trim('"')
+      if ([string]::IsNullOrWhiteSpace($TrimmedEntry)) { continue }
+      $ExpandedPath = [Environment]::ExpandEnvironmentVariables($TrimmedEntry)
+      try { $ExpandedPath = [IO.Path]::GetFullPath($ExpandedPath) } catch {}
+      $IdentityPath = $ExpandedPath
+      $PathRoot = [IO.Path]::GetPathRoot($ExpandedPath)
+      if ($ExpandedPath.Length -gt $PathRoot.Length) { $IdentityPath = $ExpandedPath.TrimEnd('\', '/') }
+      [pscustomobject][ordered]@{
+        Identity          = "EnvironmentPath|$($Definition.Scope)|$($IdentityPath.ToLowerInvariant())"
+        Scope             = $Definition.Scope
+        Ordinal           = $Ordinal
+        RawEntry          = $TrimmedEntry
+        ExpandedPath      = $ExpandedPath
+        Exists            = [IO.Directory]::Exists($ExpandedPath)
+        CommandCandidates = @(Get-VMPathCommandCandidate -DirectoryPath $ExpandedPath)
+      }
+    }
+  }
+  return @($Entries | Sort-Object Identity -Unique)
+}
+
+function Add-VMInstallerLogCandidate {
+  param (
+    [Parameter(Mandatory)][hashtable]$Seen,
+    [Parameter(Mandatory)]$Candidates,
+    [Parameter(Mandatory)][IO.FileInfo]$File,
+    [Parameter(Mandatory)][string]$Origin,
+    [Parameter(Mandatory)][datetime]$CutoffUtc,
+    [switch]$RequireRecent
+  )
+
+  if ($RequireRecent -and $File.LastWriteTimeUtc -lt $CutoffUtc) { return }
+  $FullName = $File.FullName
+  if ($Seen.ContainsKey($FullName)) { return }
+  $Seen[$FullName] = $true
+  $Candidates.Add([pscustomobject][ordered]@{ File = $File; Origin = $Origin })
+}
+
+function Get-VMInstallerLogCandidate {
+  param (
+    [AllowNull()][string[]]$RequestedPath,
+    [Parameter(Mandatory)][datetime]$CutoffUtc,
+    [bool]$IncludeTemp,
+    [ValidateRange(1, 4096)][int]$MaximumFiles
+  )
+
+  $Seen = @{}
+  $Candidates = New-Object 'System.Collections.Generic.List[object]'
+  foreach ($Requested in @($RequestedPath)) {
+    if ([string]::IsNullOrWhiteSpace($Requested)) { continue }
+    try { $FullRequestedPath = [IO.Path]::GetFullPath([Environment]::ExpandEnvironmentVariables($Requested)) } catch { continue }
+    $Exact = Get-Item -LiteralPath $FullRequestedPath -Force -ErrorAction SilentlyContinue
+    if ($null -ne $Exact -and -not $Exact.PSIsContainer) {
+      Add-VMInstallerLogCandidate -Seen $Seen -Candidates $Candidates -File $Exact -Origin 'RequestedFile' -CutoffUtc $CutoffUtc
+    }
+    if ($null -ne $Exact -and $Exact.PSIsContainer) {
+      foreach ($File in @(Get-ChildItem -LiteralPath $Exact.FullName -File -Recurse -Force -ErrorAction SilentlyContinue)) {
+        Add-VMInstallerLogCandidate -Seen $Seen -Candidates $Candidates -File $File -Origin 'RequestedDirectory' -CutoffUtc $CutoffUtc -RequireRecent
+      }
+    }
+
+    $AdjacentDirectory = if ($null -eq $Exact -or -not $Exact.PSIsContainer) { [IO.Path]::GetDirectoryName($FullRequestedPath) } else { $null }
+    if (-not [string]::IsNullOrWhiteSpace($AdjacentDirectory) -and [IO.Directory]::Exists($AdjacentDirectory)) {
+      $RequestedStem = [IO.Path]::GetFileNameWithoutExtension($FullRequestedPath)
+      foreach ($File in @(Get-ChildItem -LiteralPath $AdjacentDirectory -File -Force -ErrorAction SilentlyContinue)) {
+        if (-not [string]::IsNullOrWhiteSpace($RequestedStem) -and -not $File.Name.StartsWith($RequestedStem, [StringComparison]::OrdinalIgnoreCase)) { continue }
+        Add-VMInstallerLogCandidate -Seen $Seen -Candidates $Candidates -File $File -Origin 'Adjacent' -CutoffUtc $CutoffUtc -RequireRecent
+      }
+    }
+  }
+
+  if ($IncludeTemp -and [IO.Directory]::Exists($env:TEMP)) {
+    $TextLogExtensions = @('.log', '.txt', '.xml', '.json', '.yaml', '.yml', '.ini', '.config', '.out', '.err')
+    foreach ($File in @(Get-ChildItem -LiteralPath $env:TEMP -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTimeUtc -ge $CutoffUtc -and ([string]::IsNullOrEmpty($_.Extension) -or $_.Extension.ToLowerInvariant() -in $TextLogExtensions) })) {
+      Add-VMInstallerLogCandidate -Seen $Seen -Candidates $Candidates -File $File -Origin 'TemporaryDirectory' -CutoffUtc $CutoffUtc -RequireRecent
+    }
+  }
+
+  return @($Candidates | Sort-Object @{ Expression = { switch ($_.Origin) { 'RequestedFile' { 0 } 'RequestedDirectory' { 1 } 'Adjacent' { 2 } default { 3 } } } }, @{ Expression = { $_.File.LastWriteTimeUtc }; Descending = $true }, @{ Expression = { $_.File.FullName } } | Select-Object -First $MaximumFiles)
+}
+
+function Get-VMInstallerLogTail {
+  param (
+    [Parameter(Mandatory)][IO.FileInfo]$File,
+    [ValidateRange(1, 10000)][int]$LineCount
+  )
+
+  $TextExtensions = @('', '.log', '.txt', '.xml', '.json', '.yaml', '.yml', '.ini', '.config', '.out', '.err')
+  if ($File.Extension.ToLowerInvariant() -notin $TextExtensions) { return @() }
+  try { return @(Get-Content -LiteralPath $File.FullName -Tail $LineCount -ErrorAction Stop | ForEach-Object { [string]$_ }) } catch { return @() }
+}
+
+function Copy-VMInstallerLogFile {
+  param (
+    [Parameter(Mandatory)][string]$SourcePath,
+    [Parameter(Mandatory)][string]$DestinationPath,
+    [Parameter(Mandatory)][ValidateRange(0, 4294967296)][long]$MaximumBytes
+  )
+
+  $Source = $null
+  $Destination = $null
+  try {
+    $Source = [IO.File]::Open($SourcePath, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+    $SourceLength = $Source.Length
+    if ($SourceLength -gt $MaximumBytes) { throw "The log grew beyond the remaining evidence limit of $MaximumBytes bytes." }
+    $Destination = [IO.File]::Open($DestinationPath, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    $Buffer = New-Object byte[] 65536
+    $Remaining = $SourceLength
+    while ($Remaining -gt 0) {
+      $Read = $Source.Read($Buffer, 0, [int][Math]::Min($Buffer.Length, $Remaining))
+      if ($Read -le 0) { throw "The log ended before the expected $SourceLength bytes were copied." }
+      $Destination.Write($Buffer, 0, $Read)
+      $Remaining -= $Read
+    }
+    return $SourceLength
+  } finally {
+    if ($null -ne $Destination) { $Destination.Dispose() }
+    if ($null -ne $Source) { $Source.Dispose() }
+  }
+}
+
+function Get-WinGetVMInstallerLogEvidence {
+  param (
+    [AllowNull()][string[]]$RequestedPath,
+    [Parameter(Mandatory)][datetime]$StartedAtUtc,
+    [Parameter(Mandatory)][string]$EvidenceDirectory,
+    [AllowNull()][Nullable[int]]$ExitCode,
+    [Parameter(Mandatory)][string]$Mode,
+    [bool]$TimedOut,
+    [bool]$IncludeTemp,
+    [int]$MaximumFiles,
+    [long]$MaximumFileBytes,
+    [long]$MaximumTotalBytes,
+    [int]$TailLineCount
+  )
+
+  $FullEvidenceDirectory = [IO.Path]::GetFullPath($EvidenceDirectory)
+  if (-not [IO.Directory]::Exists($FullEvidenceDirectory)) { $null = [IO.Directory]::CreateDirectory($FullEvidenceDirectory) }
+  $Warnings = New-Object 'System.Collections.Generic.List[string]'
+  $EvidenceFiles = New-Object 'System.Collections.Generic.List[object]'
+  $CopiedBytes = [int64]0
+  $Index = 0
+  foreach ($Candidate in @(Get-VMInstallerLogCandidate -RequestedPath $RequestedPath -CutoffUtc $StartedAtUtc -IncludeTemp $IncludeTemp -MaximumFiles $MaximumFiles)) {
+    $Index++
+    $File = $Candidate.File
+    $SafeName = ($File.Name -replace '[^A-Za-z0-9._-]', '_')
+    if ([string]::IsNullOrWhiteSpace($SafeName)) { $SafeName = 'installer.log' }
+    $EvidenceFileName = ('{0:D4}-{1}' -f $Index, $SafeName)
+    $DestinationPath = Join-Path $FullEvidenceDirectory $EvidenceFileName
+    $Copied = $false
+    $SkipReason = $null
+    if ($File.Length -gt $MaximumFileBytes) {
+      $SkipReason = "File exceeds MaximumLogFileBytes ($MaximumFileBytes)."
+    } elseif ($CopiedBytes + $File.Length -gt $MaximumTotalBytes) {
+      $SkipReason = "Combined files exceed MaximumTotalLogBytes ($MaximumTotalBytes)."
+    } else {
+      try {
+        $RemainingTotalBytes = $MaximumTotalBytes - $CopiedBytes
+        $CopiedFileBytes = Copy-VMInstallerLogFile -SourcePath $File.FullName -DestinationPath $DestinationPath -MaximumBytes ([Math]::Min($MaximumFileBytes, $RemainingTotalBytes))
+        $Copied = $true
+        $CopiedBytes += $CopiedFileBytes
+      } catch {
+        $SkipReason = $_.Exception.Message
+      }
+    }
+    if (-not [string]::IsNullOrWhiteSpace($SkipReason)) { $Warnings.Add("Log '$($File.FullName)' was not copied: $SkipReason") }
+    $EvidenceFiles.Add([pscustomobject][ordered]@{
+        SourcePath       = $File.FullName
+        Origin           = $Candidate.Origin
+        Length           = $File.Length
+        LastWriteTimeUtc = $File.LastWriteTimeUtc.ToString('o')
+        EvidenceFileName = if ($Copied) { $EvidenceFileName } else { $null }
+        Copied           = $Copied
+        SkipReason       = $SkipReason
+        TailLines        = @(Get-VMInstallerLogTail -File $File -LineCount $TailLineCount)
+      })
+  }
+  if ($EvidenceFiles.Count -eq 0) { $Warnings.Add('No installer log files were found at the requested, adjacent, or temporary locations.') }
+
+  return [pscustomobject][ordered]@{
+    SchemaVersion     = 1
+    CollectedAtUtc    = [DateTime]::UtcNow.ToString('o')
+    StartedAtUtc      = $StartedAtUtc.ToUniversalTime().ToString('o')
+    InstallerMode     = $Mode
+    InstallerExitCode = if ($null -eq $ExitCode) { $null } else { [int]$ExitCode }
+    ExitCodeIsZero    = if ($null -eq $ExitCode) { $null } else { [int]$ExitCode -eq 0 }
+    InstallerTimedOut = $TimedOut
+    RequestedLogPaths = @($RequestedPath)
+    IncludedTempLogs  = $IncludeTemp
+    EvidenceDirectory = $FullEvidenceDirectory
+    CopiedBytes       = $CopiedBytes
+    Files             = $EvidenceFiles.ToArray()
+    Warnings          = $Warnings.ToArray()
+  }
+}
+
 function Get-WinGetVMInstalledStateSnapshot {
   param ([Parameter(Mandatory)][string]$SnapshotPhase)
 
@@ -394,12 +662,13 @@ function Get-WinGetVMInstalledStateSnapshot {
   $ARPEntries = @(Get-VMArpEntrySnapshot)
   $Protocols = @($Associations.ProtocolAssociations)
   $FileExtensions = @($Associations.FileExtensionAssociations)
+  $EnvironmentPaths = @(Get-VMEnvironmentPathSnapshot)
   if (($ARPEntries.Count + $Protocols.Count + $FileExtensions.Count) -eq 0) {
     throw 'The installed-state collector returned no ARP, protocol, or file-extension records. This usually means the guest registry was not accessible in the current PowerShell Direct session; discard this capture and verify the guest credential and registry access.'
   }
 
   return [pscustomobject][ordered]@{
-    SchemaVersion             = 1
+    SchemaVersion             = 2
     Phase                     = $SnapshotPhase
     CapturedAtUtc             = [DateTime]::UtcNow.ToString('o')
     ComputerName              = $env:COMPUTERNAME
@@ -410,13 +679,15 @@ function Get-WinGetVMInstalledStateSnapshot {
     Is64BitOperatingSystem    = [Environment]::Is64BitOperatingSystem
     Is64BitProcess            = [Environment]::Is64BitProcess
     EvidenceCounts            = [pscustomobject][ordered]@{
-      ARPEntries     = $ARPEntries.Count
-      Protocols      = $Protocols.Count
-      FileExtensions = $FileExtensions.Count
+      ARPEntries       = $ARPEntries.Count
+      Protocols        = $Protocols.Count
+      FileExtensions   = $FileExtensions.Count
+      EnvironmentPaths = $EnvironmentPaths.Count
     }
     ARPEntries                = $ARPEntries
     ProtocolAssociations      = $Protocols
     FileExtensionAssociations = $FileExtensions
+    EnvironmentPaths          = $EnvironmentPaths
   }
 }
 
@@ -472,24 +743,29 @@ function Compare-WinGetVMInstalledStateSnapshot {
   $HiddenARPChanges = @($ARPChanges | Where-Object { -not (Test-VMArpChangeVisible -Change $_) })
   $ProtocolChanges = @(Compare-VMInstalledStateCollection -Before $Before.ProtocolAssociations -After $After.ProtocolAssociations)
   $FileExtensionChanges = @(Compare-VMInstalledStateCollection -Before $Before.FileExtensionAssociations -After $After.FileExtensionAssociations)
+  $BeforeEnvironmentPaths = if ($Before.PSObject.Properties['EnvironmentPaths']) { @($Before.EnvironmentPaths) } else { @() }
+  $AfterEnvironmentPaths = if ($After.PSObject.Properties['EnvironmentPaths']) { @($After.EnvironmentPaths) } else { @() }
+  $EnvironmentPathChanges = @(Compare-VMInstalledStateCollection -Before $BeforeEnvironmentPaths -After $AfterEnvironmentPaths)
 
   return [pscustomobject][ordered]@{
-    SchemaVersion        = 1
-    ComparedAtUtc        = [DateTime]::UtcNow.ToString('o')
-    BeforePhase          = $Before.Phase
-    AfterPhase           = $After.Phase
-    Summary              = [pscustomobject][ordered]@{
-      ARPChanges           = $ARPChanges.Count
-      VisibleARPChanges    = $VisibleARPChanges.Count
-      HiddenARPChanges     = $HiddenARPChanges.Count
-      ProtocolChanges      = $ProtocolChanges.Count
-      FileExtensionChanges = $FileExtensionChanges.Count
+    SchemaVersion          = 2
+    ComparedAtUtc          = [DateTime]::UtcNow.ToString('o')
+    BeforePhase            = $Before.Phase
+    AfterPhase             = $After.Phase
+    Summary                = [pscustomobject][ordered]@{
+      ARPChanges             = $ARPChanges.Count
+      VisibleARPChanges      = $VisibleARPChanges.Count
+      HiddenARPChanges       = $HiddenARPChanges.Count
+      ProtocolChanges        = $ProtocolChanges.Count
+      FileExtensionChanges   = $FileExtensionChanges.Count
+      EnvironmentPathChanges = $EnvironmentPathChanges.Count
     }
-    ARPChanges           = $ARPChanges
-    VisibleARPChanges    = $VisibleARPChanges
-    HiddenARPChanges     = $HiddenARPChanges
-    ProtocolChanges      = $ProtocolChanges
-    FileExtensionChanges = $FileExtensionChanges
+    ARPChanges             = $ARPChanges
+    VisibleARPChanges      = $VisibleARPChanges
+    HiddenARPChanges       = $HiddenARPChanges
+    ProtocolChanges        = $ProtocolChanges
+    FileExtensionChanges   = $FileExtensionChanges
+    EnvironmentPathChanges = $EnvironmentPathChanges
   }
 }
 
@@ -515,6 +791,10 @@ if ($Action -eq 'Compare') {
   $Before = Get-Content -LiteralPath $BeforePath -Raw | ConvertFrom-Json
   $After = Get-Content -LiteralPath $AfterPath -Raw | ConvertFrom-Json
   $Result = Compare-WinGetVMInstalledStateSnapshot -Before $Before -After $After
+} elseif ($Action -eq 'CollectLogs') {
+  if ($null -eq $SinceUtc) { throw 'SinceUtc is required for CollectLogs.' }
+  if ([string]::IsNullOrWhiteSpace($LogOutputDirectory)) { throw 'LogOutputDirectory is required for CollectLogs.' }
+  $Result = Get-WinGetVMInstallerLogEvidence -RequestedPath $LogPath -StartedAtUtc ([datetime]$SinceUtc) -EvidenceDirectory $LogOutputDirectory -ExitCode $InstallerExitCode -Mode $InstallerMode -TimedOut ([bool]$InstallerTimedOut) -IncludeTemp $IncludeTemporaryLogs -MaximumFiles $MaximumLogFiles -MaximumFileBytes $MaximumLogFileBytes -MaximumTotalBytes $MaximumTotalLogBytes -TailLineCount $LogTailLineCount
 } else {
   $Result = Get-WinGetVMInstalledStateSnapshot -SnapshotPhase $Phase
 }

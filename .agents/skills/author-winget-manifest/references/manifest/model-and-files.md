@@ -116,7 +116,7 @@ Set:
 
 - `PackageIdentifier`: exact casing and segments matching the manifest path. For a new package, follow [Define The Package Identifier](../package/identity.md#define-the-package-identifier) before creating the directory tree.
 - `PackageVersion`: normally the installed ARP version or the version that best prevents upgrade loops.
-- `DefaultLocale`: the locale of the default locale manifest, usually `en-US` unless the publisher metadata is primarily another language.
+- `DefaultLocale`: the evidence-backed BCP-47 locale of the default-locale manifest. It must exactly match that manifest's `PackageLocale`; choose its region through the [regional locale workflow](../locale/model.md#regional-locale-selection) rather than defaulting English to `en-US` or another language to its most common country.
 - `ManifestVersion`: `1.12.0`.
 
 If upstream marketing version and ARP `DisplayVersion` differ, decide explicitly which value is `PackageVersion` and whether `AppsAndFeaturesEntries.DisplayVersion` is required.

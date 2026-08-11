@@ -1,8 +1,8 @@
 # VM-only dynamic validation workflow
 
-Use this workflow only for facts static analysis cannot prove. Never execute an unknown installer on the host. The bundled scripts capture state but deliberately do not launch installers or applications.
+Complete this workflow before treating any new or modified installer entry as submission-ready. Validate every behaviorally distinct artifact, switch set, scope, architecture, locale, elevation route, or nested-payload route represented by the manifest. Static analysis determines what to test but cannot prove that unattended installation completes without a blocker. Never execute an unknown installer on the host. The bundled scripts capture state but deliberately do not launch installers or applications.
 
-Run the host controller and Hyper-V commands in PowerShell 7.4 or later (`pwsh`). `Invoke-WinGetVMInstalledState.ps1` enforces this requirement because `Import-Module -UseWindowsPowerShell` is a PowerShell Core compatibility feature. Only the staged guest collector, `Get-WinGetVMInstalledState.ps1`, is designed for Windows PowerShell 5.1.
+Run the host controller and Hyper-V commands in PowerShell 7.4 or later (`pwsh`). `Invoke-WinGetVMInstalledState.ps1` enforces this requirement and imports the inbox Hyper-V module natively. Only the staged guest collector, `Get-WinGetVMInstalledState.ps1`, is designed for Windows PowerShell 5.1.
 
 ## 1. Preserve the Windows environment and prepare Hyper-V
 
@@ -16,12 +16,12 @@ ignore_default_excludes = false
 
 Restart Codex or start a new task after changing `config.toml`. Do not use `inherit = "core"` for this workflow: its Windows allowlist omits `WINDIR`, `COMPUTERNAME`, and the inherited `PSModulePath`. Without them, PowerShell Core cannot discover or natively load the inbox Hyper-V module, and `Get-VM` cannot infer the local host.
 
-Verify the environment and explicitly load the inbox Hyper-V module through Windows PowerShell compatibility when running PowerShell Core under Codex:
+Verify the environment and explicitly load the inbox Hyper-V module when running PowerShell Core under Codex:
 
 ```powershell
 Get-Item Env:WINDIR, Env:COMPUTERNAME, Env:PSModulePath
 $env:PSModulePath += ';C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules'
-Import-Module Hyper-V -UseWindowsPowerShell -PassThru
+Import-Module Hyper-V -PassThru
 Get-Command Get-VM, Copy-VMFile
 ```
 
@@ -32,7 +32,7 @@ $env:WINDIR = $env:SystemRoot
 $env:COMPUTERNAME = [Environment]::MachineName
 $env:PSModulePath = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\Modules;$env:PSModulePath"
 
-Import-Module Hyper-V -UseWindowsPowerShell -PassThru
+Import-Module Hyper-V -PassThru
 Get-Command Get-VM, Copy-VMFile
 ```
 
@@ -63,6 +63,7 @@ The snapshot records:
 - HKLM 64-bit, HKLM 32-bit, and HKCU ARP entries, including hidden/incomplete entries.
 - Direct `Software\Classes` protocols and extensions with ProgID commands and icons.
 - `RegisteredApplications` capability mappings.
+- User and machine PATH entries, expanded directory identities, existence, and top-level command candidates.
 - Registry value types, hive, view, scope evidence, user SID, elevation, and capture phase.
 
 The collector rejects a snapshot when all three evidence collections are empty. Do not continue from a zero-record JSON file. The script does not inventory Start menu entries, arbitrary AppData files, installed services, or the complete filesystem; collect those separately with focused guest commands when they matter.
@@ -85,19 +86,57 @@ If the official source requires headers, cookies, or a transport unavailable ins
 
 Before launching, inspect the actual file rather than trusting architecture labels on the download page. Use `Get-PEArchitectureInfo` for PE launchers and `Get-MsiInstallerInfo` or the MSI package template for MSI payloads. A page marked x64 can still serve an x86 launcher, and `win32` does not prove x86 installed binaries.
 
-Capture the outer process result:
+### Require and inspect installer logs
+
+Pass the installer's supported log argument on every silent validation run, including when WinGet supplies that argument by default and the manifest correctly omits it. Use the family workflow, static parser result, or WinGet default-switch table to choose the syntax. Give each validation case a unique path under `C:\DumplingsValidation\Logs` and preserve the exact argument list in evidence.
+
+Treat `<LOGPATH>` as a destination hint rather than assuming it is one file. An installer may create the named file, create a directory at that path, use the path as a filename prefix and write several adjacent logs, or ignore it and write under `%TEMP%`. Record the launch time and inspect all of these locations. During an apparent hang, read newly written text logs with `Get-Content -Tail 200` while the process is still running. After completion, retrieve and read the complete log file, log directory, adjacent matching files, and relevant new `%TEMP%` logs, then preserve them in the transient evidence directory. Do not paste full logs into chat.
+
+If the installer documents no log switch or rejects logging, record that limitation and still inspect newly created or modified files under `%TEMP%`, `%ProgramData%`, and the installer's working directory. Absence of a requested log is evidence to investigate, not proof that installation succeeded.
+
+### Capture the process result
+
+Capture the outer process result and retain the exact exit code:
 
 ```powershell
+$LogPath = 'C:\DumplingsValidation\Logs\Silent\Installer.log'
+$StartedAtUtc = [DateTime]::UtcNow
 $Process = Start-Process -FilePath C:\DumplingsValidation\Installer.exe `
-  -ArgumentList @('<tested switches>') -Wait -PassThru
+  -ArgumentList @('<silent switches>', '<log switch with log path>') -PassThru
+
+$Completed = $Process.WaitForExit([int][TimeSpan]::FromMinutes(15).TotalMilliseconds)
+if (-not $Completed) {
+  Get-ChildItem -LiteralPath (Split-Path -Path $LogPath -Parent) -File -Recurse -ErrorAction SilentlyContinue | Where-Object LastWriteTimeUtc -GE $StartedAtUtc | ForEach-Object { "### $($_.FullName)"; Get-Content -LiteralPath $_.FullName -Tail 200 -ErrorAction SilentlyContinue }
+  [pscustomobject]@{ StartedAtUtc = $StartedAtUtc.ToString('o'); ExitCode = $null; Mode = 'silent'; TimedOut = $true }
+  throw 'Silent installation exceeded the validation timeout. Collect the live logs from the host before terminating the process.'
+}
+$Process.Refresh()
 
 [pscustomobject]@{
+  StartedAtUtc = $StartedAtUtc.ToString('o')
   ExitCode = $Process.ExitCode
   Mode = '<interactive|silent|silentWithProgress|cancelled>'
+  TimedOut = $false
 }
 ```
 
-Run cancellation, elevated/non-elevated behavior, user/machine scope, and quiet/passive variants as separate checkpoint-restored cases. For wrappers, record whether the outer process propagates nested MSI codes. Exit code `0` alone is not proof of installation.
+The normal success expectation is exit code `0`. A nonzero code may indicate failure or a documented successful outcome such as success-with-reboot. Accept it only when vendor documentation, installer-family return-code evidence, or a repeatable successful installed-state comparison proves the meaning; then author `InstallerSuccessCodes` or `ExpectedReturnCodes` only when required by the manifest rules. A zero exit code is still insufficient without the expected installed state and a blocker-free unattended run.
+
+When the process hangs, leave it running long enough to collect its live evidence from the host, then terminate it inside the guest and treat the route as failed:
+
+```powershell
+& $Tool -Action CollectLogs -VMName PackageValidation -Phase SilentTimeout -UserName SpecterShell -AllowEmptyPassword -OutputDirectory $Evidence -LogPath 'C:\DumplingsValidation\Logs\Silent\Installer.log' -InstallerStartedAtUtc '<UTC launch timestamp>' -InstallerMode silent -InstallerTimedOut
+```
+
+After a completed run, pass the exact exit code:
+
+```powershell
+& $Tool -Action CollectLogs -VMName PackageValidation -Phase Silent -UserName SpecterShell -AllowEmptyPassword -OutputDirectory $Evidence -LogPath 'C:\DumplingsValidation\Logs\Silent\Installer.log' -InstallerStartedAtUtc '<UTC launch timestamp>' -InstallerExitCode 0 -InstallerMode silent
+```
+
+The controller writes `<Phase>.InstallerLogs.json` and copies bounded log files to `Logs\<Phase>`. The JSON records requested, adjacent, and recent `%TEMP%` candidates, tail text, copied byte counts, timeout state, the exit code, and `ExitCodeIsZero`. Review its warnings when files exceed the per-file or total limits. Use `-SkipLogFileTransfer` only when metadata and tails are sufficient; adjust `MaximumLogFiles`, `MaximumLogFileBytes`, `MaximumTotalLogBytes`, or `LogTailLineCount` only for an evidenced need.
+
+Run cancellation, elevated/non-elevated behavior, user/machine scope, and quiet/passive variants as separate checkpoint-restored cases. For wrappers, record whether the outer process propagates nested MSI codes. If the silent process exceeds the case timeout, inspect logs before termination and treat the route as failed unless the logs prove a bounded prerequisite operation that subsequently completes in a clean repeat.
 
 For a GUI application that must run in the logged-on desktop after installation, create an interactive scheduled task with a start time in the future, invoke it immediately, and poll for the expected process. A past `/st` value can leave the task eligible but never started.
 
@@ -136,7 +175,7 @@ This rejection applies only when driver trust consent blocks the tested unattend
   -OutputDirectory $Evidence
 ```
 
-Review `VisibleARPChanges` first. Keep `HiddenARPChanges` to explain embedded MSI/custom EXE behavior. Confirm installed paths, executable architecture, services, drivers, and package scope independently; `WOW6432Node` does not determine installed architecture.
+Review `VisibleARPChanges` first. Keep `HiddenARPChanges` to explain embedded MSI/custom EXE behavior. Review `EnvironmentPathChanges` for added, removed, or modified user and machine PATH entries; each entry includes command candidates observed at capture time. A modified entry can mean that command candidates appeared in an existing PATH directory even when the PATH string itself did not change. Confirm each intended CLI command from a fresh shell. Record only user-facing commands; exclude GUI executables, uninstallers, updaters, crash tools, and framework implementation helpers such as .NET's `createdump`. Confirm installed paths, executable architecture, services, drivers, and package scope independently; `WOW6432Node` does not determine installed architecture.
 
 ## 5. Capture first-run associations
 
@@ -161,8 +200,10 @@ Read [Installed state](installed-state.md) before converting deltas into `AppsAn
 Also verify:
 
 - Claimed `InstallModes` and complete switch replacements.
-- Success, cancellation, failure, and reboot exit codes.
+- The requested installer log and any fallback logs, including the last meaningful operation before a hang or failure.
+- Exit code `0` for ordinary success, or conclusive evidence for each accepted nonzero success, cancellation, failure, and reboot code.
 - `ElevationRequirement` using both launch contexts when relevant.
+- User and machine PATH changes, the installed directories they expose, and commands that work from a fresh shell.
 - Network endpoints, stable metadata, and payload hashes for download bootstrappers.
 - Upgrade behavior by installing the prior version before the new version when required.
 

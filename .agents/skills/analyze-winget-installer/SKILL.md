@@ -15,7 +15,7 @@ Run Dumplings module commands and host-side skill scripts with PowerShell 7.4 or
 2. Read that family's `workflow.md`. Open its linked internals page only when implementing or debugging a parser.
 3. Follow [Wrapper installers](references/workflows/wrapper-installers.md) when an outer executable selects, downloads, or launches another installer.
 4. Read [Installed state](references/workflows/installed-state.md) when ARP matching, protocols, or file extensions matter.
-5. Use [VM validation](references/workflows/vm-validation.md) only for facts static parsing cannot prove.
+5. Complete [VM validation](references/workflows/vm-validation.md) for every distinct installer route before treating it as submission-ready. Static parsing selects the switches and reduces the test matrix; it does not replace unattended-installation validation.
 6. Persist large records through [Transient evidence](references/workflows/evidence.md).
 7. Use [`$use-dumplings-functions`](../use-dumplings-functions/SKILL.md) when analysis needs shared networking, file, archive, content, feed, browser, HTML, or YAML helpers.
 8. Read [Parser development](references/parser-development/workflow.md) before changing parser code.
@@ -26,7 +26,7 @@ When installer analysis is part of manifest authoring, work against the current 
 
 ## Safety
 
-Never execute an unknown installer or extracted payload on the host. Dynamic installation belongs in a checkpointed Windows Sandbox or Hyper-V VM.
+Never execute an unknown installer or extracted payload on the host. Dynamic installation belongs in a checkpointed Windows Sandbox or Hyper-V VM. An installer entry is incomplete until its exact artifact, switches, scope, and elevation route complete unattended without a blocking prompt or other manual action.
 
 Agents may use external static tools such as 7-Zip, NanaZip, Detect It Easy, or Exeinfo PE to investigate a format. Dumplings parsers, bridges, analyzers, tests, and CI must not invoke or depend on them. Treat their output as supporting evidence rather than the implementation or sole regression oracle.
 
@@ -34,7 +34,7 @@ Do not invent package metadata, registry values, format fields, silent switches,
 
 ## Required result
 
-Report the detected family and decisive evidence; outer and installed architecture; static metadata and visible ARP owner; scope and elevation evidence; switches, modes, exit codes, and WinGet defaults; nested payload selection; external dependency evidence; protocols and extensions when proven; unresolved warnings; and whether VM validation is required.
+Report the detected family and decisive evidence; outer and installed architecture; static metadata and visible ARP owner; scope and elevation evidence; switches, modes, log paths, exit codes, and WinGet defaults; nested payload selection; external dependency evidence; installed PATH changes and CLI commands; protocols and extensions when proven; unresolved warnings; and the completed VM-validation outcome.
 
 Do not author `UnsupportedOSArchitectures` at present. Do not duplicate a localized ARP identity in `AppsAndFeaturesEntries` when the corresponding locale manifest can represent it.
 

@@ -6,7 +6,7 @@ Every default-locale manifest requires:
 
 - `PackageIdentifier`: the stable, case-sensitive package identity matching the manifest path.
 - `PackageVersion`: the release identity shared by every file in the manifest set.
-- `PackageLocale`: the BCP-47 language tag for the default metadata.
+- `PackageLocale`: the BCP-47 language tag for the default metadata, including an evidence-backed region subtag; follow [Regional locale selection](model.md#regional-locale-selection) instead of defaulting a language to its most common country.
 - `Publisher`: the publisher identity selected according to the rules below.
 - `PackageName`: the user-facing package name selected according to the rules below.
 - `License`: the license identifier or classification selected according to the rules below.

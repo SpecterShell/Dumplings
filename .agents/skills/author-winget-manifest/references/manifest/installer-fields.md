@@ -59,7 +59,24 @@ Do not treat the minimal skeleton as the target output. Before finalizing, inspe
 - Installed identity: `ProductCode`, `PackageFamilyName`, `AppsAndFeaturesEntries`, `InstallationMetadata`, and `ReleaseDate`.
 - Integration evidence: `Commands`, `Protocols`, `FileExtensions`, `Dependencies`, `Capabilities`, `RestrictedCapabilities`, `Markets`, and `ArchiveBinariesDependOnPath`.
 
-Use static parser output first, then the compact VM before/after comparison for facts only observable after installation or first run. Do not read full VM snapshots unless a compact comparison identifies an ambiguity. Do not add a field merely because it exists in the schema: every value must be applicable and evidenced. `Protocols` and `FileExtensions` can be included when observed, but absence from static parsing is not proof that an application never registers them on first run.
+Use static parser output first, then complete mandatory VM validation against the exact artifact and switch set. Use the compact before/after comparison for facts observable only after installation or first run. Do not read full VM snapshots unless a compact comparison identifies an ambiguity. Do not add a field merely because it exists in the schema: every value must be applicable and evidenced. `Protocols` and `FileExtensions` can be included when observed, but absence from static parsing is not proof that an application never registers them on first run.
+
+### Commands and portable command aliases
+
+`Commands` has an installation meaning only when the base `InstallerType` is `portable`. WinGet permits zero or one value for a direct portable installer; when present, the first value becomes the installed executable name and portable link alias. For example, an artifact named `codex-x86_64-pc-windows-msvc.exe` should use `Commands: [codex]`, based on the documented user-facing command rather than the architecture, target platform, toolchain, or file suffix in the asset name.
+
+For `InstallerType: zip` with `NestedInstallerType: portable`, put `PortableCommandAlias` next to each exposed `RelativeFilePath`. This alias controls the portable link WinGet creates after extraction. `Commands` does not create that alias, but still add the same user-facing commands to `Commands` so they are published in the source index. Do not assign `PortableCommandAlias` to bundled helper executables that are not intended as commands.
+
+For every other base and nested installer-type combination, `Commands` does not alter installer execution, filenames, PATH, or aliases. It is still aggregated into WinGet's searchable Commands index. PowerToys' Command Not Found integration uses the `Microsoft.WinGet.CommandNotFound` provider to obtain Windows Package Manager suggestions, so accurate command metadata lets an unknown command resolve to the correct package.
+
+Follow these rules:
+
+- Always author `Commands` for direct portable and ZIP-plus-portable packages. A direct portable entry must have exactly one command. A ZIP-plus-portable package may expose several commands, subject to the schema limit, with a corresponding `PortableCommandAlias` on each command target.
+- Derive the command from the project's documentation, README, usage output, or a verified installed command. Strip architecture, platform, toolchain, version, and packaging decorations from filenames. Do not guess solely from an asset name.
+- During mandatory VM validation of a non-portable installer, compare user and machine PATH. When the installer adds its own directory, add its user-facing CLI commands to `Commands` after verifying them in a fresh shell.
+- Include CLI commands only. Exclude GUI executable names and internal helpers such as uninstallers, updaters, crash tools, or framework-specific commands such as .NET's `createdump`.
+
+The behavior is grounded in winget-cli's [`PortableFlow.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCLICore/Workflows/PortableFlow.cpp), [`ManifestValidation.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/ManifestValidation.cpp), manifest command aggregation in [`Manifest.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/Manifest.cpp), source-index insertion in [`Interface_1_0.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerRepositoryCore/Microsoft/Schema/1_0/Interface_1_0.cpp), and the official [`Microsoft.WinGet.CommandNotFound`](https://github.com/microsoft/winget-command-not-found) integration.
 
 ### ReleaseDate
 

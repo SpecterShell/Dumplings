@@ -5,6 +5,7 @@
 - [When To Use](#when-to-use)
 - [Manifest Headers](#manifest-headers)
 - [Locale Selection And Inheritance](#locale-selection-and-inheritance)
+- [Regional Locale Selection](#regional-locale-selection)
 - [Additional Locale Fields](#additional-locale-fields)
 - [Locale Field Completeness Pass](#locale-field-completeness-pass)
 - [Localization Rules](#localization-rules)
@@ -32,6 +33,32 @@ Use the exact fixed `defaultLocale` or `locale` header from [Manifest model and 
 - `Moniker` exists only in the default-locale schema and cannot be overridden by an additional locale manifest.
 - Localized `PackageName` and `Publisher` values participate in WinGet search and ARP correlation. Do not add arbitrary translations that do not represent the product's actual localized identity.
 - When static parsing or VM evidence shows a localized ARP `DisplayName` or `Publisher`, put that evidenced identity in the matching locale manifest rather than `AppsAndFeaturesEntries`. Use an Apps & Features override only when the corresponding locale manifest does not exist.
+
+## Regional Locale Selection
+
+Do not derive the region subtag from the language alone. English does not imply `en-US`, French does not imply `fr-FR`, German does not imply `de-DE`, and Dutch does not imply `nl-NL`. `DefaultLocale` in the version manifest and `PackageLocale` in the default-locale manifest must use the same evidence-backed BCP-47 tag.
+
+Use the strongest available evidence in this order:
+
+1. An explicit locale or market declaration in the product page, HTML language metadata, locale selector, installer metadata, application settings, store listing, feed, or API.
+2. The product's stated target market, regional site, supported-country list, currency, legal terms, spelling, and other regionalized content.
+3. The publisher's official contact page, legal address, company location, imprint or `Impressum`, privacy policy, terms, repository profile, or official store profile. Use publisher location as the fallback when the source establishes the language but does not declare a region.
+
+A country-code domain or translated navigation label is supporting evidence, not a decision by itself. A multinational publisher may serve a regional product that differs from its headquarters, and a site can intentionally use another regional variety. Prefer product-specific evidence when it conflicts with company location. If the evidence remains ambiguous, record the uncertainty instead of silently defaulting to the most common country for that language.
+
+Examples:
+
+| Evidence | Locale decision |
+|---|---|
+| A British publisher serves its primary product metadata in English and the legal/contact evidence places the product in the United Kingdom, as with `Everway.ClaroRead`. | Use `en-GB`, not an automatic `en-US`. |
+| A Belgian publisher or individual serves the product in French, as with `GaetanSencie.SimpleAnnualAccounting`. | Use `fr-BE`, not `fr-FR`. |
+| A Swiss company serves a French product page for the Swiss market. | Use `fr-CH`, not `fr-FR`. |
+| A Swiss company serves German metadata for a Swiss product, as with `HealthInfoNet.HINClient` or `MigrosBank.EBanking`. | Use `de-CH`, not `de-DE`. |
+| An Austrian publisher serves its product in German, as with `Untis.Untis.2026`. | Use `de-AT`, not `de-DE`. |
+| A Belgian product is served in German for the Belgian market. | Use `de-BE`, not `de-DE`. |
+| A Belgian organization serves Dutch metadata, as with `BelgianGovernment.eIDViewer`. | Use `nl-BE`, not `nl-NL`. |
+
+Apply the same reasoning to additional locale manifests. Their `PackageLocale` describes the regional localization represented by that file, which can differ from both the publisher's home country and the default locale.
 
 ## Additional Locale Fields
 
@@ -80,6 +107,7 @@ For an additional locale, perform the same applicability review but include only
 ## Validation Checklist
 
 - The default locale matches the version manifest's `DefaultLocale`.
+- The region subtag is supported by explicit product/market evidence or, when that is absent, official publisher-location evidence; it was not inferred from the language alone.
 - The file begins with the exact fixed header for `defaultLocale` or `locale`, and its versioned schema URL matches `ManifestVersion`.
 - Every locale tag is valid BCP-47 and unique in the manifest set.
 - Required default-locale fields are present.

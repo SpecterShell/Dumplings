@@ -19,4 +19,4 @@ When official InstallShield or Advanced Installer downloads include both an EXE 
 
 Do not infer the outer family from the application's framework or another release artifact. An Electron application can use NSIS, Inno, Squirrel, MSI, or a vendor bootstrapper, and an Inno or InstallShield wrapper can delegate ARP ownership to a nested MSI. Detect the physical outer file first, then compose its forwarding syntax with the selected nested installer's switches.
 
-Use [VM validation](vm-validation.md) when static parsing cannot prove forwarding syntax, payload choice, ARP ownership, exit-code propagation, or download behavior.
+Complete mandatory [VM validation](vm-validation.md) against the composed outer and nested command line. Focus additional checks on forwarding syntax, payload choice, ARP ownership, log forwarding, exit-code propagation, and download behavior when static parsing cannot prove them.

@@ -117,8 +117,8 @@ Review the selected outer installer and effective payload for hard prerequisites
 
 Map a proven Visual Studio Tools for Office Runtime requirement to `Microsoft.VSTOR`. Map a proven requirement for the installed Microsoft Office desktop suite or a host such as Outlook, Word, Excel, or PowerPoint to `Microsoft.Office`. Map a proven requirement for the Windows .NET Framework 3.5 optional component to `Dependencies.WindowsFeatures: [NetFx3]`; do not use this feature for .NET Framework 4.x or modern .NET runtimes. Follow the manifest-authoring [dependency workflow](../../../author-winget-manifest/references/manifest/dependencies.md) for the complete mapping set, evidence thresholds, `MinimumVersion`, field placement, and optional-integration exclusions.
 
-## 6. Escalate unresolved facts
+## 6. Complete dynamic validation
 
-Read [Installed state](installed-state.md) for ARP matching and association evidence. Read [VM validation](vm-validation.md) only when static parsing cannot prove visible ARP ownership, scope, architecture, silent behavior, exit codes, elevation, network payload selection, or first-run associations.
+Read [Installed state](installed-state.md) for ARP matching, PATH, command, and association evidence. Complete [VM validation](vm-validation.md) for every distinct installer route before submission. Use static evidence to target the test, then prove blocker-free silent behavior, logging, exit codes, installed state, scope, elevation, network payload selection, and first-run behavior in the VM.
 
 Write full parser and VM output to [transient evidence](evidence.md). When this analysis supports an authored package, project each conclusive result into the existing working manifest and save it before continuing; do not wait until every static and dynamic question is resolved. For manifest creation, field placement, defaults, incremental serialization, and sorting, use the manifest-authoring skill rather than duplicating those rules in installer-family pages.

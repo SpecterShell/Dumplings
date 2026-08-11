@@ -33,7 +33,7 @@ Update and save the working manifest after each meaningful evidence milestone: a
 
 Use official publisher sources. Do not use download aggregators, mirrors, repackagers, or search-result download sites. Cross-check websites and repositories before trusting either.
 
-Never execute an unknown installer on the host. Stop when the only link is login-required, email-delivered, unofficial, suspicious, session-bound without a stable fallback, or when the installer cannot be installed unattended. A blocking Windows Security driver-publisher consent dialog also rejects the installer; follow the [VM procedure](../analyze-winget-installer/references/workflows/vm-validation.md#reject-blocking-driver-trust-prompts).
+Never execute an unknown installer on the host. Before finalizing or submitting an installer entry, complete the canonical [VM procedure](../analyze-winget-installer/references/workflows/vm-validation.md) against the exact artifact and authored switches. Stop when the only link is login-required, email-delivered, unofficial, suspicious, session-bound without a stable fallback, or when the installer cannot be installed unattended. A blocking Windows Security driver-publisher consent dialog also rejects the installer; follow the [driver-prompt rule](../analyze-winget-installer/references/workflows/vm-validation.md#reject-blocking-driver-trust-prompts).
 
 Do not invent publisher identities, legal names, URLs, release notes, versions, registry metadata, or switches. Search all likely authoritative sources before omitting an applicable optional field.
 

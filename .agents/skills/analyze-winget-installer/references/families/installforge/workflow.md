@@ -78,7 +78,7 @@ Use explicit parser evidence for scope and installed payload architecture. Prese
 
 ## VM validation
 
-Follow [VM validation workflow](../../workflows/vm-validation.md) only to verify a separate silent-capable wrapper or build. The standard InstallForge package remains blocked when it cannot install unattended.
+Complete the mandatory [VM validation workflow](../../workflows/vm-validation.md) for a claimed silent-capable wrapper or build. The standard InstallForge package remains blocked when it cannot install unattended.
 
 ## Known examples
 
