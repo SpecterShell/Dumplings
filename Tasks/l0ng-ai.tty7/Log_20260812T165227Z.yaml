@@ -1,0 +1,101 @@
+Version: 26.8.3
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/l0ng-ai/tty7/releases/download/v26.8.3/tty7-26.8.3-windows-x86_64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    tty7 has a real Source Control panel now — staging, committing, diffs from three sources, git decorations in the file tree, and a commit history with lanes — and none of it needs a newer remote server. The interface also got a font size of its own, so the chrome can grow without touching the text in your panes. Behind those two, a polish pass of 151 fixes went over the whole app: gestures that quietly did nothing, dialogs that put the destructive button where Cancel belongs, failures that failed in silence. Windows users get Ctrl+C back in panes, and the macOS DMG builds again.
+    Added
+    - A full Source Control panel: stage, commit, push, pull, diff, and a commit history with lanes (#424)
+    - The interface has a font size of its own — ui_font_size scales the chrome, not the grid
+    - A scrollback scrollbar down the right edge of a pane (#480, reported by @junyi-deep in #432)
+    - Zoom a pane's font with the platform modifier and the wheel
+    - The command palette previews a theme live while you arrow through the list
+    - The palette matches commands in every locale, not just the one on screen
+    - fish history joins the Ctrl+R menu and inline completion (by @dongyuwei in #421)
+    - The daemon upgrades in place with execve, instead of killing every shell (#449)
+    - Closing a tab asks before it ends work that is still running
+    - Tail-first sidebar elision, with a hover card for what the row hid (by @ArnoChenFx in #446)
+    - The Info tab's rows do what they show — open a diff, copy an address, close the panel (#531)
+    - The opencode plugin reports its session id, so a restarted pane can resume it (by @cwatanab in #481)
+    - Drop files into the Files panel to copy them in (#458, reported by @shihuaidexianyu in #490)
+    - Rearrange splits by dragging a pane onto the layout (#445)
+    - Native Windows backdrop materials — Mica, Mica Alt, Acrylic, Blur (by @ArnoChenFx in #412)
+    - Panes come back showing what was on them after the background service dies (#449)
+    - tty7 send --key presses keys, tty7 wait --until free waits on a command (#505)
+    - SSH probes the ~/.ssh default identity keys (by @shihuaidexianyu in #507, #484)
+    - A WSL pane gets its shell integration whatever the distro's shell is (by @biztex in #533)
+    - Put your own entries in the new-tab menu with custom_shells (by @biztex in #534, reported by @junyi-deep in #443)
+    - A documentation site (#478)
+    Changed
+    - Every confirmation puts the action on the right and Cancel on the left, and Escape cancels
+    - A search match is washed in the theme's accent, at a strength that theme can afford (#470)
+    - The block cursor is drawn as reverse video instead of a tint that halved its contrast
+    - An inactive pane dims by blending its colors toward the window background (by @ArnoChenFx in #464)
+    - The pane grip is three dots, the way Ghostty draws its own (#463)
+    - The WSL distro list comes from the registry, not the WSL service
+    - Opening a WSL tab costs one readiness probe instead of two (reported by @liao666brant in #454)
+    Fixed
+    - Ctrl+C works in a pane on Windows again (#459, reported by @junyi-deep in #451 and @fooofei in #314)
+    - Two tty7s on different config directories no longer erase each other's workspaces (#462)
+    - The macOS DMG builds again — the volume ran out, not the runner's disk (#477)
+    - A remote window that lost its first tree pull no longer sits empty until you restart (#472)
+    - The CLI and the GUI agree on what workspaces, tabs and attachments exist (#423)
+    - A pane the CLI created can be attached to, instead of being orphaned (#425)
+    - A WSL pane starts when the distro's default shell is fish (by @ArnoChenFx in #422)
+    - A remembered WSL server path repairs itself instead of failing every tab
+    - A half-read registry is no longer passed off as "there are no distros"
+    - Gestures that did nothing: Escape in dialogs, ⌘P then Return, ⌘G past the last match, Tab in the palette
+    - ls | gre + Tab completes grep, not filenames
+    - Typing or pasting while scrolled back snaps the view to the prompt
+    - Typing into a filled text box replaces it instead of prepending
+    - Silent failures now speak: theme writes, server restarts, short session restores, SFTP overwrites
+    - A directory with no children says which kind of nothing it is
+    - Scrollbars on the settings pages, diff overlay, Markdown preview, SFTP transfers and switcher
+    - The SSH host form stacks below 1000px instead of squeezing its labels to a letter per line
+    - Preset inks reach button labels, panel headings, tooltips, menus and the splitters
+    - An agent's state is no longer carried by hue alone (#402)
+    - The palette stops showing recent commands twice, and keeps frecency once you type
+    - SFTP transfers stop writing over files without a word
+    - Escape no longer throws away an unsaved SSH connection
+    - A tab label is cut on grapheme clusters, so an emoji is never torn in half (#450)
+    - A multiline history entry draws on one menu row (#436)
+    - The Source Control panel is on the same font scale as the rest of the window (#557)
+    - A search highlight stays on its text while the pane is printing (#559)
+    - A machine's name gets its own line in the switcher (by @ArnoChenFx in #560)
+    - The workspace discs in the switcher are legible again (#483)
+    - Overlay scrollbars fade out again (#471)
+    - Switching workspaces no longer wipes the tab titles of the one you left (#558)
+    - A WSL distro that cannot reach /mnt keeps its own .bashrc (by @biztex in #535)
+    - An idle window stops re-reading the repository on Linux (#523)
+    - An alias put back in an Included ssh config file is found again (#528)
+    - A rejected stored SSH credential asks again instead of failing forever (#519)
+    - A host key of a new algorithm is no longer reported as a compromise (#516)
+    - One account of whether a machine is connected (#517)
+    - A half-filled SSH profile is refused rather than saved (#511)
+    - An ssh config import says what it added, updated and could not keep (#515)
+    - "Forget Password" asks first, and says who else it signs out (#510)
+    - A port-forward edit cannot lose the rule it replaces (#514)
+    - A failed SFTP poll, forward or file-tree search no longer reads as an empty result (#518)
+    - Deleting an SSH profile no longer strands its remote workspaces (by @shihuaidexianyu in #508)
+    - The Files tree follows a coding agent into its git worktree (#526)
+    - Opening a folder from Explorer no longer costs you your layout (#529)
+    - A drop replaces what it lands on only once the copy is whole (by @biztex in #512)
+    - The stray guide rail under a remote machine is gone (#536)
+    New Contributors
+    - @dongyuwei made their first contribution in #421
+    - @biztex made their first contribution in #512
+    Install
+    - macOS — tty7-26.8.3-macos-arm64.dmg (Apple silicon) or tty7-26.8.3-macos-x86_64.dmg (Intel)
+    - Windows — tty7-26.8.3-windows-x86_64-setup.exe, or the .zip for a portable copy
+    - Linux — tty7-26.8.3-linux-x86_64.AppImage, or the .tar.gz
+    Every entry above is written up in full in
+    CHANGELOG.md.
+    Full Changelog: https://github.com/l0ng-ai/tty7/compare/v26.8.2...v26.8.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/l0ng-ai/tty7/releases/tag/v26.8.3
+ReleaseTime: 2026-08-12T12:59:23.0000000Z
