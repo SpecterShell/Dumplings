@@ -7,7 +7,12 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  Architecture = 'x64'
+  InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ $_.url.EndsWith('.exe') -and $_.url.Contains('_x64') }, 'First')[0].url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ $_.url.EndsWith('.exe') -and $_.url.Contains('_arm64') }, 'First')[0].url
 }
 
 switch -Regex ($this.Check()) {
