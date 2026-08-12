@@ -23,6 +23,15 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      # RealVersion
+      $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
+
+      # Avoid 429
+      Start-Sleep -Seconds 60
+    }
+
     try {
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
