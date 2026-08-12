@@ -1,0 +1,70 @@
+Version: 0.5.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.5.5/Agentero_0.5.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.5.5/Agentero_0.5.5_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds a new built-in ACP agent (Pi), switches PDF figure/table/formula annotations to open on click, introduces an "Open in Chat" entry for external platforms, and adds a continuous UI zoom, trackpad pinch zoom, and global reduced-motion support. It also unifies interface motion details and fixes native title-bar controls on Linux, selection translation, translation-provider config, and several PDF / editor interactions.
+    Features
+    - Pi ACP agent: Pi is now a built-in agent preset. Pi has no native ACP, so it connects through the community pi-acp adapter (which spawns pi --mode rpc), with one-click install/update for both the host and the adapter. (fce87b4a by @Phil-Fan)
+    - Open in Chat: The PDF ask card gains an "Open in Chat" menu that carries the selection, an explain instruction, and the paper link to external AI platforms. (8e05eda6 by @Phil-Fan)
+    - Add file from context menu: The file-tree right-click menu can add a file directly to the current agent conversation. (3b3ac2e1 by @Slowist-Lee)
+    - Click to open visual annotations: Figure, table, and formula annotations now open on click instead of hover dwell, with a softened selection border. (acc5f2aa by @Phil-Fan, 3fdf5458 by @Slowist-Lee)
+    - Continuous UI zoom: The appearance UI-scale control is now a continuous slider, and editor font size scales with it. (04962fed by @Slowist-Lee)
+    - Trackpad pinch zoom: PDF supports trackpad pinch zoom via WebKit gesture events. (dfe29a8b by @Phil-Fan)
+    - Reduced motion: Adds a global prefers-reduced-motion fallback and routes JS-driven animations (tree reveal, wiki navigation, chat autoscroll) through it. (92951a49 by @Phil-Fan)
+    - arXiv ID display: The Info panel header shows the arXiv ID and copies it on click. (0d9426fb by @Phil-Fan)
+    Improvements
+    - Unified motion: The nav highlight slides between tabs, the rail collapse/expand animates, library rows fade on sort and tag-filter changes, and stray transition durations are aligned to one motion ladder. (a6eb136f by @Phil-Fan)
+    - Leaner Info panel: Removes the HTML link chip and clamps title and authors to two lines. (f47a83bd by @Phil-Fan)
+    - Reasoning collapsed by default: Agent reasoning is collapsed by default and no longer auto-expands while streaming. (2ba489fa by @Slowist-Lee)
+    - Larger swatch hit area: The highlight swatch in the selection menu gets a 24px click target. (f0660908 by @Phil-Fan)
+    Fixes
+    - Linux native title bar: Fixes maximize/minimize/close buttons being unresponsive on Linux in the initial window state. (#301 by @bet4it)
+    - LaTeX in selection translation: Selection-translation results reuse the math rendering pipeline so inline formulas render instead of showing raw text. (#291 by @July-h5kf3)
+    - CLI mark ids: mark get / mark delete now accept mark ids that start with a hyphen instead of parsing them as an unknown flag. (80ac3754 by @Phil-Fan)
+    - Translation provider config: Config edits stay as drafts until Confirm, and trailing slashes in the baseUrl are preserved while typing. (9d477da3 by @Phil-Fan)
+    - Visual annotation hits: Hardens the click-to-annotate hit target and ignores scroll gestures that land on visual annotations. (f216c236 by @Phil-Fan)
+    - Editor layout: Reserves a right gutter so a collapsed TOC never covers text, and raises the external-link popover above the editor split divider. (98d1b933 by @Slowist-Lee)
+    - PDF cards: Clamps the hover citation preview to two lines and hardens formula-seed access when merging captions. (61a3b07a by @Phil-Fan)
+    - Windows installer: Adds Agentero branding to the Windows setup wizard. (cf20a092 by @Phil-Fan)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布带来一个新的内置 ACP Agent（Pi），把 PDF 的图/表/公式标注改为点击打开，新增「在外部平台打开对话」入口，并加入连续 UI 缩放、触控板双指缩放与全局「减少动态效果」支持。同时统一了界面运动细节，修复了 Linux 原生标题栏、划词翻译、翻译服务商配置与多处 PDF / 编辑器交互问题。
+    新功能
+    - Pi ACP Agent: 在设置的 Agent 预置中加入 Pi。Pi 无原生 ACP，通过社区适配器 pi-acp 接入（内部 spawn pi --mode rpc），支持一键安装/更新宿主与适配器两层。（fce87b4a by @Phil-Fan）
+    - 在外部平台打开对话：PDF 提问卡新增「Open in Chat」菜单，可把选区、解释指令与论文链接一并带到外部 AI 平台。（8e05eda6 by @Phil-Fan）
+    - 从上下文菜单加入对话：文件树右键菜单可直接把文件加入当前 Agent 对话。（3b3ac2e1 by @Slowist-Lee）
+    - 点击打开视觉标注：图、表、公式的视觉标注改为点击打开，替代悬停停留，并柔化选区边框。（acc5f2aa by @Phil-Fan、3fdf5458 by @Slowist-Lee）
+    - 连续 UI 缩放：设置中的界面缩放改为连续滑块，编辑器字号随之缩放。（04962fed by @Slowist-Lee）
+    - 触控板双指缩放：PDF 支持通过 WebKit 手势事件的触控板双指缩放。（dfe29a8b by @Phil-Fan）
+    - 减少动态效果：新增全局 prefers-reduced-motion 回退，并让树展开、Wiki 跳转、聊天自动滚动等 JS 驱动动画也遵循该偏好。（92951a49 by @Phil-Fan）
+    - arXiv ID 展示：Info 面板头部显示 arXiv ID，点击即可复制。（0d9426fb by @Phil-Fan）
+    改进
+    - 运动细节统一：导航高亮在标签间滑动、侧栏折叠/展开动画、论文库排序与标签筛选时的行淡入，以及零散过渡时长统一到同一运动节奏。（a6eb136f by @Phil-Fan）
+    - Info 面板精简：移除 HTML 链接 chip，标题与作者截断为两行。（f47a83bd by @Phil-Fan）
+    - 推理默认折叠：Agent 回复中的推理内容默认折叠，流式生成时不再自动展开。（2ba489fa by @Slowist-Lee）
+    - 高亮色块点击区域：划词菜单的高亮色块点击热区扩大到 24px。（f0660908 by @Phil-Fan）
+    修复
+    - Linux 原生标题栏：修复 Linux 上最大化/最小化/关闭按钮初始无法响应的问题。（#301 by @bet4it）
+    - 划词翻译渲染 LaTeX: 划词翻译结果复用数学渲染链路，正确显示行内公式而非原样文本。（#291 by @July-h5kf3）
+    - CLI mark id: mark get / mark delete 现在接受以连字符开头的 mark id，不再被解析为未知参数。（80ac3754 by @Phil-Fan）
+    - 翻译服务商配置：配置编辑在点击确认前保持草稿态，输入 baseUrl 时保留尾部斜杠。（9d477da3 by @Phil-Fan）
+    - 视觉标注命中：加固点击标注的命中区域，并忽略落在视觉标注上的滚动手势。（f216c236 by @Phil-Fan）
+    - 编辑器布局：折叠 TOC 时预留右侧留白避免遮挡正文，外链 popover 层级提升到分栏分隔线之上。（98d1b933 by @Slowist-Lee）
+    - PDF 卡片：悬停引用预览截断为两行，合并图注时加固公式种子访问。（61a3b07a by @Phil-Fan）
+    - Windows 安装器：为 Windows 安装向导加入 Agentero 品牌视觉。（cf20a092 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.5.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.5.5
+ReleaseTime: 2026-08-12T04:47:49.0000000Z
