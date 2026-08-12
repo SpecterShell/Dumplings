@@ -1,0 +1,68 @@
+Version: 0.15.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.15.3/FylloCode-0.15.3-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.15.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release makes past Chat sessions easier to recover and collects an Agent's file changes from one turn into a read-only Diff view. ACP tool events, message audit metadata, and JSONL writes now follow consistent semantics, while multi-root Workspaces choose and create Proposals independently for each Project. Sidebar, timeline, and tool-detail layout changes reduce wasted space and horizontal overflow in long conversations.
+    Added
+    - Added current-Workspace session search to the Chat sidebar. It finds past sessions by title, FylloCode Session ID, or visible User and Assistant text; excludes reasoning, Tool input and output, and system reminders; orders results by match type and update time; returns at most 50 entries; and opens a result through the existing session flow
+    - Added turn-level file-change review to tool details. Changes aggregates ACP diffs from visible normal tools in the current assistant message into added, modified, and deleted files in a read-only Diff Slideover whose items start collapsed and allow several files to remain expanded; Locations opens absolute paths and line numbers through the existing local-file preview
+    Changed
+    - ACP tool-call pending, in_progress, completed, and failed states, diffs, locations, failure text, and replacement semantics now remain consistent across live messages, Main persistence, and history reload. New messages also record updatedAt and the optional model / effort used at actual Prompt dispatch, with per-file serialization and atomic rewrites protecting JSONL history
+    - Multi-root Chat now separates a goal by Project and chooses Direct, Plan, or Proposal for each owner independently. When several Projects change behavior contracts, the Agent lists owners, specific contract changes, and cross-repository dependencies for confirmation, then creates one repository-owned Proposal per owner; Projects below the threshold can still use Direct or Plan
+    - A short pinned-session group now shrinks to its content, up to 50% of the available sidebar height, while Recent Sessions uses the remainder. The prompt timeline is narrower and uses a vertically centered transparent overlay on the left, without changing its surface on hover
+    - Updated ACP, MCP, Vue, Nuxt UI, Pinia, MarkStream, Monaco, and development dependencies. stream-monaco is now 0.0.49 with a local compatibility patch that keeps Diff Editor code lines aligned
+    Fixed
+    - Fixed renaming a Session during an Assistant reply replacing the Renderer running state with server metadata and hiding the runtime indicator too early
+    - Fixed re-entering the same new-session draft cancelling an in-flight probe and losing the Agent Session configuration loaded by that first probe
+    - Removed status-suffix DOM for all four normal-tool states. In-progress tools keep shimmer, failed tools keep an error-colored icon and Error details, and expanding an Activity group no longer lets hidden suffixes widen the message column
+    - Fixed fyllo-specs Proposal creation instructions to preserve the complete .openspec.yaml, and unified metadata serialization across Create, MCP Apply, and Archive so status writes neither truncate other fields nor add unrelated quotes to ISO timestamps
+    Notes
+    - The application version is now 0.15.3.
+    - The fyllo-specs MCP server is now 0.11.1. This patch keeps tool names, inputs, outputs, transports, and storage locations compatible while adding per-Project single-owner guidance and metadata write-safety fixes.
+    - The fyllo-cortex MCP server remains at 0.7.0, and fyllo-spawn remains at 0.1.1; neither server changed in this release range.
+    - New message JSONL records can include optional updatedAt, model, effort, and tool metadata. Historical messages need no migration: missing updatedAt falls back to createdAt in memory, and other absent fields remain absent.
+    - Session search reads existing Session metadata and message JSONL on demand without creating an index, cache, or new persistence format. Large Workspaces can take longer to query; the Renderer debounces input, serializes scans, and discards stale results.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0153---2026-08-12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布让历史 Chat 更容易找回，并把 Agent 在单轮执行中的文件变化集中到只读 Diff 视图。ACP 工具事件、消息审计 metadata 与 JSONL 写回链路现在使用一致语义；多根 Workspace 也会按 Project 独立判断和创建 Proposal。侧栏、时间线和工具详情的布局调整减少了长会话中的空间浪费与横向溢出。
+    新增
+    - Chat 侧栏新增当前 Workspace 会话搜索。可按标题、FylloCode Session ID 或 User / Assistant 可见正文查找历史会话；搜索排除 reasoning、Tool 输入输出和 system reminder，结果按命中类型与更新时间排序，最多返回 50 条，并直接沿用既有会话打开流程
+    - 工具详情新增本轮文件变更审查。Changes 会把当前 assistant message 中可见普通工具的 ACP diff 聚合为新增、修改和删除文件，并在默认折叠、可多项展开的只读 Diff Slideover 中展示；Locations 可复用现有本地文件预览打开绝对路径和行号
+    调整
+    - ACP tool call 的 pending、in_progress、completed、failed 四态、diff、locations、失败文本与 replacement 语义现在贯穿实时消息、Main 持久化和历史重载。新消息还记录 updatedAt 以及实际 Prompt dispatch 使用的可选 model / effort，并通过按文件串行和原子写回保护 JSONL 历史
+    - Multi-root Chat 现在先按 Project 拆分目标并独立判断 Direct、Plan 或 Proposal。多个 Project 都改变行为契约时，Agent 会先列出 owner、具体契约变化和跨仓库依赖供确认，再为每个 owner 分别创建 repository-owned Proposal；未达到标准的 Project 仍可使用 Direct 或 Plan
+    - Chat 侧栏中少量置顶会话按内容高度收缩，最多占可用高度的 50%，最近会话使用剩余空间。Prompt 时间线收窄并改为左侧垂直居中的透明悬浮层，hover 不再改变底板
+    - 更新 ACP、MCP、Vue、Nuxt UI、Pinia、MarkStream、Monaco 和开发工具依赖；stream-monaco 升级到 0.0.49，并带有用于保持 Diff Editor 代码行对齐的本地兼容补丁
+    修复
+    - 修复在 Assistant 回复期间重命名会话会用服务端 metadata 覆盖 Renderer running 状态，导致运行指示提前消失的问题
+    - 修复重新进入同一个新会话草稿时取消正在进行的 probe，进而丢失首次加载的 Agent Session 配置选项的问题
+    - 移除普通工具四种状态的 suffix DOM；进行中继续使用 shimmer，失败保留错误色 icon 和 Error 详情，展开 Activity group 不再因隐藏 suffix 扩大消息列宽度
+    - fyllo-specs 在创建 Proposal 草稿时要求保留完整 .openspec.yaml，并让 Create、MCP Apply、Archive 使用同一 metadata 序列化规则，避免状态写回截断其他字段或无意义地给 ISO 时间加引号
+    说明
+    - 应用版本为 0.15.3。
+    - fyllo-specs MCP server 升级到 0.11.1。这是保持 tool 名称、输入、输出、transport 和存储位置兼容的 patch 更新，包含多 Project 单 owner 调用指引与 metadata 安全写回修复。
+    - fyllo-cortex MCP server 保持 0.7.0，fyllo-spawn MCP server 保持 0.1.1；本次发布范围没有修改这两个 server。
+    - 新消息 JSONL 会增加可选 updatedAt、model、effort 与工具 metadata。历史消息无需迁移；缺少 updatedAt 时在内存中回退到 createdAt，缺少其他字段时保持缺失。
+    - 会话搜索直接按需读取现有 Session metadata 与消息 JSONL，不创建索引、缓存或新的持久化格式。较大的 Workspace 可能需要更长查询时间，Renderer 会 debounce 输入、串行扫描并丢弃过期结果。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0153---2026-08-12
+ReleaseTime: 2026-08-12T07:48:36.0000000Z
