@@ -5,8 +5,14 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^desktop-' -replace '^v
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name -eq "MindOS-Setup-$($this.CurrentState.Version).exe" }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.assets.Where({ $_.name -eq "MindOS-Setup-$($this.CurrentState.Version)-arm64.exe" }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
