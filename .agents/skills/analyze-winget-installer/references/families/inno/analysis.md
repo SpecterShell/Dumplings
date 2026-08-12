@@ -23,10 +23,32 @@ $Info.SupportedArchitectures
 $Info.UnsupportedArchitectures
 $Info.EncryptionUse
 $Info.CompressMethod
+$Info.EditionId
+$Info.CharacterMode
+$Info.RegistryWrites
+$Info.FileExtensions
+$Info.Protocols
+$Info.MetadataRecordCounts
+$Info.PascalScriptInfo
+$Info.ParserVersionInfo
 $Info.Warnings
 ```
 
 `Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `ResolvedAppId`, `UninstallRegKeyBaseName`, `UninstallDisplayName`, raw directive values, unresolved constants/fields, privilege directives, architecture expressions or packed architecture sets, encryption evidence, loader signature, and `ParserVersionInfo`. Reuse these properties throughout the analysis.
+
+`PascalScriptInfo` is the bounded `[Code]` header view: presence, byte length, IFPS version, declared type/global/function counts, entry-point index, and import size. It is null only when an embedded program header could not be validated; `Present: false` means the selected structure has no compiled program. Official Inno structures before 4.0 do not serialize `CompiledCodeText`, while the My Inno Setup Extensions line introduced it earlier.
+
+Request detailed script evidence in the same top-level parse when header fields contain `{code:...}` constants or script behavior affects scope, silent installation, registry writes, process launches, restart behavior, or downloads:
+
+```powershell
+$Info = Get-InnoInfo -Path $InstallerFile -IncludePascalScriptAnalysis
+$ScriptInfo = Get-InnoPascalScriptInfo -Path $InstallerFile
+$Disassembled = Get-InnoPascalScriptInfo -Path $InstallerFile -IncludeDisassembly -MaximumDisassemblyCharacters 4194304
+```
+
+The detailed result contains typed functions, arguments, direct call edges, string constants, external declarations, DLL imports, and calls grouped by manifest-relevant effect. `StaticReturnValues` contains only straight-line functions whose complete body proves one constant return. Those values can resolve matching setup-header `{code:Function}` strings, recorded in `ResolvedPascalCodeConstants`. A branch, call, pointer, indexed operand, exception path, unknown opcode, or nonconstant input leaves the function unresolved.
+
+The disassembly is static evidence, not decompiled Pascal source or an emulator result. Treat unresolved registry writes, process launches, privilege checks, indirect calls, and external DLL effects as VM-validation inputs.
 
 Do not follow `$Info` with `Read-ProductVersionFromInno`, `Read-ProductNameFromInno`, `Read-PublisherFromInno`, `Read-ProductCodeFromInno`, `Test-InnoDualScope`, `Read-SupportedScopesFromInno`, `Read-UnsupportedArchitecturesFromInno`, `Test-InnoUnsupportedArchitecture`, or `Test-InnoAppsAndFeaturesEntry` for the same installer. Those convenience functions invoke `Get-InnoInfo` again.
 
@@ -45,9 +67,9 @@ $OutputDirectory = Join-Path $env:TEMP 'InnoExtract'
 Expand-InnoInstaller -Path $InstallerFile -DestinationPath $OutputDirectory -Name 'nested.msi' -CollisionAction Rename
 ```
 
-`Expand-InnoInstaller` performs bounded, source-backed extraction from unencrypted Inno 5.3 through 7.x installers. Omit `-Name` to enumerate and extract the complete validated file table, or supply an exact name/wildcard to limit work. It supports ANSI and Unicode file-entry layouts, 32-bit and 64-bit location offsets, SHA-1 and SHA-256 verification, solid chunks, source-defined 64 KiB CALL/JMP transforms, and stored, Zlib, BZip2, LZMA, and LZMA2 payloads. Virtual roots such as `{app}` are removed while catalog subdirectories are preserved.
+`Expand-InnoInstaller` performs bounded, source-backed extraction across catalogued layouts from Inno Setup 1.3.21 through 7.x. Omit `-Name` to enumerate and extract the complete validated file table, or supply an exact name/wildcard to limit work. It supports ANSI and Unicode entries, legacy and resource loaders, 32-bit and 64-bit framing, external multi-disk media, Adler32, CRC32, MD5, SHA-1, and SHA-256 verification, solid chunks, all three source-defined CALL/JMP transforms, and stored, Zlib, BZip2, LZMA, and LZMA2 payloads. Virtual roots such as `{app}` are removed while catalog subdirectories are preserved.
 
-Prefer the narrowest useful `-Name` when only one nested payload is needed. For complete extraction, omit `-Name` and set an appropriate `-MaximumExpandedBytes`. Use `-CollisionAction Prompt|Error|Skip|Overwrite|Rename` when the installer has language aliases or duplicate destinations; interactive calls default to `Prompt`, while automation must pass `Rename`. Fully encrypted headers cannot be parsed, file-encrypted payloads require the setup password, and external disk-spanning slice files are not accepted by this path. These conditions fail deterministically; they do not imply malformed metadata. Some custom 5.x compilers permit exact-name compatibility extraction but do not expose a coherent full table; omitted `-Name` correctly rejects those layouts rather than returning an incomplete archive.
+Prefer the narrowest useful `-Name` when only one nested payload is needed. For complete extraction, omit `-Name` and set an appropriate `-MaximumExpandedBytes`. Use `-CollisionAction Prompt|Error|Skip|Overwrite|Rename` when the installer has language aliases or duplicate destinations; interactive calls default to `Prompt`, while automation must pass `Rename`. For external media, keep official slice names beside the setup executable or pass their directories/files with `-DiskSourcePath`; missing, truncated, wrongly identified, or size-mismatched slices fail before decompression. Fully encrypted headers cannot be parsed and file-encrypted payloads still require the setup password. My Inno Setup Extensions and ResTools use explicit catalog routes. ISX is classified but extraction is rejected. Unknown future formats are accepted only when the nearest compatible descriptor consumes every required record and stream boundary exactly.
 
 Inspect embedded `.msi`, `.msp`, `.msu`, setup `.exe`, and `[Run]`-target payloads. Route nested MSI/WiX files through `Get-MsiInstallerInfo`; route custom EXEs through their focused parser. Do not infer ownership merely because a setup-like file is embedded.
 
@@ -63,7 +85,9 @@ Inno's constant expander treats `{{` outside a constant as a literal `{`. This i
 
 For Inno 6.5 and later, check `EncryptionUse`. `Files` means header metadata is readable but payload extraction requires the setup password. `Full` encrypts metadata too, so parsing fails deterministically rather than probing alternate offsets. The parser validates the encryption-header CRC before reading compressed blocks.
 
-The current Inno aggregate parser does not expose compiled `[Registry]` protocol and file-extension associations. Inspect extracted/static script evidence when available, otherwise capture associations during VM installation and first run. An absent static result does not prove that the application never registers an association.
+`RegistryWrites` contains the bounded literal records from the compiled `[Registry]` table. `FileExtensions` and `Protocols` project deterministic registrations below `HKCR` or `Software\Classes`; they exclude unresolved `{code:...}` paths. Check `MetadataTablesResolved` and `MetadataRecordCounts` before treating an empty collection as evidence that the table was empty.
+
+Conditional records remain in `RegistryWrites` with their condition evidence and produce a warning because static parsing cannot prove that the write executes. Pascal Script, external DLLs, and application first run can create additional associations. Capture installed-state changes in the VM whenever an association is required by the manifest or the parser reports unresolved table/condition evidence.
 
 ## Build manifest fields
 
@@ -89,6 +113,6 @@ Do not execute the installer on the host. Use the Hyper-V workflow when any requ
 - scope changes according to elevation/UAC rather than command-line overrides;
 - custom code may reject or alter silent installation;
 - extracted payload architecture conflicts with header expressions;
-- protocols or file extensions may be registered only by custom code or first run.
+- protocols or file extensions are conditional, unresolved, or may be registered only by custom code or first run.
 
 Before finishing, trace every decision to `$Info`, extracted payload evidence, a nested parser result, or recorded VM evidence.

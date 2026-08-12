@@ -1,79 +1,121 @@
-# Inno Setup parser internals
+# Inno Setup internals
 
-This reference supports parser implementation and review. For installer analysis and manifest authoring, use the [Inno Setup workflow](../../families/inno/workflow.md).
+This directory explains how Inno Setup turns an `.iss` script and source files into an installer, how that installer starts, how setup records are evaluated, how installation and rollback work, and how the uninstaller reconstructs the reverse operations.
 
-Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
+The emphasis is the Inno Setup producer and runtime. Dumplings-specific parser details are kept in [parser implementation notes](parser-implementation.md).
 
-## Supported formats and variants
+Use the [Inno Setup package workflow](../../families/inno/workflow.md) when the immediate goal is a WinGet manifest.
 
-The parser covers the structured Inno Setup variants documented below. Variant-specific evidence must pass the same content-based detection and bounds checks.
+## Reading path
 
-## Binary structure
+1. [Architecture](architecture.md) introduces the compiler, loader, setup engine, data streams, script VM, and uninstaller.
+2. [Compiler and output assembly](compiler-and-output.md) follows source sections through record creation, compression, and final executable construction.
+3. [Binary format](binary-format.md) describes the loader resource, embedded setup engine, setup-data streams, record framing, file locations, and payload chunks.
+4. [Metadata model](metadata-model.md) documents the setup header and each record family written by the compiler.
+5. [Setup runtime](setup-runtime.md) follows command-line processing, language selection, architecture mode, privilege respawn, wizard state, record filtering, installation, rollback, and exit codes.
+6. [Constants, expressions, and Pascal Script](scripting-and-expressions.md) explains the three different dynamic-evaluation systems used by Inno Setup.
+7. [Uninstaller and ARP](uninstaller-and-arp.md) covers AppId normalization, uninstall-key values, uninstall files, log records, upgrades, and uninstall execution.
+8. [Format history and editions](format-history.md) explains ANSI/Unicode generations, structure identities, third-party editions, and major format transitions.
+9. [Parser implementation notes](parser-implementation.md) maps these internals to Dumplings and lists the remaining static-analysis limits.
 
-Inno stores an offset table in PE `RCDATA` resource ID `11111`. That table points to compressed setup metadata and file data elsewhere in the executable. Offsets are absolute file offsets after the resource record is decoded.
+## One installer contains several programs and data sets
+
+The familiar `Setup.exe` is usually a loader, not the full setup program mapped directly into the process.
 
 ```text
-PE setup loader
-+-- .rsrc/RCDATA/#11111             offset table
-`-- setup data
-    +-- Offset0 -> 64-byte setup signature
-    |   +-- optional encryption header
-    |   `-- chunk-framed compressed setup header/tables
-    `-- Offset1 -> file-data streams
-        `-- 7A 6C 62 1A ("zlb" 1A) + compressed chunks
+Compiled Setup.exe
++-- SetupLdr PE image
+|   +-- icons, manifest, version resources
+|   `-- RCDATA #11111 offset table
++-- setup-0 data
+|   +-- setup-data signature
+|   +-- encryption parameters
+|   +-- compressed setup header and entry tables
+|   `-- compressed file-location table
++-- compressed Setup.e32 or Setup.e64
+|   `-- the actual Setup/Uninstall/RegSvr engine
+`-- setup-1 payload data, when not disk-spanned
+    `-- compressed file chunks
 ```
+
+At runtime, `SetupLdr` validates its table, reads enough setup metadata to choose language and process early switches, extracts the setup engine to a protected temporary directory, verifies its CRC, and starts it with an internal `/SL5=` parameter. The setup engine reopens the original installer and reads `setup-0` and `setup-1` through the absolute offsets passed by the loader.
+
+When `UseSetupLdr=no`, the output can instead be the setup engine itself plus adjacent `Setup-0.bin` and `Setup-1.bin` files. Disk spanning also moves payload data into `Setup-*.bin` slices and sets embedded `Offset1` to zero.
+
+## Build-time and run-time models
+
+The compiler converts source text into two broad forms:
+
+- **Declarative records** for `[Setup]`, `[Languages]`, `[Types]`, `[Components]`, `[Tasks]`, `[Dirs]`, `[Files]`, `[Icons]`, `[INI]`, `[Registry]`, `[InstallDelete]`, `[UninstallDelete]`, `[Run]`, and `[UninstallRun]`.
+- **Compiled Pascal Script bytecode** for `[Code]`, stored as an ANSI byte string in the setup header and later copied into the uninstall log.
+
+Declarative records are not automatically unconditional. Most entry families carry version bounds, component/task/language selectors, a `Check` function name or expression, and optional `BeforeInstall` and `AfterInstall` callbacks. Setup evaluates those fields against the active installation state.
+
+## The three identities often called a version
+
+Keep these separate:
+
+| Identity | Meaning |
+| --- | --- |
+| Inno Setup product version | Release of the compiler and runtime, such as 6.2.2 or 7.0.2. |
+| `SetupID` | Fixed 64-byte compatibility signature at the start of setup-0, such as `Inno Setup Setup Data (7.0.0.3)`. It changes when serialized structures become incompatible. |
+| PE file/product version | Version resource attached to SetupLdr or the prepared setup executable. Vendors can customize some version fields. |
+
+A compiler release can retain an earlier `SetupID`. Several historical releases therefore use the same serialized layout. Format readers must select structures from `SetupID` and related layout evidence, not from PE `FileVersion` alone.
+
+## Static and dynamic behavior
+
+Inno Setup mixes several kinds of behavior:
 
 ```text
-Offset-table resource (v1, 44 bytes)
-Base        Offset  Size  Field
-----------  ------  ----  -------------------------------------------
-[resource]  0x00    12    Magic: 72 44 6C 50 74 53 CD E6 D7 7B 0B 2A
-[resource]  0x0C    4     Table version, uint32 LE
-[resource]  0x10    4     TotalSize, uint32 LE
-[resource]  0x20    4     Offset0, uint32 LE -> [abs]
-[resource]  0x24    4     Offset1, uint32 LE -> [abs]
-[resource]  0x28    4     CRC32 of bytes 0x00..0x27
+Compile-time
++-- preprocessor expansion
++-- script parsing and validation
++-- wildcard/source-file enumeration
+`-- Pascal Script compilation
 
-Offset-table resource (v2, 64 bytes)
-[resource]  0x10    8     TotalSize, int64 LE
-[resource]  0x28    8     Offset0, int64 LE -> [abs]
-[resource]  0x30    8     Offset1, int64 LE -> [abs]
-[resource]  0x3C    4     CRC32 of bytes 0x00..0x3B
+Initialization time
++-- command-line and INF loading
++-- setup-data decoding
++-- language and architecture selection
++-- constants and previous-install data
++-- privilege selection and possible elevated respawn
+`-- InitializeSetup / InitializeWizard code events
+
+Selection and install time
++-- type, component, and task selection
++-- version/language/component/task/Check filters
++-- BeforeInstall and AfterInstall callbacks
++-- file, registry, icon, INI, delete, and run actions
+`-- uninstall-log recording and rollback
+
+First application run
+`-- outside Inno Setup; may add associations or other state
 ```
 
-Before Inno 6.7 a compressed-block header stores `[StoredSize:uint32 LE][Compressed:byte]`; 6.7+ uses an `int64 LE` size. `StoredSize` frames repeated `[CRC32:uint32 LE][data:up to 4096 bytes]` chunks. The reassembled payload is stored bytes or raw LZMA with five property bytes. Setup-header and file-location records are version-dependent; the parser chooses layouts from the source-defined setup version, validates every pointer/range/CRC, and does not scan arbitrary strings for ARP values.
+A learner should identify the phase that owns an observed value. A literal registry record is available statically. `{code:...}` is not. A registration performed by the installed application is not part of the installer format at all.
 
-## Detection invariants
+## Important source units
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence.
+The official source is the primary specification.
 
-## Metadata projection
-
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields.
-
-## Bounds and malformed input
-
-Apply the shared parser bounds to every offset, size, count, decompressed range, destination path, and recursion boundary. Reject malformed input deterministically.
-
-## Performance considerations
-
-Open the installer once, reuse parsed layout evidence, and prefer bounded streams or selected-entry extraction over whole-file materialization.
-
-## Known gaps
-
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
-
-## Implementation mapping
-
-- Modules/PackageModule/Libraries/Installers/Inno.psm1
-- Modules/InstallerParsers/Libraries/Installers/Inno.psm1
-
-## Representative fixtures
-
-Use generated malformed fixtures and the behaviorally distinct real installers cited by the focused tests and family workflow.
+| Area | Source |
+| --- | --- |
+| Shared serialized structures and IDs | `Projects/Src/Shared.Struct.pas` |
+| Record serialization | `Projects/Src/Shared.SetupEntFunc.pas` |
+| Compiler parser and output assembly | `Projects/Src/Compiler.SetupCompiler.pas` |
+| Compression writer | `Projects/Src/Compiler.CompressionHandler.pas` |
+| Outer loader | `Projects/SetupLdr.dpr` |
+| Setup process entry | `Projects/Setup.dpr`, `Projects/Src/Setup.Start.pas` |
+| Setup initialization and constants | `Projects/Src/Setup.MainFunc.pas` |
+| Installation and ARP | `Projects/Src/Setup.Install.pas` |
+| File extraction | `Projects/Src/Setup.FileExtractor.pas` |
+| Script runtime bindings | `Projects/Src/Setup.ScriptRunner.pas`, `Setup.ScriptFunc.pas` |
+| Uninstall log and replay | `Projects/Src/Setup.UninstallLog.pas`, `Setup.Uninstall.pas` |
 
 ## Source references
 
-- [Inno Setup](https://github.com/jrsoftware/issrc)
+- [Official Inno Setup source](https://github.com/jrsoftware/issrc)
+- [Official Inno Setup help](https://jrsoftware.org/ishelp/)
+- [Official archived Inno Setup releases](https://files.jrsoftware.org/is/)
 - [InnoUnpacker/innounp](https://github.com/jrathlev/InnoUnpacker-Windows-GUI)
-- [Komac](https://github.com/russellbanks/Komac)

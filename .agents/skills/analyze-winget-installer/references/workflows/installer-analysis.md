@@ -78,6 +78,8 @@ This is the only installer-family route table in the skill.
 | Advanced Installer EXE | [Advanced Installer](../families/advanced-installer/workflow.md) |
 | InstallShield EXE or Advanced UI | [InstallShield](../families/installshield/workflow.md) |
 | Squirrel or Velopack | [Squirrel and Velopack](../families/squirrel/workflow.md) |
+| Kachina native PE with appended TLV records | [Kachina](../families/kachina/workflow.md) |
+| MicaSetup CLR/WPF installer | [MicaSetup](../families/micasetup/workflow.md) |
 | Zero Install bootstrapper | [Zero Install](../families/zero-install/workflow.md) |
 | Chromium Setup, Chromium Updater, Google Updater, Omaha | [Chromium Setup](../families/chromium-setup/workflow.md) |
 | Wise wrapper | [Wise](../families/wise/workflow.md) |

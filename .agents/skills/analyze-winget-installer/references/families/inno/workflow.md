@@ -5,12 +5,14 @@
 Use `InstallerType: inno` when WinGet invokes an Inno Setup installer directly. If the Inno installer only wraps another installer, keep `InstallerType: inno` for the invoked EXE but model Apps & Features metadata from the payload that writes the visible ARP entry.
 
 ## Detection
-Route here when `Get-InnoInfo` succeeds, the installer contains the Inno loader resource `#11111`, or the analyzer returns high-confidence Inno evidence.
+Route here when `Get-InnoInfo` succeeds, a validated legacy Inno loader table or resource `#11111` is present, or the analyzer returns high-confidence Inno evidence. Current installers use the resource; historical installers can store the loader pointer at absolute offset `0x30`.
+
+Use `Get-InnoFormatInfo -Path $InstallerFile` when classification or an unsupported-edition diagnosis is sufficient. It reports Official Inno Setup, My Inno Setup Extensions, ResTools, or `with ISX`, together with the catalog and route evidence. For ordinary authoring, call `Get-InnoInfo` once instead; its `ParserVersionInfo` contains the same selected routes and avoids parsing the file twice. `with ISX` is identified but remains unsupported because no trustworthy record schema is available.
 
 `Get-InnoInfo.WritesAppsAndFeaturesEntry` resolves literal `CreateUninstallRegKey` and `Uninstallable` values. It is `$null` when either directive requires compiled-code evaluation, because the runtime result cannot be inferred safely. Do not trust outer Inno ARP metadata when it is false or unresolved; route the package through wrapper/no-ARP analysis instead.
 
 ## Static analysis
-1. Parse once and determine visible ARP ownership through [Inno analysis](analysis.md).
+1. Parse once and determine edition, catalog route, visible ARP ownership, and literal registry associations through [Inno analysis](analysis.md). Add `-IncludePascalScriptAnalysis` to that call when a required field or behavior depends on `{code:...}` or `[Code]`; do not make a second full parse unless separate disassembly is needed.
 2. Select the matching [manifest shape](manifest-shapes.md).
 3. Resolve architecture, scope, and silent behavior through [Scope and silent behavior](scope-and-silent.md).
 4. Read [Inno internals](../../internals/inno/overview.md) only when implementing or debugging the parser.

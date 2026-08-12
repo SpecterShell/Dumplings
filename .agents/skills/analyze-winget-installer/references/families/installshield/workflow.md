@@ -22,7 +22,9 @@ Block InstallScript-only installers when silent installation requires a response
 1. Use [Classification](classification.md) to separate Basic MSI, InstallScript MSI, InstallScript, PackageForTheWeb, Advanced UI, and Suite/Advanced UI.
 2. Select the corresponding [manifest shape](manifest-shapes.md).
 3. Resolve visible ARP ownership and silent behavior through [ARP and silent analysis](analysis.md).
-4. Read [InstallShield internals](../../internals/installshield/overview.md) only when implementing or debugging the parser.
+4. Read [InstallShield internals](../../internals/installshield/overview.md) when
+   the setup's project model, runtime lifecycle, media generation, or nested
+   package ownership is unclear.
 
 ## Manifest shape
 

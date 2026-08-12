@@ -10,6 +10,9 @@ Use `Modules\PackageModule\Libraries\Installers\InstallShield.psm1` to extract a
 . .\Modules\PackageModule\Index.ps1
 
 $Info = Get-InstallShieldInfo -Path $InstallerFile
+$Info.InstallShieldProjectType
+$Info.InstallShieldRelease
+$Info.InstallShieldStructuralRoutes | Format-Table RouteId, Layer, FormatVersion, SupportStatus
 if ($Info.Variant -eq 'Advanced UI') {
   $Info.AdvancedUiInfo
   $Info.SuitePackages
@@ -21,6 +24,55 @@ if ($Info.Variant -eq 'Advanced UI') {
   $Info.InstallScriptInfo
 }
 ```
+
+Treat these three results independently. `InstallShieldProjectType` describes
+the authored installation model. `InstallShieldRelease` resolves the likely
+builder release from structured evidence. `InstallShieldStructuralRoutes`
+lists the physical handlers selected for each nested layer. Structural routes
+are authoritative for parsing: a newer wrapper can legally carry an older
+cabinet or InstallScript runtime.
+
+`InstallShieldRelease` includes `ReleaseName`, `ProductVersion`,
+`SchemaVersion`, `Year`, `ServicePack`, `Build`, `Confidence`, `Candidates`,
+and `Evidence`. Disagreement between schema, suite namespace, MSI summary
+information, structured `Setup.ini` engine identity, and trusted runtime PE
+metadata lowers confidence and produces a warning; it never replaces a detected
+route. `SchemaVersion` is read
+only by `Get-InstallShieldProjectReleaseInfo` from the `InstallShield` table of
+a structured `.ism` XML export or binary Windows Installer project database.
+`SourceFormat` identifies which representation was read. Do not scan shipped
+setup binaries for a `SchemaVersion` string.
+
+The `ISc(` value in `data*.hdr` always selects the proprietary cabinet format,
+but its release value depends on the encoding family. Legacy family `1` is not
+a builder product version: official InstallShield 11.5 media uses format 9.5.
+Modern families `2` and `4` use a builder-aligned version/100 value in the
+official outputs, including majors 31 and 32 for InstallShield 2025 and 2026.
+Keep the structural route independent even when a modern value contributes a
+release candidate. Preserve ambiguous candidates until an exact runtime,
+Setup.ini, project, suite, or MSI source narrows the identity.
+
+Every route records `RouteId`, `Layer`, `Profile`, `FormatVersion`, `Handler`,
+`Capabilities`, `SupportStatus`, `Evidence`, and `Limitations`. Keep
+`Unsupported` and `Malformed` routes in analysis output. They identify which
+physical layer failed without discarding evidence from other layers.
+
+An InstallShield 3 `setup32.exe` can be only the reusable setup engine. In that
+case `ContainerFormat` is `InstallShield 3 Engine` and the sole route is
+`Classic3/Engine` with `SupportStatus: Partial`. This proves the runtime release,
+not the package identity or behavior. Locate the accompanying `Setup.pkg`,
+`_setup.lib`, `data.z`, numbered disks, and `setup.ins` before authoring ARP
+metadata or switches. A complete Setup30 archive instead produces
+`Classic3/Package` and, when present, `Classic3/INS`.
+
+A reusable launcher can also keep the application media outside the executable.
+`ContainerFormat: InstallShield External Media` and `Media/External` require an
+InstallShield-identifying launcher, one bounded direct `Setup.ini`, and a direct
+compiled script, validated `ISc(` header, or exact configured package. The
+parser reads only canonical sidecars in the launcher's directory; it does not
+recurse through the surrounding download folder. `ExternalMediaInfo` records
+the media root, engine version, ProductGUID, direct scripts and catalogs, and
+the evidence used to accept this relationship.
 
 Use `Expand-InstallShieldInstaller` when file-level inspection is needed:
 
@@ -90,3 +142,10 @@ For direct MSI databases, `Get-MsiInstallerInfo` can also classify InstallShield
 `InstallShieldLauncherRequirement` reports whether `ISVerifyScriptingRuntime` proves that an InstallScript MSI must be launched through InstallShield `Setup.exe`; this verifier is launcher-contract evidence, not proof that the MSI contains an extractable INX program. Conditions are not evaluated outside Windows Installer. InstallShield-authored MSIs commonly use `INSTALLDIR="<INSTALLPATH>"`, but confirm with `$Info.InstallerBuilder -eq 'InstallShield'` because WiX and other builders can use the same public property.
 
 InstallScript MSI classification does not prove support for Windows Installer's basic-UI `/passive` mode. `CrisisGo.CrisisGo` is a validated counterexample: a standard-user `/passive` invocation requests elevation and then opens an interactive InstallShield window. Its manifest therefore advertises only `interactive` and `silent`, with quiet mode used for the silent path. Test each InstallScript MSI in the VM before retaining `silentWithProgress`.
+
+## Source references
+
+- [InstallShield schema-version mapping discussion](https://stackoverflow.com/questions/29690042/find-installshield-version-used-for-creating-an-ism-file)
+- [Historical InstallShield releases and documentation](https://zzz.buzz/notes/links-to-installshield-downloads-and-documentation/)
+- [InstallScript Decompiler](https://github.com/jte/installscript-decompiler)
+- [InstallShield reverse-engineering notes](https://hackmag.com/coding/installshield-reverse)

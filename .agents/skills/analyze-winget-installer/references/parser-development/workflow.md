@@ -14,6 +14,14 @@ Load infrastructure before format modules. Guard managed source compilation so r
 
 Parser modules, tests, bridges, and CI must not depend on `7z.exe`, NanaZip, `isx.exe`, vendor builders, Python extractors, or other executable parsers. Agents may use such tools separately to research and cross-check a format, but their output is supporting evidence rather than the implementation or sole regression oracle.
 
+## Catalog-driven versioned formats
+
+When one installer family has many binary layouts, store source-backed differences in a data catalog rather than scattering version comparisons through record readers. A descriptor should name the loader, framing, record, payload, checksum, and transform routes and compose complete field schemas from ordered deltas. Resolve descriptors once at module import and give each parse a private copy if validation state can change.
+
+Route handlers should dispatch by descriptor ID. Version numbers may select a descriptor, but must not decide field offsets inside a record reader. Source-proven byte-equivalent rows may share one canonical route while retaining every catalog alias. If shared signatures cover different structures, validate their full record consumption. A future-version fallback may use only the nearest older descriptor with the same edition, character mode, and loader family, and only after counts, offsets, checksums, record boundaries, and stream boundaries all validate.
+
+Vendor builders can establish historical layouts, but they run only in a checkpointed VM. Download pinned official builders into the sibling `Dumplings-TestFixtures` cache, copy them into the VM, compile deterministic samples there, and copy only the generated fixtures and expected hashes back. Record the compiler version and the emitted internal structure version separately. Tests may use archived builder installers as real-layout fixtures without executing them. Keep these cases optional when no durable official URL exists.
+
 ## Adding a parser
 
 1. Capture stable fixtures and source-backed format references.
