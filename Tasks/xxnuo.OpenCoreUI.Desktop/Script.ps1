@@ -20,7 +20,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') -and $_.name -match 'Desktop' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
+  Architecture  = 'arm64'
   InstallerType = 'wix'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('arm64') -and $_.name -match 'Desktop' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
