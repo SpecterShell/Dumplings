@@ -1,0 +1,28 @@
+Version: 0.2.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Simprint/simprint/releases/download/v0.2.27/Simprint_0.2.27_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.2.27: embed runtime into the core application
+    This tag captures the migration of Simprint Runtime back into the main application, together with browser startup reliability improvements and a local update-bypass option after v0.2.26.
+    Changes included:
+    - Added the runtime crate under src-tauri/crates/runtime and replaced the standalone runtime process boundary with an in-process RuntimeHost integration.
+    - Removed the separate runtime executable updater, sidecar packaging, build hooks, release metadata, and CI references that were no longer needed after the migration.
+    - Added bounded EventBus handshake and CDP readiness checks so browser launches no longer remain indefinitely in the Starting state when the kernel does not become ready.
+    - Detects early browser-process exits, preserves Error states instead of overwriting them with Stopped, and redirects browser output to simprint-browser.log for diagnosis.
+    - Added the --skip-update startup argument at the automatic-update entry point, allowing local testing to bypass update checks without passing the option into updater internals.
+    - Updated runtime bridging, configuration validation, documentation, and regression tests for the embedded architecture.
+    Migration note:
+    - The standalone Simprint/simprint-runtime repository is deprecated. Runtime development now continues in src-tauri/crates/runtime within the main Simprint repository.
+    Expected result:
+    - Contributors can build and debug Simprint without separately obtaining or packaging a runtime executable.
+    - Browser startup failures now produce bounded, actionable errors and dedicated browser logs instead of leaving environments stuck in Starting.
+    - Developers can run local production-feature tests with --skip-update while the normal release update flow remains unchanged.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Simprint/simprint/releases/tag/v0.2.27
+ReleaseTime: 2026-08-12T02:15:32.0000000Z
