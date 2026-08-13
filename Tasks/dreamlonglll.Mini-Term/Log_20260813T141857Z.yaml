@@ -1,0 +1,36 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.12.0/Mini-Term_0.12.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.12.0/Mini-Term_0.12.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    终端里的 grok，终于和 Claude / Codex 同档了
+    来自 issue #46 的诉求：grok 没有桌面版，最该被适配的恰恰是它。本版把 grok 接到与另外两家同一档——不是只认个命令名，而是状态、镜像、历史、用量四条链路全通。
+    ✨ 新功能
+    - grok 的实时状态 — 走 grok 官方 hook 拿状态，不靠猜输出：状态灯、完成播报、托盘黄绿灯与另外两家同一套判定。命令识别也认了 grok（--resume / --trust 算交互式启动，-p / --version / -h 照旧排除）
+    - grok 的对话镜像 — 手机上能看 grok 的对话。grok 把一条消息拆成任意多个分片流式落盘，攒到边界（工具调用、回合收尾、对方开口）才算一条，否则一句回答会碎成几十条
+    - grok 的 AI 历史面板 — 列出历史会话、点进去看正文、一键 grok --resume 续接
+    - grok 的用量统计 — token、成本、按模型排行进面板，数据取自会话记录里 turn_completed 自带的用量（按模型分解）
+    - hook 按 CLI 选择性注入 — 设置 → AI → AI Hook 事件新增「注入目标」：三家各一行可勾选，注册/卸载只作用于所选。每行显示配置文件路径与现状（未注册 / 已注册 N 个事件 / 旧版本 N/M）。默认勾选「已经装了的那几家」，老用户再点注册就是纯补齐，不会顺手往没在用的 CLI 里写配置
+    🐛 修复
+    - grok 的会话被认成 Claude，导致手机端镜像串台 — grok 默认会读 ~/.claude/settings.json 里的 hook，所以只要你给 Claude 注册过，grok 的事件其实一直在往 Mini-Term 发，却被按 Claude 记账：手机上会把同项目里 Claude 的对话贴到 grok 这个终端上。现在按 grok 注入的环境变量判准来源，兼容层的重复投递也会去掉
+    - 退出 grok 时白响一声「任务完成」 — grok 在会话收尾会补发一次 Stop（reason 为 channel_closed / shutdown），此前被当成任务做完了
+    🔧 内部
+    - 注册命令不能带空格：grok 只在命令含空格等元字符时才交给 shell，而 Windows 上具体是 git-bash / pwsh / powershell / cmd 由环境决定、四家引号语义互斥，写不出通用文本。因此注册进 ~/.grok/hooks/ 的是不含空格的裸文件名（hook 二进制随注册复制进同目录），事件名改由 grok 注入的 GROK_HOOK_EVENT 传递
+    - 会话是一整个目录，不是一个文件：{grok_home}/sessions/{URL 编码的 cwd}/{session-id}/。定位项目走解码目录名而非编码项目路径（后者要逐字复刻 grok 所用编码库的转义集；超长路径退化成 {slug}-{hash} 时回落读目录内的 .cwd）
+    - grok 没有 PermissionRequest 事件，「等你批准」是 Notification 的 permission_prompt 类型，归一化后点同一盏黄灯；它的 task_complete 是知会不是待办，不点灯
+    - 用量分桶按 ACP 口径换算成互斥语义（输入含缓存读写、输出含 reasoning），拆开后与 totalTokens 对账一致；models.dev 择优把 xai 纳入一方 provider，否则成本会按某个随机聚合商的报价算
+    ⚠️ 已知限制
+    - 用量面板里 grok 没有「工具排行」：grok 落盘的会话记录只有给人看的工具标题（「Read file src/x.rs」这种），拿不到真正的工具名，硬拿标题顶替会把排行灌成一堆自然语言。token / 成本 / 模型 / 会话四类统计不受影响
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.11.3...v0.12.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.12.0
+ReleaseTime: 2026-08-13T13:06:44.0000000Z
