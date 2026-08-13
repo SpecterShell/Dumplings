@@ -1,0 +1,110 @@
+Version: 0.2.17
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.17/Grok_0.2.17_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.17
+    Highlight: Stability release — shared-process session isolation (no cross-chat history poisoning, per-session turn completion), thinking timer stays live across tool loops, chat bottom jitter gone, side-terminal Powerline/truecolor, MCP OAuth follows the selected server, and macOS no longer crashes on voice.
+    中文 · 亮点： 稳定性版本——共享进程会话隔离（历史不再互灌、收尾按会话隔离）、思考计时全程在线、聊天贴底不再抖动、侧栏终端 Powerline/真彩、MCP 授权跟所选服务器走、macOS 语音不再闪退。
+    Fixed
+    - macOS no longer aborts on voice / media-device probe: Info.plist now includes NSCameraUsageDescription. WKWebView getUserMedia (even mic-only) enumerates cameras; missing the key is a TCC SIGABRT, not a permission dialog. Live Voice also passes video: false.
+    - Thinking timer no longer dies mid-turn or after switching chats: Later think→tool loops stay on “思考中 / Thinking for …” (not frozen “思考了”) even after the first status sentence. Switching away and back while the agent is still running keeps streaming and restores the live assistant from Host state, so journal reconcile cannot paint a finished thought over a live turn. The live clock follows the turn start and resumes when the window is shown again.
+    - Model / floating menu flicker (#602): When a portal menu sits above its trigger, maxHeight is no longer rewritten from the already-capped rendered height (ph + 8). That write-back plus ResizeObserver grew the panel every frame.
+    - Side terminal Starship / Powerline (#603): Multi-word Nerd Font families are quoted (WebKit no longer splits them onto unpatched JetBrains Mono). The stack prefers Mono faces; xterm loads the WebGL addon so Powerline extras fill the cell. PTY spawn drops inherited NO_COLOR and forces truecolor.
+    - MCP authorize uses the selected server (#605): Host OAuth discovery no longer tries ChatCut's well-known metadata first. Authorizing Appwrite (or any other remote MCP) opens that provider's consent screen, not api.chatcut.io. ChatCut still works — its metadata is derived from its own MCP URL. Loopback success page is generic (no longer says "ChatCut").
+    - Chat jitter at the bottom: Leaving the end no longer re-pins from the 100px near band (a trackpad bounce used to snap back). Virtual-list pin snaps are not treated as a user fling, so spacer remasure cannot bounce the tail.
+    - Fork / connecting send queue: A first message after fork (or during warm-connect) no longer parks in the follow-up queue. Handshake connecting is not a live turn — Send goes through ensureConnected. Queue Steer becomes Send now when no turn is running.
+    - Agent turn finish no longer drops the last stream batch: Process crash / RPC fail now flushes the coalesced session://stream buffer and journal tail before clearing the live slot (answers no longer stop mid-sentence).
+    - Early prompt_complete no longer discards a silent long tool: Host keeps the turn deferred while tools are still open instead of force-clearing them after 3s and treating later chunks as load-replay.
+    - Shared-process prompt complete is per session: last_update and waiter matching no longer let chat B's stream finish or extend chat A's turn.
+    - Stop / stall during Host vision no longer marks a scheduled task as run: send_message returns TURN_CANCELLED when the turn was cleared before session/prompt; automations do not advance next_run_at.
+    - YOLO / effort / proxy mid-turn actually apply after the turn: Busy soft_respawn is queued; parked agents with stale --reasoning-effort / permission flags are dropped so the next connect cold-spawns. Fixes Grok 4.6 Extra High not taking effect (#598) and UI “Ask” while the CLI still has --always-approve.
+    - Allow for session on write/edit tools no longer cancels the turn (#600): When the CLI list has no session-scoped option, Host answers with allow-once (and still caches session scope) instead of inventing always-allow.
+    - Stop cancels pending tool permission (not only ask/plan), so reconnect is not stuck on an unanswered request_permission.
+    - Media path grant is file-exact: paths_classify / grant_path no longer authorize the parent directory (no sibling read of e.g. ~/.ssh).
+    - Composer draft is kept until send succeeds; send targets the viewing chat, not a stale shell session id. Text or attachments added while a slow send is in flight are never wiped by the success cleanup.
+    - Changing proxy settings respawns warm agents so the new HTTP_PROXY is picked up.
+    - Background turns honor provider RetryState: switching away no longer leaves a hung chat until the CLI idle/absolute timeout; Host applies the same abort + NETWORK_PROVIDER path as the focused session.
+    - cwd-relative downloads (curl -O / wget without -o) prompt unless YOLO — no longer assumed to write inside the project.
+    - Opening another chat no longer dumps its history into a still-streaming one: Host will not warm-reuse a CLI process that already has a mid-turn background (or live) session. The other chat cold-spawns. Idle parked / idle background reuse is unchanged.
+    中文 · 修复
+    - macOS 语音/枚举媒体设备不再闪退：Info.plist 补上 NSCameraUsageDescription。WKWebView 即使只开麦克风也会扫摄像头，缺这个 key 会被 TCC 直接 SIGABRT，不会弹出授权框。Live Voice 申请媒体时显式 video: false。
+    - 思考计时不再在中途或切会话后停住：第一句正文之后的 think→tool 轮次仍显示「思考中」并继续走秒。切走再切回时保留 streaming，并按 Host 状态把当前助手标回直播，避免 journal 回灌把还在跑的一轮画成「思考了」。
+    - 模型/浮层菜单底边闪烁（#602）：菜单在触发器上方时不再把已受 max-height 限制的渲染高度 +8 回写成新上限；避免 ResizeObserver 正反馈。
+    - 侧栏终端 Starship / Powerline（#603）：多词 Nerd Font 族名加引号，优先 Mono 面；xterm 走 WebGL 画分隔符；PTY 去掉宿主带来的 NO_COLOR 并强制 truecolor。
+    - MCP 授权跟所选服务器走（#605）：OAuth 发现不再先打 ChatCut 的 well-known。给 Appwrite 等其它远程 MCP 点授权时，打开的是该服务商的登录页，而不是 api.chatcut.io。ChatCut 仍可用（从它自己的 MCP URL 推导元数据）。回环成功页不再写死 ChatCut。
+    - 聊天滚到底部抖动：离开底部后不会因为还在 100px 近底带里就被拽回去；虚拟列表的贴底写入不再被当成用户甩动，避免 spacer 重测把尾巴弹一下。
+    - 分叉后发不出消息：预热连接中的 connecting 不再把第一条消息当成跟进入队。握手不是进行中的回合；发送走 ensureConnected。无回合时队列「引导」改为「立即发送」。
+    - 回合结束不再丢掉最后一批流式字：进程崩溃 / RPC 失败会先刷出合批缓冲和 journal 尾巴。
+    - 提前 prompt_complete 不再丢掉仍在跑的静默工具：不再 3 秒后强清 open tools，后续 chunk 也不会被当成 load-replay 丢掉。
+    - 共享进程的收尾按会话隔离：A 的回合不会被 B 的流续命或提前结束。
+    - Stop / 准备阶段取消不再把定时任务标成已跑：未真正派发 session/prompt 时返回 TURN_CANCELLED。
+    - 回合中改 YOLO / 推理强度 / 代理会在本轮结束后重生进程：修好 Grok 4.6 极高不生效（#598）以及 UI 已是「询问」但 CLI 仍 --always-approve。
+    - 写文件等工具点「会话内允许」不再整轮取消（#600）：没有 session 档 option 时用列表里的 allow-once 作答。
+    - Stop 会取消未答复的工具权限，避免重连卡在 request_permission。
+    - 媒体路径只授权该文件本身，不再授权父目录。
+    - 发送失败前不丢草稿；发送目标跟当前查看的会话，而不是过期的 shell id。发送期间新输入的文字/附件也不会被成功后的清空吞掉。
+    - 改代理设置会回收 warm 进程。
+    - 后台回合也认 provider RetryState：切走后不再空转到 CLI 超时，和前台一样熔断并记 NETWORK_PROVIDER。
+    - 不带 -o 的下载默认要批准（YOLO 除外）。
+    - 打开另一条会话不再把对方历史灌进还在跑的聊天：有回合在跑的 CLI 进程不再给别人 warm-reuse，另一条会话会单独冷启动。空闲 parked / 空闲后台的复用不变。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.17
+    Highlight: Stability release — shared-process session isolation (no cross-chat history poisoning, per-session turn completion), thinking timer stays live across tool loops, chat bottom jitter gone, side-terminal Powerline/truecolor, MCP OAuth follows the selected server, and macOS no longer crashes on voice.
+    中文 · 亮点： 稳定性版本——共享进程会话隔离（历史不再互灌、收尾按会话隔离）、思考计时全程在线、聊天贴底不再抖动、侧栏终端 Powerline/真彩、MCP 授权跟所选服务器走、macOS 语音不再闪退。
+    Fixed
+    - macOS no longer aborts on voice / media-device probe: Info.plist now includes NSCameraUsageDescription. WKWebView getUserMedia (even mic-only) enumerates cameras; missing the key is a TCC SIGABRT, not a permission dialog. Live Voice also passes video: false.
+    - Thinking timer no longer dies mid-turn or after switching chats: Later think→tool loops stay on “思考中 / Thinking for …” (not frozen “思考了”) even after the first status sentence. Switching away and back while the agent is still running keeps streaming and restores the live assistant from Host state, so journal reconcile cannot paint a finished thought over a live turn. The live clock follows the turn start and resumes when the window is shown again.
+    - Model / floating menu flicker (#602): When a portal menu sits above its trigger, maxHeight is no longer rewritten from the already-capped rendered height (ph + 8). That write-back plus ResizeObserver grew the panel every frame.
+    - Side terminal Starship / Powerline (#603): Multi-word Nerd Font families are quoted (WebKit no longer splits them onto unpatched JetBrains Mono). The stack prefers Mono faces; xterm loads the WebGL addon so Powerline extras fill the cell. PTY spawn drops inherited NO_COLOR and forces truecolor.
+    - MCP authorize uses the selected server (#605): Host OAuth discovery no longer tries ChatCut's well-known metadata first. Authorizing Appwrite (or any other remote MCP) opens that provider's consent screen, not api.chatcut.io. ChatCut still works — its metadata is derived from its own MCP URL. Loopback success page is generic (no longer says "ChatCut").
+    - Chat jitter at the bottom: Leaving the end no longer re-pins from the 100px near band (a trackpad bounce used to snap back). Virtual-list pin snaps are not treated as a user fling, so spacer remasure cannot bounce the tail.
+    - Fork / connecting send queue: A first message after fork (or during warm-connect) no longer parks in the follow-up queue. Handshake connecting is not a live turn — Send goes through ensureConnected. Queue Steer becomes Send now when no turn is running.
+    - Agent turn finish no longer drops the last stream batch: Process crash / RPC fail now flushes the coalesced session://stream buffer and journal tail before clearing the live slot (answers no longer stop mid-sentence).
+    - Early prompt_complete no longer discards a silent long tool: Host keeps the turn deferred while tools are still open instead of force-clearing them after 3s and treating later chunks as load-replay.
+    - Shared-process prompt complete is per session: last_update and waiter matching no longer let chat B's stream finish or extend chat A's turn.
+    - Stop / stall during Host vision no longer marks a scheduled task as run: send_message returns TURN_CANCELLED when the turn was cleared before session/prompt; automations do not advance next_run_at.
+    - YOLO / effort / proxy mid-turn actually apply after the turn: Busy soft_respawn is queued; parked agents with stale --reasoning-effort / permission flags are dropped so the next connect cold-spawns. Fixes Grok 4.6 Extra High not taking effect (#598) and UI “Ask” while the CLI still has --always-approve.
+    - Allow for session on write/edit tools no longer cancels the turn (#600): When the CLI list has no session-scoped option, Host answers with allow-once (and still caches session scope) instead of inventing always-allow.
+    - Stop cancels pending tool permission (not only ask/plan), so reconnect is not stuck on an unanswered request_permission.
+    - Media path grant is file-exact: paths_classify / grant_path no longer authorize the parent directory (no sibling read of e.g. ~/.ssh).
+    - Composer draft is kept until send succeeds; send targets the viewing chat, not a stale shell session id. Text or attachments added while a slow send is in flight are never wiped by the success cleanup.
+    - Changing proxy settings respawns warm agents so the new HTTP_PROXY is picked up.
+    - Background turns honor provider RetryState: switching away no longer leaves a hung chat until the CLI idle/absolute timeout; Host applies the same abort + NETWORK_PROVIDER path as the focused session.
+    - cwd-relative downloads (curl -O / wget without -o) prompt unless YOLO — no longer assumed to write inside the project.
+    - Opening another chat no longer dumps its history into a still-streaming one: Host will not warm-reuse a CLI process that already has a mid-turn background (or live) session. The other chat cold-spawns. Idle parked / idle background reuse is unchanged.
+    中文 · 修复
+    - macOS 语音/枚举媒体设备不再闪退：Info.plist 补上 NSCameraUsageDescription。WKWebView 即使只开麦克风也会扫摄像头，缺这个 key 会被 TCC 直接 SIGABRT，不会弹出授权框。Live Voice 申请媒体时显式 video: false。
+    - 思考计时不再在中途或切会话后停住：第一句正文之后的 think→tool 轮次仍显示「思考中」并继续走秒。切走再切回时保留 streaming，并按 Host 状态把当前助手标回直播，避免 journal 回灌把还在跑的一轮画成「思考了」。
+    - 模型/浮层菜单底边闪烁（#602）：菜单在触发器上方时不再把已受 max-height 限制的渲染高度 +8 回写成新上限；避免 ResizeObserver 正反馈。
+    - 侧栏终端 Starship / Powerline（#603）：多词 Nerd Font 族名加引号，优先 Mono 面；xterm 走 WebGL 画分隔符；PTY 去掉宿主带来的 NO_COLOR 并强制 truecolor。
+    - MCP 授权跟所选服务器走（#605）：OAuth 发现不再先打 ChatCut 的 well-known。给 Appwrite 等其它远程 MCP 点授权时，打开的是该服务商的登录页，而不是 api.chatcut.io。ChatCut 仍可用（从它自己的 MCP URL 推导元数据）。回环成功页不再写死 ChatCut。
+    - 聊天滚到底部抖动：离开底部后不会因为还在 100px 近底带里就被拽回去；虚拟列表的贴底写入不再被当成用户甩动，避免 spacer 重测把尾巴弹一下。
+    - 分叉后发不出消息：预热连接中的 connecting 不再把第一条消息当成跟进入队。握手不是进行中的回合；发送走 ensureConnected。无回合时队列「引导」改为「立即发送」。
+    - 回合结束不再丢掉最后一批流式字：进程崩溃 / RPC 失败会先刷出合批缓冲和 journal 尾巴。
+    - 提前 prompt_complete 不再丢掉仍在跑的静默工具：不再 3 秒后强清 open tools，后续 chunk 也不会被当成 load-replay 丢掉。
+    - 共享进程的收尾按会话隔离：A 的回合不会被 B 的流续命或提前结束。
+    - Stop / 准备阶段取消不再把定时任务标成已跑：未真正派发 session/prompt 时返回 TURN_CANCELLED。
+    - 回合中改 YOLO / 推理强度 / 代理会在本轮结束后重生进程：修好 Grok 4.6 极高不生效（#598）以及 UI 已是「询问」但 CLI 仍 --always-approve。
+    - 写文件等工具点「会话内允许」不再整轮取消（#600）：没有 session 档 option 时用列表里的 allow-once 作答。
+    - Stop 会取消未答复的工具权限，避免重连卡在 request_permission。
+    - 媒体路径只授权该文件本身，不再授权父目录。
+    - 发送失败前不丢草稿；发送目标跟当前查看的会话，而不是过期的 shell id。发送期间新输入的文字/附件也不会被成功后的清空吞掉。
+    - 改代理设置会回收 warm 进程。
+    - 后台回合也认 provider RetryState：切走后不再空转到 CLI 超时，和前台一样熔断并记 NETWORK_PROVIDER。
+    - 不带 -o 的下载默认要批准（YOLO 除外）。
+    - 打开另一条会话不再把对方历史灌进还在跑的聊天：有回合在跑的 CLI 进程不再给别人 warm-reuse，另一条会话会单独冷启动。空闲 parked / 空闲后台的复用不变。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.17
+ReleaseTime: 2026-08-13T18:40:09.0000000Z
