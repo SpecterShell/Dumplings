@@ -7,18 +7,27 @@ Use `InstallerType: nullsoft` when WinGet invokes an NSIS/Nullsoft installer dir
 ## Detection
 Route here when `Get-NSISInfo` succeeds, the NSIS archive first header is found at a 512-byte aligned PE overlay start with `DEADBEEF` followed by `NullsoftInst`, or the analyzer returns high-confidence NSIS evidence.
 
-`Get-NSISInfo` also recognizes the NSISBI large-installer fork. Its parser evidence reports `ParserVersionInfo.IsNsisBi`, 64-bit data-block offsets, and external-payload flags; do not reject an otherwise valid installer merely because its documented first-header flags extend beyond upstream NSIS's `0x0F` mask.
+Use `Get-NSISFormatInfo -Path <installer>` when edition or serialized-format evidence is needed without ARP simulation. It reports the official, Jim Park Unicode, or NSISBI edition, ANSI/Unicode mode, ABI version range, selected command and variable routes, compression framing, and candidate-layout scores. NSIS does not serialize an exact compiler version in every installer, so a source-backed range is preferable to a guessed release number.
+
+`Get-NSISInfo` also recognizes the NSISBI large-installer fork. Its parser evidence reports the unmarked pre-3.04.1, legacy flagged, or compact-3.12 first-header route, wide data-block offsets, external/stub mode, segment count, and segment size. The pre-3.04.1 route is distinguished by validated framing at first-header offset `+0x24`, not by product strings or a loose high-bit test. Do not reject an otherwise valid installer merely because later NSISBI flags extend beyond upstream NSIS's `0x0F` mask.
 
 For NSIS, the simplest wrapper test is whether the outer installer writes uninstall registry values. `Get-NSISInfo` reports only explicit uninstall registry writes recovered from the compiled script, not arbitrary version-string probing. If `WritesAppsAndFeaturesEntry` is false or nested installer payloads exist, inspect the payload or use VM ARP deltas.
 
 Run content-based family detection before calling `Get-NSISInfo` directly. The strict parser throws when the file is not NSIS; this is a type-mismatch result rather than partial metadata failure. `Get-WinGetInstallerAnalysis` handles candidate rejection and should be the first entry point for an unknown EXE.
 
 ## Static analysis
-1. Parse once and determine visible ARP ownership through [NSIS analysis](analysis.md).
+1. Parse once with `Get-NSISInfo` and determine visible ARP ownership through [NSIS analysis](analysis.md). Reuse `ParserVersionInfo`; do not call `Get-NSISFormatInfo` for the same file unless only format evidence was requested.
 2. Select the matching [manifest shape](manifest-shapes.md).
 3. If Test-ElectronBuilder succeeds, inspect [electron-builder feeds](electron-builder.md).
 4. Resolve architecture, scope, and silent behavior through [Scope and silent behavior](scope-and-silent.md).
 5. Read [NSIS internals](../../internals/nsis/overview.md) only when implementing or debugging the parser.
+
+When `HasExternalFile` is true, keep the EXE and every sidecar together. Pass a
+legacy `.nsisbin`, ordered `setupN.bin` files, or their containing directory to
+`Expand-NSISInstaller -ExternalDataPath`. The parser treats split sidecars as
+one logical stream, keeps `ExtractStubFile` on the embedded EXE data, and rejects
+missing segments or per-file CRC mismatches. A manifest cannot distribute the
+EXE alone when installation requires external media.
 
 ## Manifest shape
 

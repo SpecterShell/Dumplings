@@ -1,89 +1,156 @@
-# NSIS parser internals
+# NSIS internals
 
-This reference supports parser implementation and review. For installer analysis and manifest authoring, use the [NSIS workflow](../../families/nsis/workflow.md).
+This directory explains how NSIS turns an `.nsi` script and source files into a
+Windows executable, how the executable locates and decodes its archive, how the
+compiled command stream runs, and how scripts create an uninstaller and Apps &
+Features registration.
 
-Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
+The emphasis is the NSIS compiler, serialized format, and runtime. Details of
+the Dumplings reader are kept in [parser implementation notes](parser-implementation.md)
+and [coverage](coverage.md).
 
-## Supported formats and variants
+Use the [NSIS package workflow](../../families/nsis/workflow.md) when the
+immediate goal is a WinGet manifest.
 
-The parser covers the structured NSIS variants documented below. Variant-specific evidence must pass the same content-based detection and bounds checks.
+## Reading path
 
-## Binary structure
+1. [Architecture](architecture.md) introduces MakeNSIS, the executable stub,
+   archive, command engine, plug-ins, and generated uninstaller.
+2. [Compiler and output assembly](compiler-and-output.md) follows source text
+   through preprocessing, command emission, string and language tables, payload
+   compression, PE customization, and final output.
+3. [Binary format](binary-format.md) documents archive discovery, first headers,
+   logical blocks, command records, payload framing, compression, and integrity.
+4. [Metadata model](metadata-model.md) describes the common header, pages,
+   sections, strings, language tables, variables, and command operands.
+5. [Setup runtime](setup-runtime.md) follows command-line handling, archive
+   loading, callbacks, pages, section execution, extraction, and exit behavior.
+6. [Scripting, strings, and plug-ins](scripting-and-expressions.md) explains the
+   compile-time preprocessor, command-address model, encoded strings, stack,
+   variables, macros, and native plug-in boundary.
+7. [Uninstaller and ARP](uninstaller-and-arp.md) covers `WriteUninstaller`,
+   uninstall registry writes, scope, localization, maintenance, and removal.
+8. [Format history and editions](format-history.md) separates official NSIS,
+   Jim Park Unicode NSIS, NSISBI, custom stubs, and script generators.
+9. [Parser implementation notes](parser-implementation.md) maps the runtime to a
+   bounded static reader and emulator.
+10. [Coverage and remaining work](coverage.md) records implementation parity,
+    known defects, unsupported routes, and the fixture matrix.
 
-NSIS appends its archive to a PE stub at a 512-byte-aligned file offset. The first header frames a compressed logical header; that header contains block directories for compiled commands, strings, languages, and payload metadata.
+## One installer contains a runtime and a program
+
+NSIS does not serialize a declarative package manifest. It compiles most script
+statements into a compact instruction table interpreted by a purpose-built
+Windows executable. Product identity, scope, architecture selection, payload
+names, and uninstall behavior are therefore program effects.
 
 ```text
-PE NSIS stub
-`-- 512-byte-aligned archive start
-    +-- first header (28 bytes; NSISBI extends it)
-    +-- packed-header size word (uint32 or uint64 LE)
+Compiled installer.exe
++-- PE executable stub
+|   +-- Windows entry point and NSIS runtime
+|   +-- dialogs, icons, manifest, and version resources
+|   `-- optional custom or vendor resources
+`-- NSIS archive
+    +-- first header and archive bounds
     +-- compressed logical header
     |   +-- common header
-    |   +-- eight block descriptors
-    |   +-- compiled command entries
-    |   +-- string/language tables
-    |   `-- data block metadata
-    `-- compressed payload streams
+    |   +-- block descriptors
+    |   +-- pages and sections
+    |   +-- compiled commands
+    |   +-- strings and language tables
+    |   `-- colors, fonts, and data-block descriptor
+    +-- compressed or stored payload data
+    `-- optional archive CRC
 ```
 
-NSISBI 3.10 multithreaded builds can wrap the solid stream in independently compressed records. Record offsets below are relative to the MTW stream. Each record expands to at most 2 MiB; a zero compressed size terminates the stream.
+The stub is selected at build time. Current official source can target x86 ANSI,
+x86 Unicode, AMD64 Unicode, or ARM64 Unicode. Its PE machine identifies the
+runtime process, not necessarily the installed application. Script code can
+select different payloads for different Windows architectures.
+
+## Build-time and run-time models
+
+NSIS has distinct evaluation layers:
 
 ```text
-Offset  Size            Field
-------  --------------  ----------------------------------------------
-0x00    3               CompressedBlockSize, unsigned uint24 LE
-0x03    CompressedSize  Selected zlib/BZip2/LZMA/LZ4 codec stream
-next    repeated        Next three-byte record header
-...     3               00 00 00 terminator
+Compile time
++-- preprocessor directives, includes, macros, and defines
++-- script tokenization and validation
++-- labels and function/section address resolution
++-- source-file enumeration and payload compression
+`-- PE resource and archive assembly
+
+Runtime initialization
++-- command-line switches and uninstaller marker handling
++-- first-header, range, compression, and CRC processing
++-- common-header and language-table initialization
++-- predefined variables and shell-folder state
+`-- .onInit, page, and other callbacks
+
+Installation
++-- page callbacks or silent route
++-- selected section command ranges
++-- file, registry, shortcut, INI, process, and plug-in operations
++-- generated uninstaller creation
+`-- script-authored Apps & Features registration
+
+First application run
+`-- outside NSIS; the application may add more associations or state
 ```
 
-```text
-Base       Offset  Size  Field
----------  ------  ----  ---------------------------------------------
-[archive]  0x00    4     Flags, uint32 LE
-[archive]  0x04    16    EF BE AD DE + ASCII "NullsoftInst"
-[archive]  0x14    4     DecompressedHeaderSize, uint32 LE
-[archive]  0x18    4     ArchiveSize, uint32 LE
-[archive]  0x1C    8     NSISBI data-block length, uint64 LE (variant)
-```
+Macros such as LogicLib and MultiUser disappear during compilation. Their output
+is ordinary command records and jumps. Native plug-ins do not disappear: the
+archive contains the plug-in DLL and commands that extract and invoke it.
 
-For a non-solid block, the packed-size high bit marks compression and the remaining bits give the compressed byte count. A solid archive instead starts directly with its codec stream. Compression may be zlib, raw DEFLATE, BZip2, LZMA, or vendor LZMA2 framing consisting of a one-byte dictionary property followed by raw LZMA2 chunk records. NSISBI MTW builds add the record layer above; Unity installers use MTW-framed LZMA and can exceed 2 GiB, so the parser bounds the PE view separately from the 64-bit archive ranges. Dumplings currently decodes MTW zlib, BZip2, and LZMA records; an MTW LZ4 build remains explicit unsupported evidence rather than falling through to another codec. Standard compiled command entries are 28 bytes; NSISBI uses 36-byte entries/64-bit data offsets. NSIS 2, NSIS 3 Unicode, Park Unicode, and log-enabled builds shift opcode layouts, so Dumplings normalizes the command table before interpreting `EW_WRITEREG`. It validates nearby PE structure, alignment, flags, header/archive sizes, codec record sizes, block counts, string offsets, execution steps, decompressed output, and watchdog time before accepting registry evidence.
+## Identity domains
 
-## Detection invariants
+Several values are easily confused:
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence.
+| Identity | Meaning |
+| --- | --- |
+| NSIS compiler release | The MakeNSIS release used to compile the script. It is not reliably serialized in every output. |
+| Serialized ABI profile | String controls, variable indexes, command numbering, record width, and fork-specific framing that a reader can prove. |
+| Executable-stub architecture | PE machine of the NSIS runtime process. |
+| Application architecture | Payload and runtime path selected by the compiled script. |
+| Script generator | electron-builder, Tauri, CPack, PortableApps.com, or another system that emits NSIS source. |
+| Package version | Application version chosen by the publisher and usually written through script commands. |
 
-## Metadata projection
+The serialized ABI profile is the useful format identity. An exact compiler
+release must remain unknown when the binary does not preserve it.
 
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields.
+## Static and dynamic evidence
 
-## Bounds and malformed input
+The archive proves command operands, literal strings, language alternatives,
+payload records, and explicit registry writes. It does not prove the result of
+an arbitrary native plug-in, a target-machine registry query, a downloaded child
+installer, or application first-run behavior.
 
-Apply the shared parser bounds to every offset, size, count, decompressed range, destination path, and recursion boundary. Reject malformed input deterministically.
+Static analysis should preserve that boundary. For example, a literal
+`WriteRegStr` to an uninstall key is direct ARP evidence. A path assembled from
+an opaque plug-in return value is conditional evidence. A registry key created
+by the installed application does not belong to the NSIS runtime at all.
 
-## Performance considerations
+## Important source units
 
-Open the installer once, reuse parsed layout evidence, and prefer bounded streams or selected-entry extraction over whole-file materialization.
+The official source is the primary specification for current NSIS output.
 
-## Known gaps
-
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
-
-## Implementation mapping
-
-- Modules/PackageModule/Libraries/Installers/NSIS.psm1
-- Modules/InstallerParsers/Libraries/Installers/NSIS.psm1
-
-## Representative fixtures
-
-Use generated malformed fixtures and the behaviorally distinct real installers cited by the focused tests and family workflow.
+| Area | Source |
+| --- | --- |
+| Serialized structures and command enumeration | `Source/exehead/fileform.h` |
+| Compiler state and target selection | `Source/build.h`, `Source/build.cpp` |
+| Script parser and command emission | `Source/script.cpp`, `Source/tokens.cpp` |
+| String controls and block serialization | `Source/fileform.cpp`, `Source/build.cpp` |
+| Runtime startup and command line | `Source/exehead/Main.c` |
+| Archive loading and decompression | `Source/exehead/fileform.c` |
+| Command interpreter | `Source/exehead/exec.c` |
+| Page and section lifecycle | `Source/exehead/Ui.c` |
+| Plug-in ABI | `Source/exehead/plugin.c`, `Source/exehead/api.h` |
+| Historical format detection | 7-Zip `CPP/7zip/Archive/Nsis` |
 
 ## Source references
 
-- [NSIS](https://github.com/NSIS-Dev/nsis)
+- [Official NSIS source](https://github.com/NSIS-Dev/nsis)
+- [Official NSIS documentation](https://nsis.sourceforge.io/Docs/)
+- [7-Zip NSIS reader](https://github.com/ip7z/7zip/tree/main/CPP/7zip/Archive/Nsis)
+- [Jim Park Unicode NSIS](https://sourceforge.net/projects/nsisu/)
 - [NSISBI](https://sourceforge.net/projects/nsisbi/)
-- [7-Zip](https://github.com/ip7z/7zip)
-- [Komac](https://github.com/russellbanks/Komac)
-- [electron-builder](https://github.com/electron-userland/electron-builder)
-- [Tauri NSIS bundler](https://github.com/tauri-apps/tauri/tree/dev/crates/tauri-bundler/src/bundle/windows/nsis)
-- [NsisMultiUser](https://github.com/Drizin/NsisMultiUser)
