@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/binaricat/Netcatty/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/wmwlwmwl/Lumin-SSH/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -notmatch 'portable' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('amd64') -and $_.name -match 'installer' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
         $Skip = $false
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
           if ($Node.Name -in @('h1', 'h2')) {
-            $Skip = $Node.InnerText -match 'Download based on your OS'
+            $Skip = $Node.InnerText -match '产物下载|安装/卸载方法'
           }
           if (-not $Skip) { $Node }
         }
@@ -35,9 +35,9 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl (en-US)
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
         Value  = $Object1.html_url
       }
