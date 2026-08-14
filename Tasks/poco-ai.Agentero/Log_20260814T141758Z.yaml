@@ -1,0 +1,82 @@
+Version: 0.6.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.1/Agentero_0.6.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.1/Agentero_0.6.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release introduces the Plaza entry point and Cool Papers integration: browse daily papers inside the app, import any row with one click, and pull the upstream Kimi analysis into your notes. It also lands a systematic performance overhaul across the Host, wiki index, catalog, Agent streaming, and the Markdown editor, with the largest gains on Windows window responsiveness. Windows CLI installation, Zotero collection-aware import, and full-page translation context are fixed as well.
+    Features
+    - Plaza and Cool Papers browsing: A collapsible Plaza virtual node now sits below Library in the sidebar, and a dedicated panel embeds Cool Papers in the center pane. In-site links navigate in place, cross-origin links hand off to the system browser, and the top bar provides its own back / forward. Plaza paths stay virtual and never touch disk. (commit by @Phil-Fan)
+    - One-click import from Cool Papers: Every paper row gains an import action next to the site's own [PDF] [Copy] [Kimi] [REL]. Venue papers are imported straight from the papers.cool page citation metadata, which covers all 11 publisher shapes the site aggregates, while arXiv rows still go through the magic-wand path to also capture the arXiv id and LaTeX source. Catalog insertion, NOTES seeding, PDF download, and dedupe all reuse the existing pipeline. (commit by @Phil-Fan)
+    - Fetch notes from Paper Info: A new button in the paper info panel appends the papers.cool Kimi analysis to the current paper's NOTES.md and refreshes the open editor. The append is content-idempotent and never overwrites handwritten notes; without an arXiv id it matches on the normalized title exactly and writes nothing when it cannot locate the paper. (commit by @Phil-Fan)
+    - Neighborhood citation graph: The References graph distinguishes the center paper, in-library references, cited-by papers, and external stubs, and full-library mode remains available as a switch. (commit by @Phil-Fan)
+    - Local activity log: Paper opens, downloads, searches, Agent runs, and app start / exit are written to an XDG usage.sqlite that Agents can read for context. The data stays on device behind the usageTrackingEnabled setting and uses a typed v2 schema with separate vault, event, and daily rollup sections. (commit by @Phil-Fan)
+    - CLI usage command: agentero usage exposes timeline, summary, and clear over the local activity log. (commit by @Phil-Fan)
+    - CLI shell completions: agentero completion <shell> emits bash / zsh / fish / powershell / elvish scripts, and --install writes to the user completion directory without touching shell rc files. Path arguments and enum flags are now Tab-completable. (commit by @Phil-Fan)
+    - Expandable paper attachments: A paper row shows a chevron only when {paper}/attachments/ contains files, and those attachments are lifted directly under the paper. Clicking the row still opens the paper, and internal folders stay hidden. (commit by @Phil-Fan)
+    - Windows CLI install adds itself to PATH: Installing the CLI on Windows now adds it to the user PATH automatically, and the command name is unified as agentero-cli. (commit by @Phil-Fan)
+    Improvements
+    - Heavy Host IO moved off the main thread: Vault tree walks, full-text search, wiki rebuilds, catalog SQLite, doctor repairs, Zotero scan and sync, font scanning, staged imports, and the refs graph now run on a blocking pool. They previously ran on the main thread, which on Windows is also the UI message pump, so each one froze the whole window. (commit by @qychen2001)
+    - Incremental wiki index rebuilds: Watcher- and rename-triggered rebuilds now reuse parse products by file fingerprint and persist only changed rows through a row-level cache. On a 1000-file × 5-link benchmark, cold rebuild drops from 1343ms to 56ms, a one-file change from 1339ms to 15ms, and a rename transaction from 1346ms to 20ms. (commit by @qychen2001)
+    - Persistent catalog connections: Each vault reuses one migrated SQLite connection instead of paying open + PRAGMAs + migrate on every call, and stale handles are dropped when the catalog file disappears. 200 paper_list calls drop from about 126ms to about 24ms. (commit by @qychen2001)
+    - Cached file tree builds: Probing a paper's source/ now goes through the caps cache instead of re-walking every e-print file on each build, with watcher invalidation widened to all ancestor directories so deep writes still refresh. Warm rebuilds of a 20-paper / 200-file vault drop from about 12.8ms to about 0.7ms. (commit by @qychen2001)
+    - Coalesced Agent streaming events: The Host merges consecutive same-kind text chunks within a roughly 40ms window before emitting, tool raw input and output are capped at 32KB, and the transcript renders memoized rows. 200 chunks now produce 40 events instead of 200, with text and ordering preserved. (commit by @qychen2001)
+    - Batched Library reading activity: A new batch call reads all annotation sidecars at once, so returning to the Library costs 2 IPC calls instead of roughly 1500–2000 at 500 papers, and missing PDF page counts are discovered lazily for visible rows and persisted. (commit by @qychen2001)
+    - Non-blocking PDF citation parsing: Citation destination parsing moved into a dedicated worker, reuses the bytes the viewer already loaded instead of re-reading from disk, and caches results per path and file size so the same PDF parses once per session. Opening a 100MB paper previously blocked scrolling and selection for seconds. (commit by @qychen2001)
+    - In-place editor reload for external changes: External writes, such as an Agent streaming into an open NOTES.md, no longer remount the whole editor; content is replaced in place and the scroll position is preserved. Conflict confirmation for dirty tabs is unchanged. (commit by @qychen2001)
+    - Cheaper editor typing path: Wikilink source / display swaps no longer serialize the whole document twice, and the status bar word count is debounced to 400ms. This also fixes a sticky CJK regex that miscounted repeated tokens, where "汉 汉" counted as 3 instead of 2. (commit by @qychen2001)
+    - Throttled download progress: Byte progress is emitted only when the percentage moves by at least 1 point or at least 100ms has passed, and the final value is always emitted on completion. A 20MB PDF drops from 1000–2500 progress events to about 102. (commit by @qychen2001)
+    Fixes
+    - Titlebar buttons on Linux secondary windows: Maximize, minimize, and close now work on the Settings window, ⌘N new windows, and the feature and doc popups on Linux. These windows no longer use the hidden-then-show startup path that broke GTK hit-testing. (#332 by @bet4it)
+    - Zotero import honors the selected collection: An item belonging to several collections used to always land at its globally deepest path, so importing folder A could place the paper under folder B. Placement now prefers the item's own collection inside the selected subtree, and duplicates merged into an existing paper are reported in the migration summary instead of being skipped silently. (commit by @JiaheChen2002)
+    - Full-page translation gains context: Layout translation used to send each paragraph as an isolated request, leaving engines without surrounding context and producing inconsistent output. Paragraphs are now grouped into reading-order batches of roughly one double-column page, translated in a single request, and split back into their original regions; on a marker mismatch the batch falls back to per-paragraph translation so nothing is lost. (commit by @Phil-Fan)
+    - Missing Plaza import button: The bridge script ran before the document body was parsed, so the first screen saw zero paper nodes and the scroll-loading observer was never attached, leaving the row action absent entirely. Traversal and observer attachment are now deferred until the document is ready. (commit by @Phil-Fan)
+    - Broken script-driven navigation in Plaza: Typing a keyword on the home page and pressing Go did nothing. All 7 script-driven navigations — search, related papers, sorting, feed, favorites export, and the arXiv calendar — now share one rule set with ordinary links: in-site navigates in place, while Atom feeds and cross-origin targets hand off to the system browser. (commit by @Phil-Fan)
+    - Agent prompts and skill activation: The Host now owns skill activation so the paper-reader prompt no longer restates syntax, and translate workflows send only the target-language request so the outer envelope cannot override the target language. (commit by @Phil-Fan)
+    - Platform-specific CLI skill on Windows: The bundled agentero-cli vault skill is now seeded per host platform: POSIX gets the agentero command with bash syntax, Windows gets agentero-cli with PowerShell / cmd syntax, and existing vaults upgrade to the matching variant. (commit by @Phil-Fan)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布带来「广场」入口与 Cool Papers 集成：可以直接在应用内浏览每日论文、一键入库、把上游的 Kimi 解析拉进笔记。同时对 Host、Wiki 索引、Catalog、Agent 流式与 Markdown 编辑器做了系统性性能改造，Windows 上的窗口卡顿改善最明显。此外补齐了 Windows CLI 安装、Zotero 分类导入与整页翻译上下文等问题。
+    新功能
+    - 广场与 Cool Papers 浏览：侧栏 Library 下方新增可折叠的「广场」虚拟节点，中间栏以专用面板嵌入 Cool Papers。站内链接原地跳转，跨源链接交给系统浏览器，顶条提供自建的后退 / 前进。广场路径全程虚拟、不落盘。（commit by @Phil-Fan）
+    - Cool Papers 一键入库：每行论文标题旁新增 [入库]，与站点自带的 [PDF] [Copy] [Kimi] [REL] 同排。venue 论文直接读取 papers.cool 页面的 citation 元数据（覆盖其聚合的全部 11 种出版商形态），arXiv 行仍走魔棒以额外获得 arXiv id 与 LaTeX 源码；catalog 插入、NOTES 播种、PDF 下载与去重全部沿用现有管线。（commit by @Phil-Fan）
+    - Paper Info 获取笔记：论文信息面板新增按钮，把 papers.cool 的 Kimi 解析追加到当前论文的 NOTES.md，完成后刷新已打开的编辑器。追加按内容幂等，不覆盖手写笔记；没有 arXiv id 时按归一化标题精确匹配，定位不到就不写入。（commit by @Phil-Fan）
+    - 邻域引用图谱：References 图谱区分中心论文、库内引用文献、被引论文与外部占位节点，全库模式保留为一个开关。（commit by @Phil-Fan）
+    - 本地使用记录：论文打开、下载、搜索、Agent 运行与应用启停写入 XDG usage.sqlite，供 Agent 读取上下文。数据留在本机，由 usageTrackingEnabled 开关控制，并采用带 vault / 事件 / 日聚合分区的 v2 类型化 schema。（commit by @Phil-Fan）
+    - CLI usage 命令：agentero usage 支持 timeline、summary 与 clear，直接读写本地活动日志。（commit by @Phil-Fan）
+    - CLI shell 自动补全：agentero completion <shell> 生成 bash / zsh / fish / powershell / elvish 脚本，--install 写入用户补全目录且不改 shell rc；路径与枚举 flag 均可 Tab 补全。（commit by @Phil-Fan）
+    - 论文附件可展开：当 {paper}/attachments/ 有文件时，论文行才显示折叠箭头，附件直接挂在论文下；点击论文行仍然打开论文，内部目录保持隐藏。（commit by @Phil-Fan）
+    - Windows 安装 CLI 自动加入 PATH: Windows 上安装 CLI 时自动写入用户 PATH，命令名统一为 agentero-cli。（commit by @Phil-Fan）
+    改进
+    - Host 重 IO 移出主线程：Vault 树遍历、全文搜索、Wiki 重建、Catalog SQLite、doctor 修复、Zotero 扫描同步、字体扫描、暂存导入与引用图谱等命令改为在阻塞线程池执行。此前它们运行在主线程，也就是 Windows 的 UI 消息泵上，会冻结整个窗口。（commit by @qychen2001）
+    - Wiki 索引增量重建：监听与重命名触发的重建改为按文件指纹复用解析结果，并用行级缓存只写变更行。1000 文件 × 5 链接基准：冷重建 1343ms → 56ms，单文件变更 1339ms → 15ms，重命名事务 1346ms → 20ms。（commit by @qychen2001）
+    - Catalog 连接复用：每个 vault 复用一条已迁移的持久 SQLite 连接，不再每次调用都 open + PRAGMA + migrate；catalog 文件消失时丢弃过期句柄。200 次 paper_list 从约 126ms 降到约 24ms。（commit by @qychen2001）
+    - 文件树构建缓存：论文 source/ 探测走 caps 缓存而非每次重走全部 e-print 文件，监听器则扩大到所有祖先目录以保证刷新。20 论文 / 200 文件的热重建从约 12.8ms 降到约 0.7ms。（commit by @qychen2001）
+    - Agent 流式事件合并：Host 在约 40ms 窗口内合并同类文本块后再发事件，工具的原始输入输出截到 32KB，聊天记录按行 memo 化渲染。200 个块从发 200 个事件降到 40 个，文本与顺序无损。（commit by @qychen2001）
+    - Library 阅读活动批量读取：新增批量接口一次读完所有标注 sidecar，切回 Library 只需 2 次 IPC（此前 500 篇论文约 1500–2000 次），缺失的 PDF 页数改为对可见行按需发现并持久化。（commit by @qychen2001）
+    - PDF 引用解析不再阻塞：引用目标解析移入独立 worker，复用阅读器已加载的字节而不是二次读盘，并按路径与文件大小缓存结果，同一 PDF 一次会话内只解析一次。此前打开百兆论文会卡住滚动与选择数秒。（commit by @qychen2001）
+    - 编辑器就地重载外部改动：外部写入（例如 Agent 流式写 NOTES.md）不再整体重挂载编辑器，而是就地替换内容并保留滚动位置；脏标签的冲突确认行为不变。（commit by @qychen2001）
+    - 编辑器输入路径开销下降：双链的源码 / 显示切换不再做两次全文序列化；状态栏字数统计改为 400ms 防抖，并修正 CJK 正则的粘性状态导致的计数错误（“汉 汉”曾被算成 3）。（commit by @qychen2001）
+    - 下载进度事件节流：下载进度仅在百分比变化不小于 1 点或距上次发送不少于 100ms 时上报，并总在完成时发送最终值。20MB PDF 的进度事件从 1000–2500 个降到约 102 个。（commit by @qychen2001）
+    修复
+    - Linux 辅助窗口标题栏按钮：设置窗口、⌘N 新窗口以及功能 / 文档弹窗在 Linux 上最大化、最小化、关闭按钮点击无效的问题已修复，这些窗口不再走会破坏 GTK 命中测试的隐藏后显示启动路径。（#332 by @bet4it）
+    - Zotero 导入尊重所选分类：同属多个分类的条目此前总是落到全局最深路径，导致导入 A 文件夹却把论文放进 B。现在优先使用所选子树内该条目自己的分类，并在迁移摘要里报告被合并的重复条目，不再静默跳过。（commit by @JiaheChen2002）
+    - 整页翻译带上下文：整页（版面）翻译此前逐段独立请求，引擎拿不到上下文、译文风格不一致。现在按阅读顺序合批（每批约一页双栏）在一次请求内翻译，再按标记切分写回各自区域；标记解析不匹配时回退到逐段翻译，不丢内容。（commit by @Phil-Fan）
+    - 广场入库按钮不出现：桥接脚本此前在文档主体解析前执行，首屏取到 0 个论文节点、滚动加载的观察器也没挂上，整行按钮都不会出现。现在推迟到文档就绪后再遍历与挂载。（commit by @Phil-Fan）
+    - 广场脚本式跳转失效：首页输入关键词点 Go 没有任何反应等问题已修复。搜索、相关论文、排序、feed、导出收藏与 arXiv 日历共 7 处脚本跳转现在与普通链接共用同一套规则：站内原地跳转，Atom feed 与跨源交给系统浏览器。（commit by @Phil-Fan）
+    - Agent 提示词与技能激活：技能激活改由 Host 掌管，精读提示不再重复声明语法；翻译工作流只发送目标语言请求，避免外层信封覆盖目标语言。（commit by @Phil-Fan）
+    - Windows 的 CLI 技能变体：Vault 内置的 agentero-cli 技能按宿主平台播种：POSIX 用 agentero 命令与 bash 语法，Windows 用 agentero-cli 命令与 PowerShell / cmd 语法，既有 vault 会升级到对应变体。（commit by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.1
+ReleaseTime: 2026-08-14T14:09:40.0000000Z
