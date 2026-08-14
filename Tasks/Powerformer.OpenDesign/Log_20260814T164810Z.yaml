@@ -1,0 +1,85 @@
+Version: 0.19.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.19.2/open-design-0.19.2-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🌟 Codename: DeepSeek Harness, One Command Away
+    🧰 28 PRs · 9 contributors · 2 days — 0.19.2 shortens the path from
+    installing DeepSeek Harness to finishing work with it. One command can set up
+    a compatible Harness toolchain, Windows paths with spaces no longer break the
+    Open Design connection, and long streams stay responsive. This patch also adds
+    offline-safe HTML export and the structured Design System 3.0 runtime.
+    🔥 Highlights
+    - 🧰 Install DeepSeek Harness with one command. The new bootstrap scripts
+      cover macOS, Linux, Windows PowerShell, and Windows CMD. They reuse compatible
+      local tools or install an isolated user-scoped Node.js 24 toolchain with the
+      pinned Harness release, then open dsh web for API key setup. Open Design now
+      installs its connection component through a shell-safe profile path, including
+      Windows application and DSH_HOME paths that contain spaces. (#6900, #6905)
+    - 📦 Export HTML that keeps working after you move it. Downloaded HTML now
+      bundles project-local images, styles, fonts, modules, workers, and nested
+      documents into one offline-safe file. Missing or oversized dependencies return
+      a clear error instead of a broken export. The same output is available through
+      od export --format html. (#6855)
+    - ⚡ Long agent runs stay responsive. Thinking and text still stream into
+      chat while Open Design batches persistence and React updates behind the scenes.
+      Terminal transitions flush the last buffered output. od export also works
+      with a project ID alone, so agents no longer need workspace or member flags
+      for a project that already has a saved workspace binding. (#6915)
+    - 🎨 Structured design systems now drive generation and validation. Design
+      System 3.0 packages give agents an intent map, exact component implementations,
+      tokens, and rules. Agents can resolve a component before generating, load only
+      its declared files, then validate reuse, required states, token use, and
+      fallback behavior. The same workflow is available through
+      od tools design-systems. (#6805)
+    ✨ Added
+    - The DeepSeek Harness design guide now has a companion collection of 13 verified
+      design plugins, grouped by vision, generative UI, workflow, and preview use
+      cases, with localized detail pages and source-backed install commands.
+      (#6864, #6897)
+    - Packaged apps now search standard nix-darwin, NixOS, system, and user profile
+      directories when discovering locally installed agent CLIs. (#6885)
+    🔁 Changed
+    - The Home creation row puts the most common project types first, and the
+      DeepSeek Pro and Flash campaign copy stays aligned across the product and
+      localized landing pages through August 27. (#6852, #6863, #6876, #6892)
+    - Landing-page production deploys now purge the active host after publishing and
+      keep a short edge TTL for HTML, reducing the time visitors spend on stale
+      pages after a release. (#6552)
+    🐛 Fixed
+    🧠 DeepSeek Harness and agents
+    - Canceling a Harness run now settles once as canceled, terminates the profile
+      process, preserves provider error details, and records the correct provider and
+      model in diagnostics. Canceled turns no longer appear as Working, Done, or Run
+      failed. (#6880)
+    - Missing DeepSeek credentials now produce steps for dsh web, Settings →
+      Models, and DEEPSEEK_API_KEY instead of [object Object]. (#6890)
+    - Long structured event streams no longer leave chat busy after useful output has
+      appeared, and project exports avoid repeated workspace-context failures.
+      (#6915)
+    🖼️ Preview and workspace UI
+    - Generated presentations recover when Chromium aborts an about:srcdoc
+      navigation, powered previews work behind reverse proxies, and comment bridges
+      wait for the committed preview URL before reporting ready. (#5592, #6797,
+      #6882)
+    - Mobile comment previews no longer flash during close, deck previews fill the
+      viewer without letterboxing, and the move-to-team dialog covers the composer
+      beneath it. (#6785, #6829, #6854)
+    - Expanded Message Center rows show their configured HTTP(S) action again.
+      Unsafe action URLs remain hidden. (#6894)
+    🖥️ Desktop and delivery
+    - Sidecars accept the configured internal host allowlist, which keeps packaged
+      deployments working behind approved internal hosts. (#6802)
+    - Team pricing copy now matches the $5 per-seat catalog across landing-page
+      surfaces. (#6834)
+    🙏 Thanks to everyone who shipped 0.19.2
+    @AmyShang-alt · @CVE-Hunter-Leo · @jlbeard84 · @joeylee12629-star ·
+    @kiuber · @lefarcen · @lorenzozanee · @mrcfps · @Siri-Ray
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.19.2
+ReleaseTime: 2026-08-14T16:17:47.0000000Z
