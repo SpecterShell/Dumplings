@@ -10,7 +10,25 @@ Switch documentation: [Qt Installer Framework CLI](https://doc.qt.io/qtinstaller
 
 ## Detection
 
-The parser reads the PE optional-header subsystem first. `WindowsCui` identifies the CLI/headless launcher and `WindowsGui` identifies the GUI launcher. It also scans only the executable prefix before appended IFW resources for source-backed CLI option and command markers as corroborating evidence or as a fallback for malformed test fixtures.
+Require a validated Qt IFW catalog profile rather than accepting an isolated cookie, `installerbase` string, or maintenance-tool marker. Normal manifest analysis accepts the installer media role. Uninstaller, updater, package-manager, and separate DAT media remain useful diagnostic evidence but are not standalone installer entries.
+
+For ordinary authoring, call `Get-QtInstallerFrameworkInfo` once and reuse the result. Use `Get-QtInstallerFrameworkFormatInfo` when diagnosing an unsupported layout, confirming a historical generation, or inspecting a non-installer media role:
+
+```powershell
+$Format = Get-QtInstallerFrameworkFormatInfo -Path $InstallerFile
+$Format.FrameworkVersion
+$Format.FrameworkVersionRange
+$Format.FormatGeneration
+$Format.MediaRole
+$Format.CookieKind
+$Format.TrailerRoute
+$Format.PackageIndexRoute
+$Format.PayloadRoute
+$Format.Capabilities
+$Format.Warnings
+```
+
+The parser then reads the PE optional-header subsystem. `WindowsCui` identifies the CLI/headless launcher and `WindowsGui` identifies the GUI launcher. It scans only the executable prefix before appended IFW resources for source-backed CLI option and command markers as corroborating evidence or as a fallback for malformed test fixtures.
 
 Interpret the result as follows:
 
@@ -35,6 +53,11 @@ $Info.PackageName
 $Info.DisplayVersion
 $Info.Publisher
 $Info.ProductCode
+$Info.FrameworkVersion
+$Info.FrameworkVersionRange
+$Info.FormatGeneration
+$Info.FormatProfileId
+$Info.PayloadAvailability
 $Info.Scope
 $Info.SupportedScopes
 $Info.ScopeEvidence
@@ -59,32 +82,25 @@ $Info.CommandLineInterfaceEvidence
 $Info.DefaultInstallLocation
 $Info.RequiresExplicitInstallLocation
 $Info.InstallLocationEvidence
-
-Test-QtInstallerFrameworkCLI -Path $InstallerFile
-Test-QtInstallerFrameworkSilentInstallation -Path $InstallerFile
-Test-QtInstallerFrameworkRequiresInstallLocation -Path $InstallerFile
 ```
 
 The CLI uses `--root` when supplied and otherwise falls back to config `<TargetDir>`. An empty `TargetDir` fails silent installation, so keep `--root "<INSTALLPATH>"` directly in both silent switches when `RequiresExplicitInstallLocation` is true. MSYS2 is a validated example.
 
 When `RequiresExplicitInstallLocation` is false, omit `--root` from the ordinary silent switches and expose it as the optional `InstallLocation` switch instead.
 
-The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence.
+The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence. `FrameworkVersion` identifies Qt IFW itself; it is not the packaged application's `PackageVersion`. `PayloadAvailability: ExternalOrUnavailable` means no embedded package archive was indexed, as with an online installer; extraction can recover local metadata but cannot recover data that the media downloads at runtime.
 
-`Expand-QtInstallerFramework` writes RCC files with their virtual paths, raw component archives under `metadata\<component>`, and selected files from embedded 7z archives under `packages\<component>\<archive>`. Extraction uses the GPL parser process with bounded, traversal-safe paths and no external archive executable.
+`Expand-QtInstallerFramework` writes RCC files with their virtual paths, raw modern resources under `metadata\<collection>`, raw legacy component archives under `packages\<component>`, and selected files from embedded archives under `packages\<component>\<archive>`. Extraction uses the GPL parser process with bounded, traversal-safe paths and no external archive executable.
 
 ### Resolve product UUID and visible ARP identity
 
-On Windows, IFW uses `ProductUUID` for the uninstall key. If no UUID is embedded, IFW generates one at installation time and stores it in maintenance configuration. Do not invent `ProductCode`; prefer name/publisher matching or VM ARP validation.
+Qt IFW 1.x uses `ProductName` as the Windows uninstall key. Qt IFW 2.0 and later use `ProductUUID`; if no UUID is embedded, IFW generates one at installation time and stores it in maintenance configuration. Do not invent a modern `ProductCode`; prefer name/publisher matching or VM ARP validation.
 
 ### Determine upgrade behavior
 
-```powershell
-Test-QtInstallerFrameworkSupportsExistingInstallationOverride -Path $InstallerFile
-Read-UpgradeBehaviorFromQtInstallerFramework -Path $InstallerFile
-```
-
 Standard IFW installers do not overwrite an existing IFW installation in the same target directory. `PackageManagerCore::installationAllowedToDirectory` rejects the target when `<MaintenanceToolName>.exe` exists. Use `UpgradeBehavior: uninstallPrevious` so WinGet removes the previous installation first. Use `deny` instead only when the package intentionally does not support WinGet upgrades.
+
+The individual `Test-*` and `Read-*FromQtInstallerFramework` functions remain available for callers that need one isolated value. Do not use them after `Get-QtInstallerFrameworkInfo`; each helper starts a separate parser operation.
 
 ### Determine scope and installed architecture
 
@@ -127,6 +143,7 @@ Installers:
   InstallerSha256: <SHA256>
   InstallModes:
   - interactive
+  - silent
   - silentWithProgress
   InstallerSwitches:
     Silent: install --root "<INSTALLPATH>" --accept-licenses --default-answer --confirm-command
@@ -168,3 +185,9 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) when CLI/GUI e
 - `MSYS2.MSYS2`: CLI-capable installer requiring an explicit target directory.
 - `KhronosGroup.VulkanSDK`: generated ProductUUID behavior.
 - `reMarkable.reMarkableCompanionApp`: Qt IFW package metadata and scope evidence.
+
+## Source references
+
+- [Qt Installer Framework source](https://github.com/qtproject/installer-framework)
+- [Qt Installer Framework archive](https://download.qt.io/archive/qt-installer-framework/)
+- [Qt Installer Framework command-line interface](https://doc.qt.io/qtinstallerframework/ifw-cli.html)
