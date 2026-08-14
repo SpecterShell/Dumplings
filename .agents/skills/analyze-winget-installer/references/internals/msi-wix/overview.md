@@ -9,6 +9,7 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 - [CFB and database layout](cfb-database.md): document classes, sectors, streams, and tables.
 - [Builder detection](builder-detection.md): WiX, Advanced Installer, InstallShield, and unknown builders.
 - [ARP and scope](arp-scope.md): visible entries, custom ARP, Windows Installer identity, and user context.
+- [Condition language](conditions.md): grammar, symbol namespaces, three-valued static evaluation, and architecture projection.
 
 Each variant must pass the same content-based detection and bounds checks.
 

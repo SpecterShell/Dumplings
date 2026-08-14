@@ -75,6 +75,10 @@ future authoring.
   expression on one physical line. Do not wrap pipelines, argument lists, or
   conditions solely to fit the Markdown width; use new lines only for actual
   block and collection structure.
+- In reference Markdown under `.agents/skills`, keep each prose paragraph and
+  list item on one physical line. Do not hard-wrap long lines, URLs, or Markdown
+  links; retain line breaks only when they express document structure or an
+  intentional Markdown hard break.
 - Prefer `[ordered]` dictionaries where deterministic serialization matters.
 - Add comment-based help to public functions. Document parameters, stream
   ownership, offset bases, units, and output contracts when they are not obvious.

@@ -1,74 +1,69 @@
-# Advanced Installer parser internals
+# Advanced Installer internals
 
-This reference supports parser implementation and review. For installer analysis and manifest authoring, use the [Advanced Installer workflow](../../families/advanced-installer/workflow.md).
+Advanced Installer is an authoring system that emits several unrelated Windows package forms. A project can produce a direct MSI, an MSI with external cabinets, an EXE bootstrapper around an MSI or MSIX, a web bootstrapper, a prerequisite launcher, or a Suite Installer MSI. The output type determines which runtime owns package selection, command-line handling, and Apps & Features registration.
 
-Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
+Use the [Advanced Installer workflow](../../families/advanced-installer/workflow.md) for WinGet authoring. This directory describes the build output and runtime that the parser reconstructs.
 
-## Supported formats and variants
+## Reading path
 
-The parser covers the structured Advanced Installer variants documented below. Variant-specific evidence must pass the same content-based detection and bounds checks.
+1. [Architecture](architecture.md) separates the project, compiler, bootstrapper, nested package, and installed-state layers.
+2. [Compiler and output](compiler-and-output.md) follows an `.aip` project into MSI, EXE, web, and external-resource media.
+3. [Binary format](binary-format.md) documents the PE, 74-byte footer, payload catalog, transforms, configuration, and nested archives.
+4. [Configuration and payload selection](configuration-and-selection.md) describes selector tuples, `GeneralOptions`, online media, and architecture branching.
+5. [MSI identity and ARP](msi-identity.md) separates builder identity, package identity, and visible uninstall registration.
+6. [Format history](format-history.md) records release boundaries that changed available media capabilities or serialized character mode.
+7. [Parser implementation](parser-implementation.md) maps the physical structures to catalog routes and bounded parsing.
+8. [Coverage](coverage.md) lists implemented routes, fixtures, and remaining static-analysis limits.
 
-## Binary structure
-
-The supported Advanced Installer bootstrapper stores a catalog and payload ranges before a fixed footer near the end of the PE file. An Authenticode certificate may follow the logical footer, so the parser searches backward in a bounded tail instead of assuming `EOF - 70`.
-
-```text
-PE bootstrapper
-+-- payload ranges                  MSI/CAB/config bytes
-+-- file catalog at InfoOffset
-|   `-- repeated 24-byte entry + UTF-16LE name
-`-- footer (70 bytes; observed variants may include 2 tail bytes)
-    `-- "ADVINSTSFX" at footer + 0x3C
-```
+## System model
 
 ```text
-Base      Offset  Size     Field
---------  ------  -------  ----------------------------------------
-[footer]  0x04    4        FileCount, uint32 LE
-[footer]  0x10    4        InfoOffset, uint32 LE -> [abs] catalog
-[footer]  0x14    4        FileOffset, uint32 LE -> [abs] payload area
-[footer]  0x3C    10       Magic: 41 44 56 49 4E 53 54 53 46 58
-[record]  0x00    4        SelectorType, uint32 LE
-[record]  0x04    4        SelectorGroup, uint32 LE
-[record]  0x08    4        TransformFlag, uint32 LE
-[record]  0x0C    4        PayloadSize, uint32 LE
-[record]  0x10    4        PayloadOffset, uint32 LE -> [abs]
-[record]  0x14    4        NameLength, uint32 LE UTF-16 code units
-[record]  0x18    N*2      Name, UTF-16LE
+.aip project
+  -> Advanced Installer compiler
+      +-- direct MSI/MSP/MSIX output
+      +-- EXE bootstrapper
+      |   +-- embedded configuration
+      |   +-- payload catalog
+      |   +-- embedded or external MSI/MSIX/CAB/7z resources
+      |   `-- prerequisite and download logic
+      `-- Suite Installer MSI
+          `-- package graph and suite UI
+
+EXE runtime
+  -> parse configuration
+  -> choose language and host architecture branch
+  -> download or extract the selected package
+  -> install prerequisites
+  -> invoke MSI/MSIX with composed switches
+  `-- forward or translate the child result
 ```
 
-`TransformFlag == 2` means the first `min(512, PayloadSize)` bytes are XORed with `0xFF`; the remainder is direct. Selector type/group and the configuration INI choose the architecture-specific MSI by configured path. A wildcard MSI search would not reproduce the bootstrapper's selection behavior.
+The outer EXE and nested package have separate versions, identities, architectures, and ARP behavior. A PE `ProductVersion` normally describes the application or vendor-customized bootstrapper. It is not reliable evidence of the Advanced Installer release.
 
-## Detection invariants
+## Identity domains
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence.
+| Identity | Meaning |
+| --- | --- |
+| Advanced Installer release | Builder version, reported only when compiled configuration or MSI Summary Information records it explicitly. |
+| Commercial edition | Free, Professional, Enterprise, or Architect license used at build time. Generated media does not normally preserve it. |
+| Project schema | Version of the `.aip` authoring document. Compiled media usually omits it. |
+| Bootstrapper format profile | Footer, catalog, configuration, payload, transform, and bootstrapper-ID ABI selected by the parser catalog. |
+| Structure version | Integer in the EXE footer. Observed classic media uses `100`; it is not the product version. |
+| Application version | Publisher-controlled package version stored in MSI properties, EXE resources, or configuration. |
+| MSI ProductCode and UpgradeCode | Windows Installer product and upgrade identities. |
+| Custom ARP key | Optional visible EXE-style uninstall entry written while the native MSI entry is hidden. |
 
-## Metadata projection
+The parser reports a validated builder-version range when no exact builder release survives compilation. It does not derive the builder version from the application version.
 
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields.
+## Static-analysis boundary
 
-## Bounds and malformed input
+The footer and catalog prove physical payload ranges and selection classes. The INI can prove literal online URLs and architecture flags. MSI tables prove package identity and authored registry behavior. Runtime prerequisites, target-machine conditions, passwords, downloaded packages, and custom actions may still require VM validation.
 
-Apply the shared parser bounds to every offset, size, count, decompressed range, destination path, and recursion boundary. Reject malformed input deterministically.
+## Sources
 
-## Performance considerations
-
-Open the installer once, reuse parsed layout evidence, and prefer bounded streams or selected-entry extraction over whole-file materialization.
-
-## Known gaps
-
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
-
-## Implementation mapping
-
-- Modules/PackageModule/Libraries/Installers/AdvancedInstaller.psm1
-- Modules/InstallerParsers/Libraries/Installers/AdvancedInstaller.psm1
-
-## Representative fixtures
-
-Use generated malformed fixtures and the behaviorally distinct real installers cited by the focused tests and family workflow.
-
-## Source references
-
-- [HydraDragonAntivirus](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus)
-- [Komac](https://github.com/russellbanks/Komac)
+- [Advanced Installer user guide](https://www.advancedinstaller.com/user-guide/)
+- [Advanced Installer release history](https://www.advancedinstaller.com/version-history.html)
+- [Advanced Installer EXE setup command line](https://www.advancedinstaller.com/user-guide/exe-setup-file.html)
+- [Advanced Installer configuration settings](https://www.advancedinstaller.com/user-guide/configuration-tab.html)
+- [Komac Advanced Installer parser](https://github.com/russellbanks/Komac/tree/main/src/analysis/installers/advanced)
+- [SabreTools Advanced Installer structures](https://github.com/SabreTools/SabreTools.Serialization/tree/main/SabreTools.Data.Models/AdvancedInstaller)

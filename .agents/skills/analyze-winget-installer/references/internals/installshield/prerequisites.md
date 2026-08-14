@@ -70,13 +70,13 @@ Each `files/file` entry supplies a logical local filename and can supply a URL, 
 
 The builder may encode size as a comma-separated value whose final part is the payload byte count. Checksums and URLs are authored data until the runtime or an analyzer verifies the actual file.
 
-## Detection conditions
+## Installation conditions
 
-Prerequisite detection answers whether installation is already satisfied. Conditions can inspect files, versions, registry values, products, and platform state. Operating-system conditions restrict which targets should evaluate or run the prerequisite.
+The `.prq` `conditions` collection states when the prerequisite should run. Every normal condition must be true. If operating-system conditions exist, any one of them is sufficient; the resulting OS group is then combined with the normal group. A missing or outdated dependency is therefore commonly represented by `DoesNotExist` or `LessThanOrMissing`, not by a predicate proving that the dependency is already installed.
 
-Condition trees can contain boolean groups and comparisons. Results depend on the target machine and can differ between architecture, Windows version, and installed runtime state.
+Condition type codes identify registry-key existence, registry values, file existence, file dates, file versions, registry versions, and App packages. Comparison codes are type-specific. The parser decodes supported pairs into names such as `Exists`, `DoesNotExist`, `Equals`, `LessThan`, `LessThanOrMissing`, and `MissingOrVersionLess`; unknown pairs remain structured `Unknown` evidence.
 
-The runtime should skip an already satisfied prerequisite. Failure to evaluate or an authored mismatch can instead block the setup, show UI, or follow the definition's behavior.
+`Get-InstallShieldPrerequisiteInfo` returns a stable `EvidenceKey` for each condition. Supplying a `ConditionEvidence` dictionary and target platform facts produces `DetectionConditionAnalyses`, `OperatingSystemConditionAnalyses`, `InstallationConditionAnalysis`, and `ShouldInstallState`. The evaluator is three-valued and never reads the analysis host. A `True` result means that the authored conditions ask InstallShield to run the prerequisite; it does not prove that the child succeeds or remains silent.
 
 ## Invocation
 

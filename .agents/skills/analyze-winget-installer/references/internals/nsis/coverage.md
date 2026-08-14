@@ -2,10 +2,7 @@
 
 [Back to NSIS internals](overview.md).
 
-NSIS coverage is compositional. Recognizing a first header does not prove the
-command layout, decoding a command table does not prove every runtime effect,
-and recovering ARP writes does not prove that every payload can be extracted.
-The table records these layers separately.
+NSIS coverage is compositional. Recognizing a first header does not prove the command layout, decoding a command table does not prove every runtime effect, and recovering ARP writes does not prove that every payload can be extracted. The table records these layers separately.
 
 ## Implementation parity
 
@@ -38,45 +35,23 @@ The table records these layers separately.
 
 ## Highest-priority correctness work
 
-1. Add an explicit command-layout profile only when source and a fixture expose
-   a feature-stripped or reordered custom stub that cannot use a stock route.
-2. Extend branch assumptions only for metadata-relevant target-state commands
-   whose source semantics and virtual inputs can be represented deterministically.
-3. Add fuzz/property tests for command-table ambiguity, string cycles, malformed
-   current MTW records, split-media boundaries, aliases, and branch limits.
+1. Add an explicit command-layout profile only when source and a fixture expose a feature-stripped or reordered custom stub that cannot use a stock route.
+2. Extend branch assumptions only for metadata-relevant target-state commands whose source semantics and virtual inputs can be represented deterministically.
+3. Add fuzz/property tests for command-table ambiguity, string cycles, malformed current MTW records, split-media boundaries, aliases, and branch limits.
 
 ## Format work still needed
 
 - Investigate Park ANSI separately only if source and real output become available.
-- Preserve the semantic-ambiguity rejection for feature-stripped or reordered
-  stubs; add a new route only when its exact command table is source-backed.
-- Determine whether legacy external-media verification records expose enough
-  information to select a sidecar automatically when several candidates exist.
+- Preserve the semantic-ambiguity rejection for feature-stripped or reordered stubs; add a new route only when its exact command table is source-backed.
+- Determine whether legacy external-media verification records expose enough information to select a sidecar automatically when several candidates exist.
 
 ## Emulator work still needed
 
-File existence, file handles, wildcard enumeration, file time/version queries,
-section and install-type mutation, command-line parsing, and the stock trailing
-`/D=` override are implemented. Unknown `IfFileExists`, `IfFlag`, `StrCmp`, and
-`IntCmp` predicates use isolated execution states with a 16-path, eight-level,
-aggregate-step bound. Values and effects common to every terminal path remain
-deterministic; divergent variables and flags become unknown, while conditional
-registry, INI, shortcut, payload, and extraction evidence retains provenance.
-When a limit is reached, the executor records truncation and follows the
-fresh-install-compatible edge rather than expanding without bound.
+File existence, file handles, wildcard enumeration, file time/version queries, section and install-type mutation, command-line parsing, and the stock trailing `/D=` override are implemented. Unknown `IfFileExists`, `IfFlag`, `StrCmp`, and `IntCmp` predicates use isolated execution states with a 16-path, eight-level, aggregate-step bound. Values and effects common to every terminal path remain deterministic; divergent variables and flags become unknown, while conditional registry, INI, shortcut, payload, and extraction evidence retains provenance. When a limit is reached, the executor records truncation and follows the fresh-install-compatible edge rather than expanding without bound.
 
-Interactive `MessageBox` responses, window/process discovery beyond the
-documented `nsProcess` contract, and arbitrary Win32 or native plug-in calls
-remain runtime-dependent. `SearchPath` uses the supplied virtual files but does
-not yet reproduce Windows PATH search order, extension probing, or filesystem
-case canonicalization. Unknown process, registry, INI, environment, and native
-call results do not yet have caller-supplied snapshot or alternative-value
-models. These gaps should be filled only when they affect package metadata that
-static analysis can verify.
+Interactive `MessageBox` responses, window/process discovery beyond the documented `nsProcess` contract, and arbitrary Win32 or native plug-in calls remain runtime-dependent. `SearchPath` uses the supplied virtual files but does not yet reproduce Windows PATH search order, extension probing, or filesystem case canonicalization. Unknown process, registry, INI, environment, and native call results do not yet have caller-supplied snapshot or alternative-value models. These gaps should be filled only when they affect package metadata that static analysis can verify.
 
-Every new handler needs defined behavior for unknown operands. It should state
-which virtual state it reads and writes, whether failure changes the NSIS error
-flag, and how unresolved results affect branch exploration.
+Every new handler needs defined behavior for unknown operands. It should state which virtual state it reads and writes, whether failure changes the NSIS error flag, and how unresolved results affect branch exploration.
 
 ## Fixture parity
 
@@ -98,10 +73,7 @@ flag, and how unresolved results affect branch exploration.
 | Vendor LZMA2 | Header and extraction tests | NetEase UU Remote | Keep classified as vendor behavior, not stock NSIS. |
 | Embedded/resource NSIS | Alignment and PE-resource tests | Package-specific fixture | Add only when a new outer placement differs structurally. |
 
-Downloaded fixtures belong under the persistent sibling
-`Dumplings-TestFixtures` cache. Historical official installers currently use the
-`InstallerParsers\NSISHistorical` area. Synthetic fixtures remain preferable for
-malformed paths because they make the violated invariant explicit.
+Downloaded fixtures belong under the persistent sibling `Dumplings-TestFixtures` cache. Historical official installers currently use the `InstallerParsers\NSISHistorical` area. Synthetic fixtures remain preferable for malformed paths because they make the violated invariant explicit.
 
 ## Sources
 

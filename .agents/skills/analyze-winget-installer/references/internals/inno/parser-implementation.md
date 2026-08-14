@@ -15,7 +15,7 @@ A format reader can establish:
 - payload locations, compression, integrity, and extracted files;
 - names of Pascal Script callbacks, typed IFPS structure, direct calls, immediate constants, and conservative runtime-effect categories.
 
-It cannot treat target-machine registry/environment state, branch-dependent `{code:...}` values, external DLL calls, child installers, or first-run application behavior as resolved literals. A `{code:...}` value may be projected only when the complete function is straight-line and returns one proven constant without calls or indirect state.
+It cannot treat target-machine registry or environment state, external DLL calls, child installers, or first-run application behavior as resolved literals. A `{code:...}` value may be projected when every terminal path in its bounded function analysis returns the same primitive constant. Calls, indirect state, exception flow, unsupported opcodes, divergent returns, and truncated paths keep the value unresolved.
 
 ## Route selection
 
@@ -77,6 +77,10 @@ Built-in ARP evidence is reconstructed from Inno's rules, not from string probin
 - expand known constants symbolically where final target state is not available;
 - leave code, registry, environment, and external-call values unresolved;
 - keep custom `[Registry]` ARP writes separate from the built-in entry.
+
+Manifest-relevant `{code:...}` constants and dynamic `CreateUninstallRegKey` or `Uninstallable` checks trigger Pascal Script analysis on demand. The static evaluator follows direct jumps and resolved comparisons. An unresolved `JumpZ`, `JumpNZ`, or `JumpF` forks isolated constant environments, with at most 16 paths and eight branch levels. Arithmetic and comparison results remain local to each path. A result is accepted only when every path terminates within its instruction budget and agrees on value and type-compatible semantics.
+
+Directive checks use Inno's `not`, `and`, and `or` expression spelling. Proven Boolean function returns can resolve those expressions. A host call such as `IsParamSpecified`, registry inspection, or environment inspection remains unknown, even when the surrounding expression is simple. This distinction is why a portable-mode installer can retain a dynamic ARP warning while a branch-heavy constant helper resolves successfully.
 
 Likewise, an architecture expression describes admission and install mode. It does not make the outer SetupLdr PE architecture the package architecture.
 

@@ -300,9 +300,7 @@ Offset  Size  Field
 0x08       8  TotalSize, int64 LE
 ```
 
-Disk spanning was introduced in Inno Setup 4.0. Structures before 4.0 do not
-serialize `SlicesPerDisk`; Setup treats them as single-slice media and their
-file-location records cannot route into external `Setup-*.bin` payloads.
+Disk spanning was introduced in Inno Setup 4.0. Structures before 4.0 do not serialize `SlicesPerDisk`; Setup treats them as single-slice media and their file-location records cannot route into external `Setup-*.bin` payloads.
 
 `TotalSize` must equal the physical file length. `FirstSlice` and `LastSlice` are zero-based logical indexes. `SlicesPerDisk=1` maps index 0 to `Setup-1.bin`, index 1 to `Setup-2.bin`, and so on. Larger values use letter suffixes: with `SlicesPerDisk=2`, indexes 0 and 1 are `Setup-1a.bin` and `Setup-1b.bin`, while index 2 is `Setup-2a.bin`.
 

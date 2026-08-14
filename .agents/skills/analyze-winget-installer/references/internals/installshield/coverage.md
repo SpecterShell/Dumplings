@@ -15,7 +15,7 @@ InstallShield coverage is compositional. A setup is understood only when each ph
 | OBL and OBS | `pOdA` member catalogs; bounded member ranges; OBS headers, prototypes, external variables, member-local address fixups, basic blocks, and selected-member decoding | OBL is a build-time library and carries no catalog-level symbol-linkage map. Analyze the final linked INX for installer behavior. |
 | Windows Installer | Basic MSI, InstallScript MSI, embedded ISSetup custom actions, package selection from Setup.ini | Windows Installer runtime behavior, native custom actions, and target-machine conditions still need VM evidence. |
 | Advanced UI | Suite identity, package and parcel catalogs, operations, conditions, transactions, nested command lines | Custom extensions, downloaded parcels, runtime callbacks, and interactive choices remain unresolved. |
-| Prerequisites | PRQ metadata, detection clauses, command lines, privilege settings, ordered references | Detection against a particular machine and prerequisite payload behavior are dynamic. |
+| Prerequisites | PRQ metadata, typed install-condition clauses, three-valued evaluation over caller-supplied registry/file/package facts, OS `All`/`Any` aggregation, command lines, privilege settings, ordered references | Unknown comparison codes, locale-sensitive CSD ordering, and prerequisite payload behavior remain dynamic. |
 
 ## Release evidence
 

@@ -25,54 +25,17 @@ if ($Info.Variant -eq 'Advanced UI') {
 }
 ```
 
-Treat these three results independently. `InstallShieldProjectType` describes
-the authored installation model. `InstallShieldRelease` resolves the likely
-builder release from structured evidence. `InstallShieldStructuralRoutes`
-lists the physical handlers selected for each nested layer. Structural routes
-are authoritative for parsing: a newer wrapper can legally carry an older
-cabinet or InstallScript runtime.
+Treat these three results independently. `InstallShieldProjectType` describes the authored installation model. `InstallShieldRelease` resolves the likely builder release from structured evidence. `InstallShieldStructuralRoutes` lists the physical handlers selected for each nested layer. Structural routes are authoritative for parsing: a newer wrapper can legally carry an older cabinet or InstallScript runtime.
 
-`InstallShieldRelease` includes `ReleaseName`, `ProductVersion`,
-`SchemaVersion`, `Year`, `ServicePack`, `Build`, `Confidence`, `Candidates`,
-and `Evidence`. Disagreement between schema, suite namespace, MSI summary
-information, structured `Setup.ini` engine identity, and trusted runtime PE
-metadata lowers confidence and produces a warning; it never replaces a detected
-route. `SchemaVersion` is read
-only by `Get-InstallShieldProjectReleaseInfo` from the `InstallShield` table of
-a structured `.ism` XML export or binary Windows Installer project database.
-`SourceFormat` identifies which representation was read. Do not scan shipped
-setup binaries for a `SchemaVersion` string.
+`InstallShieldRelease` includes `ReleaseName`, `ProductVersion`, `SchemaVersion`, `Year`, `ServicePack`, `Build`, `Confidence`, `Candidates`, and `Evidence`. Disagreement between schema, suite namespace, MSI summary information, structured `Setup.ini` engine identity, and trusted runtime PE metadata lowers confidence and produces a warning; it never replaces a detected route. `SchemaVersion` is read only by `Get-InstallShieldProjectReleaseInfo` from the `InstallShield` table of a structured `.ism` XML export or binary Windows Installer project database. `SourceFormat` identifies which representation was read. Do not scan shipped setup binaries for a `SchemaVersion` string.
 
-The `ISc(` value in `data*.hdr` always selects the proprietary cabinet format,
-but its release value depends on the encoding family. Legacy family `1` is not
-a builder product version: official InstallShield 11.5 media uses format 9.5.
-Modern families `2` and `4` use a builder-aligned version/100 value in the
-official outputs, including majors 31 and 32 for InstallShield 2025 and 2026.
-Keep the structural route independent even when a modern value contributes a
-release candidate. Preserve ambiguous candidates until an exact runtime,
-Setup.ini, project, suite, or MSI source narrows the identity.
+The `ISc(` value in `data*.hdr` always selects the proprietary cabinet format, but its release value depends on the encoding family. Legacy family `1` is not a builder product version: official InstallShield 11.5 media uses format 9.5. Modern families `2` and `4` use a builder-aligned version/100 value in the official outputs, including majors 31 and 32 for InstallShield 2025 and 2026. Keep the structural route independent even when a modern value contributes a release candidate. Preserve ambiguous candidates until an exact runtime, Setup.ini, project, suite, or MSI source narrows the identity.
 
-Every route records `RouteId`, `Layer`, `Profile`, `FormatVersion`, `Handler`,
-`Capabilities`, `SupportStatus`, `Evidence`, and `Limitations`. Keep
-`Unsupported` and `Malformed` routes in analysis output. They identify which
-physical layer failed without discarding evidence from other layers.
+Every route records `RouteId`, `Layer`, `Profile`, `FormatVersion`, `Handler`, `Capabilities`, `SupportStatus`, `Evidence`, and `Limitations`. Keep `Unsupported` and `Malformed` routes in analysis output. They identify which physical layer failed without discarding evidence from other layers.
 
-An InstallShield 3 `setup32.exe` can be only the reusable setup engine. In that
-case `ContainerFormat` is `InstallShield 3 Engine` and the sole route is
-`Classic3/Engine` with `SupportStatus: Partial`. This proves the runtime release,
-not the package identity or behavior. Locate the accompanying `Setup.pkg`,
-`_setup.lib`, `data.z`, numbered disks, and `setup.ins` before authoring ARP
-metadata or switches. A complete Setup30 archive instead produces
-`Classic3/Package` and, when present, `Classic3/INS`.
+An InstallShield 3 `setup32.exe` can be only the reusable setup engine. In that case `ContainerFormat` is `InstallShield 3 Engine` and the sole route is `Classic3/Engine` with `SupportStatus: Partial`. This proves the runtime release, not the package identity or behavior. Locate the accompanying `Setup.pkg`, `_setup.lib`, `data.z`, numbered disks, and `setup.ins` before authoring ARP metadata or switches. A complete Setup30 archive instead produces `Classic3/Package` and, when present, `Classic3/INS`.
 
-A reusable launcher can also keep the application media outside the executable.
-`ContainerFormat: InstallShield External Media` and `Media/External` require an
-InstallShield-identifying launcher, one bounded direct `Setup.ini`, and a direct
-compiled script, validated `ISc(` header, or exact configured package. The
-parser reads only canonical sidecars in the launcher's directory; it does not
-recurse through the surrounding download folder. `ExternalMediaInfo` records
-the media root, engine version, ProductGUID, direct scripts and catalogs, and
-the evidence used to accept this relationship.
+A reusable launcher can also keep the application media outside the executable. `ContainerFormat: InstallShield External Media` and `Media/External` require an InstallShield-identifying launcher, one bounded direct `Setup.ini`, and a direct compiled script, validated `ISc(` header, or exact configured package. The parser reads only canonical sidecars in the launcher's directory; it does not recurse through the surrounding download folder. `ExternalMediaInfo` records the media root, engine version, ProductGUID, direct scripts and catalogs, and the evidence used to accept this relationship.
 
 Use `Expand-InstallShieldInstaller` when file-level inspection is needed:
 
@@ -116,10 +79,13 @@ $Prerequisite = Get-InstallShieldPrerequisiteInfo -Path .\Dependency.prq
 $Prerequisite.Files
 $Prerequisite.DetectionConditions
 $Prerequisite.OperatingSystemConditions
+$Prerequisite.InstallationConditionAnalysis
 $Prerequisite.SilentCommandLine
 $Prerequisite.ReturnCodesToReboot
 $Prerequisite.RequiresAdministrativePrivileges
 ```
+
+The `.prq` conditions describe when the child should run. Re-evaluate a reviewed target scenario by passing the exact `EvidenceKey` values returned by the first parse together with architecture and Windows facts: `Get-InstallShieldPrerequisiteInfo -Path .\Dependency.prq -ConditionEvidence $Evidence -Architecture x64 -OSVersion 10.0`. Missing target evidence remains `Unknown`; do not substitute the analysis host's registry or filesystem.
 
 The `.prq` payload URL, checksum, condition, and command line describe the prerequisite package. They do not prove that the current release includes or selects it unless `Setup.ini`, the MSI, or the suite catalog references the same prerequisite. In the `.prq` Behavior record, `Lua="1"` means limited-user compatible and the absence of `Lua` means the prerequisite editor's default "requires administrative privileges" option remains enabled.
 

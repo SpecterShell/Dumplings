@@ -1,64 +1,117 @@
-# install4j parser internals
+# install4j internals
 
-This reference supports parser implementation and review. For installer analysis and manifest authoring, use the [install4j workflow](../../families/install4j/workflow.md).
+This directory explains how install4j turns a project, application files, Java launchers, installer actions, and an optional Java runtime into Windows media. It follows the producer and runtime rather than the Dumplings command surface.
 
-Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
+Use the [install4j package workflow](../../families/install4j/workflow.md) when the immediate goal is a WinGet manifest. Dumplings-specific format routing is kept in [parser implementation notes](parser-implementation.md), and current support is recorded in [coverage and remaining work](coverage.md).
 
-## Supported formats and variants
+## Reading path
 
-The parser covers the structured install4j variants documented below. Variant-specific evidence must pass the same content-based detection and bounds checks.
+1. [Architecture](architecture.md) introduces the project model, compiler, launchers, installer runtime, payload catalog, and generated uninstaller.
+2. [Compiler and output assembly](compiler-and-output.md) follows a project through variable expansion, launcher generation, runtime selection, compression, and media output.
+3. [Binary format](binary-format.md) documents the PE overlay, parameter maps, startup files, ContentCollector table, transforms, and nested archives.
+4. [Metadata model](metadata-model.md) describes `i4jparams.conf`, application identity, media settings, screens, actions, launchers, and associations.
+5. [Setup runtime](setup-runtime.md) follows startup, Java discovery, unattended modes, privilege changes, actions, rollback, and exit behavior.
+6. [Variables, expressions, and custom code](scripting-and-expressions.md) separates compiler variables, installer variables, expressions, Java callbacks, and custom installer applications.
+7. [Uninstaller and ARP](uninstaller-and-arp.md) covers application IDs, `RegisterAddRemoveAction`, scope, maintenance, updates, and removal.
+8. [Format history](format-history.md) records the recoverable Windows media generations from install4j 3 through 13.
+9. [Parser implementation notes](parser-implementation.md) maps those structures to bounded static analysis.
+10. [Coverage and remaining work](coverage.md) contains implementation parity, known defects, unsupported behavior, and the fixture matrix.
 
-## Binary structure
+## One media file contains several programs
 
-Current launchers use a PE overlay configuration; older generations may expose an unextracted-file table. Java-style fields in these records are big-endian unless stated otherwise.
+An install4j Windows setup is a native launcher that starts a Java installer application. The setup executable also carries configuration and application payloads needed before Java code can run.
 
 ```text
-PE launcher
-`-- overlay
-    +-- D5 13 E4 E8                launcher configuration magic
-    +-- data version/flags
-    +-- DataLength, int64
-    +-- UTF-8 parameter map
-    +-- UTF-16LE localized/nested maps
-    +-- startup-file table
-    `-- CRC32 of bounded configuration data
-
-Legacy/unextracted data
-+-- E8 E4 13 D5                    table magic
-+-- Java DataInput-style records   big-endian lengths/integers
-`-- 0.dat / config / runtime files raw or LZMA-compressed
+Windows setup.exe
++-- native PE launcher
+|   +-- platform startup and Java discovery
+|   +-- error messages and launcher resources
+|   `-- overlay reader
+`-- install4j overlay
+    +-- launcher parameter maps
+    +-- XOR-transformed startup files
+    |   +-- i4jruntime.jar
+    |   +-- i4jparams.conf
+    |   `-- icons and installer resources
+    +-- ContentCollector file catalog
+    +-- compressed application archive
+    `-- optional bundled Java runtime
 ```
 
-The overlay magic is at the PE overlay base. Length-prefixed strings cannot cross the declared configuration end, and startup entries point to exact file ranges. The parser also recognizes `i4jparams.conf` XML and application-ID records after structural validation. LZMA output, parameter bytes, entry count, and scan candidates are bounded; marker text alone is not sufficient classification.
+The native launcher is enough to display startup failures and locate a Java runtime. Installer screens and actions are Java objects described by `i4jparams.conf` and implemented by `i4jruntime.jar`, user code, or extension JARs.
 
-## Detection invariants
+## Build-time and run-time models
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence.
+```text
+Build time
++-- parse .install4j project XML
++-- resolve compiler variables and source paths
++-- collect application files and runtime components
++-- serialize installer applications, screens, actions, and launchers
++-- generate native platform launchers
+`-- compress and sign selected media files
 
-## Metadata projection
+Native startup
++-- parse launcher parameter maps and startup-file table
++-- locate or unpack a suitable Java runtime
++-- read i4jparams.conf and prepare the class path
+`-- start the selected installer application
 
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields.
+Installer runtime
++-- select GUI, console, or unattended mode
++-- evaluate screens, actions, conditions, and response values
++-- request privileges when configured
++-- install files and create system state
++-- register maintenance and uninstall information
+`-- commit, roll back, or return an exit code
 
-## Bounds and malformed input
+First application run
+`-- outside install4j; the application may create additional state
+```
 
-Apply the shared parser bounds to every offset, size, count, decompressed range, destination path, and recursion boundary. Reject malformed input deterministically.
+Compiler variables are normally replaced before the media is written. Runtime installer variables and custom Java code can still change paths, conditions, registry values, and control flow on the target machine.
 
-## Performance considerations
+## Identity domains
 
-Open the installer once, reuse parsed layout evidence, and prefer bounded streams or selected-entry extraction over whole-file materialization.
+Several independent values can look like an install4j version or product ID:
 
-## Known gaps
+| Identity | Meaning |
+| --- | --- |
+| Builder release | The install4j release used to compile the project, when `i4jparams.conf` records it. |
+| Launcher generation | The serialized native-launcher and payload ABI selected by the catalog. |
+| Launcher marker | Optional parameter-map value used by some vendor and builder media to identify a generation. |
+| Application ID | Stable install4j product identity, normally written as the uninstall-key name. |
+| Media set ID | Identity of one build target inside the project; it is not the ARP ProductCode. |
+| PE product version | Version resource of the generated launcher or packaged application. It is not reliable builder-generation evidence. |
+| Application version | Publisher-controlled version displayed by the installer and ARP entry. |
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+The Windows and Multi-Platform commercial editions use the same builder and media implementation. A license controls which targets can be built, so shipped Windows media cannot establish the purchased edition.
 
-## Implementation mapping
+## Static and dynamic evidence
 
-- Modules/PackageModule/Libraries/Installers/Install4j.psm1
+The overlay can prove framing, startup-file names, embedded configuration, payload boundaries, and checksums. Configuration XML can prove literal product metadata and the presence of authored actions. It cannot execute arbitrary Java expressions, extension code, downloaded payloads, or target-state checks.
 
-## Representative fixtures
+A literal `RegisterAddRemoveAction` is static ARP evidence. Its actual registry root can still depend on privilege acquisition. A custom action that writes an additional uninstall key is runtime evidence until its code is analyzed or the installer is validated in a VM.
 
-Use generated malformed fixtures and the behaviorally distinct real installers cited by the focused tests and family workflow.
+## Important shipped artifacts
+
+| Artifact | Role |
+| --- | --- |
+| `*.install4j` | Authoring project XML consumed by the builder. |
+| `i4jparams.conf` | Serialized application, launcher, installer, screen, action, variable, and media configuration. |
+| `i4jruntime.jar` | Runtime implementation for installer applications and standard actions. |
+| `user.jar` and extension JARs | Compiled project code and custom extensions. |
+| `0.dat` or `*.000` | Compressed application-content archive in later media generations. |
+| `content.zip` | Inline generation-3 application archive. |
+| `uninstall.exe` | Generated maintenance/uninstall launcher installed with the product. |
+| `updates.xml` | Optional update descriptor emitted beside media files. |
 
 ## Source references
 
-Use the source references in the mapped module headers and its focused tests. Add upstream references here when new behavior is grounded.
+- [install4j documentation](https://www.ej-technologies.com/resources/install4j/help/doc/)
+- [install4j media files](https://www.ej-technologies.com/resources/install4j/help/doc/concepts/mediaFiles.html)
+- [install4j launchers](https://www.ej-technologies.com/resources/install4j/help/doc/concepts/launchers.html)
+- [install4j installer applications](https://www.ej-technologies.com/resources/install4j/help/doc/concepts/installerApplications.html)
+- [install4j installer options](https://www.ej-technologies.com/resources/install4j/help/doc/installers/options.html)
+- [install4j change log](https://www.ej-technologies.com/install4j/changelog)
+- [install4j editions](https://www.ej-technologies.com/install4j/editions)

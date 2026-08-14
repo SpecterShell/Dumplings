@@ -1,48 +1,27 @@
 # NSIS internals
 
-This directory explains how NSIS turns an `.nsi` script and source files into a
-Windows executable, how the executable locates and decodes its archive, how the
-compiled command stream runs, and how scripts create an uninstaller and Apps &
-Features registration.
+This directory explains how NSIS turns an `.nsi` script and source files into a Windows executable, how the executable locates and decodes its archive, how the compiled command stream runs, and how scripts create an uninstaller and Apps & Features registration.
 
-The emphasis is the NSIS compiler, serialized format, and runtime. Details of
-the Dumplings reader are kept in [parser implementation notes](parser-implementation.md)
-and [coverage](coverage.md).
+The emphasis is the NSIS compiler, serialized format, and runtime. Details of the Dumplings reader are kept in [parser implementation notes](parser-implementation.md) and [coverage](coverage.md).
 
-Use the [NSIS package workflow](../../families/nsis/workflow.md) when the
-immediate goal is a WinGet manifest.
+Use the [NSIS package workflow](../../families/nsis/workflow.md) when the immediate goal is a WinGet manifest.
 
 ## Reading path
 
-1. [Architecture](architecture.md) introduces MakeNSIS, the executable stub,
-   archive, command engine, plug-ins, and generated uninstaller.
-2. [Compiler and output assembly](compiler-and-output.md) follows source text
-   through preprocessing, command emission, string and language tables, payload
-   compression, PE customization, and final output.
-3. [Binary format](binary-format.md) documents archive discovery, first headers,
-   logical blocks, command records, payload framing, compression, and integrity.
-4. [Metadata model](metadata-model.md) describes the common header, pages,
-   sections, strings, language tables, variables, and command operands.
-5. [Setup runtime](setup-runtime.md) follows command-line handling, archive
-   loading, callbacks, pages, section execution, extraction, and exit behavior.
-6. [Scripting, strings, and plug-ins](scripting-and-expressions.md) explains the
-   compile-time preprocessor, command-address model, encoded strings, stack,
-   variables, macros, and native plug-in boundary.
-7. [Uninstaller and ARP](uninstaller-and-arp.md) covers `WriteUninstaller`,
-   uninstall registry writes, scope, localization, maintenance, and removal.
-8. [Format history and editions](format-history.md) separates official NSIS,
-   Jim Park Unicode NSIS, NSISBI, custom stubs, and script generators.
-9. [Parser implementation notes](parser-implementation.md) maps the runtime to a
-   bounded static reader and emulator.
-10. [Coverage and remaining work](coverage.md) records implementation parity,
-    known defects, unsupported routes, and the fixture matrix.
+1. [Architecture](architecture.md) introduces MakeNSIS, the executable stub, archive, command engine, plug-ins, and generated uninstaller.
+2. [Compiler and output assembly](compiler-and-output.md) follows source text through preprocessing, command emission, string and language tables, payload compression, PE customization, and final output.
+3. [Binary format](binary-format.md) documents archive discovery, first headers, logical blocks, command records, payload framing, compression, and integrity.
+4. [Metadata model](metadata-model.md) describes the common header, pages, sections, strings, language tables, variables, and command operands.
+5. [Setup runtime](setup-runtime.md) follows command-line handling, archive loading, callbacks, pages, section execution, extraction, and exit behavior.
+6. [Scripting, strings, and plug-ins](scripting-and-expressions.md) explains the compile-time preprocessor, command-address model, encoded strings, stack, variables, macros, and native plug-in boundary.
+7. [Uninstaller and ARP](uninstaller-and-arp.md) covers `WriteUninstaller`, uninstall registry writes, scope, localization, maintenance, and removal.
+8. [Format history and editions](format-history.md) separates official NSIS, Jim Park Unicode NSIS, NSISBI, custom stubs, and script generators.
+9. [Parser implementation notes](parser-implementation.md) maps the runtime to a bounded static reader and emulator.
+10. [Coverage and remaining work](coverage.md) records implementation parity, known defects, unsupported routes, and the fixture matrix.
 
 ## One installer contains a runtime and a program
 
-NSIS does not serialize a declarative package manifest. It compiles most script
-statements into a compact instruction table interpreted by a purpose-built
-Windows executable. Product identity, scope, architecture selection, payload
-names, and uninstall behavior are therefore program effects.
+NSIS does not serialize a declarative package manifest. It compiles most script statements into a compact instruction table interpreted by a purpose-built Windows executable. Product identity, scope, architecture selection, payload names, and uninstall behavior are therefore program effects.
 
 ```text
 Compiled installer.exe
@@ -63,10 +42,7 @@ Compiled installer.exe
     `-- optional archive CRC
 ```
 
-The stub is selected at build time. Current official source can target x86 ANSI,
-x86 Unicode, AMD64 Unicode, or ARM64 Unicode. Its PE machine identifies the
-runtime process, not necessarily the installed application. Script code can
-select different payloads for different Windows architectures.
+The stub is selected at build time. Current official source can target x86 ANSI, x86 Unicode, AMD64 Unicode, or ARM64 Unicode. Its PE machine identifies the runtime process, not necessarily the installed application. Script code can select different payloads for different Windows architectures.
 
 ## Build-time and run-time models
 
@@ -98,9 +74,7 @@ First application run
 `-- outside NSIS; the application may add more associations or state
 ```
 
-Macros such as LogicLib and MultiUser disappear during compilation. Their output
-is ordinary command records and jumps. Native plug-ins do not disappear: the
-archive contains the plug-in DLL and commands that extract and invoke it.
+Macros such as LogicLib and MultiUser disappear during compilation. Their output is ordinary command records and jumps. Native plug-ins do not disappear: the archive contains the plug-in DLL and commands that extract and invoke it.
 
 ## Identity domains
 
@@ -115,20 +89,13 @@ Several values are easily confused:
 | Script generator | electron-builder, Tauri, CPack, PortableApps.com, or another system that emits NSIS source. |
 | Package version | Application version chosen by the publisher and usually written through script commands. |
 
-The serialized ABI profile is the useful format identity. An exact compiler
-release must remain unknown when the binary does not preserve it.
+The serialized ABI profile is the useful format identity. An exact compiler release must remain unknown when the binary does not preserve it.
 
 ## Static and dynamic evidence
 
-The archive proves command operands, literal strings, language alternatives,
-payload records, and explicit registry writes. It does not prove the result of
-an arbitrary native plug-in, a target-machine registry query, a downloaded child
-installer, or application first-run behavior.
+The archive proves command operands, literal strings, language alternatives, payload records, and explicit registry writes. It does not prove the result of an arbitrary native plug-in, a target-machine registry query, a downloaded child installer, or application first-run behavior.
 
-Static analysis should preserve that boundary. For example, a literal
-`WriteRegStr` to an uninstall key is direct ARP evidence. A path assembled from
-an opaque plug-in return value is conditional evidence. A registry key created
-by the installed application does not belong to the NSIS runtime at all.
+Static analysis should preserve that boundary. For example, a literal `WriteRegStr` to an uninstall key is direct ARP evidence. A path assembled from an opaque plug-in return value is conditional evidence. A registry key created by the installed application does not belong to the NSIS runtime at all.
 
 ## Important source units
 

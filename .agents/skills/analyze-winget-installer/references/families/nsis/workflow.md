@@ -22,12 +22,7 @@ Run content-based family detection before calling `Get-NSISInfo` directly. The s
 4. Resolve architecture, scope, and silent behavior through [Scope and silent behavior](scope-and-silent.md).
 5. Read [NSIS internals](../../internals/nsis/overview.md) only when implementing or debugging the parser.
 
-When `HasExternalFile` is true, keep the EXE and every sidecar together. Pass a
-legacy `.nsisbin`, ordered `setupN.bin` files, or their containing directory to
-`Expand-NSISInstaller -ExternalDataPath`. The parser treats split sidecars as
-one logical stream, keeps `ExtractStubFile` on the embedded EXE data, and rejects
-missing segments or per-file CRC mismatches. A manifest cannot distribute the
-EXE alone when installation requires external media.
+When `HasExternalFile` is true, keep the EXE and every sidecar together. Pass a legacy `.nsisbin`, ordered `setupN.bin` files, or their containing directory to `Expand-NSISInstaller -ExternalDataPath`. The parser treats split sidecars as one logical stream, keeps `ExtractStubFile` on the embedded EXE data, and rejects missing segments or per-file CRC mismatches. A manifest cannot distribute the EXE alone when installation requires external media.
 
 ## Manifest shape
 

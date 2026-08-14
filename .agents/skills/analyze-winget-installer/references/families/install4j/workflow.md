@@ -8,12 +8,21 @@ Switch documentation: [install4j installer options](https://www.ej-technologies.
 
 ## Detection
 
-Prefer `Test-Install4jInstaller` and `Get-Install4jInfo`. Supporting markers include:
+Start with `Get-Install4jFormatInfo`. It validates the launcher structure, selects the catalog route, and reports unsupported media without guessing metadata:
+
+```powershell
+$Format = Get-Install4jFormatInfo -Path $InstallerFile
+$Format | Select-Object IsInstall4j, IsSupported, FormatGeneration, BuilderVersion, BuilderBuild, MediaType, Architecture, Marker, LauncherRoute, StartupFileRoute, ContentTableRoute, PayloadRoute, ConfigRoute, IsFallback, Warnings
+```
+
+Use `Test-Install4jInstaller` only when a Boolean family check is sufficient. Supporting evidence includes:
 
 - `install4j` and `ej-technologies` launcher strings.
 - Embedded or listed `i4jparams.conf` and `i4jruntime.jar`.
 - `allinstdirs<dddd-dddd-dddd-dddd>`, where the numeric value is the application ID.
 - An install4j unextracted-file table or LZMA-compressed `0.dat`.
+
+Parameter `2000` is not mandatory in generated application media. When it is absent, a CRC-valid modern launcher with complete startup-file boundaries can be routed from the explicit builder version in its decoded `i4jparams.conf`. A present marker must agree with that configuration; the parser does not let configuration override a contradictory marker.
 
 ## Static analysis
 
@@ -23,6 +32,12 @@ Read [install4j Installers Parser Internals](../../internals/install4j/overview.
 
 ```powershell
 $Info = Get-Install4jInfo -Path $InstallerFile
+$Info.FormatGeneration
+$Info.BuilderVersion
+$Info.Marker
+$Info.LauncherRoute
+$Info.PayloadRoute
+$Info.ConfigRoute
 $Info.ProductCode
 $Info.DisplayVersion
 $Info.DisplayName
@@ -40,9 +55,9 @@ $ExpandedPath = Expand-Install4jInstaller -Path $InstallerFile -Name '*.exe' -Co
 Get-ChildItem -Path $ExpandedPath -Recurse -File
 ```
 
-`Get-Install4jInfo` reads the launcher configuration block at the PE overlay, validates its declared range and CRC32, decodes the startup-file transform, and parses `i4jparams.conf`. Read the returned object once instead of reparsing the same installer with individual `Read-*FromInstall4j` helpers. Those helpers are compatibility conveniences for callers that need only one field.
+`Get-Install4jInfo` creates one analysis context, selects a descriptor from `Install4jFormatCatalog.psd1`, reads the launcher maps and ContentCollector catalog, validates modern CRC32 evidence, decodes startup files, and parses `i4jparams.conf`. Read the returned object once instead of reparsing the installer with individual `Read-*FromInstall4j` helpers. Those helpers remain conveniences for callers that need only one field.
 
-`Expand-Install4jInstaller` extracts transformed launcher startup files and the separate embedded-file table. It validates and decodes standard LZMA-alone `0.dat` streams, then extracts selected files from the resulting ZIP without using `7z.exe`. It enforces CRC, dictionary, range, and output limits and rejects links and traversal paths.
+`Expand-Install4jInstaller` extracts transformed launcher startup files and ContentCollector entries. Generation 3 reads inline `content.zip`; generation 4 decodes the split `.000` LZMA archive; later generations decode the routed `0.dat` archive. It enforces CRC, dictionary, range, entry-count, and output limits and rejects links and traversal paths without invoking `7z.exe`.
 
 ### Determine whether install4j writes ARP
 
@@ -52,7 +67,7 @@ install4j `RegisterAddRemoveAction` creates:
 Software\Microsoft\Windows\CurrentVersion\Uninstall\<ApplicationId>
 ```
 
-Use the application ID as top-level `ProductCode` when deterministic. Confirm `WritesAppsAndFeaturesEntry` from the parsed `RegisterAddRemoveAction`; older or unsupported launcher revisions may still require VM ARP validation.
+Use the application ID as top-level `ProductCode` when deterministic. Confirm `WritesAppsAndFeaturesEntry` from the parsed `RegisterAddRemoveAction` or the catalogued generation-3 built-in uninstaller evidence. Unsupported launchers and conditional registration still require VM ARP validation.
 
 ### Determine privilege-dependent scope and payload architecture
 
@@ -62,7 +77,7 @@ Read the launcher/config bitness and inspect installed native binaries. Do not i
 
 ### Validate missing configuration and runtime fallbacks
 
-Require VM validation when config XML is unavailable, scope depends on privilege fallback, ARP action presence is unknown, or package-specific unattended behavior differs from the documented defaults.
+Require VM validation when config XML is unavailable, scope depends on privilege fallback, ARP action presence is unknown, external/downloadable payloads affect the result, or package-specific unattended behavior differs from the documented defaults. A future-generation fallback is static evidence only until its install behavior is validated.
 
 ## Manifest shape
 
@@ -135,3 +150,11 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) for privilege 
 - `SyncROSoft.OxygenXMLEditor`
 - `3TSoftwareLabs.Studio3T`
 - `VisualParadigm.VisualParadigm`.
+
+## Source references
+
+- [install4j editions](https://www.ej-technologies.com/install4j/editions)
+- [install4j change log](https://www.ej-technologies.com/install4j/changelog)
+- [install4j media files](https://www.ej-technologies.com/resources/install4j/help/doc/concepts/mediaFiles.html)
+- [install4j launcher concepts](https://www.ej-technologies.com/resources/install4j/help/doc/concepts/launchers.html)
+- [install4j installer options](https://www.ej-technologies.com/resources/install4j/help/doc/installers/options.html)
