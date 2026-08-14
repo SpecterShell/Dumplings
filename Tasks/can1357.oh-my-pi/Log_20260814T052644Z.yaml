@@ -1,0 +1,30 @@
+Version: 17.3.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.3.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Distinguished Gemini thought-only STOP responses from empty transports, avoiding repeated identical reasoning requests and duplicate Antigravity endpoint streams while surfacing the missing final output for session-level recovery.
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Automatically continued Gemini turns that stopped after thinking without final output, using a bounded final-answer reminder instead of exhausting generic retries.
+    - Retried Gemini MALFORMED_FUNCTION_CALL failures when every emitted tool call was proven unexecuted, while preserving real tool-result and visible-output replay guards.
+    - Kept current terminal retry errors in one pinned banner with attempt context while surfacing local continuation failures instead of stale provider errors.
+    @oh-my-pi/hashline
+    Fixed
+    - Recovered dangling range separators in hunk headers (PUT 244.=:, CUT 5.=) as single-line ranges (N.=N) instead of rejecting the header as an orphan payload line.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed Gemini reports rendering their final headings and tables as one raw code block when the model emitted a lone closing Markdown fence without its opener.
+    What's Changed
+    - fix(gemini): recover malformed, empty, and broken Markdown turns by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/8493
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.3.2...v17.3.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.3.3
+ReleaseTime: 2026-08-14T04:06:32.0000000Z
