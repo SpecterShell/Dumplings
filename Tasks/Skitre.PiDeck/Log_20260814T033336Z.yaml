@@ -1,0 +1,39 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Skitre/PiDeck/releases/download/v0.1.9/PiDeck_0.1.9_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    PiDeck v0.1.9
+    本次更新重点改善长会话的加载与阅读体验，同时增强 Provider 状态切换的可靠性，并继续打磨 macOS、Windows 与右侧 Dock 的窗口细节。
+    长会话加载与阅读
+    - 长会话改为渐进式加载，优先显示最近内容，减少打开大型会话时的等待和滚动跳动。
+    - 加载批次会根据渲染耗时自动调整，并在流式回复期间稳定跟随最新内容。
+    - 支持跳转到指定消息；即使目标尚未加载，也会自动补齐历史内容并突出显示目标位置。
+    - 切换会话时会记住各自的阅读位置，返回后可继续从上次的位置阅读。
+    - 接近会话顶部时自动加载更早内容，让历史浏览更连贯。
+    Provider 稳定性
+    - 重命名、停用、移除 Provider 或调整模型列表时，会为闲置会话迁移到仍然可用的 Provider 与模型。
+    - Provider 变更会避开正在生成内容或执行操作的会话，减少状态冲突和错误切换。
+    - 改进变更失败时的回滚与配置保护，避免会话保留已经失效的模型状态。
+    - 支持在没有启用任何 Provider 时安全创建或恢复无模型会话。
+    Extension 交互
+    - Extension 提示默认使用“自动展示”，由 PiDeck 根据内容选择合适的图形界面呈现方式。
+    - 仍可在设置中切换展示偏好，以兼容不同 Extension 和使用习惯。
+    窗口与界面优化
+    - 改善 macOS 点击关闭窗口时的响应，避免草稿保存期间出现关闭不及时的感觉。
+    - 调整右侧 Dock 开关的位置，使其跟随对话区边缘，并避开滚动条。
+    - 修正 Windows 最小化、最大化和关闭按钮的垂直位置，使其与当前主题的顶栏高度对齐。
+    候选安装包
+    - Windows x64
+    - macOS Apple Silicon
+    - macOS Intel
+    注意： 当前附件仍是开发候选安装包。Windows 尚未完成 Authenticode 签名与人工安装验收；macOS 使用 ad-hoc 签名且未公证，可能被 Gatekeeper 阻止。请勿将这些附件视为已经认证的公开安装包。
+    完整变更：https://github.com/Skitre/PiDeck/compare/v0.1.8...v0.1.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Skitre/PiDeck/releases/tag/v0.1.9
+ReleaseTime: 2026-08-14T03:24:31.0000000Z
