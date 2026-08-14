@@ -1,0 +1,26 @@
+Version: 0.12.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.12.1/Mini-Term_0.12.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.12.1/Mini-Term_0.12.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    自定义主题下的终端，字距终于和内置主题一样了
+    带背景图的主题包激活时，终端只能走 DOM 渲染（xterm 上游的 WebGL 渲染器不支持透明背景），而两个渲染器的字符格宽算法并不一致——自定义主题下字距肉眼可见地更松，全角标点后面还多出一截空隙。本版从测量源头把两条渲染路径掰齐。
+    🐛 修复
+    - 字符间距比内置主题松 — WebGL 的格宽做设备像素向下取整、DOM 不取整（上游差异），字体步进带小数时每格差零点几像素，80 列一行累计 30px+。现在把字符宽度测量在源头量化到整设备像素：DOM 与 WebGL 的格宽从构造上相等，对 WebGL 是恒等变换、零行为变化。任意缩放比率下成立（穷举 6930 组字号 × 字体步进 × DPR 验证两条不变量零例外），缩放越高偏差本来越小，双显示器跨屏拖动自动跟随
+    - 全角标点每个比 WebGL 宽 6~7px — WebView2 里 xterm 对全角标点做孤立测量时未回退到 CJK 字体（量出半角步进），整行渲染又跟着相邻汉字按上下文取全角字形，letter-spacing 按错误测量补偿，「，」「。」等每个多出一截空隙；汉字在两种场景必然落到同一回退字体，所以纯中文不受影响、只有标点出问题。终端字体栈现在显式追加 CJK 回退（Microsoft YaHei / PingFang SC / Noto Sans CJK SC），测量与渲染走同一条确定的字体匹配路径，不再依赖引擎启发式
+    🔧 内部
+    - 两处修复都经反射 xterm 私有字段实现，带静默兜底：将来 xterm 升级改名时退回原行为（间距变宽），不抛错不影响功能
+    - 用户自选字体同样追加 CJK 回退；字体本身含 CJK（如更纱黑体）时按 CSS 先到先得自动失效，无副作用。机器缺齐三款回退字体时（如精简 Linux）落到 generic monospace，行为等同修复前，不会更糟
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.12.0...v0.12.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.12.1
+ReleaseTime: 2026-08-14T14:19:06.0000000Z
