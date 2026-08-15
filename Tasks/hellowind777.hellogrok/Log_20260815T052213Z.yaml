@@ -1,0 +1,41 @@
+Version: 0.1.8
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.8/hellogrok-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.8/hellogrok-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.8
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - First-party DeepSeek integration for exact api.deepseek.com routes, with protocol capabilities driven by endpoint and actual wire format instead of a model-ID allowlist. Current and future models receive the same documented search, effort, transport, and usage handling; native same-protocol requests retain unknown fields, cross-protocol bridges map fields supported by their target API, future effort values pass through, and model capacity is never hard-coded.
+    - Native DeepSeek V4 Responses support for hosted Web Search, Grok Build function tools, passthrough of the documented custom apply_patch shape when explicitly supplied, terminal completed/incomplete/failed events, protocol-appropriate Bearer or X-Api-Key authentication, and current reasoning-effort normalization. Current Grok Build source uses the function form for local apply_patch execution.
+    - DeepSeek structured-output adaptation: Responses keeps native text.format JSON Schema, Chat converts Grok Build schemas to documented json_object mode plus a schema instruction for local validation, and Messages continues through Grok Build's validated StructuredOutput tool.
+    Changed
+    - A proxied custom model selected through [models].web_search or GROK_WEB_SEARCH_MODEL is projected as backend-search enabled for the entire proxy lifetime, including ordinary Grok Build sessions and its dedicated WebSearchClient request, across Responses, Messages, and Chat provider formats. Selection overrides an explicit false only in the temporary proxy configuration, performs no startup probe, and is restored exactly on stop.
+    - Models on the exact first-party api.deepseek.com endpoint enable provider-hosted search when supports_backend_search is omitted. Responses and Messages remain on their configured native APIs, while Chat defaults to a Responses bridge and honors an explicit dialect. Explicit false opts out unless that route is selected as the default search model, and relays receive no first-party assumptions.
+    - Upstream idle protection now covers every response body, including non-streaming success and error JSON. Ordinary channels use a 601-second header/body idle limit, one second beyond Grok Build's 600-second shell default; first-party api.deepseek.com uses 660 seconds so empty-line and SSE keep-alives can cover the provider's documented ten-minute queue without imposing a total request deadline.
+    - Configuration rewrite recovery uses one strict named format and records provider-inherited maximum-completion projections alongside temporary protocol, search, reasoning, feature, and route fields. Unknown state formats are rejected instead of being interpreted by the current schema.
+    - First-party DeepSeek models expose the documented None, Low, High, and Max menu even when Grok Build resolves the wire protocol from its catalog; explicit user menus still win. Messages turns Grok Build's omitted None into thinking.type=disabled and sends only output_config.effort. All three protocols follow the current official effort mapping (minimal/low to low, medium/high/xhigh to high, and max to max; minimal is Responses-only), and every format encodes disabled thinking natively. Chat documents the provider's separate /beta requirement for strict function schemas. Explicit Responses user-isolation IDs survive Chat and Messages protocol bridges.
+    Security
+    - Release builds now use Go 1.26.6, which fixes the reachable standard-library vulnerabilities GO-2026-6218, GO-2026-6090, GO-2026-6089, GO-2026-5972, and GO-2026-5026 reported against Go 1.26.5 HTTP and TLS call paths.
+    Fixed
+    - Backend-search declarations now have explicit cross-format failure coverage: every provider protocol receives its native search shape, unsupported upstream HTTP errors remain visible, and a selected search model that silently ignores the hosted tool returns a non-retryable error naming the missing backend web_search execution. Grok Build local tools, including arbitrary MCP names, retain declaration, selection, call, and replay semantics through every bridge.
+    - Missing or untrustworthy provider usage is no longer converted into a valid-looking all-zero measurement. Provider total_tokens is preserved only alongside complete input/output accounting, a missing total is derived only from that complete pair, and otherwise usage: null lets Grok Build preserve its token baseline instead of resetting auto-compaction progress to zero or recording invented billing values. First-party DeepSeek Responses terminal output now carries complete usage.context_details, which current Grok Build uses as its live-context input for auto-compaction.
+    - Messages and Chat translations now preserve authoritative totals, cache and reasoning token details, and terminal streaming usage blocks while rejecting partial, negative, fractional, overflowing, or all-zero placeholder counts.
+    - DeepSeek Chat compatibility now preserves tool-call reasoning_content, supplies non-null assistant tool content, maps max_completion_tokens to max_tokens unless explicitly overridden, maps developer messages to system, and requests streaming usage. Because the provider rejects tool_choice in thinking mode, hellogrok removes that selector while retaining function declarations for automatic use; explicit non-thinking requests keep the documented selector forms. DeepSeek non-streaming queue newlines and streaming : keep-alive comments both renew the dedicated idle window.
+    - DeepSeek Responses no longer receives a proxy-invented include entry that its current API explicitly ignores. Chat insufficient_system_resource termination is surfaced as a structured failure or retryable 503, depending on whether the response protocol has already started.
+    - Model responses now preserve explicit per-model or provider-inherited context_window and max_completion_tokens values and protect those selected tiers from conflicting upstream metadata. Provider-only completion limits are temporarily projected because current Grok Build does not inherit them; omitted capacity and search fields remain catalog/metadata-owned. Rolling aliases and future model IDs can therefore change limits and declared capabilities without a proxy release.
+    - DeepSeek Messages now targets the canonical /anthropic/v1/messages endpoint and emits only X-Api-Key, preventing both a missing /v1 path segment and conflicting Bearer credentials.
+    - Cache-prefix regression coverage now spans GPT, Claude, Grok, Gemini, current and future DeepSeek model IDs, and generic relays across native Responses, Messages, Chat Completions, protocol bridges, parallel tool history, reasoning history, and Grok Build conversation-ID forwarding.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#018-2026-08-15
+ReleaseTime: 2026-08-15T05:20:32.0000000Z
