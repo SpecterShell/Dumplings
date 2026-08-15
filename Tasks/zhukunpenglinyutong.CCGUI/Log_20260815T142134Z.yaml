@@ -1,0 +1,41 @@
+Version: 0.8.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zhukunpenglinyutong/desktop-cc-gui/releases/download/v0.8.9/ccgui_0.8.9_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - join Grok first-token reasoning and document PR #1092
+    - prevent Windows cold-start click freeze
+    - 校验打包产物并收紧 tauri build 失败判定
+    - gate-ready 后 idle 预热 vendor-markdown chunk
+    - 线程列表落账批次间按待输入让出一拍
+    - gate-ready 后 pointerdown 软取消在途列表水合并设推迟上限
+    - raise Windows main-thread stack reserve to 8MB
+    Performance Improvements
+    - 会话列表预览扫描降载并升版 0.8.9-fix2
+    - 收敛关系快照读写并停止搜索自动扫描
+    - 输入框改用瘦图标并删除彩图全集
+    - 推迟非关键 store 与 deferred i18n 挡住首屏
+    - subscribe Assembly by host fields instead of the full snapshot
+    - 窗口隐藏时背压队列低频排水并暂停 git status 轮询（Task 5.3）
+    - 消息图片统一 decoding="async" 让 decode 离开主线程
+    - 删除 GitDiffViewer 逐行 ResizeObserver 的重复观察
+    - 稳定布局节点身份（S1 根链 memo 补全）
+    - 落地会话内历史分页窗口与 chip 分页展开
+    - 全引擎统一走增量流式排版并放宽折叠兜底阈值至 24k
+    - 流式 full 模式改走 IncrementalMarkdown 增量渲染
+    - 新增 IncrementalMarkdown 冻结块 memo 增量渲染器
+    - 新增流式增量块切分器（尾部 2 块以外全部冻结）
+    - 契约守护三类电报不进根 dispatch 并补实测计数（263→9 次/回合）
+    - 思考/工具输出按行订阅 useLiveItemDelta，settle 时 drain 尾段落回
+    - 改道 reasoning/toolOutput 电报进 liveItemDeltaChannel，不再逐条打根 reducer
+    - 新增 liveItemDeltaChannel（reasoning/toolOutput 三 lane，48ms 节奏）
+    - 新增 liveDeltaExternalization 开关（A4 二期脚手架）
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhukunpenglinyutong/desktop-cc-gui/releases/tag/v0.8.9
+ReleaseTime: 2026-08-15T13:39:41.0000000Z
