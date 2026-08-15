@@ -101,7 +101,26 @@ Operations block
 +----------------------+
 ```
 
-The parser bounds the segment and count, validates both strings against the declared segment, and requires exact record consumption. It returns operation names and XML as evidence but does not execute or emulate the operations.
+Each `OperationData` document uses the envelope emitted by `KDUpdater::UpdateOperation::toXml()`:
+
+```xml
+<operation>
+  <arguments>
+    <argument>first literal argument</argument>
+  </arguments>
+  <values>
+    <value name="oldvalue" type="QString">backup evidence</value>
+  </values>
+</operation>
+```
+
+Arguments have already passed Qt IFW path relocation before serialization. An optional `UNDOOPERATION` marker separates perform arguments from rollback-control arguments. Scalar QVariant values are decoded conservatively; Qt `QDataStream`-encoded lists, maps, hashes, byte arrays, and generic variants remain marked encoded because their backup state is not needed to identify the operation's forward system effect.
+
+The parser bounds the segment and count, parses XML with DTD and external resolution disabled, validates both strings against the declared segment, and requires exact record consumption. It keeps `RawXml` and the legacy `Data` property for auditability, then projects source-defined operations into `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects`. Unknown operations remain in `Operations` with a warning rather than receiving guessed semantics. No operation is executed.
+
+Windows `RegisterFileType` writes are expanded into their HKCU or HKLM `Software\Classes` values, after which the shared registry-association analyzer derives `FileExtensions`, `Protocols`, `FileAssociationEffects`, and `ProtocolEffects`. `GlobalConfig` can also produce literal native registry writes; `Settings` always represents an INI-format filesystem mutation in current Qt IFW source. Environment-variable records distinguish persistent HKCU/HKLM writes from process-only values.
+
+Qt IFW registers its maintenance tool outside the performed-operation stream in `PackageManagerCorePrivate::registerMaintenanceTool()`. The parser therefore returns that source-defined registration separately as `AppsAndFeaturesEffects` and `AppsAndFeaturesEntries`, while including its individual values in `RegistryWrites`. A missing modern `ProductUUID` remains unresolved because Qt generates the uninstall-key UUID only while installing.
 
 ### Legacy component index
 
@@ -180,9 +199,13 @@ The installer configuration is normally available as `:/installer-config/config.
 
 ## Payload selection and nested execution
 
-Legacy components and modern resource collections both associate package names with archive ranges. The archive bytes are physically embedded unless the builder creates external or downloadable data. Qt IFW passes the selected package archives to its operation engine; archive order in the binary is not by itself execution order.
+Legacy components and modern resource collections both associate package names with archive ranges. The archive bytes are physically embedded unless the builder creates separate DAT content or repository packages. Qt IFW passes the selected package archives to its operation engine; archive order in the binary is not by itself execution order.
 
-Early releases normally use 7z archives. Qt IFW 4.2 moved package archive handling to libarchive and permits additional archive formats. Dumplings routes recognized 7z, ZIP, TAR, gzip, bzip2, and xz-family names through bounded SharpCompress readers. Password-protected archives and unavailable external package data remain unresolved evidence.
+Repository `Updates.xml` records use a `PackageUpdate` element. `Name` selects the component directory, `Version` prefixes each comma-separated `DownloadableArchives` value, and the resulting source path is `<repository>/<Name>/<Version><ArchiveName>`. For example, `Name=A`, `Version=1.0.0`, and `DownloadableArchives=content.7z` resolve to `A/1.0.0content.7z`. Installer configuration may supply remote URLs through `RemoteRepositories`; component scripts may add archive names through `addDownloadableArchive()`.
+
+The DAT cookie marks a complete sidecar binary-content container. A paired DAT inherits the executable's validated format profile because it may omit launcher version strings and configuration resources. Its trailer, collection index, archive ranges, and checks are still parsed independently against the DAT stream.
+
+Early releases normally use 7z archives. Qt IFW 4.2 moved package archive handling to libarchive and advertises `tar`, `tar.gz`, `tar.bz2`, `tar.xz`, `zip`, `7z`, and `qbsp`; the older lib7z route advertises only `7z` and `qbsp`. A `.qbsp` file is physically a 7z archive. Dumplings opens TAR, ZIP, 7z, and QBSP directly, while gzip, bzip2, and xz are explicitly decoded as bounded filters before opening the nested TAR catalog. Password-protected archives and unavailable external package data remain unresolved evidence.
 
 Extraction writes metadata RCC files and package archives using their logical collection/component paths. It validates traversal, collisions, link entries, archive counts, declared and actual expanded sizes, and the global output limit.
 
@@ -193,6 +216,18 @@ A cookie or source string alone is insufficient. Detection requires a supported 
 Exact framework versions come from the source-defined launcher strings `IFW Version: ...` or `Built with Qt Installer Framework ...`. The optional PE `FileVersion` corroborates newer media but never overrides the embedded IFW marker. The Qt runtime version comes from the `built with Qt ...` suffix when present.
 
 An unknown version at or beyond the catalog boundary may use the modern compatibility profile only after complete structural validation. It is reported with `IsFallback` and a warning. An incompatible or malformed index returns `IsQtInstallerFramework: true`, `IsSupported: false`, and diagnostic warnings.
+
+## Controller and component scripts
+
+Qt IFW stores controller and component scripts as named RCC resources. Installer configuration identifies a controller through `ControlScript`; package metadata identifies component scripts through `Script`. Generated media may omit `.js` or `.qs` from a controller resource name, so discovery combines the declared resource name with structural `function Controller()` and `function Component()` evidence. A successfully decoded RCC tree is traversed by leaf resource; its enclosing binary RCC buffer is never decoded again as one synthetic script.
+
+The parser returns each decoded script verbatim with its RCC path and inferred role. It does not pass source to QtScript, QJSEngine, Node.js, a browser, or another JavaScript runtime. This keeps parsing static and prevents an installer-controlled script from accessing the host.
+
+An assistive assignment index scans source order for conservative single-line `var`, `let`, `const`, property, and reassignment forms. Each site retains its line and complete right-hand expression. Literal strings use a bounded JavaScript escape decoder; numbers, booleans, null, direct references to earlier resolved assignments, and config-backed one-argument `installer.value()` or `component.value()` calls can be resolved. Reassignment records are retained independently because branch conditions determine runtime state.
+
+Concatenation, template expressions, function calls, host-object reads, environment and registry access, filesystem tests, package state, GUI state, network results, dynamic properties, multi-line expressions, and conditional outcomes remain unresolved. This is intentional: raw source remains authoritative, and unresolved manifest-critical behavior requires control-flow review or VM evidence.
+
+Script collection is bounded to 512 resources, 1 MiB of source bytes per decoded text resource, 4,194,304 characters across returned scripts, and 16,384 indexed assignment sites. Exceeding a bound rejects the script projection instead of returning truncated source that could be mistaken for complete evidence.
 
 ## Metadata projection
 
@@ -210,7 +245,9 @@ Every relative range is checked for negative values, overflow, file containment,
 
 ## Performance considerations
 
-One analysis context owns the validated layout, format profile, package collections, metadata resources, and text evidence for a top-level `Get-QtInstallerFrameworkInfo` call. The parser does not reopen and reparse the primary index for each projected field.
+One analysis context opens the input once and passes that caller-owned seekable stream through trailer discovery, package-index validation, operation decoding, version-marker scanning, PE layout/version/subsystem evidence, RCC metadata, and text-resource analysis. Readers restore the stream position after bounded random access. Parsed PE and IFW layouts, format profile, package collections, metadata resources, package declarations, and text evidence are reused for every projected field.
+
+This removes parser-local file-handle churn and repeated PE scans. It does not materially reduce the fresh-process baseline from loading PowerShell, PackageModule infrastructure, SharpCompress, and the GPL bridge process; compare operation-specific allocations separately from that module-loading baseline.
 
 Large package resources are copied through bounded streams. A temporary seekable file is created only for the selected nested archive because SharpCompress requires random access. The complete installer or overlay is never materialized as a PowerShell byte array.
 
@@ -224,20 +261,24 @@ Large package resources are copied through bounded streams. A temporary seekable
 | Qt IFW 2.0+ resource collections | Implemented | Complete collection/resource catalog validation |
 | Exact IFW and Qt runtime version | Implemented | Embedded source markers, optional PE corroboration |
 | Legacy and modern config names | Implemented | Maintenance-tool aliases normalized |
-| Performed-operation records | Implemented | Bounded name/XML pairs; no operation execution |
-| ProductName/ProductUUID ARP rules | Implemented | Runtime-generated UUID remains unresolved |
+| Performed-operation records | Implemented | Secure XML envelope decoding, perform arguments, scalar values, raw XML retention, and typed static effects; no operation execution |
+| Filesystem, registry, shortcut, and environment effects | Implemented | Source-defined built-in operation arguments are projected; opaque execution and unknown operations warn |
+| Protocol and file-association effects | Implemented | Derived from explicit `RegisterFileType` and native registry-write evidence |
+| ProductName/ProductUUID ARP rules | Implemented | Maintenance registration is reconstructed separately from operations; runtime-generated UUID remains unresolved |
 | GUI/CLI capability boundary | Implemented | 4.0 catalog capability plus PE subsystem/config |
-| 7z and libarchive-era archive extraction | Implemented | Supported SharpCompress formats are bounded |
+| All Qt-supported package formats | Implemented | Extraction regressions cover TAR, TAR+gzip, TAR+bzip2, TAR+xz, ZIP, 7z, and QBSP |
 | Unknown future compatible media | Implemented | Requires complete modern-route validation |
 | Password-protected archives | Not implemented | Returned as unsupported evidence |
-| Missing external/downloadable package data | Implemented evidence | Reported as `PayloadAvailability: ExternalOrUnavailable`; absent payload cannot be extracted |
-| Conditional controller/component scripts | Partial | Text evidence is reported; JavaScript is not emulated |
+| Embedded, sidecar, online, missing, and intentionally empty package data | Implemented | `Package`/`PackageUpdate`, `RemoteRepositories`, DAT cookies, adjacent sidecars, and embedded collections produce distinct availability evidence |
+| Caller-provided DAT and repository/package extraction | Implemented | Local DAT, repository root/`Updates.xml`, explicit archive, and package-directory inputs are bounded and traversal-safe; no network fetching |
+| Raw controller/component scripts | Implemented | Named RCC source is returned verbatim with role and bounded assignment-site values; JavaScript is never executed |
+| Conditional JavaScript control flow | Partial | Raw expressions and assignment sites are preserved; branches and host APIs require agent or VM analysis |
 
 ## Known gaps
 
-QtScript or JavaScript controller code may change target directory, scope, package selection, or runtime values conditionally. The parser reports relevant static mentions but does not execute scripts.
+QtScript or JavaScript controller code may change target directory, scope, package selection, operation arguments, or runtime values conditionally. The parser returns the complete source and conservative assignment evidence, but it does not interpret general control flow or execute scripts. Performed-operation effects describe records already serialized into maintenance media and do not predict operations that an installer script might add only at runtime.
 
-Separate package data cannot be recovered when it is not distributed beside the analyzed media. Encrypted package archives are identified by the archive reader but are not decrypted.
+Separate package data cannot be recovered unless the caller supplies a local DAT, repository, or package archive. Remote repository URLs are evidence only and are never fetched by the parser. Encrypted package archives are identified by the archive reader but are not decrypted.
 
 ## Implementation mapping
 
@@ -247,10 +288,14 @@ Separate package data cannot be recovered when it is not distributed beside the 
 
 ## Representative fixtures
 
-Catalog boundaries use official Qt IFW Windows installers for 1.3.0, 1.5.0, 2.0.5, 3.2.2, 4.0.0, and 4.2.0, plus the official Qt 4.11 online installer. Qt Linguist supplies a 3.0.6 GUI-only case. MSYS2, reMarkable, and Vulkan SDK cover distinct 4.x CLI and package-layout behavior. Synthetic fixtures cover 1.2-compatible records, future fallback, every marker/cookie pair, performed operations, and malformed indexes.
+Catalog boundaries use official Qt IFW Windows installers for 1.3.0, 1.5.0, 2.0.5, 3.2.2, 4.0.0, and 4.2.0, plus the official Qt 4.11 online installer. Qt Linguist supplies a 3.0.6 GUI-only case. MSYS2, reMarkable, and Vulkan SDK cover distinct 4.x CLI and package-layout behavior. Synthetic fixtures cover 1.2-compatible records, future fallback, every marker/cookie pair, decoded operation effects, malformed indexes, and every Qt-supported package archive suffix.
 
 ## Source references
 
 - [Qt Installer Framework source](https://github.com/qtproject/installer-framework)
+- [UpdateOperation XML serialization](https://github.com/qtproject/installer-framework/blob/master/src/libs/kdtools/updateoperation.cpp)
+- [Windows file-type registration operation](https://github.com/qtproject/installer-framework/blob/master/src/libs/installer/registerfiletypeoperation.cpp)
+- [Package archive factory](https://github.com/qtproject/installer-framework/blob/master/src/libs/installer/archivefactory.cpp)
+- [Maintenance-tool ARP registration](https://github.com/qtproject/installer-framework/blob/master/src/libs/installer/packagemanagercore_p.cpp)
 - [Qt Installer Framework release archive](https://download.qt.io/archive/qt-installer-framework/)
 - [Qt Installer Framework CLI](https://doc.qt.io/qtinstallerframework/ifw-cli.html)

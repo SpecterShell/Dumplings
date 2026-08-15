@@ -58,6 +58,9 @@ $Info.FrameworkVersionRange
 $Info.FormatGeneration
 $Info.FormatProfileId
 $Info.PayloadAvailability
+$Info.PayloadAvailabilityEvidence
+$Info.PackageMetadata
+$Info.RepositoryUrls
 $Info.Scope
 $Info.SupportedScopes
 $Info.ScopeEvidence
@@ -65,11 +68,31 @@ $Info.RequiresExplicitInstallLocation
 $Info.SupportsExistingInstallationOverride
 $Info.RecommendedUpgradeBehavior
 $Info.UpgradeEvidence
+$Info.FileSystemEffects
+$Info.RegistryWrites
+$Info.ShortcutEffects
+$Info.FileExtensions
+$Info.Protocols
+$Info.AppsAndFeaturesEffects
 $Info.Warnings
 
 $ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -Name '*.exe' -CollisionAction Rename
 Get-ChildItem -Path $ExpandedPath -Recurse -File
 ```
+
+When scripts are present, read the returned source directly instead of inferring behavior from isolated keyword matches:
+
+```powershell
+$Info.KnownInstallerValues
+$Info.JavaScriptResources | Select-Object Source, Role, VariableAssignments, RawJavaScript
+$Info.JavaScriptAnalysisInstructions
+```
+
+`RawJavaScript` is the complete decoded controller or component script and is the primary evidence. Read it verbatim. `VariableAssignments` is an assignment-site index that preserves each variable name, declaration kind, line, right-hand expression, resolution state, value, value type, and resolution source. It deliberately does not collapse repeated assignments into one supposed final value.
+
+`IsResolved: true` means the right-hand value at that assignment site is statically known; it does not prove the branch executes or that the value becomes the variable's final runtime state. The parser resolves quoted literals, numbers, booleans, null, direct references to earlier resolved assignments, and one-argument `installer.value()` or `component.value()` calls backed by `KnownInstallerValues`. Calls into the host, concatenation, runtime state, branch-dependent expressions, and other JavaScript remain unresolved with the original expression intact.
+
+Follow `JavaScriptAnalysisInstructions`: trace `Controller`, `Component`, prototype callbacks, page callbacks, `beginInstallation`, `createOperations*`, `installer.setValue`, `component.setValue`, package selection, downloadable archives, and operation calls. Evaluate user/machine scope, elevation, architecture, CLI/GUI mode, installer role, and online/offline branches separately. Never execute returned JavaScript on the host; use the VM when manifest-critical behavior depends on environment, registry, filesystem, network, GUI, user input, dynamic property access, `eval`, or another unresolved call.
 
 Use the same result to classify the command-line interface and install-location behavior:
 
@@ -88,9 +111,33 @@ The CLI uses `--root` when supplied and otherwise falls back to config `<TargetD
 
 When `RequiresExplicitInstallLocation` is false, omit `--root` from the ordinary silent switches and expose it as the optional `InstallLocation` switch instead.
 
-The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence. `FrameworkVersion` identifies Qt IFW itself; it is not the packaged application's `PackageVersion`. `PayloadAvailability: ExternalOrUnavailable` means no embedded package archive was indexed, as with an online installer; extraction can recover local metadata but cannot recover data that the media downloads at runtime.
+The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence. `FrameworkVersion` identifies Qt IFW itself; it is not the packaged application's `PackageVersion`.
+
+Use `PayloadAvailability` with `PayloadAvailabilityEvidence`, `PackageMetadata`, and `RepositoryUrls` rather than treating every archive-free binary as an online installer:
+
+| Value | Meaning |
+| --- | --- |
+| `Embedded` | At least one package archive is indexed in the analyzed binary content. |
+| `SidecarData` | The input is a DAT container or a same-base `.dat` sidecar is present. Supply any differently named paired DAT file explicitly with `-DataPath` for extraction. |
+| `OnlinePackages` | Embedded `PackageUpdate` records, `<RemoteRepositories>`, or static `addDownloadableArchive()` evidence proves repository delivery. The parser reports URLs and archive names but does not download them. |
+| `MissingFiles` | Package archive declarations exist without a resolved embedded, sidecar, or online source, or no package metadata proves that an archive-free medium is intentional. |
+| `IntentionallyEmpty` | Package metadata exists and declares no archives or dynamic downloadable archive additions. |
 
 `Expand-QtInstallerFramework` writes RCC files with their virtual paths, raw modern resources under `metadata\<collection>`, raw legacy component archives under `packages\<component>`, and selected files from embedded archives under `packages\<component>\<archive>`. Extraction uses the GPL parser process with bounded, traversal-safe paths and no external archive executable.
+
+Supply local external content explicitly. `-DataPath` accepts paired Qt IFW DAT containers, `-RepositoryPath` accepts local repository roots or `Updates.xml`, and `-PackagePath` accepts package archive files or directories. Repository resolution follows Qt IFW's source-defined `<component>\<version><archive>` convention. These parameters never fetch network URLs:
+
+```powershell
+$ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -DataPath $PairedDat -Name '*.dll' -CollisionAction Rename
+$ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -RepositoryPath $LocalRepository -Name '*.exe' -CollisionAction Rename
+$ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -PackagePath $DownloadedPackageArchives -Name '*' -CollisionAction Rename
+```
+
+Qt IFW package archives can be TAR, TAR+gzip, TAR+bzip2, TAR+xz, ZIP, 7z, or QBSP. QBSP is physically 7z. The extractor handles each source-supported format directly and validates selected-entry paths, links, collisions, entry counts, expanded sizes, and total output before writing.
+
+Maintenance media can contain performed-operation XML. `Operations` retains each decoded argument/value envelope and its raw XML, while `OperationEffects`, `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects` provide static projections of built-in Qt IFW operations. Read an operation's `Warnings` and `RawXml` when its name is unknown or it launches another process. These projections describe operations already serialized into the media; they do not replace reviewing controller/component JavaScript that conditionally adds operations at runtime.
+
+`FileExtensions`, `Protocols`, `FileAssociationEffects`, and `ProtocolEffects` are derived only from explicit registry-write evidence such as `RegisterFileType` or `GlobalConfig`. Do not infer missing associations from package names or payload extensions. `AppsAndFeaturesEffects` reconstructs Qt IFW's separate maintenance-tool registration from installer configuration and source-defined runtime behavior.
 
 ### Resolve product UUID and visible ARP identity
 
@@ -129,7 +176,7 @@ Other Qt IFW family examples that must be classified individually:
 
 ### Validate ambiguous interface or script behavior
 
-Do not execute `--help` on the host to distinguish variants. Use PE subsystem and parser evidence. Require VM validation when `InterfaceVariant` is unknown, subsystem and marker evidence conflict, scripts conditionally modify `AllUsers`, the product UUID is generated at runtime, or the package requires a controller script.
+Do not execute `--help` on the host to distinguish variants. Use PE subsystem and parser evidence. Require VM validation when `InterfaceVariant` is unknown, subsystem and marker evidence conflict, `JavaScriptResources` contain unresolved manifest-critical control flow, scripts conditionally modify `AllUsers`, the product UUID is generated at runtime, or the package requires a controller script.
 
 ## Manifest shape
 
@@ -170,7 +217,7 @@ WinGet supplies no Qt IFW defaults for generic `InstallerType: exe`. Treat the C
 
 ## Apps & Features
 
-Use structured parser evidence to identify the visible Apps & Features owner. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
+Use `AppsAndFeaturesEffects` and `AppsAndFeaturesEntries` to identify the visible maintenance-tool registration. Qt IFW writes this entry outside the performed-operation stream, so an empty `Operations` collection does not mean the installer lacks ARP registration. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
 
 ## Scope and architecture
 
