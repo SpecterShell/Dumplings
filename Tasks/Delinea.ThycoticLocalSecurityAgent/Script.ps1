@@ -1,13 +1,13 @@
-# x86
-$Object1 = $Global:DumplingsStorage.DelineaDownloadPage.SelectSingleNode('//tr[contains(./td[2], "Local Security Solution Agent (x86)")]')
-$VersionX86 = [regex]::Match($Object1.SelectSingleNode('./td[1]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 # x64
-$Object2 = $Global:DumplingsStorage.DelineaDownloadPage.SelectSingleNode('//tr[contains(./td[2], "Local Security Solution Agent (x64)")]')
-$VersionX64 = [regex]::Match($Object2.SelectSingleNode('./td[1]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
+$Object1 = $Global:DumplingsStorage.DelineaDownloadPage.SelectSingleNode('//tr[contains(./td[2], "Local Security Solution Agent (x64)")]')
+$VersionX64 = [regex]::Match($Object1.SelectSingleNode('./td[1]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
+# arm64
+$Object2 = $Global:DumplingsStorage.DelineaDownloadPage.SelectSingleNode('//tr[contains(./td[2], "Local Security Solution Agent (ARM64)")]')
+$VersionARM64 = [regex]::Match($Object2.SelectSingleNode('./td[1]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
+if ($VersionX64 -ne $VersionARM64) {
   $this.Log("x64 version: ${VersionX64}")
+  $this.Log("arm64 version: ${VersionARM64}")
   throw 'Inconsistent versions detected'
 }
 
@@ -16,11 +16,11 @@ $this.CurrentState.Version = $VersionX64
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
+  Architecture = 'x64'
   InstallerUrl = $Object1.SelectSingleNode('./td[2]//a').Attributes['href'].Value
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
+  Architecture = 'arm64'
   InstallerUrl = $Object2.SelectSingleNode('./td[2]//a').Attributes['href'].Value
 }
 
