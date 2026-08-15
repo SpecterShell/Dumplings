@@ -1,8 +1,10 @@
-$Object1 = Invoke-WebRequest -Uri 'https://docs.wasabi.com/docs/how-do-i-use-wasabi-explorer-for-windows-with-wasabi'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+    param($Page)
+    $null = Open-PlaywrightPage -Page $Page -Uri 'https://docs.wasabi.com/docs/how-do-i-use-wasabi-explorer-for-windows-with-wasabi'
+    Read-PlaywrightLocator -Page $Page -Selector 'xpath=//a[contains(@href, ".exe") and contains(@href, "WasabiExplorerSetup")]' -Property Attribute -AttributeName href
+  }
 }
 
 # Version

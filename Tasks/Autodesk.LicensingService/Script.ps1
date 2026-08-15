@@ -1,5 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/f5IhBc15i0kOwzBb8lcEN.html'
-$Object2 = $Object1.Content | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/f5IhBc15i0kOwzBb8lcEN.html'
+  Read-PlaywrightPageContent -Page $Page
+}
+$Object2 = $Object1 | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
 $Object3 = $Object2.caasData.response | Get-EmbeddedLinks
 
 # Installer

@@ -1,4 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.autodesk.com/products/design-review/download' | ConvertFrom-Html
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.autodesk.com/products/design-review/download'
+  Read-PlaywrightPageContent -Page $Page
+} | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//*[@data-cmp-hook-accordion="summaryRoot" and contains(., "Version x64")]/following-sibling::*[@data-cmp-hook-accordion="panel"]')
 
 # Installer
