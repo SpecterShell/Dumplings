@@ -1,8 +1,15 @@
-$Object1 = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Connect for Desktop'.Windows.GetEnumerator() | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value) } -Bottom 1
+$Objects = @($Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Connect for Desktop'.Windows.GetEnumerator())
+$LatestVersion = $Objects | ForEach-Object { [regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value } | Sort-Object -Property { [ChunkVersion]$_ } -Bottom 1
+$InstallerUrls = $Objects.Where({ [regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value -eq $LatestVersion }) | ForEach-Object { $_.Value.url_s.GetEnumerator() }
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Value.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 11') }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrls.Where({ $_.Value -match '(?i)-X64\.exe$' }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $InstallerUrls.Where({ $_.Value -match '(?i)-Arm64\.exe$' }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
 }
 
 # Version
