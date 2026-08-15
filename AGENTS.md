@@ -272,10 +272,7 @@ families in separate Pester files rather than growing generic catch-all suites.
 Use generated fixtures for structural edge cases and at least three meaningfully
 different real installers when format behavior could vary.
 
-Downloaded test installers live under the persistent sibling cache
-`../Dumplings-TestFixtures`, managed by each submodule's `Tests/TestFixture.ps1`.
-Do not depend on `Downloads`, `Temp`, `Sandbox`, or a user's submission-installer
-directory. Never commit large installer binaries merely to stabilize a test.
+Downloaded test installers live under `../Dumplings-TestFixtures/Installers/<Family>/<PackageIdentifier>/<Version>`, curated builder outputs under `Builders`, source trees under `Sources`, and manual evidence under `Research`. Both parser submodules use the byte-identical `Tests/Support/TestFixture.ps1` helper and its canonical relative-path API. Synthetic fixtures, decompressed payloads, extraction trees, and inspection output belong to Pester's `$TestDrive`; do not persist them in the durable cache. Do not depend on `Downloads`, `Temp`, `Sandbox`, or a user's submission-installer directory. Never commit large installer binaries merely to stabilize a test.
 
 Pester mocks apply in the session state where the call executes. When the code
 under test calls a helper that lives in another module, mock it with

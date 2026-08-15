@@ -169,7 +169,7 @@ Run ScriptAnalyzer on a changed module when available:
 Invoke-ScriptAnalyzer .\Modules\PackageModule\Libraries\Example.psm1
 ```
 
-Installer fixtures are cached outside user download and temporary directories. Tests must not execute installers.
+Downloaded fixtures are cached under the sibling `../Dumplings-TestFixtures/Installers/<Family>/<PackageIdentifier>/<Version>` catalog, while curated builder media and source trees live under `Builders` and `Sources`. Synthetic fixtures and extraction output belong to Pester's `$TestDrive`; tests must not execute installers.
 
 ## License
 

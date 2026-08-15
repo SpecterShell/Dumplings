@@ -121,20 +121,26 @@ Known `.ism` schema values include:
 | 761 | InstallShield 11 |
 | 763 | InstallShield 11.5 |
 | 765 | InstallShield 12 |
-| 766-767 | InstallShield 2008 variants |
+| 766 | InstallShield 2008 |
+| 767 | InstallShield 2008 variant reported by secondary mappings |
 | 768 | InstallShield 2009 |
-| 769-770 | InstallShield 2010 aliases |
+| 769 | InstallShield 2010; observed in the official InstallShield 2010 SP1 builder project |
+| 770 | InstallShield 2010 alias reported by secondary mappings |
 | 771 | InstallShield 2011 |
 | 772 | InstallShield 2012 |
 | 773 | InstallShield 2012 Spring |
-| 774-780 | InstallShield 2013 through 2019 |
-| 783-784 | InstallShield 2020 revisions |
+| 774-780 | InstallShield 2013 through the initial InstallShield 2019 schema sequence |
+| 781 | InstallShield 2019 R2 |
+| 782 | InstallShield 2019 R3 |
+| 783 | InstallShield 2020 R1 |
+| 784 | InstallShield 2020 R2 or R3; the observed secondary mappings remain ambiguous |
+| 785 | InstallShield 2021 R1 |
 | 787 | InstallShield 2022 R2 |
 | 789 | InstallShield 2023 R2 |
 | 791 | InstallShield 2025 R1 |
 | 792 | InstallShield 2026 R1 |
 
-The gaps are intentional. Some point releases and hotfixes did not change the schema, and not every schema has been grounded in an official project. Values 769/770 and 783/784 must retain their known alias ambiguity rather than being forced to one invented release.
+The gaps are intentional. Some point releases and hotfixes did not change the schema, and not every schema has been grounded in an official project. Official `Othello.ism` projects extracted from the InstallShield 2008, 2009, 2010 SP1, 2011, 2012 Spring, 2013, 2015, 2019 R2, 2019 R3, 2020 R1, and 2021 R1 builders ground schemas 766, 768, 769, 771, 773, 774, 776, 781, 782, 783, and 785 respectively. Schema 770 and the two reported interpretations of schema 784 remain secondary evidence and must stay distinguishable from those observations.
 
 Schema mappings apply only when the authored project database is available. They should not be inferred from raw strings in a shipped installer.
 
@@ -142,7 +148,7 @@ Schema mappings apply only when the authored project database is available. They
 
 Trusted InstallShield runtime PE files can carry product and file versions. A runtime is considered trustworthy when its own product name, file description, or company identity names InstallShield/InstallScript and the historical vendor, not merely because an application setup contains an InstallShield copyright string.
 
-Runtime versions can include build and service-pack information. A compatibility stub can be older than the project that selected it. Canonical nested files such as `Setup.exe` or `Setup.dll` can therefore provide useful runtime evidence while remaining independent from the outer application executable.
+Runtime versions can include build and service-pack information. Exact product identities and versions can distinguish release revisions even when the Advanced UI namespace contains only a year. Verified examples include `InstallShield 2019 R2` with outer runtime `25.0.676` and main MSI version `25.1.0000`, `InstallShield 2019 R3` with outer runtime `25.0.764` and main MSI version `25.2.0000`, `InstallShield 2020 R1` with outer runtime `26.0.546`, and `InstallShield 2021 R1` with outer runtime `27.0.58`. A compatibility stub can be older than the project that selected it. Canonical nested files such as `Setup.exe` or `Setup.dll` can therefore provide useful runtime evidence while remaining independent from the outer application executable.
 
 ## Setup.ini engine version
 
