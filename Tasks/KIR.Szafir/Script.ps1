@@ -2,7 +2,7 @@ $Object1 = $Global:DumplingsStorage.KIRDownloadPage.SelectSingleNode('//div[@cla
 $VersionX86Matches = [regex]::Match($Object1.InnerText, '(\d+(?:\.\d+)+)\.?\s*build (\d+)')
 $VersionX86 = "$($VersionX86Matches.Groups[1].Value).$($VersionX86Matches.Groups[2].Value)"
 
-$Object2 = $Global:DumplingsStorage.KIRDownloadPage.SelectSingleNode('//div[@class="drivers__text" and contains(., "Szafir wersja MSI") and contains(., "Windows") and contains(., "32-bit")]')
+$Object2 = $Global:DumplingsStorage.KIRDownloadPage.SelectSingleNode('//div[@class="drivers__text" and contains(., "Szafir wersja MSI") and contains(., "Windows") and contains(., "64-bit")]')
 $VersionX64Matches = [regex]::Match($Object2.InnerText, '(\d+(?:\.\d+)+)\.?\s*build (\d+)')
 $VersionX64 = "$($VersionX64Matches.Groups[1].Value).$($VersionX64Matches.Groups[2].Value)"
 
