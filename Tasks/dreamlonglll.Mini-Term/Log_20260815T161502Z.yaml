@@ -1,0 +1,40 @@
+Version: 0.13.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.13.0/Mini-Term_0.13.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.13.0/Mini-Term_0.13.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    同一个任务，并排试两条思路 —— AI 会话分支树
+    本版合入社区贡献者 @hitechr 的功能批次（#47，31 个提交 / 37 个文件），review 反馈（两处必修 + 两处 minor）已由作者逐条落实。
+    ✨ 新功能
+    - 分支会话到新分屏 — pane / 终端右键「分支会话到新分屏」：原会话原地继续跑，旁边分出的新 pane 里是复制出来的分支（Claude 走 claude --resume <id> --fork-session，Codex 走 codex fork <id>）。命令全部经白名单模板产出，注入向量有测试覆盖
+    - 历史面板分支树视图 — 平铺｜树一键切换：fork 出的会话按缩进连线挂在父会话下，正在跑的节点带状态点；点任意节点——已开的切过去聚焦，没开的新终端自动恢复。分支节点显示「分叉后第一问」（父子会话用户消息前缀比对——Claude CLI fork 不写行级标记，标记不可依赖）
+    - 悬停家族面板 — 右键「查看会话分支」悬停即展开当前会话的家族全貌：家族树 + 当前位置标记 + 从任意节点再岔一条
+    - 厂商图标跟最新模型走 — 树与面板的厂商图标按会话最新使用的模型显示：claude CLI 挂 GLM / DeepSeek 中转时亮的是真实厂商的 icon（pane 标签上的 CLI 图标不变）
+    - grok 可从树 / 浮层恢复 — grok 补 resume 能力位，点击节点新终端 grok --resume；无 CLI 级 fork，分支入口不出现
+    - npm run package 一键出正式包 — 构建 + 产物收集一条命令走完
+    - 用量统计 KPI 行新增 Token 总数卡
+    🐛 修复
+    - 背景图皮肤下浮层看不清 — 抽屉与 Git 分支下拉补毛玻璃托底、右侧抽屉底色改不透明——盖在终端文字上的浮层按「浮层不透明」原则处理
+    - codex resume 后分支入口消失 — codex resume 不重新上报 SessionStart，恢复出的新 pane 现在当场写回会话身份，不再干等 hook
+    - hook 未注册时入口静默消失 — 输入检测认出 AI 在跑但拿不到会话身份时，菜单置灰并提示原因，不再让人以为功能坏了
+    🔒 安全
+    - session id 白名单统一 — 新增 session_id_path_safe：凡前端参数 / 持久化数据拼进会话文件路径的四处入口（本机 / WSL / SSH 远程）统一过 ^[A-Za-z0-9_-]+$ 白名单，附 ../ 等穿越向量测试
+    🔧 内部
+    - 新 command scan_session_lineage（70 → 71） — Claude forkedFrom + Codex forked_from_id 双源磁盘扫描分支边，与前端 fork 时的自记账边合并、磁盘优先——覆盖 Claude CLI fork 不落盘指针的缺口
+    - 能力位表 AgentBranchCaps 与树构建是纯逻辑，Node 测试直测；自记账边随 config 持久化（量级字节级，清理策略已留档）
+    ⚠️ 已知限制
+    - WSL / SSH 远程来源的会话记录在别的机器 / 发行版里，本地 resume 恢复不了，点击会提示
+    - grok 无 CLI 级 fork（--resume 是接管不是复制），只有恢复、没有分支
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.12.1...v0.13.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.13.0
+ReleaseTime: 2026-08-15T15:34:29.0000000Z
