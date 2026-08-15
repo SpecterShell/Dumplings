@@ -1,0 +1,58 @@
+Version: 0.2.19
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.19/Grok_0.2.19_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.19
+    Highlight: SuperGrok quota auto-refresh every 10 minutes; macOS Release notarization when Apple secrets are present; first launch follows the OS language; mid-turn steer no longer flashes the transcript; composer clears as soon as the user bubble appears.
+    中文 · 亮点： SuperGrok 额度每 10 分钟自动刷新；仓库配齐 Apple secrets 后 macOS Release 会公证；首次安装跟随系统语言；中途引导不再闪聊天；发送后输入框立刻清空。
+    Changed
+    - Official SuperGrok quota auto-refresh: Background probe every 10 minutes. Settings → Account, the sidebar user-menu (remaining %), tray Usage, and the usage-limit modal all follow the same snapshot. Quiet billing-only ticks (no spinner, no heatmap walk); last good numbers stay on soft-fail.
+    - macOS Release signing / notarization: When Apple Developer ID + App Store Connect API secrets are present, release.yml codesigns and notarizes the .app / .dmg (Hardened Runtime entitlements include microphone + camera). Forks without secrets stay unsigned.
+    中文 · 变更
+    - 官方 SuperGrok 额度自动刷新：后台每 10 分钟拉一次。设置 → 账户、主页左下角用户面板（剩余 %）、托盘 Usage、用量限制弹层共用同一份快照。后台为静默、只刷新账单（不扫热力图）；失败时保留上次数字。
+    - macOS Release 签名 / 公证：仓库配齐 Developer ID + App Store Connect API secrets 后，release.yml 会对 .app / .dmg 做 codesign 与公证（Hardened Runtime 含麦克风 / 摄像头 entitlements）。未配 secrets 的 fork 仍出未签名包。
+    Fixed
+    - Chat no longer flashes after mid-turn steer: Leftover Host chunks on the pre-steer assistant id no longer revive that bubble. The Worked-for rail stays a one-line header (full tool list is capped) instead of swapping collapsed ↔ hundreds of rows.
+    - Composer clears as soon as the user bubble appears: Send no longer waits for ensureConnected / sessionSend to wipe the input. A failed send puts the text back if the box is still empty; follow-up typed during a slow send is never wiped.
+    - Follow system language on first launch: New installs default settings.locale to System. Host reads macOS AppleLanguages / Windows UI language (not just LANG=C), so a Chinese OS opens in 简体/繁體. Existing installs that still have the factory en lift once to System (explicit 简体/繁體 stays). Boot splash and tray follow the same probe.
+    - English token units (#613): Context-window chip, composer model menu, phone tools sheet, heatmap, and account call-log counts use K / M / B when locale is en (e.g. 500K, 1M) instead of Chinese 百/千/万. zh / zh-TW still use 万 · 萬 / 亿 · 億.
+    中文 · 修复
+    - 中途引导后聊天不再狂闪：旧助手 id 上残留的 Host 分片不再把已冻结气泡重新标成 streaming。「工作了」活动轨保持一行标题（工具列表有高度上限），不会在收起和整段工具行之间来回切。
+    - 发送后输入框立刻清空：用户气泡一出现就清 composer，不再等连接 / sessionSend 成功。发送失败且框仍空时回填原文；慢发送期间新打的字不会被清掉。
+    - 首次安装跟随系统语言：新安装默认「跟随系统」。Host 读取 macOS AppleLanguages / Windows 界面语言（不再只看经常为空的 LANG），中文系统会直接进入简体/繁体。旧安装里仍是出厂 en 的一次性改成跟随系统（用户已选的中文不变）。启动页与托盘同一套探测。
+    - 英文 Token 单位 (#613)：界面语言为英文时，上下文芯片、模型菜单、热力图与通话记录显示 K / M / B，不再混用「万 / 千 / 百」。简体/繁体仍用中文计数单位。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.19
+    Highlight: SuperGrok quota auto-refresh every 10 minutes; macOS Release notarization when Apple secrets are present; first launch follows the OS language; mid-turn steer no longer flashes the transcript; composer clears as soon as the user bubble appears.
+    中文 · 亮点： SuperGrok 额度每 10 分钟自动刷新；仓库配齐 Apple secrets 后 macOS Release 会公证；首次安装跟随系统语言；中途引导不再闪聊天；发送后输入框立刻清空。
+    Changed
+    - Official SuperGrok quota auto-refresh: Background probe every 10 minutes. Settings → Account, the sidebar user-menu (remaining %), tray Usage, and the usage-limit modal all follow the same snapshot. Quiet billing-only ticks (no spinner, no heatmap walk); last good numbers stay on soft-fail.
+    - macOS Release signing / notarization: When Apple Developer ID + App Store Connect API secrets are present, release.yml codesigns and notarizes the .app / .dmg (Hardened Runtime entitlements include microphone + camera). Forks without secrets stay unsigned.
+    中文 · 变更
+    - 官方 SuperGrok 额度自动刷新：后台每 10 分钟拉一次。设置 → 账户、主页左下角用户面板（剩余 %）、托盘 Usage、用量限制弹层共用同一份快照。后台为静默、只刷新账单（不扫热力图）；失败时保留上次数字。
+    - macOS Release 签名 / 公证：仓库配齐 Developer ID + App Store Connect API secrets 后，release.yml 会对 .app / .dmg 做 codesign 与公证（Hardened Runtime 含麦克风 / 摄像头 entitlements）。未配 secrets 的 fork 仍出未签名包。
+    Fixed
+    - Chat no longer flashes after mid-turn steer: Leftover Host chunks on the pre-steer assistant id no longer revive that bubble. The Worked-for rail stays a one-line header (full tool list is capped) instead of swapping collapsed ↔ hundreds of rows.
+    - Composer clears as soon as the user bubble appears: Send no longer waits for ensureConnected / sessionSend to wipe the input. A failed send puts the text back if the box is still empty; follow-up typed during a slow send is never wiped.
+    - Follow system language on first launch: New installs default settings.locale to System. Host reads macOS AppleLanguages / Windows UI language (not just LANG=C), so a Chinese OS opens in 简体/繁體. Existing installs that still have the factory en lift once to System (explicit 简体/繁體 stays). Boot splash and tray follow the same probe.
+    - English token units (#613): Context-window chip, composer model menu, phone tools sheet, heatmap, and account call-log counts use K / M / B when locale is en (e.g. 500K, 1M) instead of Chinese 百/千/万. zh / zh-TW still use 万 · 萬 / 亿 · 億.
+    中文 · 修复
+    - 中途引导后聊天不再狂闪：旧助手 id 上残留的 Host 分片不再把已冻结气泡重新标成 streaming。「工作了」活动轨保持一行标题（工具列表有高度上限），不会在收起和整段工具行之间来回切。
+    - 发送后输入框立刻清空：用户气泡一出现就清 composer，不再等连接 / sessionSend 成功。发送失败且框仍空时回填原文；慢发送期间新打的字不会被清掉。
+    - 首次安装跟随系统语言：新安装默认「跟随系统」。Host 读取 macOS AppleLanguages / Windows 界面语言（不再只看经常为空的 LANG），中文系统会直接进入简体/繁体。旧安装里仍是出厂 en 的一次性改成跟随系统（用户已选的中文不变）。启动页与托盘同一套探测。
+    - 英文 Token 单位 (#613)：界面语言为英文时，上下文芯片、模型菜单、热力图与通话记录显示 K / M / B，不再混用「万 / 千 / 百」。简体/繁体仍用中文计数单位。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.19
+ReleaseTime: 2026-08-15T09:31:46.0000000Z
