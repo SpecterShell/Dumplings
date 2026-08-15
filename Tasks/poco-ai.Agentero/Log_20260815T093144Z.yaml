@@ -1,0 +1,67 @@
+Version: 0.6.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.2/Agentero_0.6.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.2/Agentero_0.6.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release turns Plaza from Cool Papers browsing into a full discovery surface: ModelScope papers, research-lifecycle Skill picks, and local RSS / Atom feeds. Settings gains S3-compatible vault cloud sync with background auto-sync, and authoritative paper fields are projected to metadata.json so backups and multi-device restore do not need the catalog database. Layout-analysis jobs that queued forever, Cool Papers note fetches that crashed, and missing Kimi notes on venue papers are fixed.
+    Features
+    - S3-compatible vault cloud sync: Settings → Sync can connect to R2 / MinIO / AWS S3 and other object stores. Content is deduplicated by hash and the remote advances through immutable manifests plus a CAS pointer. Divergent Markdown keeps the newer copy and saves the older one as a conflict file; other files are last-write-wins by mtime. Auto-sync is on by default: once on open, again 30 seconds after the vault goes quiet, on a 15 / 30 / 60-minute interval as fallback, and a best-effort push on exit. Credentials live in on-device sync.json with secrets masked outbound. (commit by @qychen2001)
+    - Plaza feeds: Plaza gains a native Feeds panel. Paste an RSS / Atom / JSON Feed URL (arXiv categories have shortcut chips). Paper cards import through the magic wand; short items open a detail view that fetches the full text and renders Markdown. Feeds can be pinned. An empty source is not saved. Data stays in the on-device XDG feeds.sqlite. The CLI exposes agentero feed add|list|remove. (commit by @Phil-Fan)
+    - ModelScope papers: Plaza adds the ModelScope papers source and embeds modelscope.cn/papers (Chinese abstracts and scores). List cards and the detail page inject an import action that reuses the existing arXiv magic-wand path for the id and LaTeX source. Only /papers* stays in-app; login and off-site links hand off to the system browser, and no login state is injected. (commit by @Phil-Fan)
+    - Skill recommendations: Plaza adds curated GitHub Skills grouped by reading / writing / figures / reproduction / submission. Clicking a card reuses the magic-wand Skill import. Zotero-style library packs are excluded. (commit by @Phil-Fan)
+    - Plaza toggle: Settings → General can turn Plaza off. The sidebar hides it, open Plaza tabs close, and the Plaza panel is not mounted (including the site proxy and feed polling). (commit by @Phil-Fan)
+    Improvements
+    - Authoritative paper-field sidecar: Every catalog write mirrors tags, read state, URLs, and related fields into papers/<id>/metadata.json. If the catalog is lost, paper_rescan can restore rows from the sidecar, so vault backups and cloud sync do not need to carry SQLite. (commit by @qychen2001)
+    - Fetch Cool Paper notes from the toolbar: Opening a paper NOTES.md shows a Notes button on the right of the Markdown toolbar, which appends the papers.cool Kimi analysis to the current note. Paper Info no longer hosts this action. (commit by @Phil-Fan)
+    - Paddle API layout analysis can run in parallel: Local ONNX stays serial so jobs do not contend for the model. Switching to the Paddle API backend in Settings no longer inherits that cap=1, so several papers can analyze at once. Changing backends immediately drains the queued jobs. (commit by @Phil-Fan)
+    - UI copy routed through i18n: Leftover hardcoded English in Plaza, the file tree, shared dialogs / accessibility labels, and toast and job titles now goes through t(), so the Chinese UI no longer mixes untranslated strings. (commit by @qychen2001)
+    - Star us on GitHub on the About pane: Settings → About gains a Star button next to the title that opens the repository; the icon flashes yellow. (commit by @Phil-Fan)
+    Fixes
+    - Layout-analysis jobs queued forever: Finishing the first layout-analysis job never released the concurrency slot, so later jobs stayed Waiting permanently, and cancel sometimes resurrected a finished row. Terminal reports and cancel now both free the slot and drain the queue immediately. (commit by @Phil-Fan)
+    - Cool Papers note fetch crash and Plaza stutter: Entity decoding sliced on a raw byte limit, so Chinese after & panicked the Host and Fetch notes failed. Plaza also built a fresh TLS connection per asset, which stuttered behind a local proxy. Decoding now respects character boundaries, and the HTTP client reuses a connection pool. (commit by @Phil-Fan)
+    - Missing Kimi notes on venue papers: Venue imports such as 38818@AAAI previously matched only on the exact title, so a truncated search-result title showed nothing. Lookup now prefers source_url / the venue id and allows a long title-prefix match. (commit by @Phil-Fan)
+    - Feeds context menu would not open: Radix ContextMenu did not pop in a Dockview panel. The left-hand feed list now uses the same floating menu as the file tree, with a ⋯ fallback on hover. (commit by @Phil-Fan)
+    - Clicking Plaza expands its sources: After collapsing Plaza, clicking the row only opened the home view and left the children hidden. The Plaza row now toggles expand / collapse like a folder. (commit by @Phil-Fan)
+    - Transient sync transport errors retry automatically: S3 requests retry up to 3 times with backoff on connect-level failures, and error messages walk the full cause chain instead of stopping at “error sending request”. (commit by @qychen2001)
+    Known Limitations
+    - Cloud sync does not yet validate untrusted remotes: The sync engine in this tag does not reject path traversal, malformed hashes, or oversized gzip output in a remote manifest, and it does not require HTTPS for non-loopback endpoints. Connect only to object storage you control.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 新增广场入口：Cool Papers 浏览、ModelScope 论文、按科研流程分类的 Skill 推荐，以及 RSS 订阅。
+    - S3 云同步
+    新功能
+    - S3 兼容的 Vault 云同步：设置 → 同步可连接 R2 / MinIO / AWS S3 等对象存储。内容按哈希去重，远端用不可变清单加 CAS 指针推进；两侧都改过的 Markdown 保留较新的一份，较旧的另存为 conflict 副本，其余文件按修改时间取后写。默认开启自动同步：打开 Vault 同步一次、改动静置 30 秒后再同步、按 15 / 30 / 60 分钟间隔兜底，退出时尽力推送。凭据存在本机 sync.json，密钥出站掩码。（commit by @qychen2001）
+    - 广场订阅：广场下新增原生「订阅」面板，粘贴 RSS / Atom / JSON Feed URL（arXiv 分区有快捷芯片）。论文卡走魔棒入库，短讯卡打开详情并抓全文用 Markdown 渲染；订阅可置顶。空源不会写入订阅列表。数据留在本机 XDG feeds.sqlite。CLI 提供 agentero feed add|list|remove。（commit by @Phil-Fan）
+    - ModelScope 论文：广场新增魔搭论文源，内嵌浏览 modelscope.cn/papers（中文摘要与评分）。列表卡片和详情页注入「入库」，走现有 arXiv 魔棒路径拿到 id 与 LaTeX 源码。只在 /papers* 内原地浏览，登录与站外链接交给系统浏览器，不注入登录态。（commit by @Phil-Fan）
+    - Skill 推荐：广场新增按阅读 / 写作 / 绘图 / 复现 / 投稿分类的精选 GitHub Skill。点卡片复用魔棒 Skill 导入；不含 Zotero 类仓库。（commit by @Phil-Fan）
+    - 广场开关：设置 → 通用可关闭广场。关闭后侧栏隐藏、已开 tab 关掉，并且不再挂载广场面板（含站点代理与订阅轮询）。（commit by @Phil-Fan）
+    改进
+    - 论文权威字段 sidecar: 每次写入 catalog 都会把标签、已读状态、URL 等投影到 papers/<id>/metadata.json。catalog 丢失时 paper_rescan 可从 sidecar 恢复，Vault 备份和云同步不必带走 SQLite。（commit by @qychen2001）
+    - 工具栏获取 Cool Paper 笔记：打开论文 NOTES.md 时，Markdown 工具栏右侧出现「笔记」按钮，把 papers.cool 的 Kimi 解析追加到当前笔记。Paper Info 不再放这个入口。（commit by @Phil-Fan）
+    - Paddle API 版面解析可并行：本地 ONNX 仍串行以免抢模型；改用设置里的 Paddle API 后端后不再套用 cap=1，多篇可以同时跑。切换后端会立刻排空排队任务。（commit by @Phil-Fan）
+    - 界面文案接入 i18n: 广场、文件树、共享对话框 / 无障碍标签，以及 toast 与任务标题里残留的硬编码英文改走 t()，中文界面不再夹杂未翻译词条。（commit by @qychen2001）
+    - 关于页 Star us on GitHub: 设置 → 关于标题右侧增加 Star 按钮，打开仓库；图标会闪烁黄色。（commit by @Phil-Fan）
+    修复
+    - 版面解析任务一直排队：第一篇版面解析结束后没有释放并发槽，后续任务会永久停在「排队」；取消有时还会把已结束的任务条复活。终态上报与取消现在都会释放槽位并立刻排空队列。（commit by @Phil-Fan）
+    - Cool Papers 笔记拉取崩溃与广场卡顿：实体解码按字节硬切，碰到 & 后的中文会让 Host panic，「获取笔记」直接失败。广场每个资源还新建 TLS 连接，走本地代理时页面一卡一卡。解码改为按字符边界，HTTP 客户端复用连接池。（commit by @Phil-Fan）
+    - 会场论文取不到 Kimi 笔记：从 venue 入库的论文（如 38818@AAAI）此前只靠标题精确匹配，搜索结果标题被截断就显示没有。现在优先走 source_url / venue id，标题允许长前缀匹配。（commit by @Phil-Fan）
+    - 订阅右键菜单打不开：Dockview 面板里 Radix ContextMenu 无法弹出。左栏订阅改走与文件树相同的浮层菜单，hover 时露出 ⋯ 作为后备入口。（commit by @Phil-Fan）
+    - 单击广场展开子来源：收起后再点广场只打开首页、子节点不出现。广场行现在与文件夹一样单击切换展开 / 收起。（commit by @Phil-Fan）
+    - 同步瞬时传输错误自动重试：S3 请求在连接级失败时最多退避重试 3 次；错误信息会展开完整原因链，不再停在 “error sending request”。（commit by @qychen2001）
+    已知限制
+    - 云同步尚未校验不可信远端：本标签里的同步引擎还不会拒绝远端清单中的路径穿越、畸形哈希或过大的 gzip 输出，也未强制非回环端点使用 HTTPS。请只连接自己控制的对象存储。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.2
+ReleaseTime: 2026-08-15T08:56:13.0000000Z
