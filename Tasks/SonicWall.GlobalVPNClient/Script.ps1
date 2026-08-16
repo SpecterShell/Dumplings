@@ -2,6 +2,8 @@ function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
 $Object1 = $Global:DumplingsStorage.SonicWallApps.Where({ $_.Count -ge 2 -and $_[1] -is [string] -and $_[1].Contains('GVCSetup') -and $_[1].Contains('.exe') }, 'First')[0][1] -replace '^[a-zA-Z0-9]+:I?'
@@ -105,19 +107,6 @@ switch -Regex ($this.Check()) {
     $this.Print()
     $this.Write()
     $this.Message()
-    $this.Submit()
-  }
-}
-
-switch -Regex ($this.Check()) {
-  'New|Changed|Updated' {
-    $this.Print()
-    $this.Write()
-  }
-  'Changed|Updated' {
-    $this.Message()
-  }
-  'Updated' {
     $this.Submit()
   }
 }
