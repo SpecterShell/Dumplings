@@ -1,0 +1,24 @@
+Version: 0.13.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.13.1/Mini-Term_0.13.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.13.1/Mini-Term_0.13.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    统计面板显示细节修复
+    🐛 修复
+    - 金额与次数小字重叠 — 用量统计里「按项目 / 按模型」排行与 Top 会话列表的金额列原为固定宽度，$1,446.80 这类长金额放不下会向右溢出，压住最右侧的次数 / tokens 小字。金额与次数列改为最小宽度且不换行，放不下时由行首名称列截断让位；金额较短时布局与此前完全一致
+    - 「按项目」列表恒出横向滚动条 — 滚动容器吸收可点击行 hover 的出血外边距，行超宽时不再撑出横向滚动条
+    🔧 内部
+    - tauri dev 永久卡在等待 1450 端口 — Node 17+ 按系统解析顺序可能把 localhost 解析到 IPv6 回环，Vite 只绑 ::1 而 Tauri CLI 探测走 IPv4 连不上。dev 前端固定监听 127.0.0.1，devUrl 同步对齐；仅影响开发环境，发布包行为不变
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.13.0...v0.13.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.13.1
+ReleaseTime: 2026-08-16T02:55:10.0000000Z
