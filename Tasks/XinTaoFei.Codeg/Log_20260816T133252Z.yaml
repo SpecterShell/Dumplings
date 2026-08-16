@@ -1,0 +1,58 @@
+Version: 0.26.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.26.0/codeg_0.26.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.26.0/codeg_0.26.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness joins the built-in agents: install it, launch it, and use it with everything the other agents get.
+    New
+    - DeepSeek Harness is a built-in agent. Install and launch it from the agent list, with skills, skill packs, MCP, delegation, experts, Office tools and session history all wired up. Endpoint and API key sit on its settings page; model and reasoning effort are picked in the composer. Needs Node 22.
+    - A failed turn says what went wrong. Claude Code and Codex now report failures by kind — connection, sign-in, limit, rejected request, service — as a strip under the composer carrying Retry, Sign in or New session. Retries the agent makes on its own show amber and settle into one "Recovered" line.
+    - Codex sub-agents are visible while they run. Each launch is a card named after the child's task, live and on reload, and the encrypted hand-off payload is dropped instead of printed as base64.
+    - /goal gets a card on Claude Code. Live and on reload, the same card Codex sessions have carried. Each agent offers only the controls it implements: Clear on Claude Code, Pause and Clear on Codex.
+    - Choose where task worktrees live. Task settings gain a Worktree location, globally or per folder. Leave it empty and they keep landing beside the project folder.
+    Improved
+    - Updated bundled agents. CodeBuddy 2.137.0, Grok 1.0.4, and the Claude Code / Codex adapters (0.69.0 / 1.4.0).
+    - The agent row fits its space. Agents that don't fit move into a "More agents" button, so a dozen enabled agents no longer give the Task Settings dialog a horizontal scrollbar or squeeze the selected agent's name to nothing.
+    - Task settings separate Merge from Worktree. Merge holds the strategy, auto-merge and post-merge cleanup; Worktree holds the location, init command and preflight command.
+    - Skill cards are named from the first frame. The name comes from Claude Code itself rather than from arguments as they stream, so it no longer arrives late or truncated.
+    - Codex reports its context compaction. Tokens before and after when Codex sends them, and a plain failure state instead of a card stuck mid-run.
+    - The delegation page names the agents that won't get the tools. "Let the agent handle files and commands" withholds them, while the panel used to still read "enabled".
+    Fixed
+    - Pause and Clear on a Codex goal stop the work. They waited for the agent to fall idle, so a paused goal kept running and a cleared one kept continuing itself.
+    - A slash command no longer renders its answer twice. On Claude Code, /goal was also missing from history entirely.
+    - Grok can see the images you attach. They go as images now instead of file paths it never opened; formats Grok can't decode keep the old route.
+    - Opening an old session doesn't replay its alarms. Dropped images and failed compactions from the past no longer surface as live alerts and desktop notifications.
+    Thanks to @Nothing-129 for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness 加入内置智能体：可直接安装启动，其他智能体拥有的能力它同样具备。
+    新增
+    - DeepSeek Harness 成为内置智能体。 可从智能体列表安装并启动，技能、技能包、MCP、多智能体委托、专家、Office 工具与历史会话均已接通。API 端点与密钥在其设置页配置，模型和思考强度在输入框里选。需要 Node 22。
+    - 回合失败会说明原因。 Claude Code 与 Codex 现在按类型上报失败——连接、登录、额度、请求被拒、服务异常——在输入框下方显示提示条，并附「重试 / 登录 / 新建会话」。智能体自行重试时显示为琥珀色，回合正常结束后收敛为一行「已恢复」。
+    - Codex 的子智能体在运行时就能看到。 每次派发都是一张以子任务命名的卡片，实时与重开会话时都在；只有 Codex 能解开的加密交接内容会被丢弃，而不是打成一堆 base64。
+    - Claude Code 也有了目标卡片（/goal）。 实时与重开会话后都在，与 Codex 会话里是同一张卡片。每个智能体只提供自己真正实现的操作：Claude Code 是「清除」，Codex 是「暂停」和「清除」。
+    - 任务工作树的位置可以自己选。 任务设置新增「工作树位置」，全局或按文件夹配置；留空则仍创建在项目文件夹旁边。
+    改进
+    - 内置智能体版本更新。 CodeBuddy 2.137.0、Grok 1.0.4，以及 Claude Code / Codex 适配器（0.69.0 / 1.4.0）。
+    - 智能体选择器不再撑破布局。 放不下的智能体收进「更多智能体」按钮，十几个智能体不会再让任务设置弹窗出现横向滚动条，也不会把选中项的名称挤没。
+    - 任务设置把「合并」与「工作树」分开。 「合并」放合并策略、自动合并与合并后清理；「工作树」放位置、初始化命令与预检命令。
+    - 技能卡片从第一帧就带名字。 名称直接取自 Claude Code，而不是流式传入的参数，因此不会再出现得晚或被截断。
+    - Codex 的上下文压缩会自报家门。 Codex 提供数据时显示压缩前后的 token 数，失败时明确提示，而不是停在「进行中」。
+    - 委托设置页会点名拿不到委托工具的智能体。 「让智能体自己处理文件和命令」会收走这些工具，而面板此前仍显示「已启用」。
+    修复
+    - Codex 目标的「暂停」和「清除」真的会停下工作。 此前要等智能体空闲才生效，于是暂停了的目标还在跑，清除了的还在自我续跑。
+    - 斜杠命令不会再把回复渲染两遍。 在 Claude Code 上，/goal 此外还完全不出现在历史记录里。
+    - Grok 能真正看到你附上的图片。 现在按图片发送，而不是它从不打开的文件路径；Grok 无法解码的格式保持原来的方式。
+    - 打开旧会话不会再重放当时的告警。 历史会话中被丢弃的图片、失败的压缩不再作为实时提醒和系统通知弹出。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.26.0
+ReleaseTime: 2026-08-16T13:27:32.0000000Z
