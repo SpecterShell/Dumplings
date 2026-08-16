@@ -1,0 +1,36 @@
+Version: 0.2.5
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.2.5/Snow-App-Setup-0.2.5.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Git Clone Repository: A new clone dialog (URL / save location / target path preview / real-time progress) runs git clone via a Rust async subprocess; the cloned repo is auto-registered as a workspace directory.
+    - Session Pause Indicator: User-paused streaming sessions show a pause icon with a warning color in the sidebar.
+    Improvements
+    - Visual requests now reuse the main request's retry configuration (exponential backoff); truncated content-less responses double max_tokens and retry.
+    - Commit drafts and AI generation status are promoted to module level, isolated per repository path, and restored after switching or collapsing.
+    - Checkpoint Concurrency Rework: Execution-level locks are no longer held during bash execution, so cross-session commands run in parallel and rollback is not blocked by long commands; a new rollback epoch skips change records when a rollback overwrites the working tree, avoiding cross-session misrecording. External MCP tools still use the whole-tree exclusive lock.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.2.4...v0.2.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.2.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - Git 克隆仓库：新增克隆对话框（URL / 保存位置 / 目标路径预览 / 实时进度），由 Rust 异步子进程执行 git clone，完成后自动注册为工作区目录。
+    - 会话暂停状态：侧边栏中被用户暂停的流式会话显示暂停图标与警告色。
+    改进
+    - 视觉请求失败时复用主请求的重试配置（指数退避）；截断且无内容时加倍 max_tokens 重试。
+    - 提交草稿与 AI 生成状态提升到模块级，按仓库路径隔离，切换或折叠后回显。
+    - 检查点并发重构：bash 执行期间不再持有执行级锁，跨会话命令并行执行，回滚不被长命令阻塞；新增回滚纪元，检测到回滚覆盖工作树时跳过变更记录，避免跨会话误记。外部 MCP 工具仍使用整树独占锁。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v025
+ReleaseTime: 2026-08-16T16:36:23.0000000Z
