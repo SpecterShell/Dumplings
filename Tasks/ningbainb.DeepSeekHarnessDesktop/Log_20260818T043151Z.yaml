@@ -1,0 +1,50 @@
+Version: 2.3.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ningbainb/deepseek-harness-desktop/releases/download/desktop-v2.3.0/DeepSeek-Harness-Desktop-Setup-2.3.0-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness Desktop 2.3.0
+    中文
+    本次亮点
+    - 2.3.0 主界面首次加载后会展示一次 GitHub Star 引导。弹窗采用 Harness 明暗主题变量，以分层淡入、缓慢星轨、一次性光晕、按钮流光和短促星尘替代突兀弹跳；系统启用“减少动态效果”时会自动关闭动画。弹窗支持关闭按钮、遮罩、Escape、完整 Tab 焦点循环与“先继续使用”，不会阻止用户进入产品。
+    - 展示状态由 Electron 主进程在用户数据目录原子记录。只有版本恰好为 2.3.0 且未展示过时才会返回许可，因此页面刷新、运行时重载和后续启动都不会重复弹出。损坏状态可安全重建，开发截图模式不会污染真实用户状态。
+    - 主按钮通过现有固定动作打开 ningbainb/deepseek-harness-desktop；新增“加入社群，随时反馈 Bug”按钮，通过现有受控 IPC 打开 QQ 社群窗口与二维码。弹窗不访问 GitHub API、不要求令牌、不显示可能失真的 Star 数量，也不会在用户仅仅点击按钮后声称已经完成点星；实际操作仍由用户在 GitHub 页面确认。
+    - 修复图示覆盖更新失败：当旧安装目录已被移除时，cleanup-stale-processes.ps1 曾使用强制 Get-Item 解析目录，异常被统一映射为退出码 32，随后 NSIS 将它错误解释成“仍有后台进程”。现在缺失目录或非目录路径会直接返回成功，因为此时没有旧安装进程需要按目录归属清理。
+    - 安装进程检查从 customInit 与 electron-builder 默认检查两套逻辑收敛为单一 customCheckAppRunning 入口，在真正安装前读取当前目录及 HKCU/HKLM 记录的旧安装目录。0.1.9 至 2.2 直接走精确路径兜底，支持协议的新版本先请求优雅退出；脚本异常使用独立退出码 33，真实残留使用 32 并附带 PID 与路径，不再全局按进程名阻塞安装。
+    - 针对 2.2 由安装目录外隐藏 PowerShell 承载运行时的情况，安装预检会按命令行中的安装根路径归因 PowerShell、CMD、Node 等外部后代，并先解码 -EncodedCommand 的 Base64 负载再匹配。匹配集合同时保留安装器或注册表提供的 Windows 8.3 短路径引用与规范化长路径，避免短路径宿主漏判。进程句柄因旧实例以管理员身份运行等原因无法打开时，检查会回退到 WMI 可执行路径；力杀后等待进程实际退出，并以退避重试处理短暂占用。归因边界只接受安装根路径引用，官方 Web 端运行时、安装目录外的同名程序以及没有安装路径引用的外部进程均不会被误杀。
+    - 桌面运行时固定使用独立的 profiles/desktop profile，端口状态保存在该 profile 的私有文件中；首选端口被官方 Web 端或其他程序占用时会自动回退到系统分配端口。共享主目录中的重试策略与托管补丁段均以增量、原子方式写入，不覆盖用户或官方 Web 端已有配置，因此两端可以同时运行且互不抢占。
+    验证
+    - 新增 Star 展示账本测试，验证 2.2.0 和未来版本不会触发、2.3.0 并发请求只有一次成功、后续请求保持关闭，以及损坏 JSON 可恢复。
+    - 新增弹窗契约与端到端测试，覆盖对话框无障碍属性、键盘关闭、固定 GitHub 动作、社群窗口与二维码、动画和减少动态效果，并确认代码不请求 Star 数量或引入新的运行依赖。
+    - 新增真实 Windows 安装检查回归：缺失目录必须零退出，旧主程序、资源进程以及命令行明确引用安装根路径的外部后代必须结束，Windows 8.3 短路径与规范化长路径必须同时匹配，EncodedCommand 负载必须先解码归因，句柄访问失败必须使用 WMI 路径回退；安装目录外的同名程序、官方 Web 端和无安装路径引用的独立后代必须保留，同时验证安装器已覆盖框架默认的全局进程名检查。
+    - Desktop 全量 Node 测试、发布说明门禁、官网版本门禁、脚本测试与界面截图会在发布前执行。专用截图模式使用隔离的临时用户目录强制展示弹窗，便于检查窗口最小尺寸、暗色背景、按钮焦点和内容溢出。
+    下载与校验
+    下载 DeepSeek-Harness-Desktop-Setup-2.3.0-x64.exe，并使用同一 GitHub Release 中的 SHA256SUMS.txt 校验安装包。0.1.9 至 2.2 用户都可以直接覆盖更新；安装器会从注册表恢复旧版真实安装目录，精确结束其中仍在运行的程序及命令行明确引用该目录的外部运行时后代，而旧目录已经不存在时直接继续。应用仍会选择可用下载源，并按 latest.yml 中的可信摘要验证下载文件。
+    说明
+    这是社区构建版本，并非 DeepSeek、OpenAI 或腾讯官方发行版。当前安装包未使用商业代码签名证书，Windows SmartScreen 可能显示“未知发布者”。请只从本项目 GitHub Release 页面获取安装包并核对 SHA-256。Star 弹窗只负责打开公开仓库或现有社群窗口，不读取 GitHub 账号、不检测用户是否点星，也不影响更新、插件、聊天记录或个人设置。
+    English
+    Highlights
+    - Desktop 2.3.0 shows one GitHub Star prompt after the main Harness surface first loads. The surface uses Harness light and dark theme variables with staggered entry, a slow orbit, one-shot halo, button shimmer, and a short stardust burst instead of a pronounced bounce. It removes motion when the operating system requests reduced motion. Close, backdrop, Escape, complete Tab focus cycling, and Continue all remain available.
+    - The Electron main process atomically records display state under the user data directory. It grants a claim only when the running version is exactly 2.3.0 and has never shown the prompt, preventing repeats after page refreshes, runtime reloads, or later application launches. Corrupt state is rebuilt safely, while the dedicated development capture mode never writes a real user's state.
+    - The primary action opens ningbainb/deepseek-harness-desktop through the existing fixed Help action. A new community action opens the controlled QQ community window and QR code for ongoing bug feedback. The prompt makes no GitHub API request, needs no token, displays no potentially stale star count, and never claims that starring succeeded merely because the repository was opened.
+    - Fixed the reported in-place update failure. When the previous installation directory had already been removed, cleanup-stale-processes.ps1 used mandatory Get-Item resolution. Its exception was collapsed into exit code 32, which NSIS incorrectly described as background processes still running. A missing or non-directory install path now succeeds immediately because no old path-owned process needs cleanup.
+    - Installer process handling now uses one customCheckAppRunning hook instead of combining customInit with electron-builder's default global name check. It reads current and HKCU/HKLM legacy roots at the actual install step. Releases 0.1.9 through 2.2 use an exact-path fallback, while protocol-aware versions receive a graceful shutdown request first. Exit 32 reports real PID/path conflicts, exit 33 reports script failures, and unrelated same-name processes no longer block installation globally.
+    - For the 2.2 runtime hosted by hidden PowerShell outside the install directory, preflight attributes external PowerShell, CMD, and Node descendants only when their command lines reference an install root. It decodes the Base64 payload of -EncodedCommand before matching and preserves both Windows 8.3 short-path references supplied by the installer or registry and their canonical long-path forms. It falls back to the WMI executable path when an elevated legacy process prevents handle access, waits for forced termination to complete, and retries transient holds with backoff. The ownership boundary remains narrow: the official web runtime, same-name applications outside the install directory, and external processes without an install-path reference are preserved.
+    - Desktop always uses the isolated profiles/desktop profile and stores port state in that profile's private file. If the preferred port is already occupied by the official web client or another program, Desktop falls back to a system-assigned port. Retry settings and managed patch sections in the shared home directory are updated incrementally and atomically without overwriting existing user or official-client configuration, allowing both clients to run side by side.
+    Verification
+    - Added prompt-ledger tests proving that 2.2.0 and future versions do not trigger it, concurrent 2.3.0 claims produce exactly one success, later claims remain closed, and corrupt JSON recovers.
+    - Added surface-contract and end-to-end coverage for accessibility, keyboard dismissal, fixed GitHub and community actions, the community QR window, animations, and reduced motion, including an assertion that no star count is fetched and no runtime dependency is added.
+    - Added real Windows installer regressions requiring missing roots to succeed; direct old app/resource processes and external descendants whose command lines reference an install root must stop; Windows 8.3 short paths and canonical long paths must both match; encoded command payloads must be decoded; and denied handle access must use the WMI path fallback. Same-name applications, the official web runtime, and detached descendants without an install-path reference must survive. The generated installer must also replace electron-builder's default name-based check.
+    - The complete Desktop Node suite, release-note gate, website version gate, script tests, and screenshot review run before publication. A dedicated capture mode forces the prompt within an isolated temporary user directory to inspect minimum-window behavior, dark backgrounds, button focus, and overflow.
+    Download and verification
+    Download DeepSeek-Harness-Desktop-Setup-2.3.0-x64.exe and verify it with SHA256SUMS.txt from the same GitHub Release. Releases 0.1.9 through 2.2 can update directly in place. The installer recovers legacy roots from the registry, stops active executables under those roots plus external runtime descendants whose command lines explicitly reference them, and proceeds immediately when the roots are absent. Desktop still verifies the download against the trusted digest in latest.yml.
+    Notice
+    This is a community build and not an official DeepSeek, OpenAI, or Tencent distribution. The installer is not signed with a commercial code-signing certificate, so Windows SmartScreen may report an unknown publisher. Obtain installers only from this project's GitHub Release page and verify the SHA-256 checksum. The Star prompt only opens the public repository or the existing community window: it does not read a GitHub account, detect whether a star was added, or affect updates, plugins, conversations, or personal settings.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ningbainb/deepseek-harness-desktop/releases/tag/desktop-v2.3.0
+ReleaseTime: 2026-08-18T04:13:48.0000000Z
