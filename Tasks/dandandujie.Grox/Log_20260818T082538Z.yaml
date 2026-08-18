@@ -1,0 +1,32 @@
+Version: 0.3.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dandandujie/Grox/releases/download/v0.3.3/Grox_0.3.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dandandujie/Grox/releases/download/v0.3.3/Grox_0.3.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grox v0.3.3
+    这是替代已撤回 v0.3.2 的修复版本。已安装 v0.3.2 的用户应升级到本版本。
+    修复
+    - 修复供应商档案文件缺失时无法从有效备份安全恢复的问题。
+    - 统一供应商 endpoint 身份判断；host 大小写、默认端口和尾斜杠等价形式不再导致凭据引用失配或模型目录被清空。
+    - 恢复流程保持 fail-closed：只有档案 ID 与规范化 endpoint 同时匹配时才接受备份。
+    - 使用排他原子发布恢复文件，避免并发恢复覆盖已有数据。
+    - 将供应商档案数据层和服务事务从桌面 Host 入口拆分，保留 SecretStore、配置和环境文件失败回滚。
+    发布可靠性
+    - Release 在所有 Windows/macOS 构建与 SHA256SUMS 上传成功前保持 Draft。
+    - 同一 tag 的发布工作流禁止并发互相覆盖。
+    平台
+    - Windows x64：安装包与便携包。
+    - macOS：Apple Silicon 与 Intel 安装包。
+    - 本版本不提供 Linux 安装包。
+    完整变更：https://github.com/dandandujie/Grox/compare/v0.3.1...v0.3.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dandandujie/Grox/releases/tag/v0.3.3
+ReleaseTime: 2026-08-18T08:02:41.0000000Z
