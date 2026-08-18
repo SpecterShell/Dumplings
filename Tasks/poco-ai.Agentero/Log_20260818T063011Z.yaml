@@ -1,0 +1,49 @@
+Version: 0.6.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.3/Agentero_0.6.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.3/Agentero_0.6.3_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Reading is lighter, and layout analysis now has a cloud option. Switching Markdown notes no longer remounts the editor, peak memory when opening a PDF is about half, and library refreshes no longer drag already-open panes with them. Settings and onboarding can switch among on-device ONNX, Paddle, and MinerU, and MinerU's cloud API can parse figures, tables, and formulas. A failed import rolls back the half-written folder. Cloud sync closes the security gap called out in the previous release.
+    Features
+    - MinerU cloud layout analysis: Layout analysis can use the MinerU cloud API. The app requests presigned URLs, uploads PDFs in batch, polls the job, and maps the result onto the shared figure / table / formula labels and page coordinates. Untrusted result archives have download and extract caps, and a custom base URL must be HTTPS except on loopback. (commit by @qychen2001)
+    - Multi-provider layout settings: Settings and onboarding show API Key and Base URL fields per provider, and can probe whether the current backend is reachable. Local ONNX, Paddle, and MinerU share one config path, and saving no longer drops a Base URL already stored on the host. (commit by @qychen2001)
+    Improvements
+    - Markdown tabs stay mounted: Note tabs get the same keep-alive as PDFs: background tabs stay mounted, and an independent LRU (size 2) gates the Plate editor. Switching notes no longer re-initializes the editor or re-deserializes the document. (commit by @qychen2001)
+    - PDF open peak memory halved: Reading a vault file no longer clones the buffer returned by the filesystem plugin, so peak memory when opening a PDF drops from about 2× the file size to 1×. (commit by @qychen2001)
+    - Library refresh no longer rerenders open panes: Library query updates no longer force a full rerender of mounted PDF viewers and note editors. (commit by @qychen2001)
+    - Settings rows drop standing help text: Plaza, usage tracking, and cloud-sync rows no longer keep explanatory copy under the control. (commit by @qychen2001)
+    Fixes
+    - Failed imports roll back and orphans heal: If a paper folder is created but the catalog write never lands, the new folder is removed so the tree does not show a paper the library cannot see. Downloading assets can rebuild a missing catalog row from the metadata.json sidecar and refresh the library and file tree. (commit by @qychen2001)
+    Security
+    - Cloud sync validates untrusted remotes: The sync engine rejects absolute paths, backslashes, empty segments, and . / .. in remote manifests, requires 64-character lowercase hex sha256 hashes, and caps gunzip output to block gzip bombs. Non-loopback endpoints must use HTTPS. This closes the known limitation called out in v0.6.2. (commit by @qychen2001)
+    https://github.com/poco-ai/Agentero/compare/v0.6.2...v0.6.3
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    日常阅读更轻，版面分析也补上了云端选项。切换 Markdown 笔记不再重载编辑器，打开 PDF 的峰值内存大约减半，刷新论文库也不会再拖累已经打开的面板。设置和引导里可以在本地 ONNX、Paddle 与 MinerU 之间切换，用 MinerU 云 API 解析插图、表格和公式。入库中途失败会清掉半成品文件夹；云同步则补上了上一版注明的安全缺口。
+    新功能
+    - MinerU 云版面分析：版面解析新增 MinerU 云 API。应用会申请预签名地址批量上传 PDF，轮询任务后下载结果，并映射到统一的插图 / 表格 / 公式标签与页内坐标。结果压缩包有下载和解压上限，自定义地址默认只允许 HTTPS（本机回环除外）。（commit by @qychen2001）
+    - 多提供商版面配置：设置和引导按提供商显示 API Key、Base URL，并可探测当前后端是否可用。本地 ONNX、Paddle 与 MinerU 共用同一套配置，保存时不会再丢掉 Host 里已存的 Base URL。（commit by @qychen2001）
+    改进
+    - Markdown 标签页保持挂载：笔记标签页沿用与 PDF 相同的 keep-alive：后台页继续挂载，Plate 编辑器由独立 LRU（容量 2）控制。来回切换笔记时不再重新初始化、反序列化正文。（commit by @qychen2001）
+    - PDF 打开峰值内存减半：读取 Vault 文件时不再额外拷贝插件返回的字节缓冲，打开 PDF 的峰值内存从约 2 倍文件大小降到 1 倍。（commit by @qychen2001）
+    - 论文库刷新不再拖累阅读面板：论文库查询更新时，已经打开的 PDF 阅读器和笔记编辑器不再跟着整页重绘。（commit by @qychen2001）
+    - 设置页去掉常驻说明：广场开关、用量统计和云同步条目不再在行下挂解释文案，界面更干净。（commit by @qychen2001）
+    修复
+    - 入库失败回滚与孤立目录修复：文件夹已建、catalog 尚未写入就失败时，会删掉刚创建的论文目录，避免树上看得见、论文库里没有。补下资源时若缺 catalog 行，会从 metadata.json sidecar 重建，并刷新论文库和文件树。（commit by @qychen2001）
+    安全性
+    - 云同步校验不可信远端：同步引擎会拒绝清单里的绝对路径、反斜杠、空段和 . / ..，要求 sha256 为 64 位小写十六进制，并限制 gunzip 输出以防 gzip 炸弹。非回环端点必须走 HTTPS。这补上了 v0.6.2 注明的已知限制。（commit by @qychen2001）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.3
+ReleaseTime: 2026-08-18T05:53:36.0000000Z
