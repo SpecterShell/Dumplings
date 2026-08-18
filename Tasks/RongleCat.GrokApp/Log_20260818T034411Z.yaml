@@ -1,0 +1,150 @@
+Version: 0.2.21
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.21/Grok_0.2.21_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.21
+    Highlight: Create Image / Create Video from the composer + menu; Agent Kanban and Project Spaces; chat no longer freezes on the first generated image or stays stuck Connecting.
+    中文 · 亮点： 输入框 + 菜单可创作图像/视频；智能体看板与项目空间；出图首屏不再卡死，「连接中」不再只能重启。
+    Added
+    - Create Image / Create Video in the composer + menu (#677): When the bundled Imagine skill is available, Add lists Create Image (localized Imagine) and Create Video (Imagine + a short video starter prompt). Skill id stays imagine.
+    - Side workbench CodeMirror editor (#661 follow-up): Files edit mode uses CodeMirror 6 (Atom One palette + line numbers, Tab as two spaces, ⌘/Ctrl+S). Markdown still uses TipTap. Preview mode is unchanged.
+    - Side-browser Design Mode (#636): The Browser tab can inspect localhost / same-origin preview elements and send the selection, optional snapshot, and style note into the composer.
+    - Discover Claude / Cursor skills toggle: Settings → Extensions → Skills can turn external compat discovery off. Independent session mode also writes [compat.claude] skills / [compat.cursor] skills in agent-home config.toml. Shared mode only hides them in the App (does not rewrite ~/.grok).
+    - Session interrupt recovery: Shutdown cancels the ACP TCP reader with the process, stamped events require an exact session owner, and per-session send claims/epochs survive reconnect so a kill cannot leave a ghost stream or a wedged queue.
+    - Agent Kanban: Sidebar / palette / #/kanban shows live sessions in Needs you / Working / Done. A finished turn stays in Done across pane remounts (not a personal to-do list). Opening a card does not hide it.
+    - Project Spaces: Sidebar groups projects into named spaces (All / Default / custom). Membership survives restart; search from All does not force a space switch. Name errors stay inline in the prompt (red), not a toast.
+    - Transcript selection quotes: Selecting text in a bubble shows a floating bar (copy, optional comment, add to chat). Quotes sit beside the draft as a compact “N notes / N 条注释” chip — they are not pasted into the input. They persist on project/session drafts and the send queue. The agent sees Quoted excerpt / Comment blocks; the journal stores [[quote]] / [[note]] fences so reload rebuilds the cards. Queue Guide serializes quotes (and re-queues them on failure). Send settlement compares quotes so a quote added during an in-flight send is not overwritten on failure. Switching sessions closes the selection bar.
+    中文 · 新增
+    - 输入框 + 菜单可创作图像 / 视频（#677）：有 Imagine 技能时，「添加」里出现「创作图像」和「创作视频」。技能 id 仍是 imagine；创作视频会带上短片起始提示。
+    - 侧栏 CodeMirror 编辑器（#661 后续）：Files 编辑模式改用 CodeMirror 6（Atom One 配色 + 行号，Tab 两个空格，⌘/Ctrl+S）。Markdown 仍用 TipTap。预览模式不变。
+    - 侧栏浏览器设计模式（#636）：Browser 页可点选本机 / 同源预览元素，把选区、可选快照和样式备注送进输入框。
+    - 探测 Claude / Cursor 技能开关：设置 → 扩展 → 技能可关闭外源兼容探测。独立会话模式会写入 agent-home config.toml；共享模式只在应用内隐藏，不改写 ~/.grok。
+    - 会话中断恢复：关掉 Agent 时一并取消 TCP 读；打戳事件必须对上会话主人；发送认领按会话隔离，重连后不会留下幽灵流或卡死的队列。
+    - 智能体看板：侧栏 / 命令面板 / #/kanban 按「需要你 / 工作中 / 已完成」展示运行中的会话。回合结束后切走再回来仍留在已完成（不是个人待办）。打开卡片不会把它藏掉。
+    - 项目空间：侧栏项目可分到命名空间（全部 / 默认 / 自定义）。成员关系重启后仍在；「全部」里搜索不会误切空间。重名等错误在对话框里用红字提示，不再用顶部 toast。
+    - 正文选中批注：在气泡里选中文字后出现浮层（复制、可选评论、添加到对话）。注释作为紧凑的「N 条注释」贴在输入框旁，不粘进正文。会跟项目/会话草稿和发送队列一起保存。发给模型的是 Quoted excerpt / Comment；日记里写 [[quote]] / [[note]]，重载后还能还原成卡片。队列「引导」会带上注释（失败重新入队也保留）。发送结算会比较注释，发送过程中新加的注释在失败时不会被旧快照盖掉。切换会话会关掉选择浮层。
+    Changed
+    - Composer workspace chip on every desktop chat (#662): The project / default-workspace control above the input is no longer limited to a brand-new draft that already has a folder. Pick, add, or return to the default workspace from the existing ComposerProjectMenu. Chinese copy uses 默认工作区 (was 通用). Sidebar + stays. Phone still uses the tools sheet.
+    中文 · 变更
+    - 桌面输入框上方始终显示工作区（#662）：不再只在「已选项目的全新空草稿」才出现。沿用现有 ComposerProjectMenu 选择、添加或回到默认工作区。中文不再用「通用」。侧栏 + 保留。手机仍走工具页。
+    Fixed
+    - Selection comment pop hierarchy: The comment field uses the input well so it no longer blends into the panel; the excerpt stays plain truncated text.
+    - Stuck「连接中」until restart: The status pill is per-chat (another session’s handshake no longer paints this one Connecting). Host connect has a 90s wall clock; ProcessExited during handshake fails the FSM; leftover Connecting is not treated as a healthy live process. session/set_mode runs after Ready. Click the pill or Reconnect to cancel and retry — that button stays enabled.
+    - Chat no longer freezes when a generated image first appears (#675, #676): The card first-paints a placeholder or cached thumb instead of the full Imagine PNG. Host cache hits read source width/height from a sidecar (or the thumb JPEG header) and do not decode the original again.
+    - Assistant body text no longer stacks on itself: Conclusion markdown and work-fold tool stdout could occupy the same box when a parent flex column crushed their height (overflow: visible expand bodies then painted over the answer). Transcript rows, timeline children, and .chat-md--answer no longer shrink; expand-body overflow: visible is only used inside a capped/virtual scroller.
+    - Compact dialog overflow + help: Long inline help on Compact context could exceed .modal max-height (overflow: hidden, no scroll body) and clip the Compact button. Descriptions move into a title ? tip; the body scrolls and the footer stays pinned. Connect failure after confirm no longer fails silently.
+    - Pathless「文件」tab no longer stays beside an opened file: Opening a file from the tree replaces the picker Files chip. Picking Files again focuses the open file instead of minting a second dead tab (which did nothing and could stall the pane).
+    - Slash palette /rc and /review- select review-commit (#644): Treat - as a word boundary so kebab initials match, rank name prefix above description, and keep description as fallback only when no name hits. Peer skills that mention review-commit in YAML no longer steal the default highlight.
+    - Working rail overlap and leftover ANSI (#667, #672): Long live 工作中 rows no longer paint tool bodies over the next line; leftover [39m / [32m SGR after a dropped ESC is stripped. Mapped lists no longer flex-shrink into a 360px box that crushes expanded rows.
+    - 75Hz external-display chat scroll (#651): Virtual-list window updates pair requestAnimationFrame with an 8ms fallback so a missed vsync on a mixed 120Hz/75Hz Mac does not drop the scroll to a 37.5Hz stutter.
+    - Command-palette search scroll and keyboard (#657): ⌘K results sit in a real scrollport (wheel / trackpad work). Arrow keys move a highlight; Enter opens the row; ⌘/Ctrl 1–9 still jump to the numbered session.
+    - Included-usage exhaustion is no longer a generic provider error (#659): When Grok Build reports subscription:free-usage-exhausted, Host stops the 15-retry loop immediately and emits QUOTA_EXCEEDED. The chat card uses the CLI line “You hit your free usage limit.” (rolling 24-hour window + Account). A bare 429 / “rate limit, retry later” uses the CLI “Rate limited” / “Wait a minute” card, not the free-usage sentence.
+    - Desktop notification click restores the session (#654): Clicking a native toast now unminimizes / focuses the main window and opens the chat that fired it (permission, ask-user, or turn-done). Windows uses a WinRT on_activated toast instead of the fire-and-forget plugin path; packaged macOS waits for the UN default action. Missing sessionId still focuses the app. tauri dev osascript toasts (Script Editor) still cannot deep-link.
+    - Skills catalog matches CLI discovery (#653): Settings → Extensions → Skills no longer keeps listing Claude/Cursor compat skills after Grok Build has them turned off. skills_list now runs grok inspect with the session GROK_HOME and drops ~/.claude / ~/.cursor rows when [compat.claude] skills or [compat.cursor] skills is false (or the new App overlay is off). Slash / + pickers share the same list.
+    - Premature 工作了 + copy/retry while the turn is still running (#670): Host no longer emits stream done while the prompt or tools are still open. A later finished fragment folds into the live sibling without duplicating answer text. Copy/MD/retry stay hidden until Ready.
+    - Windows huge assistant replies / paste become a .txt card (#647): On Windows only, a single reply or clipboard paste ≥ 8000 characters is shown as a short preview plus a file card (or attached as .txt). macOS / Linux keep full markdown and normal paste. Find-in-chat still shows the full body.
+    - New chat no longer restores a leftover first prompt: Each project keeps a new-session composer buffer. After send, that buffer was often left on disk (#620 leftovers, or a mid-type snapshot that is not byte-identical to the sent text). Restore now drops buffers that match a recent send exactly, as a prefix of that send, or as a short first-line fragment (e.g. saved 好的 / d vs sent 好的 / 你看好了吗？). Attachment-only unsent drafts still restore. A follow-up send on an existing thread does not wipe a new-task buffer that still has extra files.
+    - Shift+Enter first press starts a new line: The composer stored \n but re-projected a trailing <br>, which WebKit treats as an empty-editor sentinel (first Shift+Enter looked like a no-op). Each line is now a div; a trailing empty line is marked data-composer-nl="1" so serialize keeps the newline and the caret stays on that line. ZWSP caret pads are not used for this path (they split IME 汉字).
+    - Windows taskbar icon no longer looks a size smaller (#650): icon.ico is generated from a fill-cropped raster so the mark fills the frame. macOS icon-source.png / .icns stay on the dock-grid master.
+    - Side workbench file tabs and per-project isolation (#661 slice): Inactive file chips show a filename (and a short parent path on collisions). Switching projects stashes that project's tabs. Opening Files shows the tree and adopts the placeholder chip instead of minting a second pathless tab. The CodeMirror editor from the same PR is not in this slice.
+    中文 · 修复
+    - 选区注释弹窗层次：评论框用输入井，不再和面板糊成一块；摘录仍是普通截断文本。
+    - 一直卡在「连接中」、只能重启：顶栏药丸按当前会话投影（别的会话在握手时，这个聊天不再显示连接中）。整段 connect 有 90 秒墙钟；握手期间进程退出会离开 Connecting；未完成的握手不再被当成健康活进程。session/set_mode 改到 Ready 之后。点击药丸或「重新连接」可取消并重试，按钮不再因连接中被禁用。
+    - 对话出图那一下不再卡死（#675、#676）：卡片首屏改占位或缓存缩略图，不再先解完整原图。Host 缓存命中读 sidecar / JPEG 头拿宽高，不再为读尺寸再解一遍原图。
+    - 助手正文不再叠字：结论 Markdown 和工作轨里的工具输出会被父级 flex 压扁到同一块区域（展开体 overflow: visible 再盖到答案上）。消息行、时间线子项和 .chat-md--answer 不再被压缩；只有带滚动条的工作列表才允许展开体溢出。
+    - 压缩弹窗过长、按钮被裁切：原先说明全铺在弹窗里，超出 .modal 最大高度后底部「压缩」被裁掉（容器 overflow: hidden、没有可滚 body）。说明收到标题旁 ?，正文可滚、底部按钮固定。确认后连不上 Agent 也不再静默失败。
+    - 空的「文件」tab 不再和已打开文件并排：从树里打开文件会替换选择器里的「文件」占位。再点「文件」只会聚焦已打开的文件，不会再多出一个点了没反应、还会卡住侧栏的死标签。
+    - 斜杠菜单 /rc、/review- 会选中 review-commit（#644）：把 - 当词界以匹配 kebab 首字母，名字前缀优先于描述，且只有名字全无命中时才用描述兜底。YAML 里互相点名 review-commit 的 skill 不再抢走默认高亮。
+    - 工作轨叠字和残留 ANSI（#667、#672）：长「工作中」不再把工具正文盖到下一行；ESC 丢掉后残留的 [39m / [32m 会被剥掉。展开后的列表不再被压进 360px 盒子里叠字。
+    - 75Hz 外接屏聊天滑动（#651）：虚拟列表窗口更新在 rAF 之外加 8ms 兜底，混用 120Hz/75Hz 时漏一帧不会掉成肉眼 37.5Hz。
+    - 命令面板搜索可滚动、可用键盘（#657）：⌘K 结果有独立滚动区。方向键高亮，Enter 打开，⌘/Ctrl 1–9 仍跳到编号会话。
+    - 额度用尽不再显示成普通提供商报错（#659）：官方返回 subscription:free-usage-exhausted 时，Host 立刻停转并记 QUOTA_EXCEEDED，气泡对齐 CLI 的 “You hit your free usage limit.”（滚动 24 小时窗口 + 账号）。普通 429 走 CLI 的 “Rate limited / 等一分钟再发”，不再和免费用量写成一句。
+    - 点击桌面通知回到对应会话（#654）：点原生通知会还原/聚焦主窗口并打开发出该通知的会话。Windows 走带点击回调的 WinRT toast；已打包的 macOS 等 UN 默认点击。没有 sessionId 时仍只聚焦应用。tauri dev 的 osascript（脚本编辑器）通知仍无法回跳。
+    - 技能目录与 CLI 探测一致（#653）：在 Grok Build 关掉兼容探测后，设置 → 扩展 → 技能不再继续列出 Claude/Cursor 技能。skills_list 用当前会话的 GROK_HOME 跑 grok inspect，并在 config.toml / 应用开关关闭时丢掉 ~/.claude、~/.cursor 条目。斜杠 / + 选择器共用这份列表。
+    - 回合还在跑就出现「工作了」和复制/重试（#670）：Host 在 prompt / 工具未结束时不再发 stream done。后到的完成片段并进仍在工作的那条，正文不重复。Ready 之前不显示复制 / MD / 重试。
+    - Windows 超长回复/粘贴改为 txt 卡片（#647）：仅 Windows，单条回复或粘贴 ≥ 8000 字改成预览 + 文件卡。macOS / Linux 仍是完整 Markdown / 正常粘贴。对话内查找仍显示全文。
+    - 新建对话不再带回已发送的残留：每个项目有一份新会话输入缓冲。发送后这份缓冲常留在磁盘上（#620 残留，或和发出去的原文不完全相同的半截）。恢复时会丢掉与最近发送完全相同、作为其前缀、或短且首行相同的碎片（例如存的是 好的 / d，发出去的是 好的 / 你看好了吗？）。只有附件的未发送草稿仍会恢复。在已有会话里跟进发送时，如果新任务缓冲还带着这份发送里没有的附件，不会整份清掉。
+    - 第一次 Shift+Enter 就会换行：原先存的是 \n，重绘却是尾部 <br>，WebKit 把它当成空编辑器哨兵，第一次换行看起来没反应。现在一行一个 div，末尾空行标 data-composer-nl="1"，序列化会保留换行，光标留在新行。这条路径不再用 ZWSP 占位（会拆开输入中的汉字）。
+    - Windows 任务栏图标不再小一号（#650）：icon.ico 按去留白后的画布生成。macOS 母版 / .icns 不动。
+    - 侧栏文件 tab 名 + 按项目隔离（#661 切片）：未激活的文件芯片显示文件名（重名时带上一级路径）。切换项目会收起该项目的 tab。打开 Files 显示树，并用占位芯片承接真实文件，不再并排多一个无路径 tab。同一 PR 里的 CodeMirror 编辑器不在本切片。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.21
+    Highlight: Create Image / Create Video from the composer + menu; Agent Kanban and Project Spaces; chat no longer freezes on the first generated image or stays stuck Connecting.
+    中文 · 亮点： 输入框 + 菜单可创作图像/视频；智能体看板与项目空间；出图首屏不再卡死，「连接中」不再只能重启。
+    Added
+    - Create Image / Create Video in the composer + menu (#677): When the bundled Imagine skill is available, Add lists Create Image (localized Imagine) and Create Video (Imagine + a short video starter prompt). Skill id stays imagine.
+    - Side workbench CodeMirror editor (#661 follow-up): Files edit mode uses CodeMirror 6 (Atom One palette + line numbers, Tab as two spaces, ⌘/Ctrl+S). Markdown still uses TipTap. Preview mode is unchanged.
+    - Side-browser Design Mode (#636): The Browser tab can inspect localhost / same-origin preview elements and send the selection, optional snapshot, and style note into the composer.
+    - Discover Claude / Cursor skills toggle: Settings → Extensions → Skills can turn external compat discovery off. Independent session mode also writes [compat.claude] skills / [compat.cursor] skills in agent-home config.toml. Shared mode only hides them in the App (does not rewrite ~/.grok).
+    - Session interrupt recovery: Shutdown cancels the ACP TCP reader with the process, stamped events require an exact session owner, and per-session send claims/epochs survive reconnect so a kill cannot leave a ghost stream or a wedged queue.
+    - Agent Kanban: Sidebar / palette / #/kanban shows live sessions in Needs you / Working / Done. A finished turn stays in Done across pane remounts (not a personal to-do list). Opening a card does not hide it.
+    - Project Spaces: Sidebar groups projects into named spaces (All / Default / custom). Membership survives restart; search from All does not force a space switch. Name errors stay inline in the prompt (red), not a toast.
+    - Transcript selection quotes: Selecting text in a bubble shows a floating bar (copy, optional comment, add to chat). Quotes sit beside the draft as a compact “N notes / N 条注释” chip — they are not pasted into the input. They persist on project/session drafts and the send queue. The agent sees Quoted excerpt / Comment blocks; the journal stores [[quote]] / [[note]] fences so reload rebuilds the cards. Queue Guide serializes quotes (and re-queues them on failure). Send settlement compares quotes so a quote added during an in-flight send is not overwritten on failure. Switching sessions closes the selection bar.
+    中文 · 新增
+    - 输入框 + 菜单可创作图像 / 视频（#677）：有 Imagine 技能时，「添加」里出现「创作图像」和「创作视频」。技能 id 仍是 imagine；创作视频会带上短片起始提示。
+    - 侧栏 CodeMirror 编辑器（#661 后续）：Files 编辑模式改用 CodeMirror 6（Atom One 配色 + 行号，Tab 两个空格，⌘/Ctrl+S）。Markdown 仍用 TipTap。预览模式不变。
+    - 侧栏浏览器设计模式（#636）：Browser 页可点选本机 / 同源预览元素，把选区、可选快照和样式备注送进输入框。
+    - 探测 Claude / Cursor 技能开关：设置 → 扩展 → 技能可关闭外源兼容探测。独立会话模式会写入 agent-home config.toml；共享模式只在应用内隐藏，不改写 ~/.grok。
+    - 会话中断恢复：关掉 Agent 时一并取消 TCP 读；打戳事件必须对上会话主人；发送认领按会话隔离，重连后不会留下幽灵流或卡死的队列。
+    - 智能体看板：侧栏 / 命令面板 / #/kanban 按「需要你 / 工作中 / 已完成」展示运行中的会话。回合结束后切走再回来仍留在已完成（不是个人待办）。打开卡片不会把它藏掉。
+    - 项目空间：侧栏项目可分到命名空间（全部 / 默认 / 自定义）。成员关系重启后仍在；「全部」里搜索不会误切空间。重名等错误在对话框里用红字提示，不再用顶部 toast。
+    - 正文选中批注：在气泡里选中文字后出现浮层（复制、可选评论、添加到对话）。注释作为紧凑的「N 条注释」贴在输入框旁，不粘进正文。会跟项目/会话草稿和发送队列一起保存。发给模型的是 Quoted excerpt / Comment；日记里写 [[quote]] / [[note]]，重载后还能还原成卡片。队列「引导」会带上注释（失败重新入队也保留）。发送结算会比较注释，发送过程中新加的注释在失败时不会被旧快照盖掉。切换会话会关掉选择浮层。
+    Changed
+    - Composer workspace chip on every desktop chat (#662): The project / default-workspace control above the input is no longer limited to a brand-new draft that already has a folder. Pick, add, or return to the default workspace from the existing ComposerProjectMenu. Chinese copy uses 默认工作区 (was 通用). Sidebar + stays. Phone still uses the tools sheet.
+    中文 · 变更
+    - 桌面输入框上方始终显示工作区（#662）：不再只在「已选项目的全新空草稿」才出现。沿用现有 ComposerProjectMenu 选择、添加或回到默认工作区。中文不再用「通用」。侧栏 + 保留。手机仍走工具页。
+    Fixed
+    - Selection comment pop hierarchy: The comment field uses the input well so it no longer blends into the panel; the excerpt stays plain truncated text.
+    - Stuck「连接中」until restart: The status pill is per-chat (another session’s handshake no longer paints this one Connecting). Host connect has a 90s wall clock; ProcessExited during handshake fails the FSM; leftover Connecting is not treated as a healthy live process. session/set_mode runs after Ready. Click the pill or Reconnect to cancel and retry — that button stays enabled.
+    - Chat no longer freezes when a generated image first appears (#675, #676): The card first-paints a placeholder or cached thumb instead of the full Imagine PNG. Host cache hits read source width/height from a sidecar (or the thumb JPEG header) and do not decode the original again.
+    - Assistant body text no longer stacks on itself: Conclusion markdown and work-fold tool stdout could occupy the same box when a parent flex column crushed their height (overflow: visible expand bodies then painted over the answer). Transcript rows, timeline children, and .chat-md--answer no longer shrink; expand-body overflow: visible is only used inside a capped/virtual scroller.
+    - Compact dialog overflow + help: Long inline help on Compact context could exceed .modal max-height (overflow: hidden, no scroll body) and clip the Compact button. Descriptions move into a title ? tip; the body scrolls and the footer stays pinned. Connect failure after confirm no longer fails silently.
+    - Pathless「文件」tab no longer stays beside an opened file: Opening a file from the tree replaces the picker Files chip. Picking Files again focuses the open file instead of minting a second dead tab (which did nothing and could stall the pane).
+    - Slash palette /rc and /review- select review-commit (#644): Treat - as a word boundary so kebab initials match, rank name prefix above description, and keep description as fallback only when no name hits. Peer skills that mention review-commit in YAML no longer steal the default highlight.
+    - Working rail overlap and leftover ANSI (#667, #672): Long live 工作中 rows no longer paint tool bodies over the next line; leftover [39m / [32m SGR after a dropped ESC is stripped. Mapped lists no longer flex-shrink into a 360px box that crushes expanded rows.
+    - 75Hz external-display chat scroll (#651): Virtual-list window updates pair requestAnimationFrame with an 8ms fallback so a missed vsync on a mixed 120Hz/75Hz Mac does not drop the scroll to a 37.5Hz stutter.
+    - Command-palette search scroll and keyboard (#657): ⌘K results sit in a real scrollport (wheel / trackpad work). Arrow keys move a highlight; Enter opens the row; ⌘/Ctrl 1–9 still jump to the numbered session.
+    - Included-usage exhaustion is no longer a generic provider error (#659): When Grok Build reports subscription:free-usage-exhausted, Host stops the 15-retry loop immediately and emits QUOTA_EXCEEDED. The chat card uses the CLI line “You hit your free usage limit.” (rolling 24-hour window + Account). A bare 429 / “rate limit, retry later” uses the CLI “Rate limited” / “Wait a minute” card, not the free-usage sentence.
+    - Desktop notification click restores the session (#654): Clicking a native toast now unminimizes / focuses the main window and opens the chat that fired it (permission, ask-user, or turn-done). Windows uses a WinRT on_activated toast instead of the fire-and-forget plugin path; packaged macOS waits for the UN default action. Missing sessionId still focuses the app. tauri dev osascript toasts (Script Editor) still cannot deep-link.
+    - Skills catalog matches CLI discovery (#653): Settings → Extensions → Skills no longer keeps listing Claude/Cursor compat skills after Grok Build has them turned off. skills_list now runs grok inspect with the session GROK_HOME and drops ~/.claude / ~/.cursor rows when [compat.claude] skills or [compat.cursor] skills is false (or the new App overlay is off). Slash / + pickers share the same list.
+    - Premature 工作了 + copy/retry while the turn is still running (#670): Host no longer emits stream done while the prompt or tools are still open. A later finished fragment folds into the live sibling without duplicating answer text. Copy/MD/retry stay hidden until Ready.
+    - Windows huge assistant replies / paste become a .txt card (#647): On Windows only, a single reply or clipboard paste ≥ 8000 characters is shown as a short preview plus a file card (or attached as .txt). macOS / Linux keep full markdown and normal paste. Find-in-chat still shows the full body.
+    - New chat no longer restores a leftover first prompt: Each project keeps a new-session composer buffer. After send, that buffer was often left on disk (#620 leftovers, or a mid-type snapshot that is not byte-identical to the sent text). Restore now drops buffers that match a recent send exactly, as a prefix of that send, or as a short first-line fragment (e.g. saved 好的 / d vs sent 好的 / 你看好了吗？). Attachment-only unsent drafts still restore. A follow-up send on an existing thread does not wipe a new-task buffer that still has extra files.
+    - Shift+Enter first press starts a new line: The composer stored \n but re-projected a trailing <br>, which WebKit treats as an empty-editor sentinel (first Shift+Enter looked like a no-op). Each line is now a div; a trailing empty line is marked data-composer-nl="1" so serialize keeps the newline and the caret stays on that line. ZWSP caret pads are not used for this path (they split IME 汉字).
+    - Windows taskbar icon no longer looks a size smaller (#650): icon.ico is generated from a fill-cropped raster so the mark fills the frame. macOS icon-source.png / .icns stay on the dock-grid master.
+    - Side workbench file tabs and per-project isolation (#661 slice): Inactive file chips show a filename (and a short parent path on collisions). Switching projects stashes that project's tabs. Opening Files shows the tree and adopts the placeholder chip instead of minting a second pathless tab. The CodeMirror editor from the same PR is not in this slice.
+    中文 · 修复
+    - 选区注释弹窗层次：评论框用输入井，不再和面板糊成一块；摘录仍是普通截断文本。
+    - 一直卡在「连接中」、只能重启：顶栏药丸按当前会话投影（别的会话在握手时，这个聊天不再显示连接中）。整段 connect 有 90 秒墙钟；握手期间进程退出会离开 Connecting；未完成的握手不再被当成健康活进程。session/set_mode 改到 Ready 之后。点击药丸或「重新连接」可取消并重试，按钮不再因连接中被禁用。
+    - 对话出图那一下不再卡死（#675、#676）：卡片首屏改占位或缓存缩略图，不再先解完整原图。Host 缓存命中读 sidecar / JPEG 头拿宽高，不再为读尺寸再解一遍原图。
+    - 助手正文不再叠字：结论 Markdown 和工作轨里的工具输出会被父级 flex 压扁到同一块区域（展开体 overflow: visible 再盖到答案上）。消息行、时间线子项和 .chat-md--answer 不再被压缩；只有带滚动条的工作列表才允许展开体溢出。
+    - 压缩弹窗过长、按钮被裁切：原先说明全铺在弹窗里，超出 .modal 最大高度后底部「压缩」被裁掉（容器 overflow: hidden、没有可滚 body）。说明收到标题旁 ?，正文可滚、底部按钮固定。确认后连不上 Agent 也不再静默失败。
+    - 空的「文件」tab 不再和已打开文件并排：从树里打开文件会替换选择器里的「文件」占位。再点「文件」只会聚焦已打开的文件，不会再多出一个点了没反应、还会卡住侧栏的死标签。
+    - 斜杠菜单 /rc、/review- 会选中 review-commit（#644）：把 - 当词界以匹配 kebab 首字母，名字前缀优先于描述，且只有名字全无命中时才用描述兜底。YAML 里互相点名 review-commit 的 skill 不再抢走默认高亮。
+    - 工作轨叠字和残留 ANSI（#667、#672）：长「工作中」不再把工具正文盖到下一行；ESC 丢掉后残留的 [39m / [32m 会被剥掉。展开后的列表不再被压进 360px 盒子里叠字。
+    - 75Hz 外接屏聊天滑动（#651）：虚拟列表窗口更新在 rAF 之外加 8ms 兜底，混用 120Hz/75Hz 时漏一帧不会掉成肉眼 37.5Hz。
+    - 命令面板搜索可滚动、可用键盘（#657）：⌘K 结果有独立滚动区。方向键高亮，Enter 打开，⌘/Ctrl 1–9 仍跳到编号会话。
+    - 额度用尽不再显示成普通提供商报错（#659）：官方返回 subscription:free-usage-exhausted 时，Host 立刻停转并记 QUOTA_EXCEEDED，气泡对齐 CLI 的 “You hit your free usage limit.”（滚动 24 小时窗口 + 账号）。普通 429 走 CLI 的 “Rate limited / 等一分钟再发”，不再和免费用量写成一句。
+    - 点击桌面通知回到对应会话（#654）：点原生通知会还原/聚焦主窗口并打开发出该通知的会话。Windows 走带点击回调的 WinRT toast；已打包的 macOS 等 UN 默认点击。没有 sessionId 时仍只聚焦应用。tauri dev 的 osascript（脚本编辑器）通知仍无法回跳。
+    - 技能目录与 CLI 探测一致（#653）：在 Grok Build 关掉兼容探测后，设置 → 扩展 → 技能不再继续列出 Claude/Cursor 技能。skills_list 用当前会话的 GROK_HOME 跑 grok inspect，并在 config.toml / 应用开关关闭时丢掉 ~/.claude、~/.cursor 条目。斜杠 / + 选择器共用这份列表。
+    - 回合还在跑就出现「工作了」和复制/重试（#670）：Host 在 prompt / 工具未结束时不再发 stream done。后到的完成片段并进仍在工作的那条，正文不重复。Ready 之前不显示复制 / MD / 重试。
+    - Windows 超长回复/粘贴改为 txt 卡片（#647）：仅 Windows，单条回复或粘贴 ≥ 8000 字改成预览 + 文件卡。macOS / Linux 仍是完整 Markdown / 正常粘贴。对话内查找仍显示全文。
+    - 新建对话不再带回已发送的残留：每个项目有一份新会话输入缓冲。发送后这份缓冲常留在磁盘上（#620 残留，或和发出去的原文不完全相同的半截）。恢复时会丢掉与最近发送完全相同、作为其前缀、或短且首行相同的碎片（例如存的是 好的 / d，发出去的是 好的 / 你看好了吗？）。只有附件的未发送草稿仍会恢复。在已有会话里跟进发送时，如果新任务缓冲还带着这份发送里没有的附件，不会整份清掉。
+    - 第一次 Shift+Enter 就会换行：原先存的是 \n，重绘却是尾部 <br>，WebKit 把它当成空编辑器哨兵，第一次换行看起来没反应。现在一行一个 div，末尾空行标 data-composer-nl="1"，序列化会保留换行，光标留在新行。这条路径不再用 ZWSP 占位（会拆开输入中的汉字）。
+    - Windows 任务栏图标不再小一号（#650）：icon.ico 按去留白后的画布生成。macOS 母版 / .icns 不动。
+    - 侧栏文件 tab 名 + 按项目隔离（#661 切片）：未激活的文件芯片显示文件名（重名时带上一级路径）。切换项目会收起该项目的 tab。打开 Files 显示树，并用占位芯片承接真实文件，不再并排多一个无路径 tab。同一 PR 里的 CodeMirror 编辑器不在本切片。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.21
+ReleaseTime: 2026-08-18T03:23:59.0000000Z
