@@ -6,12 +6,16 @@ $this.CurrentState.Version = [regex]::Match($Object1.OuterHtml, 'Release:\s+(\d+
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(@onclick, "Download")]').Attributes['href'].Value
-  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe" })
+  InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[contains(@onclick, "Download")]').Attributes['href'].Value
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
+
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.visual-3d.com/News/vc/ReadMe.aspx' | ConvertFrom-Html
 
