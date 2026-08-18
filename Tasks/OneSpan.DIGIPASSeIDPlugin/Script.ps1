@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
@@ -12,7 +12,6 @@ function Read-Installer {
   $ZipFile.Dispose()
   # Version
   $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath, '(\d+(?:\.\d+)+)').Groups[1].Value
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.onespan.com/resources/digipass-plug-eid-middleware-windows'

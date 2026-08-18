@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
   $InstallerFileExtracted = New-TempFolder
   $InstallerFile2 = Expand-InnoInstaller -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Name 'BK5WIN.EXE' -CollisionAction Rename | Select-Object -First 1 -ExpandProperty 'FullName'
   # Version
@@ -7,7 +7,6 @@ function Read-Installer {
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{

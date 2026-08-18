@@ -1,12 +1,11 @@
 # $Object1 = Invoke-RestMethod -Uri 'https://releases.threema.ch/web-electron/v1/updates/work-latest-windows.json'
 
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 function Get-ReleaseNotes {

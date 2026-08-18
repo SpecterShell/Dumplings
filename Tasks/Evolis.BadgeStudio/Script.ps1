@@ -4,7 +4,6 @@ function Read-Installer {
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
   # InstallerSha256
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.badgy.com/software-badgy/download-the-evolis-badge-studio-trial-version-software/'

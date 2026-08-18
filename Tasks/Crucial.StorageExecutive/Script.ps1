@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile '*.exe' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted '*.exe' | Get-Item -Force | Select-Object -First 1
@@ -16,7 +16,6 @@ function Read-Installer {
     }
   )
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Use-PlaywrightPage -Stealth -Headless {

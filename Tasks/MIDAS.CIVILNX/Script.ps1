@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'MIDAS CIVIL NX.msi' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'MIDAS CIVIL NX.msi'
@@ -12,7 +12,6 @@ function Read-Installer {
   # AppsAndFeaturesEntries
   $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @([ordered]@{ UpgradeCode = $InstallerFile2 | Read-UpgradeCodeFromMsi })
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://support.midasuser.com/hc/en-us/articles/36302932646809-CIVIL-NX-Installation-Files'

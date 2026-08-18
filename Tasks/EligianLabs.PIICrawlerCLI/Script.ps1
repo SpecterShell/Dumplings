@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   Expand-Archive -Path $InstallerFile -DestinationPath $InstallerFileExtracted -Force
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'piicrawler.exe' -Resolve

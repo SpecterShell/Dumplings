@@ -2,7 +2,7 @@
 
 function Read-Installer {
   foreach ($Installer in $this.CurrentState.Installer) {
-    $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Setup.msi' | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted 'Setup.msi'

@@ -1,5 +1,5 @@
 function Read-Installer {
-  $Script:InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $Script:InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
   # InstallerSha256
@@ -7,6 +7,8 @@ function Read-Installer {
 }
 
 function Get-ReleaseNotes {
+  $InstallerFileExtracted = $null
+  $Object3 = $null
   try {
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'history.txt' | Out-Host
@@ -46,8 +48,12 @@ function Get-ReleaseNotes {
     $_ | Out-Host
     $this.Log($_, 'Warning')
   } finally {
-    $Object3.Close()
-    Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    if ($Object3) {
+      $Object3.Dispose()
+    }
+    if ($InstallerFileExtracted) {
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
   }
 }
 

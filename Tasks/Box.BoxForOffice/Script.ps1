@@ -1,11 +1,10 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
+  $this.InstallerFiles[$InstallerMSI.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerMSI.InstallerUrl
   # Version
   $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
   # InstallerSha256
   $InstallerMSI['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm 'SHA256').Hash
   $InstallerEXE['ProductCode'] = "Box for Office $($this.CurrentState.Version)"
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # MSI

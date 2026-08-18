@@ -1,12 +1,11 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   try {
     # Read the signed Edge tag and embedded OfflineManifest.gup without executing or externally extracting the installer.
     $InstallerInfo = Get-ChromiumSetupInfo -Path $InstallerFile
     $this.CurrentState.Version = $InstallerInfo.DisplayVersion
     $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
   } finally {
-    Remove-Item -Path $InstallerFile -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }
 }
 

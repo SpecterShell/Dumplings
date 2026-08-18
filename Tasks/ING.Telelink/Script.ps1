@@ -1,13 +1,16 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Telelink6.msi' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'Telelink6.msi'
-  # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  try {
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Telelink6.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'Telelink6.msi'
+    # Version
+    $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  } finally {
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  }
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://api.www.ing.be/be/public/pagemodel?pageUrl=/en/business/payments/telelink-isabel'

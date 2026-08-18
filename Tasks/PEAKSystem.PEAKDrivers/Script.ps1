@@ -1,5 +1,5 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
   7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'PeakOemDrv.exe' | Out-Host
   $InstallerFile2 = Join-Path $InstallerFileExtracted 'PeakOemDrv.exe'
@@ -10,7 +10,6 @@ function Read-Installer {
   # ProductCode
   $this.CurrentState.Installer[0]['ProductCode'] = "PEAK-Drivers $($this.CurrentState.Version.Split('.')[0..2] -join '.') $($this.CurrentState.Version)"
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 $this.CurrentState.Installer += [ordered]@{

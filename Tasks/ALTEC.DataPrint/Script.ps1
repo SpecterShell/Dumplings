@@ -1,22 +1,25 @@
 function Read-Installer {
-  $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Altec DataPrint.msi' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'Altec DataPrint.msi'
-  # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  # ProductCode
-  $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
-  # AppsAndFeaturesEntries
-  $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
-    [ordered]@{
-      UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
-      InstallerType = 'msi'
-    }
-  )
-  Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  try {
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'Altec DataPrint.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'Altec DataPrint.msi'
+    # Version
+    $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
+    # InstallerSha256
+    $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # ProductCode
+    $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
+  } finally {
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+  }
 }
 
 $Object1 = (Invoke-RestMethod -Uri 'https://altec.nl/wp-json/ecs-altec/download?category=139&selected[facet_146]=term_148&selected[facet_182]=term_183').downloads.Where({ $_.url.EndsWith('.exe') }, 'First')[0]
