@@ -1,0 +1,60 @@
+Version: 0.15.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.15.4/FylloCode-0.15.4-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.15.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release completes asynchronous control and observability for cross-Agent delegation: spawned Sessions now run in the background by default, can be cancelled on request, stream their completion notifications into the parent Session, and remain visible at any time through a persistent per-session activity bar. Every real session also gets its own URL for direct access, refresh recovery, and navigation from other pages.
+    Added
+    - Every real session now uses its own /chat/<session-id> subroute. Task pages, session search, and lineage open the session directly, and a refresh stays on the same session; /chat remains the draft entry before the first message, and an invalid or out-of-Workspace session route falls back to /chat with a notice
+    - Added a child-Agent activity bar at the bottom of the Chat conversation area. When the current session owns spawned Sessions, the bar shows the total as 子 Agent N plus the running count; its list orders Sessions by active first, then by most recent update, with each entry's Agent, synchronous or background mode, status, prompt preview, and update time. Opening a Session shows read-only details organized by Turn, with the latest Turn selected by default and earlier Turns available, each showing its original prompt, aggregated Activity, compacted Transcript, status, and response IDs
+    - Added the cancel_session tool to fyllo-spawn. The parent Agent can request cancellation of a running spawned Session it owns; { cancelled: true } only means the request was triggered, the turn settles as error with code TURN_CANCELLED_BY_PARENT, and the final state is confirmed through check_session_status
+    Changed
+    - fyllo-spawn's prompt_to_agent now runs in the background by default (background defaults to true): the call returns accepted once Main owns the turn, so the parent Agent can keep working and later collect the result through check_session_status and read_response. Callers that need synchronous blocking must pass background: false explicitly. This is an incompatible default change; older calls that omit the parameter behave differently
+    - When a background spawned turn completes, its completion notification now streams into the parent Session like a normal reply: the Session shows a running state and sending is temporarily disabled during the notification turn, and multiple pending notifications for the same parent are delivered one at a time in order. The notification turn lifecycle remains owned by Main; closing the window only interrupts the live projection and does not cancel or lose the reply
+    - The spawn.session Signal changed from a required discovery step to an optional contextual deep link. Main automatically exposes newly created and continued spawned Sessions through the parent Session's activity bar, so omitting the Signal does not affect visibility
+    Fixed
+    - Fixed the missing loading feedback and silently rejected sends in the parent Session while a spawn notification reply was running: once dispatch is accepted the Session enters submitted, and turns to streaming when the first content chunk arrives
+    Notes
+    - The application version is now 0.15.4.
+    - The fyllo-spawn MCP server is now 0.2.0. This version adds cancel_session and changes the background default to true; the latter is a breaking change, and callers that rely on synchronous blocking must pass background: false explicitly.
+    - The fyllo-cortex MCP server remains at 0.7.0, and the fyllo-specs MCP server remains at 0.11.1; neither server changed in this release range.
+    - The child-Agent activity bar and Turn details are read-only and read from Main's durable records and live state; no continue, cancel, or retry entry points were added to the UI, and completion-notification delivery semantics are unchanged.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0154---2026-08-19
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布围绕跨 Agent 委派补全了异步控制与可观测性：spawned Session 默认在后台运行、可以被主动取消，完成通知以流式回复进入父会话，父会话也可以通过常驻活动栏随时查看名下所有子 Agent。每个真实会话同时获得独立 URL，可以直接定位、刷新恢复和从其他页面跳转。
+    新增
+    - 每个真实会话使用独立的 /chat/<session-id> 子路由。任务页、会话搜索和 lineage 会直接打开对应会话，刷新后仍停留在同一会话；/chat 保留为首条消息前的草稿入口，无效或不属于当前 Workspace 的会话路由会回退到 /chat 并提示
+    - Chat 对话区底部新增子 Agent 活动栏。当前会话存在 spawned Session 时，活动栏显示“子 Agent N”总数与正在运行的数量，列表按活跃优先、最近更新优先展示每个 Session 的 Agent、同步或后台模式、状态、Prompt 预览与更新时间；打开任一 Session 显示按 Turn 组织的只读详情，默认选中最新 Turn，可切换历史 Turn 查看原始 Prompt、聚合 Activity、压缩 Transcript、状态与 response ID
+    - fyllo-spawn 新增 cancel_session tool。父 Agent 可以请求取消名下正在运行的 spawned Session；{ cancelled: true } 只表示取消请求已触发，turn 最终以 error（TURN_CANCELLED_BY_PARENT）结束，需通过 check_session_status 确认
+    调整
+    - fyllo-spawn 的 prompt_to_agent 现在默认后台执行（background 默认为 true）：调用在 Main 接管 turn 后立即返回 accepted，父 Agent 可以继续工作，再通过 check_session_status 与 read_response 获取结果。需要同步阻塞的调用必须显式传 background: false。这是不兼容的默认值变化，省略该参数的旧调用行为会改变
+    - 后台 spawned turn 完成后，完成通知改为以流式回复进入父会话：期间会话显示运行状态并暂时禁用发送，同一父会话的多条待投递通知按顺序逐条处理。通知 turn 的生命周期仍由 Main 持有，关闭窗口只中断实时投影，不会取消或丢失回复
+    - spawn.session Signal 从必须的发现步骤改为可选的上下文深链。Main 会自动把新建和续聊的 spawned Session 暴露到父会话活动栏，Agent 不输出 Signal 也不影响查看
+    修复
+    - 修复 spawn 通知回复期间父会话没有 loading 反馈、发送被静默拒绝的问题：dispatch 被接受后会话立即进入 submitted 状态，收到首个内容 chunk 后转为 streaming
+    说明
+    - 应用版本为 0.15.4。
+    - fyllo-spawn MCP server 升级到 0.2.0。该版本新增 cancel_session，并把 background 默认值改为 true；后者是 breaking 变化，依赖同步阻塞行为的调用方需要显式传 background: false。
+    - fyllo-cortex MCP server 保持 0.7.0，fyllo-specs MCP server 保持 0.11.1；本次发布范围没有修改这两个 server。
+    - 子 Agent 活动栏与 Turn 详情全部只读，数据来自 Main 的持久化记录与当前运行态；不新增 UI 层面的继续、取消或重试入口，也不改变完成通知的投递语义。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0154---2026-08-19
+ReleaseTime: 2026-08-19T09:23:35.0000000Z
