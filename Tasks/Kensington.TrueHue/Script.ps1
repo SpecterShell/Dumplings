@@ -26,9 +26,13 @@ switch -Regex ($this.Check()) {
         Value  = $Prefix = 'https://www.kensington.com/software/kensington-konnect/'
       }
 
-      $Object2 = Invoke-WebRequest -Uri $Prefix
+      $Object2 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
+        Read-PlaywrightPageContent -Page $Page
+      } | Get-EmbeddedLinks
 
-      $ReleaseNotesUrlLink = $Object2.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('truehue') -and $_.href.Contains('release-note') } catch {} }, 'First')
+      $ReleaseNotesUrlLink = $Object2.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('truehue') -and $_.href.Contains('release-note') } catch {} }, 'First')
       if ($ReleaseNotesUrlLink) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
