@@ -57,6 +57,8 @@ Switch and mode behavior follows the effective `NestedInstallerType`. Remove fie
 
 Use [VM validation](../../workflows/vm-validation.md) when static evidence cannot prove nested command selection, execution order, ARP ownership, or switches.
 
+When `NestedInstallerType` is `portable`, inspect the complete runtime layout rather than extracting only the command EXE. Add `ArchiveBinariesDependOnPath: true` if that executable depends on DLLs, native runtimes, plugins, or required relative-path files that remain in the extracted directory. Omit it for incidental documentation and other unrelated files. Follow the [portable workflow](../portable/workflow.md) for command aliases, PE dependency analysis, and VM verification of the installed command.
+
 ## Apps & Features
 
 Use structured parser evidence to identify the visible Apps & Features owner. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.

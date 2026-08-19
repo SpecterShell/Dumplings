@@ -78,6 +78,27 @@ Follow these rules:
 
 The behavior is grounded in winget-cli's [`PortableFlow.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCLICore/Workflows/PortableFlow.cpp), [`ManifestValidation.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/ManifestValidation.cpp), manifest command aggregation in [`Manifest.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/Manifest.cpp), source-index insertion in [`Interface_1_0.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerRepositoryCore/Microsoft/Schema/1_0/Interface_1_0.cpp), and the official [`Microsoft.WinGet.CommandNotFound`](https://github.com/microsoft/winget-command-not-found) integration.
 
+### Archive binaries that depend on the installation path
+
+For `InstallerType: zip` with `NestedInstallerType: portable`, add `ArchiveBinariesDependOnPath: true` when a command executable depends on companion files that remain in the extracted installation directory. Common evidence includes side-by-side DLLs, native runtime files, plugins, or required data and configuration loaded relative to the executable. WinGet then adds the actual portable installation directory to `PATH` instead of relying on command symlinks whose directory may not contain those dependencies.
+
+The presence of README files, licenses, checksums, icons, or other incidental non-executable content does not require this field. Multiple independent EXE files also do not prove it (Instead, please add all of them to NestedInstallerFiles). Inspect imports, adjacent runtime files, project documentation, and a WinGet installation in the VM; set the field whenever the selected portable executable needs the archive's companion files to start or operate correctly. The field applies only to archive-plus-portable installers and defaults to `false` when omitted.
+
+This behavior is defined by the WinGet [manifest schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.12.0/manifest.installer.1.12.0.json) and the portable installation path in [`PortableInstaller.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCLICore/PortableInstaller.cpp).
+
+```yaml
+InstallerType: zip
+NestedInstallerType: portable
+ArchiveBinariesDependOnPath: true
+Installers:
+- Architecture: x64
+  NestedInstallerFiles:
+  - RelativeFilePath: Product.exe
+    PortableCommandAlias: product
+  InstallerUrl: https://example.com/Product-1.2.3-x64.zip
+  InstallerSha256: <SHA256>
+```
+
 ### ReleaseDate
 
 Use the release date in this evidence order:

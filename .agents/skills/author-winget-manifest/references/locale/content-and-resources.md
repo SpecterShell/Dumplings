@@ -4,14 +4,15 @@
 
 ### License
 
-- For an open-source package with a valid SPDX license, use its [SPDX license identifier](https://spdx.org/licenses/), such as `MIT`, `Apache-2.0`, or `GPL-3.0-only`. Please search for the identifier in this page for the open source licenses not familiar with.
+- For an open-source package with a valid SPDX license, use its [SPDX license identifier](https://spdx.org/licenses/), such as `MIT`, `Apache-2.0`, or `GPL-3.0-only`. Verify that the repository or distributed source actually contains the full license text that grants permission, whether in a license file, complete source-file headers, or another complete license section. Search the SPDX list when the identifier is unfamiliar.
 - Use `Freeware` for a non-open-source package that is explicitly free to use and is not shareware.
 - Use `Proprietary` when the package uses a proprietary license and should not be classified as freeware, or when no more specific public classification is available.
-- Do not treat a copyright notice, source-available statement, or the mere presence of a public repository as an open-source license.
+- Do not treat a copyright notice, source-available statement, public repository, license badge, package metadata value, or a README sentence that merely names a license as the license grant. If the project claims an open-source license but provides no license text, do not write that SPDX identifier. Use `Freeware` when the publisher still clearly distributes the application for free, as with [`makise2060/dsh-agent`](https://github.com/makise2060/dsh-agent); otherwise use `Proprietary` until authoritative terms are available.
 
 ### LicenseUrl
 
 - For an open-source repository, link to the rendered license file on the repository's default branch using a stable branch alias such as `HEAD`, for example `https://github.com/CherryHQ/cherry-studio/blob/HEAD/LICENSE`.
+- Do not use a README license badge, heading, or one-line license claim as `LicenseUrl` when the linked page does not contain the license text. Omit `LicenseUrl` unless another official page provides the applicable terms.
 - For proprietary or freeware applications, use the official license agreement, terms of service, or end-user license page.
 - The site footer, login page, and installer wizard are useful discovery locations. A URL written to the manifest must remain publicly accessible without running the installer.
 

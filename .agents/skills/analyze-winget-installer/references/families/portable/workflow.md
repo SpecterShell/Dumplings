@@ -22,6 +22,7 @@ Installers:
 - Architecture: x64
   InstallerType: zip
   NestedInstallerType: portable
+  ArchiveBinariesDependOnPath: true
   NestedInstallerFiles:
   - RelativeFilePath: Product.exe
     PortableCommandAlias: product
@@ -29,7 +30,7 @@ Installers:
   InstallerSha256: <SHA256>
 ```
 
-Use `NestedInstallerFiles` only for portable command targets. Set `ArchiveBinariesDependOnPath` only with evidence.
+Use `NestedInstallerFiles` only for portable command targets. Add `ArchiveBinariesDependOnPath: true` when the selected executable needs files that remain beside it in the extracted archive, especially DLLs, native runtimes, plugins, or required relative-path data. WinGet uses this flag to add the real installation directory to `PATH`; without it, launching through a portable command link can prevent those companions from being resolved. Do not set it merely because the archive also contains documentation, licenses, icons, checksums, or unrelated executables. Follow the complete [installer-field rule](../../../../author-winget-manifest/references/manifest/installer-fields.md#archive-binaries-that-depend-on-the-installation-path).
 
 Add `Commands` at the installer or common root level for source-index search, and set `PortableCommandAlias` on every nested binary that should become a user-facing command. Bundled helper executables remain in `NestedInstallerFiles` only when WinGet must preserve them; omit their alias and do not list them in `Commands`.
 
@@ -61,7 +62,7 @@ $Architecture = Get-PEArchitectureInfo -Path C:\Path\To\Product.exe -RelatedFile
 $Dependencies = Get-PEDependencyInfo -Path C:\Path\To\Product.exe -RelatedFile $Related.FullName
 ```
 
-Use `RecommendedWinGetArchitecture` when singular and create concrete entries from `RecommendedWinGetArchitectures` when multiple values are supported. AnyCPU still requires concrete architectures. Never use `neutral` when a package contains PE binaries; ARM32 is excluded.
+Use `RecommendedWinGetArchitecture` when singular and create concrete entries from `RecommendedWinGetArchitectures` when multiple values are supported. AnyCPU still requires concrete architectures. Never use `neutral` when a package contains PE binaries; ARM32 is excluded. When the archive includes DLLs, pass them through `-RelatedFile` and use their architecture and import evidence both to constrain the executable architecture and to decide whether `ArchiveBinariesDependOnPath` is required.
 
 `Get-PEDependencyInfo` maps VC runtime imports to WinGet dependencies and reports UCRT evidence separately. Verify whether the runtime DLLs are bundled. For .NET 5 and later, inspect the bound managed DLL, `runtimeconfig.json`, and bundle metadata. Do not add a runtime dependency when bundled `hostfxr.dll`, `hostpolicy.dll`, `coreclr.dll`, `System.Private.CoreLib.dll`, or `includedFrameworks` proves a self-contained deployment. This helper does not infer Windows App Runtime, Microsoft UI XAML, VSTO Runtime, or Office requirements for unpackaged applications; follow the manifest-authoring [dependency workflow](../../../../author-winget-manifest/references/manifest/dependencies.md) when structured installer or publisher evidence proves one of these requirements.
 
