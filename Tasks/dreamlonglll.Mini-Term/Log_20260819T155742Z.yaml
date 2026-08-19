@@ -1,0 +1,32 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.14.0/Mini-Term_0.14.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.14.0/Mini-Term_0.14.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    布局不再一次定型 —— pane 拖拽移动 / 合并 / 重排 + 双击最大化
+    本版合入社区贡献者 @hitechr 的功能批次（#49，7 个提交 / 16 个文件），review 反馈（一处必修 + 一处 minor）已由作者逐条落实。
+    ✨ 新功能
+    - 终端 tab 拖着走 — 按住 pane 的 tab 就能拖：拖到其它分组的 tab 栏按插入位精确落子（组内前后换位、跨组按位并入，3px 圆头指示线实时预告落点）；拖到终端区中央整个并入该组；拖到终端区四边在对应方向拆出新分屏
+    - 双击最大化 — 双击 pane 标题 tab 临时铺满整个终端区，再双击还原；最大化状态下分屏 / 拖拽移动会先自动还原，新 pane 不会落进看不见的隐藏树里
+    - 落点预览讲信用 — 落下不会有任何动作的场景（独占一组的 pane 拖自己、拖回已在的组）不再显示高亮 / 指示线，指示了就一定有动作
+    🐛 修复
+    - tab 重排整屏重播动画 — 把 tab 拖到首位曾让整组终端重播淡入放大动画，像新开了一片分屏；分组 key 改用组内最小 pane id，重排恒稳
+    - 落子后拖拽态残留 — 曾出现松手后高亮框继续跟着鼠标走、下一次点击又移动一遍
+    🔧 内部
+    - 树变换全部纯函数化（movePaneInLayout / movePaneToTabIndex / insertSplitAt），复用既有摘除 / 替换原语，新增 15 例 Node 单测直测四边落点 / 合并 / no-op 边界 / 换锚拆出 / 不丢 pane
+    - 拖拽走 mousedown/mousemove/mouseup 自绘链路（与项目行、文件树拖拽同一模式）——Tauri dragDropEnabled（文件拖入终端功能依赖）拦截了 WebView 内的 HTML5 DnD，draggable/drop 在本应用里根本不触发
+    ⚠️ 已知限制
+    - 跨组拖动组内最老的 pane 时，目标组会重播一次进场动画（彻底修复等 leaf 稳定 id 设计，已留档）
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.13.1...v0.14.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.14.0
+ReleaseTime: 2026-08-19T13:53:25.0000000Z
