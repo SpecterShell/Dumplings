@@ -10,7 +10,7 @@ $Prefix = 'https://download-installer.cdn.mozilla.net/pub/firefox/releases/'
 $Object1 = Invoke-RestMethod -Uri 'https://product-details.mozilla.org/1.0/firefox_versions.json'
 
 # Version
-$OriginalVersion = $Object1.FIREFOX_ESR
+$OriginalVersion = $Object1.FIREFOX_ESR_NEXT
 $MajorVersion = [int]$OriginalVersion.Split('.')[0]
 $this.CurrentState.Version = $ShortVersion = $OriginalVersion.Replace('esr', '')
 
