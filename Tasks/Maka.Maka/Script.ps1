@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Maka-Agent/maka-agent/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/apache/maka/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -33,10 +33,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://github.com/Maka-Agent/maka-agent/blob/HEAD/CHANGELOG.md'
+        Value  = $ReleaseNotesUrl = 'https://github.com/apache/maka/blob/HEAD/CHANGELOG.md'
       }
 
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Maka-Agent/maka-agent/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/apache/maka/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
