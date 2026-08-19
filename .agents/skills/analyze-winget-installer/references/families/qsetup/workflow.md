@@ -8,7 +8,7 @@ Use `InstallerType: exe` for Pantaray QSetup installers.
 
 Strong evidence includes `QSetup` or `Pantaray`.
 
-The parser expands QSetup's bounded length-prefixed zlib records and treats explicit `Setup.txt` directives as authoritative. It can recover display name, version, publisher, uninstall key, target directory, user/all-users scope, allowed architectures, and literal association actions. An incomplete download may still expose metadata from complete leading records, but `Expand-QSetupInstaller` rejects an incomplete record table.
+The parser expands QSetup's bounded length-prefixed zlib records, validates the record-count footer before any Authenticode certificate, and treats explicit `Setup.txt` directives as authoritative. It can recover display name, version, publisher, uninstall key, target directory, user/all-users scope, allowed architectures, literal association actions, structured Execution Engine actions, and nested process launches. An incomplete download may still expose metadata from complete leading records, but `Expand-QSetupInstaller` rejects an incomplete record table.
 
 ## Static analysis
 
@@ -23,9 +23,11 @@ Load PackageModule, parse once, and treat explicit `Setup.txt` directives as str
 
 $Info = Get-QSetupInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
-  DefaultInstallationDirectory, Scope, SupportedScopes, SupportedArchitectures,
-  WritesAppsAndFeaturesEntry, ExtractedFiles, Warnings
+  DefaultInstallLocation, Scope, SupportedScopes, SupportedArchitectures,
+  WritesAppsAndFeaturesEntry, ExtractedFiles, Warnings, Notices
 $Info.SetupDirectives
+$Info.ExecutionActions
+$Info.ExecutedPayloads
 ```
 
 ### Extract the complete record table
