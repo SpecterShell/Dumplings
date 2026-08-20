@@ -14,28 +14,14 @@ if ($Object1.version -match '^\d+\.\d+\.\d+$' -and [System.Version]$Object1.vers
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'x64'
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = $InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName    = "Unity Hub $($Object1.version)"
-      DisplayVersion = $Object1.version
-      ProductCode    = 'Unity Technologies - Hub'
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl = Join-Uri $Prefix $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture           = 'arm64'
-  InstallerType          = 'nullsoft'
-  InstallerUrl           = $InstallerUrl.Replace('x64', 'arm64')
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayName    = "Unity Hub $($Object1.version)"
-      DisplayVersion = $Object1.version
-      ProductCode    = 'Unity Technologies - Hub'
-    }
-  )
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl.Replace('x64', 'arm64')
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
