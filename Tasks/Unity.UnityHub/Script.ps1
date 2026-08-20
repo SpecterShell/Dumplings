@@ -5,6 +5,13 @@ $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 # Version
 $this.CurrentState.Version = $Object1.version
 
+# RealVersion
+# Since 3.21.0, Unity Hub encodes the release channel in the fourth field of the MSIX Identity/@Version, mapping GA to 65535 (earlier releases shipped X.Y.Z.0).
+# WinGet requires PackageVersion to agree with the MSIX identity, so the manifest version is the four-part encoding while the ARP entries below keep the three-part product version.
+if ($Object1.version -match '^\d+\.\d+\.\d+$' -and [System.Version]$Object1.version -ge [System.Version]'3.21.0') {
+  $this.CurrentState.RealVersion = "$($Object1.version).65535"
+}
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
