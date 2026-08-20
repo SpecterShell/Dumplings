@@ -18,7 +18,7 @@ $Info.WritesAppsAndFeaturesEntry
 $Info.RegistryWrites
 $Info.AppsAndFeaturesEntries
 $Info.AppsAndFeaturesEntryEvidence
-$Info.Notices
+$Info.Diagnostics
 $Info.HasLocalizedAppsAndFeaturesEntries
 $Info.ExtractedFiles
 $Info.ExecutedPayloads
@@ -30,7 +30,6 @@ $Info.RequestedExecutionLevel
 $Info.TauriEvidence
 $Info.Protocols
 $Info.FileExtensions
-$Info.Warnings
 $Info.ParserVersionInfo
 ```
 

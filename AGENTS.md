@@ -171,8 +171,10 @@ Parser output contract: family parsers share the same property names for the
 same semantics — `Path`, `InstallerType`, `ProductCode`, `UpgradeCode`,
 `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`,
 `WritesAppsAndFeaturesEntry`, `AppsAndFeaturesProductCode`,
-`AppsAndFeaturesInstallerType` — plus `Warnings` and `UnresolvedFields` (string
-arrays, empty when none). Do not introduce legacy aliases such as
+`AppsAndFeaturesInstallerType` — plus context-neutral `Diagnostics` (object
+array) and `UnresolvedFields` (string array), empty when none. Parsers assign
+diagnostic identity, kind, areas, affected fields, and evidence; workflow callers
+assign scenario, level, and blocking policy. Do not introduce legacy aliases such as
 `ProductName`/`ProductVersion` in new outputs; keep family-specific extras on
 top of the shared contract.
 

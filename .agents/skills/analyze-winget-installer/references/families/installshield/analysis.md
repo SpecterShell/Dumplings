@@ -28,7 +28,7 @@ $Template = New-InstallShieldResponseFileTemplate `
   -ProductCode $Info.InstallScriptInfo.ProjectProductCode
 
 $Template.Content
-$Template.Warnings
+$Template.Diagnostics
 ```
 
 The template generator fills only documented generic keys such as `Result`, `szDir`, `bOpt1`, `bOpt2`, and `BootOption`. Feature-tree/custom dialogs and unresolved branches are emitted as TODO evidence. Never remove those warnings or invent project-specific values. Validate a recorded or reviewed file structurally before VM use:

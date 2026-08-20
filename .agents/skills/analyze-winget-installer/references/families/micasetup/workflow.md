@@ -33,7 +33,7 @@ $Info = Get-MicaSetupInfo -Path $InstallerPath
 $Info | Select-Object BuilderGeneration, DisplayName, DisplayVersion, Publisher, ProductCode, Scope, DefaultInstallLocation, WritesAppsAndFeaturesEntry
 ```
 
-Inspect `Warnings`, `Notices`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`; `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
+Inspect `Diagnostics`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`; `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
 
 ### 2. Resolve scope and elevation
 

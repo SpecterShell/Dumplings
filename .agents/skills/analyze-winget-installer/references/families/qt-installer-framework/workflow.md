@@ -25,7 +25,7 @@ $Format.TrailerRoute
 $Format.PackageIndexRoute
 $Format.PayloadRoute
 $Format.Capabilities
-$Format.Warnings
+$Format.Diagnostics
 ```
 
 The parser then reads the PE optional-header subsystem. `WindowsCui` identifies the CLI/headless launcher and `WindowsGui` identifies the GUI launcher. It scans only the executable prefix before appended IFW resources for source-backed CLI option and command markers as corroborating evidence or as a fallback for malformed test fixtures.
@@ -74,7 +74,7 @@ $Info.ShortcutEffects
 $Info.FileExtensions
 $Info.Protocols
 $Info.AppsAndFeaturesEffects
-$Info.Warnings
+$Info.Diagnostics
 
 $ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -Name '*.exe' -CollisionAction Rename
 Get-ChildItem -Path $ExpandedPath -Recurse -File
@@ -135,7 +135,7 @@ $ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -PackagePath $D
 
 Qt IFW package archives can be TAR, TAR+gzip, TAR+bzip2, TAR+xz, ZIP, 7z, or QBSP. QBSP is physically 7z. The extractor handles each source-supported format directly and validates selected-entry paths, links, collisions, entry counts, expanded sizes, and total output before writing.
 
-Maintenance media can contain performed-operation XML. `Operations` retains each decoded argument/value envelope and its raw XML, while `OperationEffects`, `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects` provide static projections of built-in Qt IFW operations. Read an operation's `Warnings` and `RawXml` when its name is unknown or it launches another process. These projections describe operations already serialized into the media; they do not replace reviewing controller/component JavaScript that conditionally adds operations at runtime.
+Maintenance media can contain performed-operation XML. `Operations` retains each decoded argument/value envelope and its raw XML, while `OperationEffects`, `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects` provide static projections of built-in Qt IFW operations. Read `Diagnostics` and an operation's `RawXml` when its name is unknown or it launches another process. These projections describe operations already serialized into the media; they do not replace reviewing controller/component JavaScript that conditionally adds operations at runtime.
 
 `FileExtensions`, `Protocols`, `FileAssociationEffects`, and `ProtocolEffects` are derived only from explicit registry-write evidence such as `RegisterFileType` or `GlobalConfig`. Do not infer missing associations from package names or payload extensions. `AppsAndFeaturesEffects` reconstructs Qt IFW's separate maintenance-tool registration from installer configuration and source-defined runtime behavior.
 

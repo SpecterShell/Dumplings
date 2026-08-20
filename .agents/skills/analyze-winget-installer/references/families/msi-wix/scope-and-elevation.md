@@ -64,7 +64,7 @@ $ChromiumMsi.IsSilentAtBasicUi
 $ChromiumMsi.SilentElevationBehavior
 $ChromiumMsi.HasImmediateTagExtraction
 $ChromiumMsi.DeferredInstallerAction
-$ChromiumMsi.Notices
+$ChromiumMsi.Diagnostics
 ```
 
 The source-defined action order first runs `ExtractTagInfoFromInstaller`, builds a default `ProductTag`, optionally replaces it with the appended `TAGSTRING`, builds `InstallCommand`, and finally runs `DoInstall` as a deferred, no-impersonate custom action. Therefore:

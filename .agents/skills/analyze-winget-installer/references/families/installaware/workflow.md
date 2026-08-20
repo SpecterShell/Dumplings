@@ -23,7 +23,7 @@ Load PackageModule, parse once, and inspect the validated embedded archive:
 
 $Info = Get-InstallAwareInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, Scope, SupportedScopes,
-  RequestedExecutionLevel, WritesAppsAndFeaturesEntry, NestedInstallerFiles, MsiPayloads, Warnings
+  RequestedExecutionLevel, WritesAppsAndFeaturesEntry, NestedInstallerFiles, MsiPayloads, Diagnostics
 ```
 
 ### Extract and analyze nested installers

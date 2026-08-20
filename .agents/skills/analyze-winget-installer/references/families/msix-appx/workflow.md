@@ -32,7 +32,7 @@ $Platform = $Info.Platform
 $MinimumOSVersion = $Info.MinimumOSVersion
 $Dependencies = $Info.Dependencies
 $UnknownDependencies = $Info.UnknownPackageDependencies
-$Warnings = $Info.Warnings
+$Diagnostics = $Info.Diagnostics
 $Capabilities = $Info.Capabilities
 $RestrictedCapabilities = $Info.RestrictedCapabilities
 $SignatureSha256 = $Info.SignatureSha256
@@ -44,7 +44,7 @@ Use `Get-MSIXInfo` as the preferred single call; it returns installer type, pack
 
 `Get-MSIXPackageKind` identifies direct packages and bundles from `AppxManifest.xml` or `AppxMetadata/AppxBundleManifest.xml`, independent of the outer filename. `Get-MSIXPackageTypeInfo` prefers the original URL extension, an explicit installer-type hint, or HTTP content type. An extensionless bundle can also use payload filenames from its bundle manifest. A direct AppX package and direct MSIX package cannot be distinguished reliably from package structures alone; in that case the helper returns the WinGet-compatible `msix` fallback with `IsAmbiguous: true` and a warning. Preserve a known `appx` type from the original URL, `.appinstaller`, or existing manifest by passing `-InstallerTypeHint appx`.
 
-`Read-DependenciesFromMSIX` returns only allowlisted dependency packages suitable for WinGet manifests. `Get-MSIXInfo.UnknownPackageDependencies` returns other XML `PackageDependency` entries found in the package, and `Get-MSIXInfo.Warnings` includes messages such as unknown dependency packages being omitted from manifest dependencies.
+`Read-DependenciesFromMSIX` returns only allowlisted dependency packages suitable for WinGet manifests. `Get-MSIXInfo.UnknownPackageDependencies` returns other XML `PackageDependency` entries found in the package, and `Get-MSIXInfo.Diagnostics` includes structured evidence such as unknown dependency packages omitted from manifest dependencies.
 
 Dependency filtering helpers:
 
@@ -55,7 +55,7 @@ $DependencyInfo = ConvertTo-MSIXManifestDependencyInfo -PackageDependencies $Raw
 
 If `$Info.UnknownPackageDependencies` is not empty, warn in the analysis result and inspect whether the dependency is a true external framework, a packaged optional component, or metadata that should not be represented in winget-pkgs.
 
-Use `Get-WinGetInstallerAnalysis -Path $InstallerFile` when PackageModule is loaded and check `BlockingIssues` before authoring. The analyzer treats missing signatures and signatures that are not trusted by the system as blocking issues.
+Use `Get-WinGetInstallerAnalysis -Path $InstallerFile` when PackageModule is loaded and inspect `Diagnostics`, `HasErrorDiagnostics`, and `HasBlockingDiagnostics` before authoring. The analyzer treats missing signatures and signatures that are not trusted by the system as blocking diagnostics.
 
 For `.appinstaller` metadata:
 

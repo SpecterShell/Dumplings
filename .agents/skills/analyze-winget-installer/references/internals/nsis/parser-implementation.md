@@ -60,7 +60,7 @@ Before metadata projection, validate:
 - decompression completion, checksum policy, extraction paths, and total output;
 - watchdog limits for recursion, steps, stack, branches, strings, and files.
 
-Rejecting an unsupported profile is safer than interpreting a valid command as a different opcode. Warnings are appropriate for opaque effects after structure has been established; structural corruption should terminate the affected read.
+Rejecting an unsupported profile is safer than interpreting a valid command as a different opcode. Opaque effects after structure has been established should return `Incomplete`, `Ambiguous`, or `ManualValidation` diagnostics; structural corruption should terminate the affected read.
 
 ## One analysis context
 

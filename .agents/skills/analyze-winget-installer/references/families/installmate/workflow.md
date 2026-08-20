@@ -27,7 +27,7 @@ $Info = Get-InstallMateInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
   ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes,
   SupportsDualScope, InstallLevel, InstallLevelName, ScopeEvidence,
-  RequestedExecutionLevel, DatabaseInfo, CanExpand, Warnings
+  RequestedExecutionLevel, DatabaseInfo, CanExpand, Diagnostics
 $Info.ArchiveInfo
 $Info.FileEntries
 ```

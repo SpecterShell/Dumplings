@@ -62,7 +62,7 @@ Keep `InstallModes: [interactive, silent, silentWithProgress]` because WinGet do
    $Info = Get-KachinaInfo -Path $InstallerPath
    ```
 
-2. Confirm `FormatGeneration`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Warnings`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina.
+2. Confirm `FormatGeneration`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Diagnostics`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina.
 
 3. Inspect `SupportedScopes` and `UacStrategy`. The default path is under `%ProgramFiles%` and is machine scope. `prefer-admin` and `prefer-user` can take a user route only when `-D` selects a writable user path and the process remains unelevated. Do not create a user installer entry until that exact path and switch route passes VM validation.
 

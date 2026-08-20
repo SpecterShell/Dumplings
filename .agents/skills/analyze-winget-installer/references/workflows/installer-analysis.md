@@ -24,9 +24,13 @@ $Analysis.ParserResults | Where-Object Success
 $Analysis.DetectedFamilies
 $Analysis.RoutingHints
 $Analysis.RejectedCandidates
+$Analysis.Diagnostics
+$Analysis.HasBlockingDiagnostics
 ```
 
 Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
+
+Raw family `Get-*Info` functions return context-neutral `Diagnostics`; they do not write to host streams. `Get-WinGetInstallerAnalysis` resolves them for `FullAnalysis`, so inspect `Level`, `Kind`, `Areas`, `AffectedFields`, and `IsBlocking` rather than matching message text. A manifest suggestion resolves the same evidence for `ManifestAuthoring`, where missing identity, architecture, unattended support, conflicting confirmed families, and invalid artifacts can become blocking. Manifest updates use `ManifestUpdate` and normally keep diagnostics unrelated to fields being refreshed at `Verbose`.
 
 Optional agent diagnostics must not become parser or CI dependencies:
 

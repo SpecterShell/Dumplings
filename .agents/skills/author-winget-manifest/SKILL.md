@@ -45,4 +45,4 @@ Do not add `Moniker` automatically. Do not author `UnsupportedOSArchitectures` a
 
 Operate on the complete logical manifest model throughout authoring. Serialize each evidence-backed revision with `Save-WinGetManifest` or the documented model APIs, then validate offline. Use `Format-WinGetManifest` only for an isolated document; it cannot perform cross-document optimization or prove missing evidence.
 
-Preserve full source, installer, VM, and validation records in the transient evidence tree. Report only the decisions, unresolved warnings, and evidence path in the task.
+Preserve full source, installer, VM, and validation records in the transient evidence tree. Report only the decisions, unresolved diagnostics, and evidence path in the task.

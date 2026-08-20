@@ -56,7 +56,7 @@ For programmatic authoring, run PowerShell 7.4 or later, load `Modules/PackageMo
 ```powershell
 $DefaultLocalization = [ordered]@{ PackageLocale = 'en-US'; Publisher = 'Vendor'; PackageName = 'Package'; License = 'Proprietary'; ShortDescription = 'Package description.' }
 $Suggestion = Get-WinGetInstallerManifestSuggestion -InstallerUrl https://downloads.example.test/setup.exe -InstallerPath C:\Installers\setup.exe -PackageVersion 1.2.3
-if ($Suggestion.BlockingIssues) { throw ($Suggestion.BlockingIssues -join "`n") }
+if ($Suggestion.HasBlockingDiagnostics) { throw (($Suggestion.Diagnostics | Where-Object IsBlocking).Message -join "`n") }
 $Manifest = New-WinGetManifest -PackageIdentifier Vendor.Package -PackageVersion 1.2.3 -DefaultLocalization $DefaultLocalization -Installer $Suggestion.Installers
 Save-WinGetManifest -Manifest $Manifest -Path C:\winget-pkgs\manifests\v\Vendor\Package\1.2.3
 ```
@@ -66,7 +66,7 @@ This initial save is a working revision, not the end of authoring. Re-read or re
 `New-WinGetManifest` constructs the complete logical model. `-DefaultLocalization` accepts the full default-locale dictionary, not a locale tag. `-Installer` accepts one or more complete effective installer dictionaries, and `-Localization` accepts additional locale dictionaries. The function has no `-Target`, `-PackageLocale`, or `-ManifestType` parameter; target selectors belong to the focused mutation functions, while serialization derives each physical manifest type from the logical model.
 
 - Call `Get-WinGetInstallerManifestSuggestion` once per physical installer and reuse its `Installers` and `Analysis` output. Do not follow it with individual `Read-*` parser calls.
-- Treat `BlockingIssues` as hard stops. Review `Suggestions` manually; they are intentionally not authored because the evidence is heuristic, ambiguous, first-run-only, or requires VM validation.
+- Treat `HasBlockingDiagnostics` as a hard stop and inspect the matching entries in `Diagnostics`. Review `Suggestions` manually; they are intentionally not authored because the evidence is heuristic, ambiguous, first-run-only, or requires VM validation.
 - Use `Add-WinGetManifestInstaller`, `Set-WinGetManifestInstaller`, and `Remove-WinGetManifestInstaller` for effective installer entries. Exact-match selectors must identify one entry.
 - Use `Add-WinGetManifestLocale`, `Set-WinGetManifestLocale`, and `Remove-WinGetManifestLocale` for locale dictionaries. Locale tags match case-insensitively and the default locale cannot be removed.
 - Use `Set-WinGetManifestValue` and `Remove-WinGetManifestValue` for focused RFC 6901 property paths. Numeric segments traverse existing array items, so `/AppsAndFeaturesEntries/0/DisplayName` addresses the first entry. Arrays do not merge, and adding or removing an array item requires replacing the parent array.

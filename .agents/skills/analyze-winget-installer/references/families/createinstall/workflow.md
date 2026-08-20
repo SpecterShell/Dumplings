@@ -25,10 +25,10 @@ Load PackageModule once, parse the installer once, and reuse the result:
 
 $Info = Get-CreateInstallInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, Scope, SupportedScopes,
-  RequestedExecutionLevel, WritesAppsAndFeaturesEntry, CanExpand, ExtractedFiles, Warnings
+  RequestedExecutionLevel, WritesAppsAndFeaturesEntry, CanExpand, ExtractedFiles, Diagnostics
 ```
 
-Treat `GEA`, `ExtractedFiles`, and `Warnings` as structured archive evidence. `CanExpand: false` blocks extraction when the archive is encrypted or contains an unknown compression method.
+Treat `GEA`, `ExtractedFiles`, and `Diagnostics` as structured archive evidence. `CanExpand: false` blocks extraction when the archive is encrypted or contains an unknown compression method.
 
 PPMd payloads are decoded by the source-shipped managed `SharpCompress.Gentee` companion provider. Standard SharpCompress PPMd-I is not compatible with GEA's model-update and solid-continuation rules. The provider uses the compressed size declared by each GEA block as a hard boundary and rejects truncated blocks rather than reading into the following record.
 

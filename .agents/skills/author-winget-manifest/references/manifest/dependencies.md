@@ -31,7 +31,7 @@ For MSIX/AppX packages, use the dependencies declared in `AppxManifest.xml` or t
 $Info = Get-MSIXInfo -Path $InstallerFile
 $Dependencies = $Info.Dependencies
 $UnknownDependencies = $Info.UnknownPackageDependencies
-$Warnings = $Info.Warnings
+$Diagnostics = $Info.Diagnostics
 ```
 
 The module maps `Microsoft.VCLibs.140.00.UWPDesktop` to `Microsoft.VCLibs.Desktop.14`, `Microsoft.VCLibs.140.00` to `Microsoft.VCLibs.14`, and the major-only `Microsoft.WindowsAppRuntime.2` identity to `Microsoft.WindowsAppRuntime.2.0`. Versioned `Microsoft.WindowsAppRuntime.<major>.<minor>` and `Microsoft.UI.Xaml.<major>.<minor>` identities already match their WinGet package identifiers and pass through unchanged. Preserve the package manifest's `MinVersion` as `MinimumVersion`.

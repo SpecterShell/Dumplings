@@ -12,7 +12,7 @@ Start with `Get-Install4jFormatInfo`. It validates the launcher structure, selec
 
 ```powershell
 $Format = Get-Install4jFormatInfo -Path $InstallerFile
-$Format | Select-Object IsInstall4j, IsSupported, FormatGeneration, BuilderVersion, BuilderBuild, MediaType, Architecture, Marker, LauncherRoute, StartupFileRoute, ContentTableRoute, PayloadRoute, ConfigRoute, IsFallback, Warnings
+$Format | Select-Object IsInstall4j, IsSupported, FormatGeneration, BuilderVersion, BuilderBuild, MediaType, Architecture, Marker, LauncherRoute, StartupFileRoute, ContentTableRoute, PayloadRoute, ConfigRoute, IsFallback, Diagnostics
 ```
 
 Use `Test-Install4jInstaller` only when a Boolean family check is sufficient. Supporting evidence includes:
@@ -46,7 +46,7 @@ $Info.WritesAppsAndFeaturesEntry
 $Info.Scope
 $Info.SupportedScopes
 $Info.ScopeEvidence
-$Info.Warnings
+$Info.Diagnostics
 $Info.LauncherConfiguration.Entries
 $Info.Config.Source
 

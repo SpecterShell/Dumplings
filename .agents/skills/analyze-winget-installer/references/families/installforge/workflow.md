@@ -23,7 +23,7 @@ Load PackageModule, parse once, and require the configuration and payload eviden
 
 $Info = Get-InstallForgeInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, DefaultInstallationDirectory,
-  Scope, SupportsSilentInstallation, WritesAppsAndFeaturesEntry, ExtractedFiles, Warnings
+  Scope, SupportsSilentInstallation, WritesAppsAndFeaturesEntry, ExtractedFiles, Diagnostics
 ```
 
 ### Extract payload files

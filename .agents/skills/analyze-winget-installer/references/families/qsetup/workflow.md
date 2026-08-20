@@ -24,7 +24,7 @@ Load PackageModule, parse once, and treat explicit `Setup.txt` directives as str
 $Info = Get-QSetupInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
   DefaultInstallLocation, Scope, SupportedScopes, SupportedArchitectures,
-  WritesAppsAndFeaturesEntry, ExtractedFiles, Warnings, Notices
+  WritesAppsAndFeaturesEntry, ExtractedFiles, Diagnostics
 $Info.SetupDirectives
 $Info.ExecutionActions
 $Info.ExecutedPayloads

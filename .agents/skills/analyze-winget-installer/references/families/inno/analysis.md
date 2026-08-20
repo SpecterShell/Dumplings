@@ -31,7 +31,7 @@ $Info.Protocols
 $Info.MetadataRecordCounts
 $Info.PascalScriptInfo
 $Info.ParserVersionInfo
-$Info.Warnings
+$Info.Diagnostics
 ```
 
 `Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `ResolvedAppId`, `UninstallRegKeyBaseName`, `UninstallDisplayName`, raw directive values, unresolved constants/fields, privilege directives, architecture expressions or packed architecture sets, encryption evidence, loader signature, and `ParserVersionInfo`. Reuse these properties throughout the analysis.

@@ -25,7 +25,7 @@ $Info = Get-DeployMasterInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
   Scope, SupportedScopes, InstallerArchitecture,
   ApplicationArchitectureMode, ApplicationArchitectures,
-  SupportedOperatingSystemArchitectures, WritesAppsAndFeaturesEntry, Warnings
+  SupportedOperatingSystemArchitectures, WritesAppsAndFeaturesEntry, Diagnostics
 
 $Info.FileEntries
 $Info.FileAssociations
@@ -63,7 +63,7 @@ The package-control scope byte is authoritative static builder evidence:
 
 The structured identity block supplies `DisplayName`, `DisplayVersion`, `Publisher`, and separate user/machine install locations. DeployMaster's built-in uninstaller uses the display name as its uninstall-key identity, so the parser returns that value as `ProductCode` and emits built-in ARP writes.
 
-Custom Registry-tab actions are not decoded yet. If `Warnings` reports this limitation, use VM evidence to detect custom ARP overrides before relying on the built-in values. For `Brinno.BrinnoVideoPlayer`, VM evidence confirms an x86 HKLM EXE ARP entry keyed `Brinno Video Player` with no `WindowsInstaller` value.
+Custom Registry-tab actions are not decoded yet. If `Diagnostics` reports this limitation, use VM evidence to detect custom ARP overrides before relying on the built-in values. For `Brinno.BrinnoVideoPlayer`, VM evidence confirms an x86 HKLM EXE ARP entry keyed `Brinno Video Player` with no `WindowsInstaller` value.
 
 ### Resolve file associations
 
