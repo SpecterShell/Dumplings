@@ -1,0 +1,54 @@
+Version: 0.7.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.7.0/Agentero_0.7.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.7.0/Agentero_0.7.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Agentero v0.7.0 reworks the local PDF import experience and makes remote vault connections easier to use, while filling long-missing capabilities such as manual paper metadata editing, a Windows/Linux app menu, and paper-folder renaming. It also fixes the file-tree scrollbar occlusion and the interface CJK font fallback.
+    Features
+    - Local PDF smart import: Dropping a local PDF now runs a recognition chain (liteparse probe → Zotero recognizer → identifier resolution) to prefill title, authors, and identifiers, and enqueues the task for background import without a confirm dialog. DOI and arXiv ID are merged into a single identifier field with auto-type detection, and the destination folder is derived from the identifier and matches existing folders instantly. (636a7443d f95504ef3 64bfb57d0 f783373dc by @qychen2001 @Phil-Fan)
+    - Manual paper metadata editing: A new Edit Metadata dialog applies patch-style updates (empty strings clear a field), marks edited rows meta_source=manual, and appends new titles as NOTES.md aliases. It is wired to both the Paper Info pencil button and a new Library row context menu, syncing the library table and open tabs after edits. (36bac206f by @qychen2001)
+    - SSH config host autocomplete: When connecting to a remote vault, ~/.ssh/config is parsed (with Include expansion, skipping wildcard hosts) so the host field autocompletes aliases and prefills User, degrading to a plain input when no config exists. (77a62722f by @Phil-Fan, fixes #339)
+    - Windows/Linux app menu: Windows and Linux lack a native menu bar, so the title-bar gear is now a compact dropdown with Settings, Keyboard Shortcuts, Quick Open, and Command Palette, each showing its platform shortcut chip; macOS keeps the native menu bar. (fec56664a by @JiaheChen2002)
+    - Rename paper folders: The paper-folder context menu now shows Rename, reusing the Host move path that relocates catalog rows and repairs internal links — previously papers could not be renamed at all. (a3a70727d by @JiaheChen2002)
+    Improvements
+    - Remote connect accepts user@host: The connect dialog drops the separate User field and accepts user@host directly (like VS Code); config-host picks keep the ssh config User, and recent-entry reconnects merge the stored user back into the destination. (c0ca02811 by @Phil-Fan)
+    - CJK font fallback: The default sans stack now includes PingFang SC / Hiragino Sans GB / Microsoft YaHei / Noto Sans SC so Chinese text no longer falls back to a different font/weight than the rest of the UI. (be662b64c by @JiaheChen2002)
+    - Settings pane performance: After the window opens, every settings pane chunk is warmed in the background (cancellable) so switching sections resolves instantly; all lazy panes are memoized so a switch re-renders only panes whose props actually changed. (b6b3f6bac by @JiaheChen2002)
+    Fixes
+    - File-tree scrollbar occlusion and tooltips: On non-Windows platforms an 8px right padding keeps actions clear of the overlay-scrollbar hit area; all tooltips disable hoverable content (closing on mouse-out) and their content is non-selectable, fixing button hit-area occlusion and stuck tooltips on Linux/macOS. (#347 by @bet4it)
+    - Animations under reduced motion: Removed the global reduced-motion override that killed .animate-spin and .star-twinkle, so loading animations behave as intended when "reduce motion" is enabled. (05f1a569e by @qychen2001)
+    Resolved Issues
+    - Library not refreshing after import (#337): The problem where the Library failed to update paper info and a freshly imported paper was not recognized as having a Note is mitigated via metadata editing with library/tab sync and recognition-chain prefill. (36bac206f 636a7443d by @qychen2001)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Agentero v0.7.0 重构了本地 PDF 导入体验并提升了远程仓库连接的易用性，同时补齐了论文元数据手动编辑、Windows/Linux 应用菜单、论文文件夹重命名等长期缺失的能力，并修复了文件树滚动条遮挡与界面中文字体回退等问题。
+    新功能
+    - 本地 PDF 智能导入：拖入本地 PDF 后由识别链（liteparse 探测 → Zotero 识别器 → 标识符解析）自动补全标题、作者与标识符，并直接加入后台导入队列，无需确认弹窗；DOI 与 arXiv ID 合并为单一标识符字段并自动判别类型，目标文件夹依据标识符自动推导并支持即时匹配已有文件夹。(636a7443d f95504ef3 64bfb57d0 f783373dc by @qychen2001 @Phil-Fan)
+    - 手动编辑论文元数据：新增 Edit Metadata 对话框，支持对论文标题、作者等字段做补丁式更新（空字符串即清空），被编辑行标记 meta_source=manual 并将新标题追加为 NOTES.md 别名；该对话框同时挂在论文信息面板的铅笔按钮与 Library 行右键菜单，更新后同步刷新 Library 表格与已打开标签页。(36bac206f by @qychen2001)
+    - SSH 配置主机补全：连接远程仓库时解析 ~/.ssh/config（含 Include 展开、跳过通配符主机），主机输入框自动补全别名并预填 User，无配置时退化为普通输入框。(77a62722f by @Phil-Fan, 修复 #339)
+    - Windows/Linux 应用菜单：Windows 与 Linux 无原生菜单栏，标题栏齿轮现改为紧凑下拉菜单，提供设置、键盘快捷键、快速打开与命令面板，并展示各自平台快捷键；macOS 保留原生菜单栏。(fec56664a by @JiaheChen2002)
+    - 重命名论文文件夹：论文文件夹右键菜单现显示「重命名」，复用 Host 移动路径同步搬迁 Catalog 行并修复内部双链，此前论文完全无法重命名。(a3a70727d by @JiaheChen2002)
+    改进
+    - 远程连接输入 user@host: 连接对话框去掉独立的 User 字段，目标直接接受 user@host（与 VS Code 一致），配置主机选择沿用 ssh config 中的 User，历史记录重连时将已存 User 合并回目标。(c0ca02811 by @Phil-Fan)
+    - 中文字体回退：默认无衬线字体栈补齐 PingFang SC / Hiragino Sans GB / Microsoft YaHei / Noto Sans SC，避免中文落到与界面其他位置不一致的字重。(be662b64c by @JiaheChen2002)
+    - 设置面板性能：窗口打开后在后台顺序预热各设置分块（可取消），切换分栏即时解析；所有懒加载分块加 memo，切换仅重渲染 props 实际变化的面板。(b6b3f6bac by @JiaheChen2002)
+    修复
+    - 文件树滚动条遮挡与 Tooltip: 非 Windows 平台为文件树操作区加 8px 右内边距避开 overlay 滚动条热区；所有 Tooltip 禁用 hoverable content 并在移出时立即消失，提示内容设为不可选中，修复 Linux/macOS 上按钮点击热区被遮挡与提示残留问题。(#347 by @bet4it)
+    - 降低动效下动画保留：移除 reduced-motion 全局规则对 animate-spin 与 star-twinkle 的误覆盖，使加载动画在用户开启「减少动态效果」时仍按预期展示。(05f1a569e by @qychen2001)
+    已解决问题
+    - 导入后 Library 不刷新 (#337): 导入完成后 Library 无法更新论文信息、新导入论文未能识别 Note 的问题，已通过元数据编辑与 Library/标签页同步、识别链预填得到缓解。(36bac206f 636a7443d by @qychen2001)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.7.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.7.0
+ReleaseTime: 2026-08-20T06:40:22.0000000Z
