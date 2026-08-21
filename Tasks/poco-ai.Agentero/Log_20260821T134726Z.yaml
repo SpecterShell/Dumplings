@@ -1,0 +1,38 @@
+Version: 0.7.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.7.2/Agentero_0.7.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.7.2/Agentero_0.7.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release focuses on stability and size: it fixes truncated Codex chat history, catalog timestamp ordering, and missing Zotero fields, significantly shrinks the desktop installer, and unifies PDF formula interaction.
+    Improvements
+    - Smaller installer: Enable strip, LTO, and codegen-units for release builds and bundle only the CLI stub instead of the full CLI, noticeably reducing binary and installer size. (commit by @Phil-Fan)
+    - Unified formula interaction: Remove the hover formula parse card so clicking a formula behaves consistently with figure, table, and algorithm annotations, with the hit box using a unified crosshair cursor. (commit by @Phil-Fan)
+    Fixes
+    - Codex history: codex-acp paginates session/list over a global time window and filters by cwd per page, so one vault's sessions were scattered across pages and only partially shown or empty. Sessions are now walked across the cursor within a single connection and deduped by id (capped at 5s / 200 pages / 500 sessions), restoring full history. (#338 by @Phil-Fan)
+    - Catalog timestamp ordering: Canonicalize all writers to millisecond RFC 3339 timestamps so string-compare ordering no longer interleaves rows, migrating legacy data and normalizing the upsert path so old sidecars cannot re-pollute the catalog. (commit by @qychen2001)
+    - Missing Zotero fields: Consolidate the papers column list and fix find_by_identifier dropping zotero_item_id / zotero_last_synced while silently swallowing map errors; partial selects now fail loudly instead of returning nothing. (commit by @qychen2001)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布聚焦稳定性与体积优化：修复了 Codex 对话记录被截断、Catalog 时间戳排序与 Zotero 字段丢失等问题，并显著减小了桌面安装包体积，同时统一了 PDF 公式的交互方式。
+    改进
+    - 更小的安装包：启用 release 构建的 strip、LTO 与 codegen-units，并让桌面安装包只内嵌 CLI stub 而非完整 CLI，明显减小二进制与安装包体积。（commit by @Phil-Fan）
+    - 统一公式交互：移除公式解析卡的悬停交互，公式点击行为与插图、表格、算法等视觉批注保持一致，命中框统一使用十字光标。（commit by @Phil-Fan）
+    修复
+    - Codex 历史记录：codex-acp 按全局时间窗口分页且逐页按 cwd 过滤，导致同一 Vault 的会话分散在多页、只显示部分甚至完全为空。现改为在单次连接内遍历游标并按会话 ID 去重（限时 5s / 200 页 / 500 会话），完整恢复历史记录。（#338 by @Phil-Fan）
+    - Catalog 时间戳排序：统一所有写入点使用毫秒级 RFC 3339 时间戳，避免因字符串比较导致的行顺序错乱，并迁移旧数据、规范化 upsert 路径防止旧 sidecar 再次污染。（commit by @qychen2001）
+    - Zotero 字段丢失：统一 papers 表列定义，修复 find_by_identifier 遗漏 zotero_item_id / zotero_last_synced 且静默吞掉映射错误的问题，部分查询失败时改为显式报错。（commit by @qychen2001）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.7.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.7.2
+ReleaseTime: 2026-08-21T12:47:30.0000000Z
