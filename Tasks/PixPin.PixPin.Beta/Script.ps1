@@ -1,5 +1,10 @@
 $Object1 = Invoke-RestMethod -Uri "https://upgrade.pixpin.cn/api/check/1/$($this.Status.Contains('New') ? '3.3.5.7' : $this.LastState.Version)/windows/x64/cn/zh-cn/.exe"
 
+if ($Object1.Count -eq 0) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1[0].version
 
