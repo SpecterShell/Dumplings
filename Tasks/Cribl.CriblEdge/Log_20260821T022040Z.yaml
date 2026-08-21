@@ -1,0 +1,15 @@
+Version: 4.19.2
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.19.2/cribl-4.19.2-89cac507-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4192/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release corrects two critical issues found in Cribl Edge 4.19.1:
+    - OAuth secret fields containing expressions that begin with C., such as C.Secret("id").value or C.vars.my_secret, sent the expression text as the client_secret instead of the resolved value. Authentication failed for Destinations and Sources that use a free-text OAuth secret field, including the Microsoft Sentinel and Webhook Destinations. For more information, see the known issue. (CRIBL-44443)
+    - HTTP-based Destinations dropped timed-out HTTP request batches instead of retrying them. For more information, see the known issue. (CRIBL-44462)
+    See the Cribl Edge 4.19.1 release notes for the latest feature and correction updates.
+ReleaseTime: 2026-08-20
