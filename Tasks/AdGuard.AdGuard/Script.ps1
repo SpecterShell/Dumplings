@@ -20,16 +20,16 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='feed__item' and contains(.//div[@class='feed__title'], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='versions__item' and contains(./*[contains(@class, 'versions__item-title')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('.//div[@class="feed__release"]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./*[contains(@class, "versions__item-date")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[@class="feed__version"]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('./*[contains(@class, "versions__item-desc")]').Attributes[':content'].Value | ConvertTo-HtmlDecodedText | ConvertFrom-Json | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
