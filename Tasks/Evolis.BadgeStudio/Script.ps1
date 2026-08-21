@@ -6,11 +6,15 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.badgy.com/software-badgy/download-the-evolis-badge-studio-trial-version-software/'
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.badgy.com/software-badgy/download-the-evolis-badge-studio-trial-version-software/'
+  Read-PlaywrightPageContent -Page $Page
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'badgestudio' }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ $_.href.EndsWith('.exe') -and $_.href -match 'badgestudio' }, 'First')[0].href
 }
 
 # Last Modified
