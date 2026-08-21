@@ -45,6 +45,10 @@ Architecture: x64
 InstallerType: exe # Kachina
 Scope: machine
 ElevationRequirement: elevatesSelf
+InstallModes:
+- interactive
+- silent
+- silentWithProgress
 InstallerSwitches:
   Silent: -S
   SilentWithProgress: -I
@@ -52,7 +56,7 @@ InstallerSwitches:
 ProductCode: <regName>
 ```
 
-Keep `InstallModes: [interactive, silent, silentWithProgress]` because WinGet does not supply Kachina defaults for generic EXE installers. A manifest formatter may move common fields to root level after all installer entries are complete.
+Keep all three `InstallModes` values because WinGet does not supply Kachina defaults for generic EXE installers. A manifest formatter may move common fields to root level after all installer entries are complete.
 
 ## Static parsing
 

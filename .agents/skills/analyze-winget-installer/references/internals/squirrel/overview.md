@@ -10,7 +10,7 @@ The parser covers the structured Squirrel and Velopack variants documented below
 
 ## Binary structure
 
-Squirrel.Windows stores an update ZIP in PE `DATA` resource ID `131` in the canonical layout. Velopack commonly stores a referenced nupkg/ZIP range in the launcher bundle header. A bounded ZIP fallback is used only when its nuspec structure validates the candidate.
+Squirrel.Windows stores an update ZIP in PE `DATA` resource ID `131`. Velopack stores a referenced nupkg/ZIP range in the launcher bundle header. These outer structures identify the family; the location of the nuspec inside the resulting ZIP does not. A bounded ZIP fallback can recover package metadata, but it cannot select either launcher contract.
 
 ```text
 Squirrel PE setup
@@ -34,9 +34,26 @@ Velopack PE setup
 
 Velopack's signature is `94 F0 B1 7B 68 93 E0 29 37 EB 34 EF 53 AA E7 D4 2B 54 F5 70 7E F5 D6 F5 78 54 98 3E 5E 94 ED 7D`. Resource and locator ranges are absolute after PE RVA mapping. The parser requires a valid ZIP/nupkg and nuspec metadata, bounds candidate count/range extraction, and does not classify from `--silent` or a bare ZIP signature alone.
 
+## Family selection routes
+
+| Route | Required structure | Result | Confidence | Launcher policy |
+| --- | --- | --- | --- | --- |
+| `SquirrelPeResource` | Valid `DATA/#131` PE resource range and package metadata | `Squirrel` | High | Squirrel switches |
+| `VelopackBundle` | Valid bundle signature, preceding offset/length, bounded package range, and package metadata | `Velopack` | High | Velopack switches |
+| `EmbeddedZipFallback` | Generic embedded ZIP containing valid nuspec metadata | `Squirrel/Velopack` | Low | Omitted |
+| `ConflictingAuthoritativeRoutes` | Both authoritative routes validate | `Squirrel/Velopack` | Low | Omitted |
+
+Candidate provenance must survive ZIP and nuspec parsing. A nested `.nupkg` does not by itself mean Squirrel.Windows, and a root nuspec does not by itself mean Velopack. When both authoritative routes validate, the parser retains package identity, reports both evidence records, and leaves launcher-specific fields unresolved.
+
+## Command-line contracts
+
+Squirrel.Windows accepts `-s` and `--silent`. Dumplings uses the canonical long form and maps both WinGet `Silent` and `SilentWithProgress` to `--silent`. The confirmed Squirrel profile does not expose setup-level installation-directory or log-path overrides.
+
+Velopack and its Clowd.Squirrel predecessor use the same bundle signature and accept `-s`/`--silent`, `-t`/`--installto <DIR>`, and `-l`/`--log <FILE>`. Dumplings emits the long forms, including `SilentWithProgress: --silent`, `InstallLocation: --installto "<INSTALLPATH>"`, and `Log: --log "<LOGPATH>"`.
+
 ## Detection invariants
 
-Accept the family only when the surrounding headers, ranges, counts, and relationships described above validate. Treat an isolated marker as a routing hint and preserve conditional values as unresolved evidence. A validated .NET bundle file table containing Squirrel libraries without package metadata is a runtime-client false positive, not an alternate setup layout.
+Accept an exact family only when its outer structure and package payload both validate. Treat an isolated marker as a routing hint and preserve generic package evidence as an unresolved family. A validated .NET bundle file table containing Squirrel libraries without package metadata is a runtime-client false positive, not an alternate setup layout.
 
 ## Metadata projection
 
@@ -52,7 +69,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Custom runtime bootstrappers that contain Squirrel libraries but obtain package metadata after launch cannot provide static nuspec identity through this parser. Their installed ARP identity requires VM evidence.
+Custom runtime bootstrappers that contain Squirrel libraries but obtain package metadata after launch cannot provide static nuspec identity through this parser. Generic ZIP-only candidates can expose nuspec identity but still require outer-launcher validation before assigning switches. Both cases require VM evidence for unresolved behavior.
 
 ## Implementation mapping
 

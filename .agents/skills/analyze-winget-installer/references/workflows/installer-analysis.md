@@ -26,11 +26,18 @@ $Analysis.RoutingHints
 $Analysis.RejectedCandidates
 $Analysis.Diagnostics
 $Analysis.HasBlockingDiagnostics
+$Analysis.SuggestedManifestFields
+$Analysis.SuggestedManifestVariants
+$Analysis.SuggestedNextSteps
 ```
 
 Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
 
-Raw family `Get-*Info` functions return context-neutral `Diagnostics`; they do not write to host streams. `Get-WinGetInstallerAnalysis` resolves them for `FullAnalysis`, so inspect `Level`, `Kind`, `Areas`, `AffectedFields`, and `IsBlocking` rather than matching message text. A manifest suggestion resolves the same evidence for `ManifestAuthoring`, where missing identity, architecture, unattended support, conflicting confirmed families, and invalid artifacts can become blocking. Manifest updates use `ManifestUpdate` and normally keep diagnostics unrelated to fields being refreshed at `Verbose`.
+`SuggestedManifestFields` contains only nonempty installer-level keys accepted by the WinGet 1.12 schema. `SuggestedManifestVariants` contains complete alternative partial shapes for scope, architecture, or subtype decisions; each item has `Name`, `ManifestFields`, and supporting `Evidence`. Scope-selecting arguments are written to `InstallerSwitches.Custom` inside each variant rather than placed in a non-schema `ScopeSwitches` property. `SuggestedNextSteps` contains review guidance and never appears inside manifest fields. A generic family keeps `Family` as its human-readable identity and uses schema value `InstallerType: exe`.
+
+Exact structural parser evidence takes priority over the family template. For example, Qt IFW CLI media can expose all three modes while GUI-only media remains interactive-only, and InstallShield output depends on whether the parser proves Basic MSI, InstallScript MSI, InstallScript-only, or Advanced UI. ZIP analysis suggests only `InstallerType: zip` until one nested file is selected. Treat routing-hint suggestions as advisory because the family has not been confirmed.
+
+Raw family `Get-*Info` functions and provider-neutral `Get-InstallerAnalysis` return facts and context-neutral `Diagnostics`; they do not return WinGet suggestions or write to host streams. `Get-WinGetInstallerAnalysis` resolves diagnostics for `FullAnalysis`, so inspect `Level`, `Kind`, `Areas`, `AffectedFields`, and `IsBlocking` rather than matching message text. A manifest suggestion resolves the same evidence for `ManifestAuthoring`, where missing identity, architecture, unattended support, conflicting confirmed families, and invalid artifacts can become blocking. `Get-WinGetInstallerManifestSuggestion` applies authoritative parser evidence and explicit overrides to installer entries, while family defaults and alternatives remain under `Suggestions`. Manifest updates use `ManifestUpdate` and normally keep diagnostics unrelated to fields being refreshed at `Verbose`.
 
 Optional agent diagnostics must not become parser or CI dependencies:
 

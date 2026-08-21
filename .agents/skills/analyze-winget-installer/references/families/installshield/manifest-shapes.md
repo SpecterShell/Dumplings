@@ -122,6 +122,10 @@ Installers:
   Scope: machine
   InstallerUrl: https://example.com/Product-1.2.3-x64.exe
   InstallerSha256: <SHA256>
+  InstallModes:
+  - interactive
+  - silent
+  - silentWithProgress
   InstallerSwitches:
     Silent: /silent
     SilentWithProgress: /passive
