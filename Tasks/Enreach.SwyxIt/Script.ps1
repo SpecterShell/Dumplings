@@ -7,7 +7,7 @@ $Installer = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.
 } | Sort-Object -Property 'Version' -Bottom 1
 
 # Version
-$this.CurrentState.Version = $Installer.Version
+$this.CurrentState.Version = [string]($Installer.Version)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
