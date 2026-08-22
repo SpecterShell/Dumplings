@@ -21,8 +21,12 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://relux.com/release-notes-reluxdesktop' | ConvertFrom-Html
-      $Object3 = [System.IO.StringReader]::new(($Object2.SelectSingleNode('//*[@id="wrap"]') | Get-TextContent))
+      $Object2 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://relux.com/release-notes-reluxdesktop'
+        Read-PlaywrightLocator -Page $Page -Selector '//*[@id="wrap"]'
+      }
+      $Object3 = [System.IO.StringReader]::new(($Object2 | ConvertFrom-Html | Get-TextContent))
 
       while ($Object3.Peek() -ne -1) {
         $String = $Object3.ReadLine()
