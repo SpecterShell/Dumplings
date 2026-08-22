@@ -30,8 +30,8 @@ $this.CurrentState.Installer += [ordered]@{
   )
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'arm'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name -match '[^a-zA-Z0-9]arm[^a-zA-Z0-9]' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture         = 'arm64'
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath     = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-arm\BaiduPCS-Go.exe"
