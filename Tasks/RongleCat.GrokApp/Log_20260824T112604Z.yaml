@@ -1,0 +1,182 @@
+Version: 0.2.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.26/Grok_0.2.26_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.26
+    Highlight: Import Grok Build CLI sessions from Account; phone mirror on the same Wi-Fi; Windows permission/rewind clicks; long chats stay scrollable.
+    中文 · 亮点： 从账户导入 Grok Build CLI 会话；同一 Wi-Fi 手机镜像；Windows 权限/回退按钮可点；长对话滚动不再卡死。
+    Added
+    - Import Grok Build CLI sessions from Account → Recent sessions: Import & open a row, or import the listed table into the sidebar. Empty sidebar offers the same when local CLI logs exist. Import may add the CLI cwd as an untrusted project (never home / or ~/).
+    - Second SuperGrok login hint on the account switcher: Add account, then switch. One login stays active.
+    中文 · 新增
+    - 从设置 → 账户「近期会话」导入 Grok Build CLI 对话到侧栏；空侧栏在有本地 CLI 记录时提供同一入口。导入可为 CLI 工作目录补一条未信任项目（不会把家目录或 / 加成项目）。
+    - 账户切换提示可添加第二个 SuperGrok 登录；同一时间只有一个登录生效。
+    Changed
+    - Settings overlay navigation (#870): open/section/tab/hash/last-route live in useSettingsNavigation. Pref hydration is useAppSettingsPrefs; session connect/live map is useSessionConnect.
+    - AppWorkbench domain split (#869): session tree, sidebar, composer send, settings stage and related chrome live in extracted modules.
+    - Bottom terminal tab chrome: hover shows the close chip on every tab; a close-all icon sits next to New terminal.
+    - Plan / resources pane enter motion: desktop in-flow aside interpolates width with the existing pane-split token; overlay and side-expanded stay snap. Bottom terminal height still snaps (no chat virtualizer reflow); chrome/body fade in.
+    - Light wallpaper readability: light theme uses its own white veil and weaker main mix so text stays ink-dark on mixed wallpaper; no extra cards under chrome.
+    中文 · 变更
+    - 设置页导航 / prefs / connect（#870）：开合走 useSettingsNavigation，prefs 水合走 useAppSettingsPrefs，会话 connect/live map 走 useSessionConnect。
+    - AppWorkbench 拆分（#869）：会话树、侧栏、发送路径、设置舞台等迁到独立模块。
+    - 底部终端标签栏：鼠标悬停任意标签显示关闭；加号旁增加关闭所有终端。
+    - 计划 / 资源侧栏入场：桌面分栏宽度用现有 pane-split 令牌插值；overlay 与展开覆盖仍一次落位。底部终端高度仍一次到位（避免长对话重排）；顶栏和内容淡入。
+    - 浅色壁纸可读性：浅色主题用独立白色 veil、主区更通透；文字保持深色描边，不额外加承载卡片。
+    Fixed
+    - Windows permission bar clicks (#878, #880): the card dumped ACP request JSON as the command preview, and Approve / Deny could miss clicks (floating composer is pointer-events: none without no-drag). Preview is the command/path; buttons stay clickable; busy/error show on the card.
+    - Windows rewind confirm stayed open (#879, #880): failures toasted under the modal overlay (z-index 60 vs 12000). Toast is portaled above overlays; rewind shows the error in the dialog; the timeline closes before confirm.
+    - Long-chat history browse freeze (#881, #882): a 4800px overscan floor remounted too much markdown on a fling. Browse overscan scales down with row count; the pin-to-bottom window is unchanged.
+    - Phone mirror same-LAN access (#875): the host bound only 127.0.0.1, so replacing the URL with a LAN IP returned ERR_CONNECTION_REFUSED. Loopback stays the default. Allow same Wi-Fi (in-app confirm) rebinds 0.0.0.0 and copies/QRs the detected LAN IPv4. Soft-fail copy no longer claims LAN works without that toggle.
+    - Windows PTY clippy: PtySession.pid is Unix-only (process-group SIGKILL). Windows kill stays on ChildKiller, so CI -D warnings stays green.
+    - Expanded SideWorkbench vs macOS traffic lights: when the sidebar is hidden or overlayed, the shared pane chrome pads with --titlebar-safe-left.
+    - WeCom webhook replay window: signed callbacks whose timestamp is outside ±300 seconds are rejected with 401.
+    - WeCom webhook loopback hint: webhook mode bound to 127.0.0.1 now surfaces that public callbacks need allow_external (runtime last_error code + Settings health copy).
+    - CLI session project import: auto-add uses home-relative depth ≥ 2, so Linux /home/name/projects and Windows C:\Users\name\Documents are not treated as projects. Missing home refuses.
+    - Theme switch snapshot cap: WebKit color snapshot skips animation when the live DOM has more than 400 elements, avoiding jank on large trees.
+    - Closing a terminal really kills the shell: tab × / close-all / overflow / project switch call host terminal_pty_kill (process killer + PTY drop), not only hide the chip. Hide-panel still keeps sessions.
+    - Bottom terminal tab numbers follow creation order: the plus button appends a new chip on the right, so the original Terminal 1 stays Terminal 1 instead of being pushed to Terminal 2.
+    - Terminal prompt inset: side and bottom PTY text sits 5px inside the pane. The 50% veil still covers the full terminal; padding is on .xterm, not the host.
+    - New session side pane opens the picker, not Plan: the unused planFocusKey 0 is no longer treated as a focus bump, so opening the right pane on a fresh chat shows the kind menu instead of an empty Plan tab.
+    - Plan empty state centers in the side pane: the idle title / hint / history CTA no longer sit in a left-capped 28rem column when Plan is a side-workbench tab.
+    - Context compact cards stay at the moment of compaction (#855): mid-turn auto-compact freezes the current assistant bubble, inserts the banner, then continues streaming below it so later tools are not piled on the composer.
+    - Files tree refreshes when the agent creates files (#863): open Resources keeps expand state and re-lists root + expanded folders as session write paths change — no need to close and reopen the pane.
+    - Long chat transcript scroll no longer hitches on Worked-for blocks or lift-off (#853): Follow-up to #842. Virtual-window growth that still covers the viewport commits in the background (startTransition) and at most 3 rows per frame; collapsed tool steps skip toolExpandBody until opened; scroll settle uses velocity + a 160ms stillness floor so touchpad lift-off is not treated as a stop; hover is disabled while moving; pin snap restores the pre-commit distance from the bottom so expanding overscan does not bounce.
+    - WeCom webhook auth + ACL fail-closed (#851): webhook mode requires callback_token and verifies signatures; empty allowFrom denies all (use * to opt in); loopback bind by default.
+    - Settings segmented controls no longer flash (#856): shared SegmentedControl for tabs and theme capsules; first mount settles without a vertical expand.
+    - Welcome intro motion + Appearance toggle (#857): restored “what to do today” cadence; optional welcome animation (on by default).
+    - Sidebar open/close motion stable (#858): wide-window rail eases with the main pane; titlebar safe padding no longer snaps toward traffic lights.
+    - Settings frosts wallpaper behind the stage (#859): app-settings-stage uses glass blur/saturate under wallpaper.
+    - Theme light/dark transition keeps sidebar blur (#860): View Transition elsewhere; WebKit color WAAPI so backdrop-filter stays live.
+    - Pet body edge no longer shows a white fringe (#861): same-ink stroke covers AA seams.
+    - Composer matches chat reading width after the first turn: once a session has transcript, the floating input (and permission bar) follow Appearance → chat width via --chat-width-max. Empty/new-session welcome still uses the classic 42rem input.
+    - Sidebar “Other sessions” no longer sits under empty project space: collapsing every project (or shrinking a folder after a long session list) now retargets the locked L1 projects height to the remaining rows instead of keeping the last expanded px.
+    - Sidebar project header icons: chevron + space name expand/collapse the project list; space switching is a standalone switch button that appears on row hover like collapse/more; collapse-all stays outside; select, archive-older, and add-project move into a ⋯ menu.
+    - Official-aux X/Imagine on packaged custom mains: /Applications/Grok.app never bundled scripts/official-aux-mcp.mjs, so ACP injected mcpServers count=0 while ChatCut still auto-loaded from independent agent-home/config.toml. Host now writes the MCP script into agent-home-official, disables user MCP enabled flags during solo inject, ships official-aux --rules on prewarm, and tells the model to call official-aux__x_keyword_search directly instead of search_tool (which was resolving to ChatCut).
+    中文 · 修复
+    - Windows 权限卡点击无响应（#878, #880）：预览区曾渲染整段 ACP JSON；浮动输入区 pointer-events: none 且权限卡未标 no-drag，WebView2 会把点击当成拖窗口。现显示真实命令，按钮可点，失败写在卡片上。
+    - Windows 回退确认窗关不掉（#879, #880）：错误 toast 被挡在遮罩下。toast 提到 overlay 之上；失败写在弹窗里；打开确认时关掉时间线。
+    - 长会话上下滚动卡死（#881, #882）：浏览历史时 overscan 下限 4800px，一甩挂太多 markdown。现按行数缩小浏览 overscan，钉在底部的窗口不变。
+    - 手机镜像同一局域网访问（#875）：主机原先只绑 127.0.0.1，把链接换成局域网 IP 会 ERR_CONNECTION_REFUSED。默认仍是回环。开启 允许同一 Wi-Fi（应用内确认）后改绑 0.0.0.0，复制/二维码使用探测到的局域网 IPv4。隧道失败时的文案不再暗示「换成局域网 IP 就能用」。
+    - Windows PTY clippy：PtySession.pid 仅 Unix 用于进程组 SIGKILL；Windows 仍走 ChildKiller，CI -D warnings 不再红。
+    - 展开侧栏避开 macOS 交通灯：侧栏隐藏或 overlay 时，共享顶栏使用 --titlebar-safe-left 内边距。
+    - 企微 webhook 重放窗口：timestamp 超出 ±300 秒的已签名回调返回 401。
+    - 企微 webhook loopback 提示：未开启 allow_external 且绑在 127.0.0.1 时，运行状态与设置页提示「公网回调需开启 allow_external」。
+    - CLI 会话导入项目路径：按相对 home 深度 ≥ 2 判断，不再把 Linux /home/name/projects 或 Windows C:\Users\name\Documents 当成项目；取不到 home 则拒绝。
+    - 主题切换快照上限：DOM 超过 400 个元素时跳过 WebKit 颜色快照，避免大树卡帧。
+    - 关闭终端会真正杀掉 shell：标签 × / 关闭全部 / 超出上限 / 切换项目都会走宿主 terminal_pty_kill（杀进程 + 关掉 PTY），不是只藏标签。收起面板仍保留会话。
+    - 底部终端标签序号跟随创建顺序：加号把新标签加到右边，原来的「终端 1」不会被挤成「终端 2」。
+    - 终端提示符内边距：侧栏和底部 PTY 文字距面板 5px。50% 遮罩仍铺满整个终端，内边距加在 .xterm 上，不加在外壳。
+    - 新建会话打开侧栏显示可选菜单，而不是计划：不再把未使用的 planFocusKey 0 当成一次聚焦，新对话打开右侧栏会看到种类菜单，而不是空的计划页签。
+    - 侧栏计划空状态在面板内居中：计划作为侧栏页签打开时，标题 / 说明 / 计划历史不再落在左侧 28rem 窄列里。
+    - 「上下文已自动压缩」卡片留在压缩发生的时间点（#855）：回合中压缩会冻结当前助手气泡、插入横幅，再在下方继续流式输出，后续工具不再堆到输入框上方。
+    - Agent 新建文件后右侧文件树自动刷新（#863）：保持展开状态，按会话写入路径重列根目录与已展开文件夹，不用关面板再开。
+    - 长对话滑过「Worked for …」和抬手时不再卡顿（#853）：#842 的后续。视口已被覆盖时的窗口扩张走后台提交，每帧最多挂 3 行；折叠的 tool 步骤在展开前不算 toolExpandBody；settle 用速度 + 160ms 静止下限，触控板抬手不再被当成停下；滑动中关掉 hover；贴底 snap 恢复 commit 前的离底距离，扩张 overscan 时不再弹跳。
+    - 企微 webhook 鉴权 + ACL 默认拒绝（#851）：webhook 必须填 callback_token 并验签；空 allowFrom 拒绝全部（显式 * 才开放）；默认只绑 loopback。
+    - 设置页签/胶囊切换不再闪（#856）：公共 SegmentedControl；首次挂载不纵向展开。
+    - 新对话欢迎动画 + 外观开关（#857）：恢复入场节奏；欢迎动画默认开、可关。
+    - 侧栏开合动效稳定（#858）：宽窗侧栏与主区连续移动；标题栏安全边距不再回弹红绿灯。
+    - 壁纸下设置舞台毛玻璃（#859）：app-settings-stage 使用 glass blur。
+    - 深浅主题切换保持侧栏模糊（#860）：非 WebKit 用 View Transition；WebKit 用颜色 WAAPI。
+    - 宠物身体外缘白边消除（#861）：同色描边盖住抗锯齿缝。
+    - 有聊天记录后输入框与阅读宽度一致：会话产生内容后，浮动输入框（及权限条）跟随设置 → 外观的聊天宽度（--chat-width-max）。新建/空会话欢迎态仍用原来的 42rem 输入框宽度。
+    - 侧栏「其他会话」不再被空项目区顶到最下面：收起全部项目（或长会话列表变短）后，L1 项目区会按剩余行高回缩，而不再锁在上次展开的像素高度。
+    - 侧栏项目区顶部图标：箭头+空间名展开/收起整个项目区；切换空间是独立按钮，和折叠/更多一样只在该行 hover 时出现；折叠全部仍留在外面；多选、按时间归档、添加项目收进 ⋯ 菜单。
+    - 打包后自定义主模型的官方 X/画图注入：正式版 App 找不到 official-aux-mcp.mjs，ACP 注入空 MCP，ChatCut 仍从独立 agent-home/config.toml 自动拉起。现将脚本写入 agent-home-official，solo inject 时关掉用户 MCP 的 enabled，预热进程带上官方 --rules，并要求模型直接调用 official-aux__x_keyword_search 而不是 search_tool（后者会命中 ChatCut）。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.26
+    Highlight: Import Grok Build CLI sessions from Account; phone mirror on the same Wi-Fi; Windows permission/rewind clicks; long chats stay scrollable.
+    中文 · 亮点： 从账户导入 Grok Build CLI 会话；同一 Wi-Fi 手机镜像；Windows 权限/回退按钮可点；长对话滚动不再卡死。
+    Added
+    - Import Grok Build CLI sessions from Account → Recent sessions: Import & open a row, or import the listed table into the sidebar. Empty sidebar offers the same when local CLI logs exist. Import may add the CLI cwd as an untrusted project (never home / or ~/).
+    - Second SuperGrok login hint on the account switcher: Add account, then switch. One login stays active.
+    中文 · 新增
+    - 从设置 → 账户「近期会话」导入 Grok Build CLI 对话到侧栏；空侧栏在有本地 CLI 记录时提供同一入口。导入可为 CLI 工作目录补一条未信任项目（不会把家目录或 / 加成项目）。
+    - 账户切换提示可添加第二个 SuperGrok 登录；同一时间只有一个登录生效。
+    Changed
+    - Settings overlay navigation (#870): open/section/tab/hash/last-route live in useSettingsNavigation. Pref hydration is useAppSettingsPrefs; session connect/live map is useSessionConnect.
+    - AppWorkbench domain split (#869): session tree, sidebar, composer send, settings stage and related chrome live in extracted modules.
+    - Bottom terminal tab chrome: hover shows the close chip on every tab; a close-all icon sits next to New terminal.
+    - Plan / resources pane enter motion: desktop in-flow aside interpolates width with the existing pane-split token; overlay and side-expanded stay snap. Bottom terminal height still snaps (no chat virtualizer reflow); chrome/body fade in.
+    - Light wallpaper readability: light theme uses its own white veil and weaker main mix so text stays ink-dark on mixed wallpaper; no extra cards under chrome.
+    中文 · 变更
+    - 设置页导航 / prefs / connect（#870）：开合走 useSettingsNavigation，prefs 水合走 useAppSettingsPrefs，会话 connect/live map 走 useSessionConnect。
+    - AppWorkbench 拆分（#869）：会话树、侧栏、发送路径、设置舞台等迁到独立模块。
+    - 底部终端标签栏：鼠标悬停任意标签显示关闭；加号旁增加关闭所有终端。
+    - 计划 / 资源侧栏入场：桌面分栏宽度用现有 pane-split 令牌插值；overlay 与展开覆盖仍一次落位。底部终端高度仍一次到位（避免长对话重排）；顶栏和内容淡入。
+    - 浅色壁纸可读性：浅色主题用独立白色 veil、主区更通透；文字保持深色描边，不额外加承载卡片。
+    Fixed
+    - Windows permission bar clicks (#878, #880): the card dumped ACP request JSON as the command preview, and Approve / Deny could miss clicks (floating composer is pointer-events: none without no-drag). Preview is the command/path; buttons stay clickable; busy/error show on the card.
+    - Windows rewind confirm stayed open (#879, #880): failures toasted under the modal overlay (z-index 60 vs 12000). Toast is portaled above overlays; rewind shows the error in the dialog; the timeline closes before confirm.
+    - Long-chat history browse freeze (#881, #882): a 4800px overscan floor remounted too much markdown on a fling. Browse overscan scales down with row count; the pin-to-bottom window is unchanged.
+    - Phone mirror same-LAN access (#875): the host bound only 127.0.0.1, so replacing the URL with a LAN IP returned ERR_CONNECTION_REFUSED. Loopback stays the default. Allow same Wi-Fi (in-app confirm) rebinds 0.0.0.0 and copies/QRs the detected LAN IPv4. Soft-fail copy no longer claims LAN works without that toggle.
+    - Windows PTY clippy: PtySession.pid is Unix-only (process-group SIGKILL). Windows kill stays on ChildKiller, so CI -D warnings stays green.
+    - Expanded SideWorkbench vs macOS traffic lights: when the sidebar is hidden or overlayed, the shared pane chrome pads with --titlebar-safe-left.
+    - WeCom webhook replay window: signed callbacks whose timestamp is outside ±300 seconds are rejected with 401.
+    - WeCom webhook loopback hint: webhook mode bound to 127.0.0.1 now surfaces that public callbacks need allow_external (runtime last_error code + Settings health copy).
+    - CLI session project import: auto-add uses home-relative depth ≥ 2, so Linux /home/name/projects and Windows C:\Users\name\Documents are not treated as projects. Missing home refuses.
+    - Theme switch snapshot cap: WebKit color snapshot skips animation when the live DOM has more than 400 elements, avoiding jank on large trees.
+    - Closing a terminal really kills the shell: tab × / close-all / overflow / project switch call host terminal_pty_kill (process killer + PTY drop), not only hide the chip. Hide-panel still keeps sessions.
+    - Bottom terminal tab numbers follow creation order: the plus button appends a new chip on the right, so the original Terminal 1 stays Terminal 1 instead of being pushed to Terminal 2.
+    - Terminal prompt inset: side and bottom PTY text sits 5px inside the pane. The 50% veil still covers the full terminal; padding is on .xterm, not the host.
+    - New session side pane opens the picker, not Plan: the unused planFocusKey 0 is no longer treated as a focus bump, so opening the right pane on a fresh chat shows the kind menu instead of an empty Plan tab.
+    - Plan empty state centers in the side pane: the idle title / hint / history CTA no longer sit in a left-capped 28rem column when Plan is a side-workbench tab.
+    - Context compact cards stay at the moment of compaction (#855): mid-turn auto-compact freezes the current assistant bubble, inserts the banner, then continues streaming below it so later tools are not piled on the composer.
+    - Files tree refreshes when the agent creates files (#863): open Resources keeps expand state and re-lists root + expanded folders as session write paths change — no need to close and reopen the pane.
+    - Long chat transcript scroll no longer hitches on Worked-for blocks or lift-off (#853): Follow-up to #842. Virtual-window growth that still covers the viewport commits in the background (startTransition) and at most 3 rows per frame; collapsed tool steps skip toolExpandBody until opened; scroll settle uses velocity + a 160ms stillness floor so touchpad lift-off is not treated as a stop; hover is disabled while moving; pin snap restores the pre-commit distance from the bottom so expanding overscan does not bounce.
+    - WeCom webhook auth + ACL fail-closed (#851): webhook mode requires callback_token and verifies signatures; empty allowFrom denies all (use * to opt in); loopback bind by default.
+    - Settings segmented controls no longer flash (#856): shared SegmentedControl for tabs and theme capsules; first mount settles without a vertical expand.
+    - Welcome intro motion + Appearance toggle (#857): restored “what to do today” cadence; optional welcome animation (on by default).
+    - Sidebar open/close motion stable (#858): wide-window rail eases with the main pane; titlebar safe padding no longer snaps toward traffic lights.
+    - Settings frosts wallpaper behind the stage (#859): app-settings-stage uses glass blur/saturate under wallpaper.
+    - Theme light/dark transition keeps sidebar blur (#860): View Transition elsewhere; WebKit color WAAPI so backdrop-filter stays live.
+    - Pet body edge no longer shows a white fringe (#861): same-ink stroke covers AA seams.
+    - Composer matches chat reading width after the first turn: once a session has transcript, the floating input (and permission bar) follow Appearance → chat width via --chat-width-max. Empty/new-session welcome still uses the classic 42rem input.
+    - Sidebar “Other sessions” no longer sits under empty project space: collapsing every project (or shrinking a folder after a long session list) now retargets the locked L1 projects height to the remaining rows instead of keeping the last expanded px.
+    - Sidebar project header icons: chevron + space name expand/collapse the project list; space switching is a standalone switch button that appears on row hover like collapse/more; collapse-all stays outside; select, archive-older, and add-project move into a ⋯ menu.
+    - Official-aux X/Imagine on packaged custom mains: /Applications/Grok.app never bundled scripts/official-aux-mcp.mjs, so ACP injected mcpServers count=0 while ChatCut still auto-loaded from independent agent-home/config.toml. Host now writes the MCP script into agent-home-official, disables user MCP enabled flags during solo inject, ships official-aux --rules on prewarm, and tells the model to call official-aux__x_keyword_search directly instead of search_tool (which was resolving to ChatCut).
+    中文 · 修复
+    - Windows 权限卡点击无响应（#878, #880）：预览区曾渲染整段 ACP JSON；浮动输入区 pointer-events: none 且权限卡未标 no-drag，WebView2 会把点击当成拖窗口。现显示真实命令，按钮可点，失败写在卡片上。
+    - Windows 回退确认窗关不掉（#879, #880）：错误 toast 被挡在遮罩下。toast 提到 overlay 之上；失败写在弹窗里；打开确认时关掉时间线。
+    - 长会话上下滚动卡死（#881, #882）：浏览历史时 overscan 下限 4800px，一甩挂太多 markdown。现按行数缩小浏览 overscan，钉在底部的窗口不变。
+    - 手机镜像同一局域网访问（#875）：主机原先只绑 127.0.0.1，把链接换成局域网 IP 会 ERR_CONNECTION_REFUSED。默认仍是回环。开启 允许同一 Wi-Fi（应用内确认）后改绑 0.0.0.0，复制/二维码使用探测到的局域网 IPv4。隧道失败时的文案不再暗示「换成局域网 IP 就能用」。
+    - Windows PTY clippy：PtySession.pid 仅 Unix 用于进程组 SIGKILL；Windows 仍走 ChildKiller，CI -D warnings 不再红。
+    - 展开侧栏避开 macOS 交通灯：侧栏隐藏或 overlay 时，共享顶栏使用 --titlebar-safe-left 内边距。
+    - 企微 webhook 重放窗口：timestamp 超出 ±300 秒的已签名回调返回 401。
+    - 企微 webhook loopback 提示：未开启 allow_external 且绑在 127.0.0.1 时，运行状态与设置页提示「公网回调需开启 allow_external」。
+    - CLI 会话导入项目路径：按相对 home 深度 ≥ 2 判断，不再把 Linux /home/name/projects 或 Windows C:\Users\name\Documents 当成项目；取不到 home 则拒绝。
+    - 主题切换快照上限：DOM 超过 400 个元素时跳过 WebKit 颜色快照，避免大树卡帧。
+    - 关闭终端会真正杀掉 shell：标签 × / 关闭全部 / 超出上限 / 切换项目都会走宿主 terminal_pty_kill（杀进程 + 关掉 PTY），不是只藏标签。收起面板仍保留会话。
+    - 底部终端标签序号跟随创建顺序：加号把新标签加到右边，原来的「终端 1」不会被挤成「终端 2」。
+    - 终端提示符内边距：侧栏和底部 PTY 文字距面板 5px。50% 遮罩仍铺满整个终端，内边距加在 .xterm 上，不加在外壳。
+    - 新建会话打开侧栏显示可选菜单，而不是计划：不再把未使用的 planFocusKey 0 当成一次聚焦，新对话打开右侧栏会看到种类菜单，而不是空的计划页签。
+    - 侧栏计划空状态在面板内居中：计划作为侧栏页签打开时，标题 / 说明 / 计划历史不再落在左侧 28rem 窄列里。
+    - 「上下文已自动压缩」卡片留在压缩发生的时间点（#855）：回合中压缩会冻结当前助手气泡、插入横幅，再在下方继续流式输出，后续工具不再堆到输入框上方。
+    - Agent 新建文件后右侧文件树自动刷新（#863）：保持展开状态，按会话写入路径重列根目录与已展开文件夹，不用关面板再开。
+    - 长对话滑过「Worked for …」和抬手时不再卡顿（#853）：#842 的后续。视口已被覆盖时的窗口扩张走后台提交，每帧最多挂 3 行；折叠的 tool 步骤在展开前不算 toolExpandBody；settle 用速度 + 160ms 静止下限，触控板抬手不再被当成停下；滑动中关掉 hover；贴底 snap 恢复 commit 前的离底距离，扩张 overscan 时不再弹跳。
+    - 企微 webhook 鉴权 + ACL 默认拒绝（#851）：webhook 必须填 callback_token 并验签；空 allowFrom 拒绝全部（显式 * 才开放）；默认只绑 loopback。
+    - 设置页签/胶囊切换不再闪（#856）：公共 SegmentedControl；首次挂载不纵向展开。
+    - 新对话欢迎动画 + 外观开关（#857）：恢复入场节奏；欢迎动画默认开、可关。
+    - 侧栏开合动效稳定（#858）：宽窗侧栏与主区连续移动；标题栏安全边距不再回弹红绿灯。
+    - 壁纸下设置舞台毛玻璃（#859）：app-settings-stage 使用 glass blur。
+    - 深浅主题切换保持侧栏模糊（#860）：非 WebKit 用 View Transition；WebKit 用颜色 WAAPI。
+    - 宠物身体外缘白边消除（#861）：同色描边盖住抗锯齿缝。
+    - 有聊天记录后输入框与阅读宽度一致：会话产生内容后，浮动输入框（及权限条）跟随设置 → 外观的聊天宽度（--chat-width-max）。新建/空会话欢迎态仍用原来的 42rem 输入框宽度。
+    - 侧栏「其他会话」不再被空项目区顶到最下面：收起全部项目（或长会话列表变短）后，L1 项目区会按剩余行高回缩，而不再锁在上次展开的像素高度。
+    - 侧栏项目区顶部图标：箭头+空间名展开/收起整个项目区；切换空间是独立按钮，和折叠/更多一样只在该行 hover 时出现；折叠全部仍留在外面；多选、按时间归档、添加项目收进 ⋯ 菜单。
+    - 打包后自定义主模型的官方 X/画图注入：正式版 App 找不到 official-aux-mcp.mjs，ACP 注入空 MCP，ChatCut 仍从独立 agent-home/config.toml 自动拉起。现将脚本写入 agent-home-official，solo inject 时关掉用户 MCP 的 enabled，预热进程带上官方 --rules，并要求模型直接调用 official-aux__x_keyword_search 而不是 search_tool（后者会命中 ChatCut）。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.26
+ReleaseTime: 2026-08-24T11:09:04.0000000Z
