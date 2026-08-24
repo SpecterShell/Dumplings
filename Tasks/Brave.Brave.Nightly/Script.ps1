@@ -1,7 +1,4 @@
-$RepoOwner = 'brave'
-$RepoName = 'brave-browser'
-
-$Releases = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.name.StartsWith('Nightly') })
+$Releases = (Invoke-GitHubApi -Uri "https://api.github.com/repos/brave/brave-browser/releases").Where({ $_.name.StartsWith('Nightly') })
 
 # The latest release may not contain all the installers. Iterate through the releases to find the latest one with all installers.
 foreach ($Object1 in $Releases) {
@@ -14,32 +11,32 @@ foreach ($Object1 in $Releases) {
       [ordered]@{
         Architecture = 'x86'
         Scope        = 'user'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('Setup32.exe') -and $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup32.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
       [ordered]@{
         Architecture = 'x86'
         Scope        = 'machine'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('Setup32.exe') -and -not $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup32.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
       [ordered]@{
         Architecture = 'x64'
         Scope        = 'user'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('Setup.exe') -and $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
       [ordered]@{
         Architecture = 'x64'
         Scope        = 'machine'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('Setup.exe') -and -not $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
       [ordered]@{
         Architecture = 'arm64'
         Scope        = 'user'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('SetupArm64.exe') -and $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('SetupArm64.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
       [ordered]@{
         Architecture = 'arm64'
         Scope        = 'machine'
-        InstallerUrl = $Object1.assets.Where({ $_.name.Contains('BraveBrowserStandalone') -and $_.name.EndsWith('SetupArm64.exe') -and -not $_.name.Contains('Silent') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('SetupArm64.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
       }
     )
 

@@ -1,12 +1,9 @@
-$RepoOwner = 'asciidocfx'
-$RepoName = 'AsciidocFX'
-
-$Object1 = (Invoke-RestMethod -Uri "https://github.com/${RepoOwner}/${RepoName}/releases/latest/download/updates.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '86' }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri "https://github.com/asciidocfx/AsciidocFX/releases/latest/download/updates.xml").updateDescriptor.entry.Where({ $_.targetMediaFileId -eq '86' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.newVersion
 
-$Prefix = "https://github.com/${RepoOwner}/${RepoName}/releases/download/v$($this.CurrentState.Version)/"
+$Prefix = "https://github.com/asciidocfx/AsciidocFX/releases/download/v$($this.CurrentState.Version)/"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -20,7 +17,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
+        Value = "https://github.com/asciidocfx/AsciidocFX/releases/tag/v$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host
@@ -28,7 +25,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/asciidocfx/AsciidocFX/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

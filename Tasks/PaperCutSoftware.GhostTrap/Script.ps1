@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = 'https://github.com/PaperCutSoftware/GhostTrap/blob/HEAD/README.md#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = 'https://github.com/PaperCutSoftware/GhostTrap/blob/HEAD/README.md#' + ($ReleaseNotesTitleNode.InnerText -replace '[^a-zA-Z0-9\-\s]+', '' -replace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')

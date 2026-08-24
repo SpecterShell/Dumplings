@@ -1,10 +1,7 @@
-$RepoOwner = 'GeoDaCenter'
-$RepoName = 'geoda'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/GeoDaCenter/geoda/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
@@ -12,7 +9,7 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -jo
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('installer') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "GeoDa_$($this.CurrentState.RealVersion)_win7+x86_Setup.exe"
@@ -21,7 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('installer') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "GeoDa_$($this.CurrentState.RealVersion)_win7+x64_Setup.exe"

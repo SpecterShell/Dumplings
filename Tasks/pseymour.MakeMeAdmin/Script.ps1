@@ -1,10 +1,7 @@
-$RepoOwner = 'pseymour'
-$RepoName = 'MakeMeAdmin'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/pseymour/MakeMeAdmin/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -47,10 +44,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = "https://github.com/${RepoOwner}/${RepoName}/blob/HEAD/CHANGELOG.md"
+        Value  = $ReleaseNotesUrl = "https://github.com/pseymour/MakeMeAdmin/blob/HEAD/CHANGELOG.md"
       }
 
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/CHANGELOG.md" | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/pseymour/MakeMeAdmin/HEAD/CHANGELOG.md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), '$($this.CurrentState.RealVersion)')]")
       if ($ReleaseNotesTitleNode) {
@@ -66,7 +63,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value  = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -replace '[^a-zA-Z0-9\-\s]+', '' -replace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')

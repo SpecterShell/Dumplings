@@ -1,13 +1,10 @@
-$RepoOwner = 'xiph'
-$RepoName = 'flac'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/xiph/flac/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'win' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri

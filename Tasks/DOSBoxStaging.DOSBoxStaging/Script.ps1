@@ -1,15 +1,12 @@
-$RepoOwner = 'dosbox-staging'
-$RepoName = 'dosbox-staging'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/dosbox-staging/dosbox-staging/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('windows') -and $_.name.Contains('x64') -and $_.name.Contains('setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'windows' -and $_.name.Contains('x64') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -33,7 +30,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/website/docs/releases/release-notes/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis'
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/dosbox-staging/dosbox-staging/HEAD/website/docs/releases/release-notes/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis'
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'Summary')]")
       if ($ReleaseNotesTitleNode) {

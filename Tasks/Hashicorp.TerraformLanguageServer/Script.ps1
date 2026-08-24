@@ -13,27 +13,24 @@ $Object2 = Invoke-WebRequest -Uri $Prefix
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'zip'
-  InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('windows') -and $_.href.Contains('_386') } catch {} }, 'First')[0].href
+  InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'windows' -and $_.href.Contains('_386') } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'zip'
-  InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('windows') -and $_.href.Contains('amd64') } catch {} }, 'First')[0].href
+  InstallerUrl  = Join-Uri $Prefix $Object2.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'windows' -and $_.href.Contains('amd64') } catch {} }, 'First')[0].href
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $RepoOwner = 'hashicorp'
-      $RepoName = 'terraform-ls'
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value = "https://github.com/hashicorp/terraform-ls/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/hashicorp/terraform-ls/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

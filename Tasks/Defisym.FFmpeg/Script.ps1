@@ -2,10 +2,10 @@ $TargetDate = (Get-Date -AsUTC).AddDays(1).ToString('yyyy-MM-01').ToDateTime($nu
 $Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/defisym/FFmpeg-Builds-Win32/releases").Where({ $_.tag_name.Contains($TargetDate.ToString('yyyy-MM-dd')) }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^autobuild-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^autobuild-'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') -and $_.name.Contains('-gpl') -and -not $_.name.Contains('7.1') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') -and $_.name -match '-gpl' -and $_.name -notmatch '7\.1' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri

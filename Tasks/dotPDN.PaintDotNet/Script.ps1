@@ -1,16 +1,13 @@
-$RepoOwner = 'paintdotnet'
-$RepoName = 'release'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/paintdotnet/release/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture         = 'x64'
   NestedInstallerType  = 'exe'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('install') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'install' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "paint.net.$($this.CurrentState.Version).install.x64.exe"
@@ -20,7 +17,7 @@ $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   NestedInstallerType  = 'wix'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('winmsi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'winmsi' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "paint.net.$($this.CurrentState.Version).winmsi.x64.msi"
@@ -30,12 +27,12 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'x64'
   NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('portable') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'portable' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
   Architecture         = 'arm64'
   NestedInstallerType  = 'exe'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('install') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'install' -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "paint.net.$($this.CurrentState.Version).install.arm64.exe"
@@ -45,7 +42,7 @@ $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'arm64'
   NestedInstallerType  = 'wix'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('winmsi') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'winmsi' -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "paint.net.$($this.CurrentState.Version).winmsi.arm64.msi"
@@ -55,7 +52,7 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'arm64'
   NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('portable') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'portable' -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

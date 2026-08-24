@@ -27,16 +27,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $RepoOwner = 'gravitational'
-      $RepoName = 'teleport'
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value = "https://github.com/gravitational/teleport/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/gravitational/teleport/releases/tags/v$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

@@ -1,7 +1,4 @@
-$RepoOwner = 'dantmnf'
-$RepoName = 'MHC2'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases")[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/dantmnf/MHC2/releases")[0]
 
 # Version
 $this.CurrentState.Version = "$($Object1.published_at.ToUniversalTime().ToString('yyyy.MM.dd'))+$($Object1.id)"

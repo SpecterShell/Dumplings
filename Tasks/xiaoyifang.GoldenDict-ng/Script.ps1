@@ -1,14 +1,11 @@
-$RepoOwner = 'xiaoyifang'
-$RepoName = 'goldendict-ng'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/xiaoyifang/goldendict-ng/releases/latest"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.tag_name, '^v(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('installer') }, 'Last')[-1].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'installer' }, 'Last')[-1].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

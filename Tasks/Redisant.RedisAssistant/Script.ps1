@@ -1,10 +1,7 @@
-$RepoOwner = 'chenjing1294'
-$RepoName = 'redis-assistant-release'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/chenjing1294/redis-assistant-release/releases/latest"
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }

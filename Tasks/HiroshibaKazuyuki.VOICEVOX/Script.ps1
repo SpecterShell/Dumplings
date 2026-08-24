@@ -1,7 +1,4 @@
-$RepoOwner = 'VOICEVOX'
-$RepoName = 'voicevox'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/VOICEVOX/voicevox/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name
@@ -9,7 +6,7 @@ $this.CurrentState.Version = $Object1.tag_name
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'neutral'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('directml') -and $_.name.Contains('voicevox') -and -not $_.name.Contains('cpu') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name -match 'directml' -and $_.name -match 'voicevox' -and $_.name -notmatch 'cpu' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

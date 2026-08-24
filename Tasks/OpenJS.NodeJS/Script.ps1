@@ -1,6 +1,3 @@
-$RepoOwner = 'nodejs'
-$RepoName = 'node'
-
 $Object1 = $Global:DumplingsStorage.NodeJSReleases |
   Where-Object -FilterScript { -not $_.lts } |
   # Sort-Object -Property { [ChunkVersion]($_.version) } |
@@ -114,10 +111,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value  = "https://github.com/nodejs/node/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/nodejs/node/releases/tags/v$($this.CurrentState.Version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         # ReleaseNotes (en-US)
@@ -134,7 +131,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases/tag/v$($this.CurrentState.Version)"
+        Value  = "https://github.com/nodejs/node/releases/tag/v$($this.CurrentState.Version)"
       }
     } catch {
       $_ | Out-Host

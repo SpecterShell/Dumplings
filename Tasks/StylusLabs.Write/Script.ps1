@@ -1,7 +1,4 @@
-$RepoOwner = 'styluslabs'
-$RepoName = 'Write'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/styluslabs/Write/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name | Get-Date -Format 'yyyy-MM'

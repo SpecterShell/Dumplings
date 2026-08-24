@@ -1,13 +1,10 @@
-$RepoOwner = 'qjfoidnh'
-$RepoName = 'BaiduPCS-Go'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/qjfoidnh/BaiduPCS-Go/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x86') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('x86') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -18,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
     }
   )
 }
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('x64') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
@@ -31,7 +28,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'arm64'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath     = "BaiduPCS-Go-v$($this.CurrentState.Version)-windows-arm\BaiduPCS-Go.exe"

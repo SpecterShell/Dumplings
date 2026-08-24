@@ -1,7 +1,4 @@
-$RepoOwner = 'vo-soft'
-$RepoName = 'vic-diary-release'
-
-$Object1 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/${RepoOwner}/${RepoName}/releases/latest" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
+$Object1 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/vo-soft/vic-diary-release/releases/latest" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -18,7 +15,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://gitee.com/${RepoOwner}/${RepoName}/releases/tag/$($Object1.tag_name)"
+        Value  = "https://gitee.com/vo-soft/vic-diary-release/releases/tag/$($Object1.tag_name)"
       }
     } catch {
       $_ | Out-Host
@@ -26,7 +23,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
+      $Object2 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/vo-soft/vic-diary-release/releases/tags/v$($this.CurrentState.Version)" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.created_at.ToUniversalTime()
@@ -46,7 +43,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://gitee.com/${RepoOwner}/${RepoName}/releases/tag/$($Object2.tag_name)"
+        Value  = "https://gitee.com/vo-soft/vic-diary-release/releases/tag/$($Object2.tag_name)"
       }
     } catch {
       $_ | Out-Host

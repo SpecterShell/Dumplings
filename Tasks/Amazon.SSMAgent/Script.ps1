@@ -11,17 +11,14 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $RepoOwner = 'aws'
-      $RepoName = 'amazon-ssm-agent'
-
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value  = "https://github.com/aws/amazon-ssm-agent/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/aws/amazon-ssm-agent/releases/tags/$($this.CurrentState.Version)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

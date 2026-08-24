@@ -1,19 +1,16 @@
-$RepoOwner = 'koodo-reader'
-$RepoName = 'koodo-reader'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('Portable') -and $_.name.Contains('x64') }, 'First')[0].name)"
+  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -notmatch 'Portable' -and $_.name.Contains('x64') }, 'First')[0].name)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and -not $_.name.Contains('Portable') -and $_.name.Contains('arm64') }, 'First')[0].name)"
+  InstallerUrl = "https://dl.koodoreader.com/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -notmatch 'Portable' -and $_.name.Contains('arm64') }, 'First')[0].name)"
 }
 
 switch -Regex ($this.Check()) {

@@ -1,10 +1,7 @@
-$RepoOwner = 'Yubico'
-$RepoName = 'yubikey-manager-qt'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Yubico/yubikey-manager-qt/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^yubikey-manager-qt-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^yubikey-manager-qt-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

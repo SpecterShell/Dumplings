@@ -1,7 +1,4 @@
-$RepoOwner = 'KiCad'
-$RepoName = 'kicad-source-mirror'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/KiCad/kicad-source-mirror/releases/latest"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

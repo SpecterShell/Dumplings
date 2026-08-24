@@ -1,7 +1,4 @@
-$RepoOwner = 'brechtsanders'
-$RepoName = 'winlibs_mingw'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.prerelease -and $_.tag_name.Contains('posix') -and $_.tag_name.Contains('ucrt') -and $_.tag_name -notmatch 'snapshot' }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases").Where({ -not $_.prerelease -and $_.tag_name.Contains('posix') -and $_.tag_name.Contains('ucrt') -and $_.tag_name -notmatch 'snapshot' }, 'First')[0]
 
 $VersionMatches = [regex]::Match($Object1.tag_name, '(?<gcc>\d+(?:\.\d+)+)posix(?:-(?<llvm>\d+(?:\.\d+)+))?-(?<mingw>\d+(?:\.\d+)+)-ucrt-r(?<release>\d+)')
 if (-not $VersionMatches.Groups['llvm'].Success) {
@@ -14,11 +11,11 @@ $this.CurrentState.Version = "$($VersionMatches.Groups['gcc'].Value)-$($VersionM
 # Installer
 $this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('llvm') -and $_.name.Contains('i686') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'llvm' -and $_.name.Contains('i686') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('llvm') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'llvm' -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

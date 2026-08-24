@@ -1,10 +1,7 @@
-$RepoOwner = 'WXRIW'
-$RepoName = 'Lyricify-App'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.prerelease -and -not $_.tag_name.Contains('lite') } , 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/WXRIW/Lyricify-App/releases").Where({ -not $_.prerelease -and -not $_.tag_name.Contains('lite') } , 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

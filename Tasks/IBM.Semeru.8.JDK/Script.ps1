@@ -6,11 +6,11 @@ $this.CurrentState.Version = [regex]::Match($Object1.tag_name, 'jdk-(\d+(?:\.\d+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('jdk') -and $_.name.Contains('x86-32') }, 'First').browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'jdk' -and $_.name.Contains('x86-32') }, 'First').browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('jdk') -and $_.name.Contains('x64') }, 'First').browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'jdk' -and $_.name.Contains('x64') }, 'First').browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

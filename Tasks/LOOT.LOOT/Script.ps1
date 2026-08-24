@@ -1,10 +1,7 @@
-$RepoOwner = 'loot'
-$RepoName = 'loot'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/loot/loot/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -23,7 +20,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/HEAD/docs/app/changelog.rst" | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/loot/loot/HEAD/docs/app/changelog.rst" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h1[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {

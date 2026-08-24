@@ -13,7 +13,7 @@ $this.CurrentState.Installer += [ordered]@{
       RelativeFilePath = "Snap4Arduino-$($this.CurrentState.Version)-32.exe"
     }
   )
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('-32') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('-32') -and $_.name -match 'installer' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
@@ -24,7 +24,7 @@ $this.CurrentState.Installer += [ordered]@{
       RelativeFilePath = "Snap4Arduino-$($this.CurrentState.Version)-64.exe"
     }
   )
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('-64') -and $_.name.Contains('installer') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('-64') -and $_.name -match 'installer' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

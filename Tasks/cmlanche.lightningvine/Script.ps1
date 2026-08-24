@@ -39,7 +39,7 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#_' + ($ReleaseNotesTitleNode.InnerText -creplace '\W+', '-')
+          Value = $ReleaseNotesUrl + '#_' + ($ReleaseNotesTitleNode.InnerText -replace '\W+', '-')
         }
       } else {
         $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')

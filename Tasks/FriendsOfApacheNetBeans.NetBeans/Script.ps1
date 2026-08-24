@@ -1,7 +1,4 @@
-$RepoOwner = 'Friends-of-Apache-NetBeans'
-$RepoName = 'netbeans-installers'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Friends-of-Apache-NetBeans/netbeans-installers/releases/latest"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.tag_name, '^(?:v|nb)?(\d+(?:\.\d+)*)').Groups[1].Value

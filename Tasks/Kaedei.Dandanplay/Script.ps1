@@ -1,10 +1,7 @@
-$RepoOwner = 'kaedei'
-$RepoName = 'dandanplay'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/kaedei/dandanplay/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^windows-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^windows-'
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -join '.'

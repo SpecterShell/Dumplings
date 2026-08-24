@@ -1,10 +1,7 @@
-$RepoOwner = 'infinitered'
-$RepoName = 'reactotron'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.StartsWith('reactotron-app') }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/infinitered/reactotron/releases").Where({ $_.tag_name.StartsWith('reactotron-app') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace 'reactotron-app@'
+$this.CurrentState.Version = $Object1.tag_name -replace 'reactotron-app@'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -13,7 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -30,10 +27,10 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://github.com/${RepoOwner}/${RepoName}/blob/master/apps/reactotron-app/CHANGELOG.md"
+        Value = $ReleaseNotesUrl = "https://github.com/infinitered/reactotron/blob/master/apps/reactotron-app/CHANGELOG.md"
       }
 
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/apps/reactotron-app/CHANGELOG.md" | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/infinitered/reactotron/master/apps/reactotron-app/CHANGELOG.md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/*[self::h2 or self::h3][contains(.//text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -42,13 +39,13 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNodes | Get-TextContent) -creplace 'Released \d{4}-\d{1,2}-\d{1,2}\n' | Format-Text
+          Value  = ($ReleaseNotesNodes | Get-TextContent) -replace 'Released \d{4}-\d{1,2}-\d{1,2}\n' | Format-Text
         }
 
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -replace '[^a-zA-Z0-9\-\s]+', '' -replace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')

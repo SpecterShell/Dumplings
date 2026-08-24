@@ -1,10 +1,7 @@
-$RepoOwner = 'manisandro'
-$RepoName = 'gImageReader'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.prerelease -and -not $_.tag_name.Contains('master') }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/manisandro/gImageReader/releases").Where({ -not $_.prerelease -and -not $_.tag_name.Contains('master') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

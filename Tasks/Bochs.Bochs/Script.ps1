@@ -1,10 +1,7 @@
-$RepoOwner = 'bochs-emu'
-$RepoName = 'Bochs'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/bochs-emu/Bochs/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace 'REL_(\d+(?:_\d+)+)_FINAL', '$1' -creplace '_', '.'
+$this.CurrentState.Version = $Object1.tag_name -replace 'REL_(\d+(?:_\d+)+)_FINAL', '$1' -replace '_', '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

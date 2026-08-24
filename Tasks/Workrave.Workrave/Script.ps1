@@ -1,10 +1,7 @@
-$RepoOwner = 'rcaelers'
-$RepoName = 'workrave'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/rcaelers/workrave/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v' -creplace '_', '.'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v' -replace '_', '.'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

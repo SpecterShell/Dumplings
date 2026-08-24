@@ -1,7 +1,4 @@
-$RepoOwner = 'vapoursynth'
-$RepoName = 'vapoursynth'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/vapoursynth/vapoursynth/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name
@@ -9,7 +6,7 @@ $this.CurrentState.Version = $Object1.tag_name
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and -not $_.name.Contains('avx') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -notmatch 'avx' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

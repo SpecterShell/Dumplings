@@ -52,16 +52,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $RepoOwner = 'BOINC'
-      $RepoName = 'boinc'
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value = "https://github.com/BOINC/boinc/releases"
       }
 
-      $Object5 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/client_release%2F$($this.CurrentState.Version.Split('.')[0..1] -join '.')%2F$($this.CurrentState.Version)"
+      $Object5 = Invoke-GitHubApi -Uri "https://api.github.com/repos/BOINC/boinc/releases/tags/client_release%2F$($this.CurrentState.Version.Split('.')[0..1] -join '.')%2F$($this.CurrentState.Version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object5.body)) {
         # ReleaseNotes (en-US)

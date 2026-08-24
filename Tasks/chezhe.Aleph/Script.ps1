@@ -1,10 +1,7 @@
-$RepoOwner = 'chezhe'
-$RepoName = 'aleph-desktop'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases")[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/chezhe/aleph-desktop/releases")[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,7 +1,4 @@
-$RepoOwner = 'devcpp'
-$RepoName = 'cterm'
-
-$Object1 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/${RepoOwner}/${RepoName}/releases/latest" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
+$Object1 = Invoke-RestMethod -Uri "https://gitee.com/api/v5/repos/devcpp/cterm/releases/latest" -Authentication Bearer -Token (ConvertTo-SecureString -String $Global:DumplingsSecret.GiteeToken -AsPlainText)
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -creplace '^v'
@@ -31,7 +28,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://gitee.com/${RepoOwner}/${RepoName}/releases/tag/$($Object1.tag_name)"
+        Value = "https://gitee.com/devcpp/cterm/releases/tag/$($Object1.tag_name)"
       }
     } catch {
       $_ | Out-Host

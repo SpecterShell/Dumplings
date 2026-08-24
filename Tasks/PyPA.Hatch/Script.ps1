@@ -1,10 +1,7 @@
-$RepoOwner = 'pypa'
-$RepoName = 'hatch'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/pypa/hatch/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^hatch-v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^hatch-v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,19 +1,16 @@
-$RepoOwner = 'rizonesoft'
-$RepoName = 'Notepad3'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/rizonesoft/Notepad3/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^RELEASE_'
+$this.CurrentState.Version = $Object1.tag_name -replace '^RELEASE_'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -33,7 +30,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/master/Build/Changes.txt"
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/rizonesoft/Notepad3/master/Build/Changes.txt"
 
       $Enumerator = ($Object2 -split '\n=+\n').GetEnumerator()
       while ($Enumerator.MoveNext()) {

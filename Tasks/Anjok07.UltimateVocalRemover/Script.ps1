@@ -1,7 +1,4 @@
-$RepoOwner = 'Anjok07'
-$RepoName = 'ultimatevocalremovergui'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Anjok07/ultimatevocalremovergui/releases/latest"
 
 # Installer
 $Asset = $Object1.assets | Where-Object -Property 'name' -Match -Value 'UVR_v([\d\.]+)_setup\.exe' | Sort-Object -Property { [ChunkVersion]($_.name) } -Bottom 1

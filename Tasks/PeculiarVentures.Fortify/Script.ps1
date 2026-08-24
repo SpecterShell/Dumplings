@@ -1,31 +1,28 @@
-$RepoOwner = 'PeculiarVentures'
-$RepoName = 'fortify-releases'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/PeculiarVentures/fortify-releases/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'en-US'
   Architecture    = 'x86'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') -and $_.name.Contains('en-US') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') -and $_.name -match 'en-US' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'en-US'
   Architecture    = 'x64'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name.Contains('en-US') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'en-US' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'de-DE'
   Architecture    = 'x86'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') -and $_.name.Contains('de-DE') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') -and $_.name -match 'de-DE' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'de-DE'
   Architecture    = 'x64'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name.Contains('de-DE') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'de-DE' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

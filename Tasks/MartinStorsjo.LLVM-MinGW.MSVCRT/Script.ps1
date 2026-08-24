@@ -1,7 +1,4 @@
-$RepoOwner = 'mstorsjo'
-$RepoName = 'llvm-mingw'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/mstorsjo/llvm-mingw/releases/latest"
 
 # Version
 $NameMatches = [regex]::Match($Object1.name, 'llvm-mingw (?<date>\d+) with LLVM (?<version>\d+(?:\.\d+)+)')
@@ -10,11 +7,11 @@ $this.CurrentState.Version = "$($NameMatches.Groups['version'].Value)-$($NameMat
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('msvcrt') -and $_.name.Contains('i686') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'msvcrt' -and $_.name.Contains('i686') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('msvcrt') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'msvcrt' -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

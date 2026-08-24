@@ -1,7 +1,4 @@
-$RepoOwner = 'flyhunterl'
-$RepoName = 'flymd'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name -match '^v(\d+(?:\.\d+)+)$' -and -not $_.prerelease }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/flyhunterl/flymd/releases").Where({ $_.tag_name -match '^v(\d+(?:\.\d+)+)$' -and -not $_.prerelease }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -9,7 +6,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('setup') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'setup' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

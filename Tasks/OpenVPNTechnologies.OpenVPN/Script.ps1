@@ -43,16 +43,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $RepoOwner = 'OpenVPN'
-      $RepoName = 'openvpn'
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value = "https://github.com/OpenVPN/openvpn/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v${ShortVersion}"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/OpenVPN/openvpn/releases/tags/v${ShortVersion}"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         # ReleaseNotes (en-US)

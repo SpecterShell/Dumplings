@@ -1,10 +1,7 @@
-$RepoOwner = 'darktable-org'
-$RepoName = 'darktable'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/darktable-org/darktable/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^release-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^release-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

@@ -1,7 +1,4 @@
-$RepoOwner = 'wixtoolset'
-$RepoName = 'wix3'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/wixtoolset/wix3/releases/latest"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.name, 'v([\d\.]+)').Groups[1].Value

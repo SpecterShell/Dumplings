@@ -1,10 +1,7 @@
-$RepoOwner = 'ThinkInAIXYZ'
-$RepoName = 'deepchat'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/ThinkInAIXYZ/deepchat/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 if ($this.CurrentState.Version -match '^workflow-') {
   $this.Log("The version $($this.CurrentState.Version) is a pre-release version", 'Error')

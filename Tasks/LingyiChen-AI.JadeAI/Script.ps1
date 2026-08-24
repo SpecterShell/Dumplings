@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Release.tag_name -replace '^v'
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Release.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Release.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'win' -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

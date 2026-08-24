@@ -1,10 +1,7 @@
-$RepoOwner = 'cnr-isti-vclab'
-$RepoName = 'meshlab'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/cnr-isti-vclab/meshlab/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^MeshLab-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^MeshLab-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

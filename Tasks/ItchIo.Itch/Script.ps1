@@ -1,16 +1,13 @@
 function Get-ReleaseNotes {
   try {
-    $RepoOwner = 'itchio'
-    $RepoName = 'itch'
-
     # ReleaseNotesUrl (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotesUrl'
-      Value  = "https://github.com/${RepoOwner}/${RepoName}/releases"
+      Value  = "https://github.com/itchio/itch/releases"
     }
 
-    $Object3 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+    $Object3 = Invoke-GitHubApi -Uri "https://api.github.com/repos/itchio/itch/releases/tags/v$($this.CurrentState.Version)"
 
     # ReleaseTime
     $this.CurrentState.ReleaseTime = $Object3.published_at.ToUniversalTime()

@@ -1,10 +1,7 @@
-$RepoOwner = 'MoganLab'
-$RepoName = 'mogan'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/MoganLab/mogan/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -40,7 +37,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/en/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MoganLab/mogan.app/HEAD/en/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
       # Remove anchors
       $Object2.SelectNodes('//a[@class="header-anchor"]').ForEach({ $_.Remove() })
 
@@ -63,7 +60,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/mogan.app/HEAD/zh/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
+      $Object3 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MoganLab/mogan.app/HEAD/zh/changelog/v$($this.CurrentState.Version.Split('.')[0..2] -join '.').html" | ConvertFrom-Html
       # Remove anchors
       $Object3.SelectNodes('//a[@class="header-anchor"]').ForEach({ $_.Remove() })
 

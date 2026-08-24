@@ -1,14 +1,11 @@
-$RepoOwner = 'Mozilla-Ocho'
-$RepoName = 'llamafile'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Mozilla-Ocho/llamafile/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.StartsWith('llamafile') -and -not $_.name.EndsWith('.zip') -and -not $_.name.Contains('bench') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.StartsWith('llamafile') -and -not $_.name.EndsWith('.zip') -and $_.name -notmatch 'bench' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

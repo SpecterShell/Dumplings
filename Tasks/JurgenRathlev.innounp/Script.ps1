@@ -8,11 +8,9 @@ function Read-Installer {
   Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
-$RepoOwner = 'jrathlev'
-$RepoName = 'InnoUnpacker-Windows-GUI'
 $FolderPath = 'innounp-2/bin'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/contents/${FolderPath}"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/jrathlev/InnoUnpacker-Windows-GUI/contents/${FolderPath}"
 $VersionedFiles = foreach ($File in $Object1) {
   if ($File.type -ceq 'file' -and $File.name -match '^innounp-(?<Version>\d+(?:\.\d+)*)\.zip$') {
     [pscustomobject]@{
@@ -25,12 +23,12 @@ $LatestFile = $VersionedFiles | Sort-Object -Property Version -Bottom 1
 if (-not $LatestFile) { throw "No versioned innounp ZIP file was found in '${FolderPath}'." }
 
 $Path = $LatestFile.File.path
-$Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/commits?path=${Path}&per_page=1"
+$Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/jrathlev/InnoUnpacker-Windows-GUI/commits?path=${Path}&per_page=1"
 if (-not $Object2) { throw "No commit was found for the selected innounp archive '${Path}'." }
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/$($Object2[0].sha)/${Path}"
+  InstallerUrl = "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/$($Object2[0].sha)/${Path}"
 }
 
 # Case 0: Force submitting the manifest

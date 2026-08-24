@@ -1,10 +1,7 @@
-$RepoOwner = 'microsoft'
-$RepoName = 'Analysis-Services'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ -not $_.prerelease -and $_.name.Contains('ALM Toolkit') }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/microsoft/Analysis-Services/releases").Where({ -not $_.prerelease -and $_.name -match 'ALM Toolkit' }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

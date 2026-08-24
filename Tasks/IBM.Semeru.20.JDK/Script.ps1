@@ -1,7 +1,4 @@
-$RepoOwner = 'ibmruntimes'
-$RepoName = 'semeru20-binaries'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/ibmruntimes/semeru20-binaries/releases/latest"
 
 $VersionMatches = [regex]::Match($Object1.tag_name, 'jdk-(?<Major>\d+)(?:\.(?<Minor>\d+))?(?:\.(?<Patch>\d+))?[+.](?<Build>\d+)')
 
@@ -17,7 +14,7 @@ $this.CurrentState.Version = $VersionBuilder.ToString()
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('jdk') }, 'First').browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'jdk' }, 'First').browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

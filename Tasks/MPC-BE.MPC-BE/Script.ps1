@@ -1,15 +1,12 @@
-$RepoOwner = 'Aleksoid1978'
-$RepoName = 'MPC-BE'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Aleksoid1978/MPC-BE/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x86'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('installer') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "MPC-BE.$($this.CurrentState.Version).x86.exe"
@@ -18,7 +15,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('installer') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "MPC-BE.$($this.CurrentState.Version).x64.exe"

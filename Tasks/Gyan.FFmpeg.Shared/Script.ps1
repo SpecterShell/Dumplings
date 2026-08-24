@@ -1,13 +1,10 @@
-$RepoOwner = 'GyanD'
-$RepoName = 'codexffmpeg'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/GyanD/codexffmpeg/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('full') -and $_.name.Contains('shared') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'full' -and $_.name -match 'shared' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
@@ -51,7 +48,7 @@ switch -Regex ($this.Check()) {
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject -creplace '^version [\d\.]+:?\n' | Format-Text
+          Value  = $ReleaseNotesObject -replace '^version [\d\.]+:?\n' | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')

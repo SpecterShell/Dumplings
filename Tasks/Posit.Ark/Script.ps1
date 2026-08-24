@@ -1,17 +1,14 @@
-$RepoOwner = 'posit-dev'
-$RepoName = 'ark'
-
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases")[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/posit-dev/ark/releases")[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'x64'
   InstallerType       = 'zip'
   NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') -and $_.name.Contains('x64') -and -not $_.name.Contains('debug') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('x64') -and $_.name -notmatch 'debug' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

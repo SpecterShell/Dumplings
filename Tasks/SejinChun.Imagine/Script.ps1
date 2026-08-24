@@ -1,10 +1,7 @@
-$RepoOwner = 'nyam1003'
-$RepoName = 'imagine'
-
 # Official versioned installers are published as repository files: x86 at the root, x64 and arm64 in their own folders.
-$RootFiles = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/contents/"
-$X64Files = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/contents/x64"
-$Arm64Files = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/contents/arm64"
+$RootFiles = Invoke-GitHubApi -Uri "https://api.github.com/repos/nyam1003/imagine/contents/"
+$X64Files = Invoke-GitHubApi -Uri "https://api.github.com/repos/nyam1003/imagine/contents/x64"
+$Arm64Files = Invoke-GitHubApi -Uri "https://api.github.com/repos/nyam1003/imagine/contents/arm64"
 
 $VersionedFiles = foreach ($File in @($RootFiles + $X64Files + $Arm64Files)) {
   if ($File.type -ceq 'file' -and $File.name -match '^Imagine_(?<Version>\d+\.\d+\.\d+)_(?:x64_|arm64_)?Unicode_Full\.exe$') {
@@ -28,12 +25,12 @@ $ArchFiles = @($VersionedFiles | Where-Object { $_.Version -eq $LatestVersion } 
 foreach ($Arch in @('x86', 'x64', 'arm64')) {
   $ArchFile = $ArchFiles.Where({ $_.Arch -eq $Arch }, 'First')[0]
   if (-not $ArchFile) { throw "The $Arch installer for version $LatestVersion was not found." }
-  $Commit = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/commits?path=$($ArchFile.File.path)&per_page=1"
+  $Commit = Invoke-GitHubApi -Uri "https://api.github.com/repos/nyam1003/imagine/commits?path=$($ArchFile.File.path)&per_page=1"
   if (-not $Commit) { throw "No commit was found for the installer '$($ArchFile.File.path)'." }
   $this.CurrentState.Installer += [ordered]@{
     Architecture  = $Arch
     InstallerType = 'nullsoft'
-    InstallerUrl  = "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/$($Commit[0].sha)/$($ArchFile.File.path)"
+    InstallerUrl  = "https://raw.githubusercontent.com/nyam1003/imagine/$($Commit[0].sha)/$($ArchFile.File.path)"
   }
 }
 

@@ -1,19 +1,16 @@
 
 
-$RepoOwner = 'MSEndpointMgr'
-$RepoName = 'IntuneDebugToolkit'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/contents/"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/MSEndpointMgr/IntuneDebugToolkit/contents/"
 $Path = $Object1.Where({ $_.name.EndsWith('.msi') }, 'First')[0].path
 
-$Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/commits?path=${Path}"
+$Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/MSEndpointMgr/IntuneDebugToolkit/commits?path=${Path}"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Path, '(\d+(\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/$($Object2[0].sha)/${Path}"
+  InstallerUrl = "https://raw.githubusercontent.com/MSEndpointMgr/IntuneDebugToolkit/$($Object2[0].sha)/${Path}"
 }
 
 switch -Regex ($this.Check()) {
@@ -22,10 +19,10 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://github.com/${RepoOwner}/${RepoName}/blob/main/README.md"
+        Value = $ReleaseNotesUrl = "https://github.com/MSEndpointMgr/IntuneDebugToolkit/blob/main/README.md"
       }
 
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/${RepoOwner}/${RepoName}/refs/heads/main/README.md" | Convert-MarkdownToHtml
+      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/MSEndpointMgr/IntuneDebugToolkit/refs/heads/main/README.md" | Convert-MarkdownToHtml
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -47,7 +44,7 @@ switch -Regex ($this.Check()) {
         # ReleaseNotesUrl
         $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -creplace '[^a-zA-Z0-9\-\s]+', '' -creplace '\s+', '-').ToLower()
+          Value = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -replace '[^a-zA-Z0-9\-\s]+', '' -replace '\s+', '-').ToLower()
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')

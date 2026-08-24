@@ -1,31 +1,28 @@
-$RepoOwner = 'playit-cloud'
-$RepoName = 'playit-agent'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/playit-cloud/playit-agent/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   Architecture  = 'x86'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'x86(?![^a-zA-Z0-9]64)' -and $_.name.Contains('signed') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name -match 'x86(?![^a-zA-Z0-9]64)' -and $_.name -match 'signed' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   Architecture  = 'x64'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86_64') -and $_.name.Contains('signed') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86_64') -and $_.name -match 'signed' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'portable'
   Architecture  = 'x86'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'x86(?![^a-zA-Z0-9]64)' -and $_.name.Contains('signed') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'x86(?![^a-zA-Z0-9]64)' -and $_.name -match 'signed' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'portable'
   Architecture  = 'x64'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') -and $_.name.Contains('signed') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') -and $_.name -match 'signed' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

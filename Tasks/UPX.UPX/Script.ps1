@@ -1,10 +1,7 @@
-$RepoOwner = 'upx'
-$RepoName = 'upx'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/upx/upx/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win32') }, 'First')[0]

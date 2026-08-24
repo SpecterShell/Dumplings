@@ -1,10 +1,7 @@
-$RepoOwner = 'SAP'
-$RepoName = 'SapMachine'
-
 $Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'21'.releases.Where({ $_.jre.Contains('windows-x64-installer') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag -creplace '^sapmachine-'
+$this.CurrentState.Version = $Object1.tag -replace '^sapmachine-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -15,7 +12,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/$($Object1.tag)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/SAP/SapMachine/releases/tags/$($Object1.tag)"
 
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()

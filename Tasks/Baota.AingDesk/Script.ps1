@@ -21,16 +21,13 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $RepoOwner = 'aingdesk'
-      $RepoName = 'AingDesk'
-
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://github.com/${RepoOwner}/${RepoName}/releases"
+        Value = "https://github.com/aingdesk/AingDesk/releases"
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/v$($this.CurrentState.Version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/aingdesk/AingDesk/releases/tags/v$($this.CurrentState.Version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         # ReleaseNotes (en-US)

@@ -1,10 +1,7 @@
-$RepoOwner = 'audacity'
-$RepoName = 'audacity'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/audacity/audacity/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^Audacity-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^Audacity-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

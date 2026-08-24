@@ -1,15 +1,12 @@
-$RepoOwner = 'xemu-project'
-$RepoName = 'xemu'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/xemu-project/xemu/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.Contains('win') -and $_.name.Contains('x86_64') -and $_.name.Contains('release') -and -not $_.name.Contains('pdb') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name -match 'win' -and $_.name.Contains('x86_64') -and $_.name -match 'release' -and $_.name -notmatch 'pdb' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

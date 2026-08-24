@@ -1,7 +1,4 @@
-$RepoOwner = 'JS8Call-improved'
-$RepoName = 'JS8Call-improved'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/JS8Call-improved/JS8Call-improved/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^release/' -replace '^v'

@@ -1,15 +1,12 @@
-$RepoOwner = 'BtbN'
-$RepoName = 'FFmpeg-Builds'
-
 $TargetDate = (Get-Date -AsUTC).AddDays(1).ToString('yyyy-MM-01').ToDateTime($null).AddDays(-1)
 
-$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases").Where({ $_.tag_name.Contains($TargetDate.ToString('yyyy-MM-dd')) }, 'First')[0]
+$Object1 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases").Where({ $_.tag_name.Contains($TargetDate.ToString('yyyy-MM-dd')) }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^autobuild-'
+$this.CurrentState.Version = $Object1.tag_name -replace '^autobuild-'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name.Contains('-gpl') -and -not $_.name.Contains('shared') -and $_.name.Contains('N-') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('win64') -and $_.name -match '-gpl' -and $_.name -notmatch 'shared' -and $_.name -match 'N-' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri

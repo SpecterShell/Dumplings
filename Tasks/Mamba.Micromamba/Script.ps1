@@ -1,11 +1,9 @@
-$RepoOwner = 'mamba-org'
-$RepoName = 'micromamba-releases'
 $RepoName2 = 'mamba'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -31,7 +29,7 @@ switch -Regex ($this.Check()) {
         Value  = 'https://github.com/mamba-org/mamba/releases'
       }
 
-      $Object2 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName2}/releases").Where({ $_.name -eq $this.CurrentState.Version.Split('-')[0] }, 'First')
+      $Object2 = (Invoke-GitHubApi -Uri "https://api.github.com/repos/mamba-org/${RepoName2}/releases").Where({ $_.name -eq $this.CurrentState.Version.Split('-')[0] }, 'First')
 
       if ($Object2) {
         if (-not [string]::IsNullOrWhiteSpace($Object2[0].body)) {

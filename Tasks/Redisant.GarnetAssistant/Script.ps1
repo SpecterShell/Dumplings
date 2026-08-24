@@ -1,13 +1,10 @@
-$RepoOwner = 'chenjing1294'
-$RepoName = 'garnet-assistant-release'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/chenjing1294/garnet-assistant-release/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('windows') }, 'First')[0]
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }

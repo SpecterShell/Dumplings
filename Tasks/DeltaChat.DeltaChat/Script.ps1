@@ -1,15 +1,12 @@
-$RepoOwner = 'deltachat'
-$RepoName = 'deltachat-desktop'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/deltachat/deltachat-desktop/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://download.delta.chat/desktop/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') -and $_.name.Contains('x64') }, 'First')[0].name)"
+  InstallerUrl = "https://download.delta.chat/desktop/$($Object1.tag_name)/$($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('x64') }, 'First')[0].name)"
 }
 
 switch -Regex ($this.Check()) {

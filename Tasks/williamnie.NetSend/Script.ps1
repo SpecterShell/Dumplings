@@ -1,14 +1,11 @@
-$RepoOwner = 'williamnie'
-$RepoName = 'netSend'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/williamnie/netSend/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.name -match '^v[\d\.]+' ?  $Object1.name -creplace '^v' : $Object1.tag_name -creplace '^v'
+$this.CurrentState.Version = $Object1.name -match '^v[\d\.]+' ?  $Object1.name -replace '^v' : $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('Setup') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

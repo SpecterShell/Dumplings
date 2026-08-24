@@ -1,7 +1,4 @@
-$RepoOwner = 'irwir'
-$RepoName = 'eMule'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/irwir/eMule/releases/latest"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.tag_name, 'v(.+?)-').Groups[1].Value

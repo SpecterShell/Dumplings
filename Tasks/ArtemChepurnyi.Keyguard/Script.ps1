@@ -1,7 +1,4 @@
-$RepoOwner = 'AChep'
-$RepoName = 'keyguard-app'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/AChep/keyguard-app/releases/latest"
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.name, 'v(\d+(?:\.\d+)+)').Groups[1].Value

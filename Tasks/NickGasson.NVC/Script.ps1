@@ -1,10 +1,7 @@
-$RepoOwner = 'nickg'
-$RepoName = 'nvc'
-
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/nickg/nvc/releases/latest"
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -creplace '^r'
+$this.CurrentState.Version = $Object1.tag_name -replace '^r'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

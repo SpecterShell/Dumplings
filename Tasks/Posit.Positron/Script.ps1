@@ -62,10 +62,7 @@ switch -Regex ($this.Check()) {
         Value = $null
       }
 
-      $RepoOwner = 'posit-dev'
-      $RepoName = 'positron'
-
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoName}/releases/tags/$($Object1.version)"
+      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/posit-dev/positron/releases/tags/$($Object1.version)"
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
