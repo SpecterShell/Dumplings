@@ -1,0 +1,69 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/diodeme/Gold-Band/releases/download/v0.14.0/Gold.Band_0.14.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/diodeme/Gold-Band/releases/download/v0.14.0/Gold.Band_0.14.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Gold Band v0.14.0
+    中文 · English
+    中文
+    Warning
+    注意：本次为破坏式更新
+    本次更新会调整 ~/应用目录/projects 下的目录名。
+    例如：
+    - 旧版本：D--Projects-code-ai-Gold-Band
+    - 新版本：d-projects-code-ai-gold-band--b098bfa9
+    此项调整会为每个目录增加一个短 UUID，以避免 Project ID 重复。例如，旧版本中 D:/Projects/code/ai/Gold-Band 和 D:/Projects/code/ai/Gold/Band 的 Project ID 相同。
+    目录迁移无需用户操作。但是，如果以前的工作流 Prompt 中包含“当前节点产物目录为 xxx”之类的固定目录描述，可能会受到影响，建议在新版本中发起新的工作流会话。
+    功能新增/调整
+    1. 支持在会话框快速切换分支
+    2. 完善 AUTO 模式
+    现已支持自动嵌套分发节点，执行流程如下：
+    1. 会话在工作树 A 发起。
+    2. 分发节点创建两个并行开发节点，分别运行在工作树 B 和工作树 C。
+    3. 工作树 B 的节点可以继续分发两个节点，分别运行在工作树 D 和工作树 E。
+    4. 工作树 D 和工作树 E 的节点运行完成后，Merge 节点将改动整合到工作树 B。
+    5. 工作树 C 和工作树 B 完成后，Merge 节点将改动整合到工作树 A。
+    体验优化
+    1. 支持在 Worktree 中输入和查看可用命令
+    2. 更流畅、更稳定的体验
+    - 优化会话定位算法，减少遍历时间。
+    - 优化长会话的停止和流式继续响应速度。
+    - 优化会话生命周期，减少竞态问题导致的生命周期错误。
+    3. 若干样式和用户体验优化
+
+    English
+    Warning
+    Important: This release contains breaking changes
+    This update changes directory names under the projects folder in the Gold Band application directory.
+    For example:
+    - Previous format: D--Projects-code-ai-Gold-Band
+    - New format: d-projects-code-ai-gold-band--b098bfa9
+    A short UUID is now appended to each directory name to prevent duplicate Project IDs. For example, in previous versions, D:/Projects/code/ai/Gold-Band and D:/Projects/code/ai/Gold/Band produced the same Project ID.
+    Directory migration is automatic and requires no user action. However, existing workflow prompts containing hard-coded directory descriptions such as “The current node artifact directory is xxx” may be affected. We recommend starting a new workflow session after updating.
+    Features and changes
+    1. Quickly switch branches in conversations
+    2. Improved AUTO mode
+    AUTO mode now supports nested dispatch nodes. The execution flow works as follows:
+    1. A conversation starts in worktree A.
+    2. A dispatch node creates two parallel development nodes running in worktrees B and C.
+    3. The node in worktree B can dispatch two additional nodes running in worktrees D and E.
+    4. After the nodes in worktrees D and E finish, a Merge node integrates their changes into worktree B.
+    5. After worktrees C and B finish, a Merge node integrates their changes into worktree A.
+    Experience improvements
+    1. View and enter available commands in Worktrees
+    2. Smoother and more reliable experience
+    - Improved the conversation lookup algorithm to reduce traversal time.
+    - Improved responsiveness when stopping or continuing streamed output in long conversations.
+    - Improved conversation lifecycle handling to reduce lifecycle errors caused by race conditions.
+    3. Additional styling and usability improvements
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/diodeme/Gold-Band/releases/tag/v0.14.0
+ReleaseTime: 2026-08-25T12:33:14.0000000Z
