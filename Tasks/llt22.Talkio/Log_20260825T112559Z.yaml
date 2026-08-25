@@ -1,0 +1,23 @@
+Version: 2.12.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.12.0/talkio_2.12.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.12.0/talkio_2.12.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新增 generate_image 绘图工具
+    在 设置 → 图片生成 里配置一个 OpenAI 兼容的 /images/generations 端点（OpenAI 官方，或任意支持 gpt-image-1 / gpt-image-2 / dall-e-3 的网关），配置完成后 generate_image 才会出现在模型的工具列表里。聊天中直接说"画一张…"，模型会自行调用并把图片展示在回复里。
+    图片模型挂在 /images/generations 而不是 /chat/completions，无法当作聊天模型使用，所以走工具调用而不是给模型加"绘图模式"。
+    生成图片改为本地文件存储
+    一张图的 base64 动辄一两兆，直接写进数据库会让会话无法加载。现在图片字节存到应用数据目录，消息里只保留文件引用，渲染时按需读取。删除消息或会话后，下次启动会自动清理不再被引用的图片文件。
+    已有的历史消息不受影响。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/llt22/talkio/releases/tag/v2.12.0
+ReleaseTime: 2026-08-25T11:19:57.0000000Z
