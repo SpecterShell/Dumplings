@@ -1,0 +1,31 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/VkRainB/ccMesh/releases/download/v0.2.5/ccMesh_0.2.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/VkRainB/ccMesh/releases/download/v0.2.5/ccMesh_0.2.5_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 代理：Claude Code 走 /v1/messages 入站、端点转换器为 codex（Responses） 时，转换为 OpenAI Responses 并转发到上游 /v1/responses，响应再转回 Claude Messages
+    修复
+    - Claude→OpenAI Chat：多段 text 压成字符串（换行拼接），并剥离 cache_control，避免 GLM 等严格校验上游因 content 数组 / 未知字段返回 400
+    - 实时请求监控：不再记录 Claude Desktop 打到网关的 /api/hello 探活（仍转发上游，不计入明细与今日请求数）
+
+    按操作系统选择下载：
+    | OS      | Download |
+    | ------- | -------- |
+    | Windows |          |
+    | macOS   |          |
+    | Linux   |          |
+    完整更新历史见 CHANGELOG.md
+
+    💬 QQ 反馈交流群：1105537401
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/VkRainB/ccMesh/releases/tag/v0.2.5
+ReleaseTime: 2026-08-27T01:38:14.0000000Z
