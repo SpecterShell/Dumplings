@@ -17,8 +17,12 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object4 = Invoke-WebRequest -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/6jWlafu6rb46GKeh4N2ssk.html'
-      $Object5 = $Object4.Content | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
+      $Object4 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/6jWlafu6rb46GKeh4N2ssk.html'
+        Read-PlaywrightPageContent -Page $Page
+      }
+      $Object5 = $Object4 | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
       $Object6 = $Object5.caasData.response | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object6.SelectSingleNode("//p[contains((text()|span), '$($this.CurrentState.Version)')]")
