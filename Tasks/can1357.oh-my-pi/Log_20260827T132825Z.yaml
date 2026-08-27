@@ -1,0 +1,177 @@
+Version: 18.0.7
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.0.7/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed Codex remote compaction to preserve images returned by image-reading tools, preventing them from being replayed as incorrect synthetic user messages.
+    @oh-my-pi/pi-ai
+    Added
+    - Added application-level usage attribution for billing and usage reporting, with per-application aggregation and automatic client identification. Applications can set their label with OMP_APP_NAME (default: omp); update the broker before clients to support the new usage reports.
+    Fixed
+    - Fixed Anthropic Claude subscription OAuth requests being rejected by the upstream service (#9801).
+    - Fixed OpenAI-compatible streaming errors being reported as empty successful completions, enabling retries and model fallback when queue admission fails.
+    - Fixed multimodal tool results in OpenAI Responses requests so inline, remote, and OpenAI file-backed images are preserved correctly.
+    - Fixed resumed and forked Cursor sessions failing when their history came from a Responses-based provider such as Codex (#9754).
+    - Fixed Cursor composer-2.5 selections using the Fast variant instead of the Standard tier (#9012).
+    @oh-my-pi/browser-relay
+    Changed
+    - Clarified the scope of the two browser relay opt-in paths: per-call app.relay: true enables relay access for an individual call, while the browser.relay setting enables it by default across projects in a profile.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added cached background refresh from the shared models.dev catalog so newly published models for known providers can appear without a new OMP release, while bundled models remain the offline fallback.
+    Fixed
+    - Fixed LiteLLM model discovery so model pricing is correctly populated when pricing information is provided by a later metadata endpoint.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added nonblocking shared model-catalog refresh with cached startup hydration and source freshness diagnostics, allowing newly published models for known providers to appear without a binary release.
+    - Added omp usage clients to report per-client token usage recorded by the auth broker, including the machine and application responsible for usage by provider. Supports --days and --json output.
+    Changed
+    - Improved omp git responsiveness by streaming file contents, rendering complete lines promptly, progressively applying syntax highlighting, and deferring large commit statistics until after the first interactive frame.
+    - Expanded omp git navigation and editing shortcuts: refresh with r, stage or unstage files and directories with s, u, or space, navigate hunks and files with keyboard shortcuts, use Vim-style motions in both panes, select diff views with 1–4, and open the commit form with c.
+    - Standardized completed edit results across edit modes with hashline-style paths and numbered previews.
+    - Documented browser relay behavior more clearly, including that browser.relay can enable relay access independently of app.relay and that a relayed session operates in the user's logged-in browser.
+    - Clarified the computer tool documentation: desktop.window() must be awaited, and win.ax() returns a textual accessibility-tree snapshot rather than a structured node list.
+    Fixed
+    - Fixed hub process waits being incorrectly prolonged or satisfied by a replacement process after an automatic restart.
+    - Preserved an explicitly empty tools: [] configuration for agent definitions instead of adding default work tools.
+    - Corrected MCP per-tool approval configuration documentation and behavior to use registered tool names for deny policies.
+    - Made /branch consistently open the branch-from-message selector regardless of the doubleEscapeAction setting.
+    - Improved ACP behavior when prompting during an active turn by returning a typed session_busy JSON-RPC error instead of an opaque internal error.
+    - Fixed --model <id>:<effort> losing its effort setting when cycling back to the default role; an explicit --thinking setting continues to take precedence.
+    - Fixed extension-registered Codex models configured with preferWebsockets: false from attempting a WebSocket connection.
+    - Fixed stale command-generated provider and model-override credentials after HTTP 401 responses by refreshing credentials before retrying.
+    - Fixed extensions configured in .omp/config.yml not exposing their bundled skills, hooks, tools, commands, rules, prompts, and MCP configuration for discovery.
+    - Fixed compiled extensions that could not import public coding-agent registry modules.
+    - Fixed extension-provided environment variables being lost in user shell commands and prevented environment changes from one hook from affecting later commands.
+    - Fixed imported and legacy sessions with missing usage metadata from dropping RPC lifecycle events.
+    - Fixed GitHub and GitHub Enterprise issue, pull-request, and tool lookups to preserve and use the repository's actual host.
+    - Fixed binary installation when GitHub returns minified release metadata.
+    - Fixed omp bench and omp if-bench resolving credential-scoped dynamic models already listed by omp models.
+    - Fixed checkpoint and rewind recovery in Codex Code Mode.
+    - Fixed truncated ask questions being displayed incorrectly when expanded with Ctrl+O.
+    - Fixed the welcome screen and transcript layout not adapting correctly after terminal resizes.
+    - Made omp if-bench retry transient Anthropic cyber-safety refusals before treating them as run-ending failures.
+    - Fixed streamed assistant responses when later provider updates revise earlier Markdown.
+    - Fixed abandoned foreground tool cards and fast tool completions from blocking transcript scrolling or later output.
+    - Improved transcript replay and shutdown behavior so terminal resizes and exits do not duplicate, lose, or unnecessarily re-render committed output.
+    - Fixed cache-miss status messages from disrupting completed streamed assistant responses.
+    - Fixed YAML rewrites for settings, migrated configuration, and keybindings from adding trailing spaces to nested mapping headers.
+    - Fixed /model role-cycle icons overlapping their ordinal on terminals with full-width icon rendering.
+    - Improved /collab QR-code fallbacks so the browser join URL remains visible when the code is clipped or cannot fit.
+    - Fixed hub and child peer listings from exposing parked agents as active model context, while restoring accurate running, idle, parked, shown, and truncated counts.
+    - Fixed browser relay clients hanging when enabling the Runtime domain on a tab shared with another client.
+    - Fixed browser relay sessions leaving Chrome's debugging infobar attached after the last client releases a tab.
+    - Fixed interactive TTSR interruptions being displayed as errors when the rule injection succeeded.
+    - Fixed cold interactive launches duplicating the welcome header in Windows console scrollback.
+    - Fixed Git TUI hunk navigation and sidebar selection after staging or unstaging files, including correct handling of CRLF files on Windows.
+    - Fixed long sessions becoming unrecoverable when a provider rejects histories that exceed its message-count limit.
+    - Improved /dump output with readable titles for system notices and fenced XML payloads.
+    - Fixed kernel session recovery when a dead kernel reports cancellation.
+    - Applied advisor tool-call loop limits to advisor runs as well as regular model runs.
+    - Fixed lsp rename_file error handling for unreadable source paths and destination checks.
+    - Fixed LSP clients with different process arguments, initialization options, or settings from incorrectly sharing one process; lsp reload * now replaces superseded clients.
+    - Fixed auto-retry countdowns appearing frozen during long provider-specified waits.
+    - Fixed the Todo HUD after viewing a subagent and returning to the main session.
+    - Fixed child task results from linking unreadable artifacts and from replaying result bodies that had already been delivered.
+    - Fixed omp update showing a Unix reinstall command on Windows after a package-rename migration verification failure.
+    - Preserved thinking.requiresEffort: false in custom model configuration so supported local models can explicitly disable thinking.
+    - Prevented incompatible non-object values in shared project settings from silently replacing an entire settings group; such values are dropped with a warning.
+    - Jina Reader now uses configured credentials for authenticated rate limits while remaining available anonymously.
+    - Improved advisor session recovery and listing performance for large advisor transcripts.
+    - Fixed failed browser.open calls from leaving OMP-spawned application processes running when no tab could be acquired.
+    - Browser handles now fail fast with a specific per-operation timeout error instead of hanging an entire browser cell.
+    - Fixed autonomous runs becoming idle when a thinking-only length stop overlaps speculative handoff and compaction recovery.
+    - Kept completed assistant replies visible when viewport pressure prevents older active content from being retired.
+    - Accelerated SHA-2 and SHA-3 checksum builtins on supported ARM64 hardware.
+    - Fixed joined collaboration guests becoming inconsistent with the host after host-side compaction.
+    - Fixed hub list and child peer rosters counting parked agents from stale root sessions; the persisted roster now scopes to the current root, retries transient filesystem faults, and renders live rows through the production subagent prompt template with a truthful omitted count.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Removed the inlineMathSpanEnd and mathStartIndex exports; the math delimiter grammar now lives in @oh-my-pi/pi-utils/math-delimiters.
+    Fixed
+    - Math spans now end at the first unescaped delimiter, so a TeX row break no longer closes a span early: \(a \\) b\) renders as one equation, and an escaped \$ no longer ends $$…$$.
+    - Fixed image previews displaying as garbled characters in Paseo terminals.
+    - Fixed terminal resizing from duplicating committed history in native scrollback.
+    - Fixed autocomplete suggestions for bare-name skills such as /batch when no command matches the prefix more strongly.
+    @oh-my-pi/pi-utils
+    Added
+    - Added math-delimiters, the LaTeX span/block delimiter grammar (mathStartIndex, mathOpenerAt, mathSpanAt, mathBlockAt) shared by every Markdown renderer: pandoc's anti-currency rules for $…$, own-line display blocks, and delimiters matched by backslash parity, so an escaped \$x$ stays literal and a TeX row break cannot end a span early.
+    - Added RequestError.sessionBusy(message, data) to represent ACP session-busy errors (-32003) through the shared JSON-RPC transport.
+    - Exported getComposerCacheDir for resolving the per-project Composer cache directory, including support for XDG_CACHE_HOME.
+    Fixed
+    - Fixed OMP sessions unexpectedly exiting during socket cleanup or optional-worker communication on Bun.
+    What's Changed
+    - fix(settings): prevent sidebar clicks from toggling options by @roboomp in https://github.com/can1357/oh-my-pi/pull/9796
+    - fix(coding-agent): export registry subpaths to compiled extensions by @grapexy in https://github.com/can1357/oh-my-pi/pull/9797
+    - fix(ai): restore Anthropic subscription OAuth compatibility by @fanbaoyu1024 in https://github.com/can1357/oh-my-pi/pull/9801
+    - fix(coding-agent): attribute tool-policy denies to the tool, not tools.approval by @srobroek in https://github.com/can1357/oh-my-pi/pull/9808
+    - fix: decouple /branch from doubleEscapeAction setting by @Anne416wu in https://github.com/can1357/oh-my-pi/pull/9818
+    - fix(tui): reseed in-flight hub wait card on focus rebuild by @roboomp in https://github.com/can1357/oh-my-pi/pull/9819
+    - fix(task): reuse prepared extensions in subagents by @whattheflop in https://github.com/can1357/oh-my-pi/pull/9821
+    - fix(acp): surface session-busy as a typed JSON-RPC error instead of -32603 by @Coriou in https://github.com/can1357/oh-my-pi/pull/9825
+    - fix(tui): surface skills for leading bare-name slash prefixes by @fabriciopirini in https://github.com/can1357/oh-my-pi/pull/9829
+    - docs(coding-agent): correct MCP approval key format by @roboomp in https://github.com/can1357/oh-my-pi/pull/9831
+    - fix(coding-agent): preserve extension websocket preferences by @roboomp in https://github.com/can1357/oh-my-pi/pull/9841
+    - fix(tui): skip append resize replay on height-only grow by @roboomp in https://github.com/can1357/oh-my-pi/pull/9672
+    - fix(ai): pin Standard tier for cursor composer-2.5 selections by @shizhenwei1984-cell in https://github.com/can1357/oh-my-pi/pull/9678
+    - fix(utils): contain uncaught worker IPC EPIPE by @n4s5ti in https://github.com/can1357/oh-my-pi/pull/9679
+    - fix(catalog): preserve LiteLLM cache pricing metadata by @jordanfbrown in https://github.com/can1357/oh-my-pi/pull/9691
+    - docs(coding-agent): corrected computer tool prompt for async window handles and textual AX snapshots by @dianaloveava in https://github.com/can1357/oh-my-pi/pull/9695
+    - docs(browser-relay): document relay scope for operators and relay semantics in the agent-facing tool prompt by @chan1103 in https://github.com/can1357/oh-my-pi/pull/9706
+    - fix(coding-agent): resolve composer cache to XDG_CACHE by @Parsifa1 in https://github.com/can1357/oh-my-pi/pull/9707
+    - fix(tui): drop Kitty image protocol inside Paseo terminals by @aproto9787 in https://github.com/can1357/oh-my-pi/pull/9724
+    - fix(coding-agent): expand truncated ask questions with Ctrl+O by @Giardi77 in https://github.com/can1357/oh-my-pi/pull/9729
+    - fix(git-tui): strip carriage returns from CRLF worktree diff lines by @roboomp in https://github.com/can1357/oh-my-pi/pull/9735
+    - fix(coding-agent): keep the effort suffix on the --model default role override by @SipgateSteffenPaul in https://github.com/can1357/oh-my-pi/pull/9737
+    - fix(coding-agent): harden persisted roster context by @amco3008 in https://github.com/can1357/oh-my-pi/pull/9738
+    - fix(ai): preserve multimodal Responses tool outputs by @chsong1 in https://github.com/can1357/oh-my-pi/pull/9744
+    - fix(session): handled missing usage in session stats by @roboomp in https://github.com/can1357/oh-my-pi/pull/9746
+    - fix(cursor): sanitize foreign tool-call ids for history replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/9756
+    - fix(tui): hide system XML wrappers in async-result and todo-nudge tree rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/9757
+    - fix(coding-agent): keep collab join URL when the QR is clipped by @Giardi77 in https://github.com/can1357/oh-my-pi/pull/9758
+    - fix(config): refresh command-backed provider headers after 401 by @roboomp in https://github.com/can1357/oh-my-pi/pull/9761
+    - fix(coding-agent): refresh model hub from the online catalog by @fabiomcarneiro in https://github.com/can1357/oh-my-pi/pull/9766
+    - fix(coding-agent): preserve dynamic providers with static fallbacks by @fabiomcarneiro in https://github.com/can1357/oh-my-pi/pull/9767
+    - fix(discovery): load config.yml extension roots for sub-discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/9769
+    - fix(utils): ignore async ERR_SOCKET_CLOSED from node:net internals by @ephraimduncan in https://github.com/can1357/oh-my-pi/pull/9771
+    - perf(pi-shell): avoid duplicate Windows Git discovery by @Shlummie in https://github.com/can1357/oh-my-pi/pull/9776
+    - fix(install): anchor tag_name extraction for minified JSON by @baileyrosen3 in https://github.com/can1357/oh-my-pi/pull/9778
+    - fix(collab): rebuild guest context after host compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/9784
+    - docs(hooks): document plain status text by @roboomp in https://github.com/can1357/oh-my-pi/pull/9791
+    - fix(settings): preserve later external config edits by @roboomp in https://github.com/can1357/oh-my-pi/pull/9792
+    - fix(coding-agent): diff user-shell env hook against the child shell's base environment by @sjawhar in https://github.com/can1357/oh-my-pi/pull/9794
+    - fix(coding-agent): mount xd tools for read-only sessions by @lz37 in https://github.com/can1357/oh-my-pi/pull/9803
+    - fix(ai): surface in-band completions stream errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/9814
+    - fix(cli): plugin uninstall no longer reports removing nothing by @srobroek in https://github.com/can1357/oh-my-pi/pull/9838
+    - feat(catalog): add runtime shared-catalog refresh by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/9903
+    - feat(collab-web): render LaTeX in transcripts via native MathML by @smurphnerd in https://github.com/can1357/oh-my-pi/pull/9782
+    New Contributors
+    - @grapexy made their first contribution in https://github.com/can1357/oh-my-pi/pull/9797
+    - @fanbaoyu1024 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9801
+    - @srobroek made their first contribution in https://github.com/can1357/oh-my-pi/pull/9808
+    - @Anne416wu made their first contribution in https://github.com/can1357/oh-my-pi/pull/9818
+    - @whattheflop made their first contribution in https://github.com/can1357/oh-my-pi/pull/9821
+    - @Coriou made their first contribution in https://github.com/can1357/oh-my-pi/pull/9825
+    - @fabriciopirini made their first contribution in https://github.com/can1357/oh-my-pi/pull/9829
+    - @shizhenwei1984-cell made their first contribution in https://github.com/can1357/oh-my-pi/pull/9678
+    - @n4s5ti made their first contribution in https://github.com/can1357/oh-my-pi/pull/9679
+    - @jordanfbrown made their first contribution in https://github.com/can1357/oh-my-pi/pull/9691
+    - @dianaloveava made their first contribution in https://github.com/can1357/oh-my-pi/pull/9695
+    - @aproto9787 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9724
+    - @SipgateSteffenPaul made their first contribution in https://github.com/can1357/oh-my-pi/pull/9737
+    - @chsong1 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9744
+    - @fabiomcarneiro made their first contribution in https://github.com/can1357/oh-my-pi/pull/9766
+    - @Shlummie made their first contribution in https://github.com/can1357/oh-my-pi/pull/9776
+    - @baileyrosen3 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9778
+    - @smurphnerd made their first contribution in https://github.com/can1357/oh-my-pi/pull/9782
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.0.6...v18.0.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.0.7
+ReleaseTime: 2026-08-27T11:06:17.0000000Z
