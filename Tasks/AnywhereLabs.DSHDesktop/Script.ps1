@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/anywhere-labs/deepseek-harness-desktop/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/anywhere-labs/dsh-desktop/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
