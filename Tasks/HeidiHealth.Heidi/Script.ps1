@@ -2,12 +2,12 @@
 $Object1 = Invoke-WebRequest -Uri 'https://cdn.crabnebula.app/download/heidi-scribe/scribe/latest/platform/nsis-x86_64' -Method Head
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.BaseResponse.RequestMessage.RequestUri.AbsoluteUri | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
 $Object2 = Invoke-WebRequest -Uri 'https://cdn.crabnebula.app/download/heidi-scribe/scribe/latest/platform/wix-x86_64' -Method Head
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = $Object2.BaseResponse.RequestMessage.RequestUri.AbsoluteUri | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object2.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
 }
 
 $VersionNSIS = [regex]::Match(
