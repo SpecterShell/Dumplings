@@ -1,0 +1,36 @@
+Version: 0.2.19
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.2.19/Snow-App-Setup-0.2.19.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Optimize Usage: A new manual "Optimize usage" action in the resource usage section of general settings runs VACUUM + WAL checkpoint on both runtime and archive databases, triggers a full V8 GC, and shrinks the process working set on Windows to reclaim idle disk and memory, reporting the freed amounts.
+    Improvements
+    - Storage Module Split: The monolithic Rust storage module (~2,400 lines) is split into 16 domain-specific submodules with an unchanged public API.
+    - Session Delete Cleanup: Orphaned upload files are removed when a session is deleted; disk reclamation is now handled exclusively by the explicit optimize action, avoiding VACUUM IO on every delete.
+    Bug Fixes
+    - Terminal Line Overlap: Fixed ConPTY abnormal sizes / high-frequency resizes causing overlapping terminal lines — clamped minimum sizes and skipped no-op resizes, added a 120ms trailing-edge debounce to resize notifications, froze auto-fit while the container is hidden, and forced a visible-area refresh after tab reactivation.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.2.18...v0.2.19
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.2.19
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 用量优化：通用设置资源占用区新增「优化用量」按钮，对运行时与归档数据库执行 VACUUM + WAL checkpoint、触发 V8 全量 GC 并在 Windows 上收缩进程工作集，回收空闲磁盘与内存并报告回收量。
+    改进
+    - 存储模块拆分：Rust 存储单体模块（约 2,400 行）按领域拆分为 16 个子模块，公共 API 保持不变。
+    - 会话删除清理：删除会话时清理孤儿上传文件；磁盘回收统一交由「优化用量」处理，避免每次删除都执行 VACUUM 产生额外 IO。
+    修复
+    - 终端行重叠：修复 Windows ConPTY 在异常尺寸或高频 resize 时终端行重叠——尺寸钳制最小值并跳过无变化 resize、resize 通知增加 120ms 尾部防抖、容器不可见时冻结自动适配、标签重新激活后强制刷新可见区域。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0219
+ReleaseTime: 2026-08-27T15:27:36.0000000Z
