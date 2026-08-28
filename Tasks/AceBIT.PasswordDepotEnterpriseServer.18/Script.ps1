@@ -10,14 +10,13 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://www.password-depot.de/en/resources/whats-new.htm' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='content-server']//h3[contains(., '$($this.CurrentState.Version)')]")
-    if ($ReleaseNotesTitleNode) {
+    $ReleaseNotesNode = $Object2.SelectSingleNode("//details[@class='vh-release' and contains(./summary[@class='vh-release-summary'], '$($this.CurrentState.Version)')]")
+    if ($ReleaseNotesNode) {
       # ReleaseNotes (en-US)
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        Value  = $ReleaseNotesNode.SelectSingleNode('.//div[@class="vh-release-body"]') | Get-TextContent | Format-Text
       }
     } else {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
