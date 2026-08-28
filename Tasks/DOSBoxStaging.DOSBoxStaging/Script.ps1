@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/dosbox-staging/dosbox-staging/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/dosbox-staging/dosbox-staging/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = "https://www.dosbox-staging.org/releases/release-notes/$($this.CurrentState.Version)/"
+        Value = $ReleaseNotesUrl = "https://www.dosbox-staging.org/releases/release-notes/$($this.CurrentState.Version)/"
       }
     } catch {
       $_ | Out-Host
@@ -30,9 +30,9 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/dosbox-staging/dosbox-staging/HEAD/website/docs/releases/release-notes/$($this.CurrentState.Version).md" | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis'
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(text(), 'Summary')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'Summary')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
