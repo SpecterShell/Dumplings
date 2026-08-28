@@ -21,32 +21,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $ReleaseNotesObject = Use-PlaywrightPage -Stealth -Headless {
-        param($Page)
-
-        $null = Open-PlaywrightPage -Page $Page -Uri 'https://catpaw.meituan.com/changelog'
-        Read-PlaywrightLocator -Page $Page -Selector "xpath=//*[@class='timeline-item' and contains(.//*[@class='version-title'], '$($this.CurrentState.Version)')]"
-      } | ConvertFrom-Html
-
-      if ($ReleaseNotesObject) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesObject.SelectSingleNode('.//*[@class="version-date"]').InnerText, '(20\d{2}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectNodes('.//*[@class="markdown-content"]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
