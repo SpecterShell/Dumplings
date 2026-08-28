@@ -22,7 +22,12 @@ $Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'wix'
+  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msi'
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
