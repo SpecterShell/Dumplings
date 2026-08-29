@@ -1,0 +1,75 @@
+Version: 1.4.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Kuddev/nebula/releases/download/v1.4.0/NebulaTerminal-1.4.0-windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/nebula/releases/tag/v1.4.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/nebula/releases/tag/v1.4.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added a versioned Runtime control API and resource-style CLI — nebula env, window, tab, pane, and agent expose discoverable JSON operations, with updated Bash, Fish, and Zsh completions.
+    - Added typed Agent workflows — Nebula can create layouts, launch verified providers, wait for a specific generation, submit prompts, run bounded non-TTY commands, paste safely, and create transactional Git worktree forks. Native SSH reports unsupported host-local operations instead of running them in the wrong place.
+    - Added a dedicated Windows quick terminal — A process-wide singleton opens across the current display at 40% height, slides from the top edge, and preserves its PTY and scrollback while hidden.
+    - Added embedded English and Simplified Chinese catalogs to GPUI Settings — Language can follow the system or be selected explicitly, persists across launches, and switches in memory without reading translation files at runtime. Addresses #71 for GPUI Settings only; other untranslated surfaces remain outside this release.
+    - Added Quick Jump and Send to Chat — Search tabs, panes, directories, SSH hosts, and recoverable Agent sessions, or send selected terminal and document text to an explicitly chosen live Agent.
+    - Added cross-window tab dragging on Windows — Move a tab or dock its complete split tree into another Nebula window without losing pane state, subscriptions, or session metadata.
+    - Added complete local and WSL file-tree actions — Open, reveal, copy paths, launch terminals, and recycle entries while preserving each WSL distribution and guest path.
+    - Added Windows taskbar progress for OSC 9;4 — Terminal applications can show normal, indeterminate, paused, error, and cleared progress states.
+    Fixed
+    - Fixed terminal output pausing mid-frame until another key or resize, and fixed an unselected completion popup capturing Up/Down before the user selects a candidate.
+    - Fixed new Windows panes inheriting stale environment variables from the long-running Nebula process; new panes now rebuild the current machine and user environment. Addresses #68.
+    - Fixed the quick-terminal global shortcut, first-open blank strip, incorrect window size, and ordinary-workspace lifecycle leaks.
+    - Fixed Settings crashing when proxy fields contain non-ASCII text or full-width punctuation. Addresses #67.
+    - Fixed File Tree, Git, top-tab, and sidebar controls leaking clicks into title-bar drag or parent collapse handlers. Addresses #62.
+    - Fixed GPUI diagnostics and Windows panic reporting causing a second panic while reporting the first failure. Addresses #70.
+    - Fixed Runtime reads, snapshots, prompts, paste, exec, layout, and Agent operations activating background windows; only an explicit focus command may activate a workspace.
+    - Fixed Runtime Agent notifications, waits, layout changes, and SSH selection routing using stale or ambiguous targets.
+    - Fixed terminal math false positives, multiline delimiter pairing, \boxed / \tag fallback, and formulas disappearing because of valid ink-free glyphs.
+    - Fixed wide-character selection, ConPTY cursor reconciliation after resize, and DECSET 2031 color-scheme notifications.
+    - Fixed settings resets, terminal-pane seams, sidebar resize geometry, cursor blinking, and tab badge priority so the displayed state matches the saved or authoritative state.
+    Improved
+    - Improved terminal TeX rendering with content-based detection and compact GPUI projection — Formulas work through WSL, SSH, and full-screen Agent interfaces while selection, cursor, completion, IME, links, and terminal source coordinates remain correct. Includes work contributed by @liu-ws in #55.
+    - Improved quick-terminal motion with the established top-edge slide timing, smooth mid-animation reversal, and no repeated activation or resize during animation.
+    - Improved themes and pane geometry — Nord is the default dark theme, Paper is its light counterpart, and theme-controlled card radius, gutter, shadow, and divider share one rendering path.
+    - Improved Runtime snapshots with semantic pane lifecycle, task state, process evidence, Agent generation, and worktree provenance for automation and auditing.
+    - Improved GPUI Settings navigation with a stable flat list for Application, Appearance, Profiles, Interaction, Key Bindings, SSH, Network, and Advanced.
+    - Improved GPUI session residency, tray routing, and terminal colors while keeping quick-terminal windows outside ordinary workspace persistence.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 新增版本化 Runtime 控制 API 与资源式 CLI — nebula env、window、tab、pane、agent 通过可发现的 JSON 操作统一控制 Nebula，并同步更新 Bash、Fish 与 Zsh 补全。
+    - 新增强类型 Agent 工作流 — 可创建布局、启动经过核实的 Provider、等待指定 generation、提交 Prompt、运行受限非 TTY 命令、安全粘贴，并事务化创建 Git worktree 分叉。原生 SSH 遇到依赖本机控制面的操作会明确报告不支持，不会改在错误位置执行。
+    - 新增 Windows 独立快速终端 — 进程级单例窗口从当前显示器顶部滑入，使用全宽和 40% 高度，并在隐藏时保留 PTY 与滚屏。
+    - 新增 GPUI 设置页内置 English 与简体中文语言包 — 语言可跟随系统或显式选择，跨启动保留，并只在内存中切换，无需运行时读取翻译文件。此项仅对应 #71 的 GPUI 设置页范围；其他尚未翻译的界面不在本次发布范围内。
+    - 新增 Quick Jump 与 Send to Chat — 可搜索标签、pane、目录、SSH 主机和可恢复 Agent 会话，也可把终端或文档选区发送给用户明确选择的 live Agent。
+    - 新增 Windows 跨窗口拖动标签 — 可把标签或完整 split tree 停靠到另一个 Nebula 窗口，同时保留 pane 状态、订阅与会话元数据。
+    - 新增本地与 WSL 文件树完整操作 — 支持打开、在资源管理器中显示、复制路径、启动终端和送入回收站，并保留 WSL 发行版与 guest path。
+    - 新增 OSC 9;4 Windows 任务栏进度 — 终端应用可以显示普通、不确定、暂停、错误和清除状态。
+    修复
+    - 修复终端输出停在半帧、必须再按键或缩放才继续，以及补全弹窗尚未选中时抢走 Up/Down 历史键的问题。
+    - 修复 Windows 新建 pane 继承 Nebula 常驻进程中的过期环境变量；新 pane 现在会重建当前机器与用户环境。对应 #68。
+    - 修复快速终端全局快捷键、首次打开空白条、窗口尺寸错误，以及混入普通工作区生命周期的问题。
+    - 修复代理输入框包含非 ASCII 文本或全角标点时设置页崩溃。对应 #67。
+    - 修复文件树、Git、顶部标签与侧栏控件把点击泄漏给标题栏拖动或父级折叠处理。对应 #62。
+    - 修复 GPUI 诊断与 Windows panic 报告在记录原始故障时触发第二次 panic。对应 #70。
+    - 修复 Runtime 读取、快照、Prompt、paste、exec、布局与 Agent 操作意外激活后台窗口；现在只有显式 focus 命令可以激活工作区。
+    - 修复 Runtime Agent 通知、wait、布局变更与 SSH 选区路由使用过期或歧义目标。
+    - 修复终端数学误判、跨行定界符错误配对、\boxed / \tag 回退，以及合法无墨字形导致整条公式消失。
+    - 修复宽字符选区、ConPTY resize 后的光标对账，以及 DECSET 2031 色彩方案通知。
+    - 修复设置重置、终端 pane 缝隙、侧栏拖拽几何、光标闪烁与 Tab 徽章优先级，让界面状态与已保存或权威状态一致。
+    改进
+    - 改进终端 TeX 渲染，采用基于内容的识别与 GPUI 紧凑投影 — WSL、SSH 和全屏 Agent 界面中的公式可以正常渲染，同时保持选区、光标、补全、输入法、链接与终端源坐标准确。包含 @liu-ws 在 #55 中贡献的工作。
+    - 改进快速终端动画，沿用既有顶部滑入节奏，支持动画中途平滑反向，且动画期间不重复激活或 resize。
+    - 改进主题与 pane 几何 — Nord 成为默认深色主题，Paper 作为浅色配对；主题控制的圆角、卡缝、阴影与分隔线共用同一条渲染路径。
+    - 改进 Runtime 快照，为自动化与审计提供语义化 pane 生命周期、任务状态、进程证据、Agent generation 与 worktree provenance。
+    - 改进 GPUI 设置导航，使用稳定的扁平列表展示“应用、外观、配置文件、交互、按键映射、SSH、网络、高级”。
+    - 改进 GPUI 会话驻留、托盘路由与终端色彩，同时让快速终端窗口保持在普通工作区持久化之外。
+ReleaseTime: 2026-08-29T11:38:43.0000000Z
