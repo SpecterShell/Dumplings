@@ -1,0 +1,122 @@
+Version: 18.0.11
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.0.11/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed agent startup and context compaction failures for models with unrecognized tokenizer encodings.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed automatic session retries for Anthropic-compatible streams that end prematurely without a completion signal.
+    - Fixed Gemini 3.x tool-call continuations through OpenAI-compatible endpoints.
+    - Fixed credential fallback for HTTP 402 payment-required and deactivated-workspace responses, preventing them from being misclassified as quota exhaustion.
+    - Fixed Perplexity email sign-in for accounts protected by authenticator-based two-factor authentication.
+    - Fixed Qianfan API-key login validation for keys that cannot access the validation model.
+    - Fixed Z.AI browser sign-in to report an occupied callback port before opening the browser.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Baseten GLM models, including GLM-5.3-Flash, being incorrectly classified as non-reasoning models.
+    - Fixed Cloudflare AI Gateway catalog refreshes so active Workers AI chat models, including newly released models, are discovered correctly.
+    - Fixed Cursor Kimi K3, Grok 4, and Composer 2.5 models being incorrectly treated as text-only when they support image attachments.
+    - Fixed OpenRouter routed model variants, including GLM-5.3 and dated DeepSeek V4 Pro, so their reasoning effort options are preserved correctly.
+    - Fixed MiniMax-M3 max output regressing to the upstream 512K pricing-tier boundary; all MiniMax providers keep the documented 128K output cap.
+    - Fixed GLM-5.3-Flash bundling the 50%-off launch promotion price; the catalog stays on the documented list price.
+    - Fixed Synthetic model discovery re-adding image input from the bundled reference when the route advertises text-only modalities.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added gallery previews for composer and status-line components, with CLI filters for browsing by surface, composer, or segment.
+    Changed
+    - The status line now displays the thinking level as a compact icon alongside the model name by default; set statusLine.compactThinkingLevel to false to restore the previous display.
+    Fixed
+    - Fixed MCP OAuth discovery for shared API gateways and authorization servers with nested paths, including Keycloak realms, so authentication targets the correct resource issuer and supports endpoint and dynamic client-registration discovery.
+    - Fixed credential rotation for HTTP 402 payment-required responses so sibling credentials are tried before model fallback without misclassifying informative non-quota errors.
+    - Transport errors after a complete, non-executed tool call can now retry through configured retry budgets and fallback chains when it is safe to do so, instead of ending the turn prematurely.
+    - Improved handling of truncated or otherwise undecodable images so they produce an actionable error and no longer permanently block subsequent requests or resumed sessions.
+    - Fixed Sharpshooter consolidation preserving memory files and queued changes when an empty replacement is returned.
+    - Fixed omp plugin features so it discovers marketplace-installed plugins.
+    - Fixed Escape handling when closing the /session information panel; the panel now retains focus until dismissed.
+    - Fixed the thinking-block visibility toggle so streamed reasoning is correctly hidden when thinking blocks are set to hidden.
+    - Reduced high idle CPU usage while the agent is working.
+    - Fixed resumed advisor subscription usage being displayed as a dollar amount instead of as a subscription.
+    - Fixed relative API addresses whose names end in image extensions being pasted as text instead of incorrectly treated as missing local image files.
+    - Fixed chat Markdown links and bare URLs so they become clickable OSC 8 hyperlinks when tui.hyperlinks=always is enabled.
+    - Fixed unreadable composer text on light terminal backgrounds when using transparent composer styles.
+    - Fixed retry.fallbackChains warnings for valid selectors from providers whose model discovery is still pending; validation now updates after discovery completes.
+    - Fixed visible browser windows launched by OMP so page content resizes with the operating-system window.
+    - Fixed Python evaluation hanging on Windows when importing native-extension modules such as NumPy.
+    - Fixed subagent extension context helpers so ctx.getContextUsage() and ctx.compact() operate on the child session.
+    - Fixed lsp diagnostics incorrectly reporting success for project-aware pull-diagnostic servers when diagnostics time out or fail.
+    - Corrected labels under Settings > Context > Compaction Token Limit.
+    - Fixed orphaned pages, iframes, and workers accumulating in the shared headless browser after abnormal OMP session termination.
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed working-memory recall returning too few or no results after matching memories were invalidated.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed staging and committing files through a reused Git repository handle, ensuring newly staged changes are correctly included in commits even on filesystems with coarse timestamp resolution.
+    @oh-my-pi/pi-tui
+    Added
+    - Added setTerminalHyperlinks() to let hosts control OSC 8 hyperlink behavior in rendered Markdown links.
+    Fixed
+    - Fixed inline color swatches appearing for words with hex-like prefixes, such as #each; swatches now appear only when the entire word is a valid color.
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed runtime installation getting stuck for up to 60 seconds after an installer crash or forced termination, allowing subsequent installation attempts to proceed normally.
+    What's Changed
+    - fix(tui): hide thinking blocks emitted as append-only stable rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/10178
+    - fix(coding-agent): resolve marketplace plugin features by @thebtf in https://github.com/can1357/oh-my-pi/pull/10183
+    - test(coding-agent): make issue-966 repro deterministic against stale gix index by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/10190
+    - fix(tui): honor tui.hyperlinks setting for chat markdown links by @roboomp in https://github.com/can1357/oh-my-pi/pull/10196
+    - fix(sharpshooter): refuse all-empty replacement to prevent memory wipe by @STRML in https://github.com/can1357/oh-my-pi/pull/10200
+    - fix(browser): reap orphaned shared-browser targets from dead sessions by @roboomp in https://github.com/can1357/oh-my-pi/pull/10025
+    - fix(catalog,coding-agent): strip OpenRouter route suffixes in bareModelId by @yudhiesh-oc in https://github.com/can1357/oh-my-pi/pull/10034
+    - fix(lsp): surface slow or failed pull diagnostics instead of reporting OK by @roboomp in https://github.com/can1357/oh-my-pi/pull/10036
+    - fix(tui): keep transparent composer text readable by @roboomp in https://github.com/can1357/oh-my-pi/pull/10039
+    - fix(mcp): support sub-path OAuth issuer discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/10045
+    - fix(session): defer retry.fallbackChains warnings for pending discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/10050
+    - fix(coding-agent): stop an undecodable image wedging a session by @dungartoriaaa in https://github.com/can1357/oh-my-pi/pull/10055
+    - fix(ai): complete Perplexity TOTP login by @spcbot in https://github.com/can1357/oh-my-pi/pull/10059
+    - fix(coding-agent): correct compact limit label by @kidonng in https://github.com/can1357/oh-my-pi/pull/10069
+    - fix(ai): tolerate qianfan invalid_model during api key validation by @kindredzhang in https://github.com/can1357/oh-my-pi/pull/10073
+    - Enable image input for supported Cursor models by @HarryFalse in https://github.com/can1357/oh-my-pi/pull/10076
+    - fix(catalog): mirror Workers AI models into Cloudflare gateway by @AshishKumar4 in https://github.com/can1357/oh-my-pi/pull/10084
+    - fix(browser): don't pin viewport on visible headless launches by @mgarmash in https://github.com/can1357/oh-my-pi/pull/10095
+    - fix(mnemopi): also exclude expired rows from FTS candidate slots by @BAKocska in https://github.com/can1357/oh-my-pi/pull/10096
+    - fix(extensions): restore subagent context callbacks by @roboomp in https://github.com/can1357/oh-my-pi/pull/10098
+    - fix(catalog): Fix Baseten GLM models being marked as non-reasoning (including GLM 5.3 Flash) by @jcfrancisco in https://github.com/can1357/oh-my-pi/pull/10100
+    - fix(tui): preserve relative image URL pastes by @roboomp in https://github.com/can1357/oh-my-pi/pull/10106
+    - fix(coding-agent): close /session panel with Esc without aborting the session by @brunowowk in https://github.com/can1357/oh-my-pi/pull/10110
+    - fix(ai): classify zero-content message_stop stream truncation as transient by @bk-ty in https://github.com/can1357/oh-my-pi/pull/10112
+    - fix(ai): retry empty Anthropic stream truncations by @roboomp in https://github.com/can1357/oh-my-pi/pull/10114
+    - fix(utils): make runtime install lock crash-safe by @roboomp in https://github.com/can1357/oh-my-pi/pull/10123
+    - fix(coding-agent): stop per-frame model-catalog scan in cost status segment by @roboomp in https://github.com/can1357/oh-my-pi/pull/10131
+    - fix(pi-vcs): read the git index from disk to avoid stale snapshot by @roboomp in https://github.com/can1357/oh-my-pi/pull/10132
+    - fix(auth): prevent unregistered Z.AI callback ports by @roboomp in https://github.com/can1357/oh-my-pi/pull/10160
+    - fix(coding-agent): prefer RFC 9728 path-inserted protected-resource metadata by @Chityanj in https://github.com/can1357/oh-my-pi/pull/10168
+    - fix(coding-agent): auto-retry transport errors after proven-unexecuted tool calls by @1Morganmore in https://github.com/can1357/oh-my-pi/pull/10171
+    - fix(ai): preserve Gemini thought signatures by @roboomp in https://github.com/can1357/oh-my-pi/pull/10173
+    - fix(agent): fall back when native tokenizer encoding is unknown by @atacolak in https://github.com/can1357/oh-my-pi/pull/10174
+    - docs: sync documentation with code and changelogs as of 18.0.10 by @KamijoToma in https://github.com/can1357/oh-my-pi/pull/10176
+    - fix(ai): classify HTTP 402 as usage limit to rotate sibling OAuth credentials before model fallback by @sshantiomm-coder in https://github.com/can1357/oh-my-pi/pull/10181
+    New Contributors
+    - @thebtf made their first contribution in https://github.com/can1357/oh-my-pi/pull/10183
+    - @yudhiesh-oc made their first contribution in https://github.com/can1357/oh-my-pi/pull/10034
+    - @spcbot made their first contribution in https://github.com/can1357/oh-my-pi/pull/10059
+    - @kindredzhang made their first contribution in https://github.com/can1357/oh-my-pi/pull/10073
+    - @HarryFalse made their first contribution in https://github.com/can1357/oh-my-pi/pull/10076
+    - @mgarmash made their first contribution in https://github.com/can1357/oh-my-pi/pull/10095
+    - @brunowowk made their first contribution in https://github.com/can1357/oh-my-pi/pull/10110
+    - @bk-ty made their first contribution in https://github.com/can1357/oh-my-pi/pull/10112
+    - @Chityanj made their first contribution in https://github.com/can1357/oh-my-pi/pull/10168
+    - @1Morganmore made their first contribution in https://github.com/can1357/oh-my-pi/pull/10171
+    - @sshantiomm-coder made their first contribution in https://github.com/can1357/oh-my-pi/pull/10181
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.0.10...v18.0.11
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.0.11
+ReleaseTime: 2026-08-29T18:30:50.0000000Z
