@@ -1,0 +1,386 @@
+Version: 26.08.0
+Installer:
+- InstallerUrl: https://download.kde.org/stable/kdenlive/26.08/windows/kdenlive-26.08.0.exe
+  InstallerSha256: 8E40613A25F3316308EED8C6A19F2F5BF0B16374F7A495594A8DDAB4090D3514
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/more_information/whats_new.html
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/zh_CN/more_information/whats_new.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added snapping in the title editor
+    - Added rounded corners on rectangles for titles
+    - Added copy & paste title elements
+    - Added option to replace the timeline clip when adding a new title clip
+    - Introduced copy selection to new sequence
+    - Added arbitrary rotation anchor for transform effect
+    - Added auto-keyframe generation for additional effects
+    - Added detect embedded MKV subtitle streams and display count in clip properties
+    - Added Shift+Click for additive soloing on audio tracks
+    - Introduced reorder timeline tracks
+    - Added Add Markers at Gaps feature to Timeline menu
+    - Added configuration of colors for clip types (video, audio, title, image, slideshow)
+    - Added warning before deleting tracks that contain clips
+    - Added insert clips to timeline using timecode metadata
+    - Added setting for “Return playhead to start position on stop” in the timeline
+    - Renamed and repositioned “Replace Timeline Clip” action
+    - Added move clip marker with mouse
+    - Added duplicate clip action
+    - Added 6 new effects: gradientmap, baltan, lightgraffiti, avfilter curves, lagfun, pseudocolor
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kdenlive.org/news/releases/26.08.0/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We are happy to announce the summer release of Kdenlive 26.08. Continuing the efforts from the last version, the core team has been focusing mostly on stability - fixing bugs and crashes while also doing lot's under the hood improvements.
+    This release comes with 11 crash fixes as well as improvements to the undo/redo stack for compositions and sequence creation. Work has also been done to modernize the codebase in the Qml loader for Clips and Compositions.
+    The majority of the new, nifty and shiny additions and enhancements in this release were made by new contributors! This seems to have become a tradition in 2026, and we couldn’t be happier about it.
+    Highlights
+    Timeline
+    Automatic Track Creation
+    Added functionality to automatically create audio tracks when adding a clip to the timeline in case there are not enough. Implemented by Vineet Tiwari.
+
+    Reorder Tracks
+    Added a long awaited ability to reorder tracks. Implemented by Vineet Tiwari.
+
+    Markers At Gaps
+    Added option to add markers at gaps between timeline clips. Implemented by Yash Bavadiya.
+
+    Playhead Snapping When Dragging
+    ALT + drag the time cursor (playhead) in the timeline ruler, it now snaps to nearby snap points like clip edges, guides, markers, and zone in/out. Implemented by Yash Bavadiya.
+
+    Copy Selection To New Sequence
+    It works similarly to "Create sequence from selection" except that it does not remove the clips from the original sequence and replace them with the new sequence clip. Implemented by Vineet Tiwari.
+
+    Clip Color Configuration
+    Added an option to configure colors for video, audio, title, image, and slideshow clip types.
+
+    Playhead/Mouse Zoom
+    Added a button in the Status Bar to toggle between zooming to the mouse cursor position or the playhead position. Implemented by the mrfantastic.
+
+    Multi-Clip Speed Changes
+    Added the ability to change the playback speed of multiple clips at once either by directly Ctrl + dragging in the timeline or by using the Clip Speed tool. Implemented by Vineet Tiwari.
+
+    Title Editor
+    Snapping
+    Added snapping in the Title Editor. Implemented by chocolateimage.
+
+    Rounded Corners
+    Rectangles now can have rounded corners. Also notice the draggable spinbox ability to change the radius. Implemented by chocolateimage.
+
+    Copy/Paste
+    Added the ability to copy and paste elements in the Titler. Implemented by chocolateimage.
+
+    Automatic Clip Replacement
+    Added option to automatically replace a title clip in the timeline with the new title clip being edited. Implemented by Eduardo Guedes.
+
+    Miscellaneous
+    Additive Soloing
+    Added the ability to do additive soloing in the audio mixer by shift clicking. Implemented by Patrick Williamson.
+
+    Adjustable Rotation Anchor
+    Added the ability to set the rotation anchor in the Transform effect. Implemented by Jean Baptiste Mardelle.
+
+    Other Noteworthy Changes
+    - Updated effects with text (GPS Text, Dynamic Text, Timer) to allow for more font properties. Implemented by Bernd Jordan.
+    - Rectangular alpha mask is now animatable. Implemented by Jean Baptiste Mardelle.
+    - Added ability to use math expressions in effects values. Implemented by Jean Baptiste Mardelle.
+    - Drawbox and Delogo effects use the newly implemented feature to draw a rectangle directly on monitor. Implemented by Jean Baptiste Mardelle.
+    - Added the frei0r Color Enhance effect. Implemented by Bernd Jordan.
+    - Added option to add rendered video to project bin in the Render Widget. Implemented by Jaimukund Bhan.
+    - Multi-cam Editing: Added functionality to insert clips to timeline using the clip's timecode from their metadata (if they contain it). Implemented by Jaimukund Bhan.
+    - Ability to open video, audio, image files from file managers or CLI environments with Kdenlive. Implemented by Yash Bavadiya.
+    - Added webp support for image sequences. Implemented by Farid Abdelnour.
+    Give back to Kdenlive
+    Releases are possible thanks to donations by the community.
+
+    Donate
+    Need help ?
+    As usual, you will find very useful tips in our documentation website. You can also get help and exchange your ideas in our Kdenlive users Matrix chat room.
+    Get involved
+    Kdenlive relies on its community, your help is always welcome. You can contribute by :
+    - Helping to identify and triage bugs
+    - Contribute to translating Kdenlive in your language
+    - Promote Kdenlive in your local community
+    Full Changelog
+    Click to see the full changelog (English)
+    - Fix crash selecting keyframe in time remap. Commit.
+    - Add appdata changelog. Commit.
+    - Fix full project reset on unsaved profile change by using .kdenlive temp extension. Commit.
+    - Fix(monitor): guard ruler tick count against divide-by-zero freeze. Commit.
+    - Fix corner radius input not updating when dragging. Commit.
+    - Fix timeline clip deletion when toggling proxy on reversed clips. Commit. Fixes bug #523788
+    - Use dissolve as default transition. Commit.
+    - Switch default transition to luma, now that the transparency issue is solved in MLT. Commit.
+    - Fix transform resize with side hanles and forced ratio. Commit. Fixes bug #516921
+    - Fix possible crash in project opening when discarding autosave file. Commit.
+    - Resolve video import and profile loading failures on paths with diacritical marks. Commit. Fixes bug #513899
+    - Fix duplicate clip only duplicating one clip. Commit.
+    - Fix allowing 0 length composition causing crash. Commit. See issue #2218
+    - Fix crash on time remap title clip. Commit. Fixes bug #523277
+    - Disable LV2 and Libplacebo. Commit.
+    - Ensure attached picture stream are not incorrectly marked as video. Commit. Fixes bug #523268
+    - Add blacklisted effects back in. Commit.
+    - Notify when speech recognition finishes. Commit. Fixes bug #509977
+    - Add duplicate clip action in timeline. Commit. Fixes bug #435319
+    - Squashed commit of the following:. Commit.
+    - Updating the About Kdenlive window with the core team members and other contributors. Commit.
+    - Remove left-over kddockwidgets version include. Commit.
+    - Remove left-over KF version includes. Commit.
+    - Fix auto-keyframe generation and interaction across monitor scenes (Corners, Geometry, etc.). Commit.
+    - Fix replacing titles longer than default duration. Commit.
+    - Add option to replace the timeline clip when adding a new title. Commit. Fixes bug #498136
+    - Remove unwanted spaces. Commit.
+    - Move Clip Marker with mouse. Commit. Fixes bug #406887
+    - Port ClipThumbs parentClip to var to resolve dependency and load Timeline. Commit.
+    - Fixc thumbnails not correctly adjusting after dar change. Commit. Fixes bug #522252
+    - Use same QQmlEngine for monitors and timelines. Commit.
+    - Fix minor typo. Commit.
+    - Ensure we always return a screen for secondary monitor. Commit. See bug #522261
+    - Fix render test suite. Commit.
+    - Fix splash screen. Commit.
+    - Curves: add per-channel tab support using avfilter.curves. Commit.
+    - Add XML files for Steve Harris' SWH Plugins. Commit.
+    - Harden malicious params detection, don't load renderpresets 4 times on render dialog opening. Commit.
+    - Fix incorrectly marking proxy param as always safe when it shouldn't. Commit.
+    - Rename and reposition Replace Timeline Clip action. Commit.
+    - Fix more QML warnings and enable qmllint in CMake. Commit.
+    - Fix a bunch of unqualifed access QML warnings. Commit.
+    - Anchor right side of list label to truncate text. Commit.
+    - Copy & paste elements in title editor. Commit.
+    - Improve message on no audio device. Commit.
+    - Use QJSEngine instead of MLT to evaluate effect parameters math operations. Commit.
+    - Allow math expressions in effects values. Commit.
+    - Fix typo. Commit.
+    - Make Rectangular alpha mask use keyframes. Commit. Fixes bug #521165
+    - Fix typo. Commit.
+    - Fix misplaced condition breaking components debug export. Commit.
+    - Fix selecting items in titler changing item properties. Commit.
+    - [CD] Only create Appx with MSVC. Commit.
+    - [CD] Add job to build binary with MSVC. Commit.
+    - Make monitor scene type available in qml. Commit.
+    - Fix timer should display audio thumbs when switching between bin clip or changing streams in clip monitor. Commit.
+    - Cleanup more monitor code and fix unqualified access warnings. Commit.
+    - Refactor time zoom properties of monitor ruler. Commit.
+    - Mark most TimelineWaveform properties as required. Commit.
+    - Fix binding loop warnings with TimelineWaveform. Commit.
+    - Remove root.captureRightClick hack. Commit.
+    - Snapping is an integer, not a bool. Commit.
+    - Fix crash deleting speed in speed change dialog. Commit.
+    - Revert aac default bitrate to previous value (fix render test suite). Commit.
+    - Cleanup duplicate method. Commit.
+    - Cache clip start timecode so that we don't always query the producer, show error message on failure. Commit.
+    - Add 'Return playhead to start position on stop' setting. Commit. Fixes bug #519449
+    - Update effects with text (GPS Text, Dynamic Text, Timer) to allow for more font properties. Commit.
+    - Fix end of timeline playing inconsistencies. Commit.
+    - Fix crashing debug message. Commit.
+    - Fix warnings in Qml monitor overlays. Commit.
+    - Cleanup unused qml file. Commit.
+    - Fix more unqualified access warnings in Qml. Commit.
+    - Cleanup frameSize property in monitor qml. Commit.
+    - Use a single QmlEngine for all timeline widgets. Commit.
+    - Fix shadowed property, unqualified access warnings etc. Commit.
+    - Fix timeline vertical scrolling on document opening. Commit. See bug #520944
+    - Fix undefined variable. Commit.
+    - Call K.Core.triggerAction and K.Core.actionText directly. Commit.
+    - Use K.Core.getCurrentFps() directly. Commit.
+    - Fix another bunch of unqualified access warnings in QML. Commit.
+    - Read from K.UiUtils.smallestReadableFont directly. Commit.
+    - Read from K.KdenliveSettings.uiDebugMode directly. Commit.
+    - Cleanup unused file. Commit.
+    - SubtitleModel: trim all leading and trailing whitespaces on adding. Commit.
+    - Add webp support for image sequences. Commit.
+    - Make audio / video bitrate adjust on profiles that support it, increase audio bitrate range. Commit. See bug #520750
+    - Fix linking to incorrect FFmpeg version. Commit.
+    - Fix paste action disabled after clearing selection. Commit.
+    - Fix missing initialization. Commit.
+    - Fix typo. Commit.
+    - Exclude tests from cppcheck. Commit.
+    - Use activeTool from pCore/K.Core directly. Commit.
+    - Make the pCore singleton available in QML. Commit.
+    - Remove unused headers. Commit.
+    - Edit mediacapture.cpp. Commit.
+    - Fix document unnecessarily marked as modified on opening, triggering a backup request. Commit.
+    - Fix qml property override warning. Commit.
+    - Fix nightly flatpak - disable rnnoise until implemented. Commit.
+    - Fix incorrect detection of missing and remote clips causing unwanted backups. Commit. Fixes issue #2194
+    - Fix tmp files copied to wrong location when setting project folder. Commit. Fixes bug #467740
+    - Fix qml merge error. Commit.
+    - Headers cleanup, fixes Windows qml startup crash. Commit. Fixes bug #520522
+    - Fix timeline preview incorrectly invalidated when a track with effect duration changed. Commit. See bug #514541
+    - Fix missing var. Commit.
+    - Display paths in native format in render widget. Commit. Fixes bug #520428
+    - Fix more unqualified access warnings. Commit.
+    - Add pragma ComponentBehaviour: Bound. Commit.
+    - Fix some unqualified access warnings in splash screens. Commit.
+    - Modernize Qml Loader for Clips and Compositions. Commit.
+    - Fix another bunch of unqualified access warnings. Commit.
+    - Port timeline from context to required initial properties. Commit.
+    - Remove dead property from monitors. Commit.
+    - Fix Cut secondary shortcut conflict. Commit.
+    - Fix multicam view crash. Commit.
+    - Fix qml startup crash - missing required monitorController. Commit.
+    - Simple splash: fix pressing return always triggered the same button. Commit.
+    - Minor update to simple splash. Commit.
+    - Fix a bunch of qml unqualified access warnings for the monitors. Commit.
+    - Port monitor controller from context to required initial property. Commit.
+    - Port away from deprecated invalidateFilter(). Commit.
+    - Add width/height targets to parammap. Commit.
+    - Fix unwanted clips added to timeline and cleanup. Commit. Fixes issue #2190
+    - Switch drawbox / delogo to new fakerect to allow drawing rect on monitor. Commit.
+    - Minor update to icon overlay. Commit.
+    - Fix fake rect not correctly initialized on add effect. Commit.
+    - Refactor Qml baseUnit and fixedFont to UiUtils.baseSizeMedium. Commit.
+    - Ensure we discard invalid autosave files. Commit.
+    - Fix welcome screen color scheme after recent cleanup. Commit.
+    - [qmllint] Fix all Quick.PropertyChangesParsed warnings. Commit.
+    - [qmllint] Fix all Quick.LayoutsPositioning warnings. Commit.
+    - Refactor conditional anchoring in ResizeHandle to use states. Commit.
+    - [qmllint] Remove check for non-existing property. Commit.
+    - [qmllint] Split keyframe delegate to its own file to fix type warnings. Commit.
+    - [qmllint] Add type annotation for repeater.itemAt(x) statements. Commit.
+    - Replace Qt.styleHints by Application.styleHints. Commit.
+    - [qmllint] Fix a few IncompatibleType warnings. Commit.
+    - [qmllint] Fix all EqualityTypeCoercion warnings. Commit.
+    - [qmllint] Switch all passing rules from warning to error. Commit.
+    - Add .qmllint.ini config file. Commit.
+    - Add Track dialog: minor ui cleanup, ensure clip warning info is hidden in add track mode. Commit.
+    - Warn before deleting tracks that contain clips. Commit. Fixes issue #2167
+    - Improve build documentation and development workflow guidance. Commit.
+    - Upgrade minimum required MLT version to 7.38.0. Commit.
+    - Timeline: Snap playhead to snap points when dragging+Alt in ruler. Commit. Fixes bug #503693
+    - Add frei0r.colorenhance. Commit.
+    - Add action to replace clip in Timeline context menu. Commit. Fixes issue #1822
+    - Modernize ki18n usage in QML. Commit.
+    - Bump minimum required versions for Qt and KDE Frameworks. Commit.
+    - Added #resource# (full path). Commit.
+    - Nicer title for welcome screen. Commit.
+    - Minor layout improvment to welcome screen, add Quit and Open shortcuts. Commit.
+    - Fix broken welcome dialog layout in tiling compositors. Commit.
+    - Add --setup-report option to print Kdenlive, MLT and Package info to a .json file, useful for our test suite. Commit.
+    - Add Shift+Click for additive soloing on audio tracks. Commit. Implements feature #421225
+    - [CI] Make successful tests required on Windows. Commit.
+    - Fix encoding in KdenliveTests::createTextProducer. Commit.
+    - [tests] Don't use QTemporaryFile with QSaveFile. Commit.
+    - (craft) Limit the number of CPU cores used during a Windows build with mingw as some .cpp files are memory intensive to build. Commit.
+    - (kde-ci) Limit the number of CPU cores used during a build as some .cpp files are memory intensive to build. Commit.
+    - (kde-ci) Cleanup old entries. Commit.
+    - Fix lambda implicit capture warning. Commit.
+    - Introduce document patch version, allowing to fix rotation regression in qtblend filter. Commit.
+    - Fix miissing args for flatpak-spawn. Commit.
+    - Flatpak: try allowing opening clips in external apps. Commit.
+    - Revert "Add some temporary debug to understand #2177". Commit.
+    - Fix filetest. Commit.
+    - Add some temporary debug to understand #2177. Commit.
+    - Set default action to abort when detecting a project with remote clips. Commit.
+    - Don't detect empty resource (titles) as remote, fix warning string for remote clips. Commit.
+    - Allow searching for missing proxies on document open. Commit. See bug #519418
+    - Detect embedded subtitle streams and show count in clip properties. Commit.
+    - Fix incorrect remote file detection. Commit.
+    - Allow arbitrary rotation anchor in qtblend filter (Transform). Commit.
+    - Fix transition preview generation. Commit.
+    - Fix crash switching multiple times between icon and list view in transitions list. Commit.
+    - Proper detection for remote resources in project file. Commit.
+    - Warn if a project file contains remote resources. Commit.
+    - Fix trying to access uninitialized core profile on document open. Commit.
+    - Fix render test suite crash on unknown render profile. Commit.
+    - Fix tests. Commit.
+    - Fix reuse and codespell errors. Commit.
+    - Display and allow resetting allowed proxy parameters in Settings dialog. Commit.
+    - Check proxy settings on project opening, use a list of allowed parameters. Commit.
+    - Add a few links to update in Release template. Commit.
+    - Update Frei0r in nightly Flatpak. Commit. See issue #2173
+    - Add .gitlab-ci.yml update task. Commit.
+    - Tests: Add tests for guide position on fps change. Commit.
+    - Always adjust composition duration on drop if there are clips above and below. Commit.
+    - Fix missing Q_EMIT keyword. Commit.
+    - Add Identify Gaps submenu to Timeline menu with Selected Track and All Tracks options. Commit. Fixes bug #352409
+    - Add per-track gap identification via track header context menu. Commit. Fixes bug #352409
+    - Use ranged markers for gap identification. Commit. Fixes bug #352409
+    - Use default marker type for gap markers. Commit.
+    - Fix gap detection to use union of intervals across all video tracks. Commit. Fixes bug #352409
+    - Add "Add Markers at Gaps" feature to Timeline menu. Commit. Fixes bug #352409
+    - [Feature] Copy Selection to New Sequence. Commit.
+    - Review feedback items. 1. Updated method to remove const contract to avoid casting this for calling overloaded non-const method. 2. Updates method documentations. Commit.
+    - Handle clips which don't have any audio streams. Commit.
+    - Refactored code to better handle the missing tracks and create them for drag and drop scenario. Also fixed some issues with multiple clips drag and drop scenario. Commit.
+    - Always insert new tracks at the end after user selects in the dialog. Let user insert into any audio track and start insertion from there. Commit.
+    - Show bubble tooltip message when dragging if some audio tracks are missing. Handle edge case scenarios for overwrite and insert modes. More strict checks beforehand for locked and insert mode unavailable tracks. Commit.
+    - Handle overwrite and insert modes to work correctly for the newly created tracks. Commit.
+    - When track changes, re create the clip preview for normal and also in overwrite/insert mode. Commit.
+    - Always create the required tracks before the mirror track can be created. This is for drag and drop only. Commit.
+    - Fixed some issue. Block drag and drop correctly if tracks are locked. Commit.
+    - Create mirror tracks properly. Commit.
+    - Correctly get mouse focus on new dialog. Commit.
+    - Initial commit for auto add audio tracks when inserting to video track without corresponding mirror audio track. Commit.
+    - Fix the issue where if keyboard tracking is set to false for the spinbox, emit the value changed signal correctly when editing finished while still keeping the scrolling and arrow key behaviour for changing the values. Commit.
+    - Implement timecode extraction in getStartTimecode. Commit.
+    - Reverting the changes made in error using an old version. Commit.
+    - Edit frei0r_levels.xml. Commit.
+    - Fix screen mirroring on Windows. Commit.
+    - Cleanup proxy parameters. Commit.
+    - Fixed ranges 0-255 and gamma 0-4. Commit.
+    - Show blocked icon on tracks where we cannot insert the clip from bin. Commit.
+    - Improve drag and drop preview to different tracks on the timeline. Commit.
+    - Fix precision spin box for setting speed value from speed dialog. Fix issues with. Commit.
+    - Set speed to timewarp producer with full precision so that later when we compare it for reusing the timewarp producer, it should be able to fuzzy compare correctly with the double value. Commit.
+    - Add common video/audio/image MIME types to desktop file. Commit.
+    - Show proper error message when resize speed change fails. Commit.
+    - Only resize (change speed) of the selected clips if the primary clip being resized is part of the selection. Commit.
+    - Improve clip color settings: live preview, reset button, fix audio color in QML, emit colorsChanged signal. Commit.
+    - Add configuration of colors for clip types (video, audio, title, image, slideshow). Commit.
+    - Hide rounded corner setting when having out of date MLT. Commit.
+    - Hide corner radius input on ellipse tool. Commit.
+    - Use draggable spinbox instead of QSpinBox for corner radius. Commit.
+    - Add rounded corner property to rectangles in titler. Commit.
+    - Apply 1 suggestion(s) to 1 file(s). Commit.
+    - Fix image sequence losing its length on track switch. Commit.
+    - Fix tab order in Render dialog. Commit. Fixes bug #487883
+    - Change snap color to yellow. Commit.
+    - Add disable snap help text. Commit.
+    - Allow snapping to the center of other objects. Commit.
+    - Fix letting go of CTRL not removing snap previews. Commit.
+    - Add snapping to safe zone edges. Commit.
+    - Use qreal instead of float. Commit.
+    - Use qDeleteAll for snap previews. Commit.
+    - Add snapping for scene edges in title editor. Commit.
+    - Fix snapping not behaving correctly in grid mode. Commit.
+    - Add snapping in the title editor. Commit.
+    - Added model tests. Commit.
+    - Updted the compositions track assignment logic with proper undo/redo. Also took care of the MLT logic to move the compositions. Commit.
+    - Updated a comment. Commit.
+    - Don't update all Atracks. Commit.
+    - Handle the changes to composition A tracks when moving tracks. If the composition is on the current track, then the A track is changed if it was set to a specific track that has moved up now. If the specific A track is the one that is being swapped, then update the A track to the new swapped position. Commit.
+    - Removed unnecessary code to ungroup clips. Commit.
+    - Added option in track to move it up or down. Keeping audio and video tracks together. Commit.
+    - Added debug log for speed change. Commit.
+    - Improved math for clip in and out calculation for speed change. Commit.
+    - Change speed of multiple items when multiple items are selected and then speed is changed by ctrl+drag. Commit.
+    - Fix duplicate profiles appearing in New Project dialog. Commit. Fixes bug #475724
+    - Fix crash downloading seamless translation model. Commit. Fixes issue #2153
+    - Restore the docks raise actions. Commit. Fixes issue #2155
+    - Fixed multiple issues with undo and redo of sequence creation. Major fixes: 1. Undo of sequence created by "Add sequence" results in the other sequence tab being unusable. Fixed by triggering connectCurrent(currentIndex) at the end of closeTimelineTab. 2. Force recompositing of timeline when it is reopened by a redo action. Use forceCompositingForExistingModel in openTimeline(). 3. Pass the finalMove variable correctly when inserting new sequence clip in the original sequence. This will trigger updateDuration properly in TrackModel::requestClipDeletion_lambda() when undo is triggered to remove the seqeunce clip. Commit.
+    - Add insert at timecode logic. Commit.
+    - Fix composition animation preview not always triggered on hover. Commit.
+    - Add "Add to Project Bin" option to Render Widget. Commit. Fixes bug #509908
+    - Set 1x speed duration or current speed duration based on if speed is same or not across clips. Commit.
+    - Removed log statement. Commit.
+    - If duration of the clips is also same, then show the common duration. Commit.
+    - Changed logs to debug. Commit.
+    - Download and use clip for testing. Commit.
+    - Added real mp4 clip for testing clip speed change. Commit.
+    - Correct typo. Commit.
+    - Added tests. Few optimizations and refactoring for clip speed change for single/multiple clips. Commit.
+    - Change speed of multiple clips selected from timeline. Keep behaviour for single clip speed change and partner pair speed change same. Commit.
+    - Add HD ready category, related to !824. Commit.
+    - Fix incorrect colorspace description in new project dialog. Commit.
+    - Add missing HD-ready (1366x768) project profiles. Commit.
+    - Allow to mirror monitor on full-screen instead of detaching. Commit.
+    - Minor refactoring for monitor fullscreen code. Commit.
+    - Implementing togglable mouse zoom on playhead feature instead of cursor position in timeline. Commit.
+    - Add timecode meta to clip properties. Commit.
