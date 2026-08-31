@@ -1,0 +1,134 @@
+Version: 0.21.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.21.1/open-design-0.21.1-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Nix distribution note (added August 31, 2026): the repository-owned flake was retired on main in commit 49cc51058fd76ec825fcd6a9f684f8d3a138fca3 via PR #7644. If you still need the last repository-shipped flake, pin to tag open-design-v0.21.1 (commit fbd4d48ebe21b20f4a2faaad0ad5e53aaeb1dc4b) or an earlier tag instead of updating against main.
+    🌟 Codename: Community First: No Login Required
+    🔓 Open Design has always been rooted in the community. Now we’re returning to
+    that promise: no account required. Choose a local CLI or BYOK directly from
+    Home and start creating. Open Design Cloud is still available whenever you need
+    it.
+    🔥 Highlights
+    - 🔓 Start without signing in. Open Design no longer requires a Cloud
+      account before you can begin creating. (#7381) Thanks @Siri-Ray.
+    - 🧰 Use your own tools from Home. Choose an existing local CLI or connect
+      your preferred model provider through BYOK. (#7381) Thanks @Siri-Ray.
+    - 🧪 Introducing Open Design Labs. Enable Open Design Harness in Settings to
+      try a new generation strategy and create more polished results. More
+      experiments are on the way. (#7445, #7514) Thanks @lefarcen.
+    📥 Download: Tag
+    open-design-v0.21.1
+
+    | Platform | Architecture  | Asset     |
+    | -------- | ------------- | --------- |
+    | macOS    | Apple Silicon | DMG       |
+    | macOS    | Intel         | DMG       |
+    | Windows  | x64           | Installer |
+    ✨ Added
+    Creation and experiments
+    - 🧪 Design Harness is now one switch away. Open Design Labs has a home in
+      Settings, where you can opt into the latest generation strategy without
+      installing another build or reaching for a terminal. The switch explains what
+      it covers, saves across restarts and tells you when another policy owns the
+      choice. (#7445)
+    - 🖼️ Real subjects get real imagery. When a prototype names a person,
+      product, artwork, event or place, Open Design now searches for and uses the
+      actual referent instead of inventing a look-alike. Images keep their natural
+      proportions and full frame instead of being forced into a leftover
+      placeholder crop. (#7436)
+    - 📱 OD Next understands the bones of a mobile interface. Calendars, stats,
+      settings rows, top bars, bottom navigation, images and confirmation dialogs
+      now receive purpose-built structure, so generated phone prototypes read
+      clearly without flattening every pattern into the same generic row. (#7327)
+    Team collaboration
+    - 🧭 Large Team workspaces can put a ceiling on background catch-up. An
+      opt-in cumulative budget keeps background materialization from growing without
+      bound while leaving foreground project opens immediate and unaffected.
+      (#7403) Thanks @lefarcen.
+    ⚡ Performance & reliability
+    - ⚡ Team projects open from a warm path. Repeated project-list and deep-link
+      reads reuse a short-lived, workspace-safe cache; shares, unshares and workspace
+      changes invalidate it immediately. (#7398) Thanks @lefarcen.
+    - 🚀 Home starts with less competition for the screen. Duplicate catalog
+      reads are collapsed, and the hidden Automations area waits until you actually
+      open it before fetching its data. (#7408, #7413) Thanks @lefarcen.
+    - 🧹 Stopping a run now means the whole run has stopped. Cancel, timeout,
+      failure, retry and app shutdown clean up the complete Agent process tree before
+      declaring the attempt finished, preventing abandoned children from continuing
+      to consume resources. (#7432) Thanks @Siri-Ray.
+    🐛 Fixed
+    Agents, models and setup
+    - ☁️ Cloud sign-out no longer closes the door on local work. Local Agent and
+      BYOK stay selectable while signed out or while Cloud is unavailable, and
+      signing out preserves provider keys, base URLs, model choices and media
+      defaults stored on this installation. (#7381, #7437) Thanks @Siri-Ray.
+    - 🧭 Run errors now point to the action that can actually help. An
+      incompatible Agent handshake asks you to change Agent versions instead of
+      retrying; membership concurrency limits show their reset guidance; and an AMR
+      model rejection stops before a second, misleading prompt failure can replace
+      the real cause. (#7303, #7429, #7458) Thanks @lefarcen, @Siri-Ray.
+    - 🚦 A real upstream limit is no longer buried under “empty output.” Quota,
+      rate-limit and availability signals keep priority over generic no-result
+      classification, so retry behavior follows the failure that actually happened.
+      (#7248) Thanks @mturac.
+    - 💬 A clarification form you can see is a clarification form you can answer.
+      Strategy tasks no longer become terminal behind a rendered question form and
+      reject the response with an internal state error. (#7509)
+    - 🔌 A missing local engine now fails clearly instead of returning the app
+      shell as if it were data. Login, Agent discovery and other API calls surface
+      a recognizable, retryable connection failure when the daemon origin is not
+      configured. (#7399) Thanks @lorenzozanee.
+    Studio, preview and export
+    - 🧩 HTML that writes HTML no longer tears its own preview apart. Print
+      windows, email templates, srcdoc payloads and markup stored in scripts or
+      attributes keep running as authored. Preview, deck, PDF and artifact export
+      now insert Open Design's bridges at the real document boundaries instead of
+      mistaking tag-shaped text for structure. (#7421, #7422) Thanks @lefarcen.
+    - 📊 Editable PPTX export no longer succeeds with an invisible background.
+      Empty Chromium captures are retried; if a correct layered capture still cannot
+      be produced, export stops with a clear failure instead of handing you a
+      transparent slide. (#7337) Thanks @mrcfps.
+    - 🎛️ Small editing controls stay in their lane. The chat resize handle no
+      longer steals hover, click or drag from the scroll edge; the slash-command
+      menu keeps each row readable; and switching to Image selects it immediately
+      without dimming the creation tabs. (#7324, #7368, #7375) Thanks @Siri-Ray,
+      @lefarcen.
+    Teams, navigation and interface
+    - 💳 Team balance follows the Team workspace you are viewing. Settings and
+      Home agree on the active workspace balance and no longer fall back to a
+      member's personal wallet when Team data is unavailable. (#7384)
+    - 🎞️ Private projects use the Team balance they belong to. Vela image and
+      video generation now preserves the project’s Workspace billing scope without
+      changing its private sharing state. (#7504) Thanks @alchemistklk.
+    - ↩️ Creating a design system brings you back to where you started. Whether
+      you entered from a conversation, picker, Library, Home or the sidebar, Back
+      restores that original context instead of dropping you at a generic page.
+      (#7367) Thanks @lefarcen.
+    - 🌐 Plugin and recovery copy speaks the app's language. Skill-card
+      descriptions follow the selected locale with a predictable English fallback,
+      and a missing bundled scenario explains—in the same language—how reinstalling
+      restores it. (#7369, #7325) Thanks @lefarcen, @Siri-Ray.
+    - 📣 The Go Plan sunset notice reaches the right people in the right
+      language. Targeted message variants open the dedicated notice, and its copy,
+      actions and layout follow the selected Open Design locale instead of falling
+      back to hard-coded Chinese. (#7430, #7453, #7477) Thanks @nettee.
+    - 🔗 Cloud authorization returns to the installed app, not a stray Electron
+      window. Development runs no longer take over the system-wide opendesign://
+      link handler, while packaged builds keep their normal sign-in and invite
+      handoff. Signed-out users also stop seeing a campaign badge that requires an
+      account. (#7479) Thanks @lefarcen.
+    - ⬆️ The update action stays where you expect it. Signed-out desktop users
+      now see the ready-to-install update in the same top-right cluster as signed-in
+      users, clear of the Home composer and model picker. (#7482) Thanks @Siri-Ray.
+    🙏 Thanks to everyone who shipped 0.21.1
+    @alchemistklk · @lefarcen · @lorenzozanee · @mixxer · @mrcfps · @mturac ·
+    @nettee · @Siri-Ray
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.21.1
+ReleaseTime: 2026-08-31T13:07:04.0000000Z
