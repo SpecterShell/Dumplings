@@ -1,0 +1,30 @@
+Version: 1.0.0-rc.30
+Installer:
+- InstallerUrl: https://github.com/QuantumNous/new-api/releases/download/v1.0.0-rc.30/new-api-v1.0.0-rc.30.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Caution
+    Critical Upgrade Notice / 关键升级提示
+    v1.0.0-rc.28 和 v1.0.0-rc.29 存在数据库迁移兼容性问题，部分使用 MySQL 或 PostgreSQL 的现有实例在升级后可能无法启动。
+    - v1.0.0-rc.29 无法启动或陷入重启循环：请升级至 v1.0.0-rc.30 并重启服务。
+    v1.0.0-rc.28 and v1.0.0-rc.29 contained a database migration compatibility regression that could prevent some existing MySQL or PostgreSQL deployments from starting after an upgrade.
+    - v1.0.0-rc.29 fails to start or enters a restart loop: upgrade to v1.0.0-rc.30 and restart the service.
+    Warning
+    Experimental Plugin System / 实验性插件系统
+    自 v1.0.0-rc.27 起引入的实验性插件系统仍处于测试阶段，并涉及较大的架构调整。如遇问题，请及时反馈。
+    从 v1.0.0-rc.26 或更早版本升级的用户，必须重新配置所有视频模型价格；已完成该配置的用户无需重复操作。本版本仍不推荐用于生产环境。
+    The experimental plugin system introduced in v1.0.0-rc.27 remains under testing and includes major architectural changes. Please report any issues promptly.
+    Users upgrading from v1.0.0-rc.26 or earlier must reconfigure all video model prices. Users who have already completed this step do not need to repeat it. This release is still not recommended for production use.
+    Bug Fixes
+    - Fixed usage-log statistics showing a zero quota total despite matching consumption records containing non-zero quota. This was a reporting-only issue; consumption logs, actual billing, and account balances were not affected (#7106, #7108).
+    - Added a safe and idempotent PostgreSQL migration for known legacy unique constraints on tokens.key, preserving existing token data and key uniqueness while preventing startup migration conflicts.
+    New Contributors
+    - @jimmyleocn made their first contribution in #7108.
+
+    Full Changelog: v1.0.0-rc.29...v1.0.0-rc.30
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QuantumNous/new-api/releases/tag/v1.0.0-rc.30
+ReleaseTime: 2026-08-31T03:55:59.0000000Z

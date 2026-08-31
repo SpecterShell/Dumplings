@@ -1,0 +1,121 @@
+Version: 0.9.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.9.0/lore-v0.9.0-x86_64-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.9.0/lore-setup-v0.9.0-x86_64-pc-windows-msvc.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changes since v0.8.6.
+    Breaking changes
+    - lore-credential: auth tokens move to tokenstore.toml under a tokenstore_encryption_key key, with nothing migrated from tokens.toml; old and new clients keep entirely separate credentials, so expect one lore login per generation, and an unmigrated store reads as Not authenticated with --remote reads answering empty rather than failing
+    - lore-server (AWS store): the fragment describing a payload now travels on the S3 object as an x-amz-meta-lore-fragment header and the fragment metadata table is replaced by a fragment state table; an existing deployment must set dynamodb_fragment_state_table plus dynamodb_fragment_metadata_table for the fallback read, and roll out as a full stop followed by a full start
+    - lore.model.v1 and lore.thin_client.v1: Repository.created, Branch.created and Revision.timestamp now carry Unix epoch milliseconds instead of seconds
+    - C API: LoreMetadataType discriminants are now stable integers shared with the on-disk metadata buffer, and lore_revision_tree_metadata_set takes typed (key, LoreMetadata) batches instead of text plus a format tag; callers using the enum names need a recompile, and callers hard-coding the old numeric values must update them
+    - lore-server (replication protocol): ExistsBatch is replaced by a batch Query and Get / GetMetadata responses carry the full StoreGetData including the partition; a peer on the previous protocol is rejected rather than misreading a response, so roll replicas and their upstream together
+    - C API: failures that previously reported -1 (internal) now carry the specific code where one applies; lore_revision_tree_metadata_set and its file equivalent can return SlowDown (5), NotAuthorized (7), Maintenance (11), NotAuthenticated (12), NoRemote (14), NotConnected (17) and NotSupported (18), remote store reads and writes add Disconnected (6), and scripts branching on -1 must be updated
+    Features
+    - lore-io: new runtime-independent asynchronous file I/O engine backing Lore's file access, with positional owned-buffer operations on a bounded, idle-reaped syscall pool, automatic upgrade to io_uring on Linux and overlapped I/O on Windows, and vectored scatter/gather reads and writes; LORE_IO_BACKEND overrides the choice
+    - lore: add lore_revision_tree_commit, freezing a handle's in-memory tree into a revision and advancing the branch tip by compare-and-swap, so a service can publish revisions with no working tree on disk
+    - lore: add lore_revision_tree_delete, _modify and _move as batch verbs alongside add, each validating the whole batch before any node changes and emitting a *_COMPLETE per entry plus one BATCH_COMPLETE
+    - lore: add batched lore_revision_tree_metadata_set / _get / _clear, with LoreMetadata, LoreMetadataType and LoreBinary reworked into owning, self-describing types
+    - lore: a revision tree handle holds its own store reference, so closing the parent storage handle leaves it usable
+    - lore: lore_storage_get / lore_storage_get_file take offset and length per item to read only a slice of the content, pruning the fragment tree so the work is proportional to the range rather than the content size
+    - lore: add lore_storage_get_resolved / lore_storage_put_resolved, also over QUIC and gRPC, resolving a key belonging to another system (an asset id, a build id) and acting on the content it names in one request instead of two
+    - lore branch archive --include-layers / --layer <path>: archive the branch in every configured layer, or in the layer at one mount path
+    - lore --identity-token <token> / --access-token <token>: use caller-supplied tokens instead of the credential store, for CI runs and stateless services
+    - LoreRepositoryCreateArgs / LoreRepositoryCloneArgs: replace use_shared_store with a LoreSharedStoreMode enum (Inherit = 0, Enabled, Disabled), so a caller can explicitly refuse shared-store backing
+    - ImmutableStore: unify exist / exist_batch into a batch query answering with the best match level found, and drop the match-level parameter from get / get_metadata for one StoreGetData
+    - lore-server: transcode fragments arriving Oodle-compressed on put to Zstd as the first step of retiring Oodle, behind the oodle feature with LORE_DISABLE_CONVERT_OODLE_ON_PUT to opt out at runtime
+    - lore-aws: add MetadataMigrator and run_migrator to drain legacy DynamoDB fragment-metadata rows into the new S3-object-metadata plus state-row model by segmented parallel scan, idempotent and resumable; packaged as a standalone tool under contrib/aws-migrate-0.9.0
+    - lore link add / remove / update / reset / list now work on a nested link mounted inside another link's subtree, and lore commit --link <nested path> commits each intermediate link as a real revision before repinning
+    - lore-server: add link_partition and tracking to the legacy urc.rpc.RevisionService diff and tree, so a consumer can tell which repository a changed path resolves under and whether a link follows its parent branch
+    - lore-server: add presigned_url_extra_content_types and presigned_url_denied_content_types under [server.http] to adjust which Content-Type values a redeemed presigned URL may carry
+    - lore-proto: thin-client TreePath exposes file size and mode, so a ThinClientService.RevisionTree caller gets both without a second request
+    - lore: honour self-signed certificates installed in the OS trust store (reqwest's rustls-tls-native-roots)
+    - lore link info <path>: report a link's mount and source paths, its branch and whether that branch is followed or pinned, the pinned and remote-latest revisions, the link flags, and the staged state and file count inside it
+    Fixes & Improvements
+    - Thread model: the network transport moves onto its own runtime, the rayon compute pool is gone with compression, hashing and chunking inlined on the core workers, and the blocking pool shrinks to two threads; LORE_MAX_THREAD is now an absolute cap (clone throughput 1.4 to 2.5 Gbps, large-commit peak memory 6 to 4 GiB)
+    - lore-storage, lore-revision: route the store buckets, packstore, fragment chunker and remaining tokio::fs / std::fs calls through lore-io, so a common-case bucket load completes in one dispatch and a flush gathers header, index and entries in one vectored write; filesystem locks back off asynchronously instead of parking a thread
+    - lore-storage: fix a file shorter than its measured size being taken as an early end, producing a chunk list covering fewer bytes than its root fragment recorded; the read now fails
+    - Windows: no handle the I/O driver opens permits a second writer, while a read-only open still shares reads and deletion so replace-by-rename works; ERROR_SHARING_VIOLATION is now transient and retried, so materializing a file being hashed waits rather than fails
+    - Fix lore branch merge under a sparse view dropping changes outside the view, leaving the branch divergent from the one it recorded as merged; nodes now merge regardless of the view and an out-of-view conflict adopts theirs as StagedMergeTheirs (34% faster on 110,000 files)
+    - Fix a link added, removed or repinned on one branch not surviving the merge that brought it over, where link list reported nothing and lore stage failed with Link not found; a row both sides moved now refuses the merge
+    - Fix a revision moving a link's pin producing an empty diff when the subtree was byte-identical, and entries from a linked repository naming no repository so content could not be fetched from the right partition; a new link_read policy covers a caller authorized only for the parent
+    - Fix lore branch create failing with Branch <name> already exists when a linked repository held the requested branch id under another name; the cascade adopts it and reports a LinkBranchCreate event with a reused flag
+    - Fix concurrent link edits overwriting one another; link add, update and remove now hold one write lock across reading and storing the registry
+    - Fix lore push on a repository with links reporting the parent's revision against a branch that exists only in a linked repository; push events now carry the repository and branch they report
+    - Fix lore stage . --scan pinning a staged revision for unchanged layers, which aborted the next commit with Nothing staged and made branch switch refuse with Layer has uncommitted staged changes; a layer is pinned only when the walk left its state dirty
+    - Fix lore sync leaving a layer's staged state on the revision it moved away from, so the next commit refused it as a stale parent; sync now refuses when a layer holds staged work and otherwise rebases onto the new pin
+    - Fix lore layer remove discarding a layer's staged work silently and leaving staged adds on disk; removal now counts staged files and refuses without --force
+    - Fix an unreadable .lore/config.toml or layer.toml presenting as a repository with no remote or no layers, which the next save made permanent; both now default only for NotFound and save through a renamed .tmp sibling
+    - Stop re-uploading content the peer already holds; where a query reports the hash under another context or partition, the client asks the peer to duplicate the association instead of sending the payload
+    - lore-revision: cache metadata resolved by query, not only get_metadata hits, so a query-heavy workload stops hopping to the durable store; should_cache_query_results is renamed cache_metadata
+    - lore-server: get_metadata fans the durable store out in parallel with read replicas over a dedicated QUIC command, instead of falling back to a local query reporting only the durably-stored flag
+    - lore-server: the JWK service picks up key rotation without a restart; a verification failure only a key could explain triggers one refresh, so material replaced behind an unchanged kid no longer rejects every token
+    - lore-server: bound JWK fetches by timeouts, a pooled client, single-flight collapsing of concurrent misses and a minimum interval, with the document capped at 1 MiB and an empty cache never throttled so start-up always proceeds
+    - lore-server: validate a JWK set key by key, skipping an unusable key rather than failing the fetch and refusing one whose alg family does not match its kty; RS256 is inferred for an RSA key omitting alg, which previously failed start-up against Microsoft Entra ID
+    - lore-server: stop returning why a JWT verification failed to the caller, since bad signature, expired and no such key id are an oracle for someone unauthenticated; the reason goes to a debug log
+    - lore-server: fix a stored-XSS vector on presigned-URL redeems, where bytes could be served from the Lore origin under a caller-chosen Content-Type such as text/html; a deny-by-default allowlist rejects at mint and coerces on redeem, with nosniff and a default-src 'none'; sandbox CSP on every response
+    - lore-server: allow binary/octet-stream in the presign allowlist and serve it verbatim, since S3 assigns it to objects uploaded without an explicit Content-Type
+    - lore-server: RepositoryMetadataGet and RepositoryMetadataSet now perform the real-time authorization check the other repository handlers do
+    - lore-transport: fix a per-item failure on the streaming storage RPCs being reported as a stream trailer, which killed the HTTP/2 stream and every request multiplexed onto it; outcomes now travel in-band, with field numbers preserved so get responses stay wire-compatible
+    - lore-transport: fix gRPC reconnect not re-reading the epoch per attempt, and storage streaming having no working reconnect at all; a dead stream now rotates once across concurrent callers and replays outstanding requests
+    - Fix lore commands taking about 30 seconds when a hostname resolved first to an address family the server was not listening on, commonly localhost on ::1; the QUIC client now follows Happy Eyeballs (RFC 8305)
+    - lore-transport: fix the per-stream in-flight counter never being decremented on error or cancellation, which degraded priority routing, and fix add_stream storing a count one short of the streams it opened
+    - lore-aws: make query backward compatible with fragments described by the legacy metadata table, so BranchPush no longer reports content as missing when it is stored but described by the old row
+    - lore-aws: treat a row holding a zero value as absent in the mutable store's zero-expected compare-and-swap, matching the local store, so an empty branch pointer cannot make a swap report success without the write landing
+    - lore-storage: stop resetting a corrupt mutable-store bucket to empty on an authoritative store, where it silently dropped branch heads, metadata and instance registrations with no upstream to refill from; authoritative: true makes it a hard error
+    - lore-credential: fix the credential store rewriting its keyring entry on every stored token, which on macOS prompted for keychain access from every application linking Lore and again after each rebuild; each seal now draws a random nonce instead of persisting a counter
+    - lore-credential: fix any keyring error being read as no key, so one denied prompt regenerated the key and wiped the token store for every Lore process on the machine; only NoEntry counts as absent
+    - Fix a notification subscription that had stopped on its own still counting as live, so every later subscribe returned success without subscribing; liveness is now checked by cancellation token and task state
+    - Fix lore history --branch <name> returning an empty listing for a branch that exists only on the remote; the local branch is preferred and the remote head used when there is no local history
+    - Fix an infinite loop walking revision history for a deleted file, where a zero parent hash was handed to State::deserialize repeatedly
+    - lore-revision: stop erroring as Divergent when divergence cannot be proven; branch points sharing no revision fall back to the older one, and two points with the same revision number short-circuit instead of spending a full search budget
+    - Fix lore reset <path> --revision <revision> failing when the path is currently a directory but was a file in that revision
+    - Fix lore sync undoing a change from a file to a directory; where an add and a delete carry the same node name, the delete now takes the from node
+    - Fix a clone failing with Failed to create directory when the parent already existed but was not created by that call, such as a bind-mounted clone root or a drive root
+    - Fix lore stage --targets <file> hanging on a large list, where dedup_to_supersets rescanned every kept path per candidate and timed out around 900,000 paths; sorting in subtree order takes the collapse from quadratic to O(n log n)
+    - lore stage no longer grows memory in proportion to the work ahead of it; in-flight tasks are capped at 1000 and drained as they complete, and directory fan-out is bounded by a semaphore
+    - lore-revision: stop holding a single-permit mutex across the whole node-allocation scan during staging, and skip the 65 KB zero allocation issued when clearing a recycled slot whose metadata block was never written
+    - lore-revision: drop the per-node stage log lines from debug to trace; they fired once per file and made --debug unusable during a large stage
+    - lore-base: fix Hash, Context, Partition and Address being unreadable under non-self-describing formats such as bitcode, which made any record carrying one fail to decode; a truncated address is refused rather than becoming the zero address
+    - lore-server: return NotFound instead of a generic Internal status when pushing a revision hash that does not exist in the immutable store
+    - lore-server: LORE_SERVER_MAINTENANCE=1 stops the internal QUIC server serving its port while the internal gRPC server keeps a stub listening, so health checks get unavailable rather than a closed port
+    - lore-telemetry: give size_histogram explicit power-of-two boundaries from 64 B to the 256 KiB FRAGMENT_SIZE_THRESHOLD, so put and get distributions are no longer cut off at the OpenTelemetry defaults
+    - lore-error-set: add chain_err_from to chain a discrete error onto an error-set enum without destructuring a Traced<E>, so call sites that discarded the originating trace now preserve it
+    - lore-revision: LoreRevisionDiffFileEventData gains from_path, so a receiver of LORE_EVENT_REVISION_DIFF_FILE can reconstruct where a moved or copied file came from
+    - lore: name the batch verbs' id fields apart, entry_id per entry and batch_id on the batch args and BatchComplete, and rename parent_entry to parent_entry_index
+    - SWFS groundwork: replace the stale commented-out integration with a real interface whose types are always available while its methods compile only under the swfs feature; InstanceOperationImpl lets an operation in a linked or layered repository be finalized alongside the main one
+    - Add an iteration Cargo profile inheriting release with LTO off, cutting link time when rebuilding frequently
+    - lore-revision: reject directory traversal and dot-prefixed segments in repository path components
+    - lore-aws: guard against maliciously large S3 payloads
+    - lore-storage: fix data loss in the lazy fan-out redistribute path, where buckets left unmarked after a fan-out could be overwritten from the stale on-disk layout by a reader racing the flush
+    - lore-storage: decide the legacy bucket layout per group rather than per store, so one written group no longer pins every other group at the maximum bucket count on the next open
+    - lore-storage: stop downloading content for file modification detection; file_matches transfers the stored header and, when fragmented, its fragment lists, then compares chunks against the file's own bytes
+    - lore-storage: fix a dropped consumer on a streaming read being reported as an error instead of draining gracefully
+    - lore-storage: build zstd compression and decompression contexts in workspaces this crate owns, with the pool holding at most 32 and further concurrency building one per call
+    - lore-storage: remove allow_partial_fragment from the local store, so a lore-server local store can cache get_metadata results
+    - lore-storage: obliterate a fragment tree without holding a lock across it, and drop an unreachable sink path from the defragment pipeline dispatch
+    - lore-storage: key file modification times by the lowercase path string, unifying them with node-name matching
+    - lore-server: ReplicatedImmutableStore implements the Copy message and returns the Context a query matched under, instead of leaving clients to assume the default
+    - lore-transport: a persistent connection updates the authn and authz tokens it presents, and authz exchange results for caller-supplied identity tokens are no longer written to the token store
+    - lore-auth: report NotAuthenticated instead of a generic internal error for a missing token
+    - Fix clone not applying view filtering inside linked and layered repositories, where clone_node was called with a path relative to the linked repository rather than the mount point
+    - lore-revision: refuse a link remove that would destroy local edits
+    - lore-revision: fix non-ASCII lowercase handling when building relative paths
+    - Fix the originating trace being lost through ::internal and ::internal_with_context
+    - lore-revision: do less work per path during staging; targets resolve concurrently, each walks from its pre-created ancestor rather than the root, a directory's children are read once and matched by binary search, a shared directory's case resolves once, and paths are neither re-stat'd nor rebuilt through extra string allocations
+    - lore-revision, lore-storage, lore-base: trim allocation and locking on the hot paths; the dirty tree walks from an explicit stack and names into one buffer, node blocks serialize from the lock without a copy and deserialize once rather than once per waiter, merkle tree blocks come from their own heap, short ASCII names fold to lowercase on the stack, the log level reads from an atomic, and successful operations no longer allocate error strings
+    - lore-transport, lore-revision: reuse the lazy StorageSession wrapper across fragment writes instead of rebuilding it per write
+    - lore-io, lore-revision: verify a path's case by asking the filesystem for the name instead of listing its directory
+    - lore-aws: box SDK error payloads to shrink the lore-aws error types
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EpicGames/lore/releases/tag/v0.9.0
+ReleaseTime: 2026-08-31T07:22:50.0000000Z
