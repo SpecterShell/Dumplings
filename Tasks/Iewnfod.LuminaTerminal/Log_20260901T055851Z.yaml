@@ -1,0 +1,20 @@
+Version: 0.2.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/iewnfod/lumina-terminal/releases/download/v0.2.4/Lumina.Terminal_0.2.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/iewnfod/lumina-terminal/releases/download/v0.2.4/Lumina.Terminal_0.2.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🐛 Bug Fixes
+    - Fixed tabs closing instantly on bash 5.3 — bash 5.3 enforces that multi-character options must come before single-character options on the command line. Lumina was spawning the shell with bash -i --init-file <path>, which bash 5.3 rejects with bash: --: invalid option (exit 2) — closing the tab, and the window when it held the last tab, right after startup. The argument order is now --init-file <path> -i, which parses correctly on all bash versions and keeps the shell integration working. A regression test now spawns a real bash and asserts the init file is sourced
+    - Fixed the test suite killing its parent shell — The shell-integration tests spawn real interactive shells (bash -i) that were sharing the controlling terminal with whatever ran cargo test (e.g. a release script running inside Lumina). Parallel test shells performing job-control ioctls fought over terminal ownership and could SIGHUP the parent process mid-run. Test-spawned shells are now detached into their own session via setsid, making the terminal ownership conflicts fail harmlessly
+    Full Changelog: https://github.com/iewnfod/lumina-terminal/compare/v0.2.3...v0.2.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iewnfod/lumina-terminal/releases/tag/v0.2.4
+ReleaseTime: 2026-09-01T01:27:39.0000000Z
