@@ -1,0 +1,20 @@
+Version: 3.34.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://dl.eviware.com/virtserver/3.34.0/VirtServer-x64-3.34.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features and improvements
+    - ReadyAPI version 4.2.0 compatibility: Updated for compatibility with ReadyAPI 4.2.0. For version pairings, see ReadyAPI-VirtServer Compatibility Matrix.
+    - Built-in OpenTelemetryTM observability: Monitor virtual service performance in real time by pushing metrics to any OTel-compatible backend, including Prometheus and Grafana. For configuration details, see Configure Observability.
+    - High-throughput and stability improvements: VirtServer 3.34.0 delivers faster, more reliable request handling under load. Response-time consistency also improves, particularly for high-throughput deployments with large payloads.
+      Note
+      The Congestion behavior setting is no longer functional. Use soapui.virt.request.suspendMultiplier to control the maximum request queue size instead. For details, see Thread management JVM options.
+    - Thread management improvements: VirtServer reworks thread management for faster error handling and more efficient thread use. Two new VMOptions, soapui.virt.request.suspendTimeout and soapui.virt.request.suspendMultiplier, give you control over request queuing behavior. SmartBear recommends scaling the maximum number of threads to twice the number of processors. For configuration details, see JVM Settings.
+    - Data Encryption Standard (DES) decryption removed: VirtServer 3.34.0 has removed the legacy DES encryption mechanism to align with ReadyAPI 4.2.0 and current security standards. If you work with projects created in ReadyAPI versions earlier than 3.57.0, see the ReadyAPI 4.2.0 release notes before upgrading.
+    - Docker Hub documentation updated: The VirtServer Docker image documentation on Docker Hub has been updated with revised prerequisites, new image tags, and refreshed configuration examples.
+    Bug fixes
+    - Fixed an issue that prevented Secure Sockets Layer (SSL) from working when configured for a service in ReadyAPI and then deployed to VirtServer.
+ReleaseTime: 2026-09-02

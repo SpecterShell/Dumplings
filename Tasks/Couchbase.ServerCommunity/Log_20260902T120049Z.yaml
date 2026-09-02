@@ -1,0 +1,38 @@
+Version: 8.0.3
+Installer:
+- InstallerUrl: https://packages.couchbase.com/releases/8.0.3/couchbase-server-community_8.0.3-windows_amd64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Couchbase Server 8.0.3 was released in August 2026. This maintenance release contains fixes for issues listed below.
+
+    Fixed Issues
+
+    Cluster Manager
+    MB-72097
+    This fix prevents a critical bug where undefined bucket storage properties caused incorrect transitions to Magma during upgrades. The issue affected buckets created before version 5.0.0.
+    MB-70951
+    The /metrics REST API previously reported certain low cardinality statistics twice. This update ensures each statistic appears only once in the output.
+
+    Data Service
+    MB-70640
+    This fix addresses a rebalance hang observed during node scaling and swap rebalance operations. The issue was related to socket receive buffer management on specific Linux kernels.
+
+    Analytics Service
+    MB-71453
+    Queries combining LIMIT with index-nested-loop joins could return incorrect results. The fix ensures all filter conditions are evaluated before applying the limit.
+
+    XDCR
+    MB-72305
+    Upgraded nodes now correctly handle rebalancing when replications or buckets were deleted and recreated. This prevents issues with stale manifests and incomplete backfills.
+    MB-71586
+    The new forwardLocalOnly setting allows XDCR to replicate only local mutations. This feature reduces data transfer by identifying mutations originating from source clusters.
+    MB-71257
+    A race condition causing deadlocks during replication pause or deletion has been resolved. The fix ensures goroutines exit properly during rollback operations.
+    MB-71013
+    XDCR now correctly handles conflict resolution for locked documents on target clusters. This fix prevents unnecessary skipping of mutations and potential data loss.
+
+    Tools
+    MB-70745
+    Restore operations no longer fail when Cost-Based Optimizer statistics contain keys with double colons. This fix applies to indexes using specific string functions.
