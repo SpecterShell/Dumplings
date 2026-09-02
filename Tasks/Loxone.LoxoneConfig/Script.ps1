@@ -21,13 +21,13 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://www.loxone.com/enen/support/changelog-config/' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h5[contains(text(), '$($this.CurrentState.Version -replace '0+(?!\.|$)')')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'et_pb_toggle_title') and contains(text(), '$($this.CurrentState.Version -replace '0+(?!\.|$)')')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::*[contains(@class, "et_pb_toggle_content")]') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
