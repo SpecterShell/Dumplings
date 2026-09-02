@@ -1,0 +1,29 @@
+Version: 0.12.9
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.9/uv-i686-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.9/uv-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.9/uv-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Released on 2026-09-01.
+    Python
+    - Add CPython 3.15.0rc2 (#21413, #21415)
+    Enhancements
+    - Add --no-locked and --no-frozen to disable lock modes enabled by UV_LOCKED and UV_FROZEN for a single invocation (#21408)
+    - Report the exact command-line lock-mode flag in warnings and errors (#21402)
+    Performance
+    - Speed up cold wheel installs by extracting each streaming ZIP archive in a single blocking task and reusing buffers across files (#21372)
+    Bug fixes
+    - Update async_http_range_reader to 0.11.1 to address a potential memory-safety issue when reading metadata ranges from untrusted wheels (#21401)
+    - Remove sensitive headers when redirects cross authentication realms, including same-host redirects that change URL schemes (#21382)
+    - Redact secrets in signed URLs from retry diagnostics, including nested request errors (#21381)
+    - Give --locked, --frozen, --check, and --check-exists precedence over conflicting UV_LOCKED and UV_FROZEN values (#21396)
+    - Prevent concurrent uv processes from redundantly extracting the same local or source-built wheel (#21400)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/astral-sh/uv/releases/tag/0.12.9
+ReleaseTime: 2026-09-01T21:58:26.0000000Z
