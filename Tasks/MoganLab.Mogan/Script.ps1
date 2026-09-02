@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/MoganLab/mogan/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/MoganLab/mogan/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -16,14 +16,14 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl
