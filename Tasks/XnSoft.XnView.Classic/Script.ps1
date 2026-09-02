@@ -1,6 +1,6 @@
 $Prefix = 'https://download.xnview.com/old_versions/XnView_Classic/'
 
-$Object1 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;P=XnView-*-win-full.exe;F=0"
+$Object1 = Invoke-WebRequest -Uri "${Prefix}?C=N;O=D;V=1;P=XnView_Classic-*-win-full.exe;F=0"
 
 $InstallerName = $Object1.Links[1].href
 
