@@ -11,7 +11,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://fclient.foundertype.com/version' -Met
 }
 
 # Version
-$this.CurrentState.Version = $Object1.founder_data.version
+$this.CurrentState.Version = [regex]::Match($Object1.founder_data.upgrade_url, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
