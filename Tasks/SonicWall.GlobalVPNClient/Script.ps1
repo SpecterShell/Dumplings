@@ -6,26 +6,19 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = $Global:DumplingsStorage.SonicWallApps.Where({ $_.Count -ge 2 -and $_[1] -is [string] -and $_[1].Contains('GVCSetup') -and $_[1].Contains('.exe') }, 'First')[0][1] -replace '^[a-zA-Z0-9]+:I?'
-$Object2 = [Newtonsoft.Json.Linq.JArray]::Parse($Object1)
-
 # x86
-$Object3 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup-Win32_.+\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
-$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object3.link.href
+  InstallerUrl = $InstallerX86Url = $Global:DumplingsStorage.SonicWallApps.Where({ $_ -match '/GVCSetup-Win32_[^/]+\.exe$' }, 'First')[0]
 }
-$Object1 = Invoke-WebRequest -Uri $InstallerX86.InstallerUrl -Method Head
-$ETag = $Object1.Headers.ETag[0]
+$ETag = (Invoke-WebRequest -Uri $InstallerX86Url -Method Head).Headers.ETag[0]
 
 # x64
-$Object4 = $Object2.SelectTokens('$..cta_group[?(@.link.href =~ /GVCSetup-x64_.+\.exe$/)]').Where({ $true }, 'First')[0].ToString() | ConvertFrom-Json
-$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object4.link.href
+  InstallerUrl = $InstallerX64Url = $Global:DumplingsStorage.SonicWallApps.Where({ $_ -match '/GVCSetup-x64_[^/]+\.exe$' }, 'First')[0]
 }
-$Object2 = Invoke-WebRequest -Uri $InstallerX64.InstallerUrl -Method Head
-$ETagX64 = $Object2.Headers.ETag[0]
+$ETagX64 = (Invoke-WebRequest -Uri $InstallerX64Url -Method Head).Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
