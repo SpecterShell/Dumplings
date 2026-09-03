@@ -1,0 +1,36 @@
+Version: 0.2.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/VkRainB/ccMesh/releases/download/v0.2.6/ccMesh_0.2.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/VkRainB/ccMesh/releases/download/v0.2.6/ccMesh_0.2.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 代理：支持 Images 文生图 / 改图入站。OpenAI Chat 或 Codex 端点直转发，不走协议转换；请求模型未在端点声明时直接拒绝，不回退到其他候选
+    - 实时请求监控：Images 文生图 / 改图请求正确识别入站路径，不再显示为未知
+    - 代理熔断：429 限流与 5xx / 网络故障分开冷却。限流优先遵循上游 Retry-After（缺省数秒），候选端点均因限流不可用时网关内退避重试，耗尽后回 429 而非 502
+    - 代理熔断：跳闸时按入站协议固化冷却（Claude 入站阈值更宽），半开探测不会因切换协议而提前恢复
+    - 端点管理：熔断中徽章展示恢复倒计时；冷却到期仍无探测流量时显示「待探测」。仪表盘队列悬停同步该状态
+    - 用量统计：新增 ZCode 来源筛选，读取本机 ZCode 用量并入统一记录（按记录键去重），与 Claude Code、Codex 并列展示
+    - 文档站点：首页改为产品落地页（能力、接入步骤、截图），指南 / 功能 / 架构同步更新，协议转换矩阵补充 Images 直转发
+    修复
+    - 流式转换：兼容 SenseNova / DeepSeek 进行中 chunk 的空串 finish_reason，避免被当成已结束而逐 token 关块
+
+    按操作系统选择下载：
+    | OS      | Download |
+    | ------- | -------- |
+    | Windows |          |
+    | macOS   |          |
+    | Linux   |          |
+    完整更新历史见 CHANGELOG.md
+
+    💬 QQ 反馈交流群：1105537401
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/VkRainB/ccMesh/releases/tag/v0.2.6
+ReleaseTime: 2026-09-03T00:45:13.0000000Z
