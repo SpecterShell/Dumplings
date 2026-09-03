@@ -8,7 +8,7 @@ function Read-Installer {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://activedirectorypro.com/downloads/365ProToolkit.exe'
+  InstallerUrl = 'https://store.activedirectorypro.com/downloads/365ProToolkit.exe'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

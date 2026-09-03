@@ -8,15 +8,18 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://docs.activedirectorypro.com/getting-started/release-notes/' | ConvertFrom-Html
+    $Object2 = Invoke-WebRequest -Uri 'https://activedirectorypro.com/ad-pro-toolkit/docs/release-notes/' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'level-h2') and contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), '$($this.CurrentState.Version)')]")
     if ($ReleaseNotesTitleNode) {
-      if ($ReleaseNotesTitleNode.InnerText -match '(\d{1,2}/\d{1,2}/\d{2})') {
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(($Matches[1] -replace '/', '-'), 'M-d-yy', $null) | Get-Date -Format 'yyyy-MM-dd'
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) {
+        if ($Node.InnerText -match '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+        } else {
+          $Node
+        }
       }
-
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('level-h2'); $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -33,7 +36,7 @@ function Get-ReleaseNotes {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://activedirectorypro.com/downloads/ADProToolkit.msi'
+  InstallerUrl = 'https://store.activedirectorypro.com/downloads/ADProToolkit.msi'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
@@ -109,7 +112,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
