@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ptc.com/en/products/creo/ptc-product-view/extension-express-download' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.ptc.com/en/products/creo/ptc-product-view/extension-express-download' | Join-String -Separator "`n" | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
