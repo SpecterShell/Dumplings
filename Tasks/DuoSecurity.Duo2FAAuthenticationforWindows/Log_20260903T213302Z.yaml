@@ -1,0 +1,43 @@
+Version: 6.0.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.0.exe
+  ProductCode: '{E6CFB61A-8834-4302-8554-2FD86B1FB1E6}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon x86
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+- Architecture: x64
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.0.exe
+  ProductCode: '{2AA63611-E33D-41DD-9B56-DE17471D4E8A}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon x64
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+- Architecture: arm64
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.0.exe
+  ProductCode: '{C1E0207B-1395-4E07-A416-BD7D502BEAA6}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon ARM64
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - General Availability of Offline Access for Passwordless OS Logon.
+    - Adds the Duo WinLogon Support Tool, a graphical diagnostic application for collecting logs, viewing log files, checking Duo connectivity, and validating time synchronization.
+    - Updates the PowerShell support script (Winlogon-Diag.ps1) to remove the dependency on Internet Explorer, update the connectivity check to use Invoke-RestMethod, add GPO registry key collection, RDP and NLA status reporting, UAC and policy analysis output, and remove legacy Windows 7/Vista code paths.
+    - Adds support for GoTrustID security keys for offline authentication.
+    - Adds the EnableSSPRFix registry value to permit Microsoft Entra ID Self-Service Password Reset (SSPR).
+    - Removes support for TLS 1.1 and earlier. Connections to Duo's cloud service now require TLS 1.2 or later.
+    - Migrates cryptographic operations from legacy CAPI to CNG and from DPAPI to DPAPI NG to support FIPS compliance requirements.
+    - "Remember Me" is now disabled during cross-session UAC elevation and password reset flows.
+    - Fixes and enhancements for password reset during Windows logon.
+    - The executable installer now displays the VC++ Redistributable installer if not already present, allowing the user to control any required reboot before Duo setup continues.
+    - The installer now enforces OS version compliance, permitting installation only on Windows 10 and later or Windows Server 2016 and later. This matches the stated supported operating systems.
+    - Corrects an issue where trusted sessions did not work correctly when multiple users had active sessions on the same machine.
+    - Improvements to Bluetooth adapter detection and BLE connection stability.
+    - Additional security improvements and bug fixes.
+RealVersion: 6.0.0.4198
+ReleaseTime: 2026-09-03
