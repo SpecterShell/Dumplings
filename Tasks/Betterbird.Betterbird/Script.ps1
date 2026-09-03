@@ -1,4 +1,4 @@
-$Locales = @('en-US', 'de', 'es-ES', 'fr', 'it', 'ja', 'nl', 'pt-BR', 'ru')
+$Locales = @('en-US', 'de', 'es-ES', 'fr', 'it', 'ja', 'nl', 'ru')
 $ArchMap = [ordered]@{
   x86   = 'win32'
   x64   = 'win64'
@@ -9,7 +9,7 @@ $Prefix = 'https://www.betterbird.eu/downloads/'
 $Object1 = Invoke-WebRequest -Uri "${Prefix}index.php"
 
 # Version
-$VersionMatches = [regex]::Match($Object1.Content, 'Betterbird (((\d+)(?:\.\d+)+)[a-zA-Z0-9\-]+)')
+$VersionMatches = [regex]::Match($Object1.Content, '(?m)Betterbird.+?(((\d+)(?:\.\d+)+)[a-zA-Z0-9\-]+)')
 $OriginalVersion = $VersionMatches.Groups[1].Value
 $MajorVersion = $VersionMatches.Groups[3].Value
 $this.CurrentState.Version = $ShortVersion = $VersionMatches.Groups[2].Value
