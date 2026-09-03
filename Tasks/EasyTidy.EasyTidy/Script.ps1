@@ -1,14 +1,14 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/EasyTidy/EasyTidy/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/EasyTidy/EasyTidy/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'msi'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'x64'
+#   InstallerType = 'msi'
+#   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
@@ -22,18 +22,11 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h1[contains(text(), '更新日志')]")
-        if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
-          # ReleaseNotes (zh-CN)
-          $this.CurrentState.Locale += [ordered]@{
-            Locale = 'zh-CN'
-            Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-          }
-        } else {
-          $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
