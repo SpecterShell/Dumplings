@@ -1,0 +1,29 @@
+Version: 1.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.2.5/Mini-Term_1.2.5_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    安全性
+    - SSH 已存密码加密保存 — 保存的 SSH 密码不再以明文落盘：以 AES-256-GCM 加密后写入配置库与 sidecar 投影文件，主密钥存于数据目录的 credential.key（Windows 上经 DPAPI 按当前用户保护，macOS / Linux 靠 0600 权限）。升级后首次启动自动加密旧版本留下的明文密码，并清扫库文件与备份中的明文残留。⚠️ 请勿删除数据目录下的 credential.key，删掉后已存密码将无法解密、需重新填写
+    - 密码解不开时（密钥丢失 / 密文损坏）界面明确提示重新填写，绝不把密文当密码发往服务器
+    - sidecar 升级至 0.4.9：SSH CLI / MCP 的会话池在认证那一刻解开密码信封，旧版 daemon 会被自动换代
+    体验
+    - SSH 连接表单密码框新增「显示 / 隐藏」切换
+    下载
+
+    | 平台                  | 文件                                                                                   |
+    | --------------------- | -------------------------------------------------------------------------------------- |
+    | Windows x64           | Mini-Term_1.2.5_x64-setup.exe                                                          |
+    | macOS (Apple Silicon) | Mini-Term_1.2.5_aarch64.dmg（首次运行如被拦截：xattr -cr /Applications/Mini-Term.app） |
+    | Linux                 | Mini-Term_1.2.5_amd64.deb / Mini-Term_1.2.5_amd64.tar.gz                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v1.2.4...v1.2.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.2.5
+ReleaseTime: 2026-09-03T15:10:40.0000000Z
