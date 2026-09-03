@@ -1,0 +1,19 @@
+Version: 4.6.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.6.6/Antigravity.Tools_4.6.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.6.6/Antigravity.Tools_4.6.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心修复] 修复 Gemini 3.7 长上下文工具调用文本泄露导致 Agent 静默中断 (Issue #3379):
+      - call:default_api 泄露检测与受控恢复 (Fail-Closed Bridge): 解决 Gemini 3.7 Flash 在长上下文压缩后，偶发未在结构化 functionCall 字段返回工具调用，而是以内部伪代码文本（call:default_api:ToolName{...}）输出导致 Claude Desktop / Claude Code Agent 工具循环中断的问题。引入 7 项严格守卫条件（已注册工具、本回合无原生工具调用、严格前缀匹配、注册工具白名单精准对齐、无额外散文干扰、参数合法 JSON 解析、本回合未发出任何 text_delta），在确保绝不发生 Prompt Injection 或误执行普通文本的前提下，将泄露文本安全恢复为标准 tool_use 块。
+      - 流式与非流式全链路对齐与诊断预警：在 SSE 流式通道（streaming.rs）与非流式响应转换（response.rs）中实现对称防御恢复逻辑，并在检测到未通过守卫条件的疑似泄露文本时输出诊断日志（tracing::warn），全面加固 9 组单元测试矩阵。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.6.6
+ReleaseTime: 2026-09-03T08:35:39.0000000Z
