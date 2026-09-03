@@ -1,29 +1,23 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/GeoDaCenter/geoda/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/GeoDaCenter/geoda/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
-# RealVersion
-$this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..1] -join '.'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x86') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "GeoDa_$($this.CurrentState.RealVersion)_win7+x86_Setup.exe"
-    }
-  )
+  Architecture  = 'x86'
+  InstallerType = 'inno'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('x86') -and $_.name -notmatch 'win7' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'installer' -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "GeoDa_$($this.CurrentState.RealVersion)_win7+x64_Setup.exe"
-    }
-  )
+  Architecture  = 'x64'
+  InstallerType = 'inno'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('x64') -and $_.name -notmatch 'win7' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'inno'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' -and $_.name.Contains('arm64') -and $_.name -notmatch 'win7' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
