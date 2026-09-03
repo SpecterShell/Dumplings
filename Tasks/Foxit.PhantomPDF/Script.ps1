@@ -1,9 +1,14 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-phantom-bussiness'
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerType = 'exe'
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'burn'
   InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website', '')
+}
+$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'wix'
+  InstallerUrl        = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.zip')
 }
 
 # Version
@@ -19,17 +24,15 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $this.InstallerFiles[$InstallerWiX.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerWiX.InstallerUrl
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    $InstallerWiX['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msp' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
-    $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
-    $Params = @{}
-    if (Test-Path -Path $InstallerFile3) { $Params['PatchPath'] = $InstallerFile3 }
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $InstallerWiX.NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $InstallerWiX.NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
-    # ProductCode
-    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi @Params
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
