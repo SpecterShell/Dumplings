@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.ravensoundsoftware.com/raven-pro-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'RavenPro' -and $_.href -match 'windows' -and $_.href -match 'installer' } catch {} }, 'First')[0].href
+  InstallerUrl  = $Object1.Links.Where({ try { $_.href.Contains('.exe') -and $_.href -match 'RavenPro' -and $_.href -match 'windows' -and $_.href -match 'installer' } catch {} }, 'First')[0].href.Trim()
 }
 
 # Version
