@@ -1,14 +1,15 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=trial-foxit-sign-suite-pro-individual'
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerType = 'exe'
-  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '_Prom')
-}
-# $this.CurrentState.Installer += $InstallerWiX = [ordered]@{
-#   InstallerType = 'wix'
-#   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.msi')
+# $this.CurrentState.Installer += $Installer = [ordered]@{
+#   InstallerType = 'exe'
+#   InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '_Prom')
 # }
+$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'wix'
+  InstallerUrl        = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Website', '').Replace('.exe', '.zip')
+}
 
 # Version
 $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
@@ -23,22 +24,15 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+    $this.InstallerFiles[$InstallerWiX.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $InstallerWiX.InstallerUrl
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
     $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msp' | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
-    $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
-    $Params = @{}
-    if (Test-Path -Path $InstallerFile3) {
-      $Params['PatchPath'] = $InstallerFile3
-      # $InstallerWiX['InstallerSwitches'] = @{ Custom = "PATCH=`"$($InstallerWiX.InstallerUrl.Replace('.msi', '.msp'))`"" }
-    } else {
-      # $InstallerWiX['InstallerSwitches'] = @{}
-    }
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
-    # ProductCode
-    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi @Params
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
