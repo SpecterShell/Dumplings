@@ -8,18 +8,9 @@ See the [task example index](../example-index.md) for current implementations of
 
 ```powershell
 $Page = Invoke-WebRequest -Uri $DownloadPage
-$Links = @($Page.Links.Where({
-  try {
-    $_.href.EndsWith('.exe') -and $_.href.Contains('product-token') -and $_.href -notmatch 'update|portable'
-  } catch {}
-}))
-if ($Links.Count -ne 1) {
-  throw "Expected one installer link, found $($Links.Count)."
-}
-$Link = $Links[0]
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = (Join-Uri $DownloadPage $Link.href)
+  InstallerUrl = Join-Uri $DownloadPage $Page.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'product-token' -and $_.href -notmatch 'update|portable' } catch {} }, 'First')[0].href
 }
 ```
 
@@ -40,33 +31,62 @@ For release pages with several artifacts, list the candidate names before writin
 Use the authenticated proxy rather than raw GitHub REST calls:
 
 ```powershell
-$Release = Invoke-GitHubApi -Uri "https://api.github.com/repos/owner/repository/releases/latest"
-$this.CurrentState.Version = $Release.tag_name -creplace '^v'
+$Release = Invoke-GitHubApi -Uri 'https://api.github.com/repos/owner/repository/releases/latest'
 
-$Candidates = @($Release.assets.Where({
-  $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'Prism' -and $_.name -notmatch 'debug|portable|update'
-}))
-if ($Candidates.Count -ne 1) {
-  throw "Expected one x64 MSI asset, found $($Candidates.Count)."
-}
-$Asset = $Candidates[0]
+# Version
+$this.CurrentState.Version = $Release.tag_name -replace '^v'
 
+# InstallerUrl
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Release.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') -and $_.name -match 'Prism' -and $_.name -notmatch 'debug|portable|update' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Release.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'Prism' -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+# If RelativeFilePath is static across versions, omit RelativeFilePath
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'nullsoft'
+  InstallerUrl        = $Release.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('x64') -and $_.name -match 'Prism' -and $_.name -match 'Setup' -and $_.name -match 'Windows' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+# If RelativeFilePath is not static, but has the same pattern as the archive filename across versions
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name -match 'windows' }, 'First')
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'portable'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\mindfs.exe" })
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+}
+$Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('arm64') }, 'First')[0]
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase).exe"
+      PortableCommandAlias = 'jjui'
+    }
+  )
 }
 ```
 
-Build each candidate predicate in this order, using only facts present in the real name or URL. GitHub release assets use `name`; objects from `Invoke-WebRequest.Links` use `href`.
+Write the repository owner and name directly in each requested URL instead of declaring one-use `$RepoOwner` and `$RepoName` variables. Use `-replace` for tag cleanup. Build each candidate predicate in this order, using only facts present in the real name or URL. GitHub release assets use `name`; objects from `Invoke-WebRequest.Links` use `href`.
 
 1. Require the extension with `EndsWith('.exe')`, `EndsWith('.msi')`, or the expected archive suffix. If a page-link URL has query parameters, use `Contains('.exe')` or `Contains('.msi')` against `href` instead.
-2. Require the source architecture token when one is present. Use it to narrow candidates, but write WinGet `Architecture` only after the installer or payload confirms the architecture.
-3. For archives or other ambiguous extensions, require the Windows platform marker, preserving the source's spelling and casing on the right-hand side, for example `-match 'Windows'`.
-4. Require `Installer`, `Setup`, or another source-specific product-form marker when releases contain both installable and non-installable builds. Require `portable` only when authoring the portable package; otherwise exclude it.
+2. Require the source architecture token with `.Contains()`, for example `.Contains('x64')` or `.Contains('amd64')`, when one is present. Use it to narrow candidates, but write WinGet `Architecture` only after the installer or payload confirms the architecture.
+3. For archives or other ambiguous extensions than `.exe`, `.msi` and `.msix`, require the Windows platform marker, preserving the source's spelling and casing on the right-hand side, for example `-match 'Windows'`.
+4. Require `Installer`, `Setup`, or another source-specific product-form marker with `-match` when releases contain both installable and non-installable builds, and the installable ones have extensions other than `.msi` and `.msix`. Require `portable` only when authoring the portable package; otherwise exclude it with `-notmatch`.
 5. Prefer the `msvc` build over a GNU build when both are published for Windows.
 6. Exclude unwanted variants such as `debug`, symbols, checksums, deltas, updater packages, and electron-builder portable executables.
-7. Require the product name when one release contains assets for several products.
+7. Require the product name with `-match` when one release contains assets for several products.
+
+Use `.Contains()` only for literal architecture tokens and extensions in URLs with query parameters. Use `-match` or `-notmatch` for platform, product, installer form, runtime, edition, channel, and other semantic labels. Escape regex metacharacters when a label must remain a literal substring.
 
 Map architecture labels instead of copying source tokens into the manifest:
 
