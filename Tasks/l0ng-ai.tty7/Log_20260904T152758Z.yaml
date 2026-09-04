@@ -1,0 +1,85 @@
+Version: 26.9.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/l0ng-ai/tty7/releases/download/v26.9.0/tty7-26.9.0-windows-x86_64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Three weeks of work, and most of it is about not covering things up. A document — a file, the code panel, a diff — now docks in a column beside the terminal instead of over it, so reading a file while an agent talks stopped being a toggle loop. A tab can be dragged into another tab as a pane, and a pane dragged back out as a tab, with nothing restarting on the way. Coding agents get an outline of their conversation with every turn as a jump target. Under that, a hundred fixes: SSH channels that leaked, panes that would not relink, a restart prompt that asked twice, and the seams between panes finally reading as edges rather than walls.
+    Added
+    - Documents dock in a column beside the terminal instead of covering it (#625, #685)
+    - Drag a tab in as a pane, or a pane out as a tab, without restarting anything (#621, #651)
+    - A coding agent's conversation gets an outline, and every turn is a jump target (#703)
+    - A remote workspace relinks its own dead panes and names their tabs for what is running (#757)
+    - Remote programs can copy images to the local clipboard over SSH, off by default (by @ayamir in #766)
+    - The interface font family is configurable in Appearance → Typography (by @cybershape in #761)
+    - ↑ and Ctrl+P recall the last command matching what is already typed (by @googolmo in #768)
+    - Saved SSH hosts are one click from the New Tab button (#647)
+    - An SSH pane names itself after its host, and a connection can be tested before you commit to it (#566)
+    - Nushell panes get OSC 7 cwd tracking and OSC 133 prompt marks (by @ArnoChenFx in #637)
+    - The shell's own line editor owns the prompt (#633)
+    - Linux updates install in app from a verified AppImage (by @biztex in #652)
+    - An all-users Windows install updates through a single UAC prompt (by @shihuaidexianyu in #562)
+    - A file path printed by a program opens in tty7, resolved on the pane's own host (#568)
+    - A flat workspace switcher with a create form, and workspaces sync at connect time (#616)
+    - SFTP opens remote text files in the built-in editor
+    - Hooks, resume and fork for the CLI agents that support them (#666); Kimi Code CLI is detected too (by @spragginsdesigns in #694)
+    - A tab whose cwd is not a repository groups by its folder (by @biztex in #631)
+    - The wheel-zoom modifier is configurable (#676)
+    - Closing the last window retires tty7 to the tray instead of quitting (by @ArnoChenFx in #639)
+    - A tty7-server build for macOS, so a Mac can host a remote workspace (#605)
+    - Four dark themes (#663)
+    Changed
+    - tty7 server restart replaces the server in place, keeping every session; --hard still kills it (#669)
+    - The seam between panes is lighter than the outline around a menu (#771)
+    - The app's copy is shorter — settings, prompts and notifications lost the sentences restating their titles (#663)
+    - tty7 send takes the bare pane id that --json prints (#699)
+    - The control dialect is v6; an older daemon is caught at launch and offered a restart (#605)
+    Fixed
+    - The "Restart Server?" prompt no longer asks a second time about a server that is already gone (#770)
+    - Every SSH channel tty7 abandons is closed before the server does (by @biztex in #727)
+    - A split pane's cursor reflects which pane actually has focus (by @cloudy-liu in #736)
+    - A stalled remote link no longer freezes the window (#709)
+    - Hidden panes stop repainting the whole window (#670)
+    - In-app updates work again on macOS — the signing requirement was read off the wrong stream (#717)
+    - A restored tab keeps its name (#725)
+    - An overflowing emoji gets the room instead of being shaved flat (#707), and a flag is shaped as one glyph (by @biztex in #691)
+    - The PTY gets back the Ctrl chords tty7 was eating (#684), and Ctrl+V reaches a full-screen program (by @biztex in #682)
+    - A window drawing its own title bar is not framed again by the compositor on Linux (by @biztex in #683)
+    - Reveal and copy normalize path separators on Windows (by @WhiteDG in #680)
+    - A restored screen stays out of ConPTY's viewport, and Restart Server stops crashing the window (#657)
+    - A daemon that lost both its names is still found and reaped (#671, #655)
+    - Shell integration is not injected into a zsh or fish the user gave arguments to (by @biztex in #629)
+    - A resize defers to the daemon's Size echo on remote routes too (by @biztex in #632)
+    - A tree pull that has to be retried no longer ends with the window deleting the tabs it was pulling (#608)
+    - A window arriving at a workspace no longer speaks for panes it has not read (by @biztex in #728)
+    - Clicking a sidebar row's change counts activates that row before opening its diff (by @biztex in #729)
+    - A conversation row no longer offers a jump the pane cannot make (#759)
+    - The agent unread badge reads live focus (#758)
+    - An orphan pane's Close button stays on screen (#712)
+    - The input bar measures columns with unicode-width instead of a hand-rolled table (#704)
+    - Ctrl+W in the editor kills one path component at a time (#659)
+    - The code editor keeps scrolled-out text off the line numbers, and off the stock syntax theme's colours (#636)
+    - The sidebar's tab rows and workspace head resolve to a width at any panel size (#662)
+    - A deleted remote workspace is scrubbed from the listing snapshots (#622)
+    - A dialect refusal has a way out instead of a retry loop (#617)
+    - An unparseable config.json is quarantined instead of overwritten (by @shihuaidexianyu in #565)
+    - Nine UX fixes across the diff overlay, layout, settings and pane spawn (#623), and nineteen more (by @shihuaidexianyu in #615)
+    New Contributors
+    - @WhiteDG made their first contribution in #680
+    - @spragginsdesigns made their first contribution in #694
+    - @cloudy-liu made their first contribution in #736
+    - @cybershape made their first contribution in #761
+    - @googolmo made their first contribution in #768
+    Install
+    - macOS — tty7-26.9.0-macos-arm64.dmg (Apple silicon) or -macos-x86_64.dmg (Intel)
+    - Windows — tty7-26.9.0-windows-x86_64-setup.exe, or the .zip for a portable copy
+    - Linux — tty7-26.9.0-linux-x86_64.AppImage, or the .tar.gz
+    Every entry above is written up in full in CHANGELOG.md.
+    Full Changelog: https://github.com/l0ng-ai/tty7/compare/v26.8.3...v26.9.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/l0ng-ai/tty7/releases/tag/v26.9.0
+ReleaseTime: 2026-09-04T13:09:47.0000000Z
