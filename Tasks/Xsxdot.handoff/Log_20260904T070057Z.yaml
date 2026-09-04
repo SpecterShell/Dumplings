@@ -1,0 +1,21 @@
+Version: 0.4.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Xsxdot/handoff/releases/download/v0.4.1/handoff_v0.4.1_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Xsxdot/handoff/releases/download/v0.4.1/handoff_v0.4.1_windows_arm64.zip
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 载体 HOME 含 ~ 时子进程在仓库下建出 ./~/ 垃圾目录。 载体登记串是跨机可认的用户可见形态（含 ~）；agentd 与 hostapi 进子进程 HOME 前未展开，子进程把 $HOME 系文件相对 cwd 落盘（2026-09-04 实测 2.2G）。现在两处都在注入环境前展开为绝对路径，展开失败保持原行为不阻断派发；.gitignore 加 /~/ 永不入库。
+    - 工作项页空白处滚动仍带动整页（B318 没修完）。 B318 的 min-h-0 只钉住了常驻房间栏的高度。/cards 上工作台仍常驻在 main 里，flex 默认 min-width:auto 按终端固有宽把 main 撑到两万像素，房间栏被推到视口外，横滑空白处整页（含左栏）跟着走。main 补 min-w-0 overflow-hidden，壳和常驻栏切断溢出。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Xsxdot/handoff/releases/tag/v0.4.1
+ReleaseTime: 2026-09-04T02:25:57.0000000Z
