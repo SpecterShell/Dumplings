@@ -1,0 +1,30 @@
+Version: 0.12.10
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.10/uv-i686-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.10/uv-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.10/uv-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Released on 2026-09-04.
+    Enhancements
+    - Attempt to revoke short-lived PyPI trusted-publishing tokens after uv publish completes, including when publishing fails (#21423)
+    Preview features
+    - Omit exclude-newer-package settings for packages outside the resolution from uv.lock with the missing-exclude-newer-package-lock preview feature (#21455)
+    - Show terminal dependency cycles in uv tree --invert output (#21404)
+    Performance
+    - Speed up locking large workspaces with conflicts by excluding unrelated extras and dependency groups from conflict simplification (#21399)
+    - Speed up uv publish by hashing each artifact in a single blocking task and reusing the buffer across reads (#21389)
+    Bug fixes
+    - Prevent --locked from failing when exclude-newer-package settings differ only for packages outside the resolution (#21454)
+    - Allow uv lock --check to reuse a lockfile when an absolute exclude-newer cutoff is moved later (#19571)
+    - Allow uv lock --check to reuse a lockfile when a package-specific exclude-newer cutoff is disabled (#21450)
+    - Require an explicit --name when uv init would infer a project name reserved for a Python interpreter (#21395)
+    - Write package-specific exclude-newer cutoffs to uv.lock in a deterministic order (#21453)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/astral-sh/uv/releases/tag/0.12.10
+ReleaseTime: 2026-09-04T23:15:57.0000000Z
