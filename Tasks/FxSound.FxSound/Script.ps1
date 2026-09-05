@@ -3,13 +3,18 @@ $Object1 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/fxsound2/fx
 # Version
 $this.CurrentState.Version = $Object1.Update.ProductVersion
 
+$Object2 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/fxsound2/fxsound-app/commits?path=release/fxsound_setup.exe'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/refs/tags/v$($this.CurrentState.Version)/release/fxsound_setup.exe"
+  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/$($Object2[0].sha)/release/fxsound_setup.exe"
 }
+
+$Object3 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/fxsound2/fxsound-app/commits?path=release/arm64/fxsound_setup.arm64.exe'
+
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/refs/tags/v$($this.CurrentState.Version)/release/arm64/fxsound_setup.arm64.exe"
+  InstallerUrl = "https://raw.githubusercontent.com/fxsound2/fxsound-app/$($Object3[0].sha)/release/arm64/fxsound_setup.arm64.exe"
 }
 
 switch -Regex ($this.Check()) {
