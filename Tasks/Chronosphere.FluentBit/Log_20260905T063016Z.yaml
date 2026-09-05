@@ -1,0 +1,97 @@
+Version: 5.1.2
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-win32.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-win64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-winarm64.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.2-win32\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-win32.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.2-win64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-win64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.2-winarm64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.2-winarm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    https://fluentbit.io/announcements/v5.1.2/
+    What's Changed
+    - workflows: bump docker/setup-buildx-action from 4.2.0 to 4.3.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12311
+    - workflows: bump reviewdog/action-actionlint from 1.73.1 to 1.73.2 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12301
+    - workflows: bump github/codeql-action/upload-sarif from 4.37.6 to 4.37.7 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12300
+    - workflows: bump uraimo/run-on-arch-action from 3.1.0 to 3.2.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12319
+    - workflows: bump github/codeql-action/upload-sarif from 4.37.7 to 4.37.8 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12324
+    - in_node_exporter_metrics: Implement stat and thermal_zone for macOS by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12335
+    - out_prometheus_remote_write: Add 1-hour cut-off for expiring staled metrics by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12334
+    - out_splunk: add time_key support for the HEC event time by @agup006 in https://github.com/fluent/fluent-bit/pull/12328
+    - Dockerfile: optimize layers by @marcofranssen in https://github.com/fluent/fluent-bit/pull/10103
+    - config: fix startup abort when log_level set via env and config by @saisree1217 in https://github.com/fluent/fluent-bit/pull/12316
+    - tests: runtime: Plug a SEGV occurrence on macOS by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12293
+    - out_gcs: add unify_tag option to buffer all tags into one file by @uristernik in https://github.com/fluent/fluent-bit/pull/12339
+    - log: clamp the suppression length to what was written by @arpitjain099 in https://github.com/fluent/fluent-bit/pull/12349
+    - out_gcs: implement parquet compressions by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12303
+    - out_gcs: support application default credentials by @balys in https://github.com/fluent/fluent-bit/pull/12263
+    - in_winevtlog: Plug a crash path by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12320
+    - in_winevtlog: fix crash when all channels are missing and ignore_missing_channels is enabled by @lecaros in https://github.com/fluent/fluent-bit/pull/12318
+    - log: make consistency for suppress log feature by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12325
+    - es: opensearch: output: task: handle partial succeeded requests by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12321
+    - tests: runtime: Fix errors of incompatible types for in_ebpf tests by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12337
+    - filter_kubernetes: implement namespace exclude by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12312
+    - in_systemd: support capturing with namespace by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12308
+    - release: update to 5.1.2 by @github-actions[bot] in https://github.com/fluent/fluent-bit/pull/12294
+    - workflows: bump softprops/action-gh-release from 3.0.2 to 3.0.3 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12355
+    - workflows: bump github/codeql-action/upload-sarif from 4.37.8 to 4.37.9 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12350
+    - lib: cmetrics: update to v2.2.2 by @edsiper in https://github.com/fluent/fluent-bit/pull/12354
+    - input_chunk: input_log: in_storage_backlog: address underflowing / overflowing chunk limit size by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12299
+    - out_azure_blob: Plug dangling pointers on exceptions by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12305
+    - out_azure_kusto: stop logging federated and access tokens by @tanmaya-panda1 in https://github.com/fluent/fluent-bit/pull/12224
+    - out_gcs: add Workload Identity Federation support by @uristernik in https://github.com/fluent/fluent-bit/pull/12326
+    - wamrc: Build with LLVM-17 by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12338
+    - reload: preserve configuration path during hot reload by @antonio in https://github.com/fluent/fluent-bit/pull/12336
+    - out_s3: Clean up orphaned chunks by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12360
+    - config: config_format: address wrongly specified parameter on service section by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12314
+    - aws: compression: validate valid columnar formats by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12304
+    - multiline: add built-in json parser for JSON multiline objects by @lecaros in https://github.com/fluent/fluent-bit/pull/12264
+    - engine: Plug a race on starting engine by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12347
+    - tests: integration: Adjust allocation patterns for Ubuntu 26.04 by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12346
+    - workflows: bump helm/kind-action from 1.14.0 to 1.15.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12367
+    - workflows: bump reviewdog/action-actionlint from 1.73.2 to 1.73.3 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12368
+    - workflows: bump docker/setup-qemu-action from 4.2.0 to 4.3.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12369
+    - out_opentelemetry: support metrics max datapoints by @edsiper in https://github.com/fluent/fluent-bit/pull/12363
+    - AGENTS: Reflect circumstance of the current commit linter by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12370
+    - in_node_exporter_metrics: expire metrics for networking by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12372
+    - in_forward: ingest all metrics contexts in payload by @edsiper in https://github.com/fluent/fluent-bit/pull/12375
+    - out_kafka: preserve infinite shutdown grace by @antonio in https://github.com/fluent/fluent-bit/pull/12345
+    - out_loki: scope remove_mpa thread-local cache per instance by @mindw in https://github.com/fluent/fluent-bit/pull/12351
+    - log: return NULL after flb_worker_context_create failure in flb_log_create by @MsfPablo in https://github.com/fluent/fluent-bit/pull/12274
+    - in_node_exporter_metrics: plug possible overrun indexes by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12341
+    - packaging: stabilize Debian release images by @edsiper in https://github.com/fluent/fluent-bit/pull/12378
+    New Contributors
+    - @marcofranssen made their first contribution in https://github.com/fluent/fluent-bit/pull/10103
+    - @saisree1217 made their first contribution in https://github.com/fluent/fluent-bit/pull/12316
+    - @arpitjain099 made their first contribution in https://github.com/fluent/fluent-bit/pull/12349
+    - @balys made their first contribution in https://github.com/fluent/fluent-bit/pull/12263
+    - @antonio made their first contribution in https://github.com/fluent/fluent-bit/pull/12336
+    - @MsfPablo made their first contribution in https://github.com/fluent/fluent-bit/pull/12274
+    Full Changelog: https://github.com/fluent/fluent-bit/compare/v5.1.1...v5.1.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/fluent/fluent-bit/releases/tag/v5.1.2
+ReleaseTime: 2026-09-05T03:54:50.0000000Z
