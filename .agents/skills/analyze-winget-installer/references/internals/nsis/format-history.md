@@ -11,7 +11,7 @@ Keep these identities separate:
 | Identity | What it describes |
 | --- | --- |
 | Compiler release | Marketing or source release used to run MakeNSIS. Often absent from output. |
-| Edition | Official NSIS, Jim Park Unicode NSIS, NSISBI, or another maintained fork. |
+| Edition | Official NSIS, Jim Park NSIS, NSISBI, or another maintained fork. |
 | ABI profile | Serialized command, string, header, and payload rules proved by the file. |
 | Stub target | x86 ANSI, x86 Unicode, AMD64 Unicode, or ARM64 Unicode runtime. |
 | Generator | electron-builder, Tauri, CPack, PortableApps.com, or another source producer. |
@@ -45,7 +45,7 @@ The NSIS 3 control codes are:
 
 ANSI mode stores byte strings. Unicode mode stores UTF-16LE code units. The same logical controls are interpreted in the selected character width.
 
-## Jim Park Unicode NSIS
+## Jim Park NSIS
 
 Jim Park's Unicode fork predates official Unicode NSIS. Its wide strings use a separate control range:
 
@@ -64,7 +64,7 @@ Historical readers distinguish three command-numbering generations:
 | Park2 | 2.46.2 | Transitional opcode insertions shift later command IDs. |
 | Park3 | 2.46.3 and later | Final fork layout used before official Unicode adoption. |
 
-Park output uses standard first headers and 28-byte command records. Edition detection therefore depends on string controls and command-layout consistency, not a unique archive signature. Historical 7-Zip code also recognizes a possible ANSI Park route but notes that it was not fully checked; that route must be grounded with real output before a parser publishes it as supported.
+Park output uses standard first headers and 28-byte command records. Unicode media use the fork-specific controls above and insert two UTF-16 file commands; ANSI media retain NSIS 2 byte controls and omit those slots while keeping the Park font-query and `FindProc` insertions. Edition detection therefore depends on string controls and command-layout consistency, not a unique archive signature. For ANSI Park2 and Park3, the source-defined shifted `WriteUninstaller` record is decisive when its alternate path is exactly `$INSTDIR\` followed by the primary path. Park1 adds no font-query shift, so compatible ANSI output can remain indistinguishable from stock NSIS when the commands in use have equivalent meanings.
 
 ## NSISBI
 
@@ -106,6 +106,9 @@ The Dumplings catalog groups releases that share a serialized ABI:
 | `official-legacy-200-ansi` | Official | ANSI | standard 28-byte | 1.x-2.03 |
 | `official-legacy-225-ansi` | Official | ANSI | standard 28-byte | 2.04-2.25 |
 | `official-nsis2-ansi` | Official | ANSI | standard 28-byte | 2.26-2.51 |
+| `park-2461-ansi` | Jim Park | ANSI | standard 28-byte | through 2.46.1 |
+| `park-2462-ansi` | Jim Park | ANSI | standard 28-byte | 2.46.2 |
+| `park-2463-ansi` | Jim Park | ANSI | standard 28-byte | 2.46.3 and later |
 | `park-2461-unicode` | Jim Park | Unicode | standard 28-byte | through 2.46.1 |
 | `park-2462-unicode` | Jim Park | Unicode | standard 28-byte | 2.46.2 |
 | `park-2463-unicode` | Jim Park | Unicode | standard 28-byte | 2.46.3 and later |

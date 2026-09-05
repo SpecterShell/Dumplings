@@ -15,7 +15,7 @@ Use the [NSIS package workflow](../../families/nsis/workflow.md) when the immedi
 5. [Setup runtime](setup-runtime.md) follows command-line handling, archive loading, callbacks, pages, section execution, extraction, and exit behavior.
 6. [Scripting, strings, and plug-ins](scripting-and-expressions.md) explains the compile-time preprocessor, command-address model, encoded strings, stack, variables, macros, and native plug-in boundary.
 7. [Uninstaller and ARP](uninstaller-and-arp.md) covers `WriteUninstaller`, uninstall registry writes, scope, localization, maintenance, and removal.
-8. [Format history and editions](format-history.md) separates official NSIS, Jim Park Unicode NSIS, NSISBI, custom stubs, and script generators.
+8. [Format history and editions](format-history.md) separates official NSIS, Jim Park NSIS, NSISBI, custom stubs, and script generators.
 9. [Parser implementation notes](parser-implementation.md) maps the runtime to a bounded static reader and emulator.
 10. [Coverage and remaining work](coverage.md) records implementation parity, known defects, unsupported routes, and the fixture matrix.
 

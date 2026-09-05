@@ -7,7 +7,7 @@ Use `InstallerType: nullsoft` when WinGet invokes an NSIS/Nullsoft installer dir
 ## Detection
 Route here when `Get-NSISInfo` succeeds, the NSIS archive first header is found at a 512-byte aligned PE overlay start with `DEADBEEF` followed by `NullsoftInst`, or the analyzer returns high-confidence NSIS evidence.
 
-Use `Get-NSISFormatInfo -Path <installer>` when edition or serialized-format evidence is needed without ARP simulation. It reports the official, Jim Park Unicode, or NSISBI edition, ANSI/Unicode mode, ABI version range, selected command and variable routes, compression framing, and candidate-layout scores. NSIS does not serialize an exact compiler version in every installer, so a source-backed range is preferable to a guessed release number.
+Use `Get-NSISFormatInfo -Path <installer>` when edition or serialized-format evidence is needed without ARP simulation. It reports the official, Jim Park, or NSISBI edition, ANSI/Unicode mode, ABI version range, selected command and variable routes, compression framing, and candidate-layout scores. NSIS does not serialize an exact compiler version in every installer, so a source-backed range is preferable to a guessed release number.
 
 `Get-NSISInfo` also recognizes the NSISBI large-installer fork. Its parser evidence reports the unmarked pre-3.04.1, legacy flagged, or compact-3.12 first-header route, wide data-block offsets, external/stub mode, segment count, and segment size. The pre-3.04.1 route is distinguished by validated framing at first-header offset `+0x24`, not by product strings or a loose high-bit test. Do not reject an otherwise valid installer merely because later NSISBI flags extend beyond upstream NSIS's `0x0F` mask.
 

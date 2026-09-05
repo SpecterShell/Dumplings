@@ -127,6 +127,7 @@ Normal Astrum 1.x and 2.x single-file media are supported. `/tiny`, `/tinyverbos
 - Controlled tiny and tiny-verbose wrappers: one bounded GZip member containing the complete inner installer and a validated 96-byte wrapper descriptor.
 - Controlled five-part spanned medium: one catalog record crossing the main EXE and four companion volumes.
 - BreakAlube PC-GINA 1.0.1.5: five payload files across application, driver, and manual groups; its localized `<TimerName>` ARP template remains unresolved in static output.
+- Iconico Screen Measurement Pack: an outer ZIP containing six Astrum 1.x installers and one Astrum 2.x installer. `Caliper.exe` uses the 1.x catalog with three installation-item groups and mixed GZip/stored payloads; `ColorPic.exe` uses the signed modern 2.x route.
 
 ## Source references
 
@@ -134,6 +135,8 @@ Normal Astrum 1.x and 2.x single-file media are supported. `/tiny`, `/tinyverbos
 - [Archived Astrum InstallWizard installer](https://web.archive.org/web/20130816053259/http://www.thraexsoftware.com/download/aiw.exe)
 - [Archived Astrum InstallWizard download page](https://web.archive.org/web/20120410054204id_/http://www.thraexsoftware.com/aiw/download.html)
 - [Archived Astrum InstallWizard version history](https://web.archive.org/web/20120410054204id_/http://www.thraexsoftware.com/aiw/version_history.txt)
+- [Iconico Screen Calipers](https://iconico.com/caliper)
+- [Iconico Screen Measurement Pack archive](https://iconicoblob.blob.core.windows.net/ico/compass/ScreenMeasurementPack.zip)
 - Astrum InstallWizard 2.29.50 builder-shipped help and sample project.
 - Controlled installers generated with the documented `aiw2.exe /build` command.
 
