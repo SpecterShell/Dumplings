@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/kaikramer/keystore-explorer/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/kaikramer/keystore-explorer/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -15,10 +15,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
