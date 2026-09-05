@@ -6,7 +6,7 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = (Invoke-RestMethod -Uri 'https://altec.nl/wp-json/ecs-altec/download?category=139&selected[facet_146]=term_148&selected[facet_182]=term_184').downloads.Where({ $_.url.EndsWith('.exe') }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://altec.nl/wp-json/ecs-altec/download?category=139&selected[facet_146]=term_148&selected[facet_182]=term_184').downloads.Where({ $_.url -match 'QlickPrint' -and $_.url.EndsWith('.exe') }, 'First')[0]
 
 $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.url
