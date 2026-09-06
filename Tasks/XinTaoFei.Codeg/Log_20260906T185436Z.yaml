@@ -1,0 +1,61 @@
+Version: 0.30.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.30.4/codeg_0.30.4_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.30.4/codeg_0.30.4_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Diffs now show images as pictures, the repository panel speaks Gitea, and workspace backgrounds get a wallpaper market.
+    Desktop notifications become a real setting, and backup & restore stops losing custom-agent conversations.
+    New
+    - A wallpaper market for the workspace background — browse the public Wallhaven SFW gallery from Settings → Appearance, and one click downloads and applies a wallpaper. (#626, @user-A100)
+    - Image files now diff as before/after pictures, with a swipe slider, in the workspace diff tab, the commit dialog, the push workspace and the unstash dialog.
+    - The repository panel now works against Gitea and Forgejo, with a Gitea accounts section under Settings → Version Control.
+    - Desktop notifications are now configurable in Settings → General: a master switch, when to notify, whether to hide contents, and one switch per event.
+    - A deleted conversation can be restored from the session picker — turn on "Include deleted", and importing one brings the original conversation back with its history intact.
+    - The status bar reports the codeg-mcp service and lets you switch its tool groups — delegation, live feedback, ask-a-question, session lookup, automations and work tasks — right in the popover.
+    - Claude now marks where its context was compacted, live and after reopening, saying whether it was triggered manually or automatically (claude-agent-acp 0.75.1).
+    - Every restore is snapshotted first and can be rolled back, with real progress, a cancel button and a result panel.
+    Improved
+    - Updated bundled agents: CodeBuddy 2.146.0, Qoder 1.1.45, Gemini CLI 0.58.0, OpenClaw 2026.9.2, and the Claude adapter (claude-agent-acp 0.75.1).
+    - Settings → General now opens with the notification and sound sections folded, instead of filling the page before anything below them.
+    - Refreshed model catalogs — Codex gains gpt-6-astra, OpenCode grows to 213 providers and 7,562 models, and gpt-6 sessions finally show a context meter.
+    Fixed
+    - A backup no longer loses custom ACP agents' conversations — their message text was packed by neither the backup nor the restore path, so a round trip left every conversation in place and empty.
+    - OpenCode, Hermes, Cursor and Antigravity session databases now survive a backup round trip whole, instead of losing their newest messages and being restored beside a stale write-ahead log.
+    - Forking a Claude conversation from a branch an earlier fork left behind now lands on the reply you picked, instead of quietly falling back to the end of the conversation (claude-agent-acp 0.75.1).
+    - A failed task push-back now reports git's own reason, instead of always blaming the fork author for not allowing maintainer edits.
+    Thanks to @user-A100 for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    差异对比现在能把图片当图片看，仓库面板支持了 Gitea，工作区背景也多了一个「壁纸市场」。
+    桌面通知成为一项完整的设置，备份恢复也不再弄丢自定义智能体的会话内容。
+    新增
+    - 工作区背景新增「壁纸市场」——在「设置 → 外观」中浏览 Wallhaven 公开图库（仅 SFW），点一下即完成下载并应用。（#626，@user-A100）
+    - 图片文件的差异现在以「改动前 / 改动后」两张图呈现，支持滑杆对比，工作区差异标签页、提交对话框、推送工作区和取出储藏对话框均已接入。
+    - 仓库面板支持 Gitea 与 Forgejo，「设置 → 版本控制」下也新增了 Gitea 账号区块。
+    - 桌面通知现在可以自行配置：「设置 → 通用」中新增总开关、通知时机、是否隐藏通知内容，以及逐事件开关。
+    - 已删除的会话可以从会话导入面板恢复——打开「包含已删除」开关后再导入，原来那条会话连同历史记录一起回来。
+    - 状态栏新增 codeg-mcp 服务指示，委托、实时反馈、向你提问、会话查询、定时自动化、工作任务这几组工具都能在弹层里直接开关。
+    - Claude 的上下文压缩现在会在会话里留下标记，实时可见、重开仍在，并写明这次是手动还是自动触发（随 claude-agent-acp 0.75.1 到位）。
+    - 每次恢复都会先给当前数据打快照并支持回滚，同时补上了真实进度、取消按钮和结果面板。
+    改进
+    - 内置智能体版本更新： CodeBuddy 2.146.0、Qoder 1.1.45、Gemini CLI 0.58.0、OpenClaw 2026.9.2，以及 Claude 适配器（claude-agent-acp 0.75.1）。
+    - 「设置 → 通用」中的通知与提示音两个区块现在默认折叠，不必先翻过它们才能看到下面的内容。
+    - 内置模型目录更新——Codex 新增 gpt-6-astra，OpenCode 增至 213 家供应商、7562 个模型，gpt-6 系列会话也终于有了上下文用量显示。
+    修复
+    - 备份不再丢失自定义 ACP 智能体的会话内容——这些消息正文备份和恢复两条路径都没打包，导致还原后会话还在、内容全空。
+    - OpenCode、Hermes、Cursor、Antigravity 的会话数据库现在能完整经受一次备份还原，不再丢掉最新的消息、也不会被还原到一份过期的预写日志旁边。
+    - 从上一次分叉留下的旧分支上分叉 Claude 会话，现在会落在你选中的那条回复上，不再不声不响地退回会话末尾（随 claude-agent-acp 0.75.1 到位）。
+    - 任务回推失败时会显示 git 给出的真实原因，不再一律回一句「需要 PR 作者允许维护者编辑」。
+    感谢 @user-A100 为本次发布做出的贡献。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.30.4
+ReleaseTime: 2026-09-06T17:48:37.0000000Z
