@@ -1,0 +1,81 @@
+Version: 1.6.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Kuddev/pebrel/releases/download/v1.6.0/NebulaTerminal-1.6.0-windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/pebrel/releases/tag/v1.6.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/pebrel/releases/tag/v1.6.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added Linux x64 Preview packages in AppImage, DEB, and portable tar.gz formats, plus separate macOS Preview DMGs for Apple Silicon and Intel, alongside the stable Windows installer and ZIP. RPM packages are not included. macOS packages use ad-hoc signing and may require Open Anyway in System Settings > Privacy & Security on first launch. Addresses #87.
+    - Added clipboard image paste for local, WSL, and SSH terminals. Pebrel saves the image as a PNG and inserts a path that the session can access; SSH images are uploaded first. Attachment thumbnails and images in a CLI's conversation still depend on that CLI.
+    - Added a reader for captured Claude Code and Codex answers, with Markdown, formulas, original text, and local image previews.
+    - Added separate SOCKS5/HTTP proxy and jump-host settings for each SSH host, with saved proxy credentials and a connection-route preview. Addresses #90.
+    - Added an optional Windows system-proxy setting for newly opened local terminals. It is off by default and does not change existing sessions. Contributed by @Sakyvo in #94.
+    - Added nine UI language choices alongside English and Simplified Chinese: Traditional Chinese, French, German, Spanish, Brazilian Portuguese, Italian, Russian, Japanese, and Korean. Untranslated text falls back to English.
+    - Added 25 application icon palettes with light and dark previews. Titanium is now the default icon.
+    - Added settings search and a confirmed Restore defaults action. Preferences are backed up before resetting, and saved hosts and other user data are retained.
+    - Added Allow and Deny actions to notifications for recognized terminal confirmation prompts. Actions stop being available when the prompt or session changes, and each request can be handled only once.
+    Fixed
+    - Fixed reopening the workspace restoring only the tab for Codex sessions without a hook-reported conversation ID. On WSL and Linux, Pebrel can now identify the current conversation and save it before window close or the application's Quit action. Native Windows and macOS sessions continue to rely on hook-reported IDs.
+    - Fixed quitting after closing the last regular window replacing saved tabs with an empty workspace. Deliberately closing every tab still starts an empty workspace next time.
+    - Fixed Ctrl+C ignoring selected terminal text. It now copies and clears the selection; without a selection, it still interrupts the running command. Contributed by @Sakyvo in #93.
+    - Fixed Ctrl+Backspace deleting only one character in supported terminal input modes and the managed PowerShell prompt. It now deletes a word. Contributed by @Sakyvo in #92.
+    - Fixed Shift+Enter being treated as plain Enter in negotiated multiline input modes, and Antigravity continuing to show a busy indicator after an answer finished. Ctrl+Enter, Alt+V, and other modified keys also retain their negotiated modifiers. Addresses #95. Contributed in part by @821869798 in #96.
+    - Fixed Windows SSH sessions losing an application's first terminal-capability response during startup, which could leave a full-screen command-line application waiting on a blank screen.
+    - Fixed duplicated WSL and SSH tabs losing their known working directory. WSL tabs also retain the selected distribution and launch settings.
+    - Fixed file search showing results from a previously opened directory or missing newly created, renamed, and deleted files.
+    - Fixed long confirmation messages being clipped by the dialog instead of wrapping to fit.
+    - Fixed the Runtime CLI showing an error dialog when the program receiving its output closed the pipe. It now finishes cleanly in that case.
+    Improved
+    - Improved the upgrade from Nebula to Pebrel: the application, commands, installer, and managed shortcuts use the new name. The installer migrates the standard old installation directory while preserving custom locations; configuration migration keeps old data and does not overwrite newer files.
+    - Improved continuity after the repository rename. Old Kuddev/nebula repository and Git links redirect to Kuddev/pebrel, and historical download filenames remain available.
+    - Improved package naming to use Pebrel-v<version>-<system>-<architecture> consistently. A byte-identical Windows installer with the old Nebula filename remains available for existing automatic-update clients.
+    - Improved SSH connection feedback: startup can be cancelled, stalled connection stages time out, and an unexpected disconnect leaves the terminal and error visible. This improves the disappearing-window and stuck-connection behavior. Addresses #89.
+    - Improved streamed formula recognition and layout, while preserving the original text when a formula cannot be displayed. KaTeX syntax support remains partial. Addresses #84.
+    - Improved notifications so clicking one focuses the terminal that raised it, even after moving its tab to another window. Activity in a different terminal no longer suppresses that notification.
+    - Improved activity indicators so they continue animating when another application has focus; hidden and minimized windows stop requesting animation frames.
+    - Improved settings with clearer groups, compact navigation, and a normal closable Settings tab. Light-theme selection and hover colors are less intense, and SSH editing makes common usernames and host controls easier to find.
+    - Improved completion lists with wheel scrolling, visible keyboard selections, and hover feedback. Changing the query clears the old list position.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 新增 Linux x64 Preview 的 AppImage、DEB 和 tar.gz 便携包，以及分别适用于 Apple Silicon 和 Intel 的 macOS Preview DMG；Windows 提供正式版安装器与 ZIP 便携包。本次不包含 RPM。macOS 包采用临时签名，首次启动可能需要在“系统设置 > 隐私与安全性”中选择“仍要打开”。对应 #87。
+    - 新增本地、WSL 和 SSH 终端的剪贴板图片粘贴：将图片保存成 PNG，再插入当前会话可以访问的路径，SSH 会先上传图片。输入框缩略图和发送后的图片显示仍取决于所用 CLI。
+    - 新增 Claude Code 和 Codex 回答阅读器，支持阅读已捕获回答的 Markdown、公式、原文和本地图片。
+    - 新增每台 SSH 主机独立的 SOCKS5/HTTP 代理与跳板设置，可保存代理凭据并预览连接路线。对应 #90。
+    - 新增让新建本地终端使用 Windows 系统代理的选项，默认关闭，不影响已经打开的会话。由 @Sakyvo 在 #94 中贡献。
+    - 新增繁体中文、法语、德语、西班牙语、巴西葡萄牙语、意大利语、俄语、日语和韩语界面选项，加上原有英语和简体中文共十一种语言；尚未翻译的内容显示英文。
+    - 新增 25 款应用图标配色，提供浅色和深色预览，并将钛银设为默认图标。
+    - 新增设置搜索和需要确认的“恢复默认”操作；重置前备份偏好设置，保留已保存主机等用户数据。
+    - 新增可识别终端确认提示的通知操作，可直接选择允许或拒绝；提示或会话变化后操作失效，同一请求只能处理一次。
+    修复
+    - 修复部分 Codex 会话重开应用后只恢复标签、没有接续对话的问题。在 WSL 和 Linux 中，即使 hook 未上报 ID，也能识别当前对话，并在关闭窗口或通过应用内“退出”操作结束前保存；原生 Windows 和 macOS 会话仍依赖 hook 上报的 ID。
+    - 修复关闭最后一个普通窗口后再退出，已保存的标签被空工作区覆盖的问题；主动关闭全部标签时，下次仍从空工作区开始。
+    - 修复选中终端文字后按 Ctrl+C 没有复制的问题：现在会复制并清除选区，没有选区时仍中断当前命令。由 @Sakyvo 在 #93 中贡献。
+    - 修复受支持的终端输入模式和受管理 PowerShell 提示符中，Ctrl+Backspace 只删除一个字符的问题，现在可按词删除。由 @Sakyvo 在 #92 中贡献。
+    - 修复已协商多行输入模式下 Shift+Enter 被当成普通回车，以及 Antigravity 回答结束后仍一直转圈的问题；Ctrl+Enter、Alt+V 等按键也会保留协商协议要求的修饰信息。对应 #95。其中部分修复由 @821869798 在 #96 中贡献。
+    - 修复 Windows SSH 会话启动时丢失应用首个终端能力应答，可能使全屏命令行程序一直停在空白画面的问题。
+    - 修复复制 WSL 和 SSH 标签后丢失已知工作目录的问题；WSL 同时保留所选发行版与启动设置。
+    - 修复文件搜索残留上一个目录的结果，以及新建、重命名或删除文件后结果未及时更新的问题。
+    - 修复较长确认消息被对话框截断的问题，现在会换行并适应内容高度。
+    - 修复接收输出的程序关闭管道后，Runtime CLI 弹出错误窗口的问题；这种情况现在会正常结束。
+    改进
+    - 改进 Nebula 到 Pebrel 的升级体验：应用、命令、安装器和受管理的快捷方式统一使用新名称。安装器会迁移标准旧安装目录并保留自定义位置；配置迁移保留旧数据，不覆盖较新的文件。
+    - 改进仓库改名后的访问衔接：旧 Kuddev/nebula 仓库与 Git 链接会跳转到 Kuddev/pebrel，历史下载文件名继续保留。
+    - 改进安装包命名，统一采用 Pebrel-v<版本>-<系统>-<架构>；同时提供与正式安装器字节一致的旧 Nebula 文件名资产，保证旧版自动更新客户端仍能找到安装包。
+    - 改进 SSH 连接反馈：连接准备期间可以取消，停滞阶段会超时结束，意外断连后保留终端并显示错误。本次处理了窗口消失和连接一直卡住的相关表现。对应 #89。
+    - 改进连续输出时的公式识别与排版，无法显示的公式保留原文；KaTeX 语法支持仍有范围限制。对应 #84。
+    - 改进通知定位：点击通知会回到发出通知的终端，即使其标签已移动到另一个窗口；其他终端的活动不再抑制这条通知。
+    - 改进运行状态指示器，切到其他应用后仍继续播放动画，窗口隐藏或最小化时停止请求动画帧。
+    - 改进设置的分组、导航和标签体验，设置页可像普通标签一样关闭；降低浅色主题的选中与悬停颜色强度，SSH 编辑器中的常用用户名和主机控件也更容易找到。
+    - 改进补全列表，支持滚轮浏览、自动显示键盘选中项和悬停反馈；查询变化后清除旧列表位置。
+ReleaseTime: 2026-09-07T12:28:55.0000000Z
