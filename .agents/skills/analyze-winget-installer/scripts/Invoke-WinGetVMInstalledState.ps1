@@ -96,7 +96,6 @@ Set-StrictMode -Version 2
 $GuestScriptSource = Join-Path $PSScriptRoot 'Get-WinGetVMInstalledState.ps1'
 
 function Import-DumplingsHyperVModule {
-  $env:PSModulePath += ';C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules'
   Import-Module Hyper-V -PassThru
 }
 

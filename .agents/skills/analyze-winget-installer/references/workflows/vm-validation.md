@@ -6,37 +6,14 @@ Run the host controller and Hyper-V commands in PowerShell 7.4 or later (`pwsh`)
 
 ## 1. Preserve the Windows environment and prepare Hyper-V
 
-For local Windows validation, configure Codex to inherit the normal process environment while retaining its default filtering of variable names containing `KEY`, `SECRET`, or `TOKEN`:
-
-```toml
-[shell_environment_policy]
-inherit = "all"
-ignore_default_excludes = false
-```
-
-Restart Codex or start a new task after changing `config.toml`. Do not use `inherit = "core"` for this workflow: its Windows allowlist omits `WINDIR`, `COMPUTERNAME`, and the inherited `PSModulePath`. Without them, PowerShell Core cannot discover or natively load the inbox Hyper-V module, and `Get-VM` cannot infer the local host.
-
-Verify the environment and explicitly load the inbox Hyper-V module when running PowerShell Core under Codex:
+Load the inbox Hyper-V module directly in PowerShell Core. Do not use the Windows PowerShell compatibility session or modify `PSModulePath` when the module is already discoverable:
 
 ```powershell
-Get-Item Env:WINDIR, Env:COMPUTERNAME, Env:PSModulePath
-$env:PSModulePath += ';C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules'
 Import-Module Hyper-V -PassThru
 Get-Command Get-VM, Copy-VMFile
 ```
 
-If an existing task was started with `inherit = "core"`, repair that process before importing the module:
-
-```powershell
-$env:WINDIR = $env:SystemRoot
-$env:COMPUTERNAME = [Environment]::MachineName
-$env:PSModulePath = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\Modules;$env:PSModulePath"
-
-Import-Module Hyper-V -PassThru
-Get-Command Get-VM, Copy-VMFile
-```
-
-Keep the repair and Hyper-V operation in the same Codex shell call because each call may start a fresh PowerShell process. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for the controller's small collector-script transfer.
+If the direct import fails, verify that the Hyper-V PowerShell feature is installed and that the process inherited the normal Windows environment before changing module paths. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for the controller's small collector-script transfer.
 
 Start from a clean checkpoint. Do not attach host submission directories as writable shared storage.
 
