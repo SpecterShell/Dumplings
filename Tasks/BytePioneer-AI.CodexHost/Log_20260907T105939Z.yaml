@@ -1,0 +1,57 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.6.0/codexhost-0.6.0-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.6.0/codexhost-0.6.0-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    codexhost v0.6.0 adds Codex multi-account routing and a redesigned account limits page, brings native Harness quotas into Settings, and expands Antigravity with commands, Fork/Rollback, questions, approvals, and Subagent progress. Local Pi and DSH sessions can now be imported through a shared paginated flow, while Windows and macOS regain Browser Use and native Computer Use compatibility.
+    codexhost v0.6.0 增加 Codex 多账号路由并重做账号额度页面，在设置中展示 Harness 原生额度，同时为 Antigravity 补齐命令、Fork/Rollback、提问、审批和 Subagent 进度。本地 Pi 与 DSH 会话现可通过统一的分页流程导入，Windows 和 macOS 的 Browser Use 与原生 Computer Use 兼容性也已恢复。
+    Features
+    - Manage multiple Codex accounts, choose the default for new tasks, keep existing Threads routed to their original account, and view usage windows, Credits, reset times, and reset cards (#117)
+    - View native account quotas for Claude Code, Grok Build, and Antigravity alongside Codex accounts
+    - Import local Pi and DSH Modern sessions from Settings with search, pagination, and resumable native history (#72, #87)
+    - Use Antigravity slash commands, Fork or roll back sessions, answer native questions, approve tools in Desktop, and follow Subagent progress (#153)
+    - Revise the previous message in supported DSH Modern sessions (#155)
+    - Adjust the direction of a running external Harness Thread from the Composer; codexhost cancels the current Turn and submits the new instruction as a fresh Turn
+    - Load the seven bundled Harness adapters through the plugin runtime and allow explicitly enabled local plugins to participate in Host routing
+    Fixes
+    - Restore local Browser Use and native Computer Use helper startup when Codex Desktop is launched through codexhost on Windows and macOS (#160, #163, #164)
+    - Keep the selected Codex account synchronized with the actual Host route and preserve backward pagination across accounts (#117)
+    - Scope Composer account labels and quota to the selected account instead of leaking state from another account (#117)
+    - Bind the initial Composer to the correct Host when startup routing becomes ready
+    - Keep local and remote Codex state isolated and stop probing unsupported methods
+    - Keep Antigravity Fork and Rollback working across project directories, preserve Brain data, and remove only the intended native steps (#153)
+    - Prevent duplicate Antigravity replies, empty new-file Diff cards, stdin EPIPE errors, and incomplete process shutdown (#153)
+    - Keep Harness command catalogs and /compact execution consistent across Host, Adapter, and Composer
+    - Preserve Harness command placement and the selected Harness styling after Renderer updates
+    - Clarify Claude Code plan approval behavior and localize permission modes
+    新功能
+    - 支持管理多个 Codex 账号，可为新任务选择默认账号，已有 Thread 继续使用原绑定账号，并可查看额度窗口、Credits、重置时间和重置卡 (#117)
+    - 在 Codex 账号旁展示 Claude Code、Grok Build 和 Antigravity 的原生账号额度
+    - 可在设置中搜索并分页导入本地 Pi 与 DSH Modern 会话，保留原生历史并继续对话 (#72, #87)
+    - Antigravity 支持斜杠命令、Session Fork、最后一轮回滚、原生提问、Desktop 工具审批和 Subagent 进度 (#153)
+    - 支持修订兼容 DSH Modern 会话的上一条消息 (#155)
+    - 可在 Composer 中调整正在运行的外部 Harness Thread；codexhost 会取消当前 Turn，并把新指令作为新 Turn 提交
+    - 七个内置 Harness Adapter 改由插件运行时加载，显式启用的本地插件可参与 Host 路由
+    修复
+    - 恢复通过 codexhost 启动 Codex Desktop 时 Windows 和 macOS 的本地 Browser Use 与原生 Computer Use Helper 启动 (#160, #163, #164)
+    - Codex 账号选择与实际 Host 路由保持同步，多账号 Thread 列表向后翻页不再丢失结果 (#117)
+    - Composer 账号标签和额度严格跟随当前选中账号，不再串用其他账号状态 (#117)
+    - 启动路由就绪后，初始 Composer 会绑定到正确的 Host
+    - 本地与远程 Codex 状态相互隔离，不再调用目标不支持的探测方法
+    - Antigravity Fork 与回滚支持跨项目目录，正确保留 Brain 数据并只删除目标原生步骤 (#153)
+    - 修复 Antigravity 重复回复、新建文件 Diff 卡片空白、stdin EPIPE 和进程关闭不完整的问题 (#153)
+    - 统一 Host、Adapter 与 Composer 的 Harness 命令目录和 /compact 执行行为
+    - Renderer 更新后仍保持 Harness 命令入口位置和选中 Harness 样式
+    - 明确 Claude Code Plan 审批行为，并补齐 Permission Mode 本地化
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.6.0
+ReleaseTime: 2026-09-07T07:14:50.0000000Z
