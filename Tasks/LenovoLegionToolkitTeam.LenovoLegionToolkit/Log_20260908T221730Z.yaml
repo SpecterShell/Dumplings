@@ -1,0 +1,111 @@
+Version: 2.36.0.0
+Installer:
+- InstallerUrl: https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit/releases/download/v2.36.0.0/LenovoLegionToolkitSetup-v2.36.0.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Support Our Work
+    This release marks another massive leap forward for Lenovo Legion Toolkit, representing hundreds of hours of reverse engineering, kernel and hardware investigation, refactoring, and community-driven polishing. Every feature in this update was designed with one principle in min; giving you absolute, uncompromising control over your laptop's hardware, performance, and thermals without the bloat.
+    Maintaining and advancing a low-level hardware control suite alongside our daily responsibilities requires immense dedication. If Lenovo Legion Toolkit has enhanced your daily workflow, elevated your gaming performance, or solved persistent hardware annoyances for you, please consider supporting our development. Your support directly sustains this project and fuels ongoing research into new Lenovo hardware platforms.
+    Thank you for being part of our community and making this journey possible!
+    Release Highlights
+    - Windows 11 Dynamic Refresh Rate (DRR) & Display Controls: Added native support for Windows 11 Dynamic Refresh Rate (DRR) directly in the refresh rate selector, alongside Auto Color Management (ACM) toggling and modernized Win32 HDR state handling that preserves your selected refresh rate.
+    - GPU Voltage Capping & Enhanced Overclocking: Added dynamic GPU voltage capping via V/F curve flattening, voltage curve locking, P-State locking, and an optional setting to keep the dGPU awake when needed.
+    - dGPU Sleep & Power State Stability: Fixed dGPU sleep-wake power state looping on RTX 50-series and newer driver branches, added GC6 sleep blocker diagnostics to the Discrete GPU status view, and synchronized NVPCF power target offsets across power mode switches.
+    - AMD Curve Shaper & Overclocking Redesign: Overhauled the AMD Overclocking interface with a unified profile format, master toggle switch, AMD Curve Shaper support, configurable power and current limits, and an option to apply profiles across all power modes.
+    - Customizable Fn + Q Loop: Introduced the ITS Mode Configuration window, allowing you to customize the Fn + Q loop sequence and disable specific power modes from the cycle, alongside Geek and Creator mode support for older and non-gaming models.
+    - Redesigned Boot Logo & Startup Customization: Redesigned the Boot Logo utility with a live boot screen preview, animated GIF support (including automatic alpha flattening and proportional scaling), and the ability to toggle the Windows Startup Animation.
+    - Game Detection & Process Rules Overhaul: Added a Manual Game Detection mode, an Included Processes whitelist, and preserved Windows Game Mode processes across Alt+Tab until the game is closed.
+    Release Notes
+    New Features
+    - Added support for Windows 11 Dynamic Refresh Rate (DRR) in the refresh rate selector.
+    - Added Auto Color Management (ACM) toggle support for compatible displays.
+    - Added dynamic GPU voltage capping via V/F curve flattening and aligned voltage locking with driver V/F curves.
+    - Added GPU Performance State (P-State) locking control and P-State readout to the Discrete GPU management window.
+    - Added an optional "Keep dGPU awake" toggle to prevent the discrete GPU from entering low-power sleep states when desired.
+    - Added AMD Curve Shaper support alongside configurable power limits (PPT) and current limits (EDC/TDC).
+    - Added the ITS Mode Configuration Window, allowing users to customize the Fn + Q loop order and exclude specific power modes.
+    - Added animated GIF boot logo support with automatic alpha flattening, proportional scaling, and a live preview.
+    - Added a toggle for the Windows Startup Animation in the Boot Logo window.
+    - Added an embedded Roslyn C# Script Engine with an interactive AvalonEdit console featuring syntax highlighting and theme integration.
+    - Added a "Within time range" trigger to Automation.
+    - Added an AI Engine step to Automation.
+    - Added a Manual Game Detection mode and an Included Processes whitelist.
+    - Added Precision Touchpad Lock.
+    - Added Remember Window Position with multi-monitor coordinate support.
+    Hardware & Device Support
+    - Added support for Legion 5 15IPH (83RW) and IdeaPad / Legion 17ITL models.
+    - Added Geek Mode / Creator Mode support for older Legion and ThinkBook models.
+    - Added XiaoXin series support to ITS Mode.
+    - Implemented BIOS Hybrid Mode abstraction for improved UMA device management.
+    - Added automatic cTGP-to-offset conversion for Non-Gaming series laptops.
+    - Added Breath, ColorPulse, Random Color, and custom color selection for 1-Zone RGB keyboards.
+    - Fixed 24-Zone RGB keyboard filtering so all zones are accessible.
+    - Prevented background hardware probing from locking external USB storage devices.
+    Discrete GPU & Display
+    - Added GC6 sleep blocker diagnostics to the Discrete GPU status view to display why the dGPU is prevented from entering sleep.
+    - Fixed dGPU sleep-wake power state looping on RTX 50-series and newer driver branches.
+    - Expanded discrete GPU memory clock offset adjustment limits up to ±3000 MHz.
+    - Synchronized NVPCF power target offsets to baseline across power mode switches and application shutdown.
+    - Fixed an issue where Custom Mode power limits were overridden when reconnecting the AC power adapter.
+    - Refactored HDR state handling to use native Win32 / WindowsDisplayAPI display screen APIs.
+    - Preserved display refresh rates when toggling HDR or Auto Color Management (ACM) to prevent unwanted mode resets.
+    - Fixed display refresh rate and resolution settings not persisting across system reboots.
+    - Fixed false-positive Dynamic Refresh Rate (DRR) detection on certain high-refresh-rate displays.
+    - Fixed discrete GPU telemetry reporting when virtual displays or dummy plugs are connected.
+    AMD Overclocking & Custom Mode
+    - Redesigned the AMD Overclocking interface with a master toggle and unified profile format.
+    - Added an Apply to All Power Modes option for AMD Overclocking.
+    - Fixed an issue where enabling CPU Overclocking unexpectedly restored PBO settings.
+    - Gated AMD Overclocking shutdown persistence by hardware capability and active state.
+    - Redesigned the Custom Mode and God Mode settings windows with improved tab navigation and layout spacing.
+    - Fixed an issue where Custom Mode failed to apply mapped power options.
+    - Fixed fan table EC race conditions and delays to ensure custom fan curves apply reliably.
+    - Gated fan state messages on active FanControl provider capabilities and routed custom fan curve diagnostics to dedicated logs.
+    - Set AMD CPU Tctl as default temperature sensor with Intel Package fallback, and added CPU Voltage readout to the OSD.
+    Automation & Game Detection
+    - Preserved Windows Game Mode process state across Alt+Tab, releasing game mode hooks only when the game executable exits.
+    - Hardened game detection process monitoring to prevent Access Denied exceptions on kernel processes.
+    - Improved game detection lifecycle handling and removed child process pinning to eliminate false detections.
+    - Fixed discrete GPU game detection pausing when navigating away from the Dashboard.
+    - Added visible AND / OR logic indicators for multi-trigger pipelines in automation subtitles.
+    - Allowed external plugins to register custom automation steps and triggers.
+    - Fixed God Mode automation step failing to save the selected preset ID.
+    Disabler Tools
+    - Updated the Lenovo Vantage Disabler process list with modern add-in hosts, toolbar daemons, and desktop widgets.
+    - Updated the Legion Space Disabler with missing background workers, scheduled tasks, and services.
+    - Updated the Legion Zone Disabler with updated background services, scheduled tasks, and processes.
+    UI & UX Improvements
+    - Added smooth scrolling and pixel virtualization across list views and settings panels.
+    - Redesigned the Exclude Processes window with real-time process search and collapsible sections.
+    - Redesigned the Discrete GPU Overclocking window with improved input controls and real-time status feedback.
+    - Added progress bar animations and accent colors to the New Sensors Dashboard, alongside drag-and-drop sensor card reordering.
+    - Prevented mouse wheel events from scrolling parent containers when interacting with open ComboBox dropdown menus.
+    - Standardized modal dialog ownership across OSD Settings and Customize Dashboard windows.
+    - Pre-warmed localization resources on application startup to eliminate UI lag when opening settings.
+    Bug Fixes & Stability
+    - Fixed an issue where the OSD window appeared in the Windows taskbar and Alt+Tab menu after Windows Explorer restarted.
+    - Prevented UIAccess privileges from causing the OSD to draw over the Windows Lock Screen.
+    - Fixed OSD settings corruption caused by rapid disk writes during window dragging by deferring saves until dragging completes.
+    - Fixed Smart Fn Lock system freezes and DPC latency spikes by debouncing driver toggling and serializing hardware settle times.
+    - Fixed an issue where Windows Power Mode synchronization was unavailable on Windows 10 and Windows 11 builds prior to 24H2.
+    - Fixed application crashes caused by deleted log directories or missing configuration files at runtime.
+    - Fixed an audio endpoint exception in VolumeListener when connecting Bluetooth devices.
+    - Fixed an exception thrown by Special Key LED synchronization on unsupported laptop models.
+    - Fixed empty tooltip boxes appearing on startup from the notification tray icon.
+    - Fixed HWiNFO integration PCH/System fan 0 RPM reporting and startup registration.
+    - Fixed Precision Touchpad pop-up displaying reversed toggle status.
+    Localization
+    - Updated translations across all supported languages via Crowdin.
+    - Replaced hardcoded UI strings in AMD Overclocking, Display settings, and Automation with centralized resource keys.
+    - Updated installer translations for InnoSetup.
+    Build & Infrastructure
+    - Implemented an automated development release workflow with dynamic odometer versioning and changelog generation.
+    - Upgraded package dependencies, including WindowsDisplayAPI, NvAPIWrapper, and LibreHardwareMonitor etc.
+    - Optimized process memory footprint and enabled background timer throttling via SetEfficiencyMode.
+    - Cleaned up redundant using directives and project namespace references.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit/releases/tag/v2.36.0.0
+ReleaseTime: 2026-09-08T19:17:02.0000000Z
