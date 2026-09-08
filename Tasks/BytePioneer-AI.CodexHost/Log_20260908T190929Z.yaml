@@ -1,0 +1,45 @@
+Version: 0.6.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.6.1/codexhost-0.6.1-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.6.1/codexhost-0.6.1-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    codexhost v0.6.1 adds Kiro CLI as a native Harness with streaming, tools, approvals, configuration, Usage, commands, history, and session editing. This release also makes external Harness edit and recovery flows more reliable, improves Codex account isolation and visibility, and fixes routing, pricing, lifecycle, and persistence edge cases.
+    codexhost v0.6.1 新增原生 Kiro CLI Harness，支持流式回复、工具、审批、配置、Usage、命令、历史和 Session 编辑。本版还提升了外部 Harness 编辑与恢复流程的可靠性，改进 Codex 账号隔离与可见性，并修复路由、计价、生命周期和持久化边界问题。
+    Features
+    - Add the Kiro CLI Harness with streaming replies, tool status and Edit Diff previews, native questions and approvals, model and permission configuration, Usage, slash commands, Fork, context compaction, and previous-message revision (#210)
+    - Show the selected Codex account in Usage details
+    Fixes
+    - Preserve native history and session configuration when revising, recovering, resuming, or forking Claude Code, Pi, and OpenCode sessions (#213, #214, #216)
+    - Wait for DSH native execution to reach a confirmed terminal state during close and transport failures (#215)
+    - Route unknown Thread IDs through the sole available runtime for official reads while preserving clear not-found and ambiguous-routing errors (#168)
+    - Estimate request costs for Claude Opus 5, Fable 5, and Fable 5.1 (#183)
+    - Remove superseded Mapping Store lock files during startup (#184)
+    - Isolate Windows official Codex listeners by account
+    - Keep Antigravity slash commands available in the command catalog
+    - Keep delegation commands working for existing sessions
+    - Retain escaped CLI descendants when managing processes on macOS
+    新功能
+    - 新增 Kiro CLI Harness，支持流式回复、工具状态与 Edit Diff 预览、原生提问与审批、模型及权限配置、Usage、斜杠命令、Fork、上下文压缩和上一条消息修订 (#210)
+    - 在 Usage 详情中显示当前选中的 Codex 账号
+    修复
+    - Claude Code、Pi 和 OpenCode Session 在修订、恢复、继续或 Fork 时保留原生历史与 Session 配置 (#213, #214, #216)
+    - DSH 在关闭和传输故障时等待原生执行进入可确认的终态 (#215)
+    - 仅有一个可用 Runtime 时，将未知 Thread ID 路由到该 Runtime 执行官方读取，同时保留明确的未找到与路由歧义错误 (#168)
+    - 补充 Claude Opus 5、Fable 5 和 Fable 5.1 的请求成本估算 (#183)
+    - 启动时清理已被替代的 Mapping Store 锁文件 (#184)
+    - Windows 上按 Codex 账号隔离官方监听器
+    - 保持 Antigravity 斜杠命令在命令目录中可用
+    - 已有 Session 可继续使用 delegation 命令
+    - macOS 进程管理保留已脱离父进程的 CLI 后代进程
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.6.1
+ReleaseTime: 2026-09-08T16:34:51.0000000Z
