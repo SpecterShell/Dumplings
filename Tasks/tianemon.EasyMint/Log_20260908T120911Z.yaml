@@ -1,0 +1,33 @@
+Version: 0.22.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tianemon/EasyMint/releases/download/v0.22.1/EasyMint-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Added（新增）
+    - Codex 项目级 skill 自动发现：项目里 .codex/skills/ 下的 skill 与 Claude Code 的 .claude/skills/ 一样自动可用，标记为「外部 ·Codex」
+    - 命令执行过程显示输出：命令展开区上方显示命令原文，下方显示命令输出（执行中实时累积，最高 6 行、超出滚动）
+    - UI 设计审美与设计检索能力：Mint 进行界面设计时自动遵循内置的审美与图标规范，并可检索主流产品的配色、字体与组件实现方案作为参考
+    Changed（优化）
+    - 编辑文件的 diff 连续显示：从最靠前到最后的改动整段连续显示（前后各保留 3 行未改动），最高 12 行、超出滚动；只在这段范围之外才折叠为省略号
+    - 后台命令/子代理完成通知改版：标题栏显示「状态 · 耗时」，默认折叠，展开查看完整内容（命令、退出码、输出等，最高 6 行、超出滚动）；通知中的日志路径可点击打开所在文件夹；图标不再使用蓝色
+    - 工具图标与文案微调：grep 显示「搜索文件」并配新图标；edit / write / 抓取网页 / 识图图标更新；模型标签图标改为三点互联图形；「调度 Agent」更名「派遣 Agent」；子代理通知标签改为 SubAgent
+    - 代码块配色调整：暗色改为偏灰微蓝、亮色改为淡暖白
+    - 输入栏微交互：权限 / 模型 / 思考图标间距调整；三者悬停有高亮（权限的高亮在开关圆点上）；权限开关增加盾形图标区分标准与完全访问（完全访问为红色警示）
+    - 供应商编辑改为独立弹窗：新增/编辑 API 供应商在居中的独立弹窗中进行，修复在设置窗口内编辑时表单被裁剪的问题，保存条固定在弹窗底部
+    - 按模型设置思考等级界面优化：显示模型名，下拉只列出该模型实际支持的档位，档位文案统一
+    Fixed（修复）
+    - 同名 skill 不再重复：全局与项目级存在同名 skill 时只有项目级生效，另一份在列表里标注「被遮蔽」
+    - 外部 skill 的删除入口移除：外部生态目录为只读发现，此前点删除会提示无法删除
+    - 项目里的 skill 优先于全局：项目 .claude/skills/、.codex/skills/、.github/skills/ 下与全局同名的 skill，以项目里的为准
+    - 项目级 skill 在设置页可见：设置页技能列表现在包含当前项目的 skill（含项目里 .claude/skills/、.codex/skills/、.github/skills/ 下的），此前该分组始终为空
+    - 历史提问跳转定位修复：首次打开会话时跳转会因虚拟列表高度估算偏差落在目标之外，现跳转后自动校正到目标消息顶部
+    - 自定义供应商接入第三方网关后发消息无响应：自定义 OpenAI 兼容供应商（第三方聚合网关等）此前发消息无任何输出，现已正常回复
+    - 带后缀的自定义模型名设置失效：模型名带渠道后缀（如 -x）时，思考档位与上下文窗口等按模型的设置此前不生效，现已按官方模型正确识别
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tianemon/EasyMint/releases/tag/v0.22.1
+ReleaseTime: 2026-09-08T10:50:42.0000000Z
