@@ -16,7 +16,7 @@ $VersionInno = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape
 
 $Asset = $Assets.Where({ $_.title.'#cdata-section'.EndsWith('.msi') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msi'
+  InstallerType = 'wix'
   InstallerUrl  = $Asset.link | ConvertTo-UnescapedUri
 }
 $VersionMSI = [regex]::Match($Asset.title.'#cdata-section', "^$([regex]::Escape($RootPath))${PatternPath}${PatternFilename}").Groups[1].Value
