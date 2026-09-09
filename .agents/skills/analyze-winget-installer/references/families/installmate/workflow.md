@@ -2,82 +2,17 @@
 
 ## When to use
 
-Use `InstallerType: exe` for Tarma InstallMate installers.
+Use `InstallerType: exe` for a structurally confirmed Tarma InstallMate package. Product strings such as `InstallMate`, `Tarma Installer`, or `Tarma Software` are routing hints, not sufficient detection evidence.
 
 ## Detection
 
-Strong evidence includes `InstallMate`, `Tarma Installer`, or `Tarma Software`.
+Run `Test-InstallMate` or `Get-InstallMateInfo`. The parser requires a valid PE plus one of the source-backed package routes: an overlay-relative `tiz1` whose Zlib stream begins with `tzff` `Setup.ini`; a bounded `tiz2` RFC 1950 Zlib stream; a bounded `tiz3` raw-LZMA stream; or a bounded `tiz4` raw-LZMA2 stream in an overlay or at `+0x10` in `.tsustub`/`.tsuarch`. Every modern route must decode to a type-2 `tzf3` record containing a `tin?` database. When a launcher contains multiple TIZ archives, the unique archive with that setup database is selected.
 
-The parser requires a bounded `tiz1` through `tiz4` archive after the PE image and before any Authenticode certificate. It decodes the raw-LZMA `tzf3` stream, the first `tin*` setup-database record, structured InstallMate 11 install-level evidence, and file records. It also reads named `ProductCode` and `PackageCode` values from the PE `StringFileInfo` resource. These are explicit metadata, not arbitrary GUID probing.
-
-For InstallMate 11 database format 15.11, the structured install level is authoritative. Older formats are decoded for files but currently fall back to the PE requested execution level for scope. `asInvoker` maps to current-user scope, `requireAdministrator` maps to machine scope, and `highestAvailable` remains conditional without a decoded install-level record.
-
-## Static analysis
-
-Read [InstallMate Parser Internals](../../internals/installmate/overview.md) before changing detection, extraction, binary decoding, or parser limits.
-
-### Parse InstallMate metadata
-
-Load PackageModule, parse once, and retain the generation-specific TIZ evidence:
-
-```powershell
-. .\Modules\PackageModule\Index.ps1
-
-$Info = Get-InstallMateInfo -Path $InstallerPath
-$Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode,
-  ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes,
-  SupportsDualScope, InstallLevel, InstallLevelName, ScopeEvidence,
-  RequestedExecutionLevel, DatabaseInfo, CanExpand, Diagnostics
-$Info.ArchiveInfo
-$Info.FileEntries
-```
-
-Use `ProductCode` only when `ProductCodeEvidence` identifies the named PE `StringFileInfo.ProductCode` value.
-
-### Expand nested files when needed
-
-Use the same parsed `FileEntries` to select payloads. The file table does not yet resolve component/folder objects, so extraction deliberately writes each file below `Payload/<record-key>/` instead of inventing an installation path:
-
-```powershell
-if ($Info.CanExpand) {
-  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
-  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -Name '*.msi' -CollisionAction Rename
-} else {
-  Write-Warning 'The bounded InstallMate setup database could not be decoded.'
-}
-```
-
-The extractor streams exact `tzf3` lengths through bounded LZMA decoding. It does not execute setup. Duplicate file names remain distinct because record keys are included in output paths.
-
-### Resolve product and uninstall identity
-
-```powershell
-$Info.RegistryWrites | Where-Object Key -Match '\\Uninstall\\'
-$Info.RegistryAssociationInfo
-$Info.Protocols
-$Info.FileExtensions
-```
-
-Custom registry records and the full component/folder graph are not decoded yet, so validate visible ARP fields and associations in a VM. Use the named PE `ProductCode` for uninstall identity when present. Do not turn conditional scope evidence into duplicate WinGet installer entries unless the package exposes a supported scope-selection command line.
-
-For `Tarma.PublishOrPerish` 8.19.5300.9483, isolated VM validation produced a machine-wide EXE entry keyed `{D7808C1C-93A9-4369-8385-A789888ED9D7}`, with `WindowsInstaller` absent. Keep this as package-specific evidence.
-
-### Validate generation-specific behavior
-
-For format 15.11, interpret `InstallLevel` as follows:
-
-- `0` (`NotChecked`): machine only, without an access check.
-- `1` (`CurrentUser`): user only.
-- `2` (`AllUsersOrCurrentUser`): machine when possible, otherwise user.
-- `3` (`AllUsersQueryCurrentUser`): machine with an interactive user-scope fallback prompt.
-- `4` (`AllUsers`): machine only.
-- `5` (`Administrator`): machine only with administrator rights.
-
-Levels 2 and 3 describe runtime fallback, not proof that command-line scope selection exists. Verify accepted switch spelling because InstallMate packages may customize command-line handling.
+Read [InstallMate internals](../../internals/installmate/overview.md) before changing detection, decompression, database routing, or extraction limits.
 
 ## Manifest shape
 
-Switch documentation: [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm).
+InstallMate is a generic EXE family, so WinGet supplies no family-specific switches, modes, or return-code mappings. The documented template is advisory until the current media accepts it:
 
 ```yaml
 Installers:
@@ -114,23 +49,85 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-## WinGet defaults and overrides
+Remove any switch, mode, return code, ProductCode, or scope that is not supported by the analyzed generation or confirmed package behavior. Install levels 2 and 3 are elevation-dependent fallback behavior and do not prove that the command line can select scope.
 
-WinGet supplies no InstallMate defaults for generic `InstallerType: exe`. Treat the documented InstallMate commands as complete overrides, explicitly state supported modes, and remove values not confirmed for the current installer generation.
+## Static parsing
+
+### 1. Parse the installer once
+
+Load PackageModule, call `Get-InstallMateInfo` once, and retain the result for every field decision:
+
+```powershell
+. .\Modules\PackageModule\Index.ps1
+$Info = Get-InstallMateInfo -Path $InstallerPath
+$Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode, ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes, SupportsDualScope, InstallLevel, InstallLevelName, DefaultInstallLocation, InstallerSwitches, InstallModes, AppsAndFeaturesEntries, CanExpand, Diagnostics
+$Info.ArchiveInfo
+$Info.DatabaseInfo
+$Info | Select-Object Components, Folders, RegistryWrites, EnvironmentChanges, Shortcuts, ExecutionActions, Prerequisites, Services
+```
+
+`ArchiveInfo.FormatVersion` preserves the two physical TIZ version words. `ArchiveInfo.BuilderFormatVersion` exposes their observed release order. Use the PE product version for package versioning; do not treat either archive value as application-version evidence.
+
+### 2. Establish product and ARP identity
+
+Prefer `ProductCodeEvidence` in this order: resolved legacy `Setup.ini` uninstall key, resolved typed `tin` `UninstallKey`/`ProductCode`, then the named PE `StringFileInfo.ProductCode` value. Do not scan arbitrary GUID strings. `AppsAndFeaturesEntries` combines the built-in uninstall identity with complete literal current-generation registry writes. Conditional, dynamic, incomplete, and older-generation custom registration or visibility behavior requires installed-state evidence before replacing conflicting manifest values.
+
+Legacy `Setup.ini` media can also establish `DisplayName`, `DisplayVersion`, `Publisher`, and `DefaultInstallLocation`. Modern typed symbols are preferred over PE version strings when present. Current `tin9`, `tinA`, and `tinB` media also exposes literal registry writes, including custom ARP values and fixed 32-bit-only or 64-bit-only registry views. Preserve an existing field when the corresponding value is unresolved or a diagnostic identifies incomplete or conditional registry handling. A literal write owned by a conditional component remains evidence but is not promoted to ARP, protocol, or file-extension metadata.
+
+### 3. Interpret scope conservatively
+
+Legacy media uses its explicit uninstall hive or `AdminRights` field. Current controlled `tinB` media provides install levels 0 through 5. Older modern databases currently fall back to the PE requested execution level: `requireAdministrator` is machine scope, `asInvoker` is user scope, and `highestAvailable` is conditional dual-scope behavior.
+
+Do not create separate user and machine installer entries merely because `SupportedScopes` contains both. First prove a command-line scope selector and validate each resulting ARP identity.
+
+### 4. Expand only when needed
+
+Omitting `-Name` expands all cataloged files. Supply a wildcard for selective extraction and use `Rename` for non-interactive internal calls:
+
+```powershell
+if ($Info.CanExpand) {
+  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -CollisionAction Rename
+  Expand-InstallMateInstaller -Path $InstallerPath -DestinationPath $DestinationPath -Name '*.msi' -CollisionAction Rename
+}
+```
+
+InstallMate 2.x files below `<AppFolder>` are emitted at their Setup.ini-relative installed paths. Files targeting other roots go below `_destinations`. Current `tin9`, `tinA`, and `tinB` files use the decoded component/folder graph and are emitted at installed paths beneath the primary folder; destinations outside that root go below `_destinations`. An unresolved folder retains `Payload/<record-key>/<leaf-name>` as a collision-safe extraction identity, not `InstallationMetadata.Files.RelativeFilePath` evidence. `CanExpand` is false for a database revision without a verified file-record layout.
+
+### 5. Review diagnostics and system effects
+
+Inspect `Diagnostics`, `UnresolvedFields`, `RegistryWrites`, `EnvironmentChanges`, `Shortcuts`, `ExecutionActions`, `Prerequisites`, `Services`, `ServiceActions`, `Protocols`, and `FileExtensions`. Current `tin9`, `tinA`, and `tinB` records provide structured system-effect evidence. Only complete, unconditional registry writes with fully resolved component references feed ARP, protocol, and file-extension projection. Component and action conditions remain unevaluated. Prerequisite handlers expose `RequiresAdministrator` when that builder option is present, but this does not establish manifest `ElevationRequirement` until the handler condition and silent elevation behavior are validated. Environment entries expose install and remove actions, current-user-only behavior, update persistence, and separator values. Service entries expose resolved binary paths, arguments, service type, start type, delayed automatic start, error control, account evidence, dependencies, recovery command, localized reboot text, and recovery actions. `ServiceActions` separately reports `svca` start, stop, pause, resume, delete, and no-action operations for installation and removal, including literal arguments. Older-generation system-effect layouts remain unresolved; do not infer them from payload strings.
+
+### 6. Apply WinGet projection
+
+Use `Get-WinGetInstallerAnalysis` when schema-valid WinGet suggestions are needed. Keep `Family` as `InstallMate` and `InstallerType` as `exe`. Suggestions are review input; authoritative artifact evidence and VM results take precedence over the family template.
 
 ## Apps & Features
 
-Use structured parser evidence to identify the visible Apps & Features owner. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
+Use the resolved uninstall-key value as `ProductCode` when the package writes the built-in visible ARP entry. Current literal registry records can refine the ARP projection, but incomplete or conditional values still require installed-state evidence. Include `AppsAndFeaturesEntries` only when its name, publisher, version, installer type, or other matching fields differ materially from the package/default-locale values. Validate hidden, disabled, conditional, or dynamic uninstall registrations in the VM.
+
+For `Tarma.PublishOrPerish` 8.19.5300.9483, isolated VM evidence found a machine-wide EXE ARP entry keyed `{D7808C1C-93A9-4369-8385-A789888ED9D7}`, with no `WindowsInstaller` value.
 
 ## Scope and architecture
 
-Use explicit parser evidence for scope and installed payload architecture. Preserve existing manifest intent and use VM validation when either value is conditional or unresolved.
+Use explicit setup-database and PE execution-level evidence for scope. Derive architecture from installed payload binaries when package architecture matters; the launcher architecture alone may describe only the setup stub.
 
 ## VM validation
 
-Follow [VM validation workflow](../../workflows/vm-validation.md) for generation-specific switches, cancellation/reboot codes, custom registry records, associations, and visible ARP behavior. For install level 3, verify what silent mode does when all-users installation is unavailable because the interactive fallback prompt cannot be answered.
+Follow the [VM validation workflow](../../workflows/vm-validation.md). InstallMate-specific checks are accepted `/q1`, `/q2`, `/b0`, `INSTALLDIR`, and log syntax; exit-code mappings; elevation-dependent install levels; visible and hidden ARP rows; custom registry data; associations; installed paths; and payload architecture. For install level 3, test silent behavior when all-users installation is unavailable because the interactive current-user fallback cannot be answered.
 
 ## Known examples
 
-- `WaveMetrics.IgorPro`
 - `Tarma.PublishOrPerish`
+- `WaveMetrics.IgorPro`
+
+## Validation notes
+
+The parser is statically covered by cached 2.25, 2.99, 3.2, 3.8, 5.2, 5.7, 5.9, 8.x, 9.10, 9.114, and controlled current media. Controlled InstallMate 11 fixtures cover payload-bearing TIZ2/Zlib extraction, component conditions, fixed 32-bit and 64-bit registry views, all documented environment install/remove actions and scope/separator flags, prerequisite Administrator-rights behavior, and component/folder, registry, shortcut, execution, prerequisite, service, driver-service, service-recovery, and `svca` service-control records. The `tin5` revisions between the verified 5.2 and 5.7 layouts, older-generation system-effect records, and one-off ancient downloads unavailable from Internet Archive remain explicit gaps.
+
+## Source references
+
+- [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm)
+- [InstallMate advanced build settings](https://tarma.com/support/im9/using/dialogs/build-advanced.htm)
+- [InstallMate packaging](https://tarma.com/support/im11/using/packaging.htm)
+- InstallMate 11 shipped help and builder data files
+- [Tarma InstallMate](https://tarma.com/)

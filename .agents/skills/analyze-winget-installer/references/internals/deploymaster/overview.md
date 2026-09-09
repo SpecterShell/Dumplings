@@ -207,9 +207,11 @@ Completion flags gate x86/x64 post-install file indexes and one argument block. 
 
 Locator-based runtimes accept `/s` and `/silent` for unattended installation and `/appfolder`, `/appcommonfolder`, `/appmenu`, `/userdata`, and `/temp` for path overrides. `/nodesktop` suppresses desktop shortcuts. Mixed-architecture media can expose `/32`. Header74 dual-scope media can expose `/userall`; older `Header66` media does not carry that route. The parser reports the complete command vocabulary separately from the WinGet-facing silent and install-location pair.
 
+Header70 and Header74 runtime cores contain `/noadmin`, which skips the elevated relaunch and forces the unelevated route; the relauncher strips the token when re-invoking elevated, and the unelevated path also skips DeployIT `Stub` registration. The parser reports this switch only after finding the exact token in the bounded embedded runtime. Header66 media does not contain `/noadmin`: its relauncher uses `/elevate /silent`. The relaunch protocol also uses internal mode markers `/components`, `/advanced`, `/usercurrent`, or `/userall`; token presence does not make those user-facing scope overrides, so they stay out of `CommandLineSwitches` unless direct invocation behavior is independently validated. Switch comparison lowercases the parameter first.
+
 Portable behavior is compiled into the package-settings record as `Never`, `UserChoice`, or `Always`. A non-`Never` value is not enough to prove a usable command line: the parser expands one bounded runtime core and requires the exact UTF-16 `/portable` token before exposing that switch. `Always` suppresses the normal installation route and built-in ARP registration. `UserChoice` retains both normal and portable behavior. The generated uninstaller accepts `/silent` independently of the setup switch.
 
-Classic 2.5.x runtime images contain no referenced unattended switch table or bounded slash-token route. They are treated as interactive-only rather than inheriting switches from later DeployMaster releases.
+Classic 2.5.x runtime images contain no referenced unattended switch table or bounded slash-token route. They are treated as interactive-only rather than inheriting switches from later DeployMaster releases. A classic packaged support DLL now raises the same `DeployMaster.Installability.SupportDllEffectsOpaque` manual-validation diagnostic and `SupportDllEffects` unresolved field as modern media, because the classic runtime invokes it identically.
 
 ## Installation and maintenance state
 

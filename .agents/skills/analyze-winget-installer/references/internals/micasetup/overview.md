@@ -10,6 +10,23 @@ MicaSetup v1 and v2 are managed .NET Framework WPF executables. The builder edit
 
 The parser identifies `Pack`, `OptionLegacy`, and `OptionModern` configuration models. `IsUninstLower` and user-path preference options distinguish the modern v2 schema. Both late v1 and early v2 releases use the legacy option schema, so `BuilderGeneration` is a structural compatibility generation rather than a release-major claim.
 
+## Release and configuration history
+
+The repository history shows that MicaSetup has retained the same managed PE, generated CIL, WPF `.g.resources`, and nested `publish.7z` architecture from v1.0.0 through v2.5.6. Changes after v1.0 are additions to the compiled configuration and runtime behavior rather than new container generations. The parser therefore dispatches on the configuration model and reports source-verified release bounds through `FormatCompatibility`; it does not infer an exact builder release from the packaged application's assembly version.
+
+| First release | Structural or behavioral change | Parser treatment |
+|---|---|---|
+| 1.0.0 | `MicaSetup.Core.Pack` and `UsePack`; the Pack type is supplied through Costura references | `Pack`, source-compatible v1 route |
+| 1.1.0 | `MicaSetup.Core.Option` replaces Pack while the host still calls `UsePack`; autorun uses the misspelled `IsCrateAsAutoRun` property | `OptionLegacy`; the typo is normalized to `IsCreateAsAutoRun`, and later releases move Option to the root namespace and adopt `UseOptions` |
+| 2.0.0 | Source tree and UI are reorganized, but the generated configuration and WPF payload structure remain compatible | Still `OptionLegacy`; the release major is not a binary-format discriminator |
+| 2.0.1 | Custom overlay cleanup handler | Handler presence is reported; arbitrary handler code remains unresolved |
+| 2.3.1 | PATH modification option | Projected through `EnvironmentChanges` |
+| 2.3.3 | `IsUninstLower` | First `OptionModern` release; changes generated uninstaller casing |
+| 2.3.7 | Local Programs and roaming AppData path preferences | Included in manifest-safe install-location resolution |
+| 2.5.1 | `CloseApplications` becomes an array | Official `CloseApplicationInfo` object initializers are projected with source defaults; arbitrary object construction remains unresolved |
+| 2.5.5 | `OverlayInstallRemovePatterns` string array | Literal compiler-emitted arrays are decoded from CIL |
+| after 2.5.6, untagged `v2` | `SupportLanguages` and opt-in language/license resource packaging | Prefer the resolved option; otherwise derive cultures from packaged BAML dictionaries |
+
 ## Container stack
 
 ```text
@@ -140,7 +157,7 @@ Hosting.CreateBuilder()
        -> ... repeated assignments
 ```
 
-The bounded symbolic evaluator supports literal strings, integers, floating-point values, booleans, null, nullable booleans, local loads/stores, simple arrays, option-property getters, string concatenation, string formatting, and resolvable conditional branches. It records the defining method and CIL offset for every option assignment. Unknown calls, object graphs, cyclic control flow, malformed bodies, and unresolved branches remain explicit evidence rather than being executed.
+The bounded symbolic evaluator supports literal strings, integers, floating-point values, booleans, null, nullable booleans, local loads/stores, compiler-emitted string arrays, option-property getters, string concatenation, string formatting, and resolvable conditional branches. It records the defining method and CIL offset for every option assignment. Array lengths are capped before allocation. Unknown calls, object graphs, cyclic control flow, malformed bodies, and unresolved branches remain explicit evidence rather than being executed.
 
 Only a high-density generated initializer contributes configuration values. Legacy Pack property names are normalized to the shared option names consumed by the PowerShell parser. This prevents MicaSetup's own runtime setters from being mistaken for packaged configuration. `UseElevated` is evaluated separately because it lives in the host-builder chain rather than the configuration lambda.
 
@@ -182,7 +199,11 @@ Payload enumeration validates entry counts and sizes. Extraction additionally va
 
 ## System effects
 
-Compiled options can prove desktop, Start menu, and Quick Launch shortcuts; HKCU autorun; PATH modification; firewall allow rules; certificate installation; close-application records; refresh behavior; and uninstaller creation. Some operations are conditional on elevation inside the runtime even when their option is enabled.
+Compiled options can prove desktop, Start menu, and Quick Launch shortcuts; Start pinning; HKCU autorun and whether the UI lets the user change it; PATH modification; firewall allow rules; certificate installation; close-application records; overlay cleanup extensions and glob patterns; packaged language dictionaries; Explorer refresh; delayed deletion during uninstall; license resource selection; and uninstaller creation. Host-builder calls also expose single-instance mutex and temporary-path relaunch behavior. Some operations are conditional on elevation inside the runtime even when their option is enabled.
+
+When `IsAllowFullFolderSecurity` is enabled, the elevated runtime adds inherited `FullControl` access rules for both `Everyone` and `Users` to the installation directory. The parser returns this under `FolderPermissionChanges` and emits the `MicaSetup.Security.PermissiveInstallAcl` risk diagnostic. The operation does not run in an unelevated process even when the option remains enabled.
+
+Official `CloseApplicationInfo` object initializers are evaluated as bounded symbolic objects. The parser returns target, description, window title, graceful-close behavior, reboot prompt, forced termination policy, and timeout. Computed constructors, callbacks, and unsupported object types remain unresolved instead of being instantiated.
 
 MicaSetup permits developers to edit the generated C# and attach custom handlers. Any behavior outside supported option assignments and literal static registry writes is arbitrary managed code. The parser reports the supported static projection and leaves computed custom effects unresolved.
 
@@ -197,7 +218,7 @@ The managed reader bounds resources, methods, decoded instructions, string lengt
 ## Known gaps
 
 - Arbitrary custom C#, dynamically computed option values, custom overlay handlers, and `RegistryKey` object flows are not emulated.
-- Close-application object details are unresolved when the generated array initializer cannot be reduced to literals.
+- Close-application details remain unresolved when code computes them through unsupported constructors, method calls, callbacks, or custom object types.
 - Silent installation is not inferred from unfinished upstream command-line hooks.
 - Builder patch versions cannot normally be recovered because packaged application versioning replaces builder assembly versioning.
 - Kachina Installer requires an independent parser and route.
@@ -212,9 +233,11 @@ The managed reader bounds resources, methods, decoded instructions, string lengt
 ## Representative fixtures
 
 - Official v1.0 demo installer: Costura Pack references, UsePack configuration, and unconditional elevated route.
+- Official v1.1 demo installer: first Option model, the transitional `MicaSetup.Core.Option` plus `UsePack` host route, and the historical `IsCrateAsAutoRun` spelling.
 - Official v1.3 demo installer: legacy Option schema and unconditional elevated route.
 - Official v2.0 demo installer: early v2 release with the legacy source-compatible Option schema.
 - Official v2.5 demo installer: modern Option schema, request-execution-level attribute, WPF resource streams, and payload sidecars.
+- Official v2.5.6 installer: modern Option schema with collection-expression output, overlay-pattern array support, and four compiled language dictionaries.
 - Generated malformed `.resources`, CIL, archive, collision, and traversal fixtures cover bounded failure paths.
 
 ## Source references
@@ -227,6 +250,9 @@ The managed reader bounds resources, methods, decoded instructions, string lengt
 - [MicaSetup v1.0 UsePack host](https://github.com/lemutec/MicaSetup/blob/v1.0.0/src/MicaSetup/Program.cs)
 - [MicaSetup generated host](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Program.cs)
 - [MicaSetup install runtime](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/Setup/InstallHelper.cs)
+- [MicaSetup installation view model](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/ViewModels/Inst/InstallViewModel.cs)
+- [MicaSetup folder security helper](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/System/SecurityControlHelper.cs)
+- [MicaSetup host-builder extensions](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Design/Hosts/HostBuilderExtension.cs)
 - [MicaSetup uninstall registry helper](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/System/RegistyUninstallHelper.cs)
 - [MicaSetup command-line parser](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/CommandLineHelper.cs)
 - [.NET `ResourceReader`](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Resources/ResourceReader.cs)

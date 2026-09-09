@@ -2,7 +2,7 @@
 
 ## Scope
 
-Kachina is a native Tauri installer whose executable carries an appended record stream. The installed application payload is not a conventional archive: each metadata-backed file is an independent Zstandard record, while control JSON, the compact index, patches, and optional runtime installers use the same outer TLV framing. The parser opens the PE once, locates the record stream after the final PE section, and performs random reads through bounded ranges.
+Kachina is a native Windows installer whose executable carries an appended record stream. Tagged releases through 0.5.1 use a Tauri host, while the later untagged `refactor/native` branch replaces Tauri with a native Win32/WebView2 host. The packer intentionally keeps the same pre-index, TLV, index, metadata, and Zstandard payload layout, so host implementation and container generation must be classified separately. The installed application payload is not a conventional archive: each metadata-backed file is an independent Zstandard record, while control JSON, the compact index, patches, and optional runtime installers use the same outer TLV framing. The parser opens the PE once, locates the record stream after the final PE section, and performs random reads through bounded ranges.
 
 The upstream Kachina repository had no declared license when this implementation was written. This document records observable structures and runtime behavior. The PackageModule implementation is independently written under Apache-2.0.
 
@@ -14,7 +14,8 @@ Kachina installer executable
 |   +-- MZ / PE linkage
 |   `-- !KachinaInstaller! marker followed by five UInt32BE fields
 +-- PE image
-|   +-- native Tauri loader and WebView UI
+|   +-- tagged route: Tauri loader and WebView UI
+|   +-- later route: native Win32 host with WebView2/TaskDialog UI
 |   +-- resources and version information
 |   `-- final section boundary
 `-- Kachina TLV stream
@@ -71,6 +72,20 @@ The next record begins immediately after the content. There is no padding or ali
 
 ## Format generations
 
+Repository history establishes the following physical boundaries. `FormatGeneration` describes these bytes, not the executable's UI host or an exact builder version.
+
+| Release range | Physical format | Relevant behavior |
+|---|---|---|
+| 0.0.1 through 0.0.17 | `!INS` sequential records | No pre-index or compact index |
+| 0.0.18 | `!IN\0`, INDEX first | Original pre-index field order and double-counted INDEX-header defect |
+| 0.0.19 onward | `!IN\0`, CONFIG first | Corrected pre-index order and bounded compact index |
+| 0.0.25 onward | Same indexed framing | Config-only online media can clear all pre-index sizes and omit metadata/payload |
+| 0.1.1 onward | Same indexed framing | A source may be an ordered source catalog rather than one URI |
+| 0.1.6 onward | Same indexed framing | Runtime prerequisites may be appended as raw installer records |
+| 0.3.0 onward | Same indexed framing | Packing order can optimize small files; metadata-backed files remain independently addressable |
+| 0.4.0 onward | Same indexed framing | Embedded image and ignore-folder configuration are available |
+| after 0.5.1, untagged `refactor/native` | Same indexed framing | Native Win32 host and transactional staging replace Tauri without changing packed-media compatibility |
+
 ### Legacy scan
 
 Legacy media uses `!INS` and has no pre-index or compact index. `.config.json` and `.metadata.json` are required, while `.image` is optional. Hash-named payload and patch records follow the control records.
@@ -108,21 +123,21 @@ Every index item must match a sequential record with the same name, content leng
 
 ## Configuration JSON
 
-The parser requires nonempty `appName`, `publisher`, `regName`, and `exeName` fields. Common fields include `source`, legacy `dfsPath`, `uninstallName`, `updaterName`, `programFilesPath`, `uacStrategy`, `runtimes`, `userDataPath`, `title`, `description`, and `windowTitle`.
+The parser requires nonempty `appName`, `publisher`, `regName`, and `exeName` fields. Common fields include `source`, legacy `dfsPath`, `uninstallName`, `updaterName`, `programFilesPath`, `uacStrategy`, `runtimes`, `userDataPath`, `ignoreFolderPath`, `extraUninstallPath`, `needWebView2`, `title`, `description`, and `windowTitle`.
 
-`regName` is the uninstall-key name and therefore the parser's `ProductCode`. `programFilesPath` forms the default `%ProgramFiles%` destination. `runtimes` contains tags understood by Kachina's prerequisite handler. The current runtime supports `Microsoft.DotNet.DesktopRuntime.*`, `Microsoft.DotNet.Runtime.*`, `Microsoft.VCRedist.2015+.x64`, and `Microsoft.VCRedist.2015+.x86`.
+`source` may be one URI or an ordered array of `{ id, name, uri, hidden, icon }` objects. Dumplings normalizes both forms into `Sources` and retains the first usable URI as `Source`. `regName` is the uninstall-key name and therefore the parser's `ProductCode`. `programFilesPath` forms the default `%ProgramFiles%` destination. `userDataPath` is preserved during ordinary uninstall, `ignoreFolderPath` is excluded from update replacement, and `extraUninstallPath` is removed during uninstall. `runtimes` contains tags understood by Kachina's prerequisite handler. The current runtime supports `Microsoft.DotNet.DesktopRuntime.*`, `Microsoft.DotNet.Runtime.*`, `Microsoft.VCRedist.2015+.x64`, and `Microsoft.VCRedist.2015+.x86`.
 
 ## Release metadata
 
-The `\0META` or `.metadata.json` object normally contains `tag_name`, `hashed`, `patches`, `deletes`, repository metadata, and an `installer` object. Each `hashed` item supplies an installed `file_name`, expanded `size`, and one or more source hash labels.
+The `\0META` or `.metadata.json` object normally contains `tag_name`, `hashed`, `patches`, `deletes`, repository metadata, and an `installer` object. Each `hashed` item supplies an installed `file_name`, expanded `size`, and one or more source hash labels. `deletes` records files removed by an update and is returned as operation evidence rather than installed payload.
 
-An `md5` value is a proven MD5 checksum and is validated after expansion. Current metadata also uses an `xxh` field, but a 128-bit string shape alone does not prove a specific xxHash variant. Dumplings preserves it as an opaque source-defined record identity and does not claim an algorithm.
+An `md5` value is a proven MD5 checksum. Current native-host source defines `xxh` as `twox_hash::XxHash3_128` with seed zero and formats the resulting unsigned 128-bit integer as lower-case hexadecimal without fixed leading-zero width. Dumplings validates both algorithms after expansion; its source-shipped MIT XXH3 provider memory-maps the bounded output rather than buffering a complete payload in PowerShell.
 
 Several paths can reference one hash-named record. Kachina stores the compressed bytes once. The extractor decompresses the first selected path and copies its verified output to the other selected destinations while still charging every installed copy against the aggregate output limit.
 
 ## Payload and patches
 
-Normal hash-named records contain one Zstandard frame. The metadata `size` is the required decompressed byte count. Extraction uses a bounded record substream, a streaming ZstdSharp decoder, an aggregate output limit, and an exact-length check that rejects both short and long output. MD5-backed entries receive a final content check.
+Normal hash-named records contain one Zstandard frame. The metadata `size` is the required decompressed byte count. Extraction uses a bounded record substream, a streaming ZstdSharp decoder, an aggregate output limit, and an exact-length check that rejects both short and long output. MD5- and XXH3-128-backed entries receive a final content check before the extracted path is returned.
 
 Patch records are named `<fromHash>_<toHash>` and contain HDiff data. They describe update routes and are not installed files. The current parser catalogs them but does not apply them. `-RawEntries` can export their physical bytes for separate static inspection.
 
@@ -147,7 +162,7 @@ generated tool
 
 ## Command line
 
-The native command-line parser defines `-D <path>` for installation directory, `-I` for noninteractive installation with progress, `-S` for silent installation, `-O` to force online installation, and `-U` for uninstall. Hidden source and mirror parameters are runtime implementation details and are not manifest switches.
+Both the tagged Clap parser and the later native parser define `-D <path>` for installation directory, `-I` for noninteractive installation with progress, `-S` for silent installation, `-O` to force online installation, and `-U` for uninstall. The native parser deliberately remains tolerant of unrelated arguments. Hidden source, mirror, and diagnostic parameters are runtime implementation details and are not manifest switches.
 
 WinGet has no Kachina-specific defaults because the manifest type is generic `exe`. The authoring projection therefore includes the proven silent, progress, and install-location switches.
 
@@ -165,20 +180,21 @@ The built-in runtime also creates Start menu shortcuts for the application and u
 
 ## Architecture and dependencies
 
-The outer Tauri PE identifies the installer host, not necessarily the installed application. Dumplings selectively expands the configured main executable plus bounded adjacent DLL and JSON sidecars, then applies the shared PE architecture and dependency analyzers. This detects native architecture, managed AnyCPU behavior, VC runtime imports, and framework-dependent .NET evidence without materializing the whole package.
+The outer installer PE identifies the host, not necessarily the installed application. Dumplings selectively expands the configured main executable plus bounded adjacent DLL and JSON sidecars, then applies the shared PE architecture and dependency analyzers. This detects native architecture, managed AnyCPU behavior, VC runtime imports, and framework-dependent .NET evidence without materializing the whole package.
 
 Configured Kachina runtime delivery remains separate from application dependency inference. The parser reports both sources of evidence and does not mutate WinGet dependencies automatically.
 
 ## Parser limits and gaps
 
-The parser limits record searches, names, record counts, JSON and index sizes, selective analysis bytes, extraction entries, and aggregate output. It validates PE layout, every physical range, index boundaries, destination containment, collisions, Zstandard output length, and proven MD5 checks. Caller-owned streams remain open and random-access helpers restore their positions.
+The parser limits record searches, names, record counts, JSON and index sizes, selective analysis bytes, extraction entries, and aggregate output. It validates PE layout, every physical range, index boundaries, destination containment, collisions, Zstandard output length, and proven MD5 or XXH3-128 checks. Caller-owned streams remain open and random-access helpers restore their positions.
 
-HDiff patch application is not implemented because patches are update inputs rather than installed files. Config-only media is not fetched. The source-defined `xxh` identity is not assigned a concrete algorithm without structured proof. Runtime prerequisite executables are exported only in raw mode and are never executed on the host.
+HDiff patch application is not implemented because patches are update inputs rather than installed files. Config-only media is not fetched. Runtime prerequisite executables are exported only in raw mode and are never executed on the host.
 
 ## Implementation mapping
 
 - `Modules/PackageModule/Libraries/Installers/Kachina.psm1`: generation detection, TLV/index parsing, metadata and ARP projection, payload extraction, and generated tools.
 - `Modules/PackageModule/Libraries/Infrastructure/Archive.psm1`: bounded Zstandard decoding through the pinned ZstdSharp assembly.
+- `Modules/PackageModule/Assets/Source/Kachina`: source-shipped XXH3-128 provider used for post-expansion integrity validation.
 - `Modules/PackageModule/Libraries/Infrastructure/InstallerAnalyzer.psm1`: strict family routing before MicaSetup and generic Tauri hints.
 - `Modules/PackageModule/Libraries/WinGet/WinGetAnalysis.psm1`: WinGet generic-EXE defaults and source-proven switches.
 
@@ -201,3 +217,5 @@ HDiff patch application is not implemented because patches are update inputs rat
 - [ARP registry writer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/registry.rs)
 - [Payload installer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/ipc/install_file.rs)
 - [Command-line arguments](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/cli/arg.rs)
+- [Native-host hash implementation](https://github.com/YuehaiTeam/kachina-installer/blob/c4ac0086e92e48825492b2e41a7a97e2153098da/src-tauri/src/utils/hash.rs)
+- [Native-host branch](https://github.com/YuehaiTeam/kachina-installer/tree/refactor/native)

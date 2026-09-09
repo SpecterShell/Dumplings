@@ -33,7 +33,7 @@ $Info = Get-MicaSetupInfo -Path $InstallerPath
 $Info | Select-Object BuilderGeneration, DisplayName, DisplayVersion, Publisher, ProductCode, Scope, DefaultInstallLocation, WritesAppsAndFeaturesEntry
 ```
 
-Inspect `Diagnostics`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`; `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
+Inspect `Diagnostics`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`; `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation; `FormatCompatibility` gives the source-verified release range for that model. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
 
 ### 2. Resolve scope and elevation
 
@@ -64,7 +64,9 @@ Treat dependency output as authoring evidence rather than automatic manifest mut
 
 ### 5. Inspect system effects
 
-Review `Shortcuts`, `AutorunEntries`, `EnvironmentChanges`, `FirewallRules`, `Certificates`, and `CloseApplications`. Literal custom `Microsoft.Win32.Registry.SetValue` calls are projected into `RegistryWrites`, `Protocols`, `FileExtensions`, and their detailed association records. Computed paths, `RegistryKey` object flows, custom handlers, and arbitrary edited C# remain unresolved and require static source review or VM validation.
+Review `Shortcuts`, `AutorunEntries`, `EnvironmentChanges`, `FirewallRules`, `Certificates`, `FolderPermissionChanges`, `CloseApplications`, `OverlayCleanup`, `RefreshesExplorer`, `EnablesUninstallDelayUntilReboot`, `HostBehavior`, `LicensePolicy`, and `SupportedLanguages`. Literal custom `Microsoft.Win32.Registry.SetValue` calls are projected into `RegistryWrites`, `Protocols`, `FileExtensions`, and their detailed association records. `SupportedLanguages` comes from a resolved modern option when present and otherwise from packaged BAML dictionaries. Official `CloseApplicationInfo` initializers are projected field by field; computed paths, `RegistryKey` object flows, custom handlers, unsupported object construction, and arbitrary edited C# remain unresolved and require static source review or VM validation.
+
+Treat `MicaSetup.Security.PermissiveInstallAcl` as security evidence rather than a manifest field. When enabled, an elevated runtime grants inherited `FullControl` to both `Everyone` and `Users` on the installation directory. Confirm the resulting ACL in a VM when assessing whether the package is acceptable for machine-wide deployment.
 
 Protocols and file extensions may also be registered during application first run. Compare installed state before installation, after installation, and after first run before treating the lists as complete.
 
@@ -119,8 +121,9 @@ If static analysis reports custom managed behavior, compare registry and filesys
 ## Known examples
 
 - Official MicaSetup v1.0 demo installer: Costura-referenced `Pack`/`UsePack` configuration and unconditional machine elevation.
-- Official MicaSetup v1.3 and v2.0 demo installers: legacy `Option`/`UseOptions` schema; the v2.0 release demonstrates why structural generation must not be inferred from a release tag or assembly version.
+- Official MicaSetup v1.1, v1.3, and v2.0 demo installers: legacy `Option` schema; v1.1 uses the transitional `MicaSetup.Core.Option` plus `UsePack` route and carries the historical `IsCrateAsAutoRun` spelling, while later releases move to `MicaSetup.Option` plus `UseOptions`.
 - Official MicaSetup v2.5 demo installer: modern option schema, compiled `RequestExecutionLevel`, generated option initializer, WPF stream resources, and 7z payload.
+- Official MicaSetup v2.5.6 installer: modern option schema, collection-expression arrays, overlay cleanup patterns, and compiled multilingual resources.
 - Historical LyricStudio and Fischless packages may be added as fixtures only when they expose a structure or behavior not covered by the official generations.
 
 ## Source references
@@ -130,6 +133,8 @@ If static analysis reports custom managed behavior, compare registry and filesys
 - [MicaSetup v1.0 `Pack`](https://github.com/lemutec/MicaSetup/blob/v1.0.0/src/MicaSetup.Core/Pack.cs)
 - [MicaSetup v1.0 host configuration](https://github.com/lemutec/MicaSetup/blob/v1.0.0/src/MicaSetup/Program.cs)
 - [MicaSetup installation behavior](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/Setup/InstallHelper.cs)
+- [MicaSetup folder security behavior](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/System/SecurityControlHelper.cs)
+- [MicaSetup host-builder behavior](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Design/Hosts/HostBuilderExtension.cs)
 - [MicaSetup uninstall registry helper](https://github.com/lemutec/MicaSetup/blob/v2/build/MicaSetup/Helper/System/RegistyUninstallHelper.cs)
 - [.NET `ResourceReader`](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Resources/ResourceReader.cs): `.resources` v2 framing and resource type codes.
 - [ECMA-335](https://ecma-international.org/publications-and-standards/standards/ecma-335/): CLR metadata and CIL structure.

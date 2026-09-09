@@ -66,11 +66,11 @@ Keep all three `InstallModes` values because WinGet does not supply Kachina defa
    $Info = Get-KachinaInfo -Path $InstallerPath
    ```
 
-2. Confirm `FormatGeneration`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Diagnostics`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina.
+2. Confirm `FormatGeneration`, `FormatCompatibility`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Diagnostics`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina. Release numbers are not encoded in the container; `FormatCompatibility` reports source-verified bounds for the detected byte layout rather than an exact builder version.
 
 3. Inspect `SupportedScopes` and `UacStrategy`. The default path is under `%ProgramFiles%` and is machine scope. `prefer-admin` and `prefer-user` can take a user route only when `-D` selects a writable user path and the process remains unelevated. Do not create a user installer entry until that exact path and switch route passes VM validation.
 
-4. Inspect `PayloadFiles`, `PatchFiles`, `ConfiguredRuntimes`, and `EmbeddedRuntimePackages`. Configured runtime packages may be embedded or downloaded by Kachina. Treat them as prerequisite-delivery evidence, not automatic WinGet dependencies.
+4. Inspect `Sources`, `PayloadFiles`, `PatchFiles`, `MetadataDeletes`, `UserDataPaths`, `IgnoredUpdatePaths`, `ExtraUninstallPaths`, `ConfiguredRuntimes`, and `EmbeddedRuntimePackages`. Configured runtime packages may be embedded or downloaded by Kachina. Treat them as prerequisite-delivery evidence, not automatic WinGet dependencies. Path and delete lists describe updater or uninstaller behavior and are not installed payload entries.
 
 5. Expand only what the current decision needs:
 
@@ -78,9 +78,9 @@ Keep all three `InstallModes` values because WinGet does not supply Kachina defa
    Expand-KachinaInstaller -Path $InstallerPath -DestinationPath $Destination -Name '*.exe' -CollisionAction Rename
    ```
 
-   Omit `-Name` to extract all installed application files plus the generated updater and uninstaller. `-RawEntries` exports physical TLV records, including patches and appended prerequisite installers, under `_kachina` without executing them.
+   Omit `-Name` to extract all installed application files plus the generated updater and uninstaller. `-RawEntries` exports physical TLV records, including patches and appended prerequisite installers, under `_kachina` without executing them. Normal extraction verifies the declared expanded size and then the legacy MD5 or current XXH3-128 digest; an integrity failure removes and rejects the output.
 
-6. Review `PayloadArchitectureInfo` and `DependencyInfo`. The outer Tauri stub architecture does not replace architecture evidence from the installed main executable and adjacent native DLLs.
+6. Review `PayloadArchitectureInfo` and `DependencyInfo`. The outer Tauri or native-host stub architecture does not replace architecture evidence from the installed main executable and adjacent native DLLs.
 
 7. Keep config-only media unresolved. `Get-KachinaInfo` can recover source and ARP behavior, but it does not fetch the online metadata or payload.
 
@@ -104,8 +104,8 @@ If `RuntimePackages` is nonempty, validate on a checkpoint without those runtime
 
 ## Known examples
 
-- `babalae.BetterGI`: current indexed media. Release 0.63 configures .NET Desktop Runtime 8 and VC++ 2015+ x64; the tested artifact downloads them rather than appending their installers.
 - AkashaNavigator 1.4.0: current indexed media with a small x64 payload, one HDiff patch record, and downloadable runtime configuration.
+- `babalae.BetterGI` 0.40 and 0.63: current indexed media from different feature periods; 0.63 adds multiple source entries, metadata deletes, ignored paths, and downloadable .NET Desktop Runtime 8 and VC++ 2015+ x64 evidence without changing the container framing.
 
 ## Source references
 
@@ -115,5 +115,6 @@ If `RuntimePackages` is nonempty, validate on a checkpoint without those runtime
 - [Runtime installation](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/runtimes.rs)
 - [ARP registry writer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/registry.rs)
 - [Command-line arguments](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/cli/arg.rs)
+- [Native-host hash implementation](https://github.com/YuehaiTeam/kachina-installer/blob/c4ac0086e92e48825492b2e41a7a97e2153098da/src-tauri/src/utils/hash.rs)
 
 The upstream repository did not declare a license when this parser was implemented. Dumplings uses it as format and behavior evidence and contains an independently written Apache-2.0 parser.
