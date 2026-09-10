@@ -1,0 +1,27 @@
+Version: 2.4.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: ai-switch-2.4.3-windows-amd64\ai-switch.exe
+  InstallerUrl: https://github.com/kingkate2009-droid/ai-switch/releases/download/v2.4.3/ai-switch-2.4.3-windows-amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AI Switch v2.4.3
+    Changes
+    - Smart import — labeled record parser: protocol=url/api_key format now parses line-by-line without cross-product explosion
+    - Smart import — full-hostname naming: Vendor names derived from complete hostname (e.g. aaa.xxx.com → aaa-xxx-com) instead of first segment only
+    - Smart import — respect protocol field: protocol=Anthropic records map to endpoint_type=anthropic
+    - Health check — preserve model inventory on scan failure: Stale models retained when network scan fails; raw error captured and displayed
+    - Health check — raw error detail: Full endpoint error detail preserved (up to 2000 chars) instead of 160-char truncation
+    - Batch import — large paste guard: Inputs over 12KB or 80 lines skip auto-parse to avoid blocking the UI
+    - Model sync: Backends read sync_models properly; empty sync selection implies all-models mode
+    - Bulk health: _replace_model_state correctly propagates so fresh scans overwrite stale model maps
+    Full Changelog: https://github.com/kingkate2009-droid/ai-switch/compare/v2.4.1...v2.4.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kingkate2009-droid/ai-switch/releases/tag/v2.4.3
+ReleaseTime: 2026-09-10T08:02:41.0000000Z
