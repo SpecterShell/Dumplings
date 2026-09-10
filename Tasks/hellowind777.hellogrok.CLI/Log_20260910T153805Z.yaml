@@ -1,0 +1,28 @@
+Version: 0.1.22
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.22/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.22/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.22
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.22
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Normalize missing Chat and Messages local tool-call IDs before delivery; repair only unambiguous missing-ID pairs in existing Chat history.
+    - Preserve Responses output-item and function-call identities across stream events and reject conflicts. Assign tool indexes when converting buffered Chat responses to SSE.
+    - Extend OpenCode session projection to Go and Zen across all three protocols. Extract identity before conversion and reuse headers for retries; unidentified requests receive isolated operation IDs instead of being blocked locally. Cross-request affinity remains unavailable without client identity.
+    - Preserve configured or incoming OpenCode User-Agent headers; when absent, derive Grok Build identification from the installed executable instead of advertising hellogrok.
+    Added
+    - Display the running application version in the Windows status/log window title.
+    - Add opt-in live-provider read-tool verification and regression coverage for tool identity, parallel fallback calls, and OpenCode request headers.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0122-2026-09-10
+ReleaseTime: 2026-09-10T14:32:08.0000000Z
