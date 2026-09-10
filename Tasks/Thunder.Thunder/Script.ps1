@@ -5,7 +5,7 @@ $this.CurrentState.Version = [regex]::Match($Object1.Links.Where({ try { $_.href
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://down.sandai.net/thunder11/XunLeiSetup$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://down.sandai.net/thunder_pc/ThunderSetup$($this.CurrentState.Version)xl.exe"
 }
 
 switch -Regex ($this.Check()) {
