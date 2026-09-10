@@ -1,8 +1,6 @@
-$Object1 = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO Scale Software'.Windows.GetEnumerator() | Sort-Object -Property { [ChunkVersion]([regex]::Match($_.Name, 'v(\d+(\.\d+)+)').Groups[1].Value) } -Bottom 1
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Value.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 11') }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
+  InstallerUrl = $Global:DumplingsStorage.DYMOApps.records.Where({ $_.software -eq 'DYMO Scale Software' -and $_.osVersion -eq 'Windows 11' }, 'Last')[0].url | ConvertTo-UnescapedUri | ConvertTo-Https
 }
 
 # Version
