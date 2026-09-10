@@ -1,0 +1,113 @@
+Version: 2026.09.0+174
+Installer:
+- InstallerUrl: https://download1.rstudio.org/electron/windows/RStudio-2026.09.0-174.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    RStudio
+    - (#18443): Added the posit-assistant-installation-enabled session option and the RSTUDIO_DISABLE_POSIT_ASSISTANT_INSTALLATION environment variable, which stop users from installing, updating, or uninstalling Posit Assistant. RStudio then runs only the administrator’s installation and makes no update checks.
+    - (#18687): Added the posit-assistant-path session option, for pointing RStudio at an administrator-managed Posit Assistant installation outside the system configuration directory.
+    - (#18649): Renamed references to the Posit AI service to Posit AI Pass in the IDE user interface.
+    - (#2129): Added horizontal and vertical split source editor views, with shared edits and independent navigation state.
+    Posit Workbench
+    - (rstudio-pro#12254) Workbench now asks the configured Package Manager instance which Linux distributions it serves binaries for, extending precompiled R package installs beyond the built-in distro list. Workbench falls back to the previous behavior if Package Manager cannot be reached.
+    - (rstudio-pro#12483) Posit Assistant for RStudio is now bundled with Workbench, so RStudio Pro sessions can use it without downloading it first, for example in air-gapped environments.
+    - (rstudio-pro#12534) Added the assistant-installation-enabled profile setting, which controls whether users can install and upgrade their own copy of Posit Assistant in RStudio Pro, or are locked to the administrator-managed or bundled copy.
+    - (rstudio-pro#11920) Added a preview “Assistant” page to the new homepage showing your own AI coding activity: session counts, recent sessions, tool and model usage, and cache-efficiency and prompting-quality insights.
+    - (rstudio-pro#12298) Added the assistant-settings-enforced and assistant-settings-default profile settings, which supply Posit Assistant settings that users respectively cannot and can override.
+    - (rstudio-pro#12297) Added the ai-providers-default profile setting, which supplies a starting AI-provider configuration for Posit Assistant that users can override in their own providers.json, alongside the existing ai-providers-enforced setting that they cannot.
+    - (rstudio-pro#12271) The ai-providers-enforced profile setting now applies to RStudio Pro sessions in addition to Positron Pro sessions.
+    - (rstudio-pro#12515) Added a native-oauth option to Databricks workspace sections in databricks.conf, letting Azure-hosted workspaces opt into the native Databricks OAuth sign-in flow instead of the Microsoft Entra ID flow.
+    - (rstudio-pro#11495) The Available Credentials view in VS Code and Positron Pro sessions now supports Databricks and Snowflake advanced integrations alongside custom OAuth, letting you sign in, activate, switch Snowflake roles, and deactivate these credentials without leaving your session.
+    - (rstudio-pro#12134) Positron Pro session logs now record the Positron version as a single-line JSON record in the same schema as log-message-format=json, so log aggregators can index the version fields instead of a multi-line text block.
+    - (rstudio-pro#12101) Added package enumeration to the environment inspection tool, which can now report the packages installed in each R and Python library location it discovers.
+    - (rstudio/launcher#1612) The Kubernetes plugin’s image registry integration now supports AWS Elastic Container Registry (type: ecr), authenticating with the launcher’s AWS credential chain.
+    - (rstudio/launcher#1673) The Slurm plugin now skips polling jobs that lack the [RStudio Launcher] job-name prefix, avoiding wasted parsing and per-job detail lookups on busy shared clusters.
+    Fixed
+    RStudio
+    - (#12229): Fixed an issue where the default CRAN repository was configured under Ubuntu resolute and Debian trixie rather than the Posit Public Package Manager, leading to R package installations building from source.
+    - (#18668): Expand All now clears nested folds in R Markdown documents after Collapse All.
+    - (#18683): Fixed intermittent user and group lookup failures on Linux when a remote user directory is slow to respond.
+    - (#16540): Fixed an issue where opening Find in the visual editor left the search box as it was, rather than filling it with the selected text the way source mode does. A selection made inside a code chunk now seeds the box too, and is what Use Selection for Find looks for there; both previously read the surrounding document selection, which sees a chunk as a single unit.
+    - (#16540): Fixed an issue where the Find and Add Next and Find All commands did nothing in the visual editor. In prose text, these commands are reported as unavailable rather than silently doing nothing.
+    - (#16540): Fixed a client error (“Cannot read properties of null”) that could follow a Reload Now of the visual editor after a format change, when the editor’s idle save of the editing location fired before the rebuilt editor existed.
+    - (#18620): The Data Viewer’s last row is no longer hidden underneath the horizontal scrollbar when scrolled to the bottom.
+    - (#18139): Fixed Windows locale drift that corrupted non-ASCII Console input and other locale-sensitive operations.
+    - (#18635): Running code from a popped-out source window no longer moves focus to the console when “Focus console after executing code from the source pane” is off.
+    - (#18441): The sign-in page and the logged-out dialog now pause polling while their tab is hidden and back off over time, and the dialog offers a “Try again now” button.
+    - (#18356): Declining the Posit Assistant install prompt now restores the previously selected code assistant.
+    - (#18631): RStudio Desktop now shows What’s New once per release instead of after every patch update.
+    - (#18602): Fixed folding and outline hierarchy for section headers decorated with # characters.
+    - (#18597): Posit Assistant code suggestions now honor system-wide installations.
+    - (#18451): Truncated AI assistant startup errors and logs to avoid dumping minified bundles while retaining useful diagnostics.
+    - (#18570): Posit Assistant manifest download errors now show the underlying DNS, proxy, or TLS failure.
+    - (#18610): Posit Assistant install and update downloads now preserve detailed errors, report warning-only failures, and honor configured timeouts.
+    - (#18531): Fixed breakpoints in methods registered on S7 generics.
+    - (#18572): Prevented RStudio Server session relaunches from starting duplicate orphaned sessions.
+    - (#18571): Fixed Posit Assistant chat incorrectly remaining in an “update in progress” state after an R session restart.
+    - (#18425): Fixed snippet help and insertion errors when the cursor moves between language modes.
+    - (#18526): Fixed S7 method breakpoints on R versions before 4.3.0 and for package-scoped classes.
+    - (#18559): The Plots pane now activates after a busy command finishes even when the plot was rendered earlier.
+    - (#18533): Prevented spurious “Error Listing Objects” dialogs after RStudio Server session restarts.
+    - (#18527): On Windows, environment variable updates and removals made by RStudio are now visible to R and in-process libraries.
+    - (#18527): On Windows, sessions started in untrusted directories no longer read user-level .Renviron files.
+    - (#10756): Improved crash reporting and thread safety during session startup.
+    - (#18507): Reduced macOS file-monitor overload by excluding high-churn and nested-worktree directories, batching events, and debouncing recovery scans.
+    - (#18493): Fixed invisible checkbox and radio button states in Windows high-contrast dark themes.
+    - (#18474): Fixed a math-preview keyboard handler leak that consumed subsequent Escape keypresses.
+    - (#18423): The Data Viewer’s global search no longer re-converts every non-character column to text on each request. Extending a search now refines the previous result instead of rescanning the whole frame.
+    - (#17806): Improved Data Viewer searching, filtering, scrolling, and Summary panel performance.
+    - (#17806): Fixed a Data Viewer memory leak when viewed objects change.
+    - (#18472): Fixed stale syntax highlighting after edits in Markdown and YAML documents.
+    - (#18447): Console line-navigation shortcuts now move or select to the ends of the whole command instead of the wrapped visual line.
+    - (#18469): Fixed R raw strings corrupting editor state and breaking later header folds.
+    - (#18468): Fixed indentation in C++ chunks and formatting of Quarto #| comment lines.
+    - (#18464): Fixed rainbow fenced-div colors to reflect nesting.
+    - (#18501): Restricted localhost proxy resolution to the requested IP address family.
+    - (#18444): Fixed repeated pane-layout collapse caused by stale zoom state.
+    - (#18448): Fixed pane zoom state after column, sidebar, source-column, and pane-size changes.
+    - (#18482): Prevented spurious Windows crash reports when closing an R session with a running terminal.
+    - (#18546): RStudio Server’s localhost proxy now streams response bodies instead of buffering them in memory.
+    Posit Workbench
+    - (rstudio-pro#12127) Fixed RS_SERVER_URL being blank in RStudio Pro sessions.
+    - (rstudio-pro#12051) Fixed rserver logging normal status messages from subprocesses like rserver-launcher as ERROR instead of their actual log level.
+    - (rstudio-pro#11957) Fixed the “Last-used” image tag in the homepage session launcher never updating after starting a session. The last-used image is now remembered separately for each workbench, so one workbench’s image choice no longer appears as the last-used image for another. Any previously remembered image is cleared once when upgrading.
+    - (rstudio-pro#12300) Fixed default extensions.autoUpdate setting for VS Code and Positron sessions to match Code OSS’s updated setting type.
+    - (rstudio-pro#12101) Fixed environment inspection finding no R installations when no R search paths were configured.
+    - (rstudio-pro#12101) Fixed audited job environment summaries recording R package names as row numbers when the same package was installed in more than one library on the search path, which is the usual case when a user library shadows the site library.
+    - (rstudio-pro#12101) Fixed audited job environment summaries truncating R library paths that contain spaces.
+    - (rstudio-pro#12208) Fixed an issue with parsing HTTP POST requests that do not comply with RFC 1341.
+    - (rstudio/launcher#1647) Fixed a slow or stuck Job Launcher plugin restart freezing API requests for other clusters.
+    - (rstudio/launcher#1683) Fixed a Job Launcher heartbeat-timer race that could count phantom missed heartbeats under heavy load and spuriously restart healthy plugins.
+    - (rstudio/launcher#1692) Fixed Kubernetes API requests that never complete (for example, silently dropped connections from NAT idle timeouts) permanently consuming request queue slots.
+    - (rstudio/launcher#1666) A missing Slurm CLI (for example, a wrong or unmounted slurm-bin-path) now reports a command-not-found error with configuration guidance instead of a generic unknown Slurm error.
+    - (rstudio/launcher#1666) The Job Launcher now logs rsandbox validation failures at startup as warnings, including rsandbox’s output and a CAP_SYS_ADMIN hint for unprivileged containers, and includes them in Slurm plugin startup errors.
+    - (rstudio/launcher#1699) The Kubernetes plugin now logs unparsable third-party Jobs in shared namespaces at warning level instead of error, reducing log noise.
+    Deprecated / Removed
+    RStudio
+    - (#18605): Marked RPubs and ShinyApps.io publishing destinations as deprecated ahead of their sunset; see the migration guide.
+    Posit Workbench
+    - The Slurm plugin no longer recognizes jobs that pre-2020 Launcher versions submitted with base64-encoded job names.
+    Upgrade Instructions
+    Posit Workbench
+    - If you set posit-assistant-path, check that it points at a valid Posit Assistant installation. The search now ends if it does not find a valid installation, and RStudio reports Posit Assistant as not installed rather than falling back to the copy bundled with Workbench.
+    - If you set posit-assistant-installation-enabled=0, users who had already installed Posit Assistant themselves are switched to the administrator-managed or bundled copy, which might be an older version. Their own copy is ignored, not removed.
+    - If you enforce extensions.autoUpdate for Positron Pro or VS Code sessions (e.g., via positron-enforced-settings), update it from the boolean false to the string "off". Code OSS 1.130.0 changed this setting from a boolean to a string enum, so a boolean value is no longer valid and the enforced setting will silently stop applying, falling back to Code OSS’s new default of "on".
+    Dependencies
+    - Copilot Language Server 1.531.0
+    - Electron 42.11.1
+    - Job Launcher Service 2.28.0-615
+    - Node.js 22.23.2 (GitHub Copilot, Posit Assistant)
+    - PWB Code Server 2026.09-b3134, Code OSS 1.130.0
+    - Posit Assistant for RStudio 1.3.0
+    - Positron 2026.09.0-150
+    - Quarto 1.10.18
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/#rstudio-2026.09.0
+ReleaseTime: 2026-09-10
