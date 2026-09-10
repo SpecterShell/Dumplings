@@ -1,41 +1,18 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/audacity/audacity/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/audacity/audacity/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^Audacity-'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('32bit') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('64bit') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
-  InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x86'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('32bit') -and $_.name -match 'win' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('64bit') -and $_.name -match 'win' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'arm64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('arm64') -and $_.name -match 'win' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -65,6 +42,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     $this.Print()
     $this.Write()
