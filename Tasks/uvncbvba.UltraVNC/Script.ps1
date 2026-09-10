@@ -2,7 +2,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://uvnc.com/downloads/ultravnc.html'
 $Object2 = Invoke-WebRequest -Uri $Object1.Links.Where({ try { $_.href.Contains('https://forum.uvnc.com/viewtopic.php?t=') } catch {} }, 'First')[0].href
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object2.Content, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
