@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri "https://update.backyard.ai/update/win32/$($this.Status.Contains('New') ? '0.29.0' : $this.LastState.Version)" -StatusCodeVariable 'StatusCode'
+$Object1 = Invoke-RestMethod -Uri "https://desktop.backyard.ai/update/win32/$($this.Status.Contains('New') ? '0.29.0' : $this.LastState.Version)" -StatusCodeVariable 'StatusCode'
 
 if ($StatusCode -eq 204) {
   $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
