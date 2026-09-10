@@ -1,0 +1,70 @@
+Version: 26.9.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/l0ng-ai/tty7/releases/download/v26.9.2/tty7-26.9.2-windows-x86_64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The sidebar is the centre of this release. Tabs can be filed into groups by hand rather than only by the repo their cwd happens to be in, groups fold, and the whole rail was given a text hierarchy so a title reads louder than a branch and colour is spent on state instead of on twelve identical discs.
+    Links got the other half of the attention. A path is now read out of the prose glued around it — --file=src/main.rs, a diff's a/, File "handlers.py", line 214 — and hovering one no longer needs the modifier held down. A remote pane's listening ports are visible and forwarded for the first time, and on macOS tty7 can be the system's default terminal.
+    Behind that, three performance fixes: the diff overlay draws its patch as a virtualised list, a pane's frame is never queued behind the grid lock, and a protocol frame goes on the wire in one write.
+    Added
+    - Put a tab in a sidebar group by hand, from its menu or by dragging it there
+    - Sidebar groups fold, and stay folded across launches (#804)
+    - A path is read out of the prose around it, with file(10,2) and file#L10 locations
+    - A resolved link underlines on hover without the modifier; right-click opens a menu about that path
+    - A remote pane's listening ports are listed, and a new one is forwarded unasked
+    - tty7 can be the system's default terminal on macOS (by @ayamir in #818)
+    - A bindable Close Window action (by @bytehello in #778, reported by @rrpolanco in #773)
+    - Opening a new window is a bindable action (#793, from @jerryokk's #710)
+    - Select a range of diff lines with the pointer and copy it (#794, requested by @LittleSource in #721)
+    - A titleless tab is named after its working directory (#792, requested by @rrpolanco in #740)
+    - The tab whose pane is zoomed says so (#782, reported by @rrpolanco in #752)
+    - Edit a host from the tab connected to it (#801, from @junyi-deep's #438)
+    - TraeCode CLI support (by @ayamir in #807)
+    Changed
+    - The sidebar and the workspace switcher get a text hierarchy; colour goes on state
+    - The window's chrome tiles paint only while the pointer is over the bar they belong to
+    - Inline controls lose their shadow, and a tooltip's shortcut gets a slot of its own (#803)
+    - The diff overlay draws its patch as a virtualised row list (#799)
+    - A pane's frame is never queued behind the grid lock
+    - A frame's header and payload go on the wire in one write (#797, from @ivydt08's #713)
+    - A directional pane move remembers where it came from per pane, not per direction (#781, reported by @rrpolanco in #738)
+    Removed
+    - The Info panel's CONVERSATION outline, and the jump back into the scrollback behind it (#703, #759)
+    Fixed
+    - A line the shell is still holding is submitted as itself (#800, from @junyi-deep's #433)
+    - A plain single line is submitted as typed, not as a paste (#790, reported by @failable in #660)
+    - A pane notices it came home from ssh without waiting for output, so ↑ stops appearing dead
+    - macOS notifications stop polling Notification Center from the UI thread
+    - A ligated run stands over its own cells (#785, reported by @rrpolanco in #751), and every ligature feature is named off (#788)
+    - A shift-punctuation chord folds into the key the platform reports (#784, reported by @rrpolanco in #750)
+    - A machine whose profile is gone is named, not spelled as a UUID (#786, reported by @shihuaidexianyu in #485)
+    - The pointer can finish a Ctrl+Tab gesture the keyboard started
+    - A click that dismisses the switcher no longer reopens it on the way out
+    - The workspace tile answers a hover
+    - An untouched rename box no longer names the tab (by @hhdebb in #849, reported in #848)
+    - An agent's status dot sits outside its disc instead of being clipped to a crescent (by @hhdebb in #846, reported in #845)
+    - A long branch no longer eats a group's name, and a lone row lifts its branch onto the header (#836, #851)
+    - A folded sidebar group hides its active row too (#806)
+    - An agent's mark has one colour, not one per draw site
+    - The floating notices stack, and the port-forward and sftp forms have their keyboard and focus back
+    - A solo glyph stays inside its cell when the next one is taken (#783)
+    - A pane's paths are read in its own host's spelling (#795)
+    - A repository is keyed by one spelling of its root (#796)
+    New Contributors
+    - @bytehello made their first contribution in #778
+    - @hhdebb made their first contribution in #846
+    Install
+    - macOS — tty7-26.9.2-macos-arm64.dmg (Apple silicon) or tty7-26.9.2-macos-x86_64.dmg (Intel)
+    - Windows — tty7-26.9.2-windows-x86_64-setup.exe, or the .zip for a portable copy
+    - Linux — tty7-26.9.2-linux-x86_64.AppImage, or the .tar.gz
+    Every entry above is written up in full in
+    CHANGELOG.md.
+    Full Changelog: https://github.com/l0ng-ai/tty7/compare/v26.9.1...v26.9.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/l0ng-ai/tty7/releases/tag/v26.9.2
+ReleaseTime: 2026-09-10T05:31:07.0000000Z
