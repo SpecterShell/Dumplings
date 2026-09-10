@@ -1,0 +1,34 @@
+Version: 3.9.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.9.9/MotrixNext_3.9.9_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.9.9/MotrixNext_3.9.9_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    Motrix Next 3.9.9 brings the improvements from the 3.9.9 beta cycle to the stable channel, with Aria2 Next 2.7.5, more resilient HTTP transfers, consistent task history, smoother task cards, and more reliable desktop integration.
+    🛠 Improvements
+    - HTTP transfer recovery — Improved parallel-download concurrency recovery, redirect destination reuse, IPv4/IPv6 worker scheduling, and stalled-tail recovery while respecting connection limits and retry backoff
+    - Consistent task lists — Unified live-task and history sorting, snapshots, and sidebar counts; removed the 1,000-entry limit from active and waiting task snapshots
+    - Smoother task cards — Added filename and status transitions, refined progress and action animations, and preserved card identity and manual ordering when retrying tasks
+    - Compact layout — Stabilized progress-bar width with a fixed percentage gap and right-aligned transfer details, keeping the two-line layout and revealing truncated details through tooltips
+    - Actionable diagnostics — Added browser-launcher registration details, native OS errors, and Linux protocol-handler information to diagnostic exports
+    🐛 Bug Fixes
+    - Fixed HTTP scheduling defects that unnecessarily reduced parallelism after early 403 responses or mishandled 429/503 overload responses
+    - Fixed false resource-change failures involving unquoted ETags and inconsistent CDN timestamps, including the reported Baidu Netdisk case; improved conditional range handling at redirecting endpoints
+    - Fixed a Windows engine event-loop crash and preserved pending wakeups when libcurl reschedules timers
+    - Fixed tasks briefly disappearing between engine completion and history persistence, suppressed stale duplicate BT/ED2K results, and preserved partial progress and error details in newly recorded history
+    - Fixed one browser's Native Messaging registration failure blocking registration for other browsers
+    - Prevented browser-inherited EGL_PLATFORM settings from interfering with Linux desktop activation
+    - Reworked Linux link associations around native GIO/XDG handling, including desktop-specific defaults and persistent AppImage paths; failed status queries now offer retry instead of appearing disabled
+    - Fixed saved window decorations overriding platform settings and hiding macOS traffic-light controls (#587)
+    - Fixed compact progress bars changing length as transfer metadata updates (#589)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.9.9
+ReleaseTime: 2026-09-10T17:23:26.0000000Z
