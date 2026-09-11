@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Prefix + $Object1.files[0].url.Replace('.exe', '_default_full.exe')
+  InstallerUrl = $Prefix + $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
