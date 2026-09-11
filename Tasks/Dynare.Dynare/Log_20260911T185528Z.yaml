@@ -1,0 +1,40 @@
+Version: "7.2"
+Installer:
+- InstallerUrl: https://www.dynare.org/release/windows/dynare-7.2-win.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/news
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We are pleased to announce the release of Dynare 7.2.
+    This maintenance release fixes various bugs.
+    The Windows, macOS, MATLAB Online and source packages are available for download at the Dynare website.
+    This release is compatible with MATLAB versions ranging from 9.8 (R2020a) to 26.1 (R2026a), and with GNU Octave versions ranging from 8.4.0 to 11.3.0 (NB: the Windows package requires version 11.3.0 specifically).
+    Here is a list of the problems identified in version 7.1 and that have been fixed in version 7.2:
+    - Under Windows, after solving a model at third order or higher (or used the k_order_solver option), MATLAB would not properly exit (would stay as a zombie process if launched via the graphical interface, or would deadlock if launched in batch mode)
+    - Estimation
+      - A normalization issue in the computation of the modified harmonic mean marginal data density was fixed that resulted in Inf in pathological cases
+      - posterior_sampling_method='slice' option: some prior draws were incorrectly accepted, causing excess variance in the posterior
+      - The SaveFiles option of mode_compute=5 optimizer would overwrite the temporary files of other workers when a parallel context was used
+    - OccBin: inconsistent error-handling could cause crashes in some cases
+    - dseries:
+      - from syntax: the result would be incorrect when a variable name was the prefix of another variable name
+      - from syntax: any keyword beginning with to or do was mistakenly taken for a to or a do, leading to a crash
+      - The disp method would fail with a single input argument
+      - The struct2dseries command would fail for all sub-annual frequencies
+      - year/subperiod methods would return wrong values for weekly dates
+      - The dates constructor would return an empty object for the weekly frequency
+      - The string2freq command did not know the weekly frequency code 'W'
+      - Bi-annual frequency code 'S' (from freq2string) was not recognized by string2freq/isfreq, which only knew 'H'
+      - Indexing an empty dates object would build wrong dates
+      - Yearly difference/growth rate were wrong for weekly data — lag was fixed at 52 periods, but ISO years can have 53 weeks
+      - Yearly difference/growth rate wrong for daily data — lag was fixed at 365 days, ignoring leap years
+      - Weekly dates for years before year 0 were silently accepted but built invalid/unprintable objects — they are now rejected, since the week-since-year-0 encoding doesn’t extend to negative years
+    - epilogue block:
+      - The result would be incorrect when a variable name was the prefix of another variable name
+      - The computation could return NaN at some early dates instead of the expected value in some cases where a variable was lagged and another variable was not lagged but contained NaN in the first periods
+    As a reminder, the list of new features introduced in versions 7.x can be found in the release notes for 7.0.
+- Key: ReleaseNotesUrl
+  Value: https://www.dynare.org/new-dynare-release/dynare-7.2-released/
+ReleaseTime: 2026-09-10T22:00:00.0000000Z
