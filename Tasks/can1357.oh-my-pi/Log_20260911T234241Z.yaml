@@ -1,0 +1,103 @@
+Version: 18.1.18
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.1.18/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Anthropic server-side compaction as a remote compaction backend: model lines the beta supports (compat.supportsServerCompaction, rule-owned in the catalog: Opus 4.6+, Sonnet 4.6+, Fable/Mythos 5) on the official endpoint, resolved the way the provider routes requests, plus Anthropic-compatible routes with remoteCompaction.enabled, compact by re-issuing the live turn's own request — same system prompt, tools, and history, so it reads the prompt cache the last turn wrote — with the compact_20260112 edit paused after the summary and the harness summary prompt as instructions. The instructions name where the retained tail begins so the summary covers only the history the rebuilt context drops. The API's summary is stored as the entry text and as preserveData.anthropicCompaction, replayed natively on later Anthropic requests and read as plain text by every other provider; the retained tail comes from session entries as with a local summary. Contexts below 55k tokens (the API trigger floor plus margin) keep summarizing locally, and a response without a summary is a native failure, like the OpenAI lanes. An aborted compaction response is the abort (a cancellation, never a native failure) and an error response keeps its HTTP status, so auth and timeout classification match the OpenAI lanes; the block's opaque encrypted_content is persisted as preserveData.anthropicCompaction.encryptedContent and replayed verbatim.
+    Fixed
+    - compact() now forwards the caller's oneshotRetry opt-out to every summarization oneshot; auto-compaction's outer retry loop no longer multiplies with the inner transient-failure retries.
+    @oh-my-pi/pi-ai
+    Added
+    - Anthropic server-side compaction (compact-2026-01-12 beta): anthropicCompaction on StreamOptions sends the compact_20260112 context-management edit, the streamed compaction block is surfaced as an anthropicCompaction provider payload, the compaction stop reason is a normal stop tagged in stopDetails (exempt from the empty-completion retry), and usage sums usage.iterations whenever a compaction iteration ran. A user-role compaction summary carrying that payload replays as a leading assistant compaction block — folded into the retained assistant turn when one follows — with the beta and a never-firing strategy attached automatically; other providers keep reading the summary text. Everything compaction-related is gated on the model line (compat.supportsServerCompaction, rule-owned in the catalog) and on the endpoint the request actually reaches (supportsAnthropicCompaction: the official API for the first-party provider, resolved through Foundry / ANTHROPIC_BASE_URL reroutes, or an explicit remoteCompaction.enabled opt-in), so a rerouted session or an older model line falls back to the text summary instead of sending a block the API rejects. Caller-owned clients are gated on their own endpoint (the client's baseURL, or an explicit remoteCompaction.enabled opt-in when it exposes none) and receive the compaction beta per request, like the effort and control betas. A block held by its originating assistant message — a caller that appends the compacting response itself — replays at the head of that turn. The block's opaque encrypted_content is captured from the stream, kept on the payload as encryptedContent, and replayed verbatim. A compacting turn is priced per sampling iteration (like a server-side fallback turn), so a long-context tier applies only to an iteration whose own prompt crosses the threshold, never to the summed totals.
+    - Added historical decimation prompt-cache breakpoints every 15 user turns on Anthropic requests, so long conversations retain stable cached prefixes during branching, rewinds, and session resume (#11665 by @camjac251).
+    Changed
+    - Defaulted Anthropic OAuth requests to 1h prompt-cache retention where supported, matching Claude Code subscriber behavior and preventing cache expiry during idle intervals (#11667 by @camjac251).
+    Fixed
+    - Fixed Codex HTTP response-body transport failures forwarded through Anthropic-compatible proxies being treated as terminal errors; replay-safe turns now use the existing transient recovery without re-executing completed tools.
+    - GitHub Copilot Enterprise requests keep the Copilot CLI identity accepted by private Enterprise endpoints, and Business requests denied with HTTP 400 model_not_supported now retry once as the Copilot CLI (matching the existing 403 fallback), restoring models that 18.1.17 rejected as unsupported (#11669).
+    - Fixed provider stream truncations reported as a bare unexpected EOF (and other stream-parse diagnostics) classifying as terminal errors, so they now retry like every other transient transport failure (#11745).
+    - GitHub Copilot streams remember the working Copilot-Integration-Id per credential after a denied chat identity retries as the Copilot CLI, so later streams start at the working shape instead of replaying the denial (#11669).
+    - Fixed Anthropic OAuth requests omitting the tool-array cache breakpoint, so tool definitions are now cached across session rewrites and sibling subagents (#11660 by @camjac251).
+    - Fixed Amazon Bedrock OpenAI models rejecting image-bearing tool results by sending each image as a sibling user content block (#11681).
+    @oh-my-pi/pi-catalog
+    Added
+    - supports-server-compaction compat axis (compat.supportsServerCompaction): whether a model line accepts Anthropic server-side compaction (compact-2026-01-12). Class rules enable it for Opus 4.6+, Sonnet 4.6+, and Fable/Mythos 5 on every Anthropic-messages host; the default is false.
+    Fixed
+    - OpenCode Go's DeepSeek Flash lanes (deepseek-flash, deepseek-v4.1-flash) now declare image input. The gateway serves them with vision despite the IDs carrying no vision suffix, so the class-wide strip-image-input rule was dropping attachments the endpoint reads; the modality is declared too, since live discovery seeds these lanes text-only (#11774 by @STRML).
+    - Amazon Bedrock OpenAI models, plus unclassified profiles such as opaque application-inference-profile ARNs, now carry the compatibility policy required to preserve image-bearing tool results (#11681).
+    - DeepSeek V4.1 Flash requests now honor the documented 384K output maximum instead of being capped at 64K (#11769).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Enable tui.mouse to focus live subagent cards and jump-list rows by clicking them, with a hover highlight on the target; native selection becomes Shift+drag while on (#11737 by @H4vC).
+    - The pinned Subagents block now lists every live agent, collapsed to a few rows with a click expander by default; display.pinnedAgents switches it to full or off (#11737 by @H4vC).
+    - The remote compaction method now covers Claude: Anthropic server-side compaction (compact-2026-01-12 beta) runs behind the existing compaction.methodOrder / compaction.remoteEnabled gates for first-party Anthropic models, persists its plain-text summary with a native replay payload that later Anthropic turns send back as a compaction block, and falls through to the next configured method on failure like OpenAI server compaction.
+    Changed
+    - The providers.cacheRetention auto setting now keeps Anthropic OAuth subscriber sessions on 1h prompt-cache retention and API keys on 5m, instead of 5m for both (#11667 by @camjac251).
+    Fixed
+    - Provider-native compaction (OpenAI Responses compact, Anthropic server-side compaction) re-issues the system prompt the live turn actually sent — a per-turn before_agent_start override included — instead of the rebuilt base prompt, and advisor compaction sends the advisor's own prompt instead of the generic summarizer prompt, so the request reads the live request's cached prefix.
+    - The set_steering_mode, set_follow_up_mode, and set_interrupt_mode RPC commands are now session-scoped, so a short-lived RPC client no longer silently writes queue-mode fields to the machine-global config.yml. The setters still persist by default, so the settings panel and existing callers are unaffected (#11555).
+    - Hand-authored *.openapi.json files can now be edited without disabling generated-file protection globally (#11674).
+    - models.yml now validates the per-model compat.stripImageInput opt-out, so a wrong-typed value is rejected like every other declared compat key instead of being silently accepted (#11697).
+    - /mcp reload now distinguishes servers still connecting after the bounded reload window instead of reporting a healthy asynchronous reload as zero active servers (#11639).
+    - Fixed isolated tasks dropping nested-repo work: nested diffs persist as <agent>.nested-*.patch before cleanup, apply=false lists each file, isolated agents report as non-resumable, and runs needing manual recovery report failed (#11343 by @grapexy).
+    - Fixed the Windows PowerShell installer (install.ps1) aborting on Windows PowerShell 5.1 when bun or git wrote normal progress to stderr: native commands now run with $ErrorActionPreference scoped to Continue and success is gated on the process exit code, so $ErrorActionPreference = "Stop"'s stderr-as-terminating-error behavior no longer kills the install (#11675).
+    - Eval cell timeouts no longer fatally terminate the session when a browser tab worker is being recycled (#11707).
+    - Models whose images are stripped on the wire (compat.stripImageInput) now trigger the describeForTextModels vision fallback and are skipped when resolving the vision model, instead of silently dropping images (#9697).
+    - #readProjectSettings now logs capability warnings when a project .claude/settings.json fails to parse, instead of silently dropping them (#11570).
+    - A malformed project .claude/settings.json now produces a warning instead of being silently ignored (#11570).
+    @oh-my-pi/snapcompact
+    Fixed
+    - A snapcompact pass now also strips a superseded Anthropic server-compaction payload (preserveData.anthropicCompaction) alongside the OpenAI replacement history, so a stale native summary can never replay ahead of the archived frames.
+    What's Changed
+    - fix(ai): hoist Bedrock OpenAI tool-result images by @roboomp in https://github.com/can1357/oh-my-pi/pull/11684
+    - chore(ai): drop unused $env import from the Copilot OAuth registry by @srobroek in https://github.com/can1357/oh-my-pi/pull/11691
+    - feat(catalog): add DeepSeek V4.1 Flash on OpenRouter by @mazzanfar in https://github.com/can1357/oh-my-pi/pull/11592
+    - fix(ai): ensure Anthropic tool array carries a cache breakpoint on OAuth by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11660
+    - fix(coding-agent): validate compat.stripImageInput in models.yml schema by @H4vC in https://github.com/can1357/oh-my-pi/pull/11700
+    - feat(ai): add historical decimation prompt-cache breakpoints on Anthropic requests by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11665
+    - fix(coding-agent): gate image fallback on wire truth (#9697) by @H4vC in https://github.com/can1357/oh-my-pi/pull/11708
+    - fix(browser): guard abort sends during worker recycling by @roboomp in https://github.com/can1357/oh-my-pi/pull/11710
+    - fix(install): stop native stderr aborting install.ps1 on PowerShell 5.1 by @roboomp in https://github.com/can1357/oh-my-pi/pull/11680
+    - feat(ai): default Anthropic OAuth requests to 1h prompt-cache retention by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11667
+    - feat(tui): mark the live session in the /resume picker by @tkossak in https://github.com/can1357/oh-my-pi/pull/11381
+    - fix(mcp): reported pending servers during reload by @roboomp in https://github.com/can1357/oh-my-pi/pull/11640
+    - fix(config): validate compat.stripImageInput in models.yml schema by @roboomp in https://github.com/can1357/oh-my-pi/pull/11698
+    - fix(edit): allow hand-authored openapi specs by @roboomp in https://github.com/can1357/oh-my-pi/pull/11676
+    - fix(session): scope RPC queue-mode setters to the session by @PeterPonyu in https://github.com/can1357/oh-my-pi/pull/11672
+    - fix(task): persist nested-repo patches before isolation teardown; stop advertising isolated agents as resumable by @grapexy in https://github.com/can1357/oh-my-pi/pull/11343
+    - fix(settings): log dropped .claude/settings.json parse warnings by @PeterPonyu in https://github.com/can1357/oh-my-pi/pull/11671
+    - test(ai): align OAuth cache_control assertions with 1h retention default by @roboomp in https://github.com/can1357/oh-my-pi/pull/11723
+    - test(natives): force plain diff driver in vcs test git helper by @roboomp in https://github.com/can1357/oh-my-pi/pull/11450
+    - fix(tui): correct Nerd Font pi icon by @roboomp in https://github.com/can1357/oh-my-pi/pull/10159
+    - docs: document camelCase session-entry role vocabulary by @roboomp in https://github.com/can1357/oh-my-pi/pull/11648
+    - fix(tui): restore pending steering block after focus attach by @roboomp in https://github.com/can1357/oh-my-pi/pull/11380
+    - fix(catalog): stop caching an empty catalog on LiteLLM discovery timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/10970
+    - fix(ai): restored Copilot Enterprise request identity by @roboomp in https://github.com/can1357/oh-my-pi/pull/11670
+    - docs(context-files): describe RULES.md system-prefix placement accurately by @roboomp in https://github.com/can1357/oh-my-pi/pull/11197
+    - fix(coding-agent): make free a searchable model fact by @TheFilipcom4607 in https://github.com/can1357/oh-my-pi/pull/11740
+    - fix(ai): cache working Copilot integration identity per credential by @H4vC in https://github.com/can1357/oh-my-pi/pull/11733
+    - feat(compaction): add Anthropic server-side compaction backend by @alphastorm in https://github.com/can1357/oh-my-pi/pull/11641
+    - fix(ai): restore abort signal on OpenAI stream requests by @H4vC in https://github.com/can1357/oh-my-pi/pull/11763
+    - feat(coding-agent): add prewalk restart command by @brymko in https://github.com/can1357/oh-my-pi/pull/11075
+    - fix(ai): classify bare stream truncations as transient by @roboomp in https://github.com/can1357/oh-my-pi/pull/11747
+    - fix(catalog): honor DeepSeek Flash output limits by @roboomp in https://github.com/can1357/oh-my-pi/pull/11775
+    - fix(ai): exercise DeepSeek KDL rule in output-cap test by @H4vC in https://github.com/can1357/oh-my-pi/pull/11777
+    - fix(ai): recover Codex response-body transport failures by @JanFrehar in https://github.com/can1357/oh-my-pi/pull/11779
+    - fix(catalog): keep image input on OpenCode Go DeepSeek Flash lanes by @STRML in https://github.com/can1357/oh-my-pi/pull/11774
+    - feat(coding-agent): mouse-driven subagent interaction by @H4vC in https://github.com/can1357/oh-my-pi/pull/11737
+    - fix(ci): run workspace typechecks sequentially to avoid OOM by @H4vC in https://github.com/can1357/oh-my-pi/pull/11783
+    New Contributors
+    - @tkossak made their first contribution in https://github.com/can1357/oh-my-pi/pull/11381
+    - @TheFilipcom4607 made their first contribution in https://github.com/can1357/oh-my-pi/pull/11740
+    - @JanFrehar made their first contribution in https://github.com/can1357/oh-my-pi/pull/11779
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.1.17...v18.1.18
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.1.18
+ReleaseTime: 2026-09-11T21:43:45.0000000Z
