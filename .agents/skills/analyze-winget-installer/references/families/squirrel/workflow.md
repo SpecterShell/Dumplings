@@ -6,7 +6,7 @@ Use `InstallerType: exe` with a family comment such as `# Squirrel` or `# Velopa
 
 ## Detection
 
-Route here when `Test-SquirrelInstaller` or `Get-SquirrelInfo` succeeds. `Get-SquirrelInfo` reports `Family: Squirrel` only when PE resource `DATA/#131` validates, and reports `Family: Velopack` only when the Velopack offset/length locator, signature, and bounded package payload validate. Embedded `.nupkg` or `.nuspec` metadata without either outer structure is reported as `Squirrel/Velopack` and does not prove the launcher's switches.
+Route here when `Test-SquirrelInstaller` or `Get-SquirrelInfo` succeeds. `Get-SquirrelInfo` reports `Family: Squirrel` when PE resource `DATA/#131` validates. It reports `Family: Velopack` for the transitional Clowd.Squirrel `DATA/#205` route and for the signed offset/length bundle used by later Clowd.Squirrel and Velopack. `LauncherGeneration` distinguishes `Squirrel.Windows`, both Clowd generations, and the Rust `Velopack` setup. Embedded `.nupkg` or `.nuspec` metadata without an authoritative outer structure is reported as `Squirrel/Velopack` and does not prove the launcher's switches. When several authoritative routes agree on `Velopack` identity but imply different generations, the parser retains `Family: Velopack`, clears `LauncherGeneration`, and emits only switches common to every route.
 
 Do not route here from `--silent` alone; unrelated installers use the same switch.
 
@@ -26,9 +26,11 @@ Static parser workflow:
 $Analysis = Get-WinGetInstallerAnalysis -Path $InstallerPath
 $ParserResult = $Analysis.ParserResults | Where-Object { $_.Name -eq 'Squirrel/Velopack' -and $_.Success } | Select-Object -First 1
 $Info = $ParserResult.Result.Metadata
-$Info | Select-Object Family, DetectionRoute, Confidence, PackageId, ProductCode, DisplayName, DisplayVersion, Publisher
+$Info | Select-Object Family, LauncherGeneration, DetectionRoute, Confidence, PackageId, ProductCode, DisplayName, DisplayVersion, Publisher, Architecture, PayloadArchitectures, MinimumOSVersion, MainExecutable, PackageRid, Channel
 $Info.InstallModes
 $Info.InstallerSwitches
+$Info.PayloadArchitectureInfo
+$Info.PayloadDependencyInfo
 $Analysis.SuggestedManifestFields
 $Analysis.SuggestedManifestVariants
 ```
@@ -42,7 +44,9 @@ $LatestRelease = $ReleasesContent | ConvertFrom-SquirrelReleases | Where-Object 
 
 `ConvertFrom-SquirrelReleases` does not access the network. It only parses the content string, preserving absolute feed URL base paths and query strings as evidence.
 
-Prefer the parser result over string probing. The `--silent` switch is common to both families and unrelated installers. The authoritative Squirrel route is PE resource type `DATA`, resource ID `131`, containing valid package metadata. The authoritative Velopack route is the source-defined bundle signature with valid preceding payload offset and length. A direct or nested nuspec found through a generic ZIP scan proves package metadata but does not identify the outer launcher; in that case raw `InstallModes` and `InstallerSwitches` are empty, launcher behavior remains in `UnresolvedFields`, and the WinGet suggestion contains no family-specific behavior. If a `RELEASES` feed is the only Squirrel evidence, use it for update discovery and validate the setup EXE in the VM before writing launcher-specific fields.
+Prefer the parser result over string probing. The `--silent` switch is common to these families and unrelated installers. The authoritative routes are Squirrel.Windows `DATA/#131`, Clowd.Squirrel `DATA/#205`, and the shared signed locator with valid preceding payload offset and length. Clowd resource metadata and Squirrel.Windows `FLAGS/#132` framework requirements are matched to the package resource by PE language ID. The signed locator began in Clowd.Squirrel, so use `LauncherGeneration`, not `Family` or `DetectionRoute`, to decide whether modern Velopack-only switches are available. A direct or nested nuspec found through a generic ZIP scan proves package metadata but does not identify the outer launcher; in that case raw `InstallModes` and `InstallerSwitches` are empty, launcher behavior remains in `UnresolvedFields`, and the WinGet suggestion contains no family-specific behavior. If a `RELEASES` feed is the only Squirrel evidence, use it for update discovery and validate the setup EXE in the VM before writing launcher-specific fields.
+
+The default signed-locator scan examines eight signatures in the first 16 MiB of the launcher. These are parser watchdogs, not format limits. Raise `MaximumBundleSignatures` or `MaximumLauncherBytes` for a source-backed outlier, up to the function's validated bounds, and retain the chosen values with the analysis evidence.
 
 A .NET single-file bundle that contains `Squirrel.dll` or `NuGet.Squirrel.dll` is not necessarily a Squirrel setup. The application may use Squirrel as a runtime update client while downloading or constructing package state after launch. `Get-SquirrelInfo` accepts this layout only when the bundle or another validated container exposes nupkg, nuspec, or RELEASES metadata. Microsoft Advertising Editor is a current example: its .NET bundle contains Squirrel libraries but no embedded Squirrel package metadata, so the parser rejects it quickly and VM evidence remains necessary for its installed ARP identity.
 
@@ -61,7 +65,7 @@ $Publisher = $InstallerPath | Read-PublisherFromSquirrel
 
 ## Manifest shape
 
-Use the Squirrel shape only when `Family` is `Squirrel` and `DetectionRoute` is `SquirrelPeResource`:
+Use the silent-only shape when `LauncherGeneration` is `Squirrel.Windows`, `Clowd.Squirrel.Resource`, or `Clowd.Squirrel.Bundle`. The example below shows Squirrel.Windows; retain the parser's detected family comment for Clowd media:
 
 ```yaml
 Installers:
@@ -82,7 +86,7 @@ Installers:
 
 Squirrel-style installers are usually per-user and write HKCU ARP entries.
 
-Use the Velopack shape only when `Family` is `Velopack` and `DetectionRoute` is `VelopackBundle`:
+Use the modern Velopack shape only when `Family` is `Velopack`, `DetectionRoute` is `VelopackBundle`, and `LauncherGeneration` is `Velopack`:
 
 ```yaml
 Installers:
@@ -107,7 +111,7 @@ Do not copy either shape from a `Squirrel/Velopack` fallback result. Its `Packag
 
 ## WinGet defaults and overrides
 
-WinGet supplies no Squirrel or Velopack defaults for generic `InstallerType: exe`. Both confirmed families map `Silent` and `SilentWithProgress` to `--silent`; Velopack also supports `InstallLocation: --installto "<INSTALLPATH>"` and `Log: --log "<LOGPATH>"`. Do not apply the Velopack-only switches to Squirrel.Windows media.
+WinGet supplies no Squirrel or Velopack defaults for generic `InstallerType: exe`. Confirmed Squirrel.Windows, Clowd.Squirrel, and Rust Velopack launchers map `Silent` and `SilentWithProgress` to `--silent`. Only a source-identified Rust Velopack setup receives `InstallLocation: --installto "<INSTALLPATH>"` and `Log: --log "<LOGPATH>"`. Do not infer those switches from the shared signed locator.
 
 ## Apps & Features
 
@@ -115,7 +119,7 @@ Use structured parser evidence to identify the visible Apps & Features owner. Do
 
 ## Scope and architecture
 
-Use explicit parser evidence for scope and installed payload architecture. Preserve existing manifest intent and use VM validation when either value is conditional or unresolved.
+Use explicit parser evidence for scope and installed payload architecture. Velopack `machineArchitecture` and an architecture-bearing Windows RID are normalized to WinGet architecture when recognized. For Rust Velopack packages, the parser also locates the declared `lib/app/<mainExe>` entry and reads its PE machine without extracting or executing it. Conflicting metadata and PE values leave `Architecture` unresolved. A valid `osMinVersion` can populate `MinimumOSVersion`; non-Windows `os` values remain diagnostic evidence. Preserve existing manifest intent and use VM validation when a value is conditional or unresolved.
 
 ## VM validation
 
@@ -149,8 +153,8 @@ In the VM, first prove that a normal Discord launch fails after silent setup. Pr
 - `Atlassian.Sourcetree`: nested `SourceTree-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `SourceTree`.
 - `Dialpad.Dialpad`: nested `dialpad-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `dialpad`.
 - `Element.Element`: nested `element-desktop-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `element-desktop`.
-- `Sogelink.Appeee`: Velopack bundle locator and direct nuspec-style package payload; `ProductCode` is `Appeee`.
-- `SaaSGroup.Tower`: Velopack bundle locator and direct nuspec-style package payload; `ProductCode` is `Tower`.
+- `Sogelink.Appeee`: signed Clowd.Squirrel bundle with a direct nuspec-style package payload; `ProductCode` is `Appeee`, and only the silent setup policy is source-backed.
+- `SaaSGroup.Tower`: Rust Velopack signed bundle with direct nuspec-style package payload; `ProductCode` is `Tower`, and the modern install-location and log switches are source-backed.
 - `Amazon.Chime`: Squirrel.Windows setup resource ZIP with nested `AmazonChime-<version>-full.nupkg`; `ProductCode` is `AmazonChime`.
 - `Toggl.TogglTrack`: Squirrel.Windows setup resource ZIP with nested `TogglTrack-<version>-full.nupkg`; `ProductCode` is `TogglTrack`.
 - `SlackTechnologies.Slack`: nested `slack-<version>-full.nupkg` inside the setup EXE; `ProductCode` is `slack`.

@@ -71,13 +71,13 @@ Use `RecommendedWinGetArchitecture` when singular and create concrete entries fr
 Use the Tauri helpers on the application executable, not its installer wrapper:
 
 ```powershell
-if (Test-TauriExecutable -Path C:\Path\To\Application.exe) {
-  $Tauri = Get-TauriExecutableInfo -Path C:\Path\To\Application.exe
+$Tauri = Get-TauriExecutableInfo -Path C:\Path\To\Application.exe
+if ($Tauri.CanExpand) {
   Expand-TauriExecutable -Path C:\Path\To\Application.exe -Name '/index.html' -CollisionAction Rename
 }
 ```
 
-Treat reverse-domain identifiers and ACL strings as candidates rather than package metadata. `CanExpand: false` can mean a custom or URL-backed asset provider. Do not infer absent resources or fetch URLs found as arbitrary binary strings.
+Call `Get-TauriExecutableInfo` once and reuse its result; calling `Test-TauriExecutable` first repeats the bounded PE scan. The generated asset-map ABI is supported from Tauri 1.0 onward. Tauri 1.x custom-provider applications can be identified by the source-backed `__TAURI_PATTERN__` and `__TAURI_METADATA__` runtime globals when no standard asset map remains. Treat reverse-domain identifiers and ACL strings as candidates rather than package metadata. `CanExpand: false` can mean a custom or URL-backed asset provider. `AuxiliaryMaps` reports generated HTML-to-CSP-hash maps only after their Rust enum slices validate, and never exposes those records as frontend files. `BundleType` describes the bundle for which Tauri patched the application executable; it does not reclassify that executable as the outer NSIS or MSI installer. Tauri versions before 2.7 do not carry this field, so keep it unresolved. Current long-token builds can retain unrelated match-arm literals, so use the validated runtime `&str` reference rather than token order. A unique-token fallback has medium confidence and emits `Tauri.BundleType.UniqueTokenFallback`. Do not infer absent resources or fetch URLs found as arbitrary binary strings.
 
 ## VM validation
 
