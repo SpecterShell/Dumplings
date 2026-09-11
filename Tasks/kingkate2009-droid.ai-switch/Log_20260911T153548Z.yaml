@@ -1,0 +1,23 @@
+Version: 2.4.4
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: ai-switch-2.4.4-windows-amd64\ai-switch.exe
+  InstallerUrl: https://github.com/kingkate2009-droid/ai-switch/releases/download/v2.4.4/ai-switch-2.4.4-windows-amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AI Switch v2.4.4
+    Fixes
+    - Raw endpoint error display: KEY 健康失败时，前端展示实际探测端点的完整原始返回（如 ），不再用泛化的 No usable model 遮盖真实原因
+    - Modality-based endpoint selection: 文本/图片/视频模型严格按模态选择候选端点。gpt-image-1 只试图片接口，sora-2 只试视频接口；Anthropic 供应商显式标记后文本走 anthropic_messages
+    - /v1 fallback: 下游代理请求若收到 404/405 且 Base URL 缺少版本路径，自动重试 /v1/ 前缀版本，避免裸 host 供应商失效
+    - Frontend toast improvement: 失败提示不再截断到 120 字符，不再拼接泛化建议，直接展示原始响应
+    Full Changelog: https://github.com/kingkate2009-droid/ai-switch/compare/v2.4.2...v2.4.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kingkate2009-droid/ai-switch/releases/tag/v2.4.4
+ReleaseTime: 2026-09-11T13:30:37.0000000Z
