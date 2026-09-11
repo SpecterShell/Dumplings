@@ -1,0 +1,55 @@
+Version: 0.30.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.30.7/codeg_0.30.7_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.30.7/codeg_0.30.7_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    pi gets a deep pass — reasoning, images, real diffs and rewound branches now come through correctly, and a new session no longer opens with a page of startup noise.
+    Local screenshots render inline in replies, imported worktrees land under their repo, and six bundled agents move up.
+    New
+    - Local images in a reply now render inline instead of a blocked placeholder, and click to open in the image viewer. (#691, @Adam-Dalloul)
+    - pi is now a local MCP source — servers in ~/.pi/agent/mcp.json show up in MCP settings and can be edited there. (#653 requested by @galact-byte, #673 @dawNotPoi)
+    Improved
+    - Updated bundled agents: DeepSeek 0.9.0, Kimi Code 0.42.0, OpenCode 1.18.30, CodeBuddy 2.149.0, Grok 1.0.25, Qoder 1.1.49.
+    - DeepSeek's model panel follows 0.9.0 — the built-in list is now deepseek-flash and deepseek-v4-pro, image detail is replaced by a pixel budget, and a list written by an older codeg says so and is repaired by saving it again.
+    - pi's settings panel now warns that a custom config or session directory only applies to pi itself — sessions written there won't appear in codeg's history.
+    Fixed
+    - pi's reasoning is no longer dropped — thinking blocks were read from the wrong field and vanished entirely.
+    - A rewound pi session now shows only the branch you're on, not the abandoned ones still sitting in the same file.
+    - Opening a pi session no longer starts with pi's startup banner as the assistant's first message.
+    - More of a pi transcript survives: images, an edit's real diff, cancelled commands marked failed, an error message on a failed turn, and context-compaction cards.
+    - A Codex code-mode MCP call keeps its identity when you reopen the session — real tool name, arguments, result and error state, instead of a generic script card. (#702, @asteroida123)
+    - An imported worktree session now lands under its repo, so it joins the repo's worktree group and gets its branch label. (#552 reported by @Luis-WowApps, #707 @Adam-Dalloul)
+    - An agent process is no longer left running when a connection ends at the wrong moment. (#701, @asteroida123)
+    Thanks to @Adam-Dalloul, @asteroida123 and @dawNotPoi for contributing to this release, and to @Luis-WowApps and @galact-byte for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版对 pi 做了一轮深度适配——推理内容、图片、真实 diff、回退后的分支都能正确还原，新开会话也不会再先甩出一大段启动信息。
+    回复里的本地截图现在直接内联显示，导入的工作树会话归到所属仓库下面，另有六个内置智能体版本更新。
+    新增
+    - 回复里的本地图片现在直接内联显示，不再是一行占位文字，点击即可在图片查看器中打开。（#691，@Adam-Dalloul）
+    - pi 现在也是本地 MCP 来源之一——~/.pi/agent/mcp.json 里的服务器会出现在 MCP 设置中，并可直接编辑。（#653 由 @galact-byte 提出，#673，@dawNotPoi）
+    改进
+    - 内置智能体版本更新： DeepSeek 0.9.0、Kimi Code 0.42.0、OpenCode 1.18.30、CodeBuddy 2.149.0、Grok 1.0.25、Qoder 1.1.49。
+    - DeepSeek 模型面板跟进 0.9.0——内置列表改为 deepseek-flash 与 deepseek-v4-pro，「图片细节」换成像素预算，旧版本 codeg 写下的列表会明确提示，重新保存一次即可修复。
+    - pi 设置面板会提示自定义配置目录/会话目录只对 pi 本身生效，写到那里的会话不会出现在 codeg 的历史里。
+    修复
+    - pi 的推理内容不再丢失——思考块此前读错字段，导致全部推理凭空消失。
+    - 回退过的 pi 会话只显示你当前所在的分支，不再混进同一文件里被放弃的分支。
+    - 打开 pi 会话不会再以 pi 的启动横幅作为助手的第一条消息。
+    - pi 会话记录还原得更完整： 图片、edit 的真实 diff、被取消的命令标记为失败、失败轮次显示错误信息，以及上下文压缩卡片。
+    - Codex code mode 里的 MCP 调用重开会话后仍保有身份——工具名、参数、结果和错误状态都在，不再退化成一张通用脚本卡片。（#702，@asteroida123）
+    - 导入的工作树会话现在归到所属仓库下面，会并入仓库的工作树分组并拿到分支标签。（#552 由 @Luis-WowApps 反馈，#707，@Adam-Dalloul）
+    - 连接在特定时机结束时不会再留下没退出的智能体进程。（#701，@asteroida123）
+    感谢 @Adam-Dalloul、@asteroida123、@dawNotPoi 为本次发布做出的贡献，也感谢 @Luis-WowApps 和 @galact-byte 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.30.7
+ReleaseTime: 2026-09-11T06:44:59.0000000Z
