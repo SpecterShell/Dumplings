@@ -17,19 +17,6 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $BuiltMatch = [regex]::Match($Page.Content, '\(built (\d{4})-([A-Za-z]+)-(\d{2})\)')
-      if ($BuiltMatch.Success) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact("$($BuiltMatch.Groups[2].Value) $($BuiltMatch.Groups[3].Value) $($BuiltMatch.Groups[1].Value)", 'MMMM dd yyyy', [System.Globalization.CultureInfo]::GetCultureInfo('en-US'), [System.Globalization.DateTimeStyles]::AssumeUniversal).ToUniversalTime()
-      } else {
-        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
