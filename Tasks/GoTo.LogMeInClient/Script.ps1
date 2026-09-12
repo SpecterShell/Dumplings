@@ -6,8 +6,8 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Prefix = 'https://support.logmein.com/pro/help/logmein-client-desktop-app-for-windows'
-$Object1 = Invoke-RestMethod -Uri 'https://support.logmein.com/api/i/pro/help/logmein-client-desktop-app-for-windows'
+$Prefix = 'https://support.logmein.com/pro/help/pro-downloads-view-all'
+$Object1 = Invoke-RestMethod -Uri 'https://support.logmein.com/api/i/pro/help/pro-downloads-view-all'
 $Object2 = $Object1.components.Where({ $_.component -eq 'BrowseTree' }, 'First')[0].data.articleBody.content
 $Object3 = $Object2 | Get-EmbeddedLinks
 
