@@ -1,8 +1,8 @@
 function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'MCHOSE HUB installer.exe' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'MCHOSE HUB installer.exe'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'M HUB installer.exe' | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted 'M HUB installer.exe'
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromExe
   # InstallerSha256
