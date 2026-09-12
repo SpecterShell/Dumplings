@@ -8,11 +8,11 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
-  InstallerUrl  = Join-Uri $Prefix $Object1.files[0].url
+  InstallerUrl  = $InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri $Prefix $Object1.msiFiles[0]
+  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msi'
 }
 
 switch -Regex ($this.Check()) {
