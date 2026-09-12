@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object1.downloads.windows.link
+  InstallerUrl = $Object1.downloads.windowsWeb.link
 }
 
 switch -Regex ($this.Check()) {
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
     }
 
     # InstallerSha256
-    $Installer['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windows.checksumLink).Split()[0].ToUpper()
+    $Installer['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsWeb.checksumLink).Split()[0].ToUpper()
 
     $this.Print()
     $this.Write()
