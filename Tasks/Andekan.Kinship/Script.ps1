@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://app.kinship.io/index.php?action=download_addin&func=get_assets&version=release'
+$Object1 = Invoke-RestMethod -Uri 'https://app.kinship.io/api/download/addin/assets?version=release'
 # EXE
 $Object2 = $Object1.Where({ $_.fileName -match 'KinshipSetup' -and $_.extension -eq 'exe' }, 'First')[0]
 # MSI
