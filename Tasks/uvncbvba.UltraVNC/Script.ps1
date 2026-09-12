@@ -1,17 +1,22 @@
-$Object1 = Invoke-WebRequest -Uri 'https://uvnc.com/downloads/ultravnc.html'
-$Object2 = Invoke-WebRequest -Uri $Object1.Links.Where({ try { $_.href.Contains('https://forum.uvnc.com/viewtopic.php?t=') } catch {} }, 'First')[0].href
+$Prefix = 'https://uvnc.com/downloads/ultravnc.html'
+$Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//th[@class="list-title"]/a')
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object2.Content, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object2.InnerText, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
+
+$Object3 = Invoke-WebRequest -Uri ($Prefix = Join-Uri $Prefix $Object2.Attributes['href'].Value) | ConvertFrom-Html
+$Object4 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'X86') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
+$Object5 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'X64') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object4.Content, "document.location.href='([^']+?)'").Groups[1].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x64') } catch {} }, 'First')[0].href
+  InstallerUrl = [regex]::Match($Object5.Content, "document.location.href='([^']+?)'").Groups[1].Value
 }
 
 switch -Regex ($this.Check()) {
@@ -23,12 +28,12 @@ switch -Regex ($this.Check()) {
         Value = $null
       }
 
-      if ($ReleaseNotesUrlLink = $Object1.Links.Where({ try { $_.href.Contains('//forum.uvnc.com/viewtopic.php') } catch {} }, 'First')) {
+      if ($ReleaseNotesUrlLink = $Object1.SelectSingleNode('//a[contains(@href, "//forum.uvnc.com/viewtopic.php")]')) {
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl = $ReleaseNotesUrlLink[0].href
+          Value  = $ReleaseNotesUrl = $ReleaseNotesUrlLink.Attributes['href'].Value
         }
 
         $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
