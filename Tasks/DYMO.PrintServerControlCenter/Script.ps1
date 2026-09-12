@@ -9,7 +9,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.DYMOApps.'DYMO Softwares'.'DYMO PrinterServer Control Center'.Windows.'DYMO PrinterServer Control Center'.url_s.GetEnumerator().Where({ $_.Name.Contains('Windows 8.1') }, 'First')[0].Value | ConvertTo-UnescapedUri | ConvertTo-Https
+  InstallerUrl = $Global:DumplingsStorage.DYMOApps.records.Where({ $_.software -eq 'DYMO PrinterServer Control Center' -and $_.osVersion -eq 'Windows 8.1' }, 'Last')[0].url | ConvertTo-UnescapedUri | ConvertTo-Https
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
