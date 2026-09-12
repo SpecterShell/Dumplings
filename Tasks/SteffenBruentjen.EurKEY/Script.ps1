@@ -1,7 +1,7 @@
 $Prefix = 'https://eurkey.steffen.bruentjen.eu/'
 
 $Object1 = Invoke-WebRequest -Uri "${Prefix}download.html"
-$Installer = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('windows') -and -not $_.href.Contains('beta') } catch {} }, 'First')[0]
+$Installer = $Object1.Links.Where({ try { $_.href.EndsWith('.zip') -and $_.href.Contains('windows') -and $_.href -notmatch '-(beta|rc)' } catch {} }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Installer.outerHTML, 'version (\d+(?:\.\d+)+)').Groups[1].Value
