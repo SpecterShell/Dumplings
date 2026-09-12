@@ -10,9 +10,9 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl  = $Object1.artifacts.nsis.x64.url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x64'
-  InstallerType = 'wix'
-  InstallerUrl  = $Object1.artifacts.msi.x64.url | ConvertTo-UnescapedUri
+  Architecture  = 'arm64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Object1.artifacts.nsis.arm64.url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
