@@ -1,21 +1,24 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/llvm/llvm-project/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/llvm/llvm-project/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^llvmorg-'
 
 # Installer
 # $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x86'
-#   InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win32') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+#   Architecture  = 'x86'
+#   InstallerType = 'wix'
+#   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('win32') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 # }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('win64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('win64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-if ($Asset = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('woa64') }, 'First')) {
+if ($Asset = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('woa64') }, 'First')) {
   $this.CurrentState.Installer += [ordered]@{
-    Architecture = 'arm64'
-    InstallerUrl = $Asset[0].browser_download_url | ConvertTo-UnescapedUri
+    Architecture  = 'arm64'
+    InstallerType = 'wix'
+    InstallerUrl  = $Asset[0].browser_download_url | ConvertTo-UnescapedUri
   }
 }
 
@@ -49,9 +52,9 @@ switch -Regex ($this.Check()) {
 
         $Object3 = Invoke-RestMethod -Uri "https://discourse.llvm.org/t/$($ReleaseNotesUrlObject[0].slug)/$($ReleaseNotesUrlObject[0].id).json"
         $ReleaseNotesObject = $Object3.post_stream.posts[0].cooked | ConvertFrom-Html
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('/h1[contains(text(), "Changes") or contains(text(), "Release Notes")]')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('/*[(self::h1 or self::h2) and text()="Changes" or contains(text(), "Release Notes")]')
         if ($ReleaseNotesTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1'; $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h1' -and $Node.Name -ne $ReleaseNotesTitleNode.Name; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
