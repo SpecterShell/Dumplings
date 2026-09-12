@@ -1,0 +1,26 @@
+Version: 0.1.25
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.25/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.25/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.25
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.25
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Responses streams no longer fail when an upstream reuses one item ID across output slots (observed on sub2api-style gateways that share a single reasoning ID per response). The colliding later slot is remapped to a fresh unique ID that keeps the provider's type prefix (rs_, ws_, msg_, …), and every later item_id event for that slot — reasoning summary deltas, function-call argument deltas, and the final response.completed snapshot — is rewritten consistently. Affected turns previously exhausted Grok Build's retry budget and ended as Server error (500).
+    - Chat Completions streams now assign a unique call_ ID to any tool_call whose upstream ID was already used by another call in the same response, keeping the next round's tool history valid instead of tripping request-side history validation.
+    - The per-stream remap count is logged (remapped N duplicate upstream item id(s)) so a defective upstream remains visible in diagnostics.
+    Changed
+    - Responses stream identity validation distinguishes two failure classes: cross-slot ID reuse (remapped, stream survives) and same-slot identity conflicts (still rejected). Request-side tool-history validation is unchanged.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0125-2026-09-12
+ReleaseTime: 2026-09-12T09:05:20.0000000Z
