@@ -1,0 +1,27 @@
+Version: 0.1.28
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.28/hellogrok-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.28/hellogrok-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.28
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.28
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Relays that answer a failure with HTTP 200 plus an error envelope no longer die as an opaque envelope-validation rejection. A transient envelope (rate limit, overloaded, timeout) now enters the absorb window and is retried inside the proxy; a deterministic envelope (authentication, billing, invalid request) passes through with the provider's explanation and a terminal disposition. Responses terminal bodies that carry their own error member keep the native failed-response path.
+    - A Cloudflare shield challenge in front of a relay (cf-mitigated: challenge or a Cloudflare-served challenge page) is treated as transient: absorbed inside the retry window, and passed through as a retryable 503 when it outlasts the window, because a bare 403 classifies terminal in Grok Build. A genuine origin 403 without Cloudflare markers is untouched.
+    - Non-streaming Chat Completions responses whose relay reuses one tool_call ID across calls are remapped to fresh unique IDs, matching the streaming rectifier's tolerance, instead of being rejected; the next round's tool history stays valid.
+    - Responses bodies that omit envelope bookkeeping (id, object, status) on an otherwise complete terminal payload get the missing markers synthesized instead of a 502 rejection; present-but-wrong values and a missing or malformed output remain rejections.
+    Added
+    - Regression coverage for wrapped-2xx absorb-then-recover and deterministic passthrough, Cloudflare challenge absorb/passthrough and origin-403 separation, envelope bookkeeping synthesis, and non-streaming duplicate call-ID remapping.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0128-2026-09-12
+ReleaseTime: 2026-09-12T14:18:34.0000000Z
