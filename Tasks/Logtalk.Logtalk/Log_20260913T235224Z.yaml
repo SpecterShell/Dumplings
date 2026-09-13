@@ -1,0 +1,141 @@
+Version: 3.102.0
+Installer:
+- InstallerUrl: https://logtalk.org/files/logtalk-3.102.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Logtalk compiler and runtime
+    - ADDED: Compiler support for using the logtalk_linter_hook/7 predicate to lint "super" calls and messages to "self".
+    - ADDED: New linter warning when a cut is followed by a goal that throws an error. Controlled by the suspicious_calls flag.
+    - ADDED: New linter warning when using a once/1 goal as an if-then-else or soft-cut conditional. Controlled by the suspicious_calls flag.
+    - FIXED: The arithmetic_expressions flag was non-operational as the warnings were still controlled by the older suspicious_calls flag.
+    - FIXED: Compiler bug in the handling of initialization/1 directives found in included files where the initialization goals could be called out-of-order.
+    - FIXED: The logtalk_make(check) goal misreporting missing predicates for (::)/1 and (^^)/1 calls from complementing categories.
+    Prolog adapter and integration files
+    - CHANGED: The Trealla Prolog adapter file to require version 3.9.64 or later.
+    - UPDATED: The Trealla Prolog adapter file for the tabling support added in its 3.0.0 version. Thanks to Andrew Davison for the patch file.
+    - UPDATED: The Trealla Prolog adapter file tables of proprietary predicate properties and tautology/falsehood candidates used by the linter.
+    - UPDATED: The SWI-Prolog adapter file table of proprietary predicate properties used by the linter.
+    Documentation
+    - ADDED: Handbook section on library third-party dependencies.
+    - IMPROVED: The manual installation instructions.
+    - FIXED: Some Handbook library and tool links to their API documentation.
+    Library
+    - CHANGED: The linear_algebra library to return 0.0 for empty-vector dot products and norms, propagate these semantics to normalization, difference norms, and zero-width matrix-vector products, and return correctly shaped square zero Gram matrices for zero-width row matrices.
+    - CHANGED: The http_router library http_router category now implements http_handler_protocol (as a marker protocol) to simplify server code that defines routes.
+    - REMOVED: The mcp_server library support for the deprecated 2025-03-26 spec. Existing code using the previous version of this library must be updated to one the more recent specs that are now supported by the library.
+    - ADDED: New crontab library implementing a parser and generator for user and system crontab files.
+    - ADDED: New lru_caches library implementing immutable LRU (Least Recently Used) caches.
+    - ADDED: New lemmatization library providing extensible word lemmatization.
+    - ADDED: New n_grams library providing predicates for generating and counting token and character n-grams.
+    - ADDED: New stop_words library for representation-independent stop-word enumeration, membership testing, and filtering. Includes default English, Portuguese, Spanish, French, German, and Italian stop-word list objects.
+    - ADDED: New tokenization library providing extensible tokenization and sentence splitting.
+    - ADDED: New text_normalization library providing extensible Unicode aware text cleaning and normalization.
+    - ADDED: New text_vectorization library providing deterministic binary, count, term-frequency, and TF-IDF sparse vectorization.
+    - ADDED: New language_detection library providing extensible language detection for text.
+    - UPDATED: The unicode_data library to Unicode 17.0.0, with reproducible generation, shared backing ranges, selectively loadable legacy compatibility views, and preservation of all Unihan variant solutions.
+    - ADDED: New http_oauth library implementing OAuth 2.0 Bearer request protection, protected-resource metadata, token introspection, and JWT verification.
+    - ADDED: New http_sse library implementing HTTP Server-Sent Events.
+    - ADDED: New uri_template library implementing RFC 6570.
+    - ADDED: New paseto library implementing Platform-Agnostic Security Tokens (PASETO) version 4.
+    - ADDED: New bson library implementing the BSON 1.1 binary interchange format.
+    - ADDED: New gpx library implementing the GPX 1.1 GPS data interchange format.
+    - ADDED: New byte_order library providing predicates for converting between integers and fixed-size byte lists in big-endian and little-endian order. Both unsigned and signed two's-complement conversions are supported.
+    - ADDED: New integer_partitions library providing predicates for generating and querying integer partitions.
+    - ADDED: New univariate_distributions library providing normal distribution sampling, density, log-density, cumulative distribution, and quantile predicates.
+    - ADDED: New multivariate_distributions library providing singular-aware sampling and density predicates for multivariate normal and Student's t distributions, additive-log-ratio logistic-normal sampling predicates, and Mahalanobis distance predicates.
+    - ADDED: New mqtt library implementing a MQTT 5.0 client.
+    - ADDED: New smtp library implementing a portable SMTP/ESMTP client.
+    - ADDED: New linear_programming library providing immutable construction and solving of small linear programs.
+    - ADDED: New numerical_analysis library providing scalar root finding, finite-interval quadrature, interpolation and cubic splines, and non-stiff initial-value ODE solvers.
+    - ADDED: New local_optimization library providing common box constraints solvers.
+    - ADDED: New constrained_optimization library providing common general equality and inequality constraints solvers.
+    - ADDED: New ant_colony meta-heuristic optimizer library.
+    - ADDED: New genetic_algorithm meta-heuristic optimizer library.
+    - ADDED: New differential_evolution meta-heuristic optimizer library.
+    - ADDED: New particle_swarm_optimization meta-heuristic optimizer library.
+    - ADDED: New tabu_search meta-heuristic optimizer library.
+    - ADDED: New association_rule_miner library implementing a association rule miner deriving confidence- and lift-scored rules from frequent itemsets and sequential patterns, with leverage and several similarity metrics available on demand.
+    - ADDED: New mlp_classifier library implementing a multi-layer perceptron classifier for continuous, categorical, and mixed tabular datasets.
+    - ADDED: New one_class_svm_anomaly_detector library implementing one-class support vector machine anomaly detector for continuous, categorical, and mixed-feature datasets.
+    - ADDED: New spectral_clusterer library implementing a normalized spectral clusterer for continuous datasets.
+    - ADDED: New svr_regression library implementing Support vector regression (SVR) using an epsilon-insensitive dual margin model with linear, polynomial, and radial basis function kernels.
+    - ADDED: New tsne_projection library implementing exact t-distributed Stochastic Neighbor Embedding dimension reduction for continuous datasets.
+    - ADDED: New umap_projection library implementing Uniform Manifold Approximation and Projection dimension reduction for continuous, categorical, and mixed datasets.
+    - ADDED: New trueskill_ranker library implementing the TrueSkill ranker for ordered multiplayer matches.
+    - ADDED: New sqids library for encoding lists of non-negative integers into short, obfuscated (but not encrypted), URL-safe identifiers.
+    - ADDED: New typeid library implementing a type-safe, K-sortable, globally unique identifier (TypeID) generator.
+    - ADDED: New ripple_down_rules library implementing Single Classification Ripple-Down Rules (SCRDR), Multi Classification Ripple-Down Rules (MCRDR), and Generalized Ripple-Down Rules (GRDR).
+    - ADDED: New tries library implementing prefix trees that associate complete strings with values.
+    - ADDED: New block_ciphers library with AES 128/192/256 implementations.
+    - ADDED: New cmac library providing a portable implementation of the Cipher-based Message Authentication Code specified in NIST SP 800-38B.
+    - ADDED: Support for Ed25519 (RFC 8032) public-key signatures to the crypto library (when using a backend supporting unbound integer arithmetic).
+    - ADDED: Support for the bcrypt b2 version to the crypto library.
+    - ADDED: Support for the XChaCha20-Poly1305 authenticated encryption with associated data algorithm to the crypto library (when using a backend supporting unbound integer arithmetic).
+    - ADDED: Support for X25519 key agreement and identity-authenticated ephemeral channels to the crypto library (when using a backend supporting unbound integer arithmetic).
+    - ADDED: Support to the hashes library for generalized BLAKE2 cryptographic hash functions that accept both key an digest size parameters (per RFC 7693).
+    - ADDED: Support for the 2025-11-25 and 2026-07-28 MCP specs to the mcp_server library. Also refactored the library for separation of concerns between data layer specs and transports.
+    - ADDED: Completions, resource templates, and OAuth support to the mcp_server library.
+    - ADDED: Support for MCP Apps to the mcp_server library.
+    - ADDED: Support to the mcp_server library for an optional output_schema/2 predicate. Allow the optional input_schema/2 and output_schema/2 predicates to override schema inference from a tool/predicate documentation.
+    - ADDED: Full support for socat to the http_process_transport library and a new connection_helper_executable/1 option (defaulting to ncat on Windows and socat on POSIX systems). The existing listener_helper_executable/1 option uses the same defaults.
+    - ADDED: Support to the ranking_protocols library for ordered multiplayer ranking datasets with ranked teams and weighted player participation, plus shared portable standard normal distribution numeric helpers.
+    - ADDED: Caverphone and NYSIIS phonetic encodings and matching support to the string_distance library.
+    - ADDED: Support for the open_probability type to the types and arbitrary libraries.
+    - ADDED: New options library linter warning for ^^option/3 calls where the default option have a different indicator than queried option.
+    - ADDED: Tests to the dependents library.
+    - IMPROVED: Tests code coverage of the clustering_protocols library.
+    - IMPROVED: Performance of the list::nth0/3 and list::nth1/3 library predicates. Thanks to Andrew Davison for the performance bug report.
+    - IMPROVED: Portability of the sockets library with versions of SWI-Prolog older than 9.1.5.
+    - IMPROVED: The string_distance library Metaphone and Double Metaphone implementations and expanded conformance tests.
+    - UPDATED: The amqp, character_sets, hashes, ieee_754, and protobuf libraries to use the new byte_order library.
+    - UPDATED: The http_authenticate library for the new bcrypt b2 version support provided by the crypto library.
+    - UPDATED: The http_parameters and http_router libraries to use a standard domain error for parameter validation errors.
+    - UPDATED: The mcp_server library to clearly inform clients when tool calls fail.
+    - UPDATED: The thurstone_mosteller_ranker library to reuse the new shared standard normal quantile implementation.
+    - UPDATED: The thurstone_mosteller_ranker and trueskill_ranker libraries to use the new univariate_distributions library.
+    - UPDATED: The hmac library documentation to mention the BLAKE2 hash functions and added tests for HMAC-BLAKE2b and HMAC-BLAKE2s.
+    - FIXED: The crypto library PBKDF2 implementation conformance with RFC 8018.
+    - FIXED: A html library bug where generating a file would fail to close its stream in case of error.
+    - FIXED: A race condition in the http_process_transport library when closing ncat-backed connections that could discard pending output bytes. Thanks to Andrew Davison for the bug report.
+    - FIXED: The http_process_transport and sockets libraries to close the output stream before the input stream when they are distinct, preventing connection teardown before buffered output is flushed.
+    - FIXED: The http_server_core library handling of client connections closed while reading a partial HTTP request.
+    - FIXED: The http_static_files and http_directory_listing libraries handling of document roots accessed through symbolic links when using SWI-Prolog.
+    - FIXED: The http_process_transport and http_socket_transport libraries handling of per-connection errors to keep listeners serving subsequent connections.
+    - FIXED: The http_process_transport library handling of OpenSSL calls to avoid HTTP headers being mistaken for commands. OpenSSL 3.0.0 or later is now required.
+    - FIXED: Performance issue in the rest library when looking for duplicated endpoint identifiers. Thanks to Lindsey Spratt for the patch.
+    - FIXED: Portability of the jwt library when using backends that don't provide length/2 as a built-in predicate.
+    - FIXED: Harmless make check warning in the graphs library.
+    - FIXED: Several random library sampling API declaration, formula, parameter validation, and edge case handling issues.
+    Tools
+    - ADDED: Support for diagnostics to the ports_profiler tool. The diagnostics report unexpected non-determinism for declared predicates that specify only deterministic modes.
+    - ADDED: New logtalk_http_server.sh and logtalk_http_server.ps1 scripts for starting a HTTP server using Logtalk HTTP libraries. Supports ECLiPSe, SICStus Prolog, SWI-Prolog, Trealla Prolog, and XVM.
+    - ADDED: New lgtunit tool linter warning for ^^assertion/1-2 calls where the assertion argument is not a built-in predicate, message-sending, or module-qualified goal.
+    - IMPROVED: Tests for the linter_reporter tool to be less verbose.
+    - IMPROVED: Tests for the lgtunit tool to be less verbose.
+    - UPDATED: The lgtunit tool to expand calls to test assertions in test outcomes and test bodies to avoid false dead code warnings as the assertion meta-calls are only expanded when the tests are compiled in optimal mode, which is not common practice.
+    - UPDATED: The tutor tool to explain the new linter warnings on cuts followed by goals that throws an error and the use of once/1 goals as if-then-else or soft-cut conditionals.
+    - FIXED: The dead_code_scanner tool to also report unused built-in Prolog predicates referenced in uses/2 and use_module/2 directives where the referenced object or module is user.
+    Examples
+    - ADDED: New http_sse_ticker example illustrating the use of the new http_sse library.
+    - ADDED: New factorial_mcp example illustrating the mcp_server library.
+    - ADDED: New get_time_mcp_app example illustrating the mcp_server library support for MCP Apps.
+    - ADDED: New symdiff_mcp_app example illustrating the mcp_server library support for MCP Apps.
+    - UPDATED: The birds_mcp example to also illustrate the MCP 2026-07-28 spec and add tests covering both MCP 2025-06-18 and 2026-07-28 specs.
+    - UPDATED: The errors example to illustrate the new linter warnings.
+    - FIXED: The barriers, checkpoint, and philosophers multi-threading examples to use the fast_random library object to avoid possible race conditions. Thanks to Andrew Davison for the analysis.
+    Tests
+    - ADDED: Additional test for the ISO Prolog starting copy_term/2 predicate taken from a Ulrich Neumerkel bug report.
+    Contributions
+    - ADDED: Support for negative durations to the iso8601 contribution duration_string/2 and interval_string/2 predicates.
+    Installers and installation scripts
+    - CHANGED: The portable Docker image to exclude YAP by default as its current git version is not usable and no tags for a stable version exist.
+    - UPDATED: The portable Docker image to compile SWI-Prolog without its documentation (to avoid recurrent failures) and in optimized mode.
+    IDEs, text editors, and syntax highlighters support
+    - FIXED: VSCode support for finding predicate references to a declared predicate when the reference is a call to a local definition.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#31020---september-14-2026
+ReleaseTime: 2026-09-14
