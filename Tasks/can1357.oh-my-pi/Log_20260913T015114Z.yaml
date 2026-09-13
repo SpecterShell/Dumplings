@@ -1,0 +1,128 @@
+Version: 18.1.19
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.1.19/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added Agent.getPendingToolResults() for reconstructing live displays before buffered tool results are persisted (#11868 by @serverinspector).
+    - Added opt-in host authorization and exact-once streamed child execution for discard-safe local reads.
+    Changed
+    - Tool <name> not found now also suggests mounted xd:// devices, not just the advertised tool set, via the new suggestFallbackToolNames option (#11516, #10109 by @oldschoola).
+    Fixed
+    - Speculative stream sessions are now discarded when a hook or argument transform replaces a call's arguments while keeping its ID, instead of releasing deferred work planned from the original code (#11889 by @h4vc).
+    @oh-my-pi/pi-ai
+    Added
+    - Charm Hyper accounts now report their remaining prepaid credit balance in /usage (#11656 by @oldschoola).
+    Fixed
+    - Fixed Kimi Code's 7-day rate-limiting window being mislabeled as "Total quota" in omp usage, causing accounts whose monthly subscription pool is exhausted to appear 100% free while chat completions fail; parsed totalQuota add-on packs into the true "Total quota" row when present, and recognized Kimi's HTTP 403 access_terminated_error as a credential-rotatable usage limit. (#11827 by @revofusion)
+    - Fixed provider streams that die after emitting toolcall_start but before any argument content failing validation with empty {} arguments; the uncommitted attempt is now discarded and retried (#11823 by @justdoGIT).
+    - Fixed Windows zcode:// (Z.AI coding-plan) OAuth sign-in never completing after a successful browser authorization: the native callback handler is now registered with a path the Windows shell can launch, so the zcode://zai-auth/callback redirect reaches omp instead of being silently dropped by the browser (#11907 by @oldschoola).
+    - Codex OAuth login now accepts valid account tokens that expose an email but omit chatgpt_account_id, without fabricating a workspace header (#11847 by @nguyennguyenit).
+    - Fixed Muse Code login failing when Meta returns no assigned subscription tier (subs_tier_id/subs_tier_name as null); sign-in now succeeds and usage is reported without a tier (#11843 by @John-Cusack).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Charm Hyper as a built-in provider with API-key login, live model discovery, and per-model pricing, effort ladders, and limits read straight from its catalog (#11656 by @oldschoola).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added default-off speculative execution for validated local reads, including reads projected from nested JavaScript and Python eval cells.
+    - /usage now shows prepaid credit balances (e.g. Charm Hyper's 100 credits left) on the provider cards and account summaries instead of no data (#11656 by @oldschoola).
+    - Retry fallback chains now support per-model reasoning efforts: a fallback entry may carry an explicit thinking suffix ("default": ["openai/gpt-5-mini:low"]), and pressing t on a fallback row in /models sets or clears it. Bare entries keep inheriting the failing turn's effort. (#11842 by @H4vC).
+    - Added task.agentServiceTierOverrides for sparse exact-name service-tier overrides on task/eval agents, so selected agents can use priority/Fast mode without accelerating every subagent (#9668 by @alphastorm).
+    - Added session-local /btw history with persistent answers and follow-ups; bare /btw reopens history, Escape cancels running answers before closing, and new questions no longer replace an in-progress answer.
+    - Added f follow up in BTW history to continue a selected side conversation with an English input prompt, persistent multi-turn history, and no changes to the main conversation.
+    - Completed inline BTW answers now support f follow up directly; history uses Tab for pane navigation and Enter or f to start a follow-up.
+    - Codex web search now accepts valid email-only OAuth credentials without requiring or fabricating a ChatGPT-Account-Id header (#11847 by @nguyennguyenit).
+    - Sessions now stay alive when their working directory is removed instead of crashing while preparing shell tools (#11828).
+    - MCP tool calls spelled with the Claude Code doubled separator (mcp__server__tool) now reach their registered tool (#11516 by @oldschoola).
+    - MCP HTTP reconnects now release obsolete tool generations instead of growing session memory on every reconnect (#11784).
+    - /debug memory reports now keep large heap snapshots out of JavaScript strings and reject empty snapshots instead of saving zero-byte files (#11785).
+    - Sloppy-mode edits now drop a copied [N more lines in ...] read notice the same way they already drop the other read-metadata rows, so a pasted projection can no longer leak into the matched pattern or the written text (#11797 by @vasyza).
+    - /usage now honors a provider's configured baseUrl when checking credentials before any model has been discovered, so a proxy-scoped API key is no longer sent to the provider's canonical host (#11656 by @oldschoola).
+    Fixed
+    - Fixed completed tool cards reverting to pending after refocusing live sessions, and tool output collapsing behind finished reasoning segments (#11868 by @serverinspector).
+    - Invalid WATCHDOG.yml entries now produce startup/editor warnings while healthy advisors remain available (#11882 by @olegpulatov).
+    - Claude Code session imports now preserve typed user text stored alongside tool results (#11854).
+    - Extension commands now settle BTW writes before creating, switching, or branching sessions, preventing side requests from outliving their source session (#11335 by @Ant39140).
+    - Session selection and active-session deletion now settle BTW writes before switching or removing history, preventing stale saves from blocking the next session (#11335 by @Ant39140).
+    - Escape now cancels BTW follow-ups that are still waiting for startup writes, without launching a model request (#11335 by @Ant39140).
+    - BTW history now rejects out-of-range timestamps instead of failing during display (#11335 by @Ant39140).
+    - BTW follow-ups now preserve separate user/assistant messages and reuse an isolated topic-specific provider session for prompt caching; cancellation or failure starts a fresh transport generation.
+    - Restored Escape cancellation for running BTW answers and removed the separate x shortcut; cancelled output stays visible, and closing another history entry returns to any still-running BTW panel instead of hiding it.
+    - BTW history now rejects stale cross-process writes and protects running topics with an OS-backed lease, preventing one instance from erasing another instance's follow-ups.
+    - Copying a BTW topic now falls back to its most recent nonempty answer after an empty failed or cancelled follow-up.
+    - Invalid or cancelled /move operations no longer cancel BTW requests; busy side conversations block relocation, and stalled history writes stop session operations with a bounded error instead of hanging indefinitely.
+    - Session shutdown now shows closing progress before waiting for live commands or BTW history writes, and stops progress updates when cleanup completes or fails.
+    - Failed BTW terminal saves now block session operations while retaining the answer for copying and safe retry, instead of being treated as a successful flush.
+    - Standalone !cd now shares the BTW relocation guard with /move and /wt, refusing before shell execution when a side conversation is active or unsaved.
+    - /wt now checks BTW migration availability before creating a branch or checkout, preventing unused worktrees when a side conversation is busy.
+    - /move now checks BTW migration availability before confirming or creating a missing target directory, preventing leftover directories after a refused move.
+    - BTW errors now shorten embedded home paths and sanitize control characters and oversized text before display, while retaining original diagnostic errors.
+    - Speculative reads now open the authorized resolved target while rendering the requested path, so enabling speculation no longer changes read output for symlinks; video targets are declined at authorization (#11892 by @h4vc).
+    - JavaScript speculation now verifies the retained tool-bridge dispatcher and string-coercion intrinsic identities before projecting reads (#11892 by @h4vc).
+    - Speculative eval sessions are now discarded at reconciliation when a hook or transform appends source the stream never verified, instead of releasing reads planned from the original code (#11892 by @h4vc).
+    - Speculative reads now classify format and rendering by the requested path while opening the resolved target, so symlinks with a different extension read exactly like ordinary reads (#11892 by @h4vc).
+    - JavaScript speculation now validates coercion intrinsics used by String() and .join() inputs, not just template and + operands (#11892 by @h4vc).
+    - Speculative reads now infer the summary language from the requested path while reading the resolved target, so cross-language symlinks summarize exactly like ordinary reads (by @h4vc).
+    - The structural summary cache now keys on the parser language path, so one file read through different extensions no longer reuses a stale summary (by @h4vc).
+    - Fixed the Windows installer failing on Windows PowerShell 5.1: OS architecture detection no longer depends on the .NET RuntimeInformation type that only resolves reliably on PowerShell 7, and the script now requires PowerShell 5.1+ with a clear upgrade message instead of failing cryptically (#11905 by @h4vc).
+    - Speculative reads now infer the summary language from the requested path while reading the resolved target, so cross-language symlinks summarize exactly like ordinary reads (#11892 by @h4vc).
+    - The structural summary cache now keys on the parser language path, so one file read through different extensions no longer reuses a stale summary (#11892 by @h4vc).
+    @oh-my-pi/pi-utils
+    Added
+    - Added public acquireFileLock() and FileLockHandle APIs for holding and explicitly releasing exclusive OS-backed file locks.
+    Fixed
+    - Child-shell environment filtering now tolerates a removed process working directory by retaining the resolved project directory (#11828).
+    What's Changed
+    - fix(debug): avoid heap snapshot string limits by @roboomp in https://github.com/can1357/oh-my-pi/pull/11786
+    - fix(mcp): release obsolete tools after reconnect by @roboomp in https://github.com/can1357/oh-my-pi/pull/11787
+    - fix(catalog): give deepseek-flash the V4.1 Flash wire contract by @H4vC in https://github.com/can1357/oh-my-pi/pull/11799
+    - fix(utils): tolerate deleted working directories by @roboomp in https://github.com/can1357/oh-my-pi/pull/11829
+    - feat(catalog): add Charm Hyper provider by @oldschoola in https://github.com/can1357/oh-my-pi/pull/11656
+    - fix(ai): rotate accounts when Anthropic reports credits_required by @AshishKumar4 in https://github.com/can1357/oh-my-pi/pull/11333
+    - fix(tui): hide tool activity in retired transcript history by @notnotype in https://github.com/can1357/oh-my-pi/pull/11734
+    - fix(ai): fall back to the canonical Anthropic usage endpoint when a custom baseUrl does not serve it by @sandboiii in https://github.com/can1357/oh-my-pi/pull/11376
+    - fix(ai): retry tool calls with empty args by @justdoGIT in https://github.com/can1357/oh-my-pi/pull/11823
+    - feat(coding-agent): per-model reasoning efforts in retry fallback chains by @H4vC in https://github.com/can1357/oh-my-pi/pull/11842
+    - feat(coding-agent): add persistent btw history and follow-ups by @Ant39140 in https://github.com/can1357/oh-my-pi/pull/11335
+    - test(release): sync native-core file list with VCS entrypoints by @roboomp in https://github.com/can1357/oh-my-pi/pull/10884
+    - fix(coding-agent): make status test worktree-safe by @roboomp in https://github.com/can1357/oh-my-pi/pull/11716
+    - fix(ai): allow null subs_tier_id/subs_tier_name in Muse Code login response by @John-Cusack in https://github.com/can1357/oh-my-pi/pull/11843
+    - fix(cli): return non-zero when a JSON print-mode turn fails by @JamieJ5926 in https://github.com/can1357/oh-my-pi/pull/11545
+    - fix(ai): allow Codex OAuth login without account ID by @nguyennguyenit in https://github.com/can1357/oh-my-pi/pull/11847
+    - test(coding-agent): make two path assertions pass on Windows by @oleg494 in https://github.com/can1357/oh-my-pi/pull/11851
+    - fix(ai): distinguish Kimi weekly limit from total quota and rotate on termination by @revofusion in https://github.com/can1357/oh-my-pi/pull/11827
+    - test(coding-agent): assert the shortened artifact notice path independently by @oleg494 in https://github.com/can1357/oh-my-pi/pull/11853
+    - fix(edit): drop a copied "more lines in ..." read notice in sloppy mode by @vasyza in https://github.com/can1357/oh-my-pi/pull/11797
+    - fix(session): preserve text in mixed Claude records by @roboomp in https://github.com/can1357/oh-my-pi/pull/11856
+    - fix(tui): skip hidden thinking formatting by @redsolver in https://github.com/can1357/oh-my-pi/pull/11632
+    - feat(task): add per-agent service-tier overrides by @alphastorm in https://github.com/can1357/oh-my-pi/pull/9668
+    - feat: Add speculative tool and eval execution by @wn-mitch in https://github.com/can1357/oh-my-pi/pull/9732
+    - Wnmitch/spec followup nits by @H4vC in https://github.com/can1357/oh-my-pi/pull/11889
+    - fix(advisor): preserve healthy WATCHDOG entries and surface warnings by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/11882
+    - fix(mcp): resolve the Claude Code tool-name spelling to its registered tool by @oldschoola in https://github.com/can1357/oh-my-pi/pull/11876
+    - test(utils,coding-agent): fix Windows-only suite failures by @H4vC in https://github.com/can1357/oh-my-pi/pull/11893
+    - fix(spec): exact-code reconcile, transform coercion gates, lexical cl… by @H4vC in https://github.com/can1357/oh-my-pi/pull/11892
+    - fix(ai): anchor proxy tunnel socket in a typed const by @H4vC in https://github.com/can1357/oh-my-pi/pull/11901
+    - docs(changelog): add 11892 links to follow-up entries, drop agent duplicate by @H4vC in https://github.com/can1357/oh-my-pi/pull/11902
+    - fix(coding-agent): version-robust fetch/socket/console typings by @H4vC in https://github.com/can1357/oh-my-pi/pull/11903
+    - fix(install): pwsh version check for pwsh installer by @H4vC in https://github.com/can1357/oh-my-pi/pull/11905
+    - fix(tui): preserve live tool results and retire closed reasoning by @serverinspector in https://github.com/can1357/oh-my-pi/pull/11868
+    - fix(auth): register zcode:// handler with a shell-launchable path by @oldschoola in https://github.com/can1357/oh-my-pi/pull/11907
+    New Contributors
+    - @sandboiii made their first contribution in https://github.com/can1357/oh-my-pi/pull/11376
+    - @justdoGIT made their first contribution in https://github.com/can1357/oh-my-pi/pull/11823
+    - @John-Cusack made their first contribution in https://github.com/can1357/oh-my-pi/pull/11843
+    - @nguyennguyenit made their first contribution in https://github.com/can1357/oh-my-pi/pull/11847
+    - @vasyza made their first contribution in https://github.com/can1357/oh-my-pi/pull/11797
+    - @redsolver made their first contribution in https://github.com/can1357/oh-my-pi/pull/11632
+    - @wn-mitch made their first contribution in https://github.com/can1357/oh-my-pi/pull/9732
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.1.18...v18.1.19
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.1.19
+ReleaseTime: 2026-09-12T23:57:09.0000000Z
