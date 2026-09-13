@@ -18,8 +18,8 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./p').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./p').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./*').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./*').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
