@@ -1,0 +1,105 @@
+Version: 0.1.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/BearKouber/TiLex/releases/download/v0.1.1/TiLex_0.1.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/BearKouber/TiLex/releases/download/v0.1.1/TiLex_0.1.1_x64_en-US.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    TiLex 0.1.1
+    相比 0.1.0 的改动。
+    升级方法：直接运行新安装包。出现「已安装」页面时，保持默认的「安装前卸载」，点下一步即可。
+    这一步只替换程序文件，原有设置和生词本都会保留。
+    新功能
+    翻译浮窗
+    - 按 Esc 直接关闭浮窗。
+    - 新增「钉住」按钮：钉住后切到别的窗口，浮窗也不会自动隐藏，方便对照着打字。按 Esc、点关闭或取消钉住即可退出。
+    - 顶部整栏都能按住拖动（加载中、出错时也能拖）。拖动后结果变长，窗口不会跳回原位置。
+    - 每个翻译服务的结果旁边都有独立的收藏按钮，想存哪家的结果就点哪家。
+    - 滚动长结果时，原文行也会吸顶，服务名吸附在原文行下方。
+    划词浮标
+    - 翻译设置里新增「浮标距离」，可调 0–20 px，默认 10 px，改完下一次划词就生效。
+    AI 服务
+    - 设置简化：只保留一个「自定义要求」文本框，预填了默认要求，可以随意修改或清空（清空后重启也保持为空）。
+      原来的角色列表、添加 Prompt、Request Arguments 已隐藏。
+    - 单词和句子都支持例句（原文 + 译文成对）和用法 / 语法说明，在浮窗、生词本、复制和导出中都能完整显示。
+    - 旧版的自定义 Prompt 会自动转换为新的「自定义要求」，原内容另有备份，不会丢失。
+    生词本
+    - 新增「多选」模式：勾选多条后一次确认批量删除，支持全选当前搜索 / 筛选结果。
+    - 删除一条后自动选中下一条，不再跳回第一条。
+    - 导出 Markdown 重新排版：音标、每个词性的释义、搭配、例句、说明分行显示；
+      *、<>、`、[]、| 等特殊字符按原文显示，不会被当成格式。
+    - 修复列表很长时「导出为 Markdown」按钮被压扁的问题。
+    问题修复
+    划词与翻译
+    - 修复翻译浮窗有时只显示上半截、要动一下鼠标才显示完整的问题。
+    - 修复同一次划词可能重复取词、旧选区的结果串到新浮窗的问题。
+    - 语言检测失败时不再卡住，会继续按源语言设置翻译。
+    - AI 返回格式异常时浮窗不再崩溃，改为显示原始文本，仍可复制和收藏。
+    - 修改模型、提示词、接口地址等设置后，不再返回改之前的缓存结果。
+    - 其他服务先返回、AI 后返回时，已收藏的条目会自动更新为完整的 AI 结果。
+    截图 OCR
+    - 框选过程中重复按截图快捷键，不会再重新截屏或重置选区。
+    - 上一次截图的结果或报错不会再覆盖新一次的结果。
+    - 识别进程异常退出但已经拿到文字时，照常显示结果；真正失败时给出明确的错误信息。
+    设置
+    - 修复刚保存的设置偶尔被旧配置覆盖回去的问题。
+    - 修复删除翻译 / OCR 服务后，重启又出现的问题。
+    - 手动选择浅色 / 深色主题后，不再被 Windows 系统主题变化覆盖。
+    移除
+    - 托盘菜单中的「自动复制」。
+    - 早已从界面移除的「自动删除换行」「拆分代码标识符」旧设置，不会再暗中改写原文，旧配置会自动清理。
+
+    TiLex 0.1.1 (English)
+    Changes since 0.1.0.
+    How to upgrade: run the new installer. When the "Already Installed" page appears, keep the default "Uninstall before installing" and click Next.
+    This only replaces the program files; your settings and wordbook are kept.
+    New
+    Translation popup
+    - Press Esc to close the popup.
+    - New Pin window button: a pinned popup stays visible when you switch to another window. Close it with Esc, the close corner, or by unpinning.
+    - Drag the popup by anywhere on its top bar, including while loading or on error. After a drag, the window no longer jumps back when results grow.
+    - Each service's result has its own favorite button, so you choose which result goes into the wordbook.
+    - While scrolling long results, the source line now sticks to the top, with service headers sticking right below it.
+    Selection icon
+    - New Icon Distance setting in Translation Settings: 0–20 px, default 10 px. Takes effect on the next selection.
+    AI services
+    - Simpler settings: one Custom instructions box, pre-filled with a default. You can edit or clear it (an empty box stays empty after restart).
+      The role list, Add Prompt and Request Arguments are hidden.
+    - Words and sentences both support examples (source + translation pairs) and usage/grammar notes. They show in full in the popup, wordbook, copy and export.
+    - Old custom prompts are converted to the new box automatically. The original config is backed up.
+    Wordbook
+    - New Select mode: tick several entries and delete them with one confirmation. "Select all" covers the current search/filter results.
+    - After a delete, the next entry is selected instead of jumping back to the first.
+    - Markdown export has a new layout: phonetics, one line per part of speech, collocations, examples and notes on separate lines.
+      Special characters such as *, <>, `, [] and | are shown as plain text.
+    - Fixed the Export as Markdown button being squashed when the list is long.
+    Fixes
+    Selection and translation
+    - Fixed the popup sometimes showing only the top half until the mouse moved.
+    - Fixed duplicate text capture for one selection, and old results showing up in a new popup.
+    - A failed language detection no longer blocks translation; it falls back to the source language setting.
+    - A malformed AI response no longer crashes the popup; the raw text is shown and can still be copied and saved.
+    - Changing model, prompt, endpoint or similar settings no longer returns stale cached results.
+    - If another service answers first and AI answers later, a saved entry is upgraded to the full AI result.
+    Screenshot OCR
+    - Pressing the screenshot hotkey again while selecting no longer re-captures or resets the selection.
+    - Results or errors from an older screenshot no longer overwrite a newer one.
+    - If the OCR process exits abnormally after producing text, the text is still used. Real failures show a clear error.
+    Settings
+    - Fixed newly saved settings sometimes being reverted by an old config.
+    - Fixed deleted translation/OCR services coming back after restart.
+    - A manually chosen light/dark theme is no longer overridden by Windows theme changes.
+    Removed
+    - Auto Copy in the tray menu.
+    - The retired "Delete newlines" and "Split code identifiers" settings no longer silently rewrite the source text. Old values are cleaned up automatically.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BearKouber/TiLex/releases/tag/v0.1.1
+ReleaseTime: 2026-09-13T14:12:47.0000000Z
