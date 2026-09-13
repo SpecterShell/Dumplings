@@ -21,11 +21,10 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl (en-US)
+      # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $null
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
       }
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
