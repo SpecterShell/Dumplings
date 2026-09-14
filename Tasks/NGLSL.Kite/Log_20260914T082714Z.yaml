@@ -1,0 +1,35 @@
+Version: 0.2.5
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.2.5/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.2.5
+    版本重点
+    修复应用内下载更新后 Kite 退出、安装器却没有启动的问题，并在“关于”页提供始终可用的最新发布页与 Kite GitHub 仓库入口。
+    修复
+    - 下载完成后通过 Windows 提权入口启动需要管理员权限的 NSIS 安装器；启动失败或用户取消提权时保留 Kite，并打开 GitHub 最新发布页供手动安装。
+    - 隐藏版本检查和下载时出现的 curl.exe 控制台窗口；使用结构化的 GitHub Release 信息选择安装包，启动前核对大小和 SHA-256。不具备校验信息时只提供手动下载入口。
+    - 安装器等用户真正开始安装后才关闭旧 Kite；仅结束 Kite 本身，不连带关闭 Kite 启动的其他应用。
+    - “关于”页增加 Kite 仓库地址，并单独提供固定的最新发布页入口。
+    升级影响
+    由于 v0.2.4 及更早版本的应用内更新器仍可能在启动安装器时遇到 Windows 错误 740，升级到本版请从本页手动下载并运行 kite-setup.exe。升级完成后，后续应用内更新会使用本版的新流程。设置、历史记录、快捷键和安装目录保持不变。
+    已知限制
+    本版已验证真实 GitHub Release 的下载与 SHA-256 校验、本地安装包构建，以及“关于”页链接的实际打开行为；尚未在其他电脑上完成 UAC 确认到覆盖安装的全流程复测。如果自动安装仍未开始，可使用“关于”页的“打开发布页”手动下载。
+    构建与验证
+    - 发布 tag：v0.2.5
+    - tag 提交：85ec324c937ef34da3dfa6deb2d13da625b8b48f
+    - 上一个发布：v0.2.4
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #4
+    本次提交范围
+    - merge: release Kite v0.2.5 updater repair (85ec324)
+    - fix: verify and launch updates safely in v0.2.5 (a03dc2b)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.2.5
+ReleaseTime: 2026-09-14T08:22:29.0000000Z
