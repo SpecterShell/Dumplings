@@ -1,5 +1,5 @@
 $Page = Invoke-WebRequest -Uri 'https://www.groeneveld-beka.com/software/'
-$Link = $Page.Links.Where({ try { $_.href -match 'PCGINA' -and $_.href -notmatch 'BreakAlube' -and $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
+$Link = $Page.Links.Where({ try { $_.href -match 'PC-?GINA' -and $_.href -notmatch 'BreakAlube' -and $_.href.EndsWith('.zip') } catch {} }, 'First')[0].href
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
