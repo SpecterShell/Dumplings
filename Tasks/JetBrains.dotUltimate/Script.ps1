@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += $Installer = [ordered]@{
-  InstallerUrl = $Object1.downloads.windowsWeb.link
+  InstallerUrl = $Object1.downloads.windowsWeb.link.Replace('.web', '')
 }
 
 switch -Regex ($this.Check()) {
