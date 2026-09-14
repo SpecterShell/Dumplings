@@ -1,0 +1,49 @@
+Version: 1.5.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.1/DeskBox_Setup_1.5.1_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.1/DeskBox_Setup_1.5.1_arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.1
+    DeskBox 1.5.1 is a reliability and polish update: storage-location moves no longer fail on read-only files, the search popup's app grid finally responds to the mouse with icons on first open, very large folders no longer freeze file widgets, capsule transitions are fully repaired, dropping files on an application shortcut opens them with that application, the native context menu no longer stalls the system when an item is clicked, Organize Desktop recovery is hardened, and new installations start on the leaner Resource saver defaults.
+    Released on September 15, 2026.
+    Highlights
+    - Storage moves survive read-only files. Changing the default storage location (and every other folder move — dropped-folder imports, organizing desktop files, moving a deleted widget's contents back to the desktop) no longer fails when the folder contains read-only files: cleanup clears the read-only attribute before deleting and restores it when the delete is blocked. Cleanup only deletes files that were verifiably copied and unchanged, so a file that appears or changes inside the folder during the move is kept in both places instead of being deleted. A blocked cleanup finishes the move and offers to recycle the leftover old folders instead of failing and rolling back, and retrying into a location that still holds a previous attempt's copy offers to clear it first instead of creating "name (2)" duplicates.
+    - The search popup's app grid works with the mouse. Single-click selects a card, double-click opens it, arrow keys plus Enter launch the highlighted card, and icons resolve on the very first open instead of only after reopening the popup. Mouse handling on this grid had silently never worked since it shipped.
+    - Big folders no longer freeze widgets. File widgets render a windowed slice of very large folders and hydrate more rows as you scroll, so opening a folder with thousands of files stays responsive; the first launch after a fresh install is also faster thanks to batched shell-icon extraction through the thumbnail proxy.
+    - Open with by dropping. Dropping files onto an application shortcut tile opens them with that application, for desktop drops and inter-widget drags alike; non-executable or unverifiable targets keep the default system behavior.
+    - More ways to switch and launch. Hovering a dragged file over a widget-group tab switches members after a short dwell, a sixth global hotkey preset targets the hardware Copilot key (Win+Shift+F23), and click-collapse mode collapses the widget from a title-bar click.
+    - Quieter, more honest open feedback. Files without a shell association raise the system Open With picker instead of appearing dead, shortcuts with missing targets report the loss instead of claiming success, success toasts are gone, and dropped hidden or dead shortcuts are rejected as a whole instead of vanishing without tiles.
+    - Capsule transitions fully fixed. Collapsing a widget no longer leaves a residual 4-DIP upward offset on the title bar of the next expansion (the Composition translation now resets when the animation stops), and the first expansion after a fresh launch no longer leaves capsule icon and title ghosts floating over the expanded body (stopping a never-created translation property threw an exception that aborted the completion chain).
+    - A snappier native context menu. Clicking an item in the native Windows right-click menu no longer stalls the whole system for 1–2 seconds: the low-level mouse hook moved off the blocked UI thread onto a dedicated pump thread and unloads as soon as the menu closes.
+    - Icons never shrink. Associated icons whose artwork sits inside a larger transparent canvas are re-issued at their native frame size instead of being scaled down by the alpha heuristic.
+    - Harder Organize Desktop recovery. Abandoning an unrecoverable restore has an explicit confirmation and diagnostics path, orphaned recovery journals are cleared, same-volume frees are exempt from the space check, failure messages are specific, and widget-mapping conflicts auto-resolve or reveal the conflicting tiles.
+    - Steadier drag and drop. Internal drag payloads carry the zone identifier (Mark of the Web), materialization is bounded for very large selections, and the native and XAML drop paths share one resolution policy. Stack member switches no longer flash the previous member's tiles.
+    - Leaner defaults. New installations default to the Resource saver preset: visible-idle maintenance after 5 minutes, hidden cache release after 30 seconds with full recreatable scope, and the small cache budget. The experimental immediate working-set trim waits 3 seconds after hiding, so quick hide/show round trips trim at most once. Existing settings are never rewritten on upgrade.
+    - Quieter failures. Widget-local delete/rename failures and the color picker became in-widget feedback bars and flyouts instead of ContentDialogs that small widget windows clipped, and interaction chrome (drop-preview outline, position rail, wheel feedback) draws the neutral tone instead of the accent color.
+    See CHANGELOG.md for the complete list.
+    Downloads and verification
+
+    | File                          | Architecture | Size    | SHA-256                                                          |
+    | ----------------------------- | ------------ | ------- | ---------------------------------------------------------------- |
+    | DeskBox_Setup_1.5.1_x64.exe   | x64          | 41.9 MB | 78A2FE4C312A76ED2DFFC1A53E779D49EAC79502E5C95D6B5A3F84ED0BA7B848 |
+    | DeskBox_Setup_1.5.1_arm64.exe | ARM64        | 41.4 MB | 280B9DA7D3244F0296430AAC0C53ADC1D0E03F77B7C948FC4D3D4066591D9F19 |
+
+    The direct installers are Full Native AOT builds with the bundled private Windows App Runtime. Installers are currently unsigned; verify the SHA-256 checksums after downloading.
+    Validation
+    - x64 full test suite: 3537/3537 passed (2026-09-15, final working tree).
+    - Storage-migration safety is pinned by 10 dedicated contract tests (read-only moves succeed on both engine paths, files appearing or changing mid-move are never deleted, locked files fail closed with attributes restored, residue completion and merge-back rollback, destination-residue rejection).
+    - x64 Native AOT retail publish and Full installer packaging verified locally for both architectures on 2026-09-15.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.1
+ReleaseTime: 2026-09-14T17:11:44.0000000Z

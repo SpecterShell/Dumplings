@@ -1,0 +1,24 @@
+Version: 0.16.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.16.0/magic-context-dashboard-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Dashboard v0.16.0
+    Protected tokens replaces protected tags
+    The config editor now edits protected_tokens (an absolute token floor protected from automatic reclaim) instead of the retired protected_tags count. Leave it blank to derive the floor from the model's usable context window; the resolved value is shown with its provenance.
+    Sidekick removed
+    The Sidekick section is gone from the config editor, matching its removal from the plugin. A legacy sidekick key in an existing config is ignored with one warning.
+    Sessions from every OpenCode install channel
+    The sessions view resolves OpenCode's store by channel — opencode.db, opencode-local.db (npm/bunx installs), opencode-dev.db, or OPENCODE_DB — instead of assuming the release-binary filename, so sessions from global npm installs now appear. Turn state is tracked from OpenCode's own session rows.
+    OMP sessions keep their project
+    A session recorded under a compatible sibling harness (Pi/OMP) still resolves its project on dashboard rows instead of showing unattributed.
+    Log viewer reads both log grammars
+    The log viewer parses the fleet structured prefix and the legacy bracketed format from either log path, keys recent errors on the log level when present, and no longer drops legacy lines whose free text contains an unmatched quote.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cortexkit/magic-context/releases/tag/dashboard-v0.16.0
+ReleaseTime: 2026-09-14T17:20:53.0000000Z

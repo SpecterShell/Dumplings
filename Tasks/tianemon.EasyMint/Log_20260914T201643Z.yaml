@@ -1,0 +1,26 @@
+Version: 0.25.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tianemon/EasyMint/releases/download/v0.25.3/EasyMint-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Added（新增）
+    - Mint 能装依赖了：可安装项目依赖或用户级开发工具，支持 npm / pnpm / yarn / bun / pip / uv / cargo / go / dart / flutter / mise；标准模式下用户级安装、缓存与临时文件都放进当前项目的专属运行区，安装脚本始终受系统核心保护
+    - Mint 能设环境变量了：可设置或移除项目级 .env、或 EasyMint 用户环境变量（值按字面量保存，不会执行其中的命令）；LD_PRELOAD、NODE_OPTIONS 这类能改变后续执行的变量会被拒绝；用户级修改对之后启动的终端与任务生效
+    Changed（调整）
+    - 切到「完全访问」会先确认：设置页与输入栏共用同一份一次性风险确认，说清会放开什么、哪些仍禁止（此前在设置页切到完全访问没有任何提示就直接生效）
+    - 权限标签的悬停说明说清了差别：悬停显示「标准：工作区与专属开发环境可写」或「完全访问：普通文件不受工作区限制」（此前只显示「权限」两个字）
+    - 项目名称可以点了：侧边栏项目名称左侧加了箭头图标，鼠标悬停会高亮，点击直接弹出「打开项目」列表——此前只能从项目菜单里进
+    - 侧边栏的项目菜单按钮：按钮上的加号换成菜单图标、去掉虚线框并放大——它点开的就是项目菜单（新建/打开/重命名项目、新建窗口），原来的加号会让人以为只能「新建」
+    - 项目菜单里的图标与宽度：菜单宽度改成贴合文字（此前固定 160px，「重命名项目」这类文字只占约 113px，右侧空一块）；「重命名项目」换成文件夹加笔、「新建窗口」换成窗口示意
+    - 新建会话按钮：图标换成圆形气泡加号（此前是方角气泡），并把显示尺寸收一档，使图标大小与旁边的归档按钮一致
+    - 浏览文件夹默认打开项目目录：打开项目、新建项目、设备传输与迁移里点「浏览」时，目录选择器直接停在你的项目目录（默认 ~/EasyMintProject，跟随设置里的「项目目录」修改），不再从下载文件夹或上次的位置开始
+    Fixed（修复）
+    - 开发配置文件不再被误拦：改 .vscode/、.idea/、.git/config 这类正常开发文件不再被拦（此前按文件名一律拒绝、且无法通过配置关掉）；.mcp.json、shell 启动文件、.gitconfig 等能影响后续执行的配置仍受保护
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tianemon/EasyMint/releases/tag/v0.25.3
+ReleaseTime: 2026-09-14T16:16:27.0000000Z
