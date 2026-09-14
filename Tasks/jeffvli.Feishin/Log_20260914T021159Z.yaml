@@ -1,0 +1,152 @@
+Version: 1.16.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/jeffvli/feishin/releases/download/v1.16.0/Feishin-1.16.0-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v1.16.0
+    1.16.0 is here! Been a while, but this large release brings quite a few new enhancements with some highlights being:
+    - Casting to local DLNA devices
+    - Feishin remote now supports library browsing and queue modification with a full interface overhaul
+    - A refreshed fullscreen player design with more customization options
+    As always, thank you to all the contributors!
+    Added
+    - Added DLNA casting support (#1887) (Thanks @Villhume)
+    - Added a new fullscreen player design (#2227) (Thanks @Kevin)
+    - (Jellyfin) Added Jellyfin Quick Connect authentication support (#2238) (Thanks @samsalonen)
+    - Added playlists section to the home page (#2435) (Thanks @KaranGoel)
+    - Enhanced the Feishin Remote with support for library browsing, queue management, and action sheets (#2337) (Thanks @mihaitom)
+    - Added an option to view top rated songs in the Favorite Songs section (#2289) (Thanks @dsimonds)
+    - Added an option to configure default share expiration (#2283) (Thanks @Yunus)
+    - Added options to make ratings/favourites more customizable (#2262) (Thanks @Kernald)
+    - Added confirmation dialog before discarding the current play queue (#2300) (Thanks @york9675)
+    - Added random sort to the playlist song list
+    - Added play action to the queue context menu
+    - Added scrobble minimum mode setting (#2414) (Thanks @ermmmwafle)
+    - Added option to exclude other artists from artist play (#2404) (Thanks @GerardGascon)
+    - (Navidrome / Jellyfin) Added support for hashed image placeholders
+    - (Jellyfin) Report the play queue window to Jellyfin sessions (#2387) (Thanks @pbr85)
+    - (Jellyfin) Use the ID3 getArtistInfo2 endpoint for artist info (#2309) (Thanks @noctuum)
+    - (Mpris) Added xesam:asText lyrics to mpris output (#2411)
+    - (OS) Added support for the topSongsByArtistId OS extension
+    - (Navidrome) Added support for v0.64.0 smart playlist fields
+    - Added library rescan action to the server selector menu
+    - Added MPV reload button to the audio player selector
+    - Added overflow menu for play queue controls (#2326)
+    - Added sidebar player / lyrics support on the Now Playing route (#2134)
+    - (macOS) Added a Window menu item that re-opens the main window (#2269) (Thanks @dsimonds)
+    - Added F11 hotkey to fullscreen the app (#2280) (Thanks @jaxi)
+    - Added various missing butterchurn visualizer presets (#2280) (Thanks @jaxi)
+    Changed
+    - (mpv) Reverted the volume max limit feature from v1.15.0 (#2288) (Thanks @SimonSlamka)
+    - Expanded date fields across the app (#2276) (Thanks @ermmmwafle)
+    Fixed
+    - (OS) Fixed parsing for OS songLyrics v1 (#2327)
+    - Fixed the renderer whitescreening and crashing while playing music if volume expanded outside of valid bounds (#2449 / #2450) (Thanks @SteffenR)
+    - Fixed the global lyrics delay offset not being applied from settings (#2456)
+    - Fixed the seekbar getting stuck in some situations (#2441) (Thanks @Allinen)
+    - Fixed the radio web player not updating player volume (#2438) (Thanks @GerardGascon)
+    - Fixed radio cover and metadata being incorrect or missing in some cases (#2407) (Thanks @GerardGascon)
+    - (macOS) Fixed the menu bar disappearing (#2428) (Thanks @york9675)
+    - (MPV) Fixed stale commands being queued during runtime player switches (#2399) (Thanks @mattvanhorn)
+    - (MPV) Fixed the pitch toggle not working with the MPV backend (#2297) (Thanks @Sekiryl)
+    - (MPV) Fixed seeking getting stuck when the waveform fails to load by keeping a fallback seek control (#2257) (Thanks @mattvanhorn)
+    - (Web Player) Fixed the AudioContext being locked until first user gesture (#2275) (Thanks @Inspiractus01)
+    - (Web Player) Fixed playback resuming on queue modification (#2250)
+    - Fixed the settings route scrolling (Thanks @kgarner7)
+    - Fixed the seek timestamp not resetting on song play (#2397) (Thanks @ermmmwafle)
+    - Fixed the resume timestamp not correctly restoring on app launch (#2395) (Thanks @AndrewHerron)
+    - Fixed empty grid row configuration being lost (#2393) (Thanks @Atirna)
+    - Fixed a redundant menu divider (#2381) (Thanks @york9675)
+    - Fixed stale playlist cover art not refreshing (#2363) (Thanks @Norman)
+    - (Subsonic) Fixed the genre track count sort label (#2386) (Thanks @noctuum)
+    - (Subsonic) Fixed artist info using the wrong endpoint (#2309) (Thanks @noctuum)
+    - (Jellyfin) Fixed missing songs in album song requests
+    - Fixed power save blocker not being initialized (#2373) (Thanks @Tarulia)
+    - Fixed the use image aspect ratio setting not being respected on the fullscreen player image (#2429)
+    - Fixed localized custom theme settings (#2299) (Thanks @york9675)
+    - Fixed subtitle overflow on title-artist columns (#2330) (Thanks @ermmmwafle)
+    - Fixed minimized window restore (#2333)
+    - Fixed artist page scroll restoration (#2335)
+    - Fixed the notification on multi-playlist add with duplicates skipped (#2293)
+    - Fixed MPRIS play/pause not being applied to radio playback (#2303)
+    - Fixed hiding the lyric translation line when it is the same as the parent (#2311)
+    - Fixed tag editor key deletion, and added a scan listener + query invalidation on save
+    - Fixed window bounds growing on DPI scale changes
+    - Fixed the visualizer system audio consent not persisting
+    - Fixed the active tab on the fullscreen player resetting due to the mobile player tab
+    - Fixed the background overlay opacity on the mobile fullscreen player
+    - Fixed the library row expansion control being unstable
+    - Fixed the playlist public flag being lost on folder move
+    - Fixed layout shift and line wrapping on compact title columns
+    - Fixed the race condition of modal closure after queue clear confirmation
+    - Fixed the Windows ARM64 builds (#2244)
+    - Fixed the mobile queue performance by using a stack layout (Thanks @kgarner7)
+    - Fixed the webaudio context mounting unless using the web player (#2324)
+    What's Changed
+    - fix: fixed height for fullscreen image by @Keviddle in https://github.com/jeffvli/feishin/pull/2274
+    - fix: keep a seek control when the waveform fails to load by @mvanhorn in https://github.com/jeffvli/feishin/pull/2257
+    - Add a Window menu item that re-opens main window on Mac by @eramdam in https://github.com/jeffvli/feishin/pull/2269
+    - Make ratings/favourites a bit more customizable by @Kernald in https://github.com/jeffvli/feishin/pull/2262
+    - Revert "feat(player): set right ctrl vol max to mpv's vol max if play… by @danglingptr0x0 in https://github.com/jeffvli/feishin/pull/2288
+    - fix(web-player): unlock AudioContext on first user gesture by @Inspiractus01 in https://github.com/jeffvli/feishin/pull/2275
+    - fix: f11 fullscreen was completely broken on linux/windows; feat: butterchurn preset expansion + randomized preset arrows by @cmyksoda in https://github.com/jeffvli/feishin/pull/2280
+    - fix: localize custom theme settings by @york9675 in https://github.com/jeffvli/feishin/pull/2299
+    - fix: preserve pitch toggle now works for MPV backend by @sekiryl in https://github.com/jeffvli/feishin/pull/2297
+    - feat: add an option to configure default share expiration by @yunusey in https://github.com/jeffvli/feishin/pull/2283
+    - feat: adds option to view top rated songs in the Favorite Songs section by @dsimonds in https://github.com/jeffvli/feishin/pull/2289
+    - Expanded date fields by @ermmmwafle in https://github.com/jeffvli/feishin/pull/2276
+    - feat: support mouse navigation by @york9675 in https://github.com/jeffvli/feishin/pull/2298
+    - feat: confirm before discarding the current queue by @york9675 in https://github.com/jeffvli/feishin/pull/2300
+    - fixed subtitle overflow for title-artist columns by @ermmmwafle in https://github.com/jeffvli/feishin/pull/2330
+    - fix: use the ID3 getArtistInfo2 endpoint for artist info by @noctuum in https://github.com/jeffvli/feishin/pull/2309
+    - feat: implemented new fullscreen player design by @Keviddle in https://github.com/jeffvli/feishin/pull/2227
+    - feat: add album link to Discord RPC by @york9675 in https://github.com/jeffvli/feishin/pull/2344
+    - fix: PowerSaveBlocker not being initialized by @mihawk90 in https://github.com/jeffvli/feishin/pull/2373
+    - fix(library): correct genre track count sort label on Subsonic by @noctuum in https://github.com/jeffvli/feishin/pull/2386
+    - bump electron to 43 and remove react-router fixed by @kgarner7 in https://github.com/jeffvli/feishin/pull/2377
+    - fix: refresh stale playlist cover art. by @nova77 in https://github.com/jeffvli/feishin/pull/2363
+    - fix: redundant menu divider by @york9675 in https://github.com/jeffvli/feishin/pull/2381
+    - fix(library): preserve empty grid row configuration by @atirna in https://github.com/jeffvli/feishin/pull/2393
+    - fix(player): correctly restore resume timestamp on app launch by @TheSpyder in https://github.com/jeffvli/feishin/pull/2395
+    - feat(player): report play queue window to Jellyfin sessions by @pbr85 in https://github.com/jeffvli/feishin/pull/2387
+    - fix(player): reset seek timestamp on song play by @ermmmwafle in https://github.com/jeffvli/feishin/pull/2397
+    - feat: exclude other artist from artist play by @GerardGascon in https://github.com/jeffvli/feishin/pull/2404
+    - Remote control: library browsing, queue management, and action sheets by @mihaitom in https://github.com/jeffvli/feishin/pull/2337
+    - fix: prevent stale MPV commands during runtime player switches by @mvanhorn in https://github.com/jeffvli/feishin/pull/2399
+    - fix(player): save current song index in queue order by @frostplexx in https://github.com/jeffvli/feishin/pull/2423
+    - fix: prevent macOS menu bar disappearance by @york9675 in https://github.com/jeffvli/feishin/pull/2428
+    - feat(ui): add playlists section to home page by @karan in https://github.com/jeffvli/feishin/pull/2435
+    - feat: add scrobble minimum mode setting by @ermmmwafle in https://github.com/jeffvli/feishin/pull/2414
+    - fix: radio cover and metadata was incorrect/missing in some cases by @GerardGascon in https://github.com/jeffvli/feishin/pull/2407
+    - fix: radio web player wasn't updating player volume by @GerardGascon in https://github.com/jeffvli/feishin/pull/2438
+    - Implementation of DLNA casting with additional fixes and features by @Villhume in https://github.com/jeffvli/feishin/pull/1887
+    - feat: add Jellyfin Quick Connect authentication support by @ssalonen in https://github.com/jeffvli/feishin/pull/2238
+    - fix: seeker stuck by @Allinen in https://github.com/jeffvli/feishin/pull/2441
+    - fixes #2449: Playing music crashes the whole renderer with a whitescreen by @steffenr in https://github.com/jeffvli/feishin/pull/2450
+    New Contributors
+    - @mvanhorn made their first contribution in https://github.com/jeffvli/feishin/pull/2257
+    - @Kernald made their first contribution in https://github.com/jeffvli/feishin/pull/2262
+    - @Inspiractus01 made their first contribution in https://github.com/jeffvli/feishin/pull/2275
+    - @cmyksoda made their first contribution in https://github.com/jeffvli/feishin/pull/2280
+    - @sekiryl made their first contribution in https://github.com/jeffvli/feishin/pull/2297
+    - @yunusey made their first contribution in https://github.com/jeffvli/feishin/pull/2283
+    - @dsimonds made their first contribution in https://github.com/jeffvli/feishin/pull/2289
+    - @ermmmwafle made their first contribution in https://github.com/jeffvli/feishin/pull/2276
+    - @atirna made their first contribution in https://github.com/jeffvli/feishin/pull/2393
+    - @TheSpyder made their first contribution in https://github.com/jeffvli/feishin/pull/2395
+    - @pbr85 made their first contribution in https://github.com/jeffvli/feishin/pull/2387
+    - @GerardGascon made their first contribution in https://github.com/jeffvli/feishin/pull/2404
+    - @mihaitom made their first contribution in https://github.com/jeffvli/feishin/pull/2337
+    - @frostplexx made their first contribution in https://github.com/jeffvli/feishin/pull/2423
+    - @karan made their first contribution in https://github.com/jeffvli/feishin/pull/2435
+    - @Villhume made their first contribution in https://github.com/jeffvli/feishin/pull/1887
+    - @ssalonen made their first contribution in https://github.com/jeffvli/feishin/pull/2238
+    - @Allinen made their first contribution in https://github.com/jeffvli/feishin/pull/2441
+    - @steffenr made their first contribution in https://github.com/jeffvli/feishin/pull/2450
+    Full Changelog: https://github.com/jeffvli/feishin/compare/v1.15.1...v1.16.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/jeffvli/feishin/releases/tag/v1.16.0
+ReleaseTime: 2026-09-14T01:09:34.0000000Z

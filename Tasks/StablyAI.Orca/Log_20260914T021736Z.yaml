@@ -1,0 +1,189 @@
+Version: 1.4.202
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.202/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - refactor(agent-status): delete the runtime's retained row store (PR 1b) by @brennanb2025 in https://github.com/stablyai/orca/pull/19785
+    - fix(deps): take Electron 43.7.0 for the glibc environ use-after-free (#20081) by @nwparker in https://github.com/stablyai/orca/pull/20089
+    - fix(browser): decode Chromium SameSite storage values (135 cookies silently lost per profile) by @brennanb2025 in https://github.com/stablyai/orca/pull/20076
+    - fix(terminal): re-run deferred tab admission when a plan installs mid-activation by @brennanb2025 in https://github.com/stablyai/orca/pull/20176
+    - fix(workspaces): complete a worktree create when a post-create step throws by @brennanb2025 in https://github.com/stablyai/orca/pull/20175
+    - feat(relay): support protocol 3 in cell rollout gates by @Jinwoo-H in https://github.com/stablyai/orca/pull/20174
+    - fix(e2e): remove four real flake sources and one caret race by @brennanb2025 in https://github.com/stablyai/orca/pull/20169
+    - fix(source-control): pass the Antigravity prompt to agy --print by @nwparker in https://github.com/stablyai/orca/pull/20147
+    - fix(e2e): run worktree first-paint probe on a mapped window by @brennanb2025 in https://github.com/stablyai/orca/pull/20197
+    - fix(relay): bound idle rehome polling and skip disabled scans by @Jinwoo-H in https://github.com/stablyai/orca/pull/20203
+    - fix(hooks): stop orphaned managed markers from consuming user TOML by @nwparker in https://github.com/stablyai/orca/pull/20148
+    - fix(codex): reconcile marketplace and plugin tables through the config mirror by @nwparker in https://github.com/stablyai/orca/pull/20150
+    - fix(relay): reuse canary across completed rollout batches by @Jinwoo-H in https://github.com/stablyai/orca/pull/20214
+    - Restore mobile push and fix cold-start dismissals by @Jinwoo-H in https://github.com/stablyai/orca/pull/20068
+    - fix(cloud): tolerate sparse director errors in rollout monitor by @Jinwoo-H in https://github.com/stablyai/orca/pull/20238
+    - feat(ai-vault-search): session search query engine over the index by @Jinwoo-H in https://github.com/stablyai/orca/pull/20029
+    - feat(mobile): add typed RPC operations and fence raw requests by @Jinwoo-H in https://github.com/stablyai/orca/pull/20018
+    - fix(native-chat): shrink skill pill text by @brennanb2025 in https://github.com/stablyai/orca/pull/20254
+    - fix(claude): refuse a structured model the provider does not list by @brennanb2025 in https://github.com/stablyai/orca/pull/19946
+    - perf: defer closed menus to speed up cold worktree switching by @nwparker in https://github.com/stablyai/orca/pull/20311
+    - test: replace fixed UI waits with observable readiness by @nwparker in https://github.com/stablyai/orca/pull/20369
+    - ci: reuse immutable package setup across shutdown checks by @nwparker in https://github.com/stablyai/orca/pull/20368
+    - perf: index Hermes session correlation instead of rescanning history by @nwparker in https://github.com/stablyai/orca/pull/20275
+    - fix: prevent infinite loops in mobile Markdown rendering by @nwparker in https://github.com/stablyai/orca/pull/20313
+    - perf: eliminate mobile review table delimiter backtracking by @nwparker in https://github.com/stablyai/orca/pull/20317
+    - perf: eliminate repeated mobile Markdown link suffix scans by @nwparker in https://github.com/stablyai/orca/pull/20322
+    - ci: narrow pnpm cache keys and shallow development checkouts by @nwparker in https://github.com/stablyai/orca/pull/20370
+    - perf(browser): fill plain fields in one stdin edit by @nwparker in https://github.com/stablyai/orca/pull/20364
+    - Fix landing footer menu placement by @nwparker in https://github.com/stablyai/orca/pull/20360
+    - ci: balance existing unit and E2E shards using recorded timings by @nwparker in https://github.com/stablyai/orca/pull/20367
+    - fix(cloud): diagnose wrapped relay trust probe failures by @Jinwoo-H in https://github.com/stablyai/orca/pull/20403
+    - refactor(renderer): improve IPC error handling with clamped and unclamped variants by @AmethystLiang in https://github.com/stablyai/orca/pull/20340
+    - Make sidebar nesting easier while preserving animated reordering by @nwparker in https://github.com/stablyai/orca/pull/20412
+    - refactor(preload): drop the unused raw electron IPC bridge by @nwparker in https://github.com/stablyai/orca/pull/20419
+    - fix(browser): move cookie scoping off psl's stale suffix list by @nwparker in https://github.com/stablyai/orca/pull/20421
+    - fix(claude-accounts): stop path resolution from creating the config directory by @makoto-developer in https://github.com/stablyai/orca/pull/12309
+    - perf: normalize title evidence once per label search by @nwparker in https://github.com/stablyai/orca/pull/20331
+    - fix(runtime): GC expired proven-absent leaf PTY verdicts by @innocarpe in https://github.com/stablyai/orca/pull/12810
+    - fix(ai-vault): close OpenCode handles when query_only setup fails by @bbingz in https://github.com/stablyai/orca/pull/14134
+    - perf(wsl): release environment probe deadline timers by @OrcaWin in https://github.com/stablyai/orca/pull/20207
+    - perf(daemon): bound immediate flush queue scans by @OrcaWin in https://github.com/stablyai/orca/pull/20209
+    - perf(mobile): normalize history scope paths once per candidate by @nwparker in https://github.com/stablyai/orca/pull/20210
+    - perf(automations): skip sorting count-only Hermes history by @OrcaWin in https://github.com/stablyai/orca/pull/20213
+    - perf(chat): reuse streamed delta byte lengths by @OrcaWin in https://github.com/stablyai/orca/pull/20215
+    - perf(files): skip unused Quick Open byte accounting by @OrcaWin in https://github.com/stablyai/orca/pull/20216
+    - perf(relay): reuse host data attachment owner without inventory copies by @nwparker in https://github.com/stablyai/orca/pull/20219
+    - perf(mobile): avoid materializing input characters on backspace by @OrcaWin in https://github.com/stablyai/orca/pull/20220
+    - perf(browser): skip unneeded inventory compaction planning by @OrcaWin in https://github.com/stablyai/orca/pull/20221
+    - perf(usage): skip session scans for empty breakdowns by @OrcaWin in https://github.com/stablyai/orca/pull/20222
+    - perf(session): reuse persisted tab membership set by @OrcaWin in https://github.com/stablyai/orca/pull/20223
+    - perf(diff): skip unused extension extraction during search by @OrcaWin in https://github.com/stablyai/orca/pull/20225
+    - perf(mobile): bound autocomplete substring retention by @OrcaWin in https://github.com/stablyai/orca/pull/20226
+    - perf: index pending terminal reconnect tab lookups by @OrcaWin in https://github.com/stablyai/orca/pull/20229
+    - perf: skip ordinary strings in JSON structure checks by @OrcaWin in https://github.com/stablyai/orca/pull/20232
+    - perf: avoid rescanning partial browser sidecar responses by @OrcaWin in https://github.com/stablyai/orca/pull/20242
+    - perf: count local RPC request bytes incrementally by @OrcaWin in https://github.com/stablyai/orca/pull/20243
+    - perf(history): cache numeric transcript timeline bounds by @OrcaWin in https://github.com/stablyai/orca/pull/20244
+    - perf: stop heading lookup at the requested occurrence by @OrcaWin in https://github.com/stablyai/orca/pull/20246
+    - perf: defer browser search row formatting until matched by @OrcaWin in https://github.com/stablyai/orca/pull/20248
+    - perf: stop preparing over-limit palette queries by @OrcaWin in https://github.com/stablyai/orca/pull/20250
+    - perf: avoid duplicate repository directory probes by @OrcaWin in https://github.com/stablyai/orca/pull/20253
+    - perf: compile nested repository ignore patterns once by @OrcaWin in https://github.com/stablyai/orca/pull/20256
+    - perf: avoid repeated model pricing name normalization by @OrcaWin in https://github.com/stablyai/orca/pull/20257
+    - perf(skills): index source ownership counts per discovery by @OrcaWin in https://github.com/stablyai/orca/pull/20259
+    - perf(plugins): stop collection traversal at message size limit by @nwparker in https://github.com/stablyai/orca/pull/20260
+    - perf(history): scan legacy alternate-screen markers linearly by @OrcaWin in https://github.com/stablyai/orca/pull/20267
+    - perf: reuse skill file digest when normalized bytes match by @OrcaWin in https://github.com/stablyai/orca/pull/20268
+    - perf(native): avoid sanitizing snapshot values twice by @nwparker in https://github.com/stablyai/orca/pull/20271
+    - perf: encode skill Git tree sort keys once by @OrcaWin in https://github.com/stablyai/orca/pull/20272
+    - perf: skip decoding discarded diagnostic error bodies by @OrcaWin in https://github.com/stablyai/orca/pull/20276
+    - perf: avoid flattening tabs for smart-sort liveness check by @OrcaWin in https://github.com/stablyai/orca/pull/20279
+    - perf: accept UTF-8 text that fits the worst-case byte bound by @OrcaWin in https://github.com/stablyai/orca/pull/20286
+    - perf: bound rich Markdown comment detection and preservation scans by @nwparker in https://github.com/stablyai/orca/pull/20287
+    - perf(ipc): bound SSH ACK batch selection scans by @nwparker in https://github.com/stablyai/orca/pull/20288
+    - perf: avoid copying completed terminal source ranges by @OrcaWin in https://github.com/stablyai/orca/pull/20289
+    - perf(ssh): skip terminal source spans awaiting ACK publication by @OrcaWin in https://github.com/stablyai/orca/pull/20290
+    - perf: reuse diagnostic bundle byte count by @OrcaWin in https://github.com/stablyai/orca/pull/20292
+    - perf: normalize manifest text files once by @OrcaWin in https://github.com/stablyai/orca/pull/20294
+    - perf: reuse formatter within reset timestamp conversion by @OrcaWin in https://github.com/stablyai/orca/pull/20295
+    - perf: defer scrollback pruning indexes until needed by @OrcaWin in https://github.com/stablyai/orca/pull/20297
+    - perf(daemon): reuse encoded unsplit NDJSON frames by @nwparker in https://github.com/stablyai/orca/pull/20298
+    - perf(browser): index iframe session refs for snapshot lookup by @nwparker in https://github.com/stablyai/orca/pull/20300
+    - perf: reuse computed project identity in projection by @OrcaWin in https://github.com/stablyai/orca/pull/20303
+    - perf: stop archive size scan once over budget by @OrcaWin in https://github.com/stablyai/orca/pull/20304
+    - perf: avoid per-item arrays in journal projection by @OrcaWin in https://github.com/stablyai/orca/pull/20305
+    - perf: reuse Windows PATH normalization within merges by @OrcaWin in https://github.com/stablyai/orca/pull/20309
+    - perf: find path basename without splitting all segments by @OrcaWin in https://github.com/stablyai/orca/pull/20312
+    - perf(ssh): copy cleanup tab map only once by @OrcaWin in https://github.com/stablyai/orca/pull/20315
+    - perf: fast-path Windows arguments without escapes by @OrcaWin in https://github.com/stablyai/orca/pull/20318
+    - perf(checks): bound log excerpt byte-limit checks by @OrcaWin in https://github.com/stablyai/orca/pull/20319
+    - perf: use native newline search in rich Markdown code stripping by @nwparker in https://github.com/stablyai/orca/pull/20320
+    - perf: stop building chat diff sections beyond preview limit by @OrcaWin in https://github.com/stablyai/orca/pull/20321
+    - perf: count chat tool calls without a filtered array by @OrcaWin in https://github.com/stablyai/orca/pull/20328
+    - perf: reject file-count labels before parsing edit patches by @OrcaWin in https://github.com/stablyai/orca/pull/20330
+    - perf(terminal): reuse bounded native snapshot byte checks by @OrcaWin in https://github.com/stablyai/orca/pull/20333
+    - perf: select matching model IDs without sorting by @OrcaWin in https://github.com/stablyai/orca/pull/20334
+    - perf: remove duplicate empty-file filtering from search finalization by @OrcaWin in https://github.com/stablyai/orca/pull/20335
+    - perf: avoid repeated history page byte serialization by @nwparker in https://github.com/stablyai/orca/pull/20337
+    - perf: collect terminal snapshot replay without wrapper arrays by @OrcaWin in https://github.com/stablyai/orca/pull/20338
+    - perf: reuse accepted project group IDs for parent validation by @OrcaWin in https://github.com/stablyai/orca/pull/20341
+    - perf: compute check severity once per sort by @OrcaWin in https://github.com/stablyai/orca/pull/20342
+    - perf: count bot comments without a filtered array by @OrcaWin in https://github.com/stablyai/orca/pull/20343
+    - perf: index relay drain migration inventories once by @nwparker in https://github.com/stablyai/orca/pull/20344
+    - perf: avoid typed-array iteration in shared SHA-256 blocks by @OrcaWin in https://github.com/stablyai/orca/pull/20346
+    - perf: reuse shared SHA-256 for renderer fallback by @OrcaWin in https://github.com/stablyai/orca/pull/20347
+    - perf(computer): avoid rescanning fragmented native provider replies by @OrcaWin in https://github.com/stablyai/orca/pull/20348
+    - perf: skip nonmatching spans in Quick Open scoring by @nwparker in https://github.com/stablyai/orca/pull/20349
+    - perf: skip dominated quick command search fields by @nwparker in https://github.com/stablyai/orca/pull/20352
+    - perf: reuse normalized executable during agent recognition by @OrcaWin in https://github.com/stablyai/orca/pull/20353
+    - perf(localization): prefilter absent brands before regex matching by @OrcaWin in https://github.com/stablyai/orca/pull/20354
+    - perf: avoid copying single-chunk process output by @OrcaWin in https://github.com/stablyai/orca/pull/20355
+    - perf: scan chat activity text from its last line by @nwparker in https://github.com/stablyai/orca/pull/20356
+    - perf(mobile): reuse UTF-8 prefix truncation for diagnostics by @OrcaWin in https://github.com/stablyai/orca/pull/20358
+    - perf(checks): bound earlier error context collection by @OrcaWin in https://github.com/stablyai/orca/pull/20211
+    - perf(mobile): reuse numeric collators across source control sorts by @nwparker in https://github.com/stablyai/orca/pull/20224
+    - perf(mobile): precompute task sort keys and reuse repository collation by @nwparker in https://github.com/stablyai/orca/pull/20233
+    - perf(agents): avoid cloning lineage ancestor sets by @OrcaWin in https://github.com/stablyai/orca/pull/20236
+    - perf(plugins): reconcile shortcut conflicts once per owner by @nwparker in https://github.com/stablyai/orca/pull/20237
+    - perf: avoid rescanning partial transcript records by @OrcaWin in https://github.com/stablyai/orca/pull/20239
+    - perf: use native newline search for Markdown review excerpts by @nwparker in https://github.com/stablyai/orca/pull/20245
+    - perf(ai-vault): deduplicate session scan batches incrementally by @OrcaWin in https://github.com/stablyai/orca/pull/20255
+    - perf: stop review acknowledgement summaries at the first readable line by @nwparker in https://github.com/stablyai/orca/pull/20263
+    - perf(git): classify bulk discard paths once by @nwparker in https://github.com/stablyai/orca/pull/20274
+    - perf: eliminate quadratic palette phrase placement scans by @nwparker in https://github.com/stablyai/orca/pull/20306
+    - perf: avoid repeated unclosed-tag scans in mobile reviews by @nwparker in https://github.com/stablyai/orca/pull/20329
+    - perf(plugins): index contributed keybindings by command by @nwparker in https://github.com/stablyai/orca/pull/20241
+    - perf(mobile): precompute Linear issue sort keys by @nwparker in https://github.com/stablyai/orca/pull/20249
+    - perf(chat): join transcript line fragments at record boundaries by @OrcaWin in https://github.com/stablyai/orca/pull/20278
+    - perf(cmd-j): scan phrase word boundaries monotonically by @nwparker in https://github.com/stablyai/orca/pull/20282
+    - perf(ai-vault): count recent sessions for scan cutoffs by @OrcaWin in https://github.com/stablyai/orca/pull/20301
+    - perf: remove repeated sibling scans from cyclic agent lineage cleanup by @nwparker in https://github.com/stablyai/orca/pull/20302
+    - perf: reuse pending filesystem watcher debounce timers by @OrcaWin in https://github.com/stablyai/orca/pull/20264
+    - fix(editor): eliminate multi-second Markdown blank-run scans by @nwparker in https://github.com/stablyai/orca/pull/20231
+    - perf: avoid rescanning partial Windows desktop responses by @OrcaWin in https://github.com/stablyai/orca/pull/20235
+    - fix(chat): bound journal replay memory by live history by @nwparker in https://github.com/stablyai/orca/pull/20247
+    - perf(android): queue fragmented scrcpy video packets by @OrcaWin in https://github.com/stablyai/orca/pull/20230
+    - perf(mobile): skip successful duplicate connection log saves by @nwparker in https://github.com/stablyai/orca/pull/20252
+    - perf: skip impossible inline HTML comment matches during encoding by @nwparker in https://github.com/stablyai/orca/pull/20293
+    - chore: remove 20.7 MiB of duplicate and unused media by @nwparker in https://github.com/stablyai/orca/pull/20416
+    - perf: bound whitespace normalization for tool previews by @nwparker in https://github.com/stablyai/orca/pull/20332
+    - fix(tabs): cancel split drags when the window loses focus by @OrcaWin in https://github.com/stablyai/orca/pull/20323
+    - fix(updater): open background check errors from the status bar by @OrcaWin in https://github.com/stablyai/orca/pull/20270
+    - perf(relay): sort latency samples once per percentile pair by @nwparker in https://github.com/stablyai/orca/pull/20427
+    - perf(skills): test agent ownership without building a deduped list by @nwparker in https://github.com/stablyai/orca/pull/20428
+    - perf(git): reject non-HEAD refs before sorting remotes by @nwparker in https://github.com/stablyai/orca/pull/20429
+    - perf(mobile): release consumed terminal write-queue slots by @nwparker in https://github.com/stablyai/orca/pull/20430
+    - perf(git): normalize tracked discard paths once per operation by @nwparker in https://github.com/stablyai/orca/pull/20299
+    - refactor(windows): vendor the registry addon as @orca/windows-registry by @nwparker in https://github.com/stablyai/orca/pull/20438
+    - fix(resource-manager): show saved folder workspace names and groups by @OrcaWin in https://github.com/stablyai/orca/pull/20324
+    - test(relay): differential coverage for the single-pass host-data owner lookup by @nwparker in https://github.com/stablyai/orca/pull/20426
+    - perf(mobile): reuse Linear grouping between list and board by @nwparker in https://github.com/stablyai/orca/pull/20431
+    - chore(deps): pin serve-sim to an exact version by @nwparker in https://github.com/stablyai/orca/pull/20446
+    - Add code quality lint for type assertions by @AmethystLiang in https://github.com/stablyai/orca/pull/19462
+    - fix(ci): cache the vendored addon where node-gyp actually writes it by @nwparker in https://github.com/stablyai/orca/pull/20445
+    - perf: accelerate cancellable remote transcript line scanning by @OrcaWin in https://github.com/stablyai/orca/pull/20351
+    - fix(ci): match the truncated windows-process-tree virtual store dir by @nwparker in https://github.com/stablyai/orca/pull/20447
+    - build(macos): parallelize native helpers with complete cancellation by @espetro in https://github.com/stablyai/orca/pull/19651
+    - perf: skip WSL discovery when filtering native-only paths by @OrcaWin in https://github.com/stablyai/orca/pull/20266
+    - perf(mobile): reuse Linear ordering for list and board grouping by @nwparker in https://github.com/stablyai/orca/pull/20314
+    - Reduce native dependency installs to the host platform by @nwparker in https://github.com/stablyai/orca/pull/20420
+    - perf(ai-vault): bound per-row bookkeeping in unlimited session scans by @nwparker in https://github.com/stablyai/orca/pull/20291
+    - perf(tooling): reuse directory entry types in source scans by @OrcaWin in https://github.com/stablyai/orca/pull/20212
+    - fix(skills): evict removed runtime discovery cache by @bbingz in https://github.com/stablyai/orca/pull/11489
+    - fix(automations): isolate the scheduler tick and refuse oversized cron steps by @nwparker in https://github.com/stablyai/orca/pull/20152
+    - fix(runtime): stop a name-only agent title from satisfying tui-idle by @nwparker in https://github.com/stablyai/orca/pull/20155
+    - fix(agent-hooks): stop navigation Escape from inferring completion by @nwparker in https://github.com/stablyai/orca/pull/20149
+    - fix(mobile): reuse current workspace on notification taps by @Jinwoo-H in https://github.com/stablyai/orca/pull/20310
+    - fix(ai-vault): re-read a transcript rewritten to its previous size by @Jinwoo-H in https://github.com/stablyai/orca/pull/20261
+    - fix(sidebar): show agent activity before workspace activation by @Jinwoo-H in https://github.com/stablyai/orca/pull/20398
+    - test(rpc): add a compile-time params catalog parity gate by @Jinwoo-H in https://github.com/stablyai/orca/pull/20281
+    - test(scripts): widen the Windows shim ratchet to catch package bin spawns by @Jinwoo-H in https://github.com/stablyai/orca/pull/20285
+    - refactor(native-chat): give each structured dispatch state exactly one meaning by @brennanb2025 in https://github.com/stablyai/orca/pull/20133
+    - feat(native-chat): decide a restart-stranded send against provider history by @brennanb2025 in https://github.com/stablyai/orca/pull/20139
+    New Contributors
+    - @espetro made their first contribution in https://github.com/stablyai/orca/pull/19651
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.201...v1.4.202
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.202
+ReleaseTime: 2026-09-14T00:03:17.0000000Z
