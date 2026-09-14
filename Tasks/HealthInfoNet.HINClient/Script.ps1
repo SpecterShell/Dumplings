@@ -11,26 +11,29 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://support.hin.ch/de/hin-client/release-notes-hin-client/' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://support.hin.ch/de/thema/hin-client/release-notes.cfm' | ConvertFrom-Html
 
-      if ($Object2.SelectSingleNode("//h1[@class='entry-title' and contains(text(), '$($this.CurrentState.Version)')]")) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match($Object2.SelectSingleNode('//div[@class="entry-content"]').InnerText, '(\d{1,2}\.\d{1,2}\.20\d{2})').Groups[1].Value,
-          'dd.MM.yyyy',
-          $null
-        ).ToString('yyyy-MM-dd')
+      if ($ReleaseNotesDETitleNode = $Object2.SelectSingleNode("//article/section[./div[1]/h2[contains(text(), '$($this.CurrentState.Version)')]]")) {
+        if (($ReleaseTimeDENode = $ReleaseNotesDETitleNode.SelectSingleNode('.//p[contains(., "Release Datum")]')) -and $ReleaseTimeDENode.InnerText -match '(\d{1,2}\.\d{1,2}\.20\d{2})') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
 
-        # Remove "Release Notes: Archiv" link
-        $Object2.SelectNodes('//a[contains(., "Release Notes: Archiv")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (de-CH)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'de-CH'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectSingleNode('//div[@class="entry-content"]') | Get-TextContent | Format-Text
+          # ReleaseNotes (de-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'de-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseTimeDENode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (de-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'de-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesDETitleNode.SelectSingleNode('./div[last()]') | Get-TextContent | Format-Text
+          }
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (de-CH) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -38,26 +41,29 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://support.hin.ch/fr/hin-client/release-notes-hin-client/' | ConvertFrom-Html
+      $Object3 = Invoke-WebRequest -Uri 'https://support.hin.ch/fr/thema/hin-client/notes-de-release.cfm' | ConvertFrom-Html
 
-      if ($Object3.SelectSingleNode("//h1[@class='entry-title' and contains(text(), '$($this.CurrentState.Version)')]")) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match($Object3.SelectSingleNode('//div[@class="entry-content"]').InnerText, '(\d{1,2}\.\d{1,2}\.20\d{2})').Groups[1].Value,
-          'dd.MM.yyyy',
-          $null
-        ).ToString('yyyy-MM-dd')
+      if ($ReleaseNotesFRTitleNode = $Object3.SelectSingleNode("//article/section[./div[1]/h2[contains(text(), '$($this.CurrentState.Version)')]]")) {
+        if (($ReleaseTimeFRNode = $ReleaseNotesFRTitleNode.SelectSingleNode('.//p[contains(., "Date de release")]')) -and $ReleaseTimeFRNode.InnerText -match '(\d{1,2}\.\d{1,2}\.20\d{2})') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
 
-        # Remove "Archive: Notes de release du client HIN" link
-        $Object3.SelectNodes('//a[contains(., "Archive: Notes de release du client HIN")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (fr-CH)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'fr-CH'
-          Key    = 'ReleaseNotes'
-          Value  = $Object3.SelectSingleNode('//div[@class="entry-content"]') | Get-TextContent | Format-Text
+          # ReleaseNotes (fr-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'fr-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseTimeFRNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (fr-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'fr-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesFRTitleNode.SelectSingleNode('./div[last()]') | Get-TextContent | Format-Text
+          }
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (fr-CH) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
@@ -65,26 +71,29 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object4 = Invoke-WebRequest -Uri 'https://support.hin.ch/it/hin-client/note-di-rilascio-hin-client/' | ConvertFrom-Html
+      $Object4 = Invoke-WebRequest -Uri 'https://support.hin.ch/it/thema/hin-client/note-di-rilascio.cfm' | ConvertFrom-Html
 
-      if ($Object4.SelectSingleNode("//h1[@class='entry-title' and contains(text(), '$($this.CurrentState.Version)')]")) {
-        # ReleaseTime
-        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          [regex]::Match($Object4.SelectSingleNode('//div[@class="entry-content"]').InnerText, '(\d{1,2}\.\d{1,2}\.20\d{2})').Groups[1].Value,
-          'dd.MM.yyyy',
-          $null
-        ).ToString('yyyy-MM-dd')
+      if ($ReleaseNotesITTitleNode = $Object4.SelectSingleNode("//article/section[./div[1]/h2[contains(text(), '$($this.CurrentState.Version)')]]")) {
+        if (($ReleaseTimeITNode = $ReleaseNotesITTitleNode.SelectSingleNode('.//p[contains(., "Data di rilascio")]')) -and $ReleaseTimeITNode.InnerText -match '(\d{1,2}\.\d{1,2}\.20\d{2})') {
+          # ReleaseTime
+          $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Matches[1], 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
 
-        # Remove "Archivio: Note di rilascio HIN Client" link
-        $Object4.SelectNodes('//a[contains(., "Archivio: Note di rilascio HIN Client")]').ForEach({ $_.Remove() })
-        # ReleaseNotes (it-CH)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'it-CH'
-          Key    = 'ReleaseNotes'
-          Value  = $Object4.SelectSingleNode('//div[@class="entry-content"]') | Get-TextContent | Format-Text
+          # ReleaseNotes (it-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'it-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseTimeITNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (it-CH)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'it-CH'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesITTitleNode.SelectSingleNode('./div[last()]') | Get-TextContent | Format-Text
+          }
         }
       } else {
-        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (it-CH) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
