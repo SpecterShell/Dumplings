@@ -213,7 +213,7 @@ Arguments
 Options
 ```
 
-The parser resolves deterministic path constants in `Command` and `Arguments` and returns the record as evidence. It never invokes the command. Official documentation defines `Execute Application` and `Shell Execute` command types, `-wait` as waiting for the child process, and `-hide` as starting the child hidden. The parser retains `Options`, exposes exact `OptionTokens`, `WaitForExit`, `Hidden`, and `UnknownOptions`, and emits a structured diagnostic for unknown types or tokens. Empty final option fields remain valid record fields rather than being mistaken for truncated tables.
+The parser resolves deterministic path constants in `Command` and `Arguments` and returns the record as evidence. It never invokes the command. Official documentation and controlled project files define `Execute Application` and `Shell Execute` command types, `-wait` as waiting for the child process, and `-hide` as starting the child hidden. Verified command records are unconditional and contain no condition field. The parser retains `Options`, exposes exact `OptionTokens`, `WaitForExit`, `Hidden`, `UnknownOptions`, `HasUnresolvedRuntimeValue`, and `UnresolvedProperties`, and emits structured diagnostics for unknown types, unknown tokens, or registry-backed values that remain runtime-dependent. Empty final option fields remain valid record fields rather than being mistaken for truncated tables.
 
 ### Desktop.dat and Startmenu.dat
 
@@ -336,7 +336,7 @@ The parser does not buffer the complete installer or payload. The small configur
 
 ## Known gaps
 
-- Registry-backed custom variables, command conditions, and other runtime-derived expressions cannot be resolved statically unless a literal default is sufficient.
+- Registry-backed custom-variable values remain runtime-dependent because the target registry value overrides the compiled default. Commands, shortcuts, and finish actions expose unresolved properties and diagnostics rather than substituting the default as authoritative evidence.
 - Runtime-generated uninstallers from verified 1.2.x-1.3.x media are not reconstructed. Modern 1.4+ uninstallers are payload records and are fully extractable.
 - Failure exit codes are not proven across releases. Cancellation returned success code `0` in the verified 1.3.2 and 1.6.1 runtimes, but remains untested in other generations.
 - InstallForge releases older than 1.2.2 and structurally different future engines have no verified fixtures.

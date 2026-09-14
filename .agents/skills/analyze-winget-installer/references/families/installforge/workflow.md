@@ -85,7 +85,7 @@ $Info.Requirements
 $Info.GeneratedUninstallerEntry
 ```
 
-The parser resolves predefined constants and literal custom-variable defaults. It excludes registry values that still contain runtime-only or unknown expressions from ARP and association projection. Command records expose `WaitForExit`, `Hidden`, and unknown option tokens. Shortcut records expose their compiled per-user or all-users scope. InstallForge 1.4+ stores the generated uninstaller as a normal payload entry identified by `GeneratedUninstallerEntry`; legacy 1.2.x-1.3.x runtimes generate the uninstaller during installation instead.
+The parser resolves deterministic predefined constants. Registry-backed custom variables retain their compiled defaults as evidence but remain unresolved because the target registry value can override the default at runtime. Registry values with unresolved expressions are excluded from ARP and association projection. Commands and shortcuts expose `HasUnresolvedRuntimeValue` and `UnresolvedProperties`; command records also expose `WaitForExit`, `Hidden`, and unknown option tokens. Verified `Commands.dat` records are unconditional and contain no condition field. Shortcut records expose their compiled per-user or all-users scope. InstallForge 1.4+ stores the generated uninstaller as a normal payload entry identified by `GeneratedUninstallerEntry`; legacy 1.2.x-1.3.x runtimes generate the uninstaller during installation instead.
 
 ### 4. Extract files only when needed
 

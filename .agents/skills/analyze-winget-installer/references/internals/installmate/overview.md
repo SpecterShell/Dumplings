@@ -211,7 +211,7 @@ Offset       Size  Field
 ...           var  LP UTF-8 installed path segment
 ```
 
-The graph resolver starts with standard folder symbols and typed symbol values, then repeatedly joins a folder's path segment to its resolved parent. Cycles, missing parents, and unresolved dynamic symbols remain unresolved. Controlled InstallMate 11 fixtures establish nested custom-folder and `INSTALLDIR` behavior.
+The graph resolver starts with standard folder symbols and typed symbol values, then repeatedly joins a folder's path segment to its resolved parent. Component display names and descriptions may have appended translations; their nonzero translation counts do not invalidate the base-language component metadata or its object key. Cycles, missing parents, and unresolved dynamic symbols remain unresolved. InstallMate 9.4, 9.114, and controlled InstallMate 11 fixtures establish translated components, nested custom folders, and `INSTALLDIR` behavior.
 
 ## Current system-effect records
 
@@ -364,7 +364,28 @@ Prerequisite action keys are linked to decoded `a206` records without evaluating
 
 ## Scope and ARP evidence
 
-Legacy media uses the explicit uninstall hive when present; otherwise `AdminRights=1` is machine-scope evidence. Current controlled `tinB` media exposes `TsuInstallLevel` in the unique `inst\0\0\0\0` record at `+0x1B4`:
+Legacy media uses the explicit uninstall hive when present; otherwise `AdminRights=1` is machine-scope evidence. Verified `tin9` and `tinB` media expose the package identity, Loader + Download URL, runtime component, and `TsuInstallLevel` through a variable-length `inst\0\0\0\0` record:
+
+```text
+inst package record
+Offset       Size  Field
+-----------  ----  -------------------------------------------------
+0x00            8  ASCII "inst" followed by four NUL bytes
+0x08            8  Package object key
+0x10         0x24  Observed fixed header
+0x34          var  LP UTF-8 Apps & Features template
+...              4  Observed option or translation word
+...            var  LP UTF-8 ProductCode
+...            var  LP UTF-8 setup name
+...            var  LP UTF-8 package Download URL; empty for local media
+...              4  Observed option word 1
+...              4  Observed option word 2
+...              8  Runtime component object key
+...              4  TsuInstallLevel, uint32 LE
+...              4  Package flags, uint32 LE
+```
+
+The length-prefixed Download URL is present even when it is empty. Loader + Download media can make it nonempty and therefore move every following field; readers must advance through the strings rather than use a fixed `InstallLevel` offset. Official InstallMate 9.4.1, archived InstallMate 9.10 Loader + Download media, InstallMate 9.114, and controlled InstallMate 11 packages establish this layout.
 
 | Value | Runtime behavior |
 | ---: | --- |
@@ -375,7 +396,7 @@ Legacy media uses the explicit uninstall hive when present; otherwise `AdminRigh
 | 4 | all users |
 | 5 | administrator |
 
-Older modern layouts retain scope from the PE requested-execution-level as fallback evidence because their install-record offset has not been mapped. `requireAdministrator` establishes machine scope, `asInvoker` establishes user scope, and `highestAvailable` remains elevation-dependent.
+Unmapped `tin3` and `tin5` install-record layouts retain scope from the PE requested-execution-level as fallback evidence. `requireAdministrator` establishes machine scope, `asInvoker` establishes user scope, and `highestAvailable` remains elevation-dependent.
 
 The built-in uninstall key is strong ARP identity evidence. Current literal custom registry records are decoded and can override the built-in ARP template or expose protocol and file-extension associations. Conditional, dynamically resolved, incomplete, or older-generation custom registrations remain diagnostics instead of being guessed.
 
@@ -389,13 +410,15 @@ Malformed headers, unsupported compression, ambiguous package archives, truncate
 
 - No fixture currently covers the `tin5` file-record revisions corresponding to physical word A 3 through 6.
 - Current `tin9`, `tinA`, and `tinB` graph and system-effect layouts are decoded; corresponding `tin3` and `tin5` layouts remain generation-specific gaps.
-- Only the current controlled `inst` record maps install-level values; older modern scope falls back to PE elevation evidence.
+- The verified variable-length `inst` layout covers `tin9` and `tinB`; `tin3` and `tin5` install-level records remain unmapped and fall back to PE elevation evidence.
 - The one-off Internet Archive samples outside the cached `tin2`, `tin3`, `tin5`, and `tin9` builder lineage were unavailable during this audit and are not claimed as covered.
 
 ## Source references
 
 - [InstallMate setup command line](https://tarma.com/support/im9/setup/cmdline.htm)
 - [InstallMate advanced build settings](https://tarma.com/support/im9/using/dialogs/build-advanced.htm)
+- [InstallMate 9 Package settings and Loader + Download behavior](https://tarma.com/support/im9/using/panes/package.htm)
+- [InstallMate 9.4.1 download](https://tarma.com/installmate/download)
 - [InstallMate packaging](https://tarma.com/support/im11/using/packaging.htm)
 - InstallMate 11 shipped help and the `TsuSymbolRules.imdata`, `Symbols.imdata`, and `StandardRegistry.imdata` builder data files
 - [Internet Archive captures of `tin2.exe`](https://web.archive.org/web/*/http://www.tarma.com/download/tin2.exe)

@@ -60,7 +60,7 @@ Load PackageModule, call `Get-InstallMateInfo` once, and retain the result for e
 ```powershell
 . .\Modules\PackageModule\Index.ps1
 $Info = Get-InstallMateInfo -Path $InstallerPath
-$Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode, ProductCodeEvidence, PackageCode, Scope, DefaultScope, SupportedScopes, SupportsDualScope, InstallLevel, InstallLevelName, DefaultInstallLocation, InstallerSwitches, InstallModes, AppsAndFeaturesEntries, CanExpand, Diagnostics
+$Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode, ProductCodeEvidence, PackageCode, PackageDownloadUrl, Scope, DefaultScope, SupportedScopes, SupportsDualScope, InstallLevel, InstallLevelName, DefaultInstallLocation, InstallerSwitches, InstallModes, AppsAndFeaturesEntries, CanExpand, Diagnostics
 $Info.ArchiveInfo
 $Info.DatabaseInfo
 $Info | Select-Object Components, Folders, RegistryWrites, EnvironmentChanges, Shortcuts, ExecutionActions, Prerequisites, Services
@@ -76,7 +76,7 @@ Legacy `Setup.ini` media can also establish `DisplayName`, `DisplayVersion`, `Pu
 
 ### 3. Interpret scope conservatively
 
-Legacy media uses its explicit uninstall hive or `AdminRights` field. Current controlled `tinB` media provides install levels 0 through 5. Older modern databases currently fall back to the PE requested execution level: `requireAdministrator` is machine scope, `asInvoker` is user scope, and `highestAvailable` is conditional dual-scope behavior.
+Legacy media uses its explicit uninstall hive or `AdminRights` field. Verified variable-length `inst` records in `tin9` and `tinB` media provide install levels 0 through 5; this includes official InstallMate 9.4.1, archived InstallMate 9.10 Loader + Download media, InstallMate 9.114, and controlled InstallMate 11 packages. `PackageDownloadUrl` reports the compiled Loader + Download source when present. Unmapped `tin3` and `tin5` databases fall back to the PE requested execution level: `requireAdministrator` is machine scope, `asInvoker` is user scope, and `highestAvailable` is conditional dual-scope behavior.
 
 Do not create separate user and machine installer entries merely because `SupportedScopes` contains both. First prove a command-line scope selector and validate each resulting ARP identity.
 
