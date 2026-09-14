@@ -4,6 +4,17 @@ This reference describes CreateInstall's compiled installer structures and gener
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
 
+## Reading path
+
+1. [Architecture](architecture.md) explains the builder, launcher, compiled Gentee program, GEA payload, runtime state, and uninstaller boundaries.
+2. [Format history](format-history.md) records the predecessor boundary and the independently evolving GE program, GEA, install-group, Add/Remove, and operation routes.
+3. [Binary format](binary-format.md) defines the PE section, launcher header, GE header and records, project lists, GEA catalogs, block framing, and companion volumes.
+4. [Metadata model](metadata-model.md) covers variables, conditions, identity, file selection, registry writes, associations, system effects, nested execution, architecture, and dependency evidence.
+5. [Setup runtime](setup-runtime.md) describes runtime phases, silent behavior, elevation, scope selection, external payloads, and dynamic evidence boundaries.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) describes built-in Add/Remove profiles, custom overrides, visibility, ProductCode derivation, registry views, and the live installed-state witness.
+7. [Parser implementation](parser-implementation.md) records structural detection, parse ownership, extraction, diagnostics, bounds, performance, and safe extension rules.
+8. [Coverage](coverage.md) lists verified generations, capabilities, fixtures, negative controls, and evidence-dependent gaps.
+
 ## Product boundary
 
 CreateInstall 5.9.0 through 8.11.2 use a Win32 PE launcher, a Gentee 4 compiled project, and an optional GEA archive. The archived `ci2000.exe`, `setupgen.exe`, and `sgpro.exe` artifacts belong to the earlier Gentee Installer product. They contain neither the verified GE4 launcher contract nor a GEA payload and are deliberately rejected instead of being assigned a speculative CreateInstall route.
@@ -100,7 +111,8 @@ The current structural catalog contains these generated operations:
 | `RunDirect8` | six-parameter `run` target fed from eight project fields | executable, arguments, working directory, wait, condition |
 | `RunMsi11` | six-parameter `runmsiex` target and source-defined MSI template | action, quiet/passive, no-restart, log, wait, interface, nested MSI path, condition |
 | `EnvironmentSetList5` | one-parameter `globsets` target with the literal `Environment` registry route and five-field rows | variable name, value, machine/user bit mask, condition, comment |
-| `EnvironmentAppend4` | four-parameter `globappend` or `globdel` target with shared `Environment` and `g_append` literals | variable name, path/value, machine/user bit mask, condition; operation remains `AppendOrRemove` because these compiled routes are structurally indistinguishable |
+| `EnvironmentAppend4` | four-parameter `globappend` target with exact literals `g_append`, `g_append`, `;`, `Environment` | variable name, path/value, machine/user bit mask, condition; operation is `Append` |
+| `EnvironmentDelete4` | four-parameter `globdel` target with exact literals `g_append`, `Environment`, empty string, `g_append`, `g_append`, `;`, `Environment` | variable name, path/value, machine/user bit mask, condition; operation is `Remove` |
 | `VisualCppCheck6` | six-parameter routine containing the source-defined MSI product and `RuntimeMinimum` probes | architecture, eight Visual C++ generation flags, AND/OR mode, result macro, failure message, condition |
 | `ServiceCreate8` | seven-parameter wrapper that calls the six-parameter service core containing `System\CurrentControlSet\Services` | binary path/name pair, service name, display name, description, start type, run-after-create flag, condition |
 | `ServiceStart1`, `ServiceStop1`, `ServiceDelete1` | one-parameter helpers calling exact `StartServiceW`, `ControlService`, or `DeleteService` imports from zero-parameter generated event functions | service name, operation, and guarding condition |
@@ -213,7 +225,7 @@ A GEA archive is optional for installer identity but mandatory for extraction. S
 
 ## Remaining unsupported behavior
 
-Arbitrary Gentee `@function` expressions are exposed with their bounded function and variable evidence but are not executed. The shared four-parameter `globappend` and `globdel` structure is reported as `AppendOrRemove` until a stable source-backed discriminator is established. INI formatting, insert/delete text transforms, generated-file operations outside the implemented copy routes, indirect calls whose operands cannot be reduced to source-backed literal/list forms, runtime DLL side effects, and password-protected payloads remain unresolved. Nested 7z, cabinet, and ZIP operations are reported, but their inner catalogs are not recursively projected into the installed-file list.
+Arbitrary Gentee `@function` expressions are exposed with their bounded function and variable evidence but are not executed. The current `globappend` and `globdel` routes are distinguished by exact source-backed literal sequences verified in controlled 8.11.2 media; an unknown sequence remains `AppendOrRemove`. INI formatting, insert/delete text transforms, generated-file operations outside the implemented copy routes, indirect calls whose operands cannot be reduced to source-backed literal/list forms, runtime DLL side effects, and password-protected payloads remain unresolved. Nested 7z, cabinet, and ZIP operations are reported, but their inner catalogs are not recursively projected into the installed-file list.
 
 The pre-CreateInstall Gentee Installer product is a separate future parser family, not an uncovered CreateInstall release.
 

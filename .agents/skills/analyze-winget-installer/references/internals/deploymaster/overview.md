@@ -4,6 +4,17 @@ This reference supports parser implementation and review. For installer analysis
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
 
+## Reading path
+
+1. [Architecture](architecture.md) explains the builder, setup runtime, generated uninstaller, identity domains, and trust boundaries.
+2. [Format history](format-history.md) records the verified classic and locator-based transitions without using release strings for dispatch.
+3. [Binary format](binary-format.md) defines the locator, control headers, data blocks, classic records, catalogs, and signed envelope.
+4. [Metadata model](metadata-model.md) covers identity, components, installation items, registry writes, associations, prerequisites, and policy records.
+5. [Setup runtime](setup-runtime.md) describes scope, elevation, architecture selection, switches, portable behavior, expiration, and nested execution.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) describes ProductCode ownership, registry views, value construction, command quoting, custom rows, and stale-key behavior.
+7. [Parser implementation](parser-implementation.md) records structural detection, one-pass ownership, extraction, diagnostics, and malformed-input bounds.
+8. [Coverage](coverage.md) lists verified fixtures, implemented capabilities, and evidence-dependent gaps.
+
 ## Format coverage and evidence
 
 The parser covers the classic 2.x BZip2/zlib route and the locator-based 6.0 through current routes documented below. Variant-specific evidence must pass the same content-based detection and bounds checks.

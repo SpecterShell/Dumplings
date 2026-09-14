@@ -25,7 +25,7 @@ $Info = Get-CreateInstallInfo -Path $InstallerPath
 $Info | Select-Object DisplayName, DisplayVersion, Publisher, ProductCode, Scope, SupportedScopes, RequestedExecutionLevel, DefaultInstallLocation, InstallerSwitches, InstallModes, WritesAppsAndFeaturesEntry, AppsAndFeaturesEntries, GenteeExpressions, Diagnostics
 ```
 
-`InstallerSwitches` comes from the compiled `MAINVAR.silentpar` value. Do not replace it with a guessed `-silent` switch. `InstallModes` includes silent modes only when that compiled value resolves deterministically.
+`InstallerSwitches` comes from the compiled `MAINVAR.silentpar` value. Do not replace it with a guessed `-silent` switch. `SupportsSilentInstallation` is true or false only when that value resolves deterministically; an unresolved value leaves the property null, records `InstallerSwitches` and `InstallModes` in `UnresolvedFields`, and emits `CreateInstall.Silent.Dynamic`.
 
 ### 2. Review payload and installation routes
 
@@ -59,7 +59,7 @@ $Info.Registrations | Select-Object Kind, Path, Name, RegistrationMethod, Framew
 $Info.ScheduledTasks | Select-Object Operation, Name, Executable, Arguments, TriggerType, Condition
 ```
 
-Environment evidence covers source-backed set operations and reports the structurally identical `globappend`/`globdel` route as `AppendOrRemove`; do not choose one operation without additional evidence. Prerequisite evidence identifies the Visual C++ generations and architecture checked by `checkredist`; `PackageDependencyCandidates` is advisory and must not be copied into a manifest without confirming that the checked runtime and package version satisfy the application. A non-empty `FailureMessage` means the runtime can prompt and abort when the check fails. Service evidence covers create, start, stop, and delete routes. Registration evidence covers fonts, COM/ActiveX and type libraries, and .NET `RegAsm` calls. Scheduled-task routes are identified through exact `citools.dll` imports rather than unstable linked object IDs.
+Environment evidence covers source-backed set, append, and remove operations. Current append and delete routines use exact, controlled GE4 literal sequences; an unrecognized variant remains `AppendOrRemove` and needs additional evidence. Prerequisite evidence identifies the Visual C++ generations and architecture checked by `checkredist`; `PackageDependencyCandidates` is advisory and must not be copied into a manifest without confirming that the checked runtime and package version satisfy the application. A non-empty `FailureMessage` means the runtime can prompt and abort when the check fails. Service evidence covers create, start, stop, and delete routes. Registration evidence covers fonts, COM/ActiveX and type libraries, and .NET `RegAsm` calls. Scheduled-task routes are identified through exact `citools.dll` imports rather than unstable linked object IDs.
 
 ### 5. Inspect shortcuts and nested execution
 
@@ -96,7 +96,7 @@ Treat `Variables.Source: ProjectVariable` and `KnownMacro` as compiled static ev
 
 Apply a human judgment only to the operation in `Context` and the fields in `AffectedFields`. Do not turn a conclusion about one condition into a package-wide scope, architecture, ARP, or dependency claim. Record the source or VM evidence used for the decision.
 
-Unresolved macros outside conditions, ambiguous `AppendOrRemove` environment mutations, unsupported INI formatting or text transformations, external DLL side effects, password-protected archives, and reported nested archives whose contents affect installed state require additional evidence. Follow the VM workflow to confirm visible ARP state, scope, child execution, and silent behavior when static evidence remains incomplete.
+Unresolved macros outside conditions, unrecognized `AppendOrRemove` environment mutations, unsupported INI formatting or text transformations, external DLL side effects, password-protected archives, and reported nested archives whose contents affect installed state require additional evidence. Follow the VM workflow to confirm visible ARP state, scope, child execution, and silent behavior when static evidence remains incomplete.
 
 ## Manifest shape
 
@@ -122,6 +122,14 @@ Installers:
 
 This example applies only when the compiled project contains `silentpar=-silent` and deterministic registry evidence proves the shown scope and ProductCode. Omit unsupported, unresolved, empty, or advisory fields.
 
+## WinGet defaults and overrides
+
+CreateInstall is a generic EXE family, so WinGet supplies no CreateInstall-specific install modes or switches. Family recognition alone proves only `InstallerType: exe`. Copy `Scope`, `InstallModes`, and `InstallerSwitches` only from the exact parser result; CreateInstall 5.9.0 builder media is interactive-only because its compiled `silentpar` is empty, while the cached 5.19.1 through 8.11.2 builder media carries `-silent`. Do not turn that observed release boundary into a version rule because custom projects can change the same field.
+
+`-silent` suppresses the CreateInstall UI while retaining progress behavior, so an exact nonempty `silentpar` is projected to both `Silent` and `SilentWithProgress` and enables all three install modes. A different compiled value must be preserved verbatim. An empty or unresolved value leaves only `interactive` and no `InstallerSwitches`.
+
+No source-backed family-wide `UpgradeBehavior`, return-code exception, or elevation override is currently emitted. Record the actual process exit code during VM validation and retain existing manifest behavior unless artifact or installed-state evidence proves a change.
+
 ## Apps & Features
 
 Prefer the parser's visible `ArpEntries` and `AppsAndFeaturesEntries`. Do not substitute PE metadata or a nested payload identity for the outer visible uninstall record. Existing accepted examples include `CreateInstall`, `CreateInstall Free`, `CreateInstall Light`, and `Balabolka`, but package history is corroborating evidence rather than a parser fallback.
@@ -129,6 +137,10 @@ Prefer the parser's visible `ArpEntries` and `AppsAndFeaturesEntries`. Do not su
 ## Scope and architecture
 
 Use the deterministic uninstall hive and registry view first. A `requireAdministrator` PE manifest can establish machine-only elevation when no uninstall record is available, but an as-invoker launcher without registry evidence does not prove user scope. Use installed payload architecture evidence rather than assuming that the x86 CreateInstall runtime matches the application architecture.
+
+## VM validation
+
+Follow the [VM validation workflow](../../workflows/vm-validation.md). For CreateInstall, compare the parser's complete `ArpEntries` tuple with the installed registry key, test the exact compiled silent parameter rather than `-s`, capture the process exit code, and confirm whether conditional install groups, registry writes, prerequisites, downloads, child installers, or post-install launches execute in the selected scenario. A no-payload setup is still a valid CreateInstall program and may perform registry, process, download, or generated-file operations, so absence of GEA files is not evidence that the executable is portable.
 
 ## Known examples
 

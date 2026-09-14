@@ -26,7 +26,10 @@ Static parser workflow:
 $Analysis = Get-WinGetInstallerAnalysis -Path $InstallerPath
 $ParserResult = $Analysis.ParserResults | Where-Object { $_.Name -eq 'Squirrel/Velopack' -and $_.Success } | Select-Object -First 1
 $Info = $ParserResult.Result.Metadata
-$Info | Select-Object Family, LauncherGeneration, DetectionRoute, Confidence, PackageId, ProductCode, DisplayName, DisplayVersion, Publisher, Architecture, PayloadArchitectures, MinimumOSVersion, MainExecutable, PackageRid, Channel
+$Info | Select-Object Family, LauncherGeneration, DetectionRoute, Confidence, PackageId, PackageVersion, ProductCode, DisplayName, DisplayVersion, Publisher, Scope, DefaultInstallLocation, UninstallString, QuietUninstallString, DisplayIcon, Architecture, PayloadArchitectures, MinimumOSVersion, MainExecutable, PackageRid, Channel
+$Info.AppsAndFeaturesEntries
+$Info.ArpEntries
+$Info.ArpDynamicFields
 $Info.InstallModes
 $Info.InstallerSwitches
 $Info.PayloadArchitectureInfo
@@ -115,7 +118,9 @@ WinGet supplies no Squirrel or Velopack defaults for generic `InstallerType: exe
 
 ## Apps & Features
 
-Use structured parser evidence to identify the visible Apps & Features owner. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
+Use structured parser evidence to identify the visible Apps & Features owner. Confirmed setup routes return the per-user uninstall key, default install location, uninstall commands, and schema-safe `AppsAndFeaturesEntries`. Rust Velopack writes only `major.minor.patch` to ARP even when `PackageVersion` contains prerelease or build metadata. Squirrel.Windows and Clowd.Squirrel retain the complete package version. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
+
+Legacy Squirrel and Clowd setup chooses `DisplayIcon` at installation time from a packaged `app.ico` or an installed executable, so an empty parser `DisplayIcon` is intentional. Rust Velopack derives it from `current\<mainExe>`. `InstallDate` and `EstimatedSize` are runtime values and remain in `ArpDynamicFields`.
 
 ## Scope and architecture
 

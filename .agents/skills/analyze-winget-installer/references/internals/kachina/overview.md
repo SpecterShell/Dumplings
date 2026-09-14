@@ -1,221 +1,63 @@
 # Kachina internals
 
-## Scope
+This reference describes the Kachina installer structures and runtime behavior consumed by Dumplings. Use the [Kachina workflow](../../families/kachina/workflow.md) for package analysis and WinGet authoring.
 
-Kachina is a native Windows installer whose executable carries an appended record stream. Tagged releases through 0.5.1 use a Tauri host, while the later untagged `refactor/native` branch replaces Tauri with a native Win32/WebView2 host. The packer intentionally keeps the same pre-index, TLV, index, metadata, and Zstandard payload layout, so host implementation and container generation must be classified separately. The installed application payload is not a conventional archive: each metadata-backed file is an independent Zstandard record, while control JSON, the compact index, patches, and optional runtime installers use the same outer TLV framing. The parser opens the PE once, locates the record stream after the final PE section, and performs random reads through bounded ranges.
+The upstream Kachina repository had no declared license when this implementation was written. These pages record independently observed structures and source-backed behavior. The PackageModule parser is independently implemented under Apache-2.0.
 
-The upstream Kachina repository had no declared license when this implementation was written. This document records observable structures and runtime behavior. The PackageModule implementation is independently written under Apache-2.0.
+## Mental model
 
-## Container layers
-
-```text
-Kachina installer executable
-+-- DOS header and stub
-|   +-- MZ / PE linkage
-|   `-- !KachinaInstaller! marker followed by five UInt32BE fields
-+-- PE image
-|   +-- tagged route: Tauri loader and WebView UI
-|   +-- later route: native Win32 host with WebView2/TaskDialog UI
-|   +-- resources and version information
-|   `-- final section boundary
-`-- Kachina TLV stream
-    +-- control records
-    |   +-- configuration JSON
-    |   +-- optional UI image
-    |   +-- optional compact index
-    |   `-- optional release metadata JSON
-    +-- application records
-    |   +-- one Zstandard frame per unique payload hash
-    |   `-- one hash may map to several installed paths
-    +-- update records
-    |   `-- <oldHash>_<newHash> HDiff patches
-    `-- appended raw records
-        `-- optional .NET or VC runtime installers
-```
-
-The physical order is part of generation detection. The compact index is an accelerator and integrity check; the runtime still scans all TLVs, so appended runtime records may be absent from the index.
-
-## PE marker and pre-index
-
-The ASCII marker `!KachinaInstaller!` occupies 18 bytes in the DOS stub. Five unsigned big-endian 32-bit fields follow it.
+Kachina is a PE followed by a TLV record stream. Configuration JSON establishes application identity and host policy. Release metadata maps installed paths to individually compressed content-hash records. An optional compact index cross-checks the early records, but sequential TLV parsing remains authoritative because runtime installers can be appended outside the index.
 
 ```text
-Offset from marker  Size  Field
-------------------  ----  -------------------------------------------------------
-0x00                  18  ASCII !KachinaInstaller!
-0x12                   4  Record-stream base offset
-0x16                   4  Generation-dependent first control-record raw length
-0x1A                   4  Generation-dependent second control-record raw length
-0x1E                   4  Generation-dependent third control-record raw length
-0x22                   4  Metadata record raw length
+Kachina setup
++-- PE host
+|   +-- optional DOS pre-index
+|   `-- Tauri or native runtime
+`-- TLV stream
+    +-- configuration JSON
+    +-- optional image
+    +-- optional compact index
+    +-- optional release metadata JSON
+    +-- Zstandard application records
+    +-- HDiff patch records
+    `-- raw prerequisite installers
+
+runtime projection
++-- select source and target path
++-- derive elevation from target writability and uacStrategy
++-- install or update payload files
++-- install configured prerequisites
++-- reconstruct updater and uninstaller
+`-- write HKLM or HKCU ARP state according to actual elevation
 ```
 
-Early indexed builders order the four sizes as INDEX, CONFIG, IMAGE, META. Corrected builders order them as CONFIG, IMAGE, INDEX, META. The first indexed builder can count the INDEX TLV header twice in the first size field. Config-only and reconstructed updater/uninstaller executables clear all five fields to zero but retain the marker text.
+The same container spans Tauri and native hosts. Structural generation, host implementation, and packaged application version are separate facts.
 
-The parser treats the pre-index as supporting evidence. Sequential TLVs and their validated offsets are authoritative because historical pre-index writers changed ordering and one release had the double-counting defect.
+## Reading path
 
-## TLV framing
+1. [Architecture](architecture.md) explains the builder, host, evidence layers, scope, and trust boundary.
+2. [Format history](format-history.md) records legacy, early indexed, current indexed, and config-only generations.
+3. [Binary format](binary-format.md) defines the pre-index, TLV framing, compact index, payload records, and generated executables.
+4. [Metadata model](metadata-model.md) covers configuration, release metadata, identity, sources, runtimes, and system effects.
+5. [Setup runtime](setup-runtime.md) describes switches, elevation, source selection, updates, prerequisites, and finalization.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) documents registry values, hives, generated uninstall behavior, and matching.
+7. [Parser implementation](parser-implementation.md) records detection, extraction, diagnostics, limits, and performance.
+8. [Coverage](coverage.md) lists fixtures and unresolved boundaries.
 
-Legacy records use `21 49 4E 53` (`!INS`). Indexed and current records use `21 49 4E 00` (`!IN\0`). All integer fields are unsigned and big-endian.
+## Structural routes
 
-```text
-Record-relative offset  Size        Field
-----------------------  ----------  -----------------------------------------------
-0x00                    4           Magic: !INS or !IN\0
-0x04                    2           NameLength:u16 BE
-0x06                    NameLength  Name: strict UTF-8
-0x06 + NameLength       4           ContentLength:u32 BE
-0x0A + NameLength       ContentLength Content bytes
-```
-
-The next record begins immediately after the content. There is no padding or alignment. A valid sequence reaches the end of the installer file. The parser rejects invalid UTF-8 names, empty or oversized names, truncated content, excessive record counts, and non-TLV trailing bytes.
-
-## Format generations
-
-Repository history establishes the following physical boundaries. `FormatGeneration` describes these bytes, not the executable's UI host or an exact builder version.
-
-| Release range | Physical format | Relevant behavior |
-|---|---|---|
-| 0.0.1 through 0.0.17 | `!INS` sequential records | No pre-index or compact index |
-| 0.0.18 | `!IN\0`, INDEX first | Original pre-index field order and double-counted INDEX-header defect |
-| 0.0.19 onward | `!IN\0`, CONFIG first | Corrected pre-index order and bounded compact index |
-| 0.0.25 onward | Same indexed framing | Config-only online media can clear all pre-index sizes and omit metadata/payload |
-| 0.1.1 onward | Same indexed framing | A source may be an ordered source catalog rather than one URI |
-| 0.1.6 onward | Same indexed framing | Runtime prerequisites may be appended as raw installer records |
-| 0.3.0 onward | Same indexed framing | Packing order can optimize small files; metadata-backed files remain independently addressable |
-| 0.4.0 onward | Same indexed framing | Embedded image and ignore-folder configuration are available |
-| after 0.5.1, untagged `refactor/native` | Same indexed framing | Native Win32 host and transactional staging replace Tauri without changing packed-media compatibility |
-
-### Legacy scan
-
-Legacy media uses `!INS` and has no pre-index or compact index. `.config.json` and `.metadata.json` are required, while `.image` is optional. Hash-named payload and patch records follow the control records.
-
-### Early indexed
-
-Early indexed media uses `!IN\0`, places `\0INDEX` first, and follows it with `\0CONFIG`, optional `\0IMAGE`, `\0META`, payload, patch, and appended records. Its pre-index sizes use INDEX, CONFIG, IMAGE, META ordering.
-
-### Current indexed
-
-Current indexed media places `\0CONFIG` first, then optional `\0IMAGE`, `\0INDEX`, `\0META`, and data records. Its pre-index sizes use CONFIG, IMAGE, INDEX, META ordering. BetterGI 0.40 and 0.63 artifacts tested by Dumplings both use this corrected physical order.
-
-### Config-only updater
-
-Config-only media has a valid `\0CONFIG` record but no `\0INDEX` or `\0META`; the five pre-index fields are zero. The installer resolves metadata and payload from its configured source at runtime. Static analysis can recover product identity, default path, ARP behavior, switches, and UAC strategy, but it must leave target version and payload-derived fields unresolved.
-
-## Compact index
-
-The `\0INDEX` content is a packed sequence with no entry count or terminator. Offsets are relative to the first physical TLV and point to record content, not record magic.
-
-```text
-Index entry
-+-----------------------------+
-| NameLength:u8               |
-+-----------------------------+
-| Name[NameLength]:UTF-8      |
-+-----------------------------+
-| ContentLength:u32 BE        |
-+-----------------------------+
-| ContentOffset:u32 BE        | relative to first TLV
-+-----------------------------+
-```
-
-Every index item must match a sequential record with the same name, content length, and absolute content offset. The index may omit appended records. An item that points outside a TLV boundary is structural corruption and rejects the installer.
-
-## Configuration JSON
-
-The parser requires nonempty `appName`, `publisher`, `regName`, and `exeName` fields. Common fields include `source`, legacy `dfsPath`, `uninstallName`, `updaterName`, `programFilesPath`, `uacStrategy`, `runtimes`, `userDataPath`, `ignoreFolderPath`, `extraUninstallPath`, `needWebView2`, `title`, `description`, and `windowTitle`.
-
-`source` may be one URI or an ordered array of `{ id, name, uri, hidden, icon }` objects. Dumplings normalizes both forms into `Sources` and retains the first usable URI as `Source`. `regName` is the uninstall-key name and therefore the parser's `ProductCode`. `programFilesPath` forms the default `%ProgramFiles%` destination. `userDataPath` is preserved during ordinary uninstall, `ignoreFolderPath` is excluded from update replacement, and `extraUninstallPath` is removed during uninstall. `runtimes` contains tags understood by Kachina's prerequisite handler. The current runtime supports `Microsoft.DotNet.DesktopRuntime.*`, `Microsoft.DotNet.Runtime.*`, `Microsoft.VCRedist.2015+.x64`, and `Microsoft.VCRedist.2015+.x86`.
-
-## Release metadata
-
-The `\0META` or `.metadata.json` object normally contains `tag_name`, `hashed`, `patches`, `deletes`, repository metadata, and an `installer` object. Each `hashed` item supplies an installed `file_name`, expanded `size`, and one or more source hash labels. `deletes` records files removed by an update and is returned as operation evidence rather than installed payload.
-
-An `md5` value is a proven MD5 checksum. Current native-host source defines `xxh` as `twox_hash::XxHash3_128` with seed zero and formats the resulting unsigned 128-bit integer as lower-case hexadecimal without fixed leading-zero width. Dumplings validates both algorithms after expansion; its source-shipped MIT XXH3 provider memory-maps the bounded output rather than buffering a complete payload in PowerShell.
-
-Several paths can reference one hash-named record. Kachina stores the compressed bytes once. The extractor decompresses the first selected path and copies its verified output to the other selected destinations while still charging every installed copy against the aggregate output limit.
-
-## Payload and patches
-
-Normal hash-named records contain one Zstandard frame. The metadata `size` is the required decompressed byte count. Extraction uses a bounded record substream, a streaming ZstdSharp decoder, an aggregate output limit, and an exact-length check that rejects both short and long output. MD5- and XXH3-128-backed entries receive a final content check before the extracted path is returned.
-
-Patch records are named `<fromHash>_<toHash>` and contain HDiff data. They describe update routes and are not installed files. The current parser catalogs them but does not apply them. `-RawEntries` can export their physical bytes for separate static inspection.
-
-## Runtime installers
-
-Kachina checks `config.runtimes` before installing the application. If a TLV has the exact runtime tag as its name, the runtime passes that record's absolute offset and length to the prerequisite installer path. If no matching TLV exists, Kachina downloads the runtime from the source encoded by its runtime handler.
-
-Appended runtime installers are raw executable bytes rather than Zstandard application records. They are not part of `metadata.hashed`, are commonly omitted from `\0INDEX`, and must not appear in default installed-file extraction. Dumplings exposes them through `EmbeddedRuntimePackages` and `-RawEntries`. A configured tag without a record remains a downloadable `RuntimePackage` with `IsEmbedded=false`.
-
-## Generated updater and uninstaller
-
-The installed updater and uninstaller are reconstructed from the original executable prefix ending after CONFIG and optional IMAGE. Kachina then writes zero to the 20-byte pre-index field area. It does not remove the 18-byte marker. The generated executable can load its compiled configuration but has no embedded metadata or payload.
-
-```text
-generated tool
-+-- original bytes from file offset 0
-+-- DOS marker retained
-+-- five pre-index UInt32BE values replaced with zero
-+-- CONFIG TLV retained
-`-- optional IMAGE TLV retained
-```
-
-## Command line
-
-Both the tagged Clap parser and the later native parser define `-D <path>` for installation directory, `-I` for noninteractive installation with progress, `-S` for silent installation, `-O` to force online installation, and `-U` for uninstall. The native parser deliberately remains tolerant of unrelated arguments. Hidden source, mirror, and diagnostic parameters are runtime implementation details and are not manifest switches.
-
-WinGet has no Kachina-specific defaults because the manifest type is generic `exe`. The authoring projection therefore includes the proven silent, progress, and install-location switches.
-
-## UAC and scope
-
-Kachina defaults to `%ProgramFiles%\<programFilesPath>`. The `force` strategy always requests elevation. `prefer-admin` requests elevation unless the target is in a recognized user location. `prefer-user` requests elevation only when the current user cannot write the target.
-
-The registry writer chooses HKLM when elevated and HKCU otherwise. A non-force installer can therefore write a user ARP entry when `-D` selects an eligible user path and the process stays unelevated. The default Program Files route remains machine scope.
-
-## ARP registration
-
-After metadata is available, Kachina creates `SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\<regName>` in the selected hive. It writes `DisplayName`, `DisplayVersion`, `UninstallString`, `InstallLocation`, `DisplayIcon`, `Publisher`, `EstimatedSize`, `NoModify=1`, `NoRepair=1`, and `InstallerMeta` containing serialized metadata.
-
-The built-in runtime also creates Start menu shortcuts for the application and uninstaller. A desktop shortcut is conditional on the installer's UI choice. The reviewed source does not define built-in protocol registration, file-extension registration, PATH changes, autorun, firewall rules, or certificate installation.
-
-## Architecture and dependencies
-
-The outer installer PE identifies the host, not necessarily the installed application. Dumplings selectively expands the configured main executable plus bounded adjacent DLL and JSON sidecars, then applies the shared PE architecture and dependency analyzers. This detects native architecture, managed AnyCPU behavior, VC runtime imports, and framework-dependent .NET evidence without materializing the whole package.
-
-Configured Kachina runtime delivery remains separate from application dependency inference. The parser reports both sources of evidence and does not mutate WinGet dependencies automatically.
-
-## Parser limits and gaps
-
-The parser limits record searches, names, record counts, JSON and index sizes, selective analysis bytes, extraction entries, and aggregate output. It validates PE layout, every physical range, index boundaries, destination containment, collisions, Zstandard output length, and proven MD5 or XXH3-128 checks. Caller-owned streams remain open and random-access helpers restore their positions.
-
-HDiff patch application is not implemented because patches are update inputs rather than installed files. Config-only media is not fetched. Runtime prerequisite executables are exported only in raw mode and are never executed on the host.
-
-## Implementation mapping
-
-- `Modules/PackageModule/Libraries/Installers/Kachina.psm1`: generation detection, TLV/index parsing, metadata and ARP projection, payload extraction, and generated tools.
-- `Modules/PackageModule/Libraries/Infrastructure/Archive.psm1`: bounded Zstandard decoding through the pinned ZstdSharp assembly.
-- `Modules/PackageModule/Assets/Source/Kachina`: source-shipped XXH3-128 provider used for post-expansion integrity validation.
-- `Modules/PackageModule/Libraries/Infrastructure/InstallerAnalyzer.psm1`: strict family routing before MicaSetup and generic Tauri hints.
-- `Modules/PackageModule/Libraries/WinGet/WinGetAnalysis.psm1`: WinGet generic-EXE defaults and source-proven switches.
-
-## Fixtures
-
-- AkashaNavigator 1.4.0, SHA256 `F6A0826E59B87C80DBFAE33492A5560B3CC76A30FBC3C854478771D7CBB0629F`: corrected indexed order, x64 payload, patch record, and downloadable runtimes.
-- BetterGI 0.40.0, SHA256 `C4683C080827F7A1C70CD2BFA2177B976FF4C5FAF07A2D6F732A5045B8882203`: production corrected indexed order.
-- BetterGI 0.63.0, SHA256 `777EB7605A6E4491EDCA1D327A32770D4A1FDCD102E699F842D320AA29A938B9`: large corrected indexed payload with configured downloadable .NET Desktop Runtime 8 and VC++ 2015+ x64 requirements.
-- Generated media covers legacy scan, early indexed order, config-only layout, appended runtime records, malformed JSON, invalid offsets, truncation, traversal, collisions, and size/hash failures.
+| Route | Record order | Intended use |
+| --- | --- | --- |
+| `LegacyScan` | `.config.json`, optional `.image`, `.metadata.json`, payload records | early sequential `!INS` media |
+| `EarlyIndexed` | `\0INDEX` before `\0CONFIG` and metadata | first indexed generation with original pre-index ordering |
+| `Indexed` | `\0CONFIG`, optional image, `\0INDEX`, `\0META`, payloads | current embedded media |
+| `ConfigOnly` | configuration and optional image, no metadata or payload | online installer or updater |
 
 ## Source references
 
-- [YuehaiTeam/kachina-installer](https://github.com/YuehaiTeam/kachina-installer)
-- [Runtime TLV and index reader](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/local.rs)
-- [Pack writer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/builder/pack.rs)
-- [Append writer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/builder/append.rs)
-- [Builder pre-index replacement](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/builder/replace_bin.rs)
-- [Installer configuration](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/config.rs)
-- [Runtime installation](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/runtimes.rs)
-- [ARP registry writer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/registry.rs)
-- [Payload installer](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/ipc/install_file.rs)
-- [Command-line arguments](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/cli/arg.rs)
-- [Native-host hash implementation](https://github.com/YuehaiTeam/kachina-installer/blob/c4ac0086e92e48825492b2e41a7a97e2153098da/src-tauri/src/utils/hash.rs)
-- [Native-host branch](https://github.com/YuehaiTeam/kachina-installer/tree/refactor/native)
+- [Kachina repository](https://github.com/YuehaiTeam/kachina-installer)
+- [Kachina configuration example](https://github.com/YuehaiTeam/kachina-installer/blob/main/README.md)
+- [Kachina builder](https://github.com/YuehaiTeam/kachina-installer/tree/main/src-tauri/src/builder)
+- [Kachina argument parser](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/cli/arg.rs)
+- [Kachina registry implementation](https://github.com/YuehaiTeam/kachina-installer/blob/main/src-tauri/src/installer/registry.rs)
+- [Kachina update and finalization flow](https://github.com/YuehaiTeam/kachina-installer/blob/main/src/App.vue)

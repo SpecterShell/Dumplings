@@ -4,6 +4,17 @@ This reference describes MicaSetup's compiled installer structure and runtime ev
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
 
+## Reading path
+
+1. [Architecture](architecture.md) explains the producer, runtime layers, identity domains, and trust boundaries.
+2. [Format history](format-history.md) records the source-compatible Pack and Option generations.
+3. [Binary format](binary-format.md) defines PE, CLR resource, ResourceManager, and nested 7z framing.
+4. [Metadata model](metadata-model.md) covers generated CIL, option normalization, symbolic evaluation, and system-effect evidence.
+5. [Setup runtime](setup-runtime.md) describes startup, elevation, paths, installation phases, and command-line limitations.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) describes ProductCode ownership, visibility, registry views, and `Uninst.dat`.
+7. [Parser implementation](parser-implementation.md) records detection, extraction, diagnostics, bounds, and performance rules.
+8. [Coverage](coverage.md) lists fixtures, supported capabilities, and unresolved behavior.
+
 ## Format identity
 
 MicaSetup v1 and v2 are managed .NET Framework WPF executables. The builder edits or regenerates C# configuration, compiles it into an installer, embeds the application archive and uninstaller in WPF resources, and replaces normal assembly identity with application identity. The installed payload is not physically adjacent to the PE overlay; it is a stream value nested inside a compiled `.resources` container referenced by CLR metadata. v1.0 keeps `MicaSetup.Core.Pack` in a Costura-managed dependency and references it from the outer assembly, while later builds define or reference `MicaSetup.Option` and configure it through `UseOptions`.
@@ -221,7 +232,7 @@ The managed reader bounds resources, methods, decoded instructions, string lengt
 - Close-application details remain unresolved when code computes them through unsupported constructors, method calls, callbacks, or custom object types.
 - Silent installation is not inferred from unfinished upstream command-line hooks.
 - Builder patch versions cannot normally be recovered because packaged application versioning replaces builder assembly versioning.
-- Kachina Installer requires an independent parser and route.
+- Kachina remains a separate installer family with its own implemented parser and route; no Kachina structure is accepted as MicaSetup evidence.
 
 ## Implementation mapping
 

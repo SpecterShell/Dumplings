@@ -20,7 +20,7 @@ $IsMicaSetup = Test-MicaSetupInstaller -Path $InstallerPath
 - v1.0 `MicaSetup.Core.Pack` member references with a MicaSetup `UsePack` host-builder method, or `MicaSetup.Option` with `UseOptions` for later releases.
 - A valid WPF `*.g.resources` container with exactly one `ResourceTypeCode.Stream` entry named `resources/setups/publish.7z`.
 
-MicaSetup strings, assembly identity, icons, PE version fields, or a standalone 7z signature are routing hints only. Read [MicaSetup internals](../../internals/micasetup/overview.md) before changing the detector, managed reader, IL evaluator, or resource decoder.
+MicaSetup strings, assembly identity, icons, PE version fields, or a standalone 7z signature are routing hints only. Read the [MicaSetup internals](../../internals/micasetup/overview.md) before changing the detector, managed reader, IL evaluator, or resource decoder. The [coverage matrix](../../internals/micasetup/coverage.md) separates supported generated configuration from arbitrary edited C# that requires source review or VM validation.
 
 ## Static parsing
 

@@ -6,9 +6,9 @@ Use `InstallerType: exe` when structural parsing confirms a Pantaray QSetup pack
 
 ## Detection
 
-`Test-QSetup` validates a PE overlay route, bounded zlib records, each decoded record header and body marker, a matching generation-specific footer, and a `Setup.txt` record containing composer directives. Fixtures verify QSetup 1.0 through 5.0, 7.0 through 8.1, and 12.0; 6.x and 9.x through 11.x have no stable fixtures and are reported through structurally compatible routes rather than guessed from version strings.
+`Test-QSetup` validates a PE overlay route, bounded zlib records, each decoded record header and body marker, a matching generation-specific footer, and a `Setup.txt` record containing composer directives. Fixtures verify QSetup 1.0 through 12.0 at every known structural boundary. QSetup 6.0 retains the earlier double-pipe container but uses a distinct 67-field transitional action layout; QSetup 9.1, 10.0, and 11.0 use the same versioned-preamble, legacy-footer, and six-command action route as 7.0 through 8.1. The parser selects these routes from structure rather than version strings.
 
-Read [QSetup internals](../../internals/qsetup/overview.md) before changing framing, footer, action, or extraction code.
+Read the [QSetup internals](../../internals/qsetup/overview.md) before changing framing, footer, action, or extraction code. The [coverage matrix](../../internals/qsetup/coverage.md) distinguishes fixture-backed behavior from unresolved runtime rules.
 
 ## Static analysis
 

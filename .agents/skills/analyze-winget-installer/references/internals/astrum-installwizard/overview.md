@@ -4,6 +4,17 @@ This reference describes the compiled Astrum runtime and wire formats consumed b
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
 
+## Reading path
+
+1. [Architecture](architecture.md) explains the builder, native runtime, compiled project, payload, generated uninstaller, and runtime-state boundaries.
+2. [Format history](format-history.md) records the verified 1.x and 2.x transitions and explains why structural profiles, not version strings, select parser routes.
+3. [Binary format](binary-format.md) defines logical endings, trailers, footers, protected configuration, catalogs, file records, tiny wrappers, spanned media, and compression.
+4. [Metadata model](metadata-model.md) covers identity, operations, conditions, variables, requirements, resources, associations, and nested execution.
+5. [Setup runtime](setup-runtime.md) describes installation phases, scope, elevation, silent behavior, license acceptance, architecture, and process results.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) describes uninstall-key ownership, visibility, registry views, variable resolution, generated-uninstaller paths, and installed-state validation.
+7. [Parser implementation](parser-implementation.md) records structural detection, one-pass ownership, extraction, diagnostics, bounds, and extension rules.
+8. [Coverage](coverage.md) lists verified media, VM-backed behavior, implemented capabilities, and evidence-dependent gaps.
+
 ## Builder and runtime model
 
 Astrum InstallWizard Builder stores authoring state in an `.ai2` XML project, but a distributed setup contains a native runtime plus compiled binary tables rather than that XML document. The compiler serializes registry trees, shortcuts, INI and text edits, file operations, variables, interactive actions, package identity, option state, installation-item groups, and payload records into the overlay. The runtime consumes those structures directly.

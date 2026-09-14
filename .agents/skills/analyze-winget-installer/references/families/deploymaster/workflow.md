@@ -21,6 +21,8 @@ $Info = Get-DeployMasterInfo -Path $InstallerPath
 
 `Get-DeployMasterInfo` validates either the classic `ClassicBZip2` route or the later locator-based `Header66`, `Header70`, or `Header74` route. Reuse the returned object instead of calling multiple `Read-*FromDeployMaster` helpers. `OverlayInfo.FormatProfile`, `ObservedRuntimeRange`, and `ProfileEvidence` explain the selected structural route; the observed release range does not select it.
 
+When requesting WinGet suggestions, use `Get-WinGetInstallerAnalysis` on the concrete artifact. Family-only guidance describes locator-based media, while exact parser evidence replaces those defaults: classic 2.5.x returns only `InstallModes: interactive` and omits `InstallerSwitches`.
+
 For classic 2.x media, the parser returns structured identity, default machine destination, release date, runtime architecture, component descriptors with recursive destination forests, the complete auxiliary and ordinary payload catalog, installed-file, shortcut, and URL-shortcut records with their component and destination ownership, explicit registry writes, file associations, and the built-in uninstall registration proven by the controlled 2.5.3 installation. Prerequisite and completion records remain unresolved, and the classic runtime is statically interactive-only, so no silent mode or switch is returned.
 
 ```powershell

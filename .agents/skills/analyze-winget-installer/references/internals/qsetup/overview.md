@@ -4,6 +4,17 @@ This page records the QSetup structures consumed by Dumplings. Use the [QSetup w
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the parser.
 
+## Reading path
+
+1. [Architecture](architecture.md) explains Composer, runtime layers, identity domains, and trust boundaries.
+2. [Format history](format-history.md) records the verified preamble, footer, and action transitions.
+3. [Binary format](binary-format.md) defines overlays, split descriptors, records, terminal structures, and certificates.
+4. [Metadata model](metadata-model.md) covers `Setup.txt`, file mapping, aliases, operations, and Execution Engine records.
+5. [Setup runtime](setup-runtime.md) describes installation phases, scope, requirements, switches, and nested execution.
+6. [Uninstaller and ARP](uninstaller-and-arp.md) describes ProductCode ownership, visibility, registry views, naming, and quoting.
+7. [Parser implementation](parser-implementation.md) records detection, stream ownership, extraction, diagnostics, and bounds.
+8. [Coverage](coverage.md) lists fixtures, supported capabilities, and unresolved behavior.
+
 ## Builder and runtime model
 
 QSetup Composer compiles a project into a native PE launcher, an ordered `Setup.txt` instruction stream, and individually compressed physical records. It can instead emit a split kernel plus an authenticated raw companion, external non-SFX payload files, or a byte-spanned setup. The original Composer project is not required at installation time. The Execution Engine reads `Setup.txt`, maps named records to destination folders, evaluates installation conditions, performs system operations, launches nested programs, and creates the configured uninstaller and Add/Remove Programs entry.
@@ -107,7 +118,7 @@ Base       Offset  Size  Field
 [overlay]  0x09    N     UTF-8 pipe-delimited preamble
 ```
 
-The preamble begins and ends with a pipe and contains an executable-name field. QSetup 6 has no stable fixture; it must satisfy one of these structural routes rather than being assigned a route from its claimed product version.
+The preamble begins and ends with a pipe and contains an executable-name field. QSetup 6.0 retains the double-pipe preamble used by QSetup 3 through 5 even though its Execution Engine record changed, demonstrating why container and action routes must be classified independently.
 
 The remaining pipe fields are preserved as preamble evidence. Their labels and use changed between releases, and the parser assigns no network, update, or executable-selection meaning beyond the validated presence of an `.exe` field. `CompressionFormat` is retained for reporting. Every verified record still uses zlib, so an unfamiliar format byte does not authorize a different decoder.
 
@@ -152,7 +163,7 @@ Base      Offset  Size  Field
 [footer]  0x08    4     Magic, uint32 LE: 0x4A3B2C1D
 ```
 
-### QSetup 3 through 8: legacy footer
+### QSetup 3 through 11: legacy footer
 
 ```text
 Base      Offset  Size  Field
@@ -240,10 +251,11 @@ QSetup stores execution actions as fixed pipe-delimited arrays. Setup actions us
 Route                     Fields  Commands  Descriptor start  Argument start
 ------------------------  ------  --------  ----------------  --------------
 LegacyFourCommand         59/60   4         20                46
+TransitionalFourCommand   67      4         20                47
 ModernSixCommand          73      6         20                53
 ```
 
-Each enabled command descriptor occupies three fields and pairs with a three-field argument slot. The parser projects process-launch commands and preserves host-dependent condition descriptors instead of evaluating them. Condition predicates are classified as filesystem, application registration, process state, service, operating system, localization, network, printer, registry, environment, hardware, dependency, user interaction, installer state, user identity, dialog state, variable state, or unknown. Each condition records whether it requires runtime state or direct user interaction. Verified layouts cover QSetup 1.0, 4.0, 5.0, 7.0, 7.5, 8.1, and 12.0.
+Each enabled command descriptor occupies three fields and pairs with a three-field argument slot. QSetup 6 retains four command slots but moves the condition arguments to fields 35 through 46 and command arguments to fields 47 through 58; seven following fields are preserved as observed tail evidence. The parser projects process-launch commands and preserves host-dependent condition descriptors instead of evaluating them. Condition predicates are classified as filesystem, application registration, process state, service, operating system, localization, network, printer, registry, environment, hardware, dependency, user interaction, installer state, user identity, dialog state, variable state, or unknown. Each condition records whether it requires runtime state or direct user interaction. Verified layouts cover QSetup 1.0, 4.0, 5.0, 6.0, 7.0, 7.5, 8.1, 9.1, 10.0, 11.0, and 12.0.
 
 The descriptor array and argument array are physically separate. Pairing by list position is required; looking for executable-looking strings loses the command type, wait behavior, stage, and condition owner. Recognized launch commands include application, executable, batch, MSI, shell, and DLL routes, with wait and no-wait variants. `ExecutedPayloads` records the literal command, parameters, show mode, setup or uninstall phase, stage, and whether runtime conditions still control execution. Non-launch commands are classified into file-association, registry, INI, environment, architecture-state, user-interaction, process-control, service, COM-registration, font, download, restart, Windows Installer, nested-execution, filesystem, security, restore-point, text-file, installer-control, and variable-state categories.
 
@@ -297,7 +309,7 @@ Detection enumerates record headers without materializing bodies. `Setup.txt` is
 
 ## Known gaps
 
-- QSetup 6.x and 9.x through 11.x lack stable fixtures. They can use a known structural route only when every preamble, record, and footer invariant passes.
+- QSetup 6.0 uses the `Legacy3-6` double-pipe container and a distinct 67-field `TransitionalFourCommand` action route. Archived QSetup 9.1, 10.0, and 11.0 media confirm the versioned-preamble, legacy-footer, and six-command route reported as `Legacy7-11`.
 - No separately branded tiny or tiny-verbose grammar was found in the available QSetup 12 builder documentation. The parser supports the structurally observable form: a bounded outer QSetup record containing an inner QSetup setup, and labels it `NestedSfxWrapper` without inventing a product name for the wrapper.
 - Blank-name uninstaller generation remains unresolved for QSetup 8 through 11 when no compiled uninstall shortcut exists. Exact shortcut targets are authoritative, the QSetup 1–7 fallback is `UnInstall_<stamp>.exe`, and the VM-proven QSetup 12 fallback is `<media>_<stamp>.exe`. Production AGTEK media built by a modern Composer independently confirms the `<media>_<stamp>.exe` route (`TrackworkSetup64_21377.exe`). Runtime disassembly shows both the Composer and the Engine treat the name as the computed `UnInstallExePath` variable rather than a stored literal template, so closing the 8–11 gap requires compiling a probe with a period Composer; the 8.1 Composer installer embeds its `Stub.exe` runtime template, extracted for that future work.
 - Host-dependent Execution Engine predicates, arbitrary external DLL side effects, and downloaded content cannot be resolved statically. The parser classifies and reports them for VM validation.
@@ -310,11 +322,15 @@ Detection enumerates record headers without materializing bodies. `Setup.txt` is
 
 ## Representative fixtures
 
-- Seventeen cached archived Pantaray builder installers cover 1.0, 2.0, 3.0, 3.5, 4.0, 5.0, 7.0, 7.5, and 8.1 structural routes.
+- Eighteen cached archived Pantaray builder installers cover 1.0, 2.0, 3.0, 3.5, 4.0, 5.0, 6.0, 7.0, 7.5, and 8.1 structural routes.
 - Pantaray QSetup 1.0.0.1, SHA256 `C9C3F625295DCB5CB3675B79DFEE8EB5C9FF9E4B7ADEB93D395AF53D40A70EFB`, establishes direct records, compact footer, comma-separated copy and shortcut lists, the legacy action layout, and the compiled `UnInstall_24376.exe` target.
 - Pantaray QSetup 4.0.0.4, SHA256 `BFEC5B30D618A4624A2F1957425F7862C26238951218B4A7E4BEC07334E046FE`, establishes the double-pipe preamble and the five-field environment-operation route.
 - Pantaray QSetup 5.0.0.0, SHA256 `606EF42EF079CC630F79D6E9013F65BE67EBA64E2D7AF99CEDBEA6F07089D629`, is the late observed double-pipe and legacy-action route and carries the compiled `UnInstall_17836.exe` target.
+- Pantaray QSetup 6.0.0.0, SHA256 `B79B711D651C0C81B5C615F799355448F9E32A78613955AED297493833ACA455`, is the Tucows distribution preserved by Internet Archive and establishes the 67-field transitional action route without relying on product strings for dispatch.
 - Pantaray QSetup 8.1.0.2, SHA256 `88C8F4BD3819696C765A1FF33935BA769BE6658DB9E1334FB1CD89FCA74C189C`, establishes the versioned preamble, modern action layout, legacy footer, undeclared certificate trailer, and explicit `un_qstp.exe` uninstaller.
+- Pantaray QSetup 9.1.0.6, SHA256 `D1333B3ADED325EC53FAFEBBC1A1A25A0B98196CF3B23346F13F147A42444CCB`, confirms that the `Legacy7-11` structural route continues through QSetup 9 and carries an explicit `un_qstp.exe` uninstaller.
+- Pantaray QSetup 10.0.2.1, SHA256 `DA057E341AE9B38AB2DB1E912C5A047561D2E601E2CE5F1AE765943216EF6724`, confirms the same legacy footer and six-command action layout with an explicit `uninstall_qstp.exe` name.
+- Pantaray QSetup 11.0.0.0, SHA256 `C319CB5AF27757FFCB2333B02911C2F28964B57DE23B95278F9FFD22919133AB`, confirms the final observed `Legacy7-11` route before the marker-bearing QSetup 12 footer.
 - Pantaray QSetup 12.0.0.5, SHA256 `E75A31A8E51757C9CA7C33EF836EAE8387139884F2C0B94A9BBD228EFA212ED7`, establishes the modern footer marker, current ARP and association directives, and more than one hundred mapped payloads.
 - `AGTEK.Trackwork` 2.25.5.6, SHA256 `6EC7D39B466DF83024E1320A8755669CFA7FEB104166D615480D2FD17F42FE62`, provides a 241-record signed vendor setup with more than ten Execution Engine actions and nested VC runtime execution.
 - A controlled QSetup 12 build establishes split-kernel authentication, raw split companions, non-SFX files, strict spanned concatenation, the generated `<media>_<stamp>.exe` name, 32-bit ARP view for ordinary I386 media, quoted `InstallLocation` and `UninstallString` values, and zero exit codes for `/hide` setup and generated uninstall. This research fixture remains outside source control.
@@ -325,3 +341,4 @@ Detection enumerates record headers without materializing bodies. `Setup.txt` is
 - [QSetup Execution Engine](https://www.pantaray.com/execute.html)
 - [QSetup execution command reference](https://www.pantaray.com/execution_cmd.html)
 - [Archived QSetup builder installers](https://web.archive.org/web/*/https://www.panta-ray.com/qstp.exe)
+- [Archived alternate QSetup builder path](https://web.archive.org/web/*/http://www.pantaray.com/qstp.exe)

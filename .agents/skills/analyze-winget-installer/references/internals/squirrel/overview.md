@@ -70,9 +70,31 @@ Accept an exact family only when its outer structure and package payload both va
 
 Project only structured metadata and explicit registry behavior into the shared parser result. Current Velopack nuspec projection includes `machineArchitecture`, `runtimeDependencies`, `mainExe`, `os`, `rid`, `osMinVersion`, `channel`, `shortcutLocations`, `shortcutAumid`, release notes, release-notes HTML, and splash progress color; the parser also accepts the historical `shortcutAmuid` spelling. List-valued metadata is normalized to arrays while the `Raw` properties retain the source strings. Architecture aliases are normalized for WinGet, minimum OS versions are validated, and unsupported values remain diagnostic evidence. Rust Velopack packages must provide the source-required `id`, nonzero SemVer with UInt64 numeric components, and a safe relative Windows `mainExe` path before the route is accepted.
 
+`PackageVersion` preserves the complete nuspec version. `DisplayVersion` models the value written to ARP. Squirrel.Windows and both Clowd generations write the package version, including a prerelease suffix. Rust Velopack writes only `major.minor.patch`, so a package version such as `1.2.3-beta.4+build.7` produces ARP `DisplayVersion` `1.2.3`. Keep these values separate when comparing update metadata with installed state.
+
+Squirrel.Windows selects ARP `DisplayName` from nuspec `title`, then `description`, then `summary`. Clowd.Squirrel uses its package product name, which is `title` with an `id` fallback. Rust Velopack also defaults an empty title to `id`. The parser applies the rule for the detected `LauncherGeneration` instead of using one fallback for every route.
+
 Squirrel.Windows `FLAGS/#132` stores the UTF-16 framework selector consumed by `FxHelper`. Recognized values range from `net45` through `net48`; the launcher treats an unknown value as `net45`, so the parser returns both the raw resource and the effective requirement. Absence remains unresolved rather than being replaced with a guessed prerequisite.
 
 For Rust Velopack packages, `mainExe` selects one exact `lib/app/<mainExe>` archive entry. The parser opens that entry through a bounded seekable stream, requires a valid PE image, and records its machine, managed status, target framework when readable, and imported DLL names. The PE architecture corroborates `machineArchitecture` and an architecture-bearing RID. A disagreement leaves `Architecture` unresolved and prevents payload architecture evidence from being projected into a WinGet suggestion.
+
+## Apps & Features behavior
+
+Confirmed Squirrel and Velopack setup routes write one visible per-user uninstall key at `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\<id>`. The parser returns its schema-safe identity under `AppsAndFeaturesEntries` and the fuller reconstruction under `ArpEntries`.
+
+| Value | Squirrel.Windows and Clowd.Squirrel | Rust Velopack |
+| --- | --- | --- |
+| `ProductCode` / key name | nuspec `id` | nuspec `id` |
+| `DisplayName` | generation-specific package product-name fallback | `title`, with `id` fallback |
+| `DisplayVersion` | complete package version | numeric `major.minor.patch` |
+| `Publisher` | package author/company projection | nuspec `authors` |
+| `InstallLocation` | `%LocalAppData%\<id>` | `%LocalAppData%\<id>` unless setup receives `--installto` |
+| `UninstallString` | `"%LocalAppData%\<id>\Update.exe" --uninstall` | same |
+| `QuietUninstallString` | append `-s` | append `--silent` |
+| `DisplayIcon` | selected at install time from `app.ico` or an installed executable | `%LocalAppData%\<id>\current\<mainExe>` |
+| `URLUpdateInfo` | nuspec `projectUrl` | not written |
+
+`InstallDate` and `EstimatedSize` depend on installation time and extracted state. Legacy `DisplayIcon` selection also depends on package contents and runtime probing. The parser lists these names under `ArpDynamicFields` rather than inventing values. A custom `--installto` invocation changes the Velopack install location and all paths derived from it; `DefaultInstallLocation` and the reconstructed default ARP paths describe an invocation without that override.
 
 ## Bounds and malformed input
 
@@ -84,7 +106,7 @@ Open the installer once, reuse its PE layout, and parse resource, signed-bundle,
 
 ## Known gaps
 
-Custom runtime bootstrappers that contain Squirrel libraries but obtain package metadata after launch cannot provide static nuspec identity through this parser. Generic ZIP-only candidates can expose nuspec identity but still require outer-launcher validation before assigning switches. A custom or stripped Rust launcher that omits the source markers is conservatively treated as the legacy signed generation and receives no modern-only switches.
+Custom runtime bootstrappers that contain Squirrel libraries but obtain package metadata after launch cannot provide static nuspec identity through this parser. Generic ZIP-only candidates can expose nuspec identity but still require outer-launcher validation before assigning switches. A custom or stripped Rust launcher that omits the source markers is conservatively treated as the legacy signed generation and receives no modern-only switches. Legacy Squirrel and Clowd `DisplayIcon`, install-time `EstimatedSize`, install date, first-run application state, downloaded prerequisites, and custom lifecycle-hook effects require payload inspection or VM evidence. The parser does not fetch online package metadata and does not treat a client application that merely embeds Squirrel libraries as a setup.
 
 ## Implementation mapping
 
@@ -99,6 +121,9 @@ Use generated malformed fixtures and behaviorally distinct real installers. The 
 
 - [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 - [Velopack](https://github.com/velopack/velopack)
+- [Squirrel.Windows uninstall-entry writer](https://github.com/Squirrel/Squirrel.Windows/blob/51f5e2cb01add79280a53d51e8d0cfa20f8c9f9f/src/Squirrel/UpdateManager.InstallHelpers.cs)
+- [Clowd.Squirrel uninstall-entry writer](https://github.com/clowd/Clowd.Squirrel/blob/8cc27f0d61716be4b190cb380995c984247efb5f/src/Squirrel/UpdateManager.InstallHelpers.cs)
+- [Rust Velopack uninstall-entry writer](https://github.com/velopack/velopack/blob/b8456fbf588fb9d331775ddad9b48ad6accc01a5/src/bins/src/windows/registry.rs)
 - [Squirrel.Windows `DATA/#131` writer](https://github.com/Squirrel/Squirrel.Windows/blob/6867fa20fc5228ec23383ae6d1c993598655730e/src/WriteZipToSetup/WriteZipToSetup.cpp)
 - [Clowd.Squirrel resource bundle metadata](https://github.com/velopack/velopack/blob/d713596bd891a69c238d3cdd613ef7cff4314726/src/Squirrel/Internal/BundledSetupInfo.cs)
 - [Clowd.Squirrel signed bundle introduction](https://github.com/velopack/velopack/tree/01aab4d7637a55a8bdde81b841f688bac643ead1/src/Squirrel.Shared)

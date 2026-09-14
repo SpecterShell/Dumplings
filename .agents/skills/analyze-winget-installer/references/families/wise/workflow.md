@@ -2,94 +2,188 @@
 
 ## When to use
 
-Use `InstallerType: exe` when WinGet invokes a Wise Installation System EXE wrapper. The implemented parser currently supports the **Wise for Windows Installer** variant that embeds an MSI database; it does not claim support for every historical Wise generation.
+Use this workflow when `Test-WiseInstaller` succeeds or structural analysis identifies a WiseScript overlay, a Wise `.WISE` MSI record, or a vendor launcher containing a complete WiseScript setup. WinGet invokes these routes as `InstallerType: exe`; the embedded format determines metadata authority and supported switches.
+
+Read [Wise installer internals](../../internals/wise/overview.md) before changing detection, binary decoding, extraction, or parser limits.
 
 ## Detection
 
-Route here when `Test-WiseInstaller` succeeds. The parser requires both Wise engine markers such as `WiseForWindowsInstaller`, `Wise for Windows Installer`, `.WISE`, or `WISE_SETUP_EXE_PATH` and a Compound File Binary whose root-storage CLSID is the MSI CLSID `{000C1084-0000-0000-C000-000000000046}`. A `Wise` string alone is not sufficient.
+Run the parser instead of relying on a `Wise` product string or a Detect It Easy label:
 
-Detect It Easy may report `Installer: Wise Installer`. Treat that label as supporting evidence; use the Dumplings parser to prove the embedded MSI.
+```powershell
+if (Test-WiseInstaller -Path $InstallerFile) {
+  $Info = Get-WiseInfo -Path $InstallerFile
+}
+```
 
-## Static analysis
+The parser requires one of these validated structures:
 
-Read [Wise Parser Internals](../../internals/wise/overview.md) before changing detection, extraction, binary decoding, or parser limits.
+- a PE `.WISE` section containing an MSI CFB record with the MSI root CLSID and a matching Wise CRC32;
+- a PE or NE host with a bounded WiseScript overlay whose required state member decompresses and passes CRC32 validation; or
+- a bounded nested PE in an outer launcher's resource range that contains the preceding WiseScript structure.
 
-### Parse and extract the embedded MSI
+Marker strings, a section name without a valid record, CFB magic without the MSI root CLSID, and an arbitrary nested MZ sequence are not enough.
+
+## Binary structure
+
+```text
+distributed EXE
++-- MZ + NE host
+|   `-- WiseScript overlay
++-- MZ + PE host
+|   +-- WiseScript overlay
+|   `-- .WISE section -> exact MSI CFB -> CRC32
+`-- vendor PE launcher
+    `-- .rsrc bounded nested PE -> WiseScript -> InstallFile -> .WISE MSI launcher
+```
+
+The WiseScript overlay contains a versioned header, raw-Deflate members with CRC trailers, a compiled state machine, optional WSE source metadata, and file-record payloads. See [binary format](../../internals/wise/binary-format.md) for offsets, field sizes, profiles, and nested-range rules.
+
+## Step 1: Parse once
 
 ```powershell
 $Info = Get-WiseInfo -Path $InstallerFile
-$Msi = Expand-WiseInstaller -Path $InstallerFile -CollisionAction Rename
 
+$Info.ContainerRoute
+$Info.FormatProfile
+$Info.WiseVariant
+$Info.BuilderVersion
 $Info.ProductCode
 $Info.UpgradeCode
-$Info.InstallLocationProperty
-$Info.AppsAndFeaturesInstallerType
+$Info.Scope
+$Info.InstallModes
+$Info.InstallerSwitches
+$Info.AppsAndFeaturesEntries
+$Info.Diagnostics
+$Info.UnresolvedFields
+```
+
+Reuse this result. Do not call multiple `Read-*FromWise` helpers after `Get-WiseInfo`.
+
+## Step 2: Follow the route
+
+### Direct Wise MSI wrapper
+
+`ContainerRoute: WiseSection/Msi` means the outer PE contains an exact MSI database in `.WISE`. Use the MSI ProductCode, UpgradeCode, architecture, associations, explicit scope, install-location property, and Windows Installer ARP evidence.
+
+The wrapper's MSI-style switches must be authored explicitly because WinGet has no Wise defaults for generic EXE media. Keep `/norestart` in the silent mode switches. Omit the install-location field if the nested MSI does not identify a property.
+
+```yaml
+InstallerType: exe
+InstallModes:
+- interactive
+- silent
+- silentWithProgress
+InstallerSwitches:
+  Silent: /quiet /norestart
+  SilentWithProgress: /passive /norestart
+  InstallLocation: INSTALLDIR="<INSTALLPATH>"
+  Log: /log "<LOGPATH>"
+ProductCode: <NestedMsiProductCode>
+AppsAndFeaturesEntries:
+- InstallerType: msi
+  UpgradeCode: <NestedMsiUpgradeCode>
+```
+
+Replace `INSTALLDIR` with the returned `InstallLocationProperty`. The manifest optimizer removes ProductCode or InstallerType from the Apps & Features entry when they are redundant in the complete manifest context.
+
+### WiseScript MSI prerequisite wrapper
+
+`WiseVariant: WiseScript MSI prerequisite wrapper` means a WiseScript file action contains another Wise launcher whose `.WISE` section owns a validated MSI. Use the nested MSI for installed-product identity, but use the outer script for installability and elevation decisions.
+
+Do not assume `/S`, `/quiet`, or `/passive` reaches the nested MSI. The two NavigatorPlus 1.42 installers are proven interactive-only wrappers and return no installer switches:
+
+```yaml
+InstallerType: exe
+InstallModes:
+- interactive
+ElevationRequirement: elevationRequired
+ProductCode: <NestedMsiProductCode>
+AppsAndFeaturesEntries:
+- InstallerType: msi
+  UpgradeCode: <NestedMsiUpgradeCode>
+```
+
+### Pure WiseScript
+
+`WiseVariant: WiseScript` means no authoritative nested MSI was found. The parser can return variables, payload records, registry writes, execution records, custom ARP candidates, and opaque external-call evidence.
+
+Classic compatible WiseScript runtimes use `/S` for silent installation and do not provide a distinct progress mode. Because `exe` has no WinGet default, write the proven override explicitly:
+
+```yaml
+InstallerType: exe
+InstallModes:
+- interactive
+- silent
+InstallerSwitches:
+  Silent: /S
+```
+
+Do not use this shape when `Wise.Metadata.ScriptModelUnsupported`, package-specific interactive behavior, or an opaque bootstrapper prevents proof of unattended installation.
+
+### Historical NE WiseScript
+
+Wise 5, 6, and early 7 can use a 16-bit NE host. Wise 7.01 state records are decoded. Wise 5 and 6 currently stop after structural header, Deflate, size, and CRC validation because their state dialect is unsupported. Preserve existing manifest metadata for those partial routes and use VM evidence; do not recover identity from arbitrary strings.
+
+## Step 3: Establish ARP ownership
+
+For a validated MSI route, use the nested MSI's ProductCode and UpgradeCode. Set `AppsAndFeaturesEntries.InstallerType: msi` when the visible row is Windows Installer-owned and that differs from the outer `InstallerType: exe`.
+
+For pure WiseScript, inspect `AppsAndFeaturesEvidence`. A row proves only a compiled literal registry action until its active condition is known. Multiple candidates leave ProductCode and scope unresolved. A single candidate accompanied by `Wise.Metadata.ScriptArpConditionsRequireValidation` still requires VM comparison before authoring it.
+
+Never use a temporary Run key, resume token, log path, generated uninstaller filename, launcher identity, or PE version string as ProductCode.
+
+## Step 4: Resolve scope and architecture
+
+Use explicit nested MSI scope evidence when available. `ALLUSERS=1` supports machine scope. If the MSI does not prove a single scope, omit or preserve `Scope` until VM validation confirms the real ARP hive.
+
+`Requested Execution Level=requireAdministrator` supports `ElevationRequirement: elevationRequired`; it does not by itself establish machine scope.
+
+Determine architecture from the nested MSI template and installed application binaries. The outer NE or PE machine type describes the bootstrapper and can differ from the payload architecture.
+
+## Step 5: Inspect files and system effects
+
+```powershell
+$Info.PayloadCatalog
+$Info.RegistryWrites
+$Info.ExecutedPrograms
+$Info.OperationCounts
 $Info.Protocols
 $Info.FileExtensions
 ```
 
-`Expand-WiseInstaller` validates the embedded CFB root CLSID before carving the MSI and never starts the setup. `Get-WiseInfo` then uses MSI tables for product identity, builder, scope, architecture, associations, install-location property, and visible ARP type.
+`PayloadCatalog` contains every projected file record, including conditional and language-specific duplicates. `RegistryWrites` and `ExecutedPrograms` are static operation evidence, not proof that every record runs. External DLL calls require static inspection or VM validation.
 
-### Use the nested MSI's visible ARP identity
+`Expand-WiseInstaller` currently exports the exact authoritative MSI selected by the supported MSI routes:
 
-Wise is the outer wrapper, not the authoritative ARP writer for this variant. Use the nested MSI evidence:
-
-- Keep `ProductCode` and `UpgradeCode` from the MSI.
-- Use `AppsAndFeaturesEntries.InstallerType: msi` when the visible entry has `WindowsInstaller=1`.
-- Use `AppsAndFeaturesEntries.InstallerType: exe` only if the MSI parser proves a custom visible EXE-style ARP entry.
-- Do not call an InstallShield-authored nested MSI a Wise-authored MSI. The wrapper and MSI builder are separate facts.
-
-### Determine scope and architecture from the MSI
-
-Add `Scope: machine` when the nested MSI explicitly has `ALLUSERS=1`. Otherwise omit `Scope` unless VM validation proves it. Determine architecture from nested MSI template and installed binaries rather than the outer bootstrapper architecture.
-
-### Reject or validate other Wise generations
-
-For another Wise generation, stop after detection and use bounded static extraction or VM validation. Do not assume this variant's MSI switches or ARP behavior apply to WiseScript, Wise Package Studio, or other Wise formats.
-
-## Manifest shape
-
-This installer-entry shape matches the supported Wise MSI wrapper. Replace `INSTALLDIR` if the nested MSI reports a different install-location property.
-
-```yaml
-Installers:
-- Architecture: x86
-  InstallerType: exe # Wise MSI
-  Scope: machine
-  InstallerUrl: https://example.com/Product-1.2.3.exe
-  InstallerSha256: <SHA256>
-  InstallModes:
-  - interactive
-  - silent
-  - silentWithProgress
-  InstallerSwitches:
-    Silent: /quiet /norestart
-    SilentWithProgress: /passive /norestart
-    InstallLocation: INSTALLDIR="<INSTALLPATH>"
-    Log: /log "<LOGPATH>"
-  ProductCode: <NestedMsiProductCode>
-  AppsAndFeaturesEntries:
-  - InstallerType: msi
+```powershell
+$Msi = Expand-WiseInstaller -Path $InstallerFile -DestinationPath (Join-Path $Scratch 'embedded.msi') -CollisionAction Rename
 ```
 
-Do not add `AppsAndFeaturesEntries.ProductCode` when it would only duplicate the installer-level `ProductCode`.
+General pure-WiseScript extraction is not yet a public contract. Do not describe `PayloadCatalog` paths as installed files without condition and destination-variable resolution.
 
-## WinGet defaults and overrides
+## Step 6: Apply WinGet suggestions conservatively
 
-WinGet supplies no Wise-wrapper defaults for generic `InstallerType: exe`. The supported Wise variant forwards MSI-style behavior, but every outer switch remains an explicit wrapper override. Keep no-reboot arguments, specify the supported modes, and use the nested MSI's verified install-location property rather than assuming `INSTALLDIR`.
+```powershell
+$Analysis = Get-WinGetInstallerAnalysis -Path $InstallerFile
+$WiseResult = $Analysis.ParserResults | Where-Object { $_.Name -eq 'Wise' -and $_.Success } | Select-Object -First 1
+$WiseResult.Result.SuggestedManifestFields
+```
 
-## Apps & Features
+Suggestions contain only WinGet 1.12 installer fields. Exact route evidence overrides the generic family template. For example, NavigatorPlus receives `interactive` only and no switch object, while TI Connect receives its MSI install-location property and MSI-owned ARP type.
 
-Use structured parser evidence to identify the visible Apps & Features owner. Do not substitute metadata from a hidden or nested payload unless that payload writes the visible uninstall entry.
+## Step 7: Validate dynamically when required
 
-## Scope and architecture
+Follow [VM validation workflow](../../workflows/vm-validation.md). Wise-specific checks are:
 
-Use explicit parser evidence for scope and installed payload architecture. Preserve existing manifest intent and use VM validation when either value is conditional or unresolved.
-
-## VM validation
-
-Follow [VM validation workflow](../../workflows/vm-validation.md) for unsupported Wise generations or when the nested MSI's visible ARP type, scope, architecture, and wrapper exit-code propagation remain unresolved.
+- capture the process exit code for interactive, silent, cancellation, and nested failure paths;
+- compare HKLM 64-bit, HKLM 32-bit, and HKCU ARP rows, including `WindowsInstaller` and `SystemComponent`;
+- verify whether the outer wrapper forwards or consumes `/S`, `/quiet`, `/passive`, properties, and log arguments;
+- compare the observed ARP tuple to the parser's exact ProductCode, DisplayName, Publisher, install location, uninstall commands, and registry view;
+- check which condition-dependent payload and registry records actually run; and
+- inspect external DLL effects and application first-run associations separately.
 
 ## Known examples
 
-- `TexasInstruments.TIConnect`: Wise for Windows Installer wrapper containing an InstallShield-authored MSI. The nested MSI uses `INSTALLDIR`, writes a visible MSI ARP entry, and provides the package ProductCode and UpgradeCode.
+- `TexasInstruments.TIConnect` uses `WiseSection/Msi`; the nested Wise-authored MSI supplies ProductCode, UpgradeCode, machine scope, `INSTALLDIR`, and the visible MSI ARP entry.
+- [`FrancotypPostalia.NavigatorPlus` 1.42 x86 and x64](https://www.fpmailing.co.uk/support/navigatorplus-support) use an outer resource launcher, a Wise 9.02 WiseScript prerequisite package, and distinct nested MSI payloads. Both supplied wrappers are interactive-only and request administrator elevation.
