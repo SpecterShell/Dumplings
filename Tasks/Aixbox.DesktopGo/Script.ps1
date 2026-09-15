@@ -9,18 +9,18 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' -and $_.name -notmatch 'en-US|zh-CN' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'en-US'
-  Architecture    = 'x64'
-  InstallerType   = 'nullsoft'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' -and $_.name -match 'en-US' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x64'
-  InstallerType   = 'nullsoft'
-  InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' -and $_.name -match 'zh-CN' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale = 'en-US'
+#   Architecture    = 'x64'
+#   InstallerType   = 'nullsoft'
+#   InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' -and $_.name -match 'en-US' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+# }
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale = 'zh-CN'
+#   Architecture    = 'x64'
+#   InstallerType   = 'nullsoft'
+#   InstallerUrl    = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' -and $_.name -match 'zh-CN' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
