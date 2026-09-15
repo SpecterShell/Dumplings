@@ -1,12 +1,12 @@
+$Object1 = Invoke-WebRequest -Uri 'https://www.fundels.com/downloads/'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://www.fundels.com/download/fundels_exe'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('fundels') } catch {} }, 'First')[0].href
 }
 
-$Object1 = Get-WinGetDeliveryOptimizationResponseHeader -Uri $this.CurrentState.Installer[0].InstallerUrl
-
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Headers.'Content-Disposition'[0], '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
