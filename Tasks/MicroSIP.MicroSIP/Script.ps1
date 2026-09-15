@@ -17,7 +17,7 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($Object2.SelectSingleNode("//tr[contains(./th, 'Date')]/td[1]").InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//tr[contains(./th, 'Changelog')]/td/text()[contains(., '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='changelog']/text()[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'b' -and $Node.InnerText -notmatch '^\s*\d+(?:\.\d+)+'; $Node = $Node.NextSibling) { $Node }
