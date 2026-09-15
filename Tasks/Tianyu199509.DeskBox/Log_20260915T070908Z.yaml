@@ -1,0 +1,32 @@
+Version: 1.5.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.2/DeskBox_Setup_1.5.2_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.2/DeskBox_Setup_1.5.2_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.2 is a focused hotfix for a 1.5.1 regression reported through the in-app feedback channel: file widgets could cap their contents at the first 30 items. Folders at or below the render threshold list every item again, and larger folders extend the rendered window whenever the visible area is not yet filled.
+    Released on September 15, 2026.
+    Highlights
+    - File widgets show everything again. 1.5.1's large-folder render windowing shipped with its activation threshold declared but never enforced, so every folder started at a 30-item prefix, and the only growth trigger was the scroll event — a prefix that fit inside the viewport had nothing to scroll and stayed stuck at 30 items forever (most visible on tall widgets). The threshold is now enforced where the window is computed: folders up to 300 items render in full, exactly as before 1.5.1. Larger folders grow the rendered window after every layout pass while the visible area is not yet filled, in addition to the existing scroll-near-the-end and End-key growth paths, so the deadlock is gone for every folder size.
+    See CHANGELOG.md for the complete list.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.2 是一次聚焦的热修复，修复经应用内反馈渠道报告的 1.5.1 回归：文件格子最多只显示前 30 个项目。不高于渲染阈值的文件夹恢复列出全部条目，更大的文件夹在可视区域尚未填满时自动扩展渲染窗口。
+    2026 年 9 月 15 日发布。
+    主要更新
+    - 文件格子恢复完整显示。 1.5.1 的大文件夹渲染窗口化上线时，激活阈值只声明未生效，所有文件夹都从 30 项的初始前缀开始，而唯一的增长触发器是滚动事件——装不满视口的前缀无内容可滚，就永远停在 30 项（高格子上最明显）。现在阈值在窗口计算处生效：不超过 300 项的文件夹恢复全量渲染，与 1.5.1 之前完全一致；更大的文件夹在每次布局后只要可视区域尚未填满就继续扩展渲染窗口，加上原有的滚动近末尾与 End 键增长路径，任何规模的文件夹都不会再卡在初始切片。
+    完整条目见 CHANGELOG.md。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.2
+ReleaseTime: 2026-09-15T01:32:57.0000000Z

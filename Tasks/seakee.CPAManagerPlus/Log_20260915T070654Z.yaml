@@ -1,0 +1,82 @@
+Version: 1.12.13
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.13_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.13/cpa-manager-plus_v1.12.13_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.13_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.13/cpa-manager-plus_v1.12.13_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.13
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.13
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.13 is a maintenance release focused on reliability, correctness, and data safety. The Accounts experience fixes observed xAI weekly quota presentation and prefixed model exclusions while adding Codex plan-remaining sorting. Manager Server now preserves manual model prices during sync, hardens credential handling at the UsageEvent persistence boundary, and keeps legacy Usage JSONL imports compatible.
+    This release does not introduce a database schema migration, does not scan or rewrite historical usage_events during startup or upgrade, and does not require offline maintenance.
+    Highlights
+    Features
+    - Add Plan remaining sorting to Accounts. Paid Codex accounts can be ordered by expiry time while Free and unknown plans remain after valid paid plans; the default sort behavior is unchanged. (Web)
+    Fixes
+    - Show observed xAI weekly credits and product usage when upstream reports them even if planType is unconfirmed. Billing limits and PAYG remain gated behind confirmed paid plans, and unconfirmed quota telemetry does not affect account health or automatic disable recommendations. (Web)
+    - One-click model-price sync no longer overwrites rows saved with source: "manual". Manual prices remain authoritative until the user deletes or replaces them. (Manager Server)
+    - Fix model exclusions for credentials using a Prefix. Runtime model IDs are mapped back to the canonical CPA exclusion rule IDs so exclusions actually take effect; unresolved mappings fail closed and surface a warning. (Web)
+    - Restore import compatibility for Usage JSONL exported by older versions. Historical noncanonical event_hash values are deterministically canonicalized when imported into a clean database, while upgraded databases continue to deduplicate against existing legacy identities without creating duplicate events. (Manager Server)
+    Security
+    - Add a unified sensitive-field sanitization boundary before UsageEvent persistence to SQLite, covering known API keys, Bearer / Authorization values, cookies, session tokens, private keys, and related credential forms while retaining useful diagnostic context. (Manager Server)
+    - Normalize or pseudonymize newly persisted opaque hash/source identities. Normal collector/runtime persistence continues to require canonical event identities; legacy compatibility is limited to the Import boundary. (Manager Server)
+    Upgrade Notes
+    - No database schema migration or offline maintenance is required. Upgrade startup does not scan or rewrite existing usage_events.
+    - UsageEvent credential sanitization applies to new writes after upgrading. Existing usage.sqlite files, old backups, and previous exports are not rewritten automatically. If historical data may have contained live credentials, rotate those credentials; historical-file cleanup is not a substitute for rotation.
+    - No new required configuration is introduced; existing Manager Server and CPA-hosted / external-panel deployment modes remain unchanged.
+    - Usage JSONL exported by older versions can be imported directly without preprocessing or offline conversion.
+    Acknowledgements
+    - @HuiCheng - Added Codex plan-remaining sorting, making it easier to identify paid accounts approaching expiration.
+    - @camy-x - Fixed model price synchronization overwriting manual prices, preserving user-defined pricing.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.12...v1.12.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.13-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.13 是一个以可靠性、正确性与数据安全为重点的维护版本。凭证列表修复了 xAI 实际周额度展示和带前缀模型禁用问题，并新增 Codex 套餐剩余时间排序；Manager Server 修复手动模型价格被同步覆盖的问题，同时在 UsageEvent 持久化边界增加凭证清理，并保持旧版本 JSONL 的导入兼容。
+    本版本不包含数据库 schema 迁移，不会在启动或升级时扫描、重写历史 usage_events，也不要求执行离线维护。
+    Highlights
+    Features
+    - 凭证列表新增「套餐剩余时间」排序。付费 Codex 账号可按到期时间排序，Free 与未知套餐保持在有效付费套餐之后；默认排序行为不变。（Web）
+    Fixes
+    - xAI 在上游未确认 planType 时，只要实际返回 weekly credit 或 product usage，仍会展示这些已观测额度；未确认套餐的 billing limit / PAYG 继续保持隐藏，且这些未确认额度不会影响账户健康状态或自动禁用判断。（Web）
+    - 一键同步模型价格不再覆盖 source: "manual" 的手动价格。手动价格保持优先，用户删除手动项后仍可重新接受同步价格。（Manager Server）
+    - 修复带凭证 Prefix 的模型禁用规则。运行时模型 ID 会映射回 CPA 预期的 canonical exclusion rule ID，避免界面显示已禁用但 CPA 实际仍可路由；无法可靠映射时会 fail closed 并提示用户。（Web）
+    - 恢复旧版本 Usage JSONL 的导入兼容。历史 noncanonical event_hash 在新数据库导入时会确定性 canonicalize；已升级数据库中的旧 identity 继续用于去重，避免重复事件。（Manager Server）
+    Security
+    - UsageEvent 在写入 SQLite 前增加统一敏感字段清理，覆盖已知 API Key、Bearer / Authorization、Cookie、session token、private key 等凭证形态，并在保留必要诊断上下文的同时阻止新的原始凭证进入持久化数据。（Manager Server）
+    - 新写入的 opaque hash / source identity 会进行规范化或伪匿名化；正常 collector/runtime 写入继续要求 canonical event identity，旧 JSONL 的兼容处理仅发生在 Import 边界。（Manager Server）
+    Upgrade Notes
+    - 无需数据库 schema 迁移，也无需离线维护。 升级不会在启动阶段扫描或重写现有 usage_events。
+    - UsageEvent 安全清理从升级后的新写入开始生效；历史 usage.sqlite、旧备份和旧导出不会自动改写。如果怀疑旧数据曾保存过有效凭证，应轮换相关凭证，清理历史文件不能替代凭证轮换。
+    - 无新增必填配置项；现有 Manager Server、CPA-hosted / external-panel 部署方式保持不变。
+    - 旧版本导出的 Usage JSONL 可直接导入当前版本，无需预处理或离线转换。
+    Acknowledgements
+    - @HuiCheng - 新增 Codex「套餐剩余时间」排序，方便优先查看临近到期的付费账号。
+    - @camy-x - 修复模型价格同步覆盖手动价格的问题，确保用户自定义价格保持优先。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.12...v1.12.13
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.13-zh.md
+ReleaseTime: 2026-09-15T04:29:35.0000000Z

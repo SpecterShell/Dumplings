@@ -1,0 +1,71 @@
+Version: 0.2.12
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xiaYuTian11/maskit/releases/download/v0.2.12/Maskit_0.2.12_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    新增 / Added
+    - 公网 IPv4 内置规则（IP_PUBLIC，默认关）：边界断言防版本号/文件名误伤，语义校验排除私网/环回/组播/CGNAT/RFC 段，白名单豁免知名公共 DNS，版本号形态（全个位数、Java 构建号 1.8.0.202）放行；已知漏检面见规则说明。
+      Public IPv4 rule (IP_PUBLIC, default off): boundary assertions against version-number/file-name false positives, semantic validation excluding private/loopback/multicast/CGNAT/RFC ranges, well-known DNS whitelisted, version shapes (all-single-digit, Java build numbers) exempted.
+    - 透传模式占位符尽力还原：停止代理或关闭过滤后，从事件库（48h、非凭据）还原模型回复中的占位符，计数并入 PASS 事件。
+      Best-effort placeholder restoration in passthrough mode from the event store (48h, non-credential); counts attached to PASS events.
+    - 客户端配置重构：默认「通用聚合」模板（/v1 通配）、端点推荐池；移除预设注入请求头（占位值会顶掉客户端真 key）。
+      Client config revamp: default general-aggregate template (/v1 wildcard), endpoint suggestions; preset header chips removed.
+    - 界面：侧边栏折叠记忆、数据密集页放宽版心、仪表盘百分比封顶展示。
+      UI: sidebar collapse memory, wider data-dense pages, capped percentage display.
+    修复 / Bug Fixes
+    - TOKEN 漏检全大写 BEARER 头；explicit 模式改域名不生效（现自动重启代理）；占位符预热超容量淘汰方向反转与孤儿泄漏；清空日志后跨进程事件复活与日志页游标停更；升级迁移不再覆盖显式 stop_mode。
+      Fixed: uppercase BEARER misses; explicit-mode domain changes not taking effect (now auto-restarts); warmup eviction order and orphan leaks; cross-process event resurrection and stale log cursor after clearing; migration no longer overrides explicit stop_mode.
+    - 透传兜底层硬化：socket 读超时、HEAD/OPTIONS 支持、畸形 chunked 请求 400、413/503 前排空请求体、自启异常挂兜底。
+      Passthrough hardening: socket read timeout, HEAD/OPTIONS support, 400 on malformed chunked bodies, request-body draining before error responses, autostart exception fallback.
+    - 前端：侧边栏 tooltip 文案互换、/v1 通配 Base URL 缺 /v1、日志清空后页码不归位。
+      Frontend: swapped sidebar tooltips, missing /v1 in wildcard Base URL, stale page number after log clear.
+    优化 / Changed
+    - App 退出不再挂明文直连兜底（退出即断连）；手动停止仍按 stop_mode 语义。
+      App exit no longer starts the plaintext fallback; manual stops keep stop_mode semantics.
+    - 关闭过滤开关后保留流式效果；FAIL_CLOSED 非白名单非 JSON 阻断尊重过滤开关。
+      Streaming preserved when filtering is off; the FAIL_CLOSED block honors the filter switch.
+    - 价格缓存原子写，并真正实现定期刷新（原「7 天自动刷新」未实现）。
+      Atomic price-cache writes plus a real periodic refresh loop.
+    - 引擎自愈收紧：重启 CAS 互斥防双引擎；孤儿清理加进程身份校验，绝不误杀无关进程。
+      Tighter self-healing: CAS restart mutex; identity-checked orphan cleanup that never kills foreign processes.
+    Full Changelog: https://github.com/xiaYuTian11/maskit/compare/v0.2.11...v0.2.12
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增 / Added
+    - 公网 IPv4 内置规则（IP_PUBLIC，默认关）：边界断言防版本号/文件名误伤，语义校验排除私网/环回/组播/CGNAT/RFC 段，白名单豁免知名公共 DNS，版本号形态（全个位数、Java 构建号 1.8.0.202）放行；已知漏检面见规则说明。
+      Public IPv4 rule (IP_PUBLIC, default off): boundary assertions against version-number/file-name false positives, semantic validation excluding private/loopback/multicast/CGNAT/RFC ranges, well-known DNS whitelisted, version shapes (all-single-digit, Java build numbers) exempted.
+    - 透传模式占位符尽力还原：停止代理或关闭过滤后，从事件库（48h、非凭据）还原模型回复中的占位符，计数并入 PASS 事件。
+      Best-effort placeholder restoration in passthrough mode from the event store (48h, non-credential); counts attached to PASS events.
+    - 客户端配置重构：默认「通用聚合」模板（/v1 通配）、端点推荐池；移除预设注入请求头（占位值会顶掉客户端真 key）。
+      Client config revamp: default general-aggregate template (/v1 wildcard), endpoint suggestions; preset header chips removed.
+    - 界面：侧边栏折叠记忆、数据密集页放宽版心、仪表盘百分比封顶展示。
+      UI: sidebar collapse memory, wider data-dense pages, capped percentage display.
+    修复 / Bug Fixes
+    - TOKEN 漏检全大写 BEARER 头；explicit 模式改域名不生效（现自动重启代理）；占位符预热超容量淘汰方向反转与孤儿泄漏；清空日志后跨进程事件复活与日志页游标停更；升级迁移不再覆盖显式 stop_mode。
+      Fixed: uppercase BEARER misses; explicit-mode domain changes not taking effect (now auto-restarts); warmup eviction order and orphan leaks; cross-process event resurrection and stale log cursor after clearing; migration no longer overrides explicit stop_mode.
+    - 透传兜底层硬化：socket 读超时、HEAD/OPTIONS 支持、畸形 chunked 请求 400、413/503 前排空请求体、自启异常挂兜底。
+      Passthrough hardening: socket read timeout, HEAD/OPTIONS support, 400 on malformed chunked bodies, request-body draining before error responses, autostart exception fallback.
+    - 前端：侧边栏 tooltip 文案互换、/v1 通配 Base URL 缺 /v1、日志清空后页码不归位。
+      Frontend: swapped sidebar tooltips, missing /v1 in wildcard Base URL, stale page number after log clear.
+    优化 / Changed
+    - App 退出不再挂明文直连兜底（退出即断连）；手动停止仍按 stop_mode 语义。
+      App exit no longer starts the plaintext fallback; manual stops keep stop_mode semantics.
+    - 关闭过滤开关后保留流式效果；FAIL_CLOSED 非白名单非 JSON 阻断尊重过滤开关。
+      Streaming preserved when filtering is off; the FAIL_CLOSED block honors the filter switch.
+    - 价格缓存原子写，并真正实现定期刷新（原「7 天自动刷新」未实现）。
+      Atomic price-cache writes plus a real periodic refresh loop.
+    - 引擎自愈收紧：重启 CAS 互斥防双引擎；孤儿清理加进程身份校验，绝不误杀无关进程。
+      Tighter self-healing: CAS restart mutex; identity-checked orphan cleanup that never kills foreign processes.
+    Full Changelog: https://github.com/xiaYuTian11/maskit/compare/v0.2.11...v0.2.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.2.12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.2.12
+ReleaseTime: 2026-09-15T06:08:29.0000000Z

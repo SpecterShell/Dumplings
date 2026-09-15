@@ -1,0 +1,21 @@
+Version: 2.4.5
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: ai-switch-2.4.5-windows-amd64\ai-switch.exe
+  InstallerUrl: https://github.com/kingkate2009-droid/ai-switch/releases/download/v2.4.5/ai-switch-2.4.5-windows-amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AI Switch v2.4.5
+    Fixes
+    - Reconcile scope leak: 单 KEY 同步任务通过子线程运行，原 Python thread-local scope 未传递到子线程，导致适配器线程内 scope 丢失、选错 KEY。现在将 vendor_ids/key_ids 显式传入子线程，确保目标 KEY 正确写入引擎配置
+    - model check cache 显示原始端点错误：check_key_models 返回结果写入健康缓存时，泛化错误（{N} model(s) failed）替换为端点探测原始响应，前端 toast 可直接看到真实失败原因
+    Full Changelog: https://github.com/kingkate2009-droid/ai-switch/compare/v2.4.4...v2.4.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kingkate2009-droid/ai-switch/releases/tag/v2.4.5
+ReleaseTime: 2026-09-15T01:23:39.0000000Z
