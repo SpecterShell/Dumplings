@@ -1,11 +1,39 @@
-$Object1 = (Invoke-WebRequest -Uri 'https://www.thorlabs.com/api/software_pages/check_updates?ItemID=EXULUS' | Read-ResponseContent | ConvertFrom-Xml).ItemID.SoftwarePkg.Where({ $_.DownloadLink -match 'EXULUS-SE1' }, 'First')[0]
+$Query = @'
+query {
+  slugInfo(
+    slug: "software-pages/EXULUS"
+    cultureName: "en-US"
+    storeId: "Thorlabs-Website"
+  ) {
+    entityInfo {
+      id
+    }
+  }
+}
+'@
+$Object1 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json'
+
+$Query = @"
+query {
+  page(
+    storeId: "Thorlabs-Website"
+    id: "$($Object1.data.slugInfo.entityInfo.id)"
+    cultureName: "en-US"
+  ) {
+    content
+    permalink
+  }
+}
+"@
+$Object2 = Invoke-RestMethod -Uri 'https://www.thorlabs.com/graphql' -Method Post -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json'
+$Object3 = $Object2.data.page.content | ConvertFrom-Json
 
 # Version
-$this.CurrentState.Version = $Object1.VersionNumber
+$this.CurrentState.Version = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -match 'EXULUS-SE1' }, 'First')[0].contentLink.expanded[0].version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = $InstallerUrl = $Object1.DownloadLink.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
+  InstallerUrl         = $InstallerUrl = $Object3.tabs.Where({ $_.contentLink.expanded.name -eq 'Archive' }, 'First')[0].contentLink.expanded.sections.Where({ $_.contentLink.expanded.name -match 'EXULUS-SE1' }, 'First')[0].contentLink.expanded[0].download.url.Replace('//thin01mstroc282prod.dxcloud.episerver.net/', '//media.thorlabs.com/')
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
@@ -15,21 +43,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
-
-      # LicenseUrl (en-US)
-      # $this.CurrentState.Locale += [ordered]@{
-      #   Locale = 'en-US'
-      #   Key    = 'LicenseUrl'
-      #   Value  = Join-Uri $InstallerUrl 'License.zip'
-      # }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
