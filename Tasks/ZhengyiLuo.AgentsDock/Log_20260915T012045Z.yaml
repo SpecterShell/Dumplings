@@ -1,0 +1,189 @@
+Version: 1.0.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ZhengyiLuo/AgentsDock-Releases/releases/download/1.0.0/AgentsDock-1.0.0-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AgentsDock 1.0.0 — Desktop
+    AgentsDock 1.0 brings the desktop beta line into the stable channel: richer
+    agent collaboration, browser chat sharing, clearer long-running work, and a
+    more resilient multi-server workspace.
+    These notes compare with the previous published stable desktop release,
+    0.2.12
+    (August 24, 2026). The final section of feature changes identifies what is new
+    since 1.0.0-beta.2.
+    Use AgentsServer 1.0.0 for the complete paired feature set. Installing the
+    desktop alone does not add missing server capabilities or restart your server.
+    Replacement 1.0.0 desktop package: untitled subagents now show their task
+    or readable task path as the heading, with the provider nickname underneath.
+    Explicit native titles remain unchanged. If you already installed the original
+    1.0.0 package, download and reinstall this replacement: the unchanged version
+    number does not trigger an automatic upgrade. This naming correction requires
+    only the replacement desktop app. Separately, the rebuilt AgentsServer 1.0.0
+    package repairs old cross-chat delivery wrappers imported as user messages;
+    that history correction requires the updated server package, not another
+    desktop rendering change.
+    Highlights for users upgrading from 0.2.12
+    More capable agent workflows
+    - Add Cursor alongside Claude Code and Codex, with server-advertised model
+      choices, permission modes, scheduled work and supported cross-chat routing.
+      Cursor must be installed and authenticated on the server; unsupported server
+      configurations remain visibly unavailable.
+    - Discover supported native provider skills and commands in the slash palette.
+      Commands come from the selected chat's server inventory rather than guessed
+      local paths, with compatibility checks for older servers.
+    - Improve existing native Codex goals: continuation progress remains visible
+      after earlier answers, and compatible Send now text or attachment
+      follow-ups can steer the existing goal without pausing or restarting it.
+      New permissions, provider commands or changed model settings do not silently
+      enter that owner-preserving steering path.
+    - Make approvals, permission controls and provider state easier to follow.
+      Supported active-chat forks use a completed history prefix without stopping
+      the source chat.
+    Agent-to-agent conversations and Team Network
+    - Present same-server agent messages as chronological conversation entries,
+      with linked sender/recipient names, readable message previews and explicit
+      delivery, unread, agent-read, cancellation and failure states. A read receipt
+      does not imply that an agent has processed or answered the message.
+    - Keep passive incoming messages in compact sender groups. Expand or delete
+      individual messages on demand; merely opening a message does not mark it as
+      read by the agent. Queued messages retain their full body and revision-safe
+      edits, and explicit Send now preserves the other items' order.
+    - Rework Team Network, which remains labeled Beta, around servers,
+      people, Mail and Bulletin. Improve invitations, approval, reconnect,
+      disconnect/forget, managed-host controls and visibility of individual Mail
+      permissions. Server-side authorization still decides which actions exist.
+    - Add searchable routing, on-demand Mail threads, agent replies, attachments,
+      and Bulletin revisions/history with the appropriate author or host controls.
+    - Show quiet, separate Mail and Bulletin indicators over one metadata-only
+      connection on supporting servers. Incoming hints do not fetch inbox contents,
+      switch views, acknowledge messages, move focus or change an unsent draft.
+      Content refresh remains explicit; older servers retain compatible behavior.
+    Share one chat in a browser
+    - View only creates a read-only snapshot; Interactive grants trusted
+      collaborators access to one live chat. Tokens can be reused by multiple
+      collaborators until access expires or is revoked.
+    - Interactive collaborators can use the shared chat's composer, uploads,
+      queue, approvals, goals, model/permission settings and scheduled jobs, within
+      the server's advertised controls. Collaborator prompts are labeled in the
+      conversation, and joined browser sessions can recover after reload.
+    - Keep the browser address separate from its access token. View-only sharing
+      also offers an explicit token-in-link copy option. Existing shares and their
+      revocation history are available on demand.
+    - Support large paginated snapshots and a live viewer built from the desktop
+      chat components. Support HTTP on trusted networks as well as HTTPS; the
+      browser still needs a reachable address for the same server.
+    Clearer progress, history and scheduled work
+    - Group supporting reasoning and tool activity into expandable progress
+      sections while keeping final answers and later goal continuation progress
+      distinct. Preserve chronological boundaries around agent messages.
+    - Improve long-chat paging, jump-to-latest behavior, minimap stability and
+      expanded queue scrolling. Opening older history or receiving a late receipt
+      should not rearrange already settled answers or steal the reading position.
+    - Keep scheduled-job output with its owning job, including when older pages
+      omit the original start event. Improve schedule descriptions, pending-run
+      presentation and queue controls without treating internal job input as a
+      new human message.
+    - Preserve server-proven history repairs across stale pages, streamed replay
+      and cache reopen. Known internal wake, interruption, compaction and subagent
+      notices no longer masquerade as human messages; genuine text and quotations
+      remain visible. Historical repairs require the matching server support.
+    - Add explicit agent emergency alerts with a separate acknowledgment action.
+      Reading the chat does not silently acknowledge an emergency.
+    Workspace, presentation and resilience
+    - Add authenticated local port forwarding for server-side development tools,
+      with detected terminal-port suggestions, explicit start/stop controls and
+      forwards shared across chats on the same server.
+    - Improve import-chat entry points, folder organization, chat navigation,
+      working-directory selection and server-backed pin synchronization on
+      supporting servers. New-chat creation can reuse the last opened location.
+    - Add English/Simplified Chinese interface selection and a keyboard-shortcut
+      reference in Settings. Refresh typography, controls and cool-neutral light
+      surfaces, including denser and narrow layouts, while retaining dark mode.
+    - Move background refresh and cache work away from active typing and scrolling.
+      Keep profile metadata separate from credential reads and guard asynchronous
+      results when switching servers.
+    - Recover more gracefully from exhausted local storage: preserve original
+      data and unsaved drafts, explain failed saves, and provide explicit retry
+      after space is freed. History checks after server upgrades are lazy and
+      scoped to opened chats rather than clearing or reloading every conversation.
+    - Make managed server updates and restarts clearer: retain idle-update intent,
+      expose blockers and uncertain outcomes, and avoid automatically resubmitting
+      an update whose result is unknown. Forceful actions remain explicit.
+    Additional changes since 1.0.0-beta.2
+    - Native Codex subagent settings: Settings > Server can save a positive
+      concurrent-subagent limit or clear it to use Codex's default—not unlimited.
+      The main agent is excluded. The setting applies to new or reloaded provider
+      threads, does not resize running work, and respects chat-specific overrides.
+      Reads and saves are bound to the displayed server and generation; editing
+      makes no requests and saving adds no polling or provider restart.
+    - Native subagent titles: the inspector prefers an explicit child-thread
+      title, then a readable task or task path, then the provider nickname. Keep
+      differing nicknames underneath for identification. Rename and clear updates
+      preserve the same child row and open output panel.
+    - Paired goal-steering correction: the updated server accepts plain
+      follow-ups with automatically attached saved-route metadata, including goals
+      created during scheduled work and resumed goals. It retains the current
+      owner's permissions and model rather than applying new grants.
+    - Consistent live activity: newer streamed run ownership cannot be erased
+      by an older health response. Quiet owned runs still show Working; live
+      compaction shows Compacting context, and completed/history views remain
+      settled. Header, timeline and composer use the current owner consistently.
+    - More precise replay handling: retain original peer messages, scheduled
+      reports and genuine human input while applying exact server-proven duplicate
+      repairs, including paged mailbox history and large tool-heavy logs. The
+      large-history proof correction is server-side, not an app-only repair.
+    - Shared-chat video and address selection: play and seek videos attached
+      to sent messages or explicitly published by the agent in supported viewers.
+      Choose another reachable LAN/HTTPS address of the same server without moving
+      admin credentials to that address. Video access remains scoped to the share.
+    - Control and compatibility fixes: remove duplicate Codex permission
+      controls, fix Codex control-dialog scrolling and Claude permission loading,
+      and tolerate malformed labels in local-session import results.
+    - Open-source licensing: add Apache License 2.0 for original project code
+      and include LICENSE/NOTICE in desktop packages, preserving separately
+      licensed components and third-party notices.
+    Compatibility and upgrade notes
+    - Server and provider requirements: use AgentsServer 1.0.0 for the new
+      subagent setting, corrected goal steering, native title metadata, shared
+      videos and history reconciliation. Native Codex features require its
+      app-server transport and a supporting Codex installation; the legacy exec
+      transport cannot configure this subagent limit. Team Network additionally
+      depends on compatible Team Hub/server capabilities and remains Beta.
+    - Sharing is trusted collaboration, not a tool sandbox. A guest has no
+      direct terminal/tmux, file-browser/download, other-chat or server-admin API.
+      The guest can still ask the existing agent to use its tools and context.
+      Revocation prevents subsequent access; it does not undo accepted work or
+      remove scheduled jobs. HTTP is unencrypted and intended only for trusted
+      networks. Browser video codec support still applies. Refresh existing
+      Interactive links after the server update; recreate older text-only
+      snapshots to include videos.
+    - Desktop updates move to the public AgentsDock feed. Existing Stable
+      installations can move from 0.2.12 directly to stable 1.0.0 through the
+      retained legacy feed. Pre-1.0 Beta installations with beta-only updaters
+      must first install a 1.0 migration bridge (1.0.0-beta.1 or beta.2) through
+      that legacy feed, then update to stable 1.0.0 from the public feed. Clients
+      already on the bridge can receive stable 1.0.0 without losing their saved
+      Beta preference. Connections and settings are retained; installation remains
+      explicit. Portable archives remain a manual-install option. See
+      direct-release migration.
+    - This is the direct desktop release for macOS, Linux and Windows. It does
+      not publish or migrate an iPhone/iPad, Android, TestFlight or App Store build.
+      The Windows installer is unsigned and may show SmartScreen warnings.
+      Check the published release assets for platform availability and verified
+      macOS signing/notarization status; source checks and local packages do not
+      establish those release gates or installed-update acceptance.
+    Verification scope
+    Desktop regression tests, TypeScript checks and production compilation cover
+    the release source. Focused checks exercise native HTTP transport, profile
+    fencing, queue and history races, and compatibility fallbacks. Isolated
+    renderer/browser journeys cover light/dark narrow layouts, sharing controls
+    and media, progress and subagent presentation, without using private chats.
+    These checks are distinct from native package signing, installed-update
+    migration and live provider/server deployment acceptance.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ZhengyiLuo/AgentsDock-Releases/releases/tag/1.0.0
+ReleaseTime: 2026-09-14T23:37:01.0000000Z
