@@ -5,12 +5,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'win' -and $_.name -match 'setup' -and $_.name -match 'amd64' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'win' -and $_.name -match 'setup' -and $_.name -match 'arm64' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -23,22 +18,22 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[contains(., '$($this.CurrentState.Version)')]")
         if ($ReleaseNotesTitleNode) {
-          # ReleaseNotes (en-US)
+          # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
+            Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
           }
         } else {
-          # ReleaseNotes (en-US)
+          # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
-            Locale = 'en-US'
+            Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
             Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
           }
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl
