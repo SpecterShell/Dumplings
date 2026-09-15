@@ -1,0 +1,29 @@
+Version: 0.26.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tianemon/EasyMint/releases/download/v0.26.2/EasyMint-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Added（新增）
+    - 新增两个供应商预设：GitHub Copilot（订阅账号，可账号登录也可填密钥）与 OpenRouter（一个密钥打通多家模型）——此前预设列表里没有这两家
+    Changed（调整）
+    - 联网搜索与网页抓取合成一处配置：设置里只填一个 Tavily 密钥，两项能力一起启用；填写即生效、清空即停用，不再有单独的开关（此前会出现「填了密钥但没打开开关」——界面上看不出差别，Mint 那边却始终拿不到联网工具）
+    - 「认证方式」只显示该供应商真正支持的那一档：OpenAI Codex 这类只能账号登录的供应商，不再出现一个填了也没用的密钥输入框；两种都支持的（Anthropic / xAI / Kimi Coding / GitHub Copilot / OpenRouter）才给分段二选一
+    - 对话里能看出每次工具调用在做什么：MCP 工具与联网搜索 / 网页抓取在标题行直接写明这次调用的对象与一句意图（如「MCP · tavily / search · 查竞品资料」），不用展开也能看懂
+    - 联网搜索与网页抓取换了图标：分别是「地球 + 放大镜」与「地球 + 下载箭头」；此前两者共用同一个放大镜图标，看不出区别
+    - 流式输出末尾改为逐字渐隐：正在生成的正文与思考内容，最后几个字淡淡收尾（末端保留 25%），表示这段还没写完
+    - 工具箱弹窗与侧栏抽屉的质感统一：去掉描边、玻璃底色统一，与其它浮层一致
+    Fixed（修复）
+    - 开着系统代理 / VPN 时账号登录失败：此前浏览器里显示授权成功、应用内却报错（登录请求换取凭据的那一步被服务方按地区拦下）——原因是程序自身的网络请求不跟随系统代理设置，只有浏览器跟随；现在会跟随系统代理
+    - 开代理时局域网内的服务连不上：本地模型、局域网地址与内网域名一律直连（系统代理自带的例外列表同样生效），不再被塞进代理导致超时
+    - 账号登录失败时能看到真实原因：此前错误原文被吞掉、只剩一句笼统提示；现在原文保留可查，并按情形说清下一步——例如「当前所在地区不受支持」不再给一个点了必然失败的重试按钮，而是给出可行的替代路径
+    - GitHub Copilot 登录卡在「正在发起授权…」：它的第一步是填 GitHub 企业版域名（非企业版留空即可），此前这一步留空会被拦下、填别的又判为非法域名，于是永远过不去；现在非企业版留空直接通过，并写明「留空 = 使用 github.com」
+    - 设备码登录不再干等：Kimi、xAI、GitHub Copilot 这类不开浏览器、只给一串设备码的登录，现在会自动打开授权页
+    - 渐隐不再把 emoji 切一半：正文或思考内容以 emoji 结尾时，不再出现半个字符的乱码框
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tianemon/EasyMint/releases/tag/v0.26.2
+ReleaseTime: 2026-09-15T17:04:54.0000000Z
