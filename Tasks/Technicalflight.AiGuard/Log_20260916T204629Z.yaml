@@ -1,0 +1,30 @@
+Version: 0.1.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Technicalflight/AiGuard/releases/download/v0.1.2/AI._0.1.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Technicalflight/AiGuard/releases/download/v0.1.2/AI._0.1.2_x64_zh-CN.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    AiGuard v0.1.2
+    本次更新
+    - 拦截防误伤：Block 动作新增「确认次数」闸门，未达确认数自动降级为脱敏；规则卡片可按规则配置确认次数
+    - 误报反馈闭环：请求 / 审计 / 防护记录可一键标记「误报 / 确认」，审计页新增近 30 天反馈统计（按防护点 / 规则的误报率）
+    - 凭据轮换提醒：保险柜密钥被 AI 实际使用后自动提示——已脱敏放行（绿色提示）/ 明文外发（红色，建议立即轮换；窗口未聚焦走系统通知）
+    - 诚实披露：设置页新增「防护边界」卡，如实列出守护不到的场景（证书固定 / QUIC 直连等）
+    - 内部质量：请求侧检测性能基准与 CI p99 门禁、主动核查 curl 跨平台修复、i18n 自检递归化、反馈统计卡布局打磨
+    AiGuard 是一个本地优先的 AI 流量安全网关（Tauri 2 + React 19 + Rust），基于 AGPL-3.0 开源：
+    - 本机 MITM 反向代理：系统代理 + PAC 只接管 AI 域名，自签根证书一键安装
+    - 请求侧脱敏：6 类内置规则（身份证 / 手机号 / 银行卡 / 邮箱 / API Key / IP），命中替换为可还原占位符
+    - 响应侧流式还原：SSE 逐帧还原，前瞻缓冲处理占位符被拆 chunk
+    - 七大防护信号：报错泄密 / 模型偷换 / 复读篡改 / 流式异常 / 响应夹带 / 记忆残留 / 高危指令
+    - 黑 / 白名单：域名与进程双向匹配，进程经本机连接表反解可执行文件路径
+    - 中英双语界面、首次运行向导、全局快捷键、默认关闭的更新检查
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Technicalflight/AiGuard/releases/tag/v0.1.2
+ReleaseTime: 2026-09-16T19:01:06.0000000Z

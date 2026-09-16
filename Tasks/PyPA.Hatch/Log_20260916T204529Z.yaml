@@ -1,0 +1,22 @@
+Version: 1.18.1
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.18.1/hatch-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.18.1/hatch-x64.msi
+- InstallerType: burn
+  InstallerUrl: https://github.com/pypa/hatch/releases/download/hatch-v1.18.1/hatch-universal.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added:
+    - Apply context formatting to the lock-filename environment option so fields such as {env_name} and {matrix:...} are resolved when computing the lock file path.
+    Fixed:
+    - Consolidate extras and feature resolution into a single code path, fixing regressions where environment and project extras could be dropped or resolved inconsistently, and always validate undefined features.
+    - Normalize hyphens in the plugin name when building environment option environment variable names in get_env_var(), so options for hyphenated plugins resolve to the correct variable.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/pypa/hatch/releases/tag/hatch-v1.18.1
+ReleaseTime: 2026-09-16T18:34:56.0000000Z
