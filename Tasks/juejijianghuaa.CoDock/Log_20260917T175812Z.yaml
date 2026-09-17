@@ -1,0 +1,25 @@
+Version: 0.4.3
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.3/CoDock-Setup-0.4.3-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.3 (2026-09-11)
+    这一版把 CoDock 从「只能自己点开」变成可以被别的程序唤起，另外修了几个一眼就能看到的小问题。
+    新功能
+    - 其它程序可以唤起 CoDock 开会话：
+      - 把 CoDock 填进别的工具「用这个终端打开」一类的设置里，--new-task <目录> 之外新增 --agent、--resume、--command 三个参数，把「用哪个工具」「继续哪个会话」「要跑什么命令」一并带进新任务弹窗；
+      - --resume 开出来的是真正的会话 Tab（进历史与用量、有跑动标记、重启可恢复），而不是终端窗口里跑着一个 CLI；
+      - 外部程序只能把请求递到弹窗，必须你点确认才会执行，没有任何静默启动的路径；会话 ID 与命令都有严格的字符校验，只接受本机请求。
+      - 用法见 README「从其它程序唤起 CoDock」。
+    优化与修复
+    - 桌面版的外部链接终于能点开了：关于页的「检查更新 / 发布记录 / GitHub 仓库」和 Composer 预览里的 Markdown 链接此前点了毫无反应——桌面 WebView 会把「开新窗口」的请求直接丢掉，既不报错也不跳转。现在统一交给系统默认浏览器打开。
+    - 修复 Claude 会话标题显示成一长串技能正文：新版 Claude Code 换了会话标题的记录格式，CoDock 没认出来，历史列表就退回「第一条用户消息」——用 / 斜杠命令开头的会话于是显示成技能说明文字。现在与 Claude Code 里看到的标题一致。
+    - 壁纸遮罩下限从 60% 放宽到 20%：滑块拉到最左时壁纸能透出更多。不做到 0 是因为遮罩全撤时终端正文压不住。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.3
+ReleaseTime: 2026-09-11T08:53:01.0000000Z

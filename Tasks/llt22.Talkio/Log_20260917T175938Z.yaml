@@ -1,0 +1,34 @@
+Version: 2.16.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.16.0/talkio_2.16.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/llt22/talkio/releases/download/v2.16.0/talkio_2.16.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版本完成了模型运行时、图片生成、会话管理和工具执行链路的大规模升级。
+    主要更新
+    - 使用 Vercel AI SDK 统一 OpenAI、Anthropic、Gemini 及 OpenAI-compatible 模型运行时。
+    - 图片生成改为按供应商和模型能力配置，支持多个供应商及独立图片模型。
+    - 新增会话归档、恢复，以及跨多个群聊批量添加或移除成员。
+    - OpenCode 请求自动携带稳定的 x-opencode-session 会话 Header，并继续支持自定义请求头。
+    - Android 明暗主题与状态栏、导航栏同步。
+    - MCP 和内置工具改为默认直接执行，不再显示启动或逐次调用审批弹窗。
+    - 加固密钥存储、备份恢复、路径边界、MCP stdio 参数处理和导出流程。
+    - 使用 gpt-tokenizer、sql.js、Zod、DOMPurify、marked、ignore、diff-match-patch 等成熟库替换手写通用能力。
+    - 格式化与代码检查迁移到 Biome。
+    行为变化
+    配置并启用的 MCP Server 会直接启动；已暴露给模型的 MCP/内置工具会直接执行。工具启用范围、角色与 Server 限制、取消操作和命令参数安全检查仍然生效。
+    问题修复
+    - 修复 OpenCode Go 因缺少 x-opencode-session 导致的请求失败。
+    - 修复 Android 手动切换明暗主题后系统栏颜色和图标不可见。
+    - 修复图片模型只能使用单一全局供应商的问题。
+    - 修复长文本模糊编辑异常、SQLite WASM 构建路径、备份类型校验及预览渲染问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/llt22/talkio/releases/tag/v2.16.0
+ReleaseTime: 2026-09-17T14:59:06.0000000Z
