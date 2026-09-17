@@ -788,8 +788,10 @@ if ($Action -eq 'Compare') {
   if ([string]::IsNullOrWhiteSpace($BeforePath) -or [string]::IsNullOrWhiteSpace($AfterPath)) {
     throw 'BeforePath and AfterPath are required for Compare.'
   }
-  $Before = Get-Content -LiteralPath $BeforePath -Raw | ConvertFrom-Json
-  $After = Get-Content -LiteralPath $AfterPath -Raw | ConvertFrom-Json
+  # Snapshots are written as UTF-8 without a BOM; Windows PowerShell 5.1 needs
+  # the encoding spelled out or it decodes non-ASCII registry text incorrectly.
+  $Before = Get-Content -LiteralPath $BeforePath -Raw -Encoding UTF8 | ConvertFrom-Json
+  $After = Get-Content -LiteralPath $AfterPath -Raw -Encoding UTF8 | ConvertFrom-Json
   $Result = Compare-WinGetVMInstalledStateSnapshot -Before $Before -After $After
 } elseif ($Action -eq 'CollectLogs') {
   if ($null -eq $SinceUtc) { throw 'SinceUtc is required for CollectLogs.' }

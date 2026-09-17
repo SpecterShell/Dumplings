@@ -223,7 +223,9 @@ if ($Action -eq 'CollectLogs') {
       }
       if ($null -ne $ExitCode) { $Parameters['InstallerExitCode'] = [int]$ExitCode }
       & $CollectorPath @Parameters
-      Get-Content -LiteralPath $ResultPath -Raw
+      # The collector writes UTF-8 without a BOM; Windows PowerShell 5.1 decodes
+      # that as the ANSI code page unless the encoding is explicit.
+      Get-Content -LiteralPath $ResultPath -Raw -Encoding UTF8
     } -ArgumentList $GuestScriptPath, $GuestLogResultPath, $GuestLogDirectory, $LogPath, ([datetime]$InstallerStartedAtUtc).ToUniversalTime(), $InstallerExitCode, $InstallerMode, ([bool]$InstallerTimedOut), $IncludeTemporaryLogs, $MaximumLogFiles, $MaximumLogFileBytes, $MaximumTotalLogBytes, $LogTailLineCount
     $Evidence = ConvertFrom-DumplingsVMLogEvidenceJson -Json ([string]$Json)
     $HostLogDirectory = Join-Path (Join-Path $OutputDirectory 'Logs') $Phase
@@ -260,7 +262,9 @@ $GuestOutputPath = Join-Path $GuestDirectory "$Phase.json"
 $Json = Invoke-Command -VMName $VMName -Credential $VMCredential -ScriptBlock {
   param($CollectorPath, $SnapshotPhase, $SnapshotPath)
   & $CollectorPath -Action Capture -Phase $SnapshotPhase -OutputPath $SnapshotPath
-  Get-Content -LiteralPath $SnapshotPath -Raw
+  # The collector writes UTF-8 without a BOM; Windows PowerShell 5.1 decodes
+  # that as the ANSI code page unless the encoding is explicit.
+  Get-Content -LiteralPath $SnapshotPath -Raw -Encoding UTF8
 } -ArgumentList $GuestScriptPath, $Phase, $GuestOutputPath
 $Snapshot = ConvertFrom-DumplingsVMSnapshotJson -Json ([string]$Json)
 
