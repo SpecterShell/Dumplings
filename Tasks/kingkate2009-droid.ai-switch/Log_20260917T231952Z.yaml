@@ -1,0 +1,30 @@
+Version: 2.4.8
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: ai-switch-2.4.8-windows-amd64\ai-switch.exe
+  InstallerUrl: https://github.com/kingkate2009-droid/ai-switch/releases/download/v2.4.8/ai-switch-2.4.8-windows-amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AI Switch v2.4.8
+    粒度同步 & 实时进度
+    支持单个 KEY / 单个模型 / 单个供应商同步后端引擎，并在任务中心实时显示每后端的同步进度。
+    新增功能
+    - 单 KEY 同步：syncKey(vendorId, keyId) — 只同步指定 KEY
+    - 单模型同步：syncModel(vendorId, keyId, modelId) — 只同步指定模型
+    - 单供应商同步：syncVendor(vendorId) — 只同步指定供应商
+    - 任务中心实时进度：通过 SSE 流式接口 /api/sync/push/stream，任务中心显示每个后端完成进度（如 "正在同步：opencode (3/11)"），完成后显示 ok/fail 统计
+    实现
+    - reconcile_all 新增 model_ids 作用域和 progress_callback
+    - /api/sync/push/stream 用 queue + 后台线程流式推送每后端进度事件
+    - 模型列表弹窗每行新增 "Sync" 按钮
+    - KEY 行原有 Sync 按钮改为流式进度同步
+    Full Changelog: https://github.com/kingkate2009-droid/ai-switch/compare/v2.4.7...v2.4.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kingkate2009-droid/ai-switch/releases/tag/v2.4.8
+ReleaseTime: 2026-09-17T21:23:22.0000000Z
