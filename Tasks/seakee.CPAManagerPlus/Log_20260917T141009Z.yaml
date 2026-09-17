@@ -1,0 +1,86 @@
+Version: 1.13.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.0_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.0/cpa-manager-plus_v1.13.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.0_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.0/cpa-manager-plus_v1.13.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.0 is a feature release focused on Devin provider support and upgrade reliability. CPAMP can now recognize Devin credentials and models, complete Devin authorization from the OAuth page, and display Daily / Weekly quota windows, reset times, and subscription-plan details in account views. Visual Config also adds editing for devin.sensitive-words, while related model, account, and monitoring presentation is integrated into the existing provider system.
+    Devin request execution and authentication remain CPA-owned. CPAMP only manages, presents, and calls the existing Management API. CPA v7.3.2 or later is required for the complete Devin OAuth callback flow.
+    This release also fixes remembered CPAMP Admin Key recovery after browser version or User-Agent changes, improves Native installer compatibility with legacy <install_dir>/data layouts and the historical bash install-cpamp.sh update invocation, and stabilizes missing-model-price attention by using a fixed icon footprint with explicit ownership by the primary cost card.
+    This release introduces no database schema migration, requires no offline maintenance, and adds no new required CPAMP configuration.
+    Highlights
+    Features
+    - Add Devin provider support across Accounts, OAuth, model recognition, Request Monitoring, and related provider presentation, including recognition of Devin credentials and devin/* models. (Web)
+    - Add the Devin OAuth flow through the CPA Management API, including authorization URL retrieval, remote callback URL submission, authorization-status polling, cancellation, and reauthentication. Responses from a previous connection are ignored after the active connection changes. (Web / CPA)
+    - Add Devin Daily / Weekly quota windows, reset times, and subscription-plan details, integrated with the standard account quota snapshot and historical-window pipeline. (Web / Manager Server)
+    - Add Visual Config editing for devin.sensitive-words. Values are normalized on save while unknown sibling configuration is preserved, and clearing the setting removes only an otherwise-empty Devin subtree. (Web)
+    Fixes
+    - Integrate Devin quota and plan information into the standard account quota snapshot and account-detail paths instead of maintaining a separate presentation path, avoiding duplicate cards and divergent state. (Web / Manager Server)
+    - Fix remembered CPAMP Admin Keys becoming unreadable after the browser User-Agent changes. The new local obfuscation format is scoped to the site environment, legacy values migrate only after successful server authentication, transient network failures / 403 / 5xx responses preserve legacy credentials, and a definitive 401 still clears invalid credentials. (Web)
+    - Fix Native upgrades failing to locate historical data when older installations stored it under <install_dir>/data. The fallback is enabled only when there is no explicit data-path authority and no current runtime database is present; existing data is not moved, copied, or symlinked. (Installer)
+    - Restore support for the historical positional bash install-cpamp.sh update invocation and keep it equivalent to CPAMP_OPERATION=upgrade; conflicting or unknown arguments fail closed. (Installer)
+    - Stabilize missing-model-price attention with a fixed-size icon instead of localized inline text, and ensure shared Usage Analytics summaries display the indicator only on the designated primary cost card. (Web)
+    - Fix Release dry-run authorization when GitHub Actions uses a dynamic run name. (Release tooling)
+    Upgrade Notes
+    - No database schema migration or offline maintenance is required. Existing CPAMP data structures and deployment modes remain compatible.
+    - CPA v7.3.2 or later is recommended as the minimum version. The complete Devin OAuth callback fix is available from CPA v7.3.2; upgrade CPA first when using Devin. Existing management behavior for other providers is unchanged.
+    - Legacy remembered Admin Keys stay in the old format until they have successfully authenticated against the server; transient network failures do not trigger destructive migration or cleanup.
+    - Native upgrades continue to honor explicit configuration and launcher arguments. The legacy <install_dir>/data fallback is used only when the current dataset cannot be resolved and a complete historical dataset is detected.
+    - Devin request execution, OAuth authentication, and upstream protocol handling remain owned by CPA; CPAMP does not implement a separate Devin request transport layer.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.14...v1.13.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.0-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.0 是一个以 Devin Provider 支持和升级可靠性为重点的功能版本。CPAMP 现在可以识别 Devin 凭证与模型，在 OAuth 页面完成 Devin 授权，并在账号详情中展示 Daily / Weekly 额度窗口、重置时间与订阅计划信息。Visual Config 同时加入 devin.sensitive-words 编辑支持，相关模型、账号与监控展示也纳入现有 Provider 体系。
+    Devin 的请求执行与认证能力继续由 CPA 提供，CPAMP 只负责管理、展示和调用现有 Management API。为保证完整的 Devin OAuth 回调流程，本版本要求 CPA v7.3.2 或更高版本。
+    本版本还修复了浏览器版本或 User-Agent 变化后已记住的 CPAMP Admin Key 无法恢复的问题，并增强 Native 安装器对旧版 <install_dir>/data 数据布局和历史 bash install-cpamp.sh update 调用方式的兼容。模型价格缺失提醒也收紧为固定图标占位，并明确由对应主费用卡片负责展示，避免布局抖动或重复提示。
+    本版本不包含数据库 schema 迁移，不需要离线维护，也没有新增 CPAMP 必填配置项。
+    Highlights
+    Features
+    - 新增 Devin Provider 支持。Accounts、OAuth、模型识别、Request Monitoring 与相关 Provider 展示现在可以识别 Devin 凭证和 devin/* 模型。（Web）
+    - 新增 Devin OAuth 流程，通过 CPA Management API 获取授权地址、提交远程回调 URL、轮询授权状态，并支持取消和重新授权；连接切换后旧授权响应不会污染当前会话。（Web / CPA）
+    - 新增 Devin Daily / Weekly 额度窗口、重置时间与订阅计划信息展示，并接入现有账号额度快照与历史窗口管线。（Web / Manager Server）
+    - Visual Config 新增 devin.sensitive-words 编辑，保存时会规范化列表，同时保留未知同级配置；清空时只移除已经为空的 Devin 子树。（Web）
+    Fixes
+    - 修复 Devin 初始实现中额度与计划信息使用独立展示路径的问题，统一接入标准账号额度快照和账号详情展示逻辑，避免重复卡片和状态分叉。（Web / Manager Server）
+    - 修复已记住的 CPAMP Admin Key 与浏览器 User-Agent 绑定导致浏览器升级后本地密钥无法解码的问题。新的本地混淆格式只绑定站点环境，并在旧格式成功通过服务端认证后再迁移；网络错误、403 或 5xx 不会提前破坏旧凭据，明确 401 仍会清除失效凭据。（Web）
+    - 修复旧版 Native 安装可能把数据保存在 <install_dir>/data，而升级脚本按其他路径解析导致找不到历史数据的问题。安全回退仅在没有显式数据路径且目标数据库不存在时启用，不移动、不复制、不链接已有数据。（Installer）
+    - Native 安装器重新支持历史 bash install-cpamp.sh update 位置参数，并与 CPAMP_OPERATION=upgrade 保持等价；冲突或未知参数会直接失败。（Installer）
+    - 模型价格缺失提醒改为固定尺寸图标，不再因本地化文本长度改变卡片占位；Usage Analytics 等共享摘要只由指定的主费用卡片展示提醒，避免重复和错位。（Web）
+    - 修复 Release dry-run 授权在 GitHub Actions 使用动态 run name 时无法正确识别合法运行的问题。（Release tooling）
+    Upgrade Notes
+    - 无需数据库 schema 迁移，也无需离线维护。 现有 CPAMP 数据结构和部署方式保持兼容。
+    - CPA 最低建议版本为 v7.3.2。 Devin OAuth 的回调修复从 CPA v7.3.2 起完整可用；使用 Devin 时请先升级 CPA。其他 Provider 的既有管理功能未改变。
+    - 已保存的旧版 Admin Key 会保持旧格式，直到成功通过服务端认证后才迁移到新格式；临时网络错误不会触发破坏性迁移或清除。
+    - Native 升级会继续尊重已有显式配置和启动参数；只有在无法解析现行数据集且检测到完整旧版数据文件时，才回退使用历史 <install_dir>/data。
+    - Devin 的请求执行、OAuth 认证和上游协议仍由 CPA 负责；CPAMP 不实现独立的 Devin 请求传输层。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.14...v1.13.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.0-zh.md
+ReleaseTime: 2026-09-17T10:26:12.0000000Z
