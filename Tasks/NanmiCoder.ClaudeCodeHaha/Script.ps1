@@ -16,22 +16,63 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
-        }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $null
       }
 
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode('./details[contains(./summary, "English")]/h1[1]')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectSingleNode('./h1[1]')
+        if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'hr') -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match 'Installation'); $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'hr') -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match '安装'); $Node = $Node.NextSibling) { $Node }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+          }
+
+          # ReleaseNotesUrl (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotesUrl'
+            Value  = $Object1.html_url
+          }
+          # ReleaseNotesUrl (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotesUrl'
+            Value  = $Object1.html_url
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+          }
+          # ReleaseNotesUrl (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotesUrl'
+            Value  = $Object1.html_url
+          }
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
