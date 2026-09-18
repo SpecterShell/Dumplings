@@ -1,0 +1,114 @@
+Version: 6000.6.2f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/770e33f6875c/Windows64EditorInstaller/UnitySetup64-6000.6.2f1.exe
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/770e33f6875c/WindowsArm64EditorInstaller/UnitySetupArm64-6000.6.2f1.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.6.2
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.6.2f1
+    - 6000.3.0a1,6000.0.51f1: Black screen is shown when Bloom is active with 2D Renderer (UUM-150232)
+    - 6000.3.13f1: Deadlock on exiting Play Mode when a Shader is destroyed while async shader compilation has queued variant requests for a different shader with Graphics Jobs enabled (UUM-152966)
+    - 6000.6.0a2,6000.5.0b2: Resources.UnloadUnusedAssets() takes significantly longer to execute when run in a Player build (UUM-149540)
+    - 6000.6.0a6: PlayMode tests return no results when Test Runner is run again after Scene-Only Reload (UUM-151667)
+    - 6000.6.0a7: Crash on D3D12CommandList::PrepareExecute when inspecting URP DrawOpaque or Lit ForwardPass constant buffers (UUM-146746)
+    - 6000.6.0b6: Crash on IsArtifactStillRelevant when opening a project with corrupted library (UUM-153198)
+    - 6000.7.0a6,6000.6.0f1: Native memory grows unboundedly when a Unity.Hierarchy node is repeatedly renamed between names of different lengths (UUM-151728)
+    - : Crash on mono_log_write_logfile when more than one copy of bee_backend is running (UUM-142773)
+    - : Crash on mono_log_write_logfile when opening specific project (UUM-150566)
+    - : [WinEditor] Play Mode framerate drops significantly when moving the mouse cursor with high polling rate (UUM-142550)
+    6000.6.2f1 Release Notes
+    Improvements
+    - GraphView: Added fallback behavior for search filters when indexing isn't complete or available, preventing potential delays displaying contents. (UUM-142087)
+    - Text: Added support for the <rotate> rich text tag in the Advanced Text Generator. (UUM-151216)
+    API Changes
+    - Entities: Deprecated: WithSharedComponentFilterManaged (the managed shared-component filter for SystemAPI.Query idiomatic foreach) is now deprecated. Convert the shared component to an unmanaged ISharedComponentData and use WithSharedComponentFilter.
+    - Text: Added: Added read-only glyph metrics API to FontAsset. (UUM-150976)
+    Changes
+    - Android: Updated the Gradle version shipped with the Editor from 9.1.0 to 9.3.1.
+    - Serialization: Changed the Dictionary Inspector warning about ignored entries to offer both Select First and Select All buttons when more than one entry is ignored. (UUM-151199)
+    - Serialization: Renamed the Reset to Defaults item in the Dictionary Inspector header context menu to Reset Layout, to make it clear that it restores only the drawer layout and not the dictionary contents. (UUM-151199)
+    Fixes
+    - 2D: Fixed an issue where Tilemap.tilemapPositionsChanged and tilemapTileChanged callbacks didn't invoke when SetTiles changed only the transform or color of a tile. (UUM-146094)
+    - 2D: Fixed Light2D memory leak when unloading scenes - the runtime-created light mesh is now properly destroyed when the component is destroyed. (UUM-143650)
+    - 2D: Fixed TilemapRenderer flicker when editing Grid Selection scale/rotation. (UUM-146002)
+    - Android: Fixed problem with WebCamTexture not restoring on Android when "Run Without Focus" is set. (UUM-149681)
+    - Android: SystemInfo.processorModel and SystemInfo.processorManufacturer now return unknown on Android API levels below 32 instead of a warning string, matching the behaviour on other platforms. (UUM-150389)
+    - Asset Bundles: Fixed a crash in ContentNamespaceManager::GetNamespaceName when ArchiveFileInterface.MountAsync is passed an unregistered ContentNamespace. (UUM-150814)
+    - Asset Bundles: Fixed a player crash during the first content load when a Content Directory build resolves built-in resource references. (UUM-150973)
+    - Audio: Fixed audiomixer fader clicking in playmode. (UUM-150250)
+    - Audio: The Editor no longer logs an error when the audio output device fails to re-initialize while resuming the output after a period of silence. The output now stays suspended, a warning is logged, and the resume is retried the next time audio is used. Also fixed a potential crash on Editor shutdown when the output could not be resumed. (UUM-115959)
+    - Build System: Fixed case of the IL2CPP Analytics tool exiting with a JsonException after a successful build when the system clock moved backwards during the build. (UUM-150019)
+    - Editor: Fixed case of Project Auditor URP rules (URP0002, URP0003, URP0101, URP0102, URP0103, URP0201, URP0401) incorrectly reporting Error severity for non-compile-error issues; they now report Major severity. (UUM-149397)
+    - Editor: Fixed case of Project Auditor's Audit() API returning a successful, empty report instead of throwing an error when the Project Auditor Rules package is not installed. (UUM-151218)
+    - Editor: Fixed console assertion errors when the Animation window records while a USS rule is selected in the Inspector. (UUM-146258)
+    - Editor: Fixed crash in Material Upgrader by saving assets and freeing memory when reaching 2GB of loaded textures from Materials. (UUM-146064)
+    - Editor: Fixed mesh particles rendering with incorrect UVs (and other vertex channels) when the source mesh used a non-float vertex format such as 8-bit UNorm. (UUM-141864)
+    - Editor: Fixed potential crash when using Surface Cache GI in the Editor. (UUM-147981)
+    - Editor: Fixed right margin on Tags and Sorting Layers lists (and their add/remove buttons) in Project Settings > Tags and Layers. (UUM-150777). (UUM-150777)
+    - Editor: Fixed the Hierarchy window Tag column not updating when a newly created Tag is assigned to multiple selected GameObjects from the Inspector. (UUM-134208)
+    - Editor: Fixed the text cursor being displayed at the beginning of the text when typing with an IME in text fields using the Advanced Text Generator. (UUM-149800)
+    - Editor: Print invalid define message instead of throwing. (UUM-146349)
+    - Entities: Fixed performance regressions related to transform hierarchy children access. (UUM-138633)
+    - Entities: Removed per frame GC Allocations in ComponentSystemGroup. (UUM-151683)
+    - Game Core: Fixed a potential race condition that could cause a file handle to be closed twice via the AsyncReadManager API. (UUM-150205)
+    - Graphics: Fixed a device freeze on Midgard Mali GPUs when Blit Type was set to Auto. (UUM-149414)
+    - Graphics: Fixed Graphics.RenderPrimitives and Graphics.DrawProcedural crash with MeshTopology.Quads when Graphics Jobs are enabled. (UUM-141117)
+    - IL2CPP: Fixed segmentation fault on OSX and Linux while running IL2CPP. (UUM-149985)
+    - IL2CPP: Restored IL2CPP's code generation for ldind/stind opcodes to use normal pointer casts instead of memcpy calls. (UUM-129900)
+    - IMGUI: Reduced GC allocations when a GUISkin style is assigned during OnGUI. (UUM-134155)
+    - Networking: Fixed issue whereby UnityHttpMessageHandler requests would never complete (and could not be cancelled) when the HTTP response had an empty body. (UUM-150583). (UUM-150583)
+    - Profiler: "Screenshot details are paused while the Profiler is recording" note is now hidden as soon as profiling ends. (UUM-148847)
+    - Profiler: Fixed a NullReferenceException thrown when saving Profiler data from the top menu of the Standalone Profiler window after toggling the UI Toolkit Live Reload option. (UUM-150706)
+    - Profiler: Fixed case of screenshot info text remaining after profiling data was cleared. (UUM-149205)
+    - Profiler: Fixed inability to create a details view for CPU Usage module following deletion of a custom module. (UUM-149160)
+    - Scene/Game View: Fixed issue where the Rect Tool would not be moveable if the caps lock modifier was on. (UUM-150693)
+    - Terrain: Fixed Terrain Layer property changes not being added to the Undo history when using the Universal Render Pipeline or the High Definition Render Pipeline. (UUM-134483)
+    - Text: Fixed infinite loop in text measure with hyphen preceded by whitespace. (UUM-144559)
+    - Text: Fixed multi-paragraph auto-sized text collapses to an elided first line instead of shrinking to fit. (UUM-150602)
+    - UI Toolkit: Fixed a performance issue where rewriting unchanged shader-info records re-uploaded the full shader-info texture every frame, slowing panning and animated UI. (UUM-151011)
+    - UI Toolkit: Fixed case of Editor freezing and RenderTexture errors being thrown when a large blur value was entered in the UI Builder filter field. (UUM-134044)
+    - UI Toolkit: Fixed case of elements removed from a panel being kept in memory until the next focus navigation. (UUM-151139)
+    - UI Toolkit: Fixed case of the Inspector's Name field erroneously accepting special characters when renaming a UI Toolkit element. (UUM-151282)
+    - UI Toolkit: Fixed InvalidCastException errors and an empty Inspector after unsetting a Data Source Type on a Visual Element. (UUM-148143)
+    - UI Toolkit: Fixed issue that could prevent element renaming working as expected: the rename field now starts from the raw element name, not the # display text. (UUM-149523)
+    - UI Toolkit: Fixed rendering corruption and out-of-bounds errors on WebGL when a large number of elements changed in a single frame. (UUM-151098)
+    - UI Toolkit: Fixed Tab case of key navigation getting stuck on fields that have a unit dropdown in the Inspector of UI Staging Mode. (UUM-147715)
+    - UI Toolkit: Fixed the UITK dictionary list scrolling up when removing an entry at the bottom. (UUM-150685)
+    - UI Toolkit: Fixed the UXML document being marked as having unsaved changes when using the Cut operation in UI Builder. (UUM-151306)
+    - UI Toolkit: Fixed UI Toolkit Debugger world-space overlays. (UUM-145537)
+    - Unity Physics: Fixed an issue where the BVH static tree wouldn't be updated correctly when swapping from multi-threaded to single threaded setups. (UUM-133011)
+    - URP: Fixed case of the Render Pipeline Converter's 2D Material Reference and Shader Converters naming the renderer inconsistently (as "Renderer 2D") in their disabled tooltip, instead of matching the Target Pipeline dropdown's "2D Renderer". (UUM-151380)
+    - URP: Fixed case of ScriptableRendererData.TryGetRendererFeature throwing NullReferenceException. (UUM-150772)
+    - URP: Fixed missing tile map grid lines. Ensures preview camera render target is correct after rendering with an SRP. (UUM-122618)
+    - Version Control: Fixed race condition provoking a Version Control error "UpdateSettings: Unknown version control plugin: XYZ" during editor startup. (UUM-149884)
+    - Web: Fixed broken NameFilesAsHashes functionality. (UUM-148663)
+    - Web: Fixed case of Editor crashing on exit when a manual proxy without credentials is configured on Windows.
+    - Web: Fixed failing builds when building in batchmode and using NameFilesAsHashes. (UUM-149003)
+    - WebGL: Fixed error if shader expects a cube texture but a texture wasn't explicitly bound. (UUM-150746)
+    - WebGL: [WebGPU] Fixed case of render_attachment usage flags being set on textures when not needed, potentially affecting performance of those textures. (UUM-150892)
+    - XR: Fixed case of XR graphics becoming frozen when changing the MSAA level at runtime, while having depth textures submission enabled.
+    Package changes in 6000.6.2f1
+    Packages updated
+    - com.unity.2d.animation: 16.0.0 to 16.0.1
+    - com.unity.2d.psdimporter: 15.0.0 to 15.0.1
+    - com.unity.2d.tilemap.extras: 9.0.0 to 9.0.1
+    - com.unity.2d.tooling: 4.0.0 to 4.0.1
+    - com.unity.localization: 1.5.12 to 1.5.13
+    - com.unity.terrain-tools: 5.3.2 to 5.3.3
+    - com.unity.profiling.systemmetrics.mali: 1.1.1 to 1.1.4
+ReleaseTime: 2026-09-18T09:11:19.3490000Z

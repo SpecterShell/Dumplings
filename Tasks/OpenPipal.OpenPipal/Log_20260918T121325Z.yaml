@@ -1,0 +1,25 @@
+Version: 1.2.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.2/openpipal-1.2.2-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.2/openpipal-1.2.2-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release fixes long conversations dying right after a tool call on custom OpenAI-compatible endpoints, fixes a bug that could leave the assistant running without its system prompt, lets you delete rules from the Rules page, and gives rules a turn-end event and a small persistent store. (1.2.1 was tagged but never published as a release; everything it contained is in here.)
+    What's fixed
+    - Long conversations no longer stop after a tool call on custom endpoints. If you added a model through a custom OpenAI-compatible endpoint and entered a context window larger than 131,072 tokens (for example 1M), OpenPipal used your number for its own budgeting but forgot to pass it to the model layer, which kept a 131,072 default. Once a conversation really grew past that, the request that follows a tool result was sent with max_tokens = 1: the model produced one token and stopped, and you saw the error 「模型连续两次结束，但都没有返回正文或工具调用…」 ("the model finished twice without text or a tool call"). Regenerate reproduced it every time, so it looked like a provider problem; it was not. The configured window is now passed through on every model construction path. Existing conversations that hit this work again after updating: just press Regenerate. When a reply does come back empty, the log now records one line with the stop reason, output tokens, prompt size and both window values, so the cause can be told apart from a real provider hiccup.
+    - A rule can no longer wipe the system prompt. A rule that adds text to the system prompt (before_agent_start) is supposed to return the original prompt plus its own paragraph. If the rule returned only its own paragraph, that paragraph replaced the whole prompt: no role instructions and no skill index, so the assistant guessed at skill folders and tried to search the home directory. One such rule, written by the background rule writer, did exactly that on a real machine for nine days. Now a result that does not contain the original prompt is appended to it instead, the event is logged ([Hooks] … 已按追加处理), handlers receive a copy of the event, and the rule-writing docs say the original must be kept. If you have set a "from now on…" rule about how the assistant should behave and the assistant has since seemed to ignore its skills or its role, this is a likely cause; updating is enough, you do not need to rewrite the rule.
+    - Pal avatars never fall back to an emoji. A Pal that has no saved avatar (older template Pals, Pals created by the Evolver) now gets one computed from its id, the same way team members do, instead of showing an emoji in some places and a drawn avatar in others.
+    - One running indicator per team. In the sidebar, an expanded team shows the running dot on the topic that is actually running; a collapsed team shows a single dot no matter how many topics are running. The hover "+" no longer overlaps the dot.
+    What's new
+    - Delete a rule. On Plugins → Rules, every rule you set yourself (for all Pals, for one Pal, or for a team) has a bin next to its switch. Click it, confirm inline, and the rule file goes to the system Trash, so a mistake is recoverable; the rule's stored data is cleared with it. Rules that ship inside a third-party plugin have no bin: uninstall the plugin instead.
+    - agent_end event. Rules can run after every turn, whether the turn finished, was stopped or failed (event.outcome), and see the tools that were called and the final reply. Useful for bookkeeping: run a script, note what happened.
+    - ctx.store. Each rule gets its own small store (get / set / delete) that survives restarts: one JSON file per rule, capped at 256 KB, written atomically, shared by every conversation running that rule. Typical pairing: note in agent_end that code changed but tests did not run, and remind at the start of the next turn.
+    Windows installers are rebuilt from the same source. There is still no OS sandbox on Windows (the agent asks before running shell commands).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yuanlang12/OpenPipal/releases/tag/v1.2.2
+ReleaseTime: 2026-09-18T11:05:47.0000000Z
