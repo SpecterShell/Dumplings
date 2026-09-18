@@ -1,8 +1,5 @@
 $Object1 = Invoke-RestMethod -Uri 'https://gc-updates.elgato.com/windows/ewlw-update/final/app-version-check.json.php'
 
-# Version
-$this.CurrentState.Version = $Object1.Manual.Version
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
@@ -12,6 +9,9 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
   InstallerUrl = $Object1.Manual.fileURLs.arm64
 }
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+){3})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
