@@ -16,13 +16,13 @@ function Get-ReleaseNotes {
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         [regex]::Match(
           $ReleaseNotesTitleNode.InnerText,
-          '(\d{1,2}(?:st|nd|rd|th)\s+[a-zA-Z]+\s+\d{4})'
+          '(\d{1,2}(?:st|nd|rd|th)?\s+[a-zA-Z]+\s+\d{4})'
         ).Groups[1].Value,
         [string[]]@(
-          "d'st' MMM yyyy", "d'st' MMMM yyyy",
-          "d'nd' MMM yyyy", "d'nd' MMMM yyyy",
-          "d'rd' MMM yyyy", "d'rd' MMMM yyyy",
-          "d'th' MMM yyyy", "d'th' MMMM yyyy"
+          "d'st' MMM yyyy", "d'st' MMMM yyyy", 'd MMM yyyy',
+          "d'nd' MMM yyyy", "d'nd' MMMM yyyy", 'd MMM yyyy',
+          "d'rd' MMM yyyy", "d'rd' MMMM yyyy", 'd MMM yyyy',
+          "d'th' MMM yyyy", "d'th' MMMM yyyy", 'd MMM yyyy'
         ),
         (Get-Culture -Name 'en-US'),
         [System.Globalization.DateTimeStyles]::None
@@ -114,7 +114,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The Last Modified and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
