@@ -5,24 +5,23 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Gr
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerType        = 'zip'
-  NestedInstallerType  = 'exe'
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "$($InstallerUrl | Split-Path -LeafBase).exe"
-    }
-  )
-  InstallerUrl         = $InstallerUrl
+  InstallerType       = 'zip'
+  NestedInstallerType = 'exe'
+  InstallerUrl        = $InstallerUrl
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $NestedInstallerPath = $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
-    $InstallerFileExtracted = Expand-TempArchive -Path $InstallerFile -RelativeFilePath $NestedInstallerPath -CollisionAction Rename
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     try {
       # RealVersion
-      $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path (Join-Path $InstallerFileExtracted $NestedInstallerPath) -Name 'msi.x64.msi').DisplayVersion
+      $this.CurrentState.RealVersion = (Get-AdvancedInstallerMsiInfo -Path $InstallerFile2 -Name 'msi.x64.msi').DisplayVersion
     } finally {
       Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
     }
