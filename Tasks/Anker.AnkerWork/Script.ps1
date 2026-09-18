@@ -7,11 +7,11 @@ function Read-Installer {
 }
 
 $Prefix = 'https://us.ankerwork.com/pages/download-software'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'AnkerWork' -and $_.href -match 'Setup' -and $_.href.Contains('ia32') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'AnkerWork' -and $_.href -match 'Setup' -and $_.href.Contains('ia32') } catch {} }, 'First')[0].href
 }
 
 $ETag = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.ETag[0]

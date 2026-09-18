@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://us.ipevo.com/pages/camcontrol-download' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://us.ipevo.com/pages/camcontrol-download' | Join-String -Separator "`n" | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode("//text()[.='Windows 10 (19041) and above']/following::a[contains(., 'Download')]").Attributes['href'].Value | ConvertTo-HtmlDecodedText
 $RedirectedInstallerUrl = Get-RedirectedUrl -Uri $InstallerUrl

@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://us.ipevo.com/pages/visualizer-ltse-download' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://us.ipevo.com/pages/visualizer-ltse-download' | Join-String -Separator "`n" | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

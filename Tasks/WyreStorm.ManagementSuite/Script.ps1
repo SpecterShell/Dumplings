@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.wyrestorm.com/management-suite/' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.wyrestorm.com/management-suite/' | Join-String -Separator "`n" | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

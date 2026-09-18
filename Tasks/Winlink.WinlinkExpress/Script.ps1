@@ -1,9 +1,9 @@
 $Prefix = 'https://downloads.winlink.org/User%20Programs/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('Winlink_Express') -and $_.href.Contains('install') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = Join-Uri $Prefix $Object1.Where({ try { $_.href.Contains('Winlink_Express') -and $_.href.Contains('install') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 # Version

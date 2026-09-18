@@ -1,11 +1,11 @@
 $ReleaseNotesUrl = 'https://www.thunderheadeng.com/docs/latest/ventus/'
-$Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl
-$ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl ([regex]::Match($Object1.Content, 'location.href="([^"]+)"').Groups[1].Value)
-$Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n"
+$ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl ([regex]::Match($Object1, 'location.href="([^"]+)"').Groups[1].Value)
+$Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = [regex]::Match($Object2.Content, '"(https://www.thunderheadeng.net/releases/Ventus-[^"]+?\.msi)"').Groups[1].Value
+  InstallerUrl = [regex]::Match($Object2, '"(https://www.thunderheadeng.net/releases/Ventus-[^"]+?\.msi)"').Groups[1].Value
 }
 
 # Version

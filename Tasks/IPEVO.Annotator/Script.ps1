@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://us.ipevo.com/pages/annotator-download' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://us.ipevo.com/pages/annotator-download' | Join-String -Separator "`n" | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode("//text()[.='Windows 7 / 8 / 10 / 11']/following::a[contains(., 'Download')]").Attributes['href'].Value | ConvertTo-HtmlDecodedText
 
