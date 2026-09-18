@@ -1,0 +1,30 @@
+Version: 18.2.6
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.2.6/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Anthropic prompt-cache head re-baselining on every memory recall refresh: the system breakpoint now anchors on the last stable segment instead of the volatile recall suffix, and the stable-system fingerprint ignores recall blocks, so a recall refresh re-bills only the suffix instead of the whole tools+system head.
+    - Fixed auth-broker client config resolution failing silently on Windows when reading the token file or config.yml; reads now use node:fs instead of Bun.file.
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Fixed clipboard paste stalling on an empty clipboard; image and text clipboard reads now run concurrently so the empty-clipboard status surfaces after the slower read instead of the sum of both.
+    - Fixed memory recall blocks carrying a minute-resolution Current time stamp that dirtied the cached system prompt on every refresh; recall rows already carry dates, so the stamp is removed.
+    - Fixed omp auth-broker token and omp auth-gateway token exiting silently without creating a token on Windows when no token file exists yet; token and config reads now use node:fs instead of Bun.file.
+    What's Changed
+    - fix(auth-broker): use node:fs for token and config reads on Windows by @H4vC in https://github.com/can1357/oh-my-pi/pull/12390
+    - docs(changelog): restore contributor attribution for #12177 and #12236 (@shivamklr) by @shivamklr in https://github.com/can1357/oh-my-pi/pull/12396
+    - fix(ai): keep prompt-cache head stable across memory recall refreshes by @H4vC in https://github.com/can1357/oh-my-pi/pull/12431
+    - fix(coding-agent): run clipboard image and text reads concurrently on paste by @H4vC in https://github.com/can1357/oh-my-pi/pull/12447
+    - fix(ai): remove dead breakpoint locals in head-caching recall test by @H4vC in https://github.com/can1357/oh-my-pi/pull/12453
+    - fix(build): pin find-msvc-tools to 0.1.12 for Windows cc compat by @H4vC in https://github.com/can1357/oh-my-pi/pull/12455
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.2.5...v18.2.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.2.6
+ReleaseTime: 2026-09-18T18:10:25.0000000Z
