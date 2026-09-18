@@ -1,0 +1,25 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.5/CommandCodeGo.Manager-Setup-0.2.5-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.5/CommandCodeGo.Manager-Setup-0.2.5-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.2.5 — 界面修复：厂商手风琴牵连展开、导航切换卡顿
+    模型页：展开一个厂商不再牵连旁边的厂商
+    - 双列网格缺省的等高拉伸（align-items: stretch）会让同一行的两张卡片一样高——展开左边厂商时，右边折叠态的卡片被拉到同高，看起来像"旁边的厂商也跟着展开了"。现在卡片各自按内容高度排布
+    左侧导航切换卡顿
+    - 根因：模型 / 密钥管理 / 设备指纹 / 设置四页未纳入保活，每次切换都是整页卸载重挂载（重新拉数据 + 重建 DOM + 闪 Loading），弱 GPU 或转译环境（Rosetta）下被显著放大。此前只有四个监控页保活，所以"加了保活还是卡"
+    - 修复：保活扩展到全部 8 页，切换退化为 display 翻转——二次进入零重建、页面状态原样保留（展开的厂商、未保存的表单草稿都在）；各页需要最新数据时点各自的刷新按钮
+    - 保活页隐藏（display:none）时跳过 ECharts 的 0×0 尺寸 resize，消除隐藏页无意义的 canvas 重建
+    - 模型行 memo 化：手风琴展开/收起只重渲染目标厂商组
+    ⚠️ Apple Silicon（M 系列芯片）用户请安装 arm64 安装包
+    不带架构后缀的 CommandCodeGo Manager-<版本>.dmg 是 Intel x64 包，在 M 系列上经 Rosetta 转译运行，渲染性能会差数倍（这是部分用户切换页面卡顿秒级的最主要原因）。M 系列 Mac 请下载 CommandCodeGo Manager-0.2.5-arm64.dmg；Intel Mac 才用无后缀的 .dmg
+    Full Changelog: https://github.com/learningdog1/CommandCodeGo-manager/compare/v0.2.4...v0.2.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/learningdog1/CommandCodeGo-manager/releases/tag/v0.2.5
+ReleaseTime: 2026-09-18T14:32:06.0000000Z
