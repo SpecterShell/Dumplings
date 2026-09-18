@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'26'.releases.Where({ $_.jre.Contains('windows-x64-installer') }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.SapMachineBuilds.assets.'27'.releases.Where({ $_.jre.Contains('windows-x64-installer') }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag -replace '^sapmachine-'
@@ -21,10 +21,11 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object2.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object2.html_url
       }
     } catch {
       $_ | Out-Host
