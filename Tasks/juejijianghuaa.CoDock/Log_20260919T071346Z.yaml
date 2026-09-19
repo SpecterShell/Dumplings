@@ -1,0 +1,25 @@
+Version: 0.4.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.4/CoDock-Setup-0.4.4-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.4 (2026-09-19)
+    这一版重做了「任务完成提醒」：不再依赖 CLI 自己发响铃，只按终端输出静默判断，因此少了误报、也少了重复提示；另外修了几个会话标题与排序上的问题，官网换了套皮肤。
+    优化与修复
+    - 任务完成提醒重做，改用单一判定：此前同时接 CLI 自己发的响铃 / OSC 9 和 CoDock 的「输出静默」推断，两个信号源得互相防重报——claude 的响铃（它的 idle 通知）约一分钟后才到，静默 5 秒就报了，几乎总被吞掉；codebuddy 则是每段输出都发 BEL，纯噪声。现在只剩静默一条路（阈值从 8 秒收紧到 5 秒），所有 Agent 一视同仁，响铃/OSC 9 与配套的防重报、冷却确认逻辑一并删除。代价是：任务期间 CLI 长时间不吐可见字符时可能提前报一次，真结束时不再补报——静默本来也只表示「没有新输出了」，可能是跑完了，也可能是在等你回话，所以它只提示你回来看一眼。
+    - 空回车不再凭空亮标记：在空输入行上敲回车、TUI 里选菜单、敲完又按 Esc 取消，这些都只产生一个回车、没有任何实际产出。此前会立刻亮一颗转圈、5 秒后转成未读点，用户什么都没让 agent 干却被提示两回。现在要真的吐出过 ≥ 100 字节才算「开始了」。
+    - 已经看过、刚切走的 tab 不再补一个未读点：静默判定比结果出现晚 5 秒，「看到结果再切走」是最常见的形状，此前会在人刚离开时冒出一个他其实已经看过的点。现在刚离开视线（9 秒内）的 tab 不标记。
+    - Tab 栏支持鼠标中键关闭会话：鼠标中键（滚轮按下）落在 Tab 上即关闭该会话，和浏览器标签页的习惯一致；左键拖拽排序与右键菜单不受影响。
+    - 终端里的链接终于都能点开：v0.4.3 那次外链修复只覆盖了关于页按钮和 Composer 的 Markdown 预览，终端正文里的裸 URL 走 addon 默认的 window.open、CLI 自己发的 OSC 8 超链接走 xterm 内核默认行为（在桌面 WebView 里要么被丢弃、要么弹一个英文警告框）。现在两条通道都交给原生打开，桌面版交给系统默认浏览器。协议仍只放行 http/https/mailto。
+    - 修复 /命令 开头的会话标题显示成技能正文：Claude Code 把斜杠命令记成一条 <command-message>/<command-name>/<command-args> 三段信封的用户消息，整条以 < 开头会被当成系统包裹跳过，标题于是退到下一条消息——也就是技能正文，表现为清一色「Base directory for this skill: …」。现在会把信封还原成你敲的那一行。只影响还没有标题记录的会话。
+    - 修复 agy 会话的时间戳与活跃排序：空会话的无效时间戳此前会退回「当前时间」，导致它在历史里排到最前；现在改用对话库文件的真实修改时间，并统一了盘符大小写造成的项目分桶。归档会话也不再抢占主列表的活跃排序。
+    官网
+    - 换了一套深海青玻璃拟态皮肤；首屏新增可切换的 Agent Dock（点图标换全站强调色并显示厂商与一句话简介）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.4
+ReleaseTime: 2026-09-19T05:12:50.0000000Z

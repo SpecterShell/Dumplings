@@ -1,0 +1,44 @@
+Version: 0.3.3
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.3.3/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.3.3
+    版本重点
+    本版修复计算器在实际安装环境中的兼容性和升级问题：=1^2、=1(2)、=1/1 等输入可以正常计算；安装包升级时会正确覆盖旧的官方插件，并释放旧插件进程占用的文件。
+    修复
+    - 计算器兼容带触发前缀的原始查询。即使旧宿主或异常调用链把 = 一并传给插件，计算器也会先剥离前缀再解析表达式。
+    - 计算器继续支持括号、隐式乘法、幂、除法及原有全角符号和千分位输入。
+    - 启动时同步安装包内置的官方插件，覆盖用户数据目录中的旧官方包，避免安装目录已经更新但实际仍加载旧插件。
+    - NSIS 升级安装前会结束 Kite 官方插件子进程，避免 kite-plugin-calculator.exe 等文件被旧进程锁住而无法覆盖。
+    - PluginHost 退出时主动结束插件子进程；后台空闲清扫线程不再阻止宿主释放插件进程。
+    升级影响
+    - 设置、历史记录、固定项、别名和安装目录无需迁移。
+    - 官方插件会按安装包版本覆盖用户插件目录中的同 ID 官方包；第三方插件和不在安装包官方目录中的用户插件不受影响。
+    - 正常升级无需手动删除 %APPDATA%\com.kite.launcher\plugins。旧版本遗留的官方插件进程也会在升级前被结束。
+    - 安装包仍需要管理员权限写入安装目录；Kite 本身以普通用户权限运行。
+    验证
+    - Calculator 官方插件测试：9/9 通过。
+    - PluginHost 测试：14/14 通过，包含真实 stdio 插件启动、查询和宿主销毁清理进程验证。
+    - 安装器升级契约检查：通过。
+    - Release 构建和 NSIS 安装包构建：通过。
+    已知限制
+    - 安装包仍无 Authenticode 数字签名。
+    - 本地完整扫描测试依赖当前 Windows 的开始菜单、注册表和便携目录状态；发布 CI 会在干净的 Windows runner 上重新执行完整测试。
+    构建与验证
+    - 发布 tag：v0.3.3
+    - tag 提交：ac0dff31a72732c2ae5d724582cbc8f64b99a4ac
+    - 上一个发布：v0.3.2
+    - 提交数量：1
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #17
+    本次提交范围
+    - chore(release): v0.3.3 (ac0dff3)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.3.3
+ReleaseTime: 2026-09-19T06:32:55.0000000Z
