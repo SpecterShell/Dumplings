@@ -1,0 +1,73 @@
+Version: 0.1.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/BearKouber/TiLex/releases/download/v0.1.2/TiLex_0.1.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/BearKouber/TiLex/releases/download/v0.1.2/TiLex_0.1.2_x64_en-US.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    TiLex 0.1.2
+    相比 0.1.1 的改动。
+    升级方法：直接运行新安装包。出现「已安装」页面时，保持默认的「安装前卸载」，点下一步即可。
+    这一步只替换程序文件，原有设置和生词本都会保留。
+    新功能
+    划词取词
+    - 新增「增强选中识别」（翻译设置 → 划词）。部分程序（如微信聊天记录）不把选中文字暴露给外部，
+      开启后 TiLex 会在这些程序里模拟一次复制来取词，随后自动恢复剪贴板原有内容。
+      注意：剪贴板管理工具和 Win+V 历史中可能会留下这次复制的记录。默认关闭。
+    生词本
+    - 长难句改成一张完整卡片：原句在上、译文在下，译文下方用分割线显示 AI 给出的分类与难度。
+    - 长难句新增分类（英文 6 类 / 中文 5 类）和三档难度，可据此回顾。
+    - 中文长句现在也能被识别成句子（含中文逗号、顿号、分号、冒号，或汉字超过 10 个）。
+    改进
+    AI 长难句解析
+    - 解析结果精简：主干只照抄原文，修饰成分最多 3 条，术语最多 4 个。
+      旧的解析结果不受影响，重新翻译才会用新格式。
+    - 某一项标记格式异常时只丢掉那一项，整条解析照常显示。
+    - 同一句话既有 AI 解析、又有其他服务的纯译文时，收藏优先存 AI 的完整结果。
+    生词本版式
+    - 长难句字号降到正文大小，译文单独成卡，英文换成更耐看的字体。
+    导出 Markdown
+    - 单词改为 #### 标题加两列释义表；长难句去掉 Callout 包裹，直接成段。
+    - 排序：单词按 A–Z（中文按拼音并入同一序列），长难句先按分类分组、组内按难度升序。
+
+    TiLex 0.1.2 (English)
+    Changes since 0.1.1.
+    How to upgrade: run the new installer. When the "Already Installed" page appears, keep the default "Uninstall before installing" and click Next.
+    This only replaces the program files; your settings and wordbook are kept.
+    New
+    Text selection
+    - New Enhanced Selection (Translation Settings → Selection). Some apps (such as WeChat chat history)
+      do not expose selected text directly. When on, TiLex simulates one copy in those apps to get the text,
+      then restores what was on the clipboard.
+      Note: clipboard managers and Win+V history may keep a record of this copy. Off by default.
+    Wordbook
+    - Long sentences are now one complete card: source on top, translation below, with the AI category and
+      difficulty shown under a divider.
+    - New categories (6 for English / 5 for Chinese) and three difficulty levels for long sentences.
+    - Chinese long sentences are now detected as sentences (Chinese comma, enumeration comma, semicolon,
+      colon, or more than 10 Han characters).
+    Improvements
+    AI sentence analysis
+    - Shorter output: the main clause quotes the source verbatim, at most 3 modifiers and at most 4 terms.
+      Existing saved results are unchanged; the new format applies to new translations.
+    - A malformed field only drops itself; the rest of the analysis still shows.
+    - When a sentence has both an AI analysis and a plain translation from another service,
+      the favorite button saves the AI result.
+    Wordbook layout
+    - Long sentences use body text size, the translation gets its own card, and English uses a nicer font.
+    Markdown export
+    - Words are exported as #### headings with a two-column definition table; long sentences no longer
+      sit inside a Callout.
+    - Sorting: words A–Z (Chinese merged in by pinyin), long sentences grouped by category and sorted by
+      difficulty within each group.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BearKouber/TiLex/releases/tag/v0.1.2
+ReleaseTime: 2026-09-19T09:18:53.0000000Z

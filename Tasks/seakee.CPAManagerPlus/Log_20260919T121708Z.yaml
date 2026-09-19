@@ -1,0 +1,86 @@
+Version: 1.13.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.1_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.1/cpa-manager-plus_v1.13.1_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.1_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.1/cpa-manager-plus_v1.13.1_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.1 is a maintenance release focused on credential-operation performance, request diagnostics, and upgrade compatibility. For large credential pools, single-credential refreshes, status changes, field updates, and configuration-editor saves now prefer targeted lookups and local reconciliation instead of unnecessary full auth-file inventory reads, while multi-credential operations and initial list loading retain complete-set semantics where correctness requires them.
+    Request Monitoring can now distinguish the requested model, CPA-routed model, and upstream response model. When the response model differs from the routed model, the actual response model is highlighted in amber to make upstream model switching or downgrades visible. Request metadata emitted by newer CPA Usage queues, including session hierarchy and generate/stream flags, is also preserved through persistence and monitoring. Older events or CPA versions that do not emit these fields degrade cleanly.
+    This release also fixes model-price loading when legacy SQLite databases contain REAL values in configured-flag columns, and fixes OAuth excluded-model handling when the API explicitly returns a null wrapper.
+    Highlights
+    Features
+    - Distinguish requested, routed, and upstream response models in Request Monitoring. A response model that differs from the routed model is shown with an amber response line and “Model mismatch” badge. (Web / Manager Server)
+    - Preserve CPA Usage queue fields response_model, session_id, parent_session_id, access_token_sha256, generate, and stream across SQLite persistence, Monitoring APIs, JSONL export, and compatible usage import/export. Explicit false remains distinct from an absent value. (Manager Server / Web)
+    Performance
+    - Scope single-credential refresh polling to targeted lookups by physical file name, runtime ID, and auth index instead of repeatedly loading the complete credential inventory. Older CPA versions that ignore targeted query parameters still fall back safely. (Web / CPA)
+    - Scope single-credential status changes, priority/note/WebSocket field edits, and configuration-editor save reconciliation to the affected source. Multi-credential operations retain full-list checks for collision and batch-safety semantics. (Web)
+    Fixes
+    - Fix OAuth excluded-model responses with an explicit null wrapper incorrectly falling through to items or provider-level keys, which could restore values that should remain empty. (Web)
+    - Fix model-price, Dashboard, and Usage Analytics loading failures when legacy SQLite model_prices or pricing-tier *_configured flags are stored as REAL values. Numeric zero remains false, finite non-zero numeric values are treated as true, and invalid storage types still fail closed. (Manager Server)
+    Docs
+    - Refresh README credential-management screenshots to match the current interface.
+    Upgrade Notes
+    - This release automatically adds six nullable columns to usage_events: response_model, session_id, parent_session_id, access_token_sha256, generate, and stream. The schema expansion is online and requires no manual database action or offline maintenance; existing historical rows remain unchanged.
+    - The minimum CPA compatibility baseline remains v7.3.2. The new request metadata appears only when CPA actually emits the corresponding Usage queue fields. Older or non-emitting CPA versions continue to work with those diagnostics left empty.
+    - This release reduces unnecessary full-inventory reads for single-credential operations. Initial Accounts loading still requires the complete credential set to preserve global search, filtering, sorting, metrics, and selection semantics.
+    - The legacy configured-flag compatibility fix changes read behavior only; it does not rewrite or clean existing model-price data.
+    Acknowledgements
+    - @Sun1090 - Fixed compatibility handling for explicit null OAuth excluded-model wrappers.
+    - @camy-x - Contributed the targeted single-credential refresh lookup optimization that formed the basis for the broader credential-operation performance work.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.0...v1.13.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.1-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.1 是一个以凭证操作性能、请求诊断和升级兼容性为重点的维护版本。针对大规模凭证池，单凭证刷新、启停、字段修改和配置编辑保存现在尽量使用定向查询与局部对账，减少不必要的全量凭证列表读取，同时继续保留多凭证操作和初始列表加载所需的完整集合语义。
+    Request Monitoring 现在可以区分请求模型、CPA 路由模型和上游响应模型；当响应模型与路由模型不一致时，会以琥珀色提示实际响应模型，便于识别上游模型切换或降级。新版 CPA Usage queue 提供的 session、parent session、generate、stream 等请求元数据也会进入持久化与监控链路；旧数据或未提供这些字段的 CPA 会自然降级，不影响既有用量记录。
+    本版本还修复了历史 SQLite 数据中模型价格 configured 标记以 REAL 数值保存时导致价格加载失败的问题，以及 OAuth 排除模型接口显式返回 null wrapper 时被错误回退到其他字段的问题。
+    Highlights
+    Features
+    - Request Monitoring 的模型列现在区分请求模型、路由模型和上游响应模型；当响应模型与路由模型不一致时，以琥珀色响应模型与“模型不一致”标记提示异常路由结果。（Web / Manager Server）
+    - 接入 CPA Usage queue 的 response_model、session_id、parent_session_id、access_token_sha256、generate 和 stream 字段，并贯通 SQLite、Monitoring API、JSONL 导出和兼容用量导入/导出链路；显式 false 与缺失值保持可区分。（Manager Server / Web）
+    Performance
+    - 单凭证刷新改为按物理文件名、运行时 ID 和 auth index 做定向查询与局部对账，避免每次轮询都重新拉取完整凭证集合；旧 CPA 不支持定向参数时仍可安全回退。（Web / CPA）
+    - 单凭证启停、优先级、备注、WebSocket 等字段修改，以及配置编辑器保存后的对账改为局部 source reconciliation；多凭证操作继续使用完整列表以维持碰撞检查和批处理安全语义。（Web）
+    Fixes
+    - 修复 OAuth 排除模型接口显式返回 null wrapper 时继续回退读取 items 或 provider 顶层字段的问题，避免把本应为空的排除模型列表恢复成旧值。（Web）
+    - 修复历史 SQLite model_prices 及价格 tier 表中的 *_configured 标记以 REAL 数值保存时，Manager Server 因按整数扫描而导致模型价格、Dashboard 或 Usage Analytics 加载失败的问题；数值 0 仍视为 false，非零有限数值视为 true，非法存储类型继续失败关闭。（Manager Server）
+    Docs
+    - 更新 README 凭证管理相关截图，使文档与当前界面保持一致。
+    Upgrade Notes
+    - 本版本会自动为 usage_events 增加 6 个可空字段：response_model、session_id、parent_session_id、access_token_sha256、generate、stream。 迁移为在线增列，不需要手动数据库操作或离线维护，历史记录保持原样。
+    - CPA 最低兼容基线仍为 v7.3.2。 新增请求元数据只有在 CPA 实际提供对应 Usage queue 字段时才会出现；较旧或不提供这些字段的 CPA 仍可继续使用，只是相关诊断信息为空。
+    - 本版本优化的是单凭证操作中的不必要全量读取；Accounts 初次进入时仍需要完整凭证集合，以维持全局搜索、筛选、排序、统计和选择语义。
+    - 历史模型价格 configured 标记兼容修复只改变读取方式，不会重写或清洗已有价格数据。
+    Acknowledgements
+    - @Sun1090 - 修复 OAuth 排除模型显式 null wrapper 的兼容处理。
+    - @camy-x - 提交单凭证刷新定向查询优化，为后续凭证操作性能收口提供基础。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.0...v1.13.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.1-zh.md
+ReleaseTime: 2026-09-19T08:18:41.0000000Z
