@@ -1,0 +1,36 @@
+Version: 0.3.5
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.3.5/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.3.5
+    版本重点
+    修复托盘菜单首次打开设置时，窗口刚出现就被隐藏的问题；关闭设置返回搜索界面时，窗口会恢复到居中位置。
+    修复
+    - 在 Windows 托盘菜单中选择「设置」后，忽略打开菜单时产生的同一次左键抬起事件，避免它再次触发窗口显示切换。直接左键点击托盘仍可唤起 Kite。
+    - 设置窗口切换尺寸后再定位；关闭设置时先恢复搜索窗口尺寸，再按当前显示器工作区重新居中，最后聚焦搜索框。
+    升级影响
+    - 设置、快捷键、历史记录、固定项和别名无需迁移。
+    - 无新增依赖或配置项。
+    验证与限制
+    - 本地 cargo check 通过；完整测试串行运行结果为 544 通过、10 忽略。首次并行运行时有两项扫描器测试受扫描时间预算影响失败，单独及串行复跑均通过。
+    - 本地 cargo build --release 通过。正式发布流程会重新运行完整测试、release 构建并生成安装包。
+    - 本次修复尚未在新构建的 Windows 桌面程序中完成人工托盘点选和设置窗口交互验证。
+    - 安装包仍无 Authenticode 数字签名。
+    构建与验证
+    - 发布 tag：v0.3.5
+    - tag 提交：21fa6505e7c6cfc6e26e4b566ab8601d683c11b6
+    - 上一个发布：v0.3.4
+    - 提交数量：1
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #19
+    本次提交范围
+    - fix(ui): stabilize tray settings and window placement (21fa650)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.3.5
+ReleaseTime: 2026-09-19T18:47:39.0000000Z

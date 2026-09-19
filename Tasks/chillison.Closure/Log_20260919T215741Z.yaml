@@ -1,0 +1,62 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AoharuCat/Closure/releases/download/v0.3.2/Closure-Setup-0.3.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版是修复专项：把 Antigravity CLI 接入从「能接上」推到「能稳定用」——补上项目内检索/列目录的正路、把调用内置工具被拒导致的空回合改造成可观测可救援，并修掉一批会静默失败或给出错误归因的地方。
+    新功能 / New Features
+    - 模型配置：Antigravity CLI 密钥状态探测——启动自动连通性检查 + 手动「测试连接」，凭据失效时状态行常驻并有提示
+    - 模型配置：Antigravity CLI 支持自定义 agy 可执行路径（留空自动探测默认安装位置）
+    - Agent 页：Antigravity CLI 模型带形态标识（CLI · 无工具调用）
+    - Antigravity CLI：补入项目内检索与列目录——模型现在能直接回答「项目里哪里有 X」「这个目录下有什么」，不再绕道调用会被拒的内置工具
+    - Antigravity CLI：模型离开写作工具族时给出可见提示（含调用的是哪个工具）；这类调用导致空回合时，系统注入纠正并续跑，把该轮救回
+    - 设置：Closure 文本 Agent 卡片——纯文本调用挂载写作人设 agent，可开可关，带文件状态与启动对账
+    - 诊断：Antigravity CLI 日志观测——会话的 agent 加载状态写入应用日志
+    修复 / Fixed
+    - 知识库：向量索引维度漂移自愈——换嵌入模型后不再常驻「向量检索降级中」
+    - 蒸馏：中断残留的「运行中」台账启动自动对账——状态条不再永挂
+    - Antigravity CLI：认证失效不再以「空响应」收场，改为可读错误 + 终端重新登录指引
+    - Antigravity CLI：修复调用内置工具被拒时的错误归因——不再把拒绝原因说错
+    - Antigravity CLI：修复一处导致整条通道在生产不可用的路径校验缺陷
+    - Antigravity CLI：修复授权被拒时的错误归因——不再把授权问题误报成「工具被拒」
+    - 文件工具：读取越界不再静默返回空内容，改为带总行数与回退上界的提示；新增翻页续读信号（并送进模型可见面）
+    - 文件工具：列目录/检索的路径校验强度对齐——项目内符号链接不再把项目外内容带出来
+    - 模型配置：参数越界被拒时的提示改为可见（原先渲染在视口外，用户只见「点了没反应」）
+    - 设置：Antigravity CLI 会话占用时的关闭提示改为如实说明释放条件
+    - 品牌：运行时兜底提示词的人设由 Orison 更正为 Closure（可露希尔）
+    已知限制 / Known Issues
+    - Antigravity CLI 目前无法派发写作链与规划员：它只能调用受控的工具子集，「写章链」与规划员派发等工具对它不可达。表现为——让对话模型「写第一章」时，它会把正文直接写在对话里，而不会触发写章链（写作页时间线不会亮）。该能力正在开发，下一版补。
+    - Antigravity CLI 下模型仍可能尝试调用 agy 内置工具，这类调用会被无头权限拒绝；系统会注入纠正并重试一次，但仍可能失败。
+
+    This release is the fourth dogfood round's fix batch: it takes the Antigravity CLI integration from "it connects" to "it holds up" — adding the proper in-project search and directory-listing path, turning the empty-turn failures caused by denied built-in tool calls into something visible and recoverable, and fixing a set of places that failed silently or blamed the wrong cause.
+    New Features
+    - Model settings: Antigravity CLI credential probe — connectivity is checked automatically at startup, plus a manual "Test connection"; a dead credential shows a persistent status row and a notice
+    - Model settings: Antigravity CLI accepts a custom agy executable path (leave blank to auto-detect the default install location)
+    - Agent page: Antigravity CLI models carry a form badge (CLI · 无工具调用)
+    - Antigravity CLI: in-project search and directory listing are now available — the model can answer "where is X in this project" and "what is in this directory" directly, instead of falling back to built-in tools that get denied
+    - Antigravity CLI: leaving the writing toolset now produces a visible notice (naming the tool it tried); when such a call empties the turn, the system injects a correction and continues the turn, recovering it
+    - Settings: Closure text agent card — the plain-text lane mounts a writing-persona agent, toggleable, with file state and startup reconciliation
+    - Diagnostics: Antigravity CLI log observation — the session's agent-loaded state is written to the app log
+    Fixed
+    - Knowledge base: vector index dimension drift now self-heals — switching embedding models no longer leaves a permanent "vector search degraded" banner
+    - Distillation: a "running" ledger row left by an interrupted run is reconciled at startup — the status strip no longer hangs forever
+    - Antigravity CLI: an expired credential no longer ends as an "empty response"; it now reports a readable error with terminal re-login guidance
+    - Antigravity CLI: fixed the misattributed error when a built-in tool call is denied
+    - Antigravity CLI: fixed a path-validation defect that made the whole lane unusable in production
+    - Antigravity CLI: fixed the misattributed error when authorization is denied — an authorization problem is no longer reported as "tool denied"
+    - File tools: reading past the end of a file no longer silently returns nothing — it reports the total line count and the usable range; added a continuation signal (and made it visible to the model)
+    - File tools: directory listing and search now validate paths as strictly as file reads — in-project symlinks can no longer reach content outside the project
+    - Model settings: out-of-range parameter values now show a visible notice when rejected
+    - Settings: the close-bridge notice shown while a session is active now states the real release condition
+    - Branding: the runtime fallback prompt's persona is corrected from Orison to Closure
+    Known Issues
+    - Antigravity CLI cannot dispatch the writing chain or the planner agents right now: it can only call a restricted tool subset, so tools such as the chapter-writing chain and planner dispatch are unreachable for it. In practice — asking the dialogue model to "write chapter one" makes it write the prose straight into the chat, without triggering the writing chain (the writing page timeline stays empty). This capability is under development and will land next release.
+    - Antigravity CLI models may still attempt to call agy built-in tools; such calls are denied by headless permissions. The system injects a correction and retries once, but the turn may still fail.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AoharuCat/Closure/releases/tag/v0.3.2
+ReleaseTime: 2026-09-19T15:03:25.0000000Z

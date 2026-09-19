@@ -1,0 +1,62 @@
+Version: 0.10.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.3/pinvou-agent_0.10.3-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.3 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    问题修复
+    1. 压缩后的会话不再以"模型不可用"的假象失败：被压缩的历史可能把 tool → user(摘要) 的消息序列交给严格的 Chat Completions 模板而收到 HTTP 400，桌面端曾把这类请求格式错误误报为模型不可用并建议重试。现在引擎在后续轮次、重复压缩与会话恢复后都保持工具轮次边界，修复前持久化的会话在加载时自动修复，生成的摘要携带结构化来源标记；role/模板类 HTTP 400 归类为请求格式错误，三语文案、不再建议重试。
+    2. 停止按钮不再误伤引擎自主启动的后继轮次：底座有三条自主轮启动路径（空闲子代理收尾、后台 shell 完成唤醒、目标续跑）会在引擎内部直接开轮，而共享取消令牌在 TurnStarted 发出之前就被替换——针对第 N 轮的停止可能经由滞后的 epoch 视图通过两段式复核，误杀引擎自启动的第 N+1 轮。现在共享槽携带轮次身份（TurnCancelSlot { turn_id, token }），宿主停止按同源身份快照分发、在持锁临界区内只能命中被指名的那一轮；延迟的 submit→TurnStarted 重放绑定到武装它的那次提交，超车的自启动后继轮既不能消费重放也不会被其取消——用户对第 N 轮的停止精准送达第 N 轮。底座半边（取消槽身份与 TurnStarted 提交回显）已随 0.10.2 的 gitlink 批次落地，本版接入应用侧分发。
+    3. 连接器对话框不再被迟到的异步事件二次触发：连接器完成/错误事件异步到达，关闭对话框后迟到的 event 曾会无条件清掉共享忙碌槽——重新点亮仍在运行的操作按钮，使安装/卸载/导入可被双击重复执行。现在全部 17 处释放点都做属主校验（包括绕过工厂路径的第二组组件级监听器家族，以及在 React 队列中抢先于函数式更新器的 plain-null 写法），在另一操作持有忙碌槽时发起新操作会在原先无保护的入口直接 no-op。
+    4. 内置市场安装以编译期内置清单为准：磁盘上的清单过期或被篡改时，安装写入 mcp.json 的 command/args/secret 声明可能被重定义。现在凡带内嵌 spec 的工具一律优先使用 include_str! 编译期快照（uploads 与自定义磁盘工具仍走磁盘路径），并把快照重新发布以收敛旧拷贝；store 路径安装的 Python 依赖缺少可验证 lock 时，在 Windows 上改为 fail-closed 而非警告跳过，策略提取为可回归测试的 helper。
+    5. 内部仓库崩溃/安全加固回移（2026-09-17/18 封闭-开源差异审计）：GUI tokio runtime 的 worker 栈提升到 16 MiB——引擎分发峰值 2.25–2.5 MiB，默认栈下的栈溢出是对 catch_unwind 不可见的裸进程击杀；密钥文件在打开句柄上重新断言 0600 权限，为带外恢复与机器迁移追加一层防御；Web 构建不再自动预览宿主路径的交付物（用户主动预览仍经 Web 访问门授权）；chrome-devtools MCP 下载改为纯 Node HTTPS 下载器（仅 HTTPS 重定向、重定向上限、截止时间、有界重试与 tar 解包参数防护）；Windows 安装器新增 VC++ 运行库预检，可修复损坏的 Installer TEMP ACL（0x80070660），其中整机 TEMP/TMP 修复分支 fail-closed；.gitattributes 钉住 .githooks/* 为 LF，autocrlf=true 的检出继续可用。
+    6. 移除 H3C 客户专属残留：死亡的"内部工具"i18n 键及其静态可达但不可进入的徽标分支、Linux 专属 MegaCube 侧栏入口端到端（页脚按钮、外链白名单条目、随包图标、能力管线）、一份含贡献者邮箱与内部环境信息的过期内部交接文档、贡献者本地笔记路径、文档注释中的客户名、测试 fixture 中的真实个人身份——退役的键以 must-stay-deleted 钉住。厂商预装的本地 LLM 引导保留其功能，仅改用中性硬件措辞。
+    7. 链接 worktree 内的 diff 缓存不再提供过期差异：链接 worktree 的 .git 是 gitfile，codex-acp diff 缓存指纹此前直接读 .git/index/.git/HEAD，失败后字段保持 0，跨暂存变更与 HEAD 移动持续提供过期的缓存 diff。现在路径经共享隐藏命令管线的 git rev-parse --git-path 解析，与其他 git 调用点一致。
+    内部改进
+    1. CodeWhale 底座推进到 2026-09-18 头（7fc36e587）：三个 squash 合并——压缩交接保持工具轮次边界（#519 修复的引擎半边）、computer-use 插件遵守 zoom 栅格契约（子栅格坐标按父缩放比重新绑定到裁剪区域）且 ssh 元素状态保留在宿主侧并给出显式 fail-closed 原因、DynamicGate 重建于 tokio Semaphore（取消重派/陈旧等待者/收缩语义已钉住）。fork 登记重钉 layer 0（36 个 signed-off 提交；gitlink 按 fork-policy §0 豁免领先不可变 r1 标签 21 个提交，直至 r2 出标）。
+    2. 全仓死测试与死命令清理：移除 12 个注册但从未调用的 Tauri 命令（handler 清单 454 → 442，连同协议测试清单、访问策略行与 smoke mock）、两个从未被任何 CI job 执行的集成测试文件、死 Rust 辅助函数（含从未被调用的 memory pre-LLM 启发式链）、一个无法失败的测试（改为统计 mock 命中）；此前静默的套件被接入门禁真正生效（五个 Windows 回归过滤器、一个从不传播结果的 iwencai 守卫）。共 62 个文件、+293/−1378，每项移除都有零引用审计背书。
+    3. 检查点 diff flake 从根因修复：同一文件系统时间戳 tick 内的同长度文件重写让 lstat 与缓存 index 条目完全一致，git 信任过期条目导致 diff 丢失变更——时序固有，已在串行单跑的第 69、87 次迭代复现。测试 fixture 现在先删除目标文件再重写，新 inode 强制 git 在所有 POSIX 文件系统上确定性重读；一处 helper 改动覆盖所有携带同款隐患的 fixture，500 次串行迭代完成红绿验证。
+    4. CI Linux 内存上限再抬高：zram 压缩算法 lz4 → zstd（rustc/ThinLTO 工作集压缩率更高）、设备容量改为按运行时 MemTotal 的 2 倍推导（公开 16 GiB runner 约 31 GiB 虚拟设备）、压缩池硬上限从内存的 50% 放宽到 70%、8 GiB 磁盘交换从 opt-in 改为每台 runner 强制（读不到 MemTotal 时 fail-closed 回落下层）。/mnt 安全护栏保留（跳过 tmpfs 与过小挂载、交换文件上限为空闲空间 60%），CONTRIBUTING.md 的内存事实同步更新。
+    注意事项
+    - 压缩修复拆分：#519 承载 UI 错误分类与 fork 登记；引擎行为随 #552 推进的 CodeWhale gitlink 落地（CodeWhale #62），两半同在本版生效。
+    - 停止绑定：#408 后仍保留少量刻意未绑定的取消触发点（级联取消、空闲兜底、调度监督者、引擎回收），已在 fork 登记文档逐条登记为已评审的边界。
+    - 行为变化披露：另一连接器操作运行期间发起新操作，此前无保护的入口现在直接 no-op 而非抢占忙碌槽（#548）；Web 构建不再自动预览宿主路径的交付物，用户主动预览仍走授权门（#546）；chrome-devtools MCP 下载器不再理会 HTTPS_PROXY 风格环境变量（#546）。
+    - 审计来源：#546、#547、#548 的核心与 #543 出自 2026-09-17/18 封闭-开源差异审计；与未开源内部实现纠缠的项被刻意留下——结构化连接器错误码与重试感知文案层（后端错误码载荷未开源）、按工具的市场操作互斥锁（本仓已通过事务锁串行化全部市场变更）。
+    - #543：被删除的文档、退役 i18n 键与历史 Signed-off-by 尾注仍保留在已发布的 git 历史中；清除历史是单独的高破坏性决定，刻意不在本次范围。
+    - #540 仅报告不修复：遗留的 ~/.pinvou3/<id>_disabled 标志文件仍会隐藏连接器技能且无重置路径（预存问题，待产品决定）。
+    - CodeWhale：gitlink 按 fork-policy §0 豁免刻意领先不可变 r1 标签 21 个提交，直至 r2 出标。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 55b77c8e5 / Actions #35435803779（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    修复
+    - 压缩后的会话不再以"模型不可用"的假象失败：工具轮次边界在压缩与恢复后保留，role 格式 HTTP 400 按请求格式错误上报（三语文案，不再建议重试）。
+    - 停止按钮对轮次的取消投递精准：针对第 N 轮的停止不再误杀引擎自启动的第 N+1 轮，延迟重放与超车轮次互不干扰。
+    - 连接器操作不再被迟到的异步事件二次触发，正在运行的操作按钮不会被重新点亮。
+    - 内置市场安装的 command/args/密钥声明以编译期内置清单为准；Windows 上无法验证依赖 lock 的预设源安装改为 fail-closed 而非警告跳过。
+    - 崩溃与安全加固回移：16 MiB GUI worker 栈终结静默栈溢出崩溃；密钥文件重新断言 owner-only 权限；Web 构建不再自动预览宿主路径交付物；chrome-devtools MCP 下载器加固；Windows 安装器在安装 VC++ 运行库前修复损坏的 TEMP ACL。
+    - 从社区仓移除 H3C 客户专属残留（死 i18n 键、MegaCube 侧栏入口、内部交接文档、fixture 中的真实个人身份）。
+    - 链接 worktree 内的 diff 缓存不再提供过期差异。
+    en-US
+    Fixes
+    - Compacted conversations no longer fail with a false "model unavailable": tool-round boundaries survive compaction and restore, and role-format HTTP 400s are reported as request-format errors (trilingual, no retry suggestion).
+    - Stop now delivers cancellation to the exact turn it targets: stopping turn N no longer kills an engine-initiated follow-up turn, and the deferred replay cannot be consumed by (or cancel) an overtaking turn.
+    - Connector operations can no longer be double-triggered by late async events re-enabling the buttons of a still-running operation.
+    - Builtin marketplace installs take their command/args/secret declarations from the compiled-in manifest, and unverifiable Windows preset-source dependencies fail closed instead of being skipped with a warning.
+    - Hardening backports: 16 MiB GUI worker stacks end a silent stack-overflow crash; secret files re-assert owner-only permissions; web builds no longer auto-preview host-path deliverables; the chrome-devtools MCP downloader is hardened; the Windows installer repairs broken TEMP ACLs before installing the VC++ redistributable.
+    - H3C customer-specific residue (dead i18n keys, the MegaCube sidebar entry, an internal handoff document, real identities in fixtures) is removed from the community repo.
+    - Diff caches inside linked worktrees stop serving stale diffs.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.3
+ReleaseTime: 2026-09-19T13:59:27.0000000Z
