@@ -1,0 +1,35 @@
+Version: 0.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AoharuCat/Closure/releases/download/v0.3.1/Closure-Setup-0.3.1.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Closure v0.3.1 —— 多系统支持整条线：三平台从「能打包」升级为「能运行」，CI 全链机械验证 + 启动冒烟，随批修复一批跨平台缺陷。
+    本次更新
+    - 多系统支持：Windows / macOS / Linux 理论可运行全链——每次推送即证三平台构建、测试与启动冒烟
+    - 磁盘命名安全单源：项目与文件树手建名拒绝 Windows 非法名（保留名 / 非法字符 / 超长），章节文件名、导出、图片、材料派生名自动净化
+    - Linux 文件监听原生化：外部改动自动刷新，不再降级为手动刷新
+    - 文件读取编码归一：GBK 中文文件、CRLF 文件不再乱码或把回车符带进生成链路
+    - 修复数据丢失：「移动文件」在 macOS / Linux 上目标已存在会被静默覆盖——现在显式拒绝
+    - 修复 macOS 同类误判：默认文件系统大小写不敏感导致的改名 / 提及台账目录判定问题
+    - agy 接入增强：macOS / Linux 图形会话 PATH 受限时自动枚举常见安装路径；Windows npm shim 形态给出专用引导；会话临时目录清扫加固
+    - 分发扩面：macOS 补 zip、Windows / Linux 补 arm64
+    平台覆盖
+
+    | 平台                | 产物                                                                             |
+    | ------------------- | -------------------------------------------------------------------------------- |
+    | Windows x64 / arm64 | Closure-Setup-0.3.1.exe（双架构合一安装包）、Closure-portable-v0.3.1-win-x64.zip |
+    | macOS arm64 / x64   | dmg 安装镜像 + zip                                                               |
+    | Linux x64 / arm64   | AppImage                                                                         |
+
+    已知限制
+    - macOS 包未签名：首启需右键打开或终端执行 xattr -cr /Applications/Closure.app；应用内自动更新在签名落地前不可用
+    - arm64 产物为机械验证级（CI 全链 + 启动冒烟实证，未真机实测）
+    完整变更见仓库 CHANGELOG.md。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AoharuCat/Closure/releases/tag/v0.3.1
+ReleaseTime: 2026-09-19T01:26:22.0000000Z
