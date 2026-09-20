@@ -1,0 +1,24 @@
+Version: 0.1.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.7/ddc-v0.1.7-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.7/ddc-v0.1.7-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.7 — correctness: framework nesting, clinit returns, field casts
+    - External framework nested references now dot correctly
+      (android.os.Parcelable.Creator instead of Parcelable$Creator).
+    - Static initializers no longer contain illegal returns
+      ("return outside method": 184 → 2 on reqable).
+    - Field reads on Object-widened receivers cast to the declaring class.
+    - Full-javac gate (reqable + android.jar): 20,895 semantic errors
+      (-50.5% vs 0.1.5); syntax gate zero across the corpus; deterministic.
+    - jdc-core 0.2.2.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.6...v0.1.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.7
+ReleaseTime: 2026-09-20T15:22:17.0000000Z

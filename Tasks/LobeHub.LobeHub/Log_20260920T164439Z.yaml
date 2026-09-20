@@ -1,0 +1,98 @@
+Version: 2.2.18
+Installer:
+- InstallerUrl: https://github.com/lobehub/lobehub/releases/download/v2.2.18/LobeHub-2.2.18-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Published from https://github.com/lobehub/lobehub/pull/19706 on merge commit 14dfc07b.
+    Full Changelog: https://github.com/lobehub/lobehub/compare/v2.2.17...v2.2.18
+
+    🚀 LobeHub Release (20260920)
+    Planned Release Date: September 20, 2026
+    Since v2.2.17: 177 non-merge commits · 12 contributors (excluding bots)
+    This week brings text-anchored document comments, conversation-linked Goals, clearer CLI diagnostics, and a more reliable self-hosted setup, alongside fixes for long-running Agent work and Desktop updates.
+    ⚙️ Upgrade & Migration Notes
+    - Docker Compose: Chats now use server-side Gateway Mode by default. Existing deployments need deployment-specific JWKS_KEY, matching public-only JWKS_PUBLIC_KEY, GATEWAY_SERVICE_TOKEN, and a browser-reachable AGENT_GATEWAY_URL. Follow the updated Compose upgrade guide; do not retain the old example signing key. Missing settings produce a startup warning and chats fall back to browser execution. AGENT_GATEWAY_INTERNAL_URL and S3_INTERNAL_ENDPOINT separate container-internal access from browser-facing URLs. (#19583)
+    - Compose startup: Bucket initialization uses rustfs/rc; upload CORS and PostgreSQL initialization/health checks are corrected. The setup script downloads templates from main and supports curl and macOS host-IP detection. (#19572, #19590)
+    - Database: Migrations 0162–0166 add search-capture version tracking, Environment/Instance/project associations, document-comment selection anchors, delivery-standard provenance, and nullable device CPU architecture. Environment support in this range is schema-only, not provisioning or execution integration. Back up the database before upgrading; this release preparation has not verified a full production upgrade or rollback. (#19537, #19270, #19595, #19627, #19510)
+    - Plain PostgreSQL search: FTS_SEARCH_PROVIDER=pg_like explicitly selects an extension-free query backend for smaller instances; it is not an automatic fallback. Historical migrations still require pg_search, so this setting alone does not make a fresh extension-free installation possible. (#19188)
+    - Bot credentials: List/detail responses mask credentials, and lh bot view --show-credentials is removed. (#19452)
+
+    ✨ Highlights
+    - Continue after a rate limit — Transfer an external CLI Agent conversation to another Agent, schedule continuation, or retry. Product acceptance remains incomplete as noted below. (#19080)
+    - Pull requests in the Desktop sidebar — A native PR tab brings descriptions, checks, commits, activity, and merge actions into the Working Sidebar. (#19506)
+    - Comments beside the text — Select a document excerpt to comment on it, then follow the highlighted passage and its aligned comment card. (#19602, #19659)
+    - Goals from a conversation — /goal lets a heterogeneous Agent supervise work from its current conversation; the linked Goal tray and portal are behind the enableTopicAcceptance Lab. (#19588)
+    - One diagnostic command — lh doctor checks credentials, endpoints, scope, device connectivity, and execution with selectable profiles and actionable results. (#19626)
+    - A simpler Desktop composer — Quick Composer opens for typing first and captures screenshots when requested. (#19523)
+    - Resource previews in place — Files and Pages open in an inline detail panel, keeping the resource list within reach. (#19599)
+    - More durable Agent runs — Operation-token renewal and corrected failure handling reduce interruptions and prevent discarded output from being reported as success. (#19548, #19549, #19658)
+
+    🏗️ Core Agent & Architecture
+    - Goal plans express dependencies across rounds; documents written through lh doc become run deliverables. After final acceptance checks pass, the Goal can surface its delivered document. (#19587)
+    - Agent steps share message reads and reuse turn-invariant facts; full completion-state snapshots become opt-in. (#19683, #19690, #19682)
+    - With the gatewayMux Lab enabled, supported tool results send smaller display payloads and recover full command/document output on demand. Follow-up fixes restore full bodies before transcript replay and cover the command-output family. (#19666, #19694, #19695)
+    - Consecutive server Agent steps run in one invocation, with deferred work settled between steps and queued messages able to request a turn handoff. (#19470, #19531, #19541, #19585)
+    - Shared rules now assemble Agent configuration, context, model parameters, tool rules, tool manifests, and Skills across execution hosts. (#19476, #19514, #19517, #19525, #19576, #19586, #19604, #19616, #19667)
+    - Goals use the system planner and supervising Agent, show Task assignees, retain graph position during interaction, and display live Task runs in the result panel. The default per-Task attempt budget increases from 3 to 8. (#19477, #19578, #19591, #19535, #19575)
+    - Acceptance review receives evidence frames inline, and review errors no longer consume Task attempts. Public discussion gains moderation and clearer permission boundaries. (#19565, #19448)
+    - Delivery-standard capture can derive lessons from settled rejection feedback and retain their provenance. This is backend groundwork; standards pages and automatic enforcement are not delivered here. (#19629, #19627)
+
+    📱 Platforms & Integrations
+    - Devices report CPU architecture on registration; existing rows remain nullable until upgraded clients reconnect. Local and remote Codex quota handling share the same account model. (#19510, #19678)
+    - The pi integration uses RPC transport and reuses its process across turns. Windows Claude SDK shim handling and Android Codex Gateway routing are corrected. (#18346, #18674, #18717)
+    - OAuth applications support web redirect URIs, and Android passkey origins are accepted. (#19504, #19640)
+    - Gateway connection multiplexing is available behind a Labs toggle, sharing one WebSocket per user. (#19557)
+    - Desktop improves first-paint startup, restored tabs, idle memory collection, renderer OTA application, and completion-sound choices. Missing user folders no longer crash the main process. (#19429, #19481, #19497, #19509, #19480, #19598)
+    - Agent-share visitor attachments gain scoped storage limits and isolation; shared Topic errors become safer and traceable. Availability follows the distribution's Agent-sharing surface. (#19569, #19649, #19560)
+
+    🖥️ CLI & User Experience
+    - Stopping an accepted reply preserves the current composer draft; only an unaccepted cancelled send restores its snapshot. Question submissions receive immediate optimistic feedback. (#19674, #19681)
+    - Terminal Task runs can be stopped or deleted, device settings give the detail pane more room, and workflow folds measure their own elapsed wall-clock time. (#19688, #19680, #19702)
+    - lh doctor supports offline diagnostics, JSON output, and opt-in deep checks; costly checks are not enabled by default. (#19626)
+    - HTML publishing can copy outside-Workspace assets into the Workspace, and the CLI prints the Artifact share URL after publishing. (#19447, #19536)
+    - Document comments retain the selected excerpt, align beside their source, and keep the line-comment marker inside the editor column. Pasted document images are rehosted. (#19602, #19659, #19664, #19527)
+    - Task URLs gain readable slugs; Artifact previews stay in the run drawer; resource galleries refresh after document deletion. (#19503, #19641, #19647)
+    - Acceptance adds a pinned list rail, multi-select, and optional evidence-file deletion. (#19559, #19529)
+    - Navigation restores sidebar scroll position, virtualizes long branch lists, and shows full upload errors in file tooltips. (#19441, #19492, #19453)
+
+    🔧 Tooling
+    - OpenAPI exposes Evaluation resources and the external run lifecycle for integration tooling. (#19428)
+    - Provider-native stream diagnostics and router-affinity hooks improve deployment troubleshooting. (#19643, #19648)
+    - Search indexing skips ineligible messages with versioned capture, and capture-trigger upgrades reduce lock contention. (#19537, #19570)
+    - Source tooling moves to pnpm 12.4.1 and actions/checkout v7. (#19437, #19656)
+
+    🔒 Security & Reliability
+    - JSON device-Gateway dispatch errors are recognized, and Agent message errors and structured IM replies are normalized. Rate-limit handoff coordinates cancellation with scheduled dispatch to prevent duplicate continuation. (#19692, #19676, #19080)
+    - Credential protection: Bot credentials are masked server-side; Compose generates deployment-specific signing keys and gives Gateway only the public key. (#19452, #19583)
+    - Discussion access: Public Acceptance visitors cannot impersonate Workspace Agents; private Workspace viewers remain read-only, with moderation and rate limits for public comments. (#19448)
+    - Run recovery: Garbled tool names are recovered, large tool errors are bounded, and sandbox spawn timeouts no longer immediately kill live or completed runs. (#19362, #19496, #19443)
+    - Accurate completion: Discarded heterogeneous output cannot settle as success; Desktop cancellation is confirmed even when its local Task record is missing. (#19658, #19603)
+    - File and tool handling: Device file operations avoid false outside-Workspace refusals, archived tool results are deduplicated, and knowledge reads are paginated. (#16962, #19665)
+
+    🧪 Release Validation & Known Gaps
+    This PR packages existing canary changes and adds no release-specific code. Main ancestry is restored by the preceding synchronization PR; the candidate is based on the synchronized canary. Git ancestry and release-note references are checked locally. Product tests, lint, and type-check were not rerun solely to prepare this release.
+    Existing upstream evidence is linked for traceability; these links do not establish full release-wide coverage:
+    - Docker Gateway, chat, uploads, and existing-environment upgrade.
+    - One-click Compose startup and upload CORS.
+    - Document comment gutter: upstream reports 19/19 checks across two rounds.
+    - Conversation-linked Goals: real device path covered; cloud sandbox and Desktop-local paths have unit coverage only.
+    - CLI diagnostics.
+    - Bot credential masking.
+    - Quick Composer: upstream reports 6/7 passed, with the denied Screen Recording permission prompt still blocked. This is not a fully passed acceptance.
+    - Cancelled-send composer recovery: covers dispatch cancellation, preserving a draft after acceptance, and typing/clearing during cancellation rollback.
+    - Tool-result projection: covers settled reads, on-demand recovery, and a controlled busy-assistant rendering regression; not a live WebSocket end-to-end claim.
+    - Rate-limit handoff: incomplete upstream; the atomic-cancellation repair has database regression coverage but no new passing UI acceptance because of a local worktree dependency blocker.
+    Additional limitations: lh doctor cannot report an unsupported Node runtime if module loading fails before the command starts; the Compose setup short-link redirect to main remains an external follow-up in the upstream PR. Full migration/rollback verification is not claimed.
+
+    👥 Contributors
+    Thanks to the 12 contributors represented in this Git range. Handles were verified against the contributing PRs; community contributors are listed first, followed by team members in contribution-count order.
+    @hardy-one · @northword · @Totoro-qaq · @BetterAndBetterII · @arvinxx · @Innei · @tjx666 · @rdmclin2 · @sudongyuer · @AmAzing129 · @cy948 · @ONLY-yours
+    Maintenance synchronization also includes LobeHub Bot.
+
+    Full Changelog: https://github.com/lobehub/lobehub/compare/v2.2.17...release/weekly-20260920
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lobehub/lobehub/releases/tag/v2.2.18
+ReleaseTime: 2026-09-20T13:11:30.0000000Z
