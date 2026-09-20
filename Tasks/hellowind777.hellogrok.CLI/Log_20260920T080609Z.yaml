@@ -1,0 +1,24 @@
+Version: 0.1.41
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.41/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.41/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.41
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.41
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Self-healing carrier for Chat tool calls whose name stays unresolved after shape inference. Parseable arguments are carried by run_terminal_command (command holds the raw text); corrupt non-JSON arguments are carried by read_file (target_file holds the raw text, (no arguments) when empty). The route is logged as unresolved-name-routed(name=…) with a valid JSON carrier payload, so the failure returns through a tool_result and the model regenerates the call. When neither carrier is declared on the request the call is left untouched.
+    Fixed
+    - Unnamed Chat tool calls that shape inference cannot name (for example an empty name plus arguments missing the opening { with trailing garbage) no longer reach Grok Build with an empty name and die as a silent terminal NotFound the model never sees fed back. The turn now recovers through the carrier path above instead of stalling.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0141-2026-09-20
+ReleaseTime: 2026-09-20T05:18:19.0000000Z
