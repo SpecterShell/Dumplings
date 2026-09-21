@@ -1,0 +1,22 @@
+Version: 0.2.10
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.10/CommandCodeGo.Manager-Setup-0.2.10-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.10/CommandCodeGo.Manager-Setup-0.2.10-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    上游连接中断被谎报成正常结束，导致「只有思考、无正文无工具调用」的空回复 (#5)
+    - 根因：CLI 的 finish 事件读法是 rawFinishReason ?? finishReason,网络失败族(network/connection/upstream error)只会出现在 rawFinishReason 字段里；代理此前只读 finishReason,上游连接中途挂掉时读到空值，又被折成 stop —— 下游收到 200 + stop + 只有 reasoning 的空回复，agent 循环判定「正常完成」,对话静默结束。
+    - 修复：三个端点(chat/completions、messages、responses)× 流式/非流式全部改读有效完成原因；finish 事件存在但没给原因时按可重试的 502 上报(对齐 CLI),下游得以重试而不是静默吞掉；空值会打 warn 日志留痕便于与上游对账。
+    - 顺带：402(配额/窗口耗尽)仍返回 429 状态码保持退避兼容，但 message 现在明确区分「配额耗尽」与「瞬时限流」。
+    /v1/models 的套餐(plan)标注过时
+    内置模型清单从 command-code@1.54.2 更新到 @1.58.1:claude/gpt/gemini/grok 系实际已要求 Pro/Max/GOAT 套餐(此前误标为 go,请求会收到 403 MODEL_NOT_IN_PLAN);Kimi-K2.7-Code 与 Qwen3.8-Max 系新开放到 go 套餐；新增 glm-5.3-flashx。
+    Full Changelog: https://github.com/learningdog1/CommandCodeGo-manager/compare/v0.2.9...v0.2.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/learningdog1/CommandCodeGo-manager/releases/tag/v0.2.10
+ReleaseTime: 2026-09-21T11:57:09.0000000Z
