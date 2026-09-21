@@ -1,0 +1,50 @@
+Version: 2.0.0-preview-v3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yuh-G/rikkahub-desktop/releases/download/v2.0.0-preview-v3/Rikkahub_2.0.0-preview-v3_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ✨ 新特性
+    - 消息发送队列：生成中发送的消息自动进入队列，支持多条按序处理
+    - 插话：排队消息在回答的自然边界插队
+    - 部分搜索引擎支持配图：Tavily 等搜索引擎回答自动嵌入 2~4 张相关图片
+    - 语音模式免提循环：支持连续多轮语音对话
+    - 访问密码：设置页支持配置 Docker 访问密码
+    - TTS 服务商新增 4 家，MiniMax 默认模型升级至 2.8-hd
+    - 朗读内容过滤：仅朗读引号内文本，自动跳过括号内容与 Markdown 标记
+    - 搜索服务新增 Serper、豆包，增强 Exa、Ollama
+    - 预置供应商新增 MiniMax、MiMo
+    - 「快速模型」统一配置：标题生成与内容建议共用，未配置时静默跳过
+    - ask_user 提问工具支持文本 / 单选 / 多选题型
+    - Responses API 支持自定义路径，适配 Azure 及各类网关
+    - MCP 连接健康监控：掉线自动重连，故障提供结构化诊断
+    - 图片生成页支持多选与批量操作
+    - 会话身份头与品牌 User-Agent 按供应商规范自动注入，UA 支持自定义
+    - 工作区审批矩阵新增 skills 目录免审批写入
+    🐛 问题修复
+    - 修复长连接请求偶发中断，Bun 运行时升级至 1.4.2
+    - 修复启动时闪现报错页
+    - 修复裸 IP / HTTP 部署下添加助手、供应商、MCP 等操作报错
+    - 修复 Docker 非安全上下文下表格复制无效、按钮错位
+    - 修复 Docker 镜像构建失败
+    - 修复附件过多时挤占输入框
+    - 修复工具卡片「用时」无限增长
+    - 修复长文件名弹窗标题折行叠字
+    - 修复快速连发消息时队列误判「发送失败」；回复失败与手动停止的队列状态分开提示
+    - 修复切换 API 格式时覆写 Base URL；预置供应商直达官方多协议端点
+    🔧 优化与变更
+    - 工作区引擎升级至 pi v0.85.1
+    - 上下文截断与工具调用配对对齐，工具记录不再被截断撕裂
+    - 会话时间感知阈值缩短至 10 分钟
+    - TTS 分片合成失败自动重试，预取策略调优
+    - 备份加固：封堵 TTS/ASR 配置盲区，未知类型优雅降级，大文件备份流式化，导入报告可见
+    - 语音输入在不支持的环境给出明确提示
+    - 代码字体禁用连字；重新生成增加确认提示
+    - 下架已停维护的 RikkaHub 预置供应商
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yuh-G/rikkahub-desktop/releases/tag/v2.0.0-preview-v3
+ReleaseTime: 2026-09-21T01:33:15.0000000Z
