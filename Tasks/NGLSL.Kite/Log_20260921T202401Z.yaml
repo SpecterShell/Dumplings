@@ -1,0 +1,54 @@
+Version: 0.4.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.4.0/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.4.0
+    版本重点
+    这一版让搜索「更懂你的习惯」，同时把文件搜索模式修到符合直觉：同一查询下反复选中的应用会按选择占比与新鲜度加分，偶然分散的选择不会锁死首位；显式打开「文件」后，Everything 命中优先排在应用前面，不再被同名应用刷屏。
+    新功能与体验改进
+    Adaptive Search（自适应搜索）
+    在既有「次数型」Query→App 历史之上升级为置信度型学习（不改数据库表结构，不上 ML）：
+    - 选择置信度 Confidence：该应用被选次数 / 该 Query 下总选择次数。wx 只开微信 vs 微信/开发者工具/企业微信各占三分之一，加分不再一样。
+    - 配对新鲜度 Freshness：Query→App 关系按最近使用时间保守衰减（≤30 天 100% → 30–90 天 80% → 90–180 天 60% → 更久 40%），陈旧习惯不再长期霸榜。
+    - 习得关系门槛：次数 ≥ 3 且 置信度 ≥ 70% 才形成 Learned Relation，配对加分可更高；未形成时按弱历史保守封顶。
+    - 公式：配对学习分 = 次数强度 × 置信度 × 新鲜度，再与全局启动频次/近期使用相加，并受历史总加分上限约束。
+    - 明确匹配保护不变：Name Exact / 用户 Alias 仍受硬保护，历史分不能把无关弱匹配抬到精确匹配之前。
+    文件模式排序
+    - 显式开启「文件」胶囊后：Everything 文件命中优先于应用等其余命中；应用仍保留在列表后部。
+    - 有文件结果时不再插入网页搜索槽位，避免文件列表被从中打断。
+    - 依赖状态（未安装 / 未运行 Everything）仍置顶可见。
+    工程结构
+    - ui/results 按职责拆分为编排 / 文件搜索 / 路径直达 / 空 Query 列表等模块，便于后续改动各自收口。
+    修复
+    - 文件模式下短查询（如图片筛选搜 test）曾被 ODBC、Python 等应用命中挤到文件结果后面；现已改为模式内文件优先。
+    - 空 Query 固定项按存储层「最近固定在前」顺序选取，上限 8 条时入选集合确定，不再依赖哈希迭代顺序。
+    升级影响
+    - 设置、历史、固定项、别名、插件与快捷键配置无需迁移；query_history / usage_history 表结构不变。
+    - 搜索排序公式变化：长期分散选择同一 Query 的场景下，首位可能从「次数最多的」变为「更稳定、更近期的」目标——这是预期行为。
+    - 安装包升级路径不变；官方插件资源随安装包同步。
+    - 领域词汇（Confidence / Learned Relation / Freshness / 文件模式）已写入 docs/CONTEXT.md；文件模式排序决策已修订 ADR 0002。
+    验证与限制
+    - 本地完整 cargo test：566 通过、11 忽略、0 失败。
+    - 含自适应回归（置信度区分、衰减、Learned Relation 门槛、保护层不变量）与文件模式排序回归。
+    - Windows 实机冒烟建议：文件模式搜关键词看文件是否置顶；连续用 c 打开同一应用后观察首位是否更稳。
+    - 热路径延迟与历史基线同量级；发布工作流会在 Windows 上重跑测试并生成 NSIS 安装包。
+    - 安装包仍无 Authenticode 数字签名。
+    构建与验证
+    - 发布 tag：v0.4.0
+    - tag 提交：4f5be06e98d43540c5bcd3c5b6f758ea3f5ce434
+    - 上一个发布：v0.3.7
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #22
+    本次提交范围
+    - chore(release): prepare v0.4.0 (4f5be06)
+    - feat(search): adaptive pair learning, file-mode priority, results split (1d6f95c)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.4.0
+ReleaseTime: 2026-09-21T19:20:10.0000000Z
