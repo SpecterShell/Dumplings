@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://mimocode-cdn.xiaomimimo.com/mimocode/mimodesktopai/manifest.json'
+$Object1 = Invoke-RestMethod -Uri 'https://mimocode-cdn.xiaomimimo.com/mimocode/mimodesktop/manifest.json'
 
 # Version
 $this.CurrentState.Version = $Object1.platforms.'win-x64'.version
@@ -13,15 +13,22 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.platforms.'win-x64'.timestamp | ConvertFrom-UnixTimeMilliseconds
-
-      # ReleaseNotes (en-US)
+      # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object1.platforms.'win-x64'.notes | Format-Text
       }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Object2 = Invoke-RestMethod -Uri (Join-Uri $Object1.platforms.'win-x64'.winFeedUrl 'latest.yml') | ConvertFrom-Yaml
+
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.releaseDate | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
