@@ -53,12 +53,12 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
   InstallerUrl  = $Object4.url
 }
-$this.CurrentState.Installer += [ordered]@{
-  Architecture        = 'x64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object4.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture        = 'x64'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object4.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
 # $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'zh-CN'
 #   Architecture    = 'x86'
@@ -80,13 +80,13 @@ $this.CurrentState.Installer += [ordered]@{
   # InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object6.version)_x64.exe"
   InstallerUrl    = $Object6.url
 }
-$this.CurrentState.Installer += [ordered]@{
-  InstallerLocale     = 'zh-CN'
-  Architecture        = 'x64'
-  InstallerType       = 'zip'
-  NestedInstallerType = 'portable'
-  InstallerUrl        = $Object6.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale     = 'zh-CN'
+#   Architecture        = 'x64'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object6.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
