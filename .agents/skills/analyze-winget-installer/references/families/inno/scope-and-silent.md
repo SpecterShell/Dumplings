@@ -9,6 +9,8 @@ Use these `$Info` fields together. Inno 5.3 through 6.2 stores architecture choi
 - `ArchitecturesAllowed` and `EffectiveArchitecturesAllowed` describe supported operating-system architectures.
 - `ArchitecturesInstallIn64BitMode` and its effective value identify when Inno uses 64-bit install mode.
 - `SupportedArchitectures` and `UnsupportedArchitectures` contain the parser's normalized result.
+- `RequiredArchitectureConstants` and `ArchitectureRequirementEvidence` explain x86 exclusions caused by mandatory x64-only constants such as `{commonpf64}` even when `ArchitecturesAllowed` itself permits x86.
+- `ConditionalArchitectureRequirementEvidence` retains scope-dependent `auto*64` evidence without excluding x86 when `/CURRENTUSER` can avoid the machine-only expansion route.
 - `PackedArchitecturesAllowed` and `PackedArchitecturesInstallIn64BitMode` preserve legacy raw set bytes when applicable.
 - `InstallerArchitecture` is the setup stub architecture and does not by itself determine installed application architecture.
 

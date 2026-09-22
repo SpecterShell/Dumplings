@@ -86,6 +86,10 @@ The active `TSetupLanguageEntry` supplies messages, fonts, directionality, and l
 
 An expression that asks for 64-bit install mode on a 32-bit system is treated as an internal script error.
 
+Architecture admission is also affected by constants expanded on a mandatory runtime path. `ExpandIndividualConst` raises an internal error on 32-bit Windows for `{commonpf64}`/`{pf64}`, `{commoncf64}`/`{cf64}`, `{dotnet2064}`, `{dotnet4064}`, and `reg:` constants that select a `64` registry view. `{sysnative}` and `{syswow64}` do not impose the same restriction: on 32-bit Windows they resolve to the native system directory. The `auto*64` folder constants require 64-bit Windows only in administrative mode because non-administrative mode rewrites them to their user-folder counterparts.
+
+`DefaultDirName` is expanded while the wizard initializes whenever Setup creates the application directory. A direct x64-only constant there can therefore make an installer unusable on x86 even when `ArchitecturesAllowed` admits x86. Static analysis must combine the architecture directive with required constant expansion instead of treating the directive as the sole admission rule.
+
 ## Privilege mode and elevation
 
 `PrivilegesRequired` has four persisted values:
