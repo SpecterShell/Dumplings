@@ -42,7 +42,7 @@ Classic scanning limits all-ones boundary candidates and zlib records before dec
 
 ## Implementation map
 
-- `Modules/PackageModule/Libraries/Installers/DeployMaster.psm1` contains the structural parser, evidence projection, and extractor.
+- `DeployMaster.psm1` owns public APIs, ARP/result composition, and extraction orchestration. `DeployMasterModern.psm1` owns catalog validation, structural route selection, modern control/data records, and shared destination/association decoding. `DeployMasterClassic.psm1` handles classic runtime, catalogs, and item streams using the shared family decoding where the layouts agree. All three live under `Modules/PackageModule/Libraries/Installers`; implementation modules are imported locally.
 - `Modules/PackageModule/Libraries/Installers/DeployMasterFormatCatalog.psd1` contains the verified route profiles.
 - `Modules/PackageModule/Libraries/Infrastructure/InstallerAnalyzer.psm1` performs provider-neutral candidate routing.
 - `Modules/PackageModule/Libraries/WinGet/WinGetAnalysis.psm1` composes schema-valid WinGet suggestions from exact parser evidence.

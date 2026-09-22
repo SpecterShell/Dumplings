@@ -1,0 +1,40 @@
+name: Offline regressions
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [Core, PackageModule, InstallerParsers]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - uses: ./.github/actions/setup-powershell-modules
+      with:
+        cache-path: ${{ runner.temp }}\DumplingsPowerShellModules
+        cache-key: dumplings-pwsh-modules-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('PowerShellModules.psd1') }}
+    - uses: ./.github/actions/setup-powershell-modules
+      with:
+        lock-path: Utilities/Testing/Modules.psd1
+        cache-path: ${{ runner.temp }}\DumplingsTestModules
+        cache-key: dumplings-tests-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Utilities/Testing/Modules.psd1') }}
+    - name: Run offline tests
+      shell: pwsh
+      env:
+        DUMPLINGS_TEST_OFFLINE: '1'
+        DUMPLINGS_TEST_FIXTURE_ROOT: ${{ runner.temp }}\EmptyFixtures
+      run: ./Utilities/Testing/Invoke-Regression.ps1 -Component '${{ matrix.component }}' -Offline
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: regression-${{ matrix.component }}
+        path: Outputs/Tests/

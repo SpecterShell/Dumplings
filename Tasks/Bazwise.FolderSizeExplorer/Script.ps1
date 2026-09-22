@@ -1,14 +1,10 @@
-function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+function Get-ReleaseNotes {
+  param([string]$InstallerFile)
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'FolderSizeExplorer.msi' 'ReleaseNotes.txt' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'FolderSizeExplorer.msi'
-  # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
+  $Object2 = $null
+  $Object3 = $null
   try {
+    7z.exe e -aoa -ba -bd -y -o"$InstallerFileExtracted" $InstallerFile 'ReleaseNotes.txt' | Out-Host
     $InstallerFile3 = (Get-Item -Path (Join-Path $InstallerFileExtracted 'ReleaseNotes.txt')).FullName
     $Object2 = [System.IO.File]::OpenRead($InstallerFile3)
     $Object3 = [System.IO.StreamReader]::new($Object2)
@@ -45,14 +41,14 @@ function Read-Installer {
       $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
     }
 
-    $Object3.Close()
-    $Object2.Close()
   } catch {
     $_ | Out-Host
     $this.Log($_, 'Warning')
+  } finally {
+    if ($Object3) { $Object3.Dispose() }
+    elseif ($Object2) { $Object2.Dispose() }
+    Remove-Item -LiteralPath $InstallerFileExtracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
   }
-
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 }
 
 # Installer
@@ -60,64 +56,21 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.folder-size-explorer.com/download-fse.php'
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# Hash
-$this.CurrentState.Hash = $Object1.Headers.'x-goog-hash'.Where({ $_.StartsWith('md5=') }, 'First')[0] -replace '^md5='
-
-# Case 0: Force submit the manifest
-if ($Global:DumplingsPreference.Contains('Force')) {
-  $this.Log('Skip checking states', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 1: The task is new
-if ($this.Status.Contains('New')) {
-  $this.Log('New task', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  return
-}
-
-# Case 2: The hash is unchanged
-if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
-  return
-}
-
-Read-Installer
-
-# Case 3: The current state has an invalid version
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-  throw 'The current state has an invalid version'
-}
-
-switch -Regex ($this.Check()) {
-  # Case 5: The hash and the version have changed
-  'Updated|Rollbacked' {
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
+$Result = $this.CheckInstallerUpdates(@{
+  Validator = 'Header'
+  HeaderName = 'x-goog-hash'
+  SelectValue = { param($Values) @($Values) -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_.StartsWith('md5=') } | ForEach-Object { $_.Substring(4) } }
+  LegacyState = @{ ValidatorField = 'Hash' }
+  ReadVersion = {
+    param($Path)
+    $Extracted = New-TempFolder
+    try {
+      7z.exe e -aoa -ba -bd -y -o"$Extracted" $Path 'FolderSizeExplorer.msi' | Out-Host
+      Read-ProductVersionFromMsi -Path (Join-Path $Extracted 'FolderSizeExplorer.msi')
+    } finally {
+      Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+    }
   }
-  # Case 4: The hash has changed, but the version is not
-  # The installer might be updated without changing the version (e.g., virus database update)
-  # Force submit the manifest even if neither the version nor the installer has changed
-  default {
-    $this.Log('The hash has changed, but the version is not', 'Info')
-    $this.Config.IgnorePRCheck = $true
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
-  }
-}
+})
+if ($Result.NeedsMetadata -and $Result.Artifacts[0].Path) { Get-ReleaseNotes -InstallerFile $Result.Artifacts[0].Path }
+$this.CompleteInstallerUpdates($Result)

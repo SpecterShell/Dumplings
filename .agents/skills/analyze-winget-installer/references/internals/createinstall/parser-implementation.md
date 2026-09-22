@@ -1,5 +1,9 @@
 # CreateInstall parser implementation
 
+## Module boundaries
+
+`CreateInstall.psm1` owns the public APIs, selected-payload analysis, and final result. `CreateInstallGentee.psm1` decodes GE programs and owns the validated format catalog and per-program function/import indexes. `CreateInstallOperations.psm1` interprets compiled operations and ARP evidence. `CreateInstallArchive.psm1` handles GEA layouts, companions, block decoding, and extraction. These modules exchange parsed program/layout objects and load locally beneath the public module.
+
 ## Structural detection
 
 `Test-CreateInstall` resolves the source path, validates the PE, decodes the one `.gentee` program, verifies its GE header CRC and object table, and requires a referenced `MAINVAR` table with the source-consumed project keys. It intentionally does not require a GEA archive because valid setup and uninstaller programs can contain no packaged files.

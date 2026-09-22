@@ -9,7 +9,7 @@ Use these top-level fields:
 - `Installer`: installer-state dictionaries consumed by manifest updating.
 - `Locale`: locale field mutations consumed by manifest updating.
 - `ReleaseTime`: converted to installer `ReleaseDate` unless an installer entry supplies its own date.
-- `ETag`, `Hash`, `LastModified`, `ContentLength`, or another task-specific key: persisted change evidence only for a last-resort versionless installer source; these keys do not become manifest fields.
+- `InstallerTracking`: versioned per-artifact validators, SHA256, request-identity digests, and resolved versions managed by `CheckInstallerUpdates`. These are state evidence, not manifest fields. Legacy `ETag`, `Hash`, `LastModified`, and `ContentLength` keys require explicit mappings in the [versionless workflow](../sources/versionless.md).
 
 Validate that every selected asset exists and that all architecture variants report a consistent release version. Do not silently publish only whichever asset happened to be first in an API response.
 
@@ -38,6 +38,8 @@ When the manifest version is available only from installer analysis, call `Check
 Do not use `RealVersion` when `Version` can already be the correct WinGet `PackageVersion` without missing upstream updates. Never use it to conceal an uncertain version mapping. If multiple upstream versions intentionally collapse to one `RealVersion`, expect same-version manifest updates and verify that this matches the publisher's versioning and winget-pkgs policy.
 
 ## 7. Reuse Downloaded Installers
+
+`CheckInstallerUpdates` registers and owns its downloaded artifacts automatically. Do not add a second download/hash pass or copy its runtime result into `CurrentState`. Its verified hash evidence stays in `InstallerFileEvidence` outside serialized state; manifest updating invalidates it when the file identity changes.
 
 When a task must inspect an installer to discover its version or confirm a hash, register the file before parsing it:
 

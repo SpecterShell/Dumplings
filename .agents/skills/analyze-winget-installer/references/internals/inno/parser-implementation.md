@@ -4,6 +4,8 @@ Read the other pages in this directory first. They describe the producer and run
 
 ## Static-analysis boundary
 
+The GPL implementation is split into locally imported layers: `InnoFormat.psm1` owns loader/header/catalog decoding and per-operation analysis contexts; `InnoScript.psm1` owns bounded Pascal Script analysis; `InnoPayload.psm1` owns slice streams, payload decompression, and CALL transforms. `Inno.psm1` retains public APIs and result composition. The resolved format catalog is initialized only in the format layer, and callers receive copied selected layouts through the analysis context.
+
 A format reader can establish:
 
 - the exact setup-data identity, edition, character mode, and container route;

@@ -171,6 +171,12 @@ Invoke-ScriptAnalyzer .\Modules\PackageModule\Libraries\Example.psm1
 
 Downloaded fixtures are cached under the sibling `../Dumplings-TestFixtures/Installers/<Family>/<PackageIdentifier>/<Version>` catalog, while curated builder media and source trees live under `Builders` and `Sources`. Synthetic fixtures and extraction output belong to Pester's `$TestDrive`; tests must not execute installers.
 
+### Offline and Performance Checks
+
+The offline regression workflow runs Core, PackageModule and InstallerParsers in separate jobs with pinned module caches. It does not run package tasks, submit manifests, send messages or download installer fixtures. Run the same checks locally with `./Utilities/Testing/Invoke-Regression.ps1 -Component PackageModule -Offline`; select the other components by name.
+
+Use Core's `-MeasurePerformance` switch for sanitized per-run stage measurements. The isolated benchmark and AST task-inventory tools are documented in [Utilities/Testing](Utilities/Testing/README.md), including measured startup costs and the ready scheduler's dependency-heavy results. These switches do not enable state writes or submission.
+
 ## License
 
 The root project remains licensed under the [MIT License](LICENSE). Core and PackageModule use the [Apache License 2.0](Core/LICENSE) and [Apache License 2.0](Modules/PackageModule/LICENSE), respectively. PackageModule contains documented file-level MIT and third-party exceptions. InstallerParsers has file-specific GPL licensing described in its [README](Modules/InstallerParsers/README.md).

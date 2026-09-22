@@ -12,7 +12,7 @@ foreach ($Node in $Document.SelectNodes("//div[contains(concat(' ', normalize-sp
   if ($DownloadEntry) {
     # The thank-you link carries a Base64 token whose tail is the real installer URL
     $DownloadToken = [regex]::Match([string]$DownloadEntry.Value.download_link.url, 'download=([^&]+)').Groups[1].Value
-    $DecodedDownload = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($DownloadToken))
+    $DecodedDownload = $DownloadToken | ConvertFrom-Base64
     $Item = $Node
     $InstallerUrl = ($DecodedDownload -split '--')[-1]
     break

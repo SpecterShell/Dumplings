@@ -26,7 +26,7 @@ Start manifest feedback early. As soon as the task can produce the required vers
 
 Keep package-specific discovery in `Script.ps1`; keep reusable mechanics in PackageModule. Create a shared provider when at least three tasks fetch the same source and declare every dependency in `Config.yaml`.
 
-Populate the current version and installer URLs before calling `Check()` once. Keep required installer downloads and `RealVersion` parsing outside recoverable `try`/`catch` blocks. Isolate optional release metadata sources in separate `try`/`catch` blocks.
+Populate the current version and installer URLs before calling `Check()` once. For versionless installers, use `CheckInstallerUpdates` and `CompleteInstallerUpdates` instead of handwritten probe/hash/state branches. Keep required installer downloads and `RealVersion` parsing outside recoverable `try`/`catch` blocks. Isolate optional release metadata sources in separate `try`/`catch` blocks.
 
 Select full installers, not updater, delta, or electron-builder portable artifacts. Require unambiguous asset filters and verify architecture from package or binary evidence. Cache reused downloads in `$this.InstallerFiles`.
 

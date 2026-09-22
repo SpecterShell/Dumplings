@@ -20,6 +20,8 @@ Import-Module PowerHTML, powershell-yaml -ErrorAction Stop
 
 Use `Get-Command <Name> -Syntax` when current command metadata differs from an old task example. Functions may call helpers from other loaded PackageModule files; do not copy their implementations into task scripts or agent commands.
 
+Normal imports reuse implementation modules. Use `. .\Modules\PackageModule\Index.ps1 -Reload` only when intentionally reloading changed source in a development shell. Use `Copy-Object` and `Test-ObjectValueEqual` for shared data copying and structural equality; the former WinGet-specific copies of these functions were removed. Copying preserves dates, scriptblocks, explicit nulls and nested empty arrays; it does not clone disposable .NET resources.
+
 ## Function groups
 
 - Read [networking](references/networking.md) for GitHub API calls, URI composition, redirects, headers, response decoding, and embedded JSON.
@@ -34,5 +36,7 @@ Read only the groups required by the current operation. Installer-family parser 
 ## Usage rules
 
 Prefer these shared functions over local download, redirect, encoding, temporary-file, archive, HTML, YAML, feed, or browser implementations. Preserve each helper's ownership and cleanup contract. When a PackageTask downloads an installer explicitly, register the path in `$this.InstallerFiles`; independent callers own their temporary resources unless the function states otherwise.
+
+For versionless package sources, prefer PackageTask's `CheckInstallerUpdates`/`CompleteInstallerUpdates` workflow over composing probes, hashes, and publishing branches yourself. Read the [versionless task contract](../author-dumplings-task/references/sources/versionless.md) for validators, per-entry overrides, callback ownership, and legacy-state mappings. These methods register downloads and retain verified hash evidence automatically.
 
 Keep browser leases short and return detached values. Never retain page, locator, response, or browser objects after a scoped helper returns. Never execute a downloaded installer on the host.

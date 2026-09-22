@@ -2,7 +2,7 @@
 
 ## Module boundaries
 
-The Apache-2.0 implementation lives in `Modules/PackageModule/Libraries/Installers/InstallBuilder.psm1`. Its schema-specific Metakit reader lives in `Modules/PackageModule/Assets/Source/InstallBuilder/InstallBuilderMetakitReader.cs`. Shared PE, binary, compression, archive, path-safety, collision, dependency, association, condition, and diagnostic mechanics remain in their focused infrastructure modules.
+The Apache-2.0 public module is `Modules/PackageModule/Libraries/Installers/InstallBuilder.psm1`. It imports `InstallBuilderProject.psm1` for configuration, rules, actions, and system effects, and `InstallBuilderPayload.psm1` for Metakit/CookFS catalogs and payload extraction. Its schema-specific Metakit reader lives in `Modules/PackageModule/Assets/Source/InstallBuilder/InstallBuilderMetakitReader.cs`. Shared PE, binary, compression, archive, path-safety, collision, dependency, association, condition, and diagnostic mechanics remain in their focused infrastructure modules. Parsed project contexts and archive objects are passed explicitly; no interpreter or payload is executed.
 
 The managed reader implements only the exact TclKit VFS schema used by verified InstallBuilder media. It does not load Metakit, Tcl, TclKit, or installer code. The PowerShell module owns project interpretation, CookFS2, payload mapping, runtime evidence, ARP reconstruction, extraction, and public result composition.
 

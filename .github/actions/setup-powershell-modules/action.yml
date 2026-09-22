@@ -8,6 +8,9 @@ inputs:
   cache-key:
     description: Exact GitHub Actions cache key
     required: true
+  lock-path:
+    description: Repository-relative pinned module specification
+    default: PowerShellModules.psd1
 
 outputs:
   cache-hit:
@@ -29,12 +32,13 @@ runs:
       env:
         DUMPLINGS_MODULE_CACHE_HIT: ${{ steps.restore.outputs.cache-hit }}
         DUMPLINGS_MODULE_CACHE_PATH: ${{ inputs.cache-path }}
+        DUMPLINGS_MODULE_LOCK_PATH: ${{ inputs.lock-path }}
       run: |-
         $RepositoryRoot = Split-Path (Split-Path (Split-Path $env:GITHUB_ACTION_PATH -Parent) -Parent) -Parent
         $UtilityPath = Join-Path $RepositoryRoot 'Utilities' 'GitHubActions'
         Import-Module (Join-Path $UtilityPath 'PowerShellModuleCache.psm1') -Force
         Initialize-DumplingsPowerShellModuleCache `
-          -LockPath (Join-Path $RepositoryRoot 'PowerShellModules.psd1') `
+          -LockPath (Join-Path $RepositoryRoot $env:DUMPLINGS_MODULE_LOCK_PATH) `
           -CachePath $env:DUMPLINGS_MODULE_CACHE_PATH `
           -CacheHit ($env:DUMPLINGS_MODULE_CACHE_HIT -eq 'true') `
           -GitHubEnvironmentPath $env:GITHUB_ENV

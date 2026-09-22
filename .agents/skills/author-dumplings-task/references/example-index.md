@@ -20,7 +20,7 @@ Open the named task directly and read its current `Config.yaml` and `Script.ps1`
 | Explicit installer query | `RawTherapee.RawTherapee` | Select an existing installer by a `Query` dictionary when task write fields differ. |
 | Versionless URL with checksum header | `Altova.XMLSpy.Professional`, `Alibaba.Taobao`, `Alibaba.QwenWork.CN`, `Bazwise.FolderSizeExplorer` | Last-resort detection using `x-amz-meta-sha256`, `Content-MD5`, `x-oss-hash-crc64ecma`, or `x-goog-hash`. |
 | Versionless URL with ETag | `ABC.PowerExtension`, `Cjwdev.ADAccountResetTool`, `Amazon.EC2Launch` | Last-resort ETag history, SHA256 confirmation, cached installer reuse, and optional release notes. |
-| Versionless URL with Last-Modified | `AnyDesk.AnyDesk`, `BitSum.ProcessLasso.Beta` | Last-resort date comparison, regressed-date warning, and per-architecture validators. |
+| Versionless URL with Last-Modified | `AnyDesk.AnyDesk`, `Untis.Untis.2026` | Shared tracking, regressed-date verification, and per-architecture validators. Process Lasso now uses its official JSON feed. |
 | Versionless URL with Content-Length | `Ardisk.Ardisk` | Weakest last-resort prefilter followed by a content download and SHA256 comparison. |
 
 Always open the named task directly and read its current `Config.yaml` and `Script.ps1`. Do not recursively copy a family of scripts merely because this table names one member.

@@ -40,6 +40,8 @@ Raw parser results contain context-neutral structured diagnostics. The workflow 
 
 ## Implementation mapping
 
+The public GPL `SetupFactory.psm1` imports three internal modules locally. `SetupFactoryProject.psm1` decodes project, registry, and installed-file records. `SetupFactoryActions.psm1` interprets action tables and owns their record-reader dispatch. `SetupFactoryContainer.psm1` handles outer media, compressed payloads, and the classic 3.1 route. Public API names and JSON results remain owned by the original family module.
+
 - `Modules/InstallerParsers/Libraries/Installers/SetupFactory.psm1`
 - `Modules/InstallerParsers/Libraries/Installers/SetupFactoryFormatCatalog.psd1`
 - `Modules/InstallerParsers/Assets/Source/SetupFactory/CrusherLh5Decoder.cs`

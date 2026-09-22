@@ -10,6 +10,12 @@ Read [Binary notation](binary-notation.md), [parser contracts](contracts.md), an
 
 Load infrastructure before format modules. Guard managed source compilation so repeated imports and parallel runspaces do not define the same type twice. Mirrored common sources in the two parser submodules must remain byte-identical.
 
+## Internal modules and shared helpers
+
+Split a family only along substantial, independently testable responsibilities such as container decoding, project interpretation, or payload extraction. Import implementation `.psm1` modules locally with explicit exports; keep public commands in the original family module. Pass operation contexts as parameters and keep descriptor initialization in the owning layer. Do not copy another module's mutable script variables, introduce global private commands, or add generated proxy functions. Tests for private state and mocks must target the implementation module that now owns the code.
+
+Before adding a family-prefixed helper, check the existing binary, archive, runtime, Text, and Object modules. Shared readers must preserve the caller's encoding policy, offset base, enclosing-record limits, stream position, and ownership. Similar-looking helpers with different recovery or format rules should remain separate. Record public-command metadata, fixture outputs, extraction hashes, and benchmark results before a structural refactor; compare them afterward, normalizing only known temporary paths.
+
 ## External tools
 
 Parser modules, tests, bridges, and CI must not depend on `7z.exe`, NanaZip, `isx.exe`, vendor builders, Python extractors, or other executable parsers. Agents may use such tools separately to research and cross-check a format, but their output is supporting evidence rather than the implementation or sole regression oracle.
