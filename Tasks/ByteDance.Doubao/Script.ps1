@@ -8,6 +8,10 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Join-Uri $Object1.data.settings.saman_update_address.win_x64_url "../$($this.CurrentState.Version)/Doubao_installer_$($this.CurrentState.Version).exe"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = Join-Uri $Object1.data.settings.saman_update_address.win_x64_url "../$($this.CurrentState.Version)/Doubao_Arm64_installer_$($this.CurrentState.Version).exe"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
