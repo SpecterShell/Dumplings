@@ -1,4 +1,4 @@
-$Page = Invoke-WebRequest -Uri 'https://www.huaweicloud.com/product/agentarts/officeace.html'
+$Page = Invoke-WebRequest -Uri 'https://www.huaweicloud.com/product/officeace/download.html'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
