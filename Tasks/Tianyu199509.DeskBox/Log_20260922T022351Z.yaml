@@ -1,0 +1,46 @@
+Version: 1.5.5
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.5/DeskBox_Setup_1.5.5_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.5/DeskBox_Setup_1.5.5_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.5 is a feature-packed reliability update: cloud backup to your own WebDAV server with scoped, tombstone-safe restore; drag-and-drop that Copy-only targets finally accept; cross-volume transfers through the Windows file-operation engine; self-healing hotkeys; idle memory trimming; and a Fluent snap-feedback refresh.
+    Released on September 22, 2026.
+    Highlights
+    - Cloud backup to your own server. Settings → Maintenance gains a WebDAV cloud-backup page: per-domain toggles (todo, quick capture, widget style), configurable interval and retention, credentials stored in Windows Credential Manager, a "Test connection" that validates what you just typed, on-demand backups, and a browsable remote snapshot list.
+    - Scoped, tombstone-safe restore. Pick which data domains come back and choose merge (newer entries win, nothing on this device is deleted) or a full snapshot-faithful restore. Deletions leave tombstones, so a merged restore can never resurrect an item you removed locally; restores stage, validate, and apply on the next launch with a pre-restore safety archive pinned.
+    - Drag-and-drop that works everywhere. File drags out of widgets carry the same native Shell data object Explorer uses, so Copy-only drop targets that used to reject DeskBox — VS Code, browsers and other Chromium/Electron apps, WM_DROPFILES-era programs, WinForms — now accept them. Same-volume drops default to move, cross-volume to copy, Ctrl/Shift/Alt behave as expected on Windows 11, and Windows 10 keeps single-move without prompting.
+    - Cross-volume transfers through the system engine. Cross-volume moves and copies now use IFileOperation with native progress, cancellation, and conflict handling — fixing the Native AOT cross-volume import that completed with "0 items". Aborted transfers clean up only the objects they created.
+    - Hotkeys that heal themselves. Windows can silently strip the low-level hooks behind the global hotkey, search hotkey, or desktop double-click activation, leaving them dead until restart. A two-stage health watchdog now detects and re-registers them automatically.
+    - Idle memory trimming. Widgets return memory to Windows after a few seconds of true quiet — no longer only when everything is hidden — guarded by working-set floors and ambient-animation awareness. Controlled by the new "Trim memory when idle" performance option.
+    - Fluent-grade snap feedback and capsule control. The looping breathing glow is replaced by a crisp accent edge band that settles once and dissolves around rounded corners. Compact widgets gain a per-widget expansion-direction override, capsule bars reorder by dragging across monitors, and new groups default to tab navigation.
+    - Sharper shortcut icons, honest fixes. Alt-dragged shortcuts keep the target's own icon; arrow overlays render through a high-resolution compositing channel instead of pre-scaled bitmaps. The settings window no longer freezes on the theme it had when closed, the cloud-backup page no longer crashes on Native AOT builds, leftover folders no longer block same-named widgets, and migration rollback failures explain themselves.
+    See CHANGELOG.md for the complete list, including upgrade reliability (a dedicated device-local layout store, paired layout+settings commits, journaled style restore).
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.5 是一次功能与可靠性并重的更新：云备份到自己的 WebDAV 服务器（支持按域、墓碑安全还原）、Copy-only 目标终于能接受的文件拖放、走 Windows 文件操作引擎的跨盘传输、会自愈的热键、空闲内存修剪，以及 Fluent 风格的吸附反馈刷新。
+    2026 年 9 月 22 日发布。
+    主要更新
+    - 云备份上线。 设置 → 维护新增 WebDAV 云备份页：待办/快采/格子样式按域开关、自定义频率与保留份数、密码存 Windows 凭据管理器、"测试连接"直接校验刚输入的凭据、支持立即备份与远端快照浏览。
+    - 按域还原、删除不复活。 可选回哪些数据域，"合并"（新者胜、不删本机数据）或"完全恢复"；删除会留墓碑，合并还原不会复活本机已删条目；还原先暂存校验、下次启动应用，且先固定还原前安全归档。
+    - 拖放到处都好用。 从格子拖出的文件携带与 Explorer 同源的原生 Shell 数据对象——VS Code、浏览器等此前拒绝 DeskBox 拖放的目标现在都能接受。同盘默认移动、跨盘默认复制，Win11 修饰键符合预期，Win10 保持单一移动不弹框。
+    - 跨盘传输走系统引擎。 跨盘移动/复制改用 IFileOperation，获得原生进度、取消与冲突处理——修复 Native AOT 版跨盘导入"0 items"的问题；中止的传输只清理自己创建的对象。
+    - 热键自愈。 Windows 静默摘除低级钩子导致的热键/搜索热键/桌面双击激活失灵，现在由两段式健康 watchdog 自动检测并恢复。
+    - 空闲内存修剪。 格子真正静默几秒即向 Windows 归还内存，不再要求全部隐藏；由新的"空闲时修剪内存"选项控制。
+    - Fluent 吸附反馈与胶囊控制。 循环呼吸辉光改为一次落定的 accent 边缘光带；紧凑格子可覆盖展开方向、胶囊条跨显示器拖拽重排、新组默认标签页导航。
+    - 更清晰的快捷方式图标与一批诚实修复。 Alt 拖入快捷方式保留目标图标、箭头高分辨率合成不再模糊；设置窗不再冻结旧主题、云备份页在 Native AOT 版不再崩溃、残留文件夹不再堵死同名格子、迁移回滚失败会说明原因。
+    完整条目见 CHANGELOG.md（含升级可靠性：独立布局存储、布局+设置成对提交、样式还原日志化两段提交）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.5
+ReleaseTime: 2026-09-22T02:19:29.0000000Z
