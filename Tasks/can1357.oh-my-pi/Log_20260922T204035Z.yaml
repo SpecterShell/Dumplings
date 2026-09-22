@@ -1,0 +1,229 @@
+Version: 18.2.9
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.2.9/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed stream finalization when a provider ends without emitting a completion or error event, ensuring the final assistant message is preserved and corresponding message lifecycle events are emitted.
+    - Fixed tool execution being incorrectly skipped when host steering callbacks reject during a tool batch.
+    - Fixed stream hangs and preserved the original error when host aside-commit or discard callbacks fail.
+    @oh-my-pi/pi-ai
+    Added
+    - Added Claude saved-reset discovery and redemption, including session-only resets, grant eligibility, expiry, and safe retry handling.
+    Fixed
+    - Fixed custom OpenAI-compatible extension streamers failing when no compatibility configuration was provided.
+    - Fixed local provider sign-in for LM Studio, llama.cpp, and vLLM so an empty API key is not treated as successful authentication.
+    - Fixed Vercel AI Gateway models backed by non-Anthropic providers failing tool calls because of strict schema validation; requests now retry with compatible non-strict tool handling.
+    - Improved AWS Bedrock authentication by refreshing expired AWS SSO sessions automatically, reducing the need to run aws sso login again.
+    - Fixed Bedrock tool-enabled requests when tool descriptions are included in the system prompt.
+    - Improved Alibaba Token Plan (Beijing) quota reporting across workspaces and made gateway rejection codes visible in error logs.
+    - Fixed the tool-call loop guard so repeated identical calls continue to be redirected after the detection threshold is reached.
+    - Fixed valid required null values inside tool argument unions being removed before dispatch (#12523 by @cswenor).
+    - Signing in to a local provider (lm-studio, llama.cpp, vllm) with an empty key paste no longer reports the provider as logged in while its requests go out unauthenticated. (#12436 by @xiechimon)
+    - Fixed every turn failing with 400 Invalid schema for function '<tool>' … Missing '<param>' on Vercel AI Gateway models served from a non-Anthropic upstream (e.g. openai/gpt-5.6-sol): the translated strict-tool rejection now triggers the existing non-strict retry instead of failing the turn (#12760 by @primitive-type).
+    - Expired AWS SSO access tokens are now refreshed via the SSO OIDC refresh_token grant instead of failing with sso-token-expired, so Bedrock profiles keep working between aws sso login runs the same way the AWS CLI does (#12736 by @nwbb).
+    - Fixed Bedrock rejecting tool-enabled requests when tool descriptions are inlined into the system prompt (#12732 by @mustafaabidali).
+    - Alibaba Token Plan (Beijing) quota reporting no longer pins requests to a single workspace, and HTTP-200 gateway rejections now log their error code (#12395 by @Dante-dan).
+    - The tool-call loop guard keeps redirecting when a model continues the same identical call past the detection threshold instead of firing only once (#12709 by @F0Rextasy).
+    - Fixed OpenAI-compatible Gemini gateways losing message-level thought signatures when replaying tool-call history.
+    - Added support for explicitly disabling reasoning with reasoning_effort: "none" through Chat Completions authentication gateways.
+    - Improved Bedrock resilience by retrying transient in-stream internal server, service unavailable, and throttling errors.
+    - Fixed Anthropic prompt-cache keep-alive refreshes for turns that used forced tool selection.
+    - Fixed auth-broker usage reports incorrectly sharing usage limits between Team members with shared workspace and organization identifiers.
+    - Fixed OpenAI Codex requests hanging when an error response body is delayed.
+    - Fixed Kimi usage reporting so monthly totals and code quotas are shown alongside the five-hour usage window.
+    - Bedrock no longer sends provider-invalid payloads when an errored tool result contains an image; the image is hoisted into a sibling block (#12865 by @roboomp).
+    - Gemini, Vertex, and Cloud Code Assist requests no longer include the unsupported minP/repetitionPenalty sampling fields, which caused 400s when set globally (#12850 by @roboomp).
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Local OpenAI-compatible backends—including llama.cpp, LM Studio, vLLM, Ollama, and custom loopback or LAN hosts—now support maxTokens values above 64k without incorrectly applying the hosted OpenAI limit.
+    - Fixed Union Alpha requests on OpenCode Go and Zen by using the correct Messages API.
+    - Updated SuperGrok’s Grok 4.7 metadata to expose its documented 500K context window and low, medium, high, and xhigh thinking levels.
+    - Fixed GPT-OSS tool interactions on Google Antigravity and Gemini CLI so function-call history is preserved correctly.
+    - Fixed Devin model discovery for Enterprise credentials by falling back to the legacy Windsurf catalog when native discovery does not return the full model list.
+    - Curated Xiaomi Token Plan (China) MiMo V2.6 metadata: context/output limits, reasoning, and image input (#12841 by @roboomp).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added Claude saved resets to usage views and /usage reset, with automatic blocked-limit recovery and expiring-reset redemption controlled by claudeResets.
+    - Added support for searching embedded harness documentation with find and omp find using omp:// scopes, including file-specific searches and :start-end selectors; results open directly through canonical omp:// URLs.
+    Changed
+    - Updated server-side fallback documentation and logic to target claude-opus-5-5
+    - Added support for claude-opus-5-5 to model priority registry
+    - Updated the read tool guidance to decode images inline by default and require an explicit :img selector for SVG rendering.
+    - Improved model discovery and fallback behavior: authentication failures are surfaced in the /models hub, and models without a matching role-specific fallback now use the default fallback chain.
+    - Improved resilience for subagents by retrying provider stream failures that occur after partial output and preserving configured ordered model fallbacks at startup.
+    - MCP OAuth with Google issuers now requests offline access so refresh tokens can be issued; repeated auth-broker token rotations also preserve the required refresh and client metadata.
+    - MCP servers from omp-plugins now expand ${CLAUDE_PLUGIN_ROOT} and ${OMP_PLUGIN_ROOT} in commands, arguments, and working directories.
+    - /review now uses the session's current working directory after /move or /wt.
+    - Pasted and dragged image files now retain their original filesystem paths so the agent can act on the source files directly.
+    - Custom sessions can now be moved across filesystems without losing transcripts or artifacts.
+    - hub jobs now returns a compact, non-consuming status summary instead of replaying completed output or consuming pending auto-delivery.
+    - The display-reset shortcut now works while the ask dialog has keyboard focus, and tab.press() provides a clear error for the legacy argument order.
+    - Wayland keyboard input now follows the compositor's active XKB layout instead of assuming a US layout.
+    - LSP diagnostics now refresh when watched files are created or deleted and after a server reload.
+    - Compiled bytecode binaries now start correctly when bundled dependencies use import.meta.resolve.
+    Fixed
+    - Fixed JavaScript eval assignments in cells containing top-level await so they persist into subsequent cells.
+    - Fixed skill hints becoming out of sync with the active prompt after discarded rebuilds and in advisor sessions.
+    - Restored pi.pi.askToolRenderer for extensions that replace the built-in ask tool, preserving native rendering.
+    - Fixed npm plugin upgrades and reinstalls leaving stale or duplicate manifest entries that could break bun install.
+    - Fixed eval waits longer than approximately 24.8 days returning immediately because of native timer overflow.
+    - Fixed deleted sessions being resurrected from stale rewrite backups.
+    - Fixed /collab relay connections honoring HTTPS_PROXY and NO_PROXY.
+    - Fixed sessions remaining blocked by queued turns or Hindsight auto-recall after disposal or cancellation.
+    - Fixed edits to auto-generated files aborting the entire turn; they now return a tool-scoped error.
+    - Fixed Edit handling of invalid overlapping selections in multibyte text so the worker reports a match error instead of panicking.
+    - Fixed local memory consolidation on case-insensitive filesystems when project path casing changes between launches.
+    - Fixed first-time Xcode MCP connections on macOS by allowing the signed omp binary to request Apple Events permission.
+    - Fixed stale or duplicated TTSR trigger events during streaming.
+    - Fixed MCP OAuth credentials retaining their refresh endpoint and client metadata across repeated token rotations.
+    - Fixed local model and provider retry behavior for streamed and partially buffered failures.
+    - Fixed memory and session cleanup issues that could leave stale artifacts or inconsistent state.
+    - lsp.formatOnWrite now prefers a dedicated isLinter formatter server when a type-checker also claims the file (#12847 by @roboomp).
+    - /extensions no longer shows OMP-installed marketplace capabilities as disabled behind the foreign-plugin opt-in gate (#12849 by @roboomp).
+    Removed
+    - Removed support for image query parameters (?q=) and bare image paths in the read tool.
+    - Custom models now honor provider-level transport: pi-native and send requests to the native gateway (#12845 by @joshrzemien).
+    - Fixed live models that match no retry.fallbackChains role primary (e.g. Fable after /model) resolving no chain, so a wait longer than retry.maxDelayMs aborted the session instead of walking default (#12421).
+    - Fixed skill hints drifting from the active prompt after discarded rebuilds or in advisor sessions (#12148 by @jerome-benoit).
+    - Restored askToolRenderer on the extension namespace (pi.pi.askToolRenderer) after the pi-tui renderer migration dropped it, so extensions that shadow the built-in ask tool can keep the native rendering again. (#12694 by @xiechimon)
+    - Model discovery rejected with 401/403 now surfaces an authentication error in the /models hub instead of a silently empty model list. (#12436 by @xiechimon)
+    - Pasted or dragged image files now reach the agent with their original filesystem path, so it can read and act on the source file directly; clipboard screenshots keep working unchanged. (#12404 by @xiechimon)
+    - /review now runs VCS operations against the live session cwd after /move or /wt instead of the session-start checkout (#12712 by @F0Rextasy).
+    - Reinstalling or upgrading an npm plugin no longer leaves stale or duplicate manifest edges that broke bun install (#12727 by @F0Rextasy).
+    - TTSR now emits one ttsr_triggered event per streamed violation instead of one per evaluation pass (#12729 by @F0Rextasy).
+    - Eval wait() timeouts above ~24.8 days no longer overflow the native timer and return immediately (#12731 by @F0Rextasy).
+    - MCP OAuth against Google issuers now requests access_type=offline so refresh tokens are issued (#12737 by @F0Rextasy).
+    - Deleting a session now also removes its stale .bak rewrite backups so the picker cannot resurrect it (#12746 by @F0Rextasy).
+    - /collab relay WebSockets now honor HTTPS_PROXY/NO_PROXY like other transports (#12762 by @jacobcolyvan).
+    - tab.press() now rejects the inverted press(selector, key) call with a hint naming the corrected (key, { selector }) form, instead of the key parser's opaque Unknown key: <selector> (#12136) (#12266 by @danilouchoa).
+    - The display-reset shortcut (app.display.reset, alt+l by default) now fires while the ask dialog holds keyboard focus, instead of being dropped silently; the #11215 global-listener promotion covered the other four editor display actions but missed this one (#12217) (#12262 by @danilouchoa).
+    - Custom sessions can move across filesystems without losing their transcript or artifacts (#12360, #12378 by @Dante-dan).
+    - Fixed hub jobs replaying full output for every settled job and consuming pending auto-delivery; it now returns a compact non-consuming status summary (#12547 by @pedropaulovc).
+    - Compiled bytecode binaries now start correctly when bundled dependencies use import.meta.resolve (#12133 by @andrebrait).
+    - Subagents now retry provider stream errors that arrive after buffered partial output, and such failures are reported as transport errors instead of schema-invalid results (#12752 by @bse-ai).
+    - Edits targeting auto-generated files now return a tool-scoped rejection instead of aborting the whole turn (#12499 by @Dante-dan).
+    - Subagents with an ordered model fallback keep it reachable on startup when the parent default role shares the same primary model (#12377 by @Dante-dan).
+    - omp-plugins MCP servers now substitute ${CLAUDE_PLUGIN_ROOT}/${OMP_PLUGIN_ROOT} in command, args, and cwd (#12801 by @holny).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed stale workspace addons failing when first used; the error now identifies the addon and provides the command to rebuild native addons.
+    - Fixed background bash jobs hanging indefinitely when output forwarding stalls.
+    @oh-my-pi/snapcompact
+    Fixed
+    - Fixed summaries incorrectly advertising a ¶think: scope when thinking content is excluded from the archive.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed background statistics spans to use unique identifiers and close jobs correctly.
+    @oh-my-pi/pi-tui
+    Added
+    - Added Claude and Codex saved-reset counts, availability, and expiry to usage views, with provider-specific confirmation and uniquely identified account options.
+    - Added terminal detection and capability support for otty and rio, including Kitty graphics and true-color support where available, plus otty hyperlinks and notifications.
+    - Added the public stripTerminalSequences export for extensions that need to remove terminal control sequences.
+    Fixed
+    - Composer shape previews now use the full available overlay width instead of being clipped at 96 columns.
+    - Fixed cursor placement when recalling prompts from history, keeping single-line entries at the end and preserving the appropriate position for multi-line entries.
+    - Restored modified-key handling and terminal notifications over SSH sessions running inside tmux.
+    - Fixed typed Enter occasionally being interpreted as a literal newline when terminal input events are batched.
+    What's Changed
+    - singularityapi login flow by @H4vC in https://github.com/can1357/oh-my-pi/pull/12707
+    - singularityapi main platform by @H4vC in https://github.com/can1357/oh-my-pi/pull/12740
+    - fix(catalog): singularityapi image transport and GPT-5.6 reasoning ladder by @H4vC in https://github.com/can1357/oh-my-pi/pull/12751
+    - feat(find): search omp:// harness docs via materialized corpus by @H4vC in https://github.com/can1357/oh-my-pi/pull/12758
+    - fix(retry): walk default fallbackChains when live model matches no role (#12421) by @shah1git in https://github.com/can1357/oh-my-pi/pull/12620
+    - fix(compat): model side-turn capability policy by @gokceneraslan in https://github.com/can1357/oh-my-pi/pull/12629
+    - feat(catalog): split singularityapi into dev and tech providers by @H4vC in https://github.com/can1357/oh-my-pi/pull/12803
+    - fix(task): preserve subagent retry fallback role on startup by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/12377
+    - fix(hub): summarize jobs without consuming output by @pedropaulovc in https://github.com/can1357/oh-my-pi/pull/12547
+    - fix(agent): append zero-event trailing message to context and emit lifecycle events by @xiechimon in https://github.com/can1357/oh-my-pi/pull/12605
+    - fix(tui): detect the otty terminal with Kitty graphics and placeholder support by @xiechimon in https://github.com/can1357/oh-my-pi/pull/12665
+    - fix(snapcompact): gate ¶think: legend on includeThinking by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12703
+    - fix(setup): run link-omp natively on Windows by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12704
+    - fix(ai): re-detect continued identical tool calls past the threshold by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12709
+    - fix(changelog): merge duplicate 18.0.7 sections by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12717
+    - fix(catalog): curate xai-oauth grok-4.7 with documented thinking ladder by @eggpeat in https://github.com/can1357/oh-my-pi/pull/12725
+    - fix(stats): ensure unique background span ids and correct job closing by @404MaximWang in https://github.com/can1357/oh-my-pi/pull/12726
+    - fix(plugins): prune stale npm edge before bun install by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12727
+    - fix(ttsr): emit one ttsr_triggered per violation, not per evaluation by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12729
+    - fix(eval): chunk oversized wait timers past the 32-bit limit by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12731
+    - fix(ai): omit empty Bedrock tool descriptions instead of sending "" by @mustafaabidali in https://github.com/can1357/oh-my-pi/pull/12732
+    - fix(ai): refresh expired AWS SSO tokens instead of erroring by @nwbb in https://github.com/can1357/oh-my-pi/pull/12736
+    - fix(mcp): request access_type=offline from Google issuers by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12737
+    - fix(session): delete stale .bak siblings with the session by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12746
+    - fix(coding-agent): retry provider stream errors in subagents and stop reporting them as schema failures by @bse-ai in https://github.com/can1357/oh-my-pi/pull/12752
+    - fix(ai): classify gateway-translated strict tool schema rejections by @primitive-type in https://github.com/can1357/oh-my-pi/pull/12760
+    - fix(collab): honour relay WebSocket proxies by @jacobcolyvan in https://github.com/can1357/oh-my-pi/pull/12762
+    - fix(catalog): enable supportsFunctionPartId for gpt-oss on google-antigravity by @tuandinh0801 in https://github.com/can1357/oh-my-pi/pull/12771
+    - fix(ai): map Bedrock stream exception shapes to their service-model status by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/12775
+    - fix(ai): accept reasoning_effort none on Chat Completions auth-gateway by @holny in https://github.com/can1357/oh-my-pi/pull/12789
+    - fix(tui): add stripTerminalSequences by @RockinPaul in https://github.com/can1357/oh-my-pi/pull/12795
+    - fix(coding-agent): substitute CLAUDE/OMP plugin root in omp-plugins MCP servers by @holny in https://github.com/can1357/oh-my-pi/pull/12801
+    - Document browser MCP filtering by browser.enabled by @pavel-kalmykov in https://github.com/can1357/oh-my-pi/pull/12804
+    - fix(ai): preserve message-level Gemini thought signatures by @roboomp in https://github.com/can1357/oh-my-pi/pull/10631
+    - test(coding-agent): isolate agent directory in advisor toggle tests by @andrebrait in https://github.com/can1357/oh-my-pi/pull/12130
+    - fix(build): retain ESM semantics in compiled bytecode by @andrebrait in https://github.com/can1357/oh-my-pi/pull/12133
+    - fix(skills): freeze provider-side skill hint across mid-session skillful toggles by @jerome-benoit in https://github.com/can1357/oh-my-pi/pull/12148
+    - fix(coding-agent): keep display reset working while the ask dialog holds focus by @danilouchoa in https://github.com/can1357/oh-my-pi/pull/12262
+    - feat(tui): detect rio terminal with kitty graphics and true color by @danilouchoa in https://github.com/can1357/oh-my-pi/pull/12263
+    - fix(browser): reject inverted tab.press(selector, key) with an actionable hint by @danilouchoa in https://github.com/can1357/oh-my-pi/pull/12266
+    - fix(ai): avoid pinning Beijing quota to one workspace by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/12395
+    - fix(catalog): honor maxTokens on local OpenAI hosts by @ton-anywhere in https://github.com/can1357/oh-my-pi/pull/12433
+    - fix(coding-agent): keep generated-file errors tool-scoped by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/12499
+    - fix(natives): reported a stale workspace addon instead of " is not a function" by @iacore in https://github.com/can1357/oh-my-pi/pull/12698
+    - fix(commands): review uses live session cwd after /move or /wt by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12712
+    - fix(tui): use full overlay width for composer shape preview by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/12713
+    - fix(catalog): route Union Alpha through OpenCode Messages API by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/12380
+    - fix(coding-agent): carry the original filesystem path of pasted images to the agent by @xiechimon in https://github.com/can1357/oh-my-pi/pull/12404
+    - fix(tui): open recalled prompt history at a consistent caret by @H4vC in https://github.com/can1357/oh-my-pi/pull/12814
+    - feat(collab): publish whether a host session is working by @alphastorm in https://github.com/can1357/oh-my-pi/pull/12844
+    - fix(tui): resolve terminal identity through tmux by @roboomp in https://github.com/can1357/oh-my-pi/pull/12810
+    - fix(tui): stop raw-paste classifier from eating stall-batched enter by @roboomp in https://github.com/can1357/oh-my-pi/pull/12811
+    - fix(pi-edit): reject overlapping sloppy selection spans instead of panicking by @roboomp in https://github.com/can1357/oh-my-pi/pull/12817
+    - fix(auth): preserve mcp oauth refresh material by @roboomp in https://github.com/can1357/oh-my-pi/pull/12820
+    - fix(ai): prevented auth-broker Team usage collisions by @roboomp in https://github.com/can1357/oh-my-pi/pull/12821
+    - fix(macos): added apple events signing entitlement by @roboomp in https://github.com/can1357/oh-my-pi/pull/12823
+    - fix(memories): fold cwd casing into memory scope keys on win32 by @roboomp in https://github.com/can1357/oh-my-pi/pull/12826
+    - fix(ai): drop forced tool_choice from zero-output cache refresh by @roboomp in https://github.com/can1357/oh-my-pi/pull/12827
+    - fix(ai): bound codex error-body reads with the pre-response deadline by @roboomp in https://github.com/can1357/oh-my-pi/pull/12831
+    - fix(shell): bound chunk-forward stall so a wedged consumer cannot strand a background bash job by @roboomp in https://github.com/can1357/oh-my-pi/pull/12832
+    - fix(hindsight): cancel in-flight auto-recall on abort by @roboomp in https://github.com/can1357/oh-my-pi/pull/12833
+    - fix(agent): guard trailing checkSteering in runTool against rejection by @roboomp in https://github.com/can1357/oh-my-pi/pull/12813
+    - fix(agent): isolate aside-commit / discardAsides host callbacks by @roboomp in https://github.com/can1357/oh-my-pi/pull/12815
+    - fix(coding-agent): suspend loop on Esc even mid-iteration by @H4vC in https://github.com/can1357/oh-my-pi/pull/12851
+    - fix(catalog): restored legacy Devin discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/12858
+    - fix(ai): parsed Kimi monthly usage quotas by @roboomp in https://github.com/can1357/oh-my-pi/pull/12855
+    - fix(extensions): bind ExtensionAPI methods by @roboomp in https://github.com/can1357/oh-my-pi/pull/12856
+    - fix(lsp): refresh diagnostics after workspace changes by @roboomp in https://github.com/can1357/oh-my-pi/pull/12857
+    - fix(ai): preserve required nested nulls in tool argument unions by @cswenor in https://github.com/can1357/oh-my-pi/pull/12523
+    - fix(catalog): curate xiaomi mimo v2.6 metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/12841
+    - fix(coding-agent): preserve provider transport on custom models by @joshrzemien in https://github.com/can1357/oh-my-pi/pull/12845
+    - fix(lsp): prefer formatter servers for formatOnWrite by @roboomp in https://github.com/can1357/oh-my-pi/pull/12847
+    - fix(extensions): exempt omp-origin marketplace plugins from dashboard opt-in gate by @roboomp in https://github.com/can1357/oh-my-pi/pull/12849
+    - fix(ai): drop Gemini-unsupported minP/repetitionPenalty from google transports by @roboomp in https://github.com/can1357/oh-my-pi/pull/12850
+    - test(coding-agent): flush the deferred prewarm tick before restoring mocks by @andrebrait in https://github.com/can1357/oh-my-pi/pull/12863
+    - fix(bedrock): hoist images out of error toolResults by @roboomp in https://github.com/can1357/oh-my-pi/pull/12865
+    New Contributors
+    - @shah1git made their first contribution in https://github.com/can1357/oh-my-pi/pull/12620
+    - @gokceneraslan made their first contribution in https://github.com/can1357/oh-my-pi/pull/12629
+    - @F0Rextasy made their first contribution in https://github.com/can1357/oh-my-pi/pull/12703
+    - @404MaximWang made their first contribution in https://github.com/can1357/oh-my-pi/pull/12726
+    - @nwbb made their first contribution in https://github.com/can1357/oh-my-pi/pull/12736
+    - @primitive-type made their first contribution in https://github.com/can1357/oh-my-pi/pull/12760
+    - @jacobcolyvan made their first contribution in https://github.com/can1357/oh-my-pi/pull/12762
+    - @tuandinh0801 made their first contribution in https://github.com/can1357/oh-my-pi/pull/12771
+    - @holny made their first contribution in https://github.com/can1357/oh-my-pi/pull/12789
+    - @RockinPaul made their first contribution in https://github.com/can1357/oh-my-pi/pull/12795
+    - @pavel-kalmykov made their first contribution in https://github.com/can1357/oh-my-pi/pull/12804
+    - @jerome-benoit made their first contribution in https://github.com/can1357/oh-my-pi/pull/12148
+    - @ton-anywhere made their first contribution in https://github.com/can1357/oh-my-pi/pull/12433
+    - @cswenor made their first contribution in https://github.com/can1357/oh-my-pi/pull/12523
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.2.8...v18.2.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.2.9
+ReleaseTime: 2026-09-22T18:41:42.0000000Z

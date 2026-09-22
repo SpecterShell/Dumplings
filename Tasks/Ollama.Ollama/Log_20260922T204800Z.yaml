@@ -1,0 +1,31 @@
+Version: 0.34.3
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/ollama/ollama/releases/download/v0.34.3/OllamaSetup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    GET /api/show now advertises each model's thinking controls and default:
+    Available in the CLI with:
+    ollama show gemma4
+    thinking
+            levels     false, true
+            default    true
+    Available in the API with:
+    curl http://localhost:11434/api/show -d '{"model": "glm-5.3-flash:cloud"}'
+    {
+      "thinking": {
+        "values": ["low", "high", "max"],
+        "default": "max"
+      }
+    }
+    Also available on ollama.com directly for cloud models.
+    - Nemotron H vision models are now supported on Apple Silicon with MLX
+    - Ollama's macOS app will now no longer reopen windows you've closed when activating it
+    - Fix for model pulls from HuggingFace
+    Full Changelog: https://github.com/ollama/ollama/compare/v0.34.2...v0.34.3
+- Key: ReleaseNotesUrl
+  Value: https://github.com/ollama/ollama/releases/tag/v0.34.3
+ReleaseTime: 2026-09-19T00:02:57.0000000Z
