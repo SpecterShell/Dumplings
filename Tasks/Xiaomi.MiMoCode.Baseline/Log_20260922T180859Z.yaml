@@ -1,0 +1,97 @@
+Version: 0.1.15
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v0.1.15/mimocode-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Today Xiaomi released and open-sourced MiMo-V2.6 — the flagship multimodal model Pro, the efficient reasoning model Flash, and the ultra-fast model Pro-UltraSpeed. MiMoCode 0.1.15 follows with a number of improvements to everyday agent runs. Within a single agent step, model-emitted tool calls now go through a sequencing gate: only pure read/search tools overlap, everything else runs one after another; if a side-effecting call fails, later calls that could be affected are safely skipped. Session resume is also more dependable — recoverable provider errors back off and retry, and an interrupted session can pick up from the right recovery target, with idle subagents resumed alongside the main turn. On the input side, the Read tool can read images, audio, and video files, so multimodal agents can work with a wider range of material.
+
+    小米今日正式发布并开源 MiMo-V2.6 系列，包含全模态旗舰模型 Pro、高效推理模型 Flash 与超高速模型 Pro-UltraSpeed。MiMoCode 0.1.15 同步带来多项改进，覆盖智能体的日常运行。在同一次执行中，模型发出的多个工具调用会进入串行门禁：只读、检索类的工具仍可并行，其余调用依次执行；若带副作用的调用失败，后续可能受影响的调用会被安全跳过。会话恢复也更加可靠：可恢复的模型错误会退避重试，中断的会话能够从正确的恢复点继续，空闲的子智能体会随主会话一并恢复。在输入侧，Read 工具支持读取图像、音频与视频文件，便于全模态智能体处理更丰富的材料。
+    What's Changed
+    - fix(websearch): use session model for Xiaomi sidecar requests by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2312
+    - fix(session): avoid _- in session IDs by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2195
+    - test: drop the resetDatabase fixture by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2319
+    - feat(node): export LLMServerTokens from the Node entry by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2325
+    - fix(tool): unify bash output truncation on a token budget by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2328
+    - test(session): cover case-insensitive search for mixed CJK titles by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2330
+    - fix(session): strip leading slash-mentions from title generation context by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2332
+    - fix(ui): preserve patch line endings in session diff view by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2339
+    - feat(tool): gate tool-name case folding behind a flag by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2343
+    - feat(provider): sniff image MIME and transcode BMP before send by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2344
+    - refactor(llm-server): serve chat models only by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2336
+    - fix(provider): skip plugin auth loader when provider is missing from catalog by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2350
+    - docs: announce MiMo Desktop open beta in readmes by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2352
+    - docs(readme): show MiMo Desktop UI screenshots in the en/zh readmes by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2353
+    - docs(readme): show MiMo Desktop UI screenshots in the en/zh readmes by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2354
+    - docs(readme): use the en desktop screenshot in the en readme by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2355
+    - feat(session): authoritative titles and session set-title by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2346
+    - fix(plugin): skip plugins that do not return a hook object by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2358
+    - fix(provider): keep Xiaomi non-PTC chat on the stock openai-compatible SDK by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2364
+    - feat(media): bound inline attachment size and gate PDF reads on capability by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2376
+    - fix(session): broaden recovery candidates and support model override on resume by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2377
+    - perf(history): bound search/get for large media sessions by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2374
+    - fix(actor): deliver terminal outcomes after execution settles by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2347
+    - fix(models): keep local catalog available during best-effort refresh by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2375
+    - feat(media): read audio and video as inline attachments by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2381
+    - test(history): use audio/aac as the unsupported attachment fixture by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2384
+    - fix(task): publish Bus events on the calling fiber's Instance by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2383
+    - fix(provider): keep Xiaomi models on the stock openai-compatible SDK by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2386
+    - fix(server): treat port 0 as OS ephemeral; stop preferring 4096 by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2385
+    - fix(tool): gate read media attach on a finite MIME allowlist by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2388
+    - fix(session): decouple memory system prompt from checkpoint flag by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2389
+    - feat(tool): remove read-before-edit hard gate by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2390
+    - feat(actor): drop model-facing context from spawn/run tool by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2392
+    - fix(history): migrate indexes once with resumable progress by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2391
+    - fix(installation): pin plugin SDK npm version only for semver identities by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2393
+    - feat(provider): classify MiMo gateway errors for xiaomi-* providers by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2395
+    - fix(tools): exact-only tool name lookup; drop alias repair by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2397
+    - fix(history): truncate FTS bodies via tool-result preview path by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2398
+    - fix(session): treat user image attachments as user media, not fake Read by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2404
+    - feat(tool): hard-gate main-worktree writes when auto_worktree is on by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2382
+    - fix(session): persist user-side synthetic reminders for prompt-cache stability by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2403
+    - fix(retry): stop request-phase ladders from stacking session.status reconnect frames by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2406
+    - fix(session): strip leading slash-command prefixes from title input by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2408
+    - fix(session): persistent exponential retry for recoverable errors by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2407
+    - fix(provider): treat context_window_exceeded as context overflow by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2417
+    - refactor(worktree): remove automatic isolation policy by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2413
+    - refactor(skill): unbundle design-blueprint and frontend-design by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2420
+    - fix(session): preserve Responses images in native tool outputs by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2418
+    - fix(session): clean empty residue on resume and re-dispatch parent user by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2419
+    - fix(provider): tolerate missing tool call IDs in openai-compatible streams by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2421
+    - fix(session): session abort cascades cancel to all same-session actors by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2424
+    - feat(session): experimental.uncommitted_hint re-hint on dirty user turns by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2423
+    - feat(session): cascade subagent resume and honest failure terminals by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2430
+    - fix(session): clean default system prompt residual by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2434
+    - fix(agent): give general subagent skill rules and brand-root identity guard by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2438
+    - fix(runner): ensure sent prompt always gets a loop by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2437
+    - fix(mcp): refresh host connections with bounded lifetimes by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2433
+    - fix(actor): settle orphaned running question parts on abandon sweep by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2441
+    - fix(mcp): truncate SDK execution exceptions before persistence by @penghao9 in https://github.com/XiaomiMiMo/MiMo-Code/pull/2447
+    - fix(mcp): host-owned admission at connect/add/store/auth boundaries by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2440
+    - fix(session): sweep orphan tool parts before idle with execution ownership by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2445
+    - fix(mcp): close residual admit gaps after PR#2440 merge by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2449
+    - feat(skill): default to mimocode+agents roots and skip dotted skill dirs by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2446
+    - feat(session): trailing-user resume with exclusive admission by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2442
+    - fix(mcp): persist target presentation while tools are running by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2451
+    - fix(session): bounded UnknownError retry + no JSON quote wrap on string errors by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2450
+    - docs(skill): compose-next worktree base and short delivery range by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2457
+    - fix(session): unify resume recovery and subagent status ownership by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2455
+    - fix(core): disable directory script loading and remove evolve skill by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2459
+    - fix(tool): sequence multi-tool calls within each agent step by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2456
+    - fix(core): avoid scanning question history during project bootstrap by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2462
+    - Guard tool batches against flooding and failure cascades by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2463
+    - Remove speculative search batching advice from glob by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2464
+    - fix(session): align actor state, inbox rendering, and automatic titles by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2465
+    - Allow the first tool call during flooding recovery by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2487
+    - fix: expose PascalCase tools to MiMo v2.6 by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2490
+    - chore(sdk): regenerate openapi and js sdk types by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2499
+    - chore: bump version to 0.1.15 by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2500
+    Full Changelog: https://github.com/XiaomiMiMo/MiMo-Code/compare/v0.1.14...v0.1.15
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/XiaomiMiMo/MiMo-Code/releases/tag/v0.1.15
+ReleaseTime: 2026-09-22T14:58:45.0000000Z
