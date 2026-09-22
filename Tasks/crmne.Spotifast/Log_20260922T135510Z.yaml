@@ -1,0 +1,28 @@
+Version: 0.9.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crmne/spotifast/releases/download/v0.9.1/fastpotify-v0.9.1-x86_64-pc-windows-msvc-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Spotifast 0.9.1 finishes the move to the new name while keeping existing settings, sign-ins, and installations working. This is the last release with Fastpotify-named compatibility downloads. If you still use an older version, update to 0.9.1 before updating further, or install a newer Spotifast release manually.
+    Download Spotifast: Mac · Windows · Windows ARM · Linux · Linux ARM · Flatpak
+    The fastpotify-* files below are identical compatibility copies for older updaters that require those filenames. Use the Spotifast links above for a new installation. Releases after 0.9.1 will not publish old-named downloads.
+
+    Fullscreen lyrics, added in 0.9.0.
+    Fixed
+    - Your settings and sign-ins come with you. Existing profiles, cached music, window state, and protected credentials move to Spotifast. Custom device names stay unchanged, and Liked Songs pins keep their place. An updater trial leaves the old profile available if the update needs to roll back. By @crmne.
+    - Spotifast is the primary package and executable name. Portable archives, Windows installation shortcuts, the Rust package, logs, and Linux media controls use the new name. Version 0.9.1 provides the final compatibility downloads for older updaters and accepts the new archive and macOS bundle identities used by future releases. Existing installation locations remain valid. By @crmne.
+    - macOS update helpers stay inside the signed app. Updates no longer copy the helper executable out of its signed bundle. If a helper still cannot start, the error includes its exit status and a diagnostic log location. By @crmne; thanks @jorisw for reporting the startup failure. (#556)
+    - Existing Omarchy integrations follow the renamed profile. The app updates its unmodified theme hook automatically and leaves customized hooks alone. By @crmne.
+    If an older macOS build reports that its update helper exited before it was ready, install 0.9.1 from the DMG manually. The helper changes take effect for updates started from 0.9.1 onward.
+    Custom Linux media scripts should use playerctl --player=spotifast. Cargo users may need cargo install --git https://github.com/crmne/spotifast --locked --force once to replace commands owned by the old package. See the upgrade and rename guide for details.
+    Thanks
+    @jorisw and everyone who reported upgrade problems and helped test the transition to Spotifast.
+    Full changelog: https://github.com/crmne/spotifast/compare/v0.9.0...v0.9.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/crmne/spotifast/releases/tag/v0.9.1
+ReleaseTime: 2026-09-22T12:18:37.0000000Z

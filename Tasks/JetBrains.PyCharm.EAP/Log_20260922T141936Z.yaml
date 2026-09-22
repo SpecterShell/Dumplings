@@ -1,0 +1,40 @@
+Version: 263.5153.49
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-263.5153.49.exe
+  ProductCode: PyCharm 263.5153.49
+  InstallerSha256: F48B550C6859B9EDCE499F3C3D76ED54AB44A93416A54613B6161B9D03E947D4
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-263.5153.49-aarch64.exe
+  ProductCode: PyCharm 263.5153.49
+  InstallerSha256: 756DC3EC6DA43BE855419859D2C4D01B65F7B369A812E325015B01DA7160851B
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This build brings a round of type checker fixes, debugger reliability improvements, LSP tooling repairs, and editing and refactoring fixes:
+    Code Insight
+    - Catch mismatched default values against type annotations for both function parameters and class attributes - PY-80837.
+    - Avoid false positive warnings about missing str or repr implementations, which showed up on plain int and float values as well as IPv4Address/IPv6Address, string literals, and str subtypes, including a WSL-only case - PY-89986, PY-91292, and PY-89483.
+    - Avoid a false positive where a set literal like {"abc"} is inferred as set[Literal["abc"]] instead of being widened to set[str] - PY-90463.
+    - Resolve standard library imports and built-ins again in Python scratch files - PY-89831.
+    - Avoid a false positive Local variable might be referenced before assignment warning after a try/except block when the except clause always raises - PY-72253.
+    Debugger
+    - Use "Drop into debugger on failed tests" again with debugpy - PY-88218.
+    - Switch debug modes for remote development sessions from Settings | Build, Execution, Deployment | Python Debugger | Mode - PY-88602.
+    - Get the correct debug command when debugging fastapi dev with debugpy - PY-91510.
+    LSP Tools
+    - Get LSP tools support back when it's provided by the Python plugin - PY-92137.
+    - Keep enabled external tools working after restarting the IDE - PY-92163.
+    - See LSP tool icons again - PY-92165.
+    - Avoid the Pyrefly external tool being enabled unexpectedly when Pyrefly is selected as the type engine - PY-90550.
+    Editing
+    - Avoid comments (using #) breaking indentation on the following lines - PY-78251.
+    - Get completions for f-string format specifiers based on type annotations - PY-84261.
+    Refactoring
+    - Use "Implement abstract methods" on async methods without a syntax error - PY-53074.
+    - Keep usages of an optional argument intact, instead of replacing them with None, when inlining a function - PY-81983.
+    Full release notes.
+- Key: ReleaseNotesUrl
+  Value: https://youtrack.jetbrains.com/articles/PY-A-233538617
+ReleaseTime: 2026-09-22
