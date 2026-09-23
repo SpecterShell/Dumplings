@@ -1,0 +1,85 @@
+Version: 0.11.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.3/Agentero_0.11.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.3/Agentero_0.11.3_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release lets the Agent read the full text of Plaza papers, and adds month-or-day publication dates, a Library tab that stays open, and MCP access to Vault text outside the papers directory. Reading layouts, selection translation, and PDF selections are steadier, and several interruptions around paper rename, restored tabs, and chat attachments are fixed.
+    Features
+    - Plaza paper full text: Mention an arXiv Daily or feed paper with @ in the Agent composer, and the app downloads the PDF into a cache outside the Vault, converts it to a read-only full text, and hands that path to the Agent. A failed prepare falls back to the abstract and does not import the paper; Settings → About can show and clear this cache. (#589 by @ForeverHYX)
+    - Vault text read and write: External agents can list, read, and write UTF-8 files outside papers/ over MCP, such as a LaTeX draft. Hidden app data, binaries, NOTES.md, and layout indexes stay off this path. (#602, ae42bbdd by @Phil-Fan)
+    - Publication dates: Paper time is stored at the source's precision as YYYY, YYYY-MM, or YYYY-MM-DD instead of a year alone. Library, Paper Info, the metadata dialog, MCP, and the CLI show that date, and Library sorts newest first by it. (#599, 908cd333 by @qychen2001)
+    - Resident Library tab: While a Vault is open the Library tab stays present and cannot be closed. Per-tab pinning is removed. (#609, 9460702d by @qychen2001)
+    - Claude Code skills: When claude is on PATH and the Vault does not already have its own .claude/skills, that directory is linked to .agents/skills so Claude Code sees the Vault's skills. An existing real directory is left in place. (#563, 51f5ff69 by @qychen2001)
+    - Selection translation cards: Translation cards grow with their content so a long paragraph can be read at once. They scroll only after exceeding the card or the window, and streaming output stays pinned to the bottom. (c9288708 by @JiaheChen2002)
+    Improvements
+    - Agent rail width: The Agent layout opens the chat rail at one third of the reading area instead of half. Widths you drag are remembered per layout and restored when you return to that layout or relaunch the app. (7c3911e6, 140aa949 by @qychen2001)
+    - Reading and notes layouts: Reading and notes layouts collapse the left and right sidebars. Choosing either preset keeps it selected instead of marking the layout custom when the notes split opens or closes. (5a64e57d, f015e0c8, bb5f4e0a by @Phil-Fan)
+    - Custom agent hint: The add and edit forms explain that a custom agent is a stdio ACP command started in the current Vault, with arguments split on spaces. (#611, 26f60c4c by @Phil-Fan)
+    - Read-paper icon: The file-tree action that starts paper reading now uses a notebook-and-pen icon instead of a lightning bolt, matching “read and write notes.” (#605, 5dfe1ed3 by @qychen2001)
+    - File tree selection: The selected row uses the sidebar primary color and its foreground, and hover and press follow the sidebar accent, so the current file is easier to see. (8c3a0f9d by @Phil-Fan)
+    Fixes
+    - Paper rename: Renaming no longer rolls back when the destination already has a usage record for that day. A paper row in the file tree can be renamed in place, and open PDF and notes tabs follow the new path and title. (#597 by @bet4it)
+    - Restored paper tabs: Restored tabs under papers/ wait for the file tree before loading, so a dotted paper directory such as 2606.04046 is no longer treated as a file and given an extra source/ parent. (#622 by @Winfred666)
+    - Visual annotation chips: Adding the same PDF visual annotation to the sidebar chat again keeps a single chip. Removing one chip no longer removes every chip that shares its id. (#614 by @HuangYincan)
+    - PDF selection highlight: Text selections use tighter glyph bounds and a lighter blue, drop whitespace-only rows and oversized rectangles, and keep a visible gap between lines. (#603 by @longP-666)
+    - Chat images: Clipboard images can be pasted into the chat composer. “Add to sidebar chat” on a paper visual card stays clickable after the card loses focus. (#600 by @Winfred666)
+    - Markdown angle brackets: An editor-unsupported tag in a note, such as an unclosed <Constraints>, no longer cuts off the rest of the document. <input> inside inline code is kept as well. (#623, 15ed1ac1 by @Phil-Fan)
+    - Repeated selection translation: Scrolling no longer retriggers translation because the selection menu moved, which had stacked a column of identical 文 A gutter marks. Dismissing a translation card removes its gutter mark. (468ab365, ad5d4a78 by @JiaheChen2002)
+    - Selection frame color: PDF visual-region frames and comment connectors stay on the default neutral ink instead of picking up the color theme. (#610, 357f492a, 26dd709f by @Phil-Fan)
+    - Selection copy: Selecting PDF text no longer copies it to the clipboard or shows a “copied” label. (6bd82563 by @Phil-Fan)
+    - Dictation: The first words from system dictation or an IME, typed right after the Agent rail opens, are no longer cleared by draft synchronization. (05b3daec by @Phil-Fan)
+    - Interface copy: Background tasks, clearing activity history, and the theme name no longer show unsubstituted placeholders, raw i18n keys, or a success message on failure. (56d189e4 by @qychen2001)
+    - Feed errors: Plaza feed and arXiv recommendation failures show localized text instead of toasting internal codes such as feeds.listFailed. (6d679a7c by @qychen2001)
+    - tunnel-client detection: After tunnel-client is installed, MCP start and status look up the binary again, so a restart is not required. (#601, 45963977 by @Phil-Fan)
+    - Missing agents: A missing CLI is no longer offered as selectable because a bundled adapter or a stale probe says it is available. Adapters already on PATH and existing registrations are unchanged. (57fcffb8 by @qychen2001)
+    - Windows title bar: In a dark app theme, the Windows caption bar turns dark with the app instead of staying white while Windows itself is in light mode. “System” still follows the OS. (#559, 6fdc0a07 by @qychen2001)
+    - Sync internals: When a Nutstore-style client mirrors the sync folder back into the Vault, root blobs/, manifests/, HEAD, and vault.json stay out of the file tree and are not uploaded again. (#625, 9d678b15 by @qychen2001)
+    https://github.com/poco-ai/Agentero/compare/v0.11.2...v0.11.3
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这次发布让 Agent 能直接阅读广场上的论文全文，并补上论文的月/日出版日期、常驻 Library 标签，以及论文目录之外的 Vault 文本读写。阅读布局、划词翻译和 PDF 选区也更稳定；论文重命名、标签恢复和聊天附件里的几处会中断操作的问题一并修好。
+    新功能
+    - 广场论文全文：在 Agent 输入框用 @ 引用 arXiv Daily 或订阅源里的论文后，应用会把 PDF 下载到 Vault 之外的缓存，转成只读全文再交给 Agent。准备失败时退回摘要，不会把论文写进 Vault；设置 → 关于可以查看并清除这块缓存。（#589 by @ForeverHYX）
+    - Vault 文本读写：外部 Agent 可以通过 MCP 列出、读取和写入 papers/ 之外的 UTF-8 文本，例如 LaTeX 草稿。隐藏的应用数据、二进制、NOTES.md 和布局索引不在这条路径上。（#602, ae42bbdd by @Phil-Fan）
+    - 出版日期：论文时间从只有年份改为按来源精度保存 YYYY、YYYY-MM 或 YYYY-MM-DD。Library、论文信息、元数据编辑、MCP 和 CLI 都显示这个日期，Library 默认按它从新到旧排序。（#599, 908cd333 by @qychen2001）
+    - 常驻 Library: Vault 打开期间 Library 标签一直在，不能被关掉；逐标签固定功能一并移除。（#609, 9460702d by @qychen2001）
+    - Claude Code 技能目录：当 claude 在 PATH 上、且 Vault 还没有自己的 .claude/skills 时，会把该目录链接到 .agents/skills，让 Claude Code 看到 Vault 里的技能。已有的真实目录不会被替换。（#563, 51f5ff69 by @qychen2001）
+    - 划词翻译卡片：翻译卡片随内容增高，长段落可以一次读完；只有超出卡片或窗口时才滚动，流式结果默认跟着底部走。（c9288708 by @JiaheChen2002）
+    改进
+    - Agent 栏宽度：Agent 布局里聊天栏默认占阅读区的三分之一，而不再是一半。手动拖过的宽度会按布局分别记住，下次进入或重新打开应用时恢复。（7c3911e6, 140aa949 by @qychen2001）
+    - 阅读与笔记布局：阅读布局和笔记布局会收起左右侧栏。切换到这两种预设时，布局会保持选中，不再因为打开或关闭笔记分屏被标成自定义。（5a64e57d, f015e0c8, bb5f4e0a by @Phil-Fan）
+    - 自定义 Agent 说明：添加或编辑自定义 Agent 时，表单会说明它是在当前 Vault 里启动的 stdio ACP 命令，参数按空格拆分。（#611, 26f60c4c by @Phil-Fan）
+    - 精读图标：文件树里手动触发论文精读的图标从闪电改为笔记本笔，表示阅读并写笔记。（#605, 5dfe1ed3 by @qychen2001）
+    - 文件树选中态：选中行使用侧栏主色和对应前景色，悬停与按下也跟侧栏强调色走，当前文件更容易辨认。（8c3a0f9d by @Phil-Fan）
+    修复
+    - 论文重命名：重命名不再因当天已有使用记录而整段回滚；文件树里的论文行可以就地改名；已打开的 PDF 与笔记标签会跟上新的路径和标题。（#597 by @bet4it）
+    - 恢复论文标签：重启后恢复 papers/ 下的论文标签时，会等文件树就绪再加载，不再把带点的论文目录误判成文件并生成多余的 source/。（#622 by @Winfred666）
+    - 视觉批注芯片：同一条 PDF 视觉批注再次加入侧栏对话时只保留一枚芯片；删掉一枚不会把同 id 的其它芯片一起清掉。（#614 by @HuangYincan）
+    - PDF 选区高亮：文字选区改用更紧的字形边界和更淡的蓝色，去掉空白行和过大的矩形，行与行之间留出空隙。（#603 by @longP-666）
+    - 聊天图片：剪贴板图片可以粘贴进对话输入框；论文视觉卡片上的「加入侧边栏对话」在失焦后仍然可以点。（#600 by @Winfred666）
+    - Markdown 尖括号：笔记里编辑器不认识的标签，例如未闭合的 <Constraints>，不再把后面的正文截掉；行内代码里的 <input> 也会保留。（#623, 15ed1ac1 by @Phil-Fan）
+    - 划词翻译重复：滚动页面不再因为选区菜单重定位而反复翻译、在页边叠出一列相同的「文 A」。关掉翻译卡片后，对应的页边标记也会消失。（468ab365, ad5d4a78 by @JiaheChen2002）
+    - 选区框颜色：PDF 视觉选区和评论连线固定用默认中性色，不再跟着颜色主题变成别的颜色。（#610, 357f492a, 26dd709f by @Phil-Fan）
+    - 划词复制：选中 PDF 文字不再自动复制到剪贴板，也不再弹出「已复制」。（6bd82563 by @Phil-Fan）
+    - 语音输入：刚打开 Agent 栏就使用系统语音或输入法时，第一段文字不会被草稿同步清掉。（05b3daec by @Phil-Fan）
+    - 界面文案：后台任务、清除活动记录和主题名称不再把未替换的占位符、原始 i18n key 或错误的成功文案显示给用户。（56d189e4 by @qychen2001）
+    - 订阅错误：广场订阅和 arXiv 推荐失败时显示本地化说明，不再把 feeds.listFailed 这类内部代码直接 toast 出来。（6d679a7c by @qychen2001）
+    - tunnel-client 检测：之后装上 tunnel-client 时，MCP 的启动和状态会重新查找二进制，不必重启应用。（#601, 45963977 by @Phil-Fan）
+    - 未安装的 Agent: 缺少对应 CLI 时，内置适配器或过期探测结果不会再把它显示成可选用；PATH 上已有的适配器和已保存的注册不受影响。（57fcffb8 by @qychen2001）
+    - Windows 标题栏：深色主题下，Windows 标题栏会跟着应用变暗，而不再在系统浅色模式里保持白条。跟随系统时仍由操作系统决定。（#559, 6fdc0a07 by @qychen2001）
+    - 同步内部文件：坚果云等客户端把同步目录镜像回 Vault 时，根目录下的 blobs/、manifests/、HEAD 和 vault.json 不再出现在文件树里，也不会被再次上传。（#625, 9d678b15 by @qychen2001）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.3
+ReleaseTime: 2026-09-23T03:14:12.0000000Z

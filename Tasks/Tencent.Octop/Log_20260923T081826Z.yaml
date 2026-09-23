@@ -1,0 +1,96 @@
+Version: 1.0.2b1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.2b1/Octop-desktop-windows-amd64-1.0.2b1.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.2b1/Octop-desktop-windows-arm64-1.0.2b1.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 对话 Ask / Plan / Craft 模式，以及折叠思考与工具过程
+    - 生成模型多厂商管理与图片/视频独立路由（火山方舟、百炼、MiniMax）
+    - 插件市场；专家团队宿主；Discord 渠道
+    - 登录极验行为验 v4；按专家记忆知识库/连接器选择，可隐藏不常用共享专家
+    修复
+    - Windows 自升级：octop.exe 运行中也可完成升级
+    - 同一线程回合串行，避免 HITL 与普通回合交错污染会话
+    - agent 配置 PATCH 不再丢掉 workspace_dir；cron / 系统任务按时区触发
+    - iOS PWA 状态栏与 safe-area；无网络启动错误提示；旧版 Chromium 启动兼容
+    变更
+    - 升级 harness-agent 至 1.0.14；Dashboard 空状态与聊天输入交互微调
+    What's Changed
+    - chore: sync main into develop after 1.0.1 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/793
+    - feat: plugin marketplace and related dashboard polish by @jubaoliang in https://github.com/TencentCloud/Octop/pull/815
+    - docs: fix references to non-existent files by @louisss1016 in https://github.com/TencentCloud/Octop/pull/821
+    - docs: fix broken relative links in user-guide.md by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/797
+    - docs: document the undocumented 'octop captcha' CLI command by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/796
+    - docs: translate stray Chinese example message in acp.md to English by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/795
+    - docs: translate stray Chinese text in configuration.md to English by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/794
+    - docs: fix CN readme structure and document OCTOP_DATA env var by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/791
+    - fix: normalize a protocol-relative URL instead of producing a hostless one by @sclfcz in https://github.com/TencentCloud/Octop/pull/823
+    - fix: treat an uppercase HTTP(S) scheme as already absolute in browser nav by @sclfcz in https://github.com/TencentCloud/Octop/pull/822
+    - fix(providers): don't classify cloud Ollama (ollama.com) as local runtime by @louisss1016 in https://github.com/TencentCloud/Octop/pull/824
+    - fix: skip a one-line HTML comment before the frontmatter fence by @sclfcz in https://github.com/TencentCloud/Octop/pull/820
+    - fix: reject non-positive interval cron triggers by @sclfcz in https://github.com/TencentCloud/Octop/pull/819
+    - fix: round-trip escaped values in the env file by @sclfcz in https://github.com/TencentCloud/Octop/pull/818
+    - fix(dashboard): polyfill Object.hasOwn for Chromium 90 by @JY-M666 in https://github.com/TencentCloud/Octop/pull/826
+    - fix(boot): 无网络启动时展示错误与重试，避免白屏 (#696) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/744
+    - fix(pwa): iOS 加到桌面后顶栏避让状态栏 (#664) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/746
+    - feat(cron): 定时任务空状态提示词按专家区分 (#651) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/747
+    - feat: conversation support collapse thinking by @fatelei in https://github.com/TencentCloud/Octop/pull/750
+    - feat(chat): 对话中可隐藏不常用的共享专家 (#589) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/745
+    - fix(dashboard): AuthGuard 侧栏切页不整页重载；收敛 task_examples 解析 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/841
+    - fix(chat): per-expert composer selection for knowledge bases + connectors by @huangcheng in https://github.com/TencentCloud/Octop/pull/860
+    - fix: LAN MCP HTTP、TLS 公网 IP 预检与 Models 侧栏抽屉 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/863
+    - fix(chat): omit skills group from shortcut picker by @jubaoliang in https://github.com/TencentCloud/Octop/pull/866
+    - feat(teams): add expert team hosts without changing 1:1 chat by @jubaoliang in https://github.com/TencentCloud/Octop/pull/868
+    - fix(knowledge): 删除文件夹时不再误删名字相近的文件夹（LIKE 通配符 / 大小写语义） by @sclfcz in https://github.com/TencentCloud/Octop/pull/889
+    - fix(chat): clean up sessions bound to deleted threads (#833) by @dangzitou in https://github.com/TencentCloud/Octop/pull/884
+    - fix(providers): report Codex OAuth device-code start failures by @yftx293 in https://github.com/TencentCloud/Octop/pull/858
+    - docs(agents): fix broken CONTRIBUTING.md links in technical-writer subagents by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/875
+    - docs(readme): fix broken TOC anchor links in README.md and README_CN.md by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/873
+    - docs(adr): remove broken related links in ADR 002 by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/872
+    - fix(cron,hitl): date timezone + HITL resume expire on error by @jubaoliang in https://github.com/TencentCloud/Octop/pull/890
+    - feat(experts): compose prompts and skills when creating experts by @jubaoliang in https://github.com/TencentCloud/Octop/pull/891
+    - fix(dashboard): collapse login forgot-password CLI tip by @jubaoliang in https://github.com/TencentCloud/Octop/pull/898
+    - docs(configuration): add password and url to database schema example by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/896
+    - docs(acp): add language identifier to bare code block by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/895
+    - feat(auth): GeeTest v4 login captcha provider (#870) by @huangcheng in https://github.com/TencentCloud/Octop/pull/900
+    - Feature/memory slim tool by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/865
+    - feat(dashboard): chat workspace dock + help link to octop.cloud by @jubaoliang in https://github.com/TencentCloud/Octop/pull/929
+    - feat(chat): add Ask / Plan / Craft conversation modes by @jubaoliang in https://github.com/TencentCloud/Octop/pull/934
+    - fix(experts): 发布专家时保留公开头像 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/955
+    - fix(chat): make composer mode and model triggers icon-only by @jubaoliang in https://github.com/TencentCloud/Octop/pull/963
+    - fix(experts): read skill frontmatter with the shared parser by @jubaoliang in https://github.com/TencentCloud/Octop/pull/962
+    - fix(backup): include .octop and runtime dirs in workspace zip export by @jubaoliang in https://github.com/TencentCloud/Octop/pull/964
+    - fix(cron): wait for CLI-triggered runs before shutting down embedded runtime by @jubaoliang in https://github.com/TencentCloud/Octop/pull/961
+    - fix(agents): 配置更新不再丢掉 workspace_dir（scoped/容器 agent 的工作区被换掉） by @sclfcz in https://github.com/TencentCloud/Octop/pull/953
+    - feat(media): add multi-provider configuration and routing UI by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/951
+    - feat(chat): dock 标题栏 + 菜单打开工作区/浏览器/终端 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/982
+    - Feature/support discord by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/972
+    - feat(chat): add per-thread HITL allow policy by @jubaoliang in https://github.com/TencentCloud/Octop/pull/987
+    - fix(dashboard): MBTI 未配置人格时不再显示空的「已选中」引号 (#973) by @sxh313 in https://github.com/TencentCloud/Octop/pull/989
+    - fix(agents): serialize harness execution per thread for turns and HITL resume (#782) by @jubaoliang in https://github.com/TencentCloud/Octop/pull/960
+    - Fix OpenCode session header matching and bump harness-agent to 1.0.14 by @liukewia in https://github.com/TencentCloud/Octop/pull/992
+    - fix(update): unlock Windows self-upgrade when octop.exe is running by @liukewia in https://github.com/TencentCloud/Octop/pull/1000
+    - fix(dashboard): honor PWA safe-area insets and widen mobile chat bubbles by @liukewia in https://github.com/TencentCloud/Octop/pull/666
+    - feat(dashboard): unify empty guides with Tasks-like plain style by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1006
+    - chore: release 1.0.2b1 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1008
+    New Contributors
+    - @louisss1016 made their first contribution in https://github.com/TencentCloud/Octop/pull/821
+    - @Momoru2002 made their first contribution in https://github.com/TencentCloud/Octop/pull/797
+    - @sclfcz made their first contribution in https://github.com/TencentCloud/Octop/pull/823
+    - @JY-M666 made their first contribution in https://github.com/TencentCloud/Octop/pull/826
+    - @fatelei made their first contribution in https://github.com/TencentCloud/Octop/pull/750
+    - @dangzitou made their first contribution in https://github.com/TencentCloud/Octop/pull/884
+    - @yftx293 made their first contribution in https://github.com/TencentCloud/Octop/pull/858
+    - @Theater-ahyeon made their first contribution in https://github.com/TencentCloud/Octop/pull/875
+    - @sxh313 made their first contribution in https://github.com/TencentCloud/Octop/pull/989
+    Full Changelog: https://github.com/TencentCloud/Octop/compare/v1.0.1...v1.0.2b1
+- Key: ReleaseNotesUrl
+  Value: https://github.com/TencentCloud/Octop/releases/tag/v1.0.2b1
+ReleaseTime: 2026-09-23T03:00:12.0000000Z
