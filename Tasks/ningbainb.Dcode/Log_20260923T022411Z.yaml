@@ -1,0 +1,22 @@
+Version: 0.2.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ningbainb/Dcode/releases/download/v0.2.3/Dcode-Setup-0.2.3-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Dcode 0.2.3 · Windows 测试版
+    本版把原 ZCode 的 MCP 设置入口接到 DeepSeek Harness（DSH）的真实工具链，扩展 DSH 模型供应商设置，并继续通过 GitHub Releases 提供自动更新。安装包仍未签名，Windows 可能提示“未知发布者”。
+    本版重点
+    - DSH MCP 设置：设置侧边栏重新显示“MCP 服务器”，支持本地 stdio 与 Streamable HTTP；可以添加、编辑、启停和删除。浏览器与电脑控制仍在“插件”页。该设置只管理 Dcode/DSH，不修改原 ZCode Agent 的 MCP 数据。
+    - 真正的工具调用：配置进入 DSH Profile 的托管区，启用后重启 DSH。独立的本地 MCP 与带 Bearer 环境变量的 HTTP MCP 均通过了模型会话中的工具发现及调用测试。
+    - 凭据边界：密钥通过系统环境变量名引用，变量值不写入配置或 Profile。命令参数和 URL 会持久化，不能在其中填写密钥。保存成功不等于外部 MCP 服务器一定在线；异常请查看运行时日志。
+    - 模型供应商设置：复用原 ZCode 独立 API 目录的 15 个供应商模板及模型候选，可搜索供应商和模型 ID，预填协议及地址，再由用户编辑并保存到 DSH。Z.ai/BigModel 账号与订阅方案入口、重复的 DeepSeek 模板不在目录中；DSH 内置 DeepSeek 仍单独显示。
+    验证边界
+    本地合成模型夹具证明 DSH 可以发现并调用两种自定义 MCP 工具；不代表任意第三方服务器或真实账号均已验证。安装与签名状态、GitHub 端资产完整性，以及 v0.2.2 对本版更新的发现与下载，应以发布后的实际测试为准。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ningbainb/Dcode/releases/tag/v0.2.3
+ReleaseTime: 2026-09-23T01:49:33.0000000Z
