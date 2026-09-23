@@ -1,0 +1,51 @@
+Version: 0.1.10
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.10/ddc-v0.1.10-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.10/ddc-v0.1.10-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc v0.1.10 — honest-baseline quality round (−24.6% errors this cycle)
+    Quality (full-javac battery with android.jar classpath; four real-world
+    APK corpora): 83,849 → 63,214 errors (reqable 2,768 / weibo 14,075 /
+    lark 14,376 / weixin 31,995). Project cumulative: 630,443 → 63,214
+    (−90.0%).
+    Note on the lark baseline: the previous ~5.5k lark figure was
+    suppression fiction — broken hub types silenced ~15k latent javac
+    diagnostics corpus-wide. Fixing the hubs (jdc-core 0.2.5 twin
+    chain-walk) exposed them; lark's honest number is ~14.4k and falling.
+    Highlights:
+    - Determinism: removed every wall-clock lever from the structurer
+      (1500ms walk deadline deleted; 600k work budget, ≥2,100-block
+      method stubs, ladder no-progress short-circuits, 10s class watchdog
+      as pure insurance). Full-tree double runs: 0 diffs.
+    - Shadowing: locals and fields named like root-package segments are
+      renamed (v2.n.a capture); inherited fields and import-layer simples
+      now count for the render-side shadow check; twin member-type check
+      walks the whole $-chain (jdc-core).
+    - Typing: field-owner evidence is descriptor-exact and strong on
+      writes; dereferenced vars prefer real classes over boxed Boolean;
+      booleanize gained the Xor-!x shape, param-generation eligibility,
+      a bounded fixpoint ending on booleanize, and sink-gated mixed-kind
+      rewrites; bool↔int bridges at field stores, array stores, indexes,
+      locals, and explicit casts.
+    - Kotlin/R8: enum default-arg bridge fold (this-not-first family),
+      facade member-coverage rewrite (CollectionsKt__ parts), field-less
+      enum promotion (sp2/ji), cross-package access widening with override
+      closure, inline-accessor package-boundary guard (coroutines-k
+      family), inner-class detection via the this$0 name.
+    - Readability: v = v + 1 → v++, v = v op x → v op= x
+      (parity idiom flagged by the androguard/DAD comparison — DAD emits
+      non-compiling pseudo-Java; ddc's whole-APK throughput is ~100×).
+    Performance (M-series, 8 threads): weixin 98k classes ~16s, weibo
+    ~12s, lark ~9s, reqable ~0.4s.
+    jdc-core 0.2.5: twin $-chain shorten check with per-Printer memo,
+    member-registry owner prefilter.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.9...v0.1.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.10
+ReleaseTime: 2026-09-23T10:02:51.0000000Z

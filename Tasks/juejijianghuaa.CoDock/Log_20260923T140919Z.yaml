@@ -1,0 +1,24 @@
+Version: 0.4.7
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.7/CoDock-Setup-0.4.7-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.7 (2026-09-23)
+    这一版让同一个仓库里的多个任务不再互相踩：新建任务时可以在仓库旁开一份独立的 worktree，各跑各的工作目录和分支；顺带把「建不出来」和「删不干净」的几种情况说清楚了。
+    新功能
+    - 会话可以跑在独立的 git worktree 里：新建任务时若选中的目录在 git 仓库里，弹窗会多出一个「使用独立 worktree」。勾上后 CoDock 在仓库外面、与仓库同级的位置建 <仓库名>-worktrees/<名字>，并基于当前 HEAD 开一条 agent/<名字> 分支，会话直接在那个目录里启动——同一个仓库的多个任务因此不会互相踩到未提交改动、checkout 和 build 产物。名字留空就用仓库目录名；名字里的空格与符号会压成 -（feat/login 得到 agent/feat-login，不会被截成 login）。
+      - 这类项目在侧栏挂在主仓库分组下面（带分支图标，排在该仓库自身会话之前），Tab 上也有一颗分支图标；右键 Tab 可以「移除 worktree」。
+      - 只在干净时移除：目录里有任何未提交或未跟踪的改动都会拒绝，不走 --force；分支上还有未合并的提交时会保留分支不删，并在提示里说明——分支上有提交，强删才是事故。
+      - 已经处在 worktree 或子模块里的目录不会再显示这个勾选（那两层不支持再嵌一层，摆出来也只会失败）；仓库一次提交都还没有时同样不会显示，而不是等你点了再抛一句 git 的英文报错。
+    优化与修复
+    - 修复 Windows exe 的资源版本号停在 0.3.1：Release 工作流生成 Windows 图标与清单时没有传版本号，于是下载到的 exe 在「属性 → 详细信息」里一直是 winres.json 里那个 0.3.1，而应用内显示的是 tag 版本。现在跟随 tag 注入（本地 make 本来就是对的，这次补齐 CI 这一侧）。
+    官网
+    - hero 上的版本徽章更新为 v0.4.7；能力区新增一枚「一个仓库，各跑各的」卡片（worktree）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.7
+ReleaseTime: 2026-09-23T12:06:45.0000000Z
