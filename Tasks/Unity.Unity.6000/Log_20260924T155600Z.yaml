@@ -1,0 +1,117 @@
+Version: 6000.6.3f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/45d8eee7de74/Windows64EditorInstaller/UnitySetup64-6000.6.3f1.exe
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/45d8eee7de74/WindowsArm64EditorInstaller/UnitySetupArm64-6000.6.3f1.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.6.3
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.6.3f1
+    - 6000.2.0b2: [Vulkan] Crash on SIGSEGV in vkOnscreenSwapChainAcquireNextImage when vkAcquireNextImageKHR returns VK_TIMEOUT (UUM-153744)
+    - 6000.3.13f1: Deadlock on exiting Play Mode when a Shader is destroyed while async shader compilation has queued variant requests for a different shader with Graphics Jobs enabled (UUM-152966)
+    - 6000.6.0a2,6000.5.0b2: Resources.UnloadUnusedAssets() takes significantly longer to execute when run in a Player build (UUM-149540)
+    - 6000.6.0a6: Crash on CachedWriter::Write when importing a tiny non-power-of-two Texture2DArray from a package (UUM-153670)
+    - : Crash on mono_log_write_logfile when more than one copy of bee_backend is running (UUM-142773)
+    - : Crash on mono_log_write_logfile when opening specific project (UUM-150566)
+    - : [WinEditor] Play Mode framerate drops significantly when moving the mouse cursor with high polling rate (UUM-142550)
+    6000.6.3f1 Release Notes
+    Improvements
+    - Build System: Updated the bundled 7-Zip to version 26.03.
+    API Changes
+    - Graphics: Added: Added Graphics.disableDepthAndStencilBuffers, a read-only property that returns whether Disable Depth and Stencil Buffers is enabled in Player Settings.
+    Changes
+    - Android: Updated the Android Gradle Plugin (AGP) version from 9.0.0 to 9.1.1.
+    Fixes
+    - 2D: Fixed section headers for 2D/Grid Brush and 2D/Tile Palette preferences. (UUM-149246)
+    - 2D: Fixed Tile Palette Brush Picks overlay turning itself off in the Scene View when the user clears the search field in the overlay (for example by pressing Backspace). (UUM-147704)
+    - 2D: Sprite Frame edit capability are now saved and will only be loaded for importers that has the capability. (UUM-146463)
+    - Android: Fixed "Failed to find target with hash string android-37" when Target API Level 37 is selected. (UUM-150216)
+    - Android: Fixed the Target API Level dropdown in Android Player Settings listing API levels that are lower than the minimum supported compile API level. (UUM-151786)
+    - Asset Import: Fixed issue with cache mechanism of compressed textures of the Accelerator not tracking texture dependency on BC7 compressor when fetching from cache. Textures were not being reimported. Improved hash calculation. (UUM-146105)
+    - Asset Pipeline: Fixed an issue where content could fail to commit to the data store after the Editor was force-quit during an import. (UUM-151756)
+    - Asset Pipeline: Fixed an issue where downloading from Accelerator could fail to close open file handles when finished. (UUM-151405)
+    - Asset Pipeline: Fixed an issue where macOS editors could hang when the Asset Database rescanned an absolute path. (UUM-147982)
+    - Asset Pipeline: Fixed hang at startup when directory monitoring doesn't receive expected notification about changed file(s). (UUM-149019)
+    - Build Pipeline: Fixed sequential command line builds started with -activeBuildProfile compiling scripts for the previously active platform. (UUM-150775)
+    - Build System: Fixed an issue in Content Directory builds where a Scene would not be re-built when only a Prefab used in the Scene would have been modified before an incremental build. (UUM-151103)
+    - Editor: Don't optimize the projection matrix when Vulkan pre-transform may rotate it. (UUM-150650)
+    - Editor: Fixed Build Analysis tabs staying empty after clearing search. (UUM-144458)
+    - Editor: Fixed inspector not updating when navigating the Hierarchy V2 with Left Arrow key. (UUM-146977)
+    - Editor: Fixed issue where InSceneAssetUtility.CreateAssetFromInSceneAsset would crash the Editor if the referencing asset path was null. (UUM-151176)
+    - Editor: Fixed the Editor crashing when pressing Cmd+Q more than once while the "Scene(s) Have Been Modified" dialog is displayed.
+      Fixed two "Scene(s) Have Been Modified" dialogs being displayed when quitting the Editor in Play Mode with unsaved changes.
+      Fixed the Editor crashing on quit when a script subscribed to EditorApplication.quitting modified an Editor window.
+      Fixed the Escape key not selecting Cancel in Editor dialogs. (UUM-149668)
+    - Editor: Fixed Undo/Redo for "GPU Instancing" and "Double Sided Global Illumination" fields for Materials in Inspector. (UUM-143569)
+    - Editor: Fixed WinEditor's LaunchScreen image corruption when dragging it between displays with different DPI scales. (UUM-151212)
+    - Editor: Runtime Rendering Debugger - Do not store the useDiagnostics in the CoreBuild data to strip the resources. (UUM-151146)
+    - Entities: Fixed IDebugOnAdded callbacks receiving default values instead of the actual component value, and fixed ECB.Instantiate not firing OnAdded callbacks. (UUM-145910)
+    - GI: Fixed "Kernel 'histogram' not found" errors and the lightmap scheduling fallback warning that occurred when viewing lightmaps in preview mode with the Editor running on a graphics API without the histogram compute shader variant, such as Vulkan. (UUM-151644)
+    - GI: Fixed a bug where APV bake fails when scene contains a VFXRenderer. (UUM-150965)
+    - Graphics: Fixed a GPU driver crash on ARM Mali-G68 devices caused by log2 using relaxed precision in SPIR-V. (UUM-137912)
+    - Graphics: Fixed an issue that could cause memory leak warnings, primarily on macOS, while Unity processed shader jobs with GPU Resident Drawer enabled. (UUM-140185)
+    - HDRP: Fixed incorrect shader stripping when "Lightmap Bicubic Sampling" was enabled. (UUM-134794)
+    - IMGUI: Fixed Advanced Dropdown menus, such as the Build Profiles "Add Settings" dropdown, showing unstyled red items when opened during Play Mode. (UUM-135953)
+    - IMGUI: Fixed IMGUI text drawing a few pixels past the borders of enclosing scroll views and containers when the text overflowed its control. (UUM-150041)
+    - iOS: Fixed occasional failure to merge render passes with msaa depth on apple gpu family 1-3. (UUM-147831)
+    - Linux: Fixed Linux Player file extension stacking when building Linux Player from Mac Editor. (UUM-135833)
+    - Linux: Fixed the Editor hanging on the splash screen when a dialog opened while a scene was loading. (UUM-151324)
+    - Linux: Fixed the Linux Editor failing to start on distributions that ship libxml2.so.16 instead of libxml2.so.2, such as Ubuntu 25.10 and later. (UUM-151807)
+    - Netcode for Entities: Ensure NetworkStreamDriver.Disconnect disconnects the connection from the correct driver. Prior to this fix, it would only disconnect from the first driver in the store, which might be the wrong one. (UUM-151802)
+    - Netcode for Entities: Removed the unmanaged constraint from the methods in DefaultDriverConstructor taking INetworkInterface arguments. That constraint is not required anymore due to recent changes in the Unity Transport package, and it prevented usage of NGO transports through the NetcodeInterop layer of that package. (UUM-151803)
+    - Networking: UnityWebRequest: Fixed a freeze when quitting a standalone player while an ongoing request was still resolving DNS against an unresponsive or slow DNS server. (UUM-151643)
+    - Package Manager: Fixed an issue where a newly created package was not using the organization the project belongs to in the technical name. (UUM-148110)
+    - Performance Test Framework: Unsampled sample groups are now reported with zeroed statistics, and the active test is always cleared so a failing test can no longer fail the rest of the run. (UUM-150776)
+    - Player: Added guard to avoid hitting a debug assert in dev player builds. (UUM-152365)
+    - Player: List [SerializeReference] fields losing or corrupting elements when cloned with Object.Instantiate() in a built Standalone Player, if another [SerializeReference] field was declared before the list on the same class. (UUM-151757).
+    - Profiler: Fixed a NullReferenceException thrown when saving an empty Standalone Profiler recording. (UUM-150588)
+    - Profiler: Fixed issues with renaming Profiler captures in specific situations on high-DPI desktop setups. (UUM-143329)
+    - Profiler: Fixed labelling of Unrooted Allocations associated with GraphicsStateCollection Allocations. (UUM-139555)
+    - QNX: Fixed Burst AOT compilation failing to link the generated library. (UUM-151399)
+    - Scripting: Fixed a false OperationCanceledException thrown when awaiting Task.Delay() inside a background-thread Awaitable method. (UUM-150034)
+    - Scripting: Resolve hang during compilation. (UUM-126023)
+    - Search: Fixed issues where Asset Store search result items would have empty text when scrolling in List mode. (UUM-140235)
+    - Serialization: SerializeReference fields being given the wrong reference, or none at all, when a serialized array or list of a class type contained a null element. (UUM-152214)
+    - Shadergraph: Removed the 'Clip' option, which was erroneously introduced, from the Screen Position node's dropdown. (UUM-151248)
+    - SRP Core: Fixed render passes not being merged on older iOS devices (Apple GPU family 3 and below) once a native pass was considered to be over the on-tile pixel storage limit, which serialized the whole frame into one native pass per render pass. (UUM-148865)
+    - Terrain: Fixed a crash when a script updates tree instances on a terrain whose tree prototypes cannot be instanced. (UUM-150692)
+    - Terrain: Fixed shader compilation errors that were thrown when a TerrainLit Shader Graph had no Block nodes in its Vertex Context. (UUM-143598)
+    - Tests: Fixed unstable test. (UUM-132201)
+    - UI Toolkit: Fixed a NullReferenceException thrown when the UI Viewport window is destroyed before its content is created. (UUM-148374)
+    - UI Toolkit: Fixed a stream of NullReferenceExceptions being thrown when exiting Play mode with an element selected in the UI Toolkit Debugger. (UUM-151391)
+    - UI Toolkit: Fixed an error logged to the Console when selecting Two Pane Split View in the UI Library window with the Inspector tab enabled. (UUM-149144)
+    - UI Toolkit: Fixed an issue with missing-asset USS warning spam after asset deletion. (UUM-148575)
+    - UI Toolkit: Fixed backdrop-filter blur strength not scaling with ancestor transform scale, such as the UI Builder viewport zoom. (UUM-150615)
+    - UI Toolkit: Fixed continuous RenderTexture.Create errors and black Editor window flickering when zooming in the UI Viewport or UI Builder on an element with a backdrop filter. (UUM-149927)
+    - UI Toolkit: Fixed gray artifacts that flickered across Editor windows when a Filter was applied to an element with an extreme size. (UUM-147797)
+    - UI Toolkit: Fixed MissingReferenceException when deleting PanelRenderer object. (UUM-148362)
+    - UI Toolkit: Fixed nested PanelRenderer never receiving their initial UIReloadCallback. (UUM-152408)
+    - UI Toolkit: Fixed the UI Toolkit ExposedReference drawer applying every change to the last field it drew, so that only one of several ExposedReference fields shown at the same time could be assigned. (UUM-151893)
+    - UI Toolkit: Fixed the UnityEvent Inspector keeping the argument field after switching the function to a different variant. (UUM-142971)
+    - UI Toolkit: The "Save As" field in the "Save USS File" dialog is now pre-filled with a default name ("New USS") when creating a new StyleSheet from the UI Builder or the in-scene UI Toolkit editing stage's Style Sheets window. (UUM-150992)
+    - Unity Physics: Fixed a race condition so that DebugDraw jobs from the previous frame are completed before the stream are cleared for re-use. (UUM-152608)
+    - URP: Fixed the 2D Renderer creating a depth and stencil buffer in players when Disable Depth and Stencil Buffers is enabled in Player Settings. (UUM-150232)
+    - Video: Fixed a VideoPlayer freeze for looping clips that could occur upon entering Playmode, where playback would stop and not recover. (UUM-144106)
+    - Web: Fixed Web platform build when output asset sizes are larger than 2 GB, and the build error message if output asset sizes are larger than 4 GB (unsupported). (UUM-112909)
+    Package changes in 6000.6.3f1
+    Packages updated
+    - com.unity.services.authentication: 3.7.4 to 3.8.0
+    - com.unity.services.wire: 1.5.0 to 1.5.1
+    - com.unity.splines: 2.9.0 to 2.9.1
+    - com.unity.xr.compositionlayers: 2.5.0 to 2.6.0
+    - com.unity.services.multiplayer: 2.3.1 to 2.3.2
+ReleaseTime: 2026-09-24T12:16:52.2730000Z

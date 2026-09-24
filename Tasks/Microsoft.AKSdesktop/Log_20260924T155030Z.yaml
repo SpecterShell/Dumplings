@@ -1,0 +1,134 @@
+Version: 0.10.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Azure/aks-desktop/releases/download/v0.10.0/aks-desktop-0.10.0-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AKS desktop v0.10.0 makes it easier to manage Kubernetes clusters across cloud and on-premises environments from one desktop app. Navigate large, complex workloads with a faster, more resilient Resource Map; diagnose AKS issues with a cluster-aware AI Assistant that uses live resource state, logs, events, and metrics; and extend your workflows through a built-in plugin catalog. This release also streamlines project creation and deployment and improves security, reliability, accessibility, and performance.
+    Download links are available at the bottom.
+    Highlights
+    - Extend AKS desktop with plugins for GitOps, certificate management, autoscaling, and more.
+    - Diagnose AKS issues with automatic model discovery, proactive diagnosis, and organization-specific AI Skills.
+    - Investigate GPU, DNS, networking, and process activity with real-time eBPF insights.
+    - Track AKS node upgrades step by step.
+    - Use less memory, particularly in Windows VMs.
+    - Benefit from stronger protection for credentials, plugins, local APIs, and packaged tools.
+    Extend your AKS desktop experience with plugins (Preview)
+    AKS desktop now includes a built-in plugin catalog. You can add views and workflows for GitOps, certificate management, event-driven autoscaling, and more without switching tools.
+
+    - Browse, install, update, and manage plugins directly from AKS desktop.
+    - The catalog initially displays AKS desktop optimized plugins. This label means the plugins have passed Microsoft accessibility and localization checks; it doesn't indicate Microsoft support, a Microsoft security review, or guaranteed availability or compatibility.
+    - Turn off the AKS desktop optimized filter to browse Official plugins published by the upstream project.
+    - Catalog contents can change as plugins are added, updated, deprecated, or removed. The catalog included with your installed AKS desktop version is the source of truth for current availability.
+    Manage clusters across cloud environments more reliably
+    AKS desktop v0.10.0 strengthens provider-neutral multi-cluster support, making kubeconfig-backed clusters from different cloud and on-premises environments more reliable and efficient to use together.
+    - At startup, AKS desktop connects only to recently used clusters, avoiding slow or disruptive authentication prompts for every context in kubeconfig.
+    - Background version checks pause when the application is not active, reducing unnecessary requests across connected clusters. This reduces resource usage when not using the app.
+    - Kubeconfigs containing relative certificate and key paths now connect successfully, matching kubectl behavior.
+    - Port forwarding works for dynamically added clusters instead of failing because of an internal context-name mismatch.
+    - Kubeconfigs and installed plugins use an AKS desktop per-user configuration folder, preventing configuration collisions with other applications on the same machine.
+    AKS Managed Namespaces no longer require preview registration
+    AKS Managed Namespaces are generally available, so AKS desktop no longer requires the ManagedNamespacePreview subscription feature or the aks-preview Azure CLI extension.
+    - The obsolete feature and extension checks have been removed from the Create Project wizard, resolving #788 and #894.
+    - AKS desktop uses the generally available az aks namespace commands in the bundled Azure CLI.
+    - Microsoft.ContainerService provider registration remains part of the selected-subscription workflow.
+    AI Assistant enhancements (Preview)
+    The preview AI Assistant now provides faster setup and richer AKS-specific troubleshooting through GitHub Copilot integration, skills, MCP servers, and cluster-aware observability.
+
+    - GitHub Copilot Auto Detect detects an authenticated GitHub CLI session with an available Copilot subscription and obtains the live model catalog without requiring another provider configuration.
+    - Skills add specialized guidance and domain knowledge. The AKS skill from the Azure Skills repository is configured by default, and users can enable additional or custom skill repositories. Organizations or individuals might want to provide their own custom skills.
+    - Model Context Protocol support enables opt-in connections to external tools and data sources, with configurable approval controls for requested actions.
+    - Cluster-aware observability lets the assistant query resource state, logs, events, and metrics through the active Kubernetes connection.
+    - Proactive Diagnosis is an optional preview feature that detects recent warning and error events and surfaces troubleshooting recommendations without waiting for you to ask.
+    - Kubernetes resource links generated by the assistant open inside AKS desktop rather than launching an external browser.
+    - Provider-discovered GitHub Copilot model identifiers, including newer models, are supported.
+    Learn more in the updated AI Assistant documentation.
+    Telemetry consent and workflow coverage
+    Disabling telemetry now takes effect immediately rather than at the next launch, and the settings panel no longer shows a restart notice.
+    - Consent changes are recorded as events so opt-out behavior can be measured.
+    - Tracked workflows expand from three to eight, adding auth-login, auth-logout, cluster-add, namespace-create, and project-delete.
+    Deploy tab availability
+    Deployment workflows are easier to access and navigate.
+    - Manual Deploy and the per-deployment Edit action are no longer hidden when the GitHub Pipelines preview feature is disabled. Neither action depends on GitHub Pipelines.
+    - The Azure Workload Identity step is enabled when Azure context is available, and the wizard shows when that context is still loading.
+    - Previously visited configuration steps are directly selectable, avoiding repeated next/back navigation.
+    - Application configuration can be revisited and edited through the UI.
+    Contact us
+    A Contact us button has been added to the application bar, resolving #679, and the Help menu's Open Issue entry points to the same destination. The button also has improved color contrast.
+    Investigate application and DNS issues with clearer "Insights" (preview)
+    Insights now makes application connections and DNS problems easier to investigate, with clearer maps and dedicated DNS visualizations and more reliable loading behavior.
+    - The map view presents connections more clearly.
+    - The DNS tool includes dedicated visualizations for identifying DNS issues.
+    - The update includes additional translations, accessibility improvements, and clearer help text.
+    - First-run guidance makes Insights easier to configure and begin using.
+    Multiple advanced eBPF based debugging tools
+    The Insights section provides unique, real-time visibility into processes, GPU activity, networking, and DNS by mapping low-overhead, kernel-level eBPF data directly to the Kubernetes resources involved. This exposes live behavior and relationships that are not available from conventional cluster telemetry.
+    eBPF based DNS debugging support
+    When DNS is the problem, eBPF-powered visualizations help identify failures that aren't normally visible from within Kubernetes.
+    Track AKS node upgrades step by step
+    AKS node upgrades now have a step-by-step progress view covering cordon, drain, delete, reimage, and completion. The view shows timestamps, duration, failures, and surge nodes, while the cluster overview links directly to upgrades in progress.
+
+    Desktop usability, accessibility, and performance improvements
+    AKS desktop includes updates from upstream v0.44.0 and v0.45.0, along with additional improvements that make the application more consistent, accessible, and efficient across Windows and macOS.
+    - Desktop startup uses less memory, which is especially helpful in resource-constrained VMs. Optional MCP, plugin, documentation, and rendering code loads only when needed; retained Kubernetes data is smaller; and backend garbage collection is tuned. Isolated component measurements total approximately 60.3 MiB lower RSS and 9.9 MiB less JavaScript heap usage. On detected Windows VMs, disabling unused GPU acceleration avoids the GPU process and can save roughly another 100 MB, depending on the environment. The GPU saving is separate from the measured startup total, and the figures are directional rather than a single end-to-end application measurement.
+    - Large Pod lists load in batches of 1,000, preventing the Pods page from running out of memory on clusters with tens of thousands of pods. Select Load more to retrieve additional results.
+    - Product identity consistently controls the desktop profile, document titles, and protocol callbacks, executable paths, tray identity, and update behavior.
+    - Electron Zoom In, Zoom Out, and Reset Zoom actions work after menu serialization.
+    - Project views support custom grouping, hide empty overview sections, and remain usable at high zoom.
+    - Resource-map labels wrap and reflow instead of clipping at 200% text zoom.
+    - The macOS tray icon uses standard and Retina dimensions so it aligns with neighboring menu-bar icons.
+    - Requests to artifacthub.io are allowed through the external proxy for the plugin catalog.
+    - Additional desktop updates improve the cluster pre-open and proxy lifecycle, legacy secure-storage migration, product command approvals, low-memory Rsbuild packaging, package preparation, and package timing diagnostics.
+    Important
+    The configuration-folder change does not migrate existing files. Clusters registered with an earlier version store kubeconfigs under the old Headlamp folder and will not appear after upgrading. Re-register those clusters, or copy the kubeconfigs folder from the old location to the new one.
+    Security
+    AKS desktop 0.10.0 includes security hardening for the packaged desktop app, its local backend, plugins, commands, credentials, callbacks, bundled tools, and supply chain.
+    - Local desktop backend APIs require a per-launch app token, preventing other local processes from using the app's Kubernetes API bridge. Empty namespace selectors fail closed rather than broadening to cluster-wide requests.
+    - Denying a plugin command stops execution immediately. AKS product defaults can preapprove only explicitly authorized command prefixes for verified shipped plugins; saved denials still win, user-installed plugins cannot declare those defaults, and commands continue to use argument arrays with shell: false.
+    - External plugin archives are verified with SHA-256 digests. Desktop plugin secrets use encrypted storage with per-plugin namespaces, trusted inventory identity, and page-scoped capability tokens, with a narrow migration path for the existing AKS GitHub token.
+    - Product-specific deep links reject unsafe redirects, and protocol callbacks are isolated by product so one desktop product cannot consume another product's callback. Malformed, traversal, whitespace, and encoded protocol-bypass paths are rejected.
+    - The trusted AKS cluster-proxy capability is available only to the attested shipped AKS plugin. User-writable plugin directories are removed from bare command search paths so they cannot shadow az, gh, or other product tools.
+    - Scripts that interpolate dynamic paths use direct process execution instead of shell interpolation.
+    - Dependency updates resolve known vulnerabilities across the frontend, HTTP clients, backend libraries, archive and concurrency libraries, and Go standard library.
+    - Release builds authenticate bundled Azure CLI archives, Python runtimes, extensions, external tools, and plugin inputs before packaging.
+    Fixes and reliability improvements
+    - Cluster registration is resilient to duplicate submissions, stale Azure responses, authentication changes, concurrent kubeconfig updates, and same-name clusters in different Azure scopes, including the unreachable-cluster case in #892.
+    - Registration transitions to a focused success screen instead of retaining disabled selectors and pre-registration warnings, resolving #917.
+
+    - Tenant display names resolve for multi-tenant accounts instead of showing the same GUID as both label and caption, resolving #853.
+    - Azure sign-in no longer waits through a fixed delay. Account state is checked when az login returns and polled only while authentication is propagating, with a bounded timeout, retry, cancellation, and duplicate-click handling.
+    - Deleting a resource keeps the current project view open and closes the deleted resource's details pane, resolving #852.
+    - The YAML editor preserves unsaved changes and warns when a resource changes in the cluster while it is being edited.
+    - Azure Resource Graph queries are quoted correctly on Windows, resolving #910.
+    - Project workload logs preserve cluster context when resolving pods, so streams opened from project routes no longer remain empty.
+    - The GitHub Copilot provider setup uses the correct Copilot identity and logo.
+    - Bundled Azure CLI discovery and runtime selection work across Linux, macOS, and Windows, including Windows ARM64 emulation and profile-isolated extensions, covering #912 and #918.
+    - Project creation and import allow an unknown persisted Azure scope while still rejecting a known conflicting scope, resolving #931 and #950.
+    Build and localization updates
+    - The upstream desktop source is maintained as a pinned package plus an ordered, integrity-checked patch series instead of a Git submodule.
+    - Production frontend builds use Rsbuild with a 768 MB heap cap while retaining Vite as a fallback. In same-machine measurements, production build time improved from 20.37s to 10.09s (2.02x faster) and peak RSS fell from 2.65 GB to 1.56 GB (41.1% lower).
+    - Repeated frontend, plugin, Electron Builder, dependency, Azure CLI, and Go work is removed or cached. The measured macOS package target improved from 21m23s to 15m31s (1.38x faster), and the combined x64 plus ARM64 build stage improved from 1h25m07s-1h44m20s to 40m08s (2.12x-2.60x faster).
+    - macOS packages include native ARM64 Azure CLI and Python tools even when built on the hosted Intel worker. Windows packages include the verified portable Azure CLI 2.90.0 runtime and required extensions.
+    - Package phases report UTC start and elapsed timing, and deterministic verification failures no longer trigger repeated signed-artifact builds.
+    - Pipeline builds resolve npm packages through the Microsoft package-feed proxy.
+    - Translation sources include plugin-catalog, keda, cert-manager, and prometheus, with expanded and improved translations.
+    - Release builds fail when application packaging fails and verify bundled Azure CLI extensions, external tools, and packaged inputs before publishing, resolving #918.
+    Resource Map improvements
+    Resource Map is faster, more resilient, easier to navigate, and more extensible in AKS desktop 0.10.0 through updates from upstream versions 0.44 and 0.45, plus a selected change targeted for version 0.46.
+    - Large-cluster performance now uses iterative graph traversal, graph simplification, and incremental WebSocket updates. At 2,000 pods, initial loading improved by 59% and updates by 86%; clusters with more than 20,000 pods remain usable where the browser previously crashed.
+    - Large graph groups can stay expanded across sessions, avoiding repeated namespace expansion when revisiting large maps.
+    - Unscheduled pods remain visible when grouping by node. Pending pods appear under an Unscheduled group until Kubernetes assigns them to a node.
+    - Plugin-defined relationships let plugins add domain-specific connections that Kubernetes OwnerReferences cannot describe, such as Crossplane composite-resource relationships.
+    - Reusable graph APIs expose GraphView and KubeIcon to plugins so plugin authors can build visualizations consistent with Resource Map.
+    - Partial source failures no longer block the map. The view continues rendering instead of hanging indefinitely when one source cannot resolve.
+    - Topology and viewport behavior are more stable. Node additions and removals update correctly; fit-to-screen, namespace simplification, and resize behavior no longer leave stale or poorly framed graphs.
+    - Accessibility is improved. Space activates focused graph nodes, zoom and fit controls have translated accessible labels, and long resource names wrap without clipping at 200% text zoom.
+    Full changelog: https://github.com/Azure/aks-desktop/compare/v0.9.1...v0.10.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/aks-desktop/releases/tag/v0.10.0
+ReleaseTime: 2026-09-24T13:41:42.0000000Z
+RealVersion: 0.10.0

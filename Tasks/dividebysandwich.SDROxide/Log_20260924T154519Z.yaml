@@ -1,0 +1,71 @@
+Version: 1.6.8
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dividebysandwich/sdroxide/releases/download/v1.6.8/sdroxide-v1.6.8-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - HD Radio (NRSC-5): a new receive mode for the digital sidecar of FM broadcasts - HDC audio in stereo, the HD-2 subchannels, and the station's name, slogan and message, decoded by the vendored nrsc5 receiver by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/466 (#437)
+    - HD Radio: the decoder runs on a thread of its own, goes back to HD-1 on a retune, lights AUDIO only on frames that carry sound, and says which rate it needs instead of starting on a channel too narrow for the digital sidebands (#437)
+    - HD Radio: a bench example decodes a recorded capture, including one whose rate is not a whole multiple of the decoder's, by @dielectric-coder in https://github.com/dividebysandwich/sdroxide/pull/481
+    - ** HD Radio**: The decoder is now loaded at runtime (#488)
+    - ACARS: a new receive mode for the airline datalink on VHF airband - 2400-baud MSK over AM, with each message's time, aircraft registration, label, acknowledgement, block and text listed newest first, and chips for the ACARS channels by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/465 (#436)
+    - ACARS: tuned with the carrier on the dial, as for AM voice, and a CAT rig is put in AM rather than the digital modes' sideband; bursts the carrier loop locked upside down and blocks with no text decode too, only messages that pass their block check are listed, a damaged block is counted once, and the European 131.525 and 131.825 MHz join the channel chips. The demodulator and block check are ported from acarsdec (#436)
+    - USB audio radio: a new interface for radios with no control port - VOX-keyed handhelds, walkie-talkies, audio dongles - with receive audio from one sound card, transmit audio into another and the dial as a label by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/456
+    - USB audio radio: give back both sound cards before a reconnect opens the replacement, as CAT/Audio does (#15)
+    - CW: the PC keyboard as a straight key - KEY makes the Space bar the key on the radio that holds the keyboard, ahead of any shortcut bound to Space and with a 30-second hold cap, and the key is lifted on a tab switch, when the window loses focus and when a remote client drops by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/453 (#322)
+    - Audible alerts: a new Alerts settings tab rings on its own sound device for a station calling you, a CQ you could answer, a new DXCC entity, a new entity on this band or a new grid - one alarm per batch of decodes, for the most important match, with a quiet period per station, and one alarm shared by every radio tab by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/457
+    - Profiles: save how the station is set up - dials and VFOs, modes, levels, gains, antennas, the digital identity and message templates, and the band stacks - under a name, and put it back in one click; the hardware is left out, remote and browser clients share the same list, and an apply is refused while the radio is on the air by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/454 (#197)
+    - Per-mode settings: AGC, squelch, noise reduction, the auto-notch and the stereo switches are remembered per mode - each mode starts from conservative values of its own (slow AGC on the weak-signal digital modes, noise reduction and the auto-notch off), a change made while a mode is selected is kept for that mode, and a DEFAULTS chip beside the controls puts the mode's own values back, by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/485
+    - Per-mode settings: the mode's values are applied at startup and when the rig's own controls change the mode, a restored session's levels and a profile's are kept as that mode's own, and modeprofiles.json leaves unset values out and is saved when the connection to the engine drops, so the last change is not lost
+    - Decodes: export the decode list as CSV and as received-report ADIF, each record marked SWL and placed on the dial it was heard on by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/450 (#433)
+    - Logbook: an ADIF import leaves out records marked SWL and says how many, so the decode export never lands in the log as contacts (#433)
+    - Web client: import ADIF and CHIRP files in the browser by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/452 (#445)
+    - Web client: the microphone reaches the transmitter again - the mic worklet is now connected so the browser renders it by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/476 (#468)
+    - Themes: ten more colour themes - Nord, Nord dark, Gruvbox, Everforest, Solarized, Solarized dark, Dracula, Catppuccin Mocha, Catppuccin Latte and Modern minimalist - by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/455, with the faintest accents lifted to a readable contrast
+    - Tuning: an opt-in First press on the step row rounds the dial onto the step before it moves by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/451 (#422)
+    - Tuning buttons: snap to the step's own grid in the direction pressed, so a 100 Hz or 500 Hz step no longer rounds back to where it was and a 2.5 kHz step no longer walks backwards (#422, #431)
+    - SSTV: decode the PD family and Wraase SC-2, say so when a header names a mode sdroxide cannot draw, and give Martin back the separator its line was missing (#421)
+    - AIS: zoom, pan and FIT controls on the vessel chart by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/461 (#459)
+    - AIS: vessel names are placed by priority instead of all vanishing once more than 30 vessels are in view - the selected vessel, the one under the pointer and any in distress always keep theirs, then SOLAS ships, other craft and last the marks, each only where it misses the names already on the chart, by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/486 (#408)
+    - AIS: a name at the edge of the chart moves to another corner of its symbol instead of going missing, names keep off other vessels' symbols and the station's own mark, and two names that must show keep off each other in a crowded harbour (#408)
+    - ADS-B: data blocks are placed the same way instead of all being dropped once more than 25 aircraft are in view - aircraft on the ground give way first, and the selected target, the one under the pointer and any squawking an emergency always keep theirs
+    - WEFAX: the phase nudge also corrects the part of the chart already received by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/464 (#439)
+    - JS8: the template chips write into the compose box and SEND is the one way out, a typed CQ goes out as a real CQ frame, and CLEAR TO and CLEAR RX behave alike by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/478 (#472, #473)
+    - JS8: AGN? repeats the last message once instead of with the callsign doubled
+    - Public SDR: sdr-list.xyz joins as a third receiver directory, and each receiver says why sdroxide cannot open it yet (#482)
+    - HPSDR Protocol 2: send the open-collector outputs in byte 1401, not 1400, so a filter board switches at all (#438)
+    - HPSDR Protocol 2: the DUC runs at 192 kHz, the Alex words are sent, the two-ADC boards are recognised, and the DUC command declares its DAC (#440)
+    - PureSignal: a meter readout says whether the loop locked and how much it is correcting, instead of only the log (#441)
+    - ELAD FDM-DUO: follow the radio's own VFO knob on the receive cable alone, by reading the tuning back off the streaming interface by @dielectric-coder in https://github.com/dividebysandwich/sdroxide/pull/462
+    - ELAD FDM-DUO: work the radio's own VFO B when sdroxide's is taken up, so its display, its knob and its A/B button are on the dial being worked by @dielectric-coder in https://github.com/dividebysandwich/sdroxide/pull/467; a VFO taken up mid-over now waits for the unkey, and clicking a VFO puts the radio back in step after its own A/B button was pressed
+    - VFO A/B: a rig with two VFOs of its own is told which one first, before the mode recall retunes it, and a converter adds its offset to that selection instead of taking it away
+    - SDRplay: report a front end that keeps overloading once and then once a minute, rather than twice a second by @dielectric-coder in https://github.com/dividebysandwich/sdroxide/pull/475
+    - PlutoSDR: a board whose state machine was left parked in alert - every register as configured, the receiver off, one sample value repeated - is put back to receiving on connect; a TDD board sdroxide is not driving, or one whose state machine follows its enable pins, is left alone and says on connect that it is not receiving (#470)
+    - PlutoSDR: closing the radio is no longer logged as the receive socket failing, which made the end of every probe run read as iiod crashing, and the probe example says so when every sample is the same value or they arrive faster than the sample rate (#470)
+    - PlutoSDR: a receive connection that goes silent while the board still answers a fresh one is replaced within a second, instead of after two to eight seconds of dead audio; a board that has itself paused is still waited out, and the session trace records which of the two each stall was (#377, #418)
+    - Recording: shine-rs 0.1.4 fixes the MP3 encoder underflow, and a panic in the encoder no longer ends a recording in silence (#443)
+    - DSP: the complex resampler behind DRM, the neural CW decoder's tuner and HD Radio writes into a buffer it keeps, instead of allocating and moving memory for every chunk at I/Q rates
+    - Settings: the radio's sound card and its receive gain move to the Radio tab, where a per-radio setting belongs (#474)
+    - Config: an unknown layout or an absurd FFT size in config.toml now costs only that one value, instead of the whole file or a hang at start, by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/477 (#469)
+    - Dependencies: tower-http 0.7.1 by @ipaddr42 in https://github.com/dividebysandwich/sdroxide/pull/346
+    Documentation
+    - An HD Radio chapter in the user manual: the mode, the 400 kHz floor, what AUDIO means and the retune back to HD-1 (#437)
+    - The USB audio radio interface in the manual: two sound cards, a dial that is only a label, VOX keying on anything played to the card, and the transmit lockout on a licence-free radio
+    - The manual covers the CW straight key, audible alerts and station profiles (#322, #197)
+    - An ACARS chapter in the user manual: where to listen, the carrier on the dial, what the message list shows, and that damaged blocks are not yet repaired (#436)
+    - The manual covers per-mode settings - the DEFAULTS chip, RESET EVERY MODE, and the scanner's SQL stop level following the squelch of the mode being scanned
+    - The manual covers how the AIS chart and the ADS-B picture decide which vessel names and data blocks to show (#408)
+    - The manual's PlutoSDR section covers a radio that connects but hears nothing, and how a stalled receive stream is told apart from a board that has paused (#470, #377)
+    - The manual covers this release's behaviour changes: the step row's First press, the DECODES export and the SWL records an import leaves out, importing files in the browser and its local-storage ceiling, WEFAX PHASE on the chart already received, the AIS chart's zoom, the ten new themes, the JS8 composer, the new SSTV modes, the PureSignal readout, sdr-list.xyz, and the radio's sound card on the Radio tab
+    New Contributors
+    - @madmedicnl made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/464
+    - @ipaddr42 made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/346
+    Full Changelog: https://github.com/dividebysandwich/sdroxide/compare/v1.6.7...v1.6.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dividebysandwich/sdroxide/releases/tag/v1.6.8
+ReleaseTime: 2026-09-18T20:08:34.0000000Z

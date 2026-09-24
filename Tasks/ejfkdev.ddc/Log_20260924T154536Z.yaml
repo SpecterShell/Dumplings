@@ -1,0 +1,35 @@
+Version: 0.1.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.12/ddc-v0.1.12-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.12/ddc-v0.1.12-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc 0.1.12
+    Data integrity — issue #4 (fix by contributor wul7chaosN, integrated with attribution):
+    - Injective identifier sanitizer: non-ASCII class names (R8 unicode obfuscation) escape
+      to _u<hex> per code point instead of folding to _. Previously distinct classes could
+      collapse onto one output path and silently overwrite each other — on bin.mt.plus 2.26.9
+      that destroyed 22,633 of 30,768 sources with exit code 0. Now: 27,970 files, all distinct.
+    - The driver asserts output-path injectivity before any write (DDC_ALLOW_PATH_COLLISION=1
+      overrides); the summary reports files actually on disk; write errors exit 1.
+    Decompilation quality — four-APK javac battery 26,836 → 22,075 (-17.7%):
+    - AbstractMethodError stubs for R8-stripped interface methods (jadx leaves these incomplete too)
+    - Kotlin suspend lambdas: R8's return-type-specialized void invoke() renamed so the
+      Object invoke() bridge survives and satisfies the SAM interface
+    - Fallback enum rendering: constant subclasses keep extends + super(name, ordinal, ..),
+      base ctors widened for cross-package subclasses, ordinal()/values() synthesized
+    - d8 $$ExternalSynthetic* classes emitted top-level and referenced by full name
+    - Private ctors of subclassed classes widened (R8-inlined trivial supers)
+    - Object → element narrowing casts on array-element stores
+    - ctor this-alias folds, descriptor-exact null-arg casts, downcast witnesses,
+      enum-promotion improvements, bool/numeric assignment coercions
+    Tests: ddc 70, jdc-core 14, jcdc 31 — all green. Depends on jdc-core 0.2.7.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.11...v0.1.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.12
+ReleaseTime: 2026-09-24T11:13:59.0000000Z
