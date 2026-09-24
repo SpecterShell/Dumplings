@@ -26,21 +26,20 @@ switch -Regex ($this.Check()) {
         Value  = $null
       }
 
-      $ReleaseNotesUrl = "https://cj-docs.gitcode.com/zh/$($this.CurrentState.Version)/release-notes/cangjie-$($this.CurrentState.Version)-release-notes.html"
-      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl
+        Value  = $ReleaseNotesUrl = Join-Uri $Global:DumplingsStorage.CangjieSTSPrefix $Global:DumplingsStorage.CangjieSTSPage.SelectSingleNode('//a[contains(., "版本说明")]').Attributes['href'].Value
       }
+
+      $Object4 = Invoke-WebRequest -Uri ([System.Web.HttpUtility]::ParseQueryString(([uri]$ReleaseNotesUrl).Query)['url']) | ConvertFrom-Html
 
       # ReleaseNotes (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.SelectSingleNode('//main') | Get-TextContent | Format-Text
+        Value  = $Object4.SelectSingleNode('//main') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host

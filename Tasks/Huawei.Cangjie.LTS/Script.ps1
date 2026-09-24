@@ -14,15 +14,20 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Global:DumplingsStorage.CangjieSTSPage.SelectSingleNode('//div[@class="subpage-content-time"]').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
         Value  = $null
       }
-
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.SelectSingleNode('//div[@class="subpage-content-time"]').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
