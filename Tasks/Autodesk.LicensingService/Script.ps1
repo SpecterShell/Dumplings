@@ -23,12 +23,12 @@ switch -Regex ($this.Check()) {
         Read-PlaywrightPageContent -Page $Page
       }
       $Object5 = $Object4 | Get-EmbeddedJson -StartsFrom 'window.__PRELOADED_STATE__ = ' | ConvertFrom-Json
-      $Object6 = $Object5.caasData.response | ConvertFrom-Html
+      $Object6 = $Object5.caasData.response.caasContent | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object6.SelectSingleNode("//p[contains((text()|span), '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object6.SelectSingleNode("//p[contains(text(), '$($this.CurrentState.Version)') or contains(span, '$($this.CurrentState.Version)') or contains(strong, '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
