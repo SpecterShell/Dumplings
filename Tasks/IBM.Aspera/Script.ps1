@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.ibm.com/docs/api/v1/content/SS8NDZ_1.0/guide/what_is_new.html' | ConvertFrom-Html
+      $Object2 = curl -fsSL 'https://www.ibm.com/docs/api/v1/content/SS8NDZ_1.0/guide/what_is_new.html' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//p[contains(text(), 'Version $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
