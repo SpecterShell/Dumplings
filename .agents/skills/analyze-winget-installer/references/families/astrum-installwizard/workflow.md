@@ -53,12 +53,13 @@ InstallModes:
 - silent
 InstallerSwitches:
   Silent: /silent
+  SilentWithProgress: /silent
 InstallerSuccessCodes:
 - 1
 ProductCode: <uninstall-key-name>
 ```
 
-Use only fields returned by the exact artifact. The parser derives `ProductCode` from an explicit unconditional uninstall registry key. It does not infer that value from the application name when the registry record is absent or conditional. The standard User Information dialog blocks `/silent` only for generations whose profile keeps the documented claim (`Early2`); controlled VM installations prove the `Modern2` runtime skips that dialog and completes `/silent` with exit code `1`, so those artifacts keep silent support and report `Astrum.Silent.UserInformationDialogIgnored`. If the selected license dialog has the prohibit-silent option, the parser adds `/AcceptLicense` under `InstallerSwitches.Custom`; VM evidence confirms bare `/silent` refuses while `/silent /AcceptLicense` installs.
+Use only fields returned by the exact artifact. The parser derives `ProductCode` from an explicit unconditional uninstall registry key. It does not infer that value from the application name when the registry record is absent or conditional. The standard User Information dialog blocks `/silent` only for generations whose profile keeps the documented claim (`Early2`); controlled VM installations prove the `Modern2` runtime skips that dialog and completes `/silent` with exit code `1`, so those artifacts keep silent support and report `Astrum.Silent.UserInformationDialogIgnored`. Astrum has no distinct progress route, so the parser duplicates `/silent` into `InstallerSwitches.SilentWithProgress` without adding `silentWithProgress` to `InstallModes`. If the selected license dialog has the prohibit-silent option, the parser adds `/AcceptLicense` under `InstallerSwitches.Custom`; VM evidence confirms bare `/silent` refuses while `/silent /AcceptLicense` installs.
 
 Astrum 2.x documentation identifies process exit code `1` as successful completion. Keep `InstallerSuccessCodes: 1` for this generic EXE family after VM validation confirms the exact media follows that behavior; VM installations of 2.29.50 builds confirm exit code `1` on success. Astrum 1.x gained unattended installation during the 1.x line, but its binary configuration does not identify the builder subversion independently of the packaged application version. The parser projects `/silent` only when it finds the exact `/SILENT` token in the bounded native runtime option table; it still omits `InstallerSuccessCodes` for 1.x until generation-specific documentation or VM evidence proves the process result.
 

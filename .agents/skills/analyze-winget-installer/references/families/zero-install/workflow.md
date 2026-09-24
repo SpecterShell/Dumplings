@@ -65,7 +65,7 @@ Use the exact `InstallModes`, `InstallerSwitches`, `SupportedScopes`, and `Scope
 
 - Before 2.23.0, configured application bootstrappers have no source-backed silent mode.
 - The generic 2.11.0–2.14.4 deployment bootstrapper supports `--silent` and `--verysilent` for installing Zero Install itself. This behavior is separate from application-bound silent support and does not prove target ARP metadata.
-- From 2.23.0 through 2.23.x, GUI `--silent` suppresses questions and target launch but retains progress UI, so it maps to `silentWithProgress`. CLI media maps it to `silent`.
+- From 2.23.0 through 2.23.x, GUI `--silent` suppresses questions and target launch but retains progress UI, so it maps to `silentWithProgress`. CLI media maps it to `silent`; because it has no separate progress route, the parser also supplies that fully silent command in `InstallerSwitches.SilentWithProgress` without adding the mode.
 - From 2.24.0, GUI `--verysilent` maps to `silent`, while `--silent` remains `silentWithProgress`.
 - `--machine` and `--no-integrate` start at 2.23.1. An installer whose compiled integration arguments already contain `--machine` is fixed to machine scope rather than dual-scope.
 - `customizable_store_path` first appears before the command-line store override. Author `InstallLocation: --store-path="<INSTALLPATH>"` only when the field is true and the runtime is 2.24.8 or later.

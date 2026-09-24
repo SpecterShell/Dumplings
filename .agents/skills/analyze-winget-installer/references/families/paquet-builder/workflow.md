@@ -55,7 +55,7 @@ Omit `-Name` to extract all entries. Use `-ArchiveKind All` only when both appli
 
 ## Step 4: author switches and modes
 
-WinGet has no Paquet Builder defaults. Add `InstallerSwitches` and `InstallModes` only when `$Info.SupportsSilentInstallation` is true and the parser returns exact switch evidence. Current verified media uses `/s` for silent installation. Marker-only family detection must not add `/s`, `/silent`, or `silentWithProgress`.
+WinGet has no Paquet Builder defaults. Add `InstallerSwitches` and `InstallModes` only when `$Info.SupportsSilentInstallation` is true and the parser returns exact switch evidence. Current verified media uses `/s` for silent installation and has no distinct progress route, so set both WinGet silent switch fields to `/s` while retaining `InstallModes: [interactive, silent]`. Marker-only family detection must not add `/s`, `/silent`, or `silentWithProgress`.
 
 ```yaml
 InstallerType: exe
@@ -64,6 +64,7 @@ InstallModes:
 - silent
 InstallerSwitches:
   Silent: /s
+  SilentWithProgress: /s
 ```
 
 The documented package exit codes are `0` for success, `1` for decompression failure, `2` for cancellation, and `3` for an unexpected fatal error. These are not extra success codes.

@@ -27,7 +27,7 @@ WinGet fills each missing known switch key independently. Omit a manifest switch
 - WinGet supplies default silent and silent-with-progress switches for `burn`, `wix`, `msi`, `nullsoft`, and `inno`. Inno has distinct `/VERYSILENT` and `/SILENT` defaults, so do not treat it as lacking `silentWithProgress` globally.
 - Add `InstallModes` for a known type only when evidence proves that this specific installer supports a different subset from its WinGet type defaults.
 - Specify it for generic `exe` and other unknown types. Most use `interactive` and `silent` because they do not distinguish silent-with-progress behavior.
-- Include `silentWithProgress` for a generic type only when verified. Common examples include InstallShield EXE and Advanced Installer EXE wrappers over MSI that accept separate quiet and passive switches.
+- Include `silentWithProgress` in `InstallModes` for a generic type only when a progress-visible unattended route is verified. Common examples include InstallShield EXE and Advanced Installer EXE wrappers over MSI that accept separate quiet and passive switches. If only a fully silent route is verified, keep the mode omitted but copy the complete silent command into `InstallerSwitches.SilentWithProgress` because WinGet selects that slot by default and warns when either generic EXE silent field is absent.
 - Treat the array as an exact supported set, not a list of modes that merely appear plausible from family defaults.
 - Source: winget-cli [`GetDefaultKnownSwitches`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/ManifestCommon.cpp).
 

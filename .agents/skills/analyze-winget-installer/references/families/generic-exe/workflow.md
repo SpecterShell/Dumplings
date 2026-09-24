@@ -54,7 +54,7 @@ Installers:
     SilentWithProgress: <COMPLETE-SILENT-WITH-PROGRESS-COMMAND>
 ```
 
-Remove `silentWithProgress` and its switch when the installer does not implement a distinct supported mode.
+Remove `silentWithProgress` from `InstallModes` when the installer does not implement a distinct supported mode. If a fully silent command is proven, copy that complete command into `InstallerSwitches.SilentWithProgress` so WinGet's default invocation remains unattended and generic EXE validation has both required switch fields.
 
 ## WinGet defaults and overrides
 

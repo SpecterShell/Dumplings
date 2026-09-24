@@ -102,6 +102,7 @@ Installers:
   - silent
   InstallerSwitches:
     Silent: /s
+    SilentWithProgress: /s
   ProductCode: <VerifiedInstallScriptUninstallKey>
 ```
 

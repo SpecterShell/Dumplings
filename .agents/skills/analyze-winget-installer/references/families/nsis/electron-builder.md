@@ -53,3 +53,9 @@ Also distinguish initial-install installers from update-only installers. Some pu
 - The feed may still provide version or release-date evidence when trustworthy, but its update-only asset is not the manifest installer.
 
 See [Electron-builder update feeds](../../../../author-winget-manifest/references/package/artifact-selection.md#electron-builder-update-feeds) for the general URL-selection routine.
+
+## VM validation retries for the known NSIS crash
+
+Electron-builder issue [#7921](https://github.com/electron-userland/electron-builder/issues/7921) records an intermittent fresh-install crash in generated multi-user NSIS installers: exception `0xC0000005` occurs in NSIS `System.dll` around `System::Store` while the installer resolves the per-user program-files path. When VM evidence matches that signature, restore the clean checkpoint and retry the exact same installer, command line, scope, and elevation route up to three additional times. Preserve the exit code, crash evidence, installer log, and installed-state comparison for every attempt.
+
+Use this retry route only for the matching electron-builder crash. Do not reinterpret an unrelated exception, deterministic crash, blocked prompt, or timeout as issue #7921. A later successful attempt proves that the failure is intermittent; report the failed attempts and instability instead of discarding them.

@@ -64,7 +64,7 @@ Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -DestinationPath 
 
 ### 5. Compose switches and modes
 
-Actual Installer is a generic EXE family, so WinGet provides no family defaults. `/S` is the silent switch and `/D "<INSTALLPATH>"` overrides the destination. Use `InstallModes: [interactive, silent]` only when `SetupParameterInfo.AllowsSilent` is true; compiled `-nosilent` policy and a User Information dialog without `-silentinstalluserinfo` remove the silent route. There is no separate source-backed `silentWithProgress` behavior.
+Actual Installer is a generic EXE family, so WinGet provides no family defaults. `/S` is the silent switch and `/D "<INSTALLPATH>"` overrides the destination. Use `InstallModes: [interactive, silent]` only when `SetupParameterInfo.AllowsSilent` is true; compiled `-nosilent` policy and a User Information dialog without `-silentinstalluserinfo` remove the silent route. There is no separate source-backed `silentWithProgress` behavior, so set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` while retaining the exact mode list.
 
 The `/L` switch writes `%TEMP%\AISETUPLOG.TXT` to a fixed location. It neither accepts WinGet's `<LOGPATH>` token nor selects an installation mode, so do not add it as `Interactive`, `Silent`, `SilentWithProgress`, or `Log`.
 
@@ -83,6 +83,7 @@ InstallModes:
 - silent
 InstallerSwitches:
   Silent: /S
+  SilentWithProgress: /S
   InstallLocation: /D "<INSTALLPATH>"
 ProductCode: '{PRODUCT-GUID}'
 ```

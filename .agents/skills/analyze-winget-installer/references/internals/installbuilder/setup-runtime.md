@@ -42,7 +42,7 @@ The project can restrict `allowedInstallationModes`. An omitted or empty allowli
 | `LegacyMetakit` 3.x and 4.x | `--mode unattended` | Not claimed | The runtime documents unattended mode but predates `unattendedModeUI` |
 | CookFS-era or project with `unattendedModeUI` | `--mode unattended --unattendedmodeui none` | `--mode unattended --unattendedmodeui minimal` | Explicit UI mode overrides a project default such as `minimal` or `minimalWithDialogs` |
 
-`InstallModes` includes `interactive` when any non-unattended mode remains allowed, `silent` when unattended is allowed, and `silentWithProgress` only when the runtime supports `unattendedModeUI`. WinGet has no InstallBuilder defaults, so these source-proven switches must be authored when the modes are used.
+`InstallModes` includes `interactive` when any non-unattended mode remains allowed, `silent` when unattended is allowed, and `silentWithProgress` only when the runtime supports `unattendedModeUI`. WinGet has no InstallBuilder defaults, so these source-proven switches must be authored when the modes are used. Legacy runtimes without `unattendedModeUI` copy `--mode unattended` into both WinGet silent switch fields while retaining only `silent` in the mode list.
 
 ## Installation directory and logging
 

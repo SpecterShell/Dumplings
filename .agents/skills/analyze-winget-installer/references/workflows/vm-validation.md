@@ -15,6 +15,8 @@ Get-Command Get-VM, Copy-VMFile
 
 If the direct import fails, verify that the Hyper-V PowerShell feature is installed and that the process inherited the normal Windows environment before changing module paths. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for the controller's small collector-script transfer.
 
+PowerShell Direct runs commands in a non-interactive guest session that is separate from the signed-in user's visible desktop. A GUI process started through `Invoke-Command -VMName` can run without appearing in the VM console. Use PowerShell Direct for staging, state capture, and non-interactive commands; launch installers or applications that require visible observation from the VM's interactive desktop, for example through an interactive scheduled task or a console session.
+
 Start from a clean checkpoint. Do not attach host submission directories as writable shared storage.
 
 ### Checkpoints with GPU partitions
@@ -96,6 +98,8 @@ $Process.Refresh()
   TimedOut = $false
 }
 ```
+
+Do not replace the bounded process-object wait with `Start-Process -Wait`. On Windows, `-Wait` waits for the started process and its descendants, so an updater, helper, or launched application that remains alive can make validation appear hung after the installer itself has exited. Keep `-PassThru`, apply an explicit timeout to the returned process, and inspect the process tree separately when wrapper behavior matters. See the PowerShell [`Start-Process -Wait`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process#-wait) contract.
 
 The normal success expectation is exit code `0`. A nonzero code may indicate failure or a documented successful outcome such as success-with-reboot. Accept it only when vendor documentation, installer-family return-code evidence, or a repeatable successful installed-state comparison proves the meaning; then author `InstallerSuccessCodes` or `ExpectedReturnCodes` only when required by the manifest rules. A zero exit code is still insufficient without the expected installed state and a blocker-free unattended run.
 

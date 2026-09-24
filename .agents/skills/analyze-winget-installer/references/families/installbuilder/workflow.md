@@ -66,7 +66,7 @@ InstallBuilder is a generic EXE to WinGet, so no family defaults are supplied by
 
 - `--mode unattended --unattendedmodeui none` is the silent switch for CookFS-era runtimes when `unattended` is allowed; the explicit UI override prevents a project-level `minimal` or `minimalWithDialogs` default from making WinGet's silent mode visible.
 - `--mode unattended --unattendedmodeui minimal` is the progress mode when unattended installation is allowed.
-- Legacy Metakit-only 3.x and 4.x media document `--mode unattended` but predate `unattendedModeUI`; suggest silent mode only, without `silentWithProgress`, for that route.
+- Legacy Metakit-only 3.x and 4.x media document `--mode unattended` but predate `unattendedModeUI`; retain only `silent` in `InstallModes`, and set both WinGet silent switch fields to `--mode unattended` because there is no distinct progress route.
 - The install-location switch comes from the `installdir` parameter's `cliOptionName`; the runtime uses the parameter name when a custom parameter omits `cliOptionName`. The normal documented mapping is `--prefix "<INSTALLPATH>"`.
 - `--debugtrace "<LOGPATH>"` writes the installer log.
 

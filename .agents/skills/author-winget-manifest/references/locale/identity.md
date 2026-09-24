@@ -71,6 +71,7 @@ Use the official publisher homepage:
 - For a repository-hosted package, prefer the publisher's official website linked from the repository owner profile.
 - If no separate official site exists, use the repository owner profile, such as `https://github.com/example`.
 - Do not use a third-party download site, company-information directory, or repository releases page.
+- Do not derive `PublisherUrl` from a demo, playground, sample, staging, or hosted product instance unless that page is also the publisher's official public homepage. Prefer the publisher's organization site or official repository-owner profile.
 
 ### PublisherSupportUrl
 
@@ -119,3 +120,5 @@ Use an official URL in this order of preference:
 3. The official source repository page.
 
 For repository-hosted packages, use the repository page rather than its releases page. Never use a third-party download or software-listing page.
+
+Do not use a live demo, sample deployment, playground, staging site, or hosted tenant as `PackageUrl` merely because it runs the product. Use a page whose purpose is to introduce, document, or distribute the product. A page that opens directly into an application, asks for demo credentials, or presents sample data without stable product information is deployment evidence rather than a product page.

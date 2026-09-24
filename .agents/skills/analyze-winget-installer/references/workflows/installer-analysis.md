@@ -90,6 +90,7 @@ This is the only installer-family route table in the skill.
 | InstallShield EXE or Advanced UI | [InstallShield](../families/installshield/workflow.md) |
 | Squirrel or Velopack | [Squirrel and Velopack](../families/squirrel/workflow.md) |
 | Astrum InstallWizard 1.x/2.x PE overlay | [Astrum InstallWizard](../families/astrum-installwizard/workflow.md) |
+| AKInstaller legacy/modern native table or AKInstallerMSI wrapper | [AKInstaller](../families/akinstaller/workflow.md) |
 | Kachina native PE with appended TLV records | [Kachina](../families/kachina/workflow.md) |
 | MicaSetup CLR/WPF installer | [MicaSetup](../families/micasetup/workflow.md) |
 | Zero Install bootstrapper | [Zero Install](../families/zero-install/workflow.md) |

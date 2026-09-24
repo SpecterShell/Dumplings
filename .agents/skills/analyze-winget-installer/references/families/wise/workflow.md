@@ -108,7 +108,7 @@ AppsAndFeaturesEntries:
 
 `WiseVariant: WiseScript` means no authoritative nested MSI was found. The parser can return variables, payload records, registry writes, execution records, custom ARP candidates, and opaque external-call evidence.
 
-Classic compatible WiseScript runtimes use `/S` for silent installation and do not provide a distinct progress mode. Because `exe` has no WinGet default, write the proven override explicitly:
+Classic compatible WiseScript runtimes use `/S` for silent installation and do not provide a distinct progress mode. Because `exe` has no WinGet default, write `/S` into both silent switch fields while retaining only `silent` in `InstallModes`:
 
 ```yaml
 InstallerType: exe
@@ -117,6 +117,7 @@ InstallModes:
 - silent
 InstallerSwitches:
   Silent: /S
+  SilentWithProgress: /S
 ```
 
 Do not use this shape when `Wise.Metadata.ScriptModelUnsupported`, package-specific interactive behavior, or an opaque bootstrapper prevents proof of unattended installation.

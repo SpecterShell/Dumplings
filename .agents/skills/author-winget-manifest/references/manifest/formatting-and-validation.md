@@ -15,7 +15,7 @@ Author complete installer-level entries first. Dumplings calls `Move-KeysToInsta
 - Use `InstallerLocale` only when separate installer files are differentiated by locale. Omit it for one installer, multilingual installers, or the same binary reused across locales.
 - For WinGet-known types, omit each `InstallerSwitches` child whose complete value equals WinGet's default. Missing known children are populated independently; a non-default child must contain its complete replacement.
 - Omit `InstallModes` for known types when WinGet's defaults are accurate. Add it only for a proven package-specific deviation.
-- For generic EXE families, specify the verified mode set. Most support `interactive` and `silent`; add `silentWithProgress` only when a distinct progress route is proved.
+- For generic EXE families, specify the verified mode set. Most support `interactive` and `silent`; add `silentWithProgress` to `InstallModes` only when a distinct progress route is proved. WinGet defaults to the `InstallerSwitches.SilentWithProgress` slot and validates generic EXE manifests for both silent fields, so copy the proven fully silent command into that switch field when no separate progress route exists.
 - Keep no-reboot arguments in `Silent` and `SilentWithProgress`. Put mode-independent post-install launch suppression in `Custom`, such as `--do-not-launch-chrome` or `/mergetasks=!runcode`.
 - Do not add `ExpectedReturnCodes` for known types when WinGet already supplies the same mappings. For generic EXE-over-MSI wrappers that propagate MSI codes, include the complete MSI mapping rather than a single observed code.
 - Capture actual process exit codes during VM validation for success, cancellation, failure, and reboot cases.

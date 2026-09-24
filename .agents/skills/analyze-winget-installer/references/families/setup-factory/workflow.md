@@ -23,7 +23,7 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-Add `InstallModes: [interactive, silent]` and `InstallerSwitches.Silent: /S` only when `$Info.SupportsSilentInstallation` is true. Use `InstallModes: [interactive]` when it is false. Setup Factory 3.1, 4, and 5 are interactive-only. A null result indicates malformed, conflicting, or unsupported project data; do not add either field until the artifact is validated.
+Add `InstallModes: [interactive, silent]` and set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` only when `$Info.SupportsSilentInstallation` is true. Setup Factory has no distinct progress route, so do not add `silentWithProgress` to `InstallModes`. Use `InstallModes: [interactive]` when silent support is false. Setup Factory 3.1, 4, and 5 are interactive-only. A null result indicates malformed, conflicting, or unsupported project data; do not add either field until the artifact is validated.
 
 ## Static parsing
 
@@ -109,7 +109,7 @@ Inspect `SupportsSilentInstallation`, `StartsInSilentMode`, `InstallerSwitches`,
 
 For a true result, still test license acceptance, reboot suppression, custom prerequisites, external DLL actions, exit codes, and whether the application can launch after silent installation. Setup Factory 5 execution and file-operation records can be guarded by runtime variables or request removable media, while Setup Factory 6 action scripts can assign `%SilentMode%` during startup and override the command-line request. Inspect `VariableReads`, `VariableAssignments`, `ExecutionActions`, `FileSystemActions`, `InstallabilityActions`, `RebootActions`, `ExternalCodeActions`, and `SetupFactory.Installability.*` diagnostics; validate any reachable or runtime-dependent action that affects unattended behavior. A false result is interactive-only. Duplicate modern project records are accepted only when all validated records agree on both silent flags; conflicting or missing records return null with `SetupFactory.Installability.SilentSupportUnresolved`.
 
-When Lua conditions, unresolved variables, nested execution, or external DLL calls affect unattended installation, keep the parser diagnostic and use VM evidence. Do not infer `silentWithProgress` merely because `/S` performs an unattended installation.
+When Lua conditions, unresolved variables, nested execution, or external DLL calls affect unattended installation, keep the parser diagnostic and use VM evidence. Duplicating `/S` into WinGet's `SilentWithProgress` switch slot does not prove or advertise a progress-visible mode.
 
 ### 8. Compose the manifest
 

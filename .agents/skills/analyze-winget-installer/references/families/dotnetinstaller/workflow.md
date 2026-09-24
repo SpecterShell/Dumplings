@@ -75,7 +75,7 @@ InstallerSwitches:
   Log: /Log /LogFile "<LOGPATH>"
 ```
 
-Historical launchers can support only `/q`, while intermediate builds can lack `/nosplash` or `/noreboot`. A launcher can accept `/q` while a nested component falls back to its interactive command. Review `DotNetInstaller.Installability.SilentRouteUnproven` and `DotNetInstaller.Installability.BasicRouteUnproven`; omit every unproven end-to-end mode.
+Historical launchers can support only `/q`, while intermediate builds can lack `/nosplash` or `/noreboot`. When `/q` is proven but `/qb` is unavailable, keep `InstallModes` at `interactive` and `silent` and copy the composed `/q` command to `InstallerSwitches.SilentWithProgress` so WinGet's default invocation remains unattended. A launcher can accept `/q` while a nested component falls back to its interactive command. Review `DotNetInstaller.Installability.SilentRouteUnproven` and `DotNetInstaller.Installability.BasicRouteUnproven`; omit every unproven end-to-end mode.
 
 Do not add `/ComponentArgs "*":"/quiet /norestart"` or another blanket component override. dotNetInstaller already chooses the authored interactive, basic, or silent command for each component. A global override can corrupt non-MSI commands and bypass package-specific arguments.
 

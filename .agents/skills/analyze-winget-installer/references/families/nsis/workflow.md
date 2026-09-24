@@ -62,7 +62,7 @@ Use [visible ARP analysis](analysis.md#identify-the-visible-arp-owner) to distin
 Use [scope and architecture analysis](scope-and-silent.md), including targeted scope parses for MultiUser installers. Preserve existing manifest intent and use VM validation when either value is conditional or unresolved.
 
 ## VM validation
-Follow [VM validation](../../workflows/vm-validation.md) and the focused checks in the linked analysis pages.
+Follow [VM validation](../../workflows/vm-validation.md) and the focused checks in the linked analysis pages. For electron-builder media, also apply the [bounded retry procedure for the known NSIS crash](electron-builder.md#vm-validation-retries-for-the-known-nsis-crash).
 
 ## Known examples
 
