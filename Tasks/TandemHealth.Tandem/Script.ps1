@@ -13,6 +13,20 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    # Patches
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'PrivacyUrl'
+      Value = $null
+    }
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'LicenseUrl'
+      Value = $null
+    }
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'CopyrightUrl'
+      Value = $null
+    }
+
     $this.Print()
     $this.Write()
   }
