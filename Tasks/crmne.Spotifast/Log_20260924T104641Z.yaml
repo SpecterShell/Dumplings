@@ -1,0 +1,49 @@
+Version: 0.10.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crmne/spotifast/releases/download/v0.10.0/spotifast-v0.10.0-x86_64-pc-windows-msvc-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Spotifast 0.10 brings radio: open a mix of songs Spotify picks to go with any song, playlist, album, or artist, play exactly what you see, and save it as a playlist. The interface is now translated into 13 languages and follows your system's language. It also uses far less CPU while you move the mouse, keeps running on hidden Linux workspaces, uses the standard Windows title bar by default, and fixes a stuck full-screen window on Windows, Linux light and dark appearance, fonts on NixOS, and a dozen smaller problems reported since 0.9.1.
+    Download Spotifast: Mac · Windows · Windows ARM · Linux · Linux ARM · Flatpak
+
+    New
+    - Radio pages. Go to song radio now opens a page of 50 songs Spotify picks to go with the song instead of starting playback, as in Spotify's app, and playlists, albums, and artists have Go to playlist radio, Go to album radio, and Go to artist radio in their … menu. Play plays exactly the songs on the page, Refresh asks for a new mix, and Save as playlist keeps it. By @crmne; thanks @fedalc, @aspectrr, and @alexng353, whose #359 first showed a song radio as a page. (#369, #294)
+    - Spotifast speaks your language. The whole interface is now translated into German, Spanish, French, Italian, Dutch, Polish, Brazilian and European Portuguese, Russian, Swedish, Japanese, and Simplified and Traditional Chinese, and follows your system's language. Settings → Appearance → Language picks another. By @crmne, building on @LukeOkk's work. (#353, #534)
+    - Select, copy, and paste songs. Ctrl+A (Cmd+A on macOS) selects every song in a list, Ctrl+C copies their links, and Ctrl+V adds copied songs to a playlist you can edit. By @crmne; thanks @smvsch. (#539)
+    - Play, Pause, Next, and Previous in the macOS Dock menu. By @crmne; thanks @patatman. (#502)
+    - The mini player can leave the taskbar on Linux X11, as it already could on Windows. By @crmne; thanks @skorokithakis. (#325)
+    - The Library can show a grid of covers. A button in the Library header switches between the list and a grid that fits as many covers as the sidebar is wide; a card's corner button plays it. By @hyperpuncher. (#522)
+    - Middle-click autoscroll on Linux, off by default since middle click usually pastes there: Settings → Appearance → Middle-click autoscroll. By @crmne; thanks @Felitendo. (#488)
+    - Windows uses the standard title bar. Spotifast's own frameless title bar caused a black band and misplaced clicks with some graphics drivers. Settings → Appearance → Custom title bar brings it back if you prefer it. By @crmne; thanks @Mathiu and everyone who reported the black bar. (#348)
+    - Audiobooks stay out of Podcasts. Spotify lists some audiobooks among saved shows, but they can't be played here, so the Podcasts shelf leaves them out when local playback is enabled. By @crmne; thanks @nojaf. (#537)
+    - Shuffle beside a collection's Play button only turns shuffle on or off, as in Spotify's desktop app, instead of also starting the collection. By @luiscuellar31. (#525)
+    - The player bar fades between song colours instead of jumping from one tint to the next. By @luiscuellar31. (#452)
+    Fixed
+    - Moving the mouse no longer spins the CPU. Spotifast now waits for your screen's refresh on Windows, X11, and Wayland desktops that report hidden windows. In our Windows measurement, moving the pointer over the window used a fifth of the CPU it did before. On Wayland a window on a hidden workspace keeps playing and responding to media keys instead of freezing. By @crmne; thanks @hyperpuncher for measuring the problem. (#552)
+    - Quitting during fullscreen lyrics no longer leaves Windows stuck in full screen. The next launch returns the window to its previous size, and windows already stuck are restored. By @crmne; thanks @foofhere. (#565)
+    - Full-screen lyrics show the blurred cover straight away, instead of a black background that sometimes appeared only much later, and the backdrop no longer flashes black between songs. By @crmne; thanks @calisocialist and @Alimedhat000. (#561)
+    - Your playlists no longer come up short after a reload. A page left over from an earlier load of the Library could be taken for the new one's. By @kevin9327. (#471)
+    - Next names the next song immediately, even before its audio has loaded. By @crmne; thanks @milkday. (#495)
+    - Follow system follows your Linux desktop's light or dark setting, on GNOME, KDE, and in Flatpak, and changes with it. By @crmne; thanks @pakovm-git and @sanketttt26. (#498)
+    - Chinese, Japanese, and Korean titles render on NixOS, using fonts from fonts.packages. By @crmne; thanks @Nanaa05. (#546)
+    - Trackpad scrolling on Linux stays put while your fingers rest. Momentum starts only after a real lift. By @crmne; thanks @Fjalar. (#503)
+    - Editing playlist details saves only what you changed. Spotify doesn't let apps remove a description entirely, so clearing it now keeps the old one and says why instead of failing a rename saved alongside it. By @crmne; thanks @rafi. (#559)
+    - Remove from this playlist works in sorted and filtered views. By @TacticalDeux. (#564)
+    - Setting up local playback waits for every Spotify server fallback before giving up. By @luiscuellar31; thanks @cipri-tom. (#481, #479)
+    - Double-clicking the top bar on macOS performs the action chosen in Desktop & Dock. By @luiscuellar31; thanks @ankarhem. (#478, #350)
+    - Times and dates no longer shift as their digits change. By @hyperpuncher. (#562)
+    - Buttons keep the ordinary arrow pointer, and only links show the hand, as in other desktop apps. By @crmne; thanks @iamcalledrob. (#508)
+    - Dragging a playlist while following Spotify's order explains the switch to your local arrangement, since Spotify doesn't let apps change its order. By @crmne; thanks @jorisw. (#557)
+    - Settings no longer suggests creating a Spotify app once yours is ready, and large playlists no longer show a separate Go to song box; drag the scrollbar instead. By @crmne; thanks @jorisw. (#560)
+    - Simplified Chinese wording for repeat, queue, and lyrics reads more naturally. By @huojian17-star. (#544)
+    Thanks
+    @luiscuellar31, @TacticalDeux, @hyperpuncher, @huojian17-star, @Mathiu, @nojaf, @foofhere, @milkday, @pakovm-git, @sanketttt26, @Nanaa05, @Fjalar, @rafi, @cipri-tom, @ankarhem, @iamcalledrob, @jorisw, @calisocialist, @Alimedhat000, @fedalc, @aspectrr, @alexng353, @smvsch, @patatman, @skorokithakis, @Felitendo, @kevin9327, @LukeOkk, and everyone who reported problems and helped test this release.
+    Full changelog: https://github.com/crmne/spotifast/compare/v0.9.1...v0.10.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/crmne/spotifast/releases/tag/v0.10.0
+ReleaseTime: 2026-09-24T09:00:00.0000000Z

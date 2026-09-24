@@ -1,0 +1,19 @@
+Version: 0.29.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tianemon/EasyMint/releases/download/v0.29.1/EasyMint-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Changed（调整）
+    - 外部工具按需查找：开始对话时不再一次加载所有 MCP 工具；需要 GitHub、浏览器等外部能力时，Mint 会先查找相关工具再调用，减少普通对话的输入量和启动等待。MCP 服务器可在设置里填一句话用途说明（如「浏览器控制」），Mint 据此判断何时该动用它；服务器自己的说明只在查找该服务器时展示，不会自动成为每次对话的固定说明。搜不到时不再拿无关工具充数。
+    - 项目级 MCP 服务器升级后需重新确认一次：服务器的「用途说明」现在也算作定义的一部分（它会进提示词），因此升级后此前确认过的项目级服务器会回到「待确认」，再确认一次即可；用户级配置的服务器不受影响。
+    - 技能、系统提示词与经验库纳入写保护：会长期影响 Mint 行为的技能目录、系统提示词、经验库与子 Agent 模板，命令和文件工具不再能直接改写；仍可通过产品提供的管理入口或手动编辑修改。项目内从 Pi、Claude、Codex、GitHub 发现的技能目录也受保护。远程配对记录在标准模式下不可读，任何模式下都不能由命令和文件工具改写。
+    Fixed（修复）
+    - 退出应用后不再在 Dock 上显示「仍在后台运行」：macOS 上退出应用时，此前会残留一个后台进程，系统据此认为 EasyMint 仍在运行并在 Dock 上持续提示；现在退出时会一并收干净
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tianemon/EasyMint/releases/tag/v0.29.1
+ReleaseTime: 2026-09-24T09:36:55.0000000Z

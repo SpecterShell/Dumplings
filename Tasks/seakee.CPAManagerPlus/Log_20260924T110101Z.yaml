@@ -1,0 +1,123 @@
+Version: 1.14.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.0_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.0/cpa-manager-plus_v1.14.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.0_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.0/cpa-manager-plus_v1.14.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.0 is a feature release centered on the lifecycle of historical usage data. The new Usage Maintenance workspace brings archiving, verification, online-detail cleanup, import/export, resumable jobs, and storage diagnostics into one explicit workflow for long-running installations and growing SQLite databases.
+    The release also adds an offline space-reclamation path through compact-usage. It runs only after Manager Server is stopped and uses exclusive locking and integrity checks before compacting SQLite. Query, rollup, pricing-coverage, and recovery boundaries are hardened for installations that have already archived and removed raw historical usage, so logical cleanup, filesystem space reclamation, and full-history recovery remain distinct operations.
+    A separate correctness fix keeps provider display metadata out of routing configuration: upstream display_name / displayName values are no longer silently written as CPA routing aliases, preventing an imported friendly label from changing the externally callable model ID.
+    Highlights
+    Usage Maintenance
+    - Add a dedicated Usage Maintenance workspace with Archive Management and Import/Export as the primary surfaces, plus persisted task state, filters, detail drawers, and browser-history restoration. (Web / Manager Server)
+    - Preview historical data at a fixed cutoff and then progress through archive → verify → separately confirmed online-detail cleanup. Archiving and deletion remain distinct authorization stages. (Web / Manager Server)
+    - Persist archive stage and progress so long-running work can recover after page reloads, request cancellation, or service restarts without coupling background execution to one browser request. (Web / Manager Server)
+    - Add maintenance locks, coverage/readiness checks, and explicit stage transitions that prevent conflicting archive, verification, deletion, and compaction operations. (Manager Server)
+    - Add optional automatic historical retention. It is disabled by default and runs only after explicitly enabling the retention configuration. (Manager Server)
+    Archive / Import / Export
+    - Store historical archive runs under usage-archives/ as ordered gzip JSONL segments, with run, segment, identity-ledger, and verification state persisted in SQLite. (Manager Server)
+    - Export a stable JSONL snapshot of the current online usage_events independently of USAGE_QUERY_LIMIT; events written after the snapshot begins are not included. (Web / Manager Server)
+    - Add resumable import sessions with chunked upload, server-provided chunk sizes, temporary-file disk quotas, active-session limits, and TTL cleanup. (Web / Manager Server)
+    - Verify the SHA-256 of an already-uploaded prefix before resuming an import session, rejecting a different file even when filename, size, or modification metadata happen to match. (Web / Manager Server)
+    - Preserve an identity ledger so archived-and-cleaned raw events cannot be resurrected by duplicate import, while ordered archive segments can still rebuild raw history in an isolated empty recovery instance. (Manager Server)
+    Historical Query And Data Safety
+    - Harden Request Monitoring, Usage Analytics, Dashboard, and pricing-coverage reads around historical cleanup. Derived data continues to serve supported long-window queries without pretending deleted raw events are still online. (Web / Manager Server)
+    - Permit raw deletion only after archive verification and aggregate/coverage readiness checks. A later statistics-refresh failure does not undo a successfully persisted archive stage. (Manager Server)
+    - After the first historical raw deletion, historical pricing-model membership and context-tier threshold structure enter a fail-closed protection boundary so deleted history cannot become structurally unrebuildable; rate-only changes remain allowed. (Manager Server)
+    - Full-history recovery depends on a consistent pre-cleanup backup. A normal JSONL export does not automatically merge already-deleted archive segments back into online raw usage. (Manager Server / Docs)
+    Offline Compaction
+    - Add the native command cpa-manager-plus compact-usage --db-path <usage.sqlite>. (Manager Server / Native)
+    - Require every Manager Server using the database to be stopped. Process locking, SQLite exclusive access, maintenance locks, and active archive stages block unsafe compaction. (Manager Server)
+    - Emit stage/heartbeat status for long-running compaction work while keeping the final machine-readable CompactResult JSON on stdout. (Manager Server)
+    - Never run compaction automatically. It does not modify data.key or advance usage-data migration checkpoints; operators should conservatively reserve temporary free space up to roughly twice the SQLite file size. (Docs)
+    Model Discovery Alias Fix
+    - Stop normalizeModelList from treating upstream display_name / displayName as the configured routing alias. (Web)
+    - Keep friendly display metadata visible and searchable in discovery and model catalog surfaces without changing the CPA-registered external model ID. (Web)
+    - Preserve explicitly supplied upstream aliases and user-configured aliases exactly as before. (Web)
+    - Existing bad aliases are not rewritten automatically. If an older import already saved a friendly display name into the alias field, clear it manually when canonical routing is desired. (Web)
+    Upgrade Notes
+    - No manual database migration is required. Manager Server automatically creates or upgrades the additive Usage Maintenance schema at startup, and upgrading by itself does not delete historical usage_events.
+    - Automatic retention is disabled by default. Historical retention runs only when USAGE_ARCHIVE_RETENTION_ENABLED=true is explicitly configured.
+    - Before any raw cleanup, keep one consistent backup set: usage.sqlite, usage.sqlite-wal, usage.sqlite-shm, data.key, and usage-archives/ must come from the same backup point.
+    - compact-usage is offline-only. Stop every Manager Server using the SQLite database before running it. Logical deletion does not shrink the SQLite file automatically.
+    - The complete Usage Maintenance JSONL export covers only raw usage_events still present when its snapshot starts. It does not merge already-deleted archive segments into the export and is not a complete CPAMP backup.
+    - After historical raw cleanup has been performed, downgrading is no longer equivalent to simply replacing the binary if complete historical semantics must be restored. Use the consistent pre-cleanup backup or a recovery path provided by the target version.
+    - The full Muse / Meta compatibility baseline remains CPA v7.3.4+; v1.14.0 does not raise the CPA minimum compatibility baseline.
+    Acknowledgements
+    - @YogaSakti - Reported and contributed the model-discovery fix that separates display names from routing aliases, preventing friendly labels from changing externally callable model IDs.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.2...v1.14.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.0-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.0 是一次围绕历史用量生命周期管理的功能版本。新增的 Usage Maintenance（用量维护） 工作区把历史数据归档、完整性校验、在线明细清理、导入导出、任务恢复和存储诊断集中到一套明确的流程中，并为长期运行、SQLite 持续增长和历史数据迁移提供正式的维护边界。
+    本版本同时补齐离线空间回收能力：新增 compact-usage 命令，在 Manager Server 停止后通过独占锁与完整性检查安全执行 SQLite 压缩。对于已经归档并清理在线 raw usage 的实例，查询、rollup、pricing coverage 和恢复路径也增加了对应保护，避免把“逻辑删除”“物理空间回收”和“完整历史恢复”混为同一件事。
+    此外，修复模型发现中的一个配置正确性问题：上游仅用于展示的 display_name / displayName 不再自动写入 CPA 路由别名，避免保存后意外改变对外模型 ID。
+    Highlights
+    Usage Maintenance
+    - 新增独立的 用量维护 工作区，以“归档管理”和“导入/导出”为主要入口，并提供任务状态、筛选、详情抽屉和浏览器历史恢复。（Web / Manager Server）
+    - 支持按固定时间边界预览历史数据规模，然后依次执行 归档 → 校验 → 单独确认在线明细清理；归档和删除保持两个独立授权阶段。（Web / Manager Server）
+    - 归档任务状态、阶段与进度持久化，长时间任务可以在页面刷新、请求中断或服务重启后继续恢复，而不会因为前端连接中断丢失后台工作。（Web / Manager Server）
+    - 新增维护锁、coverage/readiness 检查和阶段状态机，阻止并发归档、校验、删除、压缩或未满足前置条件的破坏性操作。（Manager Server）
+    - 支持可选的历史数据自动 retention；默认关闭，只有显式启用后才会按配置的保留天数执行归档、校验和受保护的删除流程。（Manager Server）
+    Archive / Import / Export
+    - 历史归档按 run 保存到 usage-archives/，使用顺序化 gzip JSONL segment，并在数据库中保留 run、segment、identity ledger 和验证状态。（Manager Server）
+    - 完整 Usage JSONL 导出使用稳定快照边界读取当前仍在线的 usage_events，不受 USAGE_QUERY_LIMIT 限制；导出开始后新写入的事件不进入该快照。（Web / Manager Server）
+    - 导入改为可恢复 session：支持分块上传、服务端返回的动态 chunk size、临时文件磁盘配额、session 数量限制和 TTL 清理。（Web / Manager Server）
+    - 恢复已有上传 session 时会校验已上传前缀的 SHA-256；文件内容不一致时拒绝继续，避免仅凭文件名、大小或修改时间误恢复。（Web / Manager Server）
+    - identity ledger 保证已归档并删除 raw row 的事件不会因为重新导入而被“复活”；将 archive 恢复到空白隔离实例时仍可按 segment 顺序重建 raw history。（Manager Server）
+    Historical Query And Data Safety
+    - Request Monitoring、Usage Analytics、Dashboard 与 pricing coverage 增加历史清理后的读取边界，派生数据继续承担长窗口查询职责，而已经删除的 raw event 不会被静默假装仍然存在。（Web / Manager Server）
+    - raw deletion 只有在归档已验证并满足 aggregate / coverage readiness 后才允许执行；统计刷新失败不会回滚已经完成且持久化成功的归档阶段。（Manager Server）
+    - 第一次删除历史 raw event 后，历史 pricing model 集合和 context-tier 阈值结构进入 fail-closed 保护，避免后续结构变化让已删除历史无法一致重建；费率更新仍然允许。（Manager Server）
+    - 完整历史恢复需要保留删除前的一致备份。普通 JSONL export 不会自动把已经删除到 archive segment 的历史记录重新拼回当前在线数据。（Manager Server / Docs）
+    Offline Compaction
+    - 新增原生命令：
+      cpa-manager-plus compact-usage --db-path <usage.sqlite>。（Manager Server / Native）
+    - 压缩必须在所有连接该数据库的 Manager Server 停止后执行；进程锁、SQLite 独占访问、维护锁和活动归档阶段都会阻止不安全的压缩。（Manager Server）
+    - compact-usage 在长阶段输出状态/heartbeat，并将最终机器可读的 CompactResult JSON 独立写到 stdout。（Manager Server）
+    - 压缩不会自动执行，也不会修改 data.key 或推进 usage data migration checkpoint；建议预留最多约数据库文件两倍的临时可用空间。（Docs）
+    Model Discovery Alias Fix
+    - normalizeModelList 不再把上游 display_name / displayName 当作配置用 alias。（Web）
+    - 新增独立的 display metadata，模型发现列表仍能显示友好名称并参与搜索/分类，但新导入的模型不会因此改变 CPA 对外注册的模型 ID。（Web）
+    - 显式上游 alias 和用户手工设置的 alias 行为保持不变。（Web）
+    - 已经由旧版本保存到配置中的错误 alias 不会自动重写。 如之前导入时已经把友好名称写入 alias，需要用户手工清空。（Web）
+    Upgrade Notes
+    - 无需手动数据库迁移。 Manager Server 启动时会自动创建和升级 Usage Maintenance 所需的 additive schema；升级本身不会自动删除历史 usage_events。
+    - 自动 retention 默认关闭。 只有显式设置 USAGE_ARCHIVE_RETENTION_ENABLED=true 后，Manager Server 才会按配置执行历史保留流程。
+    - 执行任何 raw cleanup 前，请先保留一致备份： usage.sqlite、usage.sqlite-wal、usage.sqlite-shm、data.key 和 usage-archives/ 必须来自同一个一致时间点。
+    - compact-usage 只能离线执行。 停止所有使用该 SQLite 的 Manager Server 后再运行；逻辑删除不会自动缩小 SQLite 文件。
+    - Usage Maintenance 的完整 JSONL 导出只覆盖导出开始时仍存在于 raw usage_events 中的记录，不会把已经删除的 archive segment 自动合并回来，也不等价于完整 CPAMP 备份。
+    - 一旦已经执行历史 raw cleanup，降级到旧版本时不能再简单假设“只换回旧二进制”即可恢复完整语义。需要恢复完整历史时，应使用删除前的一致备份或该版本提供的专用恢复路径。
+    - 完整 Muse / Meta 功能的 CPA 基线继续为 v7.3.4+；本版本没有提高 CPA 最低兼容基线。
+    Acknowledgements
+    - @YogaSakti - 报告并贡献模型发现中 display name 与 routing alias 分离修复，避免友好名称被保存为路由别名并改变对外模型 ID。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.2...v1.14.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.0-zh.md
+ReleaseTime: 2026-09-24T06:45:01.0000000Z
