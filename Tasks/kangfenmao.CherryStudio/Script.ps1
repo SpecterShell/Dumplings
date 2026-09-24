@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/CherryHQ/cherry-studio/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/CherryHQ/cherry-studio/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -25,7 +25,13 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
+          $Skip = $false
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2')) {
+              $Skip = $Node.InnerText -match 'Downloads'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
@@ -33,7 +39,13 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) { $Node }
+          $Skip = $false
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2')) {
+              $Skip = $Node.InnerText -match '下载'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
@@ -42,11 +54,18 @@ switch -Regex ($this.Check()) {
           }
         } else {
           $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+          $Skip = $false
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2')) {
+              $Skip = $Node.InnerText -match 'Downloads|下载'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         }
       } else {
