@@ -1,0 +1,100 @@
+Version: 1.4.210
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.210/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    The short version
+    Agents & chat: Finished chats collapse to their answers, failed turns end instead of hanging, unread lights up when a structured chat finishes, and restart recovery stays in the status bar. Antigravity can run as a supervised worker, and terminal launches report back the pane they created.
+    Terminal, editor & workspaces: Terminal theme choice overrides Ghostty colors, the Linux daemon survives service restarts and reaps cleanly, and macOS tells you how to fix folder access. Large artifact and conflict lists are virtualized, stale search listings are fixed, and Monaco failures stay contained.
+    Remote & reliability: WSL guests keep the OpenCode agent variant, recreated SSH targets keep their generation floor, and same-cap relay waves clean up failed templates without touching the backend service.
+
+    Product experience
+    Agents, chat & launches
+    Structured chats settle cleanly, launches carry their context, and workspace lists stay responsive.
+    - fix(sidebar): stop a workspace with a structured chat reading as asleep by @brennanb2025 in https://github.com/stablyai/orca/pull/22098
+    - Fix stale listings when search query changes by @AmethystLiang in https://github.com/stablyai/orca/pull/22173
+    - Virtualize artifacts list with reusable component by @AmethystLiang in https://github.com/stablyai/orca/pull/22061
+    - Clear website annotations after successful delivery by @AmethystLiang in https://github.com/stablyai/orca/pull/22060
+    - fix(native-chat): stop a subagent's output speaking for the agent that spawned it by @brennanb2025 in https://github.com/stablyai/orca/pull/21398
+    - revert: defer subagent attribution until linkage refactor by @brennanb2025 in https://github.com/stablyai/orca/pull/22058
+    - fix(native-chat): collapse a finished turn to its answer by @brennanb2025 in https://github.com/stablyai/orca/pull/22029
+    - fix(native-chat): end a structured turn when the agent reports it failed by @brennanb2025 in https://github.com/stablyai/orca/pull/22047
+    - feat(native-chat): light the unread indicators when a structured chat finishes by @brennanb2025 in https://github.com/stablyai/orca/pull/21924
+    - fix(native-chat): navigate to open history sessions by @brennanb2025 in https://github.com/stablyai/orca/pull/21283
+    - feat(native-chat): keep restart recovery available in status bar by @brennanb2025 in https://github.com/stablyai/orca/pull/21397
+    - feat(agent-launch): carry the launch inputs the host cannot derive by @brennanb2025 in https://github.com/stablyai/orca/pull/22037
+    - refactor(agent-launch): assemble host startup-plan inputs in one resolver by @brennanb2025 in https://github.com/stablyai/orca/pull/22082
+    - feat(agent-launch): report the pane a terminal launch created by @brennanb2025 in https://github.com/stablyai/orca/pull/22108
+    - refactor(floating-workspace): launch the default agent through the shared launcher by @brennanb2025 in https://github.com/stablyai/orca/pull/21390
+    - feat: support Antigravity as supervised worker by @beattlekid in https://github.com/stablyai/orca/pull/21705
+    Usage reporting
+    Claude usage stays live and cost totals cover the newest models.
+    - fix(rate-limits): keep polling Claude usage for Fable accounts during live sessions by @Jinwoo-H in https://github.com/stablyai/orca/pull/22071
+    - fix(usage): price GPT-6 Astra, and declare when the Codex cost total omits a model by @Jinwoo-H in https://github.com/stablyai/orca/pull/22073
+    Terminal
+    Theme choice wins, background services survive restarts, and latency numbers stay honest.
+    - fix(settings): make terminal theme selection override Ghostty colors by @nwparker in https://github.com/stablyai/orca/pull/22069
+    - fix(daemon): escape the terminal daemon into its own systemd scope so a service restart no longer kills every live PTY by @LesleyMurfin in https://github.com/stablyai/orca/pull/19430
+    - fix(macos): tell the user when Orca's terminal service can't read their folder, and walk them through the fix by @Jinwoo-H in https://github.com/stablyai/orca/pull/21923
+    - fix(daemon): reap terminal descendants during shutdown by @OrcaWin in https://github.com/stablyai/orca/pull/22232
+    - fix(linux): release orphaned processes when their owner exits by @OrcaWin in https://github.com/stablyai/orca/pull/22247
+    - fix(perf): measure terminal latency with presented CI frames by @nwparker in https://github.com/stablyai/orca/pull/22096
+    - fix(perf): calibrate report budgets without masking latency stalls by @nwparker in https://github.com/stablyai/orca/pull/22075
+    Editor, workspaces & source control
+    Updates download reliably, large artifact and conflict lists stay fast, and editor failures stay contained.
+    - fix(updater): send the gh token and cache the release picker's build list by @AmethystLiang in https://github.com/stablyai/orca/pull/21902
+    - Lower filter chip contrast to indicate read-only status by @AmethystLiang in https://github.com/stablyai/orca/pull/21751
+    - Refactor editor header file rename to breadcrumb morph UI by @AmethystLiang in https://github.com/stablyai/orca/pull/21265
+    - fix(renderer): contain Monaco initialization failures by @OrcaWin in https://github.com/stablyai/orca/pull/21555
+    - Virtualize large conflict file trees by @AmethystLiang in https://github.com/stablyai/orca/pull/21920
+    - refactor: use generic VirtualizedList in conflict review by @AmethystLiang in https://github.com/stablyai/orca/pull/22092
+    - fix(browser): notify state on offscreen page navigation commit by @AmethystLiang in https://github.com/stablyai/orca/pull/21703
+    Providers & assistants
+    OpenCode launches keep their variant and plugins across hosts.
+    - fix(opencode): support v2 plugins under the plain executable name by @nwparker in https://github.com/stablyai/orca/pull/22078
+    - fix(wsl): preserve OpenCode agent variant in guest by @nwparker in https://github.com/stablyai/orca/pull/22089
+    Remote, SSH & relay
+    Recreated targets keep their floor and failed rollouts clean up after themselves.
+    - fix(ssh): keep the generation floor when a target is removed and recreated by @nwparker in https://github.com/stablyai/orca/pull/22146
+    - fix(relay): keep the backend service out of the same-cap wave; the capacity role cannot update it by @Jinwoo-H in https://github.com/stablyai/orca/pull/22140
+    - fix(relay): let a same-cap cell plan delete the deposed template a failed wave left behind by @Jinwoo-H in https://github.com/stablyai/orca/pull/22170
+    Mobile (OTA page)
+    The over-the-air page gains session routing, rich editing, dictation, capability checks, and keyboard and paint polish. Listed here for visibility only; the mobile app ships on its own release schedule.
+    - feat(mobile): register the session page route (OTA phase C, C7.7) by @Jinwoo-H in https://github.com/stablyai/orca/pull/21977
+    - refactor(mobile): the bridge host mount reads one args ref, and the handshake fact lives in the session (OTA phase C, audit item 3) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22080
+    - fix(mobile): hold every hybrid shell switch on a neutral state while the flag is unresolved (OTA phase C, ruling 33.7) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22077
+    - feat(mobile): the microphone owns the wake lock, and the stop reply carries the tail (OTA phase C, ruling 36) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22072
+    - fix(mobile): declare externalLink on the two page routes that reach the protocol wall (OTA phase C follow-up) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22113
+    - fix(mobile): two more table parsers hold a pipe in a cell (OTA phase C follow-up) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22114
+    - fix(mobile): catch the diff-comments loader rejection at the effect (OTA phase C follow-up) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22111
+    - feat(mobile): the rich Markdown editor mounts on the page (OTA phase C, C7.10 C2) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22099
+    - fix(mobile): the Android audio engine forgets a stop issued while paused by @Jinwoo-H in https://github.com/stablyai/orca/pull/22132
+    - fix(mobile): serialize a list the engine nested inside a paragraph (rich editor follow-up) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22145
+    - fix(mobile): a same-build cache hit persists the fresh manifest (OTA phase D1) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22139
+    - fix(mobile): a granted microphone tap launches no permission activity, and an aborted start says so by @Jinwoo-H in https://github.com/stablyai/orca/pull/22150
+    - feat(mobile): the shell tells a page which optional capabilities it has (OTA phase D, C8.1) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22141
+    - refactor(mobile): the host-scoping rewrite moves out of the terminal's HTML by @Jinwoo-H in https://github.com/stablyai/orca/pull/22172
+    - fix(mobile): contain the older-history page's rejection at its own boundary, and re-record its family by @Jinwoo-H in https://github.com/stablyai/orca/pull/22179
+    - fix(mobile): the catch-all carries a deep link's query, and reads a trailing rest-segment pattern (OTA phase D, C8 carry-forwards) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22180
+    - fix(mobile): the page runs one Zod (OTA phase C, C6.5 follow-up) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22182
+    - fix(mobile): write live-input text through a seam the page can honour by @Jinwoo-H in https://github.com/stablyai/orca/pull/22189
+    - feat(mobile): one build-time switch picks native or OTA, default native (OTA phase E1) by @Jinwoo-H in https://github.com/stablyai/orca/pull/22193
+    - fix(mobile): the shell swaps the page's client identity so its terminal reaches init by @Jinwoo-H in https://github.com/stablyai/orca/pull/22201
+    - build(mobile): key Metro's transform cache on the shell build kind by @Jinwoo-H in https://github.com/stablyai/orca/pull/22244
+    - fix(mobile): the page stops writing, importing and requesting what it cannot use by @Jinwoo-H in https://github.com/stablyai/orca/pull/22241
+    - fix(mobile): a refused dictation start says why by @Jinwoo-H in https://github.com/stablyai/orca/pull/22256
+    - fix(mobile): a refused update serves the cached generation while the host is up by @Jinwoo-H in https://github.com/stablyai/orca/pull/22237
+    - fix(mobile): the page's live input stays above the soft keyboard by @Jinwoo-H in https://github.com/stablyai/orca/pull/22252
+    - fix(mobile): keep a painted frame under the page until its first paint by @Jinwoo-H in https://github.com/stablyai/orca/pull/22264
+    - fix(mobile): the page never removes a host, and stops bundling push by @Jinwoo-H in https://github.com/stablyai/orca/pull/22283
+    New Contributors
+    - @beattlekid made their first contribution in https://github.com/stablyai/orca/pull/21705
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.209...v1.4.210
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.210
+ReleaseTime: 2026-09-24T05:25:24.0000000Z
