@@ -1,0 +1,58 @@
+Version: 0.1.14
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.14/ddc-v0.1.14-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.14/ddc-v0.1.14-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc 0.1.14
+    This release is the 20-APK expansion sweep round: the gold-standard four-corpus
+    javac battery went 26,672 → 26,283, and the newly-added corpora improved far more —
+    baidusearch 71,820 → 13,070 (-82%), WhatsApp 62,327 → 31,897 (-49%), Telegram -69%,
+    autoclaw/938B -55%, kimi/uuyc/autoglm -46%, deepseek -18%. Taobao, xiaohongshu,
+    ChatGLM, CMB and others stay at 0.04-0.2 errors/file.
+    R8/d8 shape recovery:
+    - Outlined constructors (new-instance Child + invoke-direct Parent-><init>, legal
+      under ART) now fold on the INSTANTIATED class — the owner-based fold rendered
+      new AbstractParent(..) (uuyc abstract-instantiation 2,221 → 1)
+    - Unfolded raw allocations materialize once into a shared local instead of cloning a
+      fresh new X() per read site (multi-allocation semantic corruption)
+    - Baidu Titan hotpatch guards: the conditional second this()/super() delegation inside
+      if ($ic != null) is stripped (dead on the unpatched path; baidusearch ctor-not-first
+      61,922 → ~3k residual shapes)
+    - Empty-shell exceptions (final class k extends Error {} after R8 stripping) get the
+      classic Throwable ctor bridges — the outlined callers resolve through the framework
+      super where the ref-owner-keyed registry cannot see them
+    Name resolution (the WhatsApp -49%):
+    - android.view.View's static Property fields X/Y/Z (API 31+) are inherited into every
+      View subclass and obscure package-first-segment refs (JLS 6.4.2) — WhatsApp keeps its
+      whole obfuscated codebase in package X (30,171 errors). Those refs now route through
+      the single-type-import layer, which outranks the obscuring variable
+    - The obscured-render gate compares against the RENAMED display of the root class: when
+      the class itself was renamed (case-collision d → d2), no in-scope type bears the raw
+      name and the qualified render is the correct one
+    - Obscured simples pass the sanitizer in EVERY type position (digit-leading WhatsApp
+      class names rendered 11o_2 v21; local decls — 16,926 parse errors that also masked
+      every semantic error in those files)
+    - Blocked-name sets carry renamed displays and own-class member names (fields shadow
+      single-type imports inside the class body)
+    Overload resolution:
+    - The descriptor-exact ambiguity pin treats java/lang/Object formals as satisfied by any
+      reference arg (pool.is_subtype cannot see framework chains like String → Object);
+      weibo -288
+    Quality gates: clippy zero warnings both crates (--all-targets); deterministic output
+    (0-diff double decompiles on weibo/weixin/lark); performance held (WhatsApp 99k files in
+    25s, weixin 21s, weibo 14s) after an O(files x package-size) hot loop in the blocked-set
+    extension was replaced by a zero-copy per-package registry view.
+    Known floors (not decompiler defects): default-package classes referenced from named
+    packages are JLS-invisible (xingye); apps depending on absent shared libraries
+    (jd 76% missing-package); packed apps emit their shell only (correctly).
+    Depends on jdc-core 0.2.9. Tests: ddc 70, jdc-core 14 — all green.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.13...v0.1.14
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.14
+ReleaseTime: 2026-09-25T19:46:19.0000000Z
