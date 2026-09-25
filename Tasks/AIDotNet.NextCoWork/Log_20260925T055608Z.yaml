@@ -1,0 +1,40 @@
+Version: 2.2.8
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.2.8/nextcowork-2.2.8-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    插件终端：「+」菜单一键起一个带配置的交互式 CLI
+    - 插件 API 新增 ncw.tabs.openTerminal:在指定工作区的根目录开一个终端 Tab 并在其中启动命令。它和 process.exec 是两件事 —— 后者一次性取回输出，给不了交互式 TTY;但两道门完全相同：同一份 process 能力、同一张清单 allowedCommands 白名单(能开进交互式终端的命令，没有理由比能一次性执行的更宽),cwd 不接受插件指定、恒为工作区根由宿主解析 —— 「cwd 想指哪就指哪」等于绕过工作区边界
+    - env 只过形状与体量门(≤16 键、单值 ≤4096 字符、键名必须是合法环境变量名、不含 NUL):写进子进程环境的是什么(ANTHROPIC_BASE_URL 之类)是插件自己的事，这一层拦的是「借环境变量夹带上百个键 / 几 MB 的值、把它当一条隐蔽的 IPC 通道用」
+    - 启动方式不是另起一个进程，而是把启动行写进既有交互 shell:主进程先铸 terminalId、备好一次性启动 spec(env + argv,60s TTL),渲染层带同一个 id 开 Tab 来 terminal:create,spawn 成功写入启动行后立刻丢弃 spec。顺序反了或 id 对不上，create 会起一个裸 shell —— 插件注入的配置静默丢失，零报错。env 只活在这张表和 pty 子进程环境里：不过渲染层、不进终端回滚缓冲、不落盘；CLI 退出后终端仍是一个活 shell,与手敲一条命令的体验一致
+    - 启动行按目标平台转义(POSIX '\'' / PowerShell ''):argv 已经过了参数门，这层只保证「写进去的就是 argv 本身」,不新增放行面
+    - SSH 远程工作区一期拒绝(reason: 'remote'):env 注不进远程 pty,而行内 export 的方案会把 API Key 回显进终端回滚缓冲。渲染层给一句专门的提示(「SSH 远程工作区暂不支持从菜单启动 CLI」),其余失败维持通用文案 —— 把一次远程拒绝显示成「插件命令没执行」,看起来像插件坏了
+    - Tab 开在菜单所在的工作区，不是「当前活动」的那个；标题 %key% 现场翻成 plugin.<id>.<key> 再落盘(Tab 标题会跟着布局一起落盘，落一个 key 进去的话，重启后 Tab 条上写的就是 plugin.acme.claude-code.cmd.launch),清单没给就回落「终端」
+    - plugins:runCommand 新增可选 args,透传调用点上下文(「+」菜单 / Dock 附带的 { workspaceId }):它是来源信息、不是插件的入参通道，命令的语义仍由清单声明
+    - 新增示例插件 examples/acme.claude-code 与 examples/acme.codex:读插件详情页的接入配置 → 组 env → 发起，工作区上下文由宿主菜单附带，注入与 pty 启动全在宿主；三项配置全可空(没配就是裸启动，宿主与 CLI 自己的默认值说了算),不写任何配置文件、不改全局 CLI 配置
+    - 插件 API 类型(packages/plugin-api/nextcowork.d.ts)同步补上 openTerminal,并写清 registerCommand 的 args 是调用点上下文
+    权限档位药丸：切完这一轮就生效，不用等下一条消息
+    - 新增 agent:setPermissionMode:药丸切档时把新档位推给正在跑的 run。RunRequest.permissionMode 仍是 run 开始时冻的快照(「重新生成」「目标续跑」要读的是「这轮当初是什么样」),当前生效值另开在 RunHandle.livePermissionMode 上，审批判定与子代理装配改读它 —— 旧症状是用户已经点了「完全访问」,这一轮后续每一次工具调用依然弹审批，和界面上刚选的档位对不上，只能等下一句话才生效
+    - 不影响已经在等用户点的那个审批弹窗：那个弹窗可能是钩子 / 工作区 ask 规则强制问人(forcedAsk 压过档位),放宽档位不该替用户把它自动点掉
+    - 子代理取父 run 此刻的活值再按 minPermission 收窄：用户在派子代理之前把档位调宽，子代理理应看见那次调整，而不是继续背着父 run 起跑那一刻早就作废的旧档位；取 min 这道「子代理永远不比父代理更宽」的防提权闸原样保留
+    - run 已收尾 / 不存在时静默返回不抛(点下拉的瞬间 run 正好结束是正常情况，不算失败);窗口订阅校验与 agent:interject 同源 —— runId 是渲染层 mint 的，光有 id 不构成授权
+    - 审批审核器(AI 审那份)仍按 run 冻结：换了它会让「同一轮前后用不同审核器」这种事无从解释。档位不在此列，理由写在 approveWith 的注释里
+    「+」菜单允许插件带自己的品牌图标
+    - 清单命令新增 iconFile(包内相对路径，只认 .svg / .png):claude-code / codex 要求用官方 logo 出现在菜单里，而名字闭集里没有、也不该有品牌字形 —— 品牌会改版，宿主不该追着改
+    - 装载时读一次转 data URL(≤32KB)随 catalog 下发：菜单在插件激活之前就要画出图标，和 messages 同一条「激活前就得有」的理由；读不出来不是装载失败 —— 一个被升级弄丢的 svg 不该把整个插件顶成 error,诊断里留一条 warn,菜单回落到名字闭集
+    - 形状(包内相对路径 + 扩展名)在清单解析期查、存在在安装期查(与 icon / main 同一分工);声明了却不在包里整包拒装 —— 否则菜单会在运行期静默回落到拼图块，而作者收不到任何提示
+    - 放宽的边界记在 shell/icons.tsx:<img> 是非脚本上下文、svg 里的脚本不执行，图标只出现在带该插件署名的菜单条目上，风险从「宿主字形被冒充」缩到与插件标题文案同级；名字闭集对其余菜单项的保证原样不变
+    Agent 起的本机命令默认跟随应用与系统代理
+    - 需求：CLI 只认 HTTP_PROXY 一类环境变量，而 Electron 从 Finder / Dock 启动时 process.env 里没有它们 —— 于是「模型跑 npm install 一直超时」和「同一条命令在用户自己的终端里好好的」可以同时成立，且没有任何报错指向代理
+    - net/proxy.ts 新增 shellProxyEnv:仍然问 defaultSession(手动代理 / 系统代理 / PAC 脚本，只有它有完整答案),把答案翻成 HTTP_PROXY / HTTPS_PROXY / ALL_PROXY / NO_PROXY。结果按 Promise 缓存：并发的前台命令 + 后台 shell 不会各自跑一遍 PAC 解析，也不会出现「两条命令走着不同代理」的窗口；换配置时作废
+    - 凭据永不进环境变量：env 会被每一条子进程读走(env、ps eww、崩溃转储),带密码的话 Agent 一条 env | grep -i proxy 就能把代理密码抄进转录 —— 需要认证的代理在这条路上表现为 407,那是可见的失败，比静默泄漏好
+    - 只补父进程没有的键(大小写不敏感),用户自己 export 过的代理变量永远赢；直连时返回空对象、不清任何已有变量(没有结论时维持继承的现状，主动清空是替用户做了「无视已有配置」的决定);NO_PROXY 缺省只保回环三条 —— 跟随系统时系统的排除列表读不到，替用户塞一堆 *.cn 等于替他改网络策略，而少了回环的表现是「开了代理之后 Agent 连本地端口都连不上」
+    - 合并次序(继承 ← 注入不覆盖 ← 显式 env,最后摘掉 ELECTRON_RUN_AS_NODE / NODE_OPTIONS)收成一份 mergeChildEnv:前台 Bash(nodeSpawn)与后台 shell / 本地钩子(environment/local.ts 的 openProcess)共用 —— 两条路各写一份的话，「注入不越过用户自己的配置」这条不变式迟早只在一条路上成立
+    - 解析失败绝不抛(降级按继承环境跑，日志留一句):这条函数站在每一次 Bash 调用的必经之路上，抛了等于 session 抽风一次、shell 工具整个死掉。await 代理变量期间 signal 可能已经响过，spawn 前要再查一次 abort —— 少了这次判断，已中断的 run 会先把命令真的跑起来再被杀
+    - 已知的洞：「跟随系统」时系统代理在应用运行中被改掉不经过 applyProxy,缓存要等到下次改设置或重启才刷新 —— Electron 没有系统代理变化的事件可听，不肯为它加轮询
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.2.8
+ReleaseTime: 2026-09-25T03:55:00.0000000Z
