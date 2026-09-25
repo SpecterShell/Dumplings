@@ -1,0 +1,24 @@
+Version: 0.4.8
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.8/CoDock-Setup-0.4.8-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.8 (2026-09-24)
+    这一版把「谁是不是 worktree」交给 git 自己回答：CoDock 建的和 IntelliJ IDEA、命令行建的一视同仁，早先那份记录也一并去掉了；顺带修掉「有 worktree 的项目被顶到最前」和「移除失败时不说会话已经关了」。
+    优化与修复
+    - worktree 识别改为只读 git 文件：早先只有 CoDock 自己在「新任务」里勾选建出来的 worktree 才被认出来——靠的是 state.db 里存的一份记录。在 IDEA 或命令行 git worktree add 出来的目录（放哪儿都行）会被当成一个普通项目，自成一组、没有分支图标；目录被 CoDock 之外删掉的那些记录又清不掉。现在判据是 git 自己写的 .git 文件（gitdir: 指向 <主仓>/.git/worktrees/<名字>），不再存任何记录：
+      - 这类项目同样挂在主仓分组下面、同样亮分支图标，右键 Tab 的「移除 worktree」对它们一样可用（目录里没有未提交改动才允许移除，分支已合并才一并删除，未合并会保留并在提示里说明）。
+      - 子模块不会被误认成 worktree；会话从 worktree 的子目录启动时也不当它是 worktree 的根——那种目录 git worktree remove 不接受。认不出来就只是普通项目，不做猜测。
+      - 代价：只有出现在历史项目或已打开 Tab 里的目录才会被识别；用 CoDock 之外的命令删掉 worktree 目录后，git 那边的登记要自己 git worktree prune 清。
+    - 有 worktree 的项目不再被顶到最前：此前带 worktree 的项目会被无条件提到列表最前面，于是几小时没动的仓库压住了刚跑过的项目。现在顶层顺序只认置顶（pin），其余按最近活跃排。
+    - 移除 worktree 失败时说清后果：会话是在删目录之前关掉的，从前失败只报一句原因，你回头发现终端全断了却不知道是谁干的——现在会一并说明关掉了几个会话。
+    官网
+    - hero 上的版本徽章更新为 v0.4.8。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.8
+ReleaseTime: 2026-09-25T00:19:57.0000000Z
