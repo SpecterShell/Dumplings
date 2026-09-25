@@ -1,0 +1,77 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/J3n5en/EnsoCode/releases/download/v0.2.0/EnsoCode-Setup-0.2.0.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    ✨ 新功能
+    - 设置中可配置 SSH 超时，默认由 15 秒改为 30 秒
+    - 收起态增加归档入口，展开按钮移到最后
+    - 隔离沙箱标题行按工具名计数展示调用
+    - 运行中输入框为空时发送快捷键 steer 队首排队消息
+    - 输入框下增加与桌面同口径的用量状态栏
+    - 已归档改为底栏图标打开的弹窗，支持独立搜索与清理
+    - 顶栏工作区徽标收起时保留文件夹图标和描边，更易识别可点
+    - 探后折叠组收拢与展开加过渡动效
+    - explore_mark 到 explore_fold 之间的过程收为一个可折叠组
+    - todo 清单陈旧时提醒模型更新
+    - 重新设计 Cmd+K 面板
+    - MCP 工具行只显示工具名，展开后再显示 server.tool
+    - 时间线与审批栏按中文显示 Enso 自研工具名
+    - 「回答完成后折叠过程」默认开启
+    - 顶栏工作区标签默认收起为状态点，悬停展开，点击可在访达/编辑器/终端中打开
+    - 执行完成后自动收起执行条
+    - Plan 模式：只读调研 → 提交计划 → 审批后执行
+    - 子会话标签按 task / coworker 区分图标
+    - 输入框上方固定显示未完成待办
+    - 生成中被正文隔开的已完成过程段立即折叠
+    - 新增「回答完成后折叠过程」开关
+    - mod+k 会话范围默认全部项目，Tab 切换
+    - 分组下拉改为可排序的标签条
+    - 统计条上下文占用常驻显示
+    - 会话区视觉改版
+    - assistant 消息投影透出 model
+    - 新增界面强调色与品牌色 token
+    🐛 问题修复
+    - 探索组在运行中的尾段保持探索中，避免调用间隙来回跳
+    - 右侧面板收起改用无过冲 tween，修复末段卡住再突然收回
+    - 折叠动画改用无过冲 tween，修复收起末段卡住再突然收回
+    - 压缩恢复遗留孤儿 toolResult 导致每轮 400
+    - 未激活的冷会话也显示「会话分支」，点击时先唤醒再分叉
+    - 重试倒计时中中断按失败收口，队列与排队压缩不再卡死
+    - 排队消息等上下文压缩结束再起轮，不再报 compaction in progress
+    - 子会话输入框按展示名显示 agent 类型，不再露出 custom:
+
+    - 子会话回流更新时保留 task / coworker 模式
+    - todo 工具说明要求每步完成后立即更新清单
+    - 审批条「批准并执行」分体按钮两半等高对齐
+    - Plan 模式下 bash / MCP 改为尊重当前审批档
+    - 会话标签溢出时隐藏横向滚动条，恢复垂直居中
+    - 退出确认框按钮顺序改为 取消 / 最小化到托盘 / 退出
+    - 置顶项目标记靠右对齐
+    - 冷会话恢复与读历史时脚点显示「加载中」而非「生成中」
+    - mod+k 会话搜索的最近列表、冷命中与 id 匹配
+    - mod+k 设置项可用界面语言搜索
+    - 重启后不再闪现已结束的后台任务
+    - 上下文弹层打开时统计条不再收起导致弹层跳动
+    - 去掉 asar 中冗余依赖副本，安装包缩回 v0.1.33 水平
+    - Virtuoso 行下标换算回 folded 下标
+    - Codex 导入账号与 Codex 共用 token 链，避免刷新后互踢
+    - 原生 shell 交还 pi-cursor，引导模型经 CallDynamicTool 调 Pi 工具
+    - 会话桥接管原生工具时不注入上游禁用规则
+    - 外置 artifact 支持 grep 按 uri 检索，read 遵守 offset/limit
+    - node-pty 预编译 spawn-helper 补执行位
+    - Windows 安装包补上 sqlite-vec 平台包
+    🔨 CI/CD
+    - 非 tag 构建上传 mac dmg 供下载试装
+    - 打包冒烟覆盖 pi-tui 原生剪贴板模块
+    - 冒烟脚本按 file URL 导入 ESM，mac 双架构互不取消
+    - mac x64 改为 Apple 芯片交叉打包，原生依赖不再为 Electron 重编
+    - 加速发版构建并迁移到 Node 24 Actions
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/J3n5en/EnsoCode/releases/tag/v0.2.0
+ReleaseTime: 2026-09-25T12:22:50.0000000Z
