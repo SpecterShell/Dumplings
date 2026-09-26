@@ -1,0 +1,86 @@
+Version: 0.1.15
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.15/ddc-v0.1.15-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.15/ddc-v0.1.15-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc 0.1.15
+    This release is the delegation-recovery and name-resolution deep round on top of the
+    embedded framework API database: the gold-standard four-corpus javac battery went
+    24,284 → 18,543 (-23.6%), and the 13-APK sweep went 122,003 → 100,560 (-17.6%) —
+    deepseek 19,466 → 4,147 (-79%), 938B -747, jd -687, xiaohongshu -644, WhatsApp -630,
+    CMB -593, kimi -838, autoclaw -440, autoglm -445, Telegram/uuyc -357 each, with zero
+    regressions across all thirteen corpora.
+    Embedded framework API database (fwdb):
+    - android.jar class-file access flags merged with api-versions.xml removed-API
+      families, extracted into a 3.86MB blob embedded via include_bytes! — magic/version
+      const-asserted at compile time, binary-search class table, NUL-scan strings, zero
+      runtime parse cost
+    - All five hand-written framework tables replaced by DB queries (exception supers,
+      Throwable ctor sigs, interface methods, resolvable prefixes, View-subclass
+      prefixes); pool is_subtype gains a framework-boundary fallback
+    - Bridge/synthetic method filter for overload-competes enumeration (android.jar's
+      Enum carries a compareTo(Enum)+compareTo(Object) bridge pair — counting the bridge
+      cast every enum compareTo arg to the erased formal, reqable "Enum 无法转换为
+      LogLevel" x2,079)
+    Kotlin constructor recovery:
+    - Branched-delegation ctors (Kotlin default-arg / conditional-bridge shapes) extract
+      their pre-delegation computation into a synthetic private static T resolve$X(..),
+      leaving the ctor a single first-statement delegation. v2 adds Position mode
+      (delegations differing at exactly one arg position with per-branch carriers, each
+      stripped delegation's own carrier filling its own return), static nested classes,
+      no-top-level-primary whole-body extraction, and common-tail hoisting (identical
+      post-delegation tails move after the merged delegation — field writes are ctor
+      work, not helper work)
+    - Repeated identical param-safe branch delegations (bare super() at four branch
+      ends, weixin appbrand/zc) hoist one copy to position 0 with the tails kept in
+      their branches
+    - Null-branch value diamonds and shape-2 overwrite folds turn Kotlin mask-ctor
+      preludes into per-arg ternaries inside a single hoisted delegation
+    - Covariant-return bridges (Context getContext() { return super.getContext(); }
+      over an AppCompatActivity-returning override) skip rendering: source cannot
+      declare the wider-return override and the rendered copy hijacked every
+      this.getContext() in the file to the wide type. Double-gated on the exact
+      invoke-super instruction shape plus a pool-ancestor name+args match, so erasure
+      and interface-satisfier bridges keep rendering
+    Catch binding:
+    - Exception-ignoring catch handlers (the standard catch (InterruptedException e) { Thread.currentThread().interrupt(); ... } idiom) lost their first statement: the
+      binder consumed ANY first-statement def as the materialized move-exception store,
+      deleting the computation and hijacking its reads to the catch parameter. Now gated
+      on the lifter's actual move-exception shape (bare decl / phi-copy of the
+      unmaterialized exception register); unbound handlers render catch (T ignored) —
+      exactly the original source (battery -1,301)
+    Name resolution:
+    - Nested member classes with identifier-unsafe names (Kotlin header/a$a-IA
+      hyphen markers, unicode tails) now render references dotted through the
+      sanitized member name, byte-identical to the declaration side — the flat
+      header.a$a_u2dIA cast form resolved to nothing (weibo cannot-find
+      4,133 → 1,131)
+    - Nested package-shadow renames gain a body-level stage-2 scan (the descriptor-level
+      trigger misses method-body-only refs: a nested class a inside a renamed a2.java
+      hijacked every a.b.c() in the file) plus display-chain repair for pass-1 mints
+      whose values embedded an ancestor display that stage 2 later renamed
+    - rescue_primitive_receivers bails on already type-consistent calls (str.hashCode()
+      with a String receiver needs no rescue — the max-id fallback was hijacking 37 param
+      reads to a switch-case-scoped local; battery -1,392)
+    - $$ExternalSynthetic flat emission units are no longer double-emitted as corrupt
+      nested chimeras inside family files — one clean_member_tail predicate now owns both
+      emission paths (12,152 bogus nested declarations removed on weibo alone)
+    Robustness:
+    - Position-mode uniform-arity gate: a bare super() mixed among arg-carrying
+      delegations panicked with an out-of-bounds slot index (class-level decompile
+      failures on deepseek/kimi, caught by the sweep)
+    - static_safe recognizes ddc's dominant this representation (the var-0 param
+      local, not just the Expr::This variant)
+    Quality gates: clippy 0 warnings both repos, full test suites green, deterministic
+    decompiles (multi-corpus double-runs, 0 diff), performance unchanged (WhatsApp 25s,
+    weixin 18s, weibo 13s full decompile).
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.14...v0.1.15
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.15
+ReleaseTime: 2026-09-26T12:55:28.0000000Z
