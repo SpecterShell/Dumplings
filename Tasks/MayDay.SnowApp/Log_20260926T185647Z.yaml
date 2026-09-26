@@ -1,0 +1,53 @@
+Version: 0.4.9
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.9/Snow-App-Setup-0.4.9.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Top Bar and Git Panel Refactor: The top bar is rearranged and gains a branch selector (branch switching moves out of the Git panel header); the Git panel header becomes the commit area (message input, AI commit-message generation and commit button), and both share one repo watcher (reference-counted).
+    - Persistent PowerShell Sessions: Consecutive PowerShell commands reuse one warm session, cutting a trivial command from ~400ms to ~40ms; the working directory still resets per command while process-level state (environment variables, $global: variables) persists, and idle sessions are reclaimed automatically.
+    - Client Scripts: The plugin list gains a "Script plugins" tab to create from a template, generate with AI, import, edit in a full-screen editor, delete, and enable/disable client scripts injected into the desktop UI.
+    - Team Avatar Colors and Top Bar Team Info: Team avatars accept a custom color (mailbox-hash default); the team name, remote address, sync status and identity actions move to the top bar, avoiding duplicate team-data fetches.
+    - Built-in MCP Server Icons: Built-in MCP servers show dedicated icons in the MCP panel.
+    Improvements
+    - LSP-first routing: prompts hard-bind scenarios to tools — with a language server available, definitions, references, types and impact start from semantic tools while grep handles literal text and annotates results with semantic-tool hints; the investigation-phase tool list in Plan / Goal / WorkFlow modes is injected from the tools actually callable in the project.
+    - Stack-aware language servers: LSP sessions start from each language's stack root (Cargo.toml / go.mod / tsconfig.json, ...), resolving mixed-stack projects accurately; languages without a stack marker are no longer started.
+    Bug Fixes
+    - Fixed individually disabled tools still appearing in injected prompts.
+    - Fixed codelens tools being hidden wholesale in mixed-stack projects: languages without language-server coverage keep the static-analysis fallback.
+    - Fixed duplicate LSP client logs and long lines split at the read-buffer boundary.
+    - Fixed skills settings and project memory lists rebuilding after refresh or actions and jumping back to the top.
+    What's Changed
+    - feat(lsp): 语义工具优先注入体系 — 动态章节 / 工具级一致性 / 栈感知会话 / 诊断降噪（11 提交） by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/166
+    - fix(settings): 刷新期间保持列表挂载，消除 Skills/项目记忆面板滚动跳顶 by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/167
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.8...v0.4.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 顶部栏与 Git 面板重构：顶部栏重排并新增分支选择器（分支切换由 Git 面板头部移入）；Git 面板头部改为提交区（提交信息输入、AI 生成提交信息与提交按钮），两处共享同一仓库监视（引用计数）。
+    - 常驻 PowerShell 会话：PowerShell 连续命令复用同一常驻会话，轻量命令开销约 400ms → 40ms；工作目录仍逐条重置，环境变量等进程级状态保留，空闲会话自动回收。
+    - 客户端脚本：插件列表新增「脚本插件」标签页，可模板新建、AI 生成、导入、全屏编辑、删除与启停注入桌面 UI 的客户端脚本。
+    - 团队头像颜色与顶栏团队信息：团队头像支持自定义颜色（默认按邮箱哈希）；团队名、远程地址、同步状态与身份操作移至顶部栏，避免重复拉取团队数据。
+    - 内置 MCP 服务图标：内置 MCP 服务器在 MCP 面板中显示专属图标。
+    改进
+    - LSP 语义优先：提示词改为「场景 → 工具」硬绑定，语言服务器可用时定义 / 引用 / 类型 / 影响面优先使用语义工具，grep 退回字面文本并附语义工具提示；Plan / Goal / WorkFlow 调查阶段的工具列表按项目实际可调用工具动态注入。
+    - 栈感知语言服务器：按语言栈根目录（Cargo.toml / go.mod / tsconfig.json 等）启动 LSP 会话，混合栈项目解析更准，无栈标记的语言不再启动。
+    修复
+    - 修复被单独禁用的工具仍出现在注入提示词中的问题。
+    - 修复混合栈项目中 codelens 文档符号工具被整体隐藏的问题：语言服务器未覆盖的语言保留静态分析回退。
+    - 修复 LSP 客户端日志重复刷屏与长行被读取缓冲截断的问题。
+    - 修复技能设置与项目记忆列表在刷新或操作后重建、滚动位置跳回顶部的问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v049
+ReleaseTime: 2026-09-26T17:56:58.0000000Z

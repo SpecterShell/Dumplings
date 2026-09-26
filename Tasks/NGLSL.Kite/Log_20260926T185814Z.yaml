@@ -1,0 +1,39 @@
+Version: 0.4.1
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.4.1/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.4.1
+    版本重点
+    修复已安装的 Codex、Grok 等 CLI 在 Kite 中搜索不到的问题。Kite 现在能发现用户 PATH 中的命令目录和 Codex Desktop 的版本化 CLI 目录；后台完整扫描完成后，可见搜索也会及时使用新索引。
+    修复与改进
+    - 扩大命令入口扫描范围：在原有 WindowsApps、WinGet Links 和 Chocolatey 目录之外，扫描 PATH 中非 Windows 系统目录的直接子项，并识别 Codex Desktop 管理的 codex.exe。只收录现存的 .exe、.cmd、.bat、.com、.lnk 文件；不递归扫描命令目录。
+    - 合并当前进程与注册表中的系统、用户 PATH，并监听环境变量和命令目录变化。Kite 常驻期间安装新 CLI 后，后续扫描可以发现新入口。
+    - 修复完整索引已在后台生成、但启动器窗口可见时仍继续使用旧索引的问题。用户继续输入时会采用新索引；当前输入仍处于搜索状态时，扫描完成也会刷新结果。结果导航过程中保留当前列表，避免选中项跳动。
+    - 跳过命令别名的版本资源读取，减少扩大 PATH 扫描范围后的元数据开销。
+    升级影响
+    - 设置、固定项、搜索历史和插件数据无需迁移；安装方式不变。
+    - 搜索结果会新增匹配的 CLI 命令。Windows 系统目录仍排除在这项命令扫描之外，减少系统工具占据普通搜索结果。
+    - 命令入口以本机已经存在的文件作为启动目标；不会把用户输入拼接成 shell 命令。
+    验证与限制
+    - 本地 cargo check、cargo test 及 NSIS 安装包构建通过；新增回归覆盖 PATH/Codex Desktop 命令发现，以及完整索引与用户输入先后到达的两种顺序。
+    - 在 Windows 本机安装修正版后，运行中的 Kite 搜索 grok 和 codex，日志均显示对应 CLI 结果排在首位。
+    - 上述实机验证覆盖搜索显示；未逐一手动启动各 CLI。安装包仍无 Authenticode 数字签名。
+    构建与验证
+    - 发布 tag：v0.4.1
+    - tag 提交：09c51d3ff8a024d56111ab0b4a6939dc378fe76b
+    - 上一个发布：v0.4.0
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #23
+    本次提交范围
+    - chore(release): prepare v0.4.1 (09c51d3)
+    - fix(search): discover installed CLIs in active search (ce4f16b)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.4.1
+ReleaseTime: 2026-09-26T16:36:47.0000000Z
