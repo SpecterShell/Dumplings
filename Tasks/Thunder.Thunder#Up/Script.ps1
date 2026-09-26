@@ -15,7 +15,7 @@ $this.CurrentState.Version = $Object1.data.v
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.url.Replace('upgrade.down.sandai.net', 'down.sandai.net').Replace('up.exe', '.exe')
+  InstallerUrl = $Object1.data.url_x64.Replace('://upgrade.down.sandai.net/', '://down.sandai.net/').Replace('up.exe', 'xl.exe')
 }
 
 switch -Regex ($this.Check()) {
