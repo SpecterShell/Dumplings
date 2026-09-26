@@ -1,13 +1,13 @@
-$Object1 = Invoke-WebRequest -Uri 'https://caramba-switcher.com/update'
+$Object1 = Invoke-WebRequest -Uri 'https://caramba-switcher.com/update/'
 # $Object1 = Invoke-RestMethod -Uri 'https://cdn.caramba-switcher.com/files/update.windows.xml'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -notmatch 'Pro' } catch {} }, 'First')[0].href
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(20\d{1,2}\.\d{1,2}\.\d{1,2})').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(20\d{2}\.\d{1,2}\.\d{1,2})').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
