@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'installer' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -38,11 +38,8 @@ switch -Regex ($this.Check()) {
     }
 
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2' | Out-Host
     # RealVersion
-    $this.CurrentState.RealVersion = [regex]::Match((Join-Path $InstallerFileExtracted '2' | Get-Item | Get-Content -Raw), '<Version>(.+?)</Version>').Groups[1].Value
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromQtInstallerFramework
 
     $this.Print()
     $this.Write()
