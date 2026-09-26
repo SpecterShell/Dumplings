@@ -1,0 +1,39 @@
+Version: 0.4.2
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.4.2/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.4.2
+    版本重点
+    改进从 Kite 启动命令行工具的体验。通过命令目录发现的 .cmd、.bat 入口现在会在可选终端中运行；CLI 默认从用户主目录启动，不再进入工具的安装目录。
+    修复与改进
+    - 设置页新增“CLI 启动终端”：自动、Terminal、PowerShell、CMD。自动模式按 Terminal → PowerShell → CMD 选择可用终端；手动选择的终端不可用时，会显示启动失败提示。
+    - 命令目录中的 .cmd、.bat 入口通过所选终端运行，保留交互窗口。直接可执行的 .exe 等入口仍按原方式启动。
+    - 命令目录扫描结果不再把安装目录记录为工作目录。启动时也会覆盖旧索引中保存的安装目录，让已缓存的 CLI 条目从用户主目录运行。
+    - 启动脚本时以已索引且存在的文件为目标，并处理路径中的空格和特殊字符；不会把搜索输入拼入命令。
+    升级影响
+    - 新设置默认“自动”，已有设置和搜索数据无需迁移。
+    - 通过 Kite 直接启动 CLI 时，当前目录默认为 Windows 用户主目录。需要在具体项目目录运行的 CLI，仍可先进入该目录再从终端启动。
+    - 终端选择只影响命令目录发现的无附加参数 .cmd、.bat 入口；其他快捷方式和应用继续使用各自的启动规则。
+    验证与限制
+    - 本地 cargo check、cargo test 和 cargo build --release 通过；回归测试覆盖终端选择、设置持久化、CLI 工作目录及含空格和特殊字符的脚本路径。
+    - 在 Windows 本机使用 Terminal 启动测试脚本，确认新标签页的工作目录为用户主目录。
+    - 设置页尚未在安装后的新版本中手动点击验证；未逐一启动用户实际安装的 CLI。安装包没有 Authenticode 数字签名。
+    构建与验证
+    - 发布 tag：v0.4.2
+    - tag 提交：ec0b318c9527b82a208e22fd679dfe41f219c06f
+    - 上一个发布：v0.4.1
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #24
+    本次提交范围
+    - chore(release): prepare v0.4.2 (ec0b318)
+    - fix(launch): open command scripts in selected terminal (c4a116b)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.4.2
+ReleaseTime: 2026-09-26T18:59:48.0000000Z
