@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://help.oclc.org/Metadata_Services/CONTENTdm/Project_Client/Project_Client_overview/Download_the_Project_Client'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'CONTENTdm Project Client (\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'CONTENTdm \(classic version\) Project Client (\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
