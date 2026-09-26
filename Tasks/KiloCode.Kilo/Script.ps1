@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Kilo-Org/kilocode/releases/latest'
+$Object1 = (Invoke-GitHubApi -Uri 'https://api.github.com/repos/Kilo-Org/kilocode/releases').Where({ -not $_.prerelease -and -not $_.draft -and $_.tag_name -like 'v*' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
