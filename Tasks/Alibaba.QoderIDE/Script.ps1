@@ -1,7 +1,7 @@
 # x64 user
 $Object1 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32-x64-user/stable/latest'
 # x64 machine
-# $Object2 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32-x64/stable/latest'
+$Object2 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32-x64/stable/latest'
 # arm64 user
 # $Object3 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32-arm64-user/stable/latest'
 # arm64 machine
@@ -9,6 +9,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32
 
 # if (@(@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
 #   $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion), arm64 user: $($Object3.productVersion), arm64 machine: $($Object4.productVersion)", 'Error')
+#   return
+# }
+# if (@(@($Object1, $Object2) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
+#   $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion)", 'Error')
 #   return
 # }
 
@@ -21,11 +25,11 @@ $this.CurrentState.Installer += [ordered]@{
   Scope        = 'user'
   InstallerUrl = $Object1.url
 }
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x64'
-#   Scope        = 'machine'
-#   InstallerUrl = $Object2.url
-# }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = $Object2.url
+}
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'arm64'
 #   Scope        = 'user'
