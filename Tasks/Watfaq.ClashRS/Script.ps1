@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Watfaq/clash-rs/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/ibigbug/clash-rs/releases/latest"
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
