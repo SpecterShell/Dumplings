@@ -15,7 +15,7 @@ if ($Object1 -is [string]) {
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.url, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.url, 'v=(\d+(?:\.\d+)*)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -24,6 +24,10 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = ($InstallerFile | Read-ProductVersionRawFromExe).ToString(3)
+
     # ReleaseTime
     $this.CurrentState.ReleaseTime = $Object1.publish_date | Get-Date -Format 'yyyy-MM-dd'
 
@@ -34,7 +38,7 @@ switch -Regex ($this.Check()) {
       Value  = $ReleaseNotesCN = $Object1.info | Split-LineEndings | Select-Object -Skip 1 | Format-Text
     }
 
-    $OldReleases[$this.CurrentState.Version] = [ordered]@{
+    $OldReleases[$this.CurrentState.RealVersion] = [ordered]@{
       ReleaseTime    = $this.CurrentState.ReleaseTime
       ReleaseNotesCN = $ReleaseNotesCN
     }
