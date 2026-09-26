@@ -10,8 +10,8 @@ foreach ($Match in [regex]::Matches($Page.Content, 'https://ife\.gtimg\.com/chat
 
 $InstallerUrl = $null
 for ($i = 0; $i -lt $Queue.Count -and -not $InstallerUrl; $i++) {
-  $Content = (Invoke-WebRequest -Uri $Queue[$i]).Content
-  $Match = [regex]::Match($Content, 'https://chatterfly\.gtimg\.com/fe/pkg/\d{8}/Chatterfly_V[\d.]+\.exe')
+  $Content = (Invoke-WebRequest -Uri $Queue[$i] -SkipHttpErrorCheck).Content
+  $Match = [regex]::Match($Content, 'https://chatterfly\.gtimg\.com/fe/pkg/\d+/Chatterfly_V[\d.]+\.exe')
   if ($Match.Success) {
     $InstallerUrl = $Match.Value
     break
