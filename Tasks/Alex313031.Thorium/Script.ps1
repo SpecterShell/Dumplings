@@ -1,6 +1,6 @@
 # $RepoNameARM64 = 'Thorium-WOA'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Alex313031/Thorium-Win/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/gz83/thorium/releases/latest"
 $Version = $Object1.tag_name -replace '^M'
 
 # $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoNameARM64}/releases/latest"
