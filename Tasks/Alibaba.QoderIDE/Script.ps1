@@ -11,10 +11,10 @@ $Object2 = Invoke-RestMethod -Uri 'https://center.qoder.sh/algo/api/update/win32
 #   $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion), arm64 user: $($Object3.productVersion), arm64 machine: $($Object4.productVersion)", 'Error')
 #   return
 # }
-# if (@(@($Object1, $Object2) | Sort-Object -Property { $_.productVersion } -Unique).Count -gt 1) {
-#   $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion)", 'Error')
-#   return
-# }
+if ($Object1.productVersion -ne $Object2.productVersion) {
+  $this.Log("Inconsistent versions: x64 user: $($Object1.productVersion), x64 machine: $($Object2.productVersion)", 'Error')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.productVersion
