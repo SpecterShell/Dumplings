@@ -3,7 +3,7 @@ $Object1 = Use-PlaywrightPage -Stealth -Headless {
   $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.couchbase.com/downloads?family=enterprise-analytics'
   Read-PlaywrightPageContent -Page $Page
 } | Get-EmbeddedJson -StartsFrom 'window.downloadData = ' | ConvertFrom-Json -AsHashtable
-$Object2 = $Object1.'couchbase-server-community'.GetEnumerator().Where({ $_.Key -match 'Current' }, 'First')[0].Value
+$Object2 = $Object1.'couchbase-server-community'.Values[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.version, '(\d+(?:\.\d+)+)').Groups[1].Value
