@@ -1,19 +1,19 @@
-$Object1 = Invoke-RestMethod -Uri 'https://appversion.115.com/1/web/1.0/api/chrome'
+$Object1 = Invoke-RestMethod -Uri 'https://appversion.115.com/1/web/1.0/api/getMultiVer'
 
 # Version
-$this.CurrentState.Version = $Object1.data.window_115.version_code
+$this.CurrentState.Version = $Object1.data.'115Life_Windows_X64'.version_code
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.data.window_115.version_url
+  InstallerUrl = $Object1.data.'115Life_Windows_X64'.version_url
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.data.window_115.created_time | ConvertFrom-UnixTimeSeconds
+      $this.CurrentState.ReleaseTime = $Object1.data.'115Life_Windows_X64'.created_time | ConvertFrom-UnixTimeSeconds
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
