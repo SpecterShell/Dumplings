@@ -1,15 +1,9 @@
-$Object1 = Invoke-RestMethod -Uri 'http://www.xploview.com/Cygnus/Proxy' -Method Post -Body @{
-  type          = 'text'
-  action        = 'get'
-  widgetId      = 'SS41499unjWoLeSLb'
-  userId        = '0'
-  applicationId = 'SS'
-}
-$Object2 = $Object1.initData.configData.Content | Get-EmbeddedLinks
+$Prefix = 'https://www.xploview.com/'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.Where({ try { $_.outerHTML.Contains('Windows') -and -not $_.outerHTML.Contains('Legacy') } catch {} }, 'First')[0].href | ConvertTo-HtmlDecodedText
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'legacy' -and $_.href -match 'xploview' } catch {} }, 'First')[0].href | ConvertTo-HtmlDecodedText
 }
 
 # Version
@@ -17,7 +11,6 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-
     $this.Print()
     $this.Write()
   }
