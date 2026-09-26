@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.xploviewPrefix $Global:DumplingsStorage.xploviewDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'legacy' -and $_.href -match 'xploview' } catch {} }, 'First')[0].href | ConvertTo-HtmlDecodedText
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.xploviewPrefix $Global:DumplingsStorage.xploviewDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'xploview-setup' -and $_.href -notmatch 'wireless|legacy' } catch {} }, 'First')[0].href | ConvertTo-HtmlDecodedText
 }
 
 # Version
