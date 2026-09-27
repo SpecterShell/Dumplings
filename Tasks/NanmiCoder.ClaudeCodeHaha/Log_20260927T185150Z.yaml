@@ -1,0 +1,85 @@
+Version: 0.6.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/NanmiCoder/cc-haha/releases/download/v0.6.7/Claude-Code-Haha-0.6.7-win-x64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds contextual side chats in the workspace and human review before an Agent Teams run, plus auto-answer after a timeout and chat appearance settings. It also fixes oversized conversations that would not open, configuration lost to concurrent writes, and IM reconnects that silently started a new session.
+    Highlights
+    - Side chats: type /btw question in the composer (or select text and pick "Ask in a side chat") to open a temporary conversation on the right of the workspace. It inherits the parent session's context and model but runs independently, so follow-up questions never interrupt the main task. Closing the tab or quitting the app clears it.
+    - Human review before an Agent Teams run: once a team plan is ready, a "Confirm before the team runs" card lets you change each member's agent preset, provider, model, task ownership and dependencies, with batch assignment and "inherit from lead". Members only start after you confirm, so cost is under your control before launch.
+    - Auto-answer after a timeout: enable it under Settings → General → Auto-answer questions and a pending question that goes unanswered past your chosen delay (1/5/10/30 minutes, 5 by default) is answered by a small model on that session using the conversation context. If it cannot tell, it keeps waiting; any click or input from you cancels the timer.
+    - Chat appearance: Settings → General → Chat appearance controls chat font (system / sans-serif / serif / monospace), font size (12–24px) and conversation width (standard / wide / full), with a preview. It applies independently of the interface zoom scale and is saved per device.
+    Models and providers
+    - Claude Opus 5.5: adds claude-opus-5-5 (1M context, low through max reasoning effort) and makes it the default for official accounts; Claude OAuth compatibility is aligned with 2.1.281.
+    - OpenAI official accounts: adds GPT-6 Astra, GPT-6-Sol and GPT-6-Luna, with GPT-6-Sol as the new default.
+    - OAuth model mapping: every official account card in Settings → Providers gains an "OAuth model mapping" panel where the main / sonnet / haiku / opus / fable slots can be pointed at a model that account actually has, or given a hand-written alias.
+    - Output budget for direct Anthropic providers: your configured output ceiling is no longer overwritten with a fixed value @omazili-guga (#1392).
+    - Grok Fable slot: the Fable slot is wired into the model mapping system, including cc-switch import and the runtime environment @MrWangBigData (#1369).
+    Fixes
+    - #1373 Oversized conversations would not open: conversations whose history exceeds 20MB no longer fail with "prompt too long". Compaction now computes the discard amount from the real token limit reported by the provider and reserves room for the reply; oversized messages no longer cause the whole metadata record to be skipped, so the title, working directory, model and permission mode stay intact.
+    - A temporary IM disconnect started a new session: a failed reconnect no longer silently swaps in a fresh session and loses context or resets the project directory; the original binding is kept and you are asked to retry @yuehua-meng (#1381).
+    - Concurrent scheduled-task writes: concurrent runs no longer overwrite each other's schedule, and deleted tasks no longer come back @yuehua-meng (#1371).
+    - Memory edit save conflicts: typing while a save is in flight no longer drops you out of edit mode, hides unsaved text, or gets blocked by your own previous revision @yuehua-meng (#1372).
+    - Reading half-written team config made teams vanish from the UI: every write path now takes the file lock and writes atomically @yuehua-meng (#1387).
+    - Silent failure of auto-naming on thinking models: the background title request no longer spends its whole token budget on thinking and leaves the title as the first message's placeholder @realLoganLuo (#1340 / #1382).
+    - Vertical scrolling ran the wrong way on Windows @MikhailTail (#1378).
+    - CORS preflight caused Failed to fetch: OPTIONS preflights from local origins are answered before the H5 gate, while remote origins are still rejected @MrWangBigData (#1369).
+    - Malformed tool arguments could stall the run: when a model emits invalid JSON for a tool call, the arguments are no longer silently degraded to {} and executed; the explicit error is fed back so the model can retry.
+    - Lost session model selection: reopening a session no longer resets the model to the default, and removing a provider no longer leaks its old model and effort onto a different provider.
+    - Duplicate prompt: appending a steering message mid-generation no longer makes it look like the same prompt was sent twice.
+    - Chat content vanishing after a tab switch or a stop: switching to the terminal or workbench and back keeps the chat view and scroll position; reloading history after stopping no longer deletes or duplicates messages that already arrived.
+    - Side chats would not scroll, workspace file tree actions and independent preview controls are restored, tab drag exclusions are confined to the viewport, and switching between tabs preserves the chat.
+    - Image forwarding: Space Bunny images and Kimi K3 images survive the OpenCode Go path.
+    - Local Markdown links keep their target, and generated output files resolve against the declared project roots.
+    - Also: long activity profile names wrap, /clear is searchable again, the checkpoint preview no longer shows the budget, auto-answering is now purely a model decision, review state after a rewind is cleared, and session discovery is bounded and reports history page limits.
+    Other
+    - Remotion skill pack: the extensions page gains a Remotion skill pack (the official 12 skills, without the runtime or renderer) for building procedural video with React.
+    - Site and documentation redesign: the landing page is rebuilt with a four-step workflow and real usage cases; the docs site gains five new walkthroughs (reading an unfamiliar project, fixing a bug, shipping a feature, daily code review, handing off from a phone); first-time visitors get the site language matching their browser.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次新增 工作区侧边对话 和 Agent Teams 启动前人工审核，补上 超时自动回答 和 聊天外观设置；同时修复了超大会话打不开、并发写丢配置、IM 重连串会话等一批稳定性问题。
+    核心功能
+    - 侧边对话：在输入框敲 /btw 问题（或选中文字后点「在侧边聊天中提问」），会在工作区右侧开一个临时对话，继承父会话的上下文和模型但独立运行，追问不会打断主任务。关闭标签或退出应用即清空。
+    - Agent Teams 启动前人工审核：团队方案就绪后先出「团队执行前确认」卡片，逐个成员改 Agent 预设、服务商、模型、任务归属与前置任务，可批量设置或「跟随主 Agent」，确认后才真正启动成员。启动前的成本由你把关。
+    - 超时自动回答：「设置 → 通用 → 自动回答问题」开启后，待回答的问题超过设定时长（1/5/10/30 分钟，默认 5）会由该会话的小模型基于对话上下文自行决策；判断不了就继续等，你任何点击或输入都会取消计时。
+    - 聊天外观：「设置 → 通用 → 聊天外观」可调聊天字体（跟随系统/无衬线/衬线/等宽）、字号（12–24px）和对话宽度（标准/宽/铺满），带预览、独立于界面缩放、按设备保存。
+    模型与供应商
+    - Claude Opus 5.5：新增 claude-opus-5-5（1M 上下文，支持 low 到 max 推理强度），并设为官方账号的默认模型；Claude OAuth 兼容版本对齐 2.1.281。
+    - OpenAI 官方账号：新增 GPT-6 Astra、GPT-6-Sol、GPT-6-Luna，默认模型改为 GPT-6-Sol。
+    - OAuth 模型映射：「设置 → 服务商」里每个官方账号新增「OAuth 模型映射」，可为 main/sonnet/haiku/opus/fable 五个槽位指定该账号实际可用的模型或手填别名。
+    - 直连 Anthropic 供应商输出预算：不再把你配置的输出上限覆盖成固定值 @omazili-guga（#1392）。
+    - Grok Fable 槽位：Fable 槽位补齐到模型映射体系，cc-switch 导入和运行时环境都能正确写入 @MrWangBigData（#1369）。
+    修复
+    - #1373 超大会话打不开：对话记录超过 20MB 后报「提示词过长」且无法继续的问题修复。压缩时按供应商报错里的真实 token 上限计算丢弃量并为回复预留空间；超大消息不再让整条元数据被跳过，会话标题、工作目录、模型和权限模式保持完整。
+    - IM 临时断线后串成新会话：重连失败时不再悄悄换成新会话导致上下文丢失、项目目录回默认，改为保留原会话绑定并提示稍后重试 @yuehua-meng（#1381）。
+    - 定时任务并发覆盖：并发执行时不再互相覆盖执行时间，已删除的任务不会「复活」 @yuehua-meng（#1371）。
+    - 记忆编辑保存冲突：保存期间继续输入，编辑器不再退出编辑态、隐藏未保存内容，也不会被自己上一次的版本号挡住 @yuehua-meng（#1372）。
+    - 团队配置读到半截 JSON 会让团队在界面里消失：所有写路径纳入文件锁并改为原子写 @yuehua-meng（#1387）。
+    - 思考型模型自动命名静默失败：后台命名请求的 token 预算不再被思考过程耗尽，会话标题不再停留在首条消息的占位文本 @realLoganLuo（#1340 / #1382）。
+    - Windows 上垂直滚动方向相反 @MikhailTail（#1378）。
+    - CORS 预检导致 Failed to fetch：本机来源的 OPTIONS 预检提前放行，远程来源仍严格拒绝 @MrWangBigData（#1369）。
+    - 工具参数损坏后卡住：模型输出了非法 JSON 工具参数时不再静默退化成空参数执行，改为把明确错误回灌给模型让它自己重试。
+    - 会话模型选择丢失：重开会话后模型不再回退默认；删除供应商后旧模型和推理强度不再串到新供应商。
+    - 提示词重复发送：生成中追加引导内容后不再看起来发了两遍。
+    - 切换标签 / 停止生成后聊天内容消失：从终端或工作台切回会话保留聊天视图和滚动位置；停止生成后历史重载不再把已收到的消息删掉或重复。
+    - 工作区侧边对话无法滚动、工作区文件树操作和预览控制恢复、拖拽标签时的滚动区域判定修正、标签页之间来回切换保留聊天。
+    - 图片转发：OpenCode Go 下的 Space Bunny 形象图和 Kimi K3 图片不再丢失。
+    - 本地 Markdown 链接点击后仍指向原目标；生成的输出文件按声明的项目根目录解析路径。
+    - 其他：活动档案名过长时自动换行；/clear 恢复为可搜索；检查点预览不再占用聊天里的预算显示；自动回答改为纯模型决策；回退后的回合审查状态正确清理；会话发现有边界且会报告历史分页上限。
+    其他
+    - Remotion 技能包：扩展页新增 Remotion 技能包（官方 12 项技能，不含运行库和渲染器），用于用 React 制作程序化视频。
+    - 站点与文档改版：官网落地页整体重做，新增四步工作流与实战案例；文档站新增 5 篇实战文档（读懂陌生项目、修 Bug、实现功能、每日代码审查、手机接力）；首次访问按浏览器语言选择站点语言。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NanmiCoder/cc-haha/releases/tag/v0.6.7
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NanmiCoder/cc-haha/releases/tag/v0.6.7
+ReleaseTime: 2026-09-27T18:01:58.0000000Z
