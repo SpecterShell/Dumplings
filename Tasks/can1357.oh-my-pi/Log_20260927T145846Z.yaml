@@ -1,0 +1,38 @@
+Version: 18.3.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.3.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Removed the stream-level Anthropic prompt-cache keep-alive: StreamOptions.anthropicCacheRefresh, StreamOptions.anthropicCacheRefreshRequest, and the zero-output refresh request path. Prompt-cache warming now lives in the coding agent's session-level cache warmer (#12699 by @KamijoToma).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the openai web-search grounding for OpenAI API models that support Responses web search (gpt-5.5, gpt-5.6-luna, gpt-6-astra, gpt-6-luna) (#13467 by @anatoli-tsinovoy).
+    - Added Model.promptCache, per-retention-tier prompt-cache entry lifetimes in seconds (short / long), declared per provider through the prompt-cache KDL rule (bundled: direct Anthropic, 5 min / 1 h). Custom models and modelOverrides opt in with the models.yml promptCache key (#12699 by @KamijoToma).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added API-key-billed OpenAI Responses web search (openai/gpt-6-luna, then openai/gpt-5.6-luna), tried after every Codex entry in the default search fallback chain so ChatGPT-subscription search is exhausted before any API usage is billed (#13467 by @anatoli-tsinovoy).
+    - Added prompt-cache warming, ported from earendil-works/pi: shortly before a prompt-cache entry expires, the main agent loop replays its last request and cuts the replay off at the first generated token, so idle gaps no longer force a full-prefix cache re-write. A refresh fires only when the expected avoided-miss cost clears its cost by $0.05, and warming stops as soon as a refresh misses the cache. Controlled by providers.cacheWarming (off / streaming / idle, default idle); idle warming covers 5-minute entries only, and models without a declared promptCache lifetime are never warmed. Extensions can override each decision through the cache_warming_decision event (#12699 by @KamijoToma).
+    @oh-my-pi/pi-natives
+    Changed
+    - Improved syntax highlighting to use about 5x less memory and run 3-5x faster by compiling grammars with Oniguruma instead of fancy-regex; highlighted output is unchanged.
+    Fixed
+    - Fixed SmolLM word completion (spelling.autocomplete: smollm) being about 25x slower on Windows x64 and Intel Macs; suggestions are unchanged (#13488 by @H4vC)
+    @oh-my-pi/pi-tui
+    Added
+    - Added an "OpenAI API" option to the setup wizard's web-search step; the existing ChatGPT-OAuth option is now labeled "OpenAI Codex" (#13467 by @anatoli-tsinovoy).
+    What's Changed
+    - feat(coding-agent): port upstream pi's cache-warming strategy by @KamijoToma in https://github.com/can1357/oh-my-pi/pull/12699
+    - perf(pi-predict): stopped SmolLM CPU kernels lowering mul_add to libm fmaf on x86-64-v2 by @H4vC in https://github.com/can1357/oh-my-pi/pull/13488
+    - feat(web-search): add OpenAI API-billed search by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/13467
+    - chore(pi-builtins): removed unused same-file dependency by @H4vC in https://github.com/can1357/oh-my-pi/pull/13491
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.3.4...v18.3.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.3.5
+ReleaseTime: 2026-09-27T13:35:03.0000000Z
