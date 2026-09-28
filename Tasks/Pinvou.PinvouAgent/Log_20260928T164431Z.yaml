@@ -1,0 +1,59 @@
+Version: 0.10.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.5/pinvou-agent_0.10.5-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.5 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. 跨平台 Computer Use（默认关闭）：新增 features/computer_use 模块，代理可捕获屏幕并合成输入（点击 / 输入 / 按键 / 滚动），按操作系统提供后端——Windows（GDI 捕获、enigo SendInput 注入、只读 UIA 树）、macOS（15.2+ 走 ScreenCaptureKit，弱链接的 CGWindowList/xcap 兜底使 11.0–12.2 缺失该框架也能启动；CGEvent 原生鼠标注入 + enigo 键盘/滚轮；只读 AX 树）、Linux X11（XCB 捕获、XTEST 注入、只读 AT-SPI 树），以及经门户链路的尽力 Wayland 捕获（输入走 RemoteDesktop，实验性）。功能默认关闭，需在设置中显式开启；无后端的平台上开关呈禁用态并附说明；开关变更双向触达运行中的引擎。无障碍树仅作只读目标筛查，全部注入走平台输入 API。
+    2. 侧栏主导航折叠改为全局手动开关：主导航不再在代码模式下自动折叠；折叠开关在任何模式下都可用，并跨模式切换与应用重启持久化（localStorage，读写双向守卫）。
+    问题修复
+    1. 卡死的引擎不再冻结整个会话：取消第二阶段的级联发送、kill-sweep 清理与引擎回收的关闭等待，现在统一受 TURN_GATE_AWAIT_TIMEOUT（5 秒）约束，卡死的引擎无法再永久持有会话 turn_lock 而冻结驱逐/删除/下一次发送；新消息提交时的持门等待按设计保持无界，其残余在 #525 跟踪（修复 #255）。
+    2. 语音长草稿截断不再漏过写回守卫：模型端 Anthropic Messages 端点现在透出 stop_reason，在 max_tokens 处被截断的长草稿回复与 OpenAI 兼容链路一样被上报为截断，拒写回守卫会拦下半编辑草稿。
+    3. MCP 启动窗口不再等于「能力不可用」终审：场景路由与其强制加载的技能在 tool_search 结果携带 mcp_boot connecting 状态时继续等待并重试，不再把瞬时启动窗口折算成决定性的「能力不可用」判定；遗留 mcp secrets 现在能跨重启再水化。
+    4. 市场治理不再静默丢写：治理与作曲家工具菜单的开关/可见性写入失败会传播（作用域写返回 Result，失败后不再广播成功，乐观翻转按后端真值回滚并内联报错）；作用域读去重为单次持锁读取；DenyAll 同意门默认在技能枚举失败时偏向过度拒绝，不可扫描的技能目录不再 fail-open；退役工具残留探测覆盖现用的 disabled_bundles.json 存储，过期条目不再误隐藏未来的同名重装。
+    5. 应用侧高影响等待有界：shell_env 钩子预算 5 秒→20 秒（登录 shell 本身限 15 秒，超时 exit 124 + stderr 警告）；读取线程改为经 channel 交付、永不 join，守护化后代继承管道写端无法再挂起成功路径；platform::process 的 taskkill 等待有界。同类残余（阻塞式制品下载、os::kill_pid_tree 的 taskkill、macOS RAM 探测 / dbus-send / run_brew join、轮前 checkpoint 大小遍历）已披露并各自在跟踪。
+    内部改进
+    1. CodeWhale 底座收口 r3（61cb769be）：不可变 tag pinvou-v0.9.12-r3 切在合并头（官方 v0.9.12 之上 49 个登记提交），恢复父仓 gitlink / 维护分支 pinvou3-clean / 不可变 tag 三方相等。父仓 Windows CI 现在带非零匹配断言运行 CodeWhale PowerShell 执行策略与 Windows shell 文本回归并缓存 CodeWhale target 目录；行为名指纹下限 57→64（实际 141）。
+    2. 全仓死代码与分歧清理：Rust 后端与 React 前端共 178 个文件（+4188/−4548），按语言拆分两次清理提交外加八次复审修复；每项移除都有零引用审计背书（含集成测试、JS invoke() 调用点与字符串动态命令分发）。
+    3. 测试可靠性：checkpoint-diff 的 inode 复用 flake 修复（fixture 不再假设 remove-then-write 必得新 inode——ext4 会立即复用，tmpfs 与 APFS 一样单调分配）；市场测试的注入写标志泄漏与取消测试只等单一效应的问题修正。
+    注意事项
+    - r3 收口后 fork-policy §0 过渡期豁免继续不生效：父仓 gitlink、维护分支 pinvou3-clean 与不可变 tag 均指向 61cb769be；回退点保持 pinvou-v0.9.12-r2。
+    - Computer use 默认关闭，开启属于显式选择；无障碍树只读用于目标筛查，全部注入走平台输入 API。Wayland 输入经 xdg-desktop-portal RemoteDesktop，实验性。从源码构建 Linux 计算机使用栈需要 PipeWire 系统头文件（libpipewire-0.3-dev 及 libdrm/libgbm/libegl 开发包），CI 的 apt 步骤已安装。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ ca18a7e2 / Actions #35990027590（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 跨平台 Computer Use（屏幕捕获 + 输入合成，按操作系统后端），默认关闭，需在设置中显式开启；Wayland 输入为实验性。
+    - 侧栏主导航不再在代码模式自动折叠；折叠是全局手动开关，跨模式与重启持久化。
+    修复
+    - 卡死引擎不再冻结会话：取消与回收阶段在会话门下的等待有界（5 秒），驱逐/删除/下一次发送恢复；向已卡死引擎发送仍受门控，该提交路径残余在 #525 跟踪。
+    - Anthropic stop_reason 透出；语音长草稿截断可见并被写回守卫拦截。
+    - MCP 启动窗口对场景与技能是重试状态而非「能力不可用」终审；遗留 mcp secrets 跨重启恢复。
+    - 市场治理写失败可见（内联回滚、不广播成功）；DenyAll 默认在枚举失败时偏向过度拒绝；退役工具残留探测覆盖现用停用库。
+    - 应用侧高影响等待有界（shell_env 20 秒 / 登录 shell 15 秒、读取线程不再 join、taskkill 等待有界）。
+    en-US
+    Features
+    - Cross-platform computer use (screen capture + input synthesis with per-OS backends), off by default behind a settings toggle; Wayland input is experimental.
+    - The sidebar primary nav no longer auto-collapses in code mode; folding is a global manual toggle that persists across modes and restarts.
+    Fixes
+    - A wedged engine no longer freezes the session: cancel and reclaim awaits under the turn gate are bounded (5s), so evict/delete/next-send recover; submitting into an already-wedged engine stays gated, with that residual tracked in #525.
+    - Anthropic stop_reason is surfaced; truncated voice long-draft edits are visible and blocked from the writeback guard.
+    - The MCP boot window is a retry state for scenes and skills instead of a definitive "unavailable" verdict; legacy mcp secrets survive restart rehydration.
+    - Marketplace governance writes fail visibly (inline rollback, no success broadcast); the DenyAll default biases to over-deny on enumeration failure; the retired-tool residue probe covers the live disabled store.
+    - High-impact app-side waits are bounded (shell_env 20s / login shell 15s, never-joined readers, bounded taskkill waits).
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.5
+ReleaseTime: 2026-09-28T07:55:08.0000000Z

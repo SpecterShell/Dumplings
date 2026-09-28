@@ -1,0 +1,25 @@
+Version: 2.2.12
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.2.12/nextcowork-2.2.12-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    Requesty 聚合供应商
+    - 目录新增 requesty(category: aggregator,模型列表免鉴权可拉):三家协议同 OpenRouter —— OpenAI Chat、Responses、Anthropic(https://router.requesty.ai)。模型 ID 两种写法都认：vendor/model(如 openai/gpt-4o-mini)与托管路由的短名(如 claude-fable-5.1)
+    - 欧盟区把地址换成 router.eu.requesty.ai,同一个 key 通用。Requesty 没有 lobehub 字形，徽标退回首字母；baseurl.ts 的 /v1 形状表与免鉴权白名单一并补上它
+    修复
+    发布流水线：一次下载超时不再让整轮发布废掉
+    - 症状：Build macOS Intel 的 postinstall 报 ConnectTimeoutError: www.electronjs.org:443 (timeout: 10000ms),Publish GitHub Release 随之被跳过、Release 永远停在草稿；而同一台 runner 上另外三个平台的同一步骤都过了 —— 看着像「那台 runner 抽风」
+    - 根因：这一步是 electron-builder install-app-deps 让 node-gyp 为 Electron 44.1.1 重编译 node-pty,headers 只能取自 www.electronjs.org/headers,而那个地址改不掉 —— @electron/rebuild 把它当命令行参数 --dist-url=… 传给 node-gyp(rebuild.js 里的默认值),electron-builder 调的是它的 API、不传 headerURL;electron-builder 自己的镜像配置(getGypEnv() 读 npm_config_electron_mirror)只作用于它那条 legacy 路径。.npmrc 里的 electron_mirror 在这一步用不上 —— 它照旧管着 electron 二进制的下载，npm 11 那句 Unknown project config 只是警告，不是失效
+    - 也试过把 node-gyp 顶到镜像：不行。实测 cdn.npmmirror.com/binaries/electron 的 SHASUMS256.txt 里没有 node-v44.1.1-headers.tar.gz,node-gyp 会以 local checksum … not match remote undefined 回滚(headers 只发布在 electronjs.org/headers)
+    - 修复：承认这条链路是「外部依赖 + 10 秒连接超时」,npm ci 改成三次重试 —— 瞬时失败不再废掉整轮发布，而确定性的编译错误三次都失败、照样红
+    说明
+    - v2.2.11 从未发到用户手上：tag 打出来了，但 macOS Intel 那台 runner 卡在上面那条下载上，Publish GitHub Release 因此被跳过、Release 一直停在草稿。v2.2.12 是第一个把 v2.2.11 的两处用户可见修复交付出去的版本 —— GPT / Responses 协议输入侧 array_above_max_length 400、以及 Agent 运行时右键菜单一闪就没(细节见 v2.2.11 一节);v2.2.11 的草稿请手工删除
+    测试
+    - 全量套件 6347 项通过(23 skipped),12 项失败全部落在 v2.2.10 起就记在案的既有红项(session-mux、native-host 依赖本机 python;provider-registry、document-rpc、document-scope 是测试在库、源文件从未入库);typecheck(node + web)与 lint 通过(0 error,4 个既有 any warning)
+    - Requesty 的目录断言(品牌对照表、免鉴权白名单)随该 PR 一起更新
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.2.12
+ReleaseTime: 2026-09-28T06:41:36.0000000Z
