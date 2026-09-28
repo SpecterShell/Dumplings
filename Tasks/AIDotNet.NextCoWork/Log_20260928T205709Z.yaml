@@ -1,0 +1,45 @@
+Version: 2.3.0
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.3.0/nextcowork-2.3.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    SaveImage:把对话里的图写进工作区
+    - 需求：用户说「把这张图存到 assets/logo.png」时，Agent 手上只有一个地址 —— 用户粘贴的图在上下文里附着 [Image URL: ncw://…],generate_image 的回执逐张列出 ncw://…。而 Write 只写文本，把 base64 当文本写进去得到的是一个打不开的文件
+    - 取字节只有两条路，都走既有的校验：ncw://(与内联 data URL)进本会话图片仓，由 resolveImageDataRef 判会话归属、realpath 围栏、大小、魔数；http(s) 走 downloadImage(逐跳 SSRF 检查、32MB 上限、魔数认格式)。地址本身不是权限，会话归属才是
+    - 落盘路径与 Write 同一条 resolvePath,Plan 模式的写入围栏(restrictedWrite)照样生效；KernelFs 新增可选的 writeBytes,本地工作区写字节、SSH 远程工作区天然就是 sftp —— 没有这一项的宿主整体不下发这个工具，不画注定失败的承诺
+    - 默认不覆盖：目标文件已存在时必须显式 overwrite: true,且不覆盖那一支用 'wx' 交给文件系统原子判定 —— 先 exists 再写，两步之间会被抢先。Write 的「先读后写」在二进制上无从谈起(Read 拒读二进制),换成显式开关守同一件事
+    - 故意不做：不转格式(.jpg 存一张 PNG 只在回执里提醒，不偷偷转码)、不进撤销/审查记录(recordChange 记的是文本前后内容，二进制放进去只会让 diff 视图出乱码)。权限档位与 Write 同档(readOnly: false + destructive: true)
+    生成图落成本会话附件，模型可以点名
+    - generate_image 的产出此后不再是内联 data URL:每张经会话图片仓落成本会话附件，output.images[i].dataRef 换成 ncw://attachments/sessions/<会话>/<ULID>.<ext>,并在回执正文里逐张列出地址。模型看不见 dataRef(图是以图像块发给它的),地址不写进正文等于没给
+    - 用户粘贴的图在出站副本里于图后附一行 [Image URL: ncw://…];转录不动，内容只由 dataRef 决定，所以每轮逐字相同，不破 prompt cache
+    - prepareRequestImages 在发出去之前把 ncw:// 解析回 data URL 并做缓存 —— Anthropic 编码器只认 data: 前缀、OpenAI 两家把 dataRef 原样当 image_url,不解析模型就看不见自己刚画的图；编码器这一侧仍然看不到 ncw://
+    - 存储失败的那张退回内联 data URL,不让整次调用失败(图已经生成、已经计费、用户已经在卡片上看见了),回执写明哪几张没有地址 —— 否则模型会对着一个不存在的地址编一个出来
+    - 压缩摘要里的 [image] 占位带上地址：摘要是压缩之后模型唯一的记忆，地址丢了它就再也点不了名
+    - 附件生命周期接到既有那一条上：生成图以 draft 登记，随消息提交转 committed(recordMessageAttachments 现在也收 tool_result 里的托管图，序号接在 image part 之后，所以既有的 managed:<n> / <messageId>:<n> id 一个都不变、重放旧消息仍然幂等)。不收进来就会在 7 天后被当成过期草稿回收，转录里的地址从此是一张裂图
+    生图卡片：提示词独立成区，单张收到图宽
+    - 卡片底部多出一区：标签 + 默认两行 + 真的装不下才给「展开」(量 scrollHeight,短提示词配一颗点了没变化的按钮正是「会失败的承诺」)+ 复制提示词。整块用 w-0 min-w-full 不参与卡片内容宽计算 —— 否则一段几百字的提示词会把卡片重新撑回满列宽
+    - 单张时卡片 w-fit 收到图的宽度：竖图配一张满宽的卡，右边大半是空底色。加载格因此从 w-full 改成定宽 w-[320px] —— 百分比宽在 w-fit 里解析成内容宽，表现为加载格缩成「图标 + 两个字」那么窄。多张仍是定宽网格，格子才对得齐
+    - 图角在悬停/键盘聚焦时浮出放大标；否则「这张能点开」只剩鼠标指针变形这一个线索
+    浏览器那一族补上展示规则，截图有了自己的卡片
+    - 整族 16 个 browser_* 此前一个都没登记，于是每一行都走 humanize(internalId) 的可读名兜底 —— 中文界面上一列「browser click / browser type / browser screenshot」。这是「新增内置工具忘了登记展示规则」那条不变式唯一没守住的缺口，清单补齐之后测试重新变成一道闸门
+    - 新增 screenshot 展示形态与 ScreenshotDetail 卡片。截图的图在 output.images 里，而它原先落在 external 的通用 JSON 渲染器 —— 那里只读 output.content、根本不碰 output.images。症状是：模型对着截图说「首页有个登录按钮」,对话里只有一行英文回执，图只进了模型的上下文
+    - 与生图卡片刻意不合并，虽然两者展开后都是「一张图」:判据是生命周期 —— 生图那张要摆 N 格占位、逐张换图、底下挂提示词区(入参里有 n 与 prompt),而截图没有生成期、没有提示词，只有一帧视口。复用那张卡会在图旁边留一块永远空着的提示词区，并在等待时显示「生成中」
+    - 截图同样不进过程折叠(isPinnedShape):它没有正文，图就是这次调用的全部结果，折进过程段等于这次调用在界面上只剩下一个标题
+    - 行的主语取人认得的东西：导航取主机名，动作取 ref / 按键 / 坐标，tabId 落在 context 那一格(一个工作区可以同时开着几个页面，「点了哪一个」不写出来就指代不明)。browser_type 刻意不回显输入的文字 —— Agent 常被要求往表单里填账号密码，而转录是会被翻、会被导出的；完整入参仍在用户主动点开的展开区里
+    修复
+    截断重跑之后，更早的工具卡片退回「等待 / 生成中」
+    - 症状：一次生图跑完，之后编辑(或点「重新生成」)一条更晚的消息重跑，更早那张生成图卡片退回「等待」+「生成中」,而它其实早就落库了。零报错，而且不会自己好 —— loadHistory 在 run 期间拒绝水合，run 正常结束后也没有人再水合一次，这份缺失一直留到重开这个会话
+    - 根因：stores/session.ts 在截断重跑时把 tools / subagents 整个清空(tools: {})。判据是 tools[callId] 还在不在 —— 不在时 ToolCallCard 把行状态读成 pending(「等待」),而 ImageGenDetail 拿到的 output 是 undefined,未结算分支就摆出加载格。input 来自消息里的 tool_call part,所以提示词照常显示，看上去像「这一张还没生成完」
+    - 修复：清空的本意只是「别把被切掉那一轮的工具状态留着」,而 toolsFromMessages 正好只做这件事 —— 按留下的消息重建，切掉的 callId 自然不在结果里；当前值当 live 传进去，与 loadHistory 同一口径
+    压缩分隔线的摘要把前后消息顶出视口
+    - 摘要是九节模板写出来的整篇文档，不限高时一展开就是一整屏，把这条线前后的消息全部顶出视口。分隔线的语义是「标位置」,不该占据整屏
+    - 限高跟 TerminalBlock / Thread 里滚动区的既有档位一致(min(50vh, 420px)),内部滚动，pr-1 给滚动条留槽
+    测试
+    - 新增 3 个测试文件、扩充 6 个，合计约 740 行：save-image(默认不覆盖、Plan 写入围栏、远程工作区、魔数不符、ncw:// 越会话);rerun-tool-cards(截断重跑后按留下的消息重建卡片状态);screenshot-card(等待卡 / 有图 / 跑完无图不画「成功」框 / 失败只给原因 / 灯箱 / 不进过程折叠);上游图片解析(ncw:// 出站解析 + 地址附注，内联图不受影响);生图卡片的提示词区与单张图宽
+    - 全量套件 6379 项通过(23 skipped),12 项失败全部落在 v2.2.10 起就记在案的既有红项(session-mux、native-host 依赖本机 python;provider-registry、document-rpc、document-scope 是测试在库、源文件从未入库);typecheck(node + web)、test:release 与 lint 通过(0 error,4 个既有 any warning)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.3.0
+ReleaseTime: 2026-09-28T17:42:42.0000000Z
