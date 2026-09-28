@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.mycloudgame.com/download.html'
+$Object1 = Invoke-WebRequest -Uri 'https://mycloudgame.com/download'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -11,19 +11,18 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.mycloudgame.com/changelog.html' | ConvertFrom-Html
+      $Object2 = Invoke-WebRequest -Uri 'https://mycloudgame.com/changelog' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(text(), '$($this.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//article[contains(./h2, '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesNode) {
         # ReleaseTime
-        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(20\d{2}\W+\d{1,2}\W+\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('//span[contains(@class, "timeline-date")]').InnerText, '(20\d{2}\W+\d{1,2}\W+\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectNodes('./h2[1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
