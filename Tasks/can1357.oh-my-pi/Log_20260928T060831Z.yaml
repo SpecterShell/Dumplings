@@ -1,0 +1,123 @@
+Version: 18.4.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.4.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Updated telemetry attribute names from the pi.* namespace to the omp.* namespace.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Changed LimitsApi.rotate() to return a CredentialRotation object ({ switched, afterSiblingWait? }) instead of a boolean. Check .switched explicitly, since the returned object is always truthy.
+    Added
+    - Added image metadata to hosted OpenAI image-generation results, including the model used and each generated image’s dimensions and quality.
+    Changed
+    - Redesigned the browser page displayed during OAuth login.
+    Fixed
+    - Fixed Anthropic accounts remaining blocked after quota resets, including for broker-connected clients, while preserving independent authentication and model-limit restrictions.
+    - Fixed concurrent usage refreshes repeatedly probing providers after failures, reducing unnecessary usage-endpoint requests.
+    - Fixed Gemini and Antigravity usage and cost reporting when upstream responses omit prompt-token counts or report more cached tokens than prompt tokens.
+    - Fixed credential failover after authentication errors so stored credentials rotate through every distinct sibling instead of stopping after one attempt; rotation can also wait briefly for a temporarily blocked healthy sibling to become available.
+    - Fixed native judge responses without token counts producing invalid usage and cost values.
+    - Fixed Cursor usage, cost, and context accounting to include final input, cache, reasoning, and output metrics, improving compaction and handoff sizing.
+    - Fixed Cursor MCP tool calls routed through external executors being returned as text instead of tool calls.
+    - Fixed Cursor shell-tool timeouts being displayed in milliseconds rather than seconds.
+    - Fixed fetch requests over Unix sockets when PI_PROXY is configured.
+    - Fixed Ollama chat turns being recorded with zero cost; usage is now priced using the model’s cost information.
+    - Fixed Anthropic requests failing after native compaction when per-message effort settings were present; effort controls are now handled correctly with compaction.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Corrected Cerebras model pricing so cached input tokens are charged at the model’s input rate, consistent with Cerebras billing.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the telemetry.otlpExportEnabled setting under Settings → Providers → Privacy to disable OTLP trace, log, and metric export even when OTEL_* endpoints are configured; exporting remains enabled by default.
+    - Added a first-launch warning when Python evaluation is enabled but no working Python interpreter is available, with guidance for configuring python.interpreter and checking the installation with omp setup python --check.
+    Changed
+    - Updated omp stats and /stats to open the redesigned dashboard immediately while session data synchronizes in the background with live progress; --json and --summary continue to synchronize before producing output.
+    - Replaced the stats dashboard’s Behavior page with a Frustration page that can classify messages using the judge model role, showing an estimated cost before analysis and recording /stats spending in the current session.
+    - Clarified the eval tool documentation to explain that its kernel may be shared with the parent session and concurrent task subagents.
+    Fixed
+    - Fixed /tree reopening saved Ask results instead of navigating past them when an optional preview was saved as null.
+    - Fixed the legacy createGrepTool() API when searching with both a file path and a glob filter.
+    - Improved task and subagent reliability: eligible saved usage resets are now redeemed automatically when polling is throttled or transient failures occur, concurrent tasks share confirmed resets, headless subagents retain assignments across session transitions, tagged ^model agents are available to nested subagents, and wait returns promptly with information about still-running work when no owned jobs are available.
+    - Fixed SDK requests using ApiKeyResolver to wait for a nearby healthy credential when a drained account’s quota block is about to expire, instead of immediately failing with a multi-hour quota error.
+    - Fixed Anthropic requests failing after native compaction when experimental context notes were enabled.
+    - Fixed Windows path handling for 8.3 short paths, including project-directory detection and home-directory display in status, tool labels, and errors.
+    - Fixed edit PUT >N producing syntactically invalid code when inserting shallower constructs near closing braces.
+    - Fixed Windows one-shot commands, including omp update, incorrectly reporting successful completion as an error; also fixed this behavior when no user npm or Bun configuration file exists.
+    - Fixed missing judge token counts corrupting session usage totals and displaying $NaN.
+    - Fixed Cursor sessions under-reporting token usage and cost, compacting based on the wrong context measurement, and applying shell-command timeouts in the wrong units.
+    - Updated goal mode to wait for user input when all remaining todos are blocked instead of repeatedly requesting approval.
+    - Fixed pi-background-tasks 2.6.0 and later failing to load due to a missing legacy pi-ai compatibility export.
+    - Fixed blob broker requests when PI_PROXY is configured.
+    - Fixed generate_image reporting the catalog model instead of the image model actually used by the ChatGPT/Codex backend; saved image metadata now reflects the provider-returned size and quality.
+    - Fixed fast-model fallback selection so it no longer chooses Gemini or MiniMax models when no smol role is configured.
+    - Fixed extension tool renderers using upstream pi’s renderCall(args, theme, context) signature failing to render.
+    - Fixed Nix flake and NixOS module builds failing because the native package version stamp was not recognized.
+    - Fixed Nix dependency-lock checks failing after obsolete stats chart dependencies were removed.
+    @oh-my-pi/collab-web
+    Changed
+    - Redesigned the web client: black chassis with one inset session panel, glass top bar with the omp mark and a live status pill, a docked composer card, prompts shown as cards in the transcript, a sectioned agents rail, and a floating agent drawer; the connect screen was rebuilt too
+    @oh-my-pi/pi-natives
+    Added
+    - Added Windows path utilities for converting between long and 8.3 short path spellings without resolving symlinks or junctions. Import them from @oh-my-pi/pi-natives/path.
+    Fixed
+    - Fixed the native xargs builtin so -P/--max-procs correctly limits parallel command execution, including GNU-compatible -P 0 behavior.
+    - Improved snapcompact rendering performance for stretched shapes on Windows x64, Intel Macs, and Linux CPUs without AVX2, with no visual changes.
+    @oh-my-pi/omp-stats
+    Changed
+    - Redesigned the dashboard: new layout, navigation (g + letter to jump, 1–6 to pick a range), sortable tables and in-house charts on every page
+    - The dashboard opens immediately and ingests sessions in the background, most recent activity first, with live progress in the header; pages update as data lands and new session activity appears within seconds
+    - Switching time ranges is now near-instant: range queries read hourly rollups instead of scanning every request (seconds → milliseconds on large histories)
+    - Frustration judge runs now scale how many requests they keep in flight (up to 256, backing off on rate limits and retrying after a short delay) and save verdicts in batches; the progress line shows the rate and requests in flight
+    - Provider subscription windows load separately from the rest of the Providers page, and the Projects page lists the 2,000 busiest folders
+    - Replaced the dashboard's Behavior page with a Frustration page showing, per model version, how often users are annoyed, annoyed at the assistant, and angry at it; a button judges unclassified messages with the host's judge model (after a cost estimate) and the chart refines live as verdicts arrive
+    Fixed
+    - Made session-statistics synchronization atomic to prevent duplicate entries when synchronization is interrupted.
+    - Improved the speed and reliability of initial and repeat omp stats imports, including large session histories and already-indexed histories.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Prevented interrupted wait operations from appearing in the transcript when a queued completion or message is received.
+    What's Changed
+    - perf(pi-natives): stopped snapcompact resize lowering mul_add to libm fmaf on x86-64-v2 by @H4vC in https://github.com/can1357/oh-my-pi/pull/13496
+    - fix(coding-agent): read optional registry config via fs.promises in omp update by @H4vC in https://github.com/can1357/oh-my-pi/pull/13514
+    - fix(cli): kept exit code when loop resumed after beforeExit by @roboomp in https://github.com/can1357/oh-my-pi/pull/13472
+    - fix(coding-agent): wait ladder restored to old hub behavior by @H4vC in https://github.com/can1357/oh-my-pi/pull/13516
+    - fix(windows): normalize working directories and abbreviate short home paths by @CoderTCY in https://github.com/can1357/oh-my-pi/pull/13394
+    - feat(telemetry): add opt-out setting override to disable OTLP export by @krizh-p in https://github.com/can1357/oh-my-pi/pull/13444
+    - docs(coding-agent): say the eval kernel is shared with concurrent task subagents by @radkawar in https://github.com/can1357/oh-my-pi/pull/13521
+    - fix(pi-edit): keep PUT >N inserts before a closer when moving them breaks the parse by @radkawar in https://github.com/can1357/oh-my-pi/pull/13520
+    - feat(coding-agent): eval backend missing by @H4vC in https://github.com/can1357/oh-my-pi/pull/13529
+    - test: remove useless tests by @H4vC in https://github.com/can1357/oh-my-pi/pull/13539
+    - fix(natives): allowed const-fn lint on windows path exports by @roboomp in https://github.com/can1357/oh-my-pi/pull/13548
+    - fix(task): retried dropped headless prompts before yield by @roboomp in https://github.com/can1357/oh-my-pi/pull/13541
+    - fix(goal): stop continuations while todos are blocked by @roboomp in https://github.com/can1357/oh-my-pi/pull/13497
+    - docs(bash): clarified shellpath execution scope by @roboomp in https://github.com/can1357/oh-my-pi/pull/13420
+    - fix(judgment): handled missing judge token counts by @roboomp in https://github.com/can1357/oh-my-pi/pull/13492
+    - fix(nix): stamped the native addon version in the nix build by @roboomp in https://github.com/can1357/oh-my-pi/pull/13506
+    - fix(ai): price ollama-chat terminal usage from the model cost card by @roboomp in https://github.com/can1357/oh-my-pi/pull/13057
+    - fix(extensions): accept pi-order renderCall theme argument by @roboomp in https://github.com/can1357/oh-my-pi/pull/13086
+    - fix(coding-agent): stopped smol mini pattern matching gemini models by @roboomp in https://github.com/can1357/oh-my-pi/pull/13410
+    - fix(coding-agent): reported the image model the codex backend ran by @roboomp in https://github.com/can1357/oh-my-pi/pull/13404
+    - fix(ai): bypassed proxy for unix-socket fetches by @roboomp in https://github.com/can1357/oh-my-pi/pull/13510
+    - fix(coding-agent): restore anthropic compat adapter by @roboomp in https://github.com/can1357/oh-my-pi/pull/13251
+    - fix(ai,coding-agent): recovered cursor turn usage and tool handoffs by @roboomp in https://github.com/can1357/oh-my-pi/pull/13085
+    - fix(ai): waited out briefly blocked siblings before failing rotation by @roboomp in https://github.com/can1357/oh-my-pi/pull/13409
+    - fix(ai): restore exec-resolved marking for streamed cursor MCP calls by @H4vC in https://github.com/can1357/oh-my-pi/pull/13554
+    - fix(ai): drop unreachable cursor exec-resolved branch and its stale test by @H4vC in https://github.com/can1357/oh-my-pi/pull/13563
+    - docs(changelog): note cursor MCP exec-resolution cleanup by @H4vC in https://github.com/can1357/oh-my-pi/pull/13565
+    - fix(ai): rotated 401s through every distinct stored sibling by @roboomp in https://github.com/can1357/oh-my-pi/pull/13561
+    - fix(ai,coding-agent): keep the Anthropic compaction block first in the request by @H4vC in https://github.com/can1357/oh-my-pi/pull/13569
+    - fix(tui): restored saved ask questions with null previews by @roboomp in https://github.com/can1357/oh-my-pi/pull/13573
+    - fix(coding-agent): corrected legacy grep file glob handling by @roboomp in https://github.com/can1357/oh-my-pi/pull/13574
+    New Contributors
+    - @krizh-p made their first contribution in https://github.com/can1357/oh-my-pi/pull/13444
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.3.5...v18.4.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.4.0
+ReleaseTime: 2026-09-28T03:33:34.0000000Z
