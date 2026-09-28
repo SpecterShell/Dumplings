@@ -1,12 +1,15 @@
-$Prefix = 'https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/'
+$Prefix = 'https://download.kde.org/stable/haruna/'
 
 $Object1 = Invoke-WebRequest -Uri $Prefix
 
-$InstallerName = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86_64') } catch {} }, 'First')[0].href
-$VersionMatches = [regex]::Match($InstallerName, 'master-(?<Build>\d+)')
+$Prefix += ($Object1.Links.Where({ try { $_.href -match '^(\d+(?:\.\d+)+)/$' } catch {} }).href | Sort-Object -Property { [ChunkVersion]([regex]::Match($_, '^(\d+(?:\.\d+)+)/$').Groups[1].Value) } -Bottom 1)
+
+$Object2 = Invoke-WebRequest -Uri $Prefix
+
+$InstallerName = $Object2.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('x86_64') } catch {} }, 'First')[0].href
 
 # Version
-$this.CurrentState.Version = $VersionMatches.Groups['Build'].Value
+$this.CurrentState.Version = [regex]::Match($InstallerName, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -16,10 +19,6 @@ $this.CurrentState.Installer += [ordered]@{
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl | Rename-Item -NewName { "${_}.exe" } -PassThru | Select-Object -ExpandProperty 'FullName'
-    # RealVersion
-    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromNSIS
-
     try {
       $Object2 = (Invoke-RestMethod -Uri 'https://apps.kde.org/haruna/index.xml').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
 
