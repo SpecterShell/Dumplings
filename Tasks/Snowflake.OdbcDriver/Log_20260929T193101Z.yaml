@@ -1,0 +1,30 @@
+Version: 3.21.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win32/3.21.0/snowflake32_odbc-3.21.0.msi
+- Architecture: x64
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win64/3.21.0/snowflake64_odbc-3.21.0.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-2026.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features and updates
+    - Added the wif_host connection parameter to override the STS/IAM endpoint used for AWS and GCP Workload Identity Federation. This is independent of the WORKLOAD_IDENTITY_AUDIENCE parameter removed in this release.
+    - Added CRL cache cleanup so expired CRLs no longer accumulate in long-lived processes. New environment variables control cache validity and cleanup:
+      - SF_CRL_CACHE_CLEANUP_INTERVAL (default 3600 seconds; set to 0 to disable)
+      - SF_CRL_CACHE_VALIDITY_TIME (default 86400 seconds)
+      - SF_CRL_ON_DISK_CACHE_REMOVAL_DELAY (default 604800 seconds)
+    - Migrated Azure storage from azure-storage-cpplite to Azure SDK for C++ (azure-storage-blobs 12.18.0).
+    - Updated curl to v8.21.0.
+    - Upgraded libsnowflakeclient to version 2.10.0.
+    Changes
+    - Restored SigV4 GetCallerIdentity as the default AWS Workload Identity Federation attestation method. The STS GetWebIdentityToken (JWT) flow introduced in version 3.18.0 is no longer used. Version 3.21.0 doesn’t provide a connection parameter to keep the JWT flow. If your IdP trust policy requires GetWebIdentityToken, stay on version 3.20.x until a later driver release exposes an opt-in.
+    - Removed the WORKLOAD_IDENTITY_AUDIENCE connection parameter added in version 3.20.0. The configurable attestation audience was withdrawn; it isn’t replaced by wif_host. The driver now always uses the default audience snowflakecomputing.com. If you still set WORKLOAD_IDENTITY_AUDIENCE, the driver ignores it and logs a warning for an unexpected connection key.
+    Bug fixes
+    - Fixed credentials appearing in diagnostic trace output.
+    - Fixed the HTTP retry path so the request buffer is reset correctly.
+    - Fixed a delay in the AWS identity detector.
+    - Tightened string copy bounds checking after the Azure SDK migration to prevent a buffer overflow.
+ReleaseTime: 2026-09-10T14:41:24.0000000Z

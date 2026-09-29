@@ -1,0 +1,60 @@
+Version: 2.0.17-next
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anywhere-labs/dsh-desktop/releases/download/v2.0.17-next/DSH-NEXT-2.0.17-next-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release upgrades to DeepSeek Harness v0.2.0-rc.2 and fixes Linux AppImage builds quitting without restarting when using in-app restart actions. Next also fixes unresponsive Session log downloads and /export.
+    DSH NEXT is a community-maintained open-source project, not an official DeepSeek product.
+    New and improved
+    - Updated core: Upgraded from v0.2.0-rc.1 to v0.2.0-rc.2, adapting the runtime and plugin management across all three channels.
+    - Terminal and CLI: Adapted to the updated built-in terminal and Desktop Profile management flow. The bundled CLI supports plugin installation, removal, and management of version compatibility exceptions.
+    - Mobile remote control: Updated Agents Anywhere integration for compatibility with rc.2.
+    Fixes
+    - Linux AppImage restart: Fixed the app exiting without relaunching after menu restarts, recovery actions, entering/leaving Safe Mode, or switching Profiles or data directories.
+    - Running without FUSE: When using --appimage-extract-and-run or APPIMAGE_EXTRACT_AND_RUN=1, restarts retain extraction mode and avoid conflicts with cleanup of the previous temporary directory.
+    - Session export: Fixed “Download Session log” and /export doing nothing. They now open the native save dialog and write the file.
+    - Download errors: Failed downloads show the underlying reason. Cancelling or interrupting a download does not leave an incomplete file.
+    - Additional restart flows: AppImage setup, factory reset, and fallback restarts after failed update installation also use the corrected relaunch flow.
+    Usage notes
+    - Quit the previous version and back up ~/.dsh before installing. The bundled v0.2.0-rc.2 is still a release candidate.
+    - The new core checks declared plugin compatibility and may skip incompatible plugins. Check for plugin updates if a plugin does not load.
+    - General settings retains the upstream “Upload Session Log” option, retaining the upstream default (enabled). Review or change it in Settings.
+    - Next remains experimental and defaults to the shared ~/.dsh home. Profiles do not isolate sessions, accounts, or credentials within that home.
+    - Set DSH_DESKTOP_NEXT_HOME to an absolute path to isolate DSH data; this does not isolate AA’s default shared sign-in and device-binding state.
+    - Markets, mobile remote control, and Computer Use are off by default in new Profiles. Next does not yet offer the original Desktop’s Extended / Advanced window modes.
+    - Before managing plugins for the desktop Profile from the bundled terminal, launch Desktop to initialize that Profile.
+    Full changelog · Project website
+    DSH NEXT will gradually replace the Stable edition.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新升级至 DeepSeek Harness v0.2.0-rc.2，修复 Linux AppImage 在应用内重启后无法重新启动的问题。 Next 同时修复 Session 日志下载和 /export 无响应的问题。
+    DSH NEXT 是社区维护的开源项目，并非 DeepSeek 官方产品。
+    新增与改进
+    - 升级内核： 从 v0.2.0-rc.1 升级至 v0.2.0-rc.2，同步适配三通道运行时和插件管理。
+    - 终端与 CLI： 适配新版内置终端及 Desktop Profile 插件管理流程，支持通过应用提供的 CLI 安装、移除插件及管理版本兼容例外。
+    - 手机远控： 更新 Agents Anywhere 的 rc.2 兼容适配。
+    修复
+    - Linux AppImage 重启： 修复菜单重启、恢复模式、进入／退出安全模式、切换 Profile 或数据目录时，应用退出后不再启动的问题。
+    - 无 FUSE 的运行方式： 使用 --appimage-extract-and-run 或 APPIMAGE_EXTRACT_AND_RUN=1 时，重启后继续使用解压运行模式，并避免新实例与旧临时目录清理相互干扰。
+    - Session 导出： 修复“下载 Session 日志”和 /export 没有反应的问题；现在会弹出系统保存对话框并写入文件。
+    - 下载错误提示： 下载失败时显示具体原因，取消保存或传输中断时不会留下未完成的文件。
+    - 更多重启流程： AppImage 下首次设置、恢复出厂设置及更新安装失败后的回退重启也使用修复后的启动流程。
+    使用提示
+    - 请先退出旧版应用并备份 ~/.dsh。内置的 v0.2.0-rc.2 仍为候选发布版本。
+    - 新版内核会检查插件声明的兼容版本，不兼容的插件可能被跳过；遇到插件未加载时，请先检查并更新插件。
+    - 通用设置中的“上传 Session Log”选项，保留上游默认值（默认开启）；可在设置中查看并调整。
+    - Next 仍属实验通道，默认与稳定版共用 ~/.dsh；Profile 不隔离同一目录中的会话、账号和凭据。
+    - 可通过绝对路径 DSH_DESKTOP_NEXT_HOME 隔离 DSH 数据，但不会因此隔离 AA 的默认共享登录与设备绑定状态。
+    - 新 Profile 的插件市场、手机远控和 Computer Use 默认关闭；Next 暂不提供原桌面版的扩展／增强窗口模式。
+    - 如需通过应用内终端管理 desktop Profile 的插件，请先启动 Desktop 完成该 Profile 的初始化。
+    完整变更记录 · 项目网站
+    DSH NEXT 将逐步取代稳定版。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.17-next
+ReleaseTime: 2026-09-29T17:15:24.0000000Z
