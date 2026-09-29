@@ -18,6 +18,10 @@ Filter HTML links using `href`, not a guessed filename property. Start with the 
 
 Use `Join-Uri` for relative links. Require one matching link and verify that it is official. Handle optional HTML release metadata only after `Check()` by following [HTML release notes](../release/html-markdown.md#html-release-notes).
 
+## Atlassian Confluence Blogs
+
+Public Confluence spaces expose blog posts through the anonymous REST API, which is the reliable source for release notes. `Vivi.Vivi` lists the space's posts with `Invoke-RestMethod -Uri 'https://vivi.atlassian.net/wiki/rest/api/content?spaceKey=VRB&type=blogpost&limit=200'`, matches the current version against post titles with a digit-boundary regex such as `"(?<![\d.])$([regex]::Escape($this.CurrentState.Version))(?![\d.])"`, then fetches the matched post with `/wiki/rest/api/content/<id>?expand=body.view`. Build the post URL from `_links.base` plus `_links.webui` (the list response has no server-side sort, and `webui` is root-relative, so `Join-Uri` against the base host drops the `/wiki` segment), and extract the notes text from the whole `body.view.value` HTML because it has no `wiki-content` wrapper. Do not call `/cgraphql`: Atlassian now rejects every non-persisted GraphQL operation there with `OperationBlocked`, including named anonymous queries.
+
 ## Select Full Installer Assets
 
 Do not submit an update-only artifact as the package installer. Reject names or URLs that identify `update`, `updater`, delta, auto-update, patch, or portable artifacts when the package represents the installed desktop application. A portable asset is valid only for an intentionally portable package; an electron-builder portable NSIS executable is not the installable NSIS setup. An updater artifact is valid only when the package itself represents that updater.

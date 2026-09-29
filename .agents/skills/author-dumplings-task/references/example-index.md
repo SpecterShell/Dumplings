@@ -16,6 +16,7 @@ Open the named task directly and read its current `Config.yaml` and `Script.ps1`
 | Custom EXE wrapper with nested MSI | `ALTEC.DataPrint`, `Apple.iTunes`, `Maximus5.ConEmu`, `Siemens.JT2Go`, `Foxit.FoxitReader` | Exact 7z payload selection, architecture mapping, raw-section extraction, nested wrapper traversal, MSI/MSP projection, and aggregate MSI parsing. |
 | Shared vendor provider | `#Argente` with `Argente.*`; `#JetBrains` with `JetBrains.*` | Three or more consumers of the same source, explicit `DependsOn`, a shared normalized catalog, and variant consistency checks. |
 | Browser-only extraction | `BLife.CustomCursor` | Short `Use-PlaywrightPage -Stealth -Headless` lease returning a detached URL. |
+| Confluence REST blog posts | `Vivi.Vivi` | Space blog list, title version match, `body.view` notes, `cgraphql` is blocked. |
 | Installer-set replacement | `Xmind.Xmind` | `WinGetReplaceMode`, conditional ARM64 inclusion, and `RealVersion`. |
 | Explicit installer query | `RawTherapee.RawTherapee` | Select an existing installer by a `Query` dictionary when task write fields differ. |
 | Versionless URL with checksum header | `Altova.XMLSpy.Professional`, `Alibaba.Taobao`, `Alibaba.QwenWork.CN`, `Bazwise.FolderSizeExplorer` | Last-resort detection using `x-amz-meta-sha256`, `Content-MD5`, `x-oss-hash-crc64ecma`, or `x-goog-hash`. |
