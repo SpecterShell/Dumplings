@@ -1,0 +1,40 @@
+Version: 1.23.22
+Installer:
+- InstallerUrl: https://github.com/deanxv/done-hub/releases/download/v1.23.22/done-hub.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - User Agreement / Privacy Policy: editable content in admin with independent toggles, consent checkbox at registration and a re-confirmation dialog at sign-in, validated on both client and server
+    - Automatic log cleanup: configurable toggle and retention period (30 days by default), deleted in batches daily at 03:00
+    - New request_id and upstream_request_id columns on logs, searchable by either ID
+    - Prices can be bulk-imported from models.dev
+    - Long-context tiered pricing: requests exceeding the threshold are billed at long-context ratios for the whole request
+    - Batch channel deletion
+    - Language settings: configurable default language, with a prompt when the browser language differs
+    Models & Providers
+    - New BedrockMessages channel type (Claude in Bedrock native Messages endpoint), supporting both SigV4 and Bearer auth
+    - AWS Bedrock now supports the /v1/responses endpoint
+    - xAI (Grok) image edits
+    - SSE streaming for image generation / edits
+    - Lossless passthrough of Gemini grounding metadata, with new maps / retrievedContext sources
+    - OAuth token refresh now routes through a unified proxy client supporting http / https / socks5
+    Stability & Billing
+    - Quota columns migrated from int32 to bigint, fixing large-amount billing overflow into negative values
+    - New MaxPromptTokens input guard; oversized requests return 400 immediately
+    - Idle timeout added for streaming responses
+    - Fixed Origin / Referer passthrough causing Claude channels to be misjudged as 403 and auto-disabled
+    - Quota reminder threshold adjusted, with a separate toggle
+    - Misc fixes to channel testing, model mapping, and request IDs
+    UI
+    - RPM now consistently uses a 60-second sliding window over the logs table, with TPM added
+    - New "Fingerprint Passthrough" toggle
+    - Multi-user token statistics page
+    - Refined price cards and log details (image tokens, cache writes, long context)
+    Deployment
+    - New RELAY_ONLY mode: exposes only relay endpoints and /health; frontend and /api admin routes return 404
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/deanxv/done-hub/releases/tag/v1.23.22
+ReleaseTime: 2026-09-29T06:03:08.0000000Z

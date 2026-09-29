@@ -1,0 +1,25 @@
+Version: 2.5.0
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.5.0/nextcowork-2.5.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    选了「跟随对话」,重启又被顶回内置模型
+    - 症状：把默认模型或子代理模型选成「跟随对话」(空串),保存成功；重启应用又变回 deepseek —— 「保存了、重启就变回去」,且零报错
+    - 根因：runtime.ts 的 seed() 判「这个作用域没配过」的依据是值是不是空串，而空串恰恰是设置页的合法选项；seed() 每次进程启动、每次切账户都会重跑，用户的选择每次都被当成「没配过」重新种上出厂默认
+    - 修复：种默认模型 / 默认子代理改按一次性标记(MODEL_DEFAULTS_SEEDED_KEY)判，每个配置作用域只种一次；标记登记进 db/config-profile.ts 的 PROFILE_KV_KEYS,必须随作用域走 —— 留在全局的话，切到一个新账户时标记还在，新账户的空作用域拿不到种子，首屏模型选择器是空的
+    - 代价(刻意保留):升级后第一次启动时还没有标记，已经选了「跟随对话」的人会被最后顶回一次；从第二次启动起不再发生
+    用 Gemini 一调工具就整轮中止、正文为空
+    - 症状：走 Google 的 OpenAI 兼容层，第一轮工具调用就报「上游返回的响应格式不完整或不符合协议…(invalid tool call)」,正文一个字都没有；retryable: false,重试无用
+    - 根因：OpenAI 规范里 tool_calls[].index 只对流式片段必需；Google 把每个调用一次性给全(id / name / arguments 同帧到齐，还多带一个我们不认识的 extra_content.google.thought_signature),一个 index 都不带 —— 它没写错，是解码器只认「片段」那一种形状，把合法帧判成了 invalid
+    - 修复：index 缺省时由 slotForToolCall 归格，三步、顺序不能换：① 同 id 的调用已存在 → 并进去(id 是上游自己给的标识，比位置权威；它还在分片累积时按前缀认);② position 那一格还可用 → 用它(空着是常态；里面那个调用还没 started 也算可用 —— 这一帧正是它的下一片);③ 否则另开一格。第三步是并行调用的命门：省 index 的上游把并行调用一条一条发，第二条的 position 同样是 0 —— 并进去会把两个调用串成一个，参数被拼成非法 JSON,而且回传时少一个 tool_use id,下一轮直接 400
+    - 连带：id / name 的提取从「新建调用」分支提前到合法性判断之前 —— 归格本身要用它们
+    测试
+    - decode-openai 新增 2 项：逐字复刻 Google 实测分片的「冻结工具调用」(无 index、整帧到齐、带 extra_content,过去判 invalid),与「index 缺省的并行调用各归各格」(过去串成一个);agent-run 新增「跟随对话重启不被顶回」(模拟重启：进程内 seeded 清掉、库不动),既有自播种用例的还原分支随新标记补撤 —— 标记在模块级单例的 kv 里，不撤会污染后面的用例
+    - 全量套件 6393 项通过(23 skipped),12 项失败与 v2.4.0 记录的既有红项逐项相同：environment/session-mux(3)、document-engine/native-host(5)依赖本机 python(本机没有，spawn python ENOENT);document-engine/provider-registry、plugin/document-rpc 是测试在库、源文件从未入库(0 test,导入即失败),plugin/document-scope(4)因引用前者连带
+    - typecheck(node + web)与 lint 通过(0 error,4 个既有 any warning)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.5.0
+ReleaseTime: 2026-09-29T04:07:02.0000000Z
