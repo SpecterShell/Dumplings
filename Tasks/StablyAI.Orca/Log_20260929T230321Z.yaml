@@ -1,0 +1,144 @@
+Version: 1.4.217
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.217/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    This patch is built from the September 27 daily build plus fixes picked from main. Pull requests that landed on main after that are not in this build.
+    The short version
+    Codex: Codex workers start again on current Codex (0.158). Orca had been waiting for a welcome-screen label that Codex 0.158 removed, so every Codex worker timed out; Orca now recognizes Codex's empty input box instead. Starting a Codex worker with a model or reasoning effort no longer hangs either.
+    Codex tabs run on their own: On Codex 0.157 and newer, every Codex tab in Orca shared one background server started by the first tab, so status and results were credited to the wrong tab and closing the first tab dropped all the others. Each Codex tab in an Orca terminal now runs its own server, so closing one no longer drops the others. New terminals opened after updating get this; terminals already open keep the old behavior until reopened. To keep the shared server, add export ORCA_CODEX_ISOLATE=0 to your shell startup file. The trade-off of the default: Codex "Run in background", codex agents, and opening a session from the Codex desktop app or an IDE won't see sessions started in Orca, and many open tabs use more memory.
+    Status bar & workspace UI: The status bar fits small screens: extra agents fold into a "+N" badge before status labels shrink to icons. Compact agent rows show unread emphasis, and activity threads from floating terminal agents open the right pane.
+    Remote & SSH: SSH hosts that ask for a verification code or other multi-factor prompt are supported, remote file access follows repository ownership, and interrupted remote installs recover without deleting files still in use.
+    Editor & browser: Solidity, Typst, and Twig files are highlighted, Markdown source survives rich-text edits, and browser tools fold into a menu on narrow screens.
+    Reliability: Orchestration workers whose terminal can no longer be found are stopped properly instead of piling up, and many background tasks clean up after themselves when a window reloads or a request is cancelled.
+
+    Product experience
+    Codex & orchestration
+    Codex workers start again on Codex 0.158, each Codex tab in an Orca terminal runs on its own, and stopping a worker reliably ends its process.
+    - fix(terminal): run Codex in Orca terminals without the shared background server by @Jinwoo-H in https://github.com/stablyai/orca/pull/23900
+    - fix(daemon): roll Codex no-daemon shell launch into a fresh v37 daemon by @Jinwoo-H in https://github.com/stablyai/orca/pull/23907
+    - fix(runtime): settle a quiet Codex composer as ready on every version by @Jinwoo-H in https://github.com/stablyai/orca/pull/23765
+    - fix(runtime): read Codex readiness from the live screen by @Jinwoo-H in https://github.com/stablyai/orca/pull/23475
+    - fix: await queued Codex trust preflight completion by @nwparker in https://github.com/stablyai/orca/pull/23148
+    - fix(orchestration): reland process-incarnation reap for stale worker terminal handles by @brennanb2025 in https://github.com/stablyai/orca/pull/23583
+    - fix(orchestration): deliver dispatch mail and replies to the current lead by @nwparker in https://github.com/stablyai/orca/pull/23325
+    Other agents & native chat
+    OpenCode, Hermes, Kimi, Grok, and Claude integrations handle edge cases more safely, and long questions in native chat can be expanded.
+    - fix: dispose OpenCode 2 hooks after prompt setup and cleanup failures by @nwparker in https://github.com/stablyai/orca/pull/23209
+    - Respect disabled OpenCode variants and refresh WSL settings safely by @nwparker in https://github.com/stablyai/orca/pull/23328
+    - Preserve Hermes YAML configuration during hook installation by @nwparker in https://github.com/stablyai/orca/pull/23324
+    - fix(kimi): don't crash if config.toml is deleted mid-write by @nwparker in https://github.com/stablyai/orca/pull/23293
+    - fix(grok): show zero usage for an explicit zero quota by @nwparker in https://github.com/stablyai/orca/pull/23321
+    - fix(native-chat): let the "Asked" row unfold a long question by @brennanb2025 in https://github.com/stablyai/orca/pull/22941
+    - fix(claude): release permission prompt abort listeners by @OrcaWin in https://github.com/stablyai/orca/pull/23195
+    - perf(native-chat): release obsolete transcript viewers after reloads by @nwparker in https://github.com/stablyai/orca/pull/22982
+    Status bar, sidebar & activity
+    The status bar fits small screens, compact agent rows show unread state, and activity threads open floating terminal agents.
+    - fix(status-bar): fold agents into +N before status labels go icon-only by @AmethystLiang in https://github.com/stablyai/orca/pull/23689
+    - fix(sidebar): show unread emphasis in compact agent rows by @nwparker in https://github.com/stablyai/orca/pull/23327
+    - fix(sidebar): preserve list focus when selecting workspaces by @nwparker in https://github.com/stablyai/orca/pull/23320
+    - feat(activity): reveal threads in floating terminal workspace by @AmethystLiang in https://github.com/stablyai/orca/pull/23239
+    Terminal
+    Git Bash is detected by its install layout, Japanese file links stay intact, and Windows terminals are more robust.
+    - fix(terminal): recognize a Git Bash launcher by its install layout by @nwparker in https://github.com/stablyai/orca/pull/23308
+    - fix(terminal): retain Japanese middle dots and tildes in file links by @nwparker in https://github.com/stablyai/orca/pull/23322
+    - fix(windows): preserve relocated terminals and native process scans by @OrcaWin in https://github.com/stablyai/orca/pull/22872
+    - fix(windows): synchronize native terminal table lifetime by @OrcaWin in https://github.com/stablyai/orca/pull/23257
+    - perf: cap shared-path scans and synchronize Windows PTY access by @nwparker in https://github.com/stablyai/orca/pull/23194
+    - perf: preserve terminal previews across unrelated settings updates by @nwparker in https://github.com/stablyai/orca/pull/23099
+    Editor, search & files
+    Solidity, Typst, and Twig get syntax highlighting, Markdown source survives rich edits, and grouped search filters keep their commas.
+    - fix(editor): highlight Solidity files by @anajuliabit in https://github.com/stablyai/orca/pull/20928
+    - feat(editor): highlight Typst files and diffs by @nwparker in https://github.com/stablyai/orca/pull/23323
+    - fix(editor): highlight Twig templates in files and diffs by @nwparker in https://github.com/stablyai/orca/pull/23366
+    - fix(editor): recognize all bundled Monaco language associations by @nwparker in https://github.com/stablyai/orca/pull/23371
+    - fix(editor): preserve Markdown source across rich edits by @nwparker in https://github.com/stablyai/orca/pull/23280
+    - fix(search): keep commas inside grouped file filters by @nwparker in https://github.com/stablyai/orca/pull/23319
+    - fix: remove PDF export temp files after setup failures by @nwparker in https://github.com/stablyai/orca/pull/23130
+    - perf: avoid rescanning partial notebook output frames by @nwparker in https://github.com/stablyai/orca/pull/23138
+    Browser
+    Browser tools fold into a menu on narrow screens, and addresses with explicit ports open correctly.
+    - Implement responsive toolbar overflow with tool folding by @AmethystLiang in https://github.com/stablyai/orca/pull/23265
+    - fix(browser): open domains with explicit ports by @nwparker in https://github.com/stablyai/orca/pull/23318
+    Remote, SSH & WSL
+    SSH supports multi-factor (keyboard-interactive) sign-in, remote file access respects repository ownership, and remote installs recover cleanly.
+    - feat(ssh): support keyboard-interactive authentication (MFA) by @Chihen-Tai in https://github.com/stablyai/orca/pull/15588
+    - Keep SSH terminals parked after their own workspace updates by @OrcaWin in https://github.com/stablyai/orca/pull/23193
+    - fix: exclude canonical SSH roots from local file access by @nwparker in https://github.com/stablyai/orca/pull/23196
+    - fix: honor canonical SSH ownership in worktree listings by @nwparker in https://github.com/stablyai/orca/pull/23198
+    - fix: bind filesystem root grants to their repository owner by @nwparker in https://github.com/stablyai/orca/pull/23206
+    - fix(ssh): preserve interrupted installation outcomes through retries by @OrcaWin in https://github.com/stablyai/orca/pull/23273
+    - fix(ssh): recover abandoned caches without deleting live dependencies by @OrcaWin in https://github.com/stablyai/orca/pull/23281
+    - fix(ssh): name the missing unzip when Bun archive extraction cannot start by @nwparker in https://github.com/stablyai/orca/pull/23298
+    - Avoid store updates for unchanged SSH repository catalogs by @nwparker in https://github.com/stablyai/orca/pull/23034
+    - fix(worktrees): clear orphan cleanup on BusyBox WSL distros by @nwparker in https://github.com/stablyai/orca/pull/23296
+    - fix(projects): enrich git remote identity for runtime-addressed repo rows by @nwparker in https://github.com/stablyai/orca/pull/23300
+    - fix(persistence): report a discarded cross-host repo update instead of failing silently by @nwparker in https://github.com/stablyai/orca/pull/23379
+    Source control & code review
+    Pull request and review lookups keep the newest result, and Gitea lookups refresh correctly.
+    - fix: refresh strict Gitea lookups and synchronize Windows PTY access by @nwparker in https://github.com/stablyai/orca/pull/23162
+    - perf(github): coalesce stronger refreshes after pending requests by @nwparker in https://github.com/stablyai/orca/pull/22970
+    - fix: preserve newer pull request lookup ownership by @nwparker in https://github.com/stablyai/orca/pull/23119
+    - fix: preserve newer hosted review lookup ownership by @nwparker in https://github.com/stablyai/orca/pull/23126
+    - fix: observe linked-issue failures during review generation by @nwparker in https://github.com/stablyai/orca/pull/23166
+    - fix: retire stale review lookups after cache invalidation by @nwparker in https://github.com/stablyai/orca/pull/23182
+    Reliability & performance
+    Orca releases abandoned work, listeners, and streams after reloads or cancellations, and skips redundant scans and updates.
+    - perf(emulator): stop obsolete video streams after renderer reloads by @nwparker in https://github.com/stablyai/orca/pull/22967
+    - perf(mobile): coalesce stalled connection log persistence by @nwparker in https://github.com/stablyai/orca/pull/22973
+    - Cancel abandoned relay search work by @nwparker in https://github.com/stablyai/orca/pull/22997
+    - perf(push): keep retention sweeps from overlapping without slowing the drain by @nwparker in https://github.com/stablyai/orca/pull/23001
+    - perf(relay): release rejected first-frame connections [trade-off] by @nwparker in https://github.com/stablyai/orca/pull/23011
+    - perf(relay): release canceled AI Vault startup requests by @nwparker in https://github.com/stablyai/orca/pull/23027
+    - perf(history): coalesce tombstone directory rescans by @nwparker in https://github.com/stablyai/orca/pull/23031
+    - Scope relay capacity checks to the requested cell by @nwparker in https://github.com/stablyai/orca/pull/23036
+    - perf: avoid repeatedly encoding retained VM recipe output by @nwparker in https://github.com/stablyai/orca/pull/23048
+    - fix: close abandoned PDF.js development asset streams by @nwparker in https://github.com/stablyai/orca/pull/23054
+    - fix: release file watches when their renderer document ends by @nwparker in https://github.com/stablyai/orca/pull/23055
+    - fix: close abandoned static web asset readers by @nwparker in https://github.com/stablyai/orca/pull/23062
+    - fix: stop stale runtime event work after renderer cleanup by @nwparker in https://github.com/stablyai/orca/pull/23066
+    - fix: release dictation session listeners when speech workers exit by @nwparker in https://github.com/stablyai/orca/pull/23077
+    - perf: skip unused Linux accessibility child enumeration by @nwparker in https://github.com/stablyai/orca/pull/23085
+    - perf: skip store notifications for unchanged project and folder catalogs by @nwparker in https://github.com/stablyai/orca/pull/23104
+    - perf: skip macOS DNS probes for unrelated errors by @nwparker in https://github.com/stablyai/orca/pull/23121
+    - perf: share pending plugin translation startup requests by @nwparker in https://github.com/stablyai/orca/pull/23133
+    - perf: bound wildcard segment work in nested repository scans by @nwparker in https://github.com/stablyai/orca/pull/23149
+    - fix(relay): release capacity wait abort listeners by @OrcaWin in https://github.com/stablyai/orca/pull/23188
+    - fix(daemon): release terminal attach cancellation listeners by @OrcaWin in https://github.com/stablyai/orca/pull/23191
+    Internationalization (i18n)
+    Diff note wording is clearer.
+    - fix(i18n): clarify the recipient of diff notes by @OrcaWin in https://github.com/stablyai/orca/pull/23256
+    Tests, CI & maintenance
+    CI runs faster and more in parallel, formatting and packaging are tidied up, and a short-lived mouse Back/Forward shortcut change was reverted.
+    - Support mouse Back/Forward buttons in shortcuts by @nwparker in https://github.com/stablyai/orca/pull/23287
+    - Revert "Support mouse Back/Forward buttons in shortcuts" by @AmethystLiang in https://github.com/stablyai/orca/pull/23350
+    - fix(design-system): replace hand-rolled diff draft-card shadow with shadow-xs by @nwparker in https://github.com/stablyai/orca/pull/23307
+    - fix(packaging): exclude root notes from app files by @nwparker in https://github.com/stablyai/orca/pull/23326
+    - fix(homebrew): remove deprecated URL verification parameter by @nwparker in https://github.com/stablyai/orca/pull/23365
+    - style: settle oxfmt 0.70 drift and stop formatting vendored licences by @nwparker in https://github.com/stablyai/orca/pull/23377
+    - test: target writer timeouts and diagnose Bun startup stalls by @OrcaWin in https://github.com/stablyai/orca/pull/23267
+    - fix(ci): preserve focused Playwright file selection by @OrcaWin in https://github.com/stablyai/orca/pull/23270
+    - ci: shard SSH tests, remove duplicate runs, and warm Windows caches by @OrcaWin in https://github.com/stablyai/orca/pull/23286
+    - ci: reuse test fixtures, native builds, and package images by @OrcaWin in https://github.com/stablyai/orca/pull/23291
+    - ci: scope orcad smoke and parallelize Linux packages by @OrcaWin in https://github.com/stablyai/orca/pull/23314
+    - ci: reuse mobile web route analysis and skip unrelated mobile tests by @OrcaWin in https://github.com/stablyai/orca/pull/23329
+    - Reuse mobile recording compilation and refresh desktop CI timings by @OrcaWin in https://github.com/stablyai/orca/pull/23343
+    - Run independent CI checks with native parallel Actions steps by @OrcaWin in https://github.com/stablyai/orca/pull/23351
+    - ci: overlap package and security preparation and share localization parsing by @OrcaWin in https://github.com/stablyai/orca/pull/23364
+    - ci: overlap shell, localization, and mobile route preparation by @OrcaWin in https://github.com/stablyai/orca/pull/23368
+    - ci: use ARM unit runners, overlap web builds, and reuse verifier fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/23376
+    - ci: build independent Electron targets together for E2E by @OrcaWin in https://github.com/stablyai/orca/pull/23378
+    - ci: compile the E2E CLI once for all consumers by @OrcaWin in https://github.com/stablyai/orca/pull/23384
+    New Contributors
+    - @anajuliabit made their first contribution in https://github.com/stablyai/orca/pull/20928
+    - @Chihen-Tai made their first contribution in https://github.com/stablyai/orca/pull/15588
+
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.216...v1.4.217
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.217
+ReleaseTime: 2026-09-29T19:40:43.0000000Z
