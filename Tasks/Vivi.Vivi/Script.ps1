@@ -27,34 +27,26 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $ReleaseNotesUrl = 'https://vivi.atlassian.net/wiki/spaces/VRB/overview'
+        Value  = 'https://vivi.atlassian.net/wiki/spaces/VRB/overview'
       }
 
-      $Query = @'
-{
-  macroBodyRenderer(
-    adf: "{\"attrs\":{\"bodyType\":\"none\",\"extensionKey\":\"blog-posts\",\"extensionType\":\"com.atlassian.confluence.macro.core\",\"parameters\":{}},\"type\":\"extension\"}"
-    contentId: "2949181"
-  ) {
-    value
-  }
-}
-'@
-      $Object1 = Invoke-RestMethod -Uri 'https://vivi.atlassian.net/cgraphql' -Method 'Post' -Body (@{ query = $Query } | ConvertTo-Json -Compress) -ContentType 'application/json' -UserAgent $DumplingsBrowserUserAgent
-      $ReleaseNotesObject = $Object1.data.macroBodyRenderer.value | ConvertFrom-Html
-      if ($ReleaseNotesNode = $ReleaseNotesObject.SelectSingleNode("//div[@class='blog-post-listing' and contains(.//a[@class='blogHeading'], '$($this.CurrentState.Version)')]")) {
+      $Object1 = Invoke-RestMethod -Uri 'https://vivi.atlassian.net/wiki/rest/api/content?spaceKey=VRB&type=blogpost&limit=200' -UserAgent $DumplingsBrowserUserAgent
+      $ReleaseNotesPost = $Object1.results.Where({ $_.title -match "(?<![\d.])$([regex]::Escape($this.CurrentState.Version))(?![\d.])" }, 'First')[0]
+      if ($ReleaseNotesPost) {
+        $Object2 = Invoke-RestMethod -Uri "https://vivi.atlassian.net/wiki/rest/api/content/$($ReleaseNotesPost.id)?expand=body.view" -UserAgent $DumplingsBrowserUserAgent
+
         # ReleaseNotesUrl (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesNode.SelectSingleNode('.//a[@class="blogHeading"]').Attributes['href'].Value
+          Value  = "$($Object2._links.base)$($Object2._links.webui)"
         }
 
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesObject.SelectSingleNode('//div[@class="wiki-content"]') | Get-TextContent | Format-Text
+          Value  = $Object2.body.view.value | ConvertFrom-Html | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotesUrl (en-US) and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
