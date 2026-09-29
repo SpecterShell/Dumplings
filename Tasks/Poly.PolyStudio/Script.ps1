@@ -48,12 +48,24 @@ switch -Regex ($this.Check()) {
     try {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.data.availableProductSoftwareByPid.publishDate.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.data.availableProductSoftwareByPid.releaseNotes.ForEach({ "$($_.header)`n$($_.body | Convert-MarkdownToHtml | Get-TextContent)" }) -join "`n`n" | Format-Text
+    try {
+      $Object2 = Invoke-RestMethod -Uri 'https://info.lens.poly.com/lens-dt-rn/atom.xml'
+
+      $ReleaseNotesObject = $Object2.Where({ $_.title.'#cdata-section'.Contains($this.CurrentState.Version.Split('.')[0..2] -join '.') }, 'First')
+      if ($ReleaseNotesObject) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject[0].content.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
