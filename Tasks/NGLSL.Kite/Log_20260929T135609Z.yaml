@@ -1,0 +1,35 @@
+Version: 0.4.3
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.4.3/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.4.3
+    版本重点
+    修复开发者工具双栏中的长文本错位。Base64 等连续字符串现在会留在各自的输入框或结果框内，不再横跨两栏重叠显示。
+    修复
+    - Base64、Hash 和 JSON 独立工具窗共用的输入框与结果框改为优先按词换行；遇到没有空格的长字符串时按字符换行。
+    - 覆盖 Base64 编码串、64 位 SHA-256 结果、压缩 JSON 和长字符串字段等容易触发越界的内容；保留原有双栏布局和纵向滚动。
+    升级影响
+    - 仅改变工具窗口的文字排版，不改变编码、解码、哈希或 JSON 转换结果。
+    - 设置、搜索索引、历史记录和插件无需迁移。
+    验证与限制
+    - 本地 cargo check、cargo test（574 通过、11 忽略）和 cargo build --release 通过；修改文件的格式检查与 git diff --check 通过。
+    - 修复后的 Windows 桌面窗口尚未进行人工视觉验收。安装包没有 Authenticode 数字签名。
+    构建与验证
+    - 发布 tag：v0.4.3
+    - tag 提交：4f39415687eab4d0cad684bd041d20088cf3bd6e
+    - 上一个发布：v0.4.2
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #25
+    本次提交范围
+    - chore(release): prepare v0.4.3 (4f39415)
+    - fix(ui): wrap long text in developer tools (7dc9f3d)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.4.3
+ReleaseTime: 2026-09-29T07:13:33.0000000Z
