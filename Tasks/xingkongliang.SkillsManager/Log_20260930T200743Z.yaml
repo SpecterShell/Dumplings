@@ -1,0 +1,54 @@
+Version: 1.40.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.2/skills-manager_1.40.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.2/skills-manager_1.40.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.2
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-09-30
+    Commit range: v1.40.1...v1.40.2
+    Release Overview
+    - A batch of small fixes: preset switching, dark-mode diffs, collapsed agent icons, and a false "update available" after installing a skill's dependencies.
+    User-facing
+    - Choosing a preset while a skill's details are open now works — The detail panel stayed on top, so the click looked like it did nothing until a reload. Thanks to @GoodScholar (#491, #485).
+    - Dark mode: the diff view is readable — Changed lines kept their light red/green backgrounds under near-white text. Thanks to @GoodScholar (#492, #488).
+    - Agents hidden behind +N can be toggled — Clicking +N opened the skill's details instead; it now expands the row so every agent can be installed or removed. Thanks to @GoodScholar (#490, #441).
+    - Installing dependencies no longer shows as an update — Running npm install or creating a Python venv in a locally imported skill's source made the update check offer an update. node_modules, .venv and venv are now looked past by that check (#502).
+    - Windows: agent paths display with one separator style — Paths read like ~\.workbuddy/skills; display only, the folders were always correct (#495).
+    Developer & Governance
+    - The dependency-folder skip is confined to the update check's tiebreaker. The content hash itself is unchanged, because repairs that replace a folder when hashes match would otherwise delete a locally installed node_modules.
+    - The two copies of compactHomePath were merged into src/utils.ts.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-09-30
+    递交范围：v1.40.1...v1.40.2
+    发布概览
+    - 一批小修复：切换 preset、深色模式差异对比、收起的 Agent 图标，以及安装技能依赖后误报「有更新」。
+    用户可见更新
+    - 打开技能详情时点击 preset 恢复正常 — 详情面板一直盖在上面，点击看起来没反应，必须重新加载。感谢 @GoodScholar（#491，#485）。
+    - 深色模式下差异对比可读 — 变更行保留了浅红/浅绿底色，配上接近白色的文字。感谢 @GoodScholar（#492，#488）。
+    - +N 收起的 Agent 可以操作 — 点击 +N 会打开技能详情；现在会展开整行，每个 Agent 都能安装或移除。感谢 @GoodScholar（#490，#441）。
+    - 安装依赖不再被判为有更新 — 在本地导入技能的源目录里运行 npm install 或创建 Python venv，会被更新检查判为「有更新」。现在该检查会跳过 node_modules、.venv、venv（#502）。
+    - Windows：Agent 路径统一分隔符显示 — 之前显示为 ~\.workbuddy/skills 这类混合形式；仅显示问题，实际目录一直正确（#495）。
+    开发者与治理更新
+    - 跳过依赖目录只作用于更新检查的兜底比较，内容 hash 本身不变：部分修复流程会在 hash 一致时替换目录，否则会误删本地已安装的 node_modules。
+    - 两份 compactHomePath 合并到 src/utils.ts。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-09-30T15:00:35.0000000Z

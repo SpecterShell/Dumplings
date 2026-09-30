@@ -1,0 +1,125 @@
+Version: 18.4.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.4.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added Factory Droid OAuth, HTTP streaming across Anthropic, OpenAI and Gemini protocols, and pool-aware usage reporting (#8577 by @will-bogusz, continued in #13276 by @DusKing1).
+    - AuthStorage.keys.setConfig(provider, value, { fallback: true }) registers a key that is used only when no stored OAuth or /login credential exists, instead of overriding them; removeConfig/clearConfig also clear these fallbacks (#13815 by @H4vC)
+    - Cursor turns now fall back to Cursor's HTTP/1 streaming transport when HTTP/2 is unavailable, surface Cursor's structured service errors, and resume from the last safe server checkpoint after a dropped stream (#11613 by @will-bogusz).
+    Fixed
+    - Auth gateway checks for configured bearer tokens in URLs or forwarded/logged headers only after authentication; unauthorized requests use socket peers and redact unknown paths. Authenticated requests with misplaced tokens are rejected before provider dispatch (#13827 by @shawnkoh).
+    - Codex sessions no longer keep spending an account's credits after its plan limit is reached while another logged-in account still has plan usage left; new and ongoing sessions switch to that account, and credits are used only when no account has plan usage left (#13889).
+    - Runtime usage providers (usage.setProvider, extension registerProvider({ usage })) now key cached reports by their own cacheVersion, so reports written by processes without the override are no longer served to it (#13814).
+    - xAI OAuth accounts with active weekly credits no longer switch away solely because an uncertain monthly counter exceeds its limit (#13806).
+    - Cursor retries after a rejected conversation now keep the tool calls and results already completed in the turn, instead of re-sending the last message and redoing that work (#11613 by @will-bogusz).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the hand-maintained Factory Droid catalog with account policy and regional discovery, upstream-specific reasoning controls, and base credit rates (#8577 by @will-bogusz, continued in #13276 by @DusKing1).
+    Changed
+    - Cursor's model list now comes from the account's own catalog: one entry per model lane with its real context window, image support, and effort ladder, only models the account can run, and Cursor's account default marked (#11613 by @will-bogusz).
+    Fixed
+    - Fixed OpenRouter decision models that report no context/output limits (respan/span-01, respan/span-01-lite, respan/span-01-lite:free) missing from the judge model list (#13888)
+    - Fixed every google-vertex/claude-sonnet-5-5 request failing with 400 thinking.adaptive.block_binding: Extra inputs are not permitted (#13795)
+    - Fixed Cursor Grok 4.7 appearing as separate grok-4.7-{low,medium,high,xhigh} and -fast models that each also offered an effort selector; they now show as grok-4.7 and grok-4.7-fast with effort picked separately (#12773)
+    - Cursor fast lanes whose bundled rate card lists only the base rate now bill at Cursor's declared fast multiplier instead of the base rate (#11613 by @will-bogusz).
+    - Cursor's default (Auto) router is marked as variably priced instead of free (#11613 by @will-bogusz).
+    - Switching Cursor accounts no longer shows the previous account's cached model list (#11613 by @will-bogusz).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added Factory Droid login and model selection with base credit badges and account-matched regional discovery (#8577 by @will-bogusz, continued in #13276 by @DusKing1).
+    - Added HELMCODE_API_KEY to the environment variables listed in omp --help (#13630 by @alexcerezo).
+    - RPC hosts can send messageUpdates: "delta" with set_event_filter to receive message_update frames without the accumulated message snapshots (message shrinks to { role } and assistantMessageEvent.partial is omitted); the response echoes the active mode (#13716 by @alphastorm)
+    - RPC hosts can follow each cache-warming refresh through cache_warming_start and cache_warming_end events (also written by --mode json), which report the outcome and the recorded usage, and can set the session's warming mode with set_cache_warming without changing config.yml; the Python client gains set_cache_warming() (#13717 by @alphastorm)
+    - The /review and /annotate code-review menus have a "Review a specific PR" option that lists the repository's open pull requests, with server-side search and a #123 shortcut (#12399 by @abilliontokens)
+    - Pinned Subagents rows can show each agent's current (or most recent) tool call with a one-line detail and an elapsed marker; enable with display.subagentLivePreview (off by default) (#3821 by @abilliontokens)
+    - Model presets: save every role assignment plus the default thinking level under a name and switch between them with /modelpreset save|switch|delete|list, pick one interactively with /modelpreset, or press s in the /models Roles view to save the current setup (#5253 by @abilliontokens)
+    - Subagent tool previews name the files a freeform edit (apply_patch, sloppy, hashline) touches (#11210 by @DarkPhilosophy).
+    Changed
+    - omp auth-gateway serve now attributes peers to the socket address by default; deployments behind a trusted reverse proxy can restore forwarded peer headers with --trust-proxy-headers (#13827 by @shawnkoh)
+    -  --no-ui now also works with --mode rpc-ui: extensions run headless while tool UI such as the ask tool still reaches the host (#13718 by @alphastorm)
+    - omp models --json reports each model's pricingStatus (fixed, free, included, variable, or unknown) (#11613 by @will-bogusz).
+    Fixed
+    - Fixed the subagent live preview blanking or mislabelling a running call when a sibling call finishes: concurrent calls are tracked by call id and keep their own intent, and the row keeps the last completed call with its success or error mark until the next one starts (#11210 by @DarkPhilosophy).
+    - Fixed subagent tool previews rewriting a search pattern that names a home directory: path arguments are now shortened by argument key, so the pattern still shows what was searched (#11210 by @DarkPhilosophy).
+    - Fixed background task job progress dropping the current tool's arguments and start time (#11210 by @DarkPhilosophy).
+    - Replying c during a /guided-goal interview now sends c as your answer instead of triggering the continue shortcut (#13819 by @H4vC)
+    - Cache-warming refreshes cancelled or superseded after the provider accepted them now count toward session usage and cost instead of being dropped (#13717)
+    - Fixed Cursor turns that fail with "Cursor stream ended before turnEnded" stopping instead of continuing with their completed tool results kept (#13684 by @eggpeat)
+    - omp plugin upgrade <name> now upgrades npm- and git-installed plugins (e.g. ida-mcp installed from github:HexRaysSA/ida-mcp#latest, which hcli mcp install relies on) and resolves a bare marketplace plugin name, instead of failing with "Invalid plugin ID"; the plugin's enabled state and feature selection are kept (#13812 by @H4vC)
+    - Extension providers that offer /login and also name an env var as their apiKey (e.g. the Nexos provider's NEXOS_API_KEY) now use the key saved by /login when that env var is unset, instead of sending the env var's name as the key, which made their models fail to load or disappear (#13815 by @H4vC)
+    - Reduced memory held by finished subagents during long sessions (#13624 by @iliaal).
+    - Fixed role and subagent retry.fallbackChains being skipped once the session's thinking level differed from the role's configured one (e.g. task: grok-4.7:high running at :xhigh), and cold-revived subagents losing the fallback chain they were spawned with (#13789)
+    - Fixed compiled OMP extensions importing @oh-my-pi/pi-catalog and its provider-model subpaths (#13731).
+    - Explicit symbolPreset: unicode now stays Unicode after a Glyph Protocol handshake instead of switching the status bar to Nerd Font icons (#13865).
+    - Fixed rewinding (/rewind, /tree) during a running turn hiding the queued-prompt bar, making the still-pending queue look deleted and uneditable (#13680)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed macOS spell checking and Apple word completion adding a duplicate terminal icon to the Dock for every omp session (#12491)
+    - Fixed computer.windows() on macOS marking every window of the frontmost app as focused. One window is marked now: the app's accessibility focused window, or its frontmost window when Accessibility permission is not granted. With the permission, computer.focusedWindow() no longer returns a floating panel such as TextEdit's Fonts panel in front of the document (#13673 by @will-bogusz).
+    - Fixed non-Latin prompts that quote code in backticks or fences losing most of their prose score, which made the typing predictor's vocabulary refuse to learn them (#13758 by @jchanghong023).
+    - Fixed computer.window(...).ax() leaving out everything inside an unnamed container. On macOS, Reminders, Contacts, Notes and Font Book windows showed only their toolbar and window buttons, and Calendar lost its month grid; Windows and Linux trees now also keep content under unnamed containers such as custom panes, lists and fillers (#13822 by @will-bogusz).
+    - Fixed Wayland computer.drag() sending all waypoints in one burst, preventing HTML5 drag-and-drop targets from receiving drop (#13860).
+    - Fixed Wayland computer input staying unavailable after a cancelled RemoteDesktop permission prompt or a disconnected input session (#13857).
+    - Fixed Wayland win.screenshot() returning the top-left of the monitor for native Wayland windows whose position AT-SPI cannot report (Discord, Teams, Chromium); it now fails with CaptureFailed instead of capturing the wrong region (#13854).
+    - Fixed computer.focusedElement() failing with AxFailed: atspi: null reference on Linux while a Chromium or Electron app (Spotify, Discord, Steam, …) is running (#13855).
+    @oh-my-pi/pi-tui
+    Added
+    - Added Factory Droid base-credit badges; models without a dollar-price reference no longer appear free (#8577 by @will-bogusz, continued in #13276 by @DusKing1).
+    Fixed
+    - Fixed home directories next to shell redirections, control operators or Markdown emphasis (<, >, &, |, *, _) leaking the full path in display-only text (#11210 by @DarkPhilosophy).
+    - Fixed the subagent task card showing full home paths in tool intents and arguments, while keeping search patterns literal (#11210 by @DarkPhilosophy).
+    - Fixed Enter doing nothing on a fully typed slash-command argument while its completion popup was open (e.g. /mcp list): it now submits instead of re-accepting the identical completion; subcommands that still need a required argument (e.g. /mcp test) keep inserting the subcommand so you can type it (#13885 by @H4vC).
+    What's Changed
+    - feat(rpc): add opt-in delta-only message_update frames by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13716
+    - feat(rpc): expose cache warming controls and refresh events by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13717
+    - feat(rpc): allow --no-ui with --mode rpc-ui by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13718
+    - feat(coding-agent): add /ratchet eval build and hillclimb command by @H4vC in https://github.com/can1357/oh-my-pi/pull/13672
+    - fix(coding-agent): upgrade npm- and git-installed plugins by name by @H4vC in https://github.com/can1357/oh-my-pi/pull/13812
+    - fix(coding-agent): keep /login keys ahead of extension provider apiKey defaults by @H4vC in https://github.com/can1357/oh-my-pi/pull/13815
+    - feat(tui): opt-in live preview of subagent tool calls in the pinned HUD by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/3821
+    - fix(coding-agent): treat bare c as an answer during guided-goal interview by @H4vC in https://github.com/can1357/oh-my-pi/pull/13819
+    - fix(ai): confine auth-gateway bearer tokens to Authorization by @shawnkoh in https://github.com/can1357/oh-my-pi/pull/13827
+    - fix(tui): keep concurrent subagent tool calls and search patterns intact in the live preview by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/11210
+    - feat(coding-agent): add model presets for saving and switching role setups by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/5253
+    - test(coding-agent): isolate llama.cpp discovery tests from ambient LLAMA_CPP_BASE_URL by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13853
+    - test(shell): isolate git worktree tests from the developer's git config by @sjawhar in https://github.com/can1357/oh-my-pi/pull/13796
+    - docs(models): clarify thinking off on the generic openai dialect by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13867
+    - fix(coding-agent): continued Cursor turns that end before turnEnded by @eggpeat in https://github.com/can1357/oh-my-pi/pull/13684
+    - fix(natives): stop marking every window of the frontmost macOS app focused by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13673
+    - docs(models): warn that an unset apiKey variable is sent literally by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13866
+    - fix(task): release parked subagent sessions held by the lifecycle reviver by @iliaal in https://github.com/can1357/oh-my-pi/pull/13624
+    - test(coding-agent): isolate skills tests from the real home via an os.homedir spy by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13872
+    - fix(pi-predict): keep prose scoring aligned across masked multi-byte characters by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/13758
+    - fix(natives): stop ax() dropping everything inside unnamed containers by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13822
+    - fix(tui): submit on Enter when slash-command argument is already fully typed by @H4vC in https://github.com/can1357/oh-my-pi/pull/13885
+    - feat(catalog): add Helmcode provider by @alexcerezo in https://github.com/can1357/oh-my-pi/pull/13630
+    - fix(ai): moved codex sessions off credit-funded accounts by @roboomp in https://github.com/can1357/oh-my-pi/pull/13894
+    - fix(ai): keyed usage report cache by the effective usage provider by @roboomp in https://github.com/can1357/oh-my-pi/pull/13818
+    - fix(ai): treated ambiguous xai monthly overage as advisory by @roboomp in https://github.com/can1357/oh-my-pi/pull/13813
+    - fix(catalog): kept openrouter models advertising zero limits by @roboomp in https://github.com/can1357/oh-my-pi/pull/13891
+    - fix(retry): kept role fallback chains across effort changes and revival by @roboomp in https://github.com/can1357/oh-my-pi/pull/13791
+    - fix(extensions): bundled catalog imports in compiled binaries by @roboomp in https://github.com/can1357/oh-my-pi/pull/13741
+    - fix(natives): pace Wayland computer drag frames by @roboomp in https://github.com/can1357/oh-my-pi/pull/13881
+    - fix(natives): retried wayland input after failed grants by @roboomp in https://github.com/can1357/oh-my-pi/pull/13876
+    - fix(natives): refused wayland window crops with unknown position by @roboomp in https://github.com/can1357/oh-my-pi/pull/13859
+    - fix(natives): skipped null at-spi refs when searching for focus by @roboomp in https://github.com/can1357/oh-my-pi/pull/13858
+    - fix(tui): preserve explicit unicode preset after glyph handshake by @roboomp in https://github.com/can1357/oh-my-pi/pull/13869
+    - fix(tui): kept queued-prompt bar visible across rewind rebuilds by @roboomp in https://github.com/can1357/oh-my-pi/pull/13691
+    - fix(catalog): dropped thinking binding controls for vertex sonnet 5.5 by @roboomp in https://github.com/can1357/oh-my-pi/pull/13797
+    - fix(catalog): collapse cursor grok effort variants by @roboomp in https://github.com/can1357/oh-my-pi/pull/12846
+    - feat(ai,catalog): add native Factory Droid provider by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/8577
+    - feat(ai,catalog): use Cursor's account catalog, real prices, and native request format by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/11613
+    - feat(coding-agent): add 'Review a specific PR' option to /review by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/12399
+    New Contributors
+    - @alexcerezo made their first contribution in https://github.com/can1357/oh-my-pi/pull/13630
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.4.4...v18.4.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.4.5
+ReleaseTime: 2026-09-30T19:08:59.0000000Z

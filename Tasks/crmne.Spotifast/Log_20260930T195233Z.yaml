@@ -1,0 +1,40 @@
+Version: 0.11.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crmne/spotifast/releases/download/v0.11.1/spotifast-v0.11.1-x86_64-pc-windows-msvc-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Spotifast 0.11.1 shows emoji in colour everywhere, comes as an AppImage, selects songs with the arrow keys, and wears a refreshed icon. It also fixes local playback on Windows on ARM, the volume jumping back after a reconnect, and a dozen smaller problems reported since 0.11.0.
+    Download Spotifast: Mac · Windows · Windows ARM · Linux · Linux ARM · Flatpak · AppImage · AppImage ARM
+
+    The icon before and after.
+    New
+    - Emoji in colour, everywhere. Names, lyrics, menus, tooltips and text fields such as the search box now draw emoji in colour, in the system's own emoji font. By @crmne.
+    - Spotifast as an AppImage. Each release now includes spotifast-X.Y.Z-x86_64.AppImage and spotifast-X.Y.Z-aarch64.AppImage: one file, make it executable and run it, no installation. By @crmne.
+    - Select songs with the arrow keys, remove them with Delete. In a playlist, album or Liked Songs, up and down now select the song they land on, and Shift extends the selection. In a playlist you can edit, Delete (and Backspace on macOS) removes the selected songs. By @shrinikets. (#585)
+    - Remove from this playlist on the playing song. Right-clicking the song in the player bar now offers the removal while it plays from a playlist you can edit. By @TacticalDeux. (#592)
+    - A refreshed icon. The play triangle is larger, has softly rounded corners and sits in the centre of the disc, and the disc has a polished rim and a lit face. By @crmne.
+    Fixed
+    - Local playback works on Windows on ARM. Turning it on answered "Premium account required" on ARM computers, because Spotify did not recognise the platform Spotifast announced. By @crmne; thanks @watermarkhu. (#123)
+    - The volume you set survives a reconnect. When the Spotify session dropped and came back, the volume returned to the level Spotifast started with: music turned down to 5% could come back at 80%. A volume set before this computer became the active device is kept too. By @queueeee. (#589)
+    - The window drags from the top of every panel with the custom title bar. On Windows, grabbing the top of the window over the sidebar, the queue or the lyrics did nothing. By @Outfluencer. (#590)
+    - Clearing the search stays on the page you are on. The clear button opened the search page. By @theworker02; thanks @D3SOX. (#609, #596)
+    - A single song starts on a phone or speaker. Playing or resuming a one-song context on another device failed with "Non supported context uri". By @Magniquick. (#605)
+    - Spotify's own mixes line up. A playlist whose songs carry no added dates no longer reserves an empty Date added column that pushed the album names out from under their heading. By @Magniquick. (#607)
+    - The visualizer's tooltip stays off the controls. "Click to change the visualizer" followed the pointer onto the play button and the seek bar and covered their tooltips. By @Magniquick. (#606)
+    - A settings file saved by Windows PowerShell or Notepad is read. Such a file starts with a byte order mark; Spotifast rejected it, fell back to the defaults and then saved them over your settings. By @kevin9327. (#617)
+    - A skin unpacked with Windows' Extract All appears in the list. Its files sit one folder deeper, which Spotifast could read but did not list. By @kevin9327. (#618)
+    - The MilkDrop sliders match the other settings. Time per preset and Frame rate now have the same shape, font and colours as the controls around them. By @nos1609. (#600)
+    - The cover stays put while full-screen lyrics load. It moved aside for the lyrics and back again when a song had none; it now waits in the middle, with "Loading…" beneath it, and moves only once there are words to show. By @crmne.
+    Known limitations
+    - The AppImage bundles no libraries: it needs glibc 2.39 or newer and your desktop's own libraries, like the DEB and RPM. It does not update itself; download the new file when Spotifast says a release is out. Running it needs FUSE, or --appimage-extract-and-run.
+    Thanks
+    @shrinikets, @TacticalDeux, @queueeee, @Outfluencer, @theworker02, @Magniquick, @kevin9327, @nos1609, @watermarkhu, @D3SOX, and everyone who reported problems since 0.11.0.
+    Full changelog: https://github.com/crmne/spotifast/compare/v0.11.0...v0.11.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/crmne/spotifast/releases/tag/v0.11.1
+ReleaseTime: 2026-09-30T19:00:23.0000000Z
