@@ -1,0 +1,89 @@
+Version: 1.2.0-pre.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.2.0-pre.7/OSW-1.2.0-pre.7-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.2.0-pre.7/OSW-1.2.0-pre.7-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    这是一个 beta 版本。 每个 beta 版本都可能会发生接口的变化和数据结构的调整，不承诺数据的兼容和自动迁移。请在更新前手动导出供应商数据（模型管理 → 导出）备份，以备不时之需。
+    为什么不兼容见 https://github.com/yinxulai/osw/issues/24。
+    Important
+    This is a beta build. Every beta release may change internal APIs and data structures; data compatibility and automatic migration are not promised. Export your provider data before updating (model management → export) as a backup, just in case.
+    See https://github.com/yinxulai/osw/issues/24 for why.
+    ⚠️ Breaking changes
+    - the macOS keychain namespace changed from @osw/app Safe Storage to OSW Safe Storage, so every locally encrypted secret (provider API keys, cloud-sync credentials) becomes unreadable and has to be entered again.
+    New
+    - app: unify the keychain namespace, one app.name per runtime profile
+    - tray: rebuild the panel as a second console entry
+    - console: show in-flight count on the provider model row
+    - app: persist main-process logs to disk
+    - router: route by logical model id and allow real model names
+    - tray: align the panel with the console design system
+    - router: refine workflow canvas fit view options
+    - app: set application display name and enhance menu options feat(screenshot): implement robust window capture with retries fix(secret-store): improve error handling for decryption failures docs(packaging): clarify safeStorage key management on macOS chore: update binary snapshots for UI assets
+    - app: automate website screenshot export
+    - router: enhance node localization and display functionality
+    - console: refine window surfaces and localization
+    - app: integrate window chrome with console surfaces
+    - tray: clarify quit action and use solid surfaces
+    - tray: redesign logical model panel
+    - tray: add app-aware proxy panel
+    - request-logs: show live rewrites and collapse detail stages
+    - console: animate live request activity
+    - observability: version the live request stream
+    - www: add light theme with header toggle and URL-synced preference
+    - console: unify language and theme into URL query params
+    - console: drive language and theme from the URL, overriding without persisting
+    - console: share the reference cards across onboarding and client config, and drop gemini-cli
+    - client-config: rework the page around copyable facts and versioned edits
+    - console: rework the cloud sync card around backup and restore
+    - client-config: drive model rows from registry config, and unify button and card-header spacing
+    - client-config: point local AI clients at the proxy from the console
+    - cloud-sync: store a config snapshot in the user's own cloud storage
+    - agent_clients: add built-in agent client registry
+    Fixed
+    - tray: pin the platform in panel tests so Linux CI matches
+    - tray: stop the panel from occasionally ignoring clicks and off-screen
+    - tray: use the standard tab layout and fix the oversized section title
+    - router: align variable landing with condition field reads
+    - router: resolve variable landings by logical model name as well (#35)
+    - snapshot: capture full Electron window reliably
+    - www: preserve full-window screenshot framing
+    - console: support environments without localStorage
+    - docs: correct the Qiniu sponsor icon path in both READMEs
+    - console: ship dark theme variants of the monochrome agent icons
+    Performance
+    - proxy: batch landing target planning
+    Changed
+    - tray: locate the panel preload the same way the other hosts do
+    - router: resolve variable landings by logical model id only
+    - proxy: make delivery snapshots explicit
+    - request-logs: remove dead fields and compatibility branches
+    - proxy: make request execution lifecycle explicit
+    - dedupe shared helpers and remove dead UI code
+    - console: give the card footer its own slot instead of stripping padding
+    - cloud-sync: base64-encode the whole snapshot and carry keys inside providers
+    - client-config: let users decide the model only, fill address and key server-side
+    - console: retire the access page and keep local-service facts in onboarding
+    - console: organize the source tree by responsibility
+    Under the hood
+    - packaging: record the legacy macOS keychain entries and why ad-hoc signing re-prompts
+    - bump version to 1.2.0-pre.7
+    - tray: cover the Linux tray path instead of only the macOS one (#36)
+    - client-config: neutralize env overrides that redirect config paths
+    - prune low-value UI coverage
+    - snapshot: capture issue 33 activity border
+    - describe live streams and proxy lifecycle
+    - sync product docs and tray copy with the reorganized pages
+    - design: add the cover artwork for the x post
+    - design: drop the scratch icon files and the duplicated agent icons
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yinxulai/osw/releases/tag/v1.2.0-pre.7
+ReleaseTime: 2026-09-30T06:11:55.0000000Z
