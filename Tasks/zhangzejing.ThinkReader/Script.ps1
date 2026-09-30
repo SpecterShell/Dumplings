@@ -23,7 +23,7 @@ switch -Regex ($this.Check()) {
           if ($Node.Name -in @('h1', 'h2')) {
             $Skip = $Node.InnerText -match 'Validation|SHA-256|验证'
           }
-          if (-not $Skip) { $Node }
+          if (-not $Skip -and -not ($Node.Name -eq 'table' -and $Node.InnerText -match 'SHA-256')) { $Node }
         }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
