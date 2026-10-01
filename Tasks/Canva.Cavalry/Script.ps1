@@ -26,7 +26,7 @@ function Get-ReleaseNotes {
       Value  = $ReleaseNotesUrl
     }
 
-    $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//header[contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object4.SelectSingleNode("//header[contains(., '$($this.CurrentState.Version -replace '(\.0+)+$')')]")
     if ($ReleaseNotesTitleNode) {
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
         if ($Node.InnerText -match 'Release date: (\d{1,2}[a-zA-Z]+\W+[a-zA-Z]+\W+20\d{2})') {
