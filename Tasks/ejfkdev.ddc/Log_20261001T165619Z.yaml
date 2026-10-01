@@ -1,0 +1,80 @@
+Version: 0.1.22
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.22/ddc-v0.1.22-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.22/ddc-v0.1.22-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.22
+    Quality and performance release — the semantic-repair arc that started
+    with reading the decompiled output side-by-side with the bytecode,
+    plus three CPU/memory hotspots eliminated.
+    Semantic fixes (found by reading, invisible to javac's parse gate)
+    - parse_handler takes the cursor by reference (Cursor is Copy): the
+      by-value call left the caller's cursor pinned at the handler-list
+      start, so EVERY catch handler parsed the first one's bytes. Any
+      method with more than one distinct handler (nested try/catch,
+      multi-catch lists) silently routed all its catches to the first
+      handler's code, and the handler list itself collapsed to one entry.
+      Wrong since the first release. Battery 11,345 → 7,857 ddc-class
+      errors (-30.7%), decompile time down on every corpus.
+    - The catch-all rethrow is no longer swallowed: d8 emits a
+      self-protection try range over the handler's own monitorexit; once
+      merged, the handler head was counted as group body, the walk's stop
+      set contained its own entry block, and reachable_within returned
+      empty — the rethrow tail was never reached.
+    - Field writes kill stale value views: a pending register view that
+      reads the written field anywhere (receiver chains count:
+      this.h.e is killed by this.h = null) materializes ahead of the
+      write; a field-read definition read past a same-field write
+      materializes at its defining pc. Previously such views re-rendered
+      the read at the use site, past the write — a guaranteed NPE.
+    - fold_synchronized rebuilt: the pattern matcher now survives the
+      value-view promotion (absorbed alias defs, Block-nested catch
+      bodies, lock identity through defining expressions), folds
+      mid-control-flow enters in place (the catch-all reduces to a bare
+      rethrow — keeping the handler's monitorexit would double-release),
+      and absorbs the split-protected-region shape back inside the lock.
+    - Field-rename hierarchy consistency (R8 overloads one name across
+      many descriptors; inherited-field refs may name any hierarchy class
+      as owner): the same-class rule now propagates renames to
+      subclasses, the obscuring rule no longer double-registers fields,
+      and the method-name propagation no longer re-mints field entries.
+    - The enclosing-static shadow walk compares in DISPLAY space, and
+      Kotlin's X$-CC facades render flat ('-' is not a Java identifier
+      start): their bare reads of the outer class's statics resolved to
+      nothing (Key2/Companion2 undefined — weibo's dominant
+      cannot-find:variable chunk).
+    - d8's API-desugar stubs under android/ relocate to ddcfwstub/: every
+      reference keeps the raw framework FQN (the bytecode's FQN means the
+      platform class at runtime), so the stubs no longer shadow the real
+      framework class at compile time.
+    Performance
+    - sub_scope goes zero-clone (the structurer's top CPU leaf — the old
+      code cloned the whole universe twice per arm walk): weibo -4.5%
+      wall.
+    - insert_object_narrowing_casts materializes each side's type once
+      (the old helpers re-erased 3-4x per statement); Lifter::materialize
+      TAKES the register's pending expression (single consumer) instead
+      of deep-cloning it — weibo total CPU -5-7%.
+    - PoolField.name/desc String → Arc through the dex string
+      table: QQ peak RSS 2.39 → 2.22 GB (-168 MB), weibo -71 MB.
+    - case_rename_map drops a full lowercase-key HashSet clone (~25-30 MB
+      of transient build memory).
+    Verification
+    - Four-corpus javac battery (reqable/weibo/lark/weixin, with
+      classpath): 7,452 ddc-class errors (from 7,871 at v0.1.21; the
+      whole v0.1.19->v0.1.22 arc: 11,345 → 7,452, -34%).
+    - 74 unit tests green, clippy clean, deterministic re-run (0-diff),
+      interleaved A/B for every perf claim.
+    - Benchmark tables in the READMEs refreshed to current reality (time
+      up on the heavy corpora with the quality machinery, peak RSS down).
+    jdc-core 0.2.14 is required; the workspace dependency resolves it.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.21...v0.1.22
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.22
+ReleaseTime: 2026-10-01T11:35:29.0000000Z

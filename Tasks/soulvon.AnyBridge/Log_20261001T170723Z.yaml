@@ -1,0 +1,27 @@
+Version: 0.5.24
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.24/AnyBridge_0.5.24_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.24/AnyBridge_0.5.24_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 Antigravity（独立桌面端）在开启汉化后重新启动**无法打开**的严重问题：
+      - 之前写入汉化补丁时未正确处理客户端内部资源文件的字节对齐，在某些情况下会损坏启动所需文件，导致客户端完全无法启动，手动打开也一样。
+      - 现已修正该写入逻辑，汉化与还原官方英文后重启均可正常打开客户端。
+      - 若你的客户端已受此问题影响无法启动，请重新安装官方客户端，或联系我们从备份恢复。
+    - 修复部分 Windows 机器上 Antigravity 重启后打不开的问题：
+      - 少数环境会因 Chromium 沙箱初始化失败，导致客户端启动数秒后自动退出（官方原版同样会出现，与 AnyBridge 无关）。
+      - 现在点击「重启客户端」时会自动检测这种情况，并改用兼容模式重新启动，无需手动处理。
+    - 移除 Antigravity IDE（编程编辑器）的界面汉化功能：
+      - 该能力需要改写 IDE 安装包内部资源并清空校验和，官方升级后会失效，甚至影响 IDE 启动，整体风险高于收益。
+      - 独立桌面端（Antigravity）的「一键汉化」不受影响，仍可正常使用。
+      - 已汉化过的 IDE 可通过「还原官方英文」一键清理，恢复为官方原版。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.24
+ReleaseTime: 2026-10-01T13:57:22.0000000Z
