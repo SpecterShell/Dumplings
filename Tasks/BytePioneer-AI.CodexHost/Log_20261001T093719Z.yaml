@@ -1,0 +1,75 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.11.0/codexhost-0.11.0-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.11.0/codexhost-0.11.0-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    This release adds a standalone recovery console, Harness CLI maintenance, OpenCode v2 support, and a Pi Codex Fast toggle. It also improves account quota reporting, background task visibility, delegation notifications, and compatibility with Codex Desktop 26.928.
+    本版新增独立控制台，方便排查启动问题；连接页支持检查和更新 Harness CLI，并新增 OpenCode v2 支持及 Pi Codex Fast 开关。同时完善账号额度展示、后台任务查看和委派完成通知，并修复 Codex Desktop 26.928 的兼容问题。
+    Features
+    - Open a local recovery console even when Codex Desktop fails to start; inspect startup status, export diagnostics and logs, manage updates, and view project announcements (#404, #432)
+    - Use settings as a navigation-rail page, with Harness ordering and grouping shared between Desktop and the Web console (#432)
+    - Check Harness CLI versions and update supported installations from Connections; unsupported installation channels remain manual, and Kiro CLI updates stay native-owned (#449, #454)
+    - Use OpenCode v2 through its native protocol while retaining v1 support; existing Sessions require the matching CLI major version
+    - View Cursor, Kimi Code, and Qoder account quotas, plus Pi prepaid balances and multiple Billing Sources, without turning unknown balances into percentages
+    - Toggle Pi Codex Fast beside the Composer model for supported Codex-authenticated models; preserve explicit draft selections and request priority processing without changing Thinking (#450, #453)
+    - See Claude Code background commands in Desktop background terminals, read available live output, and stop all background terminals; active native background tasks prevent idle Session release (#408)
+    - Register one-shot notifications when a Thread stops or a watch times out with thread watch or delegate start --watch true; watches are cleared when Host Runtime restarts (#406)
+    - Use Cursor's native Run Everything mode for unattended delegation, retaining the policy when reopening or deriving Sessions (#405)
+    - Collapse completed external Harness activity behind Desktop's final answer, including eligible historical conversations (#411)
+    Fixes
+    - Reduce redundant Renderer work while typing and browsing, and prevent large sidebars from leaving the Composer stuck on “Loading models…” (#443, #447)
+    - Pin and reorder External Threads in Desktop sections, preserving placement after resume, unarchive, rollback, or removal of neighboring Threads (#445, #446)
+    - Keep external Harnesses able to send when Codex subscription usage is exhausted on Desktop 26.928
+    - Restore Fork detection on newer Desktop layouts without treating the reply Copy button as Fork
+    - Restore drag-to-reference and @ task search in eligible historical native Codex tasks (#428)
+    - Recover Remote SSH connections after native Codex exits, and avoid disconnects caused by orphaned listeners or stale sockets (#418, #420)
+    - Avoid OpenCode v1 health-check and Provider-list failures when reopening Sessions, and fix precise Fork validation for file changes (#435)
+    - Switch Hermes models using named custom Providers without failing Thread creation (#444)
+    - Stop misclassifying successful Claude Code replies about OAuth or API keys as authentication failures (#403)
+    - Allow Claude Code permission bypass for root in declared sandboxes when native policy permits it, and show rejected permission changes (#425)
+    - Preserve delegated permission modes on resume, resume native Codex Threads before sending, and keep known task failures readable after a Harness exits (#399, #401, #402)
+    - Make delegation work without codexhost on PATH, identify the calling native Codex Thread during concurrent tasks, and upgrade older managed delegation Skills (#451, #452)
+    - Resume queued follow-up messages after an external manual /compact (#423)
+    - Stop repeated failed update checks after the retry budget is exhausted and clearly report unavailable updates (#400)
+    - Start normally on Windows when a stale Launcher PID cannot be inspected (#442)
+    - Keep the current conversation when returning from settings, and place the codexhost rail entry below pinned plugins
+    新功能
+    - 即使 Codex Desktop 启动失败，也可打开本机恢复控制台，查看启动状态、导出诊断与日志、管理更新及查看项目公告 (#404, #432)
+    - 设置改为导航栏页面，Desktop 与 Web 控制台共享 Harness 排序和分组 (#432)
+    - 在连接页检查 Harness CLI 版本并更新受支持的安装；其他安装渠道保留手动更新，Kiro CLI 更新仍由原生工具负责 (#449, #454)
+    - 通过原生协议支持 OpenCode v2，同时保留 v1 支持；已有 Session 需要匹配对应主版本的 CLI
+    - 展示 Cursor、Kimi Code、Qoder 账号额度，以及 Pi 预付费余额和多个 Billing Source，不将未知余额编造成百分比
+    - 在 Composer 模型旁切换 Pi Codex Fast，支持具备相应能力的 Codex 授权模型；保留草稿中的显式选择，请求优先处理而不改变 Thinking (#450, #453)
+    - Claude Code 后台命令显示在 Desktop 后台终端中，可查看可用的实时输出并停止全部后台终端；原生后台任务运行时不再空闲释放 Session (#408)
+    - 通过 thread watch 或 delegate start --watch true 注册 Thread 停下或观察超时的一次性通知；Host Runtime 重启后需重新注册 (#406)
+    - Cursor 无人值守委派使用原生 Run Everything 模式，恢复或派生 Session 时保留该策略 (#405)
+    - 外部 Harness 完成后的执行过程可折叠到 Desktop 最终回复之后，符合条件的历史对话同样生效 (#411)
+    修复
+    - 减少输入和浏览时的 Renderer 重复处理，避免侧边栏较大时 Composer 一直显示“Loading models…” (#443, #447)
+    - External Thread 可在 Desktop 分区中置顶和排序，恢复、取消归档、回退及移除相邻 Thread 后仍保持位置 (#445, #446)
+    - Codex Desktop 26.928 下，Codex 订阅额度耗尽时外部 Harness 仍可发送消息
+    - 恢复新版 Desktop 布局中的 Fork 识别，点击回复复制按钮不再误触发 Fork
+    - 恢复符合条件的原生 Codex 历史任务中的拖拽引用和 @ 任务搜索 (#428)
+    - 远端原生 Codex 退出后可恢复 Remote SSH 连接，避免孤立 listener 或残留 socket 导致断连 (#418, #420)
+    - 避免 OpenCode v1 重新打开 Session 时的健康检查和 Provider 列表失败，并修复文件变更的精确 Fork 校验 (#435)
+    - Hermes 使用命名自定义 Provider 切换模型时，不再导致 Thread 创建失败 (#444)
+    - Claude Code 成功回复中提及 OAuth 或 API Key 时，不再被误判为认证失败 (#403)
+    - root 在声明沙箱且原生策略允许时，可切换 Claude Code 绕过权限模式；权限切换被拒绝时显示失败提示 (#425)
+    - 委派恢复时保留权限模式，向原生 Codex Thread 发消息前先恢复订阅，Harness 退出后仍可读取已知任务失败结果 (#399, #401, #402)
+    - codexhost 不在 PATH 中也可执行委派，并发任务下正确识别原生 Codex 调用方，并升级旧版受管理委派 Skill (#451, #452)
+    - 外部 Harness 手动执行 /compact 后恢复排队消息发送 (#423)
+    - 更新检查达到重试上限后不再重复失败检查，不支持更新时明确显示不可用 (#400)
+    - Windows 上残留 Launcher PID 无法检查时，不再阻断启动 (#442)
+    - 从设置返回时保留当前对话，codexhost 导航入口位于置顶插件下方
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.11.0
+ReleaseTime: 2026-10-01T02:14:57.0000000Z
