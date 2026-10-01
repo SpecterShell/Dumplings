@@ -25,7 +25,7 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/powerbi-docs/refs/heads/main/powerbi-docs/report-server/changelog.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-WebRequest -Uri 'https://learn.microsoft.com/en-us/power-bi/report-server/changelog' | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//li/*[contains(text()|./em, 'build $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
