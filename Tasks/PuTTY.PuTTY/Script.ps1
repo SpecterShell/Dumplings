@@ -5,16 +5,37 @@ $this.CurrentState.Version = [regex]::Match($Object1.InnerText, 'Currently this 
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w32/putty-$($this.CurrentState.Version)-installer.msi"
+  Architecture  = 'x86'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w32/putty-$($this.CurrentState.Version)-installer.msi"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w64/putty-64bit-$($this.CurrentState.Version)-installer.msi"
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w64/putty-64bit-$($this.CurrentState.Version)-installer.msi"
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/wa64/putty-arm64-$($this.CurrentState.Version)-installer.msi"
+  Architecture  = 'arm64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/wa64/putty-arm64-$($this.CurrentState.Version)-installer.msi"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x86'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w32/putty.zip"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/w64/putty.zip"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = "https://the.earth.li/~sgtatham/putty/$($this.CurrentState.Version)/wa64/putty.zip"
 }
 
 switch -Regex ($this.Check()) {
