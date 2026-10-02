@@ -1,0 +1,54 @@
+Version: 1.40.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.3/skills-manager_1.40.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.3/skills-manager_1.40.3_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.3
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-10-02
+    Commit range: v1.40.2...v1.40.3
+    Release Overview
+    - Fixes for backups that could never sync, an app that quit at launch, and a CLI bridge that never installed on Windows; presets get editable descriptions, and the CLI can register custom agents.
+    User-facing
+    - Backup and sync work when git uses its newer "reftable" format — If your git is set to create reftable repositories, the skills library was created in that format, which Skills Manager cannot read: every sync failed and the repository looked broken (HEAD pointing at refs/heads/.invalid). New libraries now always use the classic format. An existing reftable library gets a clear message with the command to convert it (Git 2.48+), and automatic backup reports it instead of stopping silently (#504).
+    - The app no longer quits at launch when its sync metadata is empty — If the metadata in the library listed no skills while skill folders existed, every launch stopped before showing a window (silently on Windows). When the app's database still accounts for every skill folder, the metadata is now rebuilt from it and the app starts normally (#421).
+    - Windows: the CLI bridge installs again — Copying the bundled skills-manager-cli.exe into place failed on every launch with "the file is being used by another process", because Windows briefly keeps a just-run program locked. The app now waits that out (#487).
+    - Presets have an editable description — "Rename" is now "Edit": you can set or clear a preset's description, shown when hovering the preset in the sidebar and preset bar (#498).
+    - skills-manager-cli agents add-custom — Register a custom agent from the command line. The README has a new section on running the CLI inside WSL to manage agents installed there (#501).
+    Developer & Governance
+    - Sync metadata's "no skills listed" refusal is a typed error (EmptySkillMetadata), so startup can recover from that case alone; the reindex after a backup sync still fails hard.
+    - add_custom_tool_internal is shared by the GUI command and the CLI.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-10-02
+    递交范围：v1.40.2...v1.40.3
+    发布概览
+    - 修复备份永远无法同步、启动即退出、Windows 上 CLI 桥接始终装不上三个问题；preset 可编辑描述，命令行可注册自定义 Agent。
+    用户可见更新
+    - git 使用新的 reftable 格式时，备份与同步恢复正常 — 如果你的 git 默认创建 reftable 仓库，技能库会以这种 Skills Manager 读不了的格式建出来：每次同步都失败，仓库看起来像坏了（HEAD 指向 refs/heads/.invalid）。新建的技能库现在固定使用传统格式；已经是 reftable 的库会给出明确提示和转换命令（需 Git 2.48+），自动备份也会报出错误，而不是悄悄停掉（#504）。
+    - 同步元数据为空时不再启动即退出 — 如果技能库里的元数据一个技能都没列出、而技能文件夹还在，每次启动都会在窗口出现前退出（Windows 上没有任何提示）。现在只要应用数据库记录了全部技能文件夹，就会据此重建元数据并正常启动（#421）。
+    - Windows：CLI 桥接恢复安装 — 每次启动把内置的 skills-manager-cli.exe 放到位都会报「文件正被另一个进程使用」，原因是 Windows 会短暂锁住刚运行过的程序。现在会等锁释放后再放置（#487）。
+    - preset 可编辑描述 — 「重命名」改为「编辑」，可以设置或清空 preset 的描述，悬停在侧栏和 preset 栏上时显示（#498）。
+    - skills-manager-cli agents add-custom — 可在命令行注册自定义 Agent。README 新增在 WSL 内运行 CLI、管理 WSL 中 Agent 的说明（#501）。
+    开发者与治理更新
+    - 同步元数据「未列出任何技能」的拒绝改为类型化错误（EmptySkillMetadata），启动流程只在这一种情况下自愈；备份同步后的重建索引仍然硬失败。
+    - GUI 命令与 CLI 共用 add_custom_tool_internal。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-10-01T23:49:29.0000000Z
