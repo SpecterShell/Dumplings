@@ -4,7 +4,7 @@ $Object1 = $Global:DumplingsStorage.JetBrainsApps.RSU.release
 $this.CurrentState.Version = $Object1.version
 
 # Installer
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.downloads.windowsWeb.link.Replace('.web', '')
 }
 
@@ -34,9 +34,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    # InstallerSha256
-    $Installer['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windowsWeb.checksumLink).Split()[0].ToUpper()
 
     $this.Print()
     $this.Write()
