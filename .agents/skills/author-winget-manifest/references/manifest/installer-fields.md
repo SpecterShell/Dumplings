@@ -47,6 +47,7 @@ Switch and behavior rules:
 - Quote `<INSTALLPATH>` inside every explicitly authored install-location switch. The quotes must reach the installer command line, as in `APPDIR="<INSTALLPATH>"` or `--root "<INSTALLPATH>"`; wrapping only the YAML scalar does not protect a path containing spaces. If the installer does not support path-only quoting, test whether it accepts the complete switch inside literal double quotes. Use a single-quoted YAML scalar to preserve them, as in `InstallLocation: '"/DIR=<INSTALLPATH>"'` for `Ekahau.Capture`.
 - Add `UnsupportedArguments` when `--location` or `--log` is known unsupported.
 - For `nullsoft`, omit `InstallerSwitches.Silent` and `SilentWithProgress` when both are the default `/S`. The same per-key omission rule applies to every known installer type and to a ZIP's effective `NestedInstallerType`.
+- For Dell bootstrappers, follow the [Dell command-route workflow](../../../analyze-winget-installer/references/families/dell-update-package/workflow.md) when selecting family defaults or adapting the separate embedded-command alternative after a failed VM test.
 
 For package prerequisites, follow [Installer dependencies](dependencies.md). In addition to VC and .NET runtimes, check for hard requirements on Visual Studio Tools for Office Runtime (`Microsoft.VSTOR`) and Microsoft Office or an Office host such as Outlook, Word, Excel, or PowerPoint (`Microsoft.Office`). Do not infer either dependency from optional integration or product-name strings.
 

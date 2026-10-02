@@ -20,8 +20,8 @@ Installers:
   InstallerSwitches:
     Silent: /S /V/quiet /V/norestart
     SilentWithProgress: /S /V/passive /V/norestart
-    InstallLocation: /V"INSTALLDIR=""<INSTALLPATH>"""
-    Log: /V"/log ""<LOGPATH>"""
+    InstallLocation: /V"INSTALLDIR=\"<INSTALLPATH>\""
+    Log: /V"/log \"<LOGPATH>\""
   ProductCode: <ProductCode>
   AppsAndFeaturesEntries:
   - UpgradeCode: <UpgradeCode>
@@ -79,7 +79,7 @@ Known MSI-backed InstallShield examples:
 - `DYMO.PrintServerControlCenter`
 - `NWEA.NWEASecureTestingBrowser`
 
-The shown split `/V` arguments are one verified launcher form. Some Basic MSI wrappers instead require one compact forwarded string such as `/s /v"/qn /norestart"` or `/s /v"/passive /norestart"`. Treat these as alternatives to test, not interchangeable defaults. The nested install-location property is commonly `INSTALLDIR`; preserve quotes around `<INSTALLPATH>` with `/v"INSTALLDIR=""<INSTALLPATH>"""`, and use a less conventional quoting form only when VM evidence proves the wrapper rejects normal path quoting.
+The shown split `/V` arguments are one verified launcher form. Some Basic MSI wrappers instead require one compact forwarded string such as `/s /v"/qn /norestart"` or `/s /v"/passive /norestart"`. Test the artifact's exact command. Use the selected MSI's proven directory property rather than assuming `INSTALLDIR`. Attach the operand directly to `/v` and escape its embedded quotes with backslashes, for example `/v"INSTALLDIR=\"<INSTALLPATH>\""`, following the [InstallShield command-line reference](https://docs.revenera.com/installshield/helplibrary/IHelpSetup_EXECmdLine.htm). Plain YAML scalars preserve these backslashes; YAML double-quoted strings require an additional YAML escaping layer.
 
 Keep `AppsAndFeaturesEntries.InstallerType: msi` only when the visible uninstall entry has `WindowsInstaller=1` while WinGet invokes the outer EXE. Omit the override when the wrapper creates a visible EXE-style ARP entry or when the manifest uses the direct MSI instead.
 

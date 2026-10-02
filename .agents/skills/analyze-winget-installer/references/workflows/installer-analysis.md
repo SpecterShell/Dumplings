@@ -33,7 +33,7 @@ $Analysis.SuggestedNextSteps
 
 Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
 
-`SuggestedManifestFields` contains only nonempty installer-level keys accepted by the WinGet 1.12 schema. `SuggestedManifestVariants` contains complete alternative partial shapes for scope, architecture, or subtype decisions; each item has `Name`, `ManifestFields`, and supporting `Evidence`. Scope-selecting arguments are written to `InstallerSwitches.Custom` inside each variant rather than placed in a non-schema `ScopeSwitches` property. `SuggestedNextSteps` contains review guidance and never appears inside manifest fields. A generic family keeps `Family` as its human-readable identity and uses schema value `InstallerType: exe`.
+`SuggestedManifestFields` contains only nonempty installer-level keys accepted by the WinGet 1.12 schema. `SuggestedManifestVariants` contains complete alternative partial shapes for scope, architecture, subtype, or command-route decisions; each item has `Name`, `ManifestFields`, and supporting `Evidence`. Scope-selecting arguments are written to `InstallerSwitches.Custom` inside each variant rather than placed in a non-schema `ScopeSwitches` property. `SuggestedNextSteps` contains review guidance and never appears inside manifest fields. A generic family keeps `Family` as its human-readable identity and uses schema value `InstallerType: exe`.
 
 Exact structural parser evidence takes priority over the family template. For example, Qt IFW CLI media can expose all three modes while GUI-only media remains interactive-only, and InstallShield output depends on whether the parser proves Basic MSI, InstallScript MSI, InstallScript-only, or Advanced UI. ZIP analysis suggests only `InstallerType: zip` until one nested file is selected. Treat routing-hint suggestions as advisory because the family has not been confirmed.
 
@@ -92,6 +92,7 @@ This is the only installer-family route table in the skill.
 | Astrum InstallWizard 1.x/2.x PE overlay | [Astrum InstallWizard](../families/astrum-installwizard/workflow.md) |
 | AKInstaller legacy/modern native table or AKInstallerMSI wrapper | [AKInstaller](../families/akinstaller/workflow.md) |
 | Kachina native PE with appended TLV records | [Kachina](../families/kachina/workflow.md) |
+| TigerSetup PE with format-3 footer and Protobuf metadata | [TigerSetup](../families/tiger-setup/workflow.md) |
 | MicaSetup CLR/WPF installer | [MicaSetup](../families/micasetup/workflow.md) |
 | Zero Install bootstrapper | [Zero Install](../families/zero-install/workflow.md) |
 | Chromium Setup, Chromium Updater, Google Updater, Omaha | [Chromium Setup](../families/chromium-setup/workflow.md) |

@@ -13,6 +13,8 @@ Use this workflow for SFX archives, bootstrappers, nested MSI packages, and down
 
 The outer architecture, filename extension, and family defaults do not prove nested behavior. A wrapper can contain MSI or EXE payloads, architecture-specific choices, prerequisites, or a download client.
 
+For [Dell Update Packages](../families/dell-update-package/workflow.md), start with the nested family's defaults through `/passthrough`; embedded MUP switches are a separate `EmbeddedMup` suggestion. Consult that alternative for a focused adaptation only if default-command validation fails, then reanalyze and validate the revised command.
+
 Treat architecture words in filenames as routing hints. `win64` identifies x64, while bare `arm` may mean ARM32 or ARM64 and `win32` may describe x86 or x64 software. Resolve ambiguous labels from PE machine types, package metadata, installer conditions, and the installed primary binaries.
 
 When official InstallShield or Advanced Installer downloads include both an EXE wrapper and a direct MSI, compare the direct MSI with the wrapper-selected MSI. Prefer only the MSI when both paths install the same release and visible ARP identity.

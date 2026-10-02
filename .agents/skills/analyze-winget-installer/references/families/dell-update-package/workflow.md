@@ -21,6 +21,8 @@ $Info.UnresolvedFields
 
 For direct parsing, call `Get-DellUpdatePackageInfo`. Use `-SkipNestedAnalysis` only when catalog/configuration evidence is sufficient; it deliberately leaves installed-state identity unresolved. See [Dell binary internals](../../internals/dell-update-package/overview.md) for container bounds, XML records and command mapping.
 
+The analyzer reuses its validated Dell container for nested parsing within the same operation and disposes it afterward, including on failure. Independent callers needing the same reuse can obtain `Test-DellUpdatePackage -PassThru`, pass that context as `Get-DellUpdatePackageInfo -AnalysisContext`, and release its `ArchiveContext` with `Close-InstallerArchiveRange` in `finally`. Ordinary Boolean probes retain their existing behavior. Do not retain an open context between task updates or use it for a different source file.
+
 `ProductName` and `ProductVersion` describe the package. `DisplayName`, `DisplayVersion`, `Publisher`, ProductCode, UpgradeCode, scope and visible ARP type come from the selected nested parser when available. `FrameworkVersion` and `OuterArchitecture` describe the DUP runtime. `PackageArchitecture` uses a unique supported OS architecture from MUP, while `NestedPackageArchitecture` records the selected installer platform. Neither establishes the architecture of every installed executable. Inspect multiple architecture alternatives rather than choosing the first one.
 
 `Configuration` preserves behaviors, parameter mappings, vendor return-code mappings, inventory, content records and the exact executable reference. `PackageMetadata` retains bounded `SoftwareComponent` XML, including supported systems/devices, requirements in descriptive text, revision history and release attributes. Invalid optional `package.xml` produces an incomplete diagnostic without discarding valid MUP/container evidence. `ReleaseNotes` returns each language's revision-history text unchanged; pass the selected text through the normal release-note processing workflow.
@@ -38,7 +40,7 @@ Nested metadata analysis stages only the selected file for a direct MSI; EXE rou
 
 ## Manifest shape
 
-Prefer `/passthrough` when the selected nested technology provides additional switch types, such as vendor logging or installation location, or its known mode switches differ from the embedded MUP command. Obtain the artifact-specific route from `$Analysis.SuggestedManifestFields`. Retain configured wait flags, properties, transforms and scope options. A direct MSI installation-location switch must use the selected database's proven directory property; do not substitute a generic `TARGETDIR` or `INSTALLDIR`.
+Use the identified nested family's default switches through `/passthrough`, obtained from `$Analysis.SuggestedManifestFields`. The preferred route ignores embedded MUP arguments, including mode tokens, wait flags, properties, transforms and scope options. A direct MSI installation-location switch still uses the selected database's proven directory property; do not substitute a generic `TARGETDIR` or `INSTALLDIR`.
 
 For CommandUpdate's parsed Basic MSI route, the preferred switch shape is:
 
@@ -52,12 +54,13 @@ InstallerSwitches:
   Silent: /passthrough /S /V/quiet /V/norestart
   SilentWithProgress: /passthrough /S /V/passive /V/norestart
   Interactive: /passthrough
-  Log: /V"/log ""<LOGPATH>"""
-  InstallLocation: /V"INSTALLDIR=""<INSTALLPATH>"""
-  Custom: /clone_wait
+  Log: /V"/log \"<LOGPATH>\""
+  InstallLocation: /V"INSTALLDIR=\"<INSTALLPATH>\""
 ```
 
-This example requires the artifact's InstallShield MSI route and `INSTALLDIR` evidence. `/clone_wait` is retained from CommandUpdate 4.1.0's configured command, not added to every Dell package. Advanced UI uses its suite switches instead of MSI `/V` options. A nested known WinGet type still needs explicit switches here because the outer `InstallerType` remains `exe`.
+This example requires the artifact's InstallShield MSI route and `INSTALLDIR` evidence. It does not retain CommandUpdate's embedded `/clone_wait` or MSI arguments. Advanced UI uses its suite switches instead of MSI `/V` options. A nested known WinGet type still needs explicit switches here because the outer `InstallerType` remains `exe`.
+
+InstallShield requires the `/V` operand to be attached and embedded literal quotes to use `\"`, as in these plain YAML scalars. Doubled quotes failed with spaced log and installation paths in CommandUpdate 4.1.0. Separate `/v "..."` operands are invalid according to the [InstallShield command-line reference](https://docs.revenera.com/installshield/helplibrary/IHelpSetup_EXECmdLine.htm). The preferred projection does not parse or repair embedded arguments; follow the vendor syntax when manually adopting an option from the alternative.
 
 Apply the preferred command explicitly before relying on its installed-state metadata:
 
@@ -71,7 +74,17 @@ $Suggestion = Get-WinGetInstallerManifestSuggestion -InstallerUrl $InstallerUrl 
 
 Suggestions are advisory. Raw parser fields still describe the MUP command, and manifest updating preserves existing authored switches. Authoring with the explicit override reanalyzes the changed command; review its diagnostics and VM-validate the exact route before submission.
 
-Fall back to the embedded MUP behavior when nested parsing is incomplete, the known switches add nothing and agree with MUP, an unresolved custom/SFX layer prevents direct forwarding, or configured arguments cannot be safely rewritten. For an artifact with a resolved unattended MUP behavior, the fallback outer entry is:
+When a defaults-only passthrough route is available, the original wrapper switches are returned as an `EmbeddedMup` entry in `$Analysis.SuggestedManifestVariants`. Its `ManifestFields` contain the alternative manifest switches and modes; `Evidence.VendorArguments` contains the untouched command from MUP. `Get-WinGetInstallerManifestSuggestion` exposes the same entry under `Suggestions.ManifestVariants`.
+
+```powershell
+$EmbeddedMup = $Analysis.SuggestedManifestVariants | Where-Object Name -EQ EmbeddedMup
+$EmbeddedMup.ManifestFields.InstallerSwitches
+$EmbeddedMup.Evidence.VendorArguments
+```
+
+Try family defaults first. If the VM run fails, inspect logs and applicability/prerequisite diagnostics before blaming switches. Refer to the embedded command for only the affected package-specific options, such as a wait flag, property, transform or scope selector. Add a necessary option with the nested family's forwarding and quoting rules; do not copy its silent/UI tokens over the selected mode or mix outer Dell logging with vendor logging. Reanalyze the complete revised command and validate installation, ARP, scope, logs, location and exit codes again. If a partial adaptation cannot be established, test the complete `EmbeddedMup` wrapper route instead of merging both routes.
+
+Use the embedded MUP behavior directly when nested parsing is incomplete, the nested family has no usable defaults, or an unresolved custom/SFX layer prevents direct forwarding. An identified family still uses defaults when those defaults happen to match MUP. For an artifact with a resolved unattended MUP behavior, the fallback outer entry is:
 
 ```yaml
 InstallerType: exe # Dell Update Package
@@ -126,9 +139,7 @@ The parser follows `executable/executablename` exactly. It does not pick an arbi
 
 An additional 7z SFX is followed only when it selects one embedded executable. `ExecutionChain` preserves proven wrapper commands even when the final child is unsupported. `NestedWrapperInfo` retains InstallShield prerequisite/container evidence separately from its selected MSI. Unrecognized custom launchers, ambiguous routes, hidden registration and dynamic custom actions remain diagnostic evidence. Preserve existing manifest identity during a partial update when the selected payload cannot supply it.
 
-Watchdog Timer 2.0.0.1 illustrates the distinction: MUP selects `WDTSetup_MUP.exe`, a configured 7z SFX that selects Foxconn's `WDTAppSetUp.exe`. That custom launcher starts the adjacent InstallShield InstallScript `setup.exe`; the media includes `setup.ini`, `setup.inx`, cabinets, `setup.iss`, `uninstall.iss` and driver files, not an MSI. Static inspection confirms installation, maintenance and driver-specific command paths, but these are not a generic SFX forwarding contract. Do not assign the InstallShield GUID as wrapper ProductCode or reuse response-file switches until that command path and its installed state are validated.
-
-The configured unattended arguments are forwarded into NSIS's static command-line simulation. Other parsers do not necessarily apply MSI property overrides or transforms. When arguments can alter identity, scope, visibility or installation location, the affected top-level fields become unresolved; the unmodified payload facts remain under `NestedInstallerInfo`. Review `DellUpdatePackage.Nested.CommandOverrides` rather than copying those defaults back into a manifest.
+The configured unattended arguments are forwarded into NSIS's static command-line simulation. Other parsers do not necessarily apply MSI property overrides or transforms. Directory-property detection uses the selected MSI's `InstallLocationProperty` or `InstallLocationSwitch`, including package-specific names. A directory or scope override withholds default paths, uninstall commands, icons and association evidence; transforms also withhold identity, UpgradeCode, visibility and related ARP values. The unmodified payload facts remain under `NestedInstallerInfo`. Review `DellUpdatePackage.Nested.CommandOverrides` rather than copying those defaults back into a manifest.
 
 ## Scope and architecture
 
@@ -142,9 +153,15 @@ In a Windows 11 Hyper-V guest, CommandUpdate 4.1.0 completed `/s` with exit `0`.
 
 CommandUpdate 4.1.0 also completed `/passthrough /clone_wait /s /v"/qn ..."` with exit `0`. A test MSI property and vendor `/l*v` log placed after the delimiter appeared in the MSI log, confirming forwarding. The main ARP tuple matched the parser, and uninstall left no captured ARP, association, or PATH changes. This proves that command for that artifact; other vendor commands still need their own validation.
 
+Earlier split-switch commands were tested in both silent modes for CommandUpdate 4.1.0, CommandUpdate 5.7.2 and Universal 5.7.2. All six cases created the vendor log and installed payload files under the requested directory; both paths contained spaces. The visible ProductCode, DisplayName, DisplayVersion, Publisher, machine scope and registry view matched static parsing. Win32 returned `0` and used the 32-bit ARP view; Universal returned `2` and used the 64-bit view. A 5.7.2 run without its runtime prerequisite returned `4`, created a vendor log and installed no main payload. Those commands retained embedded arguments, including `/clone_wait` where configured; this evidence does not validate the newer defaults-only shape above. Test-added packages and prerequisites were removed without restoring the shared VM; independent Edge/WebView updates were left untouched.
+
+The defaults-only shape was subsequently validated on those same three artifacts in both modes, without embedded MUP arguments or `/clone_wait`. All six runs completed with matching ARP identities, spaced log/location paths, and the same outer exit codes. ARP, payload files and the vendor log were present at wrapper exit. In two additional 4.1.0 runs, `/V"ARPSYSTEMCOMPONENT=1"` created hidden MSI registration; the parser correctly withheld visible ARP identity for that override. Two `/V"ALLUSERS=1"` runs retained machine registration while the parser conservatively withheld its unsimulated scope default. Final cleanup left zero captured ARP, protocol, extension or PATH changes without restoring or restarting the shared VM.
+
+Historical NN71R's direct-MSI passthrough route also passed `/quiet` and `/passive` with vendor logging and `INSTALLDIR` forwarding. Its observed ProductCode, name, version and publisher matched static parsing, and the tested command registered machine scope in the 64-bit view. The first run returned outer `1` because its MSI custom action rejects installation paths longer than 80 characters; a shorter path containing spaces passed with `0`. Keep this package restriction separate from forwarding correctness. Its statically unresolved scope is not filled from one observed command. The ARM64 Optimizer suite still requires an ARM64 test environment.
+
 ## Known examples
 
-`Dell.CommandUpdate` 4.1.0 uses ZIP with file-absolute central-directory offsets. CommandUpdate 5.7.2 and its Universal variant use a 7z overlay selecting different InstallShield packages. Optimizer 6.3.5.0 ARM64 contains an InstallShield Advanced UI suite with multiple MSI payloads. Watchdog Timer Driver 2.0.0.1 selects an additional 7z SFX and a custom launcher; its inventory registration does not prove a visible uninstall key.
+`Dell.CommandUpdate` 4.1.0 uses ZIP with file-absolute central-directory offsets. CommandUpdate 5.7.2 and its Universal variant use a 7z overlay selecting different InstallShield packages. Optimizer 6.3.5.0 ARM64 contains an InstallShield Advanced UI suite with multiple MSI payloads.
 
 Historical catalog packages `CPNKY` (Intel chipset 9.3.0.1019), `NN71R` (OpenManage Client Instrumentation 8.1.0) and `GVCVP` (Intel Ethernet 15.7.0.0) use framework `003.000.000.000`, ZIP and MUP specification 2.1.0. NN71R selects `omcix64.msi` directly and supplies its MSI identity; the Intel launchers remain unsupported nested families. Legacy NVIDIA package `X2XJJ` uses `SVMSEZ32.bin` runtime identity, and BIOS package `K0T3Y` has another executable layout. They are deliberately not classified as DUPFramework.
 
