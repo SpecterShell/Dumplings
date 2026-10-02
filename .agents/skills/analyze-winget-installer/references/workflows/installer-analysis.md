@@ -101,6 +101,7 @@ This is the only installer-family route table in the skill.
 | install4j | [install4j](../families/install4j/workflow.md) |
 | Setup Factory | [Setup Factory](../families/setup-factory/workflow.md) |
 | dotNetInstaller | [dotNetInstaller](../families/dotnetinstaller/workflow.md) |
+| Dell Update Package, DUPFramework with MUPDefinition | [Dell Update Package](../families/dell-update-package/workflow.md) |
 | InstallAnywhere | [InstallAnywhere](../families/installanywhere/workflow.md) |
 | InstallAware | [InstallAware](../families/installaware/workflow.md) |
 | Actual Installer | [Actual Installer](../families/actual-installer/workflow.md) |
