@@ -1,0 +1,33 @@
+Version: 0.1.23
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.23/ddc-v0.1.23-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.23/ddc-v0.1.23-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.23
+    Perf: WhatsApp full-decompile 29.8s → 13.6s (-56%)
+    The per-class import assembly deep-copied the package's simple-name set
+    twice (the blocked set, then the obscured-state install). On APKs with
+    ten-thousand-class packages that is ~200M string allocations — the #2/#3
+    CPU frames in a sample profile. The import machinery now borrows the
+    set behind an Arc and carries two small overlay sets (JLS 7.5.1
+    narrowing removals, own-field additions); semantics are unchanged:
+    interleaved A/B runs measured 30.9s → 13.6s, output is byte-identical
+    on all four battery corpora, and the javac battery holds at 7,452.
+    Docs: benchmarks and quality story refreshed
+    WhatsApp recorded at its post-fix time (no annotation); the measurement
+    methodology wording now matches practice ("measured after a cooldown");
+    both benchmark docs gained the semantic-quality narrative (full-Android-
+    classpath javac battery: 11,345 → 7,452 ddc-attributable errors,
+    v0.1.19 → v0.1.22, -34%), and the README known-limitations sections
+    state the battery scale and the jadx gap.
+    No changes to jdc-core (0.2.14) or ddc-dex (0.2.5).
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.22...v0.1.23
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.23
+ReleaseTime: 2026-10-02T16:09:27.0000000Z

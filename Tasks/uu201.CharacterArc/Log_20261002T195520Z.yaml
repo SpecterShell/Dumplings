@@ -1,0 +1,37 @@
+Version: 1.21.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/uu201/character-arc/releases/download/v1.21.1/CharacterArc-1.21.1-x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/uu201/character-arc/releases/download/v1.21.1/CharacterArc-1.21.1-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1.21.1 - 2026-10-02
+    章节数据恢复与防丢失
+    - 修复升级后正文丢失：修复 v1.21.0 保存分卷和章节时可能连带删除章节正文与历史版本的问题，避免再次出现只有第一章有内容、其他章节变空的情况
+    - 自动找回被清空的内容：从 v1.21.0 升级时，如果检测到对应的升级前备份，会自动恢复当前数据库中已经变空的章节正文和历史版本；仍然正常的内容不会被旧备份覆盖
+    - 加强未加载正文保护：保存章节标题、摘要、状态或 AI 暂存修改时，会继续保留数据库中的完整正文，避免列表中的预览内容覆盖尚未打开的章节
+    数据库备份与回滚
+    - 主页统一管理：在主页设置中新增“数据库备份”，可以手动备份当前全部数据，并查看手动备份、升级前备份和回滚前备份
+    - 回滚前再次备份：选择旧备份恢复时，会先保存工作区并完整备份当前数据库，防止选错备份后无法返回
+    - 更安全的恢复流程：备份会先复制到临时目录并通过 SQLite 完整性检查，再替换当前数据库；如果移动、安装或校验失败，会自动还原原数据库、WAL、SHM 和版本标记
+    - 修复回滚与设置界面问题：修复数据库回滚完成后出现白屏、点击“数据库备份”导致设置弹窗偏移，以及备份列表被遮挡且无法滚动的问题
+    保存稳定性与提示
+    - 章节排序自动重试：拖动章节后如果排序保存失败，会保留待保存内容并在稍后自动重试；连续调整同一章节时以最新位置为准
+    - AI 助手错误提示：全局助手的错误提示可以手动关闭，重新加载会话成功后也会自动清除旧错误
+    - 
+    下载说明
+    - Windows Intel / AMD 电脑：下载 CharacterArc-1.21.0-x64-setup.exe；绝大多数 Windows 电脑选择这一版
+    - Windows ARM 电脑：下载 CharacterArc-1.21.0-arm64-setup.exe，适用于使用 Snapdragon 等 ARM 处理器的 Windows 设备
+    - macOS Apple 芯片：M1、M2、M3、M4 等机型下载 CharacterArc-1.21.0-mac-arm64.dmg
+    - macOS Intel 芯片：下载 CharacterArc-1.21.0-mac-x64.dmg；.zip 是对应架构的免安装解压版本
+    - Linux Intel / AMD 电脑：下载 CharacterArc-1.21.0-linux-x64.AppImage；Debian、Ubuntu 等系统也可以选择同名 .deb
+    - Linux ARM 设备：下载 CharacterArc-1.21.0-linux-arm64.AppImage；Debian、Ubuntu ARM 系统也可以选择同名 .deb
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/uu201/character-arc/releases/tag/v1.21.1
+ReleaseTime: 2026-10-02T16:06:58.0000000Z

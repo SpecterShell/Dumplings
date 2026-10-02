@@ -1,0 +1,67 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.12.0/codexhost-0.12.0-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.12.0/codexhost-0.12.0-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    This release focuses on remote connections. Settings adds a Remote Connections page: enter a remote computer's connection details, then install and configure codexhost on it with one click. Sessions now stay in sync between your computer and the remote: a session started on one shows up on the other, and messages update live. ZCode is now supported as a Harness.
+    本次更新重点优化了远程连接的能力。设置新增「远程连接」页面：填写远程电脑的连接信息，即可一键完成 codexhost 的安装和配置。本机与远程的会话实时同步：在一台电脑上发起的会话会出现在另一台上，消息实时更新。新增接入 ZCode。
+    Features
+    - Manage SSH remotes from a new Remote Connections page in Settings: add, edit, connect and remove computers, and install, update, restart or repair the remote service with one click (#473)
+    - Keep sessions in sync between your computer and an SSH remote that also runs Codex Desktop through codexhost: a session started on one shows up on the other, and messages update live
+    - Install Harness CLIs from the Connections page, with progress, errors and retry shown per Harness (#459)
+    - Add ZCode as a Harness, driven by the CLI bundled with ZCode Desktop on macOS, Windows and Linux, with Start Plan support (#407)
+    - Import sessions from Kiro CLI, Grok, CodeBuddy, WorkBuddy, OMP, Kimi Code, OpenCode v2, Qoder and Qoder CN
+    - Support DSH 0.2.0-rc.1 and 0.2.0-rc.2, including timed questions that can still be answered later in the same turn (#456)
+    - Show DSH automatic context compaction and live context usage
+    - Show Hermes usage and context occupancy, and list Hermes native and plugin commands in the Composer
+    Fixes
+    - Show each DSH PTC sub-call as its own tool card, and bring back the permission mode picker for DSH sessions (#456)
+    - Report a DSH CLI that is too old with the minimum supported version and the upgrade command, instead of a startup protocol error (#475)
+    - Create External tasks inside a Project on Codex Desktop 26.924 and later (#430)
+    - Steer a running native Codex task on a remote Host again (#391)
+    - Keep startup from failing when the Codex Desktop Renderer debugging endpoint hangs (#333)
+    - Keep the Composer and its requests separate for each Host, and keep codexhost features working when several Hosts are connected (#466)
+    - Tell Harness login problems apart from configuration problems on the Connections page, and show version states and update guidance in the selected language
+    - Hide Harnesses that are not installed, and sessions replaced by an edit or rollback, from the session import page
+    - Honor CODEXHOST_INSTALL_ROOT on macOS (#457)
+    - Inspect Pi when the Host Runtime starts in / (#336)
+    - Stop Antigravity results from another conversation appearing in the current one, and stop retrying region and quota rejections (#458)
+    - Print the console address as soon as the console is available on a terminal launch
+    Breaking Changes
+    - DSH CLI versions below 0.1.7-rc.1 are no longer supported; connecting with one now fails with an upgrade prompt. The Connections page installs 0.2.0-rc.2 (#456)
+    新功能
+    - 设置新增「远程连接」页面：添加、编辑、连接和移除远程电脑，并一键安装、更新、重启或修复远程服务 (#473)
+    - 本机与 SSH 远程电脑的会话实时同步：远程电脑同样通过 codexhost 运行 Codex Desktop 时，一端发起的会话会出现在另一端，消息实时更新
+    - 连接页可直接安装 Harness CLI，按 Harness 显示进度、错误和重试 (#459)
+    - 新增 ZCode Harness，使用 ZCode Desktop 自带的 CLI，支持 macOS、Windows 和 Linux，并支持 Start Plan (#407)
+    - 会话导入新增 Kiro CLI、Grok、CodeBuddy、WorkBuddy、OMP、Kimi Code、OpenCode v2、Qoder 和 Qoder CN
+    - 支持 DSH 0.2.0-rc.1 和 0.2.0-rc.2，限时提问超时后仍可在同一回合内回答 (#456)
+    - 显示 DSH 的自动上下文压缩和实时上下文占用
+    - 显示 Hermes 的 Usage 和上下文占用，Composer 可列出 Hermes 原生命令与插件命令
+    修复
+    - DSH PTC 的每个子调用显示为独立的工具卡片，DSH 会话恢复权限模式选择器 (#456)
+    - DSH CLI 版本过旧时，直接提示最低支持版本和升级命令，不再报启动阶段的协议错误 (#475)
+    - Codex Desktop 26.924 及以上版本可在 Project 内创建 External 任务 (#430)
+    - 远程 Host 上的原生 Codex 任务执行中可以再次插话 (#391)
+    - Codex Desktop Renderer 调试端点卡住时不再导致启动失败 (#333)
+    - Composer 状态和请求按 Host 隔离，连接多个 Host 时 codexhost 功能保持可用 (#466)
+    - 连接页区分 Harness 的登录问题和配置问题，版本状态和更新指引按所选语言显示
+    - 会话导入页不再列出未安装的 Harness，以及因编辑或回滚而被替换的旧会话
+    - macOS 上 CODEXHOST_INSTALL_ROOT 生效 (#457)
+    - Host Runtime 在 / 启动时可正常检测 Pi (#336)
+    - Antigravity 不再把其他对话的结果显示到当前对话，地区和额度类拒绝不再重试 (#458)
+    - 从终端启动时，console 可用后立即打印地址
+    破坏性变更
+    - 不再支持低于 0.1.7-rc.1 的 DSH CLI，使用旧版本连接会失败并提示升级。连接页安装的版本为 0.2.0-rc.2 (#456)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.12.0
+ReleaseTime: 2026-10-02T15:05:17.0000000Z
