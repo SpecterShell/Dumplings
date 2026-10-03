@@ -4,7 +4,7 @@ $Node = $Object1.SelectNodes('//*[@class="download" and contains(./div/h4/text()
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Node.SelectSingleNode('./div/p/text()').InnerText,
+  $Node.SelectSingleNode('./div/p').InnerText,
   'v([\d\.]+)'
 ).Groups[1].Value
 
