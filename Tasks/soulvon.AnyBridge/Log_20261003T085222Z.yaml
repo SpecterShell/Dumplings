@@ -1,0 +1,24 @@
+Version: 0.5.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge-Release/releases/download/v0.5.27/AnyBridge_0.5.27_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge-Release/releases/download/v0.5.27/AnyBridge_0.5.27_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 本地代理接入 CodeBuddy / ZCode / WorkBuddy / OpenCode 启用真流式转发：长回复首字节从分钟级降到秒级，带打字机效果；生成超长内容不再因等待整包而中途失败。
+    - 修复工具调用链路的一批问题：
+      - 修复工具定义发送格式错误导致上游拒绝（520 / 503）的问题。
+      - 补齐多轮对话中助手历史消息与工具结果回传的格式处理，第二轮起不再中断。
+      - 下游现在可以完整接收流式工具调用（增量参数拼接）。
+    - 上游偶发瞬时故障（520~524、连接超时）纳入自动重试，缓解中转站间歇性抽风带来的失败。
+    - 长内容生成的首字节等待上限由 90 秒放宽到 180 秒，避免生成到一半的请求被误判超时。
+    - 上游流内错误现在会明确返回给客户端，不再出现“空回复”式的假成功。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.27
+ReleaseTime: 2026-10-03T08:32:36.0000000Z
