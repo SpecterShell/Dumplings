@@ -1,5 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://inkscape.org/release/all/windows/?pre=0' | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//div[@id="content"]/div/table/tr[not(contains(./td[2], "dev"))][last()]')
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://inkscape.org/release/all/windows/?pre=0'
+  Read-PlaywrightPageContent -Page $Page
+} | ConvertFrom-Html
+$Object2 = $Object1.SelectSingleNode('//div[@id="content"]/div/table/tbody/tr[not(contains(./td[2], "dev"))][last()]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.SelectSingleNode('./td[1]').InnerText, 'Inkscape (\d+(?:\.\d+)+)').Groups[1].Value
@@ -28,7 +32,11 @@ switch -Regex ($this.Check()) {
         Value = $null
       }
 
-      $Object4 = Invoke-WebRequest -Uri "https://inkscape.org/release/inkscape-$($this.CurrentState.Version)/" | ConvertFrom-Html
+      $Object4 = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+        $null = Open-PlaywrightPage -Page $Page -Uri "https://inkscape.org/release/inkscape-$($this.CurrentState.Version)/"
+        Read-PlaywrightPageContent -Page $Page
+      } | ConvertFrom-Html
 
       # Remove release date
       $Object4.SelectNodes('//div[@class="notes"]//*[contains(text(), "Released on")]').ForEach({ $_.Remove() })
