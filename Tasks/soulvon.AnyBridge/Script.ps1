@@ -1,32 +1,32 @@
-$Object1 = Invoke-RestMethod -Uri 'https://github.com/soulvon/AnyBridge/releases/latest/download/latest.json'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/soulvon/AnyBridge/releases/latest'
 
 # Version
-$this.CurrentState.Version = $Object1.version -replace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.platforms.'windows-x86_64'.url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = $Object1.platforms.'windows-x86_64-msi'.url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.pub_date | Get-Date -AsUTC
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.notes)) {
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object1.notes
+          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
@@ -36,7 +36,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/soulvon/AnyBridge/releases/tag/v$($this.CurrentState.Version)"
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
