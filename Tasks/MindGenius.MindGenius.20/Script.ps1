@@ -1,11 +1,23 @@
 function Read-Installer {
   foreach ($Installer in $this.CurrentState.Installer) {
     $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile -Name 'MindGenius 20.msi'
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'MindGenius20.msi' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted 'MindGenius20.msi'
     # Version
-    $this.CurrentState.Version = $InstallerInfo.DisplayVersion
+    $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
     # InstallerSha256
     $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+    # ProductCode
+    $Installer['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi
+    # AppsAndFeaturesEntries
+    $Installer['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi
+        InstallerType = 'msi'
+      }
+    )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
   }
 }
 
