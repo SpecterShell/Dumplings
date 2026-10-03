@@ -24,14 +24,48 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (zh-CN)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
+          $Skip = $false
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match '中文'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2')) {
+              $Skip = $Node.InnerText -match 'Downloads|More models|Sponsors'
+            }
+            if (-not $Skip) { $Node }
+          }
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          }
+
+          $Skip = $false
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match 'English'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2')) {
+              $Skip = $Node.InnerText -match '下载|更多模型|赞助商'
+            }
+            if (-not $Skip) { $Node }
+          }
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+          }
+        } else {
+          $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          # ReleaseNotes (zh-CN)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'zh-CN'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+          }
         }
       } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl (zh-CN)
