@@ -1,0 +1,21 @@
+Version: 0.9.60
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zhangzejing/ThinkReader/releases/download/v0.9.60/ThinkReader-Setup-0.9.60-win_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ThinkReader 0.9.60 — MinerU API recovery
+    本版保留云端 Standard 层级，客户端直接调用 HTTP，不要求安装 mineru-kit 或 API CLI。
+    - 官方 HTTPS 云端 V1 两分钟内未得到可用结果时，切换一次独立的 V4 上传、批次与结果协议。可恢复的网络或协议错误也可提前切换；认证失败不切换。自建 V1 服务不向官方云端转发密钥。
+    - 两种协议共用 30 分钟总时限，超时停止本地解析并报告解析超时。V1 取消同一任务或未完成上传，并核实状态；公开 V4 批次接口没有运行任务取消能力，保留批次 ID 并记录远端取消不支持。
+    - 收到云端任务 ID 时立即保存。中断后立即重新解析可以创建新本地任务；后台重启和显式重试先查询已知远端任务，避免重复上传。之前任务在取消后返回的结果不会自动激活。
+    - V4 按其自己的响应结构校验批次、文件、页数和 ZIP，再使用现有 Document Intelligence 流程。修复预签名上传被 Python 自动添加 Content-Type 后导致的 HTTP 403。
+    - 每次尝试保存独立原始目录，原 PDF 和用户编辑的阅读副本保留。成功后的显式重新解析仍提交新任务。
+    文件校验
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhangzejing/ThinkReader/releases/tag/v0.9.60
+ReleaseTime: 2026-10-03T20:33:25.0000000Z
