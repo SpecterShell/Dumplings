@@ -1,0 +1,33 @@
+Version: 0.18.2
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.18.2/magic-context-dashboard-windows-x64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.18.2/magic-context-dashboard-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Dashboard v0.18.2
+    Fixes for Broca sessions, dreamer cards, the config editor and the serve mode. Works with Magic Context 0.44.x.
+    Broca sessions show their cache data
+    Broca 0.3.166 and later write a newer log record format for sessions that use scopes, steers or module tool calls. The dashboard treated those records as a damaged file and dropped the whole session, so these sessions showed no cache data. It now reads them. A record in a format newer than this build knows stops the read at that point and shows a notice, and the entries before it are kept.
+    Dreamer cards show the latest run (#596)
+    A task card showed a provider error from any earlier failed run, even after later runs succeeded. Cards now reflect the newest run only.
+    The config form keeps your comments
+    Saving from the structured config form rewrote magic-context.jsonc without its comments. Edits now change only the values you touched, and comments stay where they were. Config saves also follow a symlinked config file to its target, keep the file's permissions, and no longer delete the old file before the new one is in place.
+    Other fixes
+    - Serve mode no longer stalls other requests while a slow database read runs.
+    - The dashboard follows the database path the plugin uses, even if it changes after the app starts.
+    - Memory search escapes backslashes correctly, and paging past the full-text results no longer mixes in results from the fallback search.
+    - A config file with a trailing comma followed by a comment now parses.
+    - Pi session details reuse cached parent sessions, notice when a parent changes, and keep the cache bounded.
+    - Cron descriptions use the right ordinals (21st, 22nd, 23rd), and invalid field values are rejected instead of described.
+    - The session list keeps loading pages while you stay at the bottom.
+    - The log view labels note nudges correctly and names each bust cause once.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cortexkit/magic-context/releases/tag/dashboard-v0.18.2
+ReleaseTime: 2026-10-03T00:41:39.0000000Z
