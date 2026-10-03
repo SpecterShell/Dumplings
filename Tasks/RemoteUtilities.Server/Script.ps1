@@ -1,9 +1,9 @@
 $Prefix = 'https://www.remoteutilities.com/download/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = curl -fSsLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'server-(\d+(?:\.\d+)+)\.exe$' } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Where({ try { $_.href -match 'server-(\d+(?:\.\d+)+)\.exe$' } catch {} }, 'First')[0].href
 }
 
 # Version
