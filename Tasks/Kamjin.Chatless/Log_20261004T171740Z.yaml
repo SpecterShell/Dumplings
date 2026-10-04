@@ -1,0 +1,18 @@
+Version: 0.7.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/kamjin3086/chatless/releases/download/v0.7.1/Chatless_0.7.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/kamjin3086/chatless/releases/download/v0.7.1/Chatless_0.7.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 修复 0.7.0 启动后卡在"正在初始化模型服务"、窗口无法拖动、鼠标显示繁忙图标的问题。原因是 0.7.0 新增的窗口圆角逻辑在窗口事件回调里调用了 Tauri 的窗口查询接口，等于在事件循环内部再向事件循环投递消息并等待返回，形成持续的消息循环把主线程占满（进程 100% CPU），前端初始化因此永远无法完成。现在改为直接向 AppKit 查询窗口是否最大化/全屏，不再回调 Tauri。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kamjin3086/chatless/releases/tag/v0.7.1
+ReleaseTime: 2026-10-04T15:09:36.0000000Z
