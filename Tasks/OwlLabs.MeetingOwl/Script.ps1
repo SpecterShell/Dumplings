@@ -7,9 +7,8 @@ $VersionEXE = [regex]::Match((Get-RedirectedUrl1st -Uri $InstallerEXE.InstallerU
 
 # MSIX
 $this.CurrentState.Installer += $InstallerMSIX = [ordered]@{
-  InstallerType       = 'zip'
-  NestedInstallerType = 'msix'
-  InstallerUrl        = 'https://dashboard.barn.owllabs.com/products/DESKTOPAPP/download/latest/msix'
+  InstallerType = 'msix'
+  InstallerUrl  = 'https://dashboard.barn.owllabs.com/products/DESKTOPAPP/download/latest/msix'
 }
 $VersionMatches = [regex]::Match((Get-RedirectedUrl1st -Uri $InstallerMSIX.InstallerUrl), '((\d+(?:\.\d+)+)\((\d+)\))')
 $VersionMSIX = $VersionMatches.Groups[1].Value
