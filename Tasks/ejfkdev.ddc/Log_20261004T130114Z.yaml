@@ -1,0 +1,30 @@
+Version: 0.1.25
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.25/ddc-v0.1.25-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.25/ddc-v0.1.25-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.25
+    Three semantic decompilation fixes found by reading output against
+    smali (all invisible to the javac parse gate):
+    - stale field reads: v = !this.f; this.f = true rendered the read
+      after the write — the old value is materialized now (weibo
+      Transmitter, NestedScrollView, Random-style nextInt)
+    - lost phi values on exception paths: final-read analysis ran in pc
+      order, handler move-exception definitions shadowed later reads —
+      double-checked-locking get() returned the stale read instead of
+      the created instance
+    - lost else arms: a goto into the middle of a parked tail executed
+      the parked statements instead of skipping them (flag clobber)
+    Perf: the rename registry's quadratic scans are gone — single-class
+    getclass ~3.7x faster, full runs 1-2s faster. Battery net -109
+    errors across the four corpora.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.24...v0.1.25
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.25
+ReleaseTime: 2026-10-04T11:02:51.0000000Z
