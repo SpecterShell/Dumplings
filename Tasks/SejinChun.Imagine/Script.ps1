@@ -30,7 +30,7 @@ foreach ($Arch in @('x86', 'x64', 'arm64')) {
   $this.CurrentState.Installer += [ordered]@{
     Architecture  = $Arch
     InstallerType = 'nullsoft'
-    InstallerUrl  = "https://raw.githubusercontent.com/nyam1003/imagine/$($Commit[0].sha)/$($ArchFile.File.path)"
+    InstallerUrl  = "https://github.com/nyam1003/imagine/raw/$($Commit[0].sha)/$($ArchFile.File.path)"
   }
 }
 
