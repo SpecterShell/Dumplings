@@ -1,0 +1,32 @@
+Version: 0.5.28
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.28/AnyBridge_0.5.28_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.28/AnyBridge_0.5.28_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 新增 Hermes Agent 与 DeepSeek Harness 平台支持：
+      - Hermes：写入 ~/.hermes/config.yaml（Windows 为 %LOCALAPPDATA%\hermes\config.yaml）的 custom_providers，每条模型独立条目、可单独配置端点与密钥，并把首条启用模型设为默认模型。
+      - DeepSeek Harness：写入 ~/.dsh/settings.yaml 的 llm-pi-ai.providers，密钥按 apiKeyEnv 引用存入 ~/.dsh/.credentials.yaml 的 refs。
+      - 两者都只维护 anybridge- 前缀条目，用户手写的 provider、凭据记录与配置注释原样保留；首次写入前自动备份，可一键还原。
+      - Hermes 的 config.yaml 常带有上千行文档注释，因此采用保留原文的增量写入（只替换受管的顶层键块），不再整体重写文件。
+    - Pi / Hermes / DeepSeek Harness 写入逻辑统一改为按供应商分组（与 ZCode 一致）：
+      - 同供应商（名称、端点、密钥相同）的模型收敛为一个渠道，选择器里按供应商分组、模型按 ID 展示，不再出现一长串重复的渠道名。
+      - Hermes 受管条目识别改为状态快照（anybridge-models-state.json）+ 旧 anybridge- 前缀自动迁移；DeepSeek Harness 中文供应商名自动生成合法的环境变量引用名。
+    - 界面优化：
+      - 顶部主导航「平台」更名为「智能体」。
+      - 各智能体页面底部的「编辑查看」实体按钮改为轻量行内「查看配置」链接，紧随配置文件路径展示，不再打断说明文字。
+    - 新增 Pi（Pi Coding Agent）平台支持：
+      - 「平台」页可管理 Pi 的自定义渠道模型：保存后写入 ~/.pi/agent/models.json 的 providers（每条模型独立条目、可单独配地址与密钥），并把首条启用模型设为 Pi 默认模型（~/.pi/agent/settings.json）。
+      - 支持模型单独启停：停用的模型不再出现在 Pi 中，停用状态保留在 anybridge-disabled-models.json，随时可再启用。
+      - 只维护 anybridge- 前缀的 provider，用户手写的渠道（如 local）与 settings.json 的其它设置原样保留；首次写入前自动备份，可一键还原。
+      - 模型来源支持直连渠道，也可从「AnyBridge 本地代理」导入（走 127.0.0.1:7450/v1，享受看图备用与请求日志）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.28
+ReleaseTime: 2026-10-05T04:47:23.0000000Z
