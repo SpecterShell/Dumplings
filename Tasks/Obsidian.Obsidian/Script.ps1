@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -18,10 +18,11 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
-    # ReleaseNotesUrl
+    # ReleaseNotesUrl (en-US)
     $this.CurrentState.Locale += [ordered]@{
-      Key   = 'ReleaseNotesUrl'
-      Value = 'https://obsidian.md/changelog/'
+      Locale = 'en-US'
+      Key    = 'ReleaseNotesUrl'
+      Value  = 'https://obsidian.md/changelog/'
     }
 
     try {
