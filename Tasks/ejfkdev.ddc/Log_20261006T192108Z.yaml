@@ -1,0 +1,28 @@
+Version: 0.1.26
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.26/ddc-v0.1.26-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.26/ddc-v0.1.26-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.26
+    New Features
+    - HTTP REST + MCP frontends, built in (via xyz-rust): ddc serve runs every query command as a REST route with GET /openapi.json and a streamable MCP endpoint at /mcp; ddc http is REST-only; ddc mcp stdio|http exposes the same commands as MCP tools with input and output schemas. Closes #6 for the structured-output side: every front serves the same typed reports, no table parsing.
+    -  --format auto|text|table|markdown|md|json|jsonl on the ten query commands (closes #6): auto (the default) renders tables on a terminal and the stable text form when piped, so scripts keep parsing what they always parsed; json/jsonl emit the typed reports; markdown wraps source-shaped reports in fenced code blocks.
+    - ddc help serve|http|mcp and <mode> -h print a per-mode card (flags, endpoints, worked examples with bearer auth, TLS, CORS, Claude Desktop config).
+    Bug Fixes
+    - Stale field reads: v = !this.f; this.f = true; rendered the read after the write — the old value is materialized now (weibo Transmitter, NestedScrollView, Random-style nextInt).
+    - Lost phi values on exception paths: the final-read analysis ran in pc order, so handler move-exception definitions shadowed later reads — double-checked-locking get() returned the stale read instead of the created instance.
+    - Lost else arms: a goto into the middle of a parked tail executed the parked statements instead of skipping them (release-flag clobber).
+    Performance
+    - Rename-registry quadratic scans removed: single-class getclass ~3.7x faster (2x10^8 memcmp gone); full runs 1-2s faster.
+    Other
+    - Renderer: ~85k redundant-parenthesis noise sites eliminated (x = (true), return (!v)); four-corpus battery byte-identical, net -109 errors.
+    - Requires jdc-core 0.2.16.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.26
+ReleaseTime: 2026-10-06T18:32:45.0000000Z

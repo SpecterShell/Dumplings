@@ -1,0 +1,46 @@
+Version: 0.4.16
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.16/Snow-App-Setup-0.4.16.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Session File Change Tracking: Real files changed by a conversation are captured at tool-execution boundaries — dedicated file tools record the actual physical paths, and terminal commands are diffed with content fingerprints (including re-edits of already-modified files and non-zero exits); the file-changes panel annotates capture source, coverage, root and gap reasons, and the data is exposed to plugins through the v1 contract (fileChangeTrackingVersion / fileChangeCoverage).
+    - Plugin Message Footer Slot: Plugins can mount custom cards between a reply's body and its action buttons (contributions.messageFooters, ESM-only, with a lifecycle-scoped read-only API and automatic cleanup); session file statistics and similar displays now come from plugins.
+    - One-Click Prompt Optimization for Plugins: A host-side prompt-optimization channel (streaming in Rust, cancelled independently of ordinary chat, honoring an explicitly selected model service or profile) lets plugins optimize the draft in one click from the chat input toolbar, write the result back safely and undo it, without sending a message.
+    - Changelog Tab: Settings gain a Changelog tab to browse release notes version by version, with Simplified Chinese / Traditional Chinese / English switching; Traditional Chinese release notes are new, and the update dialog supports them as well.
+    - Stream Retry and Error Cards: Streaming retries show the attempt number and error details (expandable, copyable), and failed requests now render as a structured error notice card.
+    Improvements
+    - Browser element picking returns the DOM hierarchy tree (ancestor chain plus a summary of direct children), helping the model place an element in the page structure.
+    - Installed plugins and scripts show update badges inline and update in one click, without opening the Market tab.
+    - The plugin market index is fetched by commit-SHA content addressing, bypassing the CDN's long-lived cache of branch references.
+    - The right-panel tab context menu lists the declared panels of enabled plugins.
+    What's Changed
+    - feat(plugins): 安全提示词优化、会话文件追踪与通用回复插槽 by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/179
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.15...v0.4.16
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.16
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 会话文件变更追踪：在工具执行边界采集本会话真实改动的文件——专用文件工具记录实际物理路径，终端用内容指纹比对前后变化（含已修改文件的再次编辑与命令非零退出）；文件变更面板标注采集来源、覆盖程度、根目录与缺口原因，并以 v1 契约（fileChangeTrackingVersion / fileChangeCoverage）向插件开放。
+    - 插件消息末尾插槽：插件可在回复正文与操作按钮之间挂载自定义卡片（contributions.messageFooters，仅 ESM，配套生命周期绑定的只读 API 与自动清理），会话文件统计等展示改由插件贡献。
+    - 插件一键提示词优化：新增宿主侧提示词优化通道（Rust 流式优化、独立取消，不影响普通聊天，遵循显式指定的模型服务与档案），插件可在输入工具栏一键优化草稿、安全回填、一键还原，全程不发送消息。
+    - 更新日志：设置页新增「更新日志」标签页，按版本浏览发行说明并支持简体 / 繁体 / 英文切换；新增繁体中文发行说明，更新弹窗同步支持。
+    - 流式重试与错误卡片：流式重试时展示重试次数与错误详情（可展开、复制），请求失败改为结构化错误提示卡片。
+    改进
+    - 浏览器元素拾取附带 DOM 层级树（祖先链与直接子元素摘要），便于 AI 理解元素在页面结构中的位置。
+    - 已安装插件与脚本列表内联提示可更新版本，一键完成更新，无需进入市场页。
+    - 插件市场索引改为按最新 commit SHA 内容寻址拉取，绕开分支引用的 CDN 长缓存。
+    - 右侧面板标签页右键菜单列出已启用插件声明的面板入口。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0416
+ReleaseTime: 2026-10-06T18:14:11.0000000Z
