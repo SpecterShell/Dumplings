@@ -1,0 +1,95 @@
+Version: 0.9.24
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.24/Varin-0.9.24-win-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.24/Varin-0.9.24-win-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新摘要
+    本版完善多 Agent 协作和用户提问，调整子线程、任务概览与用量展示，并减少索引的重复维护。
+    多 Agent 协作与提问
+    - 常规子 Agent 收敛为 Worker 和检索两类，保留用户自定义配置及科研能力。主 Agent 负责整体设计、
+      关键实现、协调与最终整合；协作提示词按实际启用的角色和工具生成，不再在关闭角色后继续推荐它。
+    - 同一任务的主线、同级和后代可按范围读取彼此会话，通过消息协调接口与依赖。
+      事件等待支持显式期限或不限时等待，普通主会话也可持久等待并在条件满足后接续。
+    - 新增 submit_code，向可写成员或主线提交选定文件或精确代码片段，使用原生三方整合保留双方的其他修改。
+      待应用、已应用、冲突及失败分别呈现，重复提交和重启对账沿用原操作身份；修复其工具摘要缺失。
+    - 提问默认立即返回，Agent 可继续不依赖回答的工作；也可设置最长 600 秒的等待。
+      未回答和超时都不会被当成选择或授权，稍后回复送回原会话或原子线程。
+    - 提问改为底部小卡片，默认停留 60 秒，显式等待时使用等待期限。关闭卡片保留草稿和问题；
+      工作概览显示未回答项，可重新打开或明确结束问题。重复回复不重复启动执行。
+    - 修复首次打开会话时读取未绑定 Pi 会话，导致输入框显示 No Pi session is open 的问题。
+    - 修复设置部署目录边界时，私有源快照目录被误当成用户工作区，导致 Web 与容器启动中断的问题。
+    会话与设置
+    - 子线程在侧栏显示于主会话下方，提供树状连接；搜索可展开匹配的后代，不再把子会话散放到“最近”。
+    - 精简子任务卡片，按需收起已结束任务；点击任务打开会话面板，支持跳转到子会话和主会话。
+      子任务侧栏提供搜索和状态筛选，压缩历史使用更明确的名称。
+    - 工作概览默认展开除“来源”外的各节，并按会话记住面板开关和用户的展开选择。
+    - 用量改为本会话按提供商和模型汇总的 Token 消耗，包括输入、输出、缓存读取与缓存写入。
+      移除原提供商额度设置、查询轮询和托盘额度汇总。
+    - 调整 Agent Harness 设置顺序，将页面命名为“上下文管理”和“Computer Use”，
+      文件编辑器及会话选项显示本地化标签，不再直接显示内部枚举值。
+    - 移除 Fleet 设置页及其插件聚合桥接、代码片段功能及资源库分类；任务和后台命令仍通过现有会话界面查看。
+    - 工作区历史只展示有实际记录的条目，共享存储大小单独汇总；清理显示真实回收字节和失败原因，
+      隐藏后端未支持的历史删除与保留策略入口。
+    索引与性能
+    - 文件监听恢复采用增量核对，稳定目录跳过嵌入模型准备和索引检查点写入，
+      进度区分索引构建与代码关系维护。
+    - 默认本地嵌入组件改用多语言 Bekko a8m（384 维），支持配置组件和自适应 CPU 调度。
+      原生编码及分词移到独立 Worker，后台批次之间让出执行机会，长生成行减少重复分词探测。
+    - 同一起点的隔离 Worker 在原始内容身份一致且原生根仍有效时复用基线，
+      内容变化时重新捕获，避免反复建立相同的工作起点。
+    工程与安全
+    - Bot PR 的 CI、Docker 验证和依赖报告共用后台队列，减少批量更新对主线与发布构建的资源争抢。
+    - 更新受影响的 Git、HTTP 压缩、代理地址及源码映射依赖，统一移动端 Capacitor 运行库。
+      为尚无上游修复版的 sprintf-js 应用并验证精度处理补丁；合并和变基仍无需打开编辑器。
+
+    Release highlights
+    Varin 0.9.24 improves Agent collaboration, user questions, conversation navigation and index maintenance.
+    Collaboration and user input
+    - Consolidate ordinary subagents into Worker and retrieval profiles while retaining custom profiles and
+      research capabilities. The main Agent owns overall design, important implementation and integration;
+      generated guidance follows the enabled profiles and actual tools.
+    - Read related main, sibling and descendant conversations by range, coordinate through messages and wait
+      on events with an optional deadline. Ordinary main conversations retain their waits for continuation.
+    - Submit selected file changes or exact snippets with submit_code. Native three-way integration keeps
+      unrelated edits; application, conflict and failure receipts distinguish acceptance from completion.
+      Replays and restart reconciliation keep the original operation identity. Fix its missing tool summary.
+    - Submit questions without waiting by default, or wait up to 600 seconds. Missing answers are never
+      choices or approvals; later replies reach the original conversation or child thread.
+    - Replace blocking question dialogs with a bottom card. It stays for 60 seconds unless an explicit wait
+      supplies the deadline. Hiding preserves drafts; work overview retains unanswered questions for reopening
+      or cancellation. Duplicate replies do not start duplicate execution.
+    - Fix first-session initialization reporting No Pi session is open before native session binding.
+    - Keep private source-view storage separate from user workspace recovery so deployment directory
+      boundaries do not reject Web/container startup.
+    Conversations and settings
+    - Nest child conversations beneath their parents in the sidebar, with tree connectors and descendant search.
+      Simplify subtask cards, compact finished work and open conversation panels with parent/child navigation.
+    - Expand work-overview sections except Sources by default and remember the panel and section choices per conversation.
+    - Replace provider quota tracking with current-conversation Token totals by provider/model, including input,
+      output, cache reads and cache writes; remove quota polling, settings and tray summaries.
+    - Reorder Harness settings, clarify Context Management and Computer Use, and localize editor/session option labels.
+    - Remove Fleet settings and its aggregation bridges, along with reusable text snippets and the Library category.
+      Show shared recovery storage once, omit empty histories and report actual cleanup outcomes.
+    Indexing and performance
+    - Reconcile watcher recovery incrementally; unchanged inventories skip model preparation and checkpoints.
+      Distinguish index construction from code-relation maintenance in progress.
+    - Default local embeddings to multilingual Bekko a8m (384 dimensions), with configurable components and adaptive
+      CPU scheduling. Run native encoding/tokenization in a separate Worker and yield between background batches.
+    - Reduce repeated tokenization probes for generated long lines and reuse verified native work baselines when
+      source identities match. Changed contents still require a new capture.
+    Engineering and security
+    - Queue Bot PR CI, Docker verification and dependency reports in one background slot to reduce runner contention.
+    - Update affected Git, HTTP compression, proxy-address and source-map dependencies, and align mobile Capacitor runtimes.
+      Apply and verify the local sprintf-js precision repair pending an upstream fix; merge/rebase continuation remains noninteractive.
+    完整提交记录 / Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.24
+ReleaseTime: 2026-10-06T06:25:28.0000000Z
