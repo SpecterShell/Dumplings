@@ -1,0 +1,345 @@
+Version: 18.6.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.6.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Agent.withdrawUndeliveredQueuedMessages() replaces withdrawLiveSteering() and returns { steering, followUp }: it also takes back queued input already dequeued for the next model call, which the aborted run then neither records nor reports in agent_end (#14179 by @andrebrait)
+    Added
+    - Added Agent.setOnModelCallSystemPrompt, called with the exact system prompt each model call is built from (#14338 by @will-bogusz)
+    Changed
+    - SessionInitEntry.systemPrompt holds the system prompt blocks as sent; session files written earlier keep one joined string (#14338 by @will-bogusz)
+    - Image token estimates now use the catalog's imageTokens() formula with its OpenAI Responses wire rule; values are unchanged (#14286 by @will-bogusz).
+    Fixed
+    - Fixed the context count and auto-compaction trigger pricing every snapcompact archive frame at Opus's high-res rate, which overcounted Codex and Gemini sessions and could re-trigger compaction right after compacting (#14291 by @will-bogusz)
+    - Fixed native (OpenAI) compaction being refused as over the context window in sessions with many screenshots. Images were counted as about 1,200 tokens when deciding to compact but 12,000 when checking whether the compaction request fits; both checks now estimate images from their actual dimensions, and a request is no longer refused when only the image estimate pushes it over the window (#14260 by @H4vC).
+    - Fixed OpenAI and Codex Remote Compaction V2 dropping your recent messages instead of keeping them next to the compaction summary (#14247 by @will-bogusz)
+    - Fixed the failed V2 remote compaction warning claiming a V1 fallback on Codex, where V1 does not run (#14245 by @will-bogusz)
+    - Fixed Anthropic native compaction being rejected with Invalid signature in thinking block (or silently dropping the summarized thinking) on models with preserved thinking (#14251 by @will-bogusz)
+    @oh-my-pi/pi-ai
+    Added
+    - Added per-model compat.statefulResponses to enable or disable stored Responses chaining (previous_response_id with store: true) for one endpoint without the official-only request fields that compat.officialEndpoint implies (#13686 by @alphastorm).
+    - Added Snowflake Cortex with browser OAuth, token refresh, PAT environment authentication, and streaming Claude/OpenAI models with local tool execution (#14507 by @jorgoose).
+    - AuthStorage.health.check() accepts excludeProviders to skip credentials of providers the caller does not serve (#14234 by @will-bogusz)
+    Changed
+    - Reduced CPU spent on thinking-loop detection while streaming long reasoning (#14284 by @abilliontokens).
+    - Added recordAffinity: false to credential resolution options, selecting as the session would without pinning the choice to that session (#14512 by @will-bogusz)
+    Fixed
+    - Codex native-lane steering rejections (unsupported_native_inflight_message) now classify as retryable from their error text alone, matching the provider's own classification, and AIError.isCodexSteerRejection() identifies them so the agent retry can stay on the same model (#14242 by @alphastorm)
+    - Fixed replayed Responses and Codex history, including persisted Codex user/developer and assistant items, sending detail: "original" images to endpoints whose supportsImageDetailOriginal is off (#13687 by @alphastorm).
+    - Fixed thinking in turns kept after Anthropic native compaction being rejected or dropped on the next request (#14251 by @will-bogusz)
+    - Fixed Claude usage being re-polled every 10 seconds while Anthropic rate-limits the account; a failed refresh now waits a minute before trying again (#14515 by @will-bogusz)
+    - Fixed Devin requests skipping the onPayload hook, so payload capture now sees each Devin chat request and a returned replacement is what gets sent (#14506 by @will-bogusz)
+    - An OpenAI Responses turn whose connection drops mid-stream can now recover the finished answer from the provider (on hosts that store results, such as Muse Code) instead of re-running the whole turn and discarding the reasoning already done. Storage is opt-in: pass storeResponses: true, set PI_MUSE_STORE_RESPONSES=1, or set a process-wide default with configureProviderStoreResponses (#14293 and #14534 by @abilliontokens).
+    - Fixed the auth broker exiting when a background OAuth refresh sweep cannot read the credential store; the failure is now logged and the next sweep retries (#14538)
+    - Fixed Anthropic OAuth billing headers changing during developer-first sessions and side turns, preserving the prompt-cache prefix (#14495).
+    - Fixed OpenAI-compatible chat-completions gateways recording completed turns as client-cancelled because the connection closed before their [DONE] sentinel arrived (#14481).
+    @oh-my-pi/browser-relay
+    Fixed
+    - Fixed the extension reporting tabs that DevTools or another debugger extension is inspecting as its own attachments, which made the relay skip attaching to them (#14224 by @will-bogusz)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added an optional statefulResponses compat field for OpenAI Responses models, kept through OpenRouter's Responses dispatch (#13686 by @alphastorm).
+    - Added 15 Snowflake Cortex models with account-specific endpoints, Cortex compatibility rules, and estimated account-billed pricing (#14507 by @jorgoose).
+    - Added the image-tokenization axis, which declares how GPT-5.2+, Claude and Gemini 3 lines bill input images on every host, with wire-API fallback rules for other models, plus imageTokens() to price one image (#14286 by @will-bogusz).
+    Changed
+    - Changed OpenAI Responses endpoints other than OpenAI, Azure OpenAI, and Codex (custom and local servers, proxies including azure/openai-codex providers pointed at a non-Azure/non-Codex baseUrl, OpenRouter) to default supportsImageDetailOriginal to false, so snapcompact frames and computer screenshots go out as detail: "auto" instead of failing on servers that reject original; set compat.supportsImageDetailOriginal: true to opt a host in (#13687 by @alphastorm).
+    Fixed
+    - Muse Code can now store Responses results on Meta's side (store-responses), so a turn whose connection drops can be recovered instead of re-run. Storage is opt-in via the omp setting providers.muse-code.storeResponses or PI_MUSE_STORE_RESPONSES=1 (#14293 and #14534 by @abilliontokens).
+    - Fixed Google Antigravity listing models the signed-in account cannot use, such as Claude Opus 5.5 and Sonnet 5.5 on plans without them, which failed every request with 404 Requested entity was not found. After a successful model refresh and on subsequent restarts, only models in the account's own Antigravity model list are offered (#14328).
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - createAgentSession now throws Could not restore model <provider/id> when a resumed session's saved models cannot be restored, and AgentSession.switchSession throws it, keeping the current session, when it opens such a session; both still fall back with a warning when hasUI is set and retry.modelFallback is on, and hosts that cannot show that warning can opt out with allowSessionModelFallback: false (#13689 by @alphastorm).
+    Added
+    - Added an agents HUD pill counting running subagents, opening the agent hub on click
+    - In Tern the thinking level shows as the composer model chip's icon instead of a separate chip, still cycling on click, while statusLine.compactThinkingLevel (Compact Thinking Level, on by default) is on
+    - Added computer.zoom() and window-local zoom() in JavaScript and Python Eval, with native-detail region captures that preserve full-screenshot click coordinates.
+    - Added window menus, combined observe(), native application discovery/launch, live display handles, bounded input holds, human-approved task control, and macOS Space helpers in both Eval languages.
+    - RPC open_session and switch_session accept an optional provider/modelId pair that binds the session to that model instead of its saved one, as --model does at startup; RpcClient.openSession()/switchSession() and the Python client's open_session()/switch_session() take it too (#13689 by @alphastorm)
+    - Added compat.statefulResponses to models.yml, so a provider or model can opt into or out of stored Responses chaining without the process-wide PI_OPENAI_STATEFUL (#13686 by @alphastorm).
+    - Added the app.stt.pushToTalk keybinding, defaulting to Space, so push-to-talk can be remapped or disabled independently from speech-to-text and app.stt.toggle (#6592 by @anatoli-tsinovoy).
+    - Added an expandThinkingBlocks setting that keeps finished thinking blocks expanded in Tern instead of collapsing them at turn end (#14519 by @H4vC)
+    - RPC clients can show and toggle /slow: get_state reports slowModeSupported, slowModeEnabled, and a provider-neutral usageLimit (wrap-up or low-priority stage, with reset times for the client's timezone), and the new set_slow_mode command turns it on or off; the TypeScript client and the generated Python, Go, and Rust SDKs gain a matching setSlowMode/set_slow_mode/SetSlowMode method (#14153 by @andrebrait)
+    - RPC clients can now stop a turn the way Esc does in the TUI with abort_and_restore_queue: queued steering and follow-up messages are taken back and returned for the editor instead of running in a new turn after the abort (#14179 by @andrebrait)
+    - RPC remove_queued_message now returns the removed message's images, so clients can put an edited queued message back in the editor with its attachments (#14179 by @andrebrait)
+    - Added /btw side questions for RPC hosts: btw asks one (or a follow-up in an earlier topic) while the main turn keeps running, the answer streams as btw_delta / btw_record frames, btw_cancel stops it, and get_btw_history lists the session's BTW history shared with the TUI (#14110 by @andrebrait)
+    - Added the providers.muse-code.storeResponses setting (off by default; PI_MUSE_STORE_RESPONSES overrides it) to store Muse Code results on Meta's servers, so a turn whose connection drops is recovered instead of re-run (#14534 by @abilliontokens).
+    Changed
+    - In Tern the spinner, elapsed time and intent share one activity line with the todo, which stays in place between turns, and the tok/s readout moves into the composer bar after the thinking level
+    - Computer-use desktop captures now default to the focused window's monitor, with primary-monitor fallback; computer.display: all remains available explicitly.
+    - Computer-use guidance selects AX for semantic controls and screenshots for custom-drawn surfaces, with grouped actions and explicit state verification.
+    - Bash commands that print binary or other non-UTF-8 output no longer stall while their output is decoded (#14454 by @H4vC)
+    - Edit previews stay responsive while long edits stream, and read parses large files for block context off the main thread (#14520 by @H4vC)
+    - While a sloppy-mode edit streams, its preview no longer guesses an edit for a *** Find whose *** Replace has not arrived yet; the preview of an earlier file section that ends in a bare *** Find still matches what will be applied (#14520 by @H4vC)
+    - @ file mentions autocomplete faster in large repositories (#14454 by @H4vC)
+    - Large mermaid flowcharts and state diagrams render much faster while a response streams (#14454 by @H4vC)
+    - Diff hunk headers now name the enclosing function the way git does: the nearest earlier line starting with a letter, _ or $, cut to 80 bytes; #-prefixed and indented lines are no longer picked (#14521 by @H4vC)
+    - Made browser tab.observe() much faster on element-heavy pages, especially over the relay: listed elements are resolved to handles only when tab.id(n) uses them (#14431 by @will-bogusz)
+    Fixed
+    - Fixed Tern tooltips naming keys with Nerd Font icons Tern's UI font lacks (a box after "Thinking effort"); they show keycaps (⇧⇥) whatever the symbol preset
+    - Fixed /new, session switches, and Esc aborts hanging for up to 30 seconds while an extension's message_end hook was still running; they now wait only for end-of-turn maintenance.
+    - Fixed Tern's per-turn usage row showing a 24-hour time while the user message above it showed a 12-hour time; both now follow the terminal's clock (#14565 by @wolfiesch)
+    - Fixed Tern's agents pill missing while a finished subagent runs again after an IRC message woke or revived it; it now counts running agents as the status-line badge does
+    - Fixed browser tab.goto, back, forward and reload timing out on pages whose ad, chat or other iframe never finishes loading, although the page itself had loaded (#14421 by @will-bogusz)
+    - Fixed the token count after a snapcompact compaction (divider and RPC result) disagreeing with the context count right after it (#14291 by @will-bogusz)
+    - Fixed snapcompact archives stopping at 17 frames on models that read 1568px frames (OpenAI, Codex, and Claude before Opus 4.7); they now keep 26 under the same 3 MB image payload cap, and an archive whose frames run heavier than estimated is re-rendered with fewer frames instead of being rejected (#14277 by @will-bogusz).
+    - Preserved original-detail image pixels through both Eval runtimes instead of resizing screenshots again and requiring model-side coordinate conversion.
+    - Retired queued and in-flight native input on computer-run cancellation and teardown, including unawaited operations, without canceling later runs.
+    - Fixed the /usage sheet in Tern missing the Close button the other report sheets have (#14455 by @H4vC).
+    - Fixed a browser page load abandoned by cancelling a run still replacing the page afterwards; the cancelled load is now stopped, so a run that had taken over request interception also returns at once instead of failing with "Failed to restore browser request interception". Cancelling a run that is not navigating leaves the page's in-flight requests alone (#14425 by @will-bogusz)
+    - Fixed cancelling a bash command on Windows sometimes terminating an unrelated program (#14454 by @H4vC)
+    - Fixed umask in a bash command changing the umask of omp itself (#14454 by @H4vC)
+    - Fixed a mermaid xychart whose axis range is finer than floating-point precision freezing the terminal (#14454 by @H4vC)
+    - Fixed resuming a session whose saved model cannot be restored silently sending its transcript to another model. At startup, --continue/--resume in print, JSON, RPC, and rpc-ui modes (and in the TUI with retry.modelFallback: false) now exits with an error naming the model instead of using the settings-default or first available model. At runtime, RPC open_session and switch_session, ACP session load and fork, and extension session switches fail with Could not restore model <provider/id> and keep the current session instead of continuing on the current model; TUI /resume warns Could not restore model <provider/id>. Using <provider/id>, or fails with the error when retry.modelFallback is off. /resume also restores models from discovery-backed providers the way startup does (#12274, #13689 by @alphastorm).
+    - Auto-retry no longer switches to the fallback chain when Codex's native turn lane rejects live steering after the response streamed reasoning; the turn retries on the same model with the steering message as ordinary input, and the chain is consulted only once no same-model retry is left (#14242 by @alphastorm)
+    - Fixed bash commands re-running a direnv .envrc (and devenv setup) on every call; an unchanged direnv environment is now reused (#14310 by @n3oney).
+    - Fixed the computer guide telling the model that refs from its earlier ax() reads expire; it now says an element keeps its [ref=eN] across reads until its role or label changes (#14485 by @will-bogusz)
+    - Fixed snapcompact inline imaging judging savings by the gateway's frame cost instead of the reading model's (#14286 by @will-bogusz).
+    - Fixed a session running past local midnight losing its earlier Claude reasoning (or failing with a 400 under strict thinking binding) because a message you sent mid-turn was rewritten with the new date (#14339 by @will-bogusz).
+    - Fixed OpenAI and Codex Remote Compaction V2 dropping a /skill: or collab prompt you sent from the kept history, and kept screenshots inflating the post-compaction token count and discarding speculative compactions (#14247 by @will-bogusz)
+    - Fixed cold-resumed subagents losing signed thinking because their system prompt blocks were joined (#14338 by @will-bogusz)
+    - Fixed the first kept assistant turn losing its thinking after Anthropic native compaction, including after a date or working-directory change and on later compactions (#14251 by @will-bogusz)
+    - Fixed Claude rejecting or dropping the thinking kept after a compaction when the date or working directory had changed during a tool call in the kept turns; the date/cwd reminder those turns were sent with is no longer removed (#14502 by @H4vC)
+    - Fixed browser tab.waitForDownload() and tab.downloads() reporting a path that does not exist when another open tab set a different downloads directory (#14434 by @will-bogusz)
+    - Fixed subagents keeping the MCP tools they started with after /mcp reload or adding or removing an MCP server; running and revived subagents now follow the main session's MCP tools (#14441 by @abilliontokens).
+    - Fixed the browser relay failing its first command on a tab that DevTools or another debugger extension already had open (#14224 by @will-bogusz)
+    - Fixed browser runs through the relay hanging and failing on pages with cross-origin iframes (embedded sign-in, payment or help widgets) (#14228 by @will-bogusz)
+    - Fixed browser clicks on Chromium and Tern tabs landing on the surrounding paragraph, without following the link, when the link wraps across two lines (#14229 by @will-bogusz)
+    - Fixed browser tab and element-handle clicks and check/uncheck on an element that never becomes clickable timing out with no reason; the timeout now names the last failed check, such as display:none (#14230 by @will-bogusz)
+    - Fixed browser check(), uncheck() and click() refusing or timing out on custom-styled checkboxes and radios whose real input is transparent or drawn over by its label (#14231 by @will-bogusz)
+    - Fixed omp auth-gateway serve advertising and routing models from providers listed in disabledProviders; omp auth-gateway check now skips those providers' credentials too (#14234 by @will-bogusz)
+    - Fixed browser calls in relay mode each waiting 35 seconds after Chrome quit and then reporting that the extension "never connected"; they now fail at once and say it disconnected (#14236 by @will-bogusz)
+    - Fixed /shake and other history rewrites during a running tool call leaving the context meter stale and dropping that tool call from the agent's history (#14261 by @will-bogusz)
+    - Fixed a session using a custom browser.relayUrl port stopping the browser relay that other sessions were using on a different port (#14407 by @will-bogusz)
+    - Fixed browser tab.click(selector) failing at once with "matched no visible element" when the page renders the target a moment later; it now waits like tab.fill, tab.type and tab.dblclick (#14408 by @will-bogusz)
+    - Fixed browser tab.fill() and tab.type() on a disabled or read-only field wiping it and typing into whichever field had focus while reporting success; they now fail with the reason (#14412 by @will-bogusz)
+    - Fixed browser tab.fill(selector, "") clearing a field without telling the page, so React and Vue forms kept and submitted the old value; the clear now fires input and change (#14413 by @will-bogusz)
+    - Fixed browser tab.waitForDownload() missing a download started by the next tab action on tabs opened without a downloads directory; the file landed in the browser's default folder and the wait timed out (#14417 by @will-bogusz)
+    - Fixed browser.open failing with a bare [object ErrorEvent] when the browser's debugger websocket refuses the connection; the error now names the endpoint and why it failed (#14418 by @will-bogusz)
+    - Fixed browser tab evaluations hanging when the page redirected again while the tab was being read; they now run on the page the redirect landed on (#14423 by @will-bogusz)
+    - Fixed browser dropdown selection resetting to the first option when given an option's visible label instead of its value, on Chrome and cmux tabs and element handles; select() now fails and leaves the dropdown unchanged when a value matches no option, on every backend (#14226 by @will-bogusz)
+    - Fixed browser key combos such as Control+a failing on Chrome tabs, frames and elements, and macOS editing shortcuts and clipboard copy/paste doing nothing (#14225 by @will-bogusz)
+    - Fixed browser tab.extract("text") running headings, paragraphs, list items and table cells together on one line, and leaking <script>/<style> text with a selector (#14227 by @will-bogusz)
+    - Fixed omp dry-balance saving a 30-day session pin to agent.db for every sampled session id (#14512 by @will-bogusz)
+    - Fixed omp dry-balance rejecting --config; it now applies the overlay like PI_CONFIG_FILES, so account-policy experiments route as configured (#14513 by @will-bogusz)
+    - Fixed omp dry-balance failing to resolve credential-scoped dynamic models, such as Factory Droid's, that omp models lists (#14514 by @will-bogusz)
+    - Fixed browser element right and double clicks (click({ button, count })) becoming one left click on Tern and cmux tabs; cmux now refuses the buttons and counts it cannot press (#14232 by @will-bogusz)
+    - Fixed browser open and tab.observe() reporting a fixed 1365x768 viewport on relay, attached and visible browsers instead of the tab's real window size and pixel ratio (#14409 by @will-bogusz)
+    - Fixed browser runs and helper calls failing with "Failed to restore browser request interception" after their work had finished, including every call on pages with a hung cross-site iframe (#14410 by @will-bogusz)
+    - Fixed browser.open on a page that outlasts its timeout closing the tab with a bare "Browser open timed out"; the tab now stays on what loaded and the error names the navigation and browser.tab(name). A new tab whose navigation fails outright, or whose open is cancelled, is still closed (#14420 by @will-bogusz)
+    - Fixed browser tab.observe() leaving out every control inside iframes (embedded sign-in, payment and checkout forms), including iframes inside a web component's shadow root under selector, so they got no ids to act on. An iframe that does not answer within 5 seconds is left out and skipped by later observations until it navigates (#14415 by @will-bogusz)
+    - Pressing Esc while a queued message is about to be sent now restores it to the editor instead of the stopped turn recording it (#14179 by @andrebrait)
+    - Fixed edit silently dropping late LSP diagnostics from slow servers such as tsserver; they now arrive like they do for write (#14214)
+    - Fixed multi-question ask dropping the ticked options of a multi-select question when the user also typed an "Other" answer; the model now receives both (#14369)
+    - Focused subagents can now recall queued steering messages with Alt+Up or Shift+Up without restoring a message from the main session (#14464).
+    - Fixed results that a focused subagent submits after you prompt it in the TUI never reaching the parent agent: the subagent's agent://<id> artifact is now updated and the parent receives the completion (#14428)
+    - Computer use on KDE Plasma Wayland now types printable characters through the keymap KWin announces instead of failing with "no usable XKB keymap was announced", and type("…\n") presses Enter (#13848)
+    - Budget-stopped subagents no longer issue automatic retry requests after being reported cancelled; they remain available for explicit resumption (#13892).
+    - Fixed switching models mid-session keeping the previous model's inlineToolDescriptors: auto decision, which sent empty tool descriptions to the new model and failed with function.description is required (#14200)
+    - Fixed advisors staying quota-paused when another account's temporary auth block ends at the retry wait limit (#14551).
+    - Fixed omp worktree add and other git operations failing with git open: … does not appear to be a git repository when the checkout directory name ends in .git (#14553)
+    - Fixed Mnemopi embedding workers (and other local-model workers) staying alive and holding gigabytes of RAM after the omp process that started them exited mid-embedding (#14340)
+    - Fixed a supervised PTY service on Windows hanging when it asks the terminal for the cursor position; the launch broker now answers the query as it does on Linux and macOS
+    - Fixed snapcompact's short final frames preventing vision-backed sessions from continuing on backends that reject 32px-or-smaller images (#14355).
+    - Fixed the agent's goal calls asking for approval under --approval-mode write, which paused goal-mode loops at complete; always-ask still prompts for goal changes but not get (#14368)
+    - Fixed MCP server connection progress popping up a toast for every server that connects or fails in native terminals such as Tern; it now shows only in the classic terminal transcript
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - isoResolve now returns a Promise and runs off the JavaScript thread; a backend found available is not re-probed (#14528 by @H4vC)
+    Added
+    - Added encodeSixelAsync and decodeSixelToPngAsync, which encode and decode SIXEL off the JavaScript thread (#14529 by @H4vC)
+    - Added warmBlockParse, which parses a file for block context off the JavaScript thread so later block-context lookups answer from the cache; files over 4 MiB, which the cache does not keep, are skipped (#14520 by @H4vC)
+    - Added native screenshot region capture without replacing the full-frame coordinate reference, native cancellation generations, and cross-process input/focus ownership.
+    - Added operation-scoped physical Escape cancellation on macOS.
+    - Added native application discovery/launch, background menus, combined image/AX observations, display targets, bounded held input, task control ownership, and macOS Space movement.
+    Changed
+    - Replaced per-screenshot macOS subprocesses and intermediate PNGs with a persistent ScreenCaptureKit main-loop worker on macOS 14+ and in-process CoreGraphics on macOS 12/13.
+    - Read macOS window metadata from one coherent Quartz snapshot instead of re-enumerating the desktop for each window property.
+    - Defaulted desktop capture to the focused window's monitor, retaining explicit all-display and display-ID selection.
+    - Removed legacy desktop-addon emulation; computer use now requires the current native capture/cancellation API.
+    - Sped up the embedded shell on command output that is not valid UTF-8: decoding is linear, so commands printing binary data no longer stall (1 MiB took 14 s), and captured output is decoded once (#14454 by @H4vC)
+    - Sped up edit previews while edit arguments stream: diffs, fuzzy matching and hashline parsing no longer redo or copy all their work for every streamed chunk (#14520 by @H4vC)
+    - Sped up fuzzyFind: a cached scan is scored in place instead of being copied on every call (#14454 by @H4vC)
+    - Sped up applying multi-hunk patches and astEdit calls with many edits (#14521 by @H4vC)
+    - Sped up countTokens on long runs of one kind of character, such as whitespace or letters (#14454 by @H4vC)
+    - Sped up builtins that print many lines (ls, find, paste, diff, cmp, wc, echo, ts), while read and mapfile loops over files, and sed scripts using N (#14522 by @H4vC)
+    - Sped up flowchart and state diagram rendering in renderMermaidAscii; a 40-node flowchart renders about 14× faster, with identical output (#14454 by @H4vC)
+    - Sped up find -type, rm -r, mkdir -p, ls and stat, especially on Windows (#14523 by @H4vC)
+    - Sped up sed scripts that use regular expressions, printf output, and sort -, which now reads standard input directly instead of copying it to a temporary file (#14454 by @H4vC)
+    - Sped up cp and mv of directory trees; mv within one filesystem no longer walks the moved tree first (#14524 by @H4vC)
+    - Staging files or hunks keeps the git index's file stat cache, so the next status check no longer re-reads every tracked file; staging many files rewrites the index once (#14454 by @H4vC)
+    - pidwait and PTY sessions wait for process exit and cancellation events instead of polling (#14526 by @H4vC)
+    - Applying a patch to the worktree reads only the files the patch touches (#14454 by @H4vC)
+    - Sped up listWorkspace, fuzzyFind with followed symlinks, and fd; the file-mention scan cache releases expired entries sooner (#14527 by @H4vC)
+    - Sped up parsing of large hashline edits (#14454 by @H4vC)
+    - Sped up copy-on-write task isolation setup on reflink (Linux) and ReFS (Windows) volumes (#14528 by @H4vC)
+    - Process.waitForExit() on a single process waits for the operating system's exit notification instead of polling every 50 ms (#14454 by @H4vC)
+    - Reduced memory and copying in renderMermaidAscii, snapcompact rendering and single-display desktop screenshots (#14529 by @H4vC)
+    - DesktopSession.capabilities no longer blocks behind a running capture or input operation: while one runs, it answers from the capabilities read by the latest capture or capabilities call; otherwise it reads them live (#14529 by @H4vC)
+    - Native OAuth logins are detected as soon as the browser redirects, without polling every 20 ms (#14531 by @H4vC)
+    - Reduced the memory used by the local completion model's tokenizer (#14533 by @H4vC)
+    - Long lines cut by the lint, gt and system output minimizers now end in …[+N], showing how many characters were dropped (#14532 by @H4vC)
+    - Reduced the memory used by tokenizer tables and by counting Claude tokens on long inputs (#14530 by @H4vC)
+    Fixed
+    - Rejected stale display-layout coordinates before pointer input and zoom, and preserved the previous coordinate frame when a capture is canceled.
+    - Released held input on cancellation and refused competing native mutations before dispatch.
+    - Fixed umask in the embedded shell changing the host process's umask; the mask now belongs to the shell, applies to files created by redirections, builtins such as touch, mkdir and cp, and external commands, and a subshell's umask no longer leaks out (#14454 by @H4vC)
+    - Fixed diff hunk headers sometimes naming a different enclosing function than git diff does (#14521 by @H4vC)
+    - Fixed enable exec and enable suspend restoring builtins that replace or stop the host process (#14454 by @H4vC)
+    - Fixed ls -t and ls -S listing entries with equal times or sizes in arbitrary order, and ls --group-directories-first scrambling entries within each group; ties now sort by name as in GNU ls (#14523 by @H4vC)
+    - Fixed rm -r and rm -d on Windows failing on a directory that has the read-only attribute (#14523 by @H4vC)
+    - Fixed declare -r listing only readonly variables that were also traced, and declare -t listing every variable (#14454 by @H4vC)
+    - Fixed sed regular expressions treating \b as a backspace instead of a word boundary (#14454 by @H4vC)
+    - Fixed mv between filesystems losing modification times, modes, ownership, subdirectory extended attributes and hard links, failing on sockets, and removing source symlinks when copying an entry failed (#14524 by @H4vC)
+    - Fixed sort reading standard input again for each repeated - operand (#14454 by @H4vC)
+    - Fixed sort collating text only on its first run in a session and taking its collation order, decimal point and thousands separator from omp's own locale instead of the shell's LC_ALL, LC_COLLATE, LC_NUMERIC and LANG, and sort --parallel changing the host's thread pool: --parallel=N now limits that sort to N threads and rejects invalid counts as GNU sort does (#14525 by @H4vC)
+    - Fixed tac crashing omp when the file it read was truncated at the same time (#14525 by @H4vC)
+    - Fixed tail -f piped into a command that exits early (such as grep -m1) never stopping, including when following provider-backed paths (#14525 by @H4vC)
+    - Fixed run cancellation on Windows terminating an unrelated older process when the cancelled command reused the process ID of that process's exited parent (#14454 by @H4vC)
+    - Fixed staging hunks and stashing clearing the index's skip-worktree flags, so files outside a sparse checkout no longer show as deleted afterwards (#14454 by @H4vC)
+    - Fixed the psql output minimizer listing every table row whose first column began with a word like ERROR above the table, instead of applying the row limit (#14454 by @H4vC)
+    - Fixed a PTY command hanging forever when its output callback stopped consuming output; the bridge now disconnects after the stall timeout like the shell bridge (#14526 by @H4vC)
+    - Fixed Process.args() on Windows returning an empty list for elevated processes when the caller is not elevated (#14526 by @H4vC)
+    - Fixed strings passed to native functions sometimes losing their last characters when they ended in non-ASCII text (seen as highlightCode dropping the end of long lines) (#14454 by @H4vC)
+    - Fixed renderMermaidAscii hanging and running out of memory on an xychart axis whose range is finer than floating-point precision (#14454 by @H4vC)
+    - Fixed copied task isolation trees on Windows turning directory symlinks into file symlinks (#14528 by @H4vC)
+    - Fixed getWorkProfile() attributing async work to the wrong region or dropping it (#14454 by @H4vC)
+    - Fixed read and mapfile in the embedded shell treating Ctrl-C and Ctrl-D bytes in a file or pipe as an interrupt or end of input (printf 'a\003b\n' | read -r x failed, printf '\004x\n' | mapfile stored nothing); they are keys only when standard input is a terminal (#14522 by @H4vC)
+    - Fixed read storing each byte of UTF-8 input as a separate character (é became Ã©); read -n and read -N now count characters instead of bytes, as bash does (#14522 by @H4vC)
+    - Fixed read -d with a multibyte delimiter never matching; it stops at the delimiter's first byte, as bash does (#14522 by @H4vC)
+    - Fixed echo -e -E expanding escapes; the later option wins, as in bash (#14522 by @H4vC)
+    - Fixed mapfile -O writing into a readonly array; it now fails before reading any input, as bash does (#14522 by @H4vC)
+    - Fixed computer element refs expiring after two ax() reads of a window while the element was still there: an element now keeps its [ref=eN] across ax() and find() reads, even after missing a single snapshot. An element whose role or label changes gets a new ref, and its old ref keeps working until it expires; on Windows, an element that reuses a gone element's RuntimeId gets a new ref, and one whose RuntimeId cannot be read gets a new ref on every read (#14485 by @will-bogusz)
+    - Fixed short snapcompact PNGs being emitted below the minimum dimensions accepted by some vision backends (#14355).
+    @oh-my-pi/snapcompact
+    Breaking Changes
+    - maxFramesForDataBudget() now takes the frame shape instead of a byte budget, so the default 1568px shapes get 26 frames instead of 17 (#14277 by @will-bogusz).
+    Added
+    - Added frameBilling, frameTokens and frameBillingKey, which price a rendered frame at what the model reading it is billed (#14291 by @will-bogusz)
+    Fixed
+    - Fixed snapcompact frame token estimates following the gateway instead of the model reading the frames, which mispriced Claude behind OpenRouter or Vertex and Claude 4.6 and older (#14286 by @will-bogusz).
+    - Fixed short snapcompact frames being rejected by vision backends that require image dimensions above 32px (#14355).
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - WorkingRowSpec no longer takes rate: the native working row reads spinner, elapsed time, divider, then the intent, and the tok/s readout moved to the composer bar
+    Added
+    - ComposerNativeState.rate shows a tok/s readout in the native composer bar after the effort chip, and ComposerNativeState.thinkingInModel draws the thinking level as the model chip's icon instead of a separate chip
+    - formatTooltipKey formats a key for a native tooltip: unicode keycap glyphs whatever the symbol preset, esc for Escape
+    - ImageOptions.requestRender repaints an image without an image budget once its SIXEL encode lands (#14529 by @H4vC)
+    - AssistantMessageComponent can keep finished thinking sections expanded via setExpandThinkingBlocks(); sections folded by hand stay folded (#14519 by @H4vC)
+    Changed
+    - /hotkeys shows the effective app.stt.pushToTalk binding, including Disabled when unbound (#6592 by @anatoli-tsinovoy).
+    - SIXEL images are encoded off the main thread, so showing an image no longer stalls the terminal (#14529 by @H4vC)
+    Fixed
+    - Fixed native tooltips (composer, working row, queue, pause screen, git and extension dashboards) naming keys with Nerd Font icons Tern's UI font lacks, or as raw key ids (ctrl+g); they use keycap glyphs (⇧⇥, ⌃G)
+    - Fixed Tern's per-turn usage row showing a 24-hour time on a 12-hour terminal clock; the row and its tooltip now follow the terminal's clock, keeping the tooltip's ISO date (#14565 by @wolfiesch)
+    - Fixed hold-Space push-to-talk stopping the instant recording began (showing "No speech detected.") when opening the microphone briefly froze the UI (#14463 by @pgkt04)
+    @oh-my-pi/pi-utils
+    Breaking Changes
+    - Replaced the cursorPosition option of TerminalQueryResponder with hostCursorHandshake, which leaves only the PTY host's own session-start cursor query unanswered instead of every cursor-position query
+    What's Changed
+    - fix(tui): add Close button to the native /usage sheet by @H4vC in https://github.com/can1357/oh-my-pi/pull/14455
+    - fix(natives): various native fixes and uplifts by @H4vC in https://github.com/can1357/oh-my-pi/pull/14454
+    - test(natives): expect the 64px snapcompact frame floor by @H4vC in https://github.com/can1357/oh-my-pi/pull/14459
+    - fix(session): retry the same model when codex rejects live steering by @alphastorm in https://github.com/can1357/oh-my-pi/pull/14242
+    - feat(ai): make responses chaining a per-model compat setting by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13686
+    - fix(catalog): default unknown responses hosts to auto image detail by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13687
+    - fix(natives): keep the macOS process exit wait Send by @H4vC in https://github.com/can1357/oh-my-pi/pull/14461
+    - fix(coding-agent): fail closed when a resumed model is unavailable by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13689
+    - fix(tui): stop hold-space push-to-talk from ending as soon as it starts by @pgkt04 in https://github.com/can1357/oh-my-pi/pull/14463
+    - feat(coding-agent): make push-to-talk key configurable by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/6592
+    - fix(coding-agent): keep steering messages stable across a date rollover by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14339
+    - fix(agent): stop logging a V1 fallback that will not run after V2 compaction fails by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14245
+    - fix(agent): retain user turns in Remote Compaction V2 replacement history by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14247
+    - fix(agent,coding-agent): keep resumed subagents' reasoning by replaying their system prompt blocks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14338
+    - fix(agent,ai,coding-agent): keep signed thinking valid across Anthropic native compaction by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14251
+    - fix(browser): report where a download was actually saved by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14434
+    - fix(coding-agent): keep subagent MCP tools in step with parent reloads by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/14441
+    - fix(coding-agent): keep kept turns' date/cwd reminders across compaction by @H4vC in https://github.com/can1357/oh-my-pi/pull/14502
+    - fix(coding-agent): stop relay runs hanging on pages with cross-origin iframes by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14228
+    - fix(browser): click a wrapped link on the link instead of its paragraph by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14229
+    - fix(browser): say why a click that never became clickable timed out by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14230
+    - fix(browser): make check() and click() work on custom-styled checkboxes by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14231
+    - fix(coding-agent): honor disabledProviders in auth-gateway serve and check by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14234
+    - fix(coding-agent): fail browser calls at once after Chrome quits in relay mode by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14236
+    - docs: explain how running sessions choose and keep accounts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14238
+    - fix(coding-agent): keep the in-flight tool call when shaking mid-turn by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14261
+    - fix(browser): wait for tab.click targets the page renders a moment later by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14408
+    - fix(browser): refuse to fill or type into a disabled or read-only field by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14412
+    - fix(browser): report an empty fill to the page so framework forms see the cleared value by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14413
+    - fix(browser): track downloads started right after waitForDownload by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14417
+    - fix(browser): name the refused debugger websocket instead of [object ErrorEvent] by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14418
+    - fix(browser): stop tab evaluations hanging when a page redirects mid-read by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14423
+    - fix(browser-relay): let omp drive tabs that DevTools or another debugger already has open by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14224
+    - fix(coding-agent): keep browser relays on different ports from stopping each other by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14407
+    - perf(ai): bound thinking-loop exact-cycle scan to the max unit length by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/14284
+    - feat(ai): resume dropped muse-code Responses streams from the stored result by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/14293
+    - fix(browser): make key combos and macOS editing shortcuts work on Chrome tabs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14225
+    - fix(ai): wait a minute before re-polling Claude usage after a 429 by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14515
+    - fix(browser): select dropdown options by visible label as well as value by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14226
+    - fix(ai,coding-agent): stop omp dry-balance pinning every sampled session in agent.db by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14512
+    - fix(coding-agent): accept --config overlays in omp dry-balance by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14513
+    - fix(coding-agent): let omp dry-balance resolve credential-scoped models like Factory Droid's by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14514
+    - fix(browser): keep block boundaries as line breaks in extracted text by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14227
+    - fix(browser): stop element right and double clicks becoming one left click on Tern and cmux by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14232
+    - fix(ai): call onPayload for Devin chat requests by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14506
+    - fix(browser): report the real viewport on attached and visible browsers by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14409
+    - feat(tui): add option to keep thinking blocks expanded by @H4vC in https://github.com/can1357/oh-my-pi/pull/14519
+    - fix(coding-agent): keep browser run results when interception cleanup fails by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14410
+    - fix(agent,coding-agent,snapcompact): count snapcompact frames at their per-shape price by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14291
+    - fix(browser): stop goto, back, forward and reload timing out on pages with a never-finishing iframe by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14421
+    - fix(snapcompact): price frames by the model reading them, not the gateway by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14286
+    - fix(snapcompact): size the frame payload cap by frame area by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14277
+    - fix(coding-agent): include iframe controls in browser observe by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14415
+    - feat(ai): add Snowflake Cortex provider by @jorgoose in https://github.com/can1357/oh-my-pi/pull/14507
+    - fix(browser): keep the tab when browser.open outlasts its timeout by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14420
+    - fix(browser): make cancelling a run while a page loads return at once and stop the load by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14425
+    - fix(natives): keep an accessibility element's ref across ax() reads by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14485
+    - feat(coding-agent): make Muse Code response storage an opt-in setting by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/14534
+    - feat(coding-agent/rpc): add /btw side questions for RPC hosts by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14110
+    - feat(rpc): expose provider-neutral slow mode and usage-limit state by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14153
+    - feat(rpc): added abort_and_restore_queue command by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14179
+    - perf(browser): resolve observe() element handles when tab.id() uses them by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14431
+    - perf(edit): cheaper edit previews and diffs while arguments stream by @H4vC in https://github.com/can1357/oh-my-pi/pull/14520
+    - perf(builtins): stop re-statting by path in filesystem builtins by @H4vC in https://github.com/can1357/oh-my-pi/pull/14523
+    - perf(iso): off-thread backend probes and handle-based tree clones by @H4vC in https://github.com/can1357/oh-my-pi/pull/14528
+    - perf(natives/utok): smaller tokenizer tables and bounded Claude scratch by @H4vC in https://github.com/can1357/oh-my-pi/pull/14530
+    - refactor(shell): minimizer filters on shared primitives by @H4vC in https://github.com/can1357/oh-my-pi/pull/14532
+    - perf(predict,voice): one token arena; one audio device worker by @H4vC in https://github.com/can1357/oh-my-pi/pull/14533
+    - perf(vcs,ast): linear hunk naming, patch apply and astEdit by @H4vC in https://github.com/can1357/oh-my-pi/pull/14521
+    - perf(builtins): buffered output and block input in builtins by @H4vC in https://github.com/can1357/oh-my-pi/pull/14522
+    - refactor: one event-driven process layer for pi-builtins, pi-shell and the PTY by @H4vC in https://github.com/can1357/oh-my-pi/pull/14526
+    - perf(search): lazy walker identities, cheaper workspace walk, shared search plumbing by @H4vC in https://github.com/can1357/oh-my-pi/pull/14527
+    - perf(natives): event-driven OAuth callback wait; shared validators by @H4vC in https://github.com/can1357/oh-my-pi/pull/14531
+    - fix(builtins): stop sort, tac and tail from touching omp-wide state by @H4vC in https://github.com/can1357/oh-my-pi/pull/14525
+    - fix(builtins): GNU-correct cross-filesystem mv on cp's copy engine; faster cp by @H4vC in https://github.com/can1357/oh-my-pi/pull/14524
+    - perf(natives): rendering and desktop work off the JS thread and without extra copies by @H4vC in https://github.com/can1357/oh-my-pi/pull/14529
+    - chore(bazel): refresh MODULE.bazel.lock by @H4vC in https://github.com/can1357/oh-my-pi/pull/14547
+    - fix(tui): show usage row times on the terminal's clock by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/14565
+    - fix(coding-agent): re-decided inline tool descriptors on model switch by @roboomp in https://github.com/can1357/oh-my-pi/pull/14205
+    - fix(edit): kept late lsp diagnostics fresh after edits by @roboomp in https://github.com/can1357/oh-my-pi/pull/14218
+    - fix(coding-agent): reap ipc workers whose main thread blocks in native code by @roboomp in https://github.com/can1357/oh-my-pi/pull/14350
+    - fix(ask): kept ticked options alongside other text in multi-question asks by @roboomp in https://github.com/can1357/oh-my-pi/pull/14372
+    - fix(task): delivered focused subagent manual yields to the parent by @roboomp in https://github.com/can1357/oh-my-pi/pull/14429
+    - fix(tui): restored focused subagent steering recall by @roboomp in https://github.com/can1357/oh-my-pi/pull/14465
+    - fix(ai): drained completions streams to [DONE] before closing by @roboomp in https://github.com/can1357/oh-my-pi/pull/14482
+    - fix(ai): stabilized oauth billing header across side turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/14505
+    - fix(ai): kept auth-broker alive when a refresh sweep fails by @roboomp in https://github.com/can1357/oh-my-pi/pull/14540
+    - fix(coding-agent): restore BTW history controller test coverage by @roboomp in https://github.com/can1357/oh-my-pi/pull/14552
+    - fix(vcs): opened gix via the .git entry instead of the checkout root by @roboomp in https://github.com/can1357/oh-my-pi/pull/14556
+    - fix(advisor): prevent quota latch at sibling retry limit by @roboomp in https://github.com/can1357/oh-my-pi/pull/14560
+    - fix(natives): read libei keymaps from offset 0 and parse numeric groups by @roboomp in https://github.com/can1357/oh-my-pi/pull/13852
+    - fix(agent): stopped retries after budget cancellation by @roboomp in https://github.com/can1357/oh-my-pi/pull/13895
+    - fix: cache direnv instead of running from 0 on every bash call by @n3oney in https://github.com/can1357/oh-my-pi/pull/14310
+    New Contributors
+    - @jorgoose made their first contribution in https://github.com/can1357/oh-my-pi/pull/14507
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.6.2...v18.6.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.6.3
+ReleaseTime: 2026-10-06T13:17:27.0000000Z

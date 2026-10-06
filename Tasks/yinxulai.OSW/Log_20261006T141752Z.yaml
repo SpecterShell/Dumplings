@@ -1,0 +1,52 @@
+Version: 1.3.0-beta.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.3.0-beta.2/OSW-1.3.0-beta.2-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.3.0-beta.2/OSW-1.3.0-beta.2-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    这是一个 beta 版本。 每个 beta 版本都可能会发生接口的变化和数据结构的调整，不承诺数据的兼容和自动迁移。请在更新前手动导出供应商数据（模型管理 → 导出）备份，以备不时之需。
+    为什么不兼容见 https://github.com/yinxulai/osw/issues/24。
+    Important
+    This is a beta build. Every beta release may change internal APIs and data structures; data compatibility and automatic migration are not promised. Export your provider data before updating (model management → export) as a backup, just in case.
+    See https://github.com/yinxulai/osw/issues/24 for why.
+    Highlights
+    Still 1.3.0, and this build is a fix pass: four of the fixes repair screens that were broken outright, plus the test suite that now keeps the whole thing honest.
+    Functional fixes
+    - The error screen no longer causes a white screen. The boundary sat above the i18n provider while its fallback calls useTranslation(), so the first time it had to render it threw useI18n must be used inside I18nProvider — the last-resort screen became the very white screen it exists to prevent. The provider now wraps the boundary.
+    - Adding a model from the provider page works, and leaves nothing behind when it does not. The console used to create the model first and the scheduling binding second, so a rejected binding left an orphan model — the "error, but the model is in the list" bug. The console also sent logicalModelId: 'default', a model name, into a column that is a foreign key onto the model record id, which SQLite answered with a bare FOREIGN KEY constraint failed. The server now resolves the scheduling target before it writes anything, and answers 404 rather than guessing when the row is missing or soft-deleted.
+    - The right-side sheet no longer sits under the window controls. On Windows and Linux the full-height sheet's own top-right corner is exactly the rectangle the system keeps for minimize/maximize/close, and Electron does not let DOM paint or take clicks there — no z-index could have helped. The inset follows the native fullscreen state, because the controls hide in fullscreen and the space has to be given back. macOS is deliberately untouched (it uses hiddenInset with the traffic lights on the left).
+    - Client config detects POSIX shell profiles on every platform. shellProfileCandidates took an explicit platform but built its paths with the host's path.join, so asking for POSIX startup files from Windows produced \Users\me\.zshrc — a path that exists on no platform at all.
+    - Two smaller screen fixes: the overview bill backdrop now points at the icon catalog directory, and the marketing homepage request trace names a mainstream vendor instead of a placeholder.
+    Removed
+    - Drag reordering is gone from the provider page. provider_models has no ordering column — the order is scheduling_policies.priority, which belongs to the logical model page — so the handle could only ever end in an error. If you have been trying to reorder models there, that is why nothing moved.
+    Under the hood
+    - The test suite now covers the API layer, the core modules and the console logic: 155 new test files, 24,120 insertions, 4,229 tests across 343 files. The type errors that suite left behind were repaired rather than silenced, so pnpm typecheck, pnpm lint and pnpm test are all clean at this tag.
+    - The telemetry Worker was renamed from osw-telemetry to osw-apis. The endpoint did not move.
+    New
+    - surface the Discord community and a developer card
+    - screenshots: add zh-CN X cover and seed logical models for snapshots
+    Fixed
+    - client-config: resolve shell profiles for the given platform
+    - overview: point the bill backdrop icons at the catalog directory
+    - render: mount the error boundary inside the i18n provider
+    - sheet: keep the right-side panel clear of the window controls
+    - model-management: resolve the scheduling target before creating a model
+    - www: use a mainstream vendor in the homepage request trace
+    Under the hood
+    - repair the type errors the new suite left behind
+    - apis: rename the worker from osw-telemetry to osw-apis
+    - bump version to 1.3.0-beta.2
+    - cover the api layer, core modules, and console logic
+    - reorganize README sections and update handbook links
+    - add per-feature screenshots and clip capture for the handbook
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yinxulai/osw/releases/tag/v1.3.0-beta.2
+ReleaseTime: 2026-10-06T07:42:49.0000000Z
