@@ -50,7 +50,7 @@ else
   install the selected MSI payload
 ```
 
-The outer EXE therefore has two possible installed-state owners. Analyze both nested packages and preserve existing manifest matching fields unless target-OS behavior is represented deliberately; using only the legacy MSI ProductCode would be incorrect on systems that take the MSIX/AppX branch.
+The outer EXE therefore has two possible installed-state owners. Analyze both nested packages and preserve existing manifest matching fields unless target-OS behavior is represented deliberately. Using only the legacy MSI ProductCode would be incorrect on systems that take the MSIX/AppX branch.
 
 ## Ambiguity policy
 
@@ -60,8 +60,8 @@ If the configuration proves several architecture paths, callers must provide the
 
 The outer catalog proves which prerequisite files are embedded. Selector group `4` stores an uncompressed prerequisite and group `9` stores an LZMA-compressed prerequisite. The catalog does not contain the command lines or detection conditions.
 
-The selected MSI stores those semantics in `AI_PreRequisite` and `AI_AppSearchEx`. `AI_PreRequisite` records the display name, local path or URL, expected size, MD5 value, full/basic/silent command lines, force-install and compression flags, target name, execution order, feature, and missing condition. `AI_AppSearchEx` records the properties and searches referenced by that condition. Analyze these tables through the same selected MSI used for product identity; a different MSI from the payload set may describe different prerequisites.
+The selected MSI stores those semantics in `AI_PreRequisite` and `AI_AppSearchEx`. `AI_PreRequisite` records the display name, local path or URL, expected size, MD5 value, full/basic/silent command lines, force-install and compression flags, target name, execution order, feature, and missing condition. `AI_AppSearchEx` records the properties and searches referenced by that condition. Analyze these tables through the same selected MSI used for product identity. A different MSI from the payload set may describe different prerequisites.
 
-`MissingCondition` uses Windows Installer conditional-expression syntax. Parse it as an expression rather than searching its text: quoted strings and property-name prefixes otherwise produce false search associations. The parser reports `MissingConditionAnalysis`, exact referenced `Searches`, and a three-valued `MissingConditionState`. Callers can provide virtual MSI properties to evaluate a target scenario; unspecified properties remain `Unknown`, and the analysis host is never queried.
+`MissingCondition` uses Windows Installer conditional-expression syntax. Parse it as an expression rather than searching its text: quoted strings and property-name prefixes otherwise produce false search associations. The parser reports `MissingConditionAnalysis`, exact referenced `Searches`, and a three-valued `MissingConditionState`. Callers can provide virtual MSI properties to evaluate a target scenario. Unspecified properties remain `Unknown`, and the analysis host is never queried.
 
 Location value `0` is an embedded file, `1` is a download URL, and `2` opens a site. Controlled Advanced Installer 8.6 builds establish option flag `m` as force-install and `z` as LZMA compression. The parser leaves prerequisite elevation unresolved because the table describes child invocation rather than the child executable's manifest and runtime behavior.

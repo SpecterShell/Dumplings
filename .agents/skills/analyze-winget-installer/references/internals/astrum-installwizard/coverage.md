@@ -1,6 +1,6 @@
 # Astrum InstallWizard coverage
 
-Coverage is structural. A checked capability means the parser has a bounded implementation and a distinct fixture; it does not mean every custom condition or external child effect is statically knowable.
+Coverage is structural. A checked capability means the parser has a bounded implementation and a distinct fixture. It does not mean every custom condition or external child effect is statically knowable.
 
 ## Capability matrix
 

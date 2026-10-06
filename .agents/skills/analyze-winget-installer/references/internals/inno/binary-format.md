@@ -1,12 +1,12 @@
 # Inno Setup binary format
 
-This page describes the on-disk structures shared by the Inno compiler, SetupLdr, setup engine, and uninstaller. Current structures come from `Shared.Struct.pas`; historical differences are summarized in [format history](format-history.md).
+This page describes the on-disk structures shared by the Inno compiler, SetupLdr, setup engine, and uninstaller. Current structures come from `Shared.Struct.pas`. Historical differences are summarized in [format history](format-history.md).
 
 Integers are little-endian unless stated otherwise. `absolute` means relative to the beginning of the current file. Other offset bases are labeled.
 
 ## Normal single-file container
 
-The offset table, rather than physical adjacency, defines the container:
+The offset table, not physical adjacency, defines the container:
 
 ```text
 Setup.exe
@@ -41,7 +41,7 @@ Offset  Size  Type       Field
 0x3C       4  int32 LE   TableCRC over bytes 0x00 through 0x3B
 ```
 
-Printable bytes in the ID are `rDlPtS`; the remaining six bytes prevent a casual text collision.
+Printable bytes in the ID are `rDlPtS`. The remaining six bytes prevent a casual text collision.
 
 SetupLdr validates the table version, CRC, expected total size, engine range, setup-data ranges, and restored engine CRC before execution.
 
@@ -157,7 +157,7 @@ Offset  Size  Type       Field
 
 `BaseNonce` is itself a packed runtime record containing a random XOR start offset, first slice, and remaining random state. Separate stream-context constants prevent the same base state from being reused identically for metadata block 1, metadata block 2, and file chunks.
 
-The preceding CRC detects a malformed header; it is not password authentication. Setup derives a key from the supplied password, salt, and iteration count, then checks `PasswordTest`.
+The preceding CRC detects a malformed header. It is not password authentication. Setup derives a key from the supplied password, salt, and iteration count, then checks `PasswordTest`.
 
 ## Compressed block framing
 

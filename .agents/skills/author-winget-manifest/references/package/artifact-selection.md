@@ -14,7 +14,7 @@ Not every query parameter is invalid. Stable parameters such as `version`, `plat
 Redirect-chain rule:
 
 - If a stable official URL without dynamic parameters redirects to a signed or parameterized final URL, use the stable previous official URL as `InstallerUrl` when WinGet can download it publicly.
-- Do not blindly strip query parameters from the signed final URL and assume the result works; use the previous redirect hop or verify the stripped URL with a fresh request.
+- Do not blindly strip query parameters from the signed final URL and assume the result works. Use the previous redirect hop or verify the stripped URL with a fresh request.
 - If the page exposes only a signed or expiring URL and no stable previous official URL exists, do not write that URL into a static manifest.
 - If the application itself fetches update metadata or signed downloads at runtime, defer static manifest URL selection and capture the program traffic in a VM for the later automation-authoring workflow.
 
@@ -27,13 +27,17 @@ When static analysis identifies an electron-builder NSIS installer, look for its
 1. Replace the installer filename in its URL with `latest.yml` and test that sibling URL.
 2. If that fails, inspect the embedded electron-builder application archive, such as `$PLUGINSDIR\app-64.7z`, for `resources\latest.yml` or updater configuration that identifies the feed URL.
 3. Parse the fetched feed text with `ConvertFrom-ElectronBuilderUpdateFeed` or `ConvertFrom-ElectronBuilderLatestYaml` after PackageModule is loaded.
-4. Resolve a relative `files[].url` or `path` against the `latest.yml` URL rather than concatenating strings manually.
+4. Resolve a relative `files[].url` or `path` against the `latest.yml` URL.
 5. Prefer a versioned installer URL from the feed when available. If the feed points back to the same unversioned filename, retain the official mutable URL only after recording the feed version, release date, size, and hash evidence.
 6. Verify the downloaded installer against the feed's size and SHA512 when supplied, then calculate the SHA256 required by the WinGet manifest.
 
-Do not assume every electron-builder feed provides a versioned URL. A feed can publish a current version while retaining a relative path such as `Product Setup.exe`; this remains a mutable URL and must be reported as such.
+Do not assume every electron-builder feed provides a versioned URL. A feed can publish a current version while retaining a relative path such as `Product Setup.exe`. This remains a mutable URL and must be reported as such.
 
-When the feed will drive ongoing Dumplings updates, follow the [electron-updater feed workflow](../../../author-dumplings-task/references/sources/update-feeds.md#electron-updater-feeds) to create and test the task.
+For ongoing Dumplings updates, first apply [GitHub release source priority](../../../author-dumplings-task/references/sources/selection.md#github-release-source-priority). Use the [electron-updater feed workflow](../../../author-dumplings-task/references/sources/update-feeds.md#electron-updater-feeds) when a feed is the selected source.
+
+## Find a better URL through update traffic
+
+An application's update traffic may reveal a versioned or more stable installer URL than its download page. Follow [VM update-source discovery](../../../analyze-winget-installer/references/workflows/vm-network-capture.md#discover-the-update-source), including Computer Use for manual update checks and user-assisted login when needed. Apply the full-installer and public-access checks there before replacing the working manifest's `InstallerUrl`.
 
 ## Choose Between EXE And MSI
 
@@ -41,7 +45,7 @@ An official release may publish both an EXE bootstrapper and a direct MSI for th
 
 Establish equivalence before dropping the EXE. Parse both artifacts and compare the selected nested MSI with the direct MSI using `ProductCode`, `UpgradeCode`, product version, package architecture, scope, language, and feature or transform evidence. Also compare the visible ARP type and identity: Advanced Installer and InstallShield can hide a native MSI entry or create a separate EXE-style entry, so the mere presence of an MSI is insufficient.
 
-Keep the EXE only when evidence shows that it is materially required. Examples include an EXE that installs prerequisites not expressible as manifest dependencies, applies a required transform or property set, selects among different architecture or language payloads, chains additional products, exposes a different visible ARP identity, or is the only publisher-supported standalone installation path. If equivalence or standalone MSI behavior remains uncertain, validate both paths in the VM rather than publishing duplicate entries.
+Keep the EXE only when evidence shows that it is materially required. Examples include an EXE that installs prerequisites not expressible as manifest dependencies, applies a required transform or property set, selects among different architecture or language payloads, chains additional products, exposes a different visible ARP identity, or is the only publisher-supported standalone installation path. If equivalence or standalone MSI behavior remains uncertain, validate both paths in the VM. Do not publish duplicate entries.
 
 When the direct MSI is selected, use its own builder and metadata to choose `InstallerType`, installer switches, `ProductCode`, and `UpgradeCode`. Do not carry EXE-wrapper switches or return-code behavior into the MSI entry.
 
@@ -74,14 +78,14 @@ $Result = Test-WinGetInstallerDownload `
   -OperationTimeoutSeconds 60
 ```
 
-`Default` follows WinGet behavior: an explicit proxy uses WinINet; otherwise Delivery Optimization runs first, fatal policy failures stop, nonfatal failures fall back to WinINet, redirects follow WinGet's rules, and a complete download is checked against content length and SHA256.
+`Default` follows WinGet behavior: an explicit proxy uses WinINet. Otherwise, Delivery Optimization runs first, fatal policy failures stop, nonfatal failures fall back to WinINet, redirects follow WinGet's rules, and a complete download is checked against content length and SHA256.
 
 The native Delivery Optimization and WinINet helpers display byte progress after one second and cancel the active native operation when the PowerShell pipeline is stopped with Ctrl+C. Their timeout and retry controls follow `Invoke-WebRequest` naming:
 
-- `ConnectionTimeoutSeconds` (alias `TimeoutSec`) bounds connection and response-header receipt; `0` disables this timeout.
-- `OperationTimeoutSeconds` bounds each period without body progress; `0` disables this timeout.
+- `ConnectionTimeoutSeconds` (alias `TimeoutSec`) bounds connection and response-header receipt. `0` disables this timeout.
+- `OperationTimeoutSeconds` bounds each period without body progress. `0` disables this timeout.
 - `MaximumRetryCount` defaults to `3` and retries HTTP `304` and `400` through `599` responses.
-- `RetryIntervalSec` defaults to `3`; a valid `Retry-After` header overrides it for HTTP `429`.
+- `RetryIntervalSec` defaults to `3`. A valid `Retry-After` header overrides it for HTTP `429`.
 - `MaximumRetryDelaySeconds` defaults to `30` and rejects a requested per-retry delay above that bound.
 - `MaximumTotalRetryDelaySeconds` defaults to `60` and bounds cumulative delay for each transport.
 
@@ -98,7 +102,7 @@ $Result.FailureSummary
 
 `ServerAcceptedRequest` proves only that the native path accepted the request. `WouldWinGetDownload` requires a completed download. Run full `Default` mode before submission when practical.
 
-`Failures` retains one structured record for each rejected transport, including timeout, HTTP status, HRESULT, native error, retry count, failure stage, and final URL. `FailureSummary` presents those records as one readable line. Treat an empty native error field as unavailable evidence rather than success; use the other fields and the recommendation to distinguish a slow server, HTTP rejection, content validation failure, and hash mismatch.
+`Failures` retains one structured record for each rejected transport, including timeout, HTTP status, HRESULT, native error, retry count, failure stage, and final URL. `FailureSummary` presents those records as one readable line. Treat an empty native error field as unavailable evidence, never as success. Use the other fields and the recommendation to distinguish a slow server, HTTP rejection, content validation failure, and hash mismatch.
 
 A first-attempt HTTP `429` followed by success within the bounded retry policy is transient evidence, not proof that WinGet is incompatible with the URL. Record `AttemptCount` and the final status. Treat persistent failure after the configured retry and delay bounds as actionable download evidence.
 

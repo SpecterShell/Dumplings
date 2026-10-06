@@ -15,11 +15,11 @@ Author complete installer-level entries first. Dumplings calls `Move-KeysToInsta
 - Use `InstallerLocale` only when separate installer files are differentiated by locale. Omit it for one installer, multilingual installers, or the same binary reused across locales.
 - For WinGet-known types, omit each `InstallerSwitches` child whose complete value equals WinGet's default. Missing known children are populated independently; a non-default child must contain its complete replacement.
 - Omit `InstallModes` for known types when WinGet's defaults are accurate. Add it only for a proven package-specific deviation.
-- For generic EXE families, specify the verified mode set. Most support `interactive` and `silent`; add `silentWithProgress` to `InstallModes` only when a distinct progress route is proved. WinGet defaults to the `InstallerSwitches.SilentWithProgress` slot and validates generic EXE manifests for both silent fields, so copy the proven fully silent command into that switch field when no separate progress route exists.
+- For generic EXE families, specify the verified mode set. Most support `interactive` and `silent`. Add `silentWithProgress` to `InstallModes` only when a distinct progress route is proved. WinGet defaults to the `InstallerSwitches.SilentWithProgress` slot and validates generic EXE manifests for both silent fields, so copy the proven fully silent command into that switch field when no separate progress route exists.
 - Keep no-reboot arguments in `Silent` and `SilentWithProgress`. Put mode-independent post-install launch suppression in `Custom`, such as `--do-not-launch-chrome` or `/mergetasks=!runcode`.
 - Do not add `ExpectedReturnCodes` for known types when WinGet already supplies the same mappings. For generic EXE-over-MSI wrappers that propagate MSI codes, include the complete MSI mapping rather than a single observed code.
 - Capture actual process exit codes during VM validation for success, cancellation, failure, and reboot cases.
-- Keep all snippet values at installer level; remove unsupported fields rather than copying family examples blindly.
+- Keep all snippet values at installer level. Remove unsupported fields rather than copying family examples blindly.
 
 Minimal installer skeleton:
 
@@ -47,7 +47,7 @@ Before claiming the manifest is ready:
 - Installer URLs are stable across refreshes or intentionally use a stable official redirect URL.
 - Manifest path splits every `PackageIdentifier` component into its own directory and ends with the exact `PackageVersion`.
 - Every file begins with the exact fixed two-line header for its `ManifestType`.
-- Every schema URL is versioned, matches `ManifestVersion`, and uses the latest stable schema consistently across the manifest set.
+- Every schema URL is versioned, matches `ManifestVersion`, and uses the winget-pkgs-recommended schema consistently across the manifest set, currently `1.12.0`.
 - Required fields exist in all files.
 - Installer type and architecture match evidence.
 - Version and ARP mapping will not cause upgrade loops.
@@ -64,7 +64,7 @@ Before claiming the manifest is ready:
 Parse and serialize the complete working manifest set immediately after its initial valid creation, then repeat this after each meaningful evidence-backed change. Do not wait for the final evidence pass. `ConvertTo-WinGetManifestYaml` deep-copies the logical model, removes cross-document redundancies, recomputes legal root/installer field levels, and applies schema property order. Its post-processing removes a common `InstallerLocale` and redundant fields from a sole Apps & Features entry as described above. It does not discover missing metadata or replace validation.
 
 ```powershell
-Import-Module .\Modules\PackageModule\Index.ps1 -Force
+. .\Modules\PackageModule\Index.ps1
 
 $Manifest = Read-WinGetManifest -Path $ManifestDirectory
 $ManifestBundle = ConvertTo-WinGetManifestYaml -Manifest $Manifest

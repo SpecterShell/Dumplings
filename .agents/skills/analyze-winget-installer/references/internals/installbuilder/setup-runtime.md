@@ -54,7 +54,7 @@ custom parameter route:         --<cliOptionName> "<INSTALLPATH>"
 installer log:                  --debugtrace "<LOGPATH>"
 ```
 
-The command-line value can change subsequent folder destinations, registry values, shortcuts, and child-process arguments. Static metadata reports the compiled default; VM validation must use the actual override when testing those effects.
+The command-line value can change subsequent folder destinations, registry values, shortcuts, and child-process arguments. Static metadata reports the compiled default. VM validation must use the actual override when testing those effects.
 
 ## Exit behavior
 
@@ -76,7 +76,7 @@ A project can branch on `${installer_is_root_install}` and write HKCU in one bra
 
 ## Shortcut scope
 
-`installationScope` controls whether Start Menu and desktop shortcuts are created for the current user or all users. It does not select the installation directory, ARP hive, process elevation, or registry view. Keep it under `ShortcutScope`; do not project it as WinGet `Scope` by itself.
+`installationScope` controls whether Start Menu and desktop shortcuts are created for the current user or all users. It does not select the installation directory, ARP hive, process elevation, or registry view. Keep it under `ShortcutScope`. Do not project it as WinGet `Scope` by itself.
 
 ## Registry view and 64-bit mode
 
@@ -109,7 +109,7 @@ AND inherited condition rules resolve true
 = default installed payload
 ```
 
-False conditions move files to `ExcludedPayloadFiles`; unknown conditions move them to `ConditionalPayloadFiles`. Command-line component selection, UI choices, filesystem tests, and target-state probes can make the VM result differ from the static default. Use the same mode and parameters during validation.
+False conditions move files to `ExcludedPayloadFiles`. Unknown conditions move them to `ConditionalPayloadFiles`. Command-line component selection, UI choices, filesystem tests, and target-state probes can make the VM result differ from the static default. Use the same mode and parameters during validation.
 
 ## Registry and system actions
 
@@ -119,7 +119,7 @@ The parser does not execute service commands, task commands, scripts, DLL calls,
 
 ## Nested execution
 
-InstallBuilder can package and execute prerequisite installers or application setup programs. The parser distinguishes three important cases:
+InstallBuilder can package and execute prerequisite installers or application setup programs. The parser distinguishes three cases:
 
 | Purpose | Typical phase | Interpretation |
 | --- | --- | --- |
@@ -143,7 +143,7 @@ InstallBuilder can evaluate Tcl expressions, scripts, registry and filesystem pr
 
 ## VM evidence from current media
 
-The current InstallBuilder 26.8.0 x64 builder installer was validated as a machine-scope package. Its visible 64-bit ARP tuple, generated uninstall command, installation directory, silent install behavior, exit code zero, silent uninstall behavior, and removal of both ARP and the installation directory matched the static projection. This validates that fixture and route; it does not eliminate the need to test custom third-party project logic.
+The current InstallBuilder 26.8.0 x64 builder installer was validated as a machine-scope package. Its visible 64-bit ARP tuple, generated uninstall command, installation directory, silent install behavior, exit code zero, silent uninstall behavior, and removal of both ARP and the installation directory matched the static projection. This validates that fixture and route. It does not eliminate the need to test custom third-party project logic.
 
 ## Source references
 

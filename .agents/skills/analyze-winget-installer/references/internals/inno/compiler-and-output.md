@@ -176,7 +176,7 @@ Current normal output is conceptually:
 Offset0                                      OffsetEXE
 ```
 
-Physical ordering depends on whether payload compression was performed before the loader was reopened and appended. Always use offset-table fields rather than assuming a fixed overlay order.
+Physical ordering depends on whether payload compression was performed before the loader was reopened and appended. Always use offset-table fields, and do not assume a fixed overlay order.
 
 ## PE customization
 
@@ -207,7 +207,7 @@ Files-only mode leaves setup metadata readable and encrypts payload chunks. Full
 
 With disk spanning, the compiler writes disk slice headers and payload data to `Setup-*.bin`. It may recalculate offsets after the final outer executable size is known, then rewrite setup-0 while requiring its size to remain unchanged.
 
-An entry marked external is not copied into setup media. Setup resolves it relative to the source at runtime. Download entries similarly carry URL, credential, hash/signature, and extraction metadata rather than an ordinary embedded location.
+An entry marked external is not copied into setup media. Setup resolves it relative to the source at runtime. Download entries similarly carry URL, credential, hash/signature, and extraction metadata in place of an ordinary embedded location.
 
 ## Source references
 

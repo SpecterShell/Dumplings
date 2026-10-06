@@ -39,7 +39,7 @@ PE -> metadata CAB containing aisetup.ini -> payload CABs
 
 ## Cabinet5
 
-The 5.2 fixture places payload CABs before the metadata CAB. The real builder setup has 52 logical `[Files]` rows and 51 direct payload CABs. Its unmatched row repeats `<InstallDir>\Uninstall.exe`, which is already supplied by an earlier physical payload record; the parser classifies it as `DuplicateLogicalRecord` and does not shift subsequent cabinets. The metadata `AIUninstall.exe` is byte-identical to the mapped uninstaller in this fixture, but that observation does not prove the later runtime-patching route.
+The 5.2 fixture places payload CABs before the metadata CAB. The real builder setup has 52 logical `[Files]` rows and 51 direct payload CABs. Its unmatched row repeats `<InstallDir>\Uninstall.exe`, which is already supplied by an earlier physical payload record. The parser classifies it as `DuplicateLogicalRecord` and does not shift subsequent cabinets. The metadata `AIUninstall.exe` is byte-identical to the mapped uninstaller in this fixture, but that observation does not prove the later runtime-patching route.
 
 ```text
 PE -> payload CAB 0 -> ... -> payload CAB 50 -> metadata CAB
@@ -49,7 +49,7 @@ A checkpointed silent installation of the 5.2 builder confirmed its GUID uninsta
 
 ## Zip6Plus
 
-Version 6.x replaces the one-CAB-per-file sequence with one or more standard ZIP ranges. Payload entries use decimal names such as `0`, `1`, and `42`; the metadata ZIP contains `aisetup.ini` and non-payload resources. Central-directory offsets are relative to each embedded ZIP start, so each archive must be independently rebased and bounded.
+Version 6.x replaces the one-CAB-per-file sequence with one or more standard ZIP ranges. Payload entries use decimal names such as `0`, `1`, and `42`. The metadata ZIP contains `aisetup.ini` and non-payload resources. Central-directory offsets are relative to each embedded ZIP start, so each archive must be independently rebased and bounded.
 
 ```text
 PE

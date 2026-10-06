@@ -85,7 +85,7 @@ Common include files such as LogicLib compile to ordinary jumps and comparisons.
 
 Installer and uninstaller use the same runtime architecture. During compilation, MakeNSIS builds a separate uninstall command/header/data set and stores it in the installer data block. `WriteUninstaller` asks the runtime to combine the prepared uninstaller stub and data into a new executable.
 
-The uninstaller can copy itself to a temporary location before removal. The internal `_?=` argument preserves the original installation directory across that restart. The uninstall program still executes compiled NSIS commands; it does not replay a general transaction log.
+The uninstaller can copy itself to a temporary location before removal. The internal `_?=` argument preserves the original installation directory across that restart. The uninstall program still executes compiled NSIS commands. It does not replay a general transaction log.
 
 ## Process and privilege topology
 

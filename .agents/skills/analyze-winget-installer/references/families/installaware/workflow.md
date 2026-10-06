@@ -8,7 +8,7 @@ Use `InstallerType: exe` for InstallAware setup EXEs.
 
 Strong evidence includes `InstallAware` or `MimarSinan` strings.
 
-The parser requires a validated embedded 7z archive with InstallAware project evidence; a string match alone is insufficient. It reports PE identity, requested elevation, nested setup files, protocols, and file extensions. Current project metadata does not prove a visible uninstall key, so keep `ProductCode` unset until explicit payload or VM evidence is available.
+The parser requires a validated embedded 7z archive with InstallAware project evidence. A string match alone is insufficient. It reports PE identity, requested elevation, nested setup files, protocols, and file extensions. Current project metadata does not prove a visible uninstall key, so keep `ProductCode` unset until explicit payload or VM evidence is available.
 
 ## Static analysis
 
@@ -35,7 +35,7 @@ $Files | Where-Object Extension -In '.exe', '.msi', '.msp', '.msix', '.appx' | F
 }
 ```
 
-Use `-Name` to extract a specific entry when full extraction is unnecessary. A nested MSI/MSP must be analyzed as a Windows Installer database; the outer InstallAware family does not prove that the MSI owns the visible ARP entry.
+Use `-Name` to extract a specific entry when full extraction is unnecessary. A nested MSI/MSP must be analyzed as a Windows Installer database. The outer InstallAware family does not prove that the MSI owns the visible ARP entry.
 
 ### Resolve outer or nested ARP ownership
 

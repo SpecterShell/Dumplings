@@ -24,7 +24,7 @@ Model the nested installer that writes ARP. Use `AppsAndFeaturesEntries[0].Insta
 
 ### Compare wrapper composition examples
 
-There are no current maintained reference packages.
+There are currently no maintained reference packages.
 
 ### Validate switch forwarding and exit codes
 
@@ -67,4 +67,4 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) when the confi
 
 ## Known examples
 
-No accepted package currently serves as a dedicated 7z SFX example. Validate the configured nested command and switch forwarding before adding one.
+No accepted package is currently a dedicated 7z SFX example. Validate the configured nested command and switch forwarding before adding one.

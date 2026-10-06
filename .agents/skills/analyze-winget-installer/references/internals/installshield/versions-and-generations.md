@@ -21,7 +21,7 @@ InstallShield 3 / 5 / Professional 6
 
 Product lineage helps date an artifact but does not define its byte layout. New builders retain compatibility runtimes and can emit several release forms.
 
-Commercial SKUs such as Express, Professional, Premier, or Standalone Build are authoring-tool editions. They control which project types and build features are available, but their SKU name normally does not survive in distributed media. Project type, runtime release, and structural format can often be identified; the exact commercial SKU usually cannot.
+Commercial SKUs such as Express, Professional, Premier, or Standalone Build are authoring-tool editions. They control which project types and build features are available, but their SKU name normally does not survive in distributed media. Project type, runtime release, and structural format can often be identified. The exact commercial SKU usually cannot.
 
 ## Version domains
 
@@ -91,7 +91,7 @@ The high byte of `RawVersion` selects an encoding family:
 family = RawVersion >> 24
 ```
 
-Family 1 describes a legacy cabinet-format generation. The archived InstallShield 5 Professional media uses `0x01000004`, whose normalized major is `0` and whose descriptor omits MD5. Official InstallShield 11.5 media uses `0x01009500`, representing media format 9.5; it does not mean the builder is InstallShield 9.5.
+Family 1 describes a legacy cabinet-format generation. The archived InstallShield 5 Professional media uses `0x01000004`, whose normalized major is `0` and whose descriptor omits MD5. Official InstallShield 11.5 media uses `0x01009500`, representing media format 9.5. It does not mean the builder is InstallShield 9.5.
 
 Modern families 2 and 4 use a builder-aligned value divided by 100 in validated recent output. Official examples include `0x04000C1C` for InstallShield 2025 and `0x04000C80` for 2026. This relationship should not be projected backward onto family-1 media.
 

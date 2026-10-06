@@ -36,4 +36,4 @@ Synthetic feeds cover inheritance, localized metadata, `xml:base`, runtime-versi
 | first-run target effects | outside bootstrapper projection | after-first-run VM snapshot |
 | legacy `sha1=` implementation manifest | verify with source-backed directory timestamps and interleaved path ordering | official historical implementation archive or malformed timestamp evidence |
 
-The solver, trust store, and network client are independent systems rather than missing bootstrapper fields. Adding them to the parser would increase risk without improving ordinary WinGet manifest authoring.
+The solver, trust store, and network client are independent systems, not missing bootstrapper fields. Adding them to the parser would increase risk without improving ordinary WinGet manifest authoring.

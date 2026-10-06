@@ -22,7 +22,7 @@ The aPLib decoder is an independently written Apache-2.0 implementation based on
 
 `Expand-PaquetBuilderInstaller` resolves source and destination paths and supports `Payload`, `Runtime`, or `All`. Omitted `Name` selects all files. `Prompt` asks only after a collision; internal calls use `Rename`. `All` prefixes payload and runtime outputs to prevent cross-container name collisions.
 
-Classic extraction maps ordered GAF members to controller destinations. `{app}` becomes a path below the requested root and other destination classes are preserved below `_destinations`. Cabinet2 extraction uses the exact ISFX cabinet range. Legacy2 and Split3 use validated archive ranges. Resource2 emits the decoded runtime as `ENG.exe` and preserves the original encoded package configuration as `ENG.tail.bin`; `PackageConfiguration` contains its decoded semantic view.
+Classic extraction maps ordered GAF members to controller destinations. `{app}` becomes a path below the requested root and other destination classes are preserved below `_destinations`. Cabinet2 extraction uses the exact ISFX cabinet range. Legacy2 and Split3 use validated archive ranges. Resource2 emits the decoded runtime as `ENG.exe` and preserves the original encoded package configuration as `ENG.tail.bin`. `PackageConfiguration` contains its decoded semantic view.
 
 All output paths pass traversal checks. Aggregate expanded bytes, entry counts, recursion, record counts, metadata bytes, PE mapping, and archive sizes are bounded.
 

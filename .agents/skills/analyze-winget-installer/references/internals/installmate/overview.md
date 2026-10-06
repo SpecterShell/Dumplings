@@ -1,12 +1,12 @@
 # InstallMate internals
 
-This reference describes the InstallMate structures consumed by Dumplings. It is intended for parser maintenance and reverse engineering; use the [InstallMate workflow](../../families/installmate/workflow.md) for package analysis and manifest authoring.
+This reference describes the InstallMate structures consumed by Dumplings. It is intended for parser maintenance and reverse engineering. Use the [InstallMate workflow](../../families/installmate/workflow.md) for package analysis and manifest authoring.
 
 Read [binary notation](../../parser-development/binary-notation.md), [parser contracts](../../parser-development/contracts.md), and [performance guidance](../../parser-development/performance.md) before changing the implementation.
 
 ## Format lineage
 
-InstallMate uses Tarma TIZ containers, but the framing and database layout changed across releases. Dispatch must use the physical signature, compression framing, and decoded database signature rather than a product-version string.
+InstallMate uses Tarma TIZ containers, but the framing and database layout changed across releases. Dispatch must use the physical signature, compression framing, and decoded database signature, not a product-version string.
 
 | Observed builder line | Container | Compression | First decoded record | Database | Parser route |
 | --- | --- | --- | --- | --- | --- |
@@ -81,7 +81,7 @@ Offset  Size  Field
 0x39     ...  tiz4 raw-LZMA2 stream
 ```
 
-Historical release media stores the two physical words in minor-major order. Dumplings retains `FormatVersion` in physical order for compatibility and exposes `BuilderFormatVersion` in release order. These values identify the archive revision; they are not a substitute for PE product-version evidence.
+Historical release media stores the two physical words in minor-major order. Dumplings retains `FormatVersion` in physical order for compatibility and exposes `BuilderFormatVersion` in release order. These values identify the archive revision. They are not a substitute for PE product-version evidence.
 
 The declared archive range is bounded by the containing overlay or section. TIZ2 candidates additionally require a valid Zlib compression method and header checksum before decompression. InstallMate 5.7 and 5.9 compressed-EXE launchers contain a loader archive before the package archive, so selection must probe the first decoded record of every structurally valid candidate and choose the unique type-2 `tin?` database.
 
@@ -125,7 +125,7 @@ InstallDir=<AppFolder>\Subdirectory
 File=<archive-name>|<size>|...
 ```
 
-Literal references such as `<AppFolder>` and `<ProgramFiles>` are recursively resolved with a depth limit. Registry-derived or unknown symbols remain unresolved. Files below `<AppFolder>` receive installed relative paths; files targeting other roots are placed below `_destinations` during extraction rather than being presented as application-relative files.
+Literal references such as `<AppFolder>` and `<ProgramFiles>` are recursively resolved with a depth limit. Registry-derived or unknown symbols remain unresolved. Files below `<AppFolder>` receive installed relative paths. Files targeting other roots are placed below `_destinations` during extraction, not presented as application-relative files.
 
 ## Modern tzf3 records
 
@@ -143,7 +143,7 @@ Record-relative offset  Size  Field
 0x40                 Length  Segment bytes
 ```
 
-The package stream begins with segment type 2, whose body starts with a `tin?` signature. Subsequent segment types are matched to typed file catalog records by segment type and uncompressed size. Each catalog record can consume at most one payload segment, preserving stream order when different files share the same size and type.
+The package stream begins with segment type 2, whose body starts with a `tin?` signature. Subsequent segment types are matched to typed file catalog records by segment type and uncompressed size. Each catalog record can consume at most one payload segment, which preserves stream order when different files share the same size and type.
 
 ## tin symbol records
 
@@ -162,7 +162,7 @@ The shipped `TsuSymbolRules.imdata` data anchors the symbol identifiers used for
 
 Records begin with `symb\0\0\0\0`. `tin3` stores the identifier at `+0x18`, a value length at `+0x20`, and value bytes at `+0x24`. Verified `tin5` stores the identifier at `+0x10`, value length at `+0x18`, and value at `+0x1C`. `tin9`, `tinA`, and `tinB` store the identifier at `+0x10`, a name length at `+0x18`, the UTF-8 name at `+0x1C`, then a value length and UTF-8 value.
 
-The parser resolves bounded literal `<SymbolName>` references. A resolved `UninstallKey` is preferred for ARP `ProductCode`; the typed `ProductCode` symbol and then the named PE `StringFileInfo.ProductCode` value are fallbacks. Arbitrary GUID scans are not used.
+The parser resolves bounded literal `<SymbolName>` references. A resolved `UninstallKey` is preferred for ARP `ProductCode`. The typed `ProductCode` symbol and then the named PE `StringFileInfo.ProductCode` value are fallbacks. Arbitrary GUID scans are not used.
 
 ## tin file records
 
@@ -211,7 +211,7 @@ Offset       Size  Field
 ...           var  LP UTF-8 installed path segment
 ```
 
-The graph resolver starts with standard folder symbols and typed symbol values, then repeatedly joins a folder's path segment to its resolved parent. Component display names and descriptions may have appended translations; their nonzero translation counts do not invalidate the base-language component metadata or its object key. Cycles, missing parents, and unresolved dynamic symbols remain unresolved. InstallMate 9.4, 9.114, and controlled InstallMate 11 fixtures establish translated components, nested custom folders, and `INSTALLDIR` behavior.
+The graph resolver starts with standard folder symbols and typed symbol values, then repeatedly joins a folder's path segment to its resolved parent. Component display names and descriptions may have appended translations. Their nonzero translation counts do not invalidate the base-language component metadata or its object key. Cycles, missing parents, and unresolved dynamic symbols remain unresolved. InstallMate 9.4, 9.114, and controlled InstallMate 11 fixtures establish translated components, nested custom folders, and `INSTALLDIR` behavior.
 
 ## Current system-effect records
 
@@ -297,7 +297,7 @@ Offset  Size  Field
 ...      var  LP UTF-8 shell verb
 ```
 
-The parser resolves literal target, working-directory, icon, and destination-folder expressions through the same bounded symbol graph used for installed files. Component object keys are joined back to `cmp9` records for files, folders, registry values, environment changes, shortcuts, and services. Conditions are retained as source evidence; the parser does not execute actions or claim that a conditional action or component always runs.
+The parser resolves literal target, working-directory, icon, and destination-folder expressions through the same bounded symbol graph used for installed files. Component object keys are joined back to `cmp9` records for files, folders, registry values, environment changes, shortcuts, and services. Conditions are retained as source evidence. The parser does not execute actions or claim that a conditional action or component always runs.
 
 ```text
 preh prerequisite group
@@ -356,15 +356,15 @@ Offset       Size  Field
 ...             4  Remove action bitmask, uint32 LE
 ```
 
-Each service recovery entry is two uint32 values: action code followed by delay in milliseconds. Controlled projects map action codes 0 through 3 to Take no action, Restart the service, Restart the computer, and Run a program. Service type, start type, delayed automatic start, error control, LocalService and NetworkService account names, dependencies, load group, recovery command, localized reboot text, and recovery actions are all derived from independent builder variants. Controlled valid-driver builds establish that builder type 0 compiles to Win32 `SERVICE_FILE_SYSTEM_DRIVER` (`2`) and builder type 1 compiles to `SERVICE_KERNEL_DRIVER` (`1`); the parser reports the compiled Win32 value rather than the project index. The selected file object key is joined to the installed-file graph to produce the binary path. Account passwords are never returned; the parser exposes only `HasPassword`. Empty compiled account names cannot distinguish LocalSystem from a project that selected Other/Driver Name but supplied no name, so the parser reports `LocalSystemOrUnspecified`.
+Each service recovery entry is two uint32 values: action code followed by delay in milliseconds. Controlled projects map action codes 0 through 3 to Take no action, Restart the service, Restart the computer, and Run a program. Service type, start type, delayed automatic start, error control, LocalService and NetworkService account names, dependencies, load group, recovery command, localized reboot text, and recovery actions are all derived from independent builder variants. Controlled valid-driver builds establish that builder type 0 compiles to Win32 `SERVICE_FILE_SYSTEM_DRIVER` (`2`) and builder type 1 compiles to `SERVICE_KERNEL_DRIVER` (`1`). The parser reports the compiled Win32 value rather than the project index. The selected file object key is joined to the installed-file graph to produce the binary path. Account passwords are never returned. The parser exposes only `HasPassword`. Empty compiled account names cannot distinguish LocalSystem from a project that selected Other/Driver Name but supplied no name, so the parser reports `LocalSystemOrUnspecified`.
 
 The project keyword for a service-control action is `svcctl`, while the compiled record tag is `svca`. Controlled one-action projects map runtime bitmasks `0`, `1`, `2`, `4`, `8`, and `0x20` to No action, Start service, Stop service, Resume service, Pause service, and Delete service. Install and remove fields use the same bitmask domain. Arguments are compiled as the length-prefixed string after the service name and apply to Start service. The four option words preceding the service name remain observed because no independent builder setting has changed them.
 
-Prerequisite action keys are linked to decoded `a206` records without evaluating their conditions. Controlled projects differing only in the Prerequisite Handler's documented **Administrator rights required** checkbox map that setting to the second option word (`0` or `1`); the parser exposes it as `RequiresAdministrator`. This evidence does not by itself prove a WinGet `ElevationRequirement`, because the handler condition and the installer's silent elevation route still determine whether the prerequisite runs.
+Prerequisite action keys are linked to decoded `a206` records without evaluating their conditions. Controlled projects differing only in the Prerequisite Handler's documented **Administrator rights required** checkbox map that setting to the second option word (`0` or `1`). The parser exposes it as `RequiresAdministrator`. This evidence does not by itself prove a WinGet `ElevationRequirement`, because the handler condition and the installer's silent elevation route still determine whether the prerequisite runs.
 
 ## Scope and ARP evidence
 
-Legacy media uses the explicit uninstall hive when present; otherwise `AdminRights=1` is machine-scope evidence. Verified `tin9` and `tinB` media expose the package identity, Loader + Download URL, runtime component, and `TsuInstallLevel` through a variable-length `inst\0\0\0\0` record:
+Legacy media uses the explicit uninstall hive when present. Otherwise `AdminRights=1` is machine-scope evidence. Verified `tin9` and `tinB` media expose the package identity, Loader + Download URL, runtime component, and `TsuInstallLevel` through a variable-length `inst\0\0\0\0` record:
 
 ```text
 inst package record
@@ -402,7 +402,7 @@ The built-in uninstall key is strong ARP identity evidence. Current literal cust
 
 ## Bounds and failure behavior
 
-Candidate scans are confined to 64 MiB of the logical overlay and exact `.tsustub`/`.tsuarch` section positions. Database bytes are limited to 128 MiB, record counts to 65,536, each payload segment to 16 GiB, and legacy Setup.ini to 4 MiB. Every declared range is checked before allocation or extraction. Sequential compressed streams are drained through bounded copies; caller-owned streams are not disposed by shared helpers.
+Candidate scans are confined to 64 MiB of the logical overlay and exact `.tsustub`/`.tsuarch` section positions. Database bytes are limited to 128 MiB, record counts to 65,536, each payload segment to 16 GiB, and legacy Setup.ini to 4 MiB. Every declared range is checked before allocation or extraction. Sequential compressed streams are drained through bounded copies. Caller-owned streams are not disposed by shared helpers.
 
 Malformed headers, unsupported compression, ambiguous package archives, truncated records, impossible names, unknown file layouts, and output-limit violations fail closed. Unknown proprietary fields remain `Observed`, `Reserved`, or unresolved.
 

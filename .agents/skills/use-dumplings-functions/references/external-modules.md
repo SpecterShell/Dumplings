@@ -20,7 +20,7 @@ $ReleaseNotesNodes = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::no
 $ReleaseNotes = $ReleaseNotesNodes | Get-TextContent | Format-Text
 ```
 
-- **Notes:** Prefer retrieving content with Dumplings networking helpers when the site requires headers, cookies, retries, or encoding handling. Use `Get-TextContent` on selected nodes rather than relying on raw `InnerText` for structured release notes.
+- **Notes:** Prefer retrieving content with Dumplings networking helpers when the site requires headers, cookies, retries, or encoding handling. Use `Get-TextContent` on selected nodes to preserve release-note structure.
 
 ### `ConvertFrom-Yaml`
 
@@ -35,7 +35,7 @@ $ReleaseNotes = $ReleaseNotesNodes | Get-TextContent | Format-Text
 $Feed = $FeedText | ConvertFrom-Yaml -Ordered
 ```
 
-- **Notes:** Use `-UseMergingParser` only when the source intentionally relies on YAML merge keys. This command parses data; it does not apply WinGet manifest schema validation.
+- **Notes:** Use `-UseMergingParser` only when the source relies on YAML merge keys. Validate WinGet schemas separately after parsing.
 
 ### `ConvertTo-Yaml`
 
@@ -50,4 +50,4 @@ $Feed = $FeedText | ConvertFrom-Yaml -Ordered
 $Catalog | ConvertTo-Yaml -OutFile $CatalogPath -Options DisableAliases -Force
 ```
 
-- **Notes:** Prefer `[ordered]` dictionaries for deterministic output. `-Force` applies to replacing `-OutFile`; it does not validate the data against a schema.
+- **Notes:** Prefer `[ordered]` dictionaries for deterministic output. `-Force` applies to replacing `-OutFile`. It does not validate the data against a schema.

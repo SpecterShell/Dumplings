@@ -4,7 +4,7 @@
 
 The native launcher maps the `.gentee` section, restores a packed GE program when required, initializes globals and linked imports, and enters generated project code. That code evaluates setup conditions, installs selected GEA groups, performs configured system operations, registers uninstall state, and may execute child payloads or launch the application. The generated uninstaller uses the same architecture to replay removal actions and the installation log.
 
-The parser models compiled intent rather than running this sequence. Ordering matters for final state: custom registry calls after the generated setup body can replace built-in ARP values, and a later child executable can introduce effects that are absent from the outer program.
+The parser models compiled intent and does not run this sequence. Ordering matters for final state: custom registry calls after the generated setup body can replace built-in ARP values, and a later child executable can introduce effects that are absent from the outer program.
 
 ## Silent installation
 
@@ -24,7 +24,7 @@ CreateInstall generally uses an x86 setup runtime. Registry view follows the exe
 
 ## Child processes and prerequisites
 
-Configured EXE and MSI runs can be synchronous or asynchronous and can be conditional. `runmsiex` can add quiet/passive, restart, and logging options to the nested MSI command. Those options describe the child invocation selected by the CreateInstall project; they do not prove that the outer setup itself has the same switch or return-code behavior.
+Configured EXE and MSI runs can be synchronous or asynchronous and can be conditional. `runmsiex` can add quiet/passive, restart, and logging options to the nested MSI command. Those options describe the child invocation selected by the CreateInstall project. They do not prove that the outer setup itself has the same switch or return-code behavior.
 
 Visual C++ prerequisite checks can inspect several generations and architectures, combine results, set a macro, show a failure message, and abort or route later operations. Bundled runtime installers may execute only when the condition is true. VM validation should test a clean machine when a prerequisite affects installability.
 

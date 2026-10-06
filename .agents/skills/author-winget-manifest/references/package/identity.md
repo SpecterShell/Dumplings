@@ -2,7 +2,7 @@
 
 ## Goal
 
-Find the official, public, version-specific installer source before authoring any manifest. Treat source discovery as a security task, not just a download task.
+Find the official, public, version-specific installer source before authoring any manifest. Treat source discovery as both a security task and a download task.
 
 ## Existing Package Discovery
 
@@ -16,13 +16,17 @@ winget show --id Publisher.Package --exact --source winget
 
 Use a broad product-name search first when the identifier is unknown. Search likely publisher/brand spellings as needed, then confirm the exact identifier with `winget show`.
 
+When parser or VM evidence supplies a ProductCode, use [source-index lookup](source-index-lookup.md) to find candidate packages with the same uninstall key. Export configured sources, resolve their actual SQLite catalogs, and query them read-only. Review shared identities before deciding that another package is a duplicate.
+
+Use `--id <identifier> --exact --source winget` once the identity is known, and add `--disable-interactivity` for unattended queries. The current development branch documents experimental numbered selection for ambiguous `install`, `show`, and `download` requests. Never rely on a prompt in automation. On clients supporting it, `--output-locale en-US` selects WinGet's console language, while `--locale` selects package metadata and installer language. Check `winget --version` and command help before using newer flags. See the [current release notes](https://github.com/microsoft/winget-cli/blob/master/doc/ReleaseNotes.md).
+
 After resolving the identifier, navigate directly to its repository path:
 
 ```text
 manifests/<lowercase-first-character>/<identifier-segment-1>/<identifier-segment-2>/.../<PackageVersion>/
 ```
 
-Split `PackageIdentifier` at every dot and preserve the casing of each component. Each component is an individual directory; never combine multiple components in a dotted directory name. For example:
+Split `PackageIdentifier` at every dot and preserve the casing of each component. Give each component its own directory.
 
 ```text
 Google.Chrome.Canary
@@ -31,11 +35,11 @@ Google.Chrome.Canary
 
 `manifests/g/Google.Chrome.Canary/<PackageVersion>/` and `manifests/g/Google/Chrome.Canary/<PackageVersion>/` are invalid. The no-dot rule applies to identifier directories, while the version leaf uses the exact `PackageVersion` and can contain dots.
 
-Do not start with recursive `rg`, `grep`, `Get-ChildItem -Recurse`, or equivalent full-tree searches merely to determine whether a package exists; the winget-pkgs tree is too large for that to be the default discovery method. Use direct file lookup after `winget search`, and use scoped repository searches only for fields or examples that the public source does not expose. Also check open upstream pull requests before submitting a new package because pending packages are not yet returned by `winget search`.
+Do not start with recursive `rg`, `grep`, `Get-ChildItem -Recurse`, or equivalent full-tree searches merely to determine whether a package exists. The winget-pkgs tree is too large for that to be the default discovery method. Use direct file lookup after `winget search`, and use scoped repository searches only for fields or examples that the public source does not expose. Also check open upstream pull requests before submitting a new package because pending packages are not yet returned by `winget search`.
 
 ## Define The Package Identifier
 
-Define a new identifier only after `winget search`, direct manifest inspection, and an open-pull-request check establish that the product or variant is not already represented. Preserve an existing identifier during ordinary updates; an identifier is a stable package identity rather than a field to rename when a publisher, brand, or preferred naming convention changes.
+Define a new identifier only after `winget search`, direct manifest inspection, and an open-pull-request check establish that the product or variant is not already represented. Preserve the identifier during ordinary updates, including publisher or brand changes.
 
 ### Schema Contract
 
@@ -49,10 +53,18 @@ Together with `maxLength: 128`, this means:
 
 - An identifier has between two and eight dot-separated components. Two components, normally publisher and product, are the usual shape.
 - Every component contains between 1 and 32 characters, and the complete identifier contains no more than 128 characters.
-- A component cannot contain a dot, whitespace, slash, backslash, colon, asterisk, question mark, double quote, angle bracket, vertical bar, or control character from U+0001 through U+001F. A dot separates components; it is never part of a component.
+- A component cannot contain a dot, whitespace, slash, backslash, colon, asterisk, question mark, double quote, angle bracket, vertical bar, or control character from U+0001 through U+001F. A dot separates components and is never part of a component.
 - Casing is preserved. Use the same identifier exactly in every manifest file, filename, and repository directory component.
 
 The schema permits more than two components so qualifiers can remain explicit. Do not concatenate a region, release channel, major version, edition, or other identity boundary into the product component.
+
+### Branded product names
+
+For new identifiers, use the full branded product name in the product component when the shorter form is a generic word. Prefer `Proton.ProtonDrive` and `Proton.ProtonMail` over `Proton.Drive` and `Proton.Mail`. Retain the brand even when it repeats the publisher component, using the official product name as evidence.
+
+### CLI and desktop applications
+
+When a product offers separate CLI and desktop applications, add both as separate packages, such as `ESEngine.ReasonixCLI` and `ESEngine.ReasonixDesktop`. Keep each application's installers and version history in its own package. A command-line interface bundled with the desktop application alone does not require a separate package.
 
 ### Qualifier Components
 
@@ -69,7 +81,7 @@ Use a separate component for each qualifier that defines which product the insta
 | Architecture-specific framework | `Microsoft.VCRedist.2015+.x86`, `Microsoft.VCRedist.2015+.x64`, `Microsoft.VCRedist.2015+.arm64` | Split a dependency framework by architecture when dependents must name the matching independently installed runtime. Do not split an ordinary application merely because one manifest can contain several architecture installers. |
 | Installer delivery family | `Zoom.Zoom`, `Zoom.Zoom.EXE`, `Google.Chrome`, `Google.Chrome.EXE`, `Google.Chrome.Beta`, `Google.Chrome.Beta.EXE`, `Google.Chrome.Dev`, `Google.Chrome.Dev.EXE` | Use separate identifiers when installer families expose incompatible package or ARP version schemes, or when one artifact is version-specific and the other is a mutable or otherwise independently maintained installer. Do not split solely because both EXE and MSI files exist. |
 
-These are concrete identifiers, not templates to copy mechanically. Search each publisher and product family first, then preserve the established component order and vocabulary when adding a related package.
+These are concrete identifiers. Do not copy them mechanically as templates. Search each publisher and product family first, then preserve the established component order and vocabulary when adding a related package.
 
 ### When Major Versions Need Separate Packages
 
@@ -80,13 +92,13 @@ Add the major version as one or more identifier components when evidence shows t
 - Stable major-line ARP identities: different EXE uninstall ProductCodes or uninstall keys, or different MSI UpgradeCodes across concurrently supported lines.
 - A publisher requiring a paid upgrade or a different entitlement for the next major release. `TechSmith.Snagit.2025`, `TechSmith.Snagit.2026`, `AceBIT.PasswordDepot.18`, and `AceBIT.PasswordDepot.19` are current examples of separately maintained release identities.
 
-Compare multiple releases within each major line before using registry identity as evidence. An MSI ProductCode commonly changes for every product version, and some EXE uninstall keys also change per release; ordinary per-version churn does not by itself justify a new package identifier. Do not split a rolling product whose major update replaces the previous version under the same compatibility, licensing, and ARP identity model.
+Compare multiple releases within each major line before using registry identity as evidence. An MSI ProductCode commonly changes for every product version, and some EXE uninstall keys also change per release. Ordinary per-version churn does not by itself justify a new package identifier. Do not split a rolling product whose major update replaces the previous version under the same compatibility, licensing, and ARP identity model.
 
 ### Installer Version Schemes And ARP Ranges
 
 WinGet uses explicit `AppsAndFeaturesEntries.DisplayVersion` values to map an installed ARP version back to a manifest version. For each supported installer type, winget-cli aggregates the lowest and highest declared display versions in one manifest version into an ARP version range. The source index rejects overlapping ARP ranges among versions of the same package. During installed package correlation, WinGet maps a detected `DisplayVersion` to the manifest version whose range contains it.
 
-This mapping becomes ambiguous when two installer families for one application publish incompatible version schemes. For example, the current `Zoom.Zoom` MSI package uses a product/build form such as `7.1.43453`, while `Zoom.Zoom.EXE` uses a display form such as `7.1.5 (43453)`. Keep those delivery families separate so their manifest versions and ARP mappings do not overlap or alternate between incompatible forms. The Google Chrome MSI and EXE families are likewise kept as `Google.Chrome` and `Google.Chrome.EXE`; their Beta and Dev channels preserve the same separation.
+This mapping becomes ambiguous when two installer families for one application publish incompatible version schemes. For example, the current `Zoom.Zoom` MSI package uses a product/build form such as `7.1.43453`, while `Zoom.Zoom.EXE` uses a display form such as `7.1.5 (43453)`. Keep those delivery families separate so their manifest versions and ARP mappings do not overlap or alternate between incompatible forms. The Google Chrome MSI and EXE families are likewise kept as `Google.Chrome` and `Google.Chrome.EXE`. Their Beta and Dev channels preserve the same separation.
 
 Before deciding to split, inspect several historical versions of both installer families and collect `PackageVersion`, installer type, ProductCode, UpgradeCode, and ARP `DisplayVersion`. Keep EXE and MSI in one package when they share a single monotonic package-version scheme and resolve to compatible installed identity. Follow [Choose between EXE and MSI](artifact-selection.md#choose-between-exe-and-msi) when both artifacts are equivalent wrappers for the same installation rather than independent delivery families.
 

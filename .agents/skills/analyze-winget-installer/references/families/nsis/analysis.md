@@ -33,9 +33,9 @@ $Info.FileExtensions
 $Info.ParserVersionInfo
 ```
 
-`Get-NSISInfo` performs the complete NSIS metadata parse. Pass the effective WinGet installer architecture when it is already known, because an x86 NSIS stub can select different ARP keys, names, and install roots on x86, x64, or ARM64 Windows. Pass the effective authored scope when it is known; compiled MultiUser installers such as `DBeaver.DBeaver.*` can write different HKCU/HKLM uninstall keys, display names, and install roots from the same binary. When a manifest has multiple effective architecture/scope combinations, parse once per distinct combination and reuse each result for the corresponding entry. Omit `-Scope` on the discovery pass when scope support is not yet known, then inspect `HasScopeRuntimeCheck` and `SupportedScopes` before requesting targeted results. Do not call `Read-ProductVersionFromNSIS`, `Read-ProductNameFromNSIS`, `Read-PublisherFromNSIS`, `Read-ProductCodeFromNSIS`, `Read-ProtocolsFromNSIS`, or `Read-FileExtensionsFromNSIS` after obtaining the applicable `$Info`; each convenience reader invokes the parser again. Use a `Read-*FromNSIS` function only when one isolated field is needed and no `Get-NSISInfo` result already exists.
+`Get-NSISInfo` performs the complete NSIS metadata parse. Pass the effective WinGet installer architecture when it is already known, because an x86 NSIS stub can select different ARP keys, names, and install roots on x86, x64, or ARM64 Windows. Pass the effective authored scope when it is known; compiled MultiUser installers such as `DBeaver.DBeaver.*` can write different HKCU/HKLM uninstall keys, display names, and install roots from the same binary. When a manifest has multiple effective architecture/scope combinations, parse once per distinct combination and reuse each result for the corresponding entry. Omit `-Scope` on the discovery pass when scope support is not yet known, then inspect `HasScopeRuntimeCheck` and `SupportedScopes` before requesting targeted results. Do not call `Read-ProductVersionFromNSIS`, `Read-ProductNameFromNSIS`, `Read-PublisherFromNSIS`, `Read-ProductCodeFromNSIS`, `Read-ProtocolsFromNSIS`, or `Read-FileExtensionsFromNSIS` after obtaining the applicable `$Info`. Each convenience reader invokes the parser again. Use a `Read-*FromNSIS` function only when one isolated field is needed and no `Get-NSISInfo` result already exists.
 
-Treat explicit uninstall registry writes as authoritative. Use `DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `SystemComponent`, and the uninstall key represented by `ProductCode`. When `AppsAndFeaturesEntries` contains multiple identities, route through the localized ARP manifest shape and author the corresponding locale values instead of discarding non-primary languages or copying every identity into the installer manifest. Do not infer a version from arbitrary strings when `DisplayVersion` is absent. Review every parser warning before continuing; unresolved values must remain unresolved until another static source or VM evidence supplies them.
+Treat explicit uninstall registry writes as authoritative. Use `DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, `DisplayIcon`, `SystemComponent`, and the uninstall key represented by `ProductCode`. When `AppsAndFeaturesEntries` contains multiple identities, route through the localized ARP manifest shape and author the corresponding locale values instead of discarding non-primary languages or copying every identity into the installer manifest. Do not infer a version from arbitrary strings when `DisplayVersion` is absent. Review every parser warning before continuing. Unresolved values must remain unresolved until another static source or VM evidence supplies them.
 
 For the standard Tauri NSIS template, `IsTauri` requires the compiled `nsis_tauri_utils.dll`, `MainBinaryName`, and placeholder-install-directory markers together. `TauriInstallerMode` distinguishes `currentUser`, `perMachine`, and `both` from the compiled ARP scope, MultiUser setters, and PE requested execution level. In `both` mode, pass `-Scope user` and `-Scope machine`; NSIS 3 `GetKnownFolderPath` resolves the per-user root to `%LocalAppData%\Programs\<Product>`. A custom Tauri template may not retain this evidence and must be analyzed as ordinary NSIS rather than inferred from its product name.
 
@@ -43,7 +43,7 @@ Continue to [visible ARP ownership](#identify-the-visible-arp-owner). Do not cal
 
 ## Identify the visible ARP owner
 
-Some NSIS installers are only wrappers around another installer. In those cases, the outer NSIS executable may not write the visible Apps & Features entry; the nested MSI/WiX/custom EXE does.
+Some NSIS installers are only wrappers around another installer. In those cases, the outer NSIS executable may not write the visible Apps & Features entry. The nested MSI/WiX/custom EXE does.
 
 Inspect these `$Info` properties together:
 
@@ -57,7 +57,7 @@ Route according to the combined evidence:
 
 - `IsPortable` is true: the compiled electron-builder portable template sets all three `PORTABLE_EXECUTABLE_*` environment variables, executes the unpacked application from a temporary directory, and writes no visible ARP entry. Do not author it as `InstallerType: nullsoft`; route it to the portable manifest workflow and retain the parser warning as evidence. `DefaultInstallLocation` is intentionally null because the observed directory is transient.
 - Outer NSIS writes the visible entry and no nested payload supersedes it: retain the direct-installer manifest shape and continue to [metadata and association projection](#record-metadata-and-registry-associations).
-- Outer NSIS writes an entry and also launches a nested installer: inspect both entries. Model the entry that remains visible and matches the installed application; use the canonical [VM validation workflow](../../workflows/vm-validation.md) if ownership cannot be proven statically.
+- Outer NSIS writes an entry and also launches a nested installer: inspect both entries. Model the entry that remains visible and matches the installed application. Use the canonical [VM validation workflow](../../workflows/vm-validation.md) if ownership cannot be proven statically.
 - Outer NSIS does not write a visible entry and launches a nested MSI/WiX: extract or otherwise obtain that payload, call `$MsiInfo = Get-MsiInstallerInfo -Path $NestedMsi`, and use the nested MSI/WiX manifest shape only when `$MsiInfo.AppsAndFeaturesInstallerType` and `$MsiInfo.HidesMsiAppsAndFeaturesEntry` prove its visible ARP behavior.
 - Outer NSIS does not write a visible entry and launches a custom EXE: route the payload to its focused installer parser. Do not label the ARP entry as MSI/WiX without MSI evidence.
 - No component can be proven to write a visible entry: use the canonical [VM validation workflow](../../workflows/vm-validation.md) for ARP-delta validation.
@@ -71,7 +71,7 @@ $MsiInfo = Get-MsiInstallerInfo -Path $NestedMsi[0]
 
 Omit `-Name` only when a complete bounded payload expansion is required. `-CollisionAction Prompt|Error|Skip|Overwrite|Rename` controls duplicate or existing outputs. Interactive calls default to `Prompt`; functions and unattended automation must pass `Rename` for deterministic suffix renaming.
 
-The GPL parser reads the source-backed data offset from `EW_EXTRACTFILE`, seeks directly to non-solid records, and advances one bounded decoder through solid records. It supports stored, LZMA/LZMA2, BZip2, zlib, raw DEFLATE, x86-BCJ-filtered LZMA, and NSISBI MTW payload streams without `7z.exe`. Output paths follow the compiled `SetOutPath` sequence similarly to 7-Zip/NanaZip: the virtual `$INSTDIR\` root is removed, while roots such as `$PLUGINSDIR`, `$SYSDIR`, `$R1`, and compiler-private `$_17_` variables remain as literal directories. This preserves architecture- and branch-specific layouts without resolving paths against the host. The extractor includes compiled `File` payloads only; it does not generate `[NSIS].nsi`, license artifacts, or patched uninstallers.
+The GPL parser reads the source-backed data offset from `EW_EXTRACTFILE`, seeks directly to non-solid records, and advances one bounded decoder through solid records. It supports stored, LZMA/LZMA2, BZip2, zlib, raw DEFLATE, x86-BCJ-filtered LZMA, and NSISBI MTW payload streams without `7z.exe`. Output paths follow the compiled `SetOutPath` sequence similarly to 7-Zip/NanaZip: the virtual `$INSTDIR\` root is removed, while roots such as `$PLUGINSDIR`, `$SYSDIR`, `$R1`, and compiler-private `$_17_` variables remain as literal directories. This preserves architecture- and branch-specific layouts without resolving paths against the host. The extractor includes compiled `File` payloads only. It does not generate `[NSIS].nsi`, license artifacts, or patched uninstallers.
 
 Every reconstructed path is projected below the selected destination. Unsafe absolute paths and traversal components cannot escape that directory, aliases count toward `MaximumExpandedBytes`, and partial files are removed on failure. `CollisionAction` retains Dumplings' normal behavior when distinct records still resolve to the same reconstructed path. An NSISBI archive that declares an external payload sidecar is rejected because an embedded-only result would be incomplete; obtain and analyze the sidecar explicitly.
 
@@ -93,7 +93,7 @@ Build the manifest evidence from the retained `$Info` object:
 - `DefaultInstallLocation`, `UninstallString`, `QuietUninstallString`, and `DisplayIcon` are supporting ARP evidence.
 - `RegistryAssociationInfo`, `Protocols`, and `FileExtensions` contain literal protocol and extension writes recovered during the same parse. Do not call `Read-ProtocolsFromNSIS` or `Read-FileExtensionsFromNSIS` after `$Info` already exists.
 
-Some applications register protocols or extensions only on first run. An empty static result means the installer did not prove the association; it does not prove that the installed application never creates one. Use the canonical [VM validation workflow](../../workflows/vm-validation.md) when first-run association evidence matters.
+Some applications register protocols or extensions only on first run. An empty static result means the installer did not prove the association. It does not prove that the installed application never creates one. Use the canonical [VM validation workflow](../../workflows/vm-validation.md) when first-run association evidence matters.
 
 ## Build Apps & Features and installer fields
 
@@ -107,13 +107,13 @@ Choose the manifest shape using the earlier route results:
 Apply these field rules:
 
 - Recheck `InstallModes` and every `InstallerSwitches` child against the WinGet defaults. Remove equal values; explicitly retain complete non-default overrides.
-- Keep `ProductCode` at installer level; do not duplicate it in `AppsAndFeaturesEntries.ProductCode`.
+- Keep `ProductCode` at installer level. Do not duplicate it in `AppsAndFeaturesEntries.ProductCode`.
 - Put localized ARP names and publishers in their corresponding locale manifests. Keep them in `AppsAndFeaturesEntries` only when that locale manifest does not exist.
 - Add `AppsAndFeaturesEntries` only for a meaningful visible-ARP mismatch, including nested installer type, publisher, package name, or display version.
 - Add `InstallerType: msi` or `wix` inside the entry only when the visible ARP entry has that effective type.
 - Include `UpgradeCode` whenever the outer or Apps & Features installer type is `msi`, `wix`, or `burn`.
 - Do not retain a version-bearing `DisplayName` override when WinGet normalization removes only the version and the remaining name matches `PackageName`.
-- Preserve separate installer entries for scope-specific switches; do not move a scope-specific `Custom` switch to manifest root.
+- Preserve separate installer entries for scope-specific switches. Do not move a scope-specific `Custom` switch to manifest root.
 
 ## Escalate unresolved behavior to VM validation
 

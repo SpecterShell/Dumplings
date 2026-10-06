@@ -44,7 +44,7 @@ PE version resources and marker strings do not satisfy detection. They can remai
 
 ## Route dispatch
 
-The format catalog maps physical evidence to `Cabinet3`, `Cabinet4`, `Cabinet5`, `Zip6Plus`, or `ZipExternalData`. The configured builder major version is checked only after selection. A mismatch emits `ActualInstaller.Format.VersionRouteMismatch`; the parser keeps the structural route because applying a version-selected decoder could reinterpret unrelated bytes.
+The format catalog maps physical evidence to `Cabinet3`, `Cabinet4`, `Cabinet5`, `Zip6Plus`, or `ZipExternalData`. The configured builder major version is checked only after selection. A mismatch emits `ActualInstaller.Format.VersionRouteMismatch`. The parser keeps the structural route because applying a version-selected decoder could reinterpret unrelated bytes.
 
 This design makes future extension explicit. A new metadata position, archive type, or payload identity requires a new route record and fixtures. A new INI key within an existing physical route usually belongs to metadata interpretation instead.
 
@@ -56,7 +56,7 @@ The parser reads only catalog metadata at discovery time. It materializes one ex
 
 ## ZIP discovery
 
-ZIP discovery delegates exact range derivation to `Get-EmbeddedZipArchiveRange` and opens each range through shared archive infrastructure. It enumerates central-directory entries, rejects empty or excessive archives, and closes every context in `finally`. A malformed candidate is skipped during discovery; once a route is selected, disappearance or corruption of a previously validated selected entry is an error.
+ZIP discovery delegates exact range derivation to `Get-EmbeddedZipArchiveRange` and opens each range through shared archive infrastructure. It enumerates central-directory entries, rejects empty or excessive archives, and closes every context in `finally`. A malformed candidate is skipped during discovery. Once a route is selected, disappearance or corruption of a previously validated selected entry is an error.
 
 ## Configuration parsing
 
@@ -154,7 +154,7 @@ The parser opens streams in the smallest helper that owns them and disposes them
 - Keep large payload bytes out of PowerShell object arrays.
 - Return serializable evidence instead of archive objects or open streams.
 
-The diagnostic benchmark harness accepts `-ActualInstallerPath` and optional `-ActualInstallerCompanionFile`. On PowerShell 7.6.5, the 11.9 MB fixed 9.6 fixture completed warm parser analysis in about 1.15 seconds with 109 MB allocated and full extraction in about 0.99 seconds with 104 MB allocated. The controlled 9.6 hybrid plus companion completed analysis in about 0.93 seconds and extraction in about 0.75 seconds. Peak process working set was about 311-320 MB because each isolated benchmark process includes the complete PackageModule import; these measurements are evidence, not CI thresholds.
+The diagnostic benchmark harness accepts `-ActualInstallerPath` and optional `-ActualInstallerCompanionFile`. On PowerShell 7.6.5, the 11.9 MB fixed 9.6 fixture completed warm parser analysis in about 1.15 seconds with 109 MB allocated and full extraction in about 0.99 seconds with 104 MB allocated. The controlled 9.6 hybrid plus companion completed analysis in about 0.93 seconds and extraction in about 0.75 seconds. Peak process working set was about 311-320 MB because each isolated benchmark process includes the complete PackageModule import. These measurements are evidence, not CI thresholds.
 
 ## Extension checklist
 

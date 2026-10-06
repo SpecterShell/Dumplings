@@ -20,7 +20,7 @@ The parser locates a high-density initializer instead of accepting isolated opti
 
 The bounded evaluator supports literal strings and numeric values, booleans, null, nullable booleans, local loads and stores, compiler-emitted string arrays, official `CloseApplicationInfo` object initializers, option-property getters, string concatenation, `String.Format`, interpolation lowered to supported calls, and branches whose conditions resolve from known values. Every assignment records its defining method and CIL offset.
 
-Unknown calls, reflection, delegates with arbitrary bodies, unsupported object graphs, cyclic control flow, malformed method bodies, and branches depending on runtime state are not executed. `UnresolvedExpressions` retains the property name, reconstructed bounded call expression with literal and option-reference arguments, defining method, and IL offset. Runtime-localized `SetupName`, `MessageOfPage2`, and `MessageOfPage3` calls are informational UI evidence; unresolved expressions that can change package metadata or installation behavior retain an incomplete diagnostic with the affected manifest fields.
+Unknown calls, reflection, delegates with arbitrary bodies, unsupported object graphs, cyclic control flow, malformed method bodies, and branches depending on runtime state are not executed. `UnresolvedExpressions` retains the property name, reconstructed bounded call expression with literal and option-reference arguments, defining method, and IL offset. Runtime-localized `SetupName`, `MessageOfPage2`, and `MessageOfPage3` calls are informational UI evidence. Unresolved expressions that can change package metadata or installation behavior retain an incomplete diagnostic with the affected manifest fields.
 
 ## Option normalization
 

@@ -26,7 +26,7 @@ SET_COPY_FILES(00001#app.exe|00002#support.dll)
 00002#support.dll -> <Application Folder>\bin\support.dll
 ```
 
-An embedded descriptor resolves to a validated record. A non-SFX descriptor resolves only from caller-supplied files or directories; `._z` companions are zlib streams. Duplicate or ambiguous companion names fail.
+An embedded descriptor resolves to a validated record. A non-SFX descriptor resolves only from caller-supplied files or directories. `._z` companions are zlib streams. Duplicate or ambiguous companion names fail.
 
 ## Path aliases
 
@@ -62,8 +62,8 @@ Execution actions are fixed pipe-delimited arrays. Setup actions use `*` sentine
 | `TransitionalFourCommand` | 67 | 4 | 20 | 47 |
 | `ModernSixCommand` | 73 | 6 | 20 | 53 |
 
-The QSetup 6 transitional route stores condition arguments at fields 35 through 46 and retains seven observed tail fields at 59 through 65. Those tail values are exposed as `ObservedTrailingFields`; they remain uninterpreted until a non-empty controlled sample establishes their semantics.
+The QSetup 6 transitional route stores condition arguments at fields 35 through 46 and retains seven observed tail fields at 59 through 65. Those tail values are exposed as `ObservedTrailingFields`. They remain uninterpreted until a non-empty controlled sample establishes their semantics.
 
 Descriptors and arguments live in separate array regions and pair by index. The parser preserves command type, wait policy, phase, stage, parameters, and condition owner. Recognized categories cover process launch, association, registry, INI, environment, architecture state, user interaction, process control, services, COM, fonts, downloads, restarts, Windows Installer, nested execution, filesystem, security, restore points, text files, installer control, and variable state.
 
-Conditions are classified by dependency on filesystem, installed applications, processes, services, operating system, locale, network, printer, registry, environment, hardware, user input, setup state, identity, dialogs, or variables. Host-dependent states remain unresolved. Literal unconditional modes can promote supported effects; malformed geometry produces a structured diagnostic instead of shifted fields.
+Conditions are classified by dependency on filesystem, installed applications, processes, services, operating system, locale, network, printer, registry, environment, hardware, user input, setup state, identity, dialogs, or variables. Host-dependent states remain unresolved. Literal unconditional modes can promote supported effects. Malformed geometry produces a structured diagnostic instead of shifted fields.

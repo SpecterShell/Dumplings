@@ -23,7 +23,7 @@ Validate that every selected asset exists and that all architecture variants rep
 
 Use `RealVersion` only when the best upstream change-detection version must differ from the canonical version authored in winget-pkgs. Common cases are:
 
-- A feed or download URL includes an extra build component needed to detect every release, while the package intentionally uses the shorter product version. `Readdle.Spark`, `Zoom.ZoomRooms`, and `#IQM2.MinuteTraq` use this pattern.
+- A feed or download URL includes an extra build component needed to detect every release, while the package uses the shorter product version. `Readdle.Spark`, `Zoom.ZoomRooms`, and `#IQM2.MinuteTraq` use this pattern.
 - The source version is available before downloading and is suitable for `Check()`, but the authoritative manifest version must be read from the changed installer. `Xmind.Xmind`, `ZWSOFT.ZWCAD.*`, and `Zoom.ZoomVDIUniversalPlugin` demonstrate this split.
 
 For a deterministic source transformation, assign both values before `Check()`:
@@ -35,11 +35,11 @@ $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('.')[0..2] -jo
 
 When the manifest version is available only from installer analysis, call `Check()` with the source version first. In its change branch, cache and inspect the installer and set `RealVersion` outside a recoverable `try`/`catch`. Do so before optional sources that still need to be fetched and before `Print()`, `Write()`, or `Submit()`.
 
-Do not use `RealVersion` when `Version` can already be the correct WinGet `PackageVersion` without missing upstream updates. Never use it to conceal an uncertain version mapping. If multiple upstream versions intentionally collapse to one `RealVersion`, expect same-version manifest updates and verify that this matches the publisher's versioning and winget-pkgs policy.
+Do not use `RealVersion` when `Version` can already be the correct WinGet `PackageVersion` without missing upstream updates. Never use it to conceal an uncertain version mapping. If multiple upstream versions collapse to one `RealVersion`, expect same-version manifest updates and verify that this matches the publisher's versioning and winget-pkgs policy.
 
 ## 7. Reuse Downloaded Installers
 
-`CheckInstallerUpdates` registers and owns its downloaded artifacts automatically. Do not add a second download/hash pass or copy its runtime result into `CurrentState`. Its verified hash evidence stays in `InstallerFileEvidence` outside serialized state; manifest updating invalidates it when the file identity changes.
+`CheckInstallerUpdates` registers and owns its downloaded artifacts automatically. Do not add a second download/hash pass or copy its runtime result into `CurrentState`. Its verified hash evidence stays in `InstallerFileEvidence` outside serialized state. Manifest updating invalidates it when the file identity changes.
 
 When a task must inspect an installer to discover its version or confirm a hash, register the file before parsing it:
 
@@ -53,6 +53,6 @@ Do not remove the cached file yourself. `PackageTask.Dispose()` owns cleanup. Su
 
 Prefer one aggregate `Get-<Family>Info` call when family-specific inspection is unavoidable. Do not call several `Read-*` helpers against the same installer.
 
-`Read-ProductVersionFromExe` returns the PE `ProductVersion` verbatim. A .NET informational version can include prerelease or build metadata such as `11.31.22413+d6e55d8f98`; do not assign it directly when the publisher, feed, or ARP uses a different package version. Compare authoritative source and installed-version evidence, keep the complete monotonic source value in `Version` when it is useful for update detection, and set an evidence-backed `RealVersion` for the WinGet `PackageVersion`. Do not strip arbitrary suffixes automatically.
+`Read-ProductVersionFromExe` returns the PE `ProductVersion` verbatim. A .NET informational version can include prerelease or build metadata such as `11.31.22413+d6e55d8f98`. Do not assign it directly when the publisher, feed, or ARP uses a different package version. Compare authoritative source and installed-version evidence, keep the complete monotonic source value in `Version` when it is useful for update detection, and set an evidence-backed `RealVersion` for the WinGet `PackageVersion`. Do not strip arbitrary suffixes automatically.
 
 If the downloaded file is an unsupported custom EXE wrapper and the required version or ARP identity exists only in a nested MSI, follow [Custom EXE wrappers with nested MSI](../sources/wrappers-and-providers.md#custom-exe-wrappers-with-nested-msi). That fallback keeps the outer file cached, extracts only the verified payload, and parses the MSI once with `Get-MsiInstallerInfo`.

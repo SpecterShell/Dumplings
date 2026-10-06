@@ -2,7 +2,7 @@
 
 ## Setup Factory 3.1 media
 
-Setup Factory 3.1 is multi-file media. `SETUP.EXE` is an MZ executable with an NE header and literal references to `\\IRDATA.IRD` and `IRSETUP.EXE`. Detection requires the launcher structure and a valid sibling archive, or a directly supplied valid `IRDATA.IRD`; strings alone are not sufficient.
+Setup Factory 3.1 is multi-file media. `SETUP.EXE` is an MZ executable with an NE header and literal references to `\\IRDATA.IRD` and `IRSETUP.EXE`. Detection requires the launcher structure and a valid sibling archive, or a directly supplied valid `IRDATA.IRD`. Strings alone are not sufficient.
 
 ```text
 media directory
@@ -242,7 +242,7 @@ No separate transformed runtime precedes these catalogs. `irsetup.exe` is an ord
 
 ## Legacy5 and Legacy6 metadata blocks
 
-Setup Factory 5 and 6 serialize global product values as eight variable-length strings followed by an exact three-byte trailer and one install-log path. A variable string uses a one-byte length when shorter than 255 bytes and `FF` followed by a little-endian `uint16` otherwise. The product block follows a terminated fixed-field region and occurs before `CImageInfo`; these boundaries prevent arbitrary UI text from being accepted as metadata. `CPasswordData` is an optional earlier class and narrows the search when present, but password-free projects omit it entirely.
+Setup Factory 5 and 6 serialize global product values as eight variable-length strings followed by an exact three-byte trailer and one install-log path. A variable string uses a one-byte length when shorter than 255 bytes and `FF` followed by a little-endian `uint16` otherwise. The product block follows a terminated fixed-field region and occurs before `CImageInfo`. These boundaries prevent arbitrary UI text from being accepted as metadata. `CPasswordData` is an optional earlier class and narrows the search when present, but password-free projects omit it entirely.
 
 ```text
 Legacy product block
@@ -318,11 +318,11 @@ next        *  Observed string
 next        *  Observed string
 ```
 
-The common condition evaluator in the 5.0.1.6 runtime checks the OS mask, selected package, language, and then every advanced comparison. An all-OS mask, package zero, language `None`, and an empty advanced list prove unconditional execution and permit a Set Value record to become `RegistryWrites`. A non-empty or environment-dependent condition remains a fully bounded record with `ConditionState: Unknown`; it does not desynchronize later records and is not projected as a deterministic write. A table after the built-in uninstall configuration is classified as uninstall behavior and never projected as installed-state evidence.
+The common condition evaluator in the 5.0.1.6 runtime checks the OS mask, selected package, language, and then every advanced comparison. An all-OS mask, package zero, language `None`, and an empty advanced list prove unconditional execution and permit a Set Value record to become `RegistryWrites`. A non-empty or environment-dependent condition remains a fully bounded record with `ConditionState: Unknown`. It does not desynchronize later records and is not projected as a deterministic write. A table after the built-in uninstall configuration is classified as uninstall behavior and never projected as installed-state evidence.
 
-Setup Factory 4 and 5 serialize non-file commands as additional MFC object tables. Each table begins with a counted `CObList`, a first-object `FFFF` new-class declaration, schema 1, and the exact runtime class name. Later objects use one stable high-bit object reference. The first nested `CConditionData` object can itself use an existing high-bit class reference when an earlier table already declared the class; this reference is archive-global rather than local to the containing action table. Rejecting that form truncates otherwise valid later action records.
+Setup Factory 4 and 5 serialize non-file commands as additional MFC object tables. Each table begins with a counted `CObList`, a first-object `FFFF` new-class declaration, schema 1, and the exact runtime class name. Later objects use one stable high-bit object reference. The first nested `CConditionData` object can itself use an existing high-bit class reference when an earlier table already declared the class. This reference is archive-global rather than local to the containing action table. Rejecting that form truncates otherwise valid later action records.
 
-Setup Factory 4 `CINIData` is a compact predecessor to the version 5 action. The 4.0 builder media contains two records in the generated-uninstaller region that update `%AppDir%\irunin.ini`; runtime and media comparison establishes action code 1 as Set Value for this layout. Other action codes remain unnamed until a source-backed artifact or builder project establishes them.
+Setup Factory 4 `CINIData` is a compact predecessor to the version 5 action. The 4.0 builder media contains two records in the generated-uninstaller region that update `%AppDir%\irunin.ini`. Runtime and media comparison establishes action code 1 as Set Value for this layout. Other action codes remain unnamed until a source-backed artifact or builder project establishes them.
 
 ```text
 Setup Factory 4 CINIData
@@ -379,7 +379,7 @@ next       16  Four observed uint32 policy values
 next        *  Four observed variable strings
 ```
 
-The version 5 INI action adds existing-value policy and the same common conditions used by registry, execute, and file-operation records. The builder documentation names its three actions Add, Delete Key, and Delete Section; the runtime serializer establishes numeric order 0, 1, and 2, while the parser exposes action 0 as `SetValue` to describe the resulting system effect precisely.
+The version 5 INI action adds existing-value policy and the same common conditions used by registry, execute, and file-operation records. The builder documentation names its three actions Add, Delete Key, and Delete Section. The runtime serializer establishes numeric order 0, 1, and 2, while the parser exposes action 0 as `SetValue` to describe the resulting system effect precisely.
 
 ```text
 Setup Factory 5 CINIData
@@ -486,7 +486,7 @@ Modern7Entry
 +0x10C      *  CompressedData, PackedSize bytes
 ```
 
-Setup Factory 7.0.1 and one observed 7.0.3 runtime place `RuntimeSize` immediately after the eight-byte magic. Later media commonly inserts one byte first. The parser tests both candidate offsets and accepts one only when the declared runtime fits the file and its first decoded bytes are `MZ`; it does not depend on a release-number threshold or PE timestamp.
+Setup Factory 7.0.1 and one observed 7.0.3 runtime place `RuntimeSize` immediately after the eight-byte magic. Later media commonly inserts one byte first. The parser tests both candidate offsets and accepts one only when the declared runtime fits the file and its first decoded bytes are `MZ`. It does not depend on a release-number threshold or PE timestamp.
 
 Only the first 2,000 bytes of the embedded runtime are transformed with XOR `0x07`. Bytes after that boundary are stored verbatim.
 

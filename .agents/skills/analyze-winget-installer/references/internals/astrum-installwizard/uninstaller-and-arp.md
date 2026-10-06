@@ -8,13 +8,13 @@ The parser converts compiled registry records to normalized writes, then selects
 
 `ProductCode` is the uninstall-key leaf. `DisplayName`, `DisplayVersion`, `Publisher`, `InstallLocation`, `UninstallString`, `QuietUninstallString`, and `DisplayIcon` come from values on that key. Missing optional fields stay absent. Unresolved values remain on raw `ArpEntries` but are omitted from `AppsAndFeaturesEntries` so WinGet cannot match on a template such as `<DynamicKey>`.
 
-The built-in “hide from Add/Remove Programs” behavior can suppress the key entirely. Controlled Modern2 hidden-ARP media installs files and writes no uninstall key; it does not create a hidden `SystemComponent=1` substitute.
+The built-in “hide from Add/Remove Programs” behavior can suppress the key entirely. Controlled Modern2 hidden-ARP media installs files and writes no uninstall key. It does not create a hidden `SystemComponent=1` substitute.
 
 ## Registry roots and views
 
-HKLM establishes machine scope and HKCU establishes user scope. The x64-compliance option selects the 64-bit uninstall view; ordinary x86 Modern2 media writes WOW6432Node. Registry paths are reported in normalized logical form while `RegistryView` records the physical view.
+HKLM establishes machine scope and HKCU establishes user scope. The x64-compliance option selects the 64-bit uninstall view. Ordinary x86 Modern2 media writes WOW6432Node. Registry paths are reported in normalized logical form while `RegistryView` records the physical view.
 
-Dynamic root or key variables prevent deterministic ProductCode projection. Literal Nowhere variables and the verified empty Registry/HKEY_CLASSES_ROOT fallback may resolve; general registry lookups may not use their compiled default without runtime evidence.
+Dynamic root or key variables prevent deterministic ProductCode projection. Literal Nowhere variables and the verified empty Registry/HKEY_CLASSES_ROOT fallback may resolve. General registry lookups may not use their compiled default without runtime evidence.
 
 ## Generated uninstaller
 

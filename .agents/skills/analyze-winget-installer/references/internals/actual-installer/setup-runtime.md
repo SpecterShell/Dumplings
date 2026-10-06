@@ -40,7 +40,7 @@ Historical media without `InstallLevel` uses administrator-related configuration
 
 ## Elevation and token behavior
 
-`/RUNAS` launches the setup as administrator. `/ALL` selects all-users installation; it does not independently prove that the current process already has the required token. Current "Modern" interface configurations can defer elevation until the Install action, which permits the runtime to preserve the original interactive user's identity for selected HKCU operations.
+`/RUNAS` launches the setup as administrator. `/ALL` selects all-users installation. It does not independently prove that the current process already has the required token. Current "Modern" interface configurations can defer elevation until the Install action, which permits the runtime to preserve the original interactive user's identity for selected HKCU operations.
 
 The PE requested-execution level is useful evidence, but it is not identical to WinGet scope. A dual-scope setup can begin unelevated, select machine scope, and then elevate. Conversely, a setup compiled to run as administrator can still contain explicit HKCU records whose target identity depends on the launch route.
 
@@ -57,7 +57,7 @@ The parser does not emulate token splitting. It preserves explicit roots, resolv
 
 Actual Installer documentation ties the generated setup bitness to the required operating-system architecture. A 64-bit-only project can produce a native 64-bit setup that uses 64-bit Program Files and registry view. Other projects commonly use a 32-bit runtime and 32-bit registry view, including WOW6432Node on 64-bit Windows.
 
-The parser interprets the older Boolean `x64`/`64-bit` keys and the builder's `SystemType` enum. Value `0` is the `32 & 64 bit` option and uses 32-bit filesystem and registry layout, value `1` is `64-bit only`, and value `2` is `32-bit only`. A controlled 9.6 runtime reads `SystemType` as an integer, then uses `dec eax` and `setz` to set its 64-bit-layout flag only when the parsed value equals `1`. This confirms the 32-bit layout for the known values `0` and `2`. Unknown values remain unresolved because a future runtime could add another enum member. Through builder 9.8, even the 64-bit-only route can use an x86 setup stub that disables WOW64 redirection at runtime; version 10.0 and later can emit a native x64 stub. Media without an architecture key falls back to native setup PE bitness. PE machine type, setup runtime bitness, required OS architecture, registry view, and every payload binary's architecture remain separate facts.
+The parser interprets the older Boolean `x64`/`64-bit` keys and the builder's `SystemType` enum. Value `0` is the `32 & 64 bit` option and uses 32-bit filesystem and registry layout, value `1` is `64-bit only`, and value `2` is `32-bit only`. A controlled 9.6 runtime reads `SystemType` as an integer, then uses `dec eax` and `setz` to set its 64-bit-layout flag only when the parsed value equals `1`. This confirms the 32-bit layout for the known values `0` and `2`. Unknown values remain unresolved because a future runtime could add another enum member. Through builder 9.8, even the 64-bit-only route can use an x86 setup stub that disables WOW64 redirection at runtime. Version 10.0 and later can emit a native x64 stub. Media without an architecture key falls back to native setup PE bitness. PE machine type, setup runtime bitness, required OS architecture, registry view, and every payload binary's architecture remain separate facts.
 
 ## Documented setup switches
 
@@ -78,7 +78,7 @@ Setup switches are case-insensitive. Paths containing spaces require quoting.
 
 The setup filename can also populate `<ExtraVar>` from text after `_` or `-` unless disabled by a setup parameter. This means renaming a setup can change project logic. The parser does not derive metadata from this runtime value.
 
-The generated uninstaller accepts `/S` for silent removal. VM-observed built-in registrations store the generated path without quotes in `UninstallString` and omit `QuietUninstallString`; `UninstallerCommandEvidence` preserves that ARP value and separately provides a quoted silent invocation. Literal custom ARP writes remain authoritative when they explicitly provide either command.
+The generated uninstaller accepts `/S` for silent removal. VM-observed built-in registrations store the generated path without quotes in `UninstallString` and omit `QuietUninstallString`. `UninstallerCommandEvidence` preserves that ARP value and separately provides a quoted silent invocation. Literal custom ARP writes remain authoritative when they explicitly provide either command.
 
 ## Success and exit codes
 
@@ -117,7 +117,7 @@ The setup runtime documents the following process exit codes. They are runtime p
 | `99` | Setup initialization failed |
 | `100` | Setup file could not be opened due to access denial |
 
-The parser returns the complete documented table as `ExitCodeEvidence` and leaves `InstallerSuccessCodes` empty because code 0 is the ordinary WinGet success default. This evidence is for diagnosis and manifest authoring review; do not copy the complete runtime table into every manifest.
+The parser returns the complete documented table as `ExitCodeEvidence` and leaves `InstallerSuccessCodes` empty because code 0 is the ordinary WinGet success default. This evidence is for diagnosis and manifest authoring review. Do not copy the complete runtime table into every manifest.
 
 ## Update mode
 
@@ -129,7 +129,7 @@ An update installer can invoke the installed uninstaller and wait. Static outer-
 
 Variables and commands can fetch network content. Current online builder media can leave `AppVersion=<V>` and obtain the final value at runtime. The parser decodes recognized `DOWNLOAD:`, `GETURL`, and `GETFILE` sources into `MediaInfo` and `ExternalPayloads`, reports the dynamic field, and does not fetch its source.
 
-The "Setup EXE + Data" mode stores application source content beside the setup in a separate 7z/LZMA data file. That path differs from embedded numbered ZIP media. The parser reports the compiled companion `DataFileName`; `Get-ActualInstallerInfo -CompanionFile` validates the filename, declared size, archive type, paths, links, encryption, duplicates, and expansion bounds, then uses its catalog for main-executable architecture and dependency analysis. `Expand-ActualInstallerInstaller` expands the same explicit local file without searching for or downloading media. Exit code 18 is the runtime's missing-data result.
+The "Setup EXE + Data" mode stores application source content beside the setup in a separate 7z/LZMA data file. That path differs from embedded numbered ZIP media. The parser reports the compiled companion `DataFileName`. `Get-ActualInstallerInfo -CompanionFile` validates the filename, declared size, archive type, paths, links, encryption, duplicates, and expansion bounds, then uses its catalog for main-executable architecture and dependency analysis. `Expand-ActualInstallerInstaller` expands the same explicit local file without searching for or downloading media. Exit code 18 is the runtime's missing-data result.
 
 ## Silent-install validation boundary
 

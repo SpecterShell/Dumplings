@@ -42,7 +42,7 @@ A section record contains:
 - estimated size;
 - command-table start and length.
 
-Uninstall sections use the same command representation. Silent installation runs selected sections; it does not mean every section is selected.
+Uninstall sections use the same command representation. Silent installation runs selected sections. It does not mean every section is selected.
 
 ## Functions and callbacks
 

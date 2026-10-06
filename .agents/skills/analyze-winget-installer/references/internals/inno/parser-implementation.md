@@ -90,7 +90,7 @@ Likewise, an architecture expression describes admission and install mode. It do
 
 Metadata and payload decoding must remain bounded. Password-protected data requires the format's key derivation, password-test, nonce, and authenticated decryption rules. A missing password is a structured limitation, not malformed input.
 
-External disk slices are supported when the required media files are available. The extractor reads `SlicesPerDisk`, reproduces the official numbered or letter-suffixed filename mapping, validates every `idska32`/`idskb32` header and declared file size, and presents only the catalogued compressed ranges as one bounded stream. Missing slices remain a deterministic missing-media error; their bytes cannot be synthesized.
+External disk slices are supported when the required media files are available. The extractor reads `SlicesPerDisk`, reproduces the official numbered or letter-suffixed filename mapping, validates every `idska32`/`idskb32` header and declared file size, and presents only the catalogued compressed ranges as one bounded stream. Missing slices remain a deterministic missing-media error. Their bytes cannot be synthesized.
 
 Use `Expand-InnoInstaller -DiskSourcePath <path[]>` when slices are stored outside the setup executable directory. Each path can name a search directory or an explicit slice file. The default search includes the setup executable directory. The parser opens only the current slice and never concatenates complete media in memory.
 

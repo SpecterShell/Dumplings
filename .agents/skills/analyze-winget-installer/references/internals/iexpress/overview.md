@@ -26,7 +26,7 @@ WExtract PE stub
 selected command -> script, EXE, or MSI from CAB catalog + configured arguments
 ```
 
-PE resource RVAs are mapped through the section table; each resource size bounds its CAB or text. Resource names, not neighboring strings, associate commands with settings. The configured command is execution evidence, while CAB entry order is only physical catalog order.
+PE resource RVAs are mapped through the section table, and each resource size bounds its CAB or text. Resource names, not neighboring strings, associate commands with settings. The configured command is execution evidence, while CAB entry order is only physical catalog order.
 
 ## Detection invariants
 
@@ -46,7 +46,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

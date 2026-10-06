@@ -6,7 +6,7 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 
 ## Mental model
 
-Paquet Builder has used five physically different package layouts. All are native PE launchers, but the package catalog moved from a compressed controller and GAF stream to an ISFX-described cabinet, then to a compressed named-resource program, and finally to independent 7z payload and runtime archives. File placement, registry changes, nested execution, and ARP identity belong to the catalog or compiled program; the outer PE version resource is only product identity evidence.
+Paquet Builder has used five physically different package layouts. All are native PE launchers, but the package catalog moved from a compressed controller and GAF stream to an ISFX-described cabinet, then to a compressed named-resource program, and finally to independent 7z payload and runtime archives. File placement, registry changes, nested execution, and ARP identity belong to the catalog or compiled program. The outer PE version resource is only product identity evidence.
 
 ```text
 distributed package

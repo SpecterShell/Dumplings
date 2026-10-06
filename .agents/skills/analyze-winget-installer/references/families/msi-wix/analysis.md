@@ -29,7 +29,7 @@ $Info.Protocols
 $Info.FileExtensions
 ```
 
-Do not follow this call with `Read-ProductCodeFromMsi`, `Read-UpgradeCodeFromMsi`, `Read-InstallerBuilderFromMsi`, location readers, ARP readers, or association readers for fields already present in `$Info`; those convenience functions reopen and parse the database.
+Do not follow this call with `Read-ProductCodeFromMsi`, `Read-UpgradeCodeFromMsi`, `Read-InstallerBuilderFromMsi`, location readers, ARP readers, or association readers for fields already present in `$Info`. Those convenience functions reopen and parse the database.
 
 Use a single-field `Read-*FromMsi` helper only when one isolated value is needed and no detailed result exists. Pass `TransformPath` or `PatchPath` to the same `Get-MsiInstallerInfo` call when transforms or patches materially change the effective MSI tables.
 
@@ -42,11 +42,11 @@ Route from `$Info.InstallerBuilder`:
 - `InstallShield`: retain `InstallerType: msi` and use the InstallShield MSI shape. Do not confuse it with an InstallShield EXE wrapper.
 - `Unknown`: use the generic MSI shape unless another structured table or summary marker proves the builder.
 
-`Get-MsiInstallerInfo` currently returns `WiX`, `AdvancedInstaller`, `InstallShield`, or `Unknown`. Treat builder classification as authoring evidence, not as proof of visible ARP behavior or silent-install success. Use `Test-WiXInstaller` only when the Boolean is needed without the detailed result; do not parse the same file with both functions.
+`Get-MsiInstallerInfo` currently returns `WiX`, `AdvancedInstaller`, `InstallShield`, or `Unknown`. Treat builder classification as authoring evidence, not as proof of visible ARP behavior or silent-install success. Use `Test-WiXInstaller` only when the Boolean is needed without the detailed result. Do not parse the same file with both functions.
 
 ## Identify the visible ARP entry
 
-WinGet considers an ARP entry MSI-backed when its `WindowsInstaller` registry value is `1`; otherwise it treats the entry as EXE-style. The fact that an MSI database wrote a key does not make that key MSI-style.
+WinGet considers an ARP entry MSI-backed when its `WindowsInstaller` registry value is `1`. Otherwise it treats the entry as EXE-style. The fact that an MSI database wrote a key does not make that key MSI-style.
 
 Route using the combined `$Info` evidence:
 
@@ -71,9 +71,9 @@ Route the result:
 Then compare silent behavior with the WinGet defaults:
 
 - Standard MSI quiet/passive behavior: omit `InstallModes`, `Silent`, `SilentWithProgress`, and `Log`.
-- An MSI that turns `/passive` into interactive UI: explicitly omit `silentWithProgress` from `InstallModes`; if a defensive `SilentWithProgress` override is retained, map it to the verified quiet command rather than `/passive`.
+- An MSI that turns `/passive` into interactive UI: explicitly omit `silentWithProgress` from `InstallModes`. If a defensive `SilentWithProgress` override is retained, map it to the verified quiet command, not `/passive`.
 - Package-specific complete replacements: write only the differing child fields and retain no-reboot behavior.
-- License acceptance or another public property needed in all modes: put it in `Custom`; add `Agreements` only when the authoring skill's locale workflow also requires it.
+- License acceptance or another public property needed in all modes: put it in `Custom`. Add `Agreements` only when the authoring skill's locale workflow also requires it.
 - Custom actions that reject quiet/passive mode or return nonstandard codes: use the canonical [VM validation workflow](../../workflows/vm-validation.md).
 
 ## Record associations and build manifest fields
@@ -88,7 +88,7 @@ Choose the manifest shape using the earlier results, then apply these rules:
 - Whenever an Apps & Features item is required and either the outer type or item type is `msi`, `wix`, or `burn`, include `$Info.UpgradeCode`.
 - Do not duplicate installer-level `ProductCode` inside `AppsAndFeaturesEntries`.
 - Recheck `InstallModes` and every `InstallerSwitches` child against the WinGet defaults. Remove equal values and retain complete non-default replacements.
-- Preserve association fields even though they are not currently included in the public WinGet index; route first-run-only associations to the canonical [VM validation workflow](../../workflows/vm-validation.md).
+- Preserve association fields even though they are not currently included in the public WinGet index. Route first-run-only associations to the canonical [VM validation workflow](../../workflows/vm-validation.md).
 
 ## Escalate unresolved behavior to VM validation
 

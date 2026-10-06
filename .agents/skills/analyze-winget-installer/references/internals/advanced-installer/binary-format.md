@@ -85,7 +85,7 @@ Offset  Size  Field
 0x08       N  Sibling filename, Windows-1252 or UTF-16LE by media generation
 ```
 
-Observed role `3` identifies the bootstrapper INI, `6` identifies the application `FILES.7z`, and `7` identifies the compressed main package. Names resolve relative to the directory containing `setup.exe`; rooted paths and traversal are rejected. The table carries no payload sizes, so extraction obtains each size from the corresponding sibling file. A missing sibling leaves the outer format identifiable but produces incomplete-media warnings.
+Observed role `3` identifies the bootstrapper INI, `6` identifies the application `FILES.7z`, and `7` identifies the compressed main package. Names resolve relative to the directory containing `setup.exe`. Rooted paths and traversal are rejected. The table carries no payload sizes, so extraction obtains each size from the corresponding sibling file. A missing sibling leaves the outer format identifiable but produces incomplete-media warnings.
 
 ## Known selector tuples
 
@@ -109,7 +109,7 @@ The 32 characters at footer offset `0x1C` are not a checksum. Rebuilding the sam
 
 ## Transform boundary
 
-Catalog v0 stores payload bytes directly. In catalog v1, `TransformFlag = 0` stores payload bytes directly and `TransformFlag = 2` XORs the first `min(512, PayloadSize)` bytes with `0xFF`; bytes after that prefix are unchanged. Unknown flags are opaque and cannot be extracted as plain data.
+Catalog v0 stores payload bytes directly. In catalog v1, `TransformFlag = 0` stores payload bytes directly and `TransformFlag = 2` XORs the first `min(512, PayloadSize)` bytes with `0xFF`. Bytes after that prefix are unchanged. Unknown flags are opaque and cannot be extracted as plain data.
 
 ## Nested archives
 

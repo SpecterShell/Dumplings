@@ -45,9 +45,9 @@ PE .taubndl (Tauri 2.7 through 2.9)
     `-- tag byte count    pointer-sized unsigned word, exactly 3
 ```
 
-The generated asset-map ABI is stable from Tauri 1.0 onward. The asset record is 16 bytes for PE32 x86 and 32 bytes for PE32+ x64 or ARM64. Pointers are absolute image virtual addresses and require image-base and section mapping. PHF keys are unique, so a repeated key splits adjacent generated map slices even when the linker inserts no padding. A CSP map value uses an element count instead of a byte count. Each non-empty element must decode as `CspHash::Script(&str)` and point to a quoted SHA-256 CSP value before the map is cataloged as auxiliary evidence; accept an empty CSP slice only when a matching non-empty HTML record proves the adjacent map boundary. Tauri 1.x injects the `__TAURI_PATTERN__` and `__TAURI_METADATA__` globals; require both marker classes when a custom or URL-backed provider leaves no standard asset map.
+The generated asset-map ABI is stable from Tauri 1.0 onward. The asset record is 16 bytes for PE32 x86 and 32 bytes for PE32+ x64 or ARM64. Pointers are absolute image virtual addresses and require image-base and section mapping. PHF keys are unique, so a repeated key splits adjacent generated map slices even when the linker inserts no padding. A CSP map value uses an element count instead of a byte count. Each non-empty element must decode as `CspHash::Script(&str)` and point to a quoted SHA-256 CSP value before the map is cataloged as auxiliary evidence. Accept an empty CSP slice only when a matching non-empty HTML record proves the adjacent map boundary. Tauri 1.x injects the `__TAURI_PATTERN__` and `__TAURI_METADATA__` globals; require both marker classes when a custom or URL-backed provider leaves no standard asset map.
 
-Tauri 2.7 through 2.9 placed the runtime bundle type in `.taubndl`. The section contains a Rust string fat pointer to `NSS`, `MSI`, or `UNK` in read-only data; the bundler follows that pointer and patches the three-byte value. Tauri 2.10 replaced this structure with a long `__TAURI_BUNDLE_TYPE_VAR_*` string token referenced by a mutable Rust `&str` in writable initialized data. Follow that fat pointer to distinguish the patched runtime value from match-arm literals retained elsewhere. Resolve the mutable reference independently from the capped marker catalog. When no validated reference is available, accept only one unambiguous token value and report it as a medium-confidence fallback.
+Tauri 2.7 through 2.9 placed the runtime bundle type in `.taubndl`. The section contains a Rust string fat pointer to `NSS`, `MSI`, or `UNK` in read-only data. The bundler follows that pointer and patches the three-byte value. Tauri 2.10 replaced this structure with a long `__TAURI_BUNDLE_TYPE_VAR_*` string token referenced by a mutable Rust `&str` in writable initialized data. Follow that fat pointer to distinguish the patched runtime value from match-arm literals retained elsewhere. Resolve the mutable reference independently from the capped marker catalog. When no validated reference is available, accept only one unambiguous token value and report it as a medium-confidence fallback.
 
 ## Detection invariants
 
@@ -55,7 +55,7 @@ A marker alone is a routing hint. Accept the family only after its surrounding h
 
 ## Metadata projection
 
-Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields. Tauri evidence is application-framework data nested under `PortableEvidence`, not an installer-family result; its top-level version strings retain the PE `VERSIONINFO` field names.
+Project only structured metadata and explicit registry behavior into the shared parser result. Preserve conditional or unknown values as warnings or unresolved fields. Tauri evidence is application-framework data nested under `PortableEvidence`, not an installer-family result. Its top-level version strings retain the PE `VERSIONINFO` field names.
 
 ## Bounds and malformed input
 
@@ -67,7 +67,7 @@ Open the executable once per operation, reuse parsed layout evidence, and prefer
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

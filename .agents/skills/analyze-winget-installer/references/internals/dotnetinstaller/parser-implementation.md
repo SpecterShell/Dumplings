@@ -23,7 +23,7 @@ Normal detection requires a valid PE, exactly one bounded `CUSTOM/RES_CONFIGURAT
 
 ## Diagnostics
 
-Configuration reference failures identify the affected identity and installability fields. Missing or ambiguous payloads affect ProductCode and Apps & Features evidence. Outer mode support with unproven nested routes affects `InstallModes` and `InstallerSwitches`. Silent completion commands are risk diagnostics. Raw parser results remain scenario-neutral; analyzer and manifest-update callers assign level and blocking policy.
+Configuration reference failures identify the affected identity and installability fields. Missing or ambiguous payloads affect ProductCode and Apps & Features evidence. Outer mode support with unproven nested routes affects `InstallModes` and `InstallerSwitches`. Silent completion commands are risk diagnostics. Raw parser results remain scenario-neutral. Analyzer and manifest-update callers assign level and blocking policy.
 
 ## Bounds
 
@@ -47,5 +47,5 @@ Shared PE, cabinet, archive, bounded-stream, and filesystem helpers add offset, 
 
 ## Performance
 
-PE resources and the primary XML are parsed once. Each selected reference document and companion MSI is parsed once. Runtime token scans exclude resource sections. Repeated locale or mode routes to one MSI share extraction and MSI database parsing. CodeMeter Runtime 9.10 contains fifteen command occurrences for one 182,786,040-byte MSI-bearing wrapper; the parser retains all occurrences while opening the MSI once.
+PE resources and the primary XML are parsed once. Each selected reference document and companion MSI is parsed once. Runtime token scans exclude resource sections. Repeated locale or mode routes to one MSI share extraction and MSI database parsing. CodeMeter Runtime 9.10 contains fifteen command occurrences for one 182,786,040-byte MSI-bearing wrapper. The parser retains all occurrences while opening the MSI once.
 

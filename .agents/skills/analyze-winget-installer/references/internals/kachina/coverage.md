@@ -11,7 +11,7 @@
 | payload catalog and extraction | yes | yes | yes | no embedded payload |
 | MD5 and XXH3-128 verification | according to metadata | according to metadata | yes | not applicable |
 | updater/uninstaller reconstruction | yes | yes | yes | yes from control prefix |
-| ARP identity and scope variants | yes | yes | yes | identity known; version waits for source metadata |
+| ARP identity and scope variants | yes | yes | yes | identity known. Version waits for source metadata |
 | runtime package catalog | appended records | appended records | yes | online/configuration evidence only |
 | HDiff patch application | no | no | no | no |
 

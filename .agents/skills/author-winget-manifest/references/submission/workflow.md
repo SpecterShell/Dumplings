@@ -5,18 +5,18 @@
 Load Dumplings and run its offline, process-safe validator before submission:
 
 ```powershell
-Import-Module .\Modules\PackageModule\Index.ps1 -Force
+. .\Modules\PackageModule\Index.ps1
 $ManifestDirectory = 'C:\Path\To\ManifestDirectory'
 Test-WinGetManifest -Path $ManifestDirectory
 ```
 
-`Get-WinGetManifestValidationResult -Path <manifest-directory>` always returns structured diagnostics, effective installer entries, and dependency evidence. It also accepts `-Manifest` for an in-memory logical manifest. Use `Test-WinGetManifest -Path <manifest-directory> -PassThru` when the same result should be returned only after validation errors have been converted to a terminating error. Add `-ErrorOnWarning` to `Test-WinGetManifest` for the strict warning behavior of `winget validate`; that switch does not belong to `Get-WinGetManifestValidationResult`. Validation does not download or execute installers and does not require `winget.exe`; the Azure pipeline remains authoritative for repository and installer-content checks.
+`Get-WinGetManifestValidationResult -Path <manifest-directory>` always returns structured diagnostics, effective installer entries, and dependency evidence. It also accepts `-Manifest` for an in-memory logical manifest. Use `Test-WinGetManifest -Path <manifest-directory> -PassThru` when the same result should be returned only after validation errors have been converted to a terminating error. Add `-ErrorOnWarning` to `Test-WinGetManifest` for the strict warning behavior of `winget validate`. That switch does not belong to `Get-WinGetManifestValidationResult`. Validation does not download or execute installers and does not require `winget.exe`. The winget-pkgs validation service remains authoritative for repository, catalog, security, and installer-content checks.
 
-Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the latest stable version consistently.
+Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the repository-recommended version consistently, currently `1.12.0`.
 
-Also check the exact physical names from [File set](../manifest/model-and-files.md#file-set). The version document must be `<PackageIdentifier>.yaml`; a filename such as `<PackageIdentifier>.version.yaml` fails the winget-pkgs manifest-path rules even when the YAML contains `ManifestType: version`.
+Also check the exact physical names from [File set](../manifest/model-and-files.md#file-set). The version document must be `<PackageIdentifier>.yaml`. A filename such as `<PackageIdentifier>.version.yaml` fails the winget-pkgs manifest-path rules even when the YAML contains `ManifestType: version`.
 
-Check the identifier directory hierarchy at the same time. Split every dot-delimited `PackageIdentifier` component into a separate directory. Do not submit `Google.Chrome.Canary` under `Google.Chrome.Canary` or `Chrome.Canary`; its hierarchy is `manifests/g/Google/Chrome/Canary/<PackageVersion>/`.
+Check the identifier directory hierarchy at the same time. Split every dot-delimited `PackageIdentifier` component into a separate directory. Do not submit `Google.Chrome.Canary` under `Google.Chrome.Canary` or `Chrome.Canary`. Its hierarchy is `manifests/g/Google/Chrome/Canary/<PackageVersion>/`.
 
 For local install testing:
 
@@ -41,7 +41,7 @@ For one automation task, set the equivalent model-specific option in `Config.yam
 SkipInstallerAnalysis: true
 ```
 
-Either setting skips nested payload extraction, installer-family detection, and static metadata parsers. Installer downloads required for SHA-256, release-date handling, manifest formatting, validation, and submission still run. Use this only when the preserved manifest fields are already supported by other evidence; it does not waive installer analysis or VM validation during manifest authoring.
+Either setting skips nested payload extraction, installer-family detection, and static metadata parsers. Installer downloads required for SHA-256, release-date handling, manifest formatting, validation, and submission still run. Use this only when the preserved manifest fields are already supported by other evidence. It does not waive installer analysis or VM validation during manifest authoring.
 
 ## Common Blocking Issues
 
@@ -57,7 +57,9 @@ Check for these before opening or updating a PR:
 - `Validation-Unattended-Failed`: installer does not complete silently with declared type/switches.
 - `Manifest-Installer-Validation-Error`: installer type, MSIX metadata, or `AppsAndFeaturesEntries` is inconsistent.
 - `PullRequest-Error`: PR includes more than one package version or unrelated files.
-- `Binary-Validation-Error`: installer is flagged, inaccessible, corrupt, or otherwise fails static scan.
+- `Binary-Validation-Error`: installer fails static scan. Verify the hash, accessibility, and reported security detection. A blocking ESRP detection cannot be waived by a moderator or administrator. Resolve the detection and obtain a new validation run.
+
+Red `Policy-*`, `Validation-Domain`, and `Validation-Executable-Error` labels require Windows Package Manager administrator review. Community moderator approval cannot waive them. `Internal-Error-*` labels can indicate service failures. Inspect the current checks and artifacts before changing evidence-backed manifest values or requesting a rerun.
 
 ## PR Scope
 
@@ -82,37 +84,15 @@ The no-dot rule applies only to the identifier directories. A version directory 
 
 ## Validation And Publishing Lifecycle
 
-After submission, [`wingetbot`](https://github.com/wingetbot) starts the Azure Validation pipeline. Its PR comments contain the pipeline link and validation results, and automation applies labels describing add/remove and validation state.
+After submission, a GitHub App reports validation directly in the PR's **Checks** tab. The production app is `wingetvalidator-prod`. The current stages are PR structure, manifests, URLs, URL domains, manifest policy, catalog content, installer scans, installation, installer metadata, and `10. Validation Completed`. A historical `Azure-Pipeline-Passed` label can still appear. It does not mean that the current logs live in Azure DevOps.
 
-Do not assume every dynamic-validation failure is caused by the manifest. The validation service has known classes of infrastructure and automation problems tracked by [microsoft/winget-pkgs#325593](https://github.com/microsoft/winget-pkgs/issues/325593). Inspect the pipeline artifacts before changing otherwise-supported manifest fields in response to `Internal-Error-Dynamic-Scan`, unexplained installation failures, or inconsistent bot output.
+Follow [Validation logs and check results](validation-logs.md) to download the current operation's artifacts. Record each relevant check's status and conclusion, not just the completion check or labels. The catalog stage also checks ARP version-range overlaps, declared dependency availability and minimum versions, and removal safety. Local schema validation cannot reproduce the live catalog.
 
-After merge, the publish pipeline applies the merged manifest changes to the built WinGet source index. A merged YAML change is not visible to clients until publication completes.
+Installation validation starts as a standard, non-elevated user. Reproduce the exact switches and elevation route in the [VM workflow](../../../analyze-winget-installer/references/workflows/vm-validation.md). Set `ElevationRequirement: elevationRequired` only when that route requires explicit pre-elevation. Machine scope or a writable `Program Files` target alone does not prove it, and package updates must not add it automatically.
 
-## Retrieve Azure Validation Logs
+When feedback is required, the current repository policy adds `No-Recent-Activity` after five days and closes the PR after three more days without activity. For eligible PRs, ask at most two active moderators and avoid pinging community moderators for administrator-only labels. Moderators can request a fresh validation with `@wingetbot run`. Agents should not comment or trigger reruns without user authorization. See [Moderation](https://github.com/microsoft/winget-pkgs/blob/master/doc/Moderation.md) and the [failure guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md).
 
-Use the bundled read-only PowerShell script to find the latest `wingetbot` pipeline comment and download both `InstallationVerificationLogs` and `ValidationResult`:
-
-```powershell
-.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
-  -PullRequest 123456 `
-  -OutputDirectory .\ValidationLogs\123456
-```
-
-Anonymous GitHub access works for public PRs but is rate limited. The script uses `$env:GH_DUMPLINGS_TOKEN` by default, matching the other Dumplings GitHub API helpers; supply `-GitHubToken` only to override it. The script never closes, reopens, labels, or comments on a PR.
-
-When the Azure link or build ID is already known:
-
-```powershell
-.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
-  -PipelineUrl 'https://dev.azure.com/shine-oss/winget-pkgs/_build/results?buildId=123456' `
-  -Force
-
-.\.agents\skills\author-winget-manifest\scripts\Get-WinGetPRValidationLog.ps1 `
-  -BuildId 123456 `
-  -ArtifactName InstallationVerificationLogs
-```
-
-Artifacts are saved as ZIP files and expanded into same-name directories by default. Use `-NoExpand` to keep only archives, `-Force` to replace previous output, or `-WhatIf` to resolve the PR/build/artifact metadata without writing files. Review `InstallationVerificationLogs` for WinGet command output and installer behavior; use `ValidationResult` for structured validation status and exit-code evidence.
+After merge, the publishing service applies the merged manifest changes to the WinGet source index. Check the publishing comment and labels before expecting clients to see the version. Merge alone does not establish publication.
 
 ## Evidence To Report
 
@@ -131,5 +111,6 @@ When presenting a completed manifest update, report:
 
 - [winget-pkgs authoring](https://github.com/microsoft/winget-pkgs/blob/master/doc/Authoring.md)
 - [winget-pkgs policies](https://github.com/microsoft/winget-pkgs/blob/master/doc/Policies.md)
+- [winget-pkgs validation stages](https://github.com/microsoft/winget-pkgs/blob/master/doc/Validation.md)
 - [winget-pkgs validation failure guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md)
 - [WinGet manifest schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.12.0)

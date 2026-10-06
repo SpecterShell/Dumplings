@@ -19,7 +19,7 @@ Apply the WinGet defaults below. Add `Scope`, an install-location override, or A
 
 ## WiX MSI package
 
-Use this shape when `$Info.InstallerBuilder` is `WiX`. If only a Boolean classification is needed, `Test-WiXInstaller` can inspect WiX summary strings, table names, properties, and custom-action markers; do not call it after `$Info` already supplies the same classification. Use [install-location analysis](analysis.md#determine-install-location-switches-and-modes) to obtain the actual public install-directory property rather than assuming `INSTALLDIR`.
+Use this shape when `$Info.InstallerBuilder` is `WiX`. If only a Boolean classification is needed, `Test-WiXInstaller` can inspect WiX summary strings, table names, properties, and custom-action markers. Do not call it after `$Info` already supplies the same classification. Use [install-location analysis](analysis.md#determine-install-location-switches-and-modes) to obtain the actual public install-directory property rather than assuming `INSTALLDIR`.
 
 ```yaml
 Installers:
@@ -30,7 +30,7 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-WiX MSIs use properties including `INSTALLDIR`, `INSTALLLOCATION`, `APPLICATIONROOTDIRECTORY`, `INSTALL_ROOT`, and package-specific all-uppercase names. If `WIXUI_INSTALLDIR` exists, use it only when the referenced directory is actually connected to installed components; the parser performs this table check because the property can remain in a package with no usable location UI.
+WiX MSIs use properties including `INSTALLDIR`, `INSTALLLOCATION`, `APPLICATIONROOTDIRECTORY`, `INSTALL_ROOT`, and package-specific all-uppercase names. If `WIXUI_INSTALLDIR` exists, use it only when the referenced directory is actually connected to installed components. The parser performs this table check because the property can remain in a package with no usable location UI.
 
 ## Advanced Installer MSI package
 
@@ -51,7 +51,7 @@ Keep the comment only when it explains useful generator-specific behavior. Remov
 
 ## Advanced Installer MSI with EXE ARP
 
-Use this shape when `$Info.InstallerBuilder` is `AdvancedInstaller`, `$Info.HidesMsiAppsAndFeaturesEntry` is true, and `$Info.AppsAndFeaturesInstallerType` is `exe`. Advanced Installer can hide the native MSI entry through `ARPSYSTEMCOMPONENT=1` or `SystemComponent=1` and author a separate non-GUID uninstall key such as `[ProductName] [ProductVersion]`. Use `$Info.AppsAndFeaturesProductCode` for the visible key rather than the hidden MSI `ProductCode`.
+Use this shape when `$Info.InstallerBuilder` is `AdvancedInstaller`, `$Info.HidesMsiAppsAndFeaturesEntry` is true, and `$Info.AppsAndFeaturesInstallerType` is `exe`. Advanced Installer can hide the native MSI entry through `ARPSYSTEMCOMPONENT=1` or `SystemComponent=1` and author a separate non-GUID uninstall key such as `[ProductName] [ProductVersion]`. Use `$Info.AppsAndFeaturesProductCode` for the visible key, not the hidden MSI `ProductCode`.
 
 ```yaml
 Installers:
@@ -66,7 +66,7 @@ Installers:
   - InstallerType: exe
 ```
 
-The Apps & Features entry exists because the visible ARP type differs from the outer MSI type. Don't include `UpgradeCode` because the installer type in the visible ARP is not MSI, and do not duplicate `ProductCode` inside the entry. Known example: `IPEVO.Vurbo-ai`.
+The Apps & Features entry exists because the visible ARP type differs from the outer MSI type. Do not include `UpgradeCode` because the installer type in the visible ARP is not MSI, and do not duplicate `ProductCode` inside the entry. Known example: `IPEVO.Vurbo-ai`.
 
 ## InstallShield MSI package
 
@@ -87,7 +87,7 @@ Retain the location override only when `$Info.InstallLocationSwitch` returns it.
 
 ## Hidden MSI with `.msq` EXE ARP
 
-Use this shape when `$Info.HasMsqAppsAndFeaturesEntry` and `$Info.HidesMsiAppsAndFeaturesEntry` are both true. These packages hide the native `{ProductCode}` entry and write a visible `{ProductCode}.msq` uninstall key. Use `$Info.AppsAndFeaturesProductCode`; do not append `.msq` manually. Inspect `$Info.AppsAndFeaturesEntries.MsqAppsAndFeaturesRegistryRows` and confirm that the visible entry does not set `WindowsInstaller=1` before classifying it as `exe`.
+Use this shape when `$Info.HasMsqAppsAndFeaturesEntry` and `$Info.HidesMsiAppsAndFeaturesEntry` are both true. These packages hide the native `{ProductCode}` entry and write a visible `{ProductCode}.msq` uninstall key. Use `$Info.AppsAndFeaturesProductCode`. Do not append `.msq` manually. Inspect `$Info.AppsAndFeaturesEntries.MsqAppsAndFeaturesRegistryRows` and confirm that the visible entry does not set `WindowsInstaller=1` before classifying it as `exe`.
 
 ```yaml
 Installers:
@@ -100,6 +100,6 @@ Installers:
   - InstallerType: exe
 ```
 
-Choose the outer `InstallerType` from the MSI builder; the example uses `wix` because Figma's machine installer is WiX-authored. The visible entry is EXE-style because WinGet classifies ARP entries by `WindowsInstaller`, not by the database that created the registry key. Don't include `UpgradeCode` because the installer type in the visible ARP is not MSI, and do not duplicate `ProductCode` inside the entry. Known `.msq` examples include `Figma.Figma`, `Dizzion.Frame`, `MuteMe.MuteMe`, and `Tulip.TulipPlayer`.
+Choose the outer `InstallerType` from the MSI builder. The example uses `wix` because Figma's machine installer is WiX-authored. The visible entry is EXE-style because WinGet classifies ARP entries by `WindowsInstaller`, not by the database that created the registry key. Do not include `UpgradeCode` because the installer type in the visible ARP is not MSI, and do not duplicate `ProductCode` inside the entry. Known `.msq` examples include `Figma.Figma`, `Dizzion.Frame`, `MuteMe.MuteMe`, and `Tulip.TulipPlayer`.
 
-Velopack-generated MSIs use the same custom-entry pattern with a visible `MSI:<PackageId>` key. For example, the Tower MSI hides its GUID-based native entry with `ARPSYSTEMCOMPONENT=1` and explicitly writes `Software\Microsoft\Windows\CurrentVersion\Uninstall\MSI:Tower` without `WindowsInstaller=1`. The MSI artifact therefore has a native `{GUID}` product code, while the visible WinGet-matchable entry is EXE-style with installer-level `ProductCode: MSI:Tower`; do not strip the prefix or reuse the Velopack EXE key `Tower` for the MSI entry.
+Velopack-generated MSIs use the same custom-entry pattern with a visible `MSI:<PackageId>` key. For example, the Tower MSI hides its GUID-based native entry with `ARPSYSTEMCOMPONENT=1` and explicitly writes `Software\Microsoft\Windows\CurrentVersion\Uninstall\MSI:Tower` without `WindowsInstaller=1`. The MSI artifact therefore has a native `{GUID}` product code, while the visible WinGet-matchable entry is EXE-style with installer-level `ProductCode: MSI:Tower`. Do not strip the prefix or reuse the Velopack EXE key `Tower` for the MSI entry.

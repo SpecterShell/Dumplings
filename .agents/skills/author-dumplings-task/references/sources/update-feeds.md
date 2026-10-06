@@ -2,6 +2,8 @@
 
 See the [task example index](../example-index.md) for current implementations of these patterns.
 
+Before choosing an electron-updater or tauri-updater feed, apply [GitHub release source priority](selection.md#github-release-source-priority). Use the matching GitHub releases when they deliver the official installers, and warn the user if the application's effective updater points elsewhere.
+
 ## Sparkle Appcasts
 
 Sparkle-style appcasts commonly expose release data through an XML `enclosure`:
@@ -25,7 +27,7 @@ $this.CurrentState.Installer += [ordered]@{
 
 `Invoke-RestMethod` treats recognized RSS and Atom responses differently from ordinary XML: it writes the feed's `item` or `entry` elements directly to the pipeline instead of always returning the document root. A one-item feed may therefore look like one enclosure-bearing object, while a multi-item feed becomes a collection. The normalization above also accepts an ordinary XML result that still exposes `rss.channel.item`.
 
-This matches the current task shapes. `#Clockify.Clockify`, `#TablePlus.TablePlus`, `AppDynamic.AirServer`, and `Vivaldi.Vivaldi` consume a single object with `enclosure`; `FlorianHeidenreich.Mp3tag` filters the direct item collection by `category`; `Aegisub.Aegisub` and the SourceForge tasks also filter entries returned directly by `Invoke-RestMethod`. Inspect the actual shape and verify ordering before selecting the first matching item. Inspect enclosure fields such as `shortVersionString` or `primaryInstallationFile`, and validate that the enclosure URL is a full Windows installer rather than an updater or delta.
+This matches the current task shapes. `#Clockify.Clockify`, `#TablePlus.TablePlus`, `AppDynamic.AirServer`, and `Vivaldi.Vivaldi` consume a single object with `enclosure`. `FlorianHeidenreich.Mp3tag` filters the direct item collection by `category`. `Aegisub.Aegisub` and the SourceForge tasks also filter entries returned directly by `Invoke-RestMethod`. Inspect the actual shape and verify ordering before selecting the first matching item. Inspect enclosure fields such as `shortVersionString` or `primaryInstallationFile`, and verify that the enclosure URL is a full Windows installer. Exclude updaters and deltas.
 
 - `AppDynamic.AirServer` reads separate x86 and x64 feeds, verifies equal versions, and records each enclosure's nested installation file.
 - `FlorianHeidenreich.Mp3tag` selects the `appcast` category and derives x86 from the x64 enclosure URL.
@@ -48,9 +50,9 @@ $this.CurrentState.Installer += [ordered]@{
 }
 ```
 
-Use `Files[0]` only when exactly one feed entry applies. `Unity.UnityHub` demonstrates selecting x64 and ARM64 entries by URL. Verify every selected feed file belongs to the same version and use the original full installer rather than a distinct update-only artifact. Treat an optional feed `ReleaseDate` as release metadata and assign it inside its own guarded block after `Check()`.
+Use `Files[0]` only when exactly one feed entry applies. `Unity.UnityHub` demonstrates selecting x64 and ARM64 entries by URL. Verify every selected feed file belongs to the same version and use the original full installer. Treat an optional feed `ReleaseDate` as release metadata and assign it inside its own guarded block after `Check()`.
 
-Some applications call electron-updater `setFeedURL()` and leave an invalid `app-update.yml`. Discover and verify the effective official feed before writing the task. Keep fetching in the task; converter functions do not access the network.
+Some applications call electron-updater `setFeedURL()` and leave an invalid `app-update.yml`. Discover and verify the effective official feed before writing the task. If static configuration is insufficient, follow [VM update-source discovery](../../../analyze-winget-installer/references/workflows/vm-network-capture.md#discover-the-update-source). Fetch the feed in the task. Converters do not access the network.
 
 ## Squirrel RELEASES
 

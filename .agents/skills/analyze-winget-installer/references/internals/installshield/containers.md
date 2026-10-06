@@ -6,7 +6,7 @@ This page covers storage and delivery layers. It does not decide which nested pa
 
 ## Binary structure
 
-Classic InstallShield 3 media uses a footer catalog rather than `ISc(`. A PE self-extractor can store archive members in named `FILE` resources; the first four resource bytes belong to the launcher and are excluded before footer parsing. InstallShield also distributed `setup32.exe` as a reusable engine with no package resources or footer. That engine is not an empty package: its project files and payload archives were distributed separately as Setup30 media.
+Classic InstallShield 3 media uses a footer catalog rather than `ISc(`. A PE self-extractor can store archive members in named `FILE` resources. The first four resource bytes belong to the launcher and are excluded before footer parsing. InstallShield also distributed `setup32.exe` as a reusable engine with no package resources or footer. That engine is not an empty package: its project files and payload archives were distributed separately as Setup30 media.
 
 ```text
 Setup30 archive (.Z, _SETUP.LIB, Setup.pkg, or numbered part)
@@ -30,7 +30,7 @@ TTCOMP member
 
 The package archive, compiled `setup.ins`, and reusable engine are independent layers. A media set can contain the first two while using a shared copy of the third.
 
-InstallShield has several incompatible container generations. The PE launcher, overlay stream, proprietary media, and external sibling files remain separate physical layers. Older Basic MSI media can keep `Setup.ini` and the MSI beside `setup.exe`; that sibling relationship is configuration, not an embedded overlay.
+InstallShield has several incompatible container generations. The PE launcher, overlay stream, proprietary media, and external sibling files remain separate physical layers. Older Basic MSI media can keep `Setup.ini` and the MSI beside `setup.exe`. That sibling relationship is configuration, not an embedded overlay.
 
 ```text
 PE setup launcher
@@ -150,7 +150,7 @@ The `MSCF` search is restricted to the PE overlay. A candidate is accepted only 
 
 This distinguishes PackageForTheWeb from a PE that merely contains the text `MSCF` or bundles a cabinet as an unrelated payload.
 
-PackageForTheWeb configuration separates the outer self-extractor from the nested launcher and final payload. A configured nested command line belongs to its recorded stage; it is not automatically a valid switch for the outer executable.
+PackageForTheWeb configuration separates the outer self-extractor from the nested launcher and final payload. A configured nested command line belongs to its recorded stage. It is not automatically a valid switch for the outer executable.
 
 ## External-media acceptance
 

@@ -4,7 +4,7 @@
 
 ## Bare Chromium mini-installer
 
-Upstream Chromium mini-installer defaults to user scope and accepts `--system-level` for machine scope. Silent installation does not necessarily require a separate silent switch; package-specific switches are forwarded to nested `setup.exe`.
+Upstream Chromium mini-installer defaults to user scope and accepts `--system-level` for machine scope. Silent installation does not necessarily require a separate silent switch. Package-specific switches are forwarded to nested `setup.exe`.
 
 ```yaml
 Installers:

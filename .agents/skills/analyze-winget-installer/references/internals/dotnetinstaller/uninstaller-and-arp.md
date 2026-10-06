@@ -12,7 +12,7 @@ If one distinct visible MSI exists, its identity can be projected to the wrapper
 
 ## Selection grammar
 
-`Get-DotNetInstallerNestedMsiSelection` applies configuration and component architecture filters together with LCID filters. Positive lists are OR sets. Fully negated lists exclude matching values. Mixed positive and negated tokens are invalid, matching the runtime. No match and several matches remain explicit outcomes; the function never returns the first MSI merely because it appears first.
+`Get-DotNetInstallerNestedMsiSelection` applies configuration and component architecture filters together with LCID filters. Positive lists are OR sets. Fully negated lists exclude matching values. Mixed positive and negated tokens are invalid, matching the runtime. No match and several matches remain explicit outcomes. The function never returns the first MSI merely because it appears first.
 
 ## Non-MSI components
 

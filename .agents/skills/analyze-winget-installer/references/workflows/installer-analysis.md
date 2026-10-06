@@ -2,6 +2,12 @@
 
 Use this workflow to identify an installer family, select one focused family page, and decide whether static evidence is sufficient. Never execute an unknown installer on the host.
 
+## Stop on malware alerts
+
+If security software on the host or VM flags an installer executable or a nested or extracted executable as a virus or malware, stop work on the affected package immediately and warn the user. Do not continue parsing, extraction, installation, first-run testing, or submission for that artifact. Stop any validation processes you launched that are still running.
+
+Record the security product, detection name, file path, official source URL, and SHA256 if already available. Preserve the alert or safe diagnostic logs without restoring quarantined files. Do not assume a false positive, disable protection, add exclusions, or retry the download to evade the detection.
+
 ## 1. Resolve existing package evidence
 
 Use `winget search` before searching the winget-pkgs checkout:
@@ -14,7 +20,7 @@ After resolving an identifier, navigate directly to its manifest path and the co
 
 ## 2. Run static analysis
 
-Load PackageModule and analyze by file content rather than extension:
+Load PackageModule and analyze the file's content.
 
 ```powershell
 . .\Modules\PackageModule\Index.ps1
@@ -31,13 +37,13 @@ $Analysis.SuggestedManifestVariants
 $Analysis.SuggestedNextSteps
 ```
 
-Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers; `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and no longer contains unvalidated hints.
+Use `DetectedFamilies` for confirmed outer-family evidence. `RoutingHints` contains bounded text or incomplete structural clues used only to choose parsers. `RejectedCandidates` records hints whose parser rejected the surrounding layout. Neither collection proves an installer family, scope, silent switches, visible ARP type, or installed architecture. `FamilyCandidates` is retained as a compatibility projection of `DetectedFamilies` and excludes unvalidated hints.
 
-`SuggestedManifestFields` contains only nonempty installer-level keys accepted by the WinGet 1.12 schema. `SuggestedManifestVariants` contains complete alternative partial shapes for scope, architecture, subtype, or command-route decisions; each item has `Name`, `ManifestFields`, and supporting `Evidence`. Scope-selecting arguments are written to `InstallerSwitches.Custom` inside each variant rather than placed in a non-schema `ScopeSwitches` property. `SuggestedNextSteps` contains review guidance and never appears inside manifest fields. A generic family keeps `Family` as its human-readable identity and uses schema value `InstallerType: exe`.
+`SuggestedManifestFields` contains only nonempty installer-level keys accepted by the WinGet 1.12 schema. `SuggestedManifestVariants` contains complete alternative partial shapes for scope, architecture, subtype, or command-route decisions. Each item has `Name`, `ManifestFields`, and supporting `Evidence`. Each variant stores scope-selecting arguments in `InstallerSwitches.Custom`. `SuggestedNextSteps` contains review guidance and never appears inside manifest fields. A generic family keeps `Family` as its human-readable identity and uses schema value `InstallerType: exe`.
 
 Exact structural parser evidence takes priority over the family template. For example, Qt IFW CLI media can expose all three modes while GUI-only media remains interactive-only, and InstallShield output depends on whether the parser proves Basic MSI, InstallScript MSI, InstallScript-only, or Advanced UI. ZIP analysis suggests only `InstallerType: zip` until one nested file is selected. Treat routing-hint suggestions as advisory because the family has not been confirmed.
 
-Raw family `Get-*Info` functions and provider-neutral `Get-InstallerAnalysis` return facts and context-neutral `Diagnostics`; they do not return WinGet suggestions or write to host streams. `Get-WinGetInstallerAnalysis` resolves diagnostics for `FullAnalysis`, so inspect `Level`, `Kind`, `Areas`, `AffectedFields`, and `IsBlocking` rather than matching message text. A manifest suggestion resolves the same evidence for `ManifestAuthoring`, where missing identity, architecture, unattended support, conflicting confirmed families, and invalid artifacts can become blocking. `Get-WinGetInstallerManifestSuggestion` applies authoritative parser evidence and explicit overrides to installer entries, while family defaults and alternatives remain under `Suggestions`. Manifest updates use `ManifestUpdate` and normally keep diagnostics unrelated to fields being refreshed at `Verbose`.
+Raw family `Get-*Info` functions and provider-neutral `Get-InstallerAnalysis` return facts and context-neutral `Diagnostics`. They do not return WinGet suggestions or write to host streams. `Get-WinGetInstallerAnalysis` resolves diagnostics for `FullAnalysis`, so inspect `Level`, `Kind`, `Areas`, `AffectedFields`, and `IsBlocking`. A manifest suggestion resolves the same evidence for `ManifestAuthoring`, where missing identity, architecture, unattended support, conflicting confirmed families, and invalid artifacts can become blocking. `Get-WinGetInstallerManifestSuggestion` applies authoritative parser evidence and explicit overrides to installer entries, while family defaults and alternatives remain under `Suggestions`. Manifest updates use `ManifestUpdate` and normally keep diagnostics unrelated to fields being refreshed at `Verbose`.
 
 Optional agent diagnostics must not become parser or CI dependencies:
 
@@ -46,7 +52,7 @@ diec.exe -j C:\Path\To\Installer.exe
 exeinfope.exe 'C:\Path\To\Installer.exe*' /s /log:C:\Path\To\exeinfo.log
 ```
 
-7-Zip parser mode is another optional static diagnostic. Quote `'-t#'` in PowerShell. The `#` type asks 7-Zip's parser to scan the file for embedded supported streams instead of forcing one ordinary archive handler; numbered names such as `2.msi` are observations of the current binary layout, not stable product identities. List the current installer before selecting a stream:
+7-Zip parser mode is another optional static diagnostic. Quote `'-t#'` in PowerShell. The `#` type scans for supported embedded streams. Numbered names such as `2.msi` depend on the current binary layout. List the current installer before selecting a stream:
 
 ```powershell
 7z.exe l -ba -slt '-t#' C:\Path\To\Installer.exe | Out-Host
@@ -68,11 +74,13 @@ The Altova tasks first use parser mode to locate a CAB and then open that CAB no
 7z.exe e -aoa -ba -bd -y '-t#' -o"${InnerDirectory}" $NestedExePath '2.msi' | Out-Host
 ```
 
-Check `$LASTEXITCODE`, verify every expected output with `Test-Path`, inspect nested MSI architecture and identity, and use a separate temporary directory for each layer. Do not assume that stream `2` remains the same across versions. These commands are agent diagnostics only; Dumplings parsers, analyzers, tests, and CI must continue to use in-process source-backed implementations.
+Check `$LASTEXITCODE`, verify every expected output with `Test-Path`, inspect nested MSI architecture and identity, and use a separate temporary directory for each layer. Do not assume that stream `2` remains the same across versions. These commands are agent diagnostics only. Dumplings parsers, analyzers, tests, and CI must continue to use in-process source-backed implementations.
 
 `diec` prints help in a GUI when invoked incorrectly. Exeinfo PE writes its useful console-mode result to the requested log and may briefly show an empty countdown window. Agents may also use 7-Zip, NanaZip, or another static extractor to cross-check archive boundaries and nested files. Keep all such invocations outside Dumplings parser modules, bridges, analyzers, tests, and CI paths. Treat their output as supporting evidence and confirm it against source-backed structures or stable fixtures. Never execute the installer or an extracted payload on the host.
 
 ## 3. Route to one focused workflow
+
+If static analysis cannot identify a GUI executable as a known installer family, [inspect its interface in the VM](../families/generic-exe/workflow.md#inspect-an-unidentified-gui-executable-in-the-vm) to distinguish a portable application from a custom installer. Do not assume `InstallerType: exe` merely because the file has an `.exe` extension.
 
 This is the only installer-family route table in the skill.
 
@@ -132,10 +140,10 @@ Follow [Wrapper installers](wrapper-installers.md) for SFX, bootstrapper, nested
 
 Review the selected outer installer and effective payload for hard prerequisites. `Get-PEDependencyInfo` covers VC runtime imports and framework-dependent .NET applications. For MSIX/AppX, `Get-MSIXInfo` projects supported manifest-declared VCLibs, Windows App Runtime, and Microsoft UI XAML framework identities and reports unknown package dependencies separately. Neither helper infers Visual Studio Tools for Office Runtime or Microsoft Office. For VSTO and Office add-ins, inspect MSI launch conditions, AppSearch or registry searches, VSTO deployment metadata, InstallShield `.prq` definitions, Burn or suite package chains, and publisher requirements. Distinguish an external prerequisite from one already installed by the selected wrapper.
 
-Map a proven Visual Studio Tools for Office Runtime requirement to `Microsoft.VSTOR`. Map a proven requirement for the installed Microsoft Office desktop suite or a host such as Outlook, Word, Excel, or PowerPoint to `Microsoft.Office`. Map a proven requirement for the Windows .NET Framework 3.5 optional component to `Dependencies.WindowsFeatures: [NetFx3]`; do not use this feature for .NET Framework 4.x or modern .NET runtimes. Follow the manifest-authoring [dependency workflow](../../../author-winget-manifest/references/manifest/dependencies.md) for the complete mapping set, evidence thresholds, `MinimumVersion`, field placement, and optional-integration exclusions.
+Map a proven Visual Studio Tools for Office Runtime requirement to `Microsoft.VSTOR`. Map a proven requirement for the installed Microsoft Office desktop suite or a host such as Outlook, Word, Excel, or PowerPoint to `Microsoft.Office`. Map a proven requirement for the Windows .NET Framework 3.5 optional component to `Dependencies.WindowsFeatures: [NetFx3]`. Do not use this feature for .NET Framework 4.x or modern .NET runtimes. Follow the manifest-authoring [dependency workflow](../../../author-winget-manifest/references/manifest/dependencies.md) for the complete mapping set, evidence thresholds, `MinimumVersion`, field placement, and optional-integration exclusions.
 
 ## 6. Complete dynamic validation
 
 Read [Installed state](installed-state.md) for ARP matching, PATH, command, and association evidence. Complete [VM validation](vm-validation.md) for every distinct installer route before submission. Use static evidence to target the test, then prove blocker-free silent behavior, logging, exit codes, installed state, scope, elevation, network payload selection, and first-run behavior in the VM.
 
-Write full parser and VM output to [transient evidence](evidence.md). When this analysis supports an authored package, project each conclusive result into the existing working manifest and save it before continuing; do not wait until every static and dynamic question is resolved. For manifest creation, field placement, defaults, incremental serialization, and sorting, use the manifest-authoring skill rather than duplicating those rules in installer-family pages.
+Write full parser and VM output to [transient evidence](evidence.md). When this analysis supports an authored package, apply each conclusive result to the working manifest and save it before continuing. For manifest creation, field placement, defaults, incremental serialization, and sorting, use the manifest-authoring skill.

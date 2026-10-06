@@ -10,7 +10,7 @@ The parser covers the structured Font variants documented below. Variant-specifi
 
 ## Binary structure
 
-Font formats use their own signatures and table directories. The installer analyzer currently treats a recognized font as a terminal artifact rather than emulating an installer.
+Font formats use their own signatures and table directories. The installer analyzer currently treats a recognized font as a terminal artifact and does not emulate an installer.
 
 ```text
 Font file
@@ -19,7 +19,7 @@ Font file
 `-- named tables and glyph data
 ```
 
-Do not infer a font family from the extension alone. Parse the format signature and naming metadata where available. Unknown table fields remain unknown; they are not installer metadata.
+Do not infer a font family from the extension alone. Parse the format signature and naming metadata where available. Unknown table fields remain unknown. They are not installer metadata.
 
 ## Detection invariants
 

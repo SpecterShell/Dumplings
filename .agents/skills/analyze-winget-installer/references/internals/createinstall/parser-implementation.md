@@ -14,7 +14,7 @@
 
 `Get-CreateInstallInfo` decodes the GE program once and reuses its object table, command cache, function index, external-import index, project variables, and list buffer for every operation analyzer. The GEA layout is parsed once. Block headers are enumerated without expanding payloads, and selected files are materialized only when architecture or dependency analysis needs filesystem paths.
 
-Helpers accept the parsed `Program`, `ProjectVariableEvidence`, or `Layout` object when one already exists. Adding a new route must follow the same ownership model rather than calling `Get-CreateInstallInfo` or reopening the complete installer from an inner function.
+Helpers accept the parsed `Program`, `ProjectVariableEvidence`, or `Layout` object when one already exists. A new route must follow the same ownership model. An inner function must not call `Get-CreateInstallInfo` or reopen the complete installer.
 
 ## Route selection
 

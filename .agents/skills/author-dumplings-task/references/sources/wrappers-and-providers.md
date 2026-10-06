@@ -86,11 +86,11 @@ Extraction rules:
 
 - Check `$LASTEXITCODE` and the expected file after every 7z invocation.
 - Use `e` only when flattening one exact file is safe. Use `x` when preserving nested paths avoids collisions or proves which payload was selected.
-- Use `-t#` only for a verified raw-section layout where 7z exposes numbered streams such as `2.msi`; those numbers are format observations, not stable MSI identities.
+- Use `-t#` only for a verified raw-section layout where 7z exposes numbered streams such as `2.msi`. Verify their MSI identities on each version.
 - When several MSIs exist, map each exact payload to its WinGet architecture and compare `PackageArchitecture` with that mapping. Do not infer architecture from extraction order.
 - For a nested EXE chain, make a separate bounded extraction directory for each layer and validate every intermediate file before continuing.
 - Pass an extracted MSP through `Get-MsiInstallerInfo -PatchPath` when the patch changes the effective ProductVersion or ProductCode represented by the wrapper.
-- Remove temporary extraction directories in `finally`. Do not remove the outer file registered in `$this.InstallerFiles`; PackageTask owns that file.
+- Remove temporary extraction directories in `finally`. Leave the outer file registered in `$this.InstallerFiles` for PackageTask to clean up.
 - Keep 7z in task-specific discovery only. Installer parsers and CI-critical static analysis must not invoke or depend on 7-Zip, NanaZip, or another external parser executable.
 
 Open these concrete tasks according to the wrapper layout being analyzed. Their archive paths are useful evidence, but several retain legacy individual readers or manual manifest mutation and should not be copied line for line:

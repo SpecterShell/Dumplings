@@ -4,7 +4,7 @@
 
 ## Architecture
 
-Use these `$Info` fields together. Inno 5.3 through 6.2 stores architecture choices as packed sets; Inno 6.3 and later stores expressions. The parser normalizes both forms:
+Use these `$Info` fields together. Inno 5.3 through 6.2 stores architecture choices as packed sets. Inno 6.3 and later stores expressions. The parser normalizes both forms:
 
 - `ArchitecturesAllowed` and `EffectiveArchitecturesAllowed` describe supported operating-system architectures.
 - `ArchitecturesInstallIn64BitMode` and its effective value identify when Inno uses 64-bit install mode.
@@ -15,6 +15,8 @@ Use these `$Info` fields together. Inno 5.3 through 6.2 stores architecture choi
 - `InstallerArchitecture` is the setup stub architecture and does not by itself determine installed application architecture.
 
 Set manifest `Architecture` from the installed payload and effective architecture expressions. Do not label a universal x86 stub as x86 when `ArchitecturesAllowed` excludes x86 and the payload is x64 or arm64. Treat operating-system compatibility as distinct from payload architecture, and never use `neutral` when binaries are installed.
+
+For an existing x64 installer entry, pass `-Architecture x64` to `Get-InnoInfo` to omit the redundant `Inno.Architecture.Required64BitConstant` diagnostic. The manifest updater forwards the entry architecture automatically. Compatibility arrays and constant evidence remain available.
 
 If the parser warns that a future, malformed, or unknown architecture expression cannot be evaluated, inspect extracted binaries or route to the canonical [VM validation workflow](../../workflows/vm-validation.md). `UnsupportedOSArchitectures` should reflect proven exclusions, not filename guesses.
 
@@ -31,8 +33,8 @@ Use `$Info.PrivilegesRequired` for default scope:
 
 Then route with `$Info.PrivilegesRequiredOverridesAllowed`, `SupportsCommandLineScopeOverride`, `DefaultScope`, and `SupportedScopes`:
 
-- `commandline` present: `/CURRENTUSER` and `/ALLUSERS` are available; use the dual-scope shape.
-- only `dialog` present: the wizard can ask interactively, but WinGet cannot select both scopes; do not duplicate entries.
+- `commandline` present: `/CURRENTUSER` and `/ALLUSERS` are available. Use the dual-scope shape.
+- only `dialog` present: the wizard can ask interactively, but WinGet cannot select both scopes. Do not duplicate entries.
 - one supported scope: use that scope when privilege and default-directory evidence agree.
 - empty or contradictory values: omit `Scope` and use the canonical [VM validation workflow](../../workflows/vm-validation.md) when scope is required.
 

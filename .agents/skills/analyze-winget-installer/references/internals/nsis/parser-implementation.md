@@ -105,7 +105,7 @@ Both forms need recursion and cycle bounds. ANSI text requires the code-page sem
 
 ## Virtual runtime state
 
-The emulator needs one mutable state for variables, stack, error and reboot flags, shell context, registry view, output directory, virtual files, virtual registry values, virtual INI files, sections, and collected effects. INI and registry reads observe only writes made earlier in that state; they never query the parser host. Shortcut creation records its path, target, arguments, icon, show command, hotkey, comment, and working-directory behavior without creating a real shell link.
+The emulator needs one mutable state for variables, stack, error and reboot flags, shell context, registry view, output directory, virtual files, virtual registry values, virtual INI files, sections, and collected effects. INI and registry reads observe only writes made earlier in that state. They never query the parser host. Shortcut creation records its path, target, arguments, icon, show command, hotkey, comment, and working-directory behavior without creating a real shell link.
 
 Branch predicates should use three-valued results where evidence is incomplete:
 
@@ -123,7 +123,7 @@ Host process environment variables, registry values, files, privileges, and OS p
 
 ## Metadata projection
 
-Project Apps & Features evidence from explicit uninstall registry writes. Group writes by root, view, and key, then apply `SystemComponent` visibility and language alternatives. Architecture and scope parameters select a supported compiled branch; they must not merely filter the final result after simulation.
+Project Apps & Features evidence from explicit uninstall registry writes. Group writes by root, view, and key, then apply `SystemComponent` visibility and language alternatives. Architecture and scope parameters select a supported compiled branch. They must not merely filter the final result after simulation.
 
 Keep these evidence classes separate:
 
@@ -171,7 +171,7 @@ The GPL parser crosses into PackageModule through JSON-safe CLI actions. Do not 
 
 ## Regression evidence
 
-Use synthetic fixtures for corrupt lengths, profile ambiguity, individual opcode semantics, string controls, and codec framing. Use real fixtures for compiler/fork transitions and generator behavior. A real installer proves only the route it exercises; it does not establish the entire edition.
+Use synthetic fixtures for corrupt lengths, profile ambiguity, individual opcode semantics, string controls, and codec framing. Use real fixtures for compiler/fork transitions and generator behavior. A real installer proves only the route it exercises. It does not establish the entire edition.
 
 Persistent downloads belong under the sibling `Dumplings-TestFixtures` cache. Do not depend on `Downloads`, `Temp`, `Sandbox`, or installer-submission folders.
 

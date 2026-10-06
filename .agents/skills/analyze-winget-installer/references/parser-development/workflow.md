@@ -2,7 +2,7 @@
 
 ## Boundaries
 
-Keep reusable binary, compression, archive, PE, and safe-path mechanics in shared infrastructure. Keep installer semantics in the focused parser. PackageModule can contain Apache-2.0 or MIT-compatible code; GPL implementations remain behind the InstallerParsers JSON process bridge.
+Keep reusable binary, compression, archive, PE, and safe-path mechanics in shared infrastructure. Keep installer semantics in the focused parser. PackageModule can contain Apache-2.0 or MIT-compatible code. GPL implementations remain behind the InstallerParsers JSON process bridge.
 
 Read [Binary notation](binary-notation.md), [parser contracts](contracts.md), and [performance](performance.md) before changing a parser.
 
@@ -12,19 +12,19 @@ Load infrastructure before format modules. Guard managed source compilation so r
 
 ## Internal modules and shared helpers
 
-Split a family only along substantial, independently testable responsibilities such as container decoding, project interpretation, or payload extraction. Import implementation `.psm1` modules locally with explicit exports; keep public commands in the original family module. Pass operation contexts as parameters and keep descriptor initialization in the owning layer. Do not copy another module's mutable script variables, introduce global private commands, or add generated proxy functions. Tests for private state and mocks must target the implementation module that now owns the code.
+Split a family only along substantial, independently testable responsibilities such as container decoding, project interpretation, or payload extraction. Import implementation `.psm1` modules locally with explicit exports. Keep public commands in the original family module. Pass operation contexts as parameters and keep descriptor initialization in the owning layer. Do not copy another module's mutable script variables, introduce global private commands, or add generated proxy functions. Tests for private state and mocks must target the implementation module that now owns the code.
 
-Before adding a family-prefixed helper, check the existing binary, archive, runtime, Text, and Object modules. Shared readers must preserve the caller's encoding policy, offset base, enclosing-record limits, stream position, and ownership. Similar-looking helpers with different recovery or format rules should remain separate. Record public-command metadata, fixture outputs, extraction hashes, and benchmark results before a structural refactor; compare them afterward, normalizing only known temporary paths.
+Before adding a family-prefixed helper, check the existing binary, archive, runtime, Text, and Object modules. Shared readers must preserve the caller's encoding policy, offset base, enclosing-record limits, stream position, and ownership. Similar-looking helpers with different recovery or format rules should remain separate. Record public-command metadata, fixture outputs, extraction hashes, and benchmark results before a structural refactor. When comparing them afterward, normalize only known temporary paths.
 
 ## External tools
 
-Parser modules, tests, bridges, and CI must not depend on `7z.exe`, NanaZip, `isx.exe`, vendor builders, Python extractors, or other executable parsers. Agents may use such tools separately to research and cross-check a format, but their output is supporting evidence rather than the implementation or sole regression oracle.
+Parser modules, tests, bridges, and CI must not depend on `7z.exe`, NanaZip, `isx.exe`, vendor builders, Python extractors, or other executable parsers. Agents may use them for research, with findings corroborated by format sources or independent evidence.
 
 ## Catalog-driven versioned formats
 
-When one installer family has many binary layouts, store source-backed differences in a data catalog rather than scattering version comparisons through record readers. A descriptor should name the loader, framing, record, payload, checksum, and transform routes and compose complete field schemas from ordered deltas. Resolve descriptors once at module import and give each parse a private copy if validation state can change.
+Store source-backed layout differences in a data catalog. Each descriptor names the loader, framing, record, payload, checksum, and transform routes and builds field schemas from ordered deltas. Resolve descriptors at module import. Give each parse a private copy if validation can change its state.
 
-Route handlers should dispatch by descriptor ID. Version numbers may select a descriptor, but must not decide field offsets inside a record reader. Source-proven byte-equivalent rows may share one canonical route while retaining every catalog alias. If shared signatures cover different structures, validate their full record consumption. A future-version fallback may use only the nearest older descriptor with the same edition, character mode, and loader family, and only after counts, offsets, checksums, record boundaries, and stream boundaries all validate.
+Dispatch handlers by descriptor ID. Version numbers may select descriptors, while record readers obtain offsets from those descriptors. Byte-equivalent rows proven by source may share a route while retaining all aliases. Validate full record consumption when signatures cover different structures. A future-version fallback may use only the nearest older descriptor with the same edition, character mode, and loader family. It must pass every count, offset, checksum, record-boundary, and stream-boundary check.
 
 Vendor builders can establish historical layouts, but they run only in a checkpointed VM. Download pinned official builders into the sibling `Dumplings-TestFixtures` cache, copy them into the VM, compile deterministic samples there, and copy only the generated fixtures and expected hashes back. Record the compiler version and the emitted internal structure version separately. Tests may use archived builder installers as real-layout fixtures without executing them. Keep these cases optional when no durable official URL exists.
 
@@ -39,7 +39,7 @@ Vendor builders can establish historical layouts, but they run only in a checkpo
 7. Add bridge tests when a GPL CLI action or result contract changes.
 8. Run targeted Pester suites, ScriptAnalyzer, parity checks, and `git diff --check`.
 
-Extractors resolve paths before managed calls, extract all files when `-Name` is omitted, and expose a collision policy. Interactive calls prompt only after a collision is found; parser-to-parser calls select a noninteractive policy explicitly.
+Extractors resolve paths before managed calls, extract all files when `-Name` is omitted, and expose a collision policy. Interactive calls prompt only after a collision is found. Parser-to-parser calls select a noninteractive policy explicitly.
 
 ## Documentation structure
 
@@ -70,6 +70,6 @@ Use this order for parser-internals overviews:
 9. `Representative fixtures`
 10. `Source references`
 
-Insert `Compression and transforms` or `Payload selection and nested execution` after `Binary structure` when needed. Variant internals pages use the smaller sequence `Binary structure`, `Parsing behavior`, `Metadata projection`, and `Limits and gaps`. Keep upstream sources in the overview's final section rather than repeating them across variant pages.
+Insert `Compression and transforms` or `Payload selection and nested execution` after `Binary structure` when needed. Variant pages use `Binary structure`, `Parsing behavior`, `Metadata projection`, and `Limits and gaps`. List upstream sources once, at the end of the overview.
 
-Split a workflow near 250 lines or 2,500 words and an internals overview materially above 300 lines. The main workflow must still expose the complete core outline and route to focused secondary pages. Use descriptive headings in those pages rather than continuing a numbered sequence across files.
+Split workflows near 250 lines or 2,500 words and internals overviews materially above 300 lines. Keep the complete core outline in the main workflow, with links to focused pages. Use descriptive headings on secondary pages without numbering steps across files.

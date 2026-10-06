@@ -2,7 +2,7 @@
 
 ## When to use
 
-Use this workflow when structural analysis identifies an InstallForge setup. Current InstallForge builders are published through the [InstallForge release repository](https://github.com/soner-boztas/installforge/releases); older builders are available only from archived InstallForge download endpoints.
+Use this workflow when structural analysis identifies an InstallForge setup. Current InstallForge builders are published through the [InstallForge release repository](https://github.com/soner-boztas/installforge/releases). Older builders are available only from archived InstallForge download endpoints.
 
 ## Detection
 
@@ -35,7 +35,7 @@ PE image
 
 ## Manifest shape
 
-The standard InstallForge runtime is interactive-only. Its builder CLI builds setup files; its `-i`, `-o`, `--quiet`, and related options are not generated-setup switches.
+The standard InstallForge runtime is interactive-only. Its builder CLI builds setup files. Its `-i`, `-o`, `--quiet`, and related options are not generated-setup switches.
 
 ```yaml
 Installers:
@@ -69,7 +69,7 @@ $Info.AppsAndFeaturesEvidence
 $Info.RegistryWrites | Where-Object Key -Match '\\Uninstall\\'
 ```
 
-For verified modern media, the built-in uninstaller writes an HKLM entry whose key name and ProductCode equal `Appname`. `AppsAndFeaturesEntries` contains only WinGet schema fields; `AppsAndFeaturesEvidence` retains uninstall commands, icon, install location, registry view, and other raw values. Legacy 1.2.2 media packages an uninstaller but writes no ARP row. Verified 1.2.6.2 and 1.3.2 runtimes use `Appname` as ProductCode in HKLM's 32-bit view; inspect `LegacyArpRuntimeSupport` because dispatch follows runtime code evidence rather than a version-string assumption.
+For verified modern media, the built-in uninstaller writes an HKLM entry whose key name and ProductCode equal `Appname`. `AppsAndFeaturesEntries` contains only WinGet schema fields; `AppsAndFeaturesEvidence` retains uninstall commands, icon, install location, registry view, and other raw values. Legacy 1.2.2 media packages an uninstaller but writes no ARP row. Verified 1.2.6.2 and 1.3.2 runtimes use `Appname` as ProductCode in HKLM's 32-bit view. Inspect `LegacyArpRuntimeSupport` because dispatch follows runtime code evidence rather than a version-string assumption.
 
 ### 3. Review compiled system effects
 

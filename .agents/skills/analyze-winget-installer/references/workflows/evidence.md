@@ -21,8 +21,8 @@ Use a sortable UTC run ID such as `20260808T143000Z`. Do not move or delete exis
 
 - `source/`: raw human-readable source responses, selected safe headers, feed bodies, redirects, and source-selection notes.
 - `installer/`: hashes, complete analyzer and parser JSON, extraction catalogs, selected payload evidence, and relevant command output.
-- `vm/`: before/after snapshots, compact comparisons, tested command lines, elevation context, exit codes, screenshots references, and outcomes.
-- `manifest/`: authored YAML, formatter output, and structured validation diagnostics.
+- `vm/`: before/after snapshots, compact comparisons, tested command lines, elevation context, exit codes, screenshot references, and outcomes.
+- `manifest/`: authored YAML, formatter output, structured validation diagnostics, and PR check metadata/artifacts under `pr-validation/`. Use [Validation logs and check results](../../../author-winget-manifest/references/submission/validation-logs.md) for the current WinGet CDN download route and commit/operation binding.
 
 Keep browser screenshots in their existing transient output location and record their absolute paths in `summary.md`.
 

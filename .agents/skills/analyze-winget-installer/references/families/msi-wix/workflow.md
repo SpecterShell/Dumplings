@@ -59,7 +59,7 @@ Use [scope and elevation analysis](scope-and-elevation.md) together with summary
 
 ## Dependencies
 
-Inspect `LaunchCondition`, `AppSearch`, `RegLocator`, and prerequisite records together rather than matching one Office-related string. A condition that blocks until Visual Studio Tools for Office Runtime is detected can justify `Microsoft.VSTOR`; a condition that blocks until Microsoft Office, Outlook, Word, Excel, or PowerPoint is detected can justify `Microsoft.Office`. Registry or add-in rows without a blocking condition prove integration, not an unconditional package dependency.
+Inspect `LaunchCondition`, `AppSearch`, `RegLocator`, and prerequisite records together rather than matching one Office-related string. A condition that blocks until Visual Studio Tools for Office Runtime is detected can justify `Microsoft.VSTOR`. A condition that blocks until Microsoft Office, Outlook, Word, Excel, or PowerPoint is detected can justify `Microsoft.Office`. Registry or add-in rows without a blocking condition prove integration, not an unconditional package dependency.
 
 If an EXE wrapper installs the prerequisite before launching this MSI, retain the wrapper or omit the dependency for that wrapper. If the manifest selects the direct MSI instead, add every hard external prerequisite proved by the MSI or publisher. Follow the manifest-authoring [dependency workflow](../../../../author-winget-manifest/references/manifest/dependencies.md).
 

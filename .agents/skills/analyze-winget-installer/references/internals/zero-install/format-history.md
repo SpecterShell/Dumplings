@@ -16,7 +16,7 @@
 | `ConfigIni` | 2.24.8 through 2.25.2 | `ZeroInstall.config.ini` |
 | `BootstrapConfigIni` | 2.25.3 and later | `ZeroInstall.BootstrapConfig.ini` plus adjacent basename INI override |
 
-Exact profile names are executable parser data; use the catalog rather than inferring them from line count in documentation.
+Exact profile names are executable parser data. Use the catalog to determine them. Do not infer them from line count in documentation.
 
 ## Sidecar precedence
 

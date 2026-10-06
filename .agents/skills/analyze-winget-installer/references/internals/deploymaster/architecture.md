@@ -25,7 +25,7 @@ DeployMaster Builder
 
 ## Runtime layers
 
-The outer setup stub locates and validates the package, selects a runtime core, evaluates scope and architecture, reads the compiled records, installs files, applies system operations, launches configured prerequisites or completion programs, and registers the generated uninstaller. The uninstaller later replays `Deploy.log`; it does not reconstruct the project from the original setup.
+The outer setup stub locates and validates the package, selects a runtime core, evaluates scope and architecture, reads the compiled records, installs files, applies system operations, launches configured prerequisites or completion programs, and registers the generated uninstaller. The uninstaller later replays `Deploy.log`. It does not reconstruct the project from the original setup.
 
 ```text
 outer setup stub

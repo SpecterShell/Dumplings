@@ -20,13 +20,13 @@ The classic catalog is separate because its compression, identity encoding, reco
 
 ## Extraction
 
-`Expand-DeployMasterInstaller` expands runtime cores, metadata blocks, and package files to distinct safe namespaces. Omitting `Name` selects all entries. Public collision handling prompts only when a collision occurs; internal inspection uses `Rename`.
+`Expand-DeployMasterInstaller` expands runtime cores, metadata blocks, and package files to distinct safe namespaces. Omitting `Name` selects all entries. Public collision handling prompts only when a collision occurs. Internal inspection uses `Rename`.
 
 Each output path is resolved beneath the destination before writing. Partial files are removed when decompression, expanded-size, CRC, or total-output validation fails. Signed certificate data is never exported as package content.
 
 ## Optional runtime inspection
 
-Some command support exists only in compressed runtime code. The parser expands one bounded preferred runtime core and searches its UTF-16 string table for exact slash-prefixed tokens. This establishes feature presence for `/noadmin` and conditionally `/portable`; it does not promote internal relaunch markers into public switches.
+Some command support exists only in compressed runtime code. The parser expands one bounded preferred runtime core and searches its UTF-16 string table for exact slash-prefixed tokens. This establishes feature presence for `/noadmin` and conditionally `/portable`. It does not promote internal relaunch markers into public switches.
 
 ## Diagnostics
 
@@ -42,7 +42,7 @@ Classic scanning limits all-ones boundary candidates and zlib records before dec
 
 ## Implementation map
 
-- `DeployMaster.psm1` owns public APIs, ARP/result composition, and extraction orchestration. `DeployMasterModern.psm1` owns catalog validation, structural route selection, modern control/data records, and shared destination/association decoding. `DeployMasterClassic.psm1` handles classic runtime, catalogs, and item streams using the shared family decoding where the layouts agree. All three live under `Modules/PackageModule/Libraries/Installers`; implementation modules are imported locally.
+- `DeployMaster.psm1` owns public APIs, ARP/result composition, and extraction orchestration. `DeployMasterModern.psm1` owns catalog validation, structural route selection, modern control/data records, and shared destination/association decoding. `DeployMasterClassic.psm1` handles classic runtime, catalogs, and item streams using the shared family decoding where the layouts agree. All three live under `Modules/PackageModule/Libraries/Installers`. Implementation modules are imported locally.
 - `Modules/PackageModule/Libraries/Installers/DeployMasterFormatCatalog.psd1` contains the verified route profiles.
 - `Modules/PackageModule/Libraries/Infrastructure/InstallerAnalyzer.psm1` performs provider-neutral candidate routing.
 - `Modules/PackageModule/Libraries/WinGet/WinGetAnalysis.psm1` composes schema-valid WinGet suggestions from exact parser evidence.

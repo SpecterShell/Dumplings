@@ -135,7 +135,7 @@ $DecodedText = $Payload | ConvertFrom-Base64 -Encoding UTF-8
 $Appcast = Invoke-WebRequest -Uri $FeedUrl | Read-ResponseContent | ConvertFrom-Xml
 ```
 
-- **Notes:** Prefer this helper when the response arrives as text and consistent line-ending handling matters. `Invoke-RestMethod` applies special RSS/Atom handling and may return feed items directly instead of raw XML; use `Invoke-WebRequest`, `Read-ResponseContent`, and `ConvertFrom-Xml` when the task needs the complete XML document tree.
+- **Notes:** Prefer this helper when the response arrives as text and consistent line-ending handling matters. `Invoke-RestMethod` may return RSS/Atom items directly. Use `Invoke-WebRequest`, `Read-ResponseContent`, and `ConvertFrom-Xml` when the task needs the complete XML document tree.
 
 ### `ConvertFrom-Ini`
 
@@ -212,7 +212,7 @@ $ReleaseTime = $Release.timestamp | ConvertFrom-UnixTimeSeconds
 $ReleaseTime = $Release.timestamp | ConvertFrom-UnixTimeMilliseconds
 ```
 
-- **Notes:** A seconds value passed here produces an incorrect historical date; verify the source schema.
+- **Notes:** A seconds value passed here produces an incorrect historical date. Verify the source schema.
 
 ### `ConvertTo-UtcDateTime`
 

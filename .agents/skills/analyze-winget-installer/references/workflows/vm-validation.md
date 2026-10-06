@@ -1,6 +1,8 @@
 # VM-only dynamic validation workflow
 
-Complete this workflow before treating any new or modified installer entry as submission-ready. Validate every behaviorally distinct artifact, switch set, scope, architecture, locale, elevation route, or nested-payload route represented by the manifest. Static analysis determines what to test but cannot prove that unattended installation completes without a blocker. Never execute an unknown installer on the host. The bundled scripts capture state but deliberately do not launch installers or applications.
+Complete this workflow before treating any new or modified installer entry as submission-ready. Validate every behaviorally distinct artifact, switch set, scope, architecture, locale, elevation route, or nested-payload route represented by the manifest. Static analysis determines what to test but cannot prove that unattended installation completes without a blocker. Never execute an unknown installer on the host. The bundled scripts capture state but do not launch installers or applications.
+
+Stop validation immediately and warn the user if host or guest security software flags an executable as a virus or malware. Follow [Stop on malware alerts](installer-analysis.md#stop-on-malware-alerts). Do not bypass or disable protection to complete the test.
 
 Run the host controller and Hyper-V commands in PowerShell 7.4 or later (`pwsh`). `Invoke-WinGetVMInstalledState.ps1` enforces this requirement and imports the inbox Hyper-V module natively. Only the staged guest collector, `Get-WinGetVMInstalledState.ps1`, is designed for Windows PowerShell 5.1.
 
@@ -15,13 +17,30 @@ Get-Command Get-VM, Copy-VMFile
 
 If the direct import fails, verify that the Hyper-V PowerShell feature is installed and that the process inherited the normal Windows environment before changing module paths. Confirm that the VM is running, PowerShell Direct accepts the guest credential, and **Guest Service Interface** is enabled for the controller's small collector-script transfer.
 
-PowerShell Direct runs commands in a non-interactive guest session that is separate from the signed-in user's visible desktop. A GUI process started through `Invoke-Command -VMName` can run without appearing in the VM console. Use PowerShell Direct for staging, state capture, and non-interactive commands; launch installers or applications that require visible observation from the VM's interactive desktop, for example through an interactive scheduled task or a console session.
+PowerShell Direct runs commands in a non-interactive guest session that is separate from the signed-in user's visible desktop. A GUI process started through `Invoke-Command -VMName` can run without appearing in the VM console. Use PowerShell Direct for staging, state capture, and non-interactive commands. Launch installers or applications that require visible observation from the VM's interactive desktop, for example through an interactive scheduled task or a console session.
 
 Start from a clean checkpoint. Do not attach host submission directories as writable shared storage.
 
+### Operate the guest through VMConnect
+
+For computer use, reuse an existing Virtual Machine Connection window for the target VM or open one with `vmconnect.exe`. Verify the host and VM shown in the window, then operate the signed-in guest's visible desktop. Launch GUI programs from that desktop when visual observation is required. Windows created in a non-interactive PowerShell Direct session remain separate.
+
+Set `$ServerName`, `$VMName`, and `$InstanceCount` for the selected host, VM, and connection instance. Obtain the VM GUID from Hyper-V rather than copying a machine-specific command:
+
+```powershell
+$VM = Get-VM -ComputerName $ServerName -Name $VMName -ErrorAction Stop
+& "$env:WINDIR\System32\vmconnect.exe" $ServerName $VM.Name -G "$($VM.Id)" -C $InstanceCount
+```
+
+`-G` selects the VM by GUID. `-C` is the VMConnect instance count used when opening multiple connections, normally `0` for a single connection. Run `vmconnect.exe -?` for the local help. Use the connection UI or a saved credential when authentication is needed, and keep passwords out of command arguments and evidence files.
+
+### GPU-dependent installers and applications
+
+If the installer or application rejects the guest because it lacks a compatible GPU, follow [GPU-dependent validation](vm-gpu.md). Select a partitionable device explicitly, prepare compatible guest drivers, and verify the required graphics API before retrying. Keep GPU selection and MMIO sizes specific to the approved environment.
+
 ### Checkpoints with GPU partitions
 
-Hyper-V can reject `Restore-VMSnapshot` while a VM with a GPU partition adapter is running. Shut down the guest before restoring the checkpoint, wait for the VM state to become `Off`, restore the checkpoint, and then start it. If restore still fails, use a validation VM without GPU-P or remove and recreate the GPU partition around the checkpoint lifecycle. A failed restore is not a clean baseline; do not continue validation against the previous installed state.
+Hyper-V can reject `Restore-VMSnapshot` while a VM with a GPU partition adapter is running. Shut down the guest before restoring the checkpoint, wait for the VM state to become `Off`, restore the checkpoint, and then start it. If restore still fails, use a validation VM without GPU-P or remove and recreate the GPU partition around the checkpoint lifecycle. Do not continue validation after a failed restore.
 
 ## 2. Capture the baseline
 
@@ -45,11 +64,11 @@ The snapshot records:
 - User and machine PATH entries, expanded directory identities, existence, and top-level command candidates.
 - Registry value types, hive, view, scope evidence, user SID, elevation, and capture phase.
 
-The collector rejects a snapshot when all three evidence collections are empty. Do not continue from a zero-record JSON file. The script does not inventory Start menu entries, arbitrary AppData files, installed services, or the complete filesystem; collect those separately with focused guest commands when they matter.
+The collector rejects a snapshot when all three evidence collections are empty. Do not continue from a zero-record JSON file. The script does not inventory Start menu entries, arbitrary AppData files, installed services, or the complete filesystem. Collect those separately with focused guest commands when they matter.
 
 ## 3. Run the installer explicitly inside the VM
 
-Download the installer from its official URL inside the guest and verify its SHA256 there. This avoids `Copy-VMFile` compatibility and source-path failures for large payloads; the host controller uses Guest Service only for the small collector script. The state scripts never download or execute the installer.
+Download the installer from its official URL inside the guest and verify its SHA256 there. This avoids `Copy-VMFile` compatibility and source-path failures for large payloads. The host controller uses Guest Service only for the small collector script. The state scripts never download or execute the installer.
 
 ```powershell
 $InstallerUrl = 'https://downloads.example.test/Installer.exe'
@@ -63,15 +82,31 @@ if ($ActualSha256 -cne $ExpectedSha256) { throw "Installer SHA256 mismatch: expe
 
 If the official source requires headers, cookies, or a transport unavailable inside the guest, transfer a previously hash-verified host file through an explicitly tested channel and verify the hash again in the guest. Never rely on the filename or transfer success alone.
 
-Before launching, inspect the actual file rather than trusting architecture labels on the download page. Use `Get-PEArchitectureInfo` for PE launchers and `Get-MsiInstallerInfo` or the MSI package template for MSI payloads. A page marked x64 can still serve an x86 launcher, and `win32` does not prove x86 installed binaries.
+Before launching, verify the file's architecture. Use `Get-PEArchitectureInfo` for PE launchers and `Get-MsiInstallerInfo` or the MSI package template for MSI payloads. A page marked x64 can still serve an x86 launcher, and `win32` does not prove x86 installed binaries.
+
+When runtime downloads or update sources need investigation, follow [Capture VM network traffic](vm-network-capture.md). It covers host capture proxies, guest-only routing, Proxifier/TUN configurations, and guest CA stores. Keep the final unattended-install validation free of capture-specific preparation.
+
+### Check silent exits without elevation
+
+Some installers require an elevated caller to start installation but exit silently without requesting UAC when launched unelevated. When this behavior is suspected, use Computer Use through [VMConnect](#operate-the-guest-through-vmconnect) to launch the exact artifact from an unelevated shell on the signed-in guest's visible desktop. Do not select **Run as administrator**, use `-Verb RunAs`, or launch from an elevated terminal for this case. Verify the launch shell's token elevation rather than inferring it from administrator-group membership. A non-interactive PowerShell Direct launch alone cannot establish the absence of a visible prompt.
+
+Observe whether setup starts, a UAC prompt appears, or the process exits without installing. Record the launch context, command line, screenshots, logs, exit code, and installed-state comparison. A quick exit, even with code `0`, does not prove success or an elevation requirement. Check for a continuing child installer before concluding that nothing happened. If Computer Use cannot operate the guest desktop, ask the user to perform the observed launch and leave the result unverified until evidence is available.
+
+Restore the checkpoint and repeat with the same artifact, requested scope, and silent switches from an explicitly elevated shell. When the unelevated case cannot start installation and the elevated case completes unattended, add `ElevationRequirement: elevationRequired` to the affected manifest entry. Apply it only to the validated scope and route. Follow the [elevation field rules](../../../author-winget-manifest/references/manifest/defaults-and-return-codes.md#elevationrequirement) for placement and other behaviors.
 
 ### Require and inspect installer logs
 
 Pass the installer's supported log argument on every silent validation run, including when WinGet supplies that argument by default and the manifest correctly omits it. Use the family workflow, static parser result, or WinGet default-switch table to choose the syntax. Give each validation case a unique path under `C:\DumplingsValidation\Logs` and preserve the exact argument list in evidence.
 
-Treat `<LOGPATH>` as a destination hint rather than assuming it is one file. An installer may create the named file, create a directory at that path, use the path as a filename prefix and write several adjacent logs, or ignore it and write under `%TEMP%`. Record the launch time and inspect all of these locations. During an apparent hang, read newly written text logs with `Get-Content -Tail 200` while the process is still running. After completion, retrieve and read the complete log file, log directory, adjacent matching files, and relevant new `%TEMP%` logs, then preserve them in the transient evidence directory. Do not paste full logs into chat.
+Treat `<LOGPATH>` as a destination hint. An installer may create the named file, create a directory at that path, use the path as a filename prefix and write several adjacent logs, or ignore it and write under `%TEMP%`. Record the launch time and inspect all of these locations. During an apparent hang, read newly written text logs with `Get-Content -Tail 200` while the process is still running. After completion, retrieve and read the complete log file, log directory, adjacent matching files, and relevant new `%TEMP%` logs, then preserve them in the transient evidence directory. Do not paste full logs into chat.
 
 If the installer documents no log switch or rejects logging, record that limitation and still inspect newly created or modified files under `%TEMP%`, `%ProgramData%`, and the installer's working directory. Absence of a requested log is evidence to investigate, not proof that installation succeeded.
+
+### Capture WinGet diagnostic logs separately
+
+When testing through `winget install --manifest` inside the VM, add `--verbose-logs` and capture `winget --info` to identify that client's **Logs** directory. `--logs` or `--open-logs` opens the default directory. It does not download PR artifacts. `-o` or `--log` selects the installer log destination and is separate from WinGet's own diagnostic log. Do not assume `%TEMP%\AICLI` or a particular packaged-client path applies to every build or user. Keep both logs in the validation evidence.
+
+Archive logs promptly. Current [logging settings](https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#logging) default to deleting files older than seven days or beyond a 128 MB total at process startup. WinGet's own log wraps near 16 MB. Installer logs do not use that wrapping limit. Record the client's version and settings when interpreting missing or truncated history. For service-side PR logs, follow [Validation logs and check results](../../../author-winget-manifest/references/submission/validation-logs.md), which uses the completion check's CDN artifact link.
 
 ### Capture the process result
 
@@ -80,28 +115,30 @@ Capture the outer process result and retain the exact exit code:
 ```powershell
 $LogPath = 'C:\DumplingsValidation\Logs\Silent\Installer.log'
 $StartedAtUtc = [DateTime]::UtcNow
-$Process = Start-Process -FilePath C:\DumplingsValidation\Installer.exe `
-  -ArgumentList @('<silent switches>', '<log switch with log path>') -PassThru
+$Process = Start-Process -FilePath C:\DumplingsValidation\Installer.exe -ArgumentList @('<silent switches>', '<log switch with log path>') -PassThru
 
-$Completed = $Process.WaitForExit([int][TimeSpan]::FromMinutes(15).TotalMilliseconds)
-if (-not $Completed) {
+$WaitResult = & 'C:\DumplingsValidation\Wait-WinGetVMProcess.ps1' -Process $Process -TimeoutSeconds 900
+if ($WaitResult.TimedOut) {
   Get-ChildItem -LiteralPath (Split-Path -Path $LogPath -Parent) -File -Recurse -ErrorAction SilentlyContinue | Where-Object LastWriteTimeUtc -GE $StartedAtUtc | ForEach-Object { "### $($_.FullName)"; Get-Content -LiteralPath $_.FullName -Tail 200 -ErrorAction SilentlyContinue }
   [pscustomobject]@{ StartedAtUtc = $StartedAtUtc.ToString('o'); ExitCode = $null; Mode = 'silent'; TimedOut = $true }
   throw 'Silent installation exceeded the validation timeout. Collect the live logs from the host before terminating the process.'
 }
-$Process.Refresh()
-
 [pscustomobject]@{
   StartedAtUtc = $StartedAtUtc.ToString('o')
-  ExitCode = $Process.ExitCode
+  ProcessId = $WaitResult.ProcessId
+  ExitCode = $WaitResult.ExitCode
   Mode = '<interactive|silent|silentWithProgress|cancelled>'
   TimedOut = $false
 }
 ```
 
-Do not replace the bounded process-object wait with `Start-Process -Wait`. On Windows, `-Wait` waits for the started process and its descendants, so an updater, helper, or launched application that remains alive can make validation appear hung after the installer itself has exited. Keep `-PassThru`, apply an explicit timeout to the returned process, and inspect the process tree separately when wrapper behavior matters. See the PowerShell [`Start-Process -Wait`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process#-wait) contract.
+Do not replace the bounded process-object wait with `Start-Process -Wait`. On Windows, `-Wait` waits for the started process and its descendants, so an updater, helper, or launched application that remains alive can make validation appear hung after the installer itself has exited. [PowerShell issue #15555](https://github.com/PowerShell/PowerShell/issues/15555) reproduces this difference from `Wait-Process`, which waits only for the specified processes. The current [`Start-Process -Wait` contract](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process#-wait) documents the process-tree behavior. Keep `-PassThru`, apply an explicit timeout to the returned process, and inspect the process tree separately when wrapper behavior matters.
 
-The normal success expectation is exit code `0`. A nonzero code may indicate failure or a documented successful outcome such as success-with-reboot. Accept it only when vendor documentation, installer-family return-code evidence, or a repeatable successful installed-state comparison proves the meaning; then author `InstallerSuccessCodes` or `ExpectedReturnCodes` only when required by the manifest rules. A zero exit code is still insufficient without the expected installed state and a blocker-free unattended run.
+The returned process can also be a short-lived launcher. Waiting for that process alone does not prove that its child installer has finished. For example, `runas.exe` can exit after launching its child without forwarding the child's exit code, as the issue describes. Record the outer exit code separately, track the actual installer with a bounded wait, and confirm its logs and installed state before taking the after-install snapshot.
+
+The controller stages `Wait-WinGetVMProcess.ps1` beside the collector. It polls one retained process handle in short, bounded slices and leaves the process alive on timeout. Follow [bounded process waits](vm-process-wait.md) for known nested PIDs, an explicit process-tree wait, and remoting-session cleanup. Do not assume that wrapping a launch in `Start-ThreadJob` alone waits for its descendants.
+
+The normal success expectation is exit code `0`. A nonzero code may indicate failure or a documented successful outcome such as success-with-reboot. Accept it only when vendor documentation, installer-family return-code evidence, or a repeatable successful installed-state comparison proves the meaning. Then author `InstallerSuccessCodes` or `ExpectedReturnCodes` only when required by the manifest rules. A zero exit code is still insufficient without the expected installed state and a blocker-free unattended run.
 
 When the process hangs, leave it running long enough to collect its live evidence from the host, then terminate it inside the guest and treat the route as failed:
 
@@ -115,7 +152,7 @@ After a completed run, pass the exact exit code:
 & $Tool -Action CollectLogs -VMName PackageValidation -Phase Silent -UserName SpecterShell -AllowEmptyPassword -OutputDirectory $Evidence -LogPath 'C:\DumplingsValidation\Logs\Silent\Installer.log' -InstallerStartedAtUtc '<UTC launch timestamp>' -InstallerExitCode 0 -InstallerMode silent
 ```
 
-The controller writes `<Phase>.InstallerLogs.json` and copies bounded log files to `Logs\<Phase>`. The JSON records requested, adjacent, and recent `%TEMP%` candidates, tail text, copied byte counts, timeout state, the exit code, and `ExitCodeIsZero`. Review its warnings when files exceed the per-file or total limits. Use `-SkipLogFileTransfer` only when metadata and tails are sufficient; adjust `MaximumLogFiles`, `MaximumLogFileBytes`, `MaximumTotalLogBytes`, or `LogTailLineCount` only for an evidenced need.
+The controller writes `<Phase>.InstallerLogs.json` and copies bounded log files to `Logs\<Phase>`. The JSON records requested, adjacent, and recent `%TEMP%` candidates, tail text, copied byte counts, timeout state, the exit code, and `ExitCodeIsZero`. Review its warnings when files exceed the per-file or total limits. Use `-SkipLogFileTransfer` only when metadata and tails are sufficient. Adjust `MaximumLogFiles`, `MaximumLogFileBytes`, `MaximumTotalLogBytes`, or `LogTailLineCount` only for an evidenced need.
 
 Run cancellation, elevated/non-elevated behavior, user/machine scope, and quiet/passive variants as separate checkpoint-restored cases. For wrappers, record whether the outer process propagates nested MSI codes. If the silent process exceeds the case timeout, inspect logs before termination and treat the route as failed unless the logs prove a bounded prerequisite operation that subsequently completes in a clean repeat.
 
@@ -134,7 +171,7 @@ for ($Attempt = 0; $Attempt -lt 30 -and -not $Process; $Attempt++) { $Process = 
 if (-not $Process) { throw 'The application process did not appear after scheduled-task launch.' }
 ```
 
-Delete the task after collecting evidence. Add `/rl highest` only when the specific validation route requires an elevated first run; do not use it for ordinary user-context initialization.
+Delete the task after collecting evidence. Add `/rl highest` only when the specific validation route requires an elevated first run. Do not use it for ordinary user-context initialization.
 
 ### Reject blocking driver trust prompts
 
@@ -156,7 +193,7 @@ This rejection applies only when driver trust consent blocks the tested unattend
   -OutputDirectory $Evidence
 ```
 
-Review `VisibleARPChanges` first. Keep `HiddenARPChanges` to explain embedded MSI/custom EXE behavior. Review `EnvironmentPathChanges` for added, removed, or modified user and machine PATH entries; each entry includes command candidates observed at capture time. A modified entry can mean that command candidates appeared in an existing PATH directory even when the PATH string itself did not change. Confirm each intended CLI command from a fresh shell. Record only user-facing commands; exclude GUI executables, uninstallers, updaters, crash tools, and framework implementation helpers such as .NET's `createdump`. Confirm installed paths, executable architecture, services, drivers, and package scope independently; `WOW6432Node` does not determine installed architecture.
+Review `VisibleARPChanges` first. Keep `HiddenARPChanges` to explain embedded MSI/custom EXE behavior. Review `EnvironmentPathChanges` for added, removed, or modified user and machine PATH entries. Each entry includes command candidates observed at capture time. A modified entry can mean that command candidates appeared in an existing PATH directory even when the PATH string itself did not change. Confirm each intended CLI command from a fresh shell. Record only user-facing commands. Exclude GUI executables, uninstallers, updaters, crash tools, and framework implementation helpers such as .NET's `createdump`. Confirm installed paths, executable architecture, services, drivers, and package scope independently. `WOW6432Node` does not determine installed architecture.
 
 ## 5. Capture first-run associations
 
@@ -185,7 +222,7 @@ Also verify:
 - Exit code `0` for ordinary success, or conclusive evidence for each accepted nonzero success, cancellation, failure, and reboot code.
 - `ElevationRequirement` using both launch contexts when relevant.
 - User and machine PATH changes, the installed directories they expose, and commands that work from a fresh shell.
-- Network endpoints, stable metadata, and payload hashes for download bootstrappers.
+- Network endpoints, stable metadata, and payload hashes for download bootstrappers, using [VM network capture](vm-network-capture.md) when needed.
 - Upgrade behavior by installing the prior version before the new version when required.
 
 Restore the checkpoint after every independent route.
@@ -196,4 +233,4 @@ Focused installer pages link here and list only additional checks. Typical examp
 
 ## Stop conditions
 
-Stop when the installer requires a response file, unavoidable user interaction, a blocking Windows Security driver-trust prompt, hardware, private credentials, account activation, email-delivered links, unofficial payloads, or session-bound URLs that cannot be reproduced. Do not weaken the VM boundary to continue.
+Stop when the installer requires a response file, unavoidable user interaction, a blocking Windows Security driver-trust prompt, hardware that the approved validation VM cannot provide, private credentials, account activation, email-delivered links, unofficial payloads, or session-bound URLs that cannot be reproduced. Do not weaken the VM boundary to continue.

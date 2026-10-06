@@ -29,7 +29,7 @@
 
 Synthetic tests cover historical aliases, reference cycles and missing files, duplicate basename ambiguity, command fallback, product checks, companion payload selection, extraction collisions, and architecture/LCID filters.
 
-The official packaged 2.3 and 3.2 samples and CodeMeter Runtime return no unresolved metadata fields. Every XML attribute remains available in the raw `Attributes` map even when it does not warrant a typed projection; this avoids silently dropping uncommon UI, check, response-file, or execution settings.
+The official packaged 2.3 and 3.2 samples and CodeMeter Runtime return no unresolved metadata fields. Every XML attribute remains available in the raw `Attributes` map even when it does not warrant a typed projection. This avoids silently dropping uncommon UI, check, response-file, or execution settings.
 
 ## Known boundaries
 

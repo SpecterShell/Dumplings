@@ -41,7 +41,7 @@ WinGetIdentifier: Vendor.Package
 Skip: false
 ```
 
-Do not create `State.yaml` by guessing the current state. After the script works read-only, run it once with `-EnableWrite`; `PackageTask.Write()` creates a timestamped `Log_*.yaml` and makes `State.yaml` point to that log.
+Do not create `State.yaml` by guessing the current state. After the script works read-only, run it once with `-EnableWrite`. `PackageTask.Write()` creates a timestamped `Log_*.yaml` and makes `State.yaml` point to that log.
 
 Common configuration fields:
 
@@ -142,4 +142,4 @@ Invoke-ScriptAnalyzer .\Tasks\Vendor.Package\Script.ps1
 git diff --check
 ```
 
-The first run must discover the expected current release without writing. The dry submission must download and parse every applicable installer, update the logical manifest, serialize the multi-file set, and pass offline validation. Inspect `Outputs/WinGet/<PackageIdentifier>/<PackageVersion>/` rather than assuming a successful task check proves the generated manifests are correct.
+The first run must discover the expected current release without writing. The dry submission must download and parse every applicable installer, update the logical manifest, serialize the multi-file set, and pass offline validation. Inspect `Outputs/WinGet/<PackageIdentifier>/<PackageVersion>/` to verify the generated manifests.

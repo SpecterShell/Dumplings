@@ -14,7 +14,7 @@ For Advanced UI, use `$Info.AdvancedUiInfo.ProductCode` (the `SuiteId`) for the 
 
 ## Validate silent support and nested behavior
 
-If no MSI can be extracted and the installer is InstallScript-only, inspect `$Info.InstallScriptInfo`. Accept `Supported` when the media embeds a valid default response file. Block `ResponseFileRequired`; validate `Indeterminate` in the VM. Do not infer support merely because `/s`, dialog names, or response-runtime strings occur in the compiled script.
+If no MSI can be extracted and the installer is InstallScript-only, inspect `$Info.InstallScriptInfo`. Accept `Supported` when the media embeds a valid default response file. Block `ResponseFileRequired`. Validate `Indeterminate` in the VM. Do not infer support merely because `/s`, dialog names, or response-runtime strings occur in the compiled script.
 
 For deep analysis or future response-file authoring, reuse the extracted `setup.inx` path and inspect the IR separately:
 
@@ -37,4 +37,4 @@ The template generator fills only documented generic keys such as `Result`, `szD
 Test-InstallShieldResponseFile -Path .\setup.iss -Trace $FreshInstall
 ```
 
-These helpers assist analysis and authoring; they do not make response-file-dependent installers acceptable to winget-pkgs today.
+These helpers assist analysis and authoring. They do not make response-file-dependent installers acceptable to winget-pkgs today.

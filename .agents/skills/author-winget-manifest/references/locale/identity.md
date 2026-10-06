@@ -6,7 +6,7 @@ Every default-locale manifest requires:
 
 - `PackageIdentifier`: the stable, case-sensitive package identity matching the manifest path.
 - `PackageVersion`: the release identity shared by every file in the manifest set.
-- `PackageLocale`: the BCP-47 language tag for the default metadata, including an evidence-backed region subtag; follow [Regional locale selection](model.md#regional-locale-selection) instead of defaulting a language to its most common country.
+- `PackageLocale`: the BCP-47 language tag for the default metadata, including an evidence-backed region subtag. Follow [Regional locale selection](model.md#regional-locale-selection) instead of defaulting a language to its most common country.
 - `Publisher`: the publisher identity selected according to the rules below.
 - `PackageName`: the user-facing package name selected according to the rules below.
 - `License`: the license identifier or classification selected according to the rules below.
@@ -50,13 +50,14 @@ Appfire's [7pace acquisition announcement](https://appfire.com/resources/blog/ap
 
 Use the acquiring parent for `PackageIdentifier` or `Author` only when official evidence shows that the product was actually rebranded, republished, or transferred into the parent's product identity. Acquisition by itself is insufficient.
 
-Do not rename an existing WinGet package merely because ownership changed; package identifiers are stable identities. Apply this ownership rule when selecting an identifier for a new package, or follow an explicit migration/replacement process when an existing identifier must change.
+Do not rename an existing WinGet package merely because ownership changed. Package identifiers are stable identities. Apply this ownership rule when selecting an identifier for a new package, or follow an explicit migration/replacement process when an existing identifier must change.
 
 ## Publisher And Author
 
 ### Publisher
 
-- Prefer the visible ARP entry's `Publisher` value exactly, including its legal suffix and spelling.
+- Normally prefer the visible ARP entry's `Publisher` value exactly, including its legal suffix and spelling.
+- When the ARP `Publisher` is identical to `DisplayName` and differs from the verified owner of the official repository, prefer the repository owner's identity for the locale manifest's `Publisher`. For example, use `Publisher: lidge-jun` for `lidge-jun.OpenCodex` when both ARP values are `OpenCodex`. Preserve the actual ARP publisher in `AppsAndFeaturesEntries` when it differs from every authored locale's publisher, following the [Apps & Features rules](../manifest/apps-and-features.md). Do not apply this exception to an unaffiliated mirror or fork.
 - If the visible ARP entry has no `Publisher`, use another authoritative publisher identity, normally the same organization or person selected for `Author`.
 - A substituted manifest publisher cannot participate in name-and-publisher matching against an ARP entry that has no publisher. It does not interfere with matching when `ProductCode`, `UpgradeCode`, `PackageFamilyName`, or another independent identity field provides the match.
 - Do not assume the substitution is harmless when no independent matching identity exists. Record that the installed entry cannot be correlated by normalized name and publisher alone.
@@ -87,6 +88,8 @@ Do not use a `mailto:` link.
 
 Use the official privacy policy. Look for it in the site's header, footer, navigation menu, login or registration page, or a privacy document in the official repository. Prefer a package-specific policy when one exists.
 
+Under [Windows Package Manager policy 1.5.1](https://github.com/microsoft/winget-cli/blob/master/doc/windows/package-manager/package/windows-package-manager-policies.md#15-personal-information), a product that accesses, collects, or transmits personal information should maintain a privacy policy and provide its `PrivacyUrl` in the submission. Local-only processing does not establish an exemption. If no applicable policy exists, record the missing evidence and ask the publisher for a publicly readable policy. Do not invent a URL or substitute a site's unrelated website-only policy.
+
 ### Author
 
 - For an organization or company, use its full legal name, such as `Microsoft Corporation`, `Google LLC`, `Beijing Microlive Vision Technology Co., Ltd.`, or `Spotify AB`.
@@ -94,8 +97,8 @@ Use the official privacy policy. Look for it in the site's header, footer, navig
 - Determine who authors or develops the application from the package page, product history, documentation, About page, official repository or store profile, and acquisition announcements. Do not substitute the ultimate parent company merely because it owns the developer.
 - Privacy policies, EULAs, terms, and legal pages can identify the current owner or legal controller without identifying the product's author. Use them as ownership context rather than automatic `Author` values.
 - Treat the ARP entry, executable metadata, and installer signing certificate as supporting evidence. A valid certificate proves who signed that binary and can corroborate a legal developer name when other official evidence agrees.
-- Do not use a certificate subject as the sole source for `Author` or the `PackageIdentifier` publisher segment; signing services, build vendors, and stale certificates remain possible.
-- For publishers in mainland China, ICP registration and corporate registry information can provide corroborating evidence. Services such as [QCC](https://www.qcc.com/) and [Tianyancha](https://www.tianyancha.com/) are evidence sources only; never use them as publisher or package URLs.
+- Do not use a certificate subject as the sole source for `Author` or the `PackageIdentifier` publisher segment. Signing services, build vendors, and stale certificates remain possible.
+- For publishers in mainland China, ICP registration and corporate registry information can provide corroborating evidence. Services such as [QCC](https://www.qcc.com/) and [Tianyancha](https://www.tianyancha.com/) are evidence sources only. Never use them as publisher or package URLs.
 - Cross-check developer, brand, ownership, and legal identities independently when evidence differs. An acquisition changes ownership context, but the acquired company can remain the correct `Author` and identifier namespace.
 - Do not infer or expand a legal name from a brand, account name, certificate subject, or domain without current official corroboration.
 

@@ -18,7 +18,7 @@ Optional overlay size slots in some Wise 9 prerequisite wrappers do not describe
 
 ## Managed WiseScript reader
 
-The parser loads pinned MIT builds of `SabreTools.IO` and `SabreTools.Serialization` through the shared race-safe managed-assembly loader. The Serialization assembly is rebuilt with two unconditional console diagnostics removed; public types and parsing behavior are unchanged. Dumplings does not execute WiseUnpacker or another external extractor.
+The parser loads pinned MIT builds of `SabreTools.IO` and `SabreTools.Serialization` through the shared race-safe managed-assembly loader. The Serialization assembly is rebuilt with two unconditional console diagnostics removed. Public types and parsing behavior are unchanged. Dumplings does not execute WiseUnpacker or another external extractor.
 
 SabreTools supplies NE and WiseScript object models. Dumplings owns all trust-boundary checks, metadata authority decisions, extraction, diagnostics, and WinGet projection. A reader exception after a valid header and checksummed script member becomes `Wise.Metadata.ScriptModelUnsupported` rather than triggering arbitrary string recovery.
 
@@ -28,7 +28,7 @@ SabreTools supplies NE and WiseScript object models. Dumplings owns all trust-bo
 
 ## Diagnostic policy
 
-Raw Wise results return context-neutral diagnostics. The analyzer or manifest workflow assigns scenario-specific levels. Notable identifiers are:
+Raw Wise results return context-neutral diagnostics. The analyzer or manifest workflow assigns scenario-specific levels.
 
 | Id | Meaning |
 | --- | --- |

@@ -37,7 +37,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

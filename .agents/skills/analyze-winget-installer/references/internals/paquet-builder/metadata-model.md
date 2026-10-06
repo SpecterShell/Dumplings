@@ -6,7 +6,7 @@ Installed-package fields use explicit ownership evidence in this order: a script
 
 ## GINFOS program
 
-Versions 2.7 through 2.9 store a Windows-1252 text program named `GINFOS`. The parser preserves the full text and every non-comment command with its line number. It projects literal `SET name TO "value"` assignments, `EXEC`, `EXECUTE`, and `EXECWAIT`, `CALLDLL ...*PBExecMSI`, `WRITEREG`, shortcuts, basic file operations, and uninstaller operations. Unknown expressions remain in `Expression`; they are not evaluated as strings.
+Versions 2.7 through 2.9 store a Windows-1252 text program named `GINFOS`. The parser preserves the full text and every non-comment command with its line number. It projects literal `SET name TO "value"` assignments, `EXEC`, `EXECUTE`, and `EXECWAIT`, `CALLDLL ...*PBExecMSI`, `WRITEREG`, shortcuts, basic file operations, and uninstaller operations. Unknown expressions remain in `Expression` and are not evaluated as strings.
 
 ```text
 SET DESTPATH TO "%PROGFILESDIR%\Paquet Builder"
@@ -38,7 +38,7 @@ Classic `{app}` destinations are emitted relative to the extraction root. Other 
 
 ## Modern runtime metadata
 
-The native scanner resolves imports or delay imports of `PBCore.dll`, `PBCore64.dll`, or `PBCoreA64.dll` and searches executable sections for literal `SetVar(name, value)` calls. It understands the verified x64 RCX/RDX call shape and x86 stack argument shape, bounded UTF-16 strings, direct and indirect IAT calls, simple register copies, and selected conditional moves. UPX-packed 3.0 and 3.2 launchers are reconstructed into the same mapped-PE input after bounded LZMA decoding, executable-call unfiltering, and relocation restoration; their assignment output is byte-for-byte equivalent to scanning an externally unpacked reference during development.
+The native scanner resolves imports or delay imports of `PBCore.dll`, `PBCore64.dll`, or `PBCoreA64.dll` and searches executable sections for literal `SetVar(name, value)` calls. It understands the verified x64 RCX/RDX call shape and x86 stack argument shape, bounded UTF-16 strings, direct and indirect IAT calls, simple register copies, and selected conditional moves. UPX-packed 3.0 and 3.2 launchers are reconstructed into the same mapped-PE input after bounded LZMA decoding, executable-call unfiltering, and relocation restoration. Their assignment output is byte-for-byte equivalent to scanning an externally unpacked reference during development.
 
 The scanner also searches mapped PE data for one exact UTF-16 `Software\Microsoft\Windows\CurrentVersion\Uninstall\<suffix>` string. The suffix must contain no slash, backslash, variable, or control character. Arbitrary pointer arithmetic, dynamically assembled strings, external DLL results, and unsupported branch shapes remain outside the model.
 

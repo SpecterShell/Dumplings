@@ -55,7 +55,7 @@ Container identity, script effects, and installed-product identity are separate.
 
 | Route | Physical structure | Current support |
 | --- | --- | --- |
-| `NewExecutable/WiseScript` | 16-bit NE host plus WiseScript overlay | Wise 7.01 state records are decoded; Wise 5 and 6 headers and members are validated but their state-machine records remain partial |
+| `NewExecutable/WiseScript` | 16-bit NE host plus WiseScript overlay | Wise 7.01 state records are decoded. Wise 5 and 6 headers and members are validated but their state-machine records remain partial |
 | `WiseScript/Overlay` | PE host plus WiseScript overlay | Header, state records, file catalog, registry actions, execution actions, and nested Wise MSI selection |
 | `ResourceLauncher/WiseScript` | vendor PE resource range containing a complete WiseScript PE | Outer and nested PE bounds, WiseScript records, exact payload extraction, and nested Wise MSI selection |
 | `WiseSection/Msi` | PE `.WISE` section containing one complete MSI and CRC32 | Exact MSI range, checksum, metadata, associations, architecture, scope, and install-location property |

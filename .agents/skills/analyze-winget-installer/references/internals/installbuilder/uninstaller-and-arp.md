@@ -100,7 +100,7 @@ A row is visible when it has an effective `DisplayName`, its installation condit
 | Collection | Meaning | WinGet use |
 | --- | --- | --- |
 | `VisibleArpEntries` | Deterministic visible rows | Eligible for `AppsAndFeaturesEntries` |
-| `HiddenArpEntries` | Deterministic hidden rows | Evidence only; never projected as visible package identity |
+| `HiddenArpEntries` | Deterministic hidden rows | Evidence only. Never projected as visible package identity |
 | `UncertainArpEntries` | Conditional identity or visibility | VM validation required |
 | `ArpEntries` | Union of all reconstructed rows | Complete static evidence |
 
@@ -154,7 +154,7 @@ The current 26.8.0 x64 builder fixture wrote the predicted 64-bit HKLM row with 
 
 `AppsAndFeaturesEntries` contains only nonempty schema-supported values from visible entries: `DisplayName`, `Publisher`, `DisplayVersion`, `ProductCode`, and `InstallerType`. Redundant fields can be removed later by `Optimize-WinGetManifest` according to the default locale and installer-level ProductCode rules.
 
-Do not place `RegistryHive`, `RegistryView`, uninstall commands, URLs, `SystemComponent`, `NoModify`, `NoRepair`, `EstimatedSize`, or `InstallDate` into WinGet `AppsAndFeaturesEntries`; retain them as analysis evidence.
+Do not place `RegistryHive`, `RegistryView`, uninstall commands, URLs, `SystemComponent`, `NoModify`, `NoRepair`, `EstimatedSize`, or `InstallDate` into WinGet `AppsAndFeaturesEntries`. Retain them as analysis evidence.
 
 ## Source references
 

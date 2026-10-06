@@ -23,7 +23,7 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-Add `InstallModes: [interactive, silent]` and set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` only when `$Info.SupportsSilentInstallation` is true. Setup Factory has no distinct progress route, so do not add `silentWithProgress` to `InstallModes`. Use `InstallModes: [interactive]` when silent support is false. Setup Factory 3.1, 4, and 5 are interactive-only. A null result indicates malformed, conflicting, or unsupported project data; do not add either field until the artifact is validated.
+Add `InstallModes: [interactive, silent]` and set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` only when `$Info.SupportsSilentInstallation` is true. Setup Factory has no distinct progress route, so do not add `silentWithProgress` to `InstallModes`. Use `InstallModes: [interactive]` when silent support is false. Setup Factory 3.1, 4, and 5 are interactive-only. A null result indicates malformed, conflicting, or unsupported project data. Do not add either field until the artifact is validated.
 
 ## Static parsing
 
@@ -62,7 +62,7 @@ Setup Factory 4 through 6 store the built-in uninstall enable flag, Control Pane
 
 Setup Factory 3.1 targets Windows 3.1 Program Manager and predates the Windows Add/Remove Programs contract. `IRUNIN31.EXE` is an uninstall runtime, not ProductCode evidence. Do not derive an Apps & Features entry from its filename, product name, or program group.
 
-Hidden entries remain evidence with `IsVisible: false`; do not project them as the visible package owner. If more than one visible custom uninstall entry exists, retain the individual entries and do not invent one installer-level ProductCode.
+Hidden entries remain evidence with `IsVisible: false`. Do not project them as the visible package owner. If more than one visible custom uninstall entry exists, retain the individual entries and do not invent one installer-level ProductCode.
 
 ### 5. Inspect associations, prerequisites, and payload records
 
@@ -105,9 +105,9 @@ Determine architecture from installed application binaries or runtime behavior. 
 
 ### 7. Determine switches and installability
 
-Inspect `SupportsSilentInstallation`, `StartsInSilentMode`, `InstallerSwitches`, `InstallModes`, and `SilentInstallationEvidence`. Setup Factory 3.1, 4, and 5 are interactive-only: SF3.1 is a Windows 3.x multi-file runtime, and the Setup Factory 6 builder documentation identifies `/S` silent installation as a new 6.0 feature while the version 5 help and runtime do not expose that facility. Setup Factory 6 accepts `/S` as a generation capability; its separate "Run setup in silent mode" project default is not required to use the switch, so `StartsInSilentMode` may remain null. For Setup Factory 7 through 10, the parser reads `EnableSilentMode` from the serialized `CProjectData` record and validates the following `CMainWindowSettings` structure before accepting the flag. A true value proves that the artifact enables `/S`; a false value proves that the project disables silent mode even when the runtime contains `/S` strings.
+Inspect `SupportsSilentInstallation`, `StartsInSilentMode`, `InstallerSwitches`, `InstallModes`, and `SilentInstallationEvidence`. Setup Factory 3.1, 4, and 5 are interactive-only: SF3.1 is a Windows 3.x multi-file runtime, and the Setup Factory 6 builder documentation identifies `/S` silent installation as a new 6.0 feature while the version 5 help and runtime do not expose that facility. Setup Factory 6 accepts `/S` as a generation capability. Its separate "Run setup in silent mode" project default is not required to use the switch, so `StartsInSilentMode` may remain null. For Setup Factory 7 through 10, the parser reads `EnableSilentMode` from the serialized `CProjectData` record and validates the following `CMainWindowSettings` structure before accepting the flag. A true value proves that the artifact enables `/S`; a false value proves that the project disables silent mode even when the runtime contains `/S` strings.
 
-For a true result, still test license acceptance, reboot suppression, custom prerequisites, external DLL actions, exit codes, and whether the application can launch after silent installation. Setup Factory 5 execution and file-operation records can be guarded by runtime variables or request removable media, while Setup Factory 6 action scripts can assign `%SilentMode%` during startup and override the command-line request. Inspect `VariableReads`, `VariableAssignments`, `ExecutionActions`, `FileSystemActions`, `InstallabilityActions`, `RebootActions`, `ExternalCodeActions`, and `SetupFactory.Installability.*` diagnostics; validate any reachable or runtime-dependent action that affects unattended behavior. A false result is interactive-only. Duplicate modern project records are accepted only when all validated records agree on both silent flags; conflicting or missing records return null with `SetupFactory.Installability.SilentSupportUnresolved`.
+For a true result, still test license acceptance, reboot suppression, custom prerequisites, external DLL actions, exit codes, and whether the application can launch after silent installation. Setup Factory 5 execution and file-operation records can be guarded by runtime variables or request removable media, while Setup Factory 6 action scripts can assign `%SilentMode%` during startup and override the command-line request. Inspect `VariableReads`, `VariableAssignments`, `ExecutionActions`, `FileSystemActions`, `InstallabilityActions`, `RebootActions`, `ExternalCodeActions`, and `SetupFactory.Installability.*` diagnostics. Validate any reachable or runtime-dependent action that affects unattended behavior. A false result is interactive-only. Duplicate modern project records are accepted only when all validated records agree on both silent flags; conflicting or missing records return null with `SetupFactory.Installability.SilentSupportUnresolved`.
 
 When Lua conditions, unresolved variables, nested execution, or external DLL calls affect unattended installation, keep the parser diagnostic and use VM evidence. Duplicating `/S` into WinGet's `SilentWithProgress` switch slot does not prove or advertise a progress-visible mode.
 
@@ -117,7 +117,7 @@ Use the authoring workflow after static and dynamic evidence agree. Add `Product
 
 ## Apps and Features
 
-Use the visible ARP owner written by the installer. Built-in and custom registry routes can coexist, so explicit custom uninstall writes take precedence. `WritesAppsAndFeaturesEntry: false` means the outer installer does not expose proven visible ARP evidence; inspect nested actions and compare VM installed-state snapshots before changing existing fields.
+Use the visible ARP owner written by the installer. Built-in and custom registry routes can coexist, so explicit custom uninstall writes take precedence. `WritesAppsAndFeaturesEntry: false` means the outer installer does not expose proven visible ARP evidence. Inspect nested actions and compare VM installed-state snapshots before changing existing fields.
 
 For SF3.1, `WritesAppsAndFeaturesEntry: false` is a generation fact for the verified Windows 3.1 route, not a request to search the extracted runtime for a modern ProductCode.
 

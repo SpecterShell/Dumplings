@@ -77,7 +77,7 @@ $Href = Read-PlaywrightLocator -Page $Page -Selector 'a.download' -Property Attr
 $Html = Read-PlaywrightPageContent -Page $Page
 ```
 
-- **Notes:** Return this string from the scoped block rather than the page object.
+- **Notes:** Return the string from the scoped block. Keep the page within the lease.
 
 ### `Invoke-PlaywrightJavaScript`
 

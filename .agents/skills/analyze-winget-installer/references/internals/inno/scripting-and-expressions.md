@@ -37,7 +37,7 @@ For example:
 AppVersion={#ProductVersion}
 ```
 
-The installer stores `2.4.1`; it does not store a run-time `ProductVersion` binding. Source-location directives let compiler errors refer back through included files, but they do not change the setup-data model.
+The installer stores `2.4.1`. It does not store a run-time `ProductVersion` binding. Source-location directives let compiler errors refer back through included files, but they do not change the setup-data model.
 
 Compiler-side file enumeration is also final at build time. Wildcards in a `[Files]` `Source` parameter are expanded by the compiler into file entries and payload locations. The source path from the build machine is not needed during installation.
 

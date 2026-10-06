@@ -81,7 +81,7 @@ The decoder receives the next structural boundary and a maximum expanded size. A
 
 The CRLF-delimited UTF-8 filename block ends no more than a small reserved gap before the file table. The parser selects the uniquely nearest valid name block. Identity-carried readme, license, and support-DLL aliases are integrated before ordinary names; duplicate architecture-specific support-DLL names remain distinct physical entries.
 
-Current tables serialize six parallel columns per entry: absolute offset, expanded size, stored size, OLE Automation timestamp, attributes, and CRC32. The first five values use 64 bits and CRC32 uses 32 bits, producing `44 * FileCount` bytes. Earlier locator media may keep auxiliary payloads before `PackageDataOffset`; those offsets are reconstructed only from a unique stored-size and expanded-size record matching the table.
+Current tables serialize six parallel columns per entry: absolute offset, expanded size, stored size, OLE Automation timestamp, attributes, and CRC32. The first five values use 64 bits and CRC32 uses 32 bits, producing `44 * FileCount` bytes. Earlier locator media may keep auxiliary payloads before `PackageDataOffset`. Those offsets are reconstructed only from a unique stored-size and expanded-size record matching the table.
 
 Equal stored and expanded sizes select direct copying. Other file entries are raw-LZMA. Extraction verifies the declared expanded size and CRC32 before preserving output.
 

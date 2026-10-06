@@ -16,7 +16,7 @@ $ElectronBuilderInfo.SupportedScopes
 $ElectronBuilderInfo.Evidence
 ```
 
-If `IsPortable` is true, return to [visible ARP ownership](analysis.md#identify-the-visible-arp-owner) and select the portable workflow. The presence of `app-*.7z` alone proves electron-builder packaging but not a portable target; the helper requires the complete portable environment-variable and temporary-execution evidence before setting this property.
+If `IsPortable` is true, return to [visible ARP ownership](analysis.md#identify-the-visible-arp-owner) and select the portable workflow. The presence of `app-*.7z` alone proves electron-builder packaging but not a portable target. The helper requires the complete portable environment-variable and temporary-execution evidence before setting this property.
 
 Use `Test-ElectronBuilder` instead only when a Boolean result is the sole required output and no architecture or scope decision will follow. Do not call `Test-ElectronBuilder` immediately before `Get-ElectronBuilderNSISInfo`, because that parses the installer twice.
 
@@ -38,12 +38,14 @@ $UpdateFeed.Files
 
 `ConvertFrom-ElectronBuilderUpdateFeed` and `ConvertFrom-ElectronBuilderLatestYaml` do not access the network. They only parse the provided `latest.yml` content string.
 
+For Dumplings automation, follow [GitHub release source priority](../../../../author-dumplings-task/references/sources/selection.md#github-release-source-priority) before choosing an electron-updater or tauri-updater feed. Feed inspection remains useful for detecting a different update source and warning the user.
+
 Do not assume `app-update.yml` is authoritative. Some applications leave an invalid or placeholder URL there and call electron-updater's `setFeedURL()` at runtime. When static configuration is invalid:
 
 - If extracted application source is available under `app\`, search its JavaScript for `setFeedURL(` and trace the URL expression and environment/configuration inputs.
 - If the application is packaged as `app.asar`, extract or inspect the archive, then search the contained source for `setFeedURL(`. Do not execute the application to discover the URL on the host.
 - Accept the recovered URL only when its construction is deterministic and resolves to an official publisher-controlled endpoint.
-- If the runtime URL cannot be recovered safely, skip feed-based source automation and continue with [scope and silent behavior](scope-and-silent.md) using the original official installer source. Record a warning rather than using the invalid configuration URL.
+- If static inspection cannot recover the runtime URL, follow [VM update-source discovery](../../workflows/vm-network-capture.md#discover-the-update-source). If it remains unresolved, skip feed-based source automation and continue with [scope and silent behavior](scope-and-silent.md) using the original official installer source. Record a warning rather than using the invalid configuration URL.
 
 Also distinguish initial-install installers from update-only installers. Some publishers distribute different binaries for first installation and self-update:
 
@@ -58,4 +60,4 @@ See [Electron-builder update feeds](../../../../author-winget-manifest/reference
 
 Electron-builder issue [#7921](https://github.com/electron-userland/electron-builder/issues/7921) records an intermittent fresh-install crash in generated multi-user NSIS installers: exception `0xC0000005` occurs in NSIS `System.dll` around `System::Store` while the installer resolves the per-user program-files path. When VM evidence matches that signature, restore the clean checkpoint and retry the exact same installer, command line, scope, and elevation route up to three additional times. Preserve the exit code, crash evidence, installer log, and installed-state comparison for every attempt.
 
-Use this retry route only for the matching electron-builder crash. Do not reinterpret an unrelated exception, deterministic crash, blocked prompt, or timeout as issue #7921. A later successful attempt proves that the failure is intermittent; report the failed attempts and instability instead of discarding them.
+Use this retry route only for the matching electron-builder crash. Do not reinterpret an unrelated exception, deterministic crash, blocked prompt, or timeout as issue #7921. A later successful attempt proves that the failure is intermittent. Report the failed attempts and instability instead of discarding them.

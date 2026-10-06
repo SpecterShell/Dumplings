@@ -24,9 +24,9 @@ Rules:
 - When an `AppsAndFeaturesEntries` item is needed and either the outer `InstallerType` or that item's `InstallerType` is `msi`, `wix`, or `burn`, always include its `UpgradeCode`.
 - Include `InstallerType` inside `AppsAndFeaturesEntries` only when it differs from the installer node type or is needed to disambiguate.
 - If a wrapper writes an EXE ARP entry and hides the MSI ARP entry, model the visible ARP entry, not only the embedded MSI.
-- Do not retain an entry merely because an older manifest included redundant fields; remove it when installer-level and locale fields now match the visible ARP identity and no required mismatch remains.
+- Do not retain an entry merely because an older manifest included redundant fields. Remove it when installer-level and locale fields now match the visible ARP identity and no required mismatch remains.
 
-WinGet's source index stores normalized package names and publishers from the default localization and every additional localization in independent lookup tables. Consequently, locale-manifest identity values participate in ARP matching without being repeated in `AppsAndFeaturesEntries`; name and publisher redundancy must be evaluated independently.
+WinGet's source index stores normalized package names and publishers from the default localization and every additional localization in independent lookup tables. Locale identity values participate in ARP matching without duplication in `AppsAndFeaturesEntries`. Evaluate name and publisher redundancy independently.
 
 ## Existing Packages
 

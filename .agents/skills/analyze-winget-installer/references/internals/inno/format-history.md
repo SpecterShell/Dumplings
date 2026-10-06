@@ -1,6 +1,6 @@
 # Inno Setup format history and editions
 
-Inno Setup's file format evolved incrementally. The setup-data signature identifies a serialized structure generation, not just a marketing release. Loader placement, metadata framing, record fields, payload compression, checksums, and executable transforms changed on separate schedules.
+Inno Setup's file format evolved incrementally. The setup-data signature identifies a serialized structure generation, independent of the marketing release. Loader placement, metadata framing, record fields, payload compression, checksums, and executable transforms changed on separate schedules.
 
 ## How to read a structure identity
 
@@ -36,7 +36,7 @@ The identity determines a coordinated set of layouts. It should not be reduced t
 | 6.7 | 64-bit compressed-block sizes | setup metadata blocks move beyond 32-bit stored-size framing |
 | 7.0 | structure ID `7.0.0.3` | current metadata records and encryption framing |
 
-This table is a map, not a substitute for the exact descriptor associated with one `SetupID`.
+This table is a map. It does not replace the exact descriptor associated with one `SetupID`.
 
 ## Loader generations
 
@@ -120,7 +120,7 @@ Supported payload compression expanded over time:
 5.3.9+            Stored, Zlib, BZip2, LZMA, LZMA2
 ```
 
-Compiler settings select one supported method for a build. Solid compression can place many logical files in one stream. A file location therefore refers to a slice of a decompressed stream rather than necessarily owning a standalone compressed member.
+Compiler settings select one supported method for a build. Solid compression can place many logical files in one stream. A file location therefore refers to a slice of a decompressed stream. It does not necessarily own a standalone compressed member.
 
 ## Executable call transforms
 

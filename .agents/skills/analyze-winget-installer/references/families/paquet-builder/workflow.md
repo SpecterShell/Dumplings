@@ -2,7 +2,7 @@
 
 ## When to use
 
-Use this workflow after structural analysis identifies Paquet Builder. Author the outer package as `InstallerType: exe`; Paquet Builder is a generic EXE family rather than a WinGet known installer type.
+Use this workflow after structural analysis identifies Paquet Builder. Author the outer package as `InstallerType: exe` because Paquet Builder is a generic EXE family, not a WinGet known installer type.
 
 ## Detection
 
@@ -10,7 +10,7 @@ Run `Get-WinGetInstallerAnalysis -Path $InstallerPath` for routing or call `Get-
 
 ## Binary structure
 
-Paquet Builder media falls into five verified structural routes. Classic 2.6 media uses PE `RCDATA`, an overlay GPacker/LZHUF control stream, a packed setup controller, and an ordered GAF payload. Version 2.7 uses an `ISFX` descriptor to locate an encoded `@GDG` program and Microsoft Cabinet. Version 2.8 replaces the program compression with safe `AP32`/aPLib and uses one 7z payload. Version 2.9 stores an outer raw-LZMA `ENG` runtime and an inner transformed `GP`/LZMA package program. Version 3 and later use separate payload and runtime 7z archives; the runtime archive contains `pbfprop.dat` and `PBCore*.dll`. Archived 3.0 and 3.2 launchers additionally wrap their native image in UPX/LZMA, which the parser reconstructs in memory after validating its bounds and checksums.
+Paquet Builder media falls into five verified structural routes. Classic 2.6 media uses PE `RCDATA`, an overlay GPacker/LZHUF control stream, a packed setup controller, and an ordered GAF payload. Version 2.7 uses an `ISFX` descriptor to locate an encoded `@GDG` program and Microsoft Cabinet. Version 2.8 replaces the program compression with safe `AP32`/aPLib and uses one 7z payload. Version 2.9 stores an outer raw-LZMA `ENG` runtime and an inner transformed `GP`/LZMA package program. Version 3 and later use separate payload and runtime 7z archives, and the runtime archive contains `pbfprop.dat` and `PBCore*.dll`. Archived 3.0 and 3.2 launchers additionally wrap their native image in UPX/LZMA, which the parser reconstructs in memory after validating its bounds and checksums.
 
 ```text
 Classic2                  Cabinet2                  Legacy2 / Resource2          Split3
@@ -36,11 +36,11 @@ Reuse `$Info`. Do not parse the installer again through individual `Read-*FromPa
 
 For `ClassicResourcePackage`, inspect `ClassicEnvelope`, `ClassicCatalog`, `InstalledFiles`, `RegistryWrites`, `Shortcuts`, and `ExecutedPayloads`. The parser validates the GPacker control CRC, exact ZIP boundary, every packed controller record, the complete GAF member sequence, and each installed file's size and Adler-32. A complete controller can prove machine state and associations. The absolute `{app}` root and ProductCode remain unresolved when the catalog does not contain them.
 
-For `CabinetPackageRuntime`, inspect `IsfxDescriptor`, `PackageConfiguration`, `PackageScript`, `NestedMsiPath`, `ProductCode`, `UpgradeCode`, and `AppsAndFeaturesInstallerType`. The verified 2.7 route gives exact configuration and cabinet offsets. The parser decodes the transformed `@GDG` resource table and GINFOS program. A sole nested MSI may own ARP identity; a non-MSI child remains separate.
+For `CabinetPackageRuntime`, inspect `IsfxDescriptor`, `PackageConfiguration`, `PackageScript`, `NestedMsiPath`, `ProductCode`, `UpgradeCode`, and `AppsAndFeaturesInstallerType`. The verified 2.7 route gives exact configuration and cabinet offsets. The parser decodes the transformed `@GDG` resource table and GINFOS program. A sole nested MSI may own ARP identity, while a non-MSI child remains separate.
 
 For `LegacyEmbeddedPeRuntime`, inspect `PackageConfiguration`, `PackageScript`, `NestedMsiPath`, `ProductCode`, `UpgradeCode`, and `AppsAndFeaturesInstallerType`. The parser verifies both AP32 CRC values, decodes the aPLib stream, and parses the same named-resource and script model. The verified 2.8 builder installer is an EXE wrapper around one MSI and one external cabinet, so the nested MSI owns ARP identity.
 
-For `CompressedResourceRuntime`, inspect `RuntimeResourceInfo`, `PackageConfiguration`, `PackageScript`, `RegistryWrites`, `FileExtensions`, and `NestedMsiPath`. The parser decodes both the outer runtime PE and inner GP/LZMA named-resource table. It recognizes script-selected MSI installation and literal generic-EXE ARP rows. Resolve only fields listed in `UnresolvedFields`; the package tail is no longer opaque.
+For `CompressedResourceRuntime`, inspect `RuntimeResourceInfo`, `PackageConfiguration`, `PackageScript`, `RegistryWrites`, `FileExtensions`, and `NestedMsiPath`. The parser decodes both the outer runtime PE and inner GP/LZMA named-resource table. It recognizes script-selected MSI installation and literal generic-EXE ARP rows. Resolve only fields listed in `UnresolvedFields`, because the package tail is no longer opaque.
 
 For `SplitArchiveRuntime`, inspect `CompiledVariableAssignments`, `PackedPeInfo`, `RuntimeCatalog`, `PayloadFiles`, and `RuntimeFiles`. Literal `PBCore.SetVar` calls can prove `PBINSTALLSCOPE`, `DESTPATH`, and enabled silent handling. A literal full uninstall-key path can prove `ProductCode`; arbitrary native actions remain outside the static model. `PackedPeInfo` records the accepted UPX header, sizes, filter, and Adler-32 values when the extra reconstruction layer was required.
 
@@ -51,7 +51,7 @@ Expand-PaquetBuilderInstaller -Path $InstallerPath -DestinationPath $Destination
 Expand-PaquetBuilderInstaller -Path $InstallerPath -DestinationPath $DestinationPath -ArchiveKind Runtime -CollisionAction Rename
 ```
 
-Omit `-Name` to extract all entries. Use `-ArchiveKind All` only when both application and runtime files are needed; the function keeps them under separate `Payload` and `Runtime` directories. Classic media extracts installed GAF members to their catalogued destinations, Cabinet 2.7 media expands its exact ISFX-declared cabinet range, and legacy/resource generations expose `ENG` plus other `RCDATA` evidence through the runtime route. Resource 2.9 emits the decoded runtime as `ENG.exe` and preserves its original encoded package configuration as `ENG.tail.bin`; use `PackageConfiguration` for the decoded semantic view.
+Omit `-Name` to extract all entries. Use `-ArchiveKind All` only when both application and runtime files are needed, and the function keeps them under separate `Payload` and `Runtime` directories. Classic media extracts installed GAF members to their catalogued destinations, Cabinet 2.7 media expands its exact ISFX-declared cabinet range, and legacy/resource generations expose `ENG` plus other `RCDATA` evidence through the runtime route. Resource 2.9 emits the decoded runtime as `ENG.exe` and preserves its original encoded package configuration as `ENG.tail.bin`. Use `PackageConfiguration` for the decoded semantic view.
 
 ## Step 4: author switches and modes
 

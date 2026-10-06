@@ -88,7 +88,7 @@ outer PE
 
 ## Spanned media
 
-Spanned 2.x media is one virtual address space. The setup EXE contains the beginning and footer-owned end; caller-supplied companion files fill the missing middle range in explicit order. Their aggregate length must equal the catalog gap exactly. The parser uses a disk-backed seekable composite and records per-file `VolumeOffsets`; it never searches adjacent directories for guessed companions.
+Spanned 2.x media is one virtual address space. The setup EXE contains the beginning and footer-owned end. Caller-supplied companion files fill the missing middle range in explicit order. Their aggregate length must equal the catalog gap exactly. The parser uses a disk-backed seekable composite and records per-file `VolumeOffsets`. It never searches adjacent directories for guessed companions.
 
 ## Raw ranges
 

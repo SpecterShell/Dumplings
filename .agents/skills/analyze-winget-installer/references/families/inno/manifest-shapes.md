@@ -19,7 +19,7 @@ Apply the WinGet defaults below. Do not copy default `InstallModes` or `Installe
 
 ## Dual scope
 
-Use this shape only when `$Info.SupportsCommandLineScopeOverride` and `$Info.SupportsDualScope` are true. Inno enables `/CURRENTUSER` and `/ALLUSERS` only when `PrivilegesRequiredOverridesAllowed` includes `commandline`; `dialog` alone exposes an interactive wizard choice that WinGet cannot select reliably.
+Use this shape only when `$Info.SupportsCommandLineScopeOverride` and `$Info.SupportsDualScope` are true. Inno enables `/CURRENTUSER` and `/ALLUSERS` only when `PrivilegesRequiredOverridesAllowed` includes `commandline`. `dialog` alone exposes an interactive wizard choice that WinGet cannot select reliably.
 
 ```yaml
 Installers:

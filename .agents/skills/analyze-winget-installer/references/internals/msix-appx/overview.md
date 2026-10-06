@@ -10,7 +10,7 @@ The parser covers the structured MSIX and AppX variants documented below. Varian
 
 ## Binary structure
 
-AppX/MSIX packages are ZIP-based Open Packaging Convention containers. The package manifest defines identity and dependencies; the block map hashes payload blocks; `AppxSignature.p7x` carries the package signature. Bundles contain a bundle manifest plus nested package files.
+AppX/MSIX packages are ZIP-based Open Packaging Convention containers. The package manifest defines identity and dependencies. The block map hashes payload blocks; `AppxSignature.p7x` carries the package signature. Bundles contain a bundle manifest plus nested package files.
 
 ```text
 ZIP/OPC package
@@ -46,7 +46,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

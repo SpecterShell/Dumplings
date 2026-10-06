@@ -102,7 +102,7 @@ try {
 
 Do not use an unbounded `following-sibling` query when later releases or page sections share the same parent. Use the loop form with an explicit stop condition instead.
 
-Interleaved bilingual release bodies may place a language marker before the element that contains that language's list. HtmlAgilityPack also exposes indentation as `#text` siblings. Keep a skip flag set across whitespace text nodes and clear it only after the next substantive element; otherwise the whitespace consumes the flag and the unwanted list leaks into the selected locale.
+Interleaved bilingual release bodies may place a language marker before the element that contains that language's list. HtmlAgilityPack also exposes indentation as `#text` siblings. Keep a skip flag set across whitespace text nodes and clear it only after the next substantive element. Otherwise the whitespace consumes the flag and the unwanted list leaks into the selected locale.
 
 ```powershell
 $SkipNextElement = $false
@@ -118,7 +118,7 @@ for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2';
 
 Match the exact publisher marker and stop boundary. If the node after the marker is not the expected list or section element, warn and omit the locale instead of skipping unrelated content.
 
-Markdown can be converted to the same PowerHTML node model before applying these patterns. The parameter name is `-Extensions`; pass `hardlinebreak` for sources such as GitHub release bodies where one newline is intended to produce a line break:
+Markdown can be converted to the same PowerHTML node model before applying these patterns. The parameter name is `-Extensions`. Pass `hardlinebreak` for sources such as GitHub release bodies where one newline is intended to produce a line break:
 
 ```powershell
 try {
@@ -141,31 +141,55 @@ try {
 
 `advanced` enables the project's normal advanced Markdown pipeline, `emojis` enables emoji extension handling, and `hardlinebreak` preserves single-newline release-body formatting. Ordinary changelog Markdown should omit `hardlinebreak` unless the source uses that convention.
 
+## Skip download and hash sections
+
+Follow the manifest-authoring [release-text rules](../../../author-winget-manifest/references/locale/content-and-resources.md#format-the-release-text). Exclude complete download and hash/checksum sections before calling `Get-TextContent`, including their headings, asset links, tables, and verification instructions. Keep genuine change entries about download or hashing features.
+
+Use a persistent `$Skip` flag while walking the selected release or locale's sibling nodes. Set it at an unwanted heading and keep it set through that section's contents and deeper subheadings. Reconsider it only at the next heading of the same or a higher level, so later changes remain included. Reset the flag for each locale. Stop at the next release or language boundary when the document contains several.
+
+The GitHub example below also excludes a standalone SHA-256 table. Match the actual source headings and table structure rather than copying its patterns blindly. A checksum table may appear without a heading, and download sections may contain lists, code blocks, or nested containers. Filter those observed structures explicitly. See the [release-body filtering examples](../example-index.md#release-metadata-patterns) for current `$Skip` implementations.
+
+If the filtered text is empty, omit `ReleaseNotes` and try the release-history fallback. Preserve the remaining text verbatim after conversion.
+
 ## Git-Hosted Release Metadata
 
 For GitHub, GitLab, Gitea, Codeberg, Bitbucket, Gitee, or GitCode releases, use the release publication time and the notes for the exact selected release. When the release body is empty, boilerplate, or download-only, fall back to a current changelog or the desktop application's official release-notes page.
 
 `Anthropic.ClaudeCode` is the concrete fallback example. Its release discovery does not rely on a useful GitHub release body. The task assigns the repository's general `CHANGELOG.md` URL, downloads the raw changelog, converts it with `Convert-MarkdownToHtml`, selects the current version heading, and replaces the fallback URL with that heading's anchor. A failed request still leaves the general changelog URL instead of retaining a URL from the previous version.
 
-GitHub release bodies treat hard line breaks as meaningful:
+GitHub release bodies treat hard line breaks as meaningful. Convert to nodes, skip the unwanted sections, then format the selected changes. Initialize the URL with a verified fallback or `$null` before parsing, following [clear stale release fields](workflow.md#clear-stale-release-fields):
 
 ```powershell
+$this.CurrentState.Locale += [ordered]@{ Locale = 'en-US'; Key = 'ReleaseNotesUrl'; Value = $null }
 try {
   $this.CurrentState.ReleaseTime = $Release.published_at.ToUniversalTime()
 
-  $Notes = $Release.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+  $ReleaseNotesDocument = $Release.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+  $Skip = $false
+  $SkippedHeadingLevel = 0
+  $ReleaseNotesNodes = for ($Node = $ReleaseNotesDocument.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
+    if ($Node.Name -match '^h([1-6])$') {
+      $HeadingLevel = [int]$Matches[1]
+      if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+        $Skip = $Node.InnerText -match '^\s*(Downloads?|Hash(?:es)?|Checksums?|SHA-256|下载|校验和)\s*$'
+        if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+      }
+    }
+    if (-not $Skip -and -not ($Node.Name -eq 'table' -and $Node.InnerText -match 'SHA-256')) { $Node }
+  }
+  $Notes = $ReleaseNotesNodes | Get-TextContent | Format-Text
   if ($Notes) {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotes'
       Value  = $Notes
     }
-  }
 
-  $this.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotesUrl'
-    Value  = $Release.html_url
+    $this.CurrentState.Locale += [ordered]@{
+      Locale = 'en-US'
+      Key    = 'ReleaseNotesUrl'
+      Value  = $Release.html_url
+    }
   }
 } catch {
   $_ | Out-Host
@@ -173,4 +197,4 @@ try {
 }
 ```
 
-Remove checksum tables, repeated asset links, and unrelated mobile or platform announcements from the source selection. Preserve the selected source text verbatim after conversion; do not summarize it.
+Keep unrelated mobile or platform announcements outside the selected nodes as well.

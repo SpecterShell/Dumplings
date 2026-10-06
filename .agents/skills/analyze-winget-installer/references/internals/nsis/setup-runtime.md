@@ -21,7 +21,7 @@ Stock runtime switches include:
 | `/D=<path>` | Overrides `$INSTDIR`; it must be the last command-line argument. |
 | `_?=<path>` | Internal uninstaller original-directory handoff. |
 
-The rest of the command line remains available through `$CMDLINE`. Scripts and plug-ins can parse arbitrary private switches. `/S` suppresses stock pages; it does not neutralize `MessageBox` without `/SD`, custom plug-in windows, child process UI, or script logic that intentionally changes silent state.
+The rest of the command line remains available through `$CMDLINE`. Scripts and plug-ins can parse arbitrary private switches. `/S` suppresses stock pages. It does not neutralize `MessageBox` without `/SD`, custom plug-in windows, child process UI, or script logic that intentionally changes silent state.
 
 `GetParameters`-style macros usually remove the executable token before parsing private options. The runtime applies a trailing `/D=` value before `.onInit`, so callbacks and sections see the overridden `$INSTDIR` rather than the compiled default.
 
@@ -86,7 +86,7 @@ The interpreter uses one-based command addresses for calls and jumps. It shares 
 
 Solid archives must be decoded in stream order. Non-solid archives can seek to individual framed records. NSISBI can read an external data file or a sequence of independently compressed multithread blocks.
 
-The extraction command may ignore selected errors or continue after prompting. Static extraction should instead return deterministic integrity and bounds errors; it must not reproduce interactive ignore behavior.
+The extraction command may ignore selected errors or continue after prompting. Static extraction should instead return deterministic integrity and bounds errors. It must not reproduce interactive ignore behavior.
 
 ## Registry, files, and shell effects
 
@@ -104,6 +104,33 @@ The common `nsProcess` plug-in pops a process name and pushes a numeric result. 
 
 `Exec`, `ExecWait`, and `ShellExec` can transfer responsibility to another installer. The outer runtime knows the command and, for waiting calls, an exit status. It does not know the child's registry or filesystem effects.
 
+## Electron-builder elevation paths
+
+electron-builder's assisted dual-scope template requests a user token (`RequestExecutionLevel user`, compiled as `asInvoker`). Its all-users selection, machine installation directory, HKLM registration, and elevation logic are separate script effects. `allowElevation: false` removes a preprocessor define used by the custom scope page, causing `EnableWindow <all-users-control> 0` and a `(must run as admin)` label when the process is unelevated. The build option survives indirectly as command and string evidence, not a serialized Boolean configuration field.
+
+The GUI page and silent install section have different control flow:
+
+```text
+assisted dual-scope .onInit
++-- /allusers    -> hasPerMachineInstallation=1, hasPerUserInstallation=0
++-- /currentuser -> hasPerMachineInstallation=0, hasPerUserInstallation=1
+`-- no override -> previous registry state / compiled default
+
+interactive scope page (skipped by /S)
++-- unelevated + allowElevation=false -> disable all-users radio button
+`-- selected / forced all-users route -> UAC_RunElevated if not admin
+
+silent install section (22.14.9 fix and inspected later templates)
++-- machine flag + silent + not admin -> UAC_RunElevated, outer process Quit
+`-- already admin                    -> select all-users context, install
+```
+
+The silent block was added by commit `661a6522520e9ea59549cb7e18986fcfb58e873a` and released in 22.14.9. It is absent from the inspected 19.0.0, 20.0.0, and 22.14.8 install sections. Its condition does not inspect `MULTIUSER_INSTALLMODE_ALLOW_ELEVATION`. The machine flag can come from an existing HKLM installation or an explicit `/allusers` argument, so the block also applies to fresh installs that force machine scope. A custom script or another intermediate template can differ; these observations do not establish a universal version-only rule.
+
+The bundled UAC include encodes `UAC_RunElevated` as `UAC::_ 0`; `UAC_IsAdmin` and `UAC_IsInnerInstance` use the same export with operation values `2` and `3`. Interpret the stack argument and reachable call site rather than looking only for an export named `RunElevated` or the presence of `UAC.dll`. Elevation starts another installer instance and the outer instance may quit after the child returns.
+
+Static machine-scope metadata simulation follows a successful elevated installation path. Its HKLM effects establish that path's ARP identity, but do not establish that an unelevated invocation can reach it. Keep GUI enablement, scope support, token requirements, and silent self-elevation as separate evidence. The authoring decision and exact VM checks belong in [NSIS scope and silent behavior](../../families/nsis/scope-and-silent.md#electron-builder-elevation).
+
 ## Reboot and exit state
 
 The script can request reboot, set an exit code, abort a code segment, or quit. File operations can schedule work for reboot. Runtime and plug-in errors affect the error flag and can alter branch behavior.
@@ -118,3 +145,7 @@ The final process exit code is script- and path-dependent. A parser cannot infer
 - [NSIS user-interface runtime](https://github.com/NSIS-Dev/nsis/blob/master/Source/exehead/Ui.c)
 - [NSIS command-line usage](https://nsis.sourceforge.io/Docs/Chapter3.html)
 - [NSIS silent installation](https://nsis.sourceforge.io/Docs/Chapter4.html#silent)
+- [electron-builder 19.0.0 scope page](https://github.com/electron-userland/electron-builder/blob/v19.0.0/packages/electron-builder/templates/nsis/multiUserUi.nsh) and [install section](https://github.com/electron-userland/electron-builder/blob/v19.0.0/packages/electron-builder/templates/nsis/installer.nsi)
+- [electron-builder silent machine-elevation fix](https://github.com/electron-userland/electron-builder/commit/661a6522520e9ea59549cb7e18986fcfb58e873a) and [22.14.9 changelog](https://github.com/electron-userland/electron-builder/blob/v22.14.9/packages/app-builder-lib/CHANGELOG.md)
+- [electron-builder 26.15.3 scope page](https://github.com/electron-userland/electron-builder/blob/512a57ec9bcda593d3e0970bd2b9a33a63beeb57/packages/app-builder-lib/templates/nsis/multiUserUi.nsh), [assisted initialization](https://github.com/electron-userland/electron-builder/blob/512a57ec9bcda593d3e0970bd2b9a33a63beeb57/packages/app-builder-lib/templates/nsis/assistedInstaller.nsh), and [install section](https://github.com/electron-userland/electron-builder/blob/512a57ec9bcda593d3e0970bd2b9a33a63beeb57/packages/app-builder-lib/templates/nsis/installer.nsi)
+- [electron-builder UAC plug-in operations](https://github.com/electron-userland/electron-builder/blob/512a57ec9bcda593d3e0970bd2b9a33a63beeb57/packages/app-builder-lib/templates/nsis/include/UAC.nsh)

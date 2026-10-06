@@ -21,7 +21,7 @@ Physical record order provides storage. `Setup.txt` provides destination and exe
 
 Explicit all-users or current-user directives take priority. Requested execution level and a deterministic installation root provide fallback evidence. `requireAdministrator` establishes elevation but cannot identify the final hive of every generic registry operation.
 
-QSetup launchers are commonly I386 even when the project enables 64-bit setup state. The setup state controls built-in registry view; payload architecture is derived separately from selected installed binaries. Do not infer x86 package architecture from the outer launcher.
+QSetup launchers are commonly I386 even when the project enables 64-bit setup state. The setup state controls built-in registry view. Payload architecture is derived separately from selected installed binaries. Do not infer x86 package architecture from the outer launcher.
 
 ## Requirements and conditions
 

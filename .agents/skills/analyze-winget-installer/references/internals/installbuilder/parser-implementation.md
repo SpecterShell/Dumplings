@@ -2,7 +2,7 @@
 
 ## Module boundaries
 
-The Apache-2.0 public module is `Modules/PackageModule/Libraries/Installers/InstallBuilder.psm1`. It imports `InstallBuilderProject.psm1` for configuration, rules, actions, and system effects, and `InstallBuilderPayload.psm1` for Metakit/CookFS catalogs and payload extraction. Its schema-specific Metakit reader lives in `Modules/PackageModule/Assets/Source/InstallBuilder/InstallBuilderMetakitReader.cs`. Shared PE, binary, compression, archive, path-safety, collision, dependency, association, condition, and diagnostic mechanics remain in their focused infrastructure modules. Parsed project contexts and archive objects are passed explicitly; no interpreter or payload is executed.
+The Apache-2.0 public module is `Modules/PackageModule/Libraries/Installers/InstallBuilder.psm1`. It imports `InstallBuilderProject.psm1` for configuration, rules, actions, and system effects, and `InstallBuilderPayload.psm1` for Metakit/CookFS catalogs and payload extraction. Its schema-specific Metakit reader lives in `Modules/PackageModule/Assets/Source/InstallBuilder/InstallBuilderMetakitReader.cs`. Shared PE, binary, compression, archive, path-safety, collision, dependency, association, condition, and diagnostic mechanics remain in their focused infrastructure modules. Parsed project contexts and archive objects are passed explicitly. No interpreter or payload is executed.
 
 The managed reader implements only the exact TclKit VFS schema used by verified InstallBuilder media. It does not load Metakit, Tcl, TclKit, or installer code. The PowerShell module owns project interpretation, CookFS2, payload mapping, runtime evidence, ARP reconstruction, extraction, and public result composition.
 
@@ -52,7 +52,7 @@ Detection is content-first and intentionally stronger than branding:
 3. Locate candidate `JL 1A 00 00` and `LJ 1A 00 00` Metakit headers.
 4. Validate the database length, commit tail, root descriptor, exact VFS schema, directory graph, and file catalog.
 5. Select a VFS that owns an exact `project.xml` entry and parse that XML.
-6. Probe for a structurally valid CookFS2 tail; its absence selects legacy payload handling when `origindist` is available.
+6. Probe for a structurally valid CookFS2 tail. Its absence selects legacy payload handling when `origindist` is available.
 7. Use bounded zlib project recovery only as a metadata-only fallback when no catalog can be decoded.
 
 Product strings, PE company fields, switch strings, TclKit markers, and a bare `CFS0002` are hints only. Ordinary TclKit applications and marker-only files must fail strict detection.
@@ -92,7 +92,7 @@ Duplicate installed destinations are moved under `_destinations` rather than sil
 
 ## CookFS parsing
 
-The CookFS parser searches backward for at most 32 `CFS0002` markers. For each candidate it derives all table boundaries from `IndexSize`, `PageCount`, and stored page sizes; rejects inconsistent arithmetic; expands the index; requires `CFS2.200`; decodes the recursive directory; and consumes the optional metadata table exactly.
+The CookFS parser searches backward for at most 32 `CFS0002` markers. For each candidate it derives all table boundaries from `IndexSize`, `PageCount`, and stored page sizes, rejects inconsistent arithmetic, expands the index, requires `CFS2.200`, decodes the recursive directory, and consumes the optional metadata table exactly.
 
 The result retains:
 
@@ -152,7 +152,7 @@ The result reports inspected logical paths, architecture evidence, recommended W
 
 ## Extraction API
 
-`Expand-InstallBuilderInstaller` resolves source and destination paths before managed access. `-Name` defaults to `*`, so omission extracts `project.xml` and every packaged logical payload supported by the route. Wildcards match logical paths. Internal callers pass `CollisionAction Rename`; direct calls default to `Prompt` and prompt only after a real collision.
+`Expand-InstallBuilderInstaller` resolves source and destination paths before managed access. `-Name` defaults to `*`, so omission extracts `project.xml` and every packaged logical payload supported by the route. Wildcards match logical paths. Internal callers pass `CollisionAction Rename`. Direct calls default to `Prompt` and prompt only after a real collision.
 
 | Collision action | Behavior |
 | --- | --- |

@@ -14,7 +14,7 @@ The catalog stores source-backed enum names for text, file, interactive, timing,
 
 Text actions add, append, insert, delete, or replace text. File actions copy, delete, move, rename, create directories, or remove directories. Interactive actions execute programs, open documents or sites, explore folders, show messages, terminate installation, ask questions, collect text, or assign variables. Action timing spans startup, each standard dialog boundary, post-installation, and shutdown.
 
-Interactive action `0` executes a program and action `6` executes and waits. Both become `ExecutedPayloads`; the parser does not assume a child is silent, owns ARP, or receives the outer command line.
+Interactive action `0` executes a program and action `6` executes and waits. Both become `ExecutedPayloads`. The parser does not assume a child is silent, owns ARP, or receives the outer command line.
 
 ## Conditions
 
@@ -40,6 +40,6 @@ Legacy1 and Early2 option tails remain bounded evidence because applying Modern2
 
 ## Resources and associations
 
-Builder Resource files use ordinary file records rooted at `<ResourceDir>`. Compiled dialog and image bytes can also occupy otherwise unrouted pre-catalog ranges; these are exportable in raw mode but remain untyped.
+Builder Resource files use ordinary file records rooted at `<ResourceDir>`. Compiled dialog and image bytes can also occupy otherwise unrouted pre-catalog ranges. These are exportable in raw mode but remain untyped.
 
 Registry writes feed the shared association projector. Literal `Software\Classes` extensions, ProgIDs, commands, icons, and protocol markers become association evidence. Associations created by nested programs, conditional writes, unresolved variables, or first-run application logic remain outside static projection.

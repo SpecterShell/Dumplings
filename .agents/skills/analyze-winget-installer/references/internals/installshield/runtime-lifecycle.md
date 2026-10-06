@@ -6,7 +6,7 @@ The runtime lifecycle depends on the project model. InstallScript projects use t
 
 ## Bootstrap startup
 
-`Setup.exe` is a bootstrapper and compatibility host. Depending on the release, it may contain the product media, unpack a wrapper archive, or read sibling files. Startup commonly performs these steps:
+`Setup.exe` is a bootstrapper and compatibility host. Depending on the release, it may contain the product media, unpack a wrapper archive, or read sibling files.
 
 ```text
 process creation
@@ -36,7 +36,7 @@ The launcher can restart itself or a child at a different privilege level. Its P
 
 Fields differ by generation and project type. An absent field can mean a runtime default rather than a malformed configuration.
 
-`ProductGUID` seeds InstallScript identity but does not alone prove that an uninstall entry is created. `PackageName` identifies a configuration section; the corresponding `Location` selects the nested package. `CmdLine` belongs to the configured launch stage.
+`ProductGUID` seeds InstallScript identity but does not alone prove that an uninstall entry is created. `PackageName` identifies a configuration section. The corresponding `Location` selects the nested package. `CmdLine` belongs to the configured launch stage.
 
 ## Language initialization
 
@@ -68,7 +68,7 @@ Setup.exe / setup runtime
       optional runtime domains such as SQL, IIS, XML, or suite support
 ```
 
-Built-in functions are native runtime calls, not bytecode implementations. A compiled script instruction identifies the call and arguments; the side effect is defined by ISRT and target-machine state.
+Built-in functions are native runtime calls, not bytecode implementations. A compiled script instruction identifies the call and arguments. The side effect is defined by ISRT and target-machine state.
 
 ## Framework startup
 

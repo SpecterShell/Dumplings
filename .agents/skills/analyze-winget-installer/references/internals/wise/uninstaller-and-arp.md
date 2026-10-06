@@ -26,4 +26,4 @@ For custom WiseScript rows, use the exact literal uninstall-key suffix only afte
 
 ## VM comparison
 
-Follow the shared installed-state workflow and compare at least HKLM 64-bit, HKLM 32-bit, and HKCU. Record `WindowsInstaller`, `SystemComponent`, uninstall commands, install location, display icon, and value kinds. Compare the observed row to the exact parser tuple rather than accepting a matching display name alone.
+Follow the shared installed-state workflow and compare at least HKLM 64-bit, HKLM 32-bit, and HKCU. Record `WindowsInstaller`, `SystemComponent`, uninstall commands, install location, display icon, and value kinds. Compare the observed row to the exact parser tuple. A matching display name alone is not sufficient.

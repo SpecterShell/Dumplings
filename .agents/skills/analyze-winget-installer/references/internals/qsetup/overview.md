@@ -19,7 +19,7 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 
 QSetup Composer compiles a project into a native PE launcher, an ordered `Setup.txt` instruction stream, and individually compressed physical records. It can instead emit a split kernel plus an authenticated raw companion, external non-SFX payload files, or a byte-spanned setup. The original Composer project is not required at installation time. The Execution Engine reads `Setup.txt`, maps named records to destination folders, evaluates installation conditions, performs system operations, launches nested programs, and creates the configured uninstaller and Add/Remove Programs entry.
 
-Three identities must not be conflated. The PE launcher identifies the QSetup runtime, `SET_PROG_*` and `SET_COMPANY_*` directives identify the packaged application, and `SET_ADD_REMOVE_PROGRAMS_DISPLAY_NAME` identifies the uninstall key and visible ARP name. Physical record names form a fourth namespace: `00021#Composer.exe` can install as `Composer.exe` under a destination selected by an earlier `SET_SUB_DIR` directive.
+The PE launcher identifies the QSetup runtime, `SET_PROG_*` and `SET_COMPANY_*` directives identify the packaged application, and `SET_ADD_REMOVE_PROGRAMS_DISPLAY_NAME` identifies the uninstall key and visible ARP name. These three identities must not be conflated. Physical record names form a fourth namespace: `00021#Composer.exe` can install as `Composer.exe` under a destination selected by an earlier `SET_SUB_DIR` directive.
 
 The setup launcher commonly remains x86 while `SET_ALLOWED_OS` selects QSetup's 64-bit setup state or the payload contains x64 binaries. The outer PE architecture is therefore runtime evidence, not application architecture. The parser selectively materializes the configured main executable and at most 64 adjacent DLL or .NET sidecar files under a shared byte limit, then reports payload architecture and dependency evidence separately from the launcher.
 
@@ -124,7 +124,7 @@ The remaining pipe fields are preserved as preamble evidence. Their labels and u
 
 ### Split-media descriptor
 
-Current split media inserts a stored UTF-8 descriptor after the ordinary generation preamble and before the first record. A kernel descriptor has seven split fields because it includes the companion length; the companion has six because the length is already the physical stream length.
+Current split media inserts a stored UTF-8 descriptor after the ordinary generation preamble and before the first record. A kernel descriptor has seven split fields because it includes the companion length. The companion has six because the length is already the physical stream length.
 
 ```text
 Base          Offset  Size  Field
@@ -133,7 +133,7 @@ Base          Offset  Size  Field
 [descriptor]  0x04    N     |SourceDirectory|CompanionName|Mode|Secret|DeclaredLength?|
 ```
 
-`CompanionName` must be a leaf filename, `Mode` and optional `DeclaredLength` are decimal, and the observed secret is 16 through 128 lowercase ASCII letters. The parser requires the main and companion preambles, secrets, and companion names to match and requires the kernel's declared length to equal the supplied file. The split companion starts at absolute offset zero and carries its own preamble, descriptor, records, and footer; it is not a PE.
+`CompanionName` must be a leaf filename, `Mode` and optional `DeclaredLength` are decimal, and the observed secret is 16 through 128 lowercase ASCII letters. The parser requires the main and companion preambles, secrets, and companion names to match and requires the kernel's declared length to equal the supplied file. The split companion starts at absolute offset zero and carries its own preamble, descriptor, records, and footer. It is not a PE.
 
 ## Record framing
 
@@ -147,7 +147,7 @@ Base      Offset  Size  Field
 [decoded] M+1     ...   payload bytes
 ```
 
-`*` marks a required physical record. Each record advances by exactly `4 + CompressedLength`; the decoder is bounded to that range and cannot consume the next record. Record names are physical catalog identities and commonly use a numeric prefix such as `00021#Composer.exe`.
+`*` marks a required physical record. Each record advances by exactly `4 + CompressedLength`. The decoder is bounded to that range and cannot consume the next record. Record names are physical catalog identities and commonly use a numeric prefix such as `00021#Composer.exe`.
 
 The decoded header is limited to 4096 bytes, must use ASCII framing, and must end after the third pipe. `Name` cannot contain a pipe or `*`; `Stamp` is decimal text. QSetup does not store a separate expanded length in this outer frame, so callers that request content enforce their own output bound while `ZLibStream` validates the complete RFC 1950 member. Enumeration reads only the small decoded header. Payload bytes are decompressed only for `Setup.txt`, selective analysis, or explicit extraction.
 
@@ -193,7 +193,7 @@ Base      Offset  Size  Field
 
 The footer offset, record count, magic, self-length, parsed record endpoint, zero alignment, and complete certificate trailer must agree. QSetup 7.5 and 8.1 samples carry a valid WIN_CERTIFICATE trailer even though the PE security directory does not declare it, so the parser validates the trailer structurally instead of relying only on the PE directory.
 
-The compatibility `Footerless` route is accepted only when the record stream ends exactly at physical EOF. It receives no release label and cannot absorb trailing garbage. When a footer exists, a compact or 74-byte structure must consume the next exact bytes; the parser does not scan backward for magic and does not skip an unrecognized suffix.
+The compatibility `Footerless` route is accepted only when the record stream ends exactly at physical EOF. It receives no release label and cannot absorb trailing garbage. When a footer exists, a compact or 74-byte structure must consume the next exact bytes. The parser does not scan backward for magic and does not skip an unrecognized suffix.
 
 Each certificate record uses the standard `WIN_CERTIFICATE` envelope: `dwLength:uint32 LE`, `wRevision:uint16 LE`, `wCertificateType:uint16 LE`, and certificate bytes, rounded to an eight-byte boundary. Revision must be `0x0100` or `0x0200` and type must be PKCS signed data (`2`). Every record through EOF must validate, including old QSetup media whose PE security directory omits the table.
 
@@ -207,7 +207,7 @@ SET_NAME(value);
 // comment
 ```
 
-Names are case-insensitive `SET_` identifiers containing ASCII letters, digits, and underscores. A directive without parentheses has Boolean value `true`. The optional trailing semicolon is syntax rather than data. Repeated directives are retained in source order because operations such as `SET_SUB_DIR`, `SET_COPY_FILES`, shortcuts, associations, and Execution Engine actions are sequences rather than scalar settings. Scalar metadata reads the first value. Unknown and dynamic values remain literal evidence; the parser does not execute QSetup expressions.
+Names are case-insensitive `SET_` identifiers containing ASCII letters, digits, and underscores. A directive without parentheses has Boolean value `true`. The optional trailing semicolon is syntax rather than data. Repeated directives are retained in source order because operations such as `SET_SUB_DIR`, `SET_COPY_FILES`, shortcuts, associations, and Execution Engine actions are sequences rather than scalar settings. Scalar metadata reads the first value. Unknown and dynamic values remain literal evidence. The parser does not execute QSetup expressions.
 
 Explicit false values (`0`, `false`, `no`, `off`, or `disabled`) disable a Boolean directive even though the line is present. This distinction matters for uninstaller generation and ARP registration. `DirectiveRecords` retains name, value, and source line; `SetupDirectives` groups repeated values by name for scalar and collection lookup.
 
@@ -223,9 +223,9 @@ SET_COPY_FILES(00001#app.exe|00002#support.dll)
 00002#support.dll -> <Application Folder>\bin\support.dll
 ```
 
-Default extraction strips the resolved application root and retains the installed relative path. Targets outside the application root are placed under `_destinations\<root>`; unresolved destinations are isolated under `_unresolved`. `-RawRecords` exports physical entries under `_qsetup\records` from the requested media layer and does not follow a nested wrapper.
+Default extraction strips the resolved application root and retains the installed relative path. Targets outside the application root are placed under `_destinations\<root>`. Unresolved destinations are isolated under `_unresolved`. `-RawRecords` exports physical entries under `_qsetup\records` from the requested media layer and does not follow a nested wrapper.
 
-`SET_SUB_DIR` is stateful. It changes the destination for following copy directives until another subdirectory directive appears. A leading decimal flag prefix before `*` is returned as `DestinationFlags` or `Flags`; observed values combine group, platform, and file-option state, but individual bits are not assigned semantics without an isolating fixture. An embedded copy descriptor resolves to a physical record. A non-SFX descriptor instead resolves an exact caller-supplied filename or `._z` form; the latter is decoded as zlib. Duplicate or ambiguous companion names fail rather than selecting by enumeration order.
+`SET_SUB_DIR` is stateful. It changes the destination for following copy directives until another subdirectory directive appears. A leading decimal flag prefix before `*` is returned as `DestinationFlags` or `Flags`; observed values combine group, platform, and file-option state, but individual bits are not assigned semantics without an isolating fixture. An embedded copy descriptor resolves to a physical record. A non-SFX descriptor instead resolves an exact caller-supplied filename or `._z` form. The latter is decoded as zlib. Duplicate or ambiguous companion names fail rather than selecting by enumeration order.
 
 ## Setup directives and ARP
 
@@ -259,7 +259,7 @@ Each enabled command descriptor occupies three fields and pairs with a three-fie
 
 The descriptor array and argument array are physically separate. Pairing by list position is required; looking for executable-looking strings loses the command type, wait behavior, stage, and condition owner. Recognized launch commands include application, executable, batch, MSI, shell, and DLL routes, with wait and no-wait variants. `ExecutedPayloads` records the literal command, parameters, show mode, setup or uninstall phase, stage, and whether runtime conditions still control execution. Non-launch commands are classified into file-association, registry, INI, environment, architecture-state, user-interaction, process-control, service, COM-registration, font, download, restart, Windows Installer, nested-execution, filesystem, security, restore-point, text-file, installer-control, and variable-state categories.
 
-Modern actions expose sequence and a literal `UnConditional` mode. Legacy actions lack that explicit mode and remain conditional because their environment tests cannot be evaluated from the fixed slots alone. Unconditional setup-time `Create File Association` commands can contribute an authoritative extension; conditional and uninstall-time forms remain system-effect evidence. A user-interaction predicate or command produces a dedicated manual-validation diagnostic. An action whose sentinel positions, field count, command enable flag, or slot geometry is malformed is retained as a structured incomplete diagnostic rather than partially shifted output.
+Modern actions expose sequence and a literal `UnConditional` mode. Legacy actions lack that explicit mode and remain conditional because their environment tests cannot be evaluated from the fixed slots alone. Unconditional setup-time `Create File Association` commands can contribute an authoritative extension. Conditional and uninstall-time forms remain system-effect evidence. A user-interaction predicate or command produces a dedicated manual-validation diagnostic. An action whose sentinel positions, field count, command enable flag, or slot geometry is malformed is retained as a structured incomplete diagnostic rather than partially shifted output.
 
 ## Other system effects
 
@@ -273,11 +273,11 @@ SET_PERFORM_INI_OP(     |Path|Section|Name|Value|SetupAction|UninstallAction|)
 SET_PERFORM_XML_OP(     |Path|NodePath|Value|SetupAction|UninstallAction|)
 ```
 
-A controlled Composer 12 project compiled through `Composer.exe <project>.qsp /compile /exit` proves the current builder emits the longer names `SET_PERFORM_INIFILE_OP` and `SET_PERFORM_XMLFILE_OP` for the INI and XML pages while keeping `SET_PERFORM_REGISTRY_OP` for registry items; the compiled value strings are copied verbatim from the `.qsp` `[Registry]`, `[IniFile]`, and `[XmlFile]` sections. The parser accepts both the short and long names for the INI and XML pages and records the actual directive name in each decoded record's `Source`. The `.qsp` project file itself is a readable INI document, so controlled one-operation fixtures can be authored by editing a saved project and compiling from the command line.
+A controlled Composer 12 project compiled through `Composer.exe <project>.qsp /compile /exit` proves the current builder emits the longer names `SET_PERFORM_INIFILE_OP` and `SET_PERFORM_XMLFILE_OP` for the INI and XML pages while keeping `SET_PERFORM_REGISTRY_OP` for registry items. The compiled value strings are copied verbatim from the `.qsp` `[Registry]`, `[IniFile]`, and `[XmlFile]` sections. The parser accepts both the short and long names for the INI and XML pages and records the actual directive name in each decoded record's `Source`. The `.qsp` project file itself is a readable INI document, so controlled one-operation fixtures can be authored by editing a saved project and compiling from the command line.
 
 Registry types map `String`, `Integer`, `Hex`, `MultiString`, and `ExpandString` to the corresponding Win32 value kinds. Only literal `Create` and `Create if not Exist` setup actions become registry-write evidence. Root aliases are normalized without changing the key, deterministic path aliases are resolved inside values, and malformed field counts, roots, types, or integers produce structured diagnostics.
 
-Association projection requires a syntactically valid extension, a literal ProgID, and a create-enabled record. It writes the extension mapping, class description, optional open command, and optional icon as registry evidence. Protocols require a literal class key with a `URL Protocol` value and an open command; they are projected from decoded registry operations rather than inferred from class names or URL-looking commands.
+Association projection requires a syntactically valid extension, a literal ProgID, and a create-enabled record. It writes the extension mapping, class description, optional open command, and optional icon as registry evidence. Protocols require a literal class key with a `URL Protocol` value and an open command. They are projected from decoded registry operations rather than inferred from class names or URL-looking commands.
 
 Shortcut records can target files or URLs. QSetup 1–3 use a compact comma-separated `Name,Target` record, later historical media use a compact pipe-delimited `|Name|Target|` record, and modern media use an extended pipe record containing subfolder, parameters, working directory, window style, icon, icon index, and version-dependent trailing flags. The parser labels these layouts `CompactComma`, `CompactPipe`, and `ExtendedPipe`; only the extended trailing values remain `ObservedFlags`. Environment operations preserve both normalized user/machine scope and the original scope token. Execution Engine commands and direct directives are projected into typed system-effect collections. Conditions remain attached to each effect and use `Unknown` when runtime state is required.
 
@@ -311,7 +311,7 @@ Detection enumerates record headers without materializing bodies. `Setup.txt` is
 
 - QSetup 6.0 uses the `Legacy3-6` double-pipe container and a distinct 67-field `TransitionalFourCommand` action route. Archived QSetup 9.1, 10.0, and 11.0 media confirm the versioned-preamble, legacy-footer, and six-command route reported as `Legacy7-11`.
 - No separately branded tiny or tiny-verbose grammar was found in the available QSetup 12 builder documentation. The parser supports the structurally observable form: a bounded outer QSetup record containing an inner QSetup setup, and labels it `NestedSfxWrapper` without inventing a product name for the wrapper.
-- Blank-name uninstaller generation remains unresolved for QSetup 8 through 11 when no compiled uninstall shortcut exists. Exact shortcut targets are authoritative, the QSetup 1–7 fallback is `UnInstall_<stamp>.exe`, and the VM-proven QSetup 12 fallback is `<media>_<stamp>.exe`. Production AGTEK media built by a modern Composer independently confirms the `<media>_<stamp>.exe` route (`TrackworkSetup64_21377.exe`). Runtime disassembly shows both the Composer and the Engine treat the name as the computed `UnInstallExePath` variable rather than a stored literal template, so closing the 8–11 gap requires compiling a probe with a period Composer; the 8.1 Composer installer embeds its `Stub.exe` runtime template, extracted for that future work.
+- Blank-name uninstaller generation remains unresolved for QSetup 8 through 11 when no compiled uninstall shortcut exists. Exact shortcut targets are authoritative, the QSetup 1–7 fallback is `UnInstall_<stamp>.exe`, and the VM-proven QSetup 12 fallback is `<media>_<stamp>.exe`. Production AGTEK media built by a modern Composer independently confirms the `<media>_<stamp>.exe` route (`TrackworkSetup64_21377.exe`). Runtime disassembly shows both the Composer and the Engine treat the name as the computed `UnInstallExePath` variable rather than a stored literal template, so closing the 8–11 gap requires compiling a probe with a period Composer. The 8.1 Composer installer embeds its `Stub.exe` runtime template, extracted for that future work.
 - Host-dependent Execution Engine predicates, arbitrary external DLL side effects, and downloaded content cannot be resolved statically. The parser classifies and reports them for VM validation.
 - Trailing shortcut flags and individual bits in numeric copy and destination flag words remain observed because no fixture isolates each bit's semantics. The complete numeric values are preserved.
 

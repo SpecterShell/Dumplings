@@ -41,8 +41,8 @@ NSIS coverage is compositional. Recognizing a first header does not prove the co
 
 ## Format work still needed
 
-- Preserve the fail-closed behavior when Park1 ANSI and stock NSIS assign different meanings to the opcodes actually used; add another discriminator only when source and real output establish it.
-- Preserve the semantic-ambiguity rejection for feature-stripped or reordered stubs; add a new route only when its exact command table is source-backed.
+- Preserve the fail-closed behavior when Park1 ANSI and stock NSIS assign different meanings to the opcodes actually used. Add another discriminator only when source and real output establish it.
+- Preserve the semantic-ambiguity rejection for feature-stripped or reordered stubs. Add a new route only when its exact command table is source-backed.
 - Determine whether legacy external-media verification records expose enough information to select a sidecar automatically when several candidates exist.
 
 ## Emulator work still needed

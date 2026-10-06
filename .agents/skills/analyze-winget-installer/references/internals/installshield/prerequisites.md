@@ -2,7 +2,7 @@
 
 [Back to InstallShield internals](overview.md).
 
-InstallShield setup prerequisites are small installation packages that run before or alongside the main product. A `.prq` file describes one prerequisite; release configuration, MSI tables, feature mappings, or Advanced UI parcels decide whether a setup selects it.
+InstallShield setup prerequisites are small installation packages that run before or alongside the main product. A `.prq` file describes one prerequisite. Release configuration, MSI tables, feature mappings, or Advanced UI parcels decide whether a setup selects it.
 
 ## Prerequisite architecture
 
@@ -72,11 +72,11 @@ The builder may encode size as a comma-separated value whose final part is the p
 
 ## Installation conditions
 
-The `.prq` `conditions` collection states when the prerequisite should run. Every normal condition must be true. If operating-system conditions exist, any one of them is sufficient; the resulting OS group is then combined with the normal group. A missing or outdated dependency is therefore commonly represented by `DoesNotExist` or `LessThanOrMissing`, not by a predicate proving that the dependency is already installed.
+The `.prq` `conditions` collection states when the prerequisite should run. Every normal condition must be true. If operating-system conditions exist, any one of them is sufficient. The resulting OS group is then combined with the normal group. A missing or outdated dependency is therefore commonly represented by `DoesNotExist` or `LessThanOrMissing`, not by a predicate proving that the dependency is already installed.
 
-Condition type codes identify registry-key existence, registry values, file existence, file dates, file versions, registry versions, and App packages. Comparison codes are type-specific. The parser decodes supported pairs into names such as `Exists`, `DoesNotExist`, `Equals`, `LessThan`, `LessThanOrMissing`, and `MissingOrVersionLess`; unknown pairs remain structured `Unknown` evidence.
+Condition type codes identify registry-key existence, registry values, file existence, file dates, file versions, registry versions, and App packages. Comparison codes are type-specific. The parser decodes supported pairs into names such as `Exists`, `DoesNotExist`, `Equals`, `LessThan`, `LessThanOrMissing`, and `MissingOrVersionLess`. Unknown pairs remain structured `Unknown` evidence.
 
-`Get-InstallShieldPrerequisiteInfo` returns a stable `EvidenceKey` for each condition. Supplying a `ConditionEvidence` dictionary and target platform facts produces `DetectionConditionAnalyses`, `OperatingSystemConditionAnalyses`, `InstallationConditionAnalysis`, and `ShouldInstallState`. The evaluator is three-valued and never reads the analysis host. A `True` result means that the authored conditions ask InstallShield to run the prerequisite; it does not prove that the child succeeds or remains silent.
+`Get-InstallShieldPrerequisiteInfo` returns a stable `EvidenceKey` for each condition. Supplying a `ConditionEvidence` dictionary and target platform facts produces `DetectionConditionAnalyses`, `OperatingSystemConditionAnalyses`, `InstallationConditionAnalysis`, and `ShouldInstallState`. The evaluator is three-valued and never reads the analysis host. A `True` result means that the authored conditions ask InstallShield to run the prerequisite. It does not prove that the child succeeds or remains silent.
 
 ## Invocation
 

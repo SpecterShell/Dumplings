@@ -51,7 +51,7 @@ InstallScript MSI combines a Windows Installer product database with the Install
 
 ### Advanced UI and Suite/Advanced UI
 
-Advanced UI is a bootstrap suite. `Setup.xml` describes an outer product and an ordered catalog of MSI, MSP, EXE, AppX, prerequisite, InstallScript, and other parcels. The suite can own one ARP entry through `SuiteId`; parcel ProductCodes identify nested packages rather than the outer suite.
+Advanced UI is a bootstrap suite. `Setup.xml` describes an outer product and an ordered catalog of MSI, MSP, EXE, AppX, prerequisite, InstallScript, and other parcels. The suite can own one ARP entry through `SuiteId`. Parcel ProductCodes identify nested packages rather than the outer suite.
 
 ### Other build artifacts
 

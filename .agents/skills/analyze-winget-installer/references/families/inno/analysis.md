@@ -36,7 +36,7 @@ $Info.Diagnostics
 
 `Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `ResolvedAppId`, `UninstallRegKeyBaseName`, `UninstallDisplayName`, raw directive values, unresolved constants/fields, privilege directives, architecture expressions or packed architecture sets, encryption evidence, loader signature, and `ParserVersionInfo`. Reuse these properties throughout the analysis.
 
-`PascalScriptInfo` is the bounded `[Code]` header view: presence, byte length, IFPS version, declared type/global/function counts, entry-point index, and import size. It is null only when an embedded program header could not be validated; `Present: false` means the selected structure has no compiled program. Official Inno structures before 4.0 do not serialize `CompiledCodeText`, while the My Inno Setup Extensions line introduced it earlier.
+`PascalScriptInfo` is the bounded `[Code]` header view: presence, byte length, IFPS version, declared type/global/function counts, entry-point index, and import size. It is null only when an embedded program header could not be validated. `Present: false` means the selected structure has no compiled program. Official Inno structures before 4.0 do not serialize `CompiledCodeText`, while the My Inno Setup Extensions line introduced it earlier.
 
 Request detailed script evidence in the same top-level parse when header fields contain `{code:...}` constants or script behavior affects scope, silent installation, registry writes, process launches, restart behavior, or downloads:
 
@@ -58,7 +58,7 @@ First use `$Info.WritesAppsAndFeaturesEntry`, `CreateUninstallRegKey`, `Uninstal
 
 - true and metadata matches the product: the outer Inno setup should write its own visible entry; continue with the first or dual-scope shape.
 - false: treat the installer as a wrapper or no-ARP package. Do not use outer `AppId` as the manifest product code without payload/VM evidence.
-- `$null`: one of the directives is dynamic. Preserve the product code only with payload or VM evidence; do not substitute the directive's default.
+- `$null`: one of the directives is dynamic. Preserve the product code only with payload or VM evidence. Do not substitute the directive's default.
 
 Use file extraction only on this branch or when architecture evidence requires it:
 
@@ -77,15 +77,15 @@ Known wrapper example: `Argente.*` uses an Inno wrapper around a custom installe
 
 ## Record metadata and associations
 
-Use `$Info.DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `ProductCode`, and `AppId` as structured header evidence. Do not derive missing values from arbitrary strings. For the built-in visible ARP entry, Inno expands `AppId`, shortens ASCII values longer than 57 characters to a 48-character prefix plus `~` and CRC32, and appends `_is1`; the parser applies the same rules. `ProductCode` is null when the outer installer does not write its built-in ARP entry or when `AppId` contains unresolved runtime constants.
+Use `$Info.DisplayVersion`, `DisplayName`, `Publisher`, `DefaultInstallLocation`, `ProductCode`, and `AppId` as structured header evidence. Do not derive missing values from arbitrary strings. For the built-in visible ARP entry, Inno expands `AppId`, shortens ASCII values longer than 57 characters to a 48-character prefix plus `~` and CRC32, and appends `_is1`. The parser applies the same rules. `ProductCode` is null when the outer installer does not write its built-in ARP entry or when `AppId` contains unresolved runtime constants.
 
 The parser converts deterministic directory constants to manifest-safe environment paths, including `{win}`, `{sysnative}`, `{sd}`, `{localappdata}`, `{userappdata}`, `{commonappdata}`, `{userpf}`, `{usercf}`, `{userfonts}`, `{commonfonts}`, explicit 32/64-bit Program Files/Common Files constants, and `auto*` constants when default scope and install mode make their result unambiguous. It leaves redirectable shell folders, architecture-dependent system-directory constants such as `{sys}`/`{syswow64}`, and runtime-dependent constants such as `{code:...}`, `{param:...}`, `{reg:...}`, `{ini:...}`, `{cm:...}`, `{src}`, and `{tmp}` unresolved. Check `$Info.UnresolvedFields` and `$Info.UnresolvedConstants`; Dumplings preserves the corresponding existing manifest fields instead of writing unresolved expressions.
 
-Inno's constant expander treats `{{` outside a constant as a literal `{`. This is why an AppId compiled from `{{GUID}` becomes `{GUID}` before the uninstall key is calculated; it is not a Kiro/Qoder-specific workaround.
+Inno's constant expander treats `{{` outside a constant as a literal `{`. This is why an AppId compiled from `{{GUID}` becomes `{GUID}` before the uninstall key is calculated. It is not a Kiro/Qoder-specific workaround.
 
 For Inno 6.5 and later, check `EncryptionUse`. `Files` means header metadata is readable but payload extraction requires the setup password. `Full` encrypts metadata too, so parsing fails deterministically rather than probing alternate offsets. The parser validates the encryption-header CRC before reading compressed blocks.
 
-`RegistryWrites` contains the bounded literal records from the compiled `[Registry]` table. `FileExtensions` and `Protocols` project deterministic registrations below `HKCR` or `Software\Classes`; they exclude unresolved `{code:...}` paths. Check `MetadataTablesResolved` and `MetadataRecordCounts` before treating an empty collection as evidence that the table was empty.
+`RegistryWrites` contains the bounded literal records from the compiled `[Registry]` table. `FileExtensions` and `Protocols` project deterministic registrations below `HKCR` or `Software\Classes`. They exclude unresolved `{code:...}` paths. Check `MetadataTablesResolved` and `MetadataRecordCounts` before treating an empty collection as evidence that the table was empty.
 
 Conditional records remain in `RegistryWrites` with their condition evidence and produce a warning because static parsing cannot prove that the write executes. Pascal Script, external DLLs, and application first run can create additional associations. Capture installed-state changes in the VM whenever an association is required by the manifest or the parser reports unresolved table/condition evidence.
 
@@ -99,7 +99,7 @@ Select the shape from the previous routes, then apply these rules:
 - Nested custom EXE ARP: retain outer `InstallerType: inno`, but add only visible overrides proved for the nested component.
 - Add `AppsAndFeaturesEntries` only for a meaningful visible mismatch in installer type, name, publisher, or version.
 - Keep `ProductCode` at installer level and do not duplicate it inside Apps & Features entries.
-- Recheck `InstallModes` and every `InstallerSwitches` child against WinGet defaults; remove equal values and retain complete non-default replacements.
+- Recheck `InstallModes` and every `InstallerSwitches` child against WinGet defaults. Remove equal values and retain complete non-default replacements.
 - Keep scope-specific `Custom` values on their respective installer entries.
 
 ## Escalate unresolved behavior to VM validation

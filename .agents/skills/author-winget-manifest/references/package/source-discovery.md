@@ -19,7 +19,7 @@ Start from the package homepage when known. If unknown, use search cautiously:
 - Verify that official pages navigate to each other: homepage to download page, GitHub to homepage, documentation to publisher, or support page to product.
 - Check whether the product was acquired, merged, or rebranded. Distinguish acquisition from product-identity replacement: if the acquired company and brand remain the product's developer identity, retain them for a new package identifier and `Author`, while using the parent company's current URLs where appropriate.
 - Reject third-party download sites, including download aggregators, mirrors, repackagers, software-informer sites, Softonic-style sites, MajorGeeks-style sites, and SEO spam pages.
-- Treat popular packages with many fake results as high risk; do not use search-result download links without official cross-reference proof.
+- Treat popular packages with many fake results as high risk. Do not use search-result download links without official cross-reference proof.
 
 Common homepage download patterns:
 
@@ -42,6 +42,30 @@ If the link is not visible in static HTML:
 - Refresh the page and repeat the capture. If installer URLs, API responses, or redirect targets change between refreshes, treat the URL as dynamic until proven stable.
 
 If no DevTools MCP is available, use the in-app browser, command-line HTTP requests, and static source inspection. Do not claim DevTools evidence unless it was actually captured.
+
+### Challenge-protected sites
+
+Turnstile and other CAPTCHA or bot-protection systems may reject browser DevTools automation, browser MCPs, and browser CLIs even when the same page works in a manually opened browser. These tools often launch browsers with automation flags or enable protocol features that expose detectable signals, such as `navigator.webdriver`. Detection depends on the browser's launch and instrumentation. Cloudflare documents [automated-browser blocking](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) and [unsupported production challenge environments](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/).
+
+For [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp), prefer connecting to an existing, locally running Chrome instance with `--autoConnect`. This requires Chrome 144 or later. Start Chrome manually, enable remote debugging at `chrome://inspect/#remote-debugging`, and approve its connection prompt. The server discovers the browser through the user data directory for `--channel`, which defaults to `stable`. See the [connection guide](https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/advanced-usage.md#automatically-connecting-to-a-running-chrome-instance) and [configuration reference](https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/configuration.md).
+
+Configure the MCP client with this server command:
+
+```powershell
+npx -y chrome-devtools-mcp@latest --autoConnect
+```
+
+For the [Chrome DevTools CLI](https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/cli.md), select the same connection mode at startup:
+
+```powershell
+chrome-devtools start --autoConnect
+```
+
+Starting a fresh Chrome instance through the MCP or CLI can still expose automation markers. Attaching to an existing instance avoids that launch path but does not guarantee challenge acceptance. Obtain the user's approval before attaching to a personal profile, because the connection exposes its open windows and browser state.
+
+[Patchright](https://github.com/Kaliiiiiiiiii-Vinyzu/patchright) patches Chromium automation flags and some Chrome DevTools Protocol signals used for detection. Community interfaces include [patchright-mcp-lite](https://github.com/dylangroos/patchright-mcp-lite) for MCP and [patchright-cli](https://github.com/AhaiMk01/patchright-cli) for CLI use. Consider them when ordinary browser automation is blocked, subject to their current setup requirements. For Dumplings scripts, prefer the existing [scoped browser helpers](../../../use-dumplings-functions/references/browser.md) before adding another runtime.
+
+Neither connection mode nor Patchright guarantees passing a CAPTCHA. If a challenge persists, ask the user to open the official page manually or use another public first-party source. Record the blocked URL and a screenshot, and keep cookies and challenge tokens out of saved evidence.
 
 ## Forms
 

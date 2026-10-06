@@ -23,7 +23,7 @@ CreateInstall did not evolve as one monolithic file version. Parser dispatch is 
 | 7.1.7 through 7.4.0 | GE 4 | GEA1 | `Extended6` | `Extended5` |
 | 8.0.1 through 8.11.2 | GE 4 | GEA2 | `Extended6` | `Extended5` |
 
-The available artifacts bound transitions rather than proving the first release that shipped each format. For example, the archive width changed after 7.4.0 and no later than 8.0.1. A future artifact is accepted only when one existing structural route validates completely or a new catalog descriptor is added.
+The available artifacts bound transitions but do not prove the first release that shipped each format. For example, the archive width changed after 7.4.0 and no later than 8.0.1. A future artifact is accepted only when one existing structural route validates completely or a new catalog descriptor is added.
 
 ## Silent behavior history
 

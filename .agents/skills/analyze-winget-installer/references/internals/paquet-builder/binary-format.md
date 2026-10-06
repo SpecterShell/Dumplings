@@ -165,7 +165,7 @@ The verified 2.9.1, 2.9.5, and 2.9.6 streams leave four final range-coder bytes 
 
 ## UPX-packed Split3 launcher
 
-Archived 3.0 and 3.2 launchers compress the mapped native image before the ordinary Split3 archives. The parser accepts the observed Win32 PE/LZMA route only; it does not execute the decompressor stub or implement a generic UPX unpacker.
+Archived 3.0 and 3.2 launchers compress the mapped native image before the ordinary Split3 archives. The parser accepts the observed Win32 PE/LZMA route only. It does not execute the decompressor stub or implement a generic UPX unpacker.
 
 ```text
 File-relative  Size  Meaning

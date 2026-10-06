@@ -2,7 +2,7 @@
 
 [Back to InstallShield internals](overview.md).
 
-Advanced UI and Suite/Advanced UI are bootstrapper products rather than a single package database. The suite plans and coordinates a collection of parcels, presents a shared UI, evaluates detection and eligibility conditions, passes command lines to child packages, and can own a separate Apps & Features entry.
+Advanced UI and Suite/Advanced UI are bootstrapper products, not a single package database. The suite plans and coordinates a collection of parcels, presents a shared UI, evaluates detection and eligibility conditions, passes command lines to child packages, and can own a separate Apps & Features entry.
 
 ## Runtime architecture
 
@@ -22,7 +22,7 @@ The suite process is the orchestrator. Each MSI, MSP, EXE, AppX, InstallScript p
 
 ## Setup.xml document
 
-The central catalog is XML with a namespace of the form `installshield/<year>/bootstrap` or `installshield/<year>.<revision>/bootstrap`. InstallShield 2012 Spring, for example, emits `installshield/2012.2/bootstrap`, while InstallShield 2013 emits `installshield/2013/bootstrap`. The namespace identifies the outer bootstrap schema generation and is independent from the versions of nested packages.
+The central catalog is XML with a namespace of the form `installshield/<year>/bootstrap` or `installshield/<year>.<revision>/bootstrap`. InstallShield 2012 Spring, for example, emits `installshield/2012.2/bootstrap`, while InstallShield 2013 emits `installshield/2013/bootstrap`. The namespace identifies the outer bootstrap schema generation and is independent of the versions of nested packages.
 
 ```text
 Extracted Advanced UI media
@@ -75,7 +75,7 @@ Token identity and resolved text are distinct. A missing token in one language d
 
 ## Parcel catalog
 
-Each parcel describes one installable or prerequisite unit. Common element families include:
+Each parcel describes one installable or prerequisite unit.
 
 | Element | Installed technology |
 | --- | --- |
@@ -152,7 +152,7 @@ OR:  any True  -> True; all False -> False; otherwise Unknown
 NOT: True and False invert; Unknown remains Unknown
 ```
 
-Eligibility and detection are not interchangeable. An already-installed package can still be eligible; detection changes the operation the suite plans.
+Eligibility and detection are not interchangeable. An already-installed package can still be eligible. Detection changes the operation the suite plans.
 
 ## Selection tree and modes
 
@@ -193,13 +193,13 @@ Folder tokens are suite runtime properties. The resulting path is the suite's in
 
 ## Transactions, return codes, and reboot
 
-Transactions group package operations for coordinated commit and rollback. Their behavior depends on parcel technology and suite policy; they are not MSI transactions merely because one parcel is an MSI.
+Transactions group package operations for coordinated commit and rollback. Their behavior depends on parcel technology and suite policy. They are not MSI transactions merely because one parcel is an MSI.
 
 Operation properties tell the suite how to interpret child exit codes, whether to continue, and whether to request or defer a reboot. The child process still produces the exit code. A suite can translate or aggregate that outcome before returning from the outer executable.
 
 ## Prerequisites and Windows features
 
-Prerequisite parcels can point to external `.prq` definitions. The suite record selects and schedules the prerequisite; the PRQ owns its detection rules, payloads, commands, return-code handling, and privilege setting.
+Prerequisite parcels can point to external `.prq` definitions. The suite record selects and schedules the prerequisite. The PRQ owns its detection rules, payloads, commands, return-code handling, and privilege setting.
 
 `WindowsFeaturesDefinitions` describes operating-system features that the suite can enable or require. These are target-state operations, not payload files. Both prerequisite and Windows-feature decisions can change after detection on the target machine.
 
@@ -215,4 +215,4 @@ Scope is determined by the suite's registration and execution context. A machine
 
 The XML catalog can establish suite identity, localized metadata, parcels, physical content claims, operation commands, condition syntax, transactions, and authored selection relationships. It cannot determine conditions that need the target registry, installed products, user choices, downloaded content, or extension code.
 
-Unknown condition results should preserve candidate parcels rather than mark them selected or excluded. An authored silent command is evidence of intent; it does not prove that every nested package completes unattended on every target.
+Unknown condition results should preserve candidate parcels rather than mark them selected or excluded. An authored silent command is evidence of intent. It does not prove that every nested package completes unattended on every target.

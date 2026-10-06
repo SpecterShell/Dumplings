@@ -49,7 +49,7 @@ Do not conflate the outer launcher version, embedded runtime version, project fo
 
 ## Scope, registry identity, and architecture
 
-Scope is inferred from compiled registry roots and deterministic destination policy only when they agree. A requested execution level can support the conclusion but does not replace registry evidence. HKCU and HKLM uninstall entries remain distinct. A mixed or conditional set of writes produces alternatives or unresolved scope rather than one guessed value.
+Scope is inferred from compiled registry roots and deterministic destination policy only when they agree. A requested execution level can support the conclusion but does not replace registry evidence. HKCU and HKLM uninstall entries remain distinct. A mixed or conditional set of writes produces alternatives or an unresolved scope. The parser does not guess a single value.
 
 Setup Factory 3.1 is a 16-bit Windows 3.x product and has no Windows Apps & Features registry contract. Its archived builder media uses a fixed absolute destination. Later setup runtimes are Win32 executables, but payload architecture must come from installed PE files rather than the setup stub.
 

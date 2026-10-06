@@ -84,7 +84,7 @@ The MSI stream has no original filesystem path. At runtime Windows Installer and
 
 ## Opaque export mapping
 
-An authored InstallScript custom action is not named directly in the MSI `CustomAction.Target` field. The target commonly uses a generated export such as `f1`; `IsConfig.ini` maps that export to the authored function.
+An authored InstallScript custom action is not named directly in the MSI `CustomAction.Target` field. The target commonly uses a generated export such as `f1`. `IsConfig.ini` maps that export to the authored function.
 
 ```text
 CustomAction row
@@ -158,7 +158,7 @@ ISFeatureSetupPrerequisites
   -> prerequisite identifier/name
 ```
 
-The MSI row is a reference. The corresponding `.prq` definition contains detection conditions, payload URLs, hashes, command lines, success/reboot codes, and privilege behavior. A feature reference means the prerequisite is conditional on feature planning; it is not an unconditional package dependency.
+The MSI row is a reference. The corresponding `.prq` definition contains detection conditions, payload URLs, hashes, command lines, success/reboot codes, and privilege behavior. A feature reference means the prerequisite is conditional on feature planning. It is not an unconditional package dependency.
 
 Setup prerequisites normally run in the bootstrapper before MSI execution. Launching the MSI directly can therefore bypass checks or dependencies that the vendor expected the launcher to satisfy.
 

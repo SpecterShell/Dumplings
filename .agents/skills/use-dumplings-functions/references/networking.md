@@ -15,7 +15,7 @@
 $Release = Invoke-GitHubApi -Uri 'https://api.github.com/repos/owner/repository/releases/latest'
 ```
 
-- **Notes:** Core supplies the normal Dumplings GitHub token. In an independent shell, pass `-Token` or set `$env:GH_DUMPLINGS_TOKEN` before calling the wrapper; it deliberately does not fall back to GitHub's unauthenticated 60-request-per-hour allowance. API exceptions include available rate-limit reset, retry, request-ID, and validation details. The wrapper rejects token-bearing requests to non-GitHub origins unless `-AllowNonGitHubUri` is explicit; keep that override out of ordinary public GitHub tasks.
+- **Notes:** Core supplies the normal Dumplings GitHub token. In an independent shell, pass `-Token` or set `$env:GH_DUMPLINGS_TOKEN` before calling the wrapper. It does not fall back to GitHub's unauthenticated 60-request-per-hour allowance. API exceptions include available rate-limit reset, retry, request-ID, and validation details. The wrapper rejects token-bearing requests to non-GitHub origins unless `-AllowNonGitHubUri` is explicit. Keep that override out of ordinary public GitHub tasks.
 
 ### `Join-Uri`
 

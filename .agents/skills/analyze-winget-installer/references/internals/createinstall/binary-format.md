@@ -26,7 +26,7 @@ Launcher-relative  Size  Field
 0x2D                  4  recorded absolute launcher offset, uint32
 ```
 
-The parser requires the recorded offset to equal the located header offset. `RuntimeSize` and `ProgramRangeSize` must fit the raw `.gentee` section. A packed program begins with a four-byte expanded size followed by LZGE data; a stored program begins directly with the GE header.
+The parser requires the recorded offset to equal the located header offset. `RuntimeSize` and `ProgramRangeSize` must fit the raw `.gentee` section. A packed program begins with a four-byte expanded size followed by LZGE data. A stored program begins directly with the GE header.
 
 ## GE header
 
@@ -87,7 +87,7 @@ Imported libraries are object type 8 records. `GHIMP_LINK` (`0x0100`) introduces
 +----------------------+
 ```
 
-Detection requires a two-field `MAINVAR` table with `progname`, `ver`, `compname`, `setuppath`, `uninstexe`, and `silentpar`. Other offsets are decoded only from a matching call route and fixed row schema; the parser does not scan arbitrary buffers for plausible strings.
+Detection requires a two-field `MAINVAR` table with `progname`, `ver`, `compname`, `setuppath`, `uninstexe`, and `silentpar`. Other offsets are decoded only from a matching call route and fixed row schema. The parser does not scan arbitrary buffers for plausible strings.
 
 ## GEA header
 
@@ -128,7 +128,7 @@ GEA1 uses 32-bit packed and expanded sizes; GEA2 uses 64-bit sizes. A file descr
 +----------------------+ next block
 ```
 
-After clearing protection bit `0x80`, the high nibble identifies Store (`0`), LZGE (`1`), or Gentee PPMd-I (`2`); the low nibble plus one is the order. Store writes its declared bytes. LZGE can retain the preceding dictionary only for order one. PPMd keeps its model across solid continuation blocks and starts a fresh range stream for each block. Expanded length and Gentee CRC32 are checked before an entry is accepted.
+After clearing protection bit `0x80`, the high nibble identifies Store (`0`), LZGE (`1`), or Gentee PPMd-I (`2`). The low nibble plus one is the order. Store writes its declared bytes. LZGE can retain the preceding dictionary only for order one. PPMd keeps its model across solid continuation blocks and starts a fresh range stream for each block. Expanded length and Gentee CRC32 are checked before an entry is accepted.
 
 ## Multi-volume address space
 

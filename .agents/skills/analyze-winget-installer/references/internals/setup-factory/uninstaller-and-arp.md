@@ -36,7 +36,7 @@ Hidden rows remain installed-state evidence but are not emitted as visible AppsA
 
 ## Display values and commands
 
-DisplayName, DisplayVersion, Publisher, DisplayIcon, InstallLocation, UninstallString, and QuietUninstallString are returned only when their compiled values resolve deterministically. Product metadata is not copied into an ARP row merely because it looks similar. Generated-uninstaller paths and quoting are retained as evidence; dynamic arguments or runtime-generated paths require VM validation.
+DisplayName, DisplayVersion, Publisher, DisplayIcon, InstallLocation, UninstallString, and QuietUninstallString are returned only when their compiled values resolve deterministically. Product metadata is not copied into an ARP row merely because it looks similar. Generated-uninstaller paths and quoting are retained as evidence. Dynamic arguments or runtime-generated paths require VM validation.
 
 ## Associations
 

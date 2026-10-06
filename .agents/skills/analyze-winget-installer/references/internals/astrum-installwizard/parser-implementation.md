@@ -1,6 +1,6 @@
 # Astrum InstallWizard parser implementation
 
-The public parser is `Get-AstrumInstallWizardInfo`; detection, metadata readers, extraction, analyzer routing, and WinGet projection reuse that structural model. A caller should parse once rather than invoke several `Read-*FromAstrumInstallWizard` functions over the same file.
+The public parser is `Get-AstrumInstallWizardInfo`. Detection, metadata readers, extraction, analyzer routing, and WinGet projection reuse that structural model. A caller should parse once rather than invoke several `Read-*FromAstrumInstallWizard` functions over the same file.
 
 ## Detection pipeline
 
@@ -17,13 +17,13 @@ Marker strings and PE product identity are weak analyzer hints. `Test-AstrumInst
 
 `Open-AstrumInstallWizardContainer` owns any temporary tiny or spanned material and returns one context containing trailer, footer, decoded configuration, installation items, file records, and the logical stream. `Get-AstrumInstallWizardInfo` derives PE, ARP, association, architecture, dependency, switch, and diagnostic evidence from that context. `finally` closes owned temporary resources while preserving caller-independent behavior.
 
-Selective PE analysis materializes only bounded EXE and DLL payloads. Full extraction streams directly from each record. PowerShell arrays are created at the public boundary; inner loops use typed lists and bounded streams to avoid large `Object[]` copies.
+Selective PE analysis materializes only bounded EXE and DLL payloads. Full extraction streams directly from each record. PowerShell arrays are created at the public boundary. Inner loops use typed lists and bounded streams to avoid large `Object[]` copies.
 
 ## Extraction policy
 
 Omitting `-Name` selects every installed payload plus a resolvable enabled generated uninstaller. `-RawEntries` additionally exports decoded configuration, footer bytes, each descriptor, pre-catalog gaps, wrapper evidence, companion data, and an otherwise unplaced uninstaller under `_astrum`.
 
-Paths are resolved through the shared safe-extraction helper. `<InstallDir>` entries become paths relative to the extraction root. Other known destinations are isolated below `_destinations`; unresolved expressions go below `_unresolved`. Traversal, rooted output, duplicate unsafe paths, record-count overflow, expanded-byte overflow, malformed GZip, size mismatch, and missing spanned bytes fail at the owning layer.
+Paths are resolved through the shared safe-extraction helper. `<InstallDir>` entries become paths relative to the extraction root. Other known destinations are isolated below `_destinations`. Unresolved expressions go below `_unresolved`. Traversal, rooted output, duplicate unsafe paths, record-count overflow, expanded-byte overflow, malformed GZip, size mismatch, and missing spanned bytes fail at the owning layer.
 
 Interactive `CollisionAction` prompts only after a collision. Internal parser callers use `Rename` so analysis cannot block on a prompt.
 

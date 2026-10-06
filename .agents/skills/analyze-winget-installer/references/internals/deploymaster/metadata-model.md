@@ -24,7 +24,7 @@ Classic forests use byte-length Windows-1252 directory names but the same `0xFE`
 
 Locator registry metadata is a recursive opcode stream. Implemented opcodes select roots and child keys, delete keys, choose default or named values, keep existing values, configure logging/removal, write `REG_SZ`, `REG_DWORD`, or `REG_BINARY`, and terminate branches. `HKEY_AUTO` maps to HKCU, HKLM, or conditional SHCTX according to the selected installation scope.
 
-Classic registry records use a NUL-terminated root and a smaller branch vocabulary. Both routes return typed `CustomRegistryWrites` and `DeletedRegistryKeys`; they do not apply writes to the analysis host.
+Classic registry records use a NUL-terminated root and a smaller branch vocabulary. Both routes return typed `CustomRegistryWrites` and `DeletedRegistryKeys`. They do not apply writes to the analysis host.
 
 Literal writes under `Software\Microsoft\Windows\CurrentVersion\Uninstall` are grouped into custom ARP candidates. Entries without `DisplayName` or with nonzero `SystemComponent` remain registry evidence but are excluded from visible `AppsAndFeaturesEntries`.
 

@@ -12,7 +12,7 @@ HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninsta
 HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\
 ```
 
-WinGet ignores entries without a string `DisplayName` and entries with `SystemComponent=1`. Preserve hidden entries as wrapper/MSI evidence, but do not treat them as visible Apps & Features entries. WinGet classifies an entry as MSI when `WindowsInstaller=1`; otherwise it is an EXE-style entry unless WinGet itself registered a portable package.
+WinGet ignores entries without a string `DisplayName` and entries with `SystemComponent=1`. Preserve hidden entries as wrapper/MSI evidence, but do not treat them as visible Apps & Features entries. WinGet classifies an entry as MSI when `WindowsInstaller=1`. Otherwise it is an EXE-style entry unless WinGet itself registered a portable package.
 
 HKLM normally indicates machine scope and HKCU normally indicates user scope. MSI is exceptional: its visible ARP entry can be in HKLM despite per-user installation behavior. Use MSI properties and `Installer\UserData` evidence as supporting scope evidence. Never infer installed architecture from `WOW6432Node`.
 
@@ -41,7 +41,9 @@ WinGet correlates manifests with installed entries through exact keys and normal
 - `PackageFamilyName` matches AppX/MSIX packages.
 - Normalized `DisplayName`/`PackageName` plus `Publisher` provides fallback identity.
 
-`Publisher` is not required in every ARP entry. If absent, WinGet can still match through ProductCode, UpgradeCode, or PackageFamilyName; a default-locale publisher does not manufacture missing registry evidence.
+`Publisher` is not required in every ARP entry. If absent, WinGet can still match through ProductCode, UpgradeCode, or PackageFamilyName. A default-locale publisher does not manufacture missing registry evidence.
+
+Use [source-index lookup](../../../author-winget-manifest/references/package/source-index-lookup.md) when an observed uninstall key might already belong to a published package. The available-package catalog and the VM's installed inventory are separate evidence sources. Shared ProductCodes require manifest review before declaring a duplicate.
 
 Check a manifest against collected entries:
 
@@ -51,11 +53,11 @@ $Manifest = Read-WinGetManifest -Path C:\Path\To\ManifestDirectory
 Find-WinGetManifestInstalledEntryMatch -Manifest $Manifest -InstalledEntry $Entries
 ```
 
-For new packages, keep installer-level `ProductCode` when useful but do not duplicate it inside `AppsAndFeaturesEntries`. Put evidenced localized ARP names and publishers in the corresponding locale manifests; retain them in Apps & Features only when that locale manifest does not exist. For a sole Apps & Features entry, independently remove a repeated ProductCode, a `DisplayName` or `Publisher` whose WinGet-normalized value equals the corresponding field in the default or any additional locale manifest, and an `InstallerType` equal to the effective installer type, including a ZIP's nested type. Delete the entry if no mismatch evidence remains. Add an Apps & Features entry only when visible ARP type, name, publisher, or display version differs materially from what WinGet derives from the complete manifest set.
+For new packages, keep installer-level `ProductCode` when useful but do not duplicate it inside `AppsAndFeaturesEntries`. Put evidenced localized ARP names and publishers in the corresponding locale manifests. Retain them in Apps & Features only when that locale manifest does not exist. For a sole Apps & Features entry, independently remove a repeated ProductCode, a `DisplayName` or `Publisher` whose WinGet-normalized value equals the corresponding field in the default or any additional locale manifest, and an `InstallerType` equal to the effective installer type, including a ZIP's nested type. Delete the entry if no mismatch evidence remains. Add an Apps & Features entry only when visible ARP type, name, publisher, or display version differs materially from what WinGet derives from the complete manifest set.
 
 ## Protocol and file-extension evidence
 
-Static parser evidence is preferred. Format parsers return literal registry writes and normalized association information through their main `Get-*Info` result. Call the parser once and reuse that object instead of reparsing with individual `Read-*` helpers.
+Static parser evidence is preferred. Format parsers return literal registry writes and normalized association information through their main `Get-*Info` result. Call the parser once and reuse the result.
 
 Dynamic registration can appear under:
 
@@ -76,11 +78,11 @@ Ignore `UserChoice`, Explorer caches, recent-file state, and ambient shell chang
 
 ## Command and PATH evidence
 
-The VM collector snapshots user and machine PATH entries as `EnvironmentPaths`; comparison emits added, modified, and removed `EnvironmentPathChanges`. Each entry records its original and expanded path, scope, existence, ordinal, and top-level command candidates. A modified entry can reflect newly installed commands in a directory that was already on PATH. Verify the intended CLI entry points from a fresh shell. Add only commands users are expected to type. Exclude GUI applications, uninstallers, update helpers, diagnostics, crash dump utilities, and framework-provided implementation commands such as .NET's `createdump`.
+The VM collector snapshots user and machine PATH entries as `EnvironmentPaths`. Comparison emits added, modified, and removed `EnvironmentPathChanges`. Each entry records its original and expanded path, scope, existence, ordinal, and top-level command candidates. A modified entry can reflect newly installed commands in a directory that was already on PATH. Verify the intended CLI entry points from a fresh shell. Add only commands users are expected to type. Exclude GUI applications, uninstallers, update helpers, diagnostics, crash dump utilities, and framework-provided implementation commands such as .NET's `createdump`.
 
 `Commands` is indexed as package-search metadata for every installer type. WinGet aggregates it into the Commands table, and command-not-found integrations can query that field to recommend a package for an unknown command. This indexing behavior is separate from installation behavior: non-portable installers do not receive renamed files or aliases from `Commands`.
 
-Portable installation has additional semantics. A direct `InstallerType: portable` entry may contain at most one command; WinGet uses that value as the installed executable name and portable link alias. A ZIP with `NestedInstallerType: portable` uses `NestedInstallerFiles[].PortableCommandAlias` for each exposed binary instead, while its `Commands` values remain searchable index metadata. See [Installer fields](../../../author-winget-manifest/references/manifest/installer-fields.md#commands-and-portable-command-aliases) for authoring rules.
+Portable installation has additional semantics. A direct `InstallerType: portable` entry may contain at most one command. WinGet uses that value as the installed executable name and portable link alias. A ZIP with `NestedInstallerType: portable` uses `NestedInstallerFiles[].PortableCommandAlias` for each exposed binary instead, while its `Commands` values remain searchable index metadata. See [Installer fields](../../../author-winget-manifest/references/manifest/installer-fields.md#commands-and-portable-command-aliases) for authoring rules.
 
 ## Dynamic evidence script
 

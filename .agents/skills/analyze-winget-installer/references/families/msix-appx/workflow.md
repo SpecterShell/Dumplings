@@ -40,9 +40,9 @@ $SignatureStatus = Get-AuthenticodeSignature -LiteralPath $InstallerFile
 if ($SignatureStatus.Status -ne 'Valid') { throw "Reject MSIX/AppX package: $($SignatureStatus.StatusMessage)" }
 ```
 
-Use `Get-MSIXInfo` as the preferred single call; it returns installer type, package kind (`Package` or `Bundle`), type evidence and ambiguity, identity, architecture, platform, minimum OS version, package family name, filtered dependencies, unknown dependencies, warnings, capabilities, restricted capabilities, signature hash, and Apps & Features display evidence. For bundles, it reads nested package manifests when available.
+Use `Get-MSIXInfo` as the preferred single call. It returns installer type, package kind (`Package` or `Bundle`), type evidence and ambiguity, identity, architecture, platform, minimum OS version, package family name, filtered dependencies, unknown dependencies, warnings, capabilities, restricted capabilities, signature hash, and Apps & Features display evidence. For bundles, it reads nested package manifests when available.
 
-`Get-MSIXPackageKind` identifies direct packages and bundles from `AppxManifest.xml` or `AppxMetadata/AppxBundleManifest.xml`, independent of the outer filename. `Get-MSIXPackageTypeInfo` prefers the original URL extension, an explicit installer-type hint, or HTTP content type. An extensionless bundle can also use payload filenames from its bundle manifest. A direct AppX package and direct MSIX package cannot be distinguished reliably from package structures alone; in that case the helper returns the WinGet-compatible `msix` fallback with `IsAmbiguous: true` and a warning. Preserve a known `appx` type from the original URL, `.appinstaller`, or existing manifest by passing `-InstallerTypeHint appx`.
+`Get-MSIXPackageKind` identifies direct packages and bundles from `AppxManifest.xml` or `AppxMetadata/AppxBundleManifest.xml`, independent of the outer filename. `Get-MSIXPackageTypeInfo` prefers the original URL extension, an explicit installer-type hint, or HTTP content type. An extensionless bundle can also use payload filenames from its bundle manifest. A direct AppX package and direct MSIX package cannot be distinguished reliably from package structures alone. In that case the helper returns the WinGet-compatible `msix` fallback with `IsAmbiguous: true` and a warning. Preserve a known `appx` type from the original URL, `.appinstaller`, or existing manifest by passing `-InstallerTypeHint appx`.
 
 `Read-DependenciesFromMSIX` returns only allowlisted dependency packages suitable for WinGet manifests. `Get-MSIXInfo.UnknownPackageDependencies` returns other XML `PackageDependency` entries found in the package, and `Get-MSIXInfo.Diagnostics` includes structured evidence such as unknown dependency packages omitted from manifest dependencies.
 
@@ -80,7 +80,7 @@ $InstalledPackages = Get-WinGetInstalledAppXEntry
 $InstalledPackages | Where-Object PackageFamilyName -eq $PackageFamilyName
 ```
 
-Use `Find-WinGetManifestInstalledEntryMatch` when comparing a manifest against installed AppX/MSIX entries; it checks `PackageFamilyName` exact matches.
+Use `Find-WinGetManifestInstalledEntryMatch` when comparing a manifest against installed AppX/MSIX entries. It checks `PackageFamilyName` exact matches.
 
 ## Manifest shape
 
@@ -129,9 +129,9 @@ For `Dependencies`, include only these framework package families in WinGet mani
 - `Microsoft.WindowsAppRuntime.*.*`
 - `Microsoft.UI.Xaml.*.*`
 
-Package XML uses framework identity names rather than WinGet package identifiers. Normalize `Microsoft.VCLibs.140.00.UWPDesktop` to `Microsoft.VCLibs.Desktop.14`, `Microsoft.VCLibs.140.00` to `Microsoft.VCLibs.14`, and the major-only identity `Microsoft.WindowsAppRuntime.2` to `Microsoft.WindowsAppRuntime.2.0`. Windows App Runtime identities that already contain major and minor components, such as `Microsoft.WindowsAppRuntime.1.8` or `Microsoft.WindowsAppRuntime.2.0`, and Microsoft.UI.Xaml identities already match their corresponding WinGet package IDs. Preserve `MinimumVersion` when the MSIX/AppX manifest declares `MinVersion`. If the package XML declares other `PackageDependency` names, do not write them into `Dependencies`; report them as unknown dependencies for manual review. Current examples with allowed dependency packages include `Elgato.WaveLink`, `BicomSystems.gloCOM`, `FilesCommunity.Files`, `Microsoft.WindowsApp`, `TheBrowserCompany.Arc`, `Elgato.Studio`, `CharlesMilette.TranslucentTB`, and `Microsoft.FoundryLocal`.
+Package XML uses framework identity names rather than WinGet package identifiers. Normalize `Microsoft.VCLibs.140.00.UWPDesktop` to `Microsoft.VCLibs.Desktop.14`, `Microsoft.VCLibs.140.00` to `Microsoft.VCLibs.14`, and the major-only identity `Microsoft.WindowsAppRuntime.2` to `Microsoft.WindowsAppRuntime.2.0`. Windows App Runtime identities that already contain major and minor components, such as `Microsoft.WindowsAppRuntime.1.8` or `Microsoft.WindowsAppRuntime.2.0`, and Microsoft.UI.Xaml identities already match their corresponding WinGet package IDs. Preserve `MinimumVersion` when the MSIX/AppX manifest declares `MinVersion`. If the package XML declares other `PackageDependency` names, do not write them into `Dependencies`. Report them as unknown dependencies for manual review. Current examples with allowed dependency packages include `Elgato.WaveLink`, `BicomSystems.gloCOM`, `FilesCommunity.Files`, `Microsoft.WindowsApp`, `TheBrowserCompany.Arc`, `Elgato.Studio`, `CharlesMilette.TranslucentTB`, and `Microsoft.FoundryLocal`.
 
-The manifest-authoring [dependency workflow](../../../../author-winget-manifest/references/manifest/dependencies.md) summarizes these mappings alongside dependencies discovered from other installer families. Dependencies remain author-controlled during ordinary Dumplings updates; parser output is evidence for an intentional manifest change rather than permission to rewrite the field automatically.
+The manifest-authoring [dependency workflow](../../../../author-winget-manifest/references/manifest/dependencies.md) summarizes these mappings alongside dependencies discovered from other installer families. Dependencies remain author-controlled during ordinary Dumplings updates. Parser output is evidence for an intentional manifest change rather than permission to rewrite the field automatically.
 
 MSIX/AppX-family packages must have a signature that is valid and trusted by the local system certificate roots. Reject packages that have no embedded `AppxSignature.p7x`, no Authenticode signature, or `Get-AuthenticodeSignature` does not return `Status: Valid`.
 
@@ -143,7 +143,7 @@ Known signature-validation examples:
 
 ## WinGet defaults and overrides
 
-MSIX/AppX deployment does not use EXE command-line switch fields. Omit `InstallModes` and `InstallerSwitches`; reject untrusted or unsigned packages as described below rather than attempting to compensate with custom arguments.
+MSIX/AppX deployment does not use EXE command-line switch fields. Omit `InstallModes` and `InstallerSwitches`. Reject untrusted or unsigned packages as described below rather than attempting to compensate with custom arguments.
 
 ## Apps & Features
 

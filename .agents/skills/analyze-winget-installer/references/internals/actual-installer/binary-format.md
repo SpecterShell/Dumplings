@@ -158,7 +158,7 @@ Destination  variable-bearing installed path
 Field1...    generation-dependent fields preserved verbatim
 ```
 
-Observed real media across cabinet and ZIP generations uses bare `?` in `[Files]`. Synthetic and adjacent table grammars can use `*?`; the parser accepts the explicit compound delimiter first and then the bare delimiter on file rows. It exposes all fields plus `RecordValue`, the second field, without assigning one meaning across generations.
+Observed real media across cabinet and ZIP generations uses bare `?` in `[Files]`. Synthetic and adjacent table grammars can use `*?`. The parser accepts the explicit compound delimiter first and then the bare delimiter on file rows. It exposes all fields plus `RecordValue`, the second field, without assigning one meaning across generations.
 
 In old cabinet media the second field correlates with the physical payload-CAB length. In ZIP media it is a control value. It is not a general expanded-size field.
 

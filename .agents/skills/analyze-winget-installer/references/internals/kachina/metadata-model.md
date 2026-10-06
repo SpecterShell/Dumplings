@@ -14,7 +14,7 @@ Structural detection requires non-empty `appName`, `publisher`, `regName`, and `
 | `updaterName` | generated updater name | extraction and uninstall file list, default `update.exe` |
 | `programFilesPath` | default target below Program Files | `DefaultInstallLocation` |
 | `uacStrategy` | target-writability elevation policy | default and supported scope evidence |
-| `source` or `dfsPath` | update source or ordered source catalog | source evidence only; never fetched by parser |
+| `source` or `dfsPath` | update source or ordered source catalog | source evidence only, never fetched by parser |
 | `runtimes` | prerequisite package identifiers | dependency evidence, not automatic manifest dependencies |
 | `userDataPath` | optionally removed user data | uninstall behavior evidence |
 | `ignoreFolderPath` | update-preserved paths | update behavior evidence |
@@ -42,7 +42,7 @@ Config-only media omits metadata. Its product identity and target source remain 
 
 ## System effects
 
-The built-in runtime creates Start Menu application and uninstall shortcuts, an optional desktop shortcut, updater and uninstaller executables, and one ARP row after release metadata is available. It preserves or deletes paths from configuration and metadata lists. The current structured configuration does not provide general registry, protocol, file-extension, PATH, autorun, firewall, or certificate operations; those arrays remain empty unless a future source-backed structure proves them.
+The built-in runtime creates Start Menu application and uninstall shortcuts, an optional desktop shortcut, updater and uninstaller executables, and one ARP row after release metadata is available. It preserves or deletes paths from configuration and metadata lists. The current structured configuration does not provide general registry, protocol, file-extension, PATH, autorun, firewall, or certificate operations. Those arrays remain empty unless a future source-backed structure proves them.
 
 ## Unknown fields
 

@@ -23,7 +23,7 @@ The [NavigatorPlus 1.42 x86 and x64 files](https://www.fpmailing.co.uk/support/n
 
 ## Elevation
 
-An embedded WSE `Requested Execution Level=requireAdministrator` is strong evidence for `ElevationRequirement: elevationRequired`. It does not prove `Scope: machine`; a nested MSI can still omit an explicit `ALLUSERS=1` contract or choose scope dynamically.
+An embedded WSE `Requested Execution Level=requireAdministrator` is strong evidence for `ElevationRequirement: elevationRequired`. It does not prove `Scope: machine`. A nested MSI can still omit an explicit `ALLUSERS=1` contract or choose scope dynamically.
 
 For MSI-owned routes, explicit MSI properties and table evidence determine scope. When the MSI does not prove one scope, the parser leaves `Scope` unresolved even if the wrapper requests elevation. VM validation must then observe the real ARP hive and registry view.
 

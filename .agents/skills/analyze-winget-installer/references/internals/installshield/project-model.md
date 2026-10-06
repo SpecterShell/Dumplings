@@ -6,7 +6,7 @@ InstallShield separates authoring from release media. The `.ism` project stores 
 
 ## Project database forms
 
-Modern InstallShield projects occur in two structured representations:
+Modern InstallShield projects occur in two structured representations.
 
 ```text
 binary .ism

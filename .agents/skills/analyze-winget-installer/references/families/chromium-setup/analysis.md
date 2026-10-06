@@ -11,7 +11,7 @@ $Info.UpdaterTag
 $Info.OfflineManifest
 ```
 
-Use the aggregate result throughout the analysis. Do not call the scalar `Read-*` or `Test-*` helpers after `Get-ChromiumSetupInfo`; they are alternatives for callers that need only one value. Expand only when nested payload evidence is required:
+Use the aggregate result throughout the analysis. Do not call the scalar `Read-*` or `Test-*` helpers after `Get-ChromiumSetupInfo`. They are alternatives for callers that need only one value. Expand only when nested payload evidence is required:
 
 ```powershell
 $Files = Expand-ChromiumSetupInstaller -Path $InstallerFile -DestinationPath $DestinationPath -CollisionAction Rename
@@ -22,9 +22,9 @@ Expansion is source-backed and bounded:
 - `BN`/`BD` resources are exported directly.
 - `BL` resources are decoded as cabinets.
 - `B7` resources are opened with the bundled SharpCompress library; Chromium Updater's nested `updater.7z` is opened recursively so `bin\updater.exe` and any `bin\Offline\{bundle-guid}` payload can be inspected.
-- Branded mini-installers may replace `CHROME.PACKED.7Z` with a product name such as Vivaldi's `VIVALDI.PACKED.7Z`. Identify this layout from one non-setup/non-updater `B7` or `BN` archive paired with a `B7`, `BL`, or `BN` setup resource; do not require the `CHROME` prefix.
+- Branded mini-installers may replace `CHROME.PACKED.7Z` with a product name such as Vivaldi's `VIVALDI.PACKED.7Z`. Identify this layout from one non-setup/non-updater `B7` or `BN` archive paired with a `B7`, `BL`, or `BN` setup resource. Do not require the `CHROME` prefix.
 - Omaha resource `102` is decoded as LZMA, four-stream BCJ2, then TAR according to Omaha's metainstaller build pipeline. Declared compressed and expanded sizes are enforced. Untagged legacy payloads execute the first EXE; tagged offline payloads use the install action selected from `OfflineManifest.gup`.
-- For tagged Chromium Updater and Omaha wrappers, `Get-ChromiumSetupInfo` reads `OfflineManifest.gup` or the matching `{app-id}.gup`, selects the signed-tag application, locates its configured executable, verifies the declared size and SHA-256, and recursively analyzes that target. Omaha may suffix the physical TAR name with an app GUID or use a different physical name; a unique size match is accepted only after hash verification. `IsOnlineBootstrapper` is true only after the applicable nested archive was checked and no offline target manifest was found; it is null when that check fails.
+- For tagged Chromium Updater and Omaha wrappers, `Get-ChromiumSetupInfo` reads `OfflineManifest.gup` or the matching `{app-id}.gup`, selects the signed-tag application, locates its configured executable, verifies the declared size and SHA-256, and recursively analyzes that target. Omaha may suffix the physical TAR name with an app GUID or use a different physical name; a unique size match is accepted only after hash verification. `IsOnlineBootstrapper` is true only after the applicable nested archive was checked and no offline target manifest was found. It is null when that check fails.
 
 No installer, updater, 7-Zip, or NanaZip process is invoked.
 
@@ -54,7 +54,7 @@ The outer updater/metainstaller may not be the final application's ARP writer.
 
 - `Google.Chrome.EXE`: upstream-style bare mini-installer; current uncompressed packages contain `BN/CHROME.7Z` and `BN/SETUP.EXE`.
 - Chrome consumer download bootstrapper: tagged Chromium Updater with Chrome `appguid` and `needsadmin=prefers`; test the current official `chrome_installer.exe`, not only the untagged updater package.
-- `Google.GoogleUpdater` `1.3.35.452` and `1.3.36.372`: untagged Omaha runtime installers containing resource `B/102`; the first TAR executable is `GoogleUpdate.exe`.
+- `Google.GoogleUpdater` `1.3.35.452` and `1.3.36.372`: untagged Omaha runtime installers containing resource `B/102`. The first TAR executable is `GoogleUpdate.exe`.
 - `Google.GoogleUpdater` `126.0.6441.0` and later: untagged Chromium Updater packages containing `updater.packed.7z`.
 - `Brave.Brave`, `Brave.Brave.Beta`, `Brave.Brave.Dev`, and `Brave.Brave.Nightly`: current standalone setups are tagged Omaha wrappers with an offline manifest and embedded browser installer. Use the offline manifest for target version and execution evidence, but retain existing or VM-observed ProductCodes.
 - Brave online channel installers: small tagged Omaha wrappers without `OfflineManifest.gup`; updater identity does not prove target version or ProductCode.
@@ -64,15 +64,15 @@ The outer updater/metainstaller may not be the final application's ARP writer.
 - `Vivaldi.Vivaldi` and `Vivaldi.Vivaldi.Snapshot`: branded Chromium mini-installers containing `VIVALDI.PACKED.7Z` and `SETUP.EX_`, using `--vivaldi-silent` and `--vivaldi-install-dir`. Do not substitute upstream switches or derive ProductCode from Vivaldi's product-specific constants.
 - `360.360SE`: vendor setup using `--silent-install` and `--install-path`.
 - `360.360Chrome.X`: vendor setup using `--silent-install` and `--install-path`.
-- `360.360Chrome`: vendor Chromium setup; verify current switches and scope.
+- `360.360Chrome`: vendor Chromium setup. Verify current switches and scope.
 - `360.360GT`: vendor setup using Chromium-derived silent/install-path switches.
 - `360.360Ent`: vendor setup using Chromium-derived silent/install-path switches.
 - `Zoho.Ulaa`: Chromium-derived setup; existing manifests use no generic silent switch.
 - `NetEase.MailMaster`: Chromium-derived machine setup using `--silent-install` and `--do-not-launch-master`.
-- `Maxthon.Maxthon`: vendor setup with package-specific accepted switch spelling; never normalize it from upstream assumptions.
+- `Maxthon.Maxthon`: vendor setup with package-specific accepted switch spelling. Never normalize it from upstream assumptions.
 - `Ecosia.EcosiaBrowser`: user-scope Chromium-derived setup with package-specific custom switch evidence.
 - `BrowserOS.BrowserOS`: Chromium-derived setup; existing manifests do not prove a universal silent switch.
-- `Alex313031.Thorium`: Chromium-derived setup with artifact/CPU variants; inspect the selected asset.
+- `Alex313031.Thorium`: Chromium-derived setup with artifact/CPU variants. Inspect the selected asset.
 - `Phoenix.TheWorld`: Chromium-derived setup with package-specific `--silent` evidence.
 
 ## Validate vendor-specific behavior

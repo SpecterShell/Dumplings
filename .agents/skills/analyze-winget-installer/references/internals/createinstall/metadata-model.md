@@ -42,13 +42,13 @@ The association projector consumes only literal deterministic `Software\Classes`
 
 The parser returns typed records for shortcuts, executed EXEs and MSI packages, environment changes, Visual C++ prerequisite checks, services, fonts, COM/type libraries, .NET assembly registration, scheduled tasks, file copies, downloads, nested archive extraction, and INI changes. It preserves operation-specific options and conditions but does not execute them.
 
-The current four-parameter environment append and delete routines have distinct source-backed literal sequences and return `Append` or `Remove`. A structurally compatible routine with an unknown sequence remains `AppendOrRemove`. Prerequisite package identifiers are candidates derived from checked Visual C++ generations and architecture; they are evidence, not automatic WinGet dependencies.
+The current four-parameter environment append and delete routines have distinct source-backed literal sequences and return `Append` or `Remove`. A structurally compatible routine with an unknown sequence remains `AppendOrRemove`. Prerequisite package identifiers are candidates derived from checked Visual C++ generations and architecture. They are evidence, not automatic WinGet dependencies.
 
 ## Nested execution
 
 `runmsiex` is decoded into MSI action, UI mode, restart policy, log path, wait behavior, source path, arguments, and condition. Ordinary run routes preserve executable, arguments, working directory, and wait behavior. A child path can be matched to `InstalledFiles` or `ExtractedFiles`, but the outer parser does not copy child ProductCode, architecture, switches, or return codes into the parent.
 
-Downloads and nested 7z, cabinet, and ZIP operations identify content that may not exist in the outer GEA catalog. The parser reports URL, destination, filters, options, and condition where available; it never fetches a URL and does not recursively project an inner archive as installed files.
+Downloads and nested 7z, cabinet, and ZIP operations identify content that may not exist in the outer GEA catalog. The parser reports URL, destination, filters, options, and condition where available. It never fetches a URL and does not recursively project an inner archive as installed files.
 
 ## Architecture and dependencies
 

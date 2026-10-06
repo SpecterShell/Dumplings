@@ -1,8 +1,6 @@
 # Dumplings
 
-Dumplings is a PowerShell automation project for monitoring Windows package releases, updating package state, generating and validating WinGet manifests, and submitting changes to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs).
-
-The repository contains thousands of independent package tasks backed by a concurrent runner, static installer analyzers, manifest tooling, notification transports, and GitHub submission support.
+Dumplings monitors Windows package releases and submits updated manifests to [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs). Its PowerShell runner manages thousands of package tasks, with static installer analysis, manifest validation, and notifications.
 
 ## Features
 
@@ -47,7 +45,7 @@ PackageModule's supported standalone entry point is `Modules/PackageModule/Packa
 - Network access for release checks and installer downloads
 - GitHub credentials, and optionally a local `winget-pkgs` checkout, only when submission is enabled
 
-The runner installs missing PowerShell modules declared in `Preference.yaml`. GitHub Actions uses the pinned versions in [`PowerShellModules.psd1`](PowerShellModules.psd1) and caches them between runs. The optional browser helper similarly restores the Apache-2.0 Patchright runtime pinned by [`PlaywrightRuntime.psd1`](Modules/PackageModule/Assets/PlaywrightRuntime.psd1); its large version-coupled driver payload is cached outside Git rather than committed.
+The runner installs missing PowerShell modules declared in `Preference.yaml`. GitHub Actions caches the pinned versions in [`PowerShellModules.psd1`](PowerShellModules.psd1). The optional browser helper restores the Apache-2.0 Patchright runtime pinned by [`PlaywrightRuntime.psd1`](Modules/PackageModule/Assets/PlaywrightRuntime.psd1). Its large, version-specific driver payload is cached outside Git.
 
 ## Getting Started
 
@@ -82,7 +80,7 @@ Run every task:
 .\Core\Index.ps1
 ```
 
-Arguments not owned by `Core\Index.ps1` override values from `Preference.yaml`. Common operational switches are:
+Arguments not owned by `Core\Index.ps1` override values from `Preference.yaml`.
 
 ```powershell
 # Re-evaluate a task regardless of its persisted state.
@@ -99,7 +97,7 @@ Arguments not owned by `Core\Index.ps1` override values from `Preference.yaml`. 
 ```
 
 `-EnableMessage` and non-dry `-EnableSubmit` perform external side effects. Enable them only after configuring their credentials and reviewing the selected tasks.
-`-SkipInstallerAnalysis` is a global preference override. A task can opt out independently with `SkipInstallerAnalysis: true` in its `Config.yaml`; either setting skips static parser and detector work but not installer hashing or manifest validation.
+`-SkipInstallerAnalysis` is a global preference override. A task can opt out with `SkipInstallerAnalysis: true` in its `Config.yaml`. Both settings skip static analysis while retaining installer hashing and manifest validation.
 
 ## Configuration
 
@@ -142,7 +140,7 @@ DependsOn:
 
 Tasks whose names begin with `#` commonly populate `$Global:DumplingsStorage` for dependent package tasks. Core validates declared dependencies, orders them deterministically, and blocks dependents whose providers fail.
 
-Use nearby tasks from the same publisher as implementation references, but verify their current behavior rather than copying assumptions.
+Use tasks from the same publisher as references and verify their current behavior.
 
 ## Authoring Documentation
 
@@ -150,8 +148,6 @@ Use nearby tasks from the same publisher as implementation references, but verif
 - [`author-winget-manifest`](.agents/skills/author-winget-manifest/SKILL.md) covers official source discovery, manifest fields, localization, automation, validation, and submission.
 - [`author-dumplings-task`](.agents/skills/author-dumplings-task/SKILL.md) covers task creation, state comparison, source/feed patterns, manifest-update projection, shared providers, and dry-run validation.
 - [`use-dumplings-functions`](.agents/skills/use-dumplings-functions/SKILL.md) covers shared networking, temporary-file, archive, content, feed, browser, HTML, and YAML helper APIs.
-
-These workflows are the canonical detailed guidance. The READMEs intentionally focus on repository and API operation.
 
 ## Testing
 
@@ -169,11 +165,11 @@ Run ScriptAnalyzer on a changed module when available:
 Invoke-ScriptAnalyzer .\Modules\PackageModule\Libraries\Example.psm1
 ```
 
-Downloaded fixtures are cached under the sibling `../Dumplings-TestFixtures/Installers/<Family>/<PackageIdentifier>/<Version>` catalog, while curated builder media and source trees live under `Builders` and `Sources`. Synthetic fixtures and extraction output belong to Pester's `$TestDrive`; tests must not execute installers.
+Downloaded fixtures are cached under `../Dumplings-TestFixtures/Installers/<Family>/<PackageIdentifier>/<Version>`. Curated builder media and source trees live under `Builders` and `Sources`. Keep synthetic fixtures and extraction output in Pester's `$TestDrive`. Tests must not execute installers.
 
 ### Offline and Performance Checks
 
-The offline regression workflow runs Core, PackageModule and InstallerParsers in separate jobs with pinned module caches. It does not run package tasks, submit manifests, send messages or download installer fixtures. Run the same checks locally with `./Utilities/Testing/Invoke-Regression.ps1 -Component PackageModule -Offline`; select the other components by name.
+The offline regression workflow tests Core, PackageModule, and InstallerParsers in separate jobs with pinned module caches. It does not run package tasks, submit manifests, send messages, or download installer fixtures. Run it locally with `./Utilities/Testing/Invoke-Regression.ps1 -Component PackageModule -Offline`, selecting other components by name as needed.
 
 Use Core's `-MeasurePerformance` switch for sanitized per-run stage measurements. The isolated benchmark and AST task-inventory tools are documented in [Utilities/Testing](Utilities/Testing/README.md), including measured startup costs and the ready scheduler's dependency-heavy results. These switches do not enable state writes or submission.
 

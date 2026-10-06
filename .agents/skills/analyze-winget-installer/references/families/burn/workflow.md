@@ -6,7 +6,7 @@ Use `InstallerType: burn` when WinGet invokes a WiX Burn bootstrapper bundle dir
 
 ## Detection
 
-Route here when `Get-BurnEngineInfo` succeeds, the PE section table contains `.wixburn`, or structured Burn manifest/bootstrapper data is available. The bundle PE architecture and filename are supporting evidence only; package conditions and chain metadata determine installed architecture and behavior.
+Route here when `Get-BurnEngineInfo` succeeds, the PE section table contains `.wixburn`, or structured Burn manifest/bootstrapper data is available. The bundle PE architecture and filename are supporting evidence only. Package conditions and chain metadata determine installed architecture and behavior.
 
 ## Static analysis
 
@@ -36,7 +36,7 @@ $UpgradeCode = Read-UpgradeCodeFromBurn -Path $InstallerFile
 $ProductName = Read-ProductNameFromBurn -Path $InstallerFile
 ```
 
-Use `$BurnEngineInfo` for `.wixburn`, bundle code, machine, container, and engine-layout evidence. Use `$Manifest` and `$BootstrapperData` for registration, chain package, variable, and display metadata. Use `$ScopeInfo` and `$ArchitectureInfo` directly; do not then call `Read-ScopeFromBurn`, `Read-SupportedScopesFromBurn`, `Test-BurnDualScope`, `Read-UnsupportedArchitecturesFromBurn`, or `Test-BurnUnsupportedArchitecture` for the same installer.
+Use `$BurnEngineInfo` for `.wixburn`, bundle code, machine, container, and engine-layout evidence. Use `$Manifest` and `$BootstrapperData` for registration, chain package, variable, and display metadata. Use `$ScopeInfo` and `$ArchitectureInfo` directly. Do not then call `Read-ScopeFromBurn`, `Read-SupportedScopesFromBurn`, `Test-BurnDualScope`, `Read-UnsupportedArchitecturesFromBurn`, or `Test-BurnUnsupportedArchitecture` for the same installer.
 
 The `Read-Product*FromBurn` helpers handle WiX-version fallback between bootstrapper application data and the Burn manifest. Keep their returned values with the detailed objects for the remaining steps.
 
@@ -66,7 +66,7 @@ Use `$ArchitectureInfo.BundleArchitecture`, `SupportedArchitectures`, `Unsupport
 - Add `UnsupportedOSArchitectures` only when the package conditions prove the exclusion.
 - Never use `neutral` when the bundle installs binary files.
 
-Known x64-only bundles with x86 stubs include `Sinew.Enpass` and `Jabra.Direct`; their package evidence excludes x86.
+Known x64-only bundles with x86 stubs include `Sinew.Enpass` and `Jabra.Direct`. Their package evidence excludes x86.
 
 ### Determine scope
 
@@ -81,7 +81,7 @@ Route the result:
 
 - One supported scope: use that scope when the registration evidence is conclusive.
 - `SupportsDualScope` true with a proven overridable selector: use the dual-scope manifest shape.
-- Both package scopes but no overridable selector: keep only `DefaultScope`; do not create duplicate entries.
+- Both package scopes but no overridable selector: keep only `DefaultScope`. Do not create duplicate entries.
 - Empty or contradictory scope: route to [VM validation](#vm-validation).
 
 Most Burn bundles are machine scope. Known user-scope examples include `Crestron.AirMedia`, `DATEV.Belegtransfer`, `Grammarly.Grammarly.Office`, `IkiruPeople.VoyagerInfinitySaaSClient`, `PlanGrid.PlanGrid`, `Proton.ProtonDrive`, `RabbitCompany.Passky`, and `Slido.Slido`.
@@ -124,7 +124,7 @@ Select the manifest shape from the previous routes, then apply these rules:
 - Add `AppsAndFeaturesEntries` only for a meaningful visible mismatch in type, name, publisher, or version.
 - Whenever an Apps & Features item is needed for a Burn installer, include the corresponding `UpgradeCode`.
 - Do not duplicate installer-level `ProductCode` inside `AppsAndFeaturesEntries`.
-- Recheck `InstallModes` and each `InstallerSwitches` child against WinGet defaults; remove equal values and retain complete non-default replacements.
+- Recheck `InstallModes` and each `InstallerSwitches` child against WinGet defaults. Remove equal values and retain complete non-default replacements.
 - Keep scope-specific `Custom` and `InstallLocation` leaves on their respective dual-scope entries.
 
 ### Escalate unresolved behavior to VM validation
@@ -158,7 +158,7 @@ Do not create `AppsAndFeaturesEntries` solely to store the bundle `UpgradeCode`.
 
 ### Dual scope
 
-Use this shape only when `Get-BurnScopeInfo.SupportsDualScope` is true and the static evidence identifies a command-line-overridable scope variable. Python-style bundles qualify because they expose `InstallAllUsers` as an overridable variable and contain paired `_AllUsers` and `_JustForMe` package groups. Preserve the exact scope and location variable names returned by the current bundle; do not generalize this shape to every Burn package.
+Use this shape only when `Get-BurnScopeInfo.SupportsDualScope` is true and the static evidence identifies a command-line-overridable scope variable. Python-style bundles qualify because they expose `InstallAllUsers` as an overridable variable and contain paired `_AllUsers` and `_JustForMe` package groups. Preserve the exact scope and location variable names returned by the current bundle. Do not generalize this shape to every Burn package.
 
 ```yaml
 Installers:

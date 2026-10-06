@@ -33,7 +33,7 @@ $Info = Get-MicaSetupInfo -Path $InstallerPath
 $Info | Select-Object BuilderGeneration, DisplayName, DisplayVersion, Publisher, ProductCode, Scope, DefaultInstallLocation, WritesAppsAndFeaturesEntry
 ```
 
-Inspect `Diagnostics`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`; `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation; `FormatCompatibility` gives the source-verified release range for that model. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
+Inspect `Diagnostics`, `UnresolvedFields`, and `UnresolvedExpressions` before applying evidence. `OptionValues` and `OptionEvidence` expose normalized Pack/Option configuration, except that `UnpackingPassword` is always redacted. `ConfigurationModel` identifies `Pack`, `OptionLegacy`, or `OptionModern`. `BuilderGeneration` reports the source-compatible `v1` or `v2` configuration generation. `FormatCompatibility` gives the source-verified release range for that model. An early v2 release can still carry the v1-compatible option schema. Do not report an exact MicaSetup builder version unless the installer contains separate explicit structured evidence because MakeMica replaces ordinary assembly versions with the packaged application's version.
 
 ### 2. Resolve scope and elevation
 
@@ -54,19 +54,19 @@ A visible ARP entry exists only when all of these conditions are proven:
 
 The uninstall key name is the EXE `ProductCode`. The entry is under HKLM and uses the registry view selected by `IsUseRegistryPreferX86`: `true` means 32-bit, `false` means 64-bit, and null means the process-default view. `DisplayName`, `DisplayVersion`, `Publisher`, `InstallLocation`, `UninstallString`, `DisplayIcon`, `NoModify`, `NoRepair`, and `SystemComponent` come from the compiled options and runtime defaults.
 
-When `SystemComponent=1`, keep the registry write as hidden evidence but do not treat it as a visible WinGet-matchable ARP entry. Add `AppsAndFeaturesEntries` only when the visible identity differs meaningfully from the default locale or another installer-level field; omit a duplicate AppsAndFeatures `ProductCode` when installer-level `ProductCode` already matches.
+When `SystemComponent=1`, keep the registry write as hidden evidence but do not treat it as a visible WinGet-matchable ARP entry. Add `AppsAndFeaturesEntries` only when the visible identity differs meaningfully from the default locale or another installer-level field. Omit a duplicate AppsAndFeatures `ProductCode` when installer-level `ProductCode` already matches.
 
 ### 4. Inspect payload architecture and dependencies
 
 `Get-MicaSetupInfo` enumerates `publish.7z`, selectively materializes the configured main executable and relevant adjacent DLL/JSON sidecars, and returns `PayloadArchitectures`, `PayloadArchitectureInfo`, `DependencyInfo`, and `RecommendedPackageDependencies`.
 
-Treat dependency output as authoring evidence rather than automatic manifest mutation. Inspect unknown or conditional dependencies manually. Never use `Architecture: neutral` when the payload contains a PE binary.
+Treat dependency output as authoring evidence, not automatic manifest mutation. Inspect unknown or conditional dependencies manually. Never use `Architecture: neutral` when the payload contains a PE binary.
 
 ### 5. Inspect system effects
 
-Review `Shortcuts`, `AutorunEntries`, `EnvironmentChanges`, `FirewallRules`, `Certificates`, `FolderPermissionChanges`, `CloseApplications`, `OverlayCleanup`, `RefreshesExplorer`, `EnablesUninstallDelayUntilReboot`, `HostBehavior`, `LicensePolicy`, and `SupportedLanguages`. Literal custom `Microsoft.Win32.Registry.SetValue` calls are projected into `RegistryWrites`, `Protocols`, `FileExtensions`, and their detailed association records. `SupportedLanguages` comes from a resolved modern option when present and otherwise from packaged BAML dictionaries. Official `CloseApplicationInfo` initializers are projected field by field; computed paths, `RegistryKey` object flows, custom handlers, unsupported object construction, and arbitrary edited C# remain unresolved and require static source review or VM validation.
+Review `Shortcuts`, `AutorunEntries`, `EnvironmentChanges`, `FirewallRules`, `Certificates`, `FolderPermissionChanges`, `CloseApplications`, `OverlayCleanup`, `RefreshesExplorer`, `EnablesUninstallDelayUntilReboot`, `HostBehavior`, `LicensePolicy`, and `SupportedLanguages`. Literal custom `Microsoft.Win32.Registry.SetValue` calls are projected into `RegistryWrites`, `Protocols`, `FileExtensions`, and their detailed association records. `SupportedLanguages` comes from a resolved modern option when present and otherwise from packaged BAML dictionaries. Official `CloseApplicationInfo` initializers are projected field by field. Computed paths, `RegistryKey` object flows, custom handlers, unsupported object construction, and arbitrary edited C# remain unresolved and require static source review or VM validation.
 
-Treat `MicaSetup.Security.PermissiveInstallAcl` as security evidence rather than a manifest field. When enabled, an elevated runtime grants inherited `FullControl` to both `Everyone` and `Users` on the installation directory. Confirm the resulting ACL in a VM when assessing whether the package is acceptable for machine-wide deployment.
+Treat `MicaSetup.Security.PermissiveInstallAcl` as security evidence, not a manifest field. When enabled, an elevated runtime grants inherited `FullControl` to both `Everyone` and `Users` on the installation directory. Confirm the resulting ACL in a VM when assessing whether the package is acceptable for machine-wide deployment.
 
 Protocols and file extensions may also be registered during application first run. Compare installed state before installation, after installation, and after first run before treating the lists as complete.
 
@@ -100,7 +100,7 @@ Installers:
 
 Keep `InstallModes: interactive` until the exact fork proves another mode and passes unattended VM validation. If a fork implements silent behavior, author only the proven switches and distinguish switches handled by the outer MicaSetup host from arguments forwarded to the installed application.
 
-Use `%ProgramFiles%`, `%ProgramFiles(x86)%`, `%LOCALAPPDATA%`, or `%APPDATA%` paths returned by `DefaultInstallLocation`; do not preserve host-specific expanded user paths in the manifest.
+Use `%ProgramFiles%`, `%ProgramFiles(x86)%`, `%LOCALAPPDATA%`, or `%APPDATA%` paths returned by `DefaultInstallLocation`. Do not preserve host-specific expanded user paths in the manifest.
 
 ## WinGet defaults and overrides
 
@@ -108,7 +108,7 @@ MicaSetup has no WinGet-known installer type, switches, return codes, or install
 
 ## Scope and architecture
 
-The outer WPF setup's PE architecture is not necessarily the installed application architecture. Use `PayloadArchitectures` and the payload's native sidecars. Mixed native sidecars may constrain an AnyCPU main executable; preserve parser warnings when they disagree.
+The outer WPF setup's PE architecture is not necessarily the installed application architecture. Use `PayloadArchitectures` and the payload's native sidecars. Mixed native sidecars may constrain an AnyCPU main executable. Preserve parser warnings when they disagree.
 
 MicaSetup's installation directory preferences do not independently establish binary architecture. `IsUseInstallPathPreferX86` selects a path convention, while payload PE evidence determines WinGet `Architecture`.
 

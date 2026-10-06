@@ -79,17 +79,17 @@ Known MSI-backed InstallShield examples:
 - `DYMO.PrintServerControlCenter`
 - `NWEA.NWEASecureTestingBrowser`
 
-The shown split `/V` arguments are one verified launcher form. Some Basic MSI wrappers instead require one compact forwarded string such as `/s /v"/qn /norestart"` or `/s /v"/passive /norestart"`. Test the artifact's exact command. Use the selected MSI's proven directory property rather than assuming `INSTALLDIR`. Attach the operand directly to `/v` and escape its embedded quotes with backslashes, for example `/v"INSTALLDIR=\"<INSTALLPATH>\""`, following the [InstallShield command-line reference](https://docs.revenera.com/installshield/helplibrary/IHelpSetup_EXECmdLine.htm). Plain YAML scalars preserve these backslashes; YAML double-quoted strings require an additional YAML escaping layer.
+The shown split `/V` arguments are one verified launcher form. Some Basic MSI wrappers instead require one compact forwarded string such as `/s /v"/qn /norestart"` or `/s /v"/passive /norestart"`. Test the artifact's exact command. Use the selected MSI's proven directory property rather than assuming `INSTALLDIR`. Attach the operand directly to `/v` and escape its embedded quotes with backslashes, for example `/v"INSTALLDIR=\"<INSTALLPATH>\""`, following the [InstallShield command-line reference](https://docs.revenera.com/installshield/helplibrary/IHelpSetup_EXECmdLine.htm). Plain YAML scalars preserve these backslashes. YAML double-quoted strings require an additional YAML escaping layer.
 
 Keep `AppsAndFeaturesEntries.InstallerType: msi` only when the visible uninstall entry has `WindowsInstaller=1` while WinGet invokes the outer EXE. Omit the override when the wrapper creates a visible EXE-style ARP entry or when the manifest uses the direct MSI instead.
 
 ## InstallShield InstallScript package
 
-Use this shape only when `Get-InstallShieldInfo` reports `HasMsi: false`, `HasInstallScript: true`, and `Variant: InstallScript`. The absence of an MSI means the InstallScript engine owns installation and ARP behavior; do not apply Basic MSI `/V...` forwarding switches or derive ProductCode/UpgradeCode from a nonexistent nested database.
+Use this shape only when `Get-InstallShieldInfo` reports `HasMsi: false`, `HasInstallScript: true`, and `Variant: InstallScript`. The absence of an MSI means the InstallScript engine owns installation and ARP behavior. Do not apply Basic MSI `/V...` forwarding switches or derive ProductCode/UpgradeCode from a nonexistent nested database.
 
 Most InstallScript installers require recording and replaying a caller-supplied `setup.iss` response file for unattended installation. That additional package-specific input is not supported by winget-pkgs validation. A valid `setup.iss` already shipped beside `setup.inx` is different: InstallShield's default `/s` lookup can consume it without an additional manifest payload.
 
-`Celsys.ClipStudioPaint` is self-contained rather than response-free: its installer embeds a valid `setup.iss` with the dialog order and responses, so `/s` needs no caller-supplied file.
+`Celsys.ClipStudioPaint` is self-contained: its installer embeds a valid `setup.iss` with the dialog order and responses, so `/s` needs no caller-supplied file.
 
 ```yaml
 Installers:
@@ -110,7 +110,7 @@ Known InstallShield InstallScript package:
 
 - `Celsys.ClipStudioPaint`
 
-The rejected `IndexEducation.PronoteClient` submission in [winget-pkgs#112792](https://github.com/microsoft/winget-pkgs/pull/112792) is a useful response-file-dependent example. Its x86 and x64 installers use different ProductGUID values and store a scrambled `setup.inx` inside `data1.hdr/data1.cab`; both require an external `setup.iss`.
+The rejected `IndexEducation.PronoteClient` submission in [winget-pkgs#112792](https://github.com/microsoft/winget-pkgs/pull/112792) is a useful response-file-dependent example. Its x86 and x64 installers use different ProductGUID values and store a scrambled `setup.inx` inside `data1.hdr/data1.cab`. Both require an external `setup.iss`.
 
 ## InstallShield Advanced UI package
 

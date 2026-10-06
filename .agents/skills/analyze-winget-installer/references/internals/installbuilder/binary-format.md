@@ -2,7 +2,7 @@
 
 ## Offset conventions
 
-Absolute offsets are measured from the first byte of the distributed executable. Metakit positions are relative to the selected Metakit header. CookFS file blocks refer to decoded page-relative offsets. CookFS tail offsets are derived backward from the accepted `CFS0002` marker. Multibyte Metakit header and commit fields are big-endian unless a table says otherwise; Metakit integer-column byte order is selected by the `JL` or `LJ` signature. CookFS multibyte integers are unsigned big-endian. LZMA properties and lengths use the little-endian LZMA-alone representation consumed by the runtime handler.
+Absolute offsets are measured from the first byte of the distributed executable. Metakit positions are relative to the selected Metakit header. CookFS file blocks refer to decoded page-relative offsets. CookFS tail offsets are derived backward from the accepted `CFS0002` marker. Multibyte Metakit header and commit fields are big-endian unless a table says otherwise. Metakit integer-column byte order is selected by the `JL` or `LJ` signature. CookFS multibyte integers are unsigned big-endian. LZMA properties and lengths use the little-endian LZMA-alone representation consumed by the runtime handler.
 
 ## Outer PE
 
@@ -35,11 +35,11 @@ Offset  Size  Field
 0x04       4  database logical length, uint32 BE
 ```
 
-The declared logical length must be at least 24 bytes and remain inside the installer. It ends at the second commit mark rather than necessarily at the physical end of the executable.
+The declared logical length must be at least 24 bytes and remain inside the installer. It ends at the second commit mark, which can precede the physical end of the executable.
 
 ## Metakit commit tail
 
-The final 16 bytes contain two eight-byte commit marks. Dumplings does not assign semantics to fields that are unnecessary for VFS recovery; it validates the observed first mark and uses the second mark as the root descriptor locator.
+The final 16 bytes contain two eight-byte commit marks. Dumplings does not assign semantics to fields that are unnecessary for VFS recovery. It validates the observed first mark and uses the second mark as the root descriptor locator.
 
 ```text
 Metakit logical end minus 16 bytes
@@ -121,7 +121,7 @@ memo table
 `-- repeated: AdaptiveRowDelta, Location
 ```
 
-Integer columns use widths of 0, 1, 2, 4, 8, 16, or 32 bits selected from row count and column byte length according to Metakit's adaptive column rules. Sub-byte fields are packed least-significant-bit first within a byte. Eight-bit, 16-bit, and 32-bit fields are signed; multibyte order follows the database signature.
+Integer columns use widths of 0, 1, 2, 4, 8, 16, or 32 bits selected from row count and column byte length according to Metakit's adaptive column rules. Sub-byte fields are packed least-significant-bit first within a byte. Eight-bit, 16-bit, and 32-bit fields are signed. Multibyte order follows the database signature.
 
 The directory graph must have exactly one `<root>` row with parent `-1`. Every other parent must reference a valid directory, cycles are rejected, and path components cannot be empty, `.` or `..`, contain a NUL, or contain a path separator.
 
@@ -209,7 +209,7 @@ InstallBuilder LZMA record
   1 byte   5 bytes      int64 LE
 ```
 
-For LZMA, the dictionary size encoded in the properties must be nonzero and within the configured dictionary limit, and the declared output length must be nonnegative and bounded. Handler `255` can also represent project-specific encryption or custom compression; a record that does not satisfy the validated unencrypted framing remains unsupported.
+For LZMA, the dictionary size encoded in the properties must be nonzero and within the configured dictionary limit, and the declared output length must be nonnegative and bounded. Handler `255` can also represent project-specific encryption or custom compression. A record that does not satisfy the validated unencrypted framing remains unsupported.
 
 ## CookFS page integrity
 
@@ -225,7 +225,7 @@ Offset  Size  Field
 0x0C       4  CRC32 of expanded page, uint32 BE
 ```
 
-The parser verifies each page after decompression and before copying file blocks. Unknown page-hash algorithms prevent verified extraction rather than silently accepting bytes.
+The parser verifies each page after decompression and before copying file blocks. Unknown page-hash algorithms prevent verified extraction, and the parser does not silently accept the page bytes.
 
 ## CookFS file index
 
@@ -281,7 +281,7 @@ Keys are strict UTF-8. Values are decoded as UTF-8 when possible. Values whose k
 
 ## Split logical files
 
-InstallBuilder can split one large logical file into consecutive physical records named `Name___bitrockBigFile1`, `Name___bitrockBigFile2`, and so on. The base record starts the logical file; contiguous numbered records are concatenated in order. A numbered record without a base is not promoted to an independent installed path.
+InstallBuilder can split one large logical file into consecutive physical records named `Name___bitrockBigFile1`, `Name___bitrockBigFile2`, and so on. The base record starts the logical file. Contiguous numbered records are concatenated in order. A numbered record without a base is not promoted to an independent installed path.
 
 ```text
 physical entries                       logical output
@@ -293,7 +293,7 @@ payload/setup.bin___bitrockBigFile2 +--+
 
 ## Installed-path projection
 
-CookFS and legacy VFS paths are storage identities. The compiled component and folder records map a storage prefix to an installation destination. Paths below `${installdir}` become relative output paths. Other destination roots are isolated below `_destinations` so extraction never writes into host system directories. Duplicate projected paths are also isolated rather than resolved by extraction order.
+CookFS and legacy VFS paths are storage identities. The compiled component and folder records map a storage prefix to an installation destination. Paths below `${installdir}` become relative output paths. Other destination roots are isolated below `_destinations` so extraction never writes into host system directories. Duplicate projected paths are also isolated, and extraction order does not resolve them.
 
 ## Structural invariants
 

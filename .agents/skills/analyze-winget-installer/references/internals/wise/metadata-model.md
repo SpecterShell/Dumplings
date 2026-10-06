@@ -19,7 +19,7 @@ Wise metadata can originate in the outer PE or NE host, an embedded WSE source l
 
 Some Wise 9 media contains an `INSTALL_SCRIPT` Deflate member whose decompressed text begins with `Document Type: WSE`. The parser reads only the `item: Global` block and its literal `name=value` properties. It currently uses `Version`, `Title`, `Requested Execution Level`, and numbered variable definitions. It does not interpret arbitrary WSE statements as a source program.
 
-Variable declarations use paired keys such as `Variable Name1` and `Variable Default1`. Dumplings stores these in a case-insensitive dictionary. A missing default is represented as an empty string rather than guessed from a runtime environment.
+Variable declarations use paired keys such as `Variable Name1` and `Variable Default1`. Dumplings stores these in a case-insensitive dictionary. A missing default is represented as an empty string, not guessed from a runtime environment.
 
 ## Compiled state model
 
@@ -42,9 +42,9 @@ Known runtime variables such as `%MAINDIR%`, `%TEMP%`, `%WORKINGDIR%`, and `%SYS
 
 ## Payload catalog
 
-Every projected `InstallFile` state becomes one `PayloadCatalog` entry. `DeflateStart` and `DeflateEnd` are relative to the payload-data base selected by the Wise overlay header. `ResolvedDestinationPath` means that known project variables were substituted; it may still contain runtime variables and therefore is not necessarily a usable host path.
+Every projected `InstallFile` state becomes one `PayloadCatalog` entry. `DeflateStart` and `DeflateEnd` are relative to the payload-data base selected by the Wise overlay header. `ResolvedDestinationPath` means that known project variables were substituted. It may still contain runtime variables and therefore is not necessarily a usable host path.
 
-Several records can target the same path because Wise projects can install language-specific or condition-specific alternatives. The catalog preserves every record in source order. Extraction collision policy decides how physical outputs are named; it does not resolve runtime conditions.
+Several records can target the same path because Wise projects can install language-specific or condition-specific alternatives. The catalog preserves every record in source order. Extraction collision policy decides how physical outputs are named. It does not resolve runtime conditions.
 
 ## Nested payload authority
 

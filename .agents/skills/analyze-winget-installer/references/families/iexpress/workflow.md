@@ -79,7 +79,7 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) for nested com
 
 ## Known examples
 
-- `Microsoft.NetMon`: IExpress + WiX; visible ARP entry is WiX.
-- `Microsoft.VCRedist.2005.x64`: IExpress + Visual Studio Setup Build Engine; wrapper command runs `vcredist.msi`.
-- `Microsoft.VCRedist.2005.x86`: IExpress + Visual Studio Setup Build Engine; wrapper command runs `vcredist.msi`.
-- `SonicWall.GlobalVPNClient` version `4.9.0.1202`: IExpress runs `RunMSI.exe`; the cabinet also contains `GVCInstall64.msi`.
+- `Microsoft.NetMon`: IExpress + WiX. The visible ARP entry is WiX.
+- `Microsoft.VCRedist.2005.x64`: IExpress + Visual Studio Setup Build Engine. The wrapper command runs `vcredist.msi`.
+- `Microsoft.VCRedist.2005.x86`: IExpress + Visual Studio Setup Build Engine. The wrapper command runs `vcredist.msi`.
+- `SonicWall.GlobalVPNClient` version `4.9.0.1202`: IExpress runs `RunMSI.exe`. The cabinet also contains `GVCInstall64.msi`.

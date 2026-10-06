@@ -19,7 +19,7 @@ Strong detection requires a valid PE, a bounded Kachina TLV sequence after the P
 
 `Expand-KachinaInstaller` expands every installed payload file when `-Name` is omitted. It can export raw control, patch, and prerequisite records with `-RawEntries`. Normal extraction also reconstructs updater and uninstaller executables. Internal analysis extracts only the main executable and relevant adjacent libraries to a temporary directory.
 
-Payload files are streamed through bounded Zstandard decompression. Expected decompressed size and MD5 or XXH3-128 are verified before publication. Several metadata paths can reuse one record; each output path is validated independently. Path traversal, duplicate output, excessive entries, excessive bytes, recursion, and collision behavior use the shared extraction infrastructure.
+Payload files are streamed through bounded Zstandard decompression. Expected decompressed size and MD5 or XXH3-128 are verified before publication. Several metadata paths can reuse one record. Each output path is validated independently. Path traversal, duplicate output, excessive entries, excessive bytes, recursion, and collision behavior use the shared extraction infrastructure.
 
 ## Diagnostics
 

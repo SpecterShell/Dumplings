@@ -34,7 +34,7 @@ Runtime state includes OS and architecture probes, existing files and registry v
 
 ## Setup and uninstaller relationship
 
-CreateInstall's generated uninstaller reuses the same launcher and GE program architecture. A VM-generated uninstaller was accepted by the parser as a valid no-GEA CreateInstall artifact. Its project program replays removal operations and reads the installation log; it does not need a packaged application archive.
+CreateInstall's generated uninstaller reuses the same launcher and GE program architecture. A VM-generated uninstaller was accepted by the parser as a valid no-GEA CreateInstall artifact. Its project program replays removal operations and reads the installation log. It does not need a packaged application archive.
 
 This relationship explains why archive presence cannot be a detection requirement. A setup can also omit packaged files while performing downloads, registry changes, generated-file work, or child execution entirely from the compiled program.
 

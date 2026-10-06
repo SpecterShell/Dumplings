@@ -46,4 +46,4 @@ WiX, Advanced Installer, and InstallShield are authoring systems over the same M
 
 ## Limits and gaps
 
-Validate CFB sector geometry, chain termination, directory records, stream sizes, string indexes, table schemas, and embedded stream ranges. Route MSP and MST CLSIDs separately; do not treat them as installable MSI packages.
+Validate CFB sector geometry, chain termination, directory records, stream sizes, string indexes, table schemas, and embedded stream ranges. Route MSP and MST CLSIDs separately. Do not treat them as installable MSI packages.

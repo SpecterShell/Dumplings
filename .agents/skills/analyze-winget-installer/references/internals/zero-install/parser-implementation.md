@@ -14,7 +14,7 @@ Strong detection requires a valid managed PE and a source-backed Zero Install bo
 4. Apply adjacent INI or historical appSettings precedence for full analysis.
 5. Normalize app URI, mode, arguments, integration selection, and version-gated features.
 6. Parse caller-supplied feed XML once when present.
-7. project ARP, switches, scopes, capabilities, content entries, diagnostics, and unresolved fields.
+7. Project ARP, switches, scopes, capabilities, content entries, diagnostics, and unresolved fields.
 
 ## Feed safety
 

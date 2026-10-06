@@ -20,7 +20,7 @@ The builder starts from a host executable, patches the DOS-area pre-index when t
 
 ## Identity domains
 
-`regName` is the built-in uninstall key name and therefore the ProductCode evidence. `appName` supplies the ARP display name. `tag_name` in release metadata supplies DisplayVersion. Payload record names are content hashes and do not identify installed paths; one hash can back several metadata paths.
+`regName` is the built-in uninstall key name and therefore the ProductCode evidence. `appName` supplies the ARP display name. `tag_name` in release metadata supplies DisplayVersion. Payload record names are content hashes and do not identify installed paths. One hash can back several metadata paths.
 
 The PE version resource can belong to the host or packaged release. It is not used as the format generation. `FormatGeneration` comes from the control-record order and pre-index state.
 

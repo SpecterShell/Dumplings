@@ -68,7 +68,7 @@ RegistryPath *? ValueName *? Type *? Value *? Overwrite *? Remove *? View
 
 The current parser requires at least path, value name, and type. It recognizes literal `HKCU`, `HKLM`, `HKCR`, and long root names. `HKEY_DEFAULT` or `HKDE` resolves to HKLM for a machine default and HKCU for a user default. Known value types are normalized to `REG_SZ`, `REG_EXPAND_SZ`, `REG_MULTI_SZ`, `REG_DWORD`, and `REG_BINARY`.
 
-Overwrite and removal flags are exposed as booleans when recognized. `Default`, `32-bit`, and `64-bit` view tokens are normalized, although an unknown architecture enum leaves the default view unresolved. A literal root is not proof that the write will use that hive under every elevation and redirection policy; see [setup runtime](setup-runtime.md).
+Overwrite and removal flags are exposed as booleans when recognized. `Default`, `32-bit`, and `64-bit` view tokens are normalized, although an unknown architecture enum leaves the default view unresolved. A literal root is not proof that the write will use that hive under every elevation and redirection policy. See [setup runtime](setup-runtime.md).
 
 `RegistryOperations` retains structurally valid rows even when their key or value contains a runtime-only variable. `CanProject` is true only when both key identity and data are statically resolved; only those records enter `RegistryWrites`, ARP grouping, and the shared association projector. Literal protocol and file-class keys can therefore produce protocol or extension evidence without allowing unresolved expressions to become installed-state claims.
 
@@ -83,13 +83,13 @@ Modern: Extension *? Executable *? Description *? Parameters *? WorkingDirectory
 
 The parser validates the extension token, strips a leading dot, lowercases it, identifies the five-field or eight-field layout, resolves deterministic path variables, and preserves the raw field array. Dynamic expressions remain null in the resolved properties rather than becoming literal registry claims.
 
-The first field of current builder media can appear as `aip`; the parser returns `aip` for manifest projection and `.aip` in the detailed association object.
+The first field of current builder media can appear as `aip`. The parser returns `aip` for manifest projection and `.aip` in the detailed association object.
 
 ## Shortcuts and commands
 
 `[Shortcuts]` records are classified as the older complete-shortcut-path form or the later destination-and-name form. The parser returns authored and statically resolved shortcut path or destination, target, parameters, working directory, icon, icon index, display mode, and elevation fields while retaining the complete field array and source row.
 
-`[Commands]` records return file, parameters, display mode, timing, wait behavior, operating-system filter, and administrator flag. Some 8.x and 9.x command fields use a bytewise XOR-2 transform. The parser accepts the transformed value only when it yields documented command, URL, path, switch, or installer-variable syntax; arbitrary text is never decoded merely because XOR-2 produces printable characters. A bounded evaluator resolves simple documented `IF` comparisons when both operands are literals or deterministic installer variables. Runtime operands, malformed forms, and `IFMSG` remain `Unknown`; they are never evaluated against host files, registry, environment, or network state. A command is execution evidence, not proof that a nested executable accepts the outer setup switches.
+`[Commands]` records return file, parameters, display mode, timing, wait behavior, operating-system filter, and administrator flag. Some 8.x and 9.x command fields use a bytewise XOR-2 transform. The parser accepts the transformed value only when it yields documented command, URL, path, switch, or installer-variable syntax; arbitrary text is never decoded merely because XOR-2 produces printable characters. A bounded evaluator resolves simple documented `IF` comparisons when both operands are literals or deterministic installer variables. Runtime operands, malformed forms, and `IFMSG` remain `Unknown`. They are never evaluated against host files, registry, environment, or network state. A command is execution evidence, not proof that a nested executable accepts the outer setup switches.
 
 ## Variables
 
@@ -122,7 +122,7 @@ The builder supports many additional sources, including registry values, INI val
 
 ## Setup policy and requirements
 
-`SetupParameters` is tokenized so the parser can identify `-nosilent`, `-silentinstalluserinfo`, `-nocmdifsilent`, `-silentuninst`, `-useappver`, `-noChangeRootKey`, `-IgnoreRegistryWriteErrors`, and `-defdir`. These switches alter compiled runtime policy; they are not setup command-line arguments supplied by WinGet.
+`SetupParameters` is tokenized so the parser can identify `-nosilent`, `-silentinstalluserinfo`, `-nocmdifsilent`, `-silentuninst`, `-useappver`, `-noChangeRootKey`, `-IgnoreRegistryWriteErrors`, and `-defdir`. These switches alter compiled runtime policy. They are not setup command-line arguments supplied by WinGet.
 
 The `Requirements` result preserves recognized operating-system gates, Internet requirements, enabled prerequisite families and versions, running-application checks, and installed-version bounds. It does not convert prerequisite evidence directly into WinGet dependencies.
 

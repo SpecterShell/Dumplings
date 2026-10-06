@@ -2,7 +2,7 @@
 
 ## Detection
 
-TigerSetup is a native x64 installer with a generation-specific footer and Protobuf metadata. `Test-TigerSetupInstaller` requires a valid PE, footer CRC/layout, hashed metadata and a consistent ZIP catalog or solid-payload index. Product strings alone do not identify this family. Generated uninstallers use role 2 and no application payload; the detector excludes them.
+TigerSetup is a native x64 installer with a generation-specific footer and Protobuf metadata. `Test-TigerSetupInstaller` requires a valid PE, footer CRC/layout, hashed metadata and a consistent ZIP catalog or solid-payload index. Product strings alone do not identify this family. Generated uninstallers use role 2 and no application payload. The detector excludes them.
 
 ## Binary Structure
 
@@ -66,9 +66,9 @@ InstallerSwitches:
 UpgradeBehavior: install
 ```
 
-WinGet supplies no TigerSetup defaults. Both unattended fields use the same windowless command; `silentWithProgress` does not imply a progress UI. User scope uses `--scope user` and a writable private root; a protected custom root can trigger elevation. Dual-scope variants retain separate install locations. The engine accepts an absolute fresh-install root override; existing-state no-op and reconciliation paths handle conflicts differently. Upstream's manifest writer omits this switch for authored nondefault roots; review application path expectations before exposing it.
+WinGet supplies no TigerSetup defaults. Both unattended fields use the same windowless command; `silentWithProgress` does not imply a progress UI. User scope uses `--scope user` and a writable private root; a protected custom root can trigger elevation. Dual-scope variants retain separate install locations. The engine accepts an absolute fresh-install root override; existing-state no-op and reconciliation paths handle conflicts differently. Upstream's manifest writer omits this switch for authored nondefault roots. Review application path expectations before exposing it.
 
-The projection follows upstream return mappings: 2 invalid parameter, 3 missing dependency, 5 cancelled, 6 application in use, 8 unsupported system, 3010 reboot required, and 1/4/7 custom failures. Exit 0 is ordinary success. Runtime `InstallerType` is `exe`; the family comment belongs only in YAML examples.
+The projection follows upstream return mappings: 2 invalid parameter, 3 missing dependency, 5 cancelled, 6 application in use, 8 unsupported system, 3010 reboot required, and 1/4/7 custom failures. Exit 0 is ordinary success. Runtime `InstallerType` is `exe`. The family comment belongs only in YAML examples.
 
 ## Step 4: Check ARP
 

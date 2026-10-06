@@ -22,7 +22,7 @@ PE setup launcher
     `-- data/ and payload entries
 ```
 
-Each 7z candidate is opened as a bounded archive and ranked by structured entry evidence. The parser does not claim an undocumented InstallAware header around the standard archive. PE requested-execution-level and version resources are separate supporting layers; nested MSI/EXE files must be routed independently.
+Each 7z candidate is opened as a bounded archive and ranked by structured entry evidence. The parser does not claim an undocumented InstallAware header around the standard archive. PE requested-execution-level and version resources are separate supporting layers. Nested MSI/EXE files must be routed independently.
 
 ## Detection invariants
 
@@ -42,7 +42,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

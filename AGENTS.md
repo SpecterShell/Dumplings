@@ -1,6 +1,6 @@
 # Dumplings Agent Guide
 
-This file applies to the root repository and its checked-out submodules unless a nearer `AGENTS.md` overrides it. It contains repository-wide constraints. Detailed workflows belong in the component READMEs and `.agents/skills` references rather than being repeated here.
+This file applies to the root repository and its checked-out submodules unless a nearer `AGENTS.md` overrides it. It contains repository-wide constraints. Read the component READMEs and `.agents/skills` references for detailed workflows.
 
 ## Start Here
 
@@ -60,9 +60,9 @@ Respect licensing boundaries. Compatible shared infrastructure may live in Packa
 
 ## Core Integration
 
-Core owns runner infrastructure. PackageModule lifecycle behavior belongs in `Modules/PackageModule/Hooks` rather than hard-coded changes to `Core/Index.ps1`. Cleanup hooks must be idempotent and release resources after success, failure, timeout, or forced worker termination.
+Core owns runner infrastructure. Put PackageModule lifecycle behavior in `Modules/PackageModule/Hooks`. Cleanup hooks must be idempotent and release resources after success, failure, timeout, or forced worker termination.
 
-Use `Use-Mutex`, `Use-Semaphore`, or `Use-Monitor` from `Core/Libraries/Synchronization.psm1`; task scripts must not construct raw synchronization primitives. Native `winget` calls remain serialized.
+Use `Use-Mutex`, `Use-Semaphore`, or `Use-Monitor` from `Core/Libraries/Synchronization.psm1`. Task scripts must not construct raw synchronization primitives. Native `winget` calls remain serialized.
 
 `$Global:DumplingsStorage` is synchronized process-wide storage shared by thread-job runspaces. `$Global:DumplingsSessionStorage` is runspace-local. Shared storage does not create task ordering: declare producer dependencies with `DependsOn` in `Config.yaml`.
 
@@ -81,7 +81,7 @@ Research/<Family>/...                              durable manual evidence
 
 Synthetic fixtures, extraction trees, decompressed payloads, and temporary inspection output belong in Pester's `$TestDrive`. Do not make tests depend on `Downloads`, `Temp`, `Sandbox`, `Outputs`, or a user's submission-installer directory. Do not commit large installer binaries solely to stabilize a test.
 
-Use the byte-identical `Tests/Support/TestFixture.ps1` helper in both parser submodules. Pester mocks must target the session state that owns the called function; use `-ModuleName` when code under test invokes another module.
+Use the byte-identical `Tests/Support/TestFixture.ps1` helper in both parser submodules. Pester mocks must target the session state that owns the called function. Use `-ModuleName` when code under test invokes another module.
 
 Run the narrowest relevant suites, then the affected integration suites. Typical checks are:
 

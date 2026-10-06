@@ -17,13 +17,13 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 
 ## Format identity
 
-MicaSetup v1 and v2 are managed .NET Framework WPF executables. The builder edits or regenerates C# configuration, compiles it into an installer, embeds the application archive and uninstaller in WPF resources, and replaces normal assembly identity with application identity. The installed payload is not physically adjacent to the PE overlay; it is a stream value nested inside a compiled `.resources` container referenced by CLR metadata. v1.0 keeps `MicaSetup.Core.Pack` in a Costura-managed dependency and references it from the outer assembly, while later builds define or reference `MicaSetup.Option` and configure it through `UseOptions`.
+MicaSetup v1 and v2 are managed .NET Framework WPF executables. The builder edits or regenerates C# configuration, compiles it into an installer, embeds the application archive and uninstaller in WPF resources, and replaces normal assembly identity with application identity. The installed payload is not physically adjacent to the PE overlay. It is a stream value nested inside a compiled `.resources` container referenced by CLR metadata. v1.0 keeps `MicaSetup.Core.Pack` in a Costura-managed dependency and references it from the outer assembly, while later builds define or reference `MicaSetup.Option` and configure it through `UseOptions`.
 
 The parser identifies `Pack`, `OptionLegacy`, and `OptionModern` configuration models. `IsUninstLower` and user-path preference options distinguish the modern v2 schema. Both late v1 and early v2 releases use the legacy option schema, so `BuilderGeneration` is a structural compatibility generation rather than a release-major claim.
 
 ## Release and configuration history
 
-The repository history shows that MicaSetup has retained the same managed PE, generated CIL, WPF `.g.resources`, and nested `publish.7z` architecture from v1.0.0 through v2.5.6. Changes after v1.0 are additions to the compiled configuration and runtime behavior rather than new container generations. The parser therefore dispatches on the configuration model and reports source-verified release bounds through `FormatCompatibility`; it does not infer an exact builder release from the packaged application's assembly version.
+The repository history shows that MicaSetup has retained the same managed PE, generated CIL, WPF `.g.resources`, and nested `publish.7z` architecture from v1.0.0 through v2.5.6. Changes after v1.0 are additions to the compiled configuration and runtime behavior rather than new container generations. The parser therefore dispatches on the configuration model and reports source-verified release bounds through `FormatCompatibility`. It does not infer an exact builder release from the packaged application's assembly version.
 
 | First release | Structural or behavioral change | Parser treatment |
 |---|---|---|
@@ -90,7 +90,7 @@ Offset  Size  Field
 ...            remaining CLR data directories
 ```
 
-The parser uses `PEReader` and `MetadataReader`; it never loads the target assembly into the host AppDomain. Every caller-owned stream remains open and returns to its original position.
+The parser uses `PEReader` and `MetadataReader`. It never loads the target assembly into the host AppDomain. Every caller-owned stream remains open and returns to its original position.
 
 ## ManifestResource records
 
@@ -151,7 +151,7 @@ Data record for Stream/ByteArray
 +-------------------------------+
 ```
 
-MicaSetup's official artifacts store `resources/setups/publish.7z` and `resources/setups/uninst.exe` as v2 `ResourceTypeCode.Stream` values. Dumplings returns absolute physical file offsets that start at the stream data and exclude both the type code and length prefix. Runtime version 1 uses an index into the preceding type-name table instead of a `ResourceTypeCode`; the parser maps its primitive framework types but leaves custom serialized records opaque. Supported primitive records are decoded without invoking `BinaryFormatter` or constructing custom resource types. User-defined resource types retain their declared type name as unsupported metadata and are never deserialized.
+MicaSetup's official artifacts store `resources/setups/publish.7z` and `resources/setups/uninst.exe` as v2 `ResourceTypeCode.Stream` values. Dumplings returns absolute physical file offsets that start at the stream data and exclude both the type code and length prefix. Runtime version 1 uses an index into the preceding type-name table instead of a `ResourceTypeCode`. The parser maps its primitive framework types but leaves custom serialized records opaque. Supported primitive records are decoded without invoking `BinaryFormatter` or constructing custom resource types. User-defined resource types retain their declared type name as unsupported metadata and are never deserialized.
 
 ## Pack/Option schemas and generated CIL
 
@@ -172,7 +172,7 @@ The bounded symbolic evaluator supports literal strings, integers, floating-poin
 
 Only a high-density generated initializer contributes configuration values. Legacy Pack property names are normalized to the shared option names consumed by the PowerShell parser. This prevents MicaSetup's own runtime setters from being mistaken for packaged configuration. `UseElevated` is evaluated separately because it lives in the host-builder chain rather than the configuration lambda.
 
-The parser also observes direct `Microsoft.Win32.Registry.SetValue` calls whose key, value name, value, and optional value kind are all literal. It does not emulate `RegistryKey` object state or arbitrary custom C#; unresolved calls produce warnings and require VM validation.
+The parser also observes direct `Microsoft.Win32.Registry.SetValue` calls whose key, value name, value, and optional value kind are all literal. It does not emulate `RegistryKey` object state or arbitrary custom C#. Unresolved calls produce warnings and require VM validation.
 
 ## Scope and ARP runtime
 

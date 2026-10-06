@@ -19,7 +19,7 @@ Composer project
             `-- footer, split metadata, and optional signature
 ```
 
-The setup engine interprets `Setup.txt`; the record stream only stores bytes. A physical name such as `00021#Composer.exe` is not the installed path until ordered `SET_SUB_DIR` and `SET_COPY_FILES` directives map it to a destination.
+The setup engine interprets `Setup.txt`. The record stream only stores bytes. A physical name such as `00021#Composer.exe` is not the installed path until ordered `SET_SUB_DIR` and `SET_COPY_FILES` directives map it to a destination.
 
 ## Runtime layers
 

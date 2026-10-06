@@ -22,7 +22,7 @@ Web media records `MainAppURL` in configuration. The runtime follows that URL be
 
 ## Compressed media
 
-Advanced Installer can place the MSI and installation files in an LZMA-backed 7z archive. The catalog identifies the archive; its nested paths identify the MSI selected after extraction. Password-protected media uses AES-256 and requires `/aespassword`. During nested-archive inspection, Dumplings reads the 7z coder metadata and reports encrypted entries or an encrypted header, but it does not decrypt password-protected content.
+Advanced Installer can place the MSI and installation files in an LZMA-backed 7z archive. The catalog identifies the archive. Its nested paths identify the MSI selected after extraction. Password-protected media uses AES-256 and requires `/aespassword`. During nested-archive inspection, Dumplings reads the 7z coder metadata and reports encrypted entries or an encrypted header, but it does not decrypt password-protected content.
 
 ## Prerequisites
 

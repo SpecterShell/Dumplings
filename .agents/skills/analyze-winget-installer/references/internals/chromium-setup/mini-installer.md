@@ -14,7 +14,7 @@ Chromium mini-installer PE
 `-- B7/BN product archive          chrome.7z or vendor equivalent
 ```
 
-Current setup executables also expose a contiguous `kInstallModes` array. PE32+ records are 232 bytes; PE32 records are 168 bytes.
+Current setup executables also expose a contiguous `kInstallModes` array. PE32+ records are 232 bytes. PE32 records are 168 bytes.
 
 ```text
 InstallConstants configuration prefix (PE32+; PE32 uses 4-byte pointers)

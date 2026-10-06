@@ -12,7 +12,7 @@ Strong structural evidence is a valid PE followed by one of the supported contai
 
 ## Binary structure
 
-Actual Installer 3.x and 4.x place the metadata cabinet before one-file payload cabinets. Version 5.x reverses that order. Version 6.x and later use numbered ZIP payload entries and a final metadata ZIP. Setup EXE + Data media keeps the source-directory tree in a separately distributed 7z/LZMA file; real builder output can still embed generated uninstaller payloads before the metadata ZIP, while a metadata-only executable remains a supported structural route.
+Actual Installer 3.x and 4.x place the metadata cabinet before one-file payload cabinets. Version 5.x reverses that order. Version 6.x and later use numbered ZIP payload entries and a final metadata ZIP. Setup EXE + Data media keeps the source-directory tree in a separately distributed 7z/LZMA file. Real builder output can still embed generated uninstaller payloads before the metadata ZIP, while a metadata-only executable remains a supported structural route.
 
 ```text
 3.x/4.x: PE -> metadata CAB -> payload CAB 0 -> payload CAB 1 -> ...
@@ -47,11 +47,11 @@ For a dual-scope package, `/CU` selects current user and `/RUNAS /ALL` selects a
 
 The Product GUID is the uninstall-key identity only when uninstallation and the Programs and Features entry are both enabled. Cabinet4 instead uses literal `AppName` as the uninstall-key identity and `AppName AppVersion` as its visible display name, as verified against the 4.8 runtime. Cabinet3 can enable a visible entry without exposing a Product GUID, but its key identity remains unresolved.
 
-The parser returns `DisplayName`, `DisplayVersion`, `Publisher`, install location, display icon, uninstall command, registry hive/view, and `AppsAndFeaturesEntries` from compiled configuration. `UninstallerCommandEvidence` distinguishes the literal ARP `UninstallString` from the valid quoted `/S` invocation; it does not claim that a `QuietUninstallString` value is registered when the runtime does not write one. A complete literal custom uninstall key can supply ARP evidence when built-in registration is disabled; multiple custom keys remain ambiguous. Compare these values with a VM registry delta for a new route or package.
+The parser returns `DisplayName`, `DisplayVersion`, `Publisher`, install location, display icon, uninstall command, registry hive/view, and `AppsAndFeaturesEntries` from compiled configuration. `UninstallerCommandEvidence` distinguishes the literal ARP `UninstallString` from the valid quoted `/S` invocation. It does not claim that a `QuietUninstallString` value is registered when the runtime does not write one. A complete literal custom uninstall key can supply ARP evidence when built-in registration is disabled. Multiple custom keys remain ambiguous. Compare these values with a VM registry delta for a new route or package.
 
 ### 4. Extract installed payloads
 
-Omitting `-Name` extracts every directly stored installed file. The extractor maps `[Files]` indexes to numbered ZIP entries or one-file cabinets and strips `<InstallDir>` from output paths. Other destination roots are kept under `_destinations`. For Setup EXE + Data media, pass the compiled local 7z file through `-CompanionFile`; the source-directory tree is extracted below the destination without fetching anything from the network.
+Omitting `-Name` extracts every directly stored installed file. The extractor maps `[Files]` indexes to numbered ZIP entries or one-file cabinets and strips `<InstallDir>` from output paths. Other destination roots are kept under `_destinations`. For Setup EXE + Data media, pass the compiled local 7z file through `-CompanionFile`. The source-directory tree is extracted below the destination without fetching anything from the network.
 
 ```powershell
 Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -DestinationPath C:\Path\To\Output -CollisionAction Rename
@@ -60,15 +60,15 @@ Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -CompanionFile C:
 Expand-ActualInstallerInstaller -Path C:\Path\To\Installer.exe -DestinationPath C:\Path\To\Metadata -MetadataEntries -Name '*Uninstall.exe' -CollisionAction Rename
 ```
 
-`-MetadataEntries` exports language, image, and helper entries under `_actual\metadata`; these are not represented as installed files. `GeneratedOutputs` distinguishes duplicate logical rows, helper-backed generated uninstallers/updaters, and unresolved records. Cabinet5 and numbered-ZIP media can install a generated uninstaller as an exact helper copy, as verified by installed-file hashes for builder 5.2, 8.0, and 8.4; normal extraction includes that uninstaller. Generated updater helpers and older routes remain evidence-only until their final bytes are verified.
+`-MetadataEntries` exports language, image, and helper entries under `_actual\metadata`. These are not represented as installed files. `GeneratedOutputs` distinguishes duplicate logical rows, helper-backed generated uninstallers/updaters, and unresolved records. Cabinet5 and numbered-ZIP media can install a generated uninstaller as an exact helper copy, as verified by installed-file hashes for builder 5.2, 8.0, and 8.4. Normal extraction includes that uninstaller. Generated updater helpers and older routes remain evidence-only until their final bytes are verified.
 
 ### 5. Compose switches and modes
 
-Actual Installer is a generic EXE family, so WinGet provides no family defaults. `/S` is the silent switch and `/D "<INSTALLPATH>"` overrides the destination. Use `InstallModes: [interactive, silent]` only when `SetupParameterInfo.AllowsSilent` is true; compiled `-nosilent` policy and a User Information dialog without `-silentinstalluserinfo` remove the silent route. There is no separate source-backed `silentWithProgress` behavior, so set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` while retaining the exact mode list.
+Actual Installer is a generic EXE family, so WinGet provides no family defaults. `/S` is the silent switch and `/D "<INSTALLPATH>"` overrides the destination. Use `InstallModes: [interactive, silent]` only when `SetupParameterInfo.AllowsSilent` is true. Compiled `-nosilent` policy and a User Information dialog without `-silentinstalluserinfo` remove the silent route. There is no separate source-backed `silentWithProgress` behavior, so set both `InstallerSwitches.Silent` and `InstallerSwitches.SilentWithProgress` to `/S` while retaining the exact mode list.
 
 The `/L` switch writes `%TEMP%\AISETUPLOG.TXT` to a fixed location. It neither accepts WinGet's `<LOGPATH>` token nor selects an installation mode, so do not add it as `Interactive`, `Silent`, `SilentWithProgress`, or `Log`.
 
-Exit code `0` is success. `ExitCodeEvidence` contains the complete documented runtime table, including elevation handoff, cancellation, prerequisite, architecture, silent-policy, external-data, and initialization failures. Map nonzero results under `ExpectedReturnCodes` only when the package and tested builder generation exhibit the same behavior; do not add them to `InstallerSuccessCodes`.
+Exit code `0` is success. `ExitCodeEvidence` contains the complete documented runtime table, including elevation handoff, cancellation, prerequisite, architecture, silent-policy, external-data, and initialization failures. Map nonzero results under `ExpectedReturnCodes` only when the package and tested builder generation exhibit the same behavior. Do not add them to `InstallerSuccessCodes`.
 
 ## Manifest shape
 
@@ -96,7 +96,7 @@ Use `AppsAndFeaturesEntries` only when its parsed display identity differs from 
 
 ## Scope and architecture
 
-`x64`/x64-compliance configuration controls the Program Files variant and registry view. `SystemType=0` means the 32-bit layout on both supported OS architectures, `SystemType=1` means 64-bit-only layout, and `SystemType=2` means 32-bit-only layout; unknown numeric enum values remain unresolved. Actual Installer through 9.8 can emit an x86 setup stub for the 64-bit-only route and disable WOW64 redirection at runtime, so the outer PE machine is not layout evidence. Analyze `PayloadArchitectures` and `PayloadDependencyInfo` when installed architecture is needed.
+`x64`/x64-compliance configuration controls the Program Files variant and registry view. `SystemType=0` means the 32-bit layout on both supported OS architectures, `SystemType=1` means 64-bit-only layout, and `SystemType=2` means 32-bit-only layout. Unknown numeric enum values remain unresolved. Actual Installer through 9.8 can emit an x86 setup stub for the 64-bit-only route and disable WOW64 redirection at runtime, so the outer PE machine is not layout evidence. Analyze `PayloadArchitectures` and `PayloadDependencyInfo` when installed architecture is needed.
 
 ## VM validation
 
@@ -105,7 +105,7 @@ Follow [VM validation](../../workflows/vm-validation.md). Test the exact compile
 ## Known examples
 
 - `Softeza.ActualInstaller`
-- Actual Updater Free 5.0 is a separate product built with the same `Zip6Plus` route; the parser recovers `ProductCode={FCB1CDDE-F768-4D43-B1A1-BC019502DBC5}` from its own configuration rather than hardcoding the builder product.
+- Actual Updater Free 5.0 is a separate product built with the same `Zip6Plus` route. The parser recovers `ProductCode={FCB1CDDE-F768-4D43-B1A1-BC019502DBC5}` from the artifact's own configuration without hardcoding the builder product.
 
 ## Source references
 

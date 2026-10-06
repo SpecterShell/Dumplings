@@ -34,6 +34,7 @@ Always open the named task directly and read its current `Config.yaml` and `Scri
 | HTML release-note nodes | `1MHz.Knotes`, `HP.HPCMSL`, `Amazon.AppStream`, `RawTherapee.RawTherapee` | Nested node selection, version boundaries, XPath selection, `Get-TextContent`, and `Format-Text`. |
 | Markdown converted to PowerHTML | `9001.copyparty`, `7zip.7zip`, `Anthropic.ClaudeCode` | Markdig extensions, title-node selection, bounded sibling ranges, and direct following-sibling XPath. |
 | GitHub release body | `qyzhg.Prism`, `1357310795.TboxWebdav`, `7zip.7zip` | Publication time, hard-line-break Markdown conversion, release URL, and removal of download-only text. |
+| Release-body section filtering | `zhangzejing.ThinkReader`, `AnywhereLabs.DSHDesktop`, `ayangweb.BongoCat` | Persistent `$Skip` state for download or verification sections, standalone SHA-256 table exclusion, and separate locale boundaries. |
 | Sparkle metadata | `#Clockify.Clockify`, `#TablePlus.TablePlus`, `Amazon.WorkspacesClient`, `FlorianHeidenreich.Mp3tag` | `pubDate`, `releaseNotesLink`, description content, and publisher-specific date parsing. |
 | Line-oriented release notes | `Cjwdev.ADAccountResetTool`, `FlorianHeidenreich.Mp3tag`, `Bazwise.FolderSizeExplorer` | `StreamReader` for known streams, `StringReader` for decoded text, version boundaries, and deterministic disposal. |
 

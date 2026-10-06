@@ -2,11 +2,11 @@
 
 ## When to use
 
-Use `InstallerType: exe` when the distributed file is a dotNetInstaller bootstrapper. The wrapper selects and runs configured components; the selected nested installer normally owns the visible Apps & Features entry.
+Use `InstallerType: exe` when the distributed file is a dotNetInstaller bootstrapper. The wrapper selects and runs configured components. The selected nested installer normally owns the visible Apps & Features entry.
 
 ## Detection
 
-Run `Test-DotNetInstaller -Path $InstallerFile` for a cheap structural check. A normal packaged result requires a PE with exactly one bounded `CUSTOM/RES_CONFIGURATION` resource whose XML root is `configurations`. `RES_CAB` resources may be absent in configuration-only or online media. For a launcher intentionally driven by `/ConfigFile` or a sidecar `configuration.xml`, use `Test-DotNetInstaller -Path $InstallerFile -ConfigurationPath $ConfigurationFile`; this route additionally requires compiled dotNetInstaller capability evidence so arbitrary PE and XML files are rejected.
+Run `Test-DotNetInstaller -Path $InstallerFile` for a cheap structural check. A normal packaged result requires a PE with exactly one bounded `CUSTOM/RES_CONFIGURATION` resource whose XML root is `configurations`. `RES_CAB` resources may be absent in configuration-only or online media. For a launcher intentionally driven by `/ConfigFile` or a sidecar `configuration.xml`, use `Test-DotNetInstaller -Path $InstallerFile -ConfigurationPath $ConfigurationFile`. This route additionally requires compiled dotNetInstaller capability evidence so arbitrary PE and XML files are rejected.
 
 Read [dotNetInstaller internals](../../internals/dotnetinstaller/overview.md) before changing detection, extraction, resource routing, or command interpretation.
 
@@ -34,7 +34,7 @@ Inspect `FormatGeneration`, `XmlStorageRoute`, `RuntimeCapabilityProfile`, `Runt
 
 Each install configuration can select components by LCID, operating system, processor architecture, installed checks, and authored selection flags. Use `Get-DotNetInstallerNestedMsiSelection -Info $Info -Architecture $Architecture -InstallerLocale $InstallerLocale` to apply the runtime's positive or negated architecture and LCID filters before selecting ProductCode or nested behavior. An `Ambiguous` or `NoMatch` result is unresolved evidence, not permission to choose the first MSI.
 
-`ConfigurationOnly` media and `configuration type="reference"` records can load downloaded or sidecar XML. Pass trusted local copies through `-ReferencedConfigurationPath`; the parser follows only authored references, bounds every document to 16 MiB and the graph to ten levels, detects cycles and schema disagreements, and reports unused supplied files. Missing, ambiguous, cyclic, and incompatible branches remain unresolved. Do not fetch an arbitrary URL from a parser result automatically.
+`ConfigurationOnly` media and `configuration type="reference"` records can load downloaded or sidecar XML. Pass trusted local copies through `-ReferencedConfigurationPath`. The parser follows only authored references, bounds every document to 16 MiB and the graph to ten levels, detects cycles and schema disagreements, and reports unused supplied files. Missing, ambiguous, cyclic, and incompatible branches remain unresolved. Do not fetch an arbitrary URL from a parser result automatically.
 
 ### 3. Identify the executed payload
 
@@ -75,7 +75,7 @@ InstallerSwitches:
   Log: /Log /LogFile "<LOGPATH>"
 ```
 
-Historical launchers can support only `/q`, while intermediate builds can lack `/nosplash` or `/noreboot`. When `/q` is proven but `/qb` is unavailable, keep `InstallModes` at `interactive` and `silent` and copy the composed `/q` command to `InstallerSwitches.SilentWithProgress` so WinGet's default invocation remains unattended. A launcher can accept `/q` while a nested component falls back to its interactive command. Review `DotNetInstaller.Installability.SilentRouteUnproven` and `DotNetInstaller.Installability.BasicRouteUnproven`; omit every unproven end-to-end mode.
+Historical launchers can support only `/q`, while intermediate builds can lack `/nosplash` or `/noreboot`. When `/q` is proven but `/qb` is unavailable, keep `InstallModes` at `interactive` and `silent` and copy the composed `/q` command to `InstallerSwitches.SilentWithProgress` so WinGet's default invocation remains unattended. A launcher can accept `/q` while a nested component falls back to its interactive command. Review `DotNetInstaller.Installability.SilentRouteUnproven` and `DotNetInstaller.Installability.BasicRouteUnproven`. Omit every unproven end-to-end mode.
 
 Do not add `/ComponentArgs "*":"/quiet /norestart"` or another blanket component override. dotNetInstaller already chooses the authored interactive, basic, or silent command for each component. A global override can corrupt non-MSI commands and bypass package-specific arguments.
 

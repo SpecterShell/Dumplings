@@ -66,7 +66,7 @@ Keep all three `InstallModes` values because WinGet does not supply Kachina defa
    $Info = Get-KachinaInfo -Path $InstallerPath
    ```
 
-2. Confirm `FormatGeneration`, `FormatCompatibility`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Diagnostics`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina. Release numbers are not encoded in the container; `FormatCompatibility` reports source-verified bounds for the detected byte layout rather than an exact builder version.
+2. Confirm `FormatGeneration`, `FormatCompatibility`, `ProductCode`, `DisplayName`, `DisplayVersion`, `Publisher`, `Scope`, `DefaultInstallLocation`, `PayloadArchitectures`, `RuntimePackages`, `Diagnostics`, and `UnresolvedFields`. `ProductCode` comes from `regName`, which is the uninstall-key name used by Kachina. Release numbers are not encoded in the container. `FormatCompatibility` reports source-verified bounds for the detected byte layout, not an exact builder version.
 
 3. Inspect `SupportedScopes` and `UacStrategy`. The default path is under `%ProgramFiles%` and is machine scope. `prefer-admin` and `prefer-user` can take a user route only when `-D` selects a writable user path and the process remains unelevated. Do not create a user installer entry until that exact path and switch route passes VM validation.
 
@@ -78,7 +78,7 @@ Keep all three `InstallModes` values because WinGet does not supply Kachina defa
    Expand-KachinaInstaller -Path $InstallerPath -DestinationPath $Destination -Name '*.exe' -CollisionAction Rename
    ```
 
-   Omit `-Name` to extract all installed application files plus the generated updater and uninstaller. `-RawEntries` exports physical TLV records, including patches and appended prerequisite installers, under `_kachina` without executing them. Normal extraction verifies the declared expanded size and then the legacy MD5 or current XXH3-128 digest; an integrity failure removes and rejects the output.
+   Omit `-Name` to extract all installed application files plus the generated updater and uninstaller. `-RawEntries` exports physical TLV records, including patches and appended prerequisite installers, under `_kachina` without executing them. Normal extraction verifies the declared expanded size and then the legacy MD5 or current XXH3-128 digest. An integrity failure removes and rejects the output.
 
 6. Review `PayloadArchitectureInfo` and `DependencyInfo`. The outer Tauri or native-host stub architecture does not replace architecture evidence from the installed main executable and adjacent native DLLs.
 
@@ -92,7 +92,7 @@ Use installer-level `ProductCode: <regName>`. Add `AppsAndFeaturesEntries` only 
 
 ## Scope and architecture
 
-`force` supports only the elevated machine route. `prefer-admin` requests elevation outside recognized user locations. `prefer-user` requests elevation when the target is not writable. Kachina can therefore expose machine and user routes without a dedicated scope switch; the selected `-D` path and UAC outcome determine the hive.
+`force` supports only the elevated machine route. `prefer-admin` requests elevation outside recognized user locations. `prefer-user` requests elevation when the target is not writable. Kachina can therefore expose machine and user routes without a dedicated scope switch. The selected `-D` path and UAC outcome determine the hive.
 
 Use `PayloadArchitectures` for the WinGet architecture. Do not use the outer stub alone, and do not use `neutral` when the package contains binaries.
 
@@ -105,7 +105,7 @@ If `RuntimePackages` is nonempty, validate on a checkpoint without those runtime
 ## Known examples
 
 - AkashaNavigator 1.4.0: current indexed media with a small x64 payload, one HDiff patch record, and downloadable runtime configuration.
-- `babalae.BetterGI` 0.40 and 0.63: current indexed media from different feature periods; 0.63 adds multiple source entries, metadata deletes, ignored paths, and downloadable .NET Desktop Runtime 8 and VC++ 2015+ x64 evidence without changing the container framing.
+- `babalae.BetterGI` 0.40 and 0.63: current indexed media from different feature periods. 0.63 adds multiple source entries, metadata deletes, ignored paths, and downloadable .NET Desktop Runtime 8 and VC++ 2015+ x64 evidence without changing the container framing.
 
 ## Source references
 

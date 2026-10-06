@@ -8,7 +8,7 @@ Locator-based normal installations use the compiled `DisplayName` as the uninsta
 HKCU or HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\<DisplayName>
 ```
 
-The selected scope chooses HKCU or HKLM. Application architecture chooses the 32-bit or 64-bit registry view. Mixed media produces one conditional registration variant per supported scope and application architecture; filename equality is not sufficient to merge them.
+The selected scope chooses HKCU or HKLM. Application architecture chooses the 32-bit or 64-bit registry view. Mixed media produces one conditional registration variant per supported scope and application architecture. Filename equality is not sufficient to merge them.
 
 Portable-only media does not execute this built-in route. User-choice portable media retains the normal registration variants because an ordinary installation remains possible.
 
@@ -16,13 +16,13 @@ Portable-only media does not execute this built-in route. User-choice portable m
 
 Runtime decompilation and controlled installations establish these built-in values: `DisplayName`, `UninstallString`, `NoModify=1`, `NoRepair=1`, `InstallLocation`, `DisplayVersion`, string `VersionMajor`, string `VersionMinor`, `Publisher`, `HelpLink`, `URLInfoUpdate`, `URLInfoAbout`, optional `DisplayIcon`, computed `EstimatedSize`, and runtime `InstallDate`.
 
-`VersionMajor` and `VersionMinor` are the first two dot-separated display-version components without numeric normalization. `DEMO 6.1.2` therefore becomes `DEMO 6` and `1`. The application URL supplies `HelpLink` and `URLInfoUpdate`; when it is empty, locator runtimes fall back to the publisher URL. `URLInfoAbout` uses the publisher URL.
+`VersionMajor` and `VersionMinor` are the first two dot-separated display-version components without numeric normalization. `DEMO 6.1.2` therefore becomes `DEMO 6` and `1`. The application URL supplies `HelpLink` and `URLInfoUpdate`. When it is empty, locator runtimes fall back to the publisher URL. `URLInfoAbout` uses the publisher URL.
 
 `EstimatedSize`, `InstallDate`, and the setup-source `Stub` value depend on runtime state and are named but not guessed. An authored application icon can produce `DisplayIcon`, but its final runtime value is not yet decoded and is omitted rather than fabricated.
 
 ## Uninstall command routes
 
-The installed x86 uninstaller is `UnDeploy.exe`; x64 uses `UnDeploy64.exe`. Mixed media can store `UnDeploy32.exe` and rename it to `UnDeploy.exe` when selected.
+The installed x86 uninstaller is `UnDeploy.exe`. x64 uses `UnDeploy64.exe`. Mixed media can store `UnDeploy32.exe` and rename it to `UnDeploy.exe` when selected.
 
 Header66 and Header70 always leave the executable path unquoted and quote the log path:
 
@@ -40,11 +40,11 @@ A space-free custom destination remains unquoted. This distinction comes from ru
 
 ## Deployment tracking
 
-The runtime writes the deployment-log path to a value named `<DisplayName>` under `Software\JGsoft\DeployIT` in the same hive and registry view as the built-in uninstall key. The adjacent `Stub` value records the setup source path at runtime. If the previous log remains, a reinstall can choose `Deploy2.log`, `Deploy3.log`, or another indexed name; static output reports the base path and identifies the runtime-generated name.
+The runtime writes the deployment-log path to a value named `<DisplayName>` under `Software\JGsoft\DeployIT` in the same hive and registry view as the built-in uninstall key. The adjacent `Stub` value records the setup source path at runtime. If the previous log remains, a reinstall can choose `Deploy2.log`, `Deploy3.log`, or another indexed name. Static output reports the base path and identifies the runtime-generated name.
 
 ## Classic 2.5 registration
 
-Controlled 2.5.3 installation establishes a 32-bit HKLM key whose leaf and ProductCode are the classic package `DisplayName`. The visible `DisplayName` concatenates publisher, package name, and version. The classic route writes only `DisplayName` and `UninstallString` to ARP; it does not write Publisher, DisplayVersion, InstallLocation, NoModify, NoRepair, EstimatedSize, or InstallDate.
+Controlled 2.5.3 installation establishes a 32-bit HKLM key whose leaf and ProductCode are the classic package `DisplayName`. The visible `DisplayName` concatenates publisher, package name, and version. The classic route writes only `DisplayName` and `UninstallString` to ARP. It does not write Publisher, DisplayVersion, InstallLocation, NoModify, NoRepair, EstimatedSize, or InstallDate.
 
 ```text
 %WINDOWS%\UnDeploy.exe "<MachineInstallLocation>\Deploy.log"

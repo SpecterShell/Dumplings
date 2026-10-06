@@ -67,7 +67,7 @@ Physical structure selects the parser route. Branding, project schema, PE versio
 | `CookFS2` | JXplorer 3.3.1.2 and InstallBuilder 7.2.5, 8.2.0, 9.5.5, 16.1.0, 23.1.0, and 26.8.0 research media | `project.xml` remains in the project-owning Metakit VFS | CookFS2 logical files backed by stored, Deflate, BZip2, or source-backed LZMA pages |
 | `ProjectRecord` | Synthetic and incomplete research evidence only | Bounded RFC 1950 project candidate without a readable Metakit catalog | No authoritative payload route |
 
-An executable may contain more than one valid Metakit database. InstallBuilder 8.2.0 builder media has two. The parser selects a database by ownership of the required `project.xml` or `origindist` entry, not by its physical position.
+An executable may contain more than one valid Metakit database. InstallBuilder 8.2.0 builder media has two. The parser selects a database by ownership of the required `project.xml` or `origindist` entry, regardless of its physical position.
 
 The `ProjectRecord` label preserves metadata recovered from a structurally valid project stream when the surrounding VFS cannot be decoded. It is not equivalent to a complete installer parse and must not be used to claim payload extraction.
 

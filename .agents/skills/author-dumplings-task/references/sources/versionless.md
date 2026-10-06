@@ -20,9 +20,9 @@ if ($Result.NeedsMetadata) {
 $this.CompleteInstallerUpdates($Result)
 ```
 
-`CheckInstallerUpdates` prepares `CurrentState`, registers downloads in `InstallerFiles`, and returns a runtime-only result. It never writes state files, sends messages, or submits manifests. It preserves `LastState` and rejects inconsistent versions before applying any candidate. `CompleteInstallerUpdates` belongs to that task instance and is idempotent, including after a partially failed completion. Start a new check explicitly to retry a completed operation; an unfinished check must be completed first.
+`CheckInstallerUpdates` prepares `CurrentState`, registers downloads in `InstallerFiles`, and returns a runtime-only result. It never writes state files, sends messages, or submits manifests. It preserves `LastState` and rejects inconsistent versions before applying any candidate. `CompleteInstallerUpdates` belongs to that task instance and is idempotent, including after a partially failed completion. Start a new check explicitly to retry a completed operation. An unfinished check must be completed first.
 
-The result exposes `Outcome`, `NeedsMetadata`, `Accepted`, `ShouldWrite`, `ShouldMessage`, `ShouldSubmit`, and ordered `Artifacts`. Each artifact contains `Key`, `InstallerIndex`, `Downloaded`, `Path`, `Sha256`, `Version`, and `RealVersion`. `Path` is absent after a fast validator match. The result also carries internal candidate, ownership, and hash evidence; never put the result itself in state.
+The result exposes `Outcome`, `NeedsMetadata`, `Accepted`, `ShouldWrite`, `ShouldMessage`, `ShouldSubmit`, and ordered `Artifacts`. Each artifact contains `Key`, `InstallerIndex`, `Downloaded`, `Path`, `Sha256`, `Version`, and `RealVersion`. `Path` is absent after a fast validator match. The result also carries internal candidate, ownership, and hash evidence. Never put the result itself in state.
 
 | Outcome | Completion |
 | --- | --- |
@@ -35,7 +35,7 @@ The result exposes `Outcome`, `NeedsMetadata`, `Accepted`, `ShouldWrite`, `Shoul
 | `Rollbacked` | Warn and retain accepted state; no publishing unless `AllowRollback = $true`. |
 | `Forced` | Download and read every artifact; use the normal forced publishing gates. |
 
-Every write/message/submission still respects existing task and runner enablement flags. Rebuilds do not set `IgnorePRCheck`; other-author blocking, identical-PR detection, empty-change rejection, and submission claims remain active. A regressed Last-Modified timestamp triggers hash verification, not a version rollback decision.
+Every write/message/submission still respects existing task and runner enablement flags. Rebuilds do not set `IgnorePRCheck`. Other-author blocking, identical-PR detection, empty-change rejection, and submission claims remain active. A regressed Last-Modified timestamp triggers hash verification, not a version rollback decision.
 
 ## Options
 
@@ -53,7 +53,7 @@ Every write/message/submission still respects existing task and runner enablemen
 | `LegacyState` | Explicit legacy mapping described below. |
 | `Probe`, `Download`, `RequestKey` | Custom endpoint callbacks and a required non-secret request identity revision. |
 
-`Auto` tries a configured checksum header, ETag, Last-Modified, Content-Length, then downloaded SHA256. Explicit modes never silently switch to a weaker fast validator: missing, multiple, or malformed values require a download. ETags and checksum values compare exactly, including case. Dates normalize to UTC and lengths to nonnegative integers. Base64 MD5, CRC64, multipart ETags, and other checksum encodings remain opaque; they are never assigned to `InstallerSha256`.
+`Auto` tries a configured checksum header, ETag, Last-Modified, Content-Length, then downloaded SHA256. Explicit modes never silently switch to a weaker fast validator: missing, multiple, or malformed values require a download. ETags and checksum values compare exactly, including case. Dates normalize to UTC and lengths to nonnegative integers. Base64 MD5, CRC64, multipart ETags, and other checksum encodings remain opaque. They are never assigned to `InstallerSha256`.
 
 ```powershell
 $Result = $this.CheckInstallerUpdates(@{
@@ -64,15 +64,15 @@ $Result = $this.CheckInstallerUpdates(@{
 })
 ```
 
-Unchanged dates and lengths do not prove unchanged bytes. Use `Hash` to verify SHA256 every run if the endpoint's validators are unreliable; `-Force` also bypasses all fast checks and version-reader reuse. Successful HTTP status is checked before using headers. Authentication and network failures fail the check; this version sends no conditional HTTP requests.
+Unchanged dates and lengths do not prove unchanged bytes. Use `Hash` to verify SHA256 every run if the endpoint's validators are unreliable. `-Force` also bypasses all fast checks and version-reader reuse. Successful HTTP status is checked before using headers. Authentication and network failures fail the check. The workflow sends no conditional HTTP requests.
 
-Delivery Optimization may complete a valid download without exposing HTTP status; that file can still supply SHA256/version evidence, but no header validator is accepted. For its completed ranged transfers, partial-response Content-Length is excluded from tracking.
+Delivery Optimization may complete a valid download without exposing HTTP status. That file can still supply SHA256/version evidence, but no header validator is accepted. For its completed ranged transfers, partial-response Content-Length is excluded from tracking.
 
 ## Multiple installers and state migration
 
-Every selected installer must resolve to the same `Version` and `RealVersion`. Shared requests download and hash once, but each architecture/scope-specific reader still runs when its bytes or reader change. A staged architecture rollout fails without advancing accepted state. Default keys derive from literal locale, architecture, type, nested type, and scope selectors, excluding URL and list order. Duplicate selectors and query/scriptblock selectors require explicit keys. Changing request settings invalidates fast reuse; differing requests for the same URL are rejected because the existing `InstallerFiles` cache is URL-keyed.
+Every selected installer must resolve to the same `Version` and `RealVersion`. Shared requests download and hash once, but each architecture/scope-specific reader still runs when its bytes or reader change. A staged architecture rollout fails without advancing accepted state. Default keys derive from literal locale, architecture, type, nested type, and scope selectors, excluding URL and list order. Duplicate selectors and query/scriptblock selectors require explicit keys. Changing request settings invalidates fast reuse. Differing requests for the same URL are rejected because the existing `InstallerFiles` cache is URL-keyed.
 
-Migrate old fields only through verified mappings. Specify the old installer index when more than one old entry exists. Legacy state has no request or reader identity, so the first migrated check downloads and reads every artifact even if it has a SHA256. The old hash still distinguishes unchanged bytes from rebuilds; subsequent checks can use the new fast path. Missing hashes or ambiguous associations never establish equivalence. Migration uses an explicit validator, not `Auto`.
+Migrate old fields only through verified mappings. Specify the old installer index when more than one old entry exists. Legacy state has no request or reader identity, so the first migrated check downloads and reads every artifact even if it has a SHA256. The old hash still distinguishes unchanged bytes from rebuilds. Subsequent checks can use the new fast path. Missing hashes or ambiguous associations never establish equivalence. Migration uses an explicit validator, not `Auto`.
 
 ```powershell
 $Result = $this.CheckInstallerUpdates(@{
@@ -85,14 +85,14 @@ $Result = $this.CheckInstallerUpdates(@{
 })
 ```
 
-Accepted evidence is stored under `InstallerTracking.SchemaVersion = 1` and `InstallerTracking.Artifacts`, keyed by artifact identity. Records contain digests of request/source/reader identity, validator kind/name, up to 16 accepted values for the current SHA256, and resolved versions. Changed bytes reset validator history. Only actual download-response validators are added; missing download validators disable subsequent fast reuse. The explicitly mapped old keys are removed only from the candidate state and persisted through normal enabled writes. Do not rewrite `State.yaml` or historical logs during a script migration.
+Accepted evidence is stored under `InstallerTracking.SchemaVersion = 1` and `InstallerTracking.Artifacts`, keyed by artifact identity. Records contain digests of request/source/reader identity, validator kind/name, up to 16 accepted values for the current SHA256, and resolved versions. Changed bytes reset validator history. Only actual download-response validators are added. Missing download validators disable subsequent fast reuse. The explicitly mapped old keys are removed only from the candidate state and persisted through normal enabled writes. Do not rewrite `State.yaml` or historical logs during a script migration.
 
 ## Custom endpoints and ownership
 
-`Probe(Uri, Options)` runs synchronously in the task runspace and must return one `{ StatusCode = 200; Headers = <dictionary>; RequestUri = <final URL> }` record. `Download(Uri, DestinationPath, Options)` returns one `{ Path; OwnsFile; Response }` record, with optional `Response` following the same contract. Prefer writing to the supplied resolved destination. A different returned file is borrowed unless `OwnsFile = $true`; callback-supplied hashes are ignored and computed from the actual file. A callback that throws owns cleanup of any extra paths it created; the workflow removes its supplied destination. `RequestKey` must change when external callback request settings change. Do not embed secrets in keys.
+`Probe(Uri, Options)` runs synchronously in the task runspace and must return one `{ StatusCode = 200; Headers = <dictionary>; RequestUri = <final URL> }` record. `Download(Uri, DestinationPath, Options)` returns one `{ Path; OwnsFile; Response }` record, with optional `Response` following the same contract. Prefer writing to the supplied resolved destination. A different returned file is borrowed unless `OwnsFile = $true`; callback-supplied hashes are ignored and computed from the actual file. A callback that throws owns cleanup of any extra paths it created. The workflow removes its supplied destination. `RequestKey` must change when external callback request settings change. Do not embed secrets in keys.
 
-Never change the installer inside `ReadVersion`, dispose the retained installer yourself, or store credentials, bodies, responses, or paths in task state. Readers may use local temporary extraction directories with `finally` cleanup. Successful downloads stay registered for manifest parsing until `PackageTask.Dispose`; failed checks remove only workflow-owned files. Verified hashes are reused by manifest updating while the file identity still matches, and are recomputed after a detected file change.
+Never change the installer inside `ReadVersion`, dispose the retained installer yourself, or store credentials, bodies, responses, or paths in task state. Readers may use local temporary extraction directories with `finally` cleanup. Successful downloads stay registered for manifest parsing until `PackageTask.Dispose`. Failed checks remove only workflow-owned files. Verified hashes are reused by manifest updating while the file identity still matches, and are recomputed after a detected file change.
 
 ## Examples and remaining migrations
 
-Use `1IC.BPMN-RPAStudio` for MSI/ETag, `AnyDesk.AnyDesk` for Last-Modified, `Ardisk.Ardisk` for Content-Length, `Alibaba.Taobao` and `Bazwise.FolderSizeExplorer` for checksum selection, `ABC.PowerExtension` for GET/user-agent settings, and `Untis.Untis.2026` and `Cjwdev.ADAccountResetTool` for multiple architectures. Keep `Amazon.EC2Launch`'s mutable-to-versioned URL transition bespoke until that behavior is supported explicitly. Inventory candidates with `Utilities/Testing/Get-TaskMechanicsInventory.ps1 -InstallerTracking`; its matches require review and do not authorize bulk migration.
+Use `1IC.BPMN-RPAStudio` for MSI/ETag, `AnyDesk.AnyDesk` for Last-Modified, `Ardisk.Ardisk` for Content-Length, `Alibaba.Taobao` and `Bazwise.FolderSizeExplorer` for checksum selection, `ABC.PowerExtension` for GET/user-agent settings, and `Untis.Untis.2026` and `Cjwdev.ADAccountResetTool` for multiple architectures. Keep `Amazon.EC2Launch`'s mutable-to-versioned URL transition bespoke until that behavior is supported explicitly. Inventory candidates with `Utilities/Testing/Get-TaskMechanicsInventory.ps1 -InstallerTracking`. Its matches require review and do not authorize bulk migration.

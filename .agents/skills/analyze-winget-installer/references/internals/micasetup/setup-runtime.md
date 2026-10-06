@@ -44,4 +44,4 @@ Do not infer silent installation from `CommandLineHelper`, from an option key ap
 
 ## Dynamic boundary
 
-Generated source can add service registrations, callbacks, network operations, downloads, custom pages, arbitrary file generation, and application launch logic. The parser does not execute those methods. Review source when available; otherwise compare before-install, after-install, and after-first-run evidence in a VM.
+Generated source can add service registrations, callbacks, network operations, downloads, custom pages, arbitrary file generation, and application launch logic. The parser does not execute those methods. Review source when available. Otherwise compare before-install, after-install, and after-first-run evidence in a VM.

@@ -11,16 +11,16 @@ Run these module functions with PowerShell 7.4 or later (`pwsh`). PackageModule 
 
 Core loads PackageModule and the PowerShell modules declared in `Preference.yaml` before it runs task scripts. Do not add `Import-Module` calls to `Tasks/*/Script.ps1`.
 
-For an independent repository shell, load the external modules and PackageModule before using the references:
+In a standalone repository shell, load the required external modules and PackageModule.
 
 ```powershell
 Import-Module PowerHTML, powershell-yaml -ErrorAction Stop
 . .\Modules\PackageModule\Index.ps1
 ```
 
-Use `Get-Command <Name> -Syntax` when current command metadata differs from an old task example. Functions may call helpers from other loaded PackageModule files; do not copy their implementations into task scripts or agent commands.
+Use `Get-Command <Name> -Syntax` to check parameters when an old task example differs from current metadata. Functions may depend on other loaded PackageModule files. Reuse them instead of copying their implementations.
 
-Normal imports reuse implementation modules. Use `. .\Modules\PackageModule\Index.ps1 -Reload` only when intentionally reloading changed source in a development shell. Use `Copy-Object` and `Test-ObjectValueEqual` for shared data copying and structural equality; the former WinGet-specific copies of these functions were removed. Copying preserves dates, scriptblocks, explicit nulls and nested empty arrays; it does not clone disposable .NET resources.
+Normal imports reuse implementation modules. During development, reload changed source with `. .\Modules\PackageModule\Index.ps1 -Reload`. Use `Copy-Object` for data copying and `Test-ObjectValueEqual` for structural equality. Copying preserves dates, scriptblocks, explicit nulls, and nested empty arrays. Disposable .NET resources cannot be cloned.
 
 ## Function groups
 
@@ -31,11 +31,11 @@ Normal imports reuse implementation modules. Use `. .\Modules\PackageModule\Inde
 - Read [browser access](references/browser.md) for scoped Playwright leases and detached browser results.
 - Read [external modules](references/external-modules.md) for PowerHTML and powershell-yaml commands.
 
-Read only the groups required by the current operation. Installer-family parser APIs remain in `$analyze-winget-installer`; manifest field rules remain in `$author-winget-manifest`; task lifecycle and source recipes remain in `$author-dumplings-task`.
+Read only the groups needed for the current operation. Use `$analyze-winget-installer` for family-specific parser APIs, `$author-winget-manifest` for manifest fields, and `$author-dumplings-task` for task lifecycle and source recipes.
 
 ## Usage rules
 
-Prefer these shared functions over local download, redirect, encoding, temporary-file, archive, HTML, YAML, feed, or browser implementations. Preserve each helper's ownership and cleanup contract. When a PackageTask downloads an installer explicitly, register the path in `$this.InstallerFiles`; independent callers own their temporary resources unless the function states otherwise.
+Reuse shared helpers and follow their ownership and cleanup contracts. Register PackageTask installer downloads in `$this.InstallerFiles`. Standalone callers own temporary resources unless the function states otherwise.
 
 For versionless package sources, prefer PackageTask's `CheckInstallerUpdates`/`CompleteInstallerUpdates` workflow over composing probes, hashes, and publishing branches yourself. Read the [versionless task contract](../author-dumplings-task/references/sources/versionless.md) for validators, per-entry overrides, callback ownership, and legacy-state mappings. These methods register downloads and retain verified hash evidence automatically.
 

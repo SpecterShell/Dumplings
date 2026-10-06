@@ -8,7 +8,7 @@ This page maps the shipped structures to Dumplings. User-facing parser commands 
 
 `Install4jFormatCatalog.psd1` assigns each generation a launcher, startup-file, content-table, payload, and configuration route. Readers dispatch through route maps rather than checking version thresholds while decoding records.
 
-Markers select a descriptor when present. A complete markerless modern launcher is retained as structural evidence; the parser then decodes its bounded `i4jparams.conf` startup entry and resolves the generation from explicit `install4jVersion` data. The selected descriptor must use the already validated launcher route.
+Markers select a descriptor when present. A complete markerless modern launcher is retained as structural evidence. The parser then decodes its bounded `i4jparams.conf` startup entry and resolves the generation from explicit `install4jVersion` data. The selected descriptor must use the already validated launcher route.
 
 ## Analysis context
 
@@ -34,7 +34,7 @@ Metadata projection and extraction consume that context. Format-independent PE, 
 2. Parse the PE overlay with modern and legacy launcher routes.
 3. Resolve a marker-backed descriptor when possible.
 4. Parse catalog records and startup-file ranges.
-5. Decode `i4jparams.conf`; use its explicit version for a markerless route.
+5. Decode `i4jparams.conf`. Use its explicit version for a markerless route.
 6. Use bounded strings only to identify structurally incomplete media.
 
 PE version strings do not select a generation. A ContentCollector table alone can identify install4j media but does not establish a payload decoder.

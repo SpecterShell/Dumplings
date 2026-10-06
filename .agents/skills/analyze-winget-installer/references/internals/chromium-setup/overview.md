@@ -23,7 +23,7 @@ Accept the family only when the surrounding headers, ranges, counts, and relatio
 
 ## Metadata projection
 
-Project only structured metadata into the shared parser result. The parser does not construct or detect an ARP `ProductCode`; that field remains unresolved for every supported variant.
+Project only structured metadata into the shared parser result. The parser does not construct or detect an ARP `ProductCode`. That field remains unresolved for every supported variant.
 
 ## Bounds and malformed input
 
@@ -35,7 +35,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain warnings or unresolved evidence. Arbitrary strings cannot establish them.
 
 ## Implementation mapping
 

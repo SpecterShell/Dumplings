@@ -33,7 +33,7 @@ Application desktop integration defaults to user scope. `--machine` selects mach
 
 ## Integration categories
 
-Integration removes selected categories before adding categories. `--add-all` includes capabilities, menu, desktop, send-to, aliases, auto-start, and default access points. `--add-standard` includes capabilities, menu, send-to, and aliases. Capability registration includes explicit-only capabilities; default access points exclude them. With no deterministic add/remove category, the runtime opens integration UI and static output cannot claim final associations.
+Integration removes selected categories before adding categories. `--add-all` includes capabilities, menu, desktop, send-to, aliases, auto-start, and default access points. `--add-standard` includes capabilities, menu, send-to, and aliases. Capability registration includes explicit-only capabilities. Default access points exclude them. With no deterministic add/remove category, the runtime opens integration UI and static output cannot claim final associations.
 
 ## Solver and trust
 

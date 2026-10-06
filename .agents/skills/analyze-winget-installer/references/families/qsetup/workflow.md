@@ -25,7 +25,7 @@ Use `SetupDirectives`, `PayloadCatalog`, `RegistryWrites`, `RegistryOperations`,
 
 ### 2. Confirm ARP ownership
 
-QSetup creates its visible uninstall key from the Add/Remove Programs display name, falling back to the program descriptive name when the display-name field is empty. Use `ProductCode` only when `WritesAppsAndFeaturesEntry` is true. Explicit `SET_PERFORM_REGISTRY_OP` uninstall keys override built-in defaults, and `SystemComponent=1` rows remain hidden evidence rather than WinGet-matchable Apps & Features entries. The parser first uses an explicit `SET_UNINSTALL_EXE_NAME`, then an exact compiled uninstall shortcut matching `SET_PROG_STAMP`. If neither exists, the verified QSetup 1–7 formula is `UnInstall_<stamp>.exe` and the VM-proven QSetup 12 formula is `<media>_<stamp>.exe`; a blank name in QSetup 8–11 remains unresolved because no fixture establishes its generation rule. Inspect `Uninstaller.NamingRoute`, `ComposerBuild`, and diagnostics before accepting a generated path.
+QSetup creates its visible uninstall key from the Add/Remove Programs display name, falling back to the program descriptive name when the display-name field is empty. Use `ProductCode` only when `WritesAppsAndFeaturesEntry` is true. Explicit `SET_PERFORM_REGISTRY_OP` uninstall keys override built-in defaults, and `SystemComponent=1` rows remain hidden evidence rather than WinGet-matchable Apps & Features entries. The parser first uses an explicit `SET_UNINSTALL_EXE_NAME`, then an exact compiled uninstall shortcut matching `SET_PROG_STAMP`. If neither exists, the verified QSetup 1-7 formula is `UnInstall_<stamp>.exe` and the VM-proven QSetup 12 formula is `<media>_<stamp>.exe`. A blank name in QSetup 8-11 remains unresolved because no fixture establishes its generation rule. Inspect `Uninstaller.NamingRoute`, `ComposerBuild`, and diagnostics before accepting a generated path.
 
 ```powershell
 $Info.AppsAndFeaturesEntries
@@ -43,7 +43,7 @@ The documented switches are `/hide`, `/silent`, and `/InstallDir="<INSTALLPATH>"
 
 ### 5. Extract installed files
 
-Default extraction follows ordered `SET_SUB_DIR` and `SET_COPY_FILES` directives, removes the physical numeric record prefix, and writes application-root files at their installed relative paths. Files targeting other roots are placed below `_destinations`. For split, non-SFX, or spanned output, pass exact companion files or a containing directory through `-CompanionPath`; the parser does not guess neighboring media.
+Default extraction follows ordered `SET_SUB_DIR` and `SET_COPY_FILES` directives, removes the physical numeric record prefix, and writes application-root files at their installed relative paths. Files targeting other roots are placed below `_destinations`. For split, non-SFX, or spanned output, pass exact companion files or a containing directory through `-CompanionPath`. The parser does not guess neighboring media.
 
 ```powershell
 $Files = Expand-QSetupInstaller -Path $InstallerPath -CompanionPath $CompanionPath -DestinationPath $DestinationPath -CollisionAction Rename
@@ -72,7 +72,7 @@ $Info.UserInteractionOperations
 $Info.ProcessControlOperations
 ```
 
-The parser decodes source-backed eight-field registry and INI records and seven-field XML records. Literal registry creates feed custom ARP and association projection; unsupported roots, types, actions, or malformed field counts become structured diagnostics instead of shifted evidence. It also classifies Execution Engine commands for file associations, registry, INI, environment, architecture state, user interaction, process control, services, COM, fonts, downloads, restarts, nested execution, and filesystem effects. Only unconditional setup-time `Create File Association` actions become authoritative `FileExtensions`; conditional associations remain operation evidence. Conditions retain `ConditionState`, category, and runtime or interaction requirements, so host-dependent predicates still require VM validation.
+The parser decodes source-backed eight-field registry and INI records and seven-field XML records. Literal registry creates feed custom ARP and association projection. Unsupported roots, types, actions, or malformed field counts become structured diagnostics instead of shifted evidence. It also classifies Execution Engine commands for file associations, registry, INI, environment, architecture state, user interaction, process control, services, COM, fonts, downloads, restarts, nested execution, and filesystem effects. Only unconditional setup-time `Create File Association` actions become authoritative `FileExtensions`, while conditional associations remain operation evidence. Conditions retain `ConditionState`, category, and runtime or interaction requirements, so host-dependent predicates still require VM validation.
 
 ### 7. Validate in a VM
 
@@ -100,7 +100,7 @@ Installers:
   InstallerSha256: <SHA256>
 ```
 
-Omit silent modes and switches when `HasUserInformationDialog` is true. Preserve exact case and quoting. Do not add an installer success code from the QSetup Composer’s documented build exit code; that code applies to Composer compilation, not to the generated setup.
+Omit silent modes and switches when `HasUserInformationDialog` is true. Preserve exact case and quoting. Do not add an installer success code from the QSetup Composer’s documented build exit code. That code applies to Composer compilation, not to the generated setup.
 
 ## Apps & Features
 

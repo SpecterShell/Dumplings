@@ -28,7 +28,7 @@ Drupal sites that expose a download listing as a View (look for `"views":{"ajax_
 
 ## Select Full Installer Assets
 
-Do not submit an update-only artifact as the package installer. Reject names or URLs that identify `update`, `updater`, delta, auto-update, patch, or portable artifacts when the package represents the installed desktop application. A portable asset is valid only for an intentionally portable package; an electron-builder portable NSIS executable is not the installable NSIS setup. An updater artifact is valid only when the package itself represents that updater.
+Do not submit an update-only artifact as the package installer. Reject names or URLs that identify `update`, `updater`, delta, auto-update, patch, or portable artifacts when the package represents the installed desktop application. Use portable assets only for portable packages. An electron-builder portable NSIS executable cannot replace the installable setup. An updater artifact is valid only when the package itself represents that updater.
 
 `appmakes.Typora` demonstrates a feed whose `download` fields point to update artifacts. Its task replaces `update` with `setup` for every architecture and locale. `Vivaldi.Vivaldi` replaces `stable-auto` with `stable`. Treat such rewrites as source-specific rules: probe every derived URL, verify its version and architecture, and confirm that it is a full installer before using it.
 
@@ -36,7 +36,7 @@ For release pages with several artifacts, list the candidate names before writin
 
 ## GitHub Releases
 
-Use the authenticated proxy rather than raw GitHub REST calls:
+Use the authenticated GitHub proxy.
 
 ```powershell
 $Release = Invoke-GitHubApi -Uri 'https://api.github.com/repos/owner/repository/releases/latest'
@@ -55,7 +55,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'nullsoft'
   InstallerUrl  = $Release.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'Prism' -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
-# If RelativeFilePath is static across versions, omit RelativeFilePath
+# Omit NestedInstallerFiles when all nested paths and aliases stay unchanged.
 $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'x64'
   InstallerType       = 'zip'
@@ -84,19 +84,23 @@ $this.CurrentState.Installer += [ordered]@{
 }
 ```
 
-Write the repository owner and name directly in each requested URL instead of declaring one-use `$RepoOwner` and `$RepoName` variables. Use `-replace` for tag cleanup. Build each candidate predicate in this order, using only facts present in the real name or URL. GitHub release assets use `name`; objects from `Invoke-WebRequest.Links` use `href`.
+Write the repository owner and name directly in each requested URL. Use `-replace` for tag cleanup. Build each candidate predicate in this order, using only facts present in the real name or URL. GitHub release assets use `name`. Objects from `Invoke-WebRequest.Links` use `href`.
+
+Keep extension, architecture, platform, product, and installer-form checks as separate predicates joined with `-and`. Replace `$_.name.EndsWith('Setup.exe')` with `$_.name.EndsWith('.exe') -and $_.name -match 'Setup'`. Apply the same rule to `href` filters. Combined suffixes or substrings couple independent requirements and can miss valid naming variations.
 
 1. Require the extension with `EndsWith('.exe')`, `EndsWith('.msi')`, or the expected archive suffix. If a page-link URL has query parameters, use `Contains('.exe')` or `Contains('.msi')` against `href` instead.
 2. Require the source architecture token with `.Contains()`, for example `.Contains('x64')` or `.Contains('amd64')`, when one is present. Use it to narrow candidates, but write WinGet `Architecture` only after the installer or payload confirms the architecture.
 3. For archives or other ambiguous extensions than `.exe`, `.msi` and `.msix`, require the Windows platform marker, preserving the source's spelling and casing on the right-hand side, for example `-match 'Windows'`.
-4. Require `Installer`, `Setup`, or another source-specific product-form marker with `-match` when releases contain both installable and non-installable builds, and the installable ones have extensions other than `.msi` and `.msix`. Require `portable` only when authoring the portable package; otherwise exclude it with `-notmatch`.
+4. Require `Installer`, `Setup`, or another source-specific product-form marker with `-match` when releases contain both installable and non-installable builds, and the installable ones have extensions other than `.msi` and `.msix`. Require `portable` only when authoring the portable package. Otherwise exclude it with `-notmatch`.
 5. Prefer the `msvc` build over a GNU build when both are published for Windows.
 6. Exclude unwanted variants such as `debug`, symbols, checksums, deltas, updater packages, and electron-builder portable executables.
 7. Require the product name with `-match` when one release contains assets for several products.
 
 Use `.Contains()` only for literal architecture tokens and extensions in URLs with query parameters. Use `-match` or `-notmatch` for platform, product, installer form, runtime, edition, channel, and other semantic labels. Escape regex metacharacters when a label must remain a literal substring.
 
-Map architecture labels instead of copying source tokens into the manifest:
+Keep task installer entries limited to the selectors and values needed for the update. An omitted `Scope` can match both existing `user` and `machine` entries when they use the same installer asset. Omit unchanged fields such as `NestedInstallerFiles` when its `RelativeFilePath` values and aliases stay constant. Follow [installer entry matching](../manifest/update-contract.md#installer-entry-matching) and [explicit installer overrides](../manifest/update-contract.md#explicit-installer-overrides) for wildcard matching and inherited values.
+
+Map source architecture labels to WinGet values.
 
 | Source labels | WinGet `Architecture` |
 | --- | --- |
@@ -108,9 +112,9 @@ Map architecture labels instead of copying source tokens into the manifest:
 | `win32` | Ambiguous: inspect the installer because publishers may use it for either x86 or x64 Windows software |
 | No binaries | `neutral` only when the package genuinely contains no binary files |
 
-Filename labels select candidates; they do not override binary evidence. Check the PE machine type, MSI/MSIX package metadata, installer-family metadata, and the architecture of the installed or nested primary executable. For an archive, inspect the configured command and its dependent native files. Do not use a bare `.Contains('arm')` predicate when both ARM32 and ARM64 assets exist because it can select either one.
+Use filename labels to select candidates, then verify binary architecture. Check the PE machine type, MSI/MSIX package metadata, installer-family metadata, and the architecture of the installed or nested primary executable. For an archive, inspect the configured command and its dependent native files. Do not use a bare `.Contains('arm')` predicate when both ARM32 and ARM64 assets exist because it can select either one.
 
-`1357310795.TboxWebdav` demonstrates Windows, architecture, and `no-runtime` filters for ZIP assets. `astral-sh.uv` demonstrates translating Rust target triples such as `i686`, `x86_64`, and `aarch64`. `A2-Ai.rv` and `houseabsolute.ubi` add `msvc`; `EpicGames.Lore` adds product-name and debug exclusions. `qyzhg.Prism` requires setup for its EXE and differentiates EXE and MSI assets.
+`1357310795.TboxWebdav` demonstrates Windows, architecture, and `no-runtime` filters for ZIP assets. `astral-sh.uv` demonstrates translating Rust target triples such as `i686`, `x86_64`, and `aarch64`. `A2-Ai.rv` and `houseabsolute.ubi` add `msvc`. `EpicGames.Lore` adds product-name and debug exclusions. `qyzhg.Prism` requires setup for its EXE and differentiates EXE and MSI assets.
 
 `qyzhg.Prism` is the compact example for tag and asset handling. Reuse its GitHub source pattern only: it currently lists both EXE and MSI artifacts, while current authoring policy prefers the direct MSI when an equivalent InstallShield or Advanced Installer wrapper would install the same ARP identity. Parse the release date and release body separately by following [Git-hosted release metadata](../release/html-markdown.md#git-hosted-release-metadata).
 

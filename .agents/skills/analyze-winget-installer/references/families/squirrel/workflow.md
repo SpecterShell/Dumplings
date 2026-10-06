@@ -68,7 +68,7 @@ $Publisher = $InstallerPath | Read-PublisherFromSquirrel
 
 ## Manifest shape
 
-Use the silent-only shape when `LauncherGeneration` is `Squirrel.Windows`, `Clowd.Squirrel.Resource`, or `Clowd.Squirrel.Bundle`. The example below shows Squirrel.Windows; retain the parser's detected family comment for Clowd media:
+Use the silent-only shape when `LauncherGeneration` is `Squirrel.Windows`, `Clowd.Squirrel.Resource`, or `Clowd.Squirrel.Bundle`. The example below shows Squirrel.Windows. Retain the parser's detected family comment for Clowd media:
 
 ```yaml
 Installers:
@@ -110,7 +110,7 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-Do not copy either shape from a `Squirrel/Velopack` fallback result. Its `PackageId` and nuspec metadata identify the embedded package, but they do not prove an outer ARP `ProductCode`, scope, installation root, or command line; those fields require stronger static evidence or VM validation.
+Do not copy either shape from a `Squirrel/Velopack` fallback result. Its `PackageId` and nuspec metadata identify the embedded package, but they do not prove an outer ARP `ProductCode`, scope, installation root, or command line. Those fields require stronger static evidence or VM validation.
 
 ## WinGet defaults and overrides
 
@@ -151,7 +151,7 @@ Treat lifecycle invocation as diagnostic evidence, not an outer installer switch
 
 `Discord.Discord` is a known case where a fresh silent installation can leave Discord unable to complete a later normal launch because the suppressed `--squirrel-firstrun` run did not create all Discord-specific first-run state. Community package validation has reproduced a fatal JavaScript `InconsistentInstallerState` failure and uses the versioned `Discord.exe --squirrel-firstrun` invocation as the recovery/diagnostic route. Test the current Discord build rather than assuming the behavior is fixed or universal.
 
-In the VM, first prove that a normal Discord launch fails after silent setup. Preserve the logs and `AfterInstall` snapshot, invoke the latest installed `app-*\Discord.exe` once with `--squirrel-firstrun`, and then retry a normal launch. Capture the resulting `AfterFirstRun` state. If that sequence fixes launch, report the exact created or modified files from the comparison; do not label them as a version database unless the observed file format or Discord logs prove that identity.
+In the VM, first prove that a normal Discord launch fails after silent setup. Preserve the logs and `AfterInstall` snapshot, invoke the latest installed `app-*\Discord.exe` once with `--squirrel-firstrun`, and then retry a normal launch. Capture the resulting `AfterFirstRun` state. If that sequence fixes launch, report the exact created or modified files from the comparison. Do not label them as a version database unless the observed file format or Discord logs prove that identity.
 
 ## Known examples
 

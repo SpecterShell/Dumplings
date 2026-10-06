@@ -8,7 +8,7 @@ Use `InstallerType: exe # Advanced Installer` when WinGet invokes an Advanced In
 
 ## Detection
 
-Route here when `Get-AdvancedInstallerInfo` succeeds. Strings such as `ADVINSTSFX`, `Advanced Installer`, `aicustact`, or `AI_SETUPEXEPATH` are routing hints only; the parser must validate a complete footer and catalog profile.
+Route here when `Get-AdvancedInstallerInfo` succeeds. Strings such as `ADVINSTSFX`, `Advanced Installer`, `aicustact`, or `AI_SETUPEXEPATH` are routing hints only. The parser must validate a complete footer and catalog profile.
 
 Do not decide the visible Apps & Features type from the presence of an embedded MSI. Advanced Installer EXE packages can expose either MSI ARP entries or EXE-style ARP entries.
 
@@ -41,11 +41,11 @@ Use `Get-AdvancedInstallerFormatInfo -Path $InstallerFile` only for format diagn
 
 `Get-AdvancedInstallerInfo` parses the SFX payload-table selector fields and embedded `GeneralOptions`. For a direct package, Advanced Installer resolves the first main `(1, 0)` MSI entry. For a compressed package, it resolves the main `(3, 7)` archive entry and changes that archive path to `.msi`. `MsiPayloadSelection` exposes the selected paths and `ArchitectureSelectionMode` without executing the bootstrapper.
 
-The outer `$Info` object does not project nested MSI ARP fields. Read `ProductCode`, `UpgradeCode`, `AppsAndFeaturesProductCode`, `AppsAndFeaturesInstallerType`, display metadata, and install-location evidence from `$MsiInfo`. An Advanced Installer package can use an MSI product code internally while the MSI Registry table writes a visible custom EXE ARP key such as `Badge Studio 2.5.1`; `Get-AdvancedInstallerMsiInfo` returns that custom key when the table contains literal evidence.
+The outer `$Info` object does not project nested MSI ARP fields. Read `ProductCode`, `UpgradeCode`, `AppsAndFeaturesProductCode`, `AppsAndFeaturesInstallerType`, display metadata, and install-location evidence from `$MsiInfo`. An Advanced Installer package can use an MSI product code internally while the MSI Registry table writes a visible custom EXE ARP key such as `Badge Studio 2.5.1`. `Get-AdvancedInstallerMsiInfo` returns that custom key when the table contains literal evidence.
 
 `BuilderVersion` on the EXE format result is populated only from an explicit compiled builder-version key. `InstallerBuilderVersion` on the nested MSI is populated only from structured Summary Information such as `CreatingApp: Advanced Installer 10.3`. Do not use the outer PE product version or MSI `ProductVersion` as the Advanced Installer builder version. Generated media does not reliably reveal the Free, Professional, Enterprise, or Architect edition.
 
-`ArchitectureSelectionMode: Wow64Suffix` means `AllPlatforms=true`: the x86 bootstrapper uses its base MSI on an x86 host and inserts `.x64` before the extension when `IsWow64Process` succeeds. An x86 bootstrapper running under ARM64 emulation follows the same `.x64` branch; this does not make its x64 MSI ARM64-compatible. `Get-AdvancedInstallerMsiInfo` validates the selected MSI metadata and rejects that mismatch.
+`ArchitectureSelectionMode: Wow64Suffix` means `AllPlatforms=true`: the x86 bootstrapper uses its base MSI on an x86 host and inserts `.x64` before the extension when `IsWow64Process` succeeds. An x86 bootstrapper running under ARM64 emulation follows the same `.x64` branch. This does not make its x64 MSI ARM64-compatible. `Get-AdvancedInstallerMsiInfo` validates the selected MSI metadata and rejects that mismatch.
 
 `ArchitectureSelectionMode: FixedPath` means the bootstrapper does not branch by host architecture. The same base path may contain an x86, x64, or ARM64 MSI, so do not infer architecture from the EXE stub or filename. For example, `FxSound.FxSound` uses one `AllPlatforms` EXE containing x86 and x64 MSIs and a separate fixed-path EXE containing `fxsound.arm64.msi`.
 
@@ -57,7 +57,7 @@ Always pass the concrete manifest architecture. `Get-AdvancedInstallerMsiInfo` f
 
 If the publisher also serves a direct MSI, parse it once with `Get-MsiInstallerInfo -Path` and compare it with `$MsiInfo`. Prefer only the direct MSI when its product code, upgrade code, version, architecture, scope, and visible ARP evidence match the wrapper-selected payload. Retain the EXE only when `GeneralOptions`, payload selection, prerequisites, transforms, or custom ARP evidence proves that the wrapper changes the installation. See [Choose between EXE and MSI](../../../../author-winget-manifest/references/package/artifact-selection.md#choose-between-exe-and-msi).
 
-Read `$Info.PrerequisitePayloads` for physical embedded prerequisite evidence and `$MsiInfo.Prerequisites` for the selected MSI's prerequisite URLs, hashes, command lines, force-install flags, compression, and exact condition-linked searches. `MissingConditionAnalysis` parses the authored MSI expression and defaults unresolved properties to `Unknown`; pass `-PrerequisiteProperty`, `-KnownPresentPrerequisiteProperty`, or `-KnownAbsentPrerequisiteProperty` only for reviewed target-state scenarios. Analyze each child installer separately before treating its silent command line or elevation behavior as valid.
+Read `$Info.PrerequisitePayloads` for physical embedded prerequisite evidence and `$MsiInfo.Prerequisites` for the selected MSI's prerequisite URLs, hashes, command lines, force-install flags, compression, and exact condition-linked searches. `MissingConditionAnalysis` parses the authored MSI expression and defaults unresolved properties to `Unknown`. Pass `-PrerequisiteProperty`, `-KnownPresentPrerequisiteProperty`, or `-KnownAbsentPrerequisiteProperty` only for reviewed target-state scenarios. Analyze each child installer separately before treating its silent command line or elevation behavior as valid.
 
 ### Resolve the visible apps & features entry
 

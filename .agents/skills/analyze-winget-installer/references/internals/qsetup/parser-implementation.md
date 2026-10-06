@@ -32,7 +32,7 @@ The parser never guesses adjacent files by wildcard. Missing parts, duplicate na
 
 ## Extraction
 
-Default extraction follows the installed payload catalog, removes numeric physical prefixes, and writes paths relative to the application root. Other deterministic roots are isolated below `_destinations`; unresolved destinations go below `_unresolved`. `-RawRecords` exports physical records below `_qsetup\records` without following a nested wrapper.
+Default extraction follows the installed payload catalog, removes numeric physical prefixes, and writes paths relative to the application root. Other deterministic roots are isolated below `_destinations`, and unresolved destinations go below `_unresolved`. `-RawRecords` exports physical records below `_qsetup\records` without following a nested wrapper.
 
 Omitted `Name` means every mapped installed file. Selection accepts installed path or leaf name. Source and destination paths are resolved before managed I/O. Shared collision handling prompts only when a conflict occurs; internal calls use `Rename`.
 

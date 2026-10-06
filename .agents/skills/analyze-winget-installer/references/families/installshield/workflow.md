@@ -11,7 +11,7 @@ Route here when `Get-InstallShieldInfo` succeeds, static strings contain `Instal
 
 Classify the variant before writing manifest fields. The presence of an MSI is not sufficient by itself because Advanced UI and Suite/Advanced UI can carry MSI parcels:
 
-- Basic MSI: the selected MSI is InstallShield-authored but lacks the InstallScript MSI runtime verifier/tables. A Basic MSI may still contain individual compiled InstallScript custom actions in `Binary.ISSetup.dll`; those actions do not change the project type.
+- Basic MSI: the selected MSI is InstallShield-authored but lacks the InstallScript MSI runtime verifier/tables. A Basic MSI may still contain individual compiled InstallScript custom actions in `Binary.ISSetup.dll`. Those actions do not change the project type.
 - InstallScript MSI: the selected MSI contains `ISInstallScriptAction`, `ISScriptFile`, `ISInstallScript*`, or `ISVerifyScriptingRuntime` evidence.
 - InstallScript-only: no MSI payload; often requires response-file replay.
 - Advanced UI or Suite/Advanced UI: extracted `Setup.xml` uses the `installshield/<year>/bootstrap` namespace and contains `ARPInfo`/`Parcels`.

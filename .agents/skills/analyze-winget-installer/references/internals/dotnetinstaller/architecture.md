@@ -24,7 +24,7 @@ Keep the outer application version, configuration schema, configuration and comp
 
 ## Configuration and component selection
 
-The root can contain several install configurations and reference configurations. Locale, OS, processor architecture, and authored selection attributes narrow the graph. Required components can still have state-dependent installed checks. Optional controls can change selection interactively. Static analysis returns every route plus filter evidence; it does not choose a route from the analysis host's locale or architecture.
+The root can contain several install configurations and reference configurations. Locale, OS, processor architecture, and authored selection attributes narrow the graph. Required components can still have state-dependent installed checks. Optional controls can change selection interactively. Static analysis returns every route plus filter evidence. It does not choose a route from the analysis host's locale or architecture.
 
 Reference configurations are separate documents loaded to a maximum depth of ten. The parser accepts only caller-supplied trusted copies, resolves the authored filename deterministically, detects cycles, and preserves document provenance.
 

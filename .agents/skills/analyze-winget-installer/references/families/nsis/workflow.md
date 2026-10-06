@@ -13,12 +13,12 @@ Use `Get-NSISFormatInfo -Path <installer>` when edition or serialized-format evi
 
 For NSIS, the simplest wrapper test is whether the outer installer writes uninstall registry values. `Get-NSISInfo` reports only explicit uninstall registry writes recovered from the compiled script, not arbitrary version-string probing. If `WritesAppsAndFeaturesEntry` is false or nested installer payloads exist, inspect the payload or use VM ARP deltas.
 
-Run content-based family detection before calling `Get-NSISInfo` directly. The strict parser throws when the file is not NSIS; this is a type-mismatch result rather than partial metadata failure. `Get-WinGetInstallerAnalysis` handles candidate rejection and should be the first entry point for an unknown EXE.
+Run content-based family detection before calling `Get-NSISInfo` directly. The strict parser throws when the file is not NSIS. This is a type-mismatch result rather than partial metadata failure. `Get-WinGetInstallerAnalysis` handles candidate rejection and should be the first entry point for an unknown EXE.
 
 ## Static analysis
-1. Parse once with `Get-NSISInfo` and determine visible ARP ownership through [NSIS analysis](analysis.md). Reuse `ParserVersionInfo`; do not call `Get-NSISFormatInfo` for the same file unless only format evidence was requested.
+1. Parse once with `Get-NSISInfo` and determine visible ARP ownership through [NSIS analysis](analysis.md). Reuse `ParserVersionInfo`. Do not call `Get-NSISFormatInfo` for the same file unless only format evidence was requested.
 2. Select the matching [manifest shape](manifest-shapes.md).
-3. If Test-ElectronBuilder succeeds, inspect [electron-builder feeds](electron-builder.md).
+3. If `Test-ElectronBuilder` succeeds, inspect [electron-builder feeds](electron-builder.md).
 4. Resolve architecture, scope, and silent behavior through [Scope and silent behavior](scope-and-silent.md).
 5. Read [NSIS internals](../../internals/nsis/overview.md) only when implementing or debugging the parser.
 
@@ -41,11 +41,9 @@ WinGet populates missing switch fields independently for `InstallerType: nullsof
 
 With the standard behavior, the effective install modes are `interactive`, `silent`, and `silentWithProgress`. Both silent modes use `/S`, so `silentWithProgress` does not imply that an NSIS installer displays progress.
 
-Apply these omission and override rules:
-
 - Omit `InstallModes` when the installer supports the standard three modes. If it supports a different set, write the complete supported array explicitly.
 - Remove each `InstallerSwitches` child whose complete value is identical to the WinGet default. Missing children are populated independently, so retaining one custom child does not require copying the default children.
-- If the installer needs a different value, explicitly write the complete replacement for that child. WinGet replaces that field; it does not merge command-line tokens with the default value.
+- If the installer needs a different value, explicitly write the complete replacement for that child. WinGet replaces that field. It does not merge command-line tokens with the default value.
 - Keep additional mode-independent arguments in `InstallerSwitches.Custom`, including scope selection and post-install launch suppression.
 - Add `Log` only when the installer implements a verified logging switch. Nullsoft has no WinGet default for it.
 - Do not add `Silent: /S`, `SilentWithProgress: /S`, or `InstallLocation: /D=<INSTALLPATH>` merely to document NSIS defaults.

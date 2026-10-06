@@ -21,13 +21,11 @@ InstallShield coverage is compositional. A setup is understood only when each ph
 
 Runtime resources, structured `EngineVersion`, MSI Summary Information, Advanced UI namespaces, and structured `.ism` schemas can identify a release. Schema coverage intentionally has gaps where no official project has established a value. An unmapped schema is returned as evidence rather than assigned to the nearest year.
 
-Exact commercial editions such as Premier, Professional, Express, or Standalone Build usually do not survive in shipped media. The installation model and runtime release are useful; guessing the purchased SKU is not.
+Exact commercial editions such as Premier, Professional, Express, or Standalone Build usually do not survive in shipped media. The installation model and runtime release are useful. Guessing the purchased SKU is not.
 
 ## InstallScript semantic coverage
 
 The bounded interpreter follows source-backed assignments, arithmetic, calls, branches, handlers, references, selected registry and shell APIs, process and file operations, response-backed dialogs, and MaintenanceStart defaults. It does not invoke imported code.
-
-The remaining semantic gaps are:
 
 - Old INS is sequential, so an action whose source-backed framing table marks it as generation-dependent stops the affected event rather than allowing a guessed resynchronization. The archived InstallShield 5 Professional setup decodes all 4,510 actions without taking this fallback.
 - Native DLL exports, COM objects, runtime properties, and target-state queries can change control flow or system effects. Those paths require inspection of the dependency or VM validation.
@@ -47,7 +45,7 @@ The highest-value additions are controlled builder fixtures at structural transi
 
 The archived InstallShield 5 Professional distribution grounds the pre-digest descriptor, single-file catalog, legacy compression, old INS, and runtime-stub transitions. The archived InstallShield Professional 6.10 media grounds uppercase external-media discovery, the family-1 ANSI catalog, numbered-volume resolution, selected payload extraction, and a complete aLuZ program while demonstrating that old optional descriptor fields must not be interpreted through the modern registry/shell layout. The InstallShield 8 item contains `ISScript.zip` rather than a complete builder and is therefore useful for runtime and custom-action comparison, not controlled project generation. The cached 2012 Spring and 2013 distributions ground the point-release and year-only Advanced UI namespace forms. The 2014 and 2015 distributions remain optional controlled-builder sources for matched outputs when a new structural difference is observed; marketing-year coverage alone does not justify adding fixtures.
 
-Internet Archive items are community-uploaded fixture sources, not authoritative format specifications. Verify downloaded hashes, signatures, PE/MSI metadata, and generated output against source-backed structures. Cache only builder inputs and minimal generated fixtures needed by tests; exclude license keys, cracks, activation utilities, and unrelated archive contents.
+Internet Archive items are community-uploaded fixture sources, not authoritative format specifications. Verify downloaded hashes, signatures, PE/MSI metadata, and generated output against source-backed structures. Cache only builder inputs and minimal generated fixtures needed by tests. Exclude license keys, cracks, activation utilities, and unrelated archive contents.
 
 ## Sources
 

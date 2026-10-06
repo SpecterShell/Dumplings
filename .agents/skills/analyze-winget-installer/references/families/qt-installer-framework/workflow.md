@@ -30,14 +30,12 @@ $Format.Diagnostics
 
 The parser then reads the PE optional-header subsystem. `WindowsCui` identifies the CLI/headless launcher and `WindowsGui` identifies the GUI launcher. It scans only the executable prefix before appended IFW resources for source-backed CLI option and command markers as corroborating evidence or as a fallback for malformed test fixtures.
 
-Interpret the result as follows:
-
 | Result | Meaning |
 | --- | --- |
 | `InterfaceVariant: CLI`, `CommandLineInterface: Enabled` | Silent CLI is available. |
 | `InterfaceVariant: CLI`, `CommandLineInterface: Disabled` | CLI code exists, but `<DisableCommandLineInterface>true</DisableCommandLineInterface>` disables it. |
-| `InterfaceVariant: GUI`, `CommandLineInterface: Unavailable` | GUI-only launcher; no WinGet-compatible silent installation. |
-| `InterfaceVariant: Unknown` | Partial/ambiguous evidence; validate manually. |
+| `InterfaceVariant: GUI`, `CommandLineInterface: Unavailable` | GUI-only launcher with no WinGet-compatible silent installation. |
+| `InterfaceVariant: Unknown` | Partial/ambiguous evidence. Validate manually. |
 
 Do not infer CLI support merely from Qt IFW cookies, `installerbase`, maintenance-tool strings, or the existence of generic command-line options.
 
@@ -90,9 +88,9 @@ $Info.JavaScriptAnalysisInstructions
 
 `RawJavaScript` is the complete decoded controller or component script and is the primary evidence. Read it verbatim. `VariableAssignments` is an assignment-site index that preserves each variable name, declaration kind, line, right-hand expression, resolution state, value, value type, and resolution source. It deliberately does not collapse repeated assignments into one supposed final value.
 
-`IsResolved: true` means the right-hand value at that assignment site is statically known; it does not prove the branch executes or that the value becomes the variable's final runtime state. The parser resolves quoted literals, numbers, booleans, null, direct references to earlier resolved assignments, and one-argument `installer.value()` or `component.value()` calls backed by `KnownInstallerValues`. Calls into the host, concatenation, runtime state, branch-dependent expressions, and other JavaScript remain unresolved with the original expression intact.
+`IsResolved: true` means the right-hand value at that assignment site is statically known. It does not prove the branch executes or that the value becomes the variable's final runtime state. The parser resolves quoted literals, numbers, booleans, null, direct references to earlier resolved assignments, and one-argument `installer.value()` or `component.value()` calls backed by `KnownInstallerValues`. Calls into the host, concatenation, runtime state, branch-dependent expressions, and other JavaScript remain unresolved with the original expression intact.
 
-Follow `JavaScriptAnalysisInstructions`: trace `Controller`, `Component`, prototype callbacks, page callbacks, `beginInstallation`, `createOperations*`, `installer.setValue`, `component.setValue`, package selection, downloadable archives, and operation calls. Evaluate user/machine scope, elevation, architecture, CLI/GUI mode, installer role, and online/offline branches separately. Never execute returned JavaScript on the host; use the VM when manifest-critical behavior depends on environment, registry, filesystem, network, GUI, user input, dynamic property access, `eval`, or another unresolved call.
+Follow `JavaScriptAnalysisInstructions`: trace `Controller`, `Component`, prototype callbacks, page callbacks, `beginInstallation`, `createOperations*`, `installer.setValue`, `component.setValue`, package selection, downloadable archives, and operation calls. Evaluate user/machine scope, elevation, architecture, CLI/GUI mode, installer role, and online/offline branches separately. Never execute returned JavaScript on the host. Use the VM when manifest-critical behavior depends on environment, registry, filesystem, network, GUI, user input, dynamic property access, `eval`, or another unresolved call.
 
 Use the same result to classify the command-line interface and install-location behavior:
 
@@ -111,7 +109,7 @@ The CLI uses `--root` when supplied and otherwise falls back to config `<TargetD
 
 When `RequiresExplicitInstallLocation` is false, omit `--root` from the ordinary silent switches and expose it as the optional `InstallLocation` switch instead.
 
-The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence. `FrameworkVersion` identifies Qt IFW itself; it is not the packaged application's `PackageVersion`.
+The parser reads IFW binary-content trailers and RCC metadata without execution. It maps config `<Name>`, `<Version>`, `<Publisher>`, and `<ProductUUID>` to manifest-authoring evidence. `FrameworkVersion` identifies Qt IFW itself. It is not the packaged application's `PackageVersion`.
 
 Use `PayloadAvailability` with `PayloadAvailabilityEvidence`, `PackageMetadata`, and `RepositoryUrls` rather than treating every archive-free binary as an online installer:
 
@@ -135,23 +133,23 @@ $ExpandedPath = Expand-QtInstallerFramework -Path $InstallerFile -PackagePath $D
 
 Qt IFW package archives can be TAR, TAR+gzip, TAR+bzip2, TAR+xz, ZIP, 7z, or QBSP. QBSP is physically 7z. The extractor handles each source-supported format directly and validates selected-entry paths, links, collisions, entry counts, expanded sizes, and total output before writing.
 
-Maintenance media can contain performed-operation XML. `Operations` retains each decoded argument/value envelope and its raw XML, while `OperationEffects`, `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects` provide static projections of built-in Qt IFW operations. Read `Diagnostics` and an operation's `RawXml` when its name is unknown or it launches another process. These projections describe operations already serialized into the media; they do not replace reviewing controller/component JavaScript that conditionally adds operations at runtime.
+Maintenance media can contain performed-operation XML. `Operations` retains each decoded argument/value envelope and its raw XML, while `OperationEffects`, `FileSystemEffects`, `RegistryWrites`, `ShortcutEffects`, `EnvironmentEffects`, and `ExecutionEffects` provide static projections of built-in Qt IFW operations. Read `Diagnostics` and an operation's `RawXml` when its name is unknown or it launches another process. These projections describe operations already serialized into the media. They do not replace reviewing controller/component JavaScript that conditionally adds operations at runtime.
 
 `FileExtensions`, `Protocols`, `FileAssociationEffects`, and `ProtocolEffects` are derived only from explicit registry-write evidence such as `RegisterFileType` or `GlobalConfig`. Do not infer missing associations from package names or payload extensions. `AppsAndFeaturesEffects` reconstructs Qt IFW's separate maintenance-tool registration from installer configuration and source-defined runtime behavior.
 
 ### Resolve product UUID and visible ARP identity
 
-Qt IFW 1.x uses `ProductName` as the Windows uninstall key. Qt IFW 2.0 and later use `ProductUUID`; if no UUID is embedded, IFW generates one at installation time and stores it in maintenance configuration. Do not invent a modern `ProductCode`; prefer name/publisher matching or VM ARP validation.
+Qt IFW 1.x uses `ProductName` as the Windows uninstall key. Qt IFW 2.0 and later use `ProductUUID`; if no UUID is embedded, IFW generates one at installation time and stores it in maintenance configuration. Do not invent a modern `ProductCode`. Prefer name/publisher matching or VM ARP validation.
 
 ### Determine upgrade behavior
 
 Standard IFW installers do not overwrite an existing IFW installation in the same target directory. `PackageManagerCore::installationAllowedToDirectory` rejects the target when `<MaintenanceToolName>.exe` exists. Use `UpgradeBehavior: uninstallPrevious` so WinGet removes the previous installation first. Use `deny` instead only when the package intentionally does not support WinGet upgrades.
 
-The individual `Test-*` and `Read-*FromQtInstallerFramework` functions remain available for callers that need one isolated value. Do not use them after `Get-QtInstallerFrameworkInfo`; each helper starts a separate parser operation.
+The individual `Test-*` and `Read-*FromQtInstallerFramework` functions remain available for callers that need one isolated value. Do not use them after `Get-QtInstallerFrameworkInfo`. Each helper starts a separate parser operation.
 
 ### Determine scope and installed architecture
 
-IFW writes HKLM only when `AllUsers=true`; otherwise it writes HKCU. CLI-enabled installers can accept `AllUsers=true` or `AllUsers=false` as user arguments, so the parser reports both scopes only when the command-line interface is enabled. GUI-only or CLI-disabled installers report only their configured default scope.
+IFW writes HKLM only when `AllUsers=true`. Otherwise it writes HKCU. CLI-enabled installers can accept `AllUsers=true` or `AllUsers=false` as user arguments, so the parser reports both scopes only when the command-line interface is enabled. GUI-only or CLI-disabled installers report only their configured default scope.
 
 When duplicating CLI-enabled user/machine entries, keep `Scope` and the corresponding `AllUsers` custom value on each installer entry.
 

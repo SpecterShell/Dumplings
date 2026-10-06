@@ -11,7 +11,7 @@ Run Dumplings module commands and task validation with PowerShell 7.4 or later (
 
 ## Workflow
 
-1. Confirm the package with `winget search`; Dumplings updates an existing manifest rather than authoring its first version.
+1. Confirm the existing package with `winget search`. Have its first manifest version accepted before adding automation.
 2. Read [Task lifecycle](references/task/lifecycle.md), [state, versions, and cache](references/task/state-version-cache.md), and [dependencies and providers](references/task/dependencies-and-providers.md).
 3. Read the [manifest update contract](references/manifest/update-contract.md) before selecting installers, locales, queries, or replace mode.
 4. Select the relevant source workflow: [source selection](references/sources/selection.md), [pages and releases](references/sources/pages-and-releases.md), [update feeds](references/sources/update-feeds.md), [wrappers and providers](references/sources/wrappers-and-providers.md), or [versionless sources](references/sources/versionless.md).
@@ -20,23 +20,25 @@ Run Dumplings module commands and task validation with PowerShell 7.4 or later (
 7. Find current examples in the [task example index](references/example-index.md). Open each named task directly and verify its assumptions.
 8. Persist large records through [Transient evidence](../analyze-winget-installer/references/workflows/evidence.md).
 
-Start manifest feedback early. As soon as the task can produce the required version and installer state, run a dry submission and inspect the generated manifests under `Outputs/WinGet`. Repeat the dry run after installer parsing, locale projection, or release-metadata changes instead of waiting until the task is otherwise finished. Keep these changes in `CurrentState` and the manifest update pipeline; do not edit winget-pkgs YAML from `Script.ps1`.
+Run a dry submission once the task produces the required version and installer state. Inspect the manifests under `Outputs/WinGet` and repeat after parsing, locale, or release-metadata changes. Apply changes through `CurrentState` and the manifest pipeline. Do not edit winget-pkgs YAML from `Script.ps1`.
 
 ## Design rules
 
-Keep package-specific discovery in `Script.ps1`; keep reusable mechanics in PackageModule. Create a shared provider when at least three tasks fetch the same source and declare every dependency in `Config.yaml`.
+Keep package-specific discovery in `Script.ps1` and reusable mechanics in PackageModule. Create a shared provider when at least three tasks fetch the same source. Declare every dependency in `Config.yaml`.
 
 Populate the current version and installer URLs before calling `Check()` once. For versionless installers, use `CheckInstallerUpdates` and `CompleteInstallerUpdates` instead of handwritten probe/hash/state branches. Keep required installer downloads and `RealVersion` parsing outside recoverable `try`/`catch` blocks. Isolate optional release metadata sources in separate `try`/`catch` blocks.
 
-Select full installers, not updater, delta, or electron-builder portable artifacts. Require unambiguous asset filters and verify architecture from package or binary evidence. Cache reused downloads in `$this.InstallerFiles`.
+Select full installers. Exclude updater, delta, and electron-builder portable artifacts. Use unambiguous asset filters and verify architecture from package or binary evidence. Cache reused downloads in `$this.InstallerFiles`.
 
 Let manifest generation download, classify, hash, and parse installers. Do not copy legacy individual `Read-Product*` sequences into new tasks. External `7z.exe` extraction is a task-local last resort for an unsupported custom wrapper and must never become parser or CI infrastructure.
 
-Use response validators only when no official page, feed, API, redirect, or browser source exposes the version. Prefer checksum/hash headers, then `ETag`, `Last-Modified`, and `Content-Length`, and confirm changed content with SHA256. Do not derive `ReleaseTime` from `Last-Modified`; the framework handles that fallback.
+Use response validators only when official pages, feeds, APIs, redirects, and browser access cannot expose the version. Prefer checksum/hash headers, then `ETag`, `Last-Modified`, and `Content-Length`. Confirm changed content with SHA256. Leave the `Last-Modified` fallback for `ReleaseTime` to the framework.
 
 Set `ReleaseNotesUrl` only to a human-readable HTTP(S), text, or Markdown source. An API, JSON response, XML appcast, or other machine feed may supply content but not the public URL.
 
 Never execute an installer on the host. Use `$analyze-winget-installer` for static parsing and its VM workflow for unresolved behavior.
+
+If host or VM security software flags an executable as a virus or malware, stop work on the affected package and warn the user. Follow [Stop on malware alerts](../analyze-winget-installer/references/workflows/installer-analysis.md#stop-on-malware-alerts).
 
 ## Validation
 

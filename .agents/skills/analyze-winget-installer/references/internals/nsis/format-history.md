@@ -32,7 +32,7 @@ These shifts affect every encoded variable reference. Treating an early stream a
 
 ## Official NSIS 3
 
-NSIS 3 introduced a new string-control encoding and supports ANSI and Unicode targets. Current official source supplies x86 ANSI, x86 Unicode, AMD64 Unicode, and ARM64 Unicode stubs. The executable target affects pointer size and PE machine; the serialized command record remains the standard 28-byte form.
+NSIS 3 introduced a new string-control encoding and supports ANSI and Unicode targets. Current official source supplies x86 ANSI, x86 Unicode, AMD64 Unicode, and ARM64 Unicode stubs. The executable target affects pointer size and PE machine. The serialized command record remains the standard 28-byte form.
 
 The NSIS 3 control codes are:
 

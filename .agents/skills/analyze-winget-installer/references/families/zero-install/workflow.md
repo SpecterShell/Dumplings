@@ -10,7 +10,7 @@ The generic `0install.exe` and `zero-install.exe` launchers belong to this binar
 
 Route here when `Test-ZeroInstallInstaller` or `Get-ZeroInstallInfo` succeeds. Structural detection requires a valid managed PE, a source-backed Zero Install bootstrapper CLR type, and either exactly one supported embedded configuration resource or the legacy 2.11.0–2.11.5 generic-bootstrapper type profile. Supported resources are `ZeroInstall.EmbeddedConfig.txt`, `ZeroInstall.config.ini`, and `ZeroInstall.BootstrapConfig.ini`. Product strings and command-line markers are hints only.
 
-The three resource names cover eight source-backed layouts from Zero Install 2.11.6 onward; the no-resource legacy profile covers the generic deployment bootstrapper introduced in 2.11.0. Read [Zero Install parser internals](../../internals/zero-install/overview.md) before changing the generation catalog, feature boundaries, resource parsing, or ARP projection.
+The three resource names cover eight source-backed layouts from Zero Install 2.11.6 onward. The no-resource legacy profile covers the generic deployment bootstrapper introduced in 2.11.0. Read [Zero Install parser internals](../../internals/zero-install/overview.md) before changing the generation catalog, feature boundaries, resource parsing, or ARP projection.
 
 ## Static analysis
 
@@ -23,7 +23,7 @@ $Info = Get-ZeroInstallInfo -Path $InstallerPath
 $Info | Select-Object FormatGeneration, RuntimeVersion, ConfigurationResourceName, ConfigurationSource, AppUri, AppName, ProductCode, Scope, SupportedScopes, InstallModes, InstallerSwitches, WritesAppsAndFeaturesEntry
 ```
 
-Reuse `$Info`; do not call the individual `Read-*FromZeroInstall` functions after `Get-ZeroInstallInfo` has parsed the same file. `FormatGeneration` identifies the physical configuration layout. Runtime features are gated separately by `RuntimeVersion` because several layouts span behavior changes.
+Reuse `$Info`. Do not call the individual `Read-*FromZeroInstall` functions after `Get-ZeroInstallInfo` has parsed the same file. `FormatGeneration` identifies the physical configuration layout. Runtime features are gated separately by `RuntimeVersion` because several layouts span behavior changes.
 
 ### 2. Preserve the runtime configuration precedence
 
@@ -55,7 +55,7 @@ $Info.FeedInfo.ApplicableImplementations | Select-Object Kind, Id, Version, Arch
 
 The feed must be a namespaced `<interface>` document. The parser applies nearest-value group inheritance, accumulates requirements, restrictions, bindings, and commands from the implementation outward through its ancestor groups, resolves relative references through inherited `xml:base`, and preserves retrieval recipes in execution order. It also projects localized metadata, entry points, command arguments and runners, and legacy or explicit manifest digests. Unknown recipe steps produce a structured extraction diagnostic instead of being discarded.
 
-`Get-ZeroInstallInfo` passes the bootstrapper's `RuntimeVersion` into feed conversion. Every projected element retains its raw `if-0install-version` expression and receives `AppliesToRuntime`; the corresponding `Applicable*` collections exclude records rejected by the same exact, exclusion, inclusive-lower/exclusive-upper, and union range grammar used by Zero Install. A direct `ConvertFrom-ZeroInstallFeed` call without `-RuntimeVersion` keeps conditional records as potentially applicable and leaves their applicability unresolved. These collections reproduce version filtering only. They do not select an implementation because the Zero Install solver also considers platform, requirements, stability policy, rollout percentage, and local preferences.
+`Get-ZeroInstallInfo` passes the bootstrapper's `RuntimeVersion` into feed conversion. Every projected element retains its raw `if-0install-version` expression and receives `AppliesToRuntime`. The corresponding `Applicable*` collections exclude records rejected by the same exact, exclusion, inclusive-lower/exclusive-upper, and union range grammar used by Zero Install. A direct `ConvertFrom-ZeroInstallFeed` call without `-RuntimeVersion` keeps conditional records as potentially applicable and leaves their applicability unresolved. These collections reproduce version filtering only. They do not select an implementation because the Zero Install solver also considers platform, requirements, stability policy, rollout percentage, and local preferences.
 
 For URL-protocol capabilities, a custom protocol uses the capability `id`; a capability with `<known-prefix>` children registers those prefixes instead. File extensions come from Windows-compatible capability lists only. `FeedInfo.Protocols` and `FeedInfo.FileExtensions` are available capabilities, not proof that the bootstrapper selects them. Use the top-level `Protocols` and `FileExtensions` only after deterministic `IntegrationSelection`, and still capture installed-state changes after first launch when the target application can modify associations itself.
 
@@ -82,11 +82,11 @@ $PayloadFiles = Expand-ZeroInstallInstaller -Path $InstallerPath -DestinationPat
 
 Omitting `-Name` exports every supported embedded resource. `ContentEntries` classifies embedded and explicitly supplied content as feeds, icons, OpenPGP keys, desktop-integration stubs, implementation archives, or ignored files using the same filename routing as the bootstrap runtime. An explicit content directory is enumerated non-recursively, matching upstream behavior.
 
-Implementation archives are expanded only with `-ExpandImplementationArchives` and are isolated under `_implementations/<manifest-digest>/`. This raw-content operation exposes payload evidence; it does not apply a feed recipe, preserve all archive metadata, verify the implementation digest, satisfy dependencies, or prove that the solver will select the implementation. `ZeroInstall.Content.ManifestDigestNotVerified` and unresolved `PayloadIntegrity` therefore remain appropriate for this route.
+Implementation archives are expanded only with `-ExpandImplementationArchives` and are isolated under `_implementations/<manifest-digest>/`. This raw-content operation exposes payload evidence. It does not apply a feed recipe, preserve all archive metadata, verify the implementation digest, satisfy dependencies, or prove that the solver will select the implementation. `ZeroInstall.Content.ManifestDigestNotVerified` and unresolved `PayloadIntegrity` therefore remain appropriate for this route.
 
 ### 7. Materialize an explicitly selected implementation offline
 
-Use `Expand-ZeroInstallImplementation` when a feed implementation and all of its retrieval inputs have already been selected. Supply every download as a local path; the function never accesses the network. If more than one retrieval method is applicable, pass `-RetrievalMethodIndex` explicitly rather than treating document order as solver output.
+Use `Expand-ZeroInstallImplementation` when a feed implementation and all of its retrieval inputs have already been selected. Supply every download as a local path. The function never accesses the network. If more than one retrieval method is applicable, pass `-RetrievalMethodIndex` explicitly rather than treating document order as solver output.
 
 ```powershell
 $Feed = ConvertFrom-ZeroInstallFeed -Content $FeedResponse.Content -BaseUri $Info.AppUri -RuntimeVersion $Info.RuntimeVersion
@@ -101,7 +101,7 @@ $Result | Select-Object ImplementationId, RetrievalMethodIndex, ExpectedDigest, 
 
 The executor applies applicable `archive`, `file`, `rename`, `remove`, and `copy-from` records in order inside a temporary tree. Archive `start-offset`, `extract`, and `dest` values, single-file executable state, copy-from `.manifest` executable records, timestamps, output bounds, duplicate paths, and traversal are enforced. The complete implementation is hashed before selected files reach the destination. A digest mismatch leaves the destination unchanged. ZIP mode bits use `ZipArchive`; other supported archive stacks use the pinned SharpCompress reader. Archive links are rejected because safely publishing their semantics on Windows requires a link-aware output contract.
 
-`Get-ZeroInstallImplementationManifest` computes `sha1new`, `sha256`, or `sha256new` evidence for a local implementation. `Test-ZeroInstallImplementationDigest` verifies an expected digest. Supply `-ExecutablePath` when the files came from a source that cannot preserve Unix executable bits. Do not use `-SkipManifestDigestCheck` for manifest authoring; it exists for bounded format research and still returns the computed digest.
+`Get-ZeroInstallImplementationManifest` computes `sha1new`, `sha256`, or `sha256new` evidence for a local implementation. `Test-ZeroInstallImplementationDigest` verifies an expected digest. Supply `-ExecutablePath` when the files came from a source that cannot preserve Unix executable bits. Do not use `-SkipManifestDigestCheck` for manifest authoring. It exists for bounded format research and still returns the computed digest.
 
 This API is not a solver. The caller remains responsible for feed signature/trust validation, architecture and stability policy, rollout, dependency resolution, package implementations, and choosing one exact implementation and retrieval method.
 
@@ -154,10 +154,10 @@ For a source-backed integration route, `ProductCode` is the canonical `app_uri` 
 
 ARP behavior changes by runtime:
 
-- 2.21 through 2.23.2 append ` (Zero Install)` to the feed name in `DisplayName`; record that difference only when it remains relevant after manifest normalization.
+- 2.21 through 2.23.2 append ` (Zero Install)` to the feed name in `DisplayName`. Record that difference only when it remains relevant after manifest normalization.
 - 2.23.3 and later use the plain feed name.
 - 2.24.0 and later write feed publisher evidence. Earlier releases omit `Publisher` from the ARP entry.
-- Application integration does not write `DisplayVersion`; preserve it as unresolved unless the target application later writes it.
+- Application integration does not write `DisplayVersion`. Preserve it as unresolved unless the target application later writes it.
 - Before 2.25.12, the ARP entry has `NoModify=1`. Releases from 2.25.12 expose an `integrate` modify command and set `NoModify=0`.
 - `UninstallString` and `QuietUninstallString` point to the deployed Zero Install runtime, whose install-base path is runtime state. The parser returns executable and argument evidence instead of inventing an absolute path.
 

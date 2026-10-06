@@ -14,9 +14,9 @@ Read [InstallAnywhere Parser Internals](../../internals/installanywhere/overview
 
 ### Parse and extract InstallAnywhere metadata
 
-InstallAnywhere installers can contain a valid ZIP archive after the native stub. Locate the ZIP by validating the final ZIP end-of-central-directory record and deriving the archive start from the central-directory offset; do not assume the first `PK` local-file header is the archive start.
+InstallAnywhere installers can contain a valid ZIP archive after the native stub. Locate the ZIP by validating the final ZIP end-of-central-directory record and deriving the archive start from the central-directory offset. Do not assume the first `PK` local-file header is the archive start.
 
-Use the PackageModule parser directly; it never launches the native stub or Java payload:
+Use the PackageModule parser directly. It never launches the native stub or Java payload:
 
 ```powershell
 $Info = Get-InstallAnywhereInfo -Path C:\Path\To\Installer.exe
@@ -37,7 +37,7 @@ For this sample, `Get-InstallAnywhereInfo` reports `ProductCode: FlowJo 10.10.0`
 
 FlowJo's `ExecFile` action identifies `vcredist_x64.exe` and its nested arguments, while `MakeExecutable` records expose the LaunchAnywhere main class, JVM behavior, and LAX properties. These remain static action definitions: preserve each `RuleExpression` and correlate it with `Rules` before treating an action as a Windows execution path. Custom Java actions remain unresolved and require VM validation.
 
-Evaluate platform-only conditions against an explicit target descriptor. The expression parser supports `!`, `&&`, `||`, and parentheses. It returns three-valued results; variable, registry, file, and custom-code rules remain `Unknown`, and the analysis host is never consulted.
+Evaluate platform-only conditions against an explicit target descriptor. The expression parser supports `!`, `&&`, `||`, and parentheses. It returns three-valued results. Variable, registry, file, and custom-code rules remain `Unknown`, and the analysis host is never consulted.
 
 ```powershell
 $WindowsActions = Get-InstallAnywhereActionEligibility -Info $Info -PlatformName 'Windows 11'

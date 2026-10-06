@@ -1,6 +1,6 @@
 # Astrum InstallWizard setup runtime
 
-The setup runtime turns compiled records into target-machine state. Static parsing establishes configured behavior; VM comparison establishes what a specific runtime does when elevation, conditions, dialogs, and external programs participate.
+The setup runtime turns compiled records into target-machine state. Static parsing establishes configured behavior. VM comparison establishes what a specific runtime does when elevation, conditions, dialogs, and external programs participate.
 
 ## Installation phases
 
@@ -10,7 +10,7 @@ File extraction follows installation-item selection and conditions. Registry, sh
 
 ## Silent behavior
 
-Verified 2.x media accepts `/silent` and returns exit code `1` after successful installation. When the selected license dialog has the prohibit-silent flag, `/AcceptLicense` is also required; controlled Modern2 media refuses bare `/silent` with exit code `0` and leaves no partial state, while `/silent /AcceptLicense` installs fully.
+Verified 2.x media accepts `/silent` and returns exit code `1` after successful installation. When the selected license dialog has the prohibit-silent flag, `/AcceptLicense` is also required. Controlled Modern2 media refuses bare `/silent` with exit code `0` and leaves no partial state, while `/silent /AcceptLicense` installs fully.
 
 Modern2 skips a compiled User Information dialog during `/silent`. This is confirmed by runtime inspection and VM installation. Early2 retains the builder documentation's interactive-only claim because no equivalent execution evidence exists. For 1.x, only a delimited `/SILENT` token in the native runtime option table establishes switch support, and the success code remains unprojected until validated for that generation.
 
@@ -18,7 +18,7 @@ The observed `/REVERT` token has an independent runtime flag, but its rollback b
 
 ## Scope and elevation
 
-The explicit uninstall hive is primary scope evidence. Requested execution level and resolved destination are fallbacks. HKLM and machine-protected destinations imply machine scope; HKCU and private user roots imply user scope. Mixed or conditional hives produce alternatives rather than a guessed scalar scope.
+The explicit uninstall hive is primary scope evidence. Requested execution level and resolved destination are fallbacks. HKLM and machine-protected destinations imply machine scope. HKCU and private user roots imply user scope. Mixed or conditional hives produce alternatives rather than a guessed scalar scope.
 
 `requireAdministrator` or the compiled `RequireAdmin` option proves `ElevationRequirement: elevationRequired`. An `asInvoker` manifest does not prove that machine installation is usable unelevated. Controlled Modern2 media targeting HKLM and `%ProgramFiles(x86)%` refuses unelevated `/silent` with exit code `0` and no partial state, but installs when the caller is already elevated. The parser therefore reports caller elevation as required for structurally proven machine-protected writes and emits `Astrum.Elevation.CallerRequired`.
 

@@ -73,7 +73,7 @@ Offset  Size      Field
 ...        var    event records
 ```
 
-Each event starts with a reserved word and an action count. Actions begin with a uint16 action ID. Most actions use tagged operands; some control-flow, call, function-prolog, and variable-argument actions have dedicated framing.
+Each event starts with a reserved word and an action count. Actions begin with a uint16 action ID. Most actions use tagged operands. Some control-flow, call, function-prolog, and variable-argument actions have dedicated framing.
 
 ```text
 Event
@@ -120,7 +120,7 @@ Prototype flags distinguish DLL, internal, predefined, exported, calling- conven
 
 ### aLuZ and kUtZ
 
-The aLuZ generation uses a packed 124-byte header. It contains absolute offsets to variables, prototypes, typedefs, basic blocks, and debug data. The executable instruction region is bounded by header offsets; it is not the remainder of the file.
+The aLuZ generation uses a packed 124-byte header. It contains absolute offsets to variables, prototypes, typedefs, basic blocks, and debug data. The executable instruction region is bounded by header offsets. It is not the remainder of the file.
 
 ```text
 Decoded modern INX
@@ -299,7 +299,7 @@ InstallScript built-ins cover:
 - DLL loading and imported native calls.
 - Services, environment, fonts, INI files, and other system configuration.
 
-`CreateRegistrySet` and `CreateShellObjects` select records stored in the media database. Their arguments identify authored data; the actual values and owning components live in `data1.hdr`. Component-associated records are normally applied while that component transfers, even when no explicit script call names them.
+`CreateRegistrySet` and `CreateShellObjects` select records stored in the media database. Their arguments identify authored data. The actual values and owning components live in `data1.hdr`. Component-associated records are normally applied while that component transfers, even when no explicit script call names them.
 
 Native DLL exports are opaque to the InstallScript program database. `UseDLL` can prove that a DLL is loaded and a call record can prove its arguments, but the export's side effects require inspection of that DLL or runtime observation.
 

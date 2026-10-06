@@ -10,7 +10,7 @@ User integration writes HKCU. Machine integration writes HKLM. The uninstall sub
 
 | Value | Behavior |
 | --- | --- |
-| `DisplayName` | feed name plus ` (Zero Install)` before 2.23.3; plain feed name afterward |
+| `DisplayName` | feed name plus ` (Zero Install)` before 2.23.3. Plain feed name afterward |
 | `Publisher` | feed publisher from 2.24.0 |
 | `URLInfoAbout` | feed homepage |
 | `DisplayVersion` | absent or deleted by built-in integration |
@@ -38,5 +38,5 @@ Desktop integration can register protocols and file types from feed capabilities
 
 ## Manifest matching
 
-Do not put a feed implementation version into `AppsAndFeaturesEntries.DisplayVersion`; the built-in ARP row does not write one. A target application can later write or modify ARP state, so VM comparison remains necessary when the package has first-run registration behavior.
+Do not put a feed implementation version into `AppsAndFeaturesEntries.DisplayVersion`. The built-in ARP row does not write one. A target application can later write or modify ARP state, so VM comparison remains necessary when the package has first-run registration behavior.
 

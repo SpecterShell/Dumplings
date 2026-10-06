@@ -43,7 +43,7 @@ The analyzer can use `ADVINSTSFX` as a cheap routing marker, but it accepts Adva
 
 ## Performance evidence
 
-The 2,167,225,168-byte BenchMate fixture is the large-media regression. In a clean local PowerShell process, catalog analysis plus selected nested MSI parsing completed in 13.74 seconds with a 221.8 MiB peak working set. This measurement is diagnostic evidence, not a portable CI expectation; the test enforces only the existing 60-second watchdog.
+The 2,167,225,168-byte BenchMate fixture is the large-media regression. In a clean local PowerShell process, catalog analysis plus selected nested MSI parsing completed in 13.74 seconds with a 221.8 MiB peak working set. This measurement is diagnostic evidence, not a portable CI expectation. The test enforces only the existing 60-second watchdog.
 
 ## Fallback
 

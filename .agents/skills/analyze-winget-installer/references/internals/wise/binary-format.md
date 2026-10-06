@@ -120,4 +120,4 @@ The parser searches at most the first MiB of the section for CFB candidates. A c
 
 ## Resource launcher route
 
-NavigatorPlus contains an outer PE and a second complete PE beginning at absolute file offset 6144 inside `.rsrc` slack. The nested PE owns the WiseScript overlay. One WiseScript InstallFile record expands to another PE with a `.WISE` section, and that section contains the authoritative MSI. These are logical execution layers; their source bytes are not assumed to be adjacent after decompression.
+NavigatorPlus contains an outer PE and a second complete PE beginning at absolute file offset 6144 inside `.rsrc` slack. The nested PE owns the WiseScript overlay. One WiseScript InstallFile record expands to another PE with a `.WISE` section, and that section contains the authoritative MSI. These are logical execution layers. Their source bytes are not assumed to be adjacent after decompression.

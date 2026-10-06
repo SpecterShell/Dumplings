@@ -47,7 +47,7 @@ An application name must never substitute for an unresolved or absent uninstall-
 
 Normal media contains one complete logical Astrum setup. Tiny and tiny-verbose media wrap another complete Astrum PE in a bounded GZip member. Spanned 2.x media divides one logical byte address space between the setup EXE and explicitly ordered companion volumes. Authenticode signatures follow the logical Astrum ending and are not part of the payload catalog.
 
-Every variant converges on the same parsed context: one validated format descriptor, one configuration profile, one installation-item table, one file catalog, and bounded payload ranges. Metadata is always taken from the inner logical setup rather than the wrapper.
+Every variant converges on the same parsed context: one validated format descriptor, one configuration profile, one installation-item table, one file catalog, and bounded payload ranges. Metadata is always taken from the inner logical setup, not the wrapper.
 
 ## Security boundaries
 

@@ -22,7 +22,7 @@ Use `Test-Install4jInstaller` only when a Boolean family check is sufficient. Su
 - `allinstdirs<dddd-dddd-dddd-dddd>`, where the numeric value is the application ID.
 - An install4j unextracted-file table or LZMA-compressed `0.dat`.
 
-Parameter `2000` is not mandatory in generated application media. When it is absent, a CRC-valid modern launcher with complete startup-file boundaries can be routed from the explicit builder version in its decoded `i4jparams.conf`. A present marker must agree with that configuration; the parser does not let configuration override a contradictory marker.
+Parameter `2000` is not mandatory in generated application media. When it is absent, a CRC-valid modern launcher with complete startup-file boundaries can be routed from the explicit builder version in its decoded `i4jparams.conf`. A present marker must agree with that configuration. The parser does not let configuration override a contradictory marker.
 
 ## Static analysis
 
@@ -103,7 +103,7 @@ Confirm package-specific unattended behavior before retaining these family defau
 
 ## WinGet defaults and overrides
 
-WinGet supplies no family-specific switches for generic `InstallerType: exe`. Treat the install4j snippet as a complete family-specific override and verify it against the current launcher. Explicitly specify the supported `InstallModes`; keep reboot suppression in both silent values and omit any switch field the launcher does not support.
+WinGet supplies no family-specific switches for generic `InstallerType: exe`. Treat the install4j snippet as a complete family-specific override and verify it against the current launcher. Explicitly specify the supported `InstallModes`. Keep reboot suppression in both silent values and omit any switch field the launcher does not support.
 
 ## Apps & Features
 
@@ -149,7 +149,7 @@ Follow [VM validation workflow](../../workflows/vm-validation.md) for privilege 
 - `SyncROSoft.OxygenXMLDeveloper`
 - `SyncROSoft.OxygenXMLEditor`
 - `3TSoftwareLabs.Studio3T`
-- `VisualParadigm.VisualParadigm`.
+- `VisualParadigm.VisualParadigm`
 
 ## Source references
 

@@ -48,7 +48,7 @@ The research corpus also includes structurally inspected InstallBuilder 3.7.0, r
 | 7.2.5 | Confirms the observed unencrypted custom LZMA handler on CookFS2 |
 | 16.1.0 | Confirms later action vocabulary without a container-format change |
 
-Static extraction from recovered builder packages produced 15 distinct Windows runtime templates across the researched generations. Those templates are evidence for packing, branding, architecture, and capability boundaries; production parsing still dispatches from installed package structures.
+Static extraction from recovered builder packages produced 15 distinct Windows runtime templates across the researched generations. Those templates are evidence for packing, branding, architecture, and capability boundaries. Production parsing still dispatches from installed package structures.
 
 ## Synthetic coverage
 
@@ -70,7 +70,7 @@ Generated Pester fixtures exercise conditions that are difficult or unsafe to ob
 
 ## Byte-exact extraction evidence
 
-The durable suite compares extracted size and SHA256 for distinct physical routes rather than checking only filenames. Legacy 3.6.0 full extraction verifies 89 outputs including `project.xml`, `demo/docs/license.txt`, `demo/bin/demo.txt`, and `bin/builder.exe`. CookFS coverage includes a Deflate file from JXplorer, an LZMA file from 8.2.0 media, and a current logical destination from 26.8.0.
+The durable suite goes beyond filename checks and compares extracted size and SHA256 for distinct physical routes. Legacy 3.6.0 full extraction verifies 89 outputs including `project.xml`, `demo/docs/license.txt`, `demo/bin/demo.txt`, and `bin/builder.exe`. CookFS coverage includes a Deflate file from JXplorer, an LZMA file from 8.2.0 media, and a current logical destination from 26.8.0.
 
 CookFS page tests separately corrupt integrity bytes and require extraction to fail before an output is accepted. Metakit tests corrupt the commit-root range and require the catalog reader to reject it.
 
@@ -129,7 +129,7 @@ The following evidence is insufficient by itself:
 - A generic TclKit or CookFS application.
 - A PE version resource naming an InstallBuilder-produced application.
 
-Strict detection requires a valid PE and structured project/container ownership. Unsupported but strongly identified media should return a structured incomplete or unsupported diagnostic rather than be routed as a successful parse.
+Strict detection requires a valid PE and structured project/container ownership. Unsupported but strongly identified media should return a structured incomplete or unsupported diagnostic. They must not be reported as a successful parse.
 
 ## Validation expectations
 

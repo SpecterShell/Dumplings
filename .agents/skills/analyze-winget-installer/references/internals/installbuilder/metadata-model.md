@@ -25,7 +25,7 @@ InstallBuilder omits many properties when they retain runtime defaults. The pars
 | `installationScope` | `auto` | Shortcut ownership policy, not package scope |
 | `unattendedModeUI` | `none` | UI style for unattended mode |
 
-Empty defaults for icon, comments, contact, information URL, and help URL remain empty rather than being synthesized from unrelated package metadata.
+Empty defaults for icon, comments, contact, information URL, and help URL remain empty and are not synthesized from unrelated package metadata.
 
 ## Identity fields
 
@@ -37,7 +37,7 @@ Empty defaults for icon, comments, contact, information URL, and help URL remain
 | short identity | `shortName` | Variable and storage identity used by project expressions |
 | `ProjectSchemaVersion` | `projectSchemaVersion` | Project vocabulary evidence, not a container dispatch key |
 
-Identity values may reference other deterministic project values. Dumplings resolves substitutions recursively for at most 16 passes. A remaining `${...}` token causes the affected identity field to be null and produces a field-scoped diagnostic; the raw expression remains available as evidence.
+Identity values may reference other deterministic project values. Dumplings resolves substitutions recursively for at most 16 passes. A remaining `${...}` token causes the affected identity field to be null and produces a field-scoped diagnostic. The raw expression remains available as evidence.
 
 ## Variable namespaces
 
@@ -57,7 +57,7 @@ Stable Windows directories become manifest-safe variables such as `%ProgramFiles
 
 ## Directory parameters
 
-The installation directory normally comes from a `directoryParameter` named `installdir`. Its explicit `value` takes precedence over `default`. The resolved default becomes `DefaultInstallLocation` after slash normalization. The parameter's `cliOptionName` defines the install-location switch; when a custom parameter omits that field, the runtime uses the parameter name.
+The installation directory normally comes from a `directoryParameter` named `installdir`. Its explicit `value` takes precedence over `default`. The resolved default becomes `DefaultInstallLocation` after slash normalization. The parameter's `cliOptionName` defines the install-location switch. When a custom parameter omits that field, the runtime uses the parameter name.
 
 ```text
 directoryParameter
@@ -83,7 +83,7 @@ The physical VFS catalog does not directly describe default installed state. Com
 | `ExcludedPayloadFiles` | Files proven absent from the default selection |
 | `PayloadCatalog` | Physical path, logical path, size, compression, timestamp, conditions, and destination evidence |
 
-Folder mappings are inherited through the project hierarchy. A component or folder excluded by a false default-selection rule does not contribute to `PayloadFiles`. Unknown rules preserve the file under the conditional collection rather than choosing an outcome.
+Folder mappings are inherited through the project hierarchy. A component or folder excluded by a false default-selection rule does not contribute to `PayloadFiles`. Unknown rules preserve the file under the conditional collection without choosing an outcome.
 
 ## Condition model
 
@@ -100,11 +100,11 @@ Conditions use three values: `True`, `False`, and `Unknown`. The parser resolves
 | `regExMatch` | Resolve source-backed expressions that are compatible with the bounded .NET route; Tcl-specific constructs remain unknown |
 | Nested rule groups | Combine with documented `all` or `any` logic and optional negation |
 
-Filesystem tests, registry probes, target Windows-version checks without a trusted target context, Tcl code, external scripts, malformed expressions, and mutable parameter comparisons remain `Unknown`. A false child can settle an `all` group and a true child can settle an `any` group even when another child is unknown; otherwise uncertainty propagates.
+Filesystem tests, registry probes, target Windows-version checks without a trusted target context, Tcl code, external scripts, malformed expressions, and mutable parameter comparisons remain `Unknown`. A false child can settle an `all` group and a true child can settle an `any` group even when another child is unknown. Otherwise uncertainty propagates.
 
 ## Action lists and ordering
 
-`ProjectActions` retains every recognized leaf action in source order. The parser traverses nested `actionList` nodes under groups, conditions, and loops rather than examining only direct project children. Each action records its XML element name, phase, lifecycle, scalar properties, resolved values, inherited rules, condition state, unresolved variables, and redacted-property names.
+`ProjectActions` retains every recognized leaf action in source order. The parser traverses nested `actionList` nodes under groups, conditions, and loops, not only direct project children. Each action records its XML element name, phase, lifecycle, scalar properties, resolved values, inherited rules, condition state, unresolved variables, and redacted-property names.
 
 The main persistent installation order is:
 
@@ -139,15 +139,15 @@ registryDelete
 `-- phase and lifecycle
 ```
 
-`RegistryWrites` and `RegistryDeletes` separate the operation kinds. `EffectiveRegistryWrites` applies deterministic set/delete semantics in runtime order. A later value delete removes one earlier set; a later key delete removes all earlier values under that key. Conditional operations do not silently mutate the authoritative final state and instead mark the affected result uncertain.
+`RegistryWrites` and `RegistryDeletes` separate the operation kinds. `EffectiveRegistryWrites` applies deterministic set/delete semantics in runtime order. A later value delete removes one earlier set; a later key delete removes all earlier values under that key. Conditional operations do not silently mutate the authoritative final state. They mark the affected result uncertain.
 
 ## File associations
 
-`associateWindowsFileExtension` is a native InstallBuilder action rather than merely a collection of arbitrary registry rows. One action can register a space-separated extension list under one ProgID and define friendly text, MIME type, icon, executable, arguments, verbs, scope, phase, and conditions. `removeWindowsFileAssociation` removes the corresponding mapping.
+`associateWindowsFileExtension` is a native InstallBuilder action with defined semantics, not a collection of arbitrary registry rows. One action can register a space-separated extension list under one ProgID and define friendly text, MIME type, icon, executable, arguments, verbs, scope, phase, and conditions. `removeWindowsFileAssociation` removes the corresponding mapping.
 
 `FileExtensionAssociations` preserves adds and removals. `EffectiveAssociations` applies deterministic lifecycle ordering. `FileExtensions` includes only surviving literal extensions. An unresolved description, icon, or optional command argument does not erase an otherwise proven extension registration, but an unresolved extension expression keeps the extension set incomplete.
 
-Literal effective registry writes are also passed through the shared association projector, allowing conventional `Software\Classes` protocol and extension registrations to be reported. Runtime-computed keys and values remain raw operation evidence.
+Literal effective registry writes are also passed through the shared association projector, so conventional `Software\Classes` protocol and extension registrations are reported. Runtime-computed keys and values remain raw operation evidence.
 
 ## Shortcuts and executable identity
 
@@ -169,7 +169,7 @@ The parser normalizes the following source-backed action families while retainin
 | `SharedDllChanges` | add and remove shared-DLL reference actions |
 | `WindowsAclChanges` | set and clear Windows ACL actions |
 
-`setEnvironmentVariable` changes only the installer process. Persistent environment and PATH actions are distinguished from that transient operation. Service and task passwords are never returned; the result reports `PasswordConfigured` and records the property name under `SensitiveProperties`.
+`setEnvironmentVariable` changes only the installer process. Persistent environment and PATH actions are distinguished from that transient operation. Service and task passwords are never returned. The result reports `PasswordConfigured` and records the property name under `SensitiveProperties`.
 
 ## Execution actions
 
@@ -183,7 +183,7 @@ Structured `autodetectJava` actions expose accepted version ranges, bitness, ven
 
 ## Dynamic project logic
 
-`DynamicProjectLogic` is designed for direct agent review. Each record includes:
+`DynamicProjectLogic` is designed for direct agent review.
 
 | Property | Meaning |
 | --- | --- |
@@ -200,7 +200,7 @@ Password-like values are redacted before these records are returned. Agents may 
 
 ## Interpretation rule
 
-A project node becomes authoritative metadata only after its structure, lifecycle, condition, and variables are understood. Unknown XML is retained in the parsed project or `ProjectActions`; it is not assigned guessed semantics. Extending projection requires published runtime behavior or controlled builder evidence plus a fixture that exercises the relevant route.
+A project node becomes authoritative metadata only after its structure, lifecycle, condition, and variables are understood. Unknown XML is retained in the parsed project or `ProjectActions` and is not assigned guessed semantics. Extending projection requires published runtime behavior or controlled builder evidence plus a fixture that exercises the relevant route.
 
 ## Source references
 

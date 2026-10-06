@@ -18,7 +18,7 @@ The parser returns `interactive`, `silent`, and `silentWithProgress` for structu
 
 ## Source selection and update
 
-The runtime accepts one source URI or an ordered source catalog. A hidden source selector can choose a source ID. Embedded metadata supports offline installation; config-only media fetches release metadata and payload records. The parser returns source records but does not issue network requests.
+The runtime accepts one source URI or an ordered source catalog. A hidden source selector can choose a source ID. Embedded metadata supports offline installation. Config-only media fetches release metadata and payload records. The parser returns source records but does not issue network requests.
 
 During update, metadata hash comparisons decide which files can be retained, downloaded, patched, replaced, or deleted. `ignoreFolderPath` preserves configured directories. Metadata `deletes` removes obsolete paths. HDiff patches are recorded as potential routes, but the parser extracts complete embedded payload files only.
 

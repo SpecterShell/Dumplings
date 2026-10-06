@@ -16,7 +16,7 @@ Caller-owned streams remain open and have their positions restored. Parser-owned
 
 `Expand-MicaSetupInstaller` resolves source and destination paths before managed I/O. Omitted `Name` means all installed payload entries and the configured uninstaller. `-RawResources` exports supported WPF stream and byte-array records instead. Public calls default to prompting only when a collision occurs; internal calls use `Rename`.
 
-Extraction rejects absolute archive paths, root escape, traversal, malformed or duplicate destinations, excessive entries, excessive aggregate output, truncated resources, and invalid archive data. A dynamic payload password makes extraction unavailable. A constant password stays in local scope and is cleared with the archive context; it is never returned or logged.
+Extraction rejects absolute archive paths, root escape, traversal, malformed or duplicate destinations, excessive entries, excessive aggregate output, truncated resources, and invalid archive data. A dynamic payload password makes extraction unavailable. A constant password stays in local scope and is cleared with the archive context. It is never returned or logged.
 
 ## Diagnostics
 

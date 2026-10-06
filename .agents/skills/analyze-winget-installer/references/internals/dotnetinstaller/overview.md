@@ -46,12 +46,12 @@ The wrapper usually does not own the visible Apps & Features row. A selected nes
 
 | Route | Resource organization | Parser consequence |
 | --- | --- | --- |
-| `ConfigurationOnly` | configuration XML without `RES_CAB` | Payloads are downloaded, adjacent, or absent; explicit companion files are required for nested parsing. |
+| `ConfigurationOnly` | configuration XML without `RES_CAB` | Payloads are downloaded, adjacent, or absent, so explicit companion files are required for nested parsing. |
 | `GlobalCabinetExtensionless` | `SETUP_1`, `SETUP_2`, ... | One historical cabinet set is available to all components. |
 | `GlobalCabinetNamed` | `SETUP_1.CAB`, `SETUP_2.CAB`, ... | One modern named cabinet set is available to all components. |
 | `PerComponentCabinetsExtensionless` | global parts plus `SETUP_<ID>_<N>` | Transitional per-component ownership without `.CAB` resource suffixes. |
 | `PerComponentCabinetsNamed` | global parts plus `SETUP_<ID>_<N>.CAB` | Current component-owned cabinet route. |
-| `MixedCabinetNames` | named and extensionless parts coexist | Structurally valid custom or transitional media; each logical set is validated independently. |
+| `MixedCabinetNames` | named and extensionless parts coexist | Structurally valid custom or transitional media. Each logical set is validated independently. |
 
 ## Source references
 

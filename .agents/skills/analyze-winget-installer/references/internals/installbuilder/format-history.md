@@ -23,7 +23,7 @@ InstallBuilder marketing releases, project schema versions, and physical contain
 
 ## Legacy Metakit generation
 
-InstallBuilder 3.6.0 and 3.7.0 builder installers contain 317 VFS records and project 88 installed payload files below the `origindist` directory. A nominal archived 4.2.0 URL yielded media whose recovered project identifies itself as 4.5.3; that artifact contains 380 VFS records and 107 projected payload files. Record recovered identity rather than trusting an archive filename.
+InstallBuilder 3.6.0 and 3.7.0 builder installers contain 317 VFS records and project 88 installed payload files below the `origindist` directory. A nominal archived 4.2.0 URL yielded media whose recovered project identifies itself as 4.5.3. That artifact contains 380 VFS records and 107 projected payload files. Record the recovered identity. An archive filename is not trustworthy evidence.
 
 The route stores `project.xml`, `origindist`, `manifest.txt`, Tcl/Tk support files, and application files in one Metakit VFS. Application `contents:B` rows are either stored bytes or RFC 1950 zlib streams. The absence of CookFS is expected and is not a payload error.
 
@@ -35,13 +35,13 @@ CookFS2 moves application file data into compressed pages while retaining the co
 
 The same `CFS0002` route spans several product eras and compression choices. Stored, Deflate, BZip2, and the observed unencrypted LZMA handler have distinct page framing but share the footer and index model. A new compression algorithm is not automatically a new container generation.
 
-InstallBuilder 8.2 introduced encrypted payload support. A version at or above this boundary does not prove encryption. Detection requires encrypted/custom handler or project markers. The parser reports encrypted media and requires the project password instead of trying default or harvested passwords.
+InstallBuilder 8.2 introduced encrypted payload support. A version at or above this boundary does not prove encryption. Detection requires encrypted/custom handler or project markers. The parser reports encrypted media and requires the project password and never tries default or harvested passwords.
 
 ## Runtime-template evidence
 
 Static extraction of recovered 3.7.0, 4.5.3, 7.2.5, 8.2.0, 9.5.5, 16.1.0, 23.1.0, and 26.8.0 builders produced 15 distinct Windows runtime templates. Builders package these under paths such as `paks/windows*.pak`. Differences include packing, PE bitness, branding, and supported project vocabulary. Generated installers still reduce to the two physical routes documented here.
 
-The builder itself remains a TclKit/Metakit application. Some shipped Tcl files use TclPro bytecode. These files are research evidence about runtime ordering and defaults; they are not parser dependencies and are never evaluated during package analysis.
+The builder itself remains a TclKit/Metakit application. Some shipped Tcl files use TclPro bytecode. These files are research evidence about runtime ordering and defaults. They are not parser dependencies and are never evaluated during package analysis.
 
 ## Branding history
 
@@ -56,7 +56,7 @@ The package `vendor` field is the installed application's publisher. It must not
 
 ## Unavailable and misleading historical media
 
-The archived 2.6.1 URL resolves to 3.7.0 media. Available 5.4.15 captures are HTML, replay failures, or redirects to later releases rather than valid distinct installers. These observations do not prove that 2.x or 5.x used unsupported structures. They only mean those versions are not fixture evidence.
+The archived 2.6.1 URL resolves to 3.7.0 media. Available 5.4.15 captures are HTML, replay failures, or redirects to later releases. None is a valid distinct installer. These observations do not prove that 2.x or 5.x used unsupported structures. They only mean those versions are not fixture evidence.
 
 Do not add a format-catalog row from a URL label, changelog entry, or MIME type. A historical artifact becomes useful when it has a valid PE, a recoverable project, and a bounded structure that differs from existing routes or confirms a currently unsupported path.
 

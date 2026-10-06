@@ -11,7 +11,7 @@ WinGet fills each missing known switch key independently. Omit a manifest switch
 | `inno` | `/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART` | `/SP- /SILENT /SUPPRESSMSGBOXES /NORESTART` | `/LOG="<LOGPATH>"` | `/DIR="<INSTALLPATH>"` |
 | All other effective types | none | none | none | none |
 
-- If one key differs, include the complete replacement for that key; WinGet does not merge individual command-line tokens into an overridden value.
+- If one key differs, include the complete replacement for that key. WinGet does not merge individual command-line tokens into an overridden value.
 - Every manifest-authored `InstallLocation` value, or install-location argument embedded in `Silent` or `SilentWithProgress`, must protect `<INSTALLPATH>` with installer-supported quoting. Prefer quoting the path value. Use whole-switch quoting only when static documentation or VM validation proves that path-only quoting fails, and represent the literal double quotes with a single-quoted YAML scalar. Do not copy the unquoted WinGet-generated NSIS default `/D=<INSTALLPATH>` into a manifest merely to make it explicit.
 - Keep switches that prevent an automatic reboot in `Silent` and `SilentWithProgress`. Examples include MSI `/norestart`, Advanced Installer EXE `/norestart`, and InstallShield `/V/norestart`.
 - Put behavior common to every install mode in `Custom`. In particular, post-install launch suppression belongs in `Custom`, not duplicated in the silent fields.
@@ -50,7 +50,7 @@ WinGet-known behavior:
 - Add an explicit expected return code to a known type only for a package-specific addition or override not represented by WinGet's defaults.
 - For a generic EXE, cancel the wizard before installation starts and record whether it returns a distinct cancellation code.
 - For an EXE wrapper over MSI, determine whether it propagates MSI exit codes. If it does, mirror the complete current MSI mapping from winget-cli's `GetDefaultKnownReturnCodes`, because the outer generic `exe` type will not receive MSI defaults automatically. Use the [Windows Installer error-code reference](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) to interpret evidence.
-- Do not assume a wrapper forwards the nested process exit code; verify it dynamically in the VM.
+- Do not assume a wrapper forwards the nested process exit code. Verify it dynamically in the VM.
 - WinGet does not inject a default expected response for a code listed in `InstallerSuccessCodes`, allowing a proven package-specific success code to override a known-type default failure interpretation.
 - Source: winget-cli [`GetDefaultKnownReturnCodes`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/ManifestCommon.cpp).
 
@@ -69,5 +69,6 @@ Default return-code families:
 - Use `elevationProhibited` only when the installer cannot run elevated and explicitly rejects or fails elevated execution. `Spotify.Spotify` is a known example.
 - Do not use `elevationProhibited` on the user-scope entry of an installer that selects user or machine scope from current privileges. This includes many install4j packages, `Git.Git`, `JetBrains.*`, and `Mozilla.*`. Otherwise an elevated WinGet process cannot prefer the machine-scope entry correctly.
 - Use `elevationRequired` only when non-elevated execution is unsupported: the installer rejects it, exits immediately, or cannot proceed without elevation.
+- An installer may exit silently without requesting UAC when its caller is not elevated. Confirm this with [unelevated Computer Use validation in the VM](../../../analyze-winget-installer/references/workflows/vm-validation.md#check-silent-exits-without-elevation), then verify that the matching elevated silent run succeeds. Add `ElevationRequirement: elevationRequired` to the affected installer route even when the unelevated process returns `0` without installing.
 - Known elevation-required examples include `AFAS.ProfitCommunicationCenter.*`, `CatoNetworks.CatoClient`, `Corsair.iCUE.4`, `Cribl.CriblEdge`, `CrisisGo.CrisisGo`, `DisplayLink.GraphicsDriver`, `DisplayLink.GraphicsDriver.HotDesking`, `ESET.Nod32`, `ExacqTechnologies.exacqVisionClient`, `Microsoft.VCRedist.2005.*`, `NorconsultDigital.ISYLinker`, `PaloAltoNetworks.PrismaAccessBrowser`, `RealVNC.VNCServer`, `RealVNC.VNCViewer`, `Thorlabs.TSP01`, and `Thorlabs.ThorlabsDeviceSDK`.
 - Use `elevatesSelf` only when the installer conditionally requests elevation itself and remains valid when initially launched without elevation.

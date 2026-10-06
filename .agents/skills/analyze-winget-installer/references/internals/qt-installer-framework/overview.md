@@ -8,7 +8,7 @@ Read [binary notation](../../parser-development/binary-notation.md), [parser con
 
 Qt IFW does not preserve a reliable open-source or commercial edition identifier in generated media. The useful static identity consists of the Qt IFW framework version, the Qt runtime version when embedded, the binary-content generation, the media role, and the selected parser routes.
 
-The parser covers Windows media from the first source-tagged 1.2 layout through 4.11. It recognizes both executable and separate-data cookies and the installer, uninstaller, updater, and package-manager markers. `Get-QtInstallerFrameworkInfo` accepts only installer media; `Get-QtInstallerFrameworkFormatInfo` can diagnose every role.
+The parser covers Windows media from the first source-tagged 1.2 layout through 4.11. It recognizes both executable and separate-data cookies and the installer, uninstaller, updater, and package-manager markers. `Get-QtInstallerFrameworkInfo` accepts only installer media. `Get-QtInstallerFrameworkFormatInfo` can diagnose every role.
 
 | Framework range | Format generation | Package index | Configuration and runtime capabilities |
 | --- | --- | --- | --- |
@@ -205,7 +205,7 @@ Repository `Updates.xml` records use a `PackageUpdate` element. `Name` selects t
 
 The DAT cookie marks a complete sidecar binary-content container. A paired DAT inherits the executable's validated format profile because it may omit launcher version strings and configuration resources. Its trailer, collection index, archive ranges, and checks are still parsed independently against the DAT stream.
 
-Early releases normally use 7z archives. Qt IFW 4.2 moved package archive handling to libarchive and advertises `tar`, `tar.gz`, `tar.bz2`, `tar.xz`, `zip`, `7z`, and `qbsp`; the older lib7z route advertises only `7z` and `qbsp`. A `.qbsp` file is physically a 7z archive. Dumplings opens TAR, ZIP, 7z, and QBSP directly, while gzip, bzip2, and xz are explicitly decoded as bounded filters before opening the nested TAR catalog. Password-protected archives and unavailable external package data remain unresolved evidence.
+Early releases normally use 7z archives. Qt IFW 4.2 moved package archive handling to libarchive and advertises `tar`, `tar.gz`, `tar.bz2`, `tar.xz`, `zip`, `7z`, and `qbsp`. The older lib7z route advertises only `7z` and `qbsp`. A `.qbsp` file is physically a 7z archive. Dumplings opens TAR, ZIP, 7z, and QBSP directly, while gzip, bzip2, and xz are explicitly decoded as bounded filters before opening the nested TAR catalog. Password-protected archives and unavailable external package data remain unresolved evidence.
 
 Extraction writes metadata RCC files and package archives using their logical collection/component paths. It validates traversal, collisions, link entries, archive counts, declared and actual expanded sizes, and the global output limit.
 
@@ -219,7 +219,7 @@ An unknown version at or beyond the catalog boundary may use the modern compatib
 
 ## Controller and component scripts
 
-Qt IFW stores controller and component scripts as named RCC resources. Installer configuration identifies a controller through `ControlScript`; package metadata identifies component scripts through `Script`. Generated media may omit `.js` or `.qs` from a controller resource name, so discovery combines the declared resource name with structural `function Controller()` and `function Component()` evidence. A successfully decoded RCC tree is traversed by leaf resource; its enclosing binary RCC buffer is never decoded again as one synthetic script.
+Qt IFW stores controller and component scripts as named RCC resources. Installer configuration identifies a controller through `ControlScript`; package metadata identifies component scripts through `Script`. Generated media may omit `.js` or `.qs` from a controller resource name, so discovery combines the declared resource name with structural `function Controller()` and `function Component()` evidence. A successfully decoded RCC tree is traversed by leaf resource. Its enclosing binary RCC buffer is never decoded again as one synthetic script.
 
 The parser returns each decoded script verbatim with its RCC path and inferred role. It does not pass source to QtScript, QJSEngine, Node.js, a browser, or another JavaScript runtime. This keeps parsing static and prevents an installer-controlled script from accessing the host.
 
@@ -247,7 +247,7 @@ Every relative range is checked for negative values, overflow, file containment,
 
 One analysis context opens the input once and passes that caller-owned seekable stream through trailer discovery, package-index validation, operation decoding, version-marker scanning, PE layout/version/subsystem evidence, RCC metadata, and text-resource analysis. Readers restore the stream position after bounded random access. Parsed PE and IFW layouts, format profile, package collections, metadata resources, package declarations, and text evidence are reused for every projected field.
 
-This removes parser-local file-handle churn and repeated PE scans. It does not materially reduce the fresh-process baseline from loading PowerShell, PackageModule infrastructure, SharpCompress, and the GPL bridge process; compare operation-specific allocations separately from that module-loading baseline.
+This removes parser-local file-handle churn and repeated PE scans. It does not materially reduce the fresh-process baseline from loading PowerShell, PackageModule infrastructure, SharpCompress, and the GPL bridge process. Compare operation-specific allocations separately from that module-loading baseline.
 
 Large package resources are copied through bounded streams. A temporary seekable file is created only for the selected nested archive because SharpCompress requires random access. The complete installer or overlay is never materialized as a PowerShell byte array.
 

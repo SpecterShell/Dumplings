@@ -37,7 +37,7 @@ Base       Offset  Size       Field
 [section]  0x30    4*N        Container sizes, uint32 LE
 ```
 
-Container sizes frame exact sequential ranges. `AttachedIndex` maps physical attached slots to authored container IDs. Manifest XML describes logical payload paths, chain order, package conditions, cache IDs, install arguments, scope variables, and ARP registration; physical adjacency does not by itself identify the visible ARP owner.
+Container sizes frame exact sequential ranges. `AttachedIndex` maps physical attached slots to authored container IDs. Manifest XML describes logical payload paths, chain order, package conditions, cache IDs, install arguments, scope variables, and ARP registration. Physical adjacency does not by itself identify the visible ARP owner.
 
 `Expand-BurnInstaller` projects the embedded bytes using the WiX 7 extraction model:
 
@@ -52,7 +52,7 @@ Container sizes frame exact sequential ranges. `AttachedIndex` maps physical att
     `-- <Payload.FilePath>
 ```
 
-Entry `0` becomes `UX\manifest.xml`; opaque `u*` and `a*` source names are replaced with their manifest `FilePath` values. Unmapped CAB records retain their authored CAB paths under the corresponding directory. External payloads and detached containers are reported but never downloaded. WiX 7 provides this behavior through `wix burn extract`; `dark -x` is the older WiX 3 command.
+Entry `0` becomes `UX\manifest.xml`. Opaque `u*` and `a*` source names are replaced with their manifest `FilePath` values. Unmapped CAB records retain their authored CAB paths under the corresponding directory. External payloads and detached containers are reported but never downloaded. WiX 7 provides this behavior through `wix burn extract`. `dark -x` is the older WiX 3 command.
 
 ## Detection invariants
 
@@ -72,7 +72,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain warnings or unresolved evidence. Arbitrary strings cannot establish them.
 
 ## Implementation mapping
 

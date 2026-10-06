@@ -6,7 +6,7 @@ Use `InstallerType: exe` for Chromium-family setup executables after distinguish
 
 ## Detection
 
-Strong evidence includes the mini-installer's `B7`, `BL`, and `BN` setup resources; Chromium Updater's `updater.packed.7z`; Omaha's resource ID 102 LZMA, BCJ2, and TAR payload; and tags bounded to the Authenticode certificate table. An updater `appguid` is protocol identity rather than an ARP `ProductCode`. The parser does not derive `ProductCode` for any Chromium Setup, Chromium Updater, Google Updater, or Omaha variant.
+Strong evidence includes the mini-installer's `B7`, `BL`, and `BN` setup resources; Chromium Updater's `updater.packed.7z`; Omaha's resource ID 102 LZMA, BCJ2, and TAR payload; and tags bounded to the Authenticode certificate table. An updater `appguid` is protocol identity, not an ARP `ProductCode`. The parser does not derive `ProductCode` for any Chromium Setup, Chromium Updater, Google Updater, or Omaha variant.
 
 ## Static analysis
 

@@ -16,7 +16,7 @@ Read [WinRAR GUI SFX Parser Internals](../../internals/winrar-sfx/overview.md) b
 
 Use `Get-WinRarSfxInfo -Path $InstallerFile` to decompress the RAR SFX comment and return every `Presetup=` and `Setup=` command with its resolved archive entry. Use `Expand-WinRarSfx` for bounded static extraction.
 
-For example, the `Lakes.SCREENView` wrapper resolves `Setup=setup.exe /w` to its embedded InstallShield `setup.exe`; the `/w` argument is wrapper configuration evidence, not the nested installer's silent switch.
+For example, the `Lakes.SCREENView` wrapper resolves `Setup=setup.exe /w` to its embedded InstallShield `setup.exe`. The `/w` argument is wrapper configuration evidence, not the nested installer's silent switch.
 
 ### Route the nested installer and visible ARP owner
 

@@ -2,7 +2,7 @@
 
 ## Producer pipeline
 
-MicaSetup distributes source templates rather than a data-only setup compiler. MakeMica updates generated C# option assignments, copies application output into `publish.7z`, adds setup resources, compiles the WPF host, and rewrites assembly identity for the packaged application. The resulting EXE contains both the generic runtime and package-specific managed code.
+MicaSetup distributes source templates instead of a data-only setup compiler. MakeMica updates generated C# option assignments, copies application output into `publish.7z`, adds setup resources, compiles the WPF host, and rewrites assembly identity for the packaged application. The resulting EXE contains both the generic runtime and package-specific managed code.
 
 ```text
 application publish directory
@@ -54,6 +54,6 @@ Assembly title, product, company, and version identify the packaged application 
 
 ## Trust boundaries
 
-The installer assembly is untrusted input. The parser reads metadata through `PEReader` and `MetadataReader`; it never loads the target assembly, invokes its methods, or constructs its custom resource types. CIL evaluation is symbolic and bounded. Resource values are accepted only when their type and physical range are supported. The payload archive is opened through a bounded stream, and extraction applies the shared path, count, size, and collision controls.
+The installer assembly is untrusted input. The parser reads metadata through `PEReader` and `MetadataReader`. It never loads the target assembly, invokes its methods, or constructs its custom resource types. CIL evaluation is symbolic and bounded. Resource values are accepted only when their type and physical range are supported. The payload archive is opened through a bounded stream, and extraction applies the shared path, count, size, and collision controls.
 
 Custom C# is an explicit boundary. A method call can read the registry, network, clock, architecture, or user interface and then assign an option. Unless the evaluator implements that exact pure operation and all operands are known, the result remains unresolved. The analyst should inspect available source or validate the concrete effect in a VM.

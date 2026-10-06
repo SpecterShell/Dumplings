@@ -5,8 +5,9 @@
 .SYNOPSIS
   Stage and invoke the WinGet installed-state collector in a Hyper-V VM.
 .DESCRIPTION
-  Uses Hyper-V Guest Service for staging and PowerShell Direct for capture and
-  bounded installer-log retrieval. It never launches an installer or application.
+  Uses Hyper-V Guest Service to stage the collector and bounded process waiter,
+  and PowerShell Direct for capture and installer-log retrieval.
+  It never launches an installer or application.
   Run those explicitly between BeforeInstall, AfterInstall, and AfterFirstRun captures.
 .PARAMETER Action
   Stage the guest collector, capture a VM phase, compare host snapshots, or collect logs.
@@ -94,6 +95,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
 $GuestScriptSource = Join-Path $PSScriptRoot 'Get-WinGetVMInstalledState.ps1'
+$GuestWaitScriptSource = Join-Path $PSScriptRoot 'Wait-WinGetVMProcess.ps1'
 
 function Import-DumplingsHyperVModule {
   Import-Module Hyper-V -PassThru
@@ -132,9 +134,14 @@ function Get-DumplingsValidationVM {
 
 function Copy-DumplingsCollectorToVM {
   $null = Get-DumplingsValidationVM
-  if (-not (Test-Path -LiteralPath $GuestScriptSource -PathType Leaf)) { throw "Guest collector not found: $GuestScriptSource" }
   $GuestScriptPath = Join-Path $GuestDirectory 'Get-WinGetVMInstalledState.ps1'
-  Copy-VMFile -VMName $VMName -SourcePath $GuestScriptSource -DestinationPath $GuestScriptPath -FileSource Host -CreateFullPath -Force
+  # Stage observation tools only. Installer and application execution remain
+  # explicit agent actions between installed-state captures.
+  foreach ($Source in @($GuestScriptSource, $GuestWaitScriptSource)) {
+    if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) { throw "Guest validation script not found: $Source" }
+    $Destination = Join-Path $GuestDirectory (Split-Path -Path $Source -Leaf)
+    Copy-VMFile -VMName $VMName -SourcePath $Source -DestinationPath $Destination -FileSource Host -CreateFullPath -Force
+  }
   return $GuestScriptPath
 }
 
@@ -194,7 +201,7 @@ if ($Action -eq 'Compare') {
 $null = Import-DumplingsHyperVModule
 $GuestScriptPath = Copy-DumplingsCollectorToVM
 if ($Action -eq 'Stage') {
-  [pscustomobject]@{ VMName = $VMName; GuestScriptPath = $GuestScriptPath }
+  [pscustomobject]@{ VMName = $VMName; GuestScriptPath = $GuestScriptPath; GuestWaitScriptPath = (Join-Path $GuestDirectory 'Wait-WinGetVMProcess.ps1') }
   return
 }
 

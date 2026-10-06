@@ -45,6 +45,18 @@ Without `Query`, these fields select an existing effective installer:
 
 They are matching keys and are not copied back as overrides. All matching keys present in the task entry must exist with the same case-sensitive value in the old effective installer. The last matching task entry wins. Every old installer must match an entry, or update mode throws.
 
+An omitted matching key acts as a wildcard: it places no restriction on that field. Do not write `Scope = '*'` or use `$null` for this purpose. When one installer asset supports both existing scopes, omit `Scope` and use one task entry to update both `user` and `machine` entries while preserving their scopes:
+
+```powershell
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'nullsoft'
+  InstallerUrl  = $Release.X64Url
+}
+```
+
+Keep selectors that distinguish different assets, such as `Architecture` or `InstallerType`. Add `Scope` only when scope-specific assets or updates require it. These wildcard rules apply to normal update mode. Replace mode builds the installer set from task entries and needs explicit entries for the scopes to retain.
+
 Example for two existing WiX entries:
 
 ```powershell
@@ -60,7 +72,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 ```
 
-The architecture and type identify the old entries; `InstallerUrl` is applied. The updater removes the old hash and release date, downloads each new URL, and recomputes them.
+The architecture and type identify the old entries. `InstallerUrl` is applied. The updater removes the old hash and release date, downloads each new URL, and recomputes them.
 
 Use `Query` when the selector differs from the values to write:
 
@@ -71,7 +83,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 ```
 
-A dictionary `Query` requires exact values. A scriptblock `Query` receives an old installer and must return a truthy value. When `Query` exists, other fields are writes rather than implicit selectors, so include only intentional changes. `RawTherapee.RawTherapee` demonstrates a dictionary query.
+A dictionary `Query` requires exact values. A scriptblock `Query` receives an old installer and must return a truthy value. When `Query` exists, other fields update values without selecting entries. Include only intended changes. `RawTherapee.RawTherapee` demonstrates a dictionary query.
 
 ## Update Mode And Replace Mode
 
@@ -82,6 +94,8 @@ Normal mode iterates over every old installer and updates it from the last match
 ## Explicit Installer Overrides
 
 Any non-`Query` key must be a valid installer schema property. Explicit values take priority over parser output. Use this for source-authoritative data or an intentional manifest change, not to repeat data the installer parser can read.
+
+Omit unchanged author-controlled fields from task entries. The updater copies the existing effective installer before applying changes, so a ZIP task can omit `NestedInstallerFiles` entirely when every `RelativeFilePath` and `PortableCommandAlias` stays unchanged. Include that array when a nested path changes with the version, preserving any aliases and other entries that still apply. Do not supply an empty array to mean unchanged. Omission of static fields does not remove the requirement that every existing installer match a task entry in normal update mode. Volatile hashes and release dates are recomputed, and existing parser-owned fields may still be refreshed.
 
 Useful explicit cases include:
 
@@ -96,7 +110,7 @@ Do not put task-only keys beside installer schema fields. Persist ETags and othe
 
 For an installer without a supplied hash, manifest generation downloads it with the WinGet-compatible downloader, computes `InstallerSha256`, and reuses the file for analysis. A file registered in `$this.InstallerFiles` takes priority and avoids a second download.
 
-For ZIP installers, analysis extracts only the first authored `NestedInstallerFiles` path rather than expanding the whole archive. Known types (`msi`, `wix`, `burn`, `nullsoft`, `inno`, `msix`, and `appx`) are checked against their declared type before parsing. A definitive mismatch throws; incomplete metadata warns and preserves existing fields. Generic `exe` parsing is best effort.
+For ZIP installers, analysis extracts only the first authored `NestedInstallerFiles` path. Known types (`msi`, `wix`, `burn`, `nullsoft`, `inno`, `msix`, and `appx`) are checked against their declared type before parsing. A definitive mismatch throws. Incomplete metadata warns and preserves existing fields. Generic `exe` parsing is best effort.
 
 Parser metadata refreshes these authored fields when they already exist and the task did not override them:
 
@@ -108,7 +122,7 @@ Parser metadata refreshes these authored fields when they already exist and the 
 
 The updater may remove redundant `AppsAndFeaturesEntries.InstallerType` and structurally empty values. It does not infer or rewrite `Scope`, `ElevationRequirement`, `Protocols`, `FileExtensions`, `Dependencies`, locale `PackageName`, or locale `Publisher`. Those remain author-controlled because one artifact cannot safely prove every scope, dependency, first-run association, or localized identity.
 
-The parser also does not add every absent optional field. Author the desired manifest shape first; subsequent task runs keep parser-owned fields current.
+The parser also does not add every absent optional field. Author the desired manifest shape first. Subsequent task runs keep parser-owned fields current.
 
 ## Release Date
 
@@ -130,7 +144,7 @@ Each locale entry has this contract:
 }
 ```
 
-- `Key` and `Value` are required; `Locale` is optional.
+- `Key` and `Value` are required. `Locale` is optional.
 - With `Locale`, the entry applies only to an existing locale document with that exact locale. It does not create a new locale manifest.
 - Without `Locale`, the entry applies to every locale document whose schema accepts that key. Use this only for genuinely shared values.
 - A scalar or collection replaces the field after schema validation.
@@ -176,7 +190,7 @@ $this.CurrentState.Locale += [ordered]@{
 }
 ```
 
-Before applying locale entries, the updater removes old `ReleaseNotes`; a task must provide notes for the new release or leave them absent. It updates an existing copyright year, normalizes tags, and keeps `Moniker` only in the default locale. Installer parser names and publishers never overwrite locale `PackageName` or `Publisher`.
+Before applying locale entries, the updater removes old `ReleaseNotes`. A task must provide notes for the new release or leave them absent. It updates an existing copyright year, normalizes tags, and keeps `Moniker` only in the default locale. Installer parser names and publishers never overwrite locale `PackageName` or `Publisher`.
 
 ## Post-Processing
 

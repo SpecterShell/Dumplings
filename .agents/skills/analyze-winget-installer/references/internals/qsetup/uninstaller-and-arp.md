@@ -2,7 +2,7 @@
 
 ## Built-in registration
 
-Visible built-in registration requires enabled `SET_CREATE_UNINSTALL` and `SET_ADD_UNINSTALL_TO_ADD_REMOVE_PROGRAMS`. The uninstall key and `DisplayName` use `SET_ADD_REMOVE_PROGRAMS_DISPLAY_NAME`, falling back to `SET_PROG_NAME`. Display version, publisher, install location, icon, support URL, and update URL come from their corresponding literal directives.
+Visible built-in registration requires enabled `SET_CREATE_UNINSTALL` and `SET_ADD_UNINSTALL_TO_ADD_REMOVE_PROGRAMS`. The uninstall key and `DisplayName` use `SET_ADD_REMOVE_PROGRAMS_DISPLAY_NAME`, with `SET_PROG_NAME` as the fallback. Display version, publisher, install location, icon, support URL, and update URL come from their corresponding literal directives.
 
 ```text
 HKLM or HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\<DisplayName>
@@ -32,7 +32,7 @@ The parser resolves the generated uninstaller in this order:
 
 The verified historical formula is `UnInstall_<stamp>.exe` through QSetup 7. The verified current formula is `<media>_<stamp>.exe` for QSetup 12. QSetup 8 through 11 remain unresolved when both explicit routes are absent. Archived 8.1, 9.1, 10.0, and 11.0 builder installers all use explicit names and therefore do not prove the blank-name formula.
 
-`Uninstaller.NamingRoute` records the selected evidence. An unresolved generated name prevents the parser from fabricating `UninstallString`; it does not invalidate unrelated metadata.
+`Uninstaller.NamingRoute` records the selected evidence. An unresolved generated name prevents the parser from fabricating `UninstallString`. It does not invalidate unrelated metadata.
 
 ## Command quoting
 

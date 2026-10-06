@@ -4,7 +4,7 @@
 
 ## Project loading
 
-The builder reads the `.install4j` project, imported projects, compiler variables, media definitions, source paths, and extension descriptors. It validates object references before collecting files. IDs in the project connect screens, actions, launchers, file sets, and media sets; they are not generally preserved as user-facing product identities.
+The builder reads the `.install4j` project, imported projects, compiler variables, media definitions, source paths, and extension descriptors. It validates object references before collecting files. IDs in the project connect screens, actions, launchers, file sets, and media sets. They are not generally preserved as user-facing product identities.
 
 ## Variable expansion
 

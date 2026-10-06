@@ -40,7 +40,7 @@ The evaluator uses three-valued logic. Known values produce `True` or `False`; u
 
 An evaluation context keeps MSI properties, environment variables, component action and installed states, and feature action and installed states in separate namespaces. A property can be known exactly, known only to be present, known absent, or unresolved. Known presence is enough to evaluate `Property`, but `Property >= 601` remains unknown until the value is known.
 
-Architecture analysis supplies only architecture facts. It rejects a candidate architecture only when every relevant condition evaluates conclusively to `False`; malformed expressions and unrelated runtime properties remain compatible rather than creating false unsupported-architecture evidence.
+Architecture analysis supplies only architecture facts. It rejects a candidate architecture only when every relevant condition evaluates conclusively to `False`. Malformed expressions and unrelated runtime properties remain compatible rather than creating false unsupported-architecture evidence.
 
 Feature and component state symbols become meaningful only after Windows Installer has initialized costing and selection state. Callers analyzing earlier table phases should leave those symbols unresolved instead of assuming final installation states.
 

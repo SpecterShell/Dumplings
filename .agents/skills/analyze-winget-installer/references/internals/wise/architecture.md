@@ -26,7 +26,7 @@ The outer executable's machine type describes the bootstrapper. It does not prov
 
 ## Identity domains
 
-Wise media can contain several identifiers with different purposes:
+Wise media can contain several identifiers with different purposes.
 
 | Identity | Source | Use |
 | --- | --- | --- |

@@ -14,13 +14,13 @@ For a generic EXE package, `ProductCode` is the visible uninstall-key suffix. It
 | Resource 2.9 | Script-selected MSI, one literal uninstall row, or one literal `UNINSTKEY` with `UNINSTALLINFO` |
 | Split3 | One literal full uninstall-key path plus packaged uninstaller support |
 
-The 2.9.1 fixture calls `PBExecMSI` for `Setup1.msi`; its ProductCode and UpgradeCode come from that MSI. The 2.9.5 and 2.9.6 fixtures write HKLM `Software\Microsoft\Windows\CurrentVersion\Uninstall\PaquetBuilderSetup89` and return `PaquetBuilderSetup89`.
+The 2.9.1 fixture calls `PBExecMSI` for `Setup1.msi`. Its ProductCode and UpgradeCode come from that MSI. The 2.9.5 and 2.9.6 fixtures write HKLM `Software\Microsoft\Windows\CurrentVersion\Uninstall\PaquetBuilderSetup89` and return `PaquetBuilderSetup89`.
 
 ## ARP values
 
 When the selected uninstall row contains literal writes, the parser prefers its `DisplayName`, `DisplayVersion`, and `Publisher` over launcher version resources. `DisplayIcon` and `UninstallString` are resolved through deterministic variables such as `%DESTPATH%` and `%UNINSTFNAME%`. Unresolved dynamic values remain empty rather than being copied as invalid manifest paths.
 
-`AppsAndFeaturesEntries` is emitted only when one source-backed ProductCode exists. A nested MSI entry carries MSI-owned display fields. A generic EXE entry carries the literal ARP tuple. The common WinGet optimizer may later remove redundant ProductCode, DisplayName, Publisher, or InstallerType values; the parser should still return the complete evidence.
+`AppsAndFeaturesEntries` is emitted only when one source-backed ProductCode exists. A nested MSI entry carries MSI-owned display fields. A generic EXE entry carries the literal ARP tuple. The common WinGet optimizer may later remove redundant ProductCode, DisplayName, Publisher, or InstallerType values. The parser should still return the complete evidence.
 
 ## Visibility and registry view
 

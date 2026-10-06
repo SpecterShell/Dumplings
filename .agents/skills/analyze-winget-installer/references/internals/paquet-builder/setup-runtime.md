@@ -4,7 +4,7 @@
 
 The exact engine differs by structural route, but verified packages follow the same broad sequence: initialize system and package variables, check privilege and existing-version conditions, collect dialog values, establish `DESTPATH`, extract or copy payload files, apply package operations, prepare uninstaller state, and optionally launch an application.
 
-GINFOS preserves branch and label commands without pretending to execute them. Modern packages expose only bounded literal native call-site evidence. Static output therefore describes possible operations; a conditional package still needs VM evidence for the selected path.
+GINFOS preserves branch and label commands without executing them. Modern packages expose only bounded literal native call-site evidence. Static output therefore describes possible operations. A conditional package still needs VM evidence for the selected path.
 
 ## Scope and elevation
 

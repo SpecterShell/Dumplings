@@ -121,3 +121,4 @@ The official source is the primary specification for current NSIS output.
 - [7-Zip NSIS reader](https://github.com/ip7z/7zip/tree/main/CPP/7zip/Archive/Nsis)
 - [Jim Park Unicode NSIS](https://sourceforge.net/projects/nsisu/)
 - [NSISBI](https://sourceforge.net/projects/nsisbi/)
+- [electron-builder payload extraction template](https://github.com/electron-userland/electron-builder/blob/master/packages/app-builder-lib/templates/nsis/include/extractAppPackage.nsh)

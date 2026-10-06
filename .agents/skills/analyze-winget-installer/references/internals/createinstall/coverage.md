@@ -1,6 +1,6 @@
 # CreateInstall coverage
 
-Coverage is structural. A supported capability has a bounded implementation and distinct evidence; it does not imply that every Gentee expression or external side effect is statically decidable.
+Coverage is structural. A supported capability has a bounded implementation and distinct evidence. It does not imply that every Gentee expression or external side effect is statically decidable.
 
 ## Capability matrix
 

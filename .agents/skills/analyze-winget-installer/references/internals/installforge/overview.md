@@ -75,7 +75,7 @@ InstallForge setup executable
         `-- installed files                           Base64 UTF-16LE path segments
 ```
 
-The configuration and payload archives are independent. Resource bounds come from the PE resource directory. Payload bounds come from the 7z start header and next-header coordinates. The payload candidate must contain at least one canonical encoded path segment; this rejects unrelated 7z archives appended to or embedded in the executable.
+The configuration and payload archives are independent. Resource bounds come from the PE resource directory. Payload bounds come from the 7z start header and next-header coordinates. The payload candidate must contain at least one canonical encoded path segment. This rejects unrelated 7z archives appended to or embedded in the executable.
 
 ## Container headers
 
@@ -140,9 +140,9 @@ The shared 7z range locator validates header CRCs, next-header bounds, and archi
 
 ### SC.dat
 
-`SC.dat` is an INI document. Legacy media normally contains only `[Setup]`; modern media also contains `[SetupArchive]`. Text decoding accepts UTF-8, UTF-16 BOMs, strict BOM-less UTF-8, and Windows-1252 fallback. Repeated keys use the last compiled value.
+`SC.dat` is an INI document. Legacy media normally contains only `[Setup]`. Modern media also contains `[SetupArchive]`. Text decoding accepts UTF-8, UTF-16 BOMs, strict BOM-less UTF-8, and Windows-1252 fallback. Repeated keys use the last compiled value.
 
-Important `[Setup]` keys consumed by the parser include:
+`[Setup]` keys consumed by the parser include:
 
 | Key | Compiled meaning used by the parser |
 | --- | --- |
@@ -152,8 +152,8 @@ Important `[Setup]` keys consumed by the parser include:
 | `Website1` | Publisher/help URL and modern ARP `HelpLink` |
 | `InstallDir` | Default installation directory expression |
 | `Uninstaller` | Enables generation of the built-in uninstaller and ARP registration |
-| `UninstallerFilename` | Configured uninstaller basename or filename; defaults to `Uninstall` when empty |
-| `Uninstaller_VW` | Selects 64-bit uninstall registry view when true; otherwise 32-bit view |
+| `UninstallerFilename` | Configured uninstaller basename or filename. Defaults to `Uninstall` when empty |
+| `Uninstaller_VW` | Selects 64-bit uninstall registry view when true, otherwise 32-bit view |
 | `UninstallerUseCustomDisplayIcon` | Selects an explicit display icon instead of the uninstaller path |
 | `UninstallerCustomDisplayIcon` | Custom ARP display-icon expression |
 | `Addition` | Enables the finish-page launch action |
@@ -186,7 +186,7 @@ Operation files are separate archive entries. Records are concatenated without a
 +----------------------+ next record
 ```
 
-Literal uninstall-key writes are grouped by root and key. A group becomes ARP evidence only when it contains `DisplayName`. The observed custom table writes every value as `REG_SZ`; therefore `SystemComponent="1"` does not hide a row because Windows and WinGet require a numeric value for that marker. Controlled 1.6.1 media confirms that custom HKLM writes from the x86 setup runtime land in the 32-bit registry view. HKCU uninstall keys are view-shared and retain no single view label. `Uninstaller_VW` applies to the built-in uninstaller row and is not applied to custom records.
+Literal uninstall-key writes are grouped by root and key. A group becomes ARP evidence only when it contains `DisplayName`. The observed custom table writes every value as `REG_SZ`, so `SystemComponent="1"` does not hide a row because Windows and WinGet require a numeric value for that marker. Controlled 1.6.1 media confirms that custom HKLM writes from the x86 setup runtime land in the 32-bit registry view. HKCU uninstall keys are view-shared and retain no single view label. `Uninstaller_VW` applies to the built-in uninstaller row and is not applied to custom records.
 
 ### Variables.dat
 
@@ -200,7 +200,7 @@ RegistryValueName
 DefaultValue
 ```
 
-The runtime reads the configured registry value and falls back to `DefaultValue`. Because the registry value can replace that default, static projection retains both as evidence but does not substitute a custom variable into authoritative ARP, association, or installation-path fields. Since InstallForge 1.4, custom variables are referenced as `[Name]`; earlier projects may use the older angle-bracket form. The resolver recognizes both forms and stops after eight passes to bound recursive substitutions.
+The runtime reads the configured registry value and falls back to `DefaultValue`. Because the registry value can replace that default, static projection retains both as evidence but does not substitute a custom variable into authoritative ARP, association, or installation-path fields. Since InstallForge 1.4, custom variables are referenced as `[Name]`. Earlier projects may use the older angle-bracket form. The resolver recognizes both forms and stops after eight passes to bound recursive substitutions.
 
 ### Commands.dat
 
@@ -225,7 +225,7 @@ Shortcut records evolved while retaining line-oriented framing.
 | InstallForge 1.2.3 through 1.2.9 | `Target`, `Name`, `Arguments` |
 | InstallForge 1.3 and later | `Target`, `Name`, `Arguments`, `IconPath`, `IconIndex` |
 
-The table name selects the destination class: desktop or Start menu. The compiled `DFA` value selects per-user versus common Desktop placement, and `SFA` does the same for Start menu placement. Controlled 1.6.1 installation proves that `DFA=1` writes below `C:\Users\Public\Desktop` and `SFA=1` writes below `C:\ProgramData\Microsoft\Windows\Start Menu\Programs`; zero uses the current user's corresponding folder. Each returned shortcut therefore includes `AllUsers`, `Scope`, and `ScopeEvidence`.
+The table name selects the destination class: desktop or Start menu. The compiled `DFA` value selects per-user versus common Desktop placement, and `SFA` does the same for Start menu placement. Controlled 1.6.1 installation proves that `DFA=1` writes below `C:\Users\Public\Desktop` and `SFA=1` writes below `C:\ProgramData\Microsoft\Windows\Start Menu\Programs`. Zero uses the current user's corresponding folder. Each returned shortcut therefore includes `AllUsers`, `Scope`, and `ScopeEvidence`.
 
 ### OS.dat and other entries
 
@@ -292,7 +292,7 @@ DisplayIcon         UninstallString
 HelpLink            Website1
 ```
 
-These legacy rows omit the modern `InstallLocation`, `InstallDate`, `EstimatedSize`, `NoModify`, and `NoRepair` values. If `UninstallerFilename` lacks `.exe`, the legacy runtime appends it; modern media preserve the configured ARP string without adding the extension.
+These legacy rows omit the modern `InstallLocation`, `InstallDate`, `EstimatedSize`, `NoModify`, and `NoRepair` values. If `UninstallerFilename` lacks `.exe`, the legacy runtime appends it. Modern media preserve the configured ARP string without adding the extension.
 
 ## Installability
 
@@ -322,17 +322,17 @@ A valid configuration without a payload remains family evidence and produces an 
 
 ## Extraction and safety
 
-`Expand-InstallForgeInstaller` reuses the validated layout and opens only the selected bounded payload range. Omitting `Name` selects all installed payload files; a supplied decoded path or wildcard selects matching entries. Modern 1.4.x GZip/TAR and 1.5+ 7z archive names are decoded before selection and safe-path resolution.
+`Expand-InstallForgeInstaller` reuses the validated layout and opens only the selected bounded payload range. Omitting `Name` selects all installed payload files. A supplied decoded path or wildcard selects matching entries. Modern 1.4.x GZip/TAR and 1.5+ 7z archive names are decoded before selection and safe-path resolution.
 
 Extraction enforces resolved source and destination paths, safe relative paths, duplicate-output tracking, collision policy, 65,536 entries, 256 MiB per entry during cataloging, a 4 GiB archive bound, and a caller-configurable aggregate output limit that defaults to 16 GiB. The shared archive layer adds CRC, decompression, traversal, and stream-ownership checks.
 
-InstallForge 1.4+ places its generated uninstaller in the installed-file archive as an ordinary root payload record, even when `SC.dat` omits the physical `.exe` suffix from the ARP command. `GeneratedUninstallerEntry` identifies that record and `Expand-InstallForgeInstaller` exports it normally. Verified 1.2.x-1.3.x media generate `Uninstall.exe` and `uninstall.dat` at installation time instead; those runtime-generated legacy bytes cannot be recovered from the installed-file archive. Configuration resources and operation tables are not exported by normal payload extraction.
+InstallForge 1.4+ places its generated uninstaller in the installed-file archive as an ordinary root payload record, even when `SC.dat` omits the physical `.exe` suffix from the ARP command. `GeneratedUninstallerEntry` identifies that record and `Expand-InstallForgeInstaller` exports it normally. Verified 1.2.x-1.3.x media generate `Uninstall.exe` and `uninstall.dat` at installation time instead. Those runtime-generated legacy bytes cannot be recovered from the installed-file archive. Configuration resources and operation tables are not exported by normal payload extraction.
 
 ## Performance model
 
 One top-level parse computes one logical layout containing the PE overlay, configuration route, configuration-entry map, payload range, decoded tables, ARP projection, and payload catalog. Bounded ranges may be reopened when the selected archive API requires independent seeking or when payload binaries are selectively materialized for PE analysis. Metadata readers delegate to `Get-InstallForgeInfo`, so callers should invoke it once and reuse the result rather than call several `Read-*FromInstallForge` functions.
 
-The parser does not buffer the complete installer or payload. The small configuration archive is capped at 16 MiB and materialized once because several tables are correlated. Payload entries are cataloged through a bounded archive view and materialized only during extraction. Architecture and dependency analysis first selects an exact configured `ProgramRun` executable. If that path is absent or ambiguous, it analyzes the complete payload EXE set, excluding the generated uninstaller, only when all executables fit within the 32-file and 512 MiB limits. The parser never samples an oversized set. A complete mixed-architecture result remains an architecture set and suppresses the scalar `Architecture`; it does not fall back to the outer x86 setup stub.
+The parser does not buffer the complete installer or payload. The small configuration archive is capped at 16 MiB and materialized once because several tables are correlated. Payload entries are cataloged through a bounded archive view and materialized only during extraction. Architecture and dependency analysis first selects an exact configured `ProgramRun` executable. If that path is absent or ambiguous, it analyzes the complete payload EXE set, excluding the generated uninstaller, only when all executables fit within the 32-file and 512 MiB limits. The parser never samples an oversized set. A complete mixed-architecture result remains an architecture set and suppresses the scalar `Architecture`. It does not fall back to the outer x86 setup stub.
 
 ## Known gaps
 

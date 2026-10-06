@@ -35,7 +35,7 @@ dataN.cab
     `-- repeated uint16-LE compressed length + raw Deflate block
 ```
 
-InstallShield 5 uses two related profiles. Early media stores both the catalog and payload ranges in `data1.cab`; its family-1 raw version can normalize to major `0`, as in the archived InstallShield 5 Professional value `0x01000004`. Later media can split the catalog into `data1.hdr` and adds a digest to each descriptor.
+InstallShield 5 uses two related profiles. Early media stores both the catalog and payload ranges in `data1.cab`. Its family-1 raw version can normalize to major `0`, as in the archived InstallShield 5 Professional value `0x01000004`. Later media can split the catalog into `data1.hdr` and add a digest to each descriptor.
 
 ```text
 data1.cab or data1.hdr file-table offset entry -> FileDescriptor5
@@ -137,7 +137,7 @@ A descriptor resolves to bytes only after its name, offset, validity flag, and l
 
 `LinkPrevious` points toward the descriptor that owns stored bytes. Resolution requires a valid index and an acyclic chain. `LinkNext` is a forward relationship, not an unchecked extraction pointer.
 
-Split files form one logical byte stream over consecutive volume ranges. Deflate framing may cross a volume boundary; the physical volumes are not independent compressed files.
+Split files form one logical byte stream over consecutive volume ranges. Deflate framing may cross a volume boundary. The physical volumes are not independent compressed files.
 
 Each required numbered volume has its own common and volume header. The descriptor must belong to the volume's declared file range. A missing intermediate volume makes the logical file incomplete while leaving catalog metadata available.
 
@@ -183,7 +183,7 @@ Locale-specific setup types list feature paths. Components connect those paths t
 
 ## Runtime application of authored records
 
-`<Default>` is created during normal file transfer. An unassociated named registry set is created when project code calls `CreateRegistrySet` for that name; the empty-string form selects all applicable sets. Component-associated registry records are created while the selected component transfers.
+`<Default>` is created during normal file transfer. An unassociated named registry set is created when project code calls `CreateRegistrySet` for that name. The empty-string form selects all applicable sets. Component-associated registry records are created while the selected component transfers.
 
 `CreateShellObjects` similarly applies unassociated shell records. Shortcuts owned by a component follow component transfer and feature selection. The media catalog therefore describes possible authored resources, while setup type, feature state, component state, and script calls determine which resources are installed.
 

@@ -5,7 +5,7 @@ Kachina release numbers are not stored as an authoritative builder version in th
 | Structural generation | Known release boundary | Control-record order | Index state |
 | --- | --- | --- | --- |
 | `LegacyScan` | 0.0.1 through 0.0.17 | `.config.json`, optional `.image`, `.metadata.json`, payloads | no compact index or pre-index routing |
-| `EarlyIndexed` | 0.0.18 | `\0INDEX`, `\0CONFIG`, optional `\0IMAGE`, `\0META` | original pre-index order; first field can include the historical INDEX-header double count |
+| `EarlyIndexed` | 0.0.18 | `\0INDEX`, `\0CONFIG`, optional `\0IMAGE`, `\0META` | original pre-index order. The first field can include the historical INDEX-header double count |
 | `Indexed` | 0.0.19 and later embedded media | `\0CONFIG`, optional `\0IMAGE`, `\0INDEX`, `\0META` | corrected order and validated boundaries |
 | `ConfigOnly` | observed from 0.0.25 | `\0CONFIG`, optional image; metadata and payload absent | five pre-index lengths are zero and target data comes from the configured source |
 
@@ -15,7 +15,7 @@ The tagged Tauri releases and the later native branch can both use `Indexed` or 
 
 ## Metadata hash transitions
 
-Legacy metadata uses `md5` record identities. Current metadata can use `xxh`, interpreted as XXH3-128 according to the builder/runtime source and fixture verification. The parser chooses the field present on each metadata item and verifies decompressed bytes with that algorithm. An unknown hash label remains unsupported; it is not guessed from its width.
+Legacy metadata uses `md5` record identities. Current metadata can use `xxh`, interpreted as XXH3-128 according to the builder/runtime source and fixture verification. The parser chooses the field present on each metadata item and verifies decompressed bytes with that algorithm. An unknown hash label remains unsupported. It is not guessed from its width.
 
 ## Index compatibility
 

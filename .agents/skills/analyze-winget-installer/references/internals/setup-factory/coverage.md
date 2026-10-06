@@ -33,4 +33,4 @@ The optional Modern8Plus Lua discriminator and reserved fields are based on stab
 
 ## Representative fixtures
 
-The focused tests cover Setup Factory 3.1, 4.0, 5.0, 6.0.1.2, 6.0.1.4, 7.0.1, 7.0.3, 7.0.6.1, 8.1.1008.0, 9.0.3, 9.0.4, 9.1.1, 9.2.0, 9.5.1, and 10.2.0 media plus current package installers. Historical builders are cached outside Git under `Dumplings-TestFixtures`; malformed and decoder-edge fixtures use Pester's temporary directory.
+The focused tests cover Setup Factory 3.1, 4.0, 5.0, 6.0.1.2, 6.0.1.4, 7.0.1, 7.0.3, 7.0.6.1, 8.1.1008.0, 9.0.3, 9.0.4, 9.1.1, 9.2.0, 9.5.1, and 10.2.0 media plus current package installers. Historical builders are cached outside Git under `Dumplings-TestFixtures`. Malformed and decoder-edge fixtures use Pester's temporary directory.

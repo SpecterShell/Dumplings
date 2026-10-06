@@ -24,7 +24,7 @@ native PE launcher
     `-- InstallerData/.../Resource1.zip and payloads
 ```
 
-Dumplings derives the embedded ZIP base from the end-of-central-directory and central-directory offset; the first `PK` local header is not trusted as the archive base. Nested ZIP ranges receive independent entry, size, path, and expansion checks. `InstallScript.iap_xml` is structured Java-bean XML containing product identity and actions.
+Dumplings derives the embedded ZIP base from the end-of-central-directory and central-directory offset. The first `PK` local header is not trusted as the archive base. Nested ZIP ranges receive independent entry, size, path, and expansion checks. `InstallScript.iap_xml` is structured Java-bean XML containing product identity and actions.
 
 ```text
 InstallScript.iap_xml
@@ -66,7 +66,7 @@ Open the installer once, reuse parsed layout evidence, and prefer bounded stream
 
 ## Known gaps
 
-Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence; they are not inferred from arbitrary strings.
+Unsupported variants and conditional runtime behavior remain explicit warnings or unresolved evidence. They are not inferred from arbitrary strings.
 
 ## Implementation mapping
 

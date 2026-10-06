@@ -16,9 +16,17 @@ Read [Generic EXE Fallback Parser Internals](../../internals/generic-exe/overvie
 
 Use `Get-WinGetInstallerAnalysis` and [Installer analysis](../../workflows/installer-analysis.md). If no parser recognizes the file, record bounded PE, resource, archive, and string evidence without guessing command-line behavior.
 
+### Inspect an unidentified GUI executable in the VM
+
+If a GUI executable remains unidentified after static analysis, launch it interactively in a clean, checkpointed VM and inspect its interface before treating it as an installer. Follow [VM validation](../../workflows/vm-validation.md) for staging, hash verification, visible desktop execution, and before/after state capture. The [malware-alert stop rule](../../workflows/installer-analysis.md#stop-on-malware-alerts) applies before and during this inspection.
+
+Record a screenshot and whether the executable opens an application, setup wizard, self-extractor, or download bootstrapper. Compare filesystem and registry changes to check for installed files, shortcuts, or an uninstall entry. An application window alone does not prove portability because first-run setup may still install or register the application. Confirm that it runs from its supplied files without an installation step before routing it to the [portable workflow](../portable/workflow.md).
+
+If it performs installation without a recognized family, continue this custom-installer workflow. Inspect any nested payload separately. Preserve the evidence and restore the checkpoint before testing silent switches. If the interface and state changes leave the classification unresolved, warn the user rather than assigning an installer type.
+
 ### Find matching publisher evidence
 
-Use `winget search` to find other accepted packages from the same publisher. Navigate directly to those manifest paths and corresponding Dumplings tasks. Reuse a switch only when the current artifact has the same installer family and configuration; publisher identity alone is insufficient.
+Use `winget search` to find other accepted packages from the same publisher. Navigate directly to those manifest paths and corresponding Dumplings tasks. Reuse a switch only when the current artifact has the same installer family and configuration. Publisher identity alone is insufficient.
 
 ### Identify nested payload and visible ARP ownership
 
@@ -30,7 +38,7 @@ Use payload architecture and installed executable evidence, not the bootstrapper
 
 ### Validate generic switches one at a time
 
-When no stronger evidence exists, test `/S`, `/silent`, `/quiet`, `-s`, `--silent`, and `--quiet` individually in a restored VM. Do not combine guesses. Accept a switch only when there is no blocking UI and installed files, visible ARP, scope, and process exit code agree. A zero exit code alone is insufficient.
+For a confirmed custom installer with no stronger switch evidence, test `/S`, `/silent`, `/quiet`, `-s`, `--silent`, and `--quiet` individually in a restored VM. Do not combine guesses. Accept a switch only when there is no blocking UI and installed files, visible ARP, scope, and process exit code agree. A zero exit code alone is insufficient.
 
 Unknown EXE families require validation for cancellation, reboot handling, architecture, install location, and downloaded payloads. Specify only `interactive` and `silent` unless a distinct silent-with-progress route is proved.
 

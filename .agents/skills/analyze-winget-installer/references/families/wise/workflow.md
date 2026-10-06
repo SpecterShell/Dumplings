@@ -2,7 +2,7 @@
 
 ## When to use
 
-Use this workflow when `Test-WiseInstaller` succeeds or structural analysis identifies a WiseScript overlay, a Wise `.WISE` MSI record, or a vendor launcher containing a complete WiseScript setup. WinGet invokes these routes as `InstallerType: exe`; the embedded format determines metadata authority and supported switches.
+Use this workflow when `Test-WiseInstaller` succeeds or structural analysis identifies a WiseScript overlay, a Wise `.WISE` MSI record, or a vendor launcher containing a complete WiseScript setup. WinGet invokes these routes as `InstallerType: exe`. The embedded format determines metadata authority and supported switches.
 
 Read [Wise installer internals](../../internals/wise/overview.md) before changing detection, binary decoding, extraction, or parser limits.
 
@@ -124,7 +124,7 @@ Do not use this shape when `Wise.Metadata.ScriptModelUnsupported`, package-speci
 
 ### Historical NE WiseScript
 
-Wise 5, 6, and early 7 can use a 16-bit NE host. Wise 7.01 state records are decoded. Wise 5 and 6 currently stop after structural header, Deflate, size, and CRC validation because their state dialect is unsupported. Preserve existing manifest metadata for those partial routes and use VM evidence; do not recover identity from arbitrary strings.
+Wise 5, 6, and early 7 can use a 16-bit NE host. Wise 7.01 state records are decoded. Wise 5 and 6 currently stop after structural header, Deflate, size, and CRC validation because their state dialect is unsupported. Preserve existing manifest metadata for those partial routes and use VM evidence. Do not recover identity from arbitrary strings.
 
 ## Step 3: Establish ARP ownership
 
@@ -138,7 +138,7 @@ Never use a temporary Run key, resume token, log path, generated uninstaller fil
 
 Use explicit nested MSI scope evidence when available. `ALLUSERS=1` supports machine scope. If the MSI does not prove a single scope, omit or preserve `Scope` until VM validation confirms the real ARP hive.
 
-`Requested Execution Level=requireAdministrator` supports `ElevationRequirement: elevationRequired`; it does not by itself establish machine scope.
+`Requested Execution Level=requireAdministrator` supports `ElevationRequirement: elevationRequired`. It does not by itself establish machine scope.
 
 Determine architecture from the nested MSI template and installed application binaries. The outer NE or PE machine type describes the bootstrapper and can differ from the payload architecture.
 
@@ -186,5 +186,5 @@ Follow [VM validation workflow](../../workflows/vm-validation.md). Wise-specific
 
 ## Known examples
 
-- `TexasInstruments.TIConnect` uses `WiseSection/Msi`; the nested Wise-authored MSI supplies ProductCode, UpgradeCode, machine scope, `INSTALLDIR`, and the visible MSI ARP entry.
+- `TexasInstruments.TIConnect` uses `WiseSection/Msi`. The nested Wise-authored MSI supplies ProductCode, UpgradeCode, machine scope, `INSTALLDIR`, and the visible MSI ARP entry.
 - [`FrancotypPostalia.NavigatorPlus` 1.42 x86 and x64](https://www.fpmailing.co.uk/support/navigatorplus-support) use an outer resource launcher, a Wise 9.02 WiseScript prerequisite package, and distinct nested MSI payloads. Both supplied wrappers are interactive-only and request administrator elevation.

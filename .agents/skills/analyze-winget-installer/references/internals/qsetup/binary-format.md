@@ -60,7 +60,7 @@ Base       Offset  Size  Field
 [overlay]  0x09    N     UTF-8 pipe-delimited preamble
 ```
 
-The UTF-8 preamble begins and ends with a pipe and contains an executable-name field. Its remaining fields are retained as evidence because labels and uses changed across releases. Every verified payload record still uses zlib; an unfamiliar format byte does not authorize another decoder.
+The UTF-8 preamble begins and ends with a pipe and contains an executable-name field. Its remaining fields are retained as evidence because labels and uses changed across releases. Every verified payload record still uses zlib. An unfamiliar format byte does not authorize another decoder.
 
 ## Split descriptor
 
@@ -71,7 +71,7 @@ Base          Offset  Size  Field
 [descriptor]  0x04    N     |SourceDirectory|CompanionName|Mode|Secret|DeclaredLength?|
 ```
 
-The kernel descriptor has the optional declared companion length; the companion omits it because the stream length is already known. `CompanionName` must be a leaf name, decimal fields must parse exactly, and the observed secret is 16 through 128 lowercase ASCII letters. Kernel and companion preambles, secret, name, and declared length must agree.
+The kernel descriptor has the optional declared companion length. The companion omits it because the stream length is already known. `CompanionName` must be a leaf name, decimal fields must parse exactly, and the observed secret is 16 through 128 lowercase ASCII letters. Kernel and companion preambles, secret, name, and declared length must agree.
 
 ## Record framing
 
@@ -129,4 +129,4 @@ Base      Offset  Size  Field
 
 Footer offset, record count, magic, self-length, parsed endpoint, zero alignment, and complete certificate trailer must agree. QSetup 7.5 and 8.1 can carry valid certificate records that the PE security directory does not declare, so the terminal reader validates the envelope at the actual record boundary.
 
-Each `WIN_CERTIFICATE` record contains `dwLength:u32`, `wRevision:u16`, `wCertificateType:u16`, and certificate bytes, rounded to eight bytes. Accepted revisions are `0x0100` and `0x0200`; the accepted type is PKCS signed data (`2`). A footerless stream is accepted only when records end at exact physical EOF.
+Each `WIN_CERTIFICATE` record contains `dwLength:u32`, `wRevision:u16`, `wCertificateType:u16`, and certificate bytes, rounded to eight bytes. Accepted revisions are `0x0100` and `0x0200`. The accepted type is PKCS signed data (`2`). A footerless stream is accepted only when records end at exact physical EOF.

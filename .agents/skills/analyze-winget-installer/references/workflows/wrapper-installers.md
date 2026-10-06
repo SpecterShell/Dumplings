@@ -8,12 +8,12 @@ Use this workflow for SFX archives, bootstrappers, nested MSI packages, and down
 2. Extract selected content through bounded static parser functions.
 3. Analyze the nested payload as an independent installer.
 4. Compose the outer forwarding syntax with the nested installer's silent, no-reboot, and install-location arguments.
-5. Model the component that owns the visible ARP entry. `WindowsInstaller=1` makes an entry MSI to WinGet; `SystemComponent=1` hides it.
+5. Model the component that owns the visible ARP entry. `WindowsInstaller=1` makes an entry MSI to WinGet. `SystemComponent=1` hides it.
 6. Add `AppsAndFeaturesEntries` only for meaningful differences from the installer and default-locale identity.
 
 The outer architecture, filename extension, and family defaults do not prove nested behavior. A wrapper can contain MSI or EXE payloads, architecture-specific choices, prerequisites, or a download client.
 
-For [Dell Update Packages](../families/dell-update-package/workflow.md), start with the nested family's defaults through `/passthrough`; embedded MUP switches are a separate `EmbeddedMup` suggestion. Consult that alternative for a focused adaptation only if default-command validation fails, then reanalyze and validate the revised command.
+For [Dell Update Packages](../families/dell-update-package/workflow.md), start with the nested family's defaults through `/passthrough`. Embedded MUP switches are a separate `EmbeddedMup` suggestion. Consult that alternative for a focused adaptation only if default-command validation fails, then reanalyze and validate the revised command.
 
 Treat architecture words in filenames as routing hints. `win64` identifies x64, while bare `arm` may mean ARM32 or ARM64 and `win32` may describe x86 or x64 software. Resolve ambiguous labels from PE machine types, package metadata, installer conditions, and the installed primary binaries.
 

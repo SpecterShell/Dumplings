@@ -89,7 +89,7 @@ try {
 }
 ```
 
-If the release date requires another endpoint, fetch and parse that endpoint in a separate block. Do not include later release-note requests in the same block. Preserve source precision when practical; manifest generation formats the value as `yyyy-MM-dd`.
+If the release date requires another endpoint, fetch and parse that endpoint in a separate block. Do not include later release-note requests in the same block. Preserve source precision when practical. Manifest generation formats the value as `yyyy-MM-dd`.
 
 Do not derive `ReleaseTime` from the installer's HTTP `Last-Modified` header. Manifest updating reads that header and supplies the fallback `ReleaseDate` automatically when no authoritative task or installer date exists. Set `ReleaseTime` only from release metadata whose meaning is established, such as a release API timestamp, appcast publication date, or versioned changelog entry. `CurrentState.LastModified` may still track changes to a versionless URL, but it must not be copied into `CurrentState.ReleaseTime`.
 
@@ -97,7 +97,7 @@ Do not derive `ReleaseTime` from the installer's HTTP `Last-Modified` header. Ma
 
 Manifest updating removes old `ReleaseNotes` before applying locale entries, but an existing `ReleaseNotesUrl` remains unless the task explicitly removes it. Before fallible parsing, assign either a trustworthy general release-notes URL or `$null`. Prefer a fallback URL when the publisher maintains a changelog page that remains useful even without a version anchor. Use `$null` when no such page exists.
 
-`ReleaseNotesUrl` must open a human-readable HTTP(S) resource: an HTML release or changelog page, a plain-text document, or a Markdown document. Do not use JSON or XML endpoints, appcasts, GitHub API URLs, or other API-like machine-readable sources for this manifest field. A task may retrieve those sources to populate `ReleaseNotes`; it should then link to the corresponding human-facing release or changelog page, use a trustworthy general fallback, or clear `ReleaseNotesUrl` when no human-readable source exists.
+`ReleaseNotesUrl` must open a human-readable HTTP(S) resource: an HTML release or changelog page, a plain-text document, or a Markdown document. Do not use JSON or XML endpoints, appcasts, GitHub API URLs, or other API-like machine-readable sources for this manifest field. A task may retrieve those sources to populate `ReleaseNotes`. It should then link to the corresponding human-facing release or changelog page, use a trustworthy general fallback, or clear `ReleaseNotesUrl` when no human-readable source exists.
 
 `Anthropic.ClaudeCode` assigns the changelog first, then upgrades it to the current version's anchor after parsing the raw Markdown:
 

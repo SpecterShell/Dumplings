@@ -14,11 +14,11 @@ Scalar group attributes use nearest-value inheritance. Collection records accumu
 
 ## Implementations
 
-An implementation can define ID, version, architecture, stability, rollout percentage, license, main command, self-test, documentation directory, dependencies, commands, bindings, and retrieval methods. A package implementation delegates deployment to a distribution package manager. `ApplicableImplementations` applies only the known Zero Install runtime-version condition; it is not solver output.
+An implementation can define ID, version, architecture, stability, rollout percentage, license, main command, self-test, documentation directory, dependencies, commands, bindings, and retrieval methods. A package implementation delegates deployment to a distribution package manager. `ApplicableImplementations` applies only the known Zero Install runtime-version condition. It is not solver output.
 
 ## Runtime-version conditions
 
-`if-0install-version` supports exact versions, exclusions, inclusive lower and exclusive upper bounds, open bounds, and union with `|`. Conditions inherit through containing groups. A missing runtime version leaves conditional applicability as null rather than selecting or rejecting the record.
+`if-0install-version` supports exact versions, exclusions, inclusive lower and exclusive upper bounds, open bounds, and union with `|`. Conditions inherit through containing groups. A missing runtime version leaves conditional applicability as null, and the record is neither selected nor rejected.
 
 ## Commands and dependencies
 

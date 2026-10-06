@@ -6,7 +6,7 @@ Use `InstallerType: exe` for CreateInstall-generated setup EXEs. The parser cove
 
 ## Detection
 
-Call `Test-CreateInstall` or `Get-CreateInstallInfo`. Strong detection requires a valid PE containing one `.gentee` section, one bounded `Gentee Launcher\0` link header, a valid GE 4 program, and a referenced `MAINVAR` project table. A GEA archive is optional because CreateInstall can compile projects without packaged files. Product strings, PE version resources, `.ci` or `.ciq` names, and isolated GEA data are hints rather than sufficient installer-family evidence.
+Call `Test-CreateInstall` or `Get-CreateInstallInfo`. Strong detection requires a valid PE containing one `.gentee` section, one bounded `Gentee Launcher\0` link header, a valid GE 4 program, and a referenced `MAINVAR` project table. A GEA archive is optional because CreateInstall can compile projects without packaged files. Product strings, PE version resources, `.ci` or `.ciq` names, and isolated GEA data are hints, not sufficient installer-family evidence.
 
 The parser validates GEA v1/v2 structures and expands Store, LZGE, and Gentee-modified PPMd-I blocks with bounded source-backed decoders. Do not pass GEA PPMd blocks to SharpCompress's standard `PpmdStream`: Gentee changed the PPMd-I model, allocator, framing, and solid continuation behavior.
 
@@ -80,7 +80,7 @@ Shortcut evidence covers direct `shortcutex` calls and `shlist` table rows. Chil
 $Files = Expand-CreateInstallInstaller -Path $InstallerPath -DestinationPath $DestinationPath -VolumePath $CompanionDirectory -CollisionAction Rename
 ```
 
-Omitting `-Name` extracts every archive entry. Use `-Name` for exact paths or wildcard selection. Omit `-VolumePath` when companion volumes are beside the main setup; otherwise point it at their directory. `GEA.VolumeFiles`, `MissingVolumes`, and `AllVolumesAvailable` show which one-based names were derived from the archive pattern. Missing companions preserve catalog and metadata evidence but disable extraction. Internal callers use `Rename`; interactive callers can retain the default prompt-on-collision behavior. Password-protected and unknown compression records are reported but not bypassed.
+Omitting `-Name` extracts every archive entry. Use `-Name` for exact paths or wildcard selection. Omit `-VolumePath` when companion volumes are beside the main setup. Otherwise point it at their directory. `GEA.VolumeFiles`, `MissingVolumes`, and `AllVolumesAvailable` show which one-based names were derived from the archive pattern. Missing companions preserve catalog and metadata evidence but disable extraction. Internal callers use `Rename`; interactive callers can retain the default prompt-on-collision behavior. Password-protected and unknown compression records are reported but not bypassed.
 
 ### 7. Resolve diagnostics and validate dynamic behavior
 

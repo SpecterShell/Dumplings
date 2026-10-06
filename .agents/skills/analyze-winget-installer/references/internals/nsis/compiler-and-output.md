@@ -34,7 +34,7 @@ Preprocessor effects do not survive as runtime instructions. A macro invocation 
 
 ## Command emission
 
-Each runtime command becomes one `entry` record. The first integer is an opcode; the remaining integers are opcode-specific operands. The compiler interns text in a shared string table and writes offsets into entries. Immediate integers are also represented through the compiler's integer-string encoding where the runtime expects a string expression.
+Each runtime command becomes one `entry` record. The first integer is an opcode. The remaining integers are opcode-specific operands. The compiler interns text in a shared string table and writes offsets into entries. Immediate integers are also represented through the compiler's integer-string encoding where the runtime expects a string expression.
 
 Labels, functions, callbacks, page handlers, and section code are first recorded symbolically. `resolve_coderefs` converts them to one-based instruction addresses before headers are serialized. Runtime jump value zero means fall through; nonzero values are converted back to a zero-based table position by subtracting one.
 
@@ -50,7 +50,7 @@ Localized strings are placed in per-language tables. A negative command string o
 
 Page declarations produce page records with dialog IDs, flags, captions, and callback addresses. PageEx and Modern UI macros configure the same underlying records and resources.
 
-Section declarations produce section records containing the section name, selected flags, installation-type masks, size, command start, and command count. Functions are command ranges referenced by call operands and callback fields; they do not have a separate serialized instruction format.
+Section declarations produce section records containing the section name, selected flags, installation-type masks, size, command start, and command count. Functions are command ranges referenced by call operands and callback fields. They do not have a separate serialized instruction format.
 
 ## Payload catalog and deduplication
 

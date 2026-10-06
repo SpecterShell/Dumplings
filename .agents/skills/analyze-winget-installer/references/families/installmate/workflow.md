@@ -6,7 +6,7 @@ Use `InstallerType: exe` for a structurally confirmed Tarma InstallMate package.
 
 ## Detection
 
-Run `Test-InstallMate` or `Get-InstallMateInfo`. The parser requires a valid PE plus one of the source-backed package routes: an overlay-relative `tiz1` whose Zlib stream begins with `tzff` `Setup.ini`; a bounded `tiz2` RFC 1950 Zlib stream; a bounded `tiz3` raw-LZMA stream; or a bounded `tiz4` raw-LZMA2 stream in an overlay or at `+0x10` in `.tsustub`/`.tsuarch`. Every modern route must decode to a type-2 `tzf3` record containing a `tin?` database. When a launcher contains multiple TIZ archives, the unique archive with that setup database is selected.
+Run `Test-InstallMate` or `Get-InstallMateInfo`. The parser requires a valid PE plus one of the source-backed package routes: an overlay-relative `tiz1` whose Zlib stream begins with `tzff` `Setup.ini`, a bounded `tiz2` RFC 1950 Zlib stream, a bounded `tiz3` raw-LZMA stream, or a bounded `tiz4` raw-LZMA2 stream in an overlay or at `+0x10` in `.tsustub`/`.tsuarch`. Every modern route must decode to a type-2 `tzf3` record containing a `tin?` database. When a launcher contains multiple TIZ archives, the unique archive with that setup database is selected.
 
 Read [InstallMate internals](../../internals/installmate/overview.md) before changing detection, decompression, database routing, or extraction limits.
 
@@ -66,7 +66,7 @@ $Info.DatabaseInfo
 $Info | Select-Object Components, Folders, RegistryWrites, EnvironmentChanges, Shortcuts, ExecutionActions, Prerequisites, Services
 ```
 
-`ArchiveInfo.FormatVersion` preserves the two physical TIZ version words. `ArchiveInfo.BuilderFormatVersion` exposes their observed release order. Use the PE product version for package versioning; do not treat either archive value as application-version evidence.
+`ArchiveInfo.FormatVersion` preserves the two physical TIZ version words. `ArchiveInfo.BuilderFormatVersion` exposes their observed release order. Use the PE product version for package versioning. Do not treat either archive value as application-version evidence.
 
 ### 2. Establish product and ARP identity
 
@@ -76,7 +76,7 @@ Legacy `Setup.ini` media can also establish `DisplayName`, `DisplayVersion`, `Pu
 
 ### 3. Interpret scope conservatively
 
-Legacy media uses its explicit uninstall hive or `AdminRights` field. Verified variable-length `inst` records in `tin9` and `tinB` media provide install levels 0 through 5; this includes official InstallMate 9.4.1, archived InstallMate 9.10 Loader + Download media, InstallMate 9.114, and controlled InstallMate 11 packages. `PackageDownloadUrl` reports the compiled Loader + Download source when present. Unmapped `tin3` and `tin5` databases fall back to the PE requested execution level: `requireAdministrator` is machine scope, `asInvoker` is user scope, and `highestAvailable` is conditional dual-scope behavior.
+Legacy media uses its explicit uninstall hive or `AdminRights` field. Verified variable-length `inst` records in `tin9` and `tinB` media provide install levels 0 through 5. This includes official InstallMate 9.4.1, archived InstallMate 9.10 Loader + Download media, InstallMate 9.114, and controlled InstallMate 11 packages. `PackageDownloadUrl` reports the compiled Loader + Download source when present. Unmapped `tin3` and `tin5` databases fall back to the PE requested execution level: `requireAdministrator` is machine scope, `asInvoker` is user scope, and `highestAvailable` is conditional dual-scope behavior.
 
 Do not create separate user and machine installer entries merely because `SupportedScopes` contains both. First prove a command-line scope selector and validate each resulting ARP identity.
 
@@ -95,11 +95,11 @@ InstallMate 2.x files below `<AppFolder>` are emitted at their Setup.ini-relativ
 
 ### 5. Review diagnostics and system effects
 
-Inspect `Diagnostics`, `UnresolvedFields`, `RegistryWrites`, `EnvironmentChanges`, `Shortcuts`, `ExecutionActions`, `Prerequisites`, `Services`, `ServiceActions`, `Protocols`, and `FileExtensions`. Current `tin9`, `tinA`, and `tinB` records provide structured system-effect evidence. Only complete, unconditional registry writes with fully resolved component references feed ARP, protocol, and file-extension projection. Component and action conditions remain unevaluated. Prerequisite handlers expose `RequiresAdministrator` when that builder option is present, but this does not establish manifest `ElevationRequirement` until the handler condition and silent elevation behavior are validated. Environment entries expose install and remove actions, current-user-only behavior, update persistence, and separator values. Service entries expose resolved binary paths, arguments, service type, start type, delayed automatic start, error control, account evidence, dependencies, recovery command, localized reboot text, and recovery actions. `ServiceActions` separately reports `svca` start, stop, pause, resume, delete, and no-action operations for installation and removal, including literal arguments. Older-generation system-effect layouts remain unresolved; do not infer them from payload strings.
+Inspect `Diagnostics`, `UnresolvedFields`, `RegistryWrites`, `EnvironmentChanges`, `Shortcuts`, `ExecutionActions`, `Prerequisites`, `Services`, `ServiceActions`, `Protocols`, and `FileExtensions`. Current `tin9`, `tinA`, and `tinB` records provide structured system-effect evidence. Only complete, unconditional registry writes with fully resolved component references feed ARP, protocol, and file-extension projection. Component and action conditions remain unevaluated. Prerequisite handlers expose `RequiresAdministrator` when that builder option is present, but this does not establish manifest `ElevationRequirement` until the handler condition and silent elevation behavior are validated. Environment entries expose install and remove actions, current-user-only behavior, update persistence, and separator values. Service entries expose resolved binary paths, arguments, service type, start type, delayed automatic start, error control, account evidence, dependencies, recovery command, localized reboot text, and recovery actions. `ServiceActions` separately reports `svca` start, stop, pause, resume, delete, and no-action operations for installation and removal, including literal arguments. Older-generation system-effect layouts remain unresolved. Do not infer them from payload strings.
 
 ### 6. Apply WinGet projection
 
-Use `Get-WinGetInstallerAnalysis` when schema-valid WinGet suggestions are needed. Keep `Family` as `InstallMate` and `InstallerType` as `exe`. Suggestions are review input; authoritative artifact evidence and VM results take precedence over the family template.
+Use `Get-WinGetInstallerAnalysis` when schema-valid WinGet suggestions are needed. Keep `Family` as `InstallMate` and `InstallerType` as `exe`. Suggestions are review input. Authoritative artifact evidence and VM results take precedence over the family template.
 
 ## Apps & Features
 
@@ -109,7 +109,7 @@ For `Tarma.PublishOrPerish` 8.19.5300.9483, isolated VM evidence found a machine
 
 ## Scope and architecture
 
-Use explicit setup-database and PE execution-level evidence for scope. Derive architecture from installed payload binaries when package architecture matters; the launcher architecture alone may describe only the setup stub.
+Use explicit setup-database and PE execution-level evidence for scope. Derive architecture from installed payload binaries when package architecture matters. The launcher architecture alone may describe only the setup stub.
 
 ## VM validation
 

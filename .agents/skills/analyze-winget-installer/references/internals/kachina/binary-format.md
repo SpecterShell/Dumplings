@@ -52,7 +52,7 @@ The four lengths use early or current field order according to the first control
 +----------------------+ next record
 ```
 
-Legacy media uses `!INS`; indexed media uses `!IN\0`. Name length, content length, record count, and every checked addition are bounded before allocation or seeking. JSON records must decode as strict UTF-8.
+Legacy media uses `!INS`. Indexed media uses `!IN\0`. Name length, content length, record count, and every checked addition are bounded before allocation or seeking. JSON records must decode as strict UTF-8.
 
 ## Control record names
 
