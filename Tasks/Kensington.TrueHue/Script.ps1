@@ -19,6 +19,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
+      <#
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
@@ -43,6 +44,7 @@ switch -Regex ($this.Check()) {
       } else {
         $this.Log("No ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
+      #>
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
