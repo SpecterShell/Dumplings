@@ -20,6 +20,8 @@ Each diagnostic contains `Id`, `Source`, `Message`, `Kind`, `Areas`, `AffectedFi
 
 Resolve diagnostics only at a workflow boundary. `FullAnalysis` reports complete static-analysis concerns, `Detection` separates rejected hints from confirmed structural failures, `ManifestAuthoring` marks missing required authoring evidence as blocking, `ManifestUpdate` promotes only fields being refreshed plus installability and security concerns, and `Extraction` treats malformed or unsafe output as blocking. Direct `Get-*Info` functions must not log.
 
+Manifest updating adds `[Installer #n/total]` when logging each entry's messages and deduplicates diagnostics within that entry. Keep parser diagnostics context-neutral so cached evidence can be reused and attributed to every affected installer.
+
 ## Match and parse failures
 
 Distinguish "not this family" from "matched family but incomplete or malformed." A declared known type that fails family detection produces a blocking `Mismatch` diagnostic. Missing fields or unsupported substructures after a positive match preserve existing manifest intent and return field-specific diagnostics. Generic candidate detection must prefer strict signatures over broad product strings.

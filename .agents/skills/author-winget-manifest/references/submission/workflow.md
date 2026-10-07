@@ -43,6 +43,10 @@ SkipInstallerAnalysis: true
 
 Either setting skips nested payload extraction, installer-family detection, and static metadata parsers. Installer downloads required for SHA-256, release-date handling, manifest formatting, validation, and submission still run. Use this only when the preserved manifest fields are already supported by other evidence. It does not waive installer analysis or VM validation during manifest authoring.
 
+## Candidate comparison failures
+
+Dumplings retries the final branch comparison before creating a PR. A comparison failure emits a warning and continues submission without the empty-change and exact duplicate checks. A confirmed empty diff still stops submission, and a confirmed identical self-authored PR is preserved. Old PRs are closed only after the replacement PR is created successfully.
+
 ## Common Blocking Issues
 
 Check for these before opening or updating a PR:

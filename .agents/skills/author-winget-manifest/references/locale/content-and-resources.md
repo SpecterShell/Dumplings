@@ -113,6 +113,8 @@ For GitHub, GitLab, Gitea, Codeberg, Bitbucket, Gitee, GitCode, and similar plat
 2. A version entry in a repository-root release history such as `CHANGELOG.md`, `RELEASES.md`, or `CHANGES.md`, including case and naming variants.
 3. The desktop application's official homepage, documentation, support site, or dedicated release-history page.
 
+If the locale of a GitHub release's notes is uncertain, read substantive notes from past releases of the same project. Compare language headings, spelling, and localization patterns with the current release, then follow [regional locale selection](model.md#regional-locale-selection). Use past releases only to clarify the locale. Keep the selected version's own notes and record uncertainty if the locale remains unresolved.
+
 A release body is not valid release notes merely because it exists. Reject an empty body, a body containing only the version/title, generated assets or download links, checksums, or other text that does not describe product changes. For example, the [ImageMagick 7.1.2-27 release](https://github.com/ImageMagick/ImageMagick/releases/tag/7.1.2-27) contains no substantive change list, so use the repository release-history files or official site instead.
 
 For applications not released through a Git platform, search the official site footer, download page, support pages, and documentation. Confirm that the selected page describes the Windows desktop application. Do not use platform-service updates, server-only changes, web-product updates, or mobile-app release notes for a desktop manifest.

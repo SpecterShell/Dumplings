@@ -102,6 +102,8 @@ The required fields are a schema minimum, not an authoring target. For the defau
 
 Search the official product, download, support, contact, privacy, terms/license, purchase, documentation, FAQ, and release-history pages. `Icons` is excluded by this project.
 
+Use `winget search` to find other packages from the same publisher, then inspect their locale manifests for candidate `PrivacyUrl`, `Author`, `LicenseUrl`, `CopyrightUrl`, and other shared publisher metadata. Verify each candidate against current official sources and confirm that it applies to this product. Products from one publisher can have different developers, licenses, privacy policies, or legal terms. Follow the field-specific [identity](identity.md) and [content rules](content-and-resources.md) before reusing a value.
+
 For an additional locale, perform the same applicability review but include only reliable localized overrides. Translate translatable licenses, descriptions, tags, documentation labels, and installation notes when evidence permits. Omit invariant or unavailable values so they inherit from the default locale. Do not copy default-language prose merely to increase field count.
 
 ## Localization Rules
