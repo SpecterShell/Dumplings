@@ -1,0 +1,17 @@
+Version: 1.0.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tianemon/EasyMint/releases/download/v1.0.1/EasyMint-windows-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Fixed（修复）
+    - CodeGraph 在 Windows 上装完即可被检测到并连上：此前从独立安装包（非 npm）装的 CodeGraph 常被判成「未安装」或「连接失败」——装完不重启 EM 时识别不到新装的路径，安装路径含空格时启动直接失败。现在按实际安装位置查找并用自带的运行时启动，重测即可生效
+    - CodeGraph 首次连接超时放宽：CodeGraph 需要在首次连接时建立索引，此前按通用的 8 秒超时判定，容易在索引建完前被判成连接失败；现给它更长的等待时间，你手动填的超时值仍然优先
+    - MCP 服务器连接失败后会自动重试：某个外部工具服务器启动失败后，此前同一个会话里再发消息也不会再试它，界面一直停在失败状态；现在每轮开始时只重试失败的服务器，已经连上的不受影响
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tianemon/EasyMint/releases/tag/v1.0.1
+ReleaseTime: 2026-10-07T09:10:22.0000000Z

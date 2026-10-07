@@ -1,0 +1,111 @@
+Version: 0.8.6
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AmintaCCCP/GithubStarsManager/releases/download/v0.8.6/GitHub.Stars.Manager.Setup.0.8.6.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New in v0.8.6 / 新版本特性
+    🌟 Highlights & Special Notes / 特别说明
+    English:
+    🏪 Plugin Marketplace & Maintained Plugin Sources (PR #427): Community plugin registry has evolved into a full-featured Plugin Marketplace! You can browse, search, install, update, and manage plugins directly from GitHub plugin sources. You can also add your own custom GitHub plugin sources in Settings.
+    📊 Repo Insights Plugin (PR #433, #434): Powered by the new V1.5 plugin network capability, Repo Insights brings an in-depth repository analytics dashboard right into the app — commit activity trends, health radar, language distribution, contributor breakdown, bus factor, security advisories, and AI-powered recent activity summaries.
+    🪪 Redesigned Repo Info Card Plugin (PR #432, #435): The Repo Info Card example plugin receives a major UI overhaul with a side-by-side workspace, Linear design aesthetic, live code/preview tabs, customizable canvas ratios (including custom pixel dimensions), 10 interface languages, and smooth loading feedback.
+    ⚡ Sharded State Persistence & Performance (PR #424, #434): Replaced monolithic IndexedDB writes with sharded atomic persistence. Changes to UI state (modal toggles, route switches) now touch only tiny lightweight shards instead of reserializing ~140MB of repository data, completely eliminating console serialization warnings and UI micro-stutters.
+    🔍 Diagnostic Logging & Global Request Auditing (PR #428, #434): Introduced a unified diagnostic logging system covering frontend, backend, main process, and plugins. Sensitive tokens are automatically redacted, transient network failures are cleanly categorized, and complete diagnostic bundles can be exported with one click for easy troubleshooting.
+    📖 Near Fullscreen README Modal (PR #431): Repository README reading dialogs now expand to near-fullscreen dimensions (calc(100vw - 2rem)), providing a much roomier and comfortable reading experience matching plugin page modals.
+    中文：
+    🏪 社区插件市场与可维护插件源（PR #427）：社区插件注册表全面升级为插件市场！现已支持按源浏览、搜索、一键安装、更新、启停和卸载 GitHub 插件源中的插件。你还可以在设置中自由添加自定义 GitHub 插件源。
+    📊 仓库洞察（Repo Insights）插件（PR #433、#434）：基于全新的 V1.5 页面只读网络能力，仓库洞察插件为每个仓库提供专业的数据看板——涵盖 52 周提交活动、代码增删、多维健康度雷达、语言分布、贡献者概览与巴士因子、安全公告，以及一键调优的 AI 近期动态总结。
+    🪪 仓库信息卡全新重构（PR #432、#435）：示例插件「仓库信息卡」迎来重大 UI/UX 重构，采用左右分栏工作台、Linear 风格设计、实时预览/代码编辑双模式、丰富画幅预设（支持自定义像素宽高）、覆盖 10 种语言，并补充了清晰的生成加载与状态反馈。
+    ⚡ 分片持久化与性能飞跃（PR #424、#434）：IndexedDB 存储重构为原子分片持久化与脏检查机制。开关弹窗、切换视图等高频界面操作仅重写几 KB 的轻量配置分片，彻底告别以往 140MB 级全量 JSON 序列化带来的卡顿与警告。
+    🔍 全量诊断日志与请求捕获（PR #428、#434）：建立覆盖主进程、渲染端、后端与插件的完整日志体系。密钥与 Token 全程自动脱敏，网络状态智能分级，支持一键打包导出诊断日志，让排查问题省时省力。
+    📖 README 近全屏沉浸阅读（PR #431）：点击仓库卡片弹出的 README 弹窗全面扩大至近全屏尺寸（四周各留 1rem 边距），阅读长篇文档与项目介绍更加舒展高效。
+
+    📸 Screenshots / 界面预览
+
+    | 🏪 Plugin Marketplace / 社区插件市场（PR #427）                | 🪪 Repo Info Card / 仓库信息卡（PR #432, #435）                    |
+    | -------------------------------------------------------------- | ------------------------------------------------------------------ |
+    |                                                                |                                                                    |
+    | 📊 Repo Insights - Overview / 仓库洞察 · 概览与健康度（PR #433） | 👥 Repo Insights - Contributors / 仓库洞察 · 贡献者与动态（PR #433） |
+    |                                                                |                                                                    |
+
+    🧩 Plugin Guide: Marketplace, Repo Info Card & Repo Insights / 插件系统使用指南
+    1. 🏪 Plugin Marketplace / 插件市场（插件商店）使用方法
+    EN: Built into the desktop client. Installing plugins only stores files locally, and an explicit permissions prompt is shown before enabling any plugin to keep your data secure.
+
+    ZH: 桌面端内置支持。插件安装仅将文件存入本地，启用前会严格展示所需权限清单，保障数据安全。
+    - Open the Marketplace / 打开插件市场：
+      - EN: Navigate to Settings → Plugin Management in the sidebar, then click Browse plugins on the top Marketplace card.
+      - ZH: 在主程序左侧导航点击 「设置」→「插件管理」，在顶部的「社区插件注册表 / 插件市场」卡片上点击 「浏览插件」。
+    - Browse & Install / 浏览与安装：
+      - EN: The modal lists plugins from the official example source (and any external sources you add), such as Repo Info Card, Repo Insights, and Markdown Exporter Example. Click Install next to a plugin to automatically download and verify it via the GitHub API.
+      - ZH: 弹窗中会展示官方示例源（以及你添加的第三方源）提供的插件，例如 Repo Info Card、Repo Insights、Markdown Exporter Example 等。点击插件右侧的 「安装」 按钮，系统将自动通过 GitHub API 下载插件包并完成校验。
+    - Review Permissions & Enable / 权限确认与启用：
+      - EN: After installation, toggle the plugin switch. A permission dialog will show the exact capabilities requested (e.g., read repository metadata, invoke AI, read-only GitHub API endpoints). Review and click Enable to activate.
+      - ZH: 安装完成后，在插件列表点击启用开关，应用会弹出权限确认窗口，清晰展示该插件请求的权限（如只读仓库信息、调用 AI、只读 GitHub API 端点等）。确认无误后点击启用即可开始使用。
+    - Manage Custom Plugin Sources / 管理自定义插件源：
+      - EN: Click Manage Sources at the top right of the marketplace to add any public GitHub directory (e.g. https://github.com/owner/repo/tree/branch/path or repository root). Sources can be edited, refreshed individually, or removed anytime.
+      - ZH: 在插件市场右上角点击 「管理插件源」，可以添加任意公开的 GitHub 仓库目录（格式支持 https://github.com/owner/repo/tree/branch/path 或仓库根目录）。添加后支持单源刷新与编辑。
+
+    2. 🪪 Repo Info Card / 仓库信息卡使用方法
+    EN: Uses your configured AI provider to distill any repository's README and metadata into an elegant, customizable, export-ready single-file HTML card.
+
+    ZH: 使用你配置的 AI 服务，将仓库的 README 和元数据浓缩为一张高颜值、可定制、支持导出的单文件 HTML 卡片。
+    - Open from Repository / 从仓库打开：
+      - EN: On any repository card, click … (More actions) → Plugin actions → 生成仓库信息卡 (Generate info card). The plugin opens in a modal with that repository's metadata and README already loaded.
+      - ZH: 在任意仓库卡片右上角点击 …（更多操作）→「插件操作」→「生成仓库信息卡」，插件将在大弹窗中打开，并自动载入当前仓库上下文与 README。
+    - Customize Style & Dimensions / 定制外观与参数：
+      - EN: Choose a theme style ("TE Paper", "Dark Instrument", "Minimal B&W") for instant re-skinning. Select an aspect ratio (1:1 · 1200×1200, 5:2 · 1500×600, 3:4 · 1200×1600), or enter custom dimensions (400–3000px). Select your preferred card language (follow UI or pick from 10 supported languages). Optionally type custom requirements (e.g., "Emphasize cross-platform features and security").
+      - ZH: 选择风格（「TE 纸面」、「暗色仪器」、「极简黑白」实时换肤）；选择画幅预设（1:1 方形、5:2 横幅、3:4 竖版，或输入 400~3000px 自定义尺寸）；指定卡片语言（跟随界面或 10 种语言）；可选填附加说明（如“重点突出跨平台与安全特性”），AI 会针对性提炼。
+    - Generate & Edit / 生成与编辑：
+      - EN: Click 生成信息卡 (Generate info card) with live loading feedback. Switch between Preview and Code tabs at the top to inspect or directly edit the generated HTML source with immediate updates.
+      - ZH: 点击 「生成信息卡」（具有清晰的加载进度反馈）。顶部可在 「预览」 与 「代码」 间自由切换，进入「代码」模式可直接修改生成的 HTML 源码并即时生效。
+    - Export & Share / 导出与分享：
+      - EN: Use the bottom action bar to Copy HTML, Copy screenshot to system clipboard, or Save screenshot as a crisp @2x PNG image. The preview canvas supports Ctrl / ⌘ + Scroll or drag-panning, while exports always preserve full @2x ultra-high resolution.
+      - ZH: 底部操作栏支持 「复制 HTML 代码」、「复制截图」（直接写入系统剪贴板）以及 「保存截图」（导出高清 @2x PNG 图片）。预览区支持 Ctrl / ⌘ + 滚轮 缩放或平移，导出始终保持完整超清分辨率。
+
+    3. 📊 Repo Insights / 仓库洞察使用方法
+    EN: Gain deep visibility into repository activity, health metrics, and community evolution to make informed dependency and tech stack decisions.
+
+    ZH: 深度了解仓库活跃度、维护健康度与社区演进，辅助判断依赖价值与技术选型。
+    - Open from Repository / 从仓库打开：
+      - EN: On any repository card, click … (More actions) → Plugin actions → 仓库洞察 (Repo Insights).
+      - ZH: 在任意仓库卡片右上角点击 …（更多操作）→「插件操作」→「仓库洞察」。
+    - In-Depth Analytics Dashboard / 多维深度看板：
+      - EN:
+        - Repository Health Check: Instant maintenance activity indicator (e.g., "Active maintenance · latest commit today"), popularity metrics, and license compliance facts.
+        - Maintainers & Contributors: Owner profile card, top 12 contributors breakdown, and Bus Factor analysis (highlighting single-point-of-failure dependency risks).
+        - Multi-Dimensional Charts: 52-week commit activity bar chart, code churn line chart, multi-axis health radar, language byte distribution, star growth history, and security advisory tallies.
+      - ZH:
+        - 仓库体检：即时呈现维护活跃度标签（如“维护活跃 · 最近提交 今天”）、关注热度、许可证规范等客观体检事实。
+        - 贡献者与巴士因子（Bus Factor）：展示仓库所有者基本资料、前 12 名主要贡献者分布比例，以及巴士因子评估（分析项目是否存在单点依赖风险）。
+        - 多维图表分析：包含 52 周提交活动柱状图、代码增减趋势折线图、综合健康度六边形雷达图、语言字节分布饼图、星标增长历史趋势图与安全公告统计。
+    - AI-Powered Recent Activity Summary / AI 近期动态分析：
+      - EN: Click 生成动态分析 (Generate dynamic analysis). The plugin gathers recent merged PRs, release notes, and commit statistics, using your configured AI model to generate a structured executive summary of recent project developments (prompts are reviewed and confirmed by the host before sending).
+      - ZH: 点击 「生成动态分析」 按钮，插件将结合仓库近期的已合并 PR、发布日志与提交数据，通过你配置的 AI 智能总结出该项目近期的核心更新重点与演进方向（调用前会经宿主确认）。
+    - Privacy & Security Guarantee / 安全与隐私保障：
+      - EN: The plugin only issues read-only requests against an allowlist of official GitHub API endpoints using your logged-in GitHub token. Your local repository data and private tokens never leave your machine.
+      - ZH: 本插件仅使用你已登录的 GitHub Token 发起官方 API 白名单只读请求，本地仓库私密数据绝不外泄。
+
+    What's Changed / 更新内容
+
+    | PR   | English Summary                                                                                                                                                                                                                                                                                                                                                                                           | 中文说明                                                                                                                                                                                                                         |
+    | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | #423 | build(deps): Bump npm dependencies across workspaces<br>Updated build toolchains and dependencies across the root, client, and server workspaces to latest secure versions.                                                                                                                                                                                                                               | 升级各目录 npm 依赖<br>将根目录、前端和服务端工作区的构建工具链与依赖库升级到最新安全版本。                                                                                                                                      |
+    | #424 | perf(persistence): Sharded state persistence with reference dirty-checking<br>Split monolithic 144MB IndexedDB storage into independent shards (repositories, releases, gists, forks, accountWorkspaces, trendingSnapshots, and core). Only modified shards are serialized and written within single atomic transactions, eliminating heavy serialization warnings and UI lag during simple interactions. | 分片持久化与引用判脏写入<br>将原本 144MB 的单键 IndexedDB 存储重构为独立数据分片，仅发生真实变化的分片才会触发序列化与单事务原子提交。开关弹窗或切页等高频 UI 操作仅更新几 KB 的核心分片，彻底消除主线程卡顿与大状态序列化告警。 |
+    | #426 | fix(webdav): Surface real desktop fetch failures and fall back to Chromium network stack<br>Desktop WebDAV operations now accurately surface underlying connection errors and seamlessly fall back to Chromium net stack when direct node fetch encounters network hurdles or custom cert issues.                                                                                                         | 优化桌面端 WebDAV 请求失败反馈与网络栈回退<br>桌面端 WebDAV 真实错误信息能够准确透出，并在特定网络环境下平滑回退至 Chromium 网络栈，提升同步与备份连接的稳定性。                                                                 |
+    | #427 | feat(plugins): Community plugin registry upgraded to maintained Plugin Marketplace<br>Introduced a full-featured Plugin Marketplace dialog. Users can browse, search, install, update, and toggle plugins from configurable GitHub repositories, with atomic downloads, directory sandboxing, and strict permission confirmation.                                                                         | 社区插件注册表升级为可维护插件源与插件市场<br>新增插件市场功能，支持从 GitHub 仓库目录源中发现、搜索、一键安装、更新及卸载插件；支持在设置中自定义添加维护外部插件源，具备完善的权限确认与沙箱隔离机制。                         |
+    | #428 | feat(diagnostics): Comprehensive diagnostic logging and global request capture<br>Built an end-to-end diagnostic logging engine covering main process, renderer, backend, and plugins. Sensitive tokens are automatically sanitized, debug mode captures outbound network traffic, and diagnostic bundles can be exported with one click for issue reports.                                               | 全量诊断日志系统与全局请求捕获<br>搭建贯穿主进程、渲染端、后端与插件的完整日志体系。密钥与凭证严格脱敏，调试模式支持捕获网络出站请求台账，并提供一键导出诊断包功能以辅助排查问题。                                               |
+    | #429 | fix(repository-chat): Align GitHub code block styling and fix sidebar truncation<br>Aligned code block presentation with GitHub design guidelines inside the repository AI chat panel, and eliminated right-edge clipping on narrow sidebars.                                                                                                                                                             | 对齐 AI 对话代码块样式并修复侧栏右缘截断<br>对齐仓库问答面板中的代码块渲染与边框圆角风格，消除窄屏及小侧栏下代码块右侧边界溢出被截断的问题。                                                                                     |
+    | #430 | fix(deps): Upgrade http-cache-semantics to 4.3.0 (CVE-2026-93748) & audit hardening<br>Upgraded http-cache-semantics to resolve vulnerability CVE-2026-93748 and hardened test environment isolation.                                                                                                                                                                                                     | 升级 http-cache-semantics 修复 CVE-2026-93748 并加固测试隔离<br>修复依赖安全漏洞 CVE-2026-93748，同时优化测试环境上下文清理与符号链接兼容性。                                                                                    |
+    | #431 | feat(readme-modal): Near fullscreen README reading modal<br>Expanded repository README preview modal to near-fullscreen dimensions (calc(100vw - 2rem) / calc(100vh - 2rem)), providing a spacious, focused reading layout identical to plugin page modals.                                                                                                                                               | README 弹窗增大为近全屏尺寸<br>将点击仓库卡片弹出的 README 阅读弹窗扩展为近全屏尺寸（四周各保留 1rem 舒适间距），使长篇文档阅读体验更加舒展专注。                                                                                |
+    | #432 | feat: Redesign Repo Info Card plugin UI and interaction<br>Redesigned Repo Info Card example plugin with side-by-side workspace, Linear design aesthetic, live code/preview switching, interactive canvas zooming & panning, and arbitrary custom dimensions.                                                                                                                                             | 重构仓库信息卡示例插件 UI 与交互<br>重构仓库信息卡插件界面为左右双栏布局，引入 Linear 设计风格，支持实时代码编辑与高亮预览、鼠标拖拽与滚轮缩放画布，并支持任意自定义尺寸输入。                                                   |
+    | #433 | feat(plugins): V1.5 plugin page network capabilities and Repo Insights plugin<br>Added host-governed read-only GitHub API network bridge (network.request) for sandboxed plugins, and shipped the brand-new Repo Insights example plugin showcasing activity charts, health radars, and bus-factor analysis.                                                                                              | V1.5 页面网络能力与仓库洞察插件<br>为插件沙箱新增受控的只读 GitHub API 桥接能力，同时发布全新官方示例插件「仓库洞察」，提供包含提交动态、代码指标、健康度雷达与巴士因子的完整分析看板。                                          |
+    | #434 | fix(diagnostics): Diagnostics refinement and stability fixes<br>Fixed Chart.js resize race condition during window minimize in Repo Insights plugin, improved WebDAV PROPFIND connection detection, and added idle throttling for massive persistence shards.                                                                                                                                             | 日志体系完善与稳定性修复<br>修复仓库洞察插件图表重绘与窗口最小化导致的竞态崩溃，优化 WebDAV PROPFIND 连接探测兼容性，并对超大持久化分片增加空闲写入节流。                                                                        |
+    | #435 | fix(plugins): Repo info card language localization and progress feedback<br>Fixed info card language generation when "Follow interface" is selected, added animated spinner and busy feedback on generate buttons, and enforced canvas-ratio validation before export.                                                                                                                                    | 修复信息卡语言跟随与补充生成 Loading 反馈<br>修复仓库信息卡选择跟随界面语言时的本地化提示词覆盖问题，生成按钮与状态栏新增动态 Loading 反馈，并在画幅与卡片不匹配时严格限制导出。                                                 |
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AmintaCCCP/GithubStarsManager/releases/tag/v0.8.6
+ReleaseTime: 2026-10-07T04:27:16.0000000Z

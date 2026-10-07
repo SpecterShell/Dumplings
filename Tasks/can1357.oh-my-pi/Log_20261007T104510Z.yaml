@@ -1,0 +1,151 @@
+Version: 18.8.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.8.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Improved performance when pruning tool output and capturing telemetry messages during long-running sessions.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - The environment API-key helpers (getEnvApiKey, getEnvApiKeyName, and listProvidersWithEnvKey) are no longer exported from @oh-my-pi/pi-ai/stream; import them from @oh-my-pi/pi-ai or @oh-my-pi/pi-ai/env-api-key instead.
+    - TranscriptionRequest.audio now accepts Uint8Array | Blob. Consumers must handle Blob values when reading transcription requests.
+    Changed
+    - Improved CPU and memory efficiency across streamed model responses, including Cursor, Devin, Codex, OpenAI Responses, and GitLab Duo Workflow.
+    - Improved request and authentication performance, including account ranking, OAuth preflight, credential rate-limit checks, credential synchronization, and auth gateway requests.
+    - Improved tool-call parsing performance for long calls and Apple Foundation Models requests.
+    - Improved Cloudflare AI Gateway request performance and AWS credential-source detection.
+    - Reduced memory usage when handling generated images and usage reports.
+    Fixed
+    - Fixed false thinking-loop detections for Gemini, DeepSeek, and Grok when responses contain repetitive code or markup such as VRML, SVG, or JSON; valid output is no longer discarded and retried.
+    - Fixed the Cursor provider retaining request resources after requests completed.
+    - Fixed session-affinity pins growing without bound in long-lived gateways; pins are now capped at 256 sessions per provider.
+    - Fixed Anthropic sessions failing every request with HTTP 400 ("role 'system' must precede an 'assistant' message") after a tool change coincided with compaction or an interrupted or failed reply; sessions already stuck this way recover on the next message (#14746).
+    @oh-my-pi/pi-catalog
+    Changed
+    - Improved catalog performance by speeding up model cache reads and repeated catalog-wide model builds, especially for large catalogs.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Write-tool previews now render as files stream: SVG files appear as images, and Mermaid files (.mmd and .mermaid) appear as diagrams. Tern also previews supported 3D model formats (.obj, .ply, .wrl, .x3dv, .stl, .gltf, and .usda) and renders SVG writes as SVG figures.
+    - Added the title.icons setting to show session title cards with a Nerd Font glyph and emoji fallback (nf+emoji, default), always the emoji (emoji), or as plain titles (boring).
+    - Added the title.generator setting to name sessions from a fork of the reply (fork, default) or with the title model only (tiny).
+    Changed
+    - Session titles are generated using the session's model when possible, with a fallback to the lightweight title model; TITLE_SYSTEM.md continues to override the title prompt.
+    - Session titles now include a card index, icon, and short code, with appropriate Nerd Font rendering in Tern panes.
+    - When Nerd Font symbols are unavailable, session titling requests only an emoji.
+    - Subagent completion indicators now advance to 99% when the subagent submits its result.
+    - In Tern panes, headed and headless browser opens are shown in Tern picture-in-picture by default; set app.tern: false, browser.tern, or PI_BROWSER_TERN=0 to open Chromium instead.
+    - In Tern panes, /fork opens the fork in a neighboring pane while preserving the original session.
+    - Tern's empty composer now shows the session title, or “What are we cooking?” when no title is available.
+    - Tern todo cards now display their checklist by default and can be collapsed by clicking the card header.
+    - Improved performance across browser extraction, web and document fetching, file tools, search, session handling, LSP/DAP, MCP, subagents, SSH file operations, image processing, voice and dictation, collaboration, and large-output or large-file workflows.
+    - Prompt history search now updates shortly after typing stops while Enter and mouse selections use the latest query.
+    - Improved responsiveness and reduced resource usage for long sessions, large files and documents, streaming evaluations, terminal graphics, live voice calls, and other high-volume workflows.
+    - Hosts that are not supported Mastodon, Lemmy, or Discourse instances are no longer repeatedly probed for those services, improving URL-fetch performance.
+    Fixed
+    - Fixed a message sent while an earlier title request was still running never getting its own try at naming the session when that request came back empty.
+    - Fixed /new incorrectly carrying plan mode, its plan-specific model, or goal mode into the new session.
+    - Fixed todo lists failing to auto-clear while subagents streamed progress.
+    - Fixed memory growth during ACP client-terminal commands.
+    - Fixed freezes after large pastes containing unclosed tags.
+    - Fixed slowdowns when processing long evaluation output, large Python kernel results, compiler/linter output, and ephemeral side-channel replies.
+    - Fixed documents served as application/octet-stream being downloaded twice.
+    - Fixed collaboration guests rebuilding the transcript excessively during streaming.
+    @oh-my-pi/collab-web
+    Changed
+    - Improved streaming transcript performance by reducing unnecessary guest updates and Markdown re-rendering, including faster rendering for transcripts with many unclosed LaTeX delimiters.
+    - Stopped tracking finished or no-longer-listed subagents, reducing unnecessary polling and memory usage in the agent drawer.
+    @oh-my-pi/omp-stats
+    Changed
+    - Improved dashboard responsiveness and efficiency by reducing unnecessary data refreshes and re-rendering, speeding up session synchronization, database access, package imports, and usage, model, and time-series requests, and avoiding repeated downloads of unchanged traces.
+    - Dashboard requests are now cancelled when no longer needed, improving responsiveness when switching sessions or closing trace views during loading.
+    @oh-my-pi/pi-tui
+    Added
+    - SVG and Mermaid files now render as images or diagrams beneath their file cards, with SVG previews updating while the file streams and Mermaid previews appearing when the file is complete.
+    - Native tool cards can open expanded regardless of the transcript’s expansion state; the todo checklist uses this behavior.
+    Changed
+    - TSP composer placeholders now appear as the composer title in italicized curly quotes, with “What are we cooking?” used when no title is provided.
+    - TSP image transfers are more efficient across reconnects and multiple surfaces: images are sent once per connection, existing terminal blobs are detected before upload, and images in the Tern blob cache can be reused without crossing the terminal pty.
+    - Improved performance and responsiveness across the TUI, including large TSP messages and Markdown documents, streaming output, tool-result cards, debug logs, raw SSE and Git diff views, path and model searches, session and settings lists, plan review, agent transcripts, status updates, assistant links, Kitty images, and large prompt or evaluation content.
+    - Large debug logs and plan-review histories now retain bounded history to keep the interface responsive, while preserving the newest log entries.
+    Fixed
+    - Fixed slow Markdown processing for certain LaTeX environments and incomplete delimiters.
+    - Fixed excessive slowdown when formatting long semicolon-free JavaScript evaluations.
+    - Fixed prompt-editor lag in large drafts containing magic keywords.
+    @oh-my-pi/pi-utils
+    Added
+    - Added ZipPackage to @oh-my-pi/pi-utils/ar for lazily reading ZIP-based document packages with a configurable total-inflation limit, plus DocxImage.readBytes() for accessing raw DOCX image data.
+    Changed
+    - Improved DOCX conversion to inflate only the package contents it needs, reducing unnecessary work and memory use.
+    - Improved performance across HTML-to-Markdown conversion, Readability extraction, Markdown lexing, terminal emulation, terminal styling, streaming tool-argument parsing, and log writing. Large-page processing and terminal workloads now use substantially less time and memory.
+    Fixed
+    - Fixed memory growth in long-lived child processes, streaming readers, prompt template compilation, and retried HTTP requests by releasing buffers, cache entries, and discarded response bodies promptly.
+    - Fixed prompt templates rejecting {{else if …}} chains as unclosed blocks; a chain now closes with its opening block's single closing tag, as in Handlebars.
+    @oh-my-pi/pi-wire
+    Changed
+    - Updated TspEditorProps.placeholder and TspInputProps.placeholder to accept TspText, enabling styled placeholder text.
+    What's Changed
+    - fix(coding-agent): reconciled mode state when /new starts a session by @roboomp in https://github.com/can1357/oh-my-pi/pull/14654
+    - fix(utils): stop ptree, ConcatSink, prompt cache and fetchWithRetry from retaining memory by @H4vC in https://github.com/can1357/oh-my-pi/pull/14664
+    - perf(utils): speed up chalk styling, parseStreamingJson and logger writes by @H4vC in https://github.com/can1357/oh-my-pi/pull/14665
+    - perf(utils): share frozen vterm cells and speed up parsing and reflow by @H4vC in https://github.com/can1357/oh-my-pi/pull/14666
+    - perf(utils): make markdown block lexing linear and drop the TUI windowed lexer by @H4vC in https://github.com/can1357/oh-my-pi/pull/14667
+    - perf(utils): speed up DOM selectors, Readability and Turndown on large pages by @H4vC in https://github.com/can1357/oh-my-pi/pull/14668
+    - perf(ai): share Connect frame decoding and stop Cursor leaking conversation state by @H4vC in https://github.com/can1357/oh-my-pi/pull/14669
+    - perf(ai): stop cloning and re-serializing Codex/Responses request bodies per turn by @H4vC in https://github.com/can1357/oh-my-pi/pull/14670
+    - perf(ai): scan only the tail for in-band tool-call terminators by @H4vC in https://github.com/can1357/oh-my-pi/pull/14671
+    - perf(ai): cut SQLite reads and locks in credential selection and usage caching by @H4vC in https://github.com/can1357/oh-my-pi/pull/14672
+    - perf(ai): share auth broker SSE frames and coalesce snapshot cache writes by @H4vC in https://github.com/can1357/oh-my-pi/pull/14673
+    - perf(ai): reuse rebuilt gateway models and avoid image and audio copies by @H4vC in https://github.com/can1357/oh-my-pi/pull/14674
+    - perf(catalog): skip re-reading unchanged model cache rows and memoize classification by @H4vC in https://github.com/can1357/oh-my-pi/pull/14676
+    - perf(coding-agent): add a copy-free SessionManager.getBranchView and extend the branch memo in place by @H4vC in https://github.com/can1357/oh-my-pi/pull/14677
+    - perf(agent): bound tool-output pruning scans and gate per-turn session rewrites by @H4vC in https://github.com/can1357/oh-my-pi/pull/14678
+    - perf(tui): trim OutputSink tails once per window instead of every chunk by @H4vC in https://github.com/can1357/oh-my-pi/pull/14679
+    - perf(coding-agent): dedupe shell snapshots and run snapshot and direnv setup together by @H4vC in https://github.com/can1357/oh-my-pi/pull/14680
+    - perf(tui): memoize ask, ast, grep, lsp, mcp and default tool renderer bodies by @H4vC in https://github.com/can1357/oh-my-pi/pull/14684
+    - perf(tui): memoize task, todo, wait and eval renderers and eval code formatting by @H4vC in https://github.com/can1357/oh-my-pi/pull/14685
+    - perf(tui): make plan review, annotation and debug viewers render incrementally by @H4vC in https://github.com/can1357/oh-my-pi/pull/14686
+    - perf(tui): prepare fuzzy queries once for hub, tree, settings and history search by @H4vC in https://github.com/can1357/oh-my-pi/pull/14687
+    - perf(tui): cache agent hub rows and cut idle transcript viewer I/O by @H4vC in https://github.com/can1357/oh-my-pi/pull/14688
+    - perf(tui): decorate the prompt editor once per text revision by @H4vC in https://github.com/can1357/oh-my-pi/pull/14690
+    - perf(tui): stop status-line PR lookups and repaints from running every event by @H4vC in https://github.com/can1357/oh-my-pi/pull/14691
+    - perf(coding-agent): lex assistant links once and cache internal URL completions by @H4vC in https://github.com/can1357/oh-my-pi/pull/14692
+    - perf(coding-agent): match TTSR rules incrementally instead of rescanning the stream by @H4vC in https://github.com/can1357/oh-my-pi/pull/14693
+    - perf(coding-agent): stream session rewrites and memoize image externalization by @H4vC in https://github.com/can1357/oh-my-pi/pull/14694
+    - perf(coding-agent): avoid branch copies and coalesce backlogged message updates by @H4vC in https://github.com/can1357/oh-my-pi/pull/14695
+    - perf(coding-agent): cut edit verification copies and bound auto-repair parses by @H4vC in https://github.com/can1357/oh-my-pi/pull/14700
+    - perf(coding-agent): read file tails and archives without repeated full scans by @H4vC in https://github.com/can1357/oh-my-pi/pull/14701
+    - perf(coding-agent): window grep grouping and memoize search descriptions and validators by @H4vC in https://github.com/can1357/oh-my-pi/pull/14702
+    - perf(coding-agent): decode eval args incrementally and stop per-chunk tail joins by @H4vC in https://github.com/can1357/oh-my-pi/pull/14704
+    - perf(coding-agent): parse stream frames incrementally and cap the stream console by @H4vC in https://github.com/can1357/oh-my-pi/pull/14705
+    - perf(coding-agent): parse cleanse checker output incrementally by @H4vC in https://github.com/can1357/oh-my-pi/pull/14706
+    - perf(coding-agent): cache Mastodon/Lemmy/Discourse platform probes per host by @H4vC in https://github.com/can1357/oh-my-pi/pull/14707
+    - perf(coding-agent): parallelize scraper requests and skip double document downloads by @H4vC in https://github.com/can1357/oh-my-pi/pull/14708
+    - perf(coding-agent): read DOCX/PPTX/XLSX/EPUB archive members lazily by @H4vC in https://github.com/can1357/oh-my-pi/pull/14709
+    - perf(coding-agent): encode LSP/DAP frames once and cap open LSP documents by @H4vC in https://github.com/can1357/oh-my-pi/pull/14710
+    - perf(coding-agent): coalesce MCP tool-set refreshes by @H4vC in https://github.com/can1357/oh-my-pi/pull/14711
+    - perf(coding-agent): memoize image hashes and write the blob index asynchronously by @H4vC in https://github.com/can1357/oh-my-pi/pull/14712
+    - perf(coding-agent): share subagent discovery and reuse verified SSH connections by @H4vC in https://github.com/can1357/oh-my-pi/pull/14713
+    - perf(coding-agent): skip collab mirroring without guests and serialize frames once by @H4vC in https://github.com/can1357/oh-my-pi/pull/14714
+    - perf(coding-agent): stream memory rollout windows and bound experiment output by @H4vC in https://github.com/can1357/oh-my-pi/pull/14718
+    - perf(coding-agent): render advisor deltas lazily and cache secret scans by @H4vC in https://github.com/can1357/oh-my-pi/pull/14717
+    - perf(coding-agent): route collab guest events through the coalescing event path by @H4vC in https://github.com/can1357/oh-my-pi/pull/14715
+    - perf(coding-agent): batch speech audio and avoid per-frame buffer copies by @H4vC in https://github.com/can1357/oh-my-pi/pull/14719
+    - perf(coding-agent): bound tiny-model preprocessing and resize images once by @H4vC in https://github.com/can1357/oh-my-pi/pull/14720
+    - perf(coding-agent): encode RPC message updates once and cut live call overhead by @H4vC in https://github.com/can1357/oh-my-pi/pull/14716
+    - perf(collab-web): coalesce web guest renders and re-parse only streaming tails by @H4vC in https://github.com/can1357/oh-my-pi/pull/14728
+    - perf(stats): stop idle dashboard ingest and skip redundant syncs and backfills by @H4vC in https://github.com/can1357/oh-my-pi/pull/14723
+    - perf(stats): cancel abandoned dashboard requests and reuse unchanged data by @H4vC in https://github.com/can1357/oh-my-pi/pull/14724
+    - perf(stats): cancel abandoned route queries and memoize table columns by @H4vC in https://github.com/can1357/oh-my-pi/pull/14725
+    - perf(stats): reuse live dashboard state in project, provider, request, tool and trace routes by @H4vC in https://github.com/can1357/oh-my-pi/pull/14726
+    - perf(stats): draw trace hover on an overlay canvas and memoize timeline lanes by @H4vC in https://github.com/can1357/oh-my-pi/pull/14727
+    - fix(tui): unescaped home image paths from terminal pastes by @roboomp in https://github.com/can1357/oh-my-pi/pull/14741
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.7.0...v18.8.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.8.0
+ReleaseTime: 2026-10-07T07:15:26.0000000Z

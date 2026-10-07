@@ -1,0 +1,272 @@
+Version: 0.3.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/photocraft/releases/download/v0.3.0/photocraft-0.3.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/photocraft/releases/download/v0.3.0/photocraft-0.3.0-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights since 0.2.0
+    182 commits from 183 merged pull requests, including work from 31 community contributors (thank you!), and 146 issues closed.
+    - Your work is safer:
+      - Recovered unsaved documents survive a second crash.
+      - Deeply nested .pcraft files reopen.
+      - photocraft-cli batch refuses to overwrite its input folder.
+      - Preferences no longer get lost when two windows or tabs save, or when a save fails.
+    - Languages: the interface is available in 日本語，简体中文，繁體中文，Español, Русский and Čeština (Edit › Preferences › Interface › Language), with CJK fonts and IME input in the Type tool.
+    - Files:
+      - JPEG and other no-alpha exports composite transparency over white.
+      - Formats without colour profiles get sRGB.
+      - Truncated JPEGs and multi-frame files open with a warning instead of silently.
+      - TGA is offered in Save As and Export As.
+    - Editing:
+      - Free Transform a Copy and Transform Again on a Copy.
+      - Keyboard layer navigation, number keys for opacity, Alt-click colour sampling.
+      - New from Clipboard.
+      - Undo and redo restore the targeted layer.
+      - Shortcuts pressed in quick succession all run, in order.
+    - Automation (CLI, MCP, control channel):
+      - Stricter, clearer parameter and flag errors, and <subcommand> --help.
+      - Background jobs that agents can wait for or poll.
+      - Recorded actions run in batch.
+    Scorecard
+    This is the first release with docs/scorecard.md, so these numbers are its baseline. 0.2.0 had no scorecard to compare against. Area counts are done / partial / missing.
+
+    | Area               | Done | Partial | Missing | Measured                                                                                                                                                     |
+    | ------------------ | ---- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | Performance        | 3    | 22      | 12      | 46 scenarios: 3 within budget, 22 over budget or failing, 13 tracked only, 4 not run, 8 not yet measurable (baseline 2026-10-05)                             |
+    | File compatibility | 1    | 8       | 18      | io corpus oracle ≥ 146/170, round trip ≥ 169/170; psd-tools oracle ≥ 229/309, round trip ≥ 307/309; Photoshop-authored oracles ≥ 130/256, round trip 258/258 |
+    | Tools              | 3    | 14      | 13      |                                                                                                                                                              |
+    | Workspace and UI   | 0    | 4       | 19      | settings that do nothing: 60 of 133 (target 0)                                                                                                               |
+    | Type               | 0    | 3       | 6       |                                                                                                                                                              |
+    | Automation         | 1    | 3       | 7       | 626 of 626 menu items live                                                                                                                                   |
+    | Reliability        | 3    | 1       | 3       | never-crash lints on 26 of 26 crates; panic_hunt fuzzes every command                                                                                        |
+    | Distribution       | 4    | 3       | 4       |                                                                                                                                                              |
+    | Open bugs          | 0    | 3       | 29      |                                                                                                                                                              |
+
+    What's Changed
+    - perf(compose): avoid unnecessary backdrop snapshots by @MikeeI in https://github.com/storytold/photocraft/pull/109
+    - perf(compose): prepare gradient stops outside pixel loops by @MikeeI in https://github.com/storytold/photocraft/pull/103
+    - Fix stale effect maps after default-only mask changes by @MikeeI in https://github.com/storytold/photocraft/pull/105
+    - Preserve HDR samples when importing white-matted PSD composites by @MikeeI in https://github.com/storytold/photocraft/pull/106
+    - Mix pass-through group coverage in premultiplied space by @MikeeI in https://github.com/storytold/photocraft/pull/108
+    - perf(compose): avoid redundant effect-halo rendering by @MikeeI in https://github.com/storytold/photocraft/pull/110
+    - Preserve merged PSD alpha at the exported sample precision by @MikeeI in https://github.com/storytold/photocraft/pull/111
+    - perf(compose): reuse compiled vector masks within each render by @MikeeI in https://github.com/storytold/photocraft/pull/112
+    - perf(compose): reuse bounded pattern preparation across render tiles by @MikeeI in https://github.com/storytold/photocraft/pull/104
+    - fix(ui): pasting an image copied in another app never ran by @tiredIsa in https://github.com/storytold/photocraft/pull/102
+    - fix(ui): make Move transform controls interactive by @Ni-zav in https://github.com/storytold/photocraft/pull/99
+    - Menu overlap and overflow #92 by @Ni-zav in https://github.com/storytold/photocraft/pull/98
+    - PR #96 — Liquify undo by @Ni-zav in https://github.com/storytold/photocraft/pull/97
+    - fix(ui): shape tools show the shape while dragging by @sommerper in https://github.com/storytold/photocraft/pull/87
+    - security: bound automation previews and reply resources by @Gh0stlyKn1ght in https://github.com/storytold/photocraft/pull/93
+    - Japanese support: IME input in the Type tool and CJK glyphs in the UI by @kntrttm in https://github.com/storytold/photocraft/pull/101
+    - Community batch follow-ups: on-demand OS clipboard paste; fmt + egui 0.36 test port by @echelon in https://github.com/storytold/photocraft/pull/134
+    - perf(ui): borrow the active layer from its document snapshot by @MikeeI in https://github.com/storytold/photocraft/pull/121
+    - perf(ui): reuse exact cached content bounds by @MikeeI in https://github.com/storytold/photocraft/pull/116
+    - perf(ui): skip offscreen layer thumbnail generation by @MikeeI in https://github.com/storytold/photocraft/pull/117
+    - perf(ui): retain channel thumbnails across view-only revisions by @MikeeI in https://github.com/storytold/photocraft/pull/120
+    - fix(ui): prune thumbnails for removed layers and documents by @MikeeI in https://github.com/storytold/photocraft/pull/119
+    - fix(ui): prune closed-document display and preview resources by @MikeeI in https://github.com/storytold/photocraft/pull/118
+    - Disambiguate colliding document identities at session admission by @MikeeI in https://github.com/storytold/photocraft/pull/114
+    - Warn when the PSD channel limit drops a Quick Mask by @MikeeI in https://github.com/storytold/photocraft/pull/115
+    - Preserve compositing properties in single-layer flat export by @MikeeI in https://github.com/storytold/photocraft/pull/122
+    - Preserve selected real masks during PSD import by @MikeeI in https://github.com/storytold/photocraft/pull/130
+    - Scale artboard bounds in proxy documents by @MikeeI in https://github.com/storytold/photocraft/pull/131
+    - Crop tool: move and resize the crop frame, Space repositions while drawing by @echelon in https://github.com/storytold/photocraft/pull/132
+    - Fix flaky canvas_geom undo test (process-wide text gamma raced by another test) by @echelon in https://github.com/storytold/photocraft/pull/135
+    - Dock: fixed-height panel groups, splitters, collapse, reorder; panels never vanish by @echelon in https://github.com/storytold/photocraft/pull/139
+    - Brush Settings panel: Photoshop structure and depth, edits through tools.setBrush by @echelon in https://github.com/storytold/photocraft/pull/136
+    - Selecting current bit depth must preserve redo by @MikeeI in https://github.com/storytold/photocraft/pull/133
+    - Detect PhotoCraft archives independent of ZIP entry order by @MikeeI in https://github.com/storytold/photocraft/pull/137
+    - Type tool: caret/selection land on the glyph under the pointer; font size is live, one undo step, ~60x faster (#123, #124) by @echelon in https://github.com/storytold/photocraft/pull/142
+    - Layers groups expand/collapse (#126); every displayed shortcut fires (#127) by @echelon in https://github.com/storytold/photocraft/pull/141
+    - Layers rows: names never run under the indicators; fx triangle; Collapse All Groups; designer PSD for QA by @echelon in https://github.com/storytold/photocraft/pull/167
+    - fix(geom): saturate Rect::translate and inflate on i32 overflow by @kevin9327 in https://github.com/storytold/photocraft/pull/159
+    - fix(ui): make tall menus scrollable on short displays by @Ni-zav in https://github.com/storytold/photocraft/pull/160
+    - PSD type layers: bounds regression tests; #148 is the layer's vector mask, not text bounds by @echelon in https://github.com/storytold/photocraft/pull/165
+    - Flatpak single-file bundles as release artifacts by @echelon in https://github.com/storytold/photocraft/pull/163
+    - Roadmap: honest parity assessment (2026-10-05) by @echelon in https://github.com/storytold/photocraft/pull/182
+    - AGENTS.md: no Tauri, Electron or webview shells by @echelon in https://github.com/storytold/photocraft/pull/184
+    - Menus scroll and navigate by keyboard on small displays; Color Range dialog on the no-GPU path (#145, #138) by @echelon in https://github.com/storytold/photocraft/pull/168
+    - Docs: where we stand and where we're going (roadmap, README, AGENTS.md) by @echelon in https://github.com/storytold/photocraft/pull/186
+    - Brushes: Tilt Scale, Brush Projection, Spacing checkbox, section locks, Mixer Wetness/Mix; Brushes grid + drag and drop; options bar through tools.setBrush by @echelon in https://github.com/storytold/photocraft/pull/174
+    - fix(ui): refresh Liquify preview after undo by @Ni-zav in https://github.com/storytold/photocraft/pull/175
+    - fix(ui): sample eyedropper colours while dragging by @Ni-zav in https://github.com/storytold/photocraft/pull/176
+    - fix(ui): keep Curves endpoint handles inside the graph area by @Ni-zav in https://github.com/storytold/photocraft/pull/177
+    - fix(ui): avoid duplicate sliders for wide filter ranges by @Ni-zav in https://github.com/storytold/photocraft/pull/179
+    - Dock polish: Layers gets the height, Character/Paragraph group, eliding tab strips, reveal the active layer (#147, #150, #151, #152) by @echelon in https://github.com/storytold/photocraft/pull/181
+    - Move/Free Transform modifier keys (#90); sharp full-resolution transform preview (#91) by @echelon in https://github.com/storytold/photocraft/pull/183
+    - CJK UI font fallback: Simplified/Traditional Chinese and Korean, lazily loaded in locale order (#149) by @echelon in https://github.com/storytold/photocraft/pull/185
+    - Layers mask thumbnails + chains; Channels/Paths temporary rows and footers (#153, #154) by @echelon in https://github.com/storytold/photocraft/pull/191
+    - GPU compositor: paged residents and effect maps, so 20k+ documents refresh on the GPU (#49) by @echelon in https://github.com/storytold/photocraft/pull/187
+    - Properties: uniform sections, per-kind Quick Actions, full-width controls (#155) by @echelon in https://github.com/storytold/photocraft/pull/192
+    - PSD corpus: psd-tools set (pinned, verified), an oracle for every file, and the fixes it found by @echelon in https://github.com/storytold/photocraft/pull/195
+    - Tool feedback: selection-mode cursor badges, scrubby zoom, contrasting outlines, Shift lines by @echelon in https://github.com/storytold/photocraft/pull/188
+    - PSD fidelity: 16/32-bit colour modes, Lab, Levels, Exposure, Dissolve oracle (corpus 133 → 140, psd-tools 212 → 222) by @echelon in https://github.com/storytold/photocraft/pull/202
+    - Fix tests on FreeBSD with RADV by @mekanix in https://github.com/storytold/photocraft/pull/194
+    - fix(clipboard): use the wayland clipboard for images by @nuIIpointerexception in https://github.com/storytold/photocraft/pull/222
+    - FreeBSD: build and test the workspace in a FreeBSD VM by @echelon in https://github.com/storytold/photocraft/pull/223
+    - Fix automatic UI scaling on 4K monitors by @john8675309 in https://github.com/storytold/photocraft/pull/225
+    - FreeBSD: serialise canvas GPU tests, CI template, RAM detection, CJK font paths by @echelon in https://github.com/storytold/photocraft/pull/227
+    - Title bar: never draw the window title over the menus or controls by @echelon in https://github.com/storytold/photocraft/pull/241
+    - Packaging: Linux runtime deps + start-up library check (#201); wasm 26.3 → 18.8 MiB (#198) by @echelon in https://github.com/storytold/photocraft/pull/237
+    - Fix live brush preview drawing a polygon (#189) by @echelon in https://github.com/storytold/photocraft/pull/240
+    - PSD effects fidelity: spread metric, emboss, gradient geometry, text gamma (113 → 118 oracle passes) by @echelon in https://github.com/storytold/photocraft/pull/224
+    - Scorecard: cargo xtask perf + scorecard, budgets, checklists, nightly perf (#221) by @echelon in https://github.com/storytold/photocraft/pull/239
+    - Layout documents: fix GPU device loss, live Move tool, local damage, no per-frame work (#125, #128) by @echelon in https://github.com/storytold/photocraft/pull/226
+    - PSD export: write tagged blocks other readers can parse (#200) by @echelon in https://github.com/storytold/photocraft/pull/236
+    - CR2: measure the colour filter row phase instead of assuming RGGB (#193) by @echelon in https://github.com/storytold/photocraft/pull/244
+    - Atomic saves: one crash-safe atomic_write for every document write by @echelon in https://github.com/storytold/photocraft/pull/230
+    - Preferences: wire tooltips, Home screen, recent files; hide what nothing reads by @echelon in https://github.com/storytold/photocraft/pull/245
+    - Eraser on locked layers: no lock-out from the simple lock button; Stroke Path erases to the background colour (#76) by @echelon in https://github.com/storytold/photocraft/pull/229
+    - Retouch tools paint the mask/channel target; Sample All Layers for Blur/Sharpen/Smudge; premultiplied Smudge (#207) by @echelon in https://github.com/storytold/photocraft/pull/234
+    - Free Transform: selection moves only its part of a linked mask; masked preview; target masks and channels (#205) by @echelon in https://github.com/storytold/photocraft/pull/242
+    - Vertical type (tategaki): lay out, render, edit and round-trip (#199) by @echelon in https://github.com/storytold/photocraft/pull/246
+    - PSD stroke effects: outlines of filled shapes, vector stroke above interior effects, joined subpaths by @echelon in https://github.com/storytold/photocraft/pull/233
+    - Live gradients: Gradient tool makes editable Gradient Fill layers (on-canvas handles, stops, midpoints) + Classic mode (#180) by @echelon in https://github.com/storytold/photocraft/pull/197
+    - Marquee: Shift squares, Alt draws from the centre, live W × H readout (#208) by @echelon in https://github.com/storytold/photocraft/pull/247
+    - GPU: crash-safe startup and device-loss fallback (#243, #4) by @echelon in https://github.com/storytold/photocraft/pull/252
+    - Text: deterministic font family order; hide private system families (fixes a flaky test) by @echelon in https://github.com/storytold/photocraft/pull/264
+    - Photoshop oracles via storytold/photocraft-corpus: pinned corpora, corpus feature, test-corpus, CI job by @echelon in https://github.com/storytold/photocraft/pull/190
+    - Masks: Alt-click to view mask, Cmd-click vector mask to select, vector-mask target brackets (#196) by @echelon in https://github.com/storytold/photocraft/pull/256
+    - Stylus pressure, tilt, rotation and eraser on macOS and X11 by @echelon in https://github.com/storytold/photocraft/pull/255
+    - Fix Windows MSI advertised shortcut icons by @CQMHV in https://github.com/storytold/photocraft/pull/238
+    - Windows taskbar icon: .exe icon id for the MSI shortcut + icon regression tests (#248) by @echelon in https://github.com/storytold/photocraft/pull/269
+    - Colours: handle non-hex Unicode values without an internal error by @storybored379 in https://github.com/storytold/photocraft/pull/261
+    - Align the CJK fallback font's baseline with Latin text by @kntrttm in https://github.com/storytold/photocraft/pull/260
+    - UI: platform shortcut notation in every label and tooltip (#251) by @tiredIsa in https://github.com/storytold/photocraft/pull/262
+    - New Document: a typed Width/Height reaches Create (#254) by @echelon in https://github.com/storytold/photocraft/pull/270
+    - Menus are as tall as their items; scroll only when the window is too short (#235) by @echelon in https://github.com/storytold/photocraft/pull/272
+    - Portable mode: keep settings beside the exe in the Windows portable zip (#228) by @echelon in https://github.com/storytold/photocraft/pull/267
+    - Brush Settings for every brush: options-bar toggle and real preset picker (#258) by @echelon in https://github.com/storytold/photocraft/pull/268
+    - Ctrl+Alt-drag resizes the brush on the canvas (#231) by @echelon in https://github.com/storytold/photocraft/pull/271
+    - Shift rubber band: preview the straight line before the click (#257) by @echelon in https://github.com/storytold/photocraft/pull/273
+    - Selection drag previews: regression tests for #253 (visible mid-drag, 1x and 2x) by @echelon in https://github.com/storytold/photocraft/pull/274
+    - Shortcuts: rebindable fill keys, D/X and held temporary tools (#249) by @echelon in https://github.com/storytold/photocraft/pull/275
+    - PSD manual and optical kerning: import, export, render, edit (#206) by @echelon in https://github.com/storytold/photocraft/pull/259
+    - Localise the UI: i18n foundation and a Japanese catalog (menus, dialogs, panels) by @kntrttm in https://github.com/storytold/photocraft/pull/169
+    - Pencil tool, Edit › Fill… dialog and "Rasterize?" prompt (#213) by @echelon in https://github.com/storytold/photocraft/pull/279
+    - Fast Select › Modify › Smooth and Feather (part of #211) by @echelon in https://github.com/storytold/photocraft/pull/280
+    - Compositor: effect maps never block inside parallel tiles (fixes #276 deadlock) by @echelon in https://github.com/storytold/photocraft/pull/281
+    - FreeBSD release tarball and README platform lines by @echelon in https://github.com/storytold/photocraft/pull/284
+    - fix: forward document index in bridge inspection by @kuishou68 in https://github.com/storytold/photocraft/pull/287
+    - Marquee: stop the selection at the canvas edge by @Multipad-cyber in https://github.com/storytold/photocraft/pull/263
+    - Background layer: double-click, masks and cut behave like Photoshop by @Multipad-cyber in https://github.com/storytold/photocraft/pull/266
+    - i18n: add Simplified Chinese localization by @CQMHV in https://github.com/storytold/photocraft/pull/282
+    - Enable dictionary segmentation for Japanese type by @midasdf in https://github.com/storytold/photocraft/pull/250
+    - Smart Objects and Smart Filters survive PSD save and open by @echelon in https://github.com/storytold/photocraft/pull/288
+    - Apply EXIF orientation on open, write Orientation = 1 on export (#285) by @echelon in https://github.com/storytold/photocraft/pull/318
+    - PSD export: 32-bit files open in Photoshop (HDR toning Color Mode Data, #291) by @echelon in https://github.com/storytold/photocraft/pull/327
+    - Windows on ARM64: release builds, PE header check, install test on ARM64 hardware by @echelon in https://github.com/storytold/photocraft/pull/333
+    - Fix preference usage scanning on CRLF checkouts by @CQMHV in https://github.com/storytold/photocraft/pull/331
+    - Windows: Alt-click clone hint and Ctrl+N channel errors (#251 follow-up) by @bommerts in https://github.com/storytold/photocraft/pull/336
+    - Move tool: Auto-Select on by default; a click picks and drags the layer under the pointer (#296) by @echelon in https://github.com/storytold/photocraft/pull/330
+    - Cmd+Enter (Ctrl+Enter) loads the path as a selection (#306) by @echelon in https://github.com/storytold/photocraft/pull/329
+    - Layers panel: rename commits on click elsewhere, Enter or Tab; one at a time (#314) by @echelon in https://github.com/storytold/photocraft/pull/326
+    - Keyboard Shortcuts: Ctrl+F records as Ctrl+F, not Ctrl+ControlLeft (#292) by @echelon in https://github.com/storytold/photocraft/pull/323
+    - macOS CLI: verify the shipped CLI is Developer ID signed and notarized in the release workflow (#308) by @echelon in https://github.com/storytold/photocraft/pull/320
+    - fix(ui): feed every pointer move per frame so fast strokes stay smooth by @leonaci in https://github.com/storytold/photocraft/pull/317
+    - Fix logic Show the clone crosshair only while Option is held by @juansebsol in https://github.com/storytold/photocraft/pull/301
+    - i18n: add Traditional Chinese (zh-hant) UI catalog by @WildfootW in https://github.com/storytold/photocraft/pull/302
+    - Add a Spanish catalog (menus, dialogs, panels) by @Mawfyy in https://github.com/storytold/photocraft/pull/299
+    - Localise the UI into Russian: a complete catalog and the missed tl! call sites by @tiredIsa in https://github.com/storytold/photocraft/pull/298
+    - Preferences: add an Apply button by @CQMHV in https://github.com/storytold/photocraft/pull/325
+    - i18n: add Czech (cs) UI translation by @petrleocompel in https://github.com/storytold/photocraft/pull/328
+    - Menus: no menu or submenu covers the menu bar (#319) by @echelon in https://github.com/storytold/photocraft/pull/337
+    - Menus stay above the taskbar; oversized windows open maximized (#315) by @echelon in https://github.com/storytold/photocraft/pull/343
+    - Background jobs: engine job API, progress and cancel (part of #210) by @echelon in https://github.com/storytold/photocraft/pull/289
+    - Background jobs in the app: progress, Cancel, open-as-job (part of #210) by @echelon in https://github.com/storytold/photocraft/pull/373
+    - Harden EXIF orientation: limits after rotation, fallible allocation, strict IFD parsing by @echelon in https://github.com/storytold/photocraft/pull/345
+    - Fonts: use craft-fonts as an optional build input; move the Japanese fonts out by @echelon in https://github.com/storytold/photocraft/pull/353
+    - Stamp Visible (Cmd+Alt+Shift+E) and Stamp Down; Alt+Merge keeps the originals (#217) by @echelon in https://github.com/storytold/photocraft/pull/356
+    - Right-click on the canvas lists the layers under the pointer (#307) by @echelon in https://github.com/storytold/photocraft/pull/360
+    - Canvas scrollbars, and Preferences > Tools > Overscroll works (#300) by @echelon in https://github.com/storytold/photocraft/pull/367
+    - Alt+right-drag resizes the brush and changes its hardness (#297) by @echelon in https://github.com/storytold/photocraft/pull/370
+    - Alt+scroll zooms the canvas in 5% steps around the pointer (#293) by @echelon in https://github.com/storytold/photocraft/pull/371
+    - ui.set: reject unknown fields; the theme error names all five themes (#412, #413) by @bflatastic in https://github.com/storytold/photocraft/pull/437
+    - serve: methods lists jobs.list and jobs.cancel (#414) by @bflatastic in https://github.com/storytold/photocraft/pull/438
+    - MCP command_batch and serve batch honour each step's wait (#415) by @bflatastic in https://github.com/storytold/photocraft/pull/439
+    - Headless saves without path never flatten over the opened file (#416) by @bflatastic in https://github.com/storytold/photocraft/pull/447
+    - Alt-click with the Brush, Pencil, Gradient or Paint Bucket samples a colour (#417) by @bflatastic in https://github.com/storytold/photocraft/pull/450
+    - Layers panel: double-click beside a layer's name opens Layer Style (#350) by @bflatastic in https://github.com/storytold/photocraft/pull/452
+    - Batch runs report inputs that share an output name instead of overwriting (#420, #422) by @bflatastic in https://github.com/storytold/photocraft/pull/448
+    - New from Clipboard, and Paste with nothing open makes a document (#368) by @bflatastic in https://github.com/storytold/photocraft/pull/458
+    - CLI: unknown flags are usage errors, <subcommand> --help prints usage, usage lists --quality (#421, #423) by @bflatastic in https://github.com/storytold/photocraft/pull/460
+    - Liquify remembers its brush settings between uses and launches (#418) by @bflatastic in https://github.com/storytold/photocraft/pull/461
+    - The main window opens centred on the screen (#419) by @bflatastic in https://github.com/storytold/photocraft/pull/462
+    - Keyboard layer navigation: Alt+[ / Alt+] / Alt+, / Alt+. and Shift to add (part of #352) by @bflatastic in https://github.com/storytold/photocraft/pull/470
+    - Transform Again on a Copy (Cmd+Alt+Shift+T): step and repeat (part of #352) by @bflatastic in https://github.com/storytold/photocraft/pull/474
+    - Number keys set opacity, Shift+[ / Shift+] step hardness, Shift+Cmd+A opens Camera Raw (part of #352) by @bflatastic in https://github.com/storytold/photocraft/pull/473
+    - Export: TGA in Save As and Export As (#363) by @Pedroj-64 in https://github.com/storytold/photocraft/pull/377
+    - Docs and MCP schema: use the real Gaussian Blur id (#378) by @floflo777 in https://github.com/storytold/photocraft/pull/390
+    - Image Size shows the one-pixel minimum it applies (#441) by @HEOJUNFO in https://github.com/storytold/photocraft/pull/468
+    - prefs.reset resets a single colorSettings key (#445) by @HEOJUNFO in https://github.com/storytold/photocraft/pull/467
+    - Content-Aware Scale: enlarging a 1 px wide or tall layer no longer panics by @Ar-maan05 in https://github.com/storytold/photocraft/pull/387
+    - Build desktop app by default (#392) by @agorevski in https://github.com/storytold/photocraft/pull/425
+    - fix(engine): use wasm-safe timing for Liquify by @naumanAhmed3 in https://github.com/storytold/photocraft/pull/393
+    - Profile mismatch: compare profiles by colour, not bytes (sRGB vs sRGB prompt) by @ljkx in https://github.com/storytold/photocraft/pull/394
+    - Type: dragging a paragraph box handle resizes the box (#351) by @Pedroj-64 in https://github.com/storytold/photocraft/pull/376
+    - docs: correct VectorCraft sibling name by @agorevski in https://github.com/storytold/photocraft/pull/429
+    - Free Transform a Copy (Cmd+Alt+T); Esc takes the copy back (part of #352) by @bflatastic in https://github.com/storytold/photocraft/pull/482
+    - Raise rust-version to 1.95, the minimum egui 0.36 needs by @carterwsmith in https://github.com/storytold/photocraft/pull/471
+    - docs: add star history chart to README by @coygeek in https://github.com/storytold/photocraft/pull/469
+    - Move drag reveals a larger-than-canvas layer's off-canvas pixels by @sommerper in https://github.com/storytold/photocraft/pull/526
+    - Spanish: add missing tool, filter and path translations by @neversaynv3r in https://github.com/storytold/photocraft/pull/488
+    - Dialogs keep their top-left when their content resizes by @sommerper in https://github.com/storytold/photocraft/pull/487
+    - PSD export selects PSB above size limit (#212) by @agorevski in https://github.com/storytold/photocraft/pull/431
+    - 32-bit documents: Exposure works on the stored linear values by @floflo777 in https://github.com/storytold/photocraft/pull/400
+    - Ctrl+Insert copies and Shift+Insert pastes on Linux; Shift+Insert pastes images on Windows by @sommerper in https://github.com/storytold/photocraft/pull/531
+    - Docs: roadmap, scorecard and README after the 2026-10-07 fixes by @bflatastic in https://github.com/storytold/photocraft/pull/538
+    - CLI batch: recorded-action steps, --format .ext, strict --quality, refuse --out = --in (#489, #490, #491, #492) by @bflatastic in https://github.com/storytold/photocraft/pull/545
+    - Gradients honour explicit transparency stops; smart filter commands accept an explicit layer target (#465, #466) by @bflatastic in https://github.com/storytold/photocraft/pull/544
+    - Recovered documents keep their recovery data until saved or closed (#444) by @bflatastic in https://github.com/storytold/photocraft/pull/549
+    - History: tool and preset names, Frame from Layers as one step, undo/redo restore the targeted layers (#513, #528, #446, #496, #495) by @bflatastic in https://github.com/storytold/photocraft/pull/551
+    - Shortcuts run in the order pressed; Shift+Delete fills on Windows; colour pickers stay put while dragging (#440, #530, #534) by @bflatastic in https://github.com/storytold/photocraft/pull/552
+    - Control channel: menu/dialog requests wait for their job; right-click menus at the point; MCP ui_pointer button (#510, #511, #512, #514) by @bflatastic in https://github.com/storytold/photocraft/pull/548
+    - Automation: non-object params rejected; headless sees finished jobs; serve stdio survives a bad line; MCP batch keeps results (#503, #504, #505, #506, #529) by @bflatastic in https://github.com/storytold/photocraft/pull/546
+    - Formats: deep .pcraft groups reopen; zero-size PSD rejected; JPEG mattes over white; no-ICC formats get sRGB (#517, #519, #521, #522) by @bflatastic in https://github.com/storytold/photocraft/pull/555
+    - Preferences merge with other tabs/windows and retry failed saves; web startup shows a Reload hint (#475, #476, #477) by @bflatastic in https://github.com/storytold/photocraft/pull/561
+    - FreeBSD CI: run the GPU integration tests one at a time by @bflatastic in https://github.com/storytold/photocraft/pull/576
+    - Import warns when it keeps only the first frame or page, or a JPEG ends early (#518, #523) by @bflatastic in https://github.com/storytold/photocraft/pull/563
+    - Linux: AppImage update information and a .zsync beside it (#349) by @ianswope in https://github.com/storytold/photocraft/pull/399
+    - Color Picker and Color panel fields accept typed values by @carterwsmith in https://github.com/storytold/photocraft/pull/485
+    - Release 0.3.0 by @bflatastic in https://github.com/storytold/photocraft/pull/577
+    New Contributors
+    - @MikeeI made their first contribution in https://github.com/storytold/photocraft/pull/109
+    - @tiredIsa made their first contribution in https://github.com/storytold/photocraft/pull/102
+    - @Ni-zav made their first contribution in https://github.com/storytold/photocraft/pull/99
+    - @kntrttm made their first contribution in https://github.com/storytold/photocraft/pull/101
+    - @kevin9327 made their first contribution in https://github.com/storytold/photocraft/pull/159
+    - @mekanix made their first contribution in https://github.com/storytold/photocraft/pull/194
+    - @nuIIpointerexception made their first contribution in https://github.com/storytold/photocraft/pull/222
+    - @john8675309 made their first contribution in https://github.com/storytold/photocraft/pull/225
+    - @CQMHV made their first contribution in https://github.com/storytold/photocraft/pull/238
+    - @kuishou68 made their first contribution in https://github.com/storytold/photocraft/pull/287
+    - @midasdf made their first contribution in https://github.com/storytold/photocraft/pull/250
+    - @bommerts made their first contribution in https://github.com/storytold/photocraft/pull/336
+    - @leonaci made their first contribution in https://github.com/storytold/photocraft/pull/317
+    - @juansebsol made their first contribution in https://github.com/storytold/photocraft/pull/301
+    - @WildfootW made their first contribution in https://github.com/storytold/photocraft/pull/302
+    - @Mawfyy made their first contribution in https://github.com/storytold/photocraft/pull/299
+    - @petrleocompel made their first contribution in https://github.com/storytold/photocraft/pull/328
+    - @bflatastic made their first contribution in https://github.com/storytold/photocraft/pull/437
+    - @Pedroj-64 made their first contribution in https://github.com/storytold/photocraft/pull/377
+    - @floflo777 made their first contribution in https://github.com/storytold/photocraft/pull/390
+    - @HEOJUNFO made their first contribution in https://github.com/storytold/photocraft/pull/468
+    - @Ar-maan05 made their first contribution in https://github.com/storytold/photocraft/pull/387
+    - @naumanAhmed3 made their first contribution in https://github.com/storytold/photocraft/pull/393
+    - @ljkx made their first contribution in https://github.com/storytold/photocraft/pull/394
+    - @carterwsmith made their first contribution in https://github.com/storytold/photocraft/pull/471
+    - @coygeek made their first contribution in https://github.com/storytold/photocraft/pull/469
+    - @neversaynv3r made their first contribution in https://github.com/storytold/photocraft/pull/488
+    - @ianswope made their first contribution in https://github.com/storytold/photocraft/pull/399
+    Full Changelog: https://github.com/storytold/photocraft/compare/v0.2.0...v0.3.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/photocraft/releases/tag/v0.3.0
+ReleaseTime: 2026-10-07T10:33:19.0000000Z

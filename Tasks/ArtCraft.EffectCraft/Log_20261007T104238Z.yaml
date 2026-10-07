@@ -1,0 +1,66 @@
+Version: 0.4.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/effectcraft/releases/download/v0.4.0/effectcraft-0.4.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/effectcraft/releases/download/v0.4.0/effectcraft-0.4.0-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    A release built around the issues people filed since v0.3.1: more than 40 of them are fixed.
+    - Timeline: Alt+wheel zooms out to the whole comp; the Time Navigator's ends drag to zoom and ; toggles frame level / the whole comp; reveal shortcuts (U, E, P…) only touch the selected layers; enabling Time Remapping reveals it; Project items land where you drop them.
+    - Viewer: drop Project items, files and effects straight onto the comp; Pan Behind snaps the anchor to its own layer, with Alt-drag, Shift-drag and Ctrl+double-click to center; a locked viewer keeps its comp.
+    - Panels and editing: clicking a value or name field selects it, so typing replaces it (Enter commits, Escape cancels); the gaps between the right column's stacked panels drag to resize them; Delete removes selected animators, masks and shape groups; the font menus list your installed fonts.
+    - Export: VP9 WebM frames always decode (no false superframe markers); long audio keeps its sound past 12:36; --format hevc / av1 and .mp4 outputs keep the codec you chose; AV1 WebM refuses alpha instead of silently dropping it.
+    - Reliability: running out of video memory falls back to the CPU instead of crashing; GPU start-up failures are contained; the CLI no longer panics when its output is piped into head.
+    - Agents and automation: MCP add_effect is one undo step and all-or-nothing; expression syntax errors reach set_property replies; unknown CLI options are errors; docs/agents.md lists every MCP tool, checked by a test.
+    - Platforms: Windows on ARM64 installers, tested on ARM64 hardware.
+    Thanks to everyone who filed issues and sent pull requests. Come say hi on Discord.
+    What's Changed
+    - Windows on ARM64: release builds, PE header check, install test on ARM64 hardware by @echelon in https://github.com/storytold/effectcraft/pull/101
+    - Persist Japanese menu language in General settings by @midasdf in https://github.com/storytold/effectcraft/pull/71
+    - Improve AE-style editing, easing fidelity and Windows GPU rendering by @dexterlabs1 in https://github.com/storytold/effectcraft/pull/95
+    - G2: font menus list the installed fonts by @bflatastic in https://github.com/storytold/effectcraft/pull/118
+    - Docs: Windows ARM64 builds in the README (#94) by @bflatastic in https://github.com/storytold/effectcraft/pull/119
+    - Render Queue: Render Settings templates apply from the menu (#117) by @bflatastic in https://github.com/storytold/effectcraft/pull/122
+    - Angles: the revolutions ("0x") scrub and take typing (#93) by @bflatastic in https://github.com/storytold/effectcraft/pull/123
+    - Preview: Audio, Lock and Shy keep the cache; playback with audio waits for frames (#103) by @bflatastic in https://github.com/storytold/effectcraft/pull/127
+    - GPU: running out of video memory falls back to the CPU instead of crashing (#106) by @bflatastic in https://github.com/storytold/effectcraft/pull/129
+    - Timeline: Project items land where they are dropped (#89) by @bflatastic in https://github.com/storytold/effectcraft/pull/131
+    - Viewer: drop Project items, files and effects onto the comp (#85, #88) by @bflatastic in https://github.com/storytold/effectcraft/pull/133
+    - Docs: user issues #85–#117 in gaps, parity, ROADMAP and README by @bflatastic in https://github.com/storytold/effectcraft/pull/134
+    - Untrack crates/hevcenc/target (36 MB of build output) and ignore nested target/ by @EthanSuquet in https://github.com/storytold/effectcraft/pull/128
+    - Settings: handle invalid Unicode label colours gracefully by @storybored379 in https://github.com/storytold/effectcraft/pull/135
+    - UI: cancel numeric edits on Escape and reject non-finite values by @jonassneu in https://github.com/storytold/effectcraft/pull/141
+    - Prevent parenting hangs on malformed loaded ancestor chains by @dexterlabs1 in https://github.com/storytold/effectcraft/pull/142
+    - GPU: land #139 (contain GPU initialization errors) with a readback latency fix by @bflatastic in https://github.com/storytold/effectcraft/pull/144
+    - Contain GPU initialization errors and retire failed compositor work by @dexterlabs1 in https://github.com/storytold/effectcraft/pull/139
+    - Docs: gaps.md records the community fixes of 7 October by @bflatastic in https://github.com/storytold/effectcraft/pull/145
+    - Control: close the connection on input that isn't a request by @Luskish in https://github.com/storytold/effectcraft/pull/150
+    - docs: add star history chart to README by @coygeek in https://github.com/storytold/effectcraft/pull/148
+    - Docs and tests: releasing guide, MCP tools table, font-list test (#136, #137, #149) by @bflatastic in https://github.com/storytold/effectcraft/pull/173
+    - CLI: --format hevc / av1 write HEVC / AV1; an unknown comp is named (#154, #155) by @bflatastic in https://github.com/storytold/effectcraft/pull/178
+    - Timeline: per-layer reveals, Time Remap reveal, full zoom-out, navigator handles (#157–#160) by @bflatastic in https://github.com/storytold/effectcraft/pull/181
+    - Project and text: row clicks, item labels, tracking alignment, Delete on groups (#146, #151–#153) by @bflatastic in https://github.com/storytold/effectcraft/pull/182
+    - Viewer: Pan Behind snapping and modifiers, locked viewers keep their comp (#147, #156, #162) by @bflatastic in https://github.com/storytold/effectcraft/pull/183
+    - Docs and packaging: web hosting guide matches the build; Linux packages describe a compositor (#164, #165, #169, #174, #180) by @bflatastic in https://github.com/storytold/effectcraft/pull/184
+    - VP9: frames never end in a byte that reads as a superframe marker (#161) by @bflatastic in https://github.com/storytold/effectcraft/pull/185
+    - Media: conformed audio keeps its sound past 12:36 (#172) by @bflatastic in https://github.com/storytold/effectcraft/pull/186
+    - UI: inline fields select their value on click (#170); stacked panels resize (#171) by @bflatastic in https://github.com/storytold/effectcraft/pull/187
+    - CLI, MCP and engine fixes (#163, #166, #167, #168, #175, #176, #177, #179) by @bflatastic in https://github.com/storytold/effectcraft/pull/188
+    - Release: EffectCraft v0.4.0 by @bflatastic in https://github.com/storytold/effectcraft/pull/189
+    New Contributors
+    - @midasdf made their first contribution in https://github.com/storytold/effectcraft/pull/71
+    - @dexterlabs1 made their first contribution in https://github.com/storytold/effectcraft/pull/95
+    - @EthanSuquet made their first contribution in https://github.com/storytold/effectcraft/pull/128
+    - @Luskish made their first contribution in https://github.com/storytold/effectcraft/pull/150
+    - @coygeek made their first contribution in https://github.com/storytold/effectcraft/pull/148
+    Full Changelog: https://github.com/storytold/effectcraft/compare/v0.3.1...v0.4.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/effectcraft/releases/tag/v0.4.0
+ReleaseTime: 2026-10-07T09:30:16.0000000Z
