@@ -1,8 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
-  param($Page)
-  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.geekbench.com/download/windows/'
-  Read-PlaywrightPageContent -Page $Page
-} | Get-EmbeddedLinks
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.geekbench.com/download/windows/' -Stealth -Headless -Screenshot | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

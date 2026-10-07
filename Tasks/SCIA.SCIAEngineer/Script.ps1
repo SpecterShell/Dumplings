@@ -1,4 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
   param($Page)
   $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.scia.net/en/scia-engineer/downloads'
   Read-PlaywrightPageContent -Page $Page

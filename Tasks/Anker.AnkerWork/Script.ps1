@@ -7,7 +7,7 @@ function Read-Installer {
 }
 
 $Prefix = 'https://us.ankerwork.com/pages/download-software'
-$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
   param($Page)
   $null = Open-PlaywrightPage -Page $Page -Uri $Prefix
   Read-PlaywrightPageContent -Page $Page

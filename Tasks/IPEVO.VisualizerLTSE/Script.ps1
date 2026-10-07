@@ -1,4 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
   param($Page)
   $null = Open-PlaywrightPage -Page $Page -Uri 'https://us.ipevo.com/pages/visualizer-ltse-download'
   Read-PlaywrightPageContent -Page $Page
