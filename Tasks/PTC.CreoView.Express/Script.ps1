@@ -20,8 +20,8 @@ switch -Regex ($this.Check()) {
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
     $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
     $InstallerFile2Extracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'pvexpress\CreoView_Express_64.msi' | Out-Host
-    $InstallerFile3 = Join-Path $InstallerFile2Extracted 'CreoView_Express_64.msi'
+    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'pvexpress\*.msi' | Out-Host
+    $InstallerFile3 = Join-Path $InstallerFile2Extracted '*.msi' | Get-Item -Force | Select-Object -First 1
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile3 | Read-ProductVersionFromMsi
     # ProductCode
