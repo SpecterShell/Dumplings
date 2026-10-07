@@ -116,7 +116,7 @@ Use filename labels to select candidates, then verify binary architecture. Check
 
 `1357310795.TboxWebdav` demonstrates Windows, architecture, and `no-runtime` filters for ZIP assets. `astral-sh.uv` demonstrates translating Rust target triples such as `i686`, `x86_64`, and `aarch64`. `A2-Ai.rv` and `houseabsolute.ubi` add `msvc`. `EpicGames.Lore` adds product-name and debug exclusions. `qyzhg.Prism` requires setup for its EXE and differentiates EXE and MSI assets.
 
-`qyzhg.Prism` is the compact example for tag and asset handling. Reuse its GitHub source pattern only: it currently lists both EXE and MSI artifacts, while current authoring policy prefers the direct MSI when an equivalent InstallShield or Advanced Installer wrapper would install the same ARP identity. Parse the release date and release body separately by following [Git-hosted release metadata](../release/html-markdown.md#git-hosted-release-metadata).
+`qyzhg.Prism` is the compact example for tag and asset handling with separate NSIS EXE and WiX MSI entries. Select both independent full-installer families when published for the matching release, and filter each family separately. Apply the [artifact-selection policy](../../../author-winget-manifest/references/package/artifact-selection.md#include-independent-installer-families), including its narrower exception for an equivalent InstallShield or Advanced Installer EXE wrapper around the direct MSI. Parse the release date and release body separately by following [Git-hosted release metadata](../release/html-markdown.md#git-hosted-release-metadata).
 
 `7zip.7zip` demonstrates multiple installer families, but each family and architecture must still match the current manifest and current artifact policy.
 

@@ -50,13 +50,16 @@ Before claiming the manifest is ready:
 - Every schema URL is versioned, matches `ManifestVersion`, and uses the winget-pkgs-recommended schema consistently across the manifest set, currently `1.12.0`.
 - Required fields exist in all files.
 - Installer type and architecture match evidence.
+- Every verified independent full-installer family is represented, including both NSIS and WiX when available. Follow [artifact selection](../package/artifact-selection.md#include-independent-installer-families) for exclusions and equivalent EXE/MSI wrappers.
 - Version and ARP mapping will not cause upgrade loops.
 - Install modes, elevation, success codes, expected return codes, and release date are backed by recorded evidence.
 - No third-party URLs are used.
 - No host execution of unknown installers occurred.
 - Every applicable installer and locale field was considered; optional fields were not omitted merely because the first source lacked them.
+- Additional locales omit `PackageName` unless a distinct localized ARP name satisfies the [identity rules](../locale/identity.md#packagename).
 - `UnsupportedOSArchitectures` is absent.
 - Known default switches, including NSIS `/S`, are not redundantly authored.
+- Every MSI/WiX entry has had its install-location property checked. Verified non-default switches are present and quoted, while omissions have a recorded default, unsupported, or unresolved reason.
 - The complete manifest set has passed through logical-model serialization after authoring; isolated drafts have passed through `Format-WinGetManifest`.
 
 ## Iterative formatting and final validation

@@ -86,6 +86,10 @@ Before launching, verify the file's architecture. Use `Get-PEArchitectureInfo` f
 
 When runtime downloads or update sources need investigation, follow [Capture VM network traffic](vm-network-capture.md). It covers host capture proxies, guest-only routing, Proxifier/TUN configurations, and guest CA stores. Keep the final unattended-install validation free of capture-specific preparation.
 
+### Preserve quotes in installer switches
+
+PowerShell can interpret or remove quotes around and within installer switches before the native process receives them. Prefer running quote-sensitive installer commands from CMD inside the VM, or stage the exact command in a guest `.cmd` file. Host-side PowerShell should transfer or dispatch that command rather than execute an unknown installer locally. CMD also has its own escaping and variable-expansion rules. Save the literal command in evidence and check the installer's logs for the arguments it received.
+
 ### Check silent exits without elevation
 
 Some installers require an elevated caller to start installation but exit silently without requesting UAC when launched unelevated. When this behavior is suspected, use Computer Use through [VMConnect](#operate-the-guest-through-vmconnect) to launch the exact artifact from an unelevated shell on the signed-in guest's visible desktop. Do not select **Run as administrator**, use `-Verb RunAs`, or launch from an elevated terminal for this case. Verify the launch shell's token elevation rather than inferring it from administrator-group membership. A non-interactive PowerShell Direct launch alone cannot establish the absence of a visible prompt.

@@ -114,6 +114,10 @@ Start from the visible ARP `DisplayName` and remove only text that is not part o
 - Preserve the release channel when separate identifiers track channels. For example, use `PixPin (Beta)` for `PixPin.PixPin.Beta`.
 - Do not remove a qualifier that distinguishes this package from another package identifier.
 
+For an additional locale, include `PackageName` only when installer parsing or VM evidence provides that locale's ARP `DisplayName` and the name remains different from the default `PackageName` after the cleanup above. Omit it when the installer has no evidenced name for that locale or the cleaned name equals the default. The locale then inherits the default name. Do not copy the default name, translate a brand, or use translated website text to manufacture an override.
+
+For example, if both the default and Chinese ARP entries name the application `Prism`, omit `PackageName` from `zh-CN`. If the Chinese installer instead writes a distinct localized product name, use that evidenced name after removing non-identity text.
+
 ### PackageUrl
 
 Use an official URL in this order of preference:

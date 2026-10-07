@@ -19,13 +19,16 @@ Do not route an MSP or MST through the direct MSI manifest shapes. Use structure
 
 ## Static analysis
 1. Parse the database once and classify its builder through [MSI analysis](analysis.md).
-2. Select the matching [manifest shape](manifest-shapes.md).
-3. Determine architecture, scope, and launch-context behavior through [Scope and elevation](scope-and-elevation.md).
-4. Read [MSI and WiX internals](../../internals/msi-wix/overview.md) only when implementing or debugging the parser.
+2. Check `$Info.InstallLocationProperty`, `$Info.InstallLocationSwitch`, and `$Info.InstallLocationSource` through [install-location analysis](analysis.md#determine-install-location-switches-and-modes). Add a verified non-default switch to the working manifest before continuing.
+3. Select the matching [manifest shape](manifest-shapes.md).
+4. Determine architecture, scope, and launch-context behavior through [Scope and elevation](scope-and-elevation.md).
+5. Read [MSI and WiX internals](../../internals/msi-wix/overview.md) only when implementing or debugging the parser.
 
 ## Manifest shape
 
 Select the [MSI, WiX, Advanced Installer, InstallShield, or custom-ARP shape](manifest-shapes.md) established by database analysis. Project only fields supported by parser or VM evidence into the installer entry.
+
+If the release also provides an independent NSIS installer, retain both verified installer families. Follow [artifact selection](../../../../author-winget-manifest/references/package/artifact-selection.md#include-independent-installer-families) and keep each route's metadata on its matching entry.
 
 ## WinGet defaults and overrides
 
@@ -43,6 +46,7 @@ With standard MSI behavior, the effective install modes are `interactive`, `sile
 - Omit `InstallModes` when all three standard modes are supported. If the package supports a different set, write the complete supported array explicitly.
 - Remove each `InstallerSwitches` child whose complete value is identical to the WinGet default. Missing children are populated independently.
 - If a package needs a different value, explicitly write the complete replacement for that child. WinGet does not merge command-line tokens with the default value.
+- For `InstallLocation`, complete [the property check](analysis.md#determine-install-location-switches-and-modes) even when all quiet, passive, and logging switches use WinGet defaults.
 - Keep `/norestart` or an equivalent no-reboot argument in custom `Silent` and `SilentWithProgress` replacements.
 - Keep mode-independent public properties or behavior arguments in `InstallerSwitches.Custom`.
 - Omit `ExpectedReturnCodes` unless the package adds behavior not represented by WinGet's built-in MSI return-code mapping.
@@ -65,6 +69,8 @@ If an EXE wrapper installs the prerequisite before launching this MSI, retain th
 
 ## VM validation
 Follow [VM validation](../../workflows/vm-validation.md) when the database cannot prove visible ARP behavior, scope, elevation, UI mode, or custom actions.
+
+For an authored install-location override, test a non-default directory containing spaces. Verify that the primary application files land there and inspect the MSI log for the effective property. An ARP `InstallLocation` value alone does not prove that the payload moved.
 
 ## Known examples
 

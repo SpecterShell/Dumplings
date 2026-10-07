@@ -28,6 +28,8 @@ When `HasExternalFile` is true, keep the EXE and every sidecar together. Pass a 
 
 Select the [direct, localized-ARP, dual-scope, or nested-payload shape](manifest-shapes.md) established by static analysis. Project only fields supported by parser or VM evidence into the installer entry.
 
+If the release also provides an independent WiX MSI, retain both verified installer families. Follow [artifact selection](../../../../author-winget-manifest/references/package/artifact-selection.md#include-independent-installer-families) rather than applying the equivalent EXE/MSI-wrapper exception to NSIS.
+
 ## WinGet defaults and overrides
 
 WinGet populates missing switch fields independently for `InstallerType: nullsoft`:

@@ -17,7 +17,9 @@ $Info.ProductCode
 $Info.UpgradeCode
 $Info.AllUsers
 $Info.InstallerBuilder
+$Info.InstallLocationProperty
 $Info.InstallLocationSwitch
+$Info.InstallLocationSource
 $Info.AppsAndFeaturesInstallerType
 $Info.AppsAndFeaturesProductCode
 $Info.SupportedArchitectures
@@ -59,14 +61,23 @@ Do not model a hidden native entry. Exclude entries with `SystemComponent=1`, an
 
 ## Determine install location, switches, and modes
 
-Use `$Info.InstallLocationProperty`, `$Info.InstallLocationSwitch`, and `$Info.InstallLocationSource`. The parser validates candidate public directory properties against the `Directory`, `Component`, and file-installation structure instead of selecting any all-uppercase property.
+Check `$Info.InstallLocationProperty`, `$Info.InstallLocationSwitch`, and `$Info.InstallLocationSource` for every MSI/WiX entry, including direct MSIs from archives. The parser checks candidate public directory properties against the authored directory structure. Confirm that the selected property controls the application payload during VM validation.
 
 Route the result:
 
 - `TARGETDIR="<INSTALLPATH>"`: omit `InstallerSwitches.InstallLocation` because it equals the WinGet default.
 - Another verified public property such as `INSTALLDIR`, `INSTALLLOCATION`, `APPLICATIONROOTDIRECTORY`, `INSTALL_ROOT`, or `APPDIR`: write the complete returned `InstallLocationSwitch` override.
-- No verified property: omit the field. Do not invent `INSTALLDIR` from builder convention.
+- No verified property: check publisher documentation and the MSI directory/component tables before leaving the field unresolved. Omit an unverified switch and record the gap. A null parser result does not establish that custom installation paths are unsupported. Do not invent `INSTALLDIR` from builder convention.
 - `WIXUI_INSTALLDIR` present but not connected to installed components: ignore it.
+
+Write the returned non-default switch into `InstallerSwitches.InstallLocation` in the matching draft entry. This applies even when the MSI uses WinGet's default quiet, passive, and log switches. For example, when `$Info.InstallLocationSwitch` returns `INSTALLDIR="<INSTALLPATH>"`, add:
+
+```yaml
+InstallerSwitches:
+  InstallLocation: 'INSTALLDIR="<INSTALLPATH>"'
+```
+
+Preserve the actual returned property name and literal double quotes. During [VM validation](workflow.md#vm-validation), replace `<INSTALLPATH>` with a non-default directory containing spaces and verify the installed application files. Use the [CMD quoting guidance](../../workflows/vm-validation.md#preserve-quotes-in-installer-switches) when PowerShell could consume the quotes.
 
 Then compare silent behavior with the WinGet defaults:
 

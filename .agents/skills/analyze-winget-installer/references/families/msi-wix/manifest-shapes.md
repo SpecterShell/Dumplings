@@ -2,6 +2,8 @@
 
 [Back to the MSI and WiX workflow](workflow.md)
 
+Complete [install-location analysis](analysis.md#determine-install-location-switches-and-modes) for every shape. Minimal snippets below do not imply that the package uses `TARGETDIR`. Add the verified non-default `InstallLocationSwitch` to its matching entry before saving the draft. Keep the literal quotes around `<INSTALLPATH>`.
+
 ## Direct installer
 
 Use this shape when [builder classification](analysis.md#classify-the-msi-builder) reports a non-WiX or unknown builder, [visible ARP analysis](analysis.md#identify-the-visible-arp-entry) proves that the native MSI entry is visible, and the manifest identity agrees with the MSI metadata. Obtain `ProductCode` from `Get-MsiInstallerInfo.ProductCode`. Do not add `AppsAndFeaturesEntries` merely to repeat the MSI identity.
@@ -15,7 +17,7 @@ Installers:
   ProductCode: <ProductCode>
 ```
 
-Apply the WinGet defaults below. Add `Scope`, an install-location override, or Apps & Features metadata only when the later steps prove that it is required.
+Apply the [WinGet defaults](workflow.md#winget-defaults-and-overrides). Add the install-location override established above, then fill `Scope` and any required Apps & Features metadata from their evidence.
 
 ## WiX MSI package
 

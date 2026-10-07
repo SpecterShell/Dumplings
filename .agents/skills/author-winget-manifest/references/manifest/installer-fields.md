@@ -44,6 +44,7 @@ Switch and behavior rules:
 
 - Prefer WinGet defaults for known installer types.
 - Add `InstallerSwitches` only when required for silent install, custom install behavior, or known publisher-specific requirements.
+- For `msi`, `wix`, and archive-contained MSI/WiX entries, explicitly check `Get-MsiInstallerInfo.InstallLocationSwitch`. Add a verified non-default override even when the other switches use WinGet defaults. Follow [MSI install-location analysis](../../../analyze-winget-installer/references/families/msi-wix/analysis.md#determine-install-location-switches-and-modes) for unresolved properties and VM checks.
 - Quote `<INSTALLPATH>` inside every explicitly authored install-location switch. The quotes must reach the installer command line, as in `APPDIR="<INSTALLPATH>"` or `--root "<INSTALLPATH>"`. Wrapping only the YAML scalar does not protect a path containing spaces. If the installer does not support path-only quoting, test whether it accepts the complete switch inside literal double quotes. Use a single-quoted YAML scalar to preserve them, as in `InstallLocation: '"/DIR=<INSTALLPATH>"'` for `Ekahau.Capture`.
 - Add `UnsupportedArguments` when `--location` or `--log` is known unsupported.
 - For `nullsoft`, omit `InstallerSwitches.Silent` and `SilentWithProgress` when both are the default `/S`. The same per-key omission rule applies to every known installer type and to a ZIP's effective `NestedInstallerType`.

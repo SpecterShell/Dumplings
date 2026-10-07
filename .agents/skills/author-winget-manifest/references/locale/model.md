@@ -81,12 +81,12 @@ This applies to `PublisherUrl`, `PublisherSupportUrl`, `PrivacyUrl`, `PackageUrl
 
 ### Non-URL Fields
 
-- Translate a non-URL field when its content is translatable and the translation is reliable.
+- Translate descriptive non-URL fields when their content is translatable and the translation is reliable. Apply the [PackageName evidence rule](identity.md#packagename) to product-name overrides.
 - Omit identifiers and invariant values that should remain unchanged, allowing them to inherit from the default locale.
 - Translate non-SPDX `License` names and classifications into the language of each manifest's `PackageLocale`, including the default locale. Additional locale manifests must supply their own translated value rather than inherit a classification in another language.
 - Use [GNU's terminology guide](https://www.gnu.org/philosophy/fs-translations.html) for translations. For `Freeware`, use the equivalent of its "gratis software" category to preserve the meaning of no-cost software. In `zh-CN`, use `专有软件` for `Proprietary` and `免费软件` for `Freeware`. Use the appropriate script and wording for other locales, and respect the schema's minimum length. Do not shorten the Chinese proprietary label to `专有`.
 - Keep SPDX identifiers such as `MIT` and `Apache-2.0` unchanged in every locale. An additional locale may omit `License` to inherit the same SPDX identifier.
-- Preserve official product names, legal company names, and technical terms unless the publisher provides an official localized form.
+- Preserve official product names, legal company names, and technical terms unless the publisher provides an official localized form. An additional-locale `PackageName` requires a distinct, evidenced localized ARP name.
 
 ## Locale Field Completeness Pass
 
@@ -133,6 +133,7 @@ For an additional locale, perform the same applicability review but include only
 - Every URL is official, public, and appropriate for its field.
 - Default-locale URLs use verified locale-neutral equivalents where available. Additional-locale URLs retain their locale markers.
 - `PackageName` preserves major-version, architecture, and channel distinctions encoded by the package identifier.
+- Additional-locale `PackageName` is omitted when there is no localized ARP `DisplayName` or its cleaned name matches the default `PackageName`.
 - `License` uses the correct unchanged SPDX identifier or an evidenced non-SPDX label translated for that manifest's locale.
 - Tags follow the lower-case, hyphen-separated convention and describe user-facing discovery terms rather than implementation technology or generic application form.
 - Tags are sorted and deduplicated with the `en-US` culture in every locale manifest.

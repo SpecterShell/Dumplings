@@ -39,13 +39,21 @@ For ongoing Dumplings updates, first apply [GitHub release source priority](../.
 
 An application's update traffic may reveal a versioned or more stable installer URL than its download page. Follow [VM update-source discovery](../../../analyze-winget-installer/references/workflows/vm-network-capture.md#discover-the-update-source), including Computer Use for manual update checks and user-assisted login when needed. Apply the full-installer and public-access checks there before replacing the working manifest's `InstallerUrl`.
 
+## Include independent installer families
+
+Review all official full installers for the selected product, release, channel, and architecture before choosing assets. When a release provides independent NSIS and WiX installers, include both as separate `Installers` entries in the same package version. Do not stop after finding the first working installer or prefer MSI solely because an EXE is also available. [Tauri's Windows installer guide](https://v2.tauri.app/distribute/windows-installer/) documents its separate NSIS EXE and WiX MSI formats. `qyzhg.Prism` demonstrates both families in a Dumplings task.
+
+Analyze each artifact once and keep its own `InstallerType`, architecture, scope, ProductCode, Apps & Features metadata, dependencies, and verified switches. Use `nullsoft` for the confirmed NSIS artifact and `wix` for the confirmed WiX MSI. Keep differing fields at installer level and validate each installation route independently in the VM. Record any omitted family and the evidence for excluding it, such as an update-only artifact, an obsolete release, or blocked unattended installation.
+
+The wrapper-equivalence exception below applies only to an EXE that invokes the same MSI. Preserve independent NSIS and WiX alternatives even when both install the same application.
+
 ## Choose Between EXE And MSI
 
 An official release may publish both an EXE bootstrapper and a direct MSI for the same application. When the EXE is InstallShield or Advanced Installer and it selects or embeds the same MSI, author only the direct MSI installer entry. Adding both artifacts can give WinGet two ways to install the same product while both resolve to the same visible ARP entry.
 
 Establish equivalence before dropping the EXE. Parse both artifacts and compare the selected nested MSI with the direct MSI using `ProductCode`, `UpgradeCode`, product version, package architecture, scope, language, and feature or transform evidence. Also compare the visible ARP type and identity: Advanced Installer and InstallShield can hide a native MSI entry or create a separate EXE-style entry, so the mere presence of an MSI is insufficient.
 
-Keep the EXE only when evidence shows that it is materially required. Examples include an EXE that installs prerequisites not expressible as manifest dependencies, applies a required transform or property set, selects among different architecture or language payloads, chains additional products, exposes a different visible ARP identity, or is the only publisher-supported standalone installation path. If equivalence or standalone MSI behavior remains uncertain, validate both paths in the VM. Do not publish duplicate entries.
+Keep the EXE only when evidence shows that it is materially required. Examples include an EXE that installs prerequisites not expressible as manifest dependencies, applies a required transform or property set, selects among different architecture or language payloads, chains additional products, exposes a different visible ARP identity, or is the only publisher-supported standalone installation path. If equivalence or standalone MSI behavior remains uncertain, validate both paths in the VM. Avoid redundant wrapper/MSI alternatives.
 
 When the direct MSI is selected, use its own builder and metadata to choose `InstallerType`, installer switches, `ProductCode`, and `UpgradeCode`. Do not carry EXE-wrapper switches or return-code behavior into the MSI entry.
 
