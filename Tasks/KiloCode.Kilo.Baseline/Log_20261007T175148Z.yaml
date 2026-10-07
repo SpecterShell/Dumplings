@@ -1,0 +1,101 @@
+Version: 7.8.8
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.8.8/kilo-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.8.8
+    Minor Changes
+    - #14891 ce9a04b - Pin worktrees in the Agent Manager sidebar with Shift+click or the context menu. Pinned worktrees stay at the top of the list, get the first jump shortcuts, and keep their section for when you unpin them.
+    - #14885 0abb254 - Open chat web links in-app by default when the experimental Integrated Browser is enabled: sidebar chats use a browser tab and Agent Manager uses its browser panel. Choose "System browser" under "Open links in" to opt out. In-app links show a browser icon, and links no longer open in two browsers.
+    Patch Changes
+    - #14890 3453059 - Reduce the height of Agent Manager section headers so more sessions fit in the sidebar.
+    - #14884 d6b3b21 - Make the integrated browser preview feel more like a native browser. Page loads and client-side route changes keep the current page visible until the next page paints, instead of showing a blank preview. Route changes in single-page apps no longer drop input. The preview now updates while you resize its panel, and it does not stretch the page during the resize.
+    - #14886 8781c16 - Show a clear warning when the Integrated Browser is opened without an active session, and disable its address bar until a session is selected.
+    - #14888 35da0f1 - Make the session header more compact to save vertical space, and keep the scroll-to-bottom button clear of the prompt rail.
+    - #14889 7f64374 Thanks @WebReflection! - Keep MCP OAuth credentials bound to the authorization server that issued them, so a server that switches authorization servers can no longer receive stored refresh tokens or client secrets.
+    - #14887 248e9ae - Switch between session tabs in the sidebar and Kilo editor tabs with Cmd+Alt+Left / Right (Ctrl+Alt+Left / Right on Windows and Linux), with shortcut hints on the tabs and in the prompt.
+    - #14854 2c85991 - Use installed Playwright Chromium in WSL when Chrome is missing and no browser preference is set. Document manual browser setup without installing software automatically.
+    - Updated dependencies [35da0f1]:
+      - @kilocode/kilo-ui@7.8.8
+    7.8.7
+    Minor Changes
+    - #14797 ecb450b - Make multi-project Agent Manager available by default, with the current workspace project first, and remove the experimental toggle and old single-project view.
+      Keep restored tabs, background sessions, and branch defaults with their project, and restore the remaining project after removing the active project.
+    - #14806 b85a1ab - Show one keyboard shortcut hint in the prompt that fits what you do now: how to add selected code to the chat, return to the prompt, stop a run, jump to a session that needs you, or review changes and the pull request in Agent Manager. Empty Agent Manager sessions list the main shortcuts, the mode picker shows its shortcut on hover, and all shortcut labels follow your custom keybindings. Turn hints off in Display settings.
+    - #14836 760048d - Open the Integrated Browser in an editor tab for any session, not only Agent Manager. Run the Open Integrated Browser command, or let the browser_open tool reveal the tab automatically. Each session gets its own browser tab.
+    - #14781 fffcf0e Thanks @eborjaa! - Choose a separate model for automatic project memory saves with the new memory_model setting in kilo.jsonc. When it is unset or unavailable, memory keeps using the session model.
+    - #14632 fc3910b Thanks @brunoagatao! - Add an experimental "Per-Conversation Prompt History" setting that keeps prompt input history separate for each conversation
+    - #14751 829f621 - Show the GitHub organization avatar next to each project in the Agent Manager project list, with a letter tile when the project has no GitHub remote.
+    - #14813 8b144bb - Show to-do progress in the session dock above the prompt. A small progress chip shows how many items are done and the current item, next to the working indicator, background agents, and the goal. Click it to see the full list. The to-do bar under the session title is removed.
+    - #14837 94c0514 - Add search to the Kilo Settings sidebar. A search field at the top of the left rail filters every setting, with results grouped by category in the panel so matching settings stay visible; select one to jump to its tab and setting. The field shows the shortcut as a keycap and focuses with Ctrl+F (Cmd+F on macOS).
+    - #14855 2049b82 - Pin and unpin session tabs with Shift+click in the sidebar and Agent Manager. The tab context menu now shows the gesture next to Pin and Unpin.
+    - #14724 72fa65f - Support OAuth sign-in for MCP servers: open authorization links through VS Code, prompt to sign in after installing an OAuth-protected server from the Marketplace, surface servers that need sign-in from the chat prompt with recovery actions, and configure a pre-registered OAuth client when a server requires one.
+    Patch Changes
+    - #14853 b0820ac - Show the keyboard shortcut hints in an empty Agent Manager session with the same VS Code keycap style used in the prompt input, so the shortcut keys look consistent in both places.
+    - #14721 b299b97 - Keep pre-warmed Agent Manager worktrees outside the project folder. .kilo/worktrees/ is now only created when you create a worktree, so build tools, test runners, and file watchers that scan the project no longer find an extra checkout. Pre-warmed worktrees left in .kilo/worktrees/ by earlier versions are removed automatically. Projects on a different drive than your home folder are no longer pre-warmed.
+    - #14712 4c09359 - Run the Agent Manager worktree setup script for a new worktree even when the setup script of another worktree is still running in the VS Code terminal, and show an error when the setup task cannot start.
+    - #14828 652cd51 - Make dragging, hovering, and scrolling in the Agent Manager integrated browser follow the pointer without a growing delay on high refresh rate displays.
+    - #14827 6c79db2 Thanks @WebReflection! - Update DOMPurify to 3.4.16 to fix an XSS vulnerability flagged by Dependabot in markdown sanitization.
+    - #14833 c918730 - Keep local sessions visible and New Session recent lists isolated when switching Agent Manager projects.
+    - #14736 d894e65 Thanks @brunoagatao! - Keep Agent Manager peer messages visible in later typed turns so the prompt cache stays warm
+    - #14780 716f722 Thanks @ykakade! - Show the actual Grep search target instead of its parent directory, including searches within a single file, and show tool paths relative to Windows workspaces.
+    - #14791 3e4c6dd Thanks @mardausdennis! - Stop the hidden working spinner from animating after a session finishes, which kept the chat view redrawing on every frame while idle.
+    - #14848 643cfc3 Thanks @WebReflection! - Update KaTeX to 0.19.0 to fix a security issue flagged by Dependabot in math rendering.
+    - #14803 21164ba - Reduce CPU use of the workspace scan for marketplace suggestions. The scan now respects .gitignore and other ignore files, searches all file patterns in one pass, and no longer follows symbolic links out of the project. Creating a file no longer starts a new scan unless the file or folder can match a suggestion.
+    - #14798 b8d0cf1 - Scroll wide MCP tool input and output horizontally instead of clipping it, and keep words in MCP output tables from breaking into single letters.
+    - #14783 227a8de Thanks @sylwester-liljegren! - Show the full path of files and folders when hovering them in the @-mention list.
+    - #14723 958f1c4 Thanks @WebReflection! - Fix model precedence so mode-configured models win over remembered picks in new sessions. Manual model picks now apply per agent within each session or draft, reopened sessions immediately show the agent and model they last ran with, and the plan follow-up "Start new session" keeps the planning session in Plan mode. The model picker recovers on its own after a Kilo catalog failure and says when Kilo models are unavailable.
+    - #14775 0883558 Thanks @LEN5010! - Preserve staged renames and the staged/unstaged split when continuing a session in a worktree.
+    - #14810 3df1371 - Show the shortcut in the prompt hint as keycaps, so the keys are easier to see.
+    - #14808 b3e22e7 - Keep Agent Manager session switching responsive when visible edit diffs are expanded.
+    - #14750 bf40cc7 - Make semantic_search available in VS Code when codebase indexing is enabled for the project, also when the indexing config switch is not set.
+    - #14834 4e0131e Thanks @WebReflection! - Update simple-git to 4.0.2 to fix command execution vulnerabilities flagged by Dependabot in Git operations.
+    - #14852 7ab5061 - Allow scrolling while selecting browser elements, refresh element highlights after scrolling, and batch trackpad input without losing scroll distance or direction changes.
+    - #14802 64a9192 - Show the model and reasoning effort of a subagent in the header of its session view, in the Agent Manager subagent panel and in the subagent editor tab.
+    - #14829 ab04799 - Open Settings directly without loading chat, unused previews, model-picker lists, or unselected language dictionaries.
+    - #14821 e80e1a6 - Fix cloud session history rendering prompts and replies in the wrong order by preserving parentID and sorting messages by creation time
+    - Updated dependencies [07b18a1, ab04799]:
+      - @kilocode/kilo-gateway@7.8.4
+      - @kilocode/kilo-ui@7.8.4
+      - @opencode-ai/core@7.8.4
+      - @kilocode/kilo-indexing@7.8.4
+      - @opencode-ai/ui@7.8.4
+    CLI
+    7.8.8
+    Patch Changes
+    - #14889 7f64374 Thanks @WebReflection! - Keep MCP OAuth credentials bound to the authorization server that issued them, so a server that switches authorization servers can no longer receive stored refresh tokens or client secrets.
+    7.8.7
+    Minor Changes
+    - #14724 c9632e4 - Support client-driven MCP OAuth authorization, preserve credentials when cancelling sign-in, and classify recoverable authentication failures as requiring sign-in.
+    - #14781 fffcf0e Thanks @eborjaa! - Choose a separate model for automatic project memory saves with the new memory_model setting in kilo.jsonc. When it is unset or unavailable, memory keeps using the session model.
+    - #14701 d627b31 Thanks @calebnorman! - Press Esc twice in a subagent view to stop that subagent and anything it started while the parent session keeps working, the same as Stop on a VS Code task card. The parent is told the user stopped it, so it no longer starts a replacement subagent right away. Leaving the TUI from a subagent view now needs a second press of the exit key.
+    - #14702 f1e766d Thanks @calebnorman! - Steer a running subagent directly from its TUI view. The steer runs as the subagent's own agent and model, and the parent agent is notified over the shared agent board.
+    Patch Changes
+    - #14800 b45cbdf - Build the CLI with Bun 1.4.2 to fix intermittent subprocess failures.
+    - #14794 2792c70 Thanks @qingshungLI! - Keep valid custom provider models available when another model entry is malformed.
+    - #14805 f54e713 Thanks @abdulhusainahk! - Preserve provider error messages when commit-message generation fails, including context-limit errors returned during streaming.
+    - #14723 07b18a1 Thanks @WebReflection! - Recover worktree models after transient Kilo catalog failures without falling back to another account's catalog.
+    - #14803 21164ba - Reduce CPU use of the workspace scan for marketplace suggestions. The scan now respects .gitignore and other ignore files, searches all file patterns in one pass, and no longer follows symbolic links out of the project. Creating a file no longer starts a new scan unless the file or folder can match a suggestion.
+    - #14723 958f1c4 Thanks @WebReflection! - Fix model precedence so mode-configured models win over remembered picks in new sessions. Manual model picks now apply per agent within each session or draft, reopened sessions immediately show the agent and model they last ran with, and the plan follow-up "Start new session" keeps the planning session in Plan mode. The model picker recovers on its own after a Kilo catalog failure and says when Kilo models are unavailable.
+    - #14722 54eacd5 - Prevent thinking indicators from remaining active after a model response is retried.
+    - #14733 6711533 - Fix write and edit tools on Linux when the sandbox allows specific network hosts. Before, these tools failed with "Filesystem worker returned an invalid response".
+    - #14750 bf40cc7 - Make semantic_search available in VS Code when codebase indexing is enabled for the project, also when the indexing config switch is not set.
+    - #14834 4e0131e Thanks @WebReflection! - Update simple-git to 4.0.2 to fix command execution vulnerabilities flagged by Dependabot in Git operations.
+    - #14787 b0aeda5 Thanks @ykakade! - Keep every project skill available when one Kilo server handles several folders, such as Agent Manager worktrees. Skills whose frontmatter has an unquoted colon (for example description: Use when: ...) no longer go missing with "Skill not found" after the first folder loads.
+    - #14799 1b9c1ab Thanks @L4XB! - Keep the time of day when reading date cells from XLSX and ODS spreadsheets, and read time and duration cells as the sheet shows them instead of as dates in 1899 or 1900.
+    - #14860 2d209e6 - Fix the TUI starting up to a permanently blank screen. A request sent to the TUI's worker before it finished starting was dropped, and the TUI then waited for a reply that never came, with no error and no timeout. Worker requests are now queued until the worker is ready, worker-side failures are reported instead of silently swallowed, and a worker that never answers fails with a clear message.
+    - Updated dependencies [07b18a1]:
+      - @kilocode/kilo-gateway@7.8.4
+      - @kilocode/kilo-indexing@7.8.4
+      - @kilocode/kilo-telemetry@7.8.4
+      - @opencode-ai/server@7.8.4
+      - @opencode-ai/tui@7.8.4
+      - @opencode-ai/ui@7.8.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.8
+ReleaseTime: 2026-10-07T10:58:51.0000000Z

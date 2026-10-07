@@ -1,0 +1,14 @@
+Version: 4.20.2
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.20.2/cribl-4.20.2-7199aa90-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4202/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release corrects one critical issue found in Cribl Edge:
+    - When a JSON field contained a string value larger than 8 MB, the JSON Array Event Breaker failed while parsing that value and raised an error for every remaining character in the chunk. This drove Worker Process CPU usage to its limit, stalled the event loop, and silently dropped all remaining records in the request while the Source still returned HTTP 200. Malformed JSON caused the same failure. The Event Breaker now stops at the first parse error, discards the rest of the request, and logs a warning. Other valid JSON is unaffected. (CRIBL-45815)
+    See the Cribl Edge 4.20.0 release notes for the latest feature and correction updates.
+ReleaseTime: 2026-10-07

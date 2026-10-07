@@ -1,0 +1,71 @@
+Version: 0.34.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.34.0/codeg_0.34.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.34.0/codeg_0.34.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This one lets you tag conversations: colored tags for every conversation or for one folder, shown after the title and ready to filter the sidebar by. The built-in browser can show a page as a tablet, a phone or any size you type, and Claude Code moves up to 0.86.0 along with six more bundled agents.
+    Alongside that: codeg's GitHub home is now spacering-net/codeg, a long Claude Code conversation no longer runs codeg out of memory, Claude Code answers /mcp in the conversation, and a queued message you insert as a turn ends goes out first.
+    New
+    - You can tag conversations from the conversation header or the Tags item in a sidebar conversation's right-click menu, and create, edit, reorder or delete tags in the "Manage tags" dialog.
+    - A tag is either global or a folder's own: global tags are offered on every conversation, chat mode included, and a folder's tags only on conversations in that folder and its worktrees.
+    - The sidebar can be filtered by tags, showing the conversations that have any or all of the tags you pick.
+    - A branch tag can show the git branch each conversation started on after its title, in a color you choose, once you turn it on in "Manage tags".
+    - The built-in browser can show a page as a tablet, a phone or at a width and height you type, from the device button to the right of the address bar, and each tab keeps its choice even after a restart.
+    Improved
+    - Updated bundled agents: Claude Code ACP 0.86.0 (Claude Code 2.1.287), OpenCode 1.18.35, Cline 3.0.68, CodeBuddy 2.161.4, Antigravity 1.3.0, OpenClaw 2026.9.8, Cursor 2026.10.01.
+    - Claude Code answers /mcp in the conversation with a list of your MCP servers, and /mcp reconnect, enable and disable work there too.
+    - Claude Code shows its Agent option again when you have custom Claude Code subagents, so a conversation can run as one of them from the next message on.
+    - Antigravity conversations show their context window usage in the status bar, which Antigravity 1.3.0 now reports.
+    - The built-in model catalog is refreshed with 8,414 models from 226 providers, up from 8,339 models.
+    Fixed
+    - codeg no longer runs out of memory when Claude Code writes a large batch to a conversation's transcript at once, as it can when picking a long conversation back up, which used to push codeg past 13 GB until the system killed it. (#885 reported by @andrehqh)
+    - Claude Code keeps your Fable pick after the update to 0.86.0, which renamed the model, instead of switching to the default model every time a conversation connects.
+    - A queued message you click "Insert into current turn" on goes out first if the turn ends before it gets in, with a notice saying so, instead of waiting behind the messages queued before it. (#883, @leehom0123)
+    - Edits you make in the message box while a message is being inserted into the current turn are kept instead of being wiped afterwards, and clicking insert on queued messages in quick succession no longer inserts two at once. (#886, @leehom0123)
+    - A CodeBuddy sub-agent's tool calls stay inside its Agent card while they are still being written, with CodeBuddy 2.161.4.
+    Note
+    - codeg now lives at github.com/spacering-net/codeg, and old links, update checks from installed versions and the install scripts are redirected there, so nothing needs to change.
+    - Docker images now go to ghcr.io/spacering-net/codeg, while ghcr.io/xintaofei/codeg stays at 0.33.0, so switch to the new address to keep updating; xintaofei/codeg on Docker Hub carries on as before.
+    - The browser's tablet, phone and custom views only change the page size — sites still see a desktop browser with mouse input, so one that picks its mobile version by browser type keeps showing the desktop one.
+    - With Antigravity 1.3.0, a "Bypass proxy for" list of just * no longer keeps all of its traffic direct — when a proxy is configured, some of its requests go through the proxy again.
+    Thanks to @leehom0123 for contributing to this release, and to @andrehqh for the report.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版可以给会话打标签了：彩色标签可以所有会话通用，也可以只属于某个文件夹，显示在标题后面，侧边栏也能按标签筛选。内置浏览器能把网页显示成平板、手机或你输入的任意尺寸，Claude Code 升级到 0.86.0，另有六个内置智能体更新了版本。
+    同期还有：codeg 的 GitHub 仓库迁到了 spacering-net/codeg，很长的 Claude Code 会话不再让 codeg 耗尽内存，Claude Code 能在会话里回应 /mcp，回合结束时插入的排队消息也会最先发出。
+    新增
+    - 可以给会话打标签了——在会话头部或侧边栏会话右键菜单的「标签」里添加，标签的新建、编辑、排序和删除都在「管理标签」对话框里完成。
+    - 标签分为全局标签和文件夹标签——全局标签所有会话都能用，聊天模式也不例外；文件夹标签只出现在该文件夹及其工作树的会话里。
+    - 侧边栏可以按标签筛选，显示带有任一或全部所选标签的会话。
+    - 分支标签可以把会话创建时所在的 git 分支显示在标题后面，颜色可自选，在「管理标签」里打开即可。
+    - 内置浏览器能把网页显示成平板、手机或你输入的宽高——在地址栏右侧的设备按钮里切换，每个标签页都会记住自己的选择，重启后也不变。
+    改进
+    - 内置智能体版本更新： Claude Code ACP 0.86.0（Claude Code 2.1.287）、OpenCode 1.18.35、Cline 3.0.68、CodeBuddy 2.161.4、Antigravity 1.3.0、OpenClaw 2026.9.8、Cursor 2026.10.01。
+    - Claude Code 能在会话里回应 /mcp 了，会列出你的 MCP 服务器，/mcp reconnect、enable、disable 也能直接在会话里用。
+    - 有自定义的 Claude Code 子智能体时，「Agent」选项又回来了，选中后会话从下一条消息起按该子智能体的设定运行。
+    - Antigravity 会话会在状态栏显示上下文窗口用量，这是 Antigravity 1.3.0 新提供的数据。
+    - 内置模型目录已更新，共 226 个供应商、8414 个模型，此前为 8339 个。
+    修复
+    - Claude Code 一次往会话记录文件写入大量内容时，codeg 不再耗尽内存——续接很长的会话时就可能这样写入，以前会让 codeg 涨到 13 GB 以上，直到被系统强行结束。（#885 由 @andrehqh 反馈）
+    - Claude Code 升级到 0.86.0 后，你选的 Fable 仍然有效，不会因为新版改了 Fable 的模型标识而在每次连接时退回默认模型。
+    - 在排队消息上点了「插入当前回合」、但回合在插入前就结束时，这条消息会排到最前、作为下一回合最先发出，并给出提示，不再排在它前面的消息后面。（#883，@leehom0123）
+    - 消息正在插入当前回合时，你在输入框里接着做的修改会保留下来，不再被清空，在排队消息上快速连点插入也不会同时插进两条。（#886，@leehom0123）
+    - CodeBuddy 子智能体的工具调用在参数生成过程中也会留在它的 Agent 卡片里，需要 CodeBuddy 2.161.4。
+    注意
+    - codeg 的 GitHub 仓库已迁到 github.com/spacering-net/codeg，旧链接、已安装版本的更新检查和安装脚本都会自动跳转过去，无需任何改动。
+    - Docker 镜像改为发布到 ghcr.io/spacering-net/codeg，ghcr.io/xintaofei/codeg 停在 0.33.0，想继续更新请换成新地址；Docker Hub 上的 xintaofei/codeg 照常更新。
+    - 内置浏览器的平板、手机和自定义视图只改变页面尺寸——网站看到的仍是桌面浏览器和鼠标操作，按浏览器类型切换手机版的网站仍会显示桌面版。
+    - Antigravity 1.3.0 下，「不走代理的地址」只填 * 已不能让它的流量全部直连——配置了代理时，它有一部分请求会重新走代理。
+    感谢 @leehom0123 为本次发布做出的贡献，也感谢 @andrehqh 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.34.0
+ReleaseTime: 2026-10-07T16:37:15.0000000Z
