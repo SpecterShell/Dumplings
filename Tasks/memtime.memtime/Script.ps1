@@ -1,9 +1,9 @@
 $Object1 = Invoke-RestMethod -Uri 'https://api.memtime.com/release/v2/app/latest-installers?updateChannel=stable&stage=production'
 # x64
-$Object2 = $Object1.installers.windows.Where({ $_.arch -eq 'x64' }, 'First')[0]
+$Object2 = $Object1.installers.windows.Where({ $_.arch -eq 'x64' -and $_.installer_type -eq 'nsis' }, 'First')[0]
 $VersionX64 = $Object2.version -replace '(?<=^|\.)0+(?=\d)'
 # arm64
-$Object3 = $Object1.installers.windows.Where({ $_.arch -eq 'arm64' }, 'First')[0]
+$Object3 = $Object1.installers.windows.Where({ $_.arch -eq 'arm64' -and $_.installer_type -eq 'nsis' }, 'First')[0]
 $VersionARM64 = $Object3.version -replace '(?<=^|\.)0+(?=\d)'
 
 if ($VersionX64 -ne $VersionARM64) {
