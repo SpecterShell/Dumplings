@@ -1,4 +1,4 @@
-$Prefix = 'https://www.eposaudio.com/en/us/software/epos-connect'
+$Prefix = 'https://www.eposaudio.com/en-us/software/epos-connect/'
 $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
