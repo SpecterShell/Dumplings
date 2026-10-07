@@ -10,11 +10,11 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://support.axes4.com/hc/sections/7371797383698'
-      }
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'ReleaseNotesUrl'
+      #   Value  = 'https://support.axes4.com/hc/sections/7371797383698'
+      # }
 
       $ReleaseNotesUrl = 'https://support.axes4.com/hc/en-us/sections/7371797383698-Release-Notes'
       $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
@@ -23,11 +23,11 @@ switch -Regex ($this.Check()) {
       if ($ReleaseNotesUrlNode) {
         $ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl $ReleaseNotesUrlNode.Attributes['href'].Value
         # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrl -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+'
-        }
+        # $this.CurrentState.Locale += [ordered]@{
+        #   Locale = 'en-US'
+        #   Key    = 'ReleaseNotesUrl'
+        #   Value  = $ReleaseNotesUrl -replace '/en-us/', '/' -replace '(?<=articles/\d+)-.+'
+        # }
 
         $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
