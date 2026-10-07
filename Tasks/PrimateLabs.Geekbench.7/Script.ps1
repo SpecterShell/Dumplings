@@ -1,4 +1,4 @@
-$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.geekbench.com/download/windows/' -Stealth -Headless -SolveCloudflare -Screenshot | Get-EmbeddedLinks
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.geekbench.com/download/windows/' -Stealth -Headless -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
