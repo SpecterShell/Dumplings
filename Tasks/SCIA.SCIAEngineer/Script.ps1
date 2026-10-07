@@ -1,8 +1,12 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.scia.net/en/scia-engineer/downloads'
+$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.scia.net/en/scia-engineer/downloads'
+  Read-PlaywrightPageContent -Page $Page
+} | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href -match 'release_(\d+(?:\.\d+)+)\.zip$' } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href -match 'release_(\d+(?:\.\d+)+)\.zip$' } catch {} }, 'First')[0].href
 }
 
 # Version

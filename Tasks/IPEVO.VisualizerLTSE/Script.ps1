@@ -1,4 +1,8 @@
-$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://us.ipevo.com/pages/visualizer-ltse-download' | Join-String -Separator "`n" | ConvertFrom-Html
+$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://us.ipevo.com/pages/visualizer-ltse-download'
+  Read-PlaywrightPageContent -Page $Page
+} | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{

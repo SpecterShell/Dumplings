@@ -1,4 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless {
+$Object1 = Use-PlaywrightPage -Stealth -Headless -Screenshot {
   param($Page)
   $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.geekbench.com/download/windows/'
   Read-PlaywrightPageContent -Page $Page
