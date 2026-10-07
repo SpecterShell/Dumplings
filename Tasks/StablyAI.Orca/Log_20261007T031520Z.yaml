@@ -1,0 +1,133 @@
+Version: 1.4.222
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.222/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    This patch is built from the October 5 daily build plus fixes picked from main: OpenCode workers now reliably receive their task, and remote computers you reveal in the sidebar stay visible.
+    The short version
+    - OpenCode workers: A worker started with orca orchestration worker-start --agent opencode no longer leaves its task sitting unsent in OpenCode's input box on a busy machine; Orca now waits until OpenCode can actually submit it. A worker can use a requested model without changing the default for your other launches, OpenCode 2.0.12 sends its first prompt on its own, and Orca's OpenCode plugin is installed where that terminal's OpenCode actually reads its settings.
+    - Sidebar and workspaces: A remote computer you reveal in the sidebar no longer disappears again while Orca saves the setting. Dragging a workspace whose children are collapsed now moves it, dragging workspaces can no longer crash the sidebar, the delete dialog stops jumping while its checks load, and Create worktree closes right away while setup scripts are checked in the background.
+    - CSV files: Large CSV files open without loading the whole file at once. You can resize columns, open links, edit cells, add or remove rows and columns, copy and paste ranges, and sort or filter, and column widths are remembered.
+    - Editor: Tabs for files outside your projects no longer come back as "Access denied" after a restart. Files with the same path on different computers keep separate text and Undo history. Image pastes and large Markdown pastes land where you started them, and notebook cells pick up changes made on disk.
+    - Typing in Japanese, Chinese or Korean: Pressing Enter to confirm text no longer also submits the field, creates the file, or sends the comment, across Orca.
+    - Native chat (experimental): Opening a chat never deletes its history, even one saved by a newer Orca. Messages show "Sending…" until the host confirms them and "Not sent" with the reason if delivery failed. Stop only marks the turn it actually stopped, a failed start no longer blocks new chats, the model list comes from the machine that runs the chat, and a reply cut off by a crash or quit reads as finished with one explanation.
+    - Agents and accounts: The usage menu shows Claude usage credits, OpenCode Zen balance and Codex credits next to usage limits. Restart after switching Codex accounts resumes the same conversation instead of leaving a blank terminal. A saved model pick and a configured agent argument no longer send the same flag twice and stop the agent from starting, and Cursor usage reads the right account.
+    - Remote terminals: Coming back to a remote tab running Claude Code no longer shows old shell output through Claude's screen.
+    - Jira: You can pick the assignee when creating a Jira issue.
+    Known issues
+    Terminal background service: v1.4.222 uses the same terminal background service version as v1.4.221, so updating from v1.4.221 keeps the service that is already running. Three fixes in this release live in that service and only apply once it restarts: recognizing OpenCode when it starts a background service on macOS (#25378), recognizing Pi installed from npm, and recognizing Qoder started with the qoder command. If you update from v1.4.220 or earlier, new terminals start on a fresh service and get these fixes right away.
+    Windows on ARM: The ARM64 package ships an x64 orca.exe command-line tool. Windows 11 on ARM runs it under emulation. Windows 10 on ARM can't run it, so the orca command does not work there (#24094).
+    OpenCode 2: If you update from v1.4.219 or earlier, OpenCode 2 panes that were already running may show no status until you restart OpenCode in them. If you downgrade Orca after updating, duplicate OpenCode status plugins are left behind. After opencode run exits, its pane can keep showing "Done"; a fix is pending in #24472.
+    Codex: After you upgrade, Codex launches use Orca's managed Codex home until Codex approves Orca's new status hook. A resumed pane that uses ~/.codex can pause for up to 30 seconds (#23552).
+    Claude folder trust: Folder pre-trust is on by default (Settings → Agents → "Trust the folder when Orca starts an agent"). On Alpine WSL, Orca can't copy the file permissions it needs, so Claude shows its own trust prompt instead (#23744).
+
+    Product experience
+    Codex & orchestration
+    OpenCode workers receive their task once OpenCode can submit it and can use their own model, long launch prompts from the phone are pasted once the agent is ready, and switching Codex accounts resumes the same conversation.
+    - fix(orchestration): give an OpenCode worker its task only once OpenCode can submit it by @OrcaWin in https://github.com/stablyai/orca/pull/25101
+    - Validate OpenCode worker model preferences on the execution host by @nwparker in https://github.com/stablyai/orca/pull/24624
+    - Keep OpenCode worker model selection separate from the default by @nwparker in https://github.com/stablyai/orca/pull/24768
+    - feat(agent-launch): keep long prompts off the launch line and paste them after readiness (step 1 of 7) by @brennanb2025 in https://github.com/stablyai/orca/pull/24257
+    - fix(codex): resume account switches without blanking the terminal by @nwparker in https://github.com/stablyai/orca/pull/25485
+    Native chat
+    Opening a chat never deletes its history, messages show whether they were sent, Stop and failed starts behave correctly, and the model list comes from the machine that runs the chat.
+    - fix(native-chat): never delete chat history on read; a chat Orca can't load says why once by @brennanb2025 in https://github.com/stablyai/orca/pull/24576
+    - fix(native-chat): show "Sending…" on a message until the host confirms it by @brennanb2025 in https://github.com/stablyai/orca/pull/24606
+    - fix(native-chat): show a message Orca accepted and then failed to deliver as "Not sent" in the chat by @brennanb2025 in https://github.com/stablyai/orca/pull/24710
+    - A resent chat message gets its recorded answer, never an early refusal or a made-up record by @brennanb2025 in https://github.com/stablyai/orca/pull/25158
+    - fix(native-chat): a Stop binds only the turn it actually stopped by @brennanb2025 in https://github.com/stablyai/orca/pull/24864
+    - fix(native-chat): start a new chat after an earlier start failed by @brennanb2025 in https://github.com/stablyai/orca/pull/24917
+    - fix(native-chat): show a reply cut off by an Orca crash or quit like a finished turn, with one explanation by @brennanb2025 in https://github.com/stablyai/orca/pull/25043
+    - fix(native-chat): a new structured chat's model list comes from the machine that runs it by @brennanb2025 in https://github.com/stablyai/orca/pull/25143
+    - fix(native-chat): a chat's finished-turn alerts come from the host recorded on its tab, not its workspace id by @brennanb2025 in https://github.com/stablyai/orca/pull/25081
+    Agents, accounts & integrations
+    Credit balances appear next to usage limits, OpenCode gets its plugin and first prompt more reliably, agents no longer fail to start on duplicate flags, and Cursor usage reads the right account.
+    - Show provider credit balances alongside usage limits by @nwparker in https://github.com/stablyai/orca/pull/25408
+    - Fix duplicate session option flags and preserve argument values by @AmethystLiang in https://github.com/stablyai/orca/pull/25382
+    - fix(cursor): keep usage cookies on the resolved account by @nwparker in https://github.com/stablyai/orca/pull/25243
+    - Submit initial OpenCode 2.0.12 prompts through the native startup plugin by @nwparker in https://github.com/stablyai/orca/pull/25428
+    - Install OpenCode hooks in the terminal's config directory by @nwparker in https://github.com/stablyai/orca/pull/25296
+    - Add repository OpenCode permission defaults by @nwparker in https://github.com/stablyai/orca/pull/25326
+    - fix(opencode): keep detached services from invalidating the foreground terminal by @nwparker in https://github.com/stablyai/orca/pull/25378
+    - Bound OpenCode history reads and repeated worker failures by @nwparker in https://github.com/stablyai/orca/pull/25292
+    Terminal
+    Remote tabs running Claude Code no longer show old output through its screen, and the card shown while your phone controls a terminal is simpler.
+    - fix(terminal): stop old output bleeding into Claude's screen when revisiting a remote tab by @Jinwoo-H in https://github.com/stablyai/orca/pull/24926
+    - Simplify the phone-control and phone-size terminal dialogs by @Jinwoo-H in https://github.com/stablyai/orca/pull/25307
+    Mobile app & paired clients
+    Android chat scrolls without selecting words, working indicators keep turning, pinned workspaces follow the desktop setting, and the in-app Android download links point to 0.0.52.
+    - fix(mobile): stop Android from selecting words while the chat transcript scrolls by @chokolademilch7 in https://github.com/stablyai/orca/pull/22871
+    - fix(mobile): keep the working rings turning on the OTA page by @Jinwoo-H in https://github.com/stablyai/orca/pull/25299
+    - fix(mobile): honour the desktop pinned-worktree placement setting by @Jinwoo-H in https://github.com/stablyai/orca/pull/25301
+    - Add shared workspace settings note and prevent filter modal expansion by @AmethystLiang in https://github.com/stablyai/orca/pull/25300
+    - Update in-app Android APK links to mobile 0.0.52 by @brennanb2025 in https://github.com/stablyai/orca/pull/25168
+    Workspaces & sidebar
+    Revealed remote computers stay visible, workspaces with collapsed children can be reordered without crashes, the delete dialog stays steady, Create worktree no longer waits on script checks, and Activity previews stay short.
+    - fix(sidebar): preserve remote host visibility across stale UI updates by @nwparker in https://github.com/stablyai/orca/pull/25737
+    - Fix reordering workspaces with collapsed children by @nwparker in https://github.com/stablyai/orca/pull/25302
+    - Fix: settle sortEpoch in store to prevent React update depth exceeded by @AmethystLiang in https://github.com/stablyai/orca/pull/25313
+    - Keep workspace deletion dialogs steady while changes load by @nwparker in https://github.com/stablyai/orca/pull/25321
+    - fix: close worktree dialog before slow script checks by @nwparker in https://github.com/stablyai/orca/pull/25472
+    - fix(activity): keep code blocks in row previews from rendering as scroll boxes by @Jinwoo-H in https://github.com/stablyai/orca/pull/25410
+    Input, settings & languages
+    Enter used to confirm Japanese, Chinese or Korean text no longer submits fields, keep-awake descriptions explain what each platform does with a closed lid, and terminal shell settings are translated.
+    - fix: prevent IME Enter from submitting text fields across Orca by @nwparker in https://github.com/stablyai/orca/pull/25480
+    - fix(ui): restore IME Enter protection in workspace details by @setodeve in https://github.com/stablyai/orca/pull/24099
+    - Update Caffeinate tooltip copy about MacBook lid behavior by @AmethystLiang in https://github.com/stablyai/orca/pull/23091
+    - Clarify keep-awake tooltip behavior by platform by @AmethystLiang in https://github.com/stablyai/orca/pull/25323
+    - Add translations for terminal shell settings by @AmethystLiang in https://github.com/stablyai/orca/pull/25418
+    Editor, files & search
+    Large CSVs open quickly and can be edited as a table, tabs for files outside your projects reopen after a restart, same-path files on different computers stay separate, pastes land where you started, and search previews hold less memory.
+    - Keep large CSV previews responsive and add column resizing and links by @nwparker in https://github.com/stablyai/orca/pull/25381
+    - Edit CSV tables directly and remember column widths by @nwparker in https://github.com/stablyai/orca/pull/25442
+    - fix(editor): restored tabs for files outside your projects no longer fail with Access denied by @brennanb2025 in https://github.com/stablyai/orca/pull/24489
+    - Isolate code editor text and Undo history by execution host by @nwparker in https://github.com/stablyai/orca/pull/25174
+    - Preserve image clipboard targets and content across editor changes by @nwparker in https://github.com/stablyai/orca/pull/25176
+    - Keep large Markdown pastes at their original selection by @nwparker in https://github.com/stablyai/orca/pull/25177
+    - Keep selected text navigation from rewriting document links by @nwparker in https://github.com/stablyai/orca/pull/25175
+    - Reuse source-line calculations for Markdown review selections by @nwparker in https://github.com/stablyai/orca/pull/25173
+    - Keep active notebook cells current after external reloads by @nwparker in https://github.com/stablyai/orca/pull/25172
+    - Bound search preview memory and stop canceled SSH scans by @nwparker in https://github.com/stablyai/orca/pull/25303
+    - Replace patched JSON parser with stream-json by @nwparker in https://github.com/stablyai/orca/pull/25202
+    Tasks & issues
+    You can pick the assignee when creating a Jira issue, and the paired web client handles a missing Jira status.
+    - feat(jira): pick the assignee when creating an issue — Automatic, me, or anyone by @kazuki-hanai in https://github.com/stablyai/orca/pull/24376
+    - fix(jira): stop the paired web client crashing on a missing Jira status by @brennanb2025 in https://github.com/stablyai/orca/pull/25579
+    Relay service
+    Server-side capacity and cleanup work for Orca's relay service.
+    - feat(relay): declare Asia spare cell c34 as migration-only by @Jinwoo-H in https://github.com/stablyai/orca/pull/25336
+    - chore(relay): move US cells c32 and c33 to the general same-cap list after promotion by @Jinwoo-H in https://github.com/stablyai/orca/pull/25367
+    - fix(relay): skip the dead-cell sweep's host scan when no cell qualifies by @Jinwoo-H in https://github.com/stablyai/orca/pull/25350
+    - fix(relay): prune released control-connection reservations in bounded batches by @Jinwoo-H in https://github.com/stablyai/orca/pull/25352
+    - fix(relay): retain confirm results for a week and audit events for 90 days by @Jinwoo-H in https://github.com/stablyai/orca/pull/25353
+    - refactor(relay): stop creating three tables nothing writes by @Jinwoo-H in https://github.com/stablyai/orca/pull/25354
+    Tests, CI & maintenance
+    PR checks spend less time on setup and on failing runs, contributor docs match the PR template, and code was reorganized with no change in behavior.
+    - fix(daemon): bump the terminal daemon protocol to v40 (already shipped in v1.4.221) by @Jinwoo-H in https://github.com/stablyai/orca/pull/25291
+    - Reduce avoidable work in PR checks and SSH test setup by @nwparker in https://github.com/stablyai/orca/pull/25309
+    - Wait for PR preflight before admitting short required checks by @nwparker in https://github.com/stablyai/orca/pull/25317
+    - Reduce repeated CI setup and overlap mobile typechecks by @nwparker in https://github.com/stablyai/orca/pull/25359
+    - Reduce repeated terminal scans and unused Qoder test imports by @nwparker in https://github.com/stablyai/orca/pull/25425
+    - fix(test): pass getInsertionRange in the image-insert access test by @Jinwoo-H in https://github.com/stablyai/orca/pull/25351
+    - fix(test): give the image-insert store fakes an open-files list by @Jinwoo-H in https://github.com/stablyai/orca/pull/25357
+    - test(linear): cover numeric-leading issue identifiers by @kenfdev in https://github.com/stablyai/orca/pull/10241
+    - refactor(terminal): one commit module for terminal topology closes, with a boundary check by @Jinwoo-H in https://github.com/stablyai/orca/pull/25329
+    - Group CSV editor code in its own folder by @nwparker in https://github.com/stablyai/orca/pull/25476
+    - Remove completed SSH picker E2E plan by @kazooooo-ma in https://github.com/stablyai/orca/pull/24824
+    - docs: align contributor guidance with the PR template by @pqminh27 in https://github.com/stablyai/orca/pull/25034
+    New Contributors
+    - @chokolademilch7 made their first contribution in https://github.com/stablyai/orca/pull/22871
+    - @setodeve made their first contribution in https://github.com/stablyai/orca/pull/24099
+    - @kazuki-hanai made their first contribution in https://github.com/stablyai/orca/pull/24376
+    - @kazooooo-ma made their first contribution in https://github.com/stablyai/orca/pull/24824
+    - @pqminh27 made their first contribution in https://github.com/stablyai/orca/pull/25034
+
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.221...v1.4.222
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.222
+ReleaseTime: 2026-10-07T02:20:45.0000000Z
