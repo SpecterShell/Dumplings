@@ -17,6 +17,10 @@ switch -Regex ($this.Check()) {
       $this.Log('Failed to parse release date', 'Warning')
     }
 
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
     try {
       $ReleaseNotesPage = Invoke-WebRequest -Uri 'https://cardexchangeid.com/support/information/release-notes' | ConvertFrom-Html
       $ReleaseNotesNode = $ReleaseNotesPage.SelectSingleNode("//div[contains(@id, 'module-') and contains(.//strong, 'CardExchange® PRODUCER')]//div[contains(@class, 'fs-changelog') and contains(.//h3[contains(@class, 'el-version')], '$($this.CurrentState.Version)')]")
