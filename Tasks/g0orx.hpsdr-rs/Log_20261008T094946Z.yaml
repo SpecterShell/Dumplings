@@ -1,0 +1,51 @@
+Version: 0.7.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/g0orx/hpsdr-rs/releases/download/v0.7.0/hpsdr-rs-0.7.0-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Covers everything since v0.6.0.
+    RX-888 Mk2 support (new)
+    First hardware backend that isn't a real openHPSDR Protocol 1/2 radio -- the RX-888 Mk2 is a receive-only, direct-sampling ADC (Cypress FX3 + LTC2208, 64.8Msps) with no on-board tuner or DDC, so hpsdr-rs does the digital down-conversion (NCO mixer + CIC decimator) itself in software.
+    - USB bring-up (FX3 firmware load, bundled -- no manual firmware setup needed), vendor control protocol (sample rate, DAT31 attenuator, AD8340 VGA gain, dither/randomizer)
+    - Selectable DDC output rates: 96/192/384kHz
+    - Up to 8 simultaneous receivers, each with its own independent NCO+CIC DDC running on its own worker thread
+    - CIC compensation filter corrects the decimator's known non-flat passband response (a visible "bowed" curve in the wideband spectrum display)
+    - Discover window shows a non-gating USB link-speed hint if the negotiated speed may be too slow
+    - Poll-based re-enumeration after firmware load, with clearer diagnostics if the device doesn't come back (stuck at bootloader vs. gone from USB entirely)
+    Gen (general coverage) band (new)
+    - New "Gen" band button covers the connected radio's full actual tunable range, for listening outside the ham allocations
+    - Right-click a VFO's frequency display to open a keypad popup and type an exact frequency directly
+    - Fixed Gen's antenna/OC-output selection (previously silently forced to OC-off/ANT1 with no way to configure it) and fixed Gen never saving its last frequency/mode/settings
+    TX out-of-band lockout (new)
+    - TX is now blocked outside the defined ham bands by default (e.g. while parked on "Gen"), gated everywhere mox can be set (on-screen, spacebar, MIDI, CAT/rigctl/TCI)
+    - New "Allow TX outside ham bands" checkbox (TX Settings) for MARS/CAP/other authorized use
+    S-meter calibration (new)
+    - New persisted per-device dB offset, applied to both the numeric S-meter reading and the spectrum/waterfall dB scale
+    CW precision
+    - Ctrl+scroll now tunes in 1Hz steps for CW (a third tier alongside the existing 100Hz/10Hz), including the VFO hover tooltip which now reflects the real CW step values
+    - Click-to-tune on a CW signal now centers on the exact clicked frequency instead of snapping to the nearest 1kHz first
+    Audio / AGC fixes
+    - Fixed AGC-on producing heavily clipped audio (40-92% of samples pinned at full scale) on ALL boards, not just RX-888 -- the default AGC max gain was 20dB higher than the piHPSDR reference this control is meant to match; confirmed fixed via real recordings on both RX-888 and a real HL2
+    - Fixed AGC Off mode clipping hard on strong signals (e.g. a broadcast AM station), and, after an initial fix, still sounding very quiet on real headphones despite measuring fine -- root cause was WDSP's plain AM detector's own unipolar/DC-biased output, never corrected anywhere in its processing chain. Added a proper DC-blocking filter ahead of every audio consumer (speaker, TCI, recording, radio-audio) and recalibrated AGC Off's internal gain
+    Other
+    - New "Enable Waterfall" toggle (Settings: Spectrum) -- when off, the spectrum trace uses the full pane height
+    - VFO frequency display now uses a dot thousands separator, matching piHPSDR's convention (e.g. "14.074.000")
+    - Settings/Add Receiver buttons moved into normal layout flow (were floating, could overlap other controls at some window sizes)
+    - User manual updated for everything in this release
+    Downloads
+    - Windows (x86_64): hpsdr-rs-0.7.0-x86_64.msi
+    - Debian/Ubuntu (amd64): hpsdr-rs_0.7.0-2_amd64.deb -- install with sudo apt install ./hpsdr-rs_0.7.0-2_amd64.deb
+    - Debian/Ubuntu (arm64, e.g. Raspberry Pi): hpsdr-rs_0.7.0-2_arm64.deb -- install with sudo apt install ./hpsdr-rs_0.7.0-2_arm64.deb
+    - macOS (Apple Silicon): hpsdr-rs-0.7.0-macos-arm64.tar.gz -- built via CI on real macOS hardware, unsigned/unnotarized, so Gatekeeper will warn on first launch: right-click the hpsdr-rs binary and choose Open, or run xattr -d com.apple.quarantine hpsdr-rs first
+    Known limitations
+    - RX-888 support is v1 scope: one direct-sampling HF-mode DDC chain per receiver, no VHF/UHF, no PureSignal/Diversity on this board
+    - RX-888 has been extensively bench-tested but some behavior (clock stability at longer runtimes) is still being investigated on real hardware
+    - AGC Off's recalibrated internal gain (+50dB) was tuned from real recordings on one station/signal strength -- may still need a nudge on very different signal conditions
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/g0orx/hpsdr-rs/releases/tag/v0.7.0
+ReleaseTime: 2026-09-21T16:06:02.0000000Z
