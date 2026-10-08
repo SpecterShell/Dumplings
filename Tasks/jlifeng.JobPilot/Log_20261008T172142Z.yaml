@@ -1,0 +1,27 @@
+Version: 1.8.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jlifeng/JobPilot/releases/download/v1.8.2/JobPilot_1.8.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jlifeng/JobPilot/releases/download/v1.8.2/JobPilot_1.8.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    JobPilot v1.8.2
+    Release date: 2026-10-08 / 发布日期：2026-10-08
+    Compared with v1.8.1. / 对比 v1.8.1。
+    修复
+    - 导出 PDF 未按 A4 分页 — 修复普通 PDF 导出会提前换页、与预览排版不一致的问题
+      - 原因是导出 HTML 的 @page 规则只声明了页边距、没有声明页面尺寸，Chrome --print-to-pdf 会回退到 US Letter（215.9×279.4mm），页高比预览使用的 A4（210×297mm）少约 12mm，导致内容更早被推到下一页
+      - 现在显式声明 size: A4，与预览及 Web 端 PDF 导出保持一致；实测同一份简历第 1 页底部留白由 37.6% 收敛到 6.3%
+    - GitHub 项目模块出现意外的语言文字 — 修复点击刷新按钮后，开源项目条目会多出一行「TypeScript」等仓库主语言的问题
+      - 原因是刷新按钮除更新 Star 数外，还会把 GitHub API 返回的 language、name、description 一并写回简历数据，而编辑器与模板会渲染 language
+      - 现在刷新按钮只更新 Star 数，不再覆盖用户手写的仓库名称与描述，也不再写入仓库主语言
+      - 预览、导出、编辑器统一在归一化阶段剥离该只读字段；桌面端增加一次性数据迁移（schema v4），自动清理历史数据中已写入的语言值
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jlifeng/JobPilot/releases/tag/v1.8.2
+ReleaseTime: 2026-10-08T14:56:43.0000000Z
