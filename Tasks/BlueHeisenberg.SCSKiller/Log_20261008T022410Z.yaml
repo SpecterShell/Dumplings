@@ -1,0 +1,133 @@
+Version: 1.2.4
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/BlueHeisenberg/SCSKiller/releases/download/v1.2.4/SCSKiller-Setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    This build isn't code-signed yet, so the first run will probably show SmartScreen's "Windows protected your PC".
+    Click More info, then Run anyway. Updates never show it.
+    Signing through the SignPath Foundation is in progress for stable releases. To
+    check the download arrived whole, compare its SHA-256 with the one at the end of these notes (PowerShell:
+    Get-FileHash <file>). These notes aren't signed, so that doesn't prove who built it. The source: https://github.com/BlueHeisenberg/SCSKiller/tree/v1.2.4.
+    Smart App Control (Windows 11) blocks unsigned apps outright. If it's on, wait for a signed release.
+    Clearer statuses
+    - "Partly compiled" shows when the driver rejected or crashed on more than a tenth of a compile's pipelines, with
+      how many, instead of "Warmed". Its ring shows the share that compiled, and "Why?" explains it. A game the driver
+      skipped only a few pipelines of stays "Warmed".
+    - "The compile didn't help" shows on NVIDIA when a game's first launch after a compile still compiles what
+      SCSKiller compiled: the game needs a custom loader. It isn't compiled again unless you ask, and its page says the
+      unused cache can be cleared.
+    - Anti-cheat games that need a recording show "Not supported" instead of "Not supported yet": their anti-cheat
+      blocks the recording they need. Gears of War: Reloaded is one, and so is every anti-cheat DirectX 12 game on AMD
+      without a community recording. ELDEN RING and ARMORED CORE VI show "Needs an offline session" until they have a
+      recording: "EasyAntiCheat blocks the recorder, but you can record at your own risk with an offline session."
+    - Game verdicts: a game without shader stutter shows "No shader stutter" and stays out of "Add all ready",
+      driver-update rebuilds and the recorder by default. The list starts empty, and the server can fill it, or mark a game
+      not supported with a reason, without an app update. STAR WARS: Galactic Racer shows "Not supported yet · An app update
+      is needed for support".
+    - A game on the "Not supported yet" or "Not supported" list shows that status on NVIDIA too.
+    - Games compiled for DirectX 11 and DirectX 12, like War Thunder, say so on their page, "DirectX 11 and 12" in the
+      Library, along with where each API's shaders come from.
+    - A guessed Unreal version is marked "(guessed)" on the game page and in the Library, and the page says when a
+      compile rests on a guessed version or DirectX.
+    Recording and compiling
+    - A first recording no longer fills up. A game recorded before its first compile, which is every game that needs a
+      recording and most DirectX 12 games on AMD, kept the bytes of every shader it built. SCSKiller now reads the game's
+      shaders in the background as soon as the recorder is on, and again after a game update, so the recorder keeps only
+      their hashes.
+    - The recording limit is 1 GB by default, up from 256 MB. A limit you picked yourself stays.
+    - Fewer compile notifications: only for games you've compiled, only when there's enough new to compile (1% of the
+      game's pipelines, at least 100, counted since the last notification), and at most once a day per game. Pipelines
+      whose shaders aren't in your install no longer count as new.
+    - Coverage and pipeline counts leave out what can't be compiled on your PC: pipelines whose shaders aren't in your
+      install, AMD-only pipelines on NVIDIA, pipelines that crash your driver, and shader combinations DirectX refuses to
+      create.
+    - Your texture filtering setting: with a recording of your own, SCSKiller compiles and counts only the pipelines at
+      your setting. Without one, it compiles every setting the community recorded and counts each pipeline once.
+    - The queue warns when one game's compile adds more than 16 GB: "Very large caches can make the game start slower
+      and use more memory." It also says when the queue takes the cache past your limit, and on AMD that the driver's cache
+      can't hold it all.
+    - Bigger community recordings are read, up to 250,000 pipelines per game, for games like S.T.A.L.K.E.R. 2.
+    - Loading hitches no longer count as shader stutters on the game page: a load compiling on many threads, or a
+      precompile after a splash screen, is loading.
+    - A game's own precompile and its loading screens no longer count as compiles while you played, also when the
+      recorder can't time frames (frame generation on).
+    Games
+    - FINAL FANTASY VII REBIRTH is fully covered again. Its community recording mixes players with different texture
+      filtering settings, which made SCSKiller fall back to a guess that left out two thirds of its shader combinations.
+      Any game whose community recording mixes settings like this is planned in full again, after one more compile.
+    - Cyberpunk 2077 and other games where DLSS loads DirectX 12 before the recorder no longer ask for a recording that
+      never comes (NVIDIA). They still compile from their files and the community database.
+    - Wuthering Waves is recognised as Kuro's fork of Unreal Engine 4.26, not 4.27, and shows as not supported instead
+      of asking for an AES key that wouldn't help: SCSKiller can only learn how this engine builds its pipelines from a
+      recording, which its anti-cheat blocks. Its files, 5.6 GB shader library included, now read correctly (thanks
+      @JohnsonRan).
+    - Ready or Not compiles again: shader libraries over 2 GB are read (found by @dkflint723), and it's recognised as
+      Unreal Engine 5.
+    - Scarlet Nexus compiles again: a line in the game's own settings no longer stops the read (found by @dkflint723).
+    - Marvel's Guardians of the Galaxy compiles without a recording on NVIDIA.
+    - 3on3 FreeStyle: Rebound is recognised as Unreal Engine 5.1, not 4.27. When an Unreal game's files don't tell its
+      version, SCSKiller takes it from the exe's version number and marks it "(guessed)".
+    - Xbox app Unreal games on AMD compile into the cache the game actually uses, after you play them once. Before,
+      their page kept saying "Needs rebuilding" after every compile (Banishers: Ghosts of New Eden).
+    - Ubisoft games with a Ubisoft+ exe, like Assassin's Creed Valhalla, record and compile for the exe that actually
+      runs, and show their name in the Library.
+    - Xbox app Unreal games are never compiled for a developer tool or console build in their package.
+    - Resident Evil Village is read as a DirectX 12 game, so it no longer compiles DirectX 11 shaders it never uses.
+    - Encrypted Unreal games: an AES key, found in the exe or typed in, is taken when it opens any of the game's
+      encrypted files, not only the first (found by @dkflint723).
+    - An Unreal game with one shader library SCSKiller can't read compiles from its other libraries, and the compile log
+      names the one it skipped (found by @dkflint723).
+    - Newer Unreal games' shipped pipeline caches are read. Gears of War: E-Day's lists 9,688 graphics pipelines.
+    Faster and steadier
+    - Less memory: SCSKiller gives memory back after a scan or compile and when it's in the tray. SCSKiller.exe --memory, run while the app is open, writes what it holds to memory.log in its data folder, for a bug report.
+    - A crash leaves a report: when SCSKiller closes on its own or can't start, it writes what went wrong to crash.log
+      in its data folder, and a failed start shows where that file is.
+    - A failed compile says which step failed and keeps the whole error in compile-error.log in the game's SCSKiller
+      folder (found by @dkflint723).
+    - How much of a game's cache is in use shows under its disk space on NVIDIA, and in the Library's tooltip: "4 GB on
+      disk · 2.6 GB in use". The driver reserves its cache files in doubling steps, so a cache that grew a little can take
+      twice the space. Clear cache still frees the whole size on disk.
+    - A nearly full 4 GB NVIDIA cache file is flagged on the game page.
+    - A compile stopped by a running process names it and its path, so a leftover one can be ended in Task Manager.
+    - A compile no longer leaves a little behind in Windows' shader cache folder each time.
+    - The compile helper reports its error instead of crashing when it can't start an Xbox app game's compile, and passes
+      on a folder ending in a backslash correctly (found by @dkflint723).
+    - Reading a large Unity bundle keeps only the blocks it read last in memory (found by @dkflint723).
+    - Sharing notices a recording rewritten at the same size within one clock tick (thanks @Dmi-3), and a recording test no
+      longer fails at random for the same reason (thanks @kaeldrin-gh).
+    - The window opens at the size and place you closed it, maximized if it was (thanks @kaeldrin-gh).
+    - The Library's games no longer vanish and come back for a moment while SCSKiller starts or a game's status changes.
+    - The Library's buttons sit on their own row, aligned right, and wrap in a narrow window (thanks @JohnsonRan).
+    - The Library and the game page show the same compile time, Clear cache shows the same size as Disk space, a finished
+      game in the compile queue opens its page when clicked, and Library in the sidebar goes back to the list.
+    Recorder and anti-cheat
+    - "Played, nothing recorded" shows in the Library when a game was played with the recorder on and nothing was
+      recorded, and its page says why: another exe from the same folder ran (SCSKiller sets the recorder up for it), the
+      game changed since the recorder was set up, or the recorder didn't load. It no longer asks for a recording again
+      (found by @dkflint723).
+    - On AMD, DirectX 11 games no longer wait for a recording: the page says a recording helps only on DirectX 12.
+    - Blizzard games installed by Battle.net but listed by another store, or added by hand, keep the recorder out
+      (found by @dkflint723).
+    - The recorder goes into a game's folder under a temporary name and is then renamed into place, so a full disk or a
+      closed app can't leave a broken d3d12.dll that stops the game from starting (found by @dkflint723).
+    - A recording whose end a power loss left zero-filled is cut back to its last whole record and recording goes on
+      (found by @dkflint723).
+    - Removing the recorder always takes out its d3d12.dll and puts back the mod it was chained to.
+    - The recorder switches off right away when a game's folder changes.
+    - About and the README say SCSKiller is used at your own risk.
+    PCs and Windows
+    - The portable build keeps its settings and data in a data folder beside SCSKiller.exe. Its first start copies
+      your existing data there.
+    Updates
+    - A failed update leaves a log: updates.log in SCSKiller's data folder.
+    - An install, update or uninstall step that fails no longer skips the others, such as taking the recorder out of your
+      games.
+    All changes in 1.2.4
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BlueHeisenberg/SCSKiller/releases/tag/v1.2.4
+ReleaseTime: 2026-10-08T00:39:25.0000000Z
