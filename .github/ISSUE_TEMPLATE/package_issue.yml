@@ -1,0 +1,45 @@
+name: '🐛 Package Issue'
+description: Report issues and unexpected behaviour of workflows for packages.
+type: Bug
+title: "[Package Issue]: Package.Identifier"
+labels: ["Issue-Bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Please confirm these before moving forward
+      description: Please confirm the following before posting your issue.
+      options:
+        - label: I have searched for my issue and not found a work-in-progress/duplicate/resolved issue.
+          required: true
+        - label: I have not been informed if the issue is resolved in a preview version of the winget client.
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Category of the issue
+      description: What kind of issue are you running into?
+      options:
+        - label: 'Installer URL: The installer URL is either invalid or does not match the claimed version.'
+          required: false
+        - label: 'Other.'
+          required: false
+  - type: input
+    attributes:
+      label: Current Package Identifier
+      placeholder: ZhipuAI.ZCode
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Package Version
+      placeholder: 0.24.3
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed Changes
+      placeholder: |
+        InstallerUrl: https://cdn.zcode-ai.com/zcode/releases/0.24.3/z-code_0.24.3_x64-setup.exe
+
+        See microsoft/winget-pkgs#352180
+    validations:
+      required: true
