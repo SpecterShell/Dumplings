@@ -1,13 +1,13 @@
 $Object1 = $Global:DumplingsStorage.KIRDownloadPage.SelectSingleNode('//div[@class="drivers__text" and contains(., "Szafir EXE version") and contains(., "Windows")]')
-$VersionMatches = [regex]::Match($Object1.InnerText, '(\d+(?:\.\d+)+)\.?\s*build (\d+)')
-
-# Version
-$this.CurrentState.Version = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[2].Value)"
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('./following-sibling::a[contains(@class, "drivers__link")]').Attributes['href'].Value
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.SelectSingleNode('./following-sibling::a[contains(@class, "drivers__link")]').Attributes['href'].Value
 }
+$VersionMatches = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)_b(\d+)')
+
+# Version
+$this.CurrentState.Version = "$($VersionMatches.Groups[1].Value).$($VersionMatches.Groups[2].Value)"
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
