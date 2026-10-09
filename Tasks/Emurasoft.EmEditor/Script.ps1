@@ -32,7 +32,7 @@ switch -Regex ($this.Check()) {
 
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-      if ($ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]")) {
+      if ($ReleaseNotesNode = $Object2.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion -replace '(\.0+)+$')')]")) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
@@ -63,12 +63,12 @@ switch -Regex ($this.Check()) {
 
       $Object3 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
 
-      if ($ReleaseNotesCNNode = $Object3.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]")) {
+      if ($ReleaseNotesCNNode = $Object3.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion -replace '(\.0+)+$')')]")) {
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesCNNode.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion)')]//div[contains(@class, 'entry-content')]") | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode.SelectSingleNode("//div[contains(@class, 'entry-content-wrapper') and contains(.//header[contains(@class, 'entry-content-header')], '$($this.CurrentState.RealVersion -replace '(\.0+)+$')')]//div[contains(@class, 'entry-content')]") | Get-TextContent | Format-Text
         }
         # ReleaseNotesUrl (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
