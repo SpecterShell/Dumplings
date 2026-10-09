@@ -29,15 +29,13 @@ switch -Regex ($this.Check()) {
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.SelectSingleNode('//div[@class="container"]/div[1]/span').InnerText | Get-Date -Format 'yyyy-MM-dd'
+      $this.CurrentState.ReleaseTime = $Object2.SelectSingleNode('//main//article//time').Attributes['datetime'].Value | Get-Date -Format 'yyyy-MM-dd'
 
       # ReleaseNotes (en-US)
-      # Remove download button
-      $Object2.SelectNodes('.//a[contains(@class, "btn")]').ForEach({ $_.Remove() })
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectNodes('//div[@class="container"]/div[1]/following-sibling::node()') | Get-TextContent | Format-Text
+        Value  = $Object2.SelectNodes('//main//article//div[contains(@class, "prose-content")]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
