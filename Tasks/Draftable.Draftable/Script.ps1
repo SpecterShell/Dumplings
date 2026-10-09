@@ -1,12 +1,12 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://dl.draftable.com/desktop/releases.win.json').Assets | Where-Object -FilterScript { $_.Type -eq 'Full' } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
 
 # Version
-$this.CurrentState.Version = $Object1.Version
+$this.CurrentState.Version = $Object1.Version -replace '-build\.\d+$'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = "https://dl.draftable.com/desktop/DraftableDesktopSetup-$($this.CurrentState.Version).exe"
+  InstallerUrl  = "https://dl.draftable.com/desktop/DraftableDesktopSetup-$($Object1.Version).exe"
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
