@@ -2,7 +2,6 @@ $Object1 = Invoke-WebRequest -Uri 'https://www.cherry.de/en-us/products/software
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
   InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('Utility_Software') } catch {} }, 'First')[0].href
   # InstallerUrl = "https://swrepo.data.cherry-world.com/sw/$($this.CurrentState.Version.Replace('.','_'))/win/x86/Cherry_Utility_Software.exe"
 }
