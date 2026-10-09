@@ -1,0 +1,65 @@
+Version: 0.8.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xiaYuTian11/maskit/releases/download/v0.8.1/Maskit_0.8.1_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 引擎：卡住的上游建连 / TLS 握手改为有预算（默认 20 秒，MASKIT_CONNECT_STALL_S），超预算时取消正在建立这一跳的任务并立即回 502，客户端不再空等约 127 秒的内核重传；事件归因为 handshake_timeout（上游、可重试）。这只治「死等多久」，链路丢包本身仍需系统层处理。
+    Fixed
+    - Engine: a stalled upstream connect / TLS handshake is now budgeted (20s by default, MASKIT_CONNECT_STALL_S); over budget the task establishing that hop is cancelled and the client gets a clean 502 instead of waiting out the ~127s kernel retransmit ladder, attributed as handshake_timeout (upstream, retryable). This bounds the dead wait and makes it retryable — the packet loss itself is a link-layer problem.
+    新增
+    - 面板：顶栏新增常驻「帮助」入口（页面导览、快速上手、常见问题、教程跳转）与三步首次引导；引导仅在尚未配置任何客户端时自动弹出，老用户升级不会被打断。
+    - 文档：新增 docs/SETTINGS.md，按页面与开关逐项解释配置口径。
+    Added
+    - Panel: the top bar gains a permanent Help entry (page guide, quick start, FAQ, tutorial links) and a three-step first-run guide that auto-opens only while no client is configured, so upgrades never interrupt existing users.
+    - Docs: added docs/SETTINGS.md, explaining each page and switch.
+    优化
+    - 日志：「隐藏噪声」默认开启（实测取消记录与脱敏记录约 1:1，列表一半被取消行占据），并记住开关选择——刷新或重开客户端后仍生效；开关说明改为列出实际隐藏的五类事件（透传/跳过/绕过/取消/DNS 错误）。
+    - 版本号：面板连不上时侧栏与「关于」卡回退显示客户端版本并标注来源（此前 502 这类故障截图上根本没有版本号，报障无从判断），面板启动日志首行也带上版本。
+    - 设置：上游连接策略的「连接复用 / 空闲期限 / 建连预算 / TLS 预算」四项补上悬停说明，明确它们是建连与握手预算，不是模型请求或 SSE 流的时长。
+    Changed
+    - Logs: hide noise events by default (cancelled rows were ~1:1 with mask rows) and remember the toggle across sessions; the tooltip now names the five hidden event types.
+    - Version: when the panel is unreachable, the sidebar and About card fall back to the client version with an explicit source note (such failure screenshots previously carried no version at all); the panel startup log line now prints it too.
+    - Settings: the four upstream connection-policy fields now explain on hover that they budget connection setup and the TLS handshake, not model requests or SSE streams.
+
+    扩展更新提示 / Extension update notice
+    ✅ 本次发版扩展无改动：已安装的扩展无需重新加载。
+    ✅ The browser extension did not change: no need to reload it.
+    Full Changelog: https://github.com/xiaYuTian11/maskit/compare/v0.8.0...v0.8.1
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 引擎：卡住的上游建连 / TLS 握手改为有预算（默认 20 秒，MASKIT_CONNECT_STALL_S），超预算时取消正在建立这一跳的任务并立即回 502，客户端不再空等约 127 秒的内核重传；事件归因为 handshake_timeout（上游、可重试）。这只治「死等多久」，链路丢包本身仍需系统层处理。
+    Fixed
+    - Engine: a stalled upstream connect / TLS handshake is now budgeted (20s by default, MASKIT_CONNECT_STALL_S); over budget the task establishing that hop is cancelled and the client gets a clean 502 instead of waiting out the ~127s kernel retransmit ladder, attributed as handshake_timeout (upstream, retryable). This bounds the dead wait and makes it retryable — the packet loss itself is a link-layer problem.
+    新增
+    - 面板：顶栏新增常驻「帮助」入口（页面导览、快速上手、常见问题、教程跳转）与三步首次引导；引导仅在尚未配置任何客户端时自动弹出，老用户升级不会被打断。
+    - 文档：新增 docs/SETTINGS.md，按页面与开关逐项解释配置口径。
+    Added
+    - Panel: the top bar gains a permanent Help entry (page guide, quick start, FAQ, tutorial links) and a three-step first-run guide that auto-opens only while no client is configured, so upgrades never interrupt existing users.
+    - Docs: added docs/SETTINGS.md, explaining each page and switch.
+    优化
+    - 日志：「隐藏噪声」默认开启（实测取消记录与脱敏记录约 1:1，列表一半被取消行占据），并记住开关选择——刷新或重开客户端后仍生效；开关说明改为列出实际隐藏的五类事件（透传/跳过/绕过/取消/DNS 错误）。
+    - 版本号：面板连不上时侧栏与「关于」卡回退显示客户端版本并标注来源（此前 502 这类故障截图上根本没有版本号，报障无从判断），面板启动日志首行也带上版本。
+    - 设置：上游连接策略的「连接复用 / 空闲期限 / 建连预算 / TLS 预算」四项补上悬停说明，明确它们是建连与握手预算，不是模型请求或 SSE 流的时长。
+    Changed
+    - Logs: hide noise events by default (cancelled rows were ~1:1 with mask rows) and remember the toggle across sessions; the tooltip now names the five hidden event types.
+    - Version: when the panel is unreachable, the sidebar and About card fall back to the client version with an explicit source note (such failure screenshots previously carried no version at all); the panel startup log line now prints it too.
+    - Settings: the four upstream connection-policy fields now explain on hover that they budget connection setup and the TLS handshake, not model requests or SSE streams.
+
+    扩展更新提示 / Extension update notice
+    ✅ 本次发版扩展无改动：已安装的扩展无需重新加载。
+    ✅ The browser extension did not change: no need to reload it.
+    Full Changelog: https://github.com/xiaYuTian11/maskit/compare/v0.8.0...v0.8.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.8.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.8.1
+ReleaseTime: 2026-10-09T13:08:03.0000000Z
