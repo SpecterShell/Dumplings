@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/lehhair/PiUI/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/chenming0v0/OMPiUI/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -19,19 +19,19 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
-        # ReleaseNotes (en-US)
+        # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
+          Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl (en-US)
+      # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
+        Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
         Value  = $Object1.html_url
       }
