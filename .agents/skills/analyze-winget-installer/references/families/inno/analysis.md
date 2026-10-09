@@ -21,6 +21,8 @@ $Info.SupportsDualScope
 $Info.WritesAppsAndFeaturesEntry
 $Info.SupportedArchitectures
 $Info.UnsupportedArchitectures
+$Info.ArchitectureRequirementEvidence
+$Info.ConditionalArchitectureRequirementEvidence
 $Info.EncryptionUse
 $Info.CompressMethod
 $Info.EditionId
@@ -35,6 +37,10 @@ $Info.Diagnostics
 ```
 
 `Get-InnoInfo` also returns `AppName`, `AppVerName`, `AppVersion`, `AppId`, `ResolvedAppId`, `UninstallRegKeyBaseName`, `UninstallDisplayName`, raw directive values, unresolved constants/fields, privilege directives, architecture expressions or packed architecture sets, encryption evidence, loader signature, and `ParserVersionInfo`. Reuse these properties throughout the analysis.
+
+Architecture evidence also covers required x64-only path constants and proven startup Pascal Script calls using a 64-bit registry view. For example, CHERRY Utility 3.12 reaches `RegDeleteValue(HKLM64, ...)` through `InitializeWizard` without an x86 guard; the parser excludes x86 even though the loader and `ArchitecturesAllowed` allow it. `RegistryArchitectureRequirement` records the callback, helper, bytecode offset, API, and numeric root. Guarded, unreachable, or unresolved paths do not exclude x86; check `ConditionalArchitectureRequirementEvidence` and validate the affected path in the VM. Pass the authored installer entry's `-Architecture` during analysis; an x64 entry retains this evidence without the redundant architecture notice. These constraints describe Windows compatibility, not the payload's CPU architecture.
+
+The pre-install check includes `PrepareToInstall`. Caramba Switcher **Pro** 2026.09.26.2 queries the classic application's 32-bit uninstall key, then queries `HKLM64` if that lookup fails. The latter call raises an exception on x86, including a fresh installation with no classic key. Its success depends on existing registry state, so the parser reports `Inno.Architecture.Conditional64BitRegistry` and retains x86 pending VM validation rather than declaring every x86 path unsupported. This sample is the Pro edition from [winget-pkgs PR #441630](https://github.com/microsoft/winget-pkgs/pull/441630), not the free edition. The warning is suppressed for authored x64 entries and when other evidence has already excluded x86.
 
 `PascalScriptInfo` is the bounded `[Code]` header view: presence, byte length, IFPS version, declared type/global/function counts, entry-point index, and import size. It is null only when an embedded program header could not be validated. `Present: false` means the selected structure has no compiled program. Official Inno structures before 4.0 do not serialize `CompiledCodeText`, while the My Inno Setup Extensions line introduced it earlier.
 

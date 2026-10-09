@@ -141,6 +141,8 @@ try {
 
 `advanced` enables the project's normal advanced Markdown pipeline, `emojis` enables emoji extension handling, and `hardlinebreak` preserves single-newline release-body formatting. Ordinary changelog Markdown should omit `hardlinebreak` unless the source uses that convention.
 
+Review the converted text against the [release-text cleanup rules](../../../author-winget-manifest/references/locale/content-and-resources.md#format-the-release-text) before assigning `ReleaseNotes`, including removal of decorative asterisks and superscript markers.
+
 ## Skip download and hash sections
 
 Follow the manifest-authoring [release-text rules](../../../author-winget-manifest/references/locale/content-and-resources.md#format-the-release-text). Exclude complete download and hash/checksum sections before calling `Get-TextContent`, including their headings, asset links, tables, and verification instructions. Keep genuine change entries about download or hashing features.

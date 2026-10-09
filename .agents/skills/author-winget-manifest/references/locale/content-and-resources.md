@@ -128,6 +128,8 @@ Record two sources separately:
 
 Use the selected version-specific desktop release-note source. Do not summarize, paraphrase, or rewrite it. Scrape the raw HTML or Markdown, remove only unrelated material such as download links, asset tables, checksums, mobile-only changes, or platform updates, then preserve the remaining processed text verbatim.
 
+Remove decorative asterisks (`*`) and superscript annotation markers, including HTML `<sup>` references, before writing `ReleaseNotes`. Convert asterisk list bullets to `-` and let the Markdown-to-text pipeline remove emphasis delimiters. Keep explanatory text that affects the meaning of a change. Preserve literal characters in code, filenames, and mathematical expressions rather than applying a blanket replacement.
+
 Omit entire download and hash/checksum sections, especially in GitHub release bodies. Remove their headings, asset lists, checksum tables, hash values, and verification instructions. Removing only the heading leaves the unwanted content in the manifest. Preserve actual change entries that discuss downloads or hashing as product features.
 
 Filter by the source's observed headings and section boundaries before `Get-TextContent`. The task-authoring [section-filtering recipe](../../../author-dumplings-task/references/release/html-markdown.md#skip-download-and-hash-sections) shows a persistent `$Skip` flag and lists current task examples. Skip standalone asset-hash tables too. If no product changes remain, omit `ReleaseNotes` and look for a substantive changelog or official release-history page.

@@ -86,6 +86,8 @@ Directive checks use Inno's `not`, `and`, and `or` expression spelling. Proven B
 
 Likewise, an architecture expression describes admission and install mode. It does not make the outer SetupLdr PE architecture the package architecture.
 
+The pre-install compatibility check reuses the bounded IFPS evaluator in an x86 execution context. It follows the program entry point, `InitializeSetup`, `InitializeWizard`, and `PrepareToInstall`, propagates primitive call arguments through direct helpers, models the IFPS argument/result stack and simple `SetPtr` aliases, and resolves `IsWin64` and `Is64BitInstallMode` as false. `PrepareToInstall` receives the runtime's initial `NeedsRestart = False`. An `Out` argument invalidates the pointed-to value, including a function's return variable, so stale constants cannot suppress a later registry fallback. Registry functions validate the explicit root flags without touching the host registry; other registry results stay unknown. Only a 64-bit-view exception proven on every reachable pre-install path excludes x86. An earlier callback that may cancel, an opaque host call, exception flow, recursion limits, or the shared 16,384-instruction budget prevents promotion to a mandatory requirement. The evaluator can continue after an opaque call to collect conditional hazards, but that path cannot establish successful completion or a mandatory failure. Registry-free scripts retain the header-only fast path; detailed analysis reuses its already decoded program.
+
 ## Extraction and passwords
 
 Metadata and payload decoding must remain bounded. Password-protected data requires the format's key derivation, password-test, nonce, and authenticated decryption rules. A missing password is a structured limitation, not malformed input.
