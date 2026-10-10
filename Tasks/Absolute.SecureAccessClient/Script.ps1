@@ -7,6 +7,11 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
   InstallerUrl  = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('x64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'wix'
+  InstallerUrl  = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('arm64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
+}
 
 # Version
 $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
