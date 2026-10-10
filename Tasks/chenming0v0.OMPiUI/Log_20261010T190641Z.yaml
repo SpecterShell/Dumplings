@@ -1,0 +1,18 @@
+Version: 0.6.12
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.12/OMPiUI_0.6.12_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    补齐共享会话安全关闭流程，作为本轮最终稳定版本。
+    - fix: HTTP 连接排空后取消短关闭截止计时，worker 保存与 runtime 退出使用独立的 20 秒清理预算，避免端口已经释放却在保存历史期间被强制退出；保留卡死清理的兜底截止。
+    - fix: 保留 0.6.11 的双向会话互通、浏览零写入、终端进程退出检查、接管备份和禁止 RPC 自动恢复；不通过私有任务副本或禁止互通规避写入安全。
+    - test: 新增正常延迟清理与卡死清理回归；编译产物验收增加真实 OMP runtime 的优雅关闭路径。
+    - chore: 全部 workspace、Tauri 与锁文件统一为 0.6.12；0.6.11 保留为预发布，稳定更新以本版本为准。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.12
+ReleaseTime: 2026-10-10T18:29:05.0000000Z

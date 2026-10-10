@@ -1,0 +1,114 @@
+Version: 2.0.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/try2love/codex-mobile-bridge/releases/download/v2.0.0/Codex-Mobile-Bridge-2.0.0-Windows-x64-Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v2.0.0 · 从手机聊天到多客户端远程工作台
+    v2.0.0 将 v1.4.0 的 Codex 手机网关扩展为 Codex、Claude Desktop、DeepSeek Harness 的统一远程入口。这次正式版汇总整个 v2 预览周期的工作台、手机 App、多客户端、网络连接和平台适配改进。任务继续在原电脑或对应 SSH 服务器运行，已有会话的提供商、认证与工作目录保持归属。
+    三个客户端，各自的会话与配置
+    - 自动发现与接入：网关扫描本机已安装的 Codex、Claude Desktop 和 DeepSeek Harness。无需先启动网关，即可检查安装与登录状态、管理接入；后续安装客户端后可重新扫描。只有配置就绪的应用才能启用，网关启动后再连接已启用的应用。
+    - 独立聊天列表：按应用切换聊天，创建会话时直接归属当前应用；Claude Code 与 Cowork 分组并可折叠。网页和手机共用会话状态标识、重连入口及可用能力提示。
+    - 受保护的启停：桌面、Web 和手机可管理已配置客户端。正常退出前检查运行任务、等待授权与待发送内容；任务状态不明时保留明确的恢复指引。退出选项区分仅停用手机接入、正常退出与二次确认的强制退出。
+    - 恢复已有连接：改善 Claude 断线重连、隐藏窗口恢复、中文路径与目录信任提示；核验并恢复旧 Harness 接入，处理插件更新和残留实例。发送或授权结果未知时，不自动重放操作。
+    聊天与项目工作台
+    - 文件标签：浏览本机或 Codex SSH 会话的项目文件，预览文本、Markdown 和图片，上传文件，在聊天文件链接与目录之间定位。普通点击先选择定位或下载，默认下载阈值为 20 MiB，可从网关、Web 或手机即时调整。
+    - 大文件与目录下载：文件列表长按、右键或键盘菜单可明确下载文件及目录，不受普通点击阈值限制；目录打包为 ZIP。下载浮窗显示进度、速度和总量，支持暂停、继续、取消；原生手机使用磁盘下载，浏览器仍受站点存储和设备空间限制。
+    - 图片缩放：聊天图片、发送前附件和工作区图片共用查看器。手机双指缩放、放大后拖动；电脑滚轮缩放与拖动；双击切换适应屏幕与两倍，支持 1–8 倍及恢复适应。关闭图片后保留草稿、阅读位置和文件标签。
+    - 连续终端：终端保留工作目录、环境和交互状态，支持多行命令、停止、清屏与尺寸变化。macOS/Linux 使用 PTY，Windows 使用 ConPTY，并补齐跨盘 cd 的处理；关闭刚创建的终端时也回收其所属进程树，避免后台残留。
+    - Git 面板：查看变更、差异、提交历史图和分支；暂存、提交、切换分支、本地合并与中止合并。保留工作区检查与确认，不提供远程推送或历史重写。
+    - Codex 侧边聊天与子智能体：在工作台查看子智能体历史，创建临时侧边聊天，独立选择模型、推理、Skill、权限和附件；支持排队、补充任务、普通/计划模式与同网关多设备同步。侧边聊天在结束或网关重启后清除，暂不支持 SSH。
+    - 宽屏分屏：电脑浏览器、平板与折叠屏可将工具标签放到右侧并调整宽度；窄屏恢复单栏，保留标签、草稿和阅读位置。Claude/DSH 按自身协议提供工具能力，不把 Codex 专属功能伪装成全部客户端可用。
+    - 上下文与权限：Codex、Claude Code 和 DSH 在权限附近展示上游提供的上下文用量，点击查看已用量、容量及说明；未提供的数据显示未知。权限按钮显示当前模式，模型与推理选项依照客户端能力。Codex 支持不选择项目创建会话。
+    账号、API、额度与模型
+    - 按客户端管理：桌面网关管理 Codex、Claude、DSH 各自的已保存账号或支持的 API 接入，提供导入、修改、重命名和删除。Web/手机展示当前应用的账号信息，可切换已保存接入；凭据的新增与编辑仍留在电脑端。
+    - 当前接入更清晰：当前账号置顶并标记，额度和重置卡紧邻账号；切换前核验任务，必要时重启对应客户端，并保留恢复信息。
+    - API 使用自己的模型：Codex 模型选择器与账号页共用当前 API 上游目录，支持主动刷新及手动填写；修复切换 API 后仍用官方地址或旧 GPT 列表的问题，兼容 CC Switch 模型目录。能列出模型不代表第三方协议一定兼容。
+    - 查询节奏可控：进入账号页自动查询，可见时每五分钟更新，手动查询立即执行并重新计时；保留上次成功值和时间，失败不把未知余额显示成零。
+    - 官方额度与重置卡：查看官方账号额度、恢复时间及服务返回的订阅周期；可为任一已保存的 Codex 官方账号使用重置卡，无需先切换接入。确认页核对账号与到期时间，等待五秒后才可消费，结果不明时复用原请求标识。
+    - 客户端能力有别：Claude 支持已登录配置及第三方网关配置，DSH 支持保存当前账号、管理官方 API Key 与查询可用余额，任意第三方提供商需在 Harness 配置；模型、推理和额度以客户端/上游实际返回为准。Codex Fast、重置卡及 Skills 不扩展为其他客户端的通用能力。
+    Android、iOS 与手机网页
+    - 多台电脑与扫码保持登录：App 保存多台电脑，支持重命名、删除、按最近访问排序和手动刷新在线状态。扫码建立可撤销的可信设备绑定，普通网页登录过期不再迫使手机反复输入密码。
+    - 更紧凑的聊天列表：搜索、排序与归档入口收拢；功能栏位于应用切换栏上方。只有一个已启用应用时隐藏切换栏；更多菜单可隐藏底部图标。左右滑动切换应用默认开启，带拖动预览，也可关闭。
+    - 电脑卡片上的应用通知：显示已启用应用的原始图标，网关按用户通知选择维护各应用未读数；点击图标直接进入该应用列表。列表加载成功后标记已读，其他应用及新到达提醒保留；已读不等于批准权限请求。
+    - 通知权限与来源：首次打开申请通知权限，允许后默认使用横幅和声音，保留用户后续选择。Android 大图标与 iOS 图片附件标明来源应用；iOS 系统小图标仍属于 Bridge，不能逐条替换成其他 App。
+    - 原生交互修复：修复 Android 应用图标跳转地址校验、重复更多菜单、输入换行、剪贴板、附件和返回导航等问题；iOS 与 Android 共用页面宿主适配，同时保留各自原生扫码、下载与系统返回逻辑。
+    远程连接与网关设置
+    - 固定 HTTPS · Tailscale：检测官方客户端、读取固定 .ts.net 地址，支持公网 Funnel 与私有 Serve，连接随网关启停。Funnel 下手机无需安装 Tailscale；Serve 需要同一私有网络权限。首次登录、网络权限及 Funnel 授权由用户在官方界面完成。
+    - 自有服务器 + SSH：保留普通用户 SSH 反向转发、主机指纹核验及固定入口检测。手机访问地址可留空并使用服务器公网 IP 的 HTTPS 地址，但服务器仍需已有 HTTPS 反代和与 IP 匹配的受信任证书；不会自动降级 HTTP。
+    - 保留多种入口：局域网、内置 Cloudflare 临时 HTTPS、固定 Cloudflare Tunnel、Tailscale、自有服务器与 NAS/已有反代可按需配置。移除桌面端“自建中继 · 内测”邀请码入口，减少普通用户配置负担。
+    - 网络提示更准确：Cloudflare 和 Tailscale 公网转发/中继可能经过境外节点，中国大陆直连可能较慢或超时；固定域名不保证国内速度。首次配置后应在实际 Wi-Fi 与蜂窝网络验证。
+    - 设置重新分区：概览、客户端与接入、网络访问、登录与设备、消息通知、应用与维护各司其职；概览和客户端页均可启停网关。修复网关实际已启动却被界面误报超时的情况；文件传输设置独立保存，异步加载不再误报网关配置未保存并阻止启动。
+    安全、效率与平台维护
+    - 请求与文件边界：加固 DSH 带认证请求的重定向限制；限制中继压缩请求，避免解压后体积绕过；保留登录、CSRF、同源图片入口和受控文件访问。Windows 补齐 junction/reparse point、.git 大小写及 Win32 路径别名检查。
+    - 减少重复工作：同轮状态刷新共用进程扫描，相同只读请求合并；发送、授权、停止保持独立。后台暂停终端读取并保留 shell，回前台按游标补读；手机通知使用增量游标，离开前台停止巡检。
+    - Windows 与 Ubuntu 实测分支整合：吸纳 Windows 安装发现、进程退出、终端和路径边界调整；改进 Ubuntu 启动器识别、权限能力查询与侧边聊天权限确认。Linux 仍为实验性支持，Claude 自动连接仅限 macOS/Windows。
+    - 更清晰的源码结构：共享业务、客户端协议、操作系统实现分别归入 features、clients、platforms；Web 宿主与宽窄布局独立，Android/iOS 保留各自原生入口，共用注入脚本只有一份。便于在目标系统上定向维护。
+    - 保留 v1.4.0 的基础能力：登录保护、会话归属、原生 Fast、模型/Skill 独立加载、已安装 Skill 链接、图片路径规范化、临时隧道重试和签名更新检查继续保留。
+    安装、升级与能力边界
+    - 电脑端：提供 macOS arm64/x64 DMG 与 ZIP、Windows x64 Setup 与 ZIP，以及实验性 Ubuntu x64/ARM64 DEB 与 AppImage。macOS 使用 ad-hoc 完整性签名、未公证；Windows 无发布者证书签名。没有 Windows ARM64 专用包。
+    - 升级网关：macOS/Windows 可在“应用更新”查看正式版，或停止旧网关并退出后手动安装；保留原数据目录。Linux 手动升级。不要让两个网关同时操作同一套客户端与数据。
+    - Android：覆盖安装 APK 以保留电脑列表和登录，不要先卸载。iOS IPA 未签名，需自行签名；源码包包含 Xcode 工程，暂无 App Store/TestFlight 分发。使用 SHA256SUMS.txt 校验下载。
+    - Claude：接入 Code/Cowork，不包含普通 Chat。首次初始化或丢失连接后的重新初始化可能需要电脑解锁、辅助功能/开发者模式及目录信任确认；已有连接优先在后台复用。不能承诺从锁屏状态完成冷启动。Cowork 未提供可靠上下文用量时显示未知。
+    - 通知与在线状态：普通手机包依靠前台同步，不保证后台、锁屏或被系统终止后的送达；可使用 Bark、ntfy、PushPlus。灵动岛在后台可能显示最后状态。电脑睡眠或离线时无法继续远程操作。
+    - 原版 Codex 更新：Bridge 可查询支持渠道的版本并引导原生更新器/商店；安装资格与确认仍由原应用处理，不承诺完全无人值守升级。此入口与 Bridge 自身更新独立。
+    - 客户端内部接口可能随上游更新变化。平台打包、模拟协议检查与真实账号/模型执行是不同验证范围；没有设备耗电测量，不宣称具体续航提升。
+    致谢
+    感谢参与跨平台真机测试、反馈和贡献的用户。保留 @qybgh 在 #15 中的更新交接贡献、@702165405 在 #16 中的模型目录兼容贡献，以及 MIT 项目 coding-mobile 对 Claude/Harness 接入的参考；相关许可与归属随源码保留。
+
+    English · v2.0.0
+    v2.0.0 expands the v1.4.0 Codex mobile gateway into one remote entry for Codex, Claude Desktop and DeepSeek Harness. It brings the v2 preview workbench, mobile apps, client management, networking and platform improvements into the stable release. Tasks continue on their original computer or SSH host with their session ownership, provider, authentication and working directory preserved.
+    Clients and sessions
+    - Discover installed clients, inspect login/setup readiness and manage connections before starting the gateway. Rescan after installing a client. Starting the gateway connects enabled, configured applications.
+    - Keep separate application chat lists; create chats under the selected client. Claude Code and Cowork have collapsible groups. Share activity indicators, reconnect controls and capability-aware messages across Web and mobile.
+    - Manage configured clients from desktop, Web and mobile. Check running tasks, approvals and queued input before quitting. Distinguish disconnecting mobile access, a normal quit and an explicitly confirmed force quit.
+    - Improve Claude reconnection, hidden-window recovery, Unicode paths and trust guidance. Verify and restore existing Harness integrations, including plugin updates and stale processes. Never automatically replay an operation whose outcome is unknown.
+    Chat and workbench
+    - Browse project files, preview text/Markdown/images, upload and locate chat-linked files in their folder. Ordinary downloads use a live configurable threshold, 20 MiB by default; larger links offer location first.
+    - Explicit long-press/right-click downloads allow files and ZIP folders above that threshold. A floating panel shows progress, speed and size with pause, resume and cancel. Native apps stream to disk; browser downloads remain subject to browser storage and device space.
+    - Zoom chat images, pending attachments and workspace images with pinch, wheel, drag or double-click. Scale from fit-to-screen to 8× and retain drafts, reading position and tabs when closing.
+    - Use persistent terminals with interactive shell state, multi-line input and resizing. macOS/Linux use PTY; Windows uses ConPTY with cross-drive cd handling; closing a newly created terminal also reaps its owned process tree.
+    - Review Git changes, diffs, commit graphs and branches; stage, commit, switch and locally merge branches. Dirty-worktree checks remain; remote push and history rewriting are not exposed.
+    - Codex temporary side chats support independent model/reasoning/Skills/permissions, attachments, queued input and Default/Plan modes. View saved subagent history. Side chats are cleared on end or gateway restart and do not support SSH.
+    - Move tool tabs into resizable split panes on wide browsers, tablets and unfolded phones. Smaller layouts retain drafts, tabs and reading position. Claude/DSH expose capabilities their protocols actually support, rather than claiming all Codex-specific tools.
+    - Show upstream context usage beside permissions for Codex, Claude Code and DSH, with a detail popover; unavailable usage remains unknown. Show current permission mode and supported model/reasoning choices. Create a Codex chat without selecting a project.
+    Accounts, models and usage
+    - Desktop manages each client's saved accounts or supported API connections, including import, editing, renaming and removal. Web/mobile show the selected client's information and can switch saved connections; credential creation/editing stays on desktop.
+    - Keep the active connection first with quota/reset credits beside the account. Verify tasks before switching, restart the appropriate client when needed and retain recovery information.
+    - Codex's model picker follows the active API provider. Refresh the upstream catalog or enter models manually; fix stale official API routing and GPT lists after switching, and retain CC Switch catalog compatibility. Listing a model does not prove third-party protocol compatibility.
+    - Fetch account data on opening, then every five minutes while visible; manual refresh runs immediately and resets the timer. Preserve successful values/timestamps on errors instead of showing unknown balances as zero.
+    - Use reset credits for any saved Codex official account without switching it active. Review the account/expiry and wait five seconds before confirmation; reuse the operation ID after an uncertain result. Subscription dates and balances reflect available upstream data.
+    - Claude supports saved login and third-party gateway configurations; DSH supports saved sign-ins, official API keys and queryable balances; arbitrary third-party providers must be configured in Harness. Quota, model and reasoning availability vary. Codex Fast, reset credits and Skills are not advertised as universal client features.
+    Mobile experience and notifications
+    - Save multiple computers, rename/remove them, sort by recent access and refresh reachability. QR pairing creates a revocable trusted-device binding that outlives ordinary browser login expiry.
+    - Compact search/sort/archive controls and application navigation. Hide the app bar when only one client is enabled, or collapse it from More. Swipe switching is enabled by default, has a visual drag preview and can be disabled.
+    - Computer cards show enabled app icons and gateway-maintained unread counts filtered by notification preferences. Open an application's list directly from its icon; acknowledge loaded notifications without clearing other apps, newly arriving events or pending approvals.
+    - Request notification permission on first launch and default to banners/sound after approval, while retaining user preferences. Android large icons and iOS attachments identify the source app; iOS retains Bridge's system app icon.
+    - Fix Android app-icon navigation URL validation, duplicate native menus, newlines, clipboard actions, attachments and back navigation. iOS/Android share host adaptation while retaining native scanning, downloads and navigation.
+    Networking and desktop organization
+    - Tailscale HTTPS: discover the official client and fixed .ts.net address, select public Funnel or private Serve, and run the entry with the gateway. Public Funnel needs no phone-side Tailscale installation; Serve requires authorized tailnet access. Login, system permissions and first authorization remain with Tailscale.
+    - Own server + SSH: retain ordinary-user reverse forwarding, host-key checks and endpoint verification. A blank phone address may use the server's public IP over HTTPS, provided the server already has HTTPS reverse proxying and a trusted certificate for that IP. No automatic HTTP downgrade.
+    - Keep LAN, bundled Cloudflare temporary HTTPS, fixed Cloudflare Tunnel, Tailscale, SSH servers and existing NAS/reverse proxies. Remove the invitation-based experimental relay entry from the desktop UI.
+    - Explain that Cloudflare and Tailscale public relay paths may cross overseas nodes and may be slow or time out in mainland China. A fixed hostname is not a performance guarantee; test actual Wi-Fi and cellular networks.
+    - Organize the gateway into Overview, Clients and access, Network access, Login and devices, Notifications, and App and maintenance. Both Overview and Clients control gateway start/stop. Fix false startup timeout reporting when the gateway is already reachable. Independently saved transfer settings no longer create a false gateway draft during asynchronous loading and block startup.
+    Security, efficiency and platforms
+    - Prevent authenticated DSH requests from following redirects; reject compressed relay requests that could bypass body limits. Retain authentication, CSRF, same-origin image and workspace boundaries. Harden Windows junction/reparse, .git case and Win32 alias handling.
+    - Reuse one process inventory per status refresh and merge identical concurrent read-only requests. Writes remain independent. Pause hidden terminal reads while keeping the shell and catch up by cursor on return. Use incremental mobile notification cursors and stop foreground polling in the background.
+    - Integrate Windows and Ubuntu validation branches covering discovery, shutdown, terminals and path safety; improve Ubuntu launchers and permission capability/confirmation handling. Linux remains experimental; Claude automatic connection supports macOS/Windows only.
+    - Separate shared business features, client protocols and OS integration, with independent Web host/layout modules and shared mobile injection sources. Preserve v1.4.0's login protection, native Fast, independent model/Skill loading, installed Skill links, image path normalization, tunnel retries and signed-update checks.
+    Downloads, upgrades and limits
+    - Desktop targets: macOS arm64/x64 DMG/ZIP, Windows x64 Setup/ZIP, experimental Ubuntu x64/ARM64 DEB/AppImage. Mac builds are ad-hoc signed, not notarized; Windows builds have no publisher certificate. No Windows ARM64 package.
+    - Update Bridge from the macOS/Windows app or stop the old gateway and manually install, retaining the data directory. Linux updates are manual. Avoid simultaneous gateways sharing client state.
+    - Install Android over the existing app to retain data. The iOS IPA is unsigned and needs your own signing; the source ZIP includes the Xcode project. No App Store/TestFlight distribution. Verify downloads with SHA256SUMS.txt.
+    - Claude integrates Code/Cowork, not regular Chat. Cold initialization or recovery may require an unlocked desktop, accessibility/developer permissions and directory trust. Existing connections are reused in the background; cold startup while locked is not guaranteed. Cowork context usage remains unknown where unsupported.
+    - Standard mobile builds synchronize in the foreground and do not guarantee background/locked/killed-app delivery. Use Bark, ntfy or PushPlus as needed; Live Activities may show the last state. Sleeping/offline computers cannot continue remote interaction.
+    - Original Codex update checks and handoff to its updater/store are separate from Bridge updates. Native eligibility and installation confirmation still apply; fully unattended Codex upgrades are not promised.
+    - Internal client APIs can change. Packaging checks, simulated protocol tests and real account/model execution are distinct. No battery-life gains are claimed without device power measurements.
+    Thanks to contributors and cross-platform testers, including @qybgh (#15), @702165405 (#16), and the MIT-licensed coding-mobile reference implementation. Attribution and licenses are retained.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/try2love/codex-mobile-bridge/releases/tag/v2.0.0
+ReleaseTime: 2026-10-10T18:09:56.0000000Z
