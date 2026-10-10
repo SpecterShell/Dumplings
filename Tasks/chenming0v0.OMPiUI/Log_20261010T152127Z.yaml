@@ -1,0 +1,21 @@
+Version: 0.6.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.9/OMPiUI_0.6.9_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增客户端流量审计，便于排查远程连接和内网穿透下的请求量与传输载荷。
+    - feat: 设置新增「流量审计」，逐条记录后端 HTTP 请求、事件流与终端 WebSocket 消息的载荷大小、状态和耗时，HTTP 重试独立计量。
+    - feat: 支持按服务器、协议、方向、URL、事件、会话和失败状态筛选，提供大小与耗时排序、单条详情、流量排行、暂停、清空及 JSON 导出。
+    - perf: 复用业务已解析的实时事件标注消息类型，UTF-8 计量使用固定缓冲；界面通知限频，不额外复制或提前读取 HTTP 响应正文。
+    - privacy: 正文预览默认关闭，开启后限长并遮蔽常见凭证；记录只留在客户端内存，保留最近 2000 条明细，累计统计不受明细淘汰影响。
+    - docs: 明确统计范围为当前客户端的应用载荷，不包含其他客户端、静态资源、传输头、TLS、穿透开销或网络重传，不等同于穿透计费流量；本版不改变原有流式传输协议。
+    - test: 101 项相关回归、前端 159 个测试文件和 1091 项全量测试通过；完整发布校验、桌面和手机深浅主题、横屏及最大字号浏览器验收通过。
+    - chore: 根包、全部 workspace、Tauri 与锁文件统一为 0.6.9，保留 0.6.8 的手机连接与登录诊断修复。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.9
+ReleaseTime: 2026-10-10T14:48:52.0000000Z

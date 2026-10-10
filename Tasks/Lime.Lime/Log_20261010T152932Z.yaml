@@ -1,0 +1,36 @@
+Version: 1.154.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.154.0/Lime-1.154.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.154.0
+    新功能
+    - 新增顶层 lime review，支持审查未提交改动、相对分支的改动、指定提交或自定义指令，复用共享 review/start 和终端输出。
+    - TUI 问答与 MCP 表单使用统一文本编辑能力，保留每题/字段草稿、游标和长粘贴正文；支持回访修订、未回答确认和完整备注提交。
+    - 外部编辑器等待期间保留 TUI 可见画面，返回后恢复输入、光标和终端模式；成功编辑可清空草稿。
+    修复
+    - 修复 ASCII 与 IME 字符连续输入的顺序，以及问答备注快速粘贴中的 Enter/Tab、长正文展开和切题保存。
+    - 修复外部编辑器命令解析中的空参数、引号与反斜杠处理，使用平台解析器并提供五语言错误提示。
+    - 修复跨目录恢复会话后外部编辑器仍使用启动目录的问题，临时正文跟随当前会话目录。
+    - 修复 MCP 在 arbitrary-precision JSON 特性下漏分派标准进度通知；线程所属连接的显式工具调用保留表单交互 owner 与调用 scope。
+    - 修正 Windows Terminal Shift+Enter 解码与 Console 输入模式恢复；平台专有行为仍需 Windows 实机验证。
+    优化与重构
+    - 优化终端绘制调度并启用布局缓存，避免重复输入接线和长期保留第二份画面状态。
+    - 统一问答备注编码、兜底选项和确认键位，Vim 空主输入框的 / 可进入命令补全。
+    - 收敛外部编辑器、MCP 表单和问答的 owner，直接替换旧解析与交接入口，保持 GUI/CLI/TUI 共用业务后端。
+    测试与质量
+    - 扩充真实 CLI stdio、TUI PTY、MCP 表单与外部编辑器可见帧回归，覆盖 canonical 身份、一次响应、输入/图片和终端恢复。
+    - 终端门禁冻结本地构建产物并保留运行时兄弟文件，避免共享 target 重编译干扰测试；修复专用 MCP 场景组合路由。
+    - Windows CI 使用精确的 current App Server filesystem/timeout 用例，并拒绝零测试伪绿。
+    文档
+    - 同步 CLI/TUI 操作说明、架构与命令边界、结构清单和执行计划；修复 Docs/Pages 生成与部署配置。
+    其他
+    - 桌面应用、CLI npm 包与 Rust workspace 版本统一为 1.154.0。
+    完整变更：v1.153.0 → v1.154.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.154.0
+ReleaseTime: 2026-10-10T11:51:34.0000000Z
