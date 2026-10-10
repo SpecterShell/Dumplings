@@ -1,0 +1,22 @@
+Version: 0.6.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.2/OMPiUI_0.6.2_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复刷新恢复与运行时生命周期问题，并整合代理来信和后台任务结果展示。
+    - fix: 兼容 OMP 扩展 UI 的数组快照；已结算权限弹窗不再被迟到快照重新打开，新 worker generation 的请求仍可正常显示（#36）。
+    - fix: 为聊天历史读取增加独立版本校验，防止迟到预览和旧刷新响应覆盖较新的历史及实时消息。
+    - fix: OMP 子进程崩溃后按原会话身份自动重新挂接；恢复失败仍可重试，不重放结果未知的命令（#40）。
+    - fix: 取消打开会话后先清理后台创建的 runtime，再释放租约；重试等待清理完成，避免重复 runtime。
+    - fix: 配对错误码 PAIR_INVALID、PAIR_USED、PAIR_RATE_LIMITED 不再被协议层降级为 INTERNAL（#39）。
+    - ui: 代理来信展示原始正文；后台任务分别展示和展开结果，保留结构化输出、错误、元数据及补充说明。
+    - test: 补齐快照竞态、取消清理、跨会话崩溃隔离与真实 IPC 恢复测试；桌面和手机宽度视觉检查通过。
+    - chore: 根包、全部 workspace、Tauri 与锁文件统一为 0.6.2。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.2
+ReleaseTime: 2026-10-10T01:10:39.0000000Z
