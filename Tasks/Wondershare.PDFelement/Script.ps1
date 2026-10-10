@@ -19,6 +19,14 @@ $this.CurrentState.Installer = @(
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
+    try {
+      # Format HTML content
+      $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' }).ForEach({ $_.Value = $_.Value | ConvertFrom-Html | Get-TextContent | Format-Text })
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
