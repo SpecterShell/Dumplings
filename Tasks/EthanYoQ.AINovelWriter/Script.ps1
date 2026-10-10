@@ -50,11 +50,12 @@ switch -Regex ($this.Check()) {
           }
         } else {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         }
       } else {
