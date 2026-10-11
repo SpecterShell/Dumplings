@@ -1,0 +1,45 @@
+Version: 3.3.0-build.67
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/JimLiu/baocut/releases/download/baocut-v3.3.0-build.67/BaoCut-3.3.0-build.67-win-x64-cuda-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new in 3.3.0
+    Editable shorts from long videos
+    - Cut into shorts is now an agent tool with editable settings for scope, count, duration, aspect ratio, framing and subtitles. It starts a new session and creates independent child videos beside the source. Each child retains the parent transcript, existing cuts and supported translations, so you can keep editing and restore material outside the selected range. Shorts tool, editable children.
+    - The result page shows each short's opening line, selection reason and notes, with rename, open, trim and trash/undo actions, plus Export all using default video-export settings. The parent lists its shorts newest first, showing six before an expandable remainder; Space shows their parent relationship and a parent filter. Result pages survive switching videos within the session. The AI tools setup/result page is desktop-only; shared editing and parent lists are also available on Web. Results and export, ordering.
+    - Trim and Adjust in transcript open transcript cutting at the clip's leading seam, with a return action to the previous panel or results. Text outside the short is struck out and folded; click a nearby sentence to extend the clip. Restoration keeps adjacent items continuous and extends captions over the restored span. Transcript entry, restoration fix.
+    Framing and clip reliability
+    - Automatic framing defaults to speaker placement. YuNet face detection supplies normalized face boxes on sampled frames, and scene-change detection supplies shot boundaries and sample times. The shorts skill uses these to choose a separate crop for each shot, handle interview camera changes and check logos, borders and captions. This is shot-by-shot framing; it does not continuously track a moving face. Face detection, shot detection, framing guidance.
+    - Derived videos support up to 64 non-overlapping crop ranges. Drag a cropped shot on the canvas to pan its crop window, or apply it to the whole short in one edit. Small uncovered gaps at the clip's edges inherit the first/last crop, avoiding tiny fallback-framing fragments; the shot control stays clear of the video toolbar. Per-shot crops, canvas controls, edge fix.
+    - Clip boundaries avoid pulling an adjacent word across a short pause. Caption counts now reflect cues visible inside the clip. Legacy translations are upgraded when possible and carried into translated/bilingual caption layers; failures return explicit warnings. Agents can read source-clock sentence timings and the stored hook/reason/notes in derivation results. Boundaries, caption counts, translations, timings.
+    - Derivation currently targets a single primary media source. Multi-source timelines can produce warnings about ranges or items that cannot be restored, and code compositions are unsupported. Restored footage inherits neighboring shot crops; split loop animations and volume envelopes restart per piece and are reported. Review these warnings when working with complex timelines.
+    Slides in agent sessions
+    - A new slides skill lets agents create and revise editable decks, validate them with the editor's compiler and import local images. Checked decks appear as conversation output cards and as a single Slides entry in Space. Desktop and Web open them in a workspace tab for preview, direct editing and presentation, with PDF/PPTX/HTML export options. Slides.
+    - Annotate an element or area and attach up to 20 annotations to a message. BaoCut passes slide locations and comments to the agent, retains them in queued/retried messages, and waits for editor saves before sending. Agent file changes reload the editor; this currently resets selection and scroll position. Annotation location labels follow the interface language; drafts are kept only in the current window.
+    - Packages now include the slides editor, its Node compiler, the face detector and its model. Windows release builds and CI also build the slides editor so compiler-dependent checks run. Release preparation.
+    - Fixed slide-file change detection after atomic saves. Directory watchers now retain subsequent edits, detect new nested design-system directories and reconcile deleted files. File watching.
+    Home
+    - Four colored quick-start cards make common video tasks easier to find, aligned with the template grid. The template shelf is now labeled Video templates, and New blank video sits in the quick-start heading. Home cards, template heading.
+    Changelog scope
+    Compared with 3.2.0 Build 65: 54 commits, 0 associated PRs, 2 reconciled batches. Every commit has a destination in the source ledger. Prototype synchronization, documentation, regression fixtures, merge wrappers, previous-release feed/download maintenance and version synchronization are accounted for. Intermediate framing heuristics are summarized by the final per-shot behavior. Full comparison.
+    Source commit: ec416fbedd71f5a13895113730ac7ee814dc7d90
+    Additional validation
+    The frozen source passed TypeScript and Rust CI: 8,303 TypeScript tests passed with 321 skipped; 3,622 Rust tests passed with 58 ignored. Skipped/ignored tests are not counted as passed. Local validation passed typecheck, the slides-editor build, 16 release-tooling tests, and 33 slide storage/HTTP regression tests after the file-watching fix. Actionlint passed for the changed workflows. The release pipeline also runs the file-watching regressions on each native Windows variant.
+    The workspace dependency audit reports 9 dependency alerts (1 high and 8 moderate), including image-size and the Electron packaging dependency chain. The local slides editor/compiler bundle-input license inventories do not include these audited modules. These dependency versions remain unchanged; the audit report is retained with the release verification records.
+    Packages and verification
+    BaoCut 3.3.0 (Build 67) for Apple Silicon, macOS 14+.
+    Bundle ID: com.baocut.app. Developer ID signed, hardened runtime and Apple notarization accepted for both App and DMG.
+    Runtime and native Worker startup, signer fingerprint, staple and Gatekeeper checks passed. UI/export, real model inference and paid Agent calls were not exercised by this workflow. ffmpeg/ffprobe and an agent engine are external dependencies.
+    Source: ec416fbedd71f5a13895113730ac7ee814dc7d90
+    Actions: https://github.com/JimLiu/baocut/actions/runs/38110769693
+    Windows x64
+    Variants: cpu, cuda, vulkan. NSIS installers and portable ZIPs are unsigned. Real credential migration and model/Agent/GPU inference were not exercised by the installer tests. Requires the Microsoft Visual C++ v14 x64 Redistributable; the current package does not bundle the VC runtime DLLs.
+    Native build and installer verification: https://github.com/JimLiu/baocut/actions/runs/38110769693
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JimLiu/baocut/releases/tag/baocut-v3.3.0-build.67
+ReleaseTime: 2026-10-11T05:43:46.0000000Z
