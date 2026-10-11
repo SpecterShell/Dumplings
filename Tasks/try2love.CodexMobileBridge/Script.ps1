@@ -18,11 +18,11 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) {
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match "[${CJK}]"); $Node = $Node.NextSibling) {
             if ($Node.Name -in @('h1', 'h2', 'h3')) {
               $Skip = $Node.InnerText -match 'Install|Upgrade'
             }
@@ -36,9 +36,9 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) {
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -in @('h1', 'h2') -and $Node.InnerText -match 'English'); $Node = $Node.NextSibling) {
             if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -match '安装|升级'
+              $Skip = $Node.InnerText -match '安装|升级|下载更新'
             }
             if (-not $Skip) { $Node }
           }
