@@ -1,0 +1,25 @@
+Version: 1.13.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.13.15/Mini-Term_1.13.15_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    ⚠️ 自托管中转需要同步更新：本版给对话镜像加了工具调用信息，旧版中转会丢掉新字段，它自带的旧手机页面还会把每次工具调用显示成一个普通的 AI 回复气泡。请先按部署文档用本版源码重建中转，再升级桌面端。中转重启后手机需要重新扫码配对一次。
+    新功能
+    - 手机端工具活动：AI 连续调用工具时，镜像里折叠成一条「工具调用 N 次 · 最近：…」，点开逐条看工具名和目标：项目里的文件显示相对路径，命令只显示第一行。
+    - 手机端工作状态：镜像底部实时显示「AI 工作中」或「等你处理」；有待作答的提问时，提示你去回答上方的提问。
+    - 手机端 Markdown 增强：AI 回复支持表格、删除线、任务列表和裸链接；宽表格、长代码行在气泡内横向滚动；代码块顶栏一键复制。
+    - 手机端阅读体验：很长的输入自动折叠，可展开、收起；用户打断显示为居中的「已打断」提示；上滑加载更早消息时，阅读位置不跳。
+    修复
+    - 从手机发送的长指令（约百字以上）只写进了 Claude 的输入框、没有提交，回执却显示成功。现在长指令和多行指令都能正常提交。
+    - 手机镜像和桌面会话面板会把 Claude 写进会话记录的系统注入当成用户输入显示出来，包括 skill 正文、本地命令输出、后台任务通知等。现在这些都滤掉了，斜杠命令显示成 /xxx。
+    - 新版 Claude Code 的 /context、/usage 这类本地命令，在手机镜像和桌面会话面板里看不到。
+    - 从手机发起的新会话里，第一条手机指令被标成「桌面输入」。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.13.15
+ReleaseTime: 2026-10-11T14:55:44.0000000Z

@@ -1,0 +1,62 @@
+Version: 1.41.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.41.0/skills-manager_1.41.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.41.0/skills-manager_1.41.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.41.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.41.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-10-11
+    Commit range: v1.40.3...v1.41.0
+    Release Overview
+    - Skills that websites publish themselves, including Feishu/Lark's official skills, now install from the market; restoring a backup no longer loses local skills; plus Escape to close details, a remembered view and window size, and a folder shortcut on project pages.
+    User-facing
+    - Install skills that websites publish themselves — skills.sh also lists skills hosted on a company's own site rather than on GitHub, such as Feishu/Lark's official lark-* skills. Installing them failed because the app looked for a GitHub repository that does not exist. They now install from the market, from a pasted skills.sh/site/… link, or with skills-manager-cli skills install, and skills search prints a ref you can install as-is. Downloads use HTTPS only and are checked for size, paths and checksums. These skills are snapshots: they are not checked for updates, and reinstalling fetches the current version. Thanks to @samuelbushi (#382, #381).
+    - Restoring a backup no longer loses local skills — Cloning a remote backup onto a library that already had skills silently replaced a local skill that shared its name with a different remote copy, and re-cloning deleted commits that were never pushed. A clone now stops and puts everything back when same-named skills differ, and offers to save your local versions to a skills-local-copies-… folder next to the library before continuing. Re-clone keeps the old history unless all of it is in the remote (#531, #532).
+    - Escape closes the skill detail panel, unless a dialog or the command palette is on top. Thanks to @GoodScholar (#494, #453).
+    - The grid/list choice is remembered across the Library, agent workspaces and projects, and after a restart; grid stays the default. Thanks to @GoodScholar (#493, #442).
+    - The window reopens where you left it — its position and size are restored at launch. If it was on a monitor that is no longer connected, the system places it instead. Thanks to @yinfall (#404).
+    - Show a project's folder in the file manager by clicking the folder icon next to the project's name. Thanks to @ZhuYichuan (#473).
+    - Git installs accept owner/repo.git and ssh:// addresses — they were rewritten into addresses that do not exist (….git.git, github.com/ssh://…). Thanks to @crmmc (#517, #516).
+    Developer & Governance
+    - New core/well_known.rs reads a site's /.well-known/agent-skills/ or /.well-known/skills/ index (v1 file lists and v2 archives with a digest). Website skills are recorded as source type well-known, keyed by their canonical skills.sh/site/<domain>/<skill> URL. The install-target rule they share with skills.sh installs now also refuses a folder that exists on disk without a record.
+    - core/file_manager.rs gathers the tray, Settings and log-export file-manager calls; its arguments stay OsString, so paths that are not valid UTF-8 pass through unchanged (#537).
+    - tauri-plugin-window-state is added; the main window starts hidden and is shown once its saved state is restored.
+    - New frontend.yml CI runs lint and the production build whenever frontend sources, config or the lockfile change.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-10-11
+    递交范围：v1.40.3...v1.41.0
+    发布概览
+    - 网站自己发布的技能（包括飞书官方技能）可以从市场安装了；恢复备份不再丢本地技能；另有 ESC 关闭详情、记住视图与窗口大小、项目页一键打开文件夹。
+    用户可见更新
+    - 可以安装网站自己发布的技能 — skills.sh 上有一类技能不在 GitHub，而是托管在厂商自己的网站，比如飞书官方的 lark-* 系列。过去安装它们会失败，因为应用会去找一个并不存在的 GitHub 仓库。现在可以从市场、粘贴 skills.sh/site/… 链接，或用 skills-manager-cli skills install 安装；skills search 输出的地址也能直接拿去安装。下载只走 HTTPS，并校验大小、路径和校验码。这类技能是快照，不检查更新，重新安装即可拿到当前版本。感谢 @samuelbushi（#382、#381）。
+    - 恢复备份不再丢本地技能 — 把远端备份克隆到已有技能的库里时，若本地技能与远端同名但内容不同，本地那份会被静默替换；重新克隆还会删掉从未推送过的提交。现在同名技能内容不同时，克隆会停下并原样恢复，并提供把本地版本另存到库旁 skills-local-copies-… 文件夹后继续的选项。重新克隆时，只有旧历史已全部在远端，才会删掉旧的 .git（#531、#532）。
+    - ESC 关闭技能详情，上面盖着对话框或命令面板时除外。感谢 @GoodScholar（#494、#453）。
+    - 记住网格/列表视图，技能库、Agent 工作区和项目页共用，重启后仍保留；默认仍是网格。感谢 @GoodScholar（#493、#442）。
+    - 窗口按上次的位置和大小打开；若上次所在的显示器已断开，则由系统重新摆放。感谢 @yinfall（#404）。
+    - 项目页一键在文件管理器中显示项目文件夹：点击项目名旁的文件夹图标。感谢 @ZhuYichuan（#473）。
+    - Git 安装支持 owner/repo.git 和 ssh:// 地址 — 之前它们会被改写成不存在的地址（….git.git、github.com/ssh://…）。感谢 @crmmc（#517、#516）。
+    开发者与治理更新
+    - 新增 core/well_known.rs，读取网站的 /.well-known/agent-skills/ 或 /.well-known/skills/ 索引（v1 文件清单、带校验码的 v2 压缩包）。网站技能以来源类型 well-known 记录，并按规范化的 skills.sh/site/<域名>/<技能> 地址识别。它与 skills.sh 安装共用的目标目录规则，现在也会拒绝磁盘上已存在但没有记录的文件夹。
+    - core/file_manager.rs 统一托盘、设置页和导出日志三处打开文件管理器的调用；参数保持 OsString，非 UTF-8 路径原样传递（#537）。
+    - 引入 tauri-plugin-window-state；主窗口启动时先隐藏，恢复保存的状态后再显示。
+    - 新增 frontend.yml CI：前端源码、配置或 lockfile 变动时运行 lint 和生产构建。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-10-11T11:38:20.0000000Z
