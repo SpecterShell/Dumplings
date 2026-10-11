@@ -1,0 +1,213 @@
+Version: 0.5.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.5.0/cadcraft-0.5.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.5.0/cadcraft-0.5.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.5.0/cadcraft-0.5.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Render tests: drop the always-true assert in degenerate_input by @kaffeochknivar in https://github.com/storytold/cadcraft/pull/37
+    - Keep elevations when EXPLODE splits a 3D polyline (#88) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/138
+    - Reject out-of-domain values in PARAMETERS instead of dropping the constraint (#93) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/139
+    - Apply DIMOVERRIDE text together with dimension variables (#108) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/141
+    - Convert typed ellipse arc angles to ellipse parameters (#82) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/143
+    - Fix justified TEXT extents and picking (#89) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/144
+    - Reject deleting a dimension that a remaining dimension refers to (#94) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/145
+    - MCP bridge: do not resend a mutation whose reply was lost (#102) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/146
+    - Keep selected objects outside the joined chain when using JOIN (#86) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/148
+    - Fence selection now includes crossed XLINE and RAY objects (#92) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/149
+    - HATCHEDIT: clear the gradient when a named pattern is chosen (#107) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/151
+    - Reject nonpositive MTEXT height on creation (#84) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/154
+    - AREA of a normal hatch no longer counts unfilled islands (#91) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/155
+    - Store canonical autoTypes names so accepted spellings take effect (#95) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/156
+    - Keep an ordinate dimension's datum fixed when its feature moves (#105) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/157
+    - Keep ATTDEF prompt when saving DXF (#81) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/137
+    - Write LWPOLYLINE elevation (group 38) to DXF (#77) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/142
+    - Keep viewport frozen-layer lists through DXF save and reopen (#98) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/150
+    - DXF: keep layer transparency and description through save and reopen (fixes #96, fixes #97) by @kaffeochknivar in https://github.com/storytold/cadcraft/pull/131
+    - Entity transparency: set it in properties.set, report it, round-trip DXF group 440 by @vangel76 in https://github.com/storytold/cadcraft/pull/174
+    - DXF: write non-ASCII text as \U+ escapes so R2000 files read correctly elsewhere (fixes #164) by @vangel76 in https://github.com/storytold/cadcraft/pull/169
+    - fix(engine): programmatic undo/redo ends a running command first by @vangel76 in https://github.com/storytold/cadcraft/pull/178
+    - DWG open: stop runaway conversions early and name the limit (#57) by @vangel76 in https://github.com/storytold/cadcraft/pull/175
+    - HATCH/GRADIENT/BOUNDARY: keep islands drawn as separate lines (fixes #106) by @vangel76 in https://github.com/storytold/cadcraft/pull/163
+    - LINE: deferred tangent/perpendicular for the first point, so belt lines tangent to two circles work (fixes #69) by @vangel76 in https://github.com/storytold/cadcraft/pull/168
+    - Selection commands prompt "Select objects" without a pickfirst selection (#126, part 2) by @vangel76 in https://github.com/storytold/cadcraft/pull/176
+    - Properties palette: every control acts or is visibly unavailable by @vangel76 in https://github.com/storytold/cadcraft/pull/182
+    - Menu items open their missing dialogs; COUNT shows its result; New Layout asks for a name (#126, part 1) by @vangel76 in https://github.com/storytold/cadcraft/pull/180
+    - cadcraft-cli mcp: --connect without HOST:PORT is an error, not a headless session (fixes #103) by @vangel76 in https://github.com/storytold/cadcraft/pull/167
+    - CLI: image exports honour the current view; add --window / --view framing (fixes #165) by @vangel76 in https://github.com/storytold/cadcraft/pull/170
+    - MCP plate test: finish TEXT before undo and check the centre line survives by @vangel76 in https://github.com/storytold/cadcraft/pull/171
+    - Windows installer: offer a desktop shortcut (#32) by @vangel76 in https://github.com/storytold/cadcraft/pull/184
+    - Light and System interface themes (System follows the OS appearance live) by @vangel76 in https://github.com/storytold/cadcraft/pull/179
+    - Command line, ViewCube and UCS icon take the pointer; command history window (F2) by @vangel76 in https://github.com/storytold/cadcraft/pull/181
+    - Linux: present without a vsync queue so the crosshair follows the mouse (#25) by @vangel76 in https://github.com/storytold/cadcraft/pull/183
+    - Ask Save / Don't Save / Cancel before closing a dirty drawing by @vangel76 in https://github.com/storytold/cadcraft/pull/172
+    - Menu commands open their dialogs; JSON calls never open file pickers (fixes #65, fixes #101) by @kaffeochknivar in https://github.com/storytold/cadcraft/pull/125
+    - Fix macOS runtime app icon sizing by @cyfung1031 in https://github.com/storytold/cadcraft/pull/128
+    - Keep a free measured origin in place when its source moves (#109) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/152
+    - Keep dimension text rotation when saving DXF (#78) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/153
+    - ARC: refuse zero-radius arcs instead of adding them (fixes #85) by @SBaksa in https://github.com/storytold/cadcraft/pull/123
+    - Extents: a wide polyline's bounds follow its drawn band (fixes #90) by @SBaksa in https://github.com/storytold/cadcraft/pull/127
+    - Reject unknown CADCraft CLI options before side effects by @cyfung1031 in https://github.com/storytold/cadcraft/pull/120
+    - macOS: the delete key erases the selection, guarded against typing by @Tru10 in https://github.com/storytold/cadcraft/pull/64
+    - Default Windows startup to DirectX 12 by @DWAA1660 in https://github.com/storytold/cadcraft/pull/31
+    - Redraw edits made while a command is still running (fixes #4) by @SBaksa in https://github.com/storytold/cadcraft/pull/22
+    - DIMANGULAR: accept polyline segments (fixes #10) by @SBaksa in https://github.com/storytold/cadcraft/pull/15
+    - Fix Open dialog drawing filter to include DWG by @DWAA1660 in https://github.com/storytold/cadcraft/pull/21
+    - Print and Ctrl+P ask where to save the PDF (#5) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/26
+    - SCALE: Reference option (#17) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/27
+    - Blocks window: click a block to insert it (#8) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/28
+    - Scripts: split a line at keyword prompts so POLYGON 6 200,20 I 15 works (#43) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/45
+    - Layer Properties Manager: stop the window growing every frame (fixes #29) by @LloydNicholson in https://github.com/storytold/cadcraft/pull/46
+    - ui.render: fit the drawing and return pngBase64 like the headless render (#49, #50) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/52
+    - Linux: default to XWayland for file drag-and-drop on Wayland desktops by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/159
+    - Fonts: per-character fallback, FONTALT and .ttc support for CJK text in SHX styles by @vangel76 in https://github.com/storytold/cadcraft/pull/173
+    - Trackpad pan by @Tru10 in https://github.com/storytold/cadcraft/pull/58
+    - Keep arc-length dimensions as arc-length through DXF save and reopen (#100) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/140
+    - PLINE: Halfwidth is centre-to-edge, and Width answers taper the next segment (fixes #83, #104) by @SBaksa in https://github.com/storytold/cadcraft/pull/121
+    - DXF/DWG: keep hatch gradients through save and reopen (fixes #80) by @vangel76 in https://github.com/storytold/cadcraft/pull/162
+    - Write Wipeout entities to DXF so saving keeps them (#79) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/147
+    - Press-and-drag selection windows (PICKDRAG = 2) by @Tru10 in https://github.com/storytold/cadcraft/pull/63
+    - SETVAR DIM* variables become style overrides for new dimensions (fixes #66) by @kaffeochknivar in https://github.com/storytold/cadcraft/pull/129
+    - DIMANGULAR: accept a circle by @SBaksa in https://github.com/storytold/cadcraft/pull/20
+    - Show Ctrl/Shift shortcuts on Windows and Linux, symbols only on macOS (#53) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/54
+    - UNITS opens a Drawing Units dialog; SETVAR prompts at the command line (fixes #30) by @kaffeochknivar in https://github.com/storytold/cadcraft/pull/38
+    - Dynamic Input: pointer input boxes with Tab, comma and relative entry by @Tru10 in https://github.com/storytold/cadcraft/pull/60
+    - Ask to save unsaved changes before closing the window (#34) by @LloydNicholson in https://github.com/storytold/cadcraft/pull/47
+    - i18n: add Ukrainian (uk) interface translation by @dmatviichuk in https://github.com/storytold/cadcraft/pull/36
+    - Progress docs: full re-measure against AutoCAD 2027 (craftrules standard) by @echelon in https://github.com/storytold/cadcraft/pull/205
+    - fix(geom): preserve three-point circle precision at large coordinates by @Ni-zav in https://github.com/storytold/cadcraft/pull/210
+    - Reject layer.set atomically: a refused call no longer applies other changes (#71) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/188
+    - Reject two-line angular constraints over 180 degrees that can never be satisfied (#73) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/190
+    - Keep the active drawing when closing an earlier inactive one (#76) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/192
+    - Respect locked layers in Clear, Cut, Stretch, Trim, Extend, Fillet, Explode and SplineEdit (#87) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/196
+    - Keep viewport layer colour overrides through DXF save and reopen (#99) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/197
+    - DXF: keep saved layer states through save and reopen (fixes #201) by @vangel76 in https://github.com/storytold/cadcraft/pull/203
+    - DXF: keep block descriptions and constant attribute definitions (fixes #204) by @vangel76 in https://github.com/storytold/cadcraft/pull/207
+    - DXF: keep thickness, point angle, hatch origin/background/elevation, xref paths and the built-in font name (fixes #213) by @vangel76 in https://github.com/storytold/cadcraft/pull/215
+    - DXF: keep linetype text, multileader styles, page setups, named views, UCSs and groups (fixes #209) by @vangel76 in https://github.com/storytold/cadcraft/pull/216
+    - DXF: keep raster images through save; report entities a save can't keep (fixes #208) by @vangel76 in https://github.com/storytold/cadcraft/pull/217
+    - ELLIPSE Rotation/Parameter and BREAK First point take effect (fixes #219) by @vangel76 in https://github.com/storytold/cadcraft/pull/222
+    - ROTATE: Reference option (fixes #235) by @vangel76 in https://github.com/storytold/cadcraft/pull/236
+    - AREA Object/Add area/Subtract area and DIST Multiple points take effect (fixes #233) by @vangel76 in https://github.com/storytold/cadcraft/pull/237
+    - TEXTEDIT prompt, Undo and Mode; MTEXT in scripts takes lines until an empty one (fixes #234) by @vangel76 in https://github.com/storytold/cadcraft/pull/239
+    - UNDO asks for the number of operations; U undoes one (fixes #241) by @vangel76 in https://github.com/storytold/cadcraft/pull/242
+    - macOS: the window title lines up with the traffic lights (fixes #161) by @vangel76 in https://github.com/storytold/cadcraft/pull/202
+    - Option to keep the system cursor over the drawing area for screen magnifiers (#39) by @vangel76 in https://github.com/storytold/cadcraft/pull/187
+    - Web: File > Open… shows the browser's file picker (fixes #55) by @vangel76 in https://github.com/storytold/cadcraft/pull/199
+    - fix(geom): calculate tight ellipse and arc bounds analytically by @Ni-zav in https://github.com/storytold/cadcraft/pull/211
+    - fix(geom): measure bulged polylines and distant polygons accurately by @Ni-zav in https://github.com/storytold/cadcraft/pull/212
+    - fix(geom): avoid false line-circle tangencies on long construction lines by @Ni-zav in https://github.com/storytold/cadcraft/pull/214
+    - Layer delete and purge keep layers used by block definitions (#72) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/189
+    - Layer rename re-points paper-space and block-definition entities (#75) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/191
+    - Deliver browser saves as downloads; keep unsaved state when they fail (#133) by @vangel76 in https://github.com/storytold/cadcraft/pull/193
+    - Linetype rename keeps layer, object and current-linetype references (#74) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/195
+    - DWG: keep true colours, transparency, table styles, layouts and viewport ids (fixes #223) by @vangel76 in https://github.com/storytold/cadcraft/pull/225
+    - Raster points no longer panic debug builds (fixes #270) by @vangel76 in https://github.com/storytold/cadcraft/pull/271
+    - Programmatic SPLINE limits the degree to 1..10 (fixes #268) by @vangel76 in https://github.com/storytold/cadcraft/pull/269
+    - Bound block expansion in drawing and extents: nested, self-referencing or arrayed blocks no longer hang (fixes #255) by @vangel76 in https://github.com/storytold/cadcraft/pull/267
+    - Points draw with the point style (PDMODE/PDSIZE) (fixes #261) by @vangel76 in https://github.com/storytold/cadcraft/pull/265
+    - Layout viewports scale model-space linetypes by PSLTSCALE (fixes #257) by @vangel76 in https://github.com/storytold/cadcraft/pull/259
+    - io: only the first CADCraft xdata string marks the PAPERVIEW viewport by @vangel76 in https://github.com/storytold/cadcraft/pull/253
+    - BLOCK refuses a definition that references itself; names are case-insensitive (fixes #250) by @vangel76 in https://github.com/storytold/cadcraft/pull/252
+    - fix(annotate): DIMCONTINUE/DIMBASELINE in linear time, cap the points (#279) by @vangel76 in https://github.com/storytold/cadcraft/pull/281
+    - DXF read: map mirrored OCS (extrusion 0,0,−1) of 2D entities to WCS by @STE1200 in https://github.com/storytold/cadcraft/pull/277
+    - Save As: offer DWG and keep the drawing's format (complements #21) by @Tru10 in https://github.com/storytold/cadcraft/pull/198
+    - SPLINE Close is smooth and options report; POLYGON typed radius has a flat bottom; CIRCLE rejects bad input (fixes #238) by @vangel76 in https://github.com/storytold/cadcraft/pull/240
+    - Array commands: ARRAY, and edit-array option loops for ARRAYRECT/ARRAYPOLAR (#230) by @vangel76 in https://github.com/storytold/cadcraft/pull/232
+    - fix(engine): guard begin/prompt/preview of interactive commands against panics (#283) by @vangel76 in https://github.com/storytold/cadcraft/pull/284
+    - Default lineweight follows LWDEFAULT (fixes #292) by @vangel76 in https://github.com/storytold/cadcraft/pull/295
+    - Metric drawings load library linetypes in millimetres (fixes #294) by @vangel76 in https://github.com/storytold/cadcraft/pull/299
+    - WBLOCK honours base when writing a block (fixes #297) by @vangel76 in https://github.com/storytold/cadcraft/pull/300
+    - OFFSET keeps a closed spline closed (fixes #303) by @vangel76 in https://github.com/storytold/cadcraft/pull/305
+    -  -BLOCK erases the selection and asks before redefining (fixes #307) by @vangel76 in https://github.com/storytold/cadcraft/pull/310
+    - Only colour 7 flips with the background (fixes #272) by @vangel76 in https://github.com/storytold/cadcraft/pull/285
+    - Wide polylines are drawn with their linetype (fixes #293) by @vangel76 in https://github.com/storytold/cadcraft/pull/309
+    - Wipeouts mask what is drawn before them; WIPEOUTFRAME controls the frame (fixes #291) by @vangel76 in https://github.com/storytold/cadcraft/pull/308
+    - Extents: ignore what draws nothing (rays, missing or empty blocks, hidden block geometry), as ZOOM Extents does by @STE1200 in https://github.com/storytold/cadcraft/pull/288
+    - Default save format for new drawings (DXF or DWG) by @Tru10 in https://github.com/storytold/cadcraft/pull/298
+    - Draw the text of complex linetypes along the line (fixes #312) by @vangel76 in https://github.com/storytold/cadcraft/pull/316
+    - Object snaps find the geometry inside block references (fixes #314) by @vangel76 in https://github.com/storytold/cadcraft/pull/318
+    -  -RENAME prompts; RENAME renames blocks (fixes #264) by @vangel76 in https://github.com/storytold/cadcraft/pull/266
+    -  -INSERT asks for X and Y scale; Basepoint/Scale/Rotate take effect (fixes #245) by @vangel76 in https://github.com/storytold/cadcraft/pull/249
+    - OFFSET Erase/Layer/Multiple/Undo and MOVE/COPY Displacement take effect (fixes #244) by @vangel76 in https://github.com/storytold/cadcraft/pull/246
+    - JSON handles: reject a malformed handle instead of using the selection (fixes #330) by @vangel76 in https://github.com/storytold/cadcraft/pull/331
+    - Save As to an image or PDF exports without renaming the drawing (fixes #327) by @vangel76 in https://github.com/storytold/cadcraft/pull/329
+    - Nearest snap picks the closest object in any drawing order (fixes #323) by @vangel76 in https://github.com/storytold/cadcraft/pull/324
+    - Grip edits act on the whole selection (fixes #320) by @vangel76 in https://github.com/storytold/cadcraft/pull/322
+    - Refuse edits whose result has infinite or undefined coordinates (fixes #338) by @vangel76 in https://github.com/storytold/cadcraft/pull/339
+    - MCP: invalid tool arguments are -32602 errors; query_entities counts all matches and windows by geometry (fixes #335) by @vangel76 in https://github.com/storytold/cadcraft/pull/336
+    - Dimensions take viewport layer colours, leader arrows their style's DIMSCALE, attributes their own properties (fixes #313) by @vangel76 in https://github.com/storytold/cadcraft/pull/319
+    - Typed angles follow ANGBASE, ANGDIR and AUNITS (fixes #326) by @vangel76 in https://github.com/storytold/cadcraft/pull/328
+    - Dimensions snap; justified text snaps and grips at its alignment point; grid snap follows SNAPBASE/SNAPANG; OSNAPHATCH (fixes #334) by @vangel76 in https://github.com/storytold/cadcraft/pull/337
+    - Midpoint, Perpendicular and Tangent snaps on elliptical arcs and splines; Quadrant stays on the arc (fixes #332) by @vangel76 in https://github.com/storytold/cadcraft/pull/333
+    - LAYMRG and LAYDEL: merge layers, delete a layer with its objects (fixes #286) by @vangel76 in https://github.com/storytold/cadcraft/pull/296
+    - ATTDISP and ATTSYNC; the display follows ATTMODE (fixes #275, #276) by @vangel76 in https://github.com/storytold/cadcraft/pull/282
+    - ATTEDIT prompts at the command line; -ATTEDIT; attribute tags in any case (fixes #273, #274) by @vangel76 in https://github.com/storytold/cadcraft/pull/280
+    -  -PURGE: type, names and verify prompts; purge by type (fixes #262) by @vangel76 in https://github.com/storytold/cadcraft/pull/263
+    -  -LAYER: command-line option loop for layers (fixes #254) by @vangel76 in https://github.com/storytold/cadcraft/pull/260
+    - Draw hatch island styles, backgrounds, two-colour gradients and DXF pattern definitions (fixes #289, #290) by @vangel76 in https://github.com/storytold/cadcraft/pull/302
+    - Dimension and multileader options take effect (fixes #243) by @vangel76 in https://github.com/storytold/cadcraft/pull/247
+    - FILLET/CHAMFER: Trim, Multiple, Undo; CHAMFER Angle, mEthod, Polyline (fixes #248) by @vangel76 in https://github.com/storytold/cadcraft/pull/251
+    - QDIM: one snap index per call, cap the input (fixes #356) by @vangel76 in https://github.com/storytold/cadcraft/pull/357
+    - TL/ML/BL text is placed by its alignment point (fixes #342) by @vangel76 in https://github.com/storytold/cadcraft/pull/346
+    - JSON draw/annotation commands refuse invalid sizes and coincident points (fixes #343) by @vangel76 in https://github.com/storytold/cadcraft/pull/344
+    - DWG and DXF keep ANGBASE/ANGDIR, fillet/chamfer, elevation and the snap grid (fixes #349) by @vangel76 in https://github.com/storytold/cadcraft/pull/350
+    - Angle prompts read AUNITS, ANGBASE and ANGDIR: ROTATE, HATCH, dimensions, CHAMFER, MLEADER (fixes #353) by @vangel76 in https://github.com/storytold/cadcraft/pull/354
+    - Control channel: a timed-out request is cancelled, and the reply says whether it ran (fixes #345) by @vangel76 in https://github.com/storytold/cadcraft/pull/348
+    - Control channel: headless and app reply alike to cmdline.input, state and app.open (fixes #351) by @vangel76 in https://github.com/storytold/cadcraft/pull/352
+    - INSERT inserts exploded (*NAME) and drawing files (fixes #340) by @vangel76 in https://github.com/storytold/cadcraft/pull/341
+    - Copy and paste between drawings with their layers and blocks; PASTEORIG, PASTEBLOCK; right-click menu (part of #325) by @vangel76 in https://github.com/storytold/cadcraft/pull/355
+    - STRETCH: repeat Select objects until Enter, C/W windows, Displacement (fixes #228) by @vangel76 in https://github.com/storytold/cadcraft/pull/231
+    - fix(geom): preserve boundary vertices far from the origin by @Ni-zav in https://github.com/storytold/cadcraft/pull/386
+    - fix(geom): use scale-aware circle-circle intersections by @Ni-zav in https://github.com/storytold/cadcraft/pull/384
+    - Keep egui on the System theme preference so the OS appearance is followed live (#301) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/363
+    - Undo/redo of LAYOUT Rename/New keeps the session on a layout that exists (fixes #371) by @vangel76 in https://github.com/storytold/cadcraft/pull/375
+    - DIMBASELINE spacing follows DIM* overrides and DIMSCALE 0 (fixes #364) by @vangel76 in https://github.com/storytold/cadcraft/pull/366
+    - Angular dimensions keep each leg's extension line; centre mark only outside (fixes #374) by @vangel76 in https://github.com/storytold/cadcraft/pull/377
+    - Dimension text: DIMRND rounds only the measurement; no DIMPOST on angles (fixes #373) by @vangel76 in https://github.com/storytold/cadcraft/pull/376
+    - DIMRADIUS/DIMDIAMETER: a location inside the circle puts the text inside (fixes #385) by @vangel76 in https://github.com/storytold/cadcraft/pull/389
+    - DIMTEDIT prompts at the command line and in scripts (fixes #382) by @vangel76 in https://github.com/storytold/cadcraft/pull/383
+    - Exploded dimension text and DXF dimension blocks match the drawn text (fixes #367) by @vangel76 in https://github.com/storytold/cadcraft/pull/369
+    - MLEADER remembers the placement order and Options (fixes #362) by @vangel76 in https://github.com/storytold/cadcraft/pull/365
+    - Control channel: cmdline.key replies like cmdline.input (fixes #360) by @vangel76 in https://github.com/storytold/cadcraft/pull/361
+    - ZOOM inside a layout viewport acts on the viewport; nXP sets its scale (fixes #370) by @vangel76 in https://github.com/storytold/cadcraft/pull/372
+    - LAYOUT / -LAYOUT: option prompts at the command line (fixes #378) by @vangel76 in https://github.com/storytold/cadcraft/pull/380
+    - VPLAYER: option prompts at the command line (fixes #381) by @vangel76 in https://github.com/storytold/cadcraft/pull/387
+    - Attributes keep their own layer, colour, linetype and lineweight; -ATTEDIT Layer/Color (fixes #358) by @vangel76 in https://github.com/storytold/cadcraft/pull/359
+    - ZOOM Center/Scale/Dynamic and plain n; All/Extents fit the sheet in paper space (fixes #388, stacked on #372) by @vangel76 in https://github.com/storytold/cadcraft/pull/391
+    - fix(select): include solid interiors in crossing-window selection by @Ni-zav in https://github.com/storytold/cadcraft/pull/401
+    - fix(geom): keep finite-scale tolerance and midpoint math stable by @Ni-zav in https://github.com/storytold/cadcraft/pull/400
+    - Layouts: a viewport on a frozen layer hides its contents (fixes #395) by @vangel76 in https://github.com/storytold/cadcraft/pull/396
+    - Dimension text: DIMPOST's suffix also goes on tolerances (fixes #390) by @vangel76 in https://github.com/storytold/cadcraft/pull/394
+    - Point prompts: FROM, M2P/MTP, point filters, * prefix and <angle override (fixes #392) by @vangel76 in https://github.com/storytold/cadcraft/pull/402
+    - TRIM/EXTEND: cutting edges, Fence, Crossing, mOde, Project, Edge, eRase, Undo (part of #397) by @vangel76 in https://github.com/storytold/cadcraft/pull/403
+    - Object snap tracking, Extension, Parallel and Apparent Intersection snaps (fixes #379) by @vangel76 in https://github.com/storytold/cadcraft/pull/405
+    - PLINE arc-mode options and Length; XLINE picks the polyline segment (fixes #397) by @vangel76 in https://github.com/storytold/cadcraft/pull/407
+    - Object snap overrides at point prompts, Shift/Ctrl+right-click snap menu, Tab cycling (fixes #393) by @vangel76 in https://github.com/storytold/cadcraft/pull/409
+    - Release prep: 0.5.0 and Linux riscv64 release build by @echelon in https://github.com/storytold/cadcraft/pull/423
+    New Contributors
+    - @kaffeochknivar made their first contribution in https://github.com/storytold/cadcraft/pull/37
+    - @MarekSpodBiedry made their first contribution in https://github.com/storytold/cadcraft/pull/138
+    - @cyfung1031 made their first contribution in https://github.com/storytold/cadcraft/pull/128
+    - @SBaksa made their first contribution in https://github.com/storytold/cadcraft/pull/123
+    - @Tru10 made their first contribution in https://github.com/storytold/cadcraft/pull/64
+    - @DWAA1660 made their first contribution in https://github.com/storytold/cadcraft/pull/31
+    - @LloydNicholson made their first contribution in https://github.com/storytold/cadcraft/pull/46
+    - @dylanmtaylor made their first contribution in https://github.com/storytold/cadcraft/pull/159
+    - @dmatviichuk made their first contribution in https://github.com/storytold/cadcraft/pull/36
+    - @Ni-zav made their first contribution in https://github.com/storytold/cadcraft/pull/210
+    - @STE1200 made their first contribution in https://github.com/storytold/cadcraft/pull/277
+    Full Changelog: https://github.com/storytold/cadcraft/compare/v0.4.0...v0.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/cadcraft/releases/tag/v0.5.0
+ReleaseTime: 2026-10-11T00:11:33.0000000Z

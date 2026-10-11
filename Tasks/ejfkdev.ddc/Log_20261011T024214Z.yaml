@@ -1,0 +1,30 @@
+Version: 0.1.28
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.28/ddc-v0.1.28-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.28/ddc-v0.1.28-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.28
+    New Features
+    - Source-level code optimization via cure (crates.io 0.1.4): every decompiled file goes through a semantic-preserving pass — register-copy chains inlined, if/else folded to ternaries, for-each recovered, dead stores and compiler artifacts dropped (−15% output lines on real corpora, javac-gate identical). #6
+    -  --fast: skip the simplification, keep formatting — roughly half the time on large APKs (weibo 23.4s → 11.5s).
+    - HTTP REST routes accept GET and POST (JSON body) on all query endpoints; /openapi.json now documents every input parameter.
+    - findrefs accepts kind=class as the plain-word alias of type.
+    Bug Fixes
+    - Float constants emitted as raw IEEE bit patterns: dex const literals are untyped bits; in float/double arithmetic, comparisons and float[] fill they must be reinterpreted with from_bits, not numerically converted (1073741824 rendered as 2.0f, not 1.07e9f) — >27k lines of silently wrong values fixed on telegram alone, invisible to the compile gate.
+    - JLS 6.4.2 obscured-member references: a static member whose owner package name is captured by an inherited field (d.j.v vs field d) now escapes through a single-static-import — reqable variable-cannot-finds 103 → 5.
+    - Seven type/scoping guards in cure found on ddc corpora (null literal overload ambiguity, for-each on non-Iterable, owner-confused method inline, enum constant shadowing, cast-position type loss, dangling cut locals).
+    Refactoring
+    - Four IR shape passes retired into cure (trailing-return, ternary fold, final dead assigns, bool xor): −360 lines of ddc source with gate parity or better.
+    - ctor_delegation_hoist, dead_pure_call, and the facts surface (generic engine + Java carrier) added to cure upstream.
+    Docs
+    - Quality metrics documented (E1/S1/S2/D1/P1) with reproduction script: docs/quality.md, docs/zh-CN/quality.md.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.27...v0.1.28
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.28
+ReleaseTime: 2026-10-11T01:46:24.0000000Z
