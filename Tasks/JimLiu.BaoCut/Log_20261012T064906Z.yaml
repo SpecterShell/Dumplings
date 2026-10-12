@@ -1,0 +1,27 @@
+Version: 3.4.1-build.69
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/JimLiu/baocut/releases/download/baocut-v3.4.1-build.69/BaoCut-3.4.1-build.69-win-x64-cuda-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    BaoCut 3.4.1 (Build 69) for Apple Silicon, macOS 14+.
+    Bundle ID: com.baocut.app. Developer ID signed, hardened runtime and Apple notarization accepted for both App and DMG.
+    Runtime and native Worker startup, signer fingerprint, staple and Gatekeeper checks passed. UI/export, real model inference and paid Agent calls were not exercised by this workflow. ffmpeg/ffprobe and an agent engine are external dependencies.
+    Source: cd2aa13ec9f1a883e2a150250231edeffe66feb0
+    Actions: https://github.com/JimLiu/baocut/actions/runs/38192644677
+    Windows x64
+    Variants: cpu, cuda, vulkan. NSIS installers and portable ZIPs are unsigned. Real credential migration and model/Agent/GPU inference were not exercised by the installer tests. Requires the Microsoft Visual C++ v14 x64 Redistributable; the current package does not bundle the VC runtime DLLs.
+    Native build and installer verification: https://github.com/JimLiu/baocut/actions/runs/38192644677
+    Changes since 3.4.0 (Build 68)
+    - Keep external slide and design-file updates working after a directory is deleted and recreated, including filesystems that reuse inode numbers. This fixes the failing CI regression and prevents subsequent edits from being missed. Fix
+    - Add a local Intel Mac packaging path for App, ZIP and DMG files, with architecture and archive verification. Whisper can use Metal on compatible Intel Mac GPUs, with CPU fallback and an AMD dispatch compatibility setting. CPU-only Whisper loads avoid unnecessary GPU discovery. Intel packages remain local-only, ad-hoc signed, without notarization or an update feed; public Mac downloads remain Apple Silicon. PR #60
+    - Allow up to 60 seconds for the first Intel Mac model-worker handshake so initial Metal kernel compilation can finish. Other platforms retain their existing startup deadline. Change
+    The optional bilingual-conversion helper from PR #60 was reverted before this release and is not included.
+    Full comparison. All 11 commits were reviewed in one batch, including the merge, revert, previous-build feed updates and version synchronization.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JimLiu/baocut/releases/tag/baocut-v3.4.1-build.69
+ReleaseTime: 2026-10-12T03:12:59.0000000Z
