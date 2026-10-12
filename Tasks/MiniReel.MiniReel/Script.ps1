@@ -21,7 +21,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Release.summary
+        Value  = $Release.summary | Format-Text
       }
 
       # ReleaseNotesUrl (zh-CN)
