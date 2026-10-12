@@ -1,0 +1,103 @@
+Version: 1.6.10
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dividebysandwich/sdroxide/releases/download/v1.6.10/sdroxide-v1.6.10-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    Satellite passes at a glance
+    The satellite window has a new PASSES tab: every pass of every workable satellite over the next 24 or 48 hours, soonest first. Each row shows when it rises (UTC and your local time), how long until then, how long it lasts, how high it peaks and which way it rises and sets. PEAK hides the low passes, and a click on a row picks that satellite, with its pass diagram, links and lock. Pass times everywhere in the window now carry your local time beside UTC. (#623, #635)
+    FT8 decodes as they are found
+    FT8 has a selectable decode depth (Fast, Normal, Deep) and runs the checkpointed signal subtraction WSJT-X uses, which digs out weak stations hidden under strong ones. The quick pass is shown at once, so an auto-sequenced reply is never held up, and each further decode from the subtraction pass now appears the moment it is found instead of all together at the end. A PC too slow to finish a Deep pass before the next slot skips the slow pass rather than falling further and further behind. (#667)
+    Olivia talks to fldigi and MultiPSK
+    Olivia used a scrambler and interleaver of its own, so it could not decode any other station. It now follows fldigi's reference design bit for bit, and has been checked against fldigi's own encoder and decoder in both directions. (#621)
+    Receive gain per band, S-meter calibration, audio per ear
+    Three new rows in Settings > Radio:
+    - Gain per band: each band gets back the receive gain you last set on it, however the dial got there. General coverage is split into HF, VHF, UHF and above, so an RTL-SDR can sit at 10 dB on shortwave and 40 dB on 2 m without touching it. (#605)
+    - S-meter calibration: an SDR's meter reads dBFS until it is told where zero is, which is why a sensitive dongle shows S9 with no antenna. Set the offset here and watch the meter move as you drag. (#642)
+    - Audio to: this radio's audio on both channels, the left only or the right only - two radios on one headset, one in each ear. The station-wide Channels setting under General does the same for everything you hear. (#654)
+    Morse trainer and grid tracker
+    SDROxide now features a Morse trainer with a reference chart, a practice player and a Koch drill
+    A grid tracker shows the Maidenhead squares you have worked on a map.
+    PSTRotator
+    The antenna rotator can now be driven through PSTRotator over its UDP control port, as well as through Hamlib rotctld. Choose it under Program in Settings > Servers and turn on UDP Control in PSTRotator's Setup. (#638)
+    Split view with many radios
+    With more radios than fit across half a window, split view showed only the tab strip and nothing below it. Tabs now wrap onto a second row whole, and every pane draws its radio. (#653)
+    Upgrading a client/server station
+    The remote protocol version moves from 175 to 179 (new per-radio settings and the rotator's program choice). Update the server and every native remote client together; the browser client is served by the server and updates with it.
+    What's Changed
+    - FSK441: transmit - the message repeats for the length of the over by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/561
+    - FSK441: the refusal reason is stored last, the TX row is pinned under the decode list, and stale docs are updated
+    - Morse trainer: a reference chart, a practice player and a Koch drill by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/568
+    - Morse trainer: plays at the device rate on the alert output, stops when closed, shares progress across tabs, and will not start a drill with no sound device
+    - CW: key as audio through the sound card when there is no control link to key as text by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/572
+    - CW: PTT holds the transmitter for the keyer with no carrier of its own, and the key or the keyer sends inside it; a MIDI key note no longer drops a held PTT, and a mapped note keys the straight key (#625)
+    - Keyboard modes: editable message buttons for PSK, RTTY, Olivia and THOR by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/596
+    - Keyboard modes: the button row's height is budgeted, and F1 stays the manual's (the buttons are on F2-F10)
+    - Olivia: fldigi's scrambler, interleaver, Walsh code and symbol shaping, so real Olivia stations decode and are decoded; the receiver searches about four tones either side of the dial (#621)
+    - Grid tracker: worked Maidenhead squares on a map by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/613
+    - Grid tracker: every band is tallied, the awards share one grid parser, and heard squares are counted while the layer is off
+    - FT8: selectable decode depth (Fast / Normal / Deep) by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/604
+    - FT8: run the checkpointed signal subtraction, like FT4 and WSJT-X by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/586
+    - FT8: decodes stream in as they are found, slots arriving late are placed under their own slot in the list, and a slow pass is skipped when the next slot is already waiting (#667)
+    - NAVTEX: track the tuning error instead of decoding it by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/611
+    - LimeSDR Mini: offer lower TX rates, which clear its underruns, by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/612; the low rates are added to the full list rather than replacing it
+    - Recording: split on silence, so an airband monitor gets a file per transmission by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/557
+    - Recording: quick clips disarm the gate, and it idles while the squelch is open
+    - SSTV: improved sensitivity by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/587
+    - SSTV: a counter underflow fixed, the second pass bounded on weak pictures, and a stale AFC offset dropped
+    - Satellites: the ISS SSTV downlink on 437.550 MHz, and SSTV links tune in SSTV-FM (#622)
+    - Satellites: a PASSES tab listing every upcoming pass, soonest first (#623), and pass times shown in local time beside UTC (#635)
+    - rigctl: a new width in the mode already running sets the filter by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/631
+    - rigctl: squelch, AGC and NR strength as Hamlib levels by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/632
+    - rigctl: the RF level, as the front-end RX gain by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/633
+    - rigctl: SQL drives a radio's own squelch, non-finite levels are refused, AGC LONG/ON are mapped, and the width actually applied is compared
+    - Decoded CW over UDP: the CW panel's settled copy as plain text, for other programs, by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/634
+    - Decoded CW over UDP: a word gap is kept across CLEAR RX and the sender's address is matched
+    - eQSL: send the QTH nickname on upload, test and download by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/648 (#647)
+    - Icom: receive-mode fallback, and HD Radio offered only when the panadapter can carry it, by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/650 (#649)
+    - Icom: a paired panadapter takes the modes the control rig refuses
+    - Icom IC-7851 and other LAN rigs: an RTTY view no longer walks the dial up the band, and a radio that has not reported its frequency yet is no longer sent to 30 kHz (#576)
+    - Icom LAN: ALC and power meters are read while transmitting (#600)
+    - Clock: UTC and local time together in the UI by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/660 (#655); shown in every mode, with a setting to hide it, and it steps aside for the pointer
+    - Audio: output routing - left, right or both - for everything you hear by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/661 (#654), folding to mono on the chosen side
+    - Audio: a per-radio Audio to setting in Settings > Radio, for two radios in two ears (#654)
+    - HFDL: the operator's own frequency chips by @madmedicnl in https://github.com/dividebysandwich/sdroxide/pull/663 (#617)
+    - HFDL: the rig is put in USB rather than FM, and a USB report no longer throws the app out of HFDL (#662)
+    - Gain per band: receive gain is remembered per band and restored as the dial returns (#605)
+    - S-meter: a per-radio calibration in Settings > Radio, applied live (#642)
+    - Spectrum: setting the floor or ceiling by hand switches FIT off, so the level stays where it was put (#642)
+    - Window title: shows the version (#664)
+    - Split view: tabs that do not fit wrap onto the next row whole, so the panes no longer go black (#653)
+    - Rotator: PSTRotator over its UDP control port (#638)
+    - Panadapter pairing: the S-meter follows the attached receiver unless the transceiver's audio is the one heard (#619)
+    - Panadapter pairing: the transmit monitor appears at key-down instead of seconds later (#618)
+    - Panadapter pairing: a receiver lent at runtime leaves the tab strip without a restart (#620)
+    - Panadapter pairing: an I.F. tap parks the receiver on the rig's fixed I.F. and tunes the rig, as on a K3 with a KXV3B (#577)
+    - Panadapter pairing: a borrowed RSPduo's diversity filter is driven and saved from the borrowing radio's DIV box (#637)
+    - Engine: external RX audio and the wide view keep running when there is no audio output (#640)
+    - Full duplex: the received spectrum and waterfall keep drawing through an over, so a QO-100 station sees its own downlink (#652)
+    - AIS: a decimated zero-IF front end such as an RSPdx no longer pushes AIS A out of the window (#658)
+    - FreeDV (RADE): microphone audio after release no longer piles up into the next over and the "samples dropped" warning (#614)
+    - WSPR: transmit duty, power and band hopping are kept per radio (#615)
+    - HPSDR: a Hermes-Lite 2 on Hermes-emulation gateware is recognised, so its PA is switched on (#578)
+    - HPSDR Protocol 2: transmit I/Q is sent at the stream's own rate instead of in bursts, for choppy SSB on a Brick2 (#659)
+    - Globe and map: the home marker and its arcs meet from any angle, and the decode map recovers from a broken view (#656)
+    - Remote: a reconnecting tab keeps its radio's address (#646)
+    - ISM: the window uses a clock that works in the browser, which froze the server's web UI (#601)
+    - Logging: the "TX refused" warning names the radio and mode (#566)
+    Documentation
+    - The manual covers the FT8 decode depth and the streamed decodes, NAVTEX tuning tolerance, the LimeSDR Mini's low rates, and CW keying through the sound card when there is no control link
+    - The manual covers the PASSES tab, the new Settings > Radio rows (Audio to, Gain per band, S-meter calibration) and how Audio to combines with the station's Channels, PSTRotator, the I.F. tap, Full duplex on the panadapter, PTT in CW with a MIDI keyer, and the version in the title bar
+    New Contributors
+    - @joscandreu made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/587
+    - @AJ6CU made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/631
+    - @K7MDL2 made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/650
+    Full Changelog: https://github.com/dividebysandwich/sdroxide/compare/v1.6.9...v1.6.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dividebysandwich/sdroxide/releases/tag/v1.6.10
+ReleaseTime: 2026-10-12T20:53:50.0000000Z

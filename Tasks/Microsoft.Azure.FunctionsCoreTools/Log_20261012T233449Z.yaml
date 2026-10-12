@@ -1,0 +1,40 @@
+Version: 4.16.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/Azure/azure-functions-core-tools/releases/download/4.16.0/func-cli-4.16.0-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Azure/azure-functions-core-tools/releases/download/4.16.0/func-cli-4.16.0-x64.msi
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Azure/azure-functions-core-tools/releases/download/4.16.0/Azure.Functions.Cli.win-x86.4.16.0.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Azure/azure-functions-core-tools/releases/download/4.16.0/Azure.Functions.Cli.win-x64.4.16.0.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Azure/azure-functions-core-tools/releases/download/4.16.0/Azure.Functions.Cli.win-arm64.4.16.0.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Azure Functions CLI 4.16.0
+    Host Version
+    - Host Runtime Version: 4.1054.250
+    - In-Proc CLI:
+      - CLI Version: 4.9.0
+      - Host Runtime Version: 4.52.200 (includes 4.852.200, 4.652.200)
+    Changes
+    - The Go runtime is now generally available on Flex Consumption, with preview support on Elastic Premium and Dedicated Linux plans. Windows and Linux Consumption plans are not supported.
+    - Add explicit .NET 11 C# isolated initialization with updated templates. The default remains .NET 10; .NET 11 F# scaffolding and Docker support are not yet available.
+    - Support worker-indexed .NET isolated build and publish outputs in func pack, including --no-build, without requiring a separate functions.metadata file.
+    - Fixed func kubernetes deploy failing with Invalid property identifier character: { for dotnet-isolated projects with more than one function. The print-functions.sh script previously used a sed command that only captured the last function name and produced malformed JSON; replaced with awk to correctly key each function object by its name field. (#3585)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/azure-functions-core-tools/releases/tag/4.16.0
+ReleaseTime: 2026-10-12T17:17:51.0000000Z
+RealVersion: 4.16.0
