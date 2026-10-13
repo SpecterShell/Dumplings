@@ -1,0 +1,74 @@
+Version: 1.14.6
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.6_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.6/cpa-manager-plus_v1.14.6_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.6_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.6/cpa-manager-plus_v1.14.6_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.6
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.6 is a maintenance patch after v1.14.5, limited to three already-merged fixes: Codex workspace spend-control limits (#935 / #938), retained monitoring data protection during usage archive cleanup (#939 / #945), and cache-token double counting for otherwise-unknown events with strict CPA v2 accounting evidence (#941 / #946).
+    This release does not introduce new features, polling, or timers, and it does not change CPA management APIs, credential privileges, or the SQLite schema.
+    Highlights
+    Fixes
+    - Codex workspace spend control (#935 / #938): Correctly interpret structured spend_control.individual_limit while retaining legacy scalar and persisted browser quota-cache compatibility. Preserve budget, used/remaining amounts, units, time windows, and reset evidence. An exhausted spend-control limit remains a limited/quota-risk state, even if standard 5-hour or weekly quotas have headroom.
+    - Explain zero-budget 0 / 0 cases as a workspace-budget restriction rather than a misleading generic “100% used” limit. Suggest reviewing the workspace budget only when complete spend-control evidence is the sole limitation; preserve the existing quota-refresh recommendation when other quota signals compete. No background provider probing or polling is added.
+    - Archive cleanup integrity (#939 / #945): Before each bounded raw-event deletion batch, verify that the corresponding retained Monitoring projection rows exist and have matching timestamps. Repair only missing/mismatched rows from still-live raw data and verify the handoff within the same SQLite transaction; fail closed and roll back if integrity cannot be established.
+    - On cleanup resume, verify retained projections for events deleted earlier in the same run before allowing more deletion. This prevents future losses of this kind but does not reconstruct already permanently deleted raw history.
+    - CPA v2 canonical cache accounting (#941 / #946): For previously unclassified events, use canonical cache semantics only when CPA v2 accounting_version=2 and token_breakdown.schema_version=2 provide a complete, internally consistent breakdown across input, cache, output, reasoning, and total tokens. This prevents counting cache-read tokens twice.
+    - Preserve existing explicit and known provider/executor/model precedence; incomplete, ambiguous, unknown-version or inconsistent evidence keeps the previous fallback. Standard JSONL imports/exports distinguish upstream-declared cache modes from CPAMP-derived accounting hints rather than promoting derived values into raw upstream evidence.
+    - Automatically reconcile eligible historical online usage_events through the existing accounting-semantics migration path and rebuild affected usage/pricing aggregates. No manual SQLite edits or offline cleanup command are needed.
+    Upgrade Notes
+    - A normal upgrade and restart is sufficient. There is no SQLite schema or configuration format migration, but eligible historical events undergo an automatic accounting-semantics correction and corresponding usage/cost rollups may change.
+    - Keep a consistent database and archive backup before upgrading. If exact pre-upgrade historical accounting must be restored after the automatic rewrite, restore the matching pre-upgrade database/archive backup instead of manually reversing derived fields.
+    - Strict canonical cache accounting is used only when complete CPA v2 evidence exists; other events preserve previous compatibility behavior. The minimum CPA baseline for full Muse / Meta functionality remains v7.3.4+.
+    - Archive deletion may incur a small bounded verification cost; cleanup fails closed if retained material coverage cannot be proven.
+    - No new background polling, timers, or manual maintenance commands are introduced.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.5...v1.14.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.6-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.6 是 v1.14.5 之后的 1.x 维护补丁版本，仅收录三个已合并并通过 CI 的问题修复：Codex 工作区预算限制的识别与展示（#935 / #938）、归档清理前的历史监控投影完整性保护（#939 / #945），以及未知提供商在严格 CPA v2 计量证据下的缓存 Token 重复计算（#941 / #946）。
+    本版本不增加新功能、后台轮询或定时器，也不改变 CPA 管理 API、凭证权限或数据库 Schema。
+    Highlights
+    Fixes
+    - Codex 工作区消费预算（#935 / #938）：正确识别结构化 spend_control.individual_limit，同时兼容旧版标量数据与浏览器中已持久化的额度缓存。保留预算总额、已用、剩余额度、单位、周期及重置证据；已触发的消费限制仍显示为受限，不再被普通 5 小时或周额度余额掩盖。
+    - 对 0 / 0 等零预算场景显示具体的 workspace budget 原因，不以“已用 100%”代替解释。仅在消费限制证据完整且没有其他冲突限制时，建议检查工作区预算；同时存在其他限制时保留额度刷新建议。没有新增后台额度探测或轮询。
+    - 归档清理数据保护（#939 / #945）：清理原始请求事件前，按批次验证保留的 Monitoring 投影行确实存在且时间戳匹配。缺失或不匹配时，仅在同一 SQLite 事务内从仍存在的原始数据补齐并复核；无法证明安全交接则回滚并停止删除。
+    - 中断后恢复清理时还会检查本次任务已删除事件的保留投影，避免在已受损的清理状态下继续删除。该修复防止未来清理造成同类缺口，不会虚构或自动恢复升级前已永久丢失的历史原始事件。
+    - CPA v2 缓存计量（#941 / #946）：对原本无法归类的事件，只有当 CPA v2 的 accounting_version=2 与 token_breakdown.schema_version=2 提供完整、内部一致的输入、缓存、输出、推理及总量证据时，才采用规范化缓存语义，避免将缓存读取 Token 再计入输入。
+    - 保留既有显式规则及已知 Provider / Executor / Model 的优先级；证据缺失、歧义、版本未知或不一致时继续采用原回退逻辑。标准 JSONL 导入导出会区分上游显式计量模式与 CPAMP 派生模式，不会将派生结论伪装成上游原始声明。
+    - 对符合条件的历史在线 usage_events 自动执行缓存计量语义修正，并通过现有迁移链重建相关聚合与费用结果，不需要手动编辑 SQLite 或执行离线清理命令。
+    Upgrade Notes
+    - 正常升级并重启即可。没有数据库 Schema 迁移或配置格式变更，但会对符合条件的历史记录运行自动计量语义修正，并重建相关用量 / 费用汇总；升级后统计值可能相应变化。
+    - 建议在升级前保留一致的数据库及归档备份。若需要回退到升级前的精确历史计量状态，应恢复同一时间点的数据库与归档备份，而不是手工逆向修改派生计量字段。
+    - 新的严格缓存计量分支只在 CPA v2 规范证据完整时生效；其他事件沿用原有兼容规则。完整 Muse / Meta 功能的 CPA 最低兼容基线仍为 v7.3.4+。
+    - 归档清理的新增验证可能增加少量批次处理开销；不能验证保留投影时将优先停止清理，保护原始数据。
+    - 无需新增后台轮询、定时器或手动数据修复步骤。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.5...v1.14.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.6-zh.md
+ReleaseTime: 2026-10-13T03:23:43.0000000Z
