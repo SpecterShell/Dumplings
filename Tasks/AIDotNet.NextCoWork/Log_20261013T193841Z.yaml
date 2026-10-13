@@ -1,0 +1,61 @@
+Version: 2.7.2
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.7.2/nextcowork-2.7.2-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    Workflow:把任务编排成依赖图，并行派子代理(实验，出厂关闭)
+    - 新增 Workflow 工具：模型把一件事写成最多 20 个节点的有向无环图(id / title / subagent_type / prompt / depends_on),没有依赖关系的节点同时派出 —— 不靠模型「记得在一轮里并发调几次 Task」。上游的完整结论自动附在下游 prompt 后面(单个上游截到 12K 字符),模型不必把 A 的产出抄进 B 的 prompt。每个节点用自己的 callId(<本次调用>#<节点 id>)去派：渲染层按 callId 索引子代理状态，共用一个的话 N 个子代理会在任务面板里互相覆盖成一个
+    - 一个节点失败，只有依赖它的那些标成 skipped,不相干的分支照常跑完。标了 allow_partial 的节点(典型是汇总)等所有上游落定，只要有一个完成就照跑，没完成的那几个在 prompt 里列成「缺失」—— 不标的话一个分析分支挂了汇总就整个跳过，其余几份做完的结论没人收。子代理报错或交了空话先按 retries(缺省 1 次)原地重派；被拒(名字不对、排不上队)和转后台的不重试：前者重派一模一样会再被拒，后者根本没失败
+    - 节点可以声明 output_schema(JSON Schema):子代理必须以一段 ```json 代码块收尾，解析并校验通过才算完成，不合格按失败重试(重试的 prompt 带上不合格的原因),下游拿到的是规整过的 JSON 而不是夹在散文里的数据。声明 map_over 的节点是逐项节点：等上游交出一个数组，对每一项各派一个子代理 —— 这是一张写死的图唯一表达不了的形状(写图的时候不知道上游会列出几个模块)。上游必须声明数组型的 schema,运行前就查；项数上限 50,超出的不处理并在结果里写明
+    - 入参先过一遍图校验才开跑：重名 id、自环、指不到节点、环，以及「一条边都没有」—— 后者几乎总是模型忘了给汇总节点写 depends_on,于是「汇总」和被汇总的分析同时开跑、交回来一份编出来的总结；真正互相独立的事不需要这张图，一轮里并发调几次 Task 就是同一个效果。校验放在 shared/agent/workflow.ts,渲染层画「入参推出来的结构」时用的是同一份
+    - 对话里画成画布(@xyflow/react,懒加载 —— 没开实验开关的人一个字节都不多下):横向分层、列内竖向居中，依赖线带箭头、allow_partial 的边画成虚线，节点上有状态图标、耗时 / token / 重试次数与逐项进度，点开看子代理产出的前一段。滚轮交还给对话(内联画布不吃滚轮，否则鼠标划过就「卡」在这张图上),缩放留给触控板捏合与全屏。工具卡外面那行标题去掉了 —— 它与画布自己的标题栏、进度是同一件事说了两遍
+    - 进度按整份快照推给界面(最多 20 个节点、几 KB):增量意味着渲染层要处理乱序和丢包，而进度事件本来就是可丢的。运行中那份在 ToolProgress.workflow(易失),结束后那份跟着转录落盘(ToolOutput.workflow,编码器不下发);两者都缺(旧转录、或被中断)时画布从工具入参现推一份全 pending 的，结构永远画得出来，只是没有状态
+    - 设置 › 实验 › 运行前确认(出厂开，和别的实验项相反):校验通过、派出任何节点之前，把全 pending 的图交给用户 —— 运行 / 要求修改(带反馈，原样转给模型)/ 取消。一张图一次就是十几个子代理的 token,开跑之前是唯一不花钱的拦截点。确认卡按层列清单而不是按入参顺序：用户要确认的恰恰是「谁和谁同时跑、谁等谁」
+    - 只在主 run 下发：子代理里再起一张图，一次调用就可能扇出几十个子代理，而嵌套深度上限挡不住宽度
+    子代理排队去掉 5 分钟墙钟上限
+    - 子代理一跑半小时是常事，排在它后面的就得等它跑完；以前的上限会把这种正常排队报成失败(Workflow 一扇出就撞上)。不会永久挂住靠的是别的出口：父 run 中断 / 结束即取消、死锁当场拒绝、队列溢出直接拒绝
+    - 顺带把节点钉模型的能力补进派发链：节点可以指定 model(先用可用别名表校验，派到一半才发现名字不对时前面的节点已经白跑了)与 thinking 档位，子 run 的用量随结果回传给父侧计账
+    Widget:TSX 组件、宿主能力与不重画的编辑
+    - visualize_show_widget 增加 tsx 格式(与 html / svg 并列；没给 format 时按源码推断 —— 先认 import / export default,再认 <svg):模型写一个 export default function Widget(),能 import react / nextcowork/widget / nextcowork/charts / lucide-react 这张白名单里的模块，面板类的东西(仪表盘、计算器、表单、表格、图表)用宿主自己的控件写 —— 和插件视图同一份实现、同一套色板，不在这里复制一份
+    - TSX 在主进程、工具运行期编译(sucrase 去类型 + 转 JSX + 转 CJS),不在 iframe 里，理由只有一条：错误要能在同一轮回到模型手上 —— 失败时模型拿到 行：列 + 出错那一行 + 一个 ^,而不是用户看到一块报错、模型以为自己画完了。编译产物随卡片下发，iframe 里由外壳包进 function (require, module, exports);模块表按编译产物重新数一遍(JSX 的自动运行时会额外引 react/jsx-runtime,源码里看不到),没用到图表的 widget 不该为它多读几百 KB
+    - 新增两个不重画的工具：visualize_edit_widget(照 Edit 的规矩做精确替换，旧串必须恰好出现一次或显式 replace_all,否则失败并说清楚 —— 不猜；产出的是一张新卡，上一版留在原处，改写历史里的那张卡会让「上一轮看到的图」在用户眼前悄悄变掉)、visualize_update_widget(只推一份新数据给同名的那张卡，useWidgetData(initial) 读它；数据只走卡片，不回灌给模型)
+    - widget 有了一组预先声明的宿主能力：copy / download(走系统保存对话框，路径由用户选)/ openFile(只认工作区之内，.. 跳出去的一律拒绝)/ openUrl / toast / setState(按 callId 持久化到 session.widget.<会话 id> 的 kv)/ submit / draft(把文字填进输入框，不发送)/ setContext / runAction / complete。每条通道都有长度上限，超了直接拒绝而不截断 —— 截断后的 JSON 是坏的
+    - 交互模式：visualize_show_widget 带 interactive: true 时这次调用会挂起等 widget 里的 submit(value),值作为这一次工具调用的结果回到模型，开不了新的一轮。只开给主 run:子代理没有人能回答它的挂起，一个等提交的 widget 在子代理里就是一次死锁。待决项(widget_submit)只承担两件事 —— 让 run 挂起有处可查(重载窗口后仍能恢复),以及给用户一个「不提交了」的出口
+    - 动作：actions 在调用时就把工具名与入参定死，widget 只能选 id 和受约束的参数。参数只有枚举与有界数字两种，没有自由字符串 —— 参数会被代进工具入参(典型是 Bash 的命令行),自由字符串等于让 widget 拼命令。声明时校验 id 不重、工具不在禁用表里(会挂起等人和会派出新 agent 的一律不许)、占位符与 params 一一对应。非只读动作第一次一定问，即使工作区开着自动档：确认框由宿主画、显示真实的工具与入参，而不是 widget 自己写的文案；确认过一次的 (卡片，动作，绑定后的入参) 在进程内记住。结果只回到那张 widget,不进模型上下文
+    - setContext() 发布的状态摘要挂在输入框上方，随下一条消息交给模型，用户看得见也删得掉 —— 那段文字是模型写的 widget 产出的，而它会以用户这条消息的名义进上下文，悄悄附上去等于让一张图替用户补了半句话。进上下文时按不可信材料包起来
+    - 宿主侧加固：iframe 仍是不透明源(allow-scripts 而没有 allow-same-origin),只信 event.source(不透明源发来的 event.origin 是字符串 "null",拿它做判据等于没判),handleCall 逐字段收窄；动作的定义只从转录里取，渲染层只给 (sessionId, callId, actionId, params),iframe 与渲染层都改不了「要跑什么」。host.complete() 走一条独立的上游路由器 —— widget 是模型写的，一个写坏的循环连发几十次请求，它们的失败不该把正文侧的供应商标成不健康
+    - widget 更像长在对话里：html / svg 边生成边长出来(高度下限从 60px 降到 24px,生成期只有一行提示，先撑出一块空白反而像「这里有张卡没加载出来」),tsx 写完一次性挂载；高度上报要把挂在 body 上的弹层也算进去(nextcowork/ui 的 Select / Tooltip 走 Radix portal,只量根节点的话下拉框一打开就被 iframe 下沿切掉);宿主把应用自己的 --color-* token 也推给 iframe,控件才会跟着换色器走；ui.css 的 @source 加上 widget 套件，否则那些 class 根本不生成
+    设置 › 实验
+    - 新增设置页「实验」,放在所有常规页之后、关于之前 —— 它不该是用户找东西时先看到的那一页。每一项都出厂关闭：打开它是用户在说「我愿意用一个还会变的东西」,这句话不能替他说；一项转正后就从这一页搬走，而不是永久留一个永远是 true 的开关
+    - 目前两项：Workflow 工作流(关掉 = 工具不下发)、运行前确认(工作流关着时禁用但不藏 —— 藏起来的话打开工作流的人不知道还有它)
+    - 设置项归到 preferences 同步档：「我要不要用实验功能」是用户的偏好，不是这台机器的事实
+    修复
+    设备服务打包不再读产物正文
+    - package:agent 以前按正则扫 out/agent/bin.mjs 的正文找依赖，而这一版把 TSX widget 的写法示例(模板字符串)打进了产物 —— 示例里那句 import { TrendingUp } from 'lucide-react' 被当成真 import,打包于是报「bundle imports packages that package.json does not declare: lucide-react, nextcowork, react」,Device service package 这一步红掉，连带 Publish GitHub Release 被跳过
+    - 改成 build:agent 把 rollup 模块图里的外部包名写成 out/agent/BUNDLE_IMPORTS.json,打包只读那份(内建与相对路径丢掉),不再碰产物正文。顺带把子路径归一到包名(@modelcontextprotocol/sdk/client/index.js → @modelcontextprotocol/sdk)、optionalDependencies(cpu-features 这类可选原生模块)不再被报成「缺声明」,清单本身也随包发出
+    -  --verify 等的那行监听地址不再写死 127.0.0.1:--host 的默认值归服务定义，改了默认值不该让打包永远等下去
+    设备服务在 Linux 上真正过上 CI
+    - CI 的 service-platforms 矩阵补上 ubuntu-latest(此前只有 macos / windows,注释里那句「Linux 在 quality 里跑」说的是整仓质量检查，而 smoke:agent 把构建产物当真实进程跑一遍这件事从来没在 Linux 上发生过 —— 偏偏它是一大票用户自部署设备服务的目标机)。smoke 的判据从 runner.os == 'macOS' 改成「不是 Windows」:脚本自己会在 Windows 上跳过
+    -  --data-dir / --node / --bin 的绝对性按 --platform 判，不再一律按 POSIX 判：C:\… 混进 Linux 的 unit、/var/lib/… 混进 WinSW 配置、以及 /C:/… 这种把 Windows 路径当 POSIX 路径拼出来的伪路径，都在 plan 阶段拒掉，而不是等 systemd / 服务管理器报一个看不懂的错
+    - service-cli 的用例改用本平台的路径：真实路径有别名(macOS 的 /var/… 底下是 /private/var/…,Windows 给 8.3 短名 C:\Users\RUNNER~1\…),拿别名路径去喂另一套路径规则本来就对不上。这正是 Windows job 上那几条 dataDir must be an absolute path 的来源
+    - pty-helper 的 win32 用例在 Windows 上跳过：chmod 在 Win32 上只翻转只读位，stat 回来的 mode 恒是 644 | 666 & umask,断言按 POSIX 的数三位字节必然红；要断的是「没有去改这个文件」
+    发到 npm 的那一步从来没成功过
+    - npm publish out/aidotnet-nextcowork-device-service-*.tgz 里的路径被 npm 当成了 GitHub 简写(owner/repo),于是它去 ssh://git@github.com/out/aidotnet-nextcowork-device-service-2.7.2.tgz.git 取包，报 git@github.com: Permission denied (publickey) —— 看起来像 NPM_TOKEN / 密钥的问题，实际是路径解析：带上 ./ 之后同一份 tarball 直接进 npm notice 📦 的发布流程。v2.7.x 的发版每次都在这里断，Publish GitHub Release 因此一直是 skipped(它 needs 这个 job)。BUNDLE_IMPORTS.json 也随之进了包(装完之后仍能看出这份产物按什么清单装配的)
+    FTS 映射表与旧版写进来的行对账
+    - 映射表(messages_fts_rowid)之外的 FTS 行会让下一条消息写不进去：V37 之前的版本(例如 /Applications 里还没升级的那份)开同一个库时，按 message_id 删、不带 rowid 插，FTS 自增出的 rowid 全落在映射之外，新版下一次分配映射 rowid 就撞上它们，发消息直接报一句不带上下文的 constraint failed。新增 reconcileMessageFts,每次开库把映射最大 rowid 之后那一段补进映射(同一条消息既有映射又有多条新行时，映射改指向最新那行),剩下仍无映射的(消息已不在)直接删掉；分配新 rowid 前先把那个位置上的残留行腾掉
+    - 只看 rowid > 映射最大值 那一段，而且必须按 BigInt 绑定：node:sqlite 把 JS number 绑成 REAL,FTS5 遇到 REAL 的 rowid > ? 不走 rowid 区间而是整表扫(本机库实测 220ms vs 2ms)。尽力而为：索引坏了 / 没了不能拦住开库，失败只回滚这一段
+    删会话时连 widget 状态一起清
+    - session.widget.<会话 id> 与 session.input.<会话 id> 一样是没外键的 kv,deleteSession / 「清空对话历史」/ 测试清库三条路径都得手删
+    空回复的回合不再画一个空页眉
+    - 回复被删光之后，threadHistoryRows 照旧在末尾补的那个空助手行会画出「供应商 / 模型」页眉、下面什么都没有 —— 看起来就是删除没删干净。停止 / 出错的空回合不同：那时它是「重新生成」唯一的落脚点，必须留着
+    任务面板并进活动胶囊
+    - 转录末尾那张子代理任务面板整个删掉，统一到活动胶囊那一个入口(它已经把任务清单 / 子代理 / 后台命令收在一起)
+    测试
+    - 本节新增工作流的图校验、节点状态、逐项节点与失败传播，tsx 编译与白名单、widget 格式推断与协议报文、编辑 / 更新工具、FTS 映射对账(含「旧版开过同一个库之后新消息照样写得进去」)、空回复回合等用例
+    - npm run typecheck(node / web / plugins / controller-client)、npm test 通过
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.7.2
+ReleaseTime: 2026-10-13T17:33:49.0000000Z
