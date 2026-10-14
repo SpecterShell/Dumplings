@@ -1,0 +1,106 @@
+Version: 0.12.16
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/readest/readest/releases/download/v0.12.16/Readest_0.12.16_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/readest/readest/releases/download/v0.12.16/Readest_0.12.16_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release Highlights
+    - Text-to-Speech: Added Readest Voice premium read-aloud voices for Plus and Pro, you can now connect your own OpenAI-compatible voice service, and Edge voices work again
+    - Annotations: You can now handwrite and draw on your pages, and share passages as quote card images
+    - Library: Books now show their page count with a new Pages sort and filter that syncs across devices, and numbered titles sort in natural order
+    - Sync: Custom fonts download when you need them and can be removed from the cloud, custom theme edits now sync, and deleted books no longer come back
+    - Sync: KOReader progress sync and WebDAV sync are more reliable, and signing out only logs out the current device
+    - Reading: Very large or link-heavy chapters no longer freeze the reader, and fixed layout issues with headings, blockquotes, footnotes, and background textures
+    - Audiobooks: Audiobookshelf playback now works in the web app, chapters are detected more reliably, and you can pair audiobooks with books streamed from Audiobookshelf
+    - Linux: Fixed a freeze with two open windows, the main window reopens maximized, and Reveal in Folder works again
+    - PDF: You can hide page thumbnails in the PDF table of contents
+    - More: The share sheet opens again on iOS 16, with polish for the drawing tools, bottom sheets, and bookshelf header
+    What's Changed
+    - chore(android): link WebView APK downloads in the outdated-WebView dialog by @chrox in https://github.com/readest/readest/pull/6649
+    - chore(deps): bump DeterminateSystems/determinate-nix-action from 3.22.5 to 3.23.0 in the github-actions group by @dependabot[bot] in https://github.com/readest/readest/pull/6679
+    - ui: place the "Log out" item in the second sub menu by @5w5 in https://github.com/readest/readest/pull/6645
+    - fix(reader): stop link-heavy single-file sections from hanging by @chrox in https://github.com/readest/readest/pull/6678
+    - refactor(ai): drop write-only indexingStates map in ragService by @irontaek in https://github.com/readest/readest/pull/6687
+    - Use music-metadata for audiobook chapters by @Borewit in https://github.com/readest/readest/pull/6686
+    - feat(reader): render huge sections in chunks by @chrox in https://github.com/readest/readest/pull/6680
+    - fix(koreader): reliable progress sync with hardened auth and error handling by @ivanovsergey93 in https://github.com/readest/readest/pull/6684
+    - fix(linux): stop the CEF focus loop that froze two-window sessions by @chrox in https://github.com/readest/readest/pull/6691
+    - fix(bookorbit): stamp the chapter on synced notes and bookmarks (#6655) by @bianyukun1213 in https://github.com/readest/readest/pull/6658
+    - fix(reader): read section text when a non-CJK lang hides CJK content by @k6G52m4Dz75W in https://github.com/readest/readest/pull/6672
+    - fix(library): stamp deletes so the sync merge cannot undelete the book, closes #6663 by @itsmunzir in https://github.com/readest/readest/pull/6682
+    - fix(opds): keep the feed scroll position after opening a book by @jadhavgaurav in https://github.com/readest/readest/pull/6683
+    - fix(library): use natural sorting for numbered titles by @kelvinalfaro in https://github.com/readest/readest/pull/6693
+    - fix(nix): refresh pnpmDeps hash for music-metadata by @chrox in https://github.com/readest/readest/pull/6688
+    - fix(kosync): keep the server path when proxying KOSync requests by @chrox in https://github.com/readest/readest/pull/6698
+    - fix(build): keep music-metadata out of the web server bundle by @chrox in https://github.com/readest/readest/pull/6699
+    - fix(reader): offer Pair Audiobook for EPUBs streamed from Audiobookshelf (#6695) by @ts-eva in https://github.com/readest/readest/pull/6697
+    - feat(reader): share passages as quote card images by @chrox in https://github.com/readest/readest/pull/6701
+    - fix(send): poll the inbox every 5 minutes instead of every minute by @chrox in https://github.com/readest/readest/pull/6706
+    - feat(tts): Readest Voice, premium read-aloud voices for Plus and Pro by @chrox in https://github.com/readest/readest/pull/6720
+    - fix(tts): connect Edge TTS to the new api.msedgeservices.com endpoint by @chrox in https://github.com/readest/readest/pull/6722
+    - fix(tts): count queued Readest Voice downloads against the listening quota by @chrox in https://github.com/readest/readest/pull/6721
+    - Support handwriting annotation by @esmaeelE in https://github.com/readest/readest/pull/6674
+    - perf(api): verify access tokens locally with getClaims by @chrox in https://github.com/readest/readest/pull/6724
+    - chore(agent): update agent memories by @chrox in https://github.com/readest/readest/pull/6725
+    - fix(auth): limit explicit logout to the current session by @hulkbig in https://github.com/readest/readest/pull/6709
+    - chore(auth): point clients at the Supabase project URL by @chrox in https://github.com/readest/readest/pull/6729
+    - feat(tts): move Readest Voice into its own service by @chrox in https://github.com/readest/readest/pull/6732
+    - fix(tts): make Readest Voice downloads responsive and tell users about quota by @chrox in https://github.com/readest/readest/pull/6736
+    - fix(tts): Readest Voice downloads that resume and follow the voice, and read aloud that survives a slow engine by @chrox in https://github.com/readest/readest/pull/6738
+    - fix(tts): resume queued downloads with the session's voice by @chrox in https://github.com/readest/readest/pull/6739
+    - fix(sync): decode XML entities in WebDAV PROPFIND hrefs by @smist37 in https://github.com/readest/readest/pull/6741
+    - fix(reader): keep the CJK widow/orphan lift alive under Use Book Layout by @k6G52m4Dz75W in https://github.com/readest/readest/pull/6711
+    - fix(rss): rebuild feed book TOC on every open instead of using the nav cache by @christi4nity in https://github.com/readest/readest/pull/6718
+    - fix(android): resolve Temp to the app cache so narration and file staging work on older Android by @ChristophWally in https://github.com/readest/readest/pull/6714
+    - fix(reader): honor justification overrides in footnote popups by @kelvinalfaro in https://github.com/readest/readest/pull/6708
+    - fix(audiobook): request Audiobookshelf audio with CORS on the web app (#6696) by @ts-eva in https://github.com/readest/readest/pull/6707
+    - docs(tts): drop the RunPod settings from the web env example by @chrox in https://github.com/readest/readest/pull/6744
+    - fix(library): retire re-keyed book hashes with a tombstone row (last import wins) by @k6G52m4Dz75W in https://github.com/readest/readest/pull/6703
+    - fix(tts): send Sec-MS-GEC v2 tokens to Edge TTS by @chrox in https://github.com/readest/readest/pull/6751
+    - feat(tts): custom OpenAI-compatible TTS services by @chrox in https://github.com/readest/readest/pull/6746
+    - fix(reader): suppress the webview context menu in the desktop app by @chrox in https://github.com/readest/readest/pull/6752
+    - fix(linux): make Reveal in Folder work again, closes #6660 by @chrox in https://github.com/readest/readest/pull/6754
+    - feat(reader): add a toggle to hide PDF page thumbnails in the TOC, closes #6650 by @chrox in https://github.com/readest/readest/pull/6756
+    - fix(linux): restore the maximized main window on launch, closes #6657 by @chrox in https://github.com/readest/readest/pull/6757
+    - fix(layout): give inline-only blockquotes the paragraph margin under Override Book Layout by @chrox in https://github.com/readest/readest/pull/6759
+    - fix(settings): reset the animation style to Push with Reset Behavior, closes #6753 by @chrox in https://github.com/readest/readest/pull/6760
+    - fix(tts): keep Read Aloud and its highlights intact after the sign-in detour by @chrox in https://github.com/readest/readest/pull/6758
+    - feat(sync): download synced custom fonts on demand, delete them from the cloud by @chrox in https://github.com/readest/readest/pull/6761
+    - fix(layout): let a more specific left-align beat a centered heading rule, closes #6723 by @chrox in https://github.com/readest/readest/pull/6763
+    - fix(metadata): allow 0 as a series index by @chrox in https://github.com/readest/readest/pull/6764
+    - fix(reader): keep the progress label in place while dragging the slider, closes #6646 by @chrox in https://github.com/readest/readest/pull/6766
+    - fix(style): keep Override Book Color working over a background texture, closes #6712 by @chrox in https://github.com/readest/readest/pull/6765
+    - fix(reader): measure image tap zones on its column in a two-page spread, closes #6745 by @chrox in https://github.com/readest/readest/pull/6769
+    - feat(calibre): add multi-language support by @GOSENGWONG in https://github.com/readest/readest/pull/6768
+    - fix(reader): keep the image long-press menu working on Android PDF pages by @chrox in https://github.com/readest/readest/pull/6771
+    - fix(ios): open the share sheet on iOS 16 for files with spaces or non-ASCII names, closes #6719 by @chrox in https://github.com/readest/readest/pull/6770
+    - build(android): ship per-ABI APKs (arm64, armv7, legacy) instead of universal by @chrox in https://github.com/readest/readest/pull/6772
+    - feat(library): count pages at import, add Pages sort and filter, closes #6662 by @chrox in https://github.com/readest/readest/pull/6774
+    - feat(sync): sync the import-time page count across devices by @chrox in https://github.com/readest/readest/pull/6775
+    - chore(agent): update agent memories by @chrox in https://github.com/readest/readest/pull/6776
+    - fix(sync): detect in-place custom theme changes by @anirudhqwerty in https://github.com/readest/readest/pull/6777
+    - fix: iOS reader polish for drawing dock, short sheets, bookshelf header and read aloud by @chrox in https://github.com/readest/readest/pull/6778
+    - release: version 0.12.16 by @chrox in https://github.com/readest/readest/pull/6779
+    New Contributors
+    - @5w5 made their first contribution in https://github.com/readest/readest/pull/6645
+    - @irontaek made their first contribution in https://github.com/readest/readest/pull/6687
+    - @Borewit made their first contribution in https://github.com/readest/readest/pull/6686
+    - @ivanovsergey93 made their first contribution in https://github.com/readest/readest/pull/6684
+    - @bianyukun1213 made their first contribution in https://github.com/readest/readest/pull/6658
+    - @ts-eva made their first contribution in https://github.com/readest/readest/pull/6697
+    - @esmaeelE made their first contribution in https://github.com/readest/readest/pull/6674
+    - @smist37 made their first contribution in https://github.com/readest/readest/pull/6741
+    - @christi4nity made their first contribution in https://github.com/readest/readest/pull/6718
+    - @ChristophWally made their first contribution in https://github.com/readest/readest/pull/6714
+    - @GOSENGWONG made their first contribution in https://github.com/readest/readest/pull/6768
+    - @anirudhqwerty made their first contribution in https://github.com/readest/readest/pull/6777
+    Full Changelog: https://github.com/readest/readest/compare/v0.12.12...v0.12.16
+- Key: ReleaseNotesUrl
+  Value: https://github.com/readest/readest/releases/tag/v0.12.16
+ReleaseTime: 2026-10-13T22:34:40.0000000Z
