@@ -5,16 +5,19 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x64') }, 'First')[0].browser_download_url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url
+  Architecture  = 'x86'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('x86') }, 'First')[0].browser_download_url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url
+  Architecture  = 'arm64'
+  InstallerType = 'wix'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url
 }
 
 switch -Regex ($this.Check()) {
