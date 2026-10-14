@@ -1,0 +1,211 @@
+Version: 18.11.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.11.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Removed ApprovalDetailsOptions; formatApprovalDetails takes only args again, since the compact approval prompt no longer shows tool details (#15642 by @H4vC)
+    Added
+    - AgentTool.delegationGuidance: instructions a same-name extension replacement inherits in its description when it delegates to the native tool (#15477 by @iliaal)
+    - CompactionPreparation.lastSummarizedEntryId and CompactionResult.providerReplayThroughEntryId: a remote compaction that could only fit the history before the kept tail reports the last entry its native history covers; later entries replay normally (#15712 by @H4vC)
+    Fixed
+    - Fixed native (OpenAI/Codex) remote compaction refusing or truncating sessions that fit the window: its preflight counted the JSON-escaped request, inflating quote-, backslash- and newline-heavy tool output such as disassembly by ~10–20%; it now counts text as the model reads it (#15712 by @H4vC)
+    - Fixed OpenAI V1/V2 remote compaction failing outright when the history, kept tail included, exceeds the context window (a large final response or tool output after the last check); it retries on the history before the kept tail (#15712 by @H4vC)
+    - Fixed fitted output caps overflowing the context window on strict hosts (llama.cpp-family) after turns with many parallel tool results; chat-template framing is now charged per locally counted message (#15699)
+    - Fixed leaked DeepSeek DSML markup reaching saved history from reasoning blocks and from turns that also made a valid tool call (#15485)
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed parallel tool calls failing with "Tool call arguments are not valid JSON" on some OpenAI-compatible gateways, such as Gemini (#15682 by @Zzz141592653)
+    - Fixed Anthropic fallback-credit redemption losing its credit on errors that only mention 400 in their text, such as an overload message (#15702 by @H4vC)
+    - Fixed Anthropic fallback-credit redemption sending an extra fallback-credit-2026-06-01 beta when the refused request used a newer one (#15702 by @H4vC)
+    - Fixed Anthropic fallback-credit redemptions failing when the refused turn included unsigned thinking (#15702 by @H4vC)
+    - Fixed turns ending without automatic retry when a gateway forwards Go's use of closed network connection transport error; it now retries like other dropped connections (#15385)
+    - Fixed Codex SSE streams failing with an abort instead of retrying when the first event stalls (#15542)
+    - Fixed Codex (ChatGPT subscription) requests with reasoning disabled, such as judges, titles, commit messages, and thinking off, leaving effort to the server default; they now send the lowest supported effort, or none where the model accepts it (#15514)
+    - Fixed a Codex account whose token OpenAI rejects (401/403) continuing to show its last quota as healthy; omp usage now drops the stale report and omp auth-gateway check reports the credential as failing (#15439)
+    - Fixed usage reports being served indefinitely while their provider keeps failing; the last successful report is now shown for at most 24 hours after it was fetched (#15439)
+    - Fixed Responses requests 400ing (DeepSeek: "The reasoning_text in the thinking mode must be passed back to the API") after a tool call whose arguments were invalid JSON: the call is now replayed with its parse diagnostic instead of being dropped and leaving a trailing [Orphan tool result] note (#15568)
+    - Fixed DeepSeek on OpenAI-compatible gateways leaving doubled-pipe DSML markup (</｜｜DSML｜｜parameter>) in assistant text and reasoning (#15485)
+    - Fixed sessions failing every request with 400 … thinking or redacted_thinking blocks in the latest assistant message cannot be modified after a response fell back to another model mid-turn (e.g. through a gateway that opts into Anthropic server-side fallback); the turn now replays one model's reasoning, and a session already stuck on such a turn recovers by dropping that turn's reasoning and retrying (#15654 by @abilliontokens)
+    - Fixed omp auth-gateway's Anthropic /v1/messages stream misnumbering content blocks after a redacted reasoning block, which misrouted every later delta in index-addressed clients (#15654 by @abilliontokens)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added local/nemotron-streaming-en-0.6b for local streaming English dictation (#15759 by @daaximus).
+    - Added SambaNova Cloud (sambanova) as a provider: /login sambanova with an API key, and the live /v1/models roster with its prices, reasoning models, and Gemma 4 image input (#14986 by @rjuez00)
+    Changed
+    - OpenCode Go requests now go to the current https://opencode.ai/inference/go/v1 endpoint instead of the legacy /zen/go one (#15722)
+    Fixed
+    - Fixed OpenCode Go's deepseek-flash alias showing $0, unknown limits, and no reasoning instead of the V4.1 Flash rate card and capabilities (#15357)
+    - Fixed OpenCode Go's Gemini 4 Argon Contributor failing with an unsupported protocol and thinking level; it now uses the native Gemini endpoint (#15722)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added a microphone button beside Send in Tern: click to record, click Stop to finish, then review and submit the transcription yourself. Clicking while it says Starting… cancels a slow first model load (#15759 by @daaximus).
+    - Added local Nemotron streaming dictation: words appear while you speak, and the microphone waits for the recognizer to be ready before recording (#15759 by @daaximus).
+    - Added agent frontmatter structured: true: that agent's task spawns keep the yield tool and its output schema validation while task.structured is off (#15717 by @alphastorm)
+    - The composer stays usable while a tool approval is pending: sending a message denies the call and steers the turn with it, so the agent knows why it was denied (#15642 by @H4vC)
+    - Session entries record which omp build wrote them, so a transcript shows whether a fix was live even in a session left open across an upgrade: the version, plus commit, branch, and uncommitted-diff hash when run from a source checkout, and OMP_BUILD_LABEL when set. /session lists the builds that wrote the session (#15680 by @will-bogusz)
+    Changed
+    - The in-composer tool approval prompt summarizes the command, path, or content to one row so the composer keeps its room; Ctrl+O shows them in full (#15642 by @H4vC)
+    - Background task guidance now lives in the Task tool description (and in same-name extension replacements that delegate to Task) instead of being repeated in every spawn acknowledgment (#15477 by @iliaal)
+    - The Auto-Promote Context and Retry Model Fallback settings now state that they are independent; turn off Retry Model Fallback (retry.modelFallback) to stop retry.fallbackChains model switches (#15636)
+    Fixed
+    - Fixed browser tab.click("text/…") timing out when the match was below the fold or the tab was in the background (#14864 by @alnaggar-dev, #15496 by @will-bogusz)
+    - Fixed browser clicks the page never received, such as on a disabled control or inside an inert subtree, reporting success; the call now fails saying the browser did not deliver the click (#15496 by @will-bogusz)
+    - tab.ariaSnapshot() no longer prints the value of a password field; it shows one bullet per character, as tab.observe() and the screen do, so a typed or browser-autofilled password stays out of the model's context (#15502 by @will-bogusz)
+    - Fixed project discovery loading plugins, SYSTEM.md, rules, context files, and skills from a .omp at a shared temporary root (/tmp, /var/tmp, the temp dir) above an unanchored working directory, or, when HOME is overridden, from another account's ~/.omp outside the working directory's git repository (#15719 by @alphastorm)
+    - Fixed browser tab.text() and tab.html() (and the same calls on a frame) throwing when called without a selector; they now read the page body on Chrome, Tern and cmux (#15599 by @will-bogusz)
+    - Fixed skill-description compression re-sending the same smol-model requests every session for a skill whose compressed answer was rejected (over 12 words or 160 characters) or cut off at the token limit; that model is no longer asked again for that skill (a newly selected smol model is), and compressions still running at exit get up to 4 seconds to save (#13291, #15720 by @alphastorm)
+    - Fixed the macOS computer tool keeping the display awake for the rest of the session after a native call hung; the call's timeout or closing the session now lets it sleep (#15414 by @will-bogusz)
+    - Fixed an agent definition whose tools value names no tool (tools: "", a number, a list without strings) getting every default built-in tool; it now gets none, like tools: [] (#15718 by @alphastorm)
+    - Fixed page.waitForNetworkIdle in a browser run timing out on a request an earlier run started (#15495 by @alnaggar-dev and @will-bogusz)
+    - Fixed a tab that a relay page opens over its own CDP session (Target.createTarget) landing in a separate Chrome window with newWindow, under an id omp could not attach to, activate or close; it now opens as a relay tab in that page's browser (#15494 by @alnaggar-dev and @will-bogusz)
+    - Fixed an Anthropic refusal fallback redeeming its fallback credit with an outdated system prompt and tools after switching models; it now sends a fresh request (#15702 by @H4vC)
+    - Fixed OpenAI/Codex auto-compaction failing with "Remote compaction input exceeds the context window" after a turn's final response pushed history past the window; native compaction now compacts the history before the kept recent turns, which stay in context as-is (#15712 by @H4vC)
+    - Fixed omp commit, /git, and other agent commits skipping the signature when Git's commit.gpgsign is enabled; they now sign with the configured key, and a signing failure leaves HEAD unchanged (#14810)
+    - Fixed rejected task calls appearing successful to SDK hosts instead of reporting a tool error (#15573)
+    - Fixed read claiming regenerated images were identical when their pixels changed at the same path (#15668)
+    - Fixed SDK embedders leaking every disposed AgentSession that owned its MCP manager, so long-lived processes that create and dispose many sessions grew memory without bound (#15386)
+    - Fixed retry model fallback stopping at a fallback model whose provider is outside a subagent's task.agentAccountPools pool; that model is now skipped and the next fallback model is tried (#15423)
+    - Fixed the system prompt's ## MCP Server Instructions section following MCP connection order, so a server connecting late or reconnecting no longer reorders it and rewrites the prompt cache; servers are now listed by name (#15705)
+    - Fixed read reporting an HTTP 204 No Content response as a failed fetch; it now returns an empty successful read (#15667)
+    - Fixed /mcp reauth failing with Could not discover OAuth endpoints when a server's 401 challenge is a bare Bearer resource_metadata="…"; the advertised protected-resource metadata URL is now used (#15690)
+    - Fixed extension agent_end events reporting a background-job wait as a scheduled continuation; they now carry awaitingAsyncWork: true alongside willContinue (#15348)
+    - Fixed auto-compaction waiting out provider retry delays longer than retry.maxDelayMs (e.g. a 16-hour retry-after); it now tries the next configured method or reports the failure (#15311)
+    - Fixed read skill://<name> for a name no loaded skill owns hanging for the rest of the turn while an MCP server was still connecting or reconnecting; it now reports Unknown skill after at most 5 seconds (#15648)
+    - Fixed /new ignoring "Start in Plan Mode" (plan.defaultOnStartup): the new session now starts in plan mode like the first one (#15627)
+    - Fixed Cursor models' Read on an image file returning the file's raw bytes as text; Read now loads the image, and Cursor's text-only Read frame gets a short image note instead of the bytes (#15630)
+    - Fixed Mermaid diagrams showing <, >, &, and #quot; literally inside labels instead of <, >, &, and " (#15619)
+    - Fixed background job results already consumed by an eval agent() handle's wait() being re-injected as one async-result follow-up when the cell ran past the 5-minute job retention window (#15625)
+    - Fixed /tan missing the parent's prompt cache: it advertised the parent's xd:// tools as top-level tools and dropped ask, so its tool list no longer matched (#15578)
+    - Fixed forks and reloaded sessions missing the prompt cache after a compaction in a session with eval history (#15695)
+    - Fixed compiled-binary extensions importing @oh-my-pi/pi-tui subpaths such as terminal-capabilities, chat/svg-figure or theme/index loading a second copy from their own node_modules instead of sharing the host's terminal, theme and figure state (#15659)
+    - Fixed marketplace plugins that keep their version in .claude-plugin/plugin.json never being reported by omp plugin upgrade or auto-updated; for plugins shipped inside the marketplace, plugin.json's version now also takes precedence over the catalog entry's, as in Claude Code (#15585)
+    - Fixed a steer (queued user or peer message) waiting behind a bash service's readiness wait (name + ready) for up to ready.timeout; the call now returns early with the service still starting, inspectable via proc://<name> (#15653)
+    - Fixed omp install/omp plugin install, upgrade, uninstall and doctor --fix failing with Executable not found in $PATH: "bun" for npm and Git plugins on machines without Bun installed, such as standalone-binary installs (#15480)
+    - Fixed /plugins enable and /plugins disable in the TUI not refreshing skills, commands, task agents and MCP servers until a reload, and rejecting npm plugins (#15383)
+    - Fixed local memory injection and learn using the Settings directory instead of the session's project directory, so SDK hosts sharing one Settings across projects injected another project's lessons and never the project's consolidated summary; sharpshooter memory follows the session directory too (#15375)
+    - Fixed ACP bash approvals ignoring bash.patterns, and an earlier "Always allow" letting critical commands such as rm -rf / run without a prompt (#15473)
+    - Fixed hashline edits silently dropping the tail of a line that read or grep had cut at the column limit; such an edit is now refused until a :raw read shows the full line (#15649)
+    - Fixed isolated tasks failing on linked worktrees with initialized recursive submodules and leaving updated submodule pins unreachable after cleanup (#15457)
+    - Fixed /tan missing the parent's prompt cache by advertising xd:// tools top-level and omitting ask (#15578).
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed polyphonic recall ranking unrelated memories above relevant ones when the query shared only a common word such as "that" with an extracted fact subject (#15512).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed macOS setValue on native text fields in background apps such as Contacts, Reminders, Calendar, Font Book and System Settings returning success for text the app showed but never stored: it now enters the text the way win.type does, and a mismatch names what the field reads (#15293 by @will-bogusz)
+    - Fixed a macOS desktop session keeping the display awake for the rest of the process after a native request hung; the request's timeout or close() now releases it (#15414 by @will-bogusz)
+    - Fixed the macOS computer tool sometimes reading an empty page on its first read of a Chrome window, and leaving Electron apps it read in screen-reader mode until they quit (#15604 by @will-bogusz)
+    - Fixed macOS press() on a scrolled-out row in a Mac Catalyst app reporting success while nothing happened: the element is asked to scroll into view first (#15607 by @will-bogusz)
+    - Fixed shell builtins on Windows resolving drive-relative paths (C:, C:name) against the agent process's start directory instead of the shell's working directory, which let cd /c/Temp/x && rm -rf C: delete the start directory; rm now also refuses a bare drive operand like . (#15511)
+    - Fixed renderMermaidAscii printing character references in labels verbatim: HTML entities (<, &, <, <) and Mermaid entity codes (#quot;, #60;) now render as the characters they name (#15619)
+    - Fixed read and while read hanging on process-substitution input (#15501)
+    - Fixed standalone binaries extracting unused native addon variants on first launch (#15462)
+    - Fixed Git diffs failing when staged or committed changes update a submodule pin (#15457)
+    @oh-my-pi/omp-stats
+    Fixed
+    - Providers → Subscription windows no longer mixes Codex 5-hour and 7-day quotas across plans: Team and weekly-only (ProLite) accounts now share the 7-day row, the 5-hour row counts only accounts that have one, and labels no longer flip with whichever account reported last (#15664)
+    @oh-my-pi/pi-tui
+    Added
+    - Added native composer microphone controls with visible starting, recording and transcription states; a start still loading its model can be cancelled, and Enter and Send wait while dictation is recording or transcribing into the draft (#15759 by @daaximus).
+    - ApprovalDialogComponent takes a draft option that routes typing to the composer beneath it, so a message can be written while a tool call waits (#15642 by @H4vC)
+    - ApprovalDialogComponent takes a fullPrompt option that the expand key (app.tools.expand) or a Details button swaps in for the summarized prompt; it replaces wrapDetails (#15642 by @H4vC)
+    Fixed
+    - SVG fences in CRLF or CR-only assistant Markdown now render as figures instead of source code (#15663).
+    - Fixed clipboard-image and image-path pastes being dropped while the composer draft is edited beneath an ask or approval dialog (#15642 by @H4vC)
+    - Fixed inline images inside tmux assuming Kitty graphics from the pane's TERM; the attached client is identified from tmux's terminal-type reply or its TERM (e.g. xterm-kitty), and unrecognized clients go to the SIXEL probe (#15524).
+    - Fixed ```svg fences rendering as their source code instead of a drawing when no theme was installed yet, e.g. in an extension rendering a message that opens with the fence (#15660)
+    - Fixed pastes inside tmux 3.5a and older submitting line by line after another program turned bracketed paste off on the pane; omp now re-enables it on the next render or keypress (#15596)
+    - Fixed assistant replies containing a table (on image-capable terminals with table charts on) publishing still-streaming rows to native scrollback, which froze the block's append-only retirement and could leave overwritten reply rows in scrollback (#15693)
+    - Fixed streamed thinking publishing a line to native scrollback just before a code fence or <!-- --> sentinel split across deltas rewrote it with the prose-fold ellipsis (#15693)
+    - Fixed streamed assistant text or thinking containing a tab stopping all later rows of the reply from retiring into native scrollback until the turn ended (#15693)
+    - Fixed wrapped lines in Write, Read, Edit, Todo, Ask and LSP tool cards losing their alignment under line numbers, tree connectors, and option or code rails (#15677)
+    - Fixed SIXEL images leaving their previous raster on screen, drawn again over itself, when the transcript moves them within the viewport (#15657)
+    What's Changed
+    - perf(task): move async task guidance into tool descriptions by @iliaal in https://github.com/can1357/oh-my-pi/pull/15477
+    - feat(coding-agent): steer from the composer during tool approval, drop duplicated call details by @H4vC in https://github.com/can1357/oh-my-pi/pull/15642
+    - fix(coding-agent): open targets a relay page session creates in that page's browser by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15494
+    - feat(coding-agent): record which omp build wrote each session entry by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15680
+    - fix(coding-agent): keep puppeteer's own tab page listeners across browser runs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15495
+    - fix(natives): open a scrolled-out row when pressing it in a macOS Catalyst app by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15607
+    - fix(natives): wait for a Chromium window's web content on the first macOS computer read by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15604
+    - fix(natives): release the macOS display-awake hold when a native call hangs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15414
+    - fix(coding-agent): read the page body when browser text() or html() gets no selector by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15599
+    - fix(coding-agent): mask password values in browser ARIA snapshots by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15502
+    - fix(natives): write macOS setValue text the way win.type does by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15293
+    - fix(ai): isolate parallel tool calls when chunks reuse stream index by @Zzz141592653 in https://github.com/can1357/oh-my-pi/pull/15682
+    - fix(ai,coding-agent): address post-merge review of Anthropic fallback credit by @H4vC in https://github.com/can1357/oh-my-pi/pull/15702
+    - fix(agent,coding-agent): misscount fixes for oai tokenizer by @H4vC in https://github.com/can1357/oh-my-pi/pull/15712
+    - fix(browser): scroll text-query click targets into view by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15496
+    - fix(discovery): stop project walks at temporary roots and foreign user config roots by @alphastorm in https://github.com/can1357/oh-my-pi/pull/15719
+    - fix(skills): cache unusable descriptions and drain writes on exit by @alphastorm in https://github.com/can1357/oh-my-pi/pull/15720
+    - feat(task): let agents keep structured results via frontmatter by @alphastorm in https://github.com/can1357/oh-my-pi/pull/15717
+    - fix(agents): fail closed for malformed tool declarations by @alphastorm in https://github.com/can1357/oh-my-pi/pull/15718
+    - fix(tui): stopped assuming kitty graphics for unknown tmux clients by @roboomp in https://github.com/can1357/oh-my-pi/pull/15534
+    - fix(catalog): restored OpenCode Go Flash alias metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/15361
+    - fix(vcs): respect configured commit signing by @roboomp in https://github.com/can1357/oh-my-pi/pull/14813
+    - fix(task): marked refused calls as errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/15576
+    - fix(ai): retried go closed-network-connection transport errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/15389
+    - docs: separated context promotion from retry model fallback by @roboomp in https://github.com/can1357/oh-my-pi/pull/15639
+    - fix(tui): handled CRLF and CR-only SVG fences by @roboomp in https://github.com/can1357/oh-my-pi/pull/15669
+    - fix(tui): initialized the theme before svg figures read it by @roboomp in https://github.com/can1357/oh-my-pi/pull/15673
+    - fix(read): included image data in repeat-read fingerprint by @roboomp in https://github.com/can1357/oh-my-pi/pull/15672
+    - fix(mnemopi): skipped stopwords in fact voice subject matching by @roboomp in https://github.com/can1357/oh-my-pi/pull/15518
+    - fix(ai): repaired codex sse watchdog retry signal by @roboomp in https://github.com/can1357/oh-my-pi/pull/15545
+    - fix(sdk): cancelled mcp-notification-cleanup postmortem on dispose by @roboomp in https://github.com/can1357/oh-my-pi/pull/15388
+    - fix(coding-agent): skipped pool-blocked candidates in retry fallback walk by @roboomp in https://github.com/can1357/oh-my-pi/pull/15430
+    - fix(mcp): rendered server instructions in name order by @roboomp in https://github.com/can1357/oh-my-pi/pull/15710
+    - fix(read): handled bodyless HTTP 204 responses by @roboomp in https://github.com/can1357/oh-my-pi/pull/15674
+    - fix(mcp): kept bare bearer resource_metadata challenges unredacted by @roboomp in https://github.com/can1357/oh-my-pi/pull/15694
+    - fix(extensions): forward background-wait reason in agent_end by @roboomp in https://github.com/can1357/oh-my-pi/pull/15349
+    - fix(stats): grouped codex usage windows by recorded window across plans by @roboomp in https://github.com/can1357/oh-my-pi/pull/15670
+    - fix(pi-vfs): resolved windows drive-relative paths against shell cwd by @roboomp in https://github.com/can1357/oh-my-pi/pull/15515
+    - fix(tui): reasserted bracketed paste inside tmux without decrqm reply by @roboomp in https://github.com/can1357/oh-my-pi/pull/15597
+    - fix(compaction): skipped long provider retry waits by @roboomp in https://github.com/can1357/oh-my-pi/pull/15313
+    - feat(catalog): add SambaNova Cloud as a provider by @rjuez00 in https://github.com/can1357/oh-my-pi/pull/14986
+    - fix(agent): charged chat-template framing per locally counted message by @roboomp in https://github.com/can1357/oh-my-pi/pull/15700
+    - fix(ai): honored disableReasoning on the codex responses route by @roboomp in https://github.com/can1357/oh-my-pi/pull/15533
+    - fix(coding-agent): bounded unknown skill:// wait on connecting mcp servers by @roboomp in https://github.com/can1357/oh-my-pi/pull/15650
+    - fix(coding-agent): applied plan.defaultOnStartup to sessions started by /new by @roboomp in https://github.com/can1357/oh-my-pi/pull/15631
+    - fix(cursor): returned images instead of raw bytes from read frames by @roboomp in https://github.com/can1357/oh-my-pi/pull/15635
+    - fix(natives): decoded character references in mermaid labels by @roboomp in https://github.com/can1357/oh-my-pi/pull/15621
+    - fix(async): kept consumed results suppressed past retention while parked by @roboomp in https://github.com/can1357/oh-my-pi/pull/15626
+    - fix(shell): unblocked read on process substitution by @roboomp in https://github.com/can1357/oh-my-pi/pull/15509
+    - fix(lsp): kept deferred diagnostics alive for formatted writes by @roboomp in https://github.com/can1357/oh-my-pi/pull/15380
+    - fix(tan): preserve the parent's advertised tool roster by @roboomp in https://github.com/can1357/oh-my-pi/pull/15583
+    - fix(session): preserve eval context across compacted forks by @roboomp in https://github.com/can1357/oh-my-pi/pull/15696
+    - fix(extensions): served pi-tui subpaths from host in compiled binaries by @roboomp in https://github.com/can1357/oh-my-pi/pull/15665
+    - fix(tui): published only settled rows of streaming tables and thinking by @roboomp in https://github.com/can1357/oh-my-pi/pull/15697
+    - fix(coding-agent): resolved marketplace plugin versions from plugin.json by @roboomp in https://github.com/can1357/oh-my-pi/pull/15587
+    - fix(catalog): route OpenCode Go Argon through native Gemini by @roboomp in https://github.com/can1357/oh-my-pi/pull/15724
+    - fix(natives): extracted only selected addon on startup by @roboomp in https://github.com/can1357/oh-my-pi/pull/15465
+    - fix(ai): purged codex usage on 401 and capped last-good retention by @roboomp in https://github.com/can1357/oh-my-pi/pull/15441
+    - fix(catalog): kept cached endpoint overrides in additive catalogs by @roboomp in https://github.com/can1357/oh-my-pi/pull/15558
+    - fix(tui): preserve hanging prefixes in tool cards by @roboomp in https://github.com/can1357/oh-my-pi/pull/15679
+    - fix(coding-agent): ended service readiness waits on a queued steer by @roboomp in https://github.com/can1357/oh-my-pi/pull/15656
+    - fix(stats): probed dashboard port without routing through http proxy by @roboomp in https://github.com/can1357/oh-my-pi/pull/15617
+    - fix(ai): replayed unparsable responses tool-call arguments as diagnostics by @roboomp in https://github.com/can1357/oh-my-pi/pull/15571
+    - fix(ai): replayed responses tool calls missing from native items by @roboomp in https://github.com/can1357/oh-my-pi/pull/15581
+    - fix(dsml): strip doubled-pipe residue from committed turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/15486
+    - fix(plugins): ran plugin installs through the embedded bun by @roboomp in https://github.com/can1357/oh-my-pi/pull/15482
+    - fix(plugins): refreshed TUI toggles and supported npm plugins by @roboomp in https://github.com/can1357/oh-my-pi/pull/15387
+    - fix(memories): scoped memory injection and learn to the session cwd by @roboomp in https://github.com/can1357/oh-my-pi/pull/15381
+    - fix(acp): honored bash approval patterns before permission requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/15474
+    - fix(edit): prevented column-cut edits from dropping tails by @roboomp in https://github.com/can1357/oh-my-pi/pull/15651
+    - fix(tui): erased a sixel block's rows before repainting it by @roboomp in https://github.com/can1357/oh-my-pi/pull/15658
+    - feat(stt): add click-to-dictate and local streaming recognition by @daaximus in https://github.com/can1357/oh-my-pi/pull/15759
+    - fix(task): detached recursive submodule git state by @roboomp in https://github.com/can1357/oh-my-pi/pull/15459
+    - fix(ai): replay one model's reasoning after a mid-turn Anthropic fallback by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/15654
+    New Contributors
+    - @Zzz141592653 made their first contribution in https://github.com/can1357/oh-my-pi/pull/15682
+    - @rjuez00 made their first contribution in https://github.com/can1357/oh-my-pi/pull/14986
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.10.4...v18.11.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.11.0
+ReleaseTime: 2026-10-14T22:01:49.0000000Z
