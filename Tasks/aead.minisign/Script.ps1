@@ -5,8 +5,10 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('amd64') -and $_.name -match 'windows' }, 'First')[0].browser_download_url
 }
 
 switch -Regex ($this.Check()) {
