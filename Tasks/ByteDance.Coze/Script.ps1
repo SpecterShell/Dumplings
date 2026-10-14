@@ -24,7 +24,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = $Object1.data.releaseNote
+        Value  = $Object1.data.releaseNote | Format-Text
       }
     } catch {
       $_ | Out-Host

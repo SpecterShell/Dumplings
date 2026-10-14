@@ -30,7 +30,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
-        Key    = 'ReleaseNotes'
+        Key    = 'ReleaseNotesUrl'
         Value  = $ReleaseNotesUrl = "https://github.com/klembot/twinejs/blob/HEAD/docs/en/src/release-notes/$($this.CurrentState.Version.Split('.')[0..1] -join '-').md"
       }
 
