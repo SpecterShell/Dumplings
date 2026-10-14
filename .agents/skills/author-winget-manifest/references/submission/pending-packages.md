@@ -41,6 +41,23 @@ One guarded commit adds the generated manifests and removes the exact obsolete p
 
 The PR title is updated to match the submitted version. Identical manifests still allow a stale title to be repaired without a new commit. A title-update failure stops submission with an explicit partial-success error: the requested manifests remain present, and a rerun retries the title. Missing permissions do not silently switch to a new PR. Grant the required access or explicitly choose `NewPullRequest`.
 
+## PR author credentials
+
+Fork write access can let the bot update a branch without allowing it to rename the author's PR in the upstream repository. An optional `GitHubPullRequestAuthorTokens` map supplies a separate credential for these title edits:
+
+```yaml
+GitHubPullRequestAuthorTokens:
+  SpecterShell: '<token belonging to SpecterShell>'
+```
+
+Supply the map through `Secret.yaml` or the existing `DUMPLINGS_SECRET` Actions secret. Core passes the loaded map to worker runspaces. If both sources provide this key, the file's whole map replaces the environment map. Keep credentials out of `Preference.yaml`, task configuration, logs, and evidence files. Use placeholders in documentation and do not read or edit a user's secret file without explicit authorization.
+
+For a pending PR whose title needs changing, Dumplings matches the rechecked author's login case-insensitively and verifies the selected token through GitHub's authenticated-user endpoint before committing. Empty, malformed, ambiguous, mismatched, or unverifiable configured credentials stop the update without falling back to the bot. A missing map or author entry retains the normal `GH_DUMPLINGS_TOKEN` behavior. An already-current title does not require an author credential.
+
+The selected credential is passed explicitly to the title request. Branch commits, PR discovery, new PRs, and PR closure still use the normal token. The shared environment is never switched between accounts. Token mappings do not replace the trusted-author allowlist or authorize another PR shape.
+
+Identity verification does not prove upstream title-edit permission. Use an author credential with appropriate public-repository access. GitHub currently documents limitations for fine-grained tokens contributing to public repositories outside the user's membership; a classic PAT with `public_repo` scope is the practical option for this case. That scope is broad, so restrict secret access to trusted workflows. A title failure after the commit retains the partial-success error, and diagnostics omit the configured credential and raw credential-bearing exception. See [GitHub token guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+
 ## Create a separate PR
 
 Set `WinGetPendingPackageAction: NewPullRequest` to use the selected PR's manifests as the template for a separate submission. The new branch starts from the normal origin reference revision, not from the pending head, so it contains only the new package version and does not inherit the old pending version or stack a PR on an unmerged branch.
