@@ -30,6 +30,14 @@ Timeout: 10800
 # Set this to [] to let all PRs from other users coexist with a new submission.
 WinGetBlockingPullRequestUsers:
 - SpecterShell
+# Opt in only for packages missing from the reference repo. Task Config.yaml
+# can override each setting, including disabling a globally enabled fallback.
+WinGetPendingPackageFallback: true
+WinGetPendingPackageAction: UpdatePullRequest
+WinGetPendingPackageTrustedUsers:
+- SpecterShell
+- spectopo
+WinGetPendingPackageSearchLimit: 30
 WebDriverLeaseDurationSeconds: 60
 PlaywrightLeaseDurationSeconds: 60
 PlaywrightOperationTimeoutMilliseconds: 30000

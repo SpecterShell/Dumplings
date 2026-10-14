@@ -46,7 +46,7 @@ jobs:
           cache-path: ${{ runner.temp }}\DumplingsPlaywrightRuntime
           cache-key: dumplings-playwright-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/Modules/PackageModule/Assets/PlaywrightRuntime.psd1') }}
       - name: Run tasks
-        run: .\Core\Index.ps1 -ThrottleLimit 4 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
+        run: .\Core\Index.ps1 -ThrottleLimit 3 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
         working-directory: Dumplings
         shell: pwsh
         env:

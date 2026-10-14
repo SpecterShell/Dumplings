@@ -47,6 +47,10 @@ Either setting skips nested payload extraction, installer-family detection, and 
 
 Dumplings retries the final branch comparison before creating a PR. A comparison failure emits a warning and continues submission without the empty-change and exact duplicate checks. A confirmed empty diff still stops submission, and a confirmed identical self-authored PR is preserved. Old PRs are closed only after the replacement PR is created successfully.
 
+## Packages awaiting merge
+
+If the package has no reference manifests yet, submission fails by default. The opt-in [pending-package workflow](pending-packages.md) can use a trusted open PR as the template, update that PR in place, or create a separate PR. Review its trust, permission, and concurrency rules before enabling it.
+
 ## Common Blocking Issues
 
 Check for these before opening or updating a PR:

@@ -21,7 +21,7 @@ Read the references needed for the current stage.
 - Installer-family guidance: start with the analyzer's [installer-family route table](../analyze-winget-installer/references/workflows/installer-analysis.md), then open the selected family workflow for static parser commands, switches, ARP ownership, and VM exceptions.
 - Large working records: [Transient evidence](../analyze-winget-installer/references/workflows/evidence.md).
 
-Use `$analyze-winget-installer` for installer evidence and `$author-dumplings-task` after the first package version is accepted.
+Use `$analyze-winget-installer` for installer evidence and `$author-dumplings-task` after the first package version is accepted, or with an explicitly configured [trusted pending-package reference](references/submission/pending-packages.md) while its first PR awaits merge.
 
 ## Incremental authoring
 

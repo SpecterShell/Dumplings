@@ -23,6 +23,8 @@ winget show --id Vendor.Package --exact --source winget
 
 Inspect the latest manifest's installer count, architecture, locale, type, scope, nested files, and Apps & Features shape. A normal submission reads that latest version as its reference. If the package does not exist yet, author and submit the package manifests first with `$author-winget-manifest`.
 
+While that first PR awaits merge, the opt-in [pending-package fallback](../../../author-winget-manifest/references/submission/pending-packages.md) can supply the reference. Select trusted authors explicitly and run a dry submission before enabling PR updates. Existing packages continue to use repository manifests.
+
 ## 2. Create The Task Files
 
 Create this layout:
@@ -56,6 +58,7 @@ Common configuration fields:
 | `SkipInstallerAnalysis` | Preserve existing parser-managed metadata while still downloading, hashing, formatting, and validating. Use only for a reviewed parser limitation. |
 | `WinGetPackageIdentifier` | Read a reference package whose identifier differs from the task's destination identity. |
 | `WinGetNewPackageIdentifier` | Submit to a new identifier, such as a deliberate major-version namespace migration. |
+| `WinGetPendingPackageFallback` | Opt in to trusted PR references when no repository version exists. See [pending-package configuration](../../../author-winget-manifest/references/submission/pending-packages.md#configuration) for the action, author allowlist, and search limit. |
 | `Notes` | Add a short operational note to task output. |
 
 Do not set `IgnorePRCheck`, `SkipPRCheck`, or repository overrides as routine boilerplate. They change submission safety and require a package-specific reason.

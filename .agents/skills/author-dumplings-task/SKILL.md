@@ -11,7 +11,7 @@ Run Dumplings module commands and task validation with PowerShell 7.4 or later (
 
 ## Workflow
 
-1. Confirm the existing package with `winget search`. Have its first manifest version accepted before adding automation.
+1. Confirm the existing package with `winget search`. Normally have its first manifest version accepted before adding automation. For an unmerged new package, explicitly configure the [trusted pending-package fallback](../author-winget-manifest/references/submission/pending-packages.md) and review its dry manifests.
 2. Read [Task lifecycle](references/task/lifecycle.md), [state, versions, and cache](references/task/state-version-cache.md), and [dependencies and providers](references/task/dependencies-and-providers.md).
 3. Read the [manifest update contract](references/manifest/update-contract.md) before selecting installers, locales, queries, or replace mode.
 4. Select the relevant source workflow: [source selection](references/sources/selection.md), [pages and releases](references/sources/pages-and-releases.md), [update feeds](references/sources/update-feeds.md), [wrappers and providers](references/sources/wrappers-and-providers.md), or [versionless sources](references/sources/versionless.md).
