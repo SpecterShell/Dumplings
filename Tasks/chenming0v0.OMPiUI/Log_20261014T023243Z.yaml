@@ -1,0 +1,27 @@
+Version: 0.6.24
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.24/OMPiUI_0.6.24_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    继续收敛跨层流量与会话状态边界：为事件恢复、搜索、Git 与静态资源读取补上并发合流和容量上限，超大帧只保留控制语义。
+    - fix: 事件重同步增加去抖与并发闸门，单个控制帧不再触发无上限全页重拉；超大事件只发送 payload_omitted 控制帧并推进游标，多订阅者扇出不再重复序列化，断线重连也不重复回放同一帧。
+    - fix: 子代理收到控制帧后主动拉取权威 state，工具不再永久停在旧状态；非 session 流保留专用恢复语义，session 流走合并的分支刷新。
+    - perf: 事件订阅增加进程级预算，超限订阅直接丢弃并保留连接，重连不会重置预算；终端 attach 重放按 TextWindow 分块读取并保持 UTF-8 边界，减少全窗口物化与重复扫描。
+    - perf: Tailscale 状态探测增加短窗口缓存与单飞，降低后台探测开销；恢复类请求按同查询合并。
+    - fix: 文件名与文本搜索、session state、磁盘会话查找按同查询单飞合并，调用方取消只影响自身等待；单文件 diff 直接按目标路径计算，不再先执行整仓 diff。
+    - fix: 为会话注册表、子代理转录、扩展 UI、终端输入、WebSocket 出站队列、乐观 bash 待处理项与待处理会话缓存增加容量和时效边界；session.open 参数校验与会话列表字段收口。
+    - fix: 中转增加待激活连接回收、总量约束、控制通道背压、请求中止清理与生命周期进度检查。
+    - fix: HTTP 增加输入与输出全局预算，合法大响应不再被过早拒绝；诊断报告的 form 编码按实际字节计量；文件写入支持不回显正文。
+    - fix: Tauri 入站桥消息限长；流量审计补齐生产开关、脱敏缓存、预览生命周期与 WebSocket 消息记录；终端布局持久化改为去抖写入并限制目录历史数量。
+    - fix: 静态资源支持受限 multipart Range 响应并保留单区间兼容；有界历史分页合并保留已加载的更早条目与 historyWindowed 游标，不因新到的最新页丢失分页状态。
+    - fix: 发版前修复本批引入的两处回归：e6735b8 把状态刷新挂到 branch 恢复请求之后，branch 慢或挂起时实时消息的 streaming→persisting 收敛会被无限推迟，现改回立即调度；http-output 全局预算已按 128 MiB 上调，测试改为从模块常量推导额度，不再钉死旧数值。
+    - verification: 类型检查、lint 与生产构建由 CI 执行；本批回归在 CI 暴露后按单文件复现并修复（app recoveryOrdering、server http-output）。安装包实机升级与线上负载不以源码验证或发布构建冒充验收。
+    - chore: 根包、全部 workspace、互依赖、npm 锁文件及 Tauri/Cargo 统一为 0.6.24；事件协议版本仍为 2（ompiui.events.v2），官方会话目录与文件格式不变。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.24
+ReleaseTime: 2026-10-14T01:03:52.0000000Z
