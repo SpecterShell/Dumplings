@@ -1,0 +1,25 @@
+Version: 0.4.13
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Nshpiter/Q-music/releases/download/v0.4.13/Q-music-v0.4.13-x64-Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Q-music 0.4.13
+    本次正式版修复 PC 与安卓酷狗歌单导入时误报“平台返回的歌曲不完整”的问题。
+    酷狗歌单同步
+    - 修复分页提前结束：平台返回的单页数量少于请求数量时，按已知歌单总数继续读取后续页，避免大歌单被误判为缺页。
+    - 修复歌曲去重后的数量误判：改为按文件及音质 hash 核对详情，不再把合法的音质合并当成缺歌；不同文件不再仅因歌曲 ID 相同而丢失。
+    - 部分歌曲详情偶发缺失时，仅补查缺失项一次，并恢复歌单原有顺序。
+    - 同步应用到 PC、安卓的酷狗账号歌单导入与每日推荐读取。
+    - 真正缺少歌曲、重复分页、平台总数变化或用户取消时，仍保留原歌单，不以不完整结果覆盖本地列表。
+    安装与验证
+    - Windows x64、Arch Linux x64 和 Android 同步升级至 0.4.13；安卓 versionCode 43，提供 arm64-v8a、armeabi-v7a、x86、x86_64 和通用 APK。
+    - 修复前已通过回归场景复现分页与音质去重误判；修复后 PC 61 项测试、安卓 18 项账号测试通过，并完成两端构建检查。
+    - 尚未取得反馈者的具体失败歌单；本版修复的是已复现的问题，不代表所有平台缺失数据都能恢复。若仍失败，请附上歌单链接、歌曲数量、系统和软件版本反馈。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Nshpiter/Q-music/releases/tag/v0.4.13
+ReleaseTime: 2026-10-13T05:15:49.0000000Z

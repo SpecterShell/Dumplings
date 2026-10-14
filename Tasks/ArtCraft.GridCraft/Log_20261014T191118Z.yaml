@@ -1,0 +1,182 @@
+Version: 0.7.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/gridcraft/releases/download/v0.7.0/gridcraft-0.7.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/gridcraft/releases/download/v0.7.0/gridcraft-0.7.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/gridcraft/releases/download/v0.7.0/gridcraft-0.7.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(calc): recalculate dependents of a cleared spill past 65536 cells (#558) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/605
+    - Return #VALUE! when a LAMBDA call has too few argument positions (#557) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/606
+    - SUBTOTAL 109-111 leave out nested subtotals like 1-11 (#556) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/607
+    - fix(xlsx): keep leading and trailing whitespace in document properties on reopen (#554) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/608
+    - Refuse XLSX export of sheet names XLSX cannot hold (#552) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/609
+    - Fix data.filterBy inside a table installing the sheet AutoFilter instead of toggling the table button (#547) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/611
+    - Fix histogram counts disagreeing with interval labels on bin boundaries (#546) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/612
+    - Draw data labels on area and stacked area charts (#545) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/613
+    - Fix chart rasterizer panic on negative rectangle extents (#542) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/616
+    - Return #VALUE! from FIND and SEARCH when the start is past the text end (#541) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/617
+    - Return zero from ROUNDDOWN and TRUNC at precisions beyond the number range (#540) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/618
+    - Return #NUM! from PROB for zero probabilities (#539) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/619
+    - Reject oversized TEXTSPLIT results before building the padded grid (#538) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/620
+    - Check the full PIVOTBY layout size before building column headers (#537) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/621
+    - HSTACK checks its padded output size before building it (#536) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/622
+    - Return an error when a weekday fill runs past the supported dates (#535) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/623
+    - Column sort rejects a zero row key with a parameter error instead of panicking (#534) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/624
+    - Refuse Total Row on a table that ends on the last worksheet row (#533) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/625
+    - Spelling: skip suggestions for words longer than 64 characters (#532) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/626
+    - Reject row/column insert counts past the worksheet and clamp delete counts instead of overflowing (#531) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/627
+    - Formula: print flat operator chains iteratively so deep trees cannot overflow the stack (#527) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/628
+    - Page Setup opens on the sheet's saved margins (#524) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/631
+    - Data Validation dialog opens on the active cell's current rule (#522) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/633
+    - Zoom dialog: a Magnification choice sets the percentage to store (#521) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/634
+    - Fix ribbon checkboxes sending the pre-click value (#520) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/635
+    - Keep a literal chart category with a comma or semicolon as one point on save (#519) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/636
+    - Read omitted val on chart smooth and showVal as on (#518) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/637
+    - Web: opt-in embedding bridge for host pages (?host=parent) by @CyberFox-81 in https://github.com/storytold/gridcraft/pull/237
+    - io: remove the .sctmp temporary file when a save fails by @SteamSmith in https://github.com/storytold/gridcraft/pull/450
+    - AutoFilter: the value list scrolls across the menu's full width (Fixes #432) by @tydude001 in https://github.com/storytold/gridcraft/pull/452
+    - i18n: add Serbian (Latin script) interface translations by @Dejan-Port in https://github.com/storytold/gridcraft/pull/453
+    - fix(i18n): correct scattered wrong French translations and add 2 missing keys by @Dejan-Port in https://github.com/storytold/gridcraft/pull/454
+    - Packaging: offer GridCraft for .xlsb and .ods files on macOS by @neilcawse in https://github.com/storytold/gridcraft/pull/457
+    - UI: Paste button and menus paste the system clipboard; regression test for the Paste freeze (#273) by @neilcawse in https://github.com/storytold/gridcraft/pull/461
+    - OFFSET: huge offsets and sizes give #REF! instead of overflowing by @webdevtodayjason in https://github.com/storytold/gridcraft/pull/466
+    - Data: Solver Evolutionary method, and Answer and Limits reports by @prxnvt in https://github.com/storytold/gridcraft/pull/475
+    - INDEX: a huge area number gives #REF! instead of overflowing by @webdevtodayjason in https://github.com/storytold/gridcraft/pull/476
+    - AutoFill: times, quarters, ordinals and mixed sources continue as series by @nihilist-narwhal in https://github.com/storytold/gridcraft/pull/483
+    - Formulas: long operator chains no longer hit the evaluator's depth limit by @nihilist-narwhal in https://github.com/storytold/gridcraft/pull/484
+    - Manage Rules: don't index past the list after a delete by @nihilist-narwhal in https://github.com/storytold/gridcraft/pull/485
+    - Merge Across: keep only the first value of each row by @nihilist-narwhal in https://github.com/storytold/gridcraft/pull/487
+    - INDIRECT: R1C1 offsets past the sheet give #REF! instead of overflowing by @webdevtodayjason in https://github.com/storytold/gridcraft/pull/503
+    - Convert TODAY and NOW to the workbook date system in 1904 workbooks (#578) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/586
+    - Restore frozen panes when showing a custom view (#577) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/587
+    - Tables: names with a hyphen or other operator characters are rejected (#576) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/588
+    - Reject table.resize to a range that does not overlap the table (#575) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/589
+    - Keep a defined name that shares a table's name when the table is renamed (#574) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/590
+    - Return #VALUE! for AGGREGATE without a data argument (#572) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/592
+    - Open files by their content, not a mismatched extension (#569) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/595
+    - Parse an intersection whose operand became #REF! (#568) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/596
+    - Parse two-digit years in spaced month-name dates (#566) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/598
+    - Treat serials past 9999-12-31 as out of range in the 1904 date system (#565) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/599
+    - Paste Special: copy the validation rule with the Validation and All options (#562) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/602
+    - MCP: reject invalid format_range borders as invalid params (#560) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/603
+    - Make gridcraft-cli check compare conditional-format rule contents, not just their count (#559) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/604
+    - Add OmaStore manifest by @KitsuneSemCalda in https://github.com/storytold/gridcraft/pull/99
+    - fix: select a newly inserted chart from Recommended Charts by @Dejan-Port in https://github.com/storytold/gridcraft/pull/448
+    - XLSX: write this-row structured references as [[#This Row],[Col]] by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/869
+    - Fix saving a custom view or script when the stored list is not a JSON object (#517) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/638
+    - Treat non-object params as empty in themeColors, background and drawBorder (#516) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/639
+    - Refuse a PivotTable that cannot fit before aggregating all column groups (#515) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/640
+    - Fail Web Page export on sheets taller than its row limit instead of dropping cells (#514) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/641
+    - xlsx: warn when hyperlinks past the 10,000-cell cap are dropped on read (#513) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/642
+    - Keep every range of a conditional format or validation sqref (#512) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/643
+    - Save a table that has only a header row and a totals row (#511) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/644
+    - Keep a long outline group's bracket once its first 4096 lines scroll away (#510) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/645
+    - fix(grid): filter dropdown installs the AutoFilter on the clicked table (#509) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/646
+    - Keep manually hidden and collapsed rows when removing an AutoFilter (#508) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/647
+    - Run the fill-handle double-click fill before the handle press returns (#507) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/648
+    - i18n(cs): translate 120 labels and tooltips already looked up via tr() by @Losminek in https://github.com/storytold/gridcraft/pull/652
+    - Compute the Top 10 filter threshold once per column (#661) by @richard1912 in https://github.com/storytold/gridcraft/pull/664
+    - Data validation: hide the input message while the cell's list is open (#505) by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/679
+    - Charts: a newly inserted chart is selected, so Delete removes it (#668, #256) by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/683
+    - Functions: COUNTIF family returns #VALUE! for criteria over 255 characters by @neilcawse in https://github.com/storytold/gridcraft/pull/686
+    - UI: clicking a column or row header in point mode inserts N:N / n:n (#691) by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/695
+    - Comments pane: one Show Comments button, and the pane keeps its width by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/715
+    - PivotTables: values on rows (Σ Values in Rows, dataOnRows) by @neilcawse in https://github.com/storytold/gridcraft/pull/718
+    - cell.set / set_cell: accept a number for input (#697) by @dantebertuzzi in https://github.com/storytold/gridcraft/pull/720
+    - i18n(pt-BR): translate 546 more labels, dialog strings and tooltips by @dantebertuzzi in https://github.com/storytold/gridcraft/pull/739
+    - Numfmt: a negative number that rounds to zero shows no minus sign by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/740
+    - macOS: register the Window menu as NSApp's windowsMenu, so the tiling shortcuts work by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/741
+    - ROMAN: forms 2 and 3 subtract IC, XM and VM like Excel by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/744
+    - functions: MODE skips typed text and logical arguments by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/745
+    - XLS: a FORMAT record shorter than its character count keeps the characters it holds by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/746
+    - XLS: open compound files whose last sector isn't padded by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/748
+    - Formulas: keep _xludf. so user-defined calls stay user-defined by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/755
+    - Grid: extending the selection from the keyboard scrolls its moving end into view (#762) by @msaulc in https://github.com/storytold/gridcraft/pull/763
+    - Grid: the selection outline stays visible when extended to the last row (#687) by @vangel76 in https://github.com/storytold/gridcraft/pull/767
+    - Numfmt: scientific formats with a literal after E±, a % or a comma match Excel by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/773
+    - XLS: a formula kept as its saved value keeps a text result by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/821
+    - XLSX: keep fileVersion and calcFeatures in workbook.xml on save by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/822
+    - XLSX: a hyperlink to another file is saved as an external relationship by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/826
+    - Grid: Shift+arrows in point mode extend from the pointed cell, also up and left by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/836
+    - Sheet tabs: All Sheets navigator with a filter field by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/851
+    - Refuse to save to an unknown file extension instead of writing XLSX under it by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/879
+    - check: a boolean cached as 1/0 without t="b" matches, and is counted apart by @CouchRiv in https://github.com/storytold/gridcraft/pull/882
+    - File: Export as PDF in the File menu, and the palette asks for a path (#407) by @isaac-levine in https://github.com/storytold/gridcraft/pull/704
+    - XLS: array formulas fill their range on recalculation by @neilcawse in https://github.com/storytold/gridcraft/pull/460
+    - Functions passed by name: GROUPBY(…,SUM), BYROW(…,SUM), MAP(…,ABS) by @nihilist-narwhal in https://github.com/storytold/gridcraft/pull/486
+    - Chart: color pie, doughnut, treemap and sunburst points from the workbook theme (#579) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/585
+    - Quote sheet names when printing sheet-qualified defined names (#567) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/597
+    - Keep a solid data bar solid across an XLSX save and reopen (#550) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/610
+    - Funnel chart: hide value labels when data labels are off (#544) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/614
+    - Honour the gridlines flag on box-and-whisker and stock charts (#543) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/615
+    - Open AutoFilter header menus with Alt+Down by @derechopiano in https://github.com/storytold/gridcraft/pull/659
+    - Reveal the active worksheet tab after sheet navigation by @derechopiano in https://github.com/storytold/gridcraft/pull/688
+    - Preserve editable ink strokes across XLSX saves by @jonathanwxh-cell in https://github.com/storytold/gridcraft/pull/712
+    - XLS import: read the calculation settings (iteration, mode, precision as displayed) by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/747
+    - Tables: structured references keep the spaces at the edges of a column name by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/749
+    - Functions: DGET and the database functions match Excel for computed, empty-string and empty-field criteria by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/751
+    - CELL("width") returns the Column Width dialog value, without the padding (#735) by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/753
+    - Data: Forecast Sheet Forecast Start option (#785) by @vangel76 in https://github.com/storytold/gridcraft/pull/786
+    - i18n: look up the Format Cells dialog labels in the catalog by @brzuchal in https://github.com/storytold/gridcraft/pull/788
+    - Page Layout view: drag the margins on the rulers (#792) by @vangel76 in https://github.com/storytold/gridcraft/pull/794
+    - Calc: SUBTOTAL 109 recalculates when Row Height, AutoFit or Ungroup reveal rows by @vangel76 in https://github.com/storytold/gridcraft/pull/796
+    - Numfmt: TEXT() and chart labels parse each format code once (#806) by @vangel76 in https://github.com/storytold/gridcraft/pull/808
+    - PDF: title and author are written as UTF-16BE when they are not ASCII (#813) by @vangel76 in https://github.com/storytold/gridcraft/pull/814
+    - PDF: text width cannot overflow; dash, stroke width and NaN sizes are sanitised (#812) by @vangel76 in https://github.com/storytold/gridcraft/pull/815
+    - XLSX: keep the workbook's default font on save by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/823
+    - XLS: formulas that use a skipped defined name keep their saved results by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/825
+    - UI: Enter pastes the copied range and ends copy mode by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/850
+    - CSV export: refuse a file over 512 MiB instead of expanding the whole used range (#528) by @Silvertree2010 in https://github.com/storytold/gridcraft/pull/853
+    - check: the package round trip reports relationship kinds the save lost by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/871
+    - Reject out-of-range numeric filterBy columns instead of overflowing (#573) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/591
+    - Fix SEARCH position when text contains a char with multi-char lowercase (#571) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/593
+    - fix(engine): CSV named History keeps a valid sheet name (#570) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/594
+    - Read date text in the workbook date system in arithmetic and VALUE (#564) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/600
+    - Center Across Selection: center text over the empty cells to its right (#479) by @MarekSpodBiedry in https://github.com/storytold/gridcraft/pull/649
+    - View: Ctrl+wheel zoom steps along a ladder that never skips 100% (#689) by @vedran-dobos in https://github.com/storytold/gridcraft/pull/690
+    - Grid: deleting several Ctrl-selected rows removes them all (#758) by @vangel76 in https://github.com/storytold/gridcraft/pull/766
+    - Security: cell hyperlinks open only http, https and mailto, after a confirmation (#777) by @vangel76 in https://github.com/storytold/gridcraft/pull/780
+    - Numfmt: no panic on a fraction denominator with 65,536 zeros; format codes are capped at 255 characters (#807) by @vangel76 in https://github.com/storytold/gridcraft/pull/809
+    - Numfmt: format-code parsing is linear, and an unclosed [ is treated the same in both passes (#810) by @vangel76 in https://github.com/storytold/gridcraft/pull/811
+    - XLSX: Save As into another folder keeps links on the same workbook by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/824
+    - View ribbon: lay out the Show group's checkboxes in two columns by @bmh129 in https://github.com/storytold/gridcraft/pull/830
+    - Grid: horizontal scrollbar in the sheet tab bar by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/849
+    - UI: Show rule-specific data validation fields by @derechopiano in https://github.com/storytold/gridcraft/pull/854
+    - XLSX: keep chart sheets on open and save (#727) by @Silvertree2010 in https://github.com/storytold/gridcraft/pull/856
+    - EDATE and EOMONTH: serial 0 is day 0 and February 1900 has 28 days by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/742
+    - Functions: MIRR, COUNTIF, INDIRECT and USDOLLAR match Excel 365 by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/752
+    - Rows auto-fit oversized fonts on open and on row formatting (#833) by @edurbs in https://github.com/storytold/gridcraft/pull/855
+    - PivotTables: the PivotTable Fields pane follows the interface language by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/862
+    - XLSX: XML maps survive a save, with their table columns and mapped cells by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/863
+    - File view: the recent list tells when each workbook was last changed by @arcanii in https://github.com/storytold/gridcraft/pull/463
+    - UI: AutoComplete for cell values can be turned off, Backspace and Escape drop the proposal by @marcoarnulfo in https://github.com/storytold/gridcraft/pull/848
+    New Contributors
+    - @CyberFox-81 made their first contribution in https://github.com/storytold/gridcraft/pull/237
+    - @SteamSmith made their first contribution in https://github.com/storytold/gridcraft/pull/450
+    - @tydude001 made their first contribution in https://github.com/storytold/gridcraft/pull/452
+    - @prxnvt made their first contribution in https://github.com/storytold/gridcraft/pull/475
+    - @KitsuneSemCalda made their first contribution in https://github.com/storytold/gridcraft/pull/99
+    - @marcoarnulfo made their first contribution in https://github.com/storytold/gridcraft/pull/869
+    - @richard1912 made their first contribution in https://github.com/storytold/gridcraft/pull/664
+    - @dantebertuzzi made their first contribution in https://github.com/storytold/gridcraft/pull/720
+    - @msaulc made their first contribution in https://github.com/storytold/gridcraft/pull/763
+    - @CouchRiv made their first contribution in https://github.com/storytold/gridcraft/pull/882
+    - @isaac-levine made their first contribution in https://github.com/storytold/gridcraft/pull/704
+    - @jonathanwxh-cell made their first contribution in https://github.com/storytold/gridcraft/pull/712
+    - @brzuchal made their first contribution in https://github.com/storytold/gridcraft/pull/788
+    - @Silvertree2010 made their first contribution in https://github.com/storytold/gridcraft/pull/853
+    - @bmh129 made their first contribution in https://github.com/storytold/gridcraft/pull/830
+    Full Changelog: https://github.com/storytold/gridcraft/compare/v0.6.1...v0.7.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/gridcraft/releases/tag/v0.7.0
+ReleaseTime: 2026-10-14T15:36:59.0000000Z

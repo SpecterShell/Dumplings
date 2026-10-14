@@ -1,0 +1,25 @@
+Version: 0.10.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.10.1/solidcraft-0.10.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.10.1/solidcraft-0.10.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.10.1/solidcraft-0.10.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SolidCraft is open-source parametric 3D CAD in Rust. Documentation · try it in the browser · issues
+    Patch release for two problems in 0.10.0. Same design file format as 0.10.0, so files move freely between 0.10.0 and 0.10.1.
+    Fixes
+    - Startup crash on some Windows machines (#1098, #1099). On older Intel graphics using Direct3D 12's FXC shader compiler, SolidCraft closed a few seconds after launch with wgpu error: Validation Error … 'solidcraft tessellation' … X3511: unable to unroll loop. The GPU tessellation shader is rewritten so FXC can compile it, and if any GPU's driver still can't build it, SolidCraft now meshes on the CPU instead of crashing. A new CI job compiles and runs the shaders with FXC on Windows. Thanks to ChadBueno for the crash report.
+    - Hovered and selected faces shimmer (#1063, #1064). Hovering or selecting a face lit it in flickering wedges instead of solidly, because the highlight and the face were drawn from two different triangulations. The highlight now uses the face's own triangles.
+    If SolidCraft still won't start for you, please open an issue with the crashes/report.json from your SolidCraft data folder (on Windows %LOCALAPPDATA%\SolidCraft\crashes\), or post it on Discord.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/bherbruck/solidcraft/releases/tag/v0.10.1
+ReleaseTime: 2026-10-14T16:42:40.0000000Z
