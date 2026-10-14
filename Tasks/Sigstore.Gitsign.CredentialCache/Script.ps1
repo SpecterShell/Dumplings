@@ -5,12 +5,14 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name -match '^gitsign-credential-cache_[\d.]+_windows_amd64\.exe$' }, 'First')[0].browser_download_url
+  Architecture  = 'x64'
+  InstallerType = 'portable'
+  InstallerUrl  = $Object1.assets.Where({ $_.name -match '^gitsign-credential-cache_[\d.]+_windows_amd64\.exe$' }, 'First')[0].browser_download_url
 }
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.assets.Where({ $_.name -match '^gitsign-credential-cache_[\d.]+_windows_arm64\.exe$' }, 'First')[0].browser_download_url
+  Architecture  = 'arm64'
+  InstallerType = 'portable'
+  InstallerUrl  = $Object1.assets.Where({ $_.name -match '^gitsign-credential-cache_[\d.]+_windows_arm64\.exe$' }, 'First')[0].browser_download_url
 }
 
 switch -Regex ($this.Check()) {
