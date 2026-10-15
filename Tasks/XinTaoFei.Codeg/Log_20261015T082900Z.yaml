@@ -1,0 +1,123 @@
+Version: 0.35.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.35.2/codeg_0.35.2_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.35.2/codeg_0.35.2_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This one opens PDF files right in a file tab, lets the repository panel turn issues and pull requests into to-dos on its own, and flashes the taskbar or bounces the Dock when an agent needs you. Token Usage now estimates what your tokens would cost at API list prices, and Claude Code moves up to 0.90.0 and Kimi Code to 2.2.0, along with six more bundled agents.
+    Alongside that: a draft can switch agents while it is still connecting, built-in browser pages on Linux stay inside the workspace window, Office previews keep their place across tab switches and wait for slow documents, message navigation reaches the whole conversation, the back gesture on phones closes what you opened instead of leaving codeg, and agents stop polling for your feedback in a loop.
+    New
+    - PDF files open in a built-in viewer in file tabs, the conversation's file viewer and canvas file cards, with zoom, fit to width, a page field, find, and a password prompt for protected files.
+    - The repository panel can turn issues and pull requests into to-dos on its own: under Panel settings → Auto-processing, have it scan on a schedule or on webhook events from GitHub, GitLab, Gitea or Forgejo and pick items by label and author, and it handles each item only once.
+    - The desktop app flashes its taskbar button or bounces its Dock icon when an agent needs you while you are in another window, on the same events as desktop notifications such as a finished turn, a permission request or a question, and Settings → General → Taskbar and Dock alerts sets each event to Off, Briefly or Until you return.
+    - Token Usage estimates what your tokens would cost at API list prices, for the selected range and for each model, with input, output, cache reads and cache writes priced separately from the models.dev catalog. (#503, @Adam-Dalloul)
+    - You can choose which tabs the @ mention panel shows and in what order under Settings → General → Mention panel, in the message box and the to-do and automation editors alike, with the Files tab always shown.
+    - To-dos can be searched by keyword, and #12 finds the task or issue with that number.
+    - The file preview header has a download button next to its ⋮ menu in the web version and in remote workspace windows, and it works for files outside your workspace folders too, such as an agent's output in /tmp. (#953, @ker2xu)
+    Improved
+    - Updated bundled agents: Claude Code ACP 0.90.0 (Claude Code 2.1.296), Kimi Code 2.2.0, OpenCode 1.19.0, Antigravity 1.4.0, Hermes 0.22.0, Cline 3.0.71, Grok 1.0.52, Qoder 1.1.71.
+    - Issue tasks check the report before acting: with Fix / implement or Plan first, when the report can't be reproduced, is already fixed, comes from the reporter's environment or describes intended behavior, the agent changes no code, writes no plan and gives its verdict in the first line of its reply.
+    - Message navigation covers the whole conversation, listing every message with its number and the files it changed, and picking one that hasn't loaded yet loads history up to it and jumps there.
+    - A draft conversation can switch to another agent while the one you picked is still connecting, in chat tabs and canvas draft cards alike, and the last agent you pick is the one that connects, with any startup error shown in the message box. (#963, @ker2xu)
+    - Sub-agent cards in Claude Code and Qoder show the sub-agent's thinking, text and tool calls in the order they happened, with thinking folded as in the main conversation, and a finished sub-agent folds all of it into one "Sub-agent activity" line with its duration. (#917, @Liang-HZ)
+    - When a Qoder turn breaks off while its sub-agent runs to the end, the sub-agent's card shows the result it finished with. (#917, @Liang-HZ)
+    - Qoder can ask you questions with its own question tool, on the same question card other agents use. (#915, @Liang-HZ)
+    - The model list under Agent defaults in Settings → Collaboration is grouped by provider, like the model picker in the message box, so same-named models from two providers can be told apart. (#947, @Liang-HZ)
+    - The web version caches itself in your browser, so a tab the browser put to sleep reloads without downloading codeg again, and a reload while the server is restarting or offline shows codeg's connection screen instead of the browser's error page. (#924, @leehom0123)
+    - Claude Code's Read card shows an "Over size limit" badge when it reads a file past the usual size limit.
+    - Claude Code's Bash and Grep cards show the description and output mode that actually ran, even when the model misnames those arguments.
+    - The built-in model catalog is refreshed with 8,831 models from 229 providers, up from 8,414, and now carries cache prices, so cost estimates still price cache tokens when models.dev can't be reached.
+    Fixed
+    - On Linux, built-in browser pages show inside the workspace window, on X11 and Wayland alike, instead of in a separate window. (#961, @bigFish0124; #937 reported by @lwxk)
+    - After Claude Code reads a large image, the rest of its reply no longer shows up twice until you reload, and neither does a reply it picks back up mid-turn, as after reaching its output limit. (#956, @nnnmdzz)
+    - Agents stop calling check_user_feedback over and over when you have sent no feedback, and after you answer their question they get on with the task instead of asking again whether to proceed. (#926, @Frank-zhu2000; #861 reported by @yl-3307)
+    - A to-do whose turn ends on an agent error, such as the upstream 400 after a cut-off tool call, now fails with the agent's own message, instead of quietly moving to To review or saying only that the agent stopped. (#945, @Frank-zhu2000; #538 reported by @pia)
+    - A draft switched to another agent no longer acts through the previous agent's connection before the new one is up: a canvas draft card no longer sends your message to the old agent, and a setting you change no longer lands on the old agent as its saved preference.
+    - Disconnecting an agent that is still starting up now stops it at once, as when you switch a draft to another agent, instead of letting it finish starting up in the background.
+    - Conversations open with their messages when an agent's environment variables move its data folder, such as CLAUDE_CONFIG_DIR or CODEX_HOME set in its settings, and importing finds them too, instead of opening empty. (#948 reported by @lfabay)
+    - A Windows desktop window connected to a codeg-server in WSL no longer stays on "Connection lost", as the connection now tries the next address when one never answers. (#930 reported by @stlyx)
+    - Typing no longer lags while several tiled conversations stream at once, or while an expanded sub-agent card is still running. (#935 reported by @miyling)
+    - Live previews of Word, Excel and PowerPoint files no longer fail when OfficeCLI takes more than 8 seconds to start, as it can on a cold start or with a large document, and quitting codeg while one is still opening no longer blocks that file's preview for the next five minutes. (#954, @ker2xu)
+    - Switching back to a Word, Excel or PowerPoint tab shows its live preview as you left it, instead of starting it over and reloading the document.
+    - On phones, the back gesture closes the file, drawer or viewer you opened, one layer at a time, instead of leaving codeg. (#940, @leehom0123)
+    - Question cards from Claude Code's and Qoder's own question tool show the answers you picked, multi-select ones included, instead of "No selection". (#927, @Liang-HZ)
+    - Qoder conversation details show the model you switched to last instead of the one the conversation started with, and Qoder's token usage now includes what its sub-agents spent, with existing conversations recounted. (#914, @Liang-HZ)
+    - Kimi Code conversations reopened from history read as they did live: attachments show as badges and thumbnails instead of raw <resource> text, slash commands show as you typed them, and a turn Kimi starts on its own no longer shows its internal prompt as your message.
+    - Kimi Code conversation titles no longer include attachment text or switch between two versions.
+    - Jumping to a message no longer snaps back to the bottom while a reply streams in or older messages load, whether you jump from Message navigation or from a reply back to its prompt.
+    - Grok's plan approvals now raise a desktop notification, as other permission requests do.
+    - Terminal commands an agent started are now stopped however its connection ends, also when it ends during startup or while a terminal is still being created, instead of being left running.
+    - On Windows and Linux, two downloads of the same link in the built-in browser no longer get mixed up when they finish.
+    - Switches no longer slide out of their track in Arabic.
+    Note
+    - Taskbar and Dock alerts are on by default and skip the window you are already looking at, and you can turn them off under Settings → General → Taskbar and Dock alerts.
+    - Cost estimates in Token Usage use base API list prices without long-context or reasoning surcharges, so they are not what a subscription plan bills, and models with no published price are left out, with the share of tokens priced shown beside the total.
+    - Auto-processing only picks up items opened or updated after you switch it on, unless you choose to include existing ones, and the desktop app receives webhooks only while its web service is running, which you start under Settings → Web Service.
+    - The web version's cache works only over HTTPS or on localhost, where browsers allow it, and the desktop app doesn't use it.
+    - Antigravity 1.4.0 lists one model per family, with the variant picked in a separate thinking level option, and the model you chose before the update carries over.
+    Thanks to @Liang-HZ, @ker2xu, @Frank-zhu2000, @leehom0123, @Adam-Dalloul, @nnnmdzz and @bigFish0124 for contributing to this release, and to @lwxk, @yl-3307, @pia, @lfabay, @stlyx and @miyling for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版可以直接在文件标签页里预览 PDF，仓库面板能自动把 Issue 和 PR 变成待办任务，智能体需要你时任务栏会闪烁、Dock 图标会跳动。Token 用量页开始按 API 标价估算花费，Claude Code 升级到 0.90.0，Kimi Code 升级到 2.2.0，另有六个内置智能体更新了版本。
+    同期还有：草稿在智能体连接中也能换智能体，Linux 上内置浏览器的页面显示在工作区窗口里了，办公文档预览切换标签页后保持原样、打开慢的文档也不会再超时，消息导航覆盖整个会话，手机上的返回手势会关掉打开的内容而不是退出 codeg，智能体也不会再反复空查你的反馈。
+    新增
+    - PDF 文件可以直接预览了——在文件标签页、会话里的文件查看器和画布文件卡片中打开，支持缩放、适合宽度、页码跳转和查找，受密码保护的文件会提示输入密码。
+    - 仓库面板可以自动把 Issue 和 PR 变成待办任务了——在「面板设置 → 自动处理」里选择定时扫描，或由 GitHub、GitLab、Gitea、Forgejo 的 Webhook 事件触发，再按标签和作者筛选条目，每个条目只会处理一次。
+    - 智能体需要你时，桌面版会闪烁任务栏按钮或让 Dock 图标跳动——你在别的窗口时，会话完成、权限请求、提问等和桌面通知相同的事件都会提醒，可在「设置 → 常规 → 任务栏 / Dock 提醒」里把每个事件设为「关闭」「短暂」或「直到切回」。
+    - Token 用量页会按 API 标价估算花费——所选时间范围和每个模型都会显示估算金额，输入、输出、缓存读取和缓存写入按 models.dev 的价格分别计算。（#503，@Adam-Dalloul）
+    - @ 提及面板显示哪些标签页、按什么顺序排列，可以自己定了——在「设置 → 常规 → 提及面板」里开关和拖动排序，输入框、待办任务编辑器和自动化编辑器都会跟着变，「文件」标签页始终显示。
+    - 待办任务可以按关键字搜索了，输入 #12 会精确匹配编号为 12 的任务或 Issue。
+    - 文件预览顶部新增下载按钮——网页版和远端工作区窗口里，它在 ⋮ 菜单左侧，工作区文件夹之外的文件（比如智能体输出到 /tmp 的文件）也能下载。（#953，@ker2xu）
+    改进
+    - 内置智能体版本更新： Claude Code ACP 0.90.0（Claude Code 2.1.296）、Kimi Code 2.2.0、OpenCode 1.19.0、Antigravity 1.4.0、Hermes 0.22.0、Cline 3.0.71、Grok 1.0.52、Qoder 1.1.71。
+    - Issue 任务会先判断报告是否属实——用「直接修复 / 实现」或「先出方案」处理时，如果问题复现不了、已经修复、是报告人环境的问题或本来就按设计如此，智能体不改代码、不出方案，并在回复第一行给出结论。
+    - 消息导航覆盖整个会话了——会列出每条消息的序号和改动的文件，点一条还没加载的消息，会先把历史加载到那里再跳过去。
+    - 草稿会话在所选智能体还在连接时，也能换成别的智能体了，会话标签页和画布草稿卡片都支持，最后选的那个智能体会连上，启动出错时输入框里会显示原因。（#963，@ker2xu）
+    - Claude Code 和 Qoder 的子智能体卡片会按实际顺序显示思考、文字和工具调用，思考和主会话一样默认折叠，子智能体结束后整个过程收成一行「子智能体活动 · 用时」。（#917，@Liang-HZ）
+    - Qoder 的回合中途断掉、子智能体却跑完了时，子智能体卡片会显示它最终的结果。（#917，@Liang-HZ）
+    - Qoder 可以用它自己的提问工具向你提问了，用的是和其他智能体相同的提问卡片。（#915，@Liang-HZ）
+    - 「设置 → 协作」的「子智能体配置」里，模型下拉按供应商分组，和输入框的模型选择器一样，两家供应商的同名模型也能分清。（#947，@Liang-HZ）
+    - 网页版会在浏览器里缓存自身的文件——被浏览器休眠的标签页重新打开时不用再下载一遍 codeg，服务器重启或离线时刷新页面，也会显示 codeg 的连接页面而不是浏览器的报错页。（#924，@leehom0123）
+    - Claude Code 的 Read 卡片读取超出常规大小限制的文件时，会显示「超出大小限制」标记。
+    - Claude Code 的 Bash 和 Grep 卡片会显示实际生效的说明和输出方式，模型把这些参数名写错时也一样。
+    - 内置模型目录已更新，共 229 家供应商的 8,831 个模型（此前 8,414 个），并带上了缓存价格，连不上 models.dev 时也能估算缓存 token 的花费。
+    修复
+    - Linux 上内置浏览器的页面会显示在工作区窗口里了，X11 和 Wayland 都支持，不再弹出单独的窗口。（#961，@bigFish0124；#937 由 @lwxk 反馈）
+    - Claude Code 读取大图后，回复的后半段不会再重复显示一遍（以前要刷新才恢复成一份），输出达到上限后接着写的回复也一样。（#956，@nnnmdzz）
+    - 你没发反馈时，智能体不会再反复调用 check_user_feedback，你回答它的问题后，它会直接接着做，不再反复问要不要开始。（#926，@Frank-zhu2000；#861 由 @yl-3307 反馈）
+    - 待办任务的回合以智能体报错告终时（比如工具调用被截断后上游返回 400），任务会标记为失败并显示智能体自己的报错，不再悄悄进入「待验收」，也不再只写一句智能体已停止。（#945，@Frank-zhu2000；#538 由 @pia 反馈）
+    - 草稿换成另一个智能体、新连接还没建好时，不会再借用上一个智能体的连接——画布草稿卡片不会再把你的消息发给旧智能体，你改的设置也不会再落到旧智能体上、存成它的偏好。
+    - 智能体还在启动时断开连接，现在会立即停掉它，比如把草稿换成别的智能体时，不会再让它在后台继续把启动走完。
+    - 智能体的环境变量改了数据目录时（比如在它的设置里配置 CLAUDE_CONFIG_DIR 或 CODEX_HOME），会话打开后能正常显示消息，导入也能找到这些会话，不再是空的。（#948 由 @lfabay 反馈）
+    - Windows 桌面版连接 WSL 里的 codeg-server 时，不会再一直显示「连接已断开」，某个地址一直不应答时，连接会改试下一个地址。（#930 由 @stlyx 反馈）
+    - 平铺显示多个会话同时输出时，输入框打字不再卡顿，展开运行中的子智能体卡片时也一样。（#935 由 @miyling 反馈）
+    - Word、Excel、PowerPoint 文件的实时预览，不会再因为 OfficeCLI 启动超过 8 秒而失败（冷启动或文档较大时就可能这么慢），预览还没打开就退出 codeg，也不会再让这个文件之后五分钟都打不开预览。（#954，@ker2xu）
+    - 切回 Word、Excel、PowerPoint 标签页时，实时预览会保持离开时的样子，不再重新启动、从头加载文档。
+    - 在手机上，返回手势会逐层关掉打开的文件、抽屉或查看器，不再直接退出 codeg。（#940，@leehom0123）
+    - Claude Code 和 Qoder 自带提问工具的问题卡片，会显示你选的答案，多选也一样，不再显示「未选择」。（#927，@Liang-HZ）
+    - Qoder 会话详情显示的是你最后切换到的模型，不再停在会话开头的模型，Token 用量也计入了它的子智能体的消耗，已有会话会重新统计。（#914，@Liang-HZ）
+    - 从历史记录打开的 Kimi Code 会话和实时看到的一致了——附件显示成标签和缩略图，不再是原始的 <resource> 文本，斜杠命令按你输入的样子显示，Kimi 自己发起的回合也不会再把它的内部提示显示成你的消息。
+    - Kimi Code 会话的标题不再带出附件内容，也不会在两个版本之间来回切换。
+    - 跳转到某条消息后，不会再被拽回底部——无论是从消息导航跳转，还是从回复跳回它的提问，回复继续输出或加载更早的消息时都会停在原处。
+    - Grok 的计划审批现在会发出桌面通知，和其他权限请求一样。
+    - 智能体在终端里启动的命令，无论连接以什么方式结束都会被停掉，连接在启动阶段或终端还没建好时结束也一样，不会再留在后台继续运行。
+    - 在 Windows 和 Linux 上，内置浏览器里同一个链接的两个下载，完成时不会再互相搞混。
+    - 阿拉伯语界面下，开关的滑块不会再滑出轨道。
+    注意
+    - 任务栏 / Dock 提醒默认开启，你正在看的窗口不会提醒，不需要时可在「设置 → 常规 → 任务栏 / Dock 提醒」里关闭。
+    - Token 用量里的花费按 API 基础标价估算，不含长上下文和推理加价，和订阅套餐的实际计费不是一回事；没有公开价格的模型不计入，总额旁会显示已计价 token 的占比。
+    - 自动处理默认只处理开启之后新建或有更新的条目，除非你选择连已有条目一起处理；桌面版只有在「设置 → Web 服务」里启动 Web 服务后才能接收 Webhook。
+    - 网页版的缓存只在 HTTPS 或 localhost 下生效，这是浏览器的限制，桌面版不使用这项缓存。
+    - Antigravity 1.4.0 的模型列表改为每个系列一项，具体型号在单独的思考档位选项里选，升级前选好的模型会保留下来。
+    感谢 @Liang-HZ、@ker2xu、@Frank-zhu2000、@leehom0123、@Adam-Dalloul、@nnnmdzz 和 @bigFish0124 为本次发布做出的贡献，也感谢 @lwxk、@yl-3307、@pia、@lfabay、@stlyx 和 @miyling 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.35.2
+ReleaseTime: 2026-10-15T06:04:24.0000000Z

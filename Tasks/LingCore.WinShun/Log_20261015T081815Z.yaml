@@ -1,0 +1,41 @@
+Version: 0.8.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/LingCore/WinShun/releases/download/v0.8.0/WinShun-0.8.0-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Win 顺 0.8.0：平时不再以管理员身份运行，读盘交给一个小小的索引服务；资源管理器里双击空白处出文件夹菜单，右键能“用 Win 顺 搜索此处”；内容搜索可以只搜某个文件夹；剪贴板图片里的字认得更准。WinShun 0.8.0: runs with your normal rights while a small index service reads the drives; a folder menu on a double click in File Explorer and “Search here with WinShun” on right-click; content search inside one folder; much better text recognition in copied pictures.
+    新功能 · What's new
+    - 🛡️ 不再以管理员身份运行：Win 顺 平时用普通权限运行，读 NTFS 主文件表和变更日志的事交给安装时装上的“Win 顺 索引服务”，照样几秒建好索引；登录和打开都不弹 UAC，从它打开的程序也是普通权限（#21）。想和以前一样，可在设置 → 搜索范围 → 磁盘 → 索引方式里选“管理员直读”。
+      No longer runs as administrator: WinShun runs with your normal rights, and the “WinShun Index Service” installed with it reads the NTFS master file table and change journal, so indexing is as fast as before; no UAC prompt at login or when you open it, and what you open from it is not elevated (#21). To run it as before, pick “Direct (administrator)” under Settings → Search scope → Drives → Index access.
+    - ⌨️ AutoHotkey 在搜索框里照常工作：搜索框开着时，AutoHotkey 改的键和热键会失灵，原因是 Win 顺 为 Ctrl+1～9 装的键盘钩子；它去掉了，数字键照样能用（#10、#9）。被别的程序占用的组合键，图标上的序号会划掉，悬停说明原因。
+      AutoHotkey keeps working in the search window: AutoHotkey remaps and hotkeys stopped while the search window was open, because of the keyboard hook WinShun set for Ctrl+1–9; it is gone and the number keys still work (#10, #9). A chord another program holds is struck through on the icons, with a tip saying why.
+    - 🗂️ 双击空白处，弹出文件夹菜单：在资源管理器文件夹或桌面的空白处双击，列出收藏的、最近的和别的窗口里开着的文件夹，选一个就在当前窗口转过去；不抢焦点，方向键、回车、Esc 都能用（#22）。Listary 在运行时自动让给它，设置里可以关。
+      Folder menu on a double click: double-click the blank space of a File Explorer folder or the desktop for favorite, recent and open folders; pick one and the same window goes there. It never takes the focus; arrows, Enter and Esc work (#22). It steps aside while Listary runs and can be turned off.
+    - 🖱️ 右键“用 Win 顺 搜索此处”：文件夹、文件夹的空白处和磁盘的右键菜单里都有（Windows 11 在“显示更多选项”里），搜索框带着这个文件夹打开，接着打字就在里面找（#20）。
+      “Search here with WinShun” on right-click: on folders, a folder's blank space and drives (under “Show more options” on Windows 11); the search window opens with that folder typed, so what you type next is searched in it (#20).
+    - 📄 内容搜索可以只搜某个文件夹：年度报告 abc/ 只在叫 abc 的文件夹里找；同名的都搜，搜索框下面列出它们，Shift+Tab 挑一个。也可以在结果里的文件夹上右键“在此文件夹中搜内容”。
+      Content search inside one folder: annual report abc/ searches only folders named abc; all of them, listed under the box, and Shift+Tab picks one. Or right-click a folder in the results → Search contents in this folder.
+    - 🖼️ 剪贴板图片里的字认得更准：文字识别改用 PaddleOCR（PP-OCRv6），仍在本机、不联网；数字、小字和界面截图都比 Windows 自带的准得多。以前的图片会重新识别一遍。
+      Better text recognition in copied pictures: recognition now uses PaddleOCR (PP-OCRv6), still on your PC and offline, and reads numbers, small print and screenshots far better than Windows' own. Pictures already in the history are read again once.
+    - 💾 设置可以备份和恢复：设置 → 高级里选一个文件夹（放在同步盘里就是云备份），设置、收藏、对话框的固定项、自己加的网页图标和插件会自动备份，保留最近 10 份，随时恢复（#17）。
+      Settings backup and restore: choose a folder under Settings → Advanced (a synced folder makes it a cloud backup); settings, favorites, dialog pins, your own web icons and plugins are backed up as they change, the last 10 kept, ready to restore (#17).
+    - 🧠 按意思找（插件，默认关）：打开“按意思找”插件后，输入 ? 去年报销的规定 也能找到写着“差旅费用申请”的文档。用你选的模型：本机的 Ollama、LM Studio 什么都不上传；硅基流动、百炼、OpenAI 等填自己的密钥，密钥存在 Windows 凭据管理器里，第一次计算前会告诉你要发出去多少字，你按回车才开始。
+      Search by meaning (plugin, off by default): with the “Search by meaning” plugin on, ? last year's expense rules finds a document that says “travel cost requests”. It uses the model you pick: Ollama or LM Studio on your PC uploads nothing; for SiliconFlow, Model Studio, OpenAI and others you enter your own key, kept in Windows Credential Manager, and before the first run it says how much text would be sent and waits for your Enter.
+    - 📦 便携版的数据跟着走：解压版旁边的 data 文件夹里存着设置、记录和索引，整个文件夹能拷到 U 盘或别的电脑；第一次启动时把这台电脑上原来的设置复制过来（#19）。
+      Portable data travels with it: the unzipped copy keeps settings, history and index in the data folder beside it, so the whole folder can move to a USB stick or another PC; on its first start it copies in what this PC already has (#19).
+    - 📋 剪贴板可以固定的在前、自己排顺序：标签行末尾的 ⇅ 让固定的排在最前；拖动左边的把手、Ctrl+↑/↓ 或菜单里的“上移”“下移”调整顺序。
+      Clipboard: pinned first, and your own order: the ⇅ at the end of the tab row puts pinned items first; drag the handle, press Ctrl+↑/↓ or use Move up / Move down to reorder.
+    - 🎨 单色任务栏图标，三档界面大小：设置 → 外观里可以把托盘和任务栏搜索框的图标换成单色，界面大小有紧凑、标准、宽松三档。
+      Monochrome taskbar icon, three sizes: under Settings → Appearance, the tray and taskbar box icons can be monochrome, and the interface comes compact, standard or roomy.
+    - 💿 机械硬盘不再被占满：只有机械硬盘的电脑上，第一次建内容索引时你在用电脑它就慢慢读，你走开了才加快；托盘菜单里能看到进度。
+      Hard disks stay quiet: on PCs with hard disks, the first content index reads gently while you use the computer and speeds up when you step away; the tray menu shows its progress.
+    - 🛠️ 其他改进：Tab 只切换全部、文件、内容，Shift+Tab 切换类型（#16）；“不搜索的文件夹”里写整个盘（如 D:\）又生效了（#17）；书签插件显示网站自己的图标（#17）；切到“内容”马上出结果；关机时先存好索引和剪贴板；剪贴板图片可以拖进文件夹存成 PNG，按复制时间命名（感谢 @nivooz1519-coder，#18）；不用时内存降得更快。
+      Other improvements: Tab only switches All, Files and Content, Shift+Tab the kinds (#16); a whole drive such as D:\ in the excluded folders works again (#17); bookmarks show their site's icon (#17); switching to Content answers at once; the index and clipboard are saved before Windows shuts down; clipboard pictures can be dragged into a folder as PNG files, named by when they were copied (thanks @nivooz1519-coder, #18); memory drops sooner while unused.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LingCore/WinShun/releases/tag/v0.8.0
+ReleaseTime: 2026-10-14T03:42:12.0000000Z
